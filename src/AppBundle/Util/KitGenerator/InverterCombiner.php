@@ -11,11 +11,74 @@ namespace AppBundle\Util\KitGenerator;
 
 class InverterCombiner
 {
-    
+    /**
+     * @var float
+     */
     private $power;
+
+    /**
+     * @var float
+     */
     private $minimumFactor;
+
+    /**
+     * @var float
+     */
     private $maximumFactor;
 
+    /**
+     * @return mixed
+     */
+    public function getPower()
+    {
+        return $this->power;
+    }
+
+    /**
+     * @param mixed $power
+     * @return InverterCombiner
+     */
+    public function setPower($power)
+    {
+        $this->power = $power;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMinimumFactor()
+    {
+        return $this->minimumFactor;
+    }
+
+    /**
+     * @param mixed $minimumFactor
+     * @return InverterCombiner
+     */
+    public function setMinimumFactor($minimumFactor)
+    {
+        $this->minimumFactor = $minimumFactor;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMaximumFactor()
+    {
+        return $this->maximumFactor;
+    }
+
+    /**
+     * @param mixed $maximumFactor
+     * @return InverterCombiner
+     */
+    public function setMaximumFactor($maximumFactor)
+    {
+        $this->maximumFactor = $maximumFactor;
+        return $this;
+    }
 
     public function combine($kwh, $lat, $lon, $mod_id){
         //this script calculates an inaccurate generator power, based on a energy consumption
@@ -177,60 +240,4 @@ class InverterCombiner
 
         return $pmax;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getPower()
-    {
-        return $this->power;
-    }
-
-    /**
-     * @param mixed $power
-     * @return InverterCombiner
-     */
-    public function setPower($power)
-    {
-        $this->power = $power;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMinimumFactor()
-    {
-        return $this->minimumFactor;
-    }
-
-    /**
-     * @param mixed $minimumFactor
-     * @return InverterCombiner
-     */
-    public function setMinimumFactor($minimumFactor)
-    {
-        $this->minimumFactor = $minimumFactor;
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMaximumFactor()
-    {
-        return $this->maximumFactor;
-    }
-
-    /**
-     * @param mixed $maximumFactor
-     * @return InverterCombiner
-     */
-    public function setMaximumFactor($maximumFactor)
-    {
-        $this->maximumFactor = $maximumFactor;
-        return $this;
-    }
-
-
 }
