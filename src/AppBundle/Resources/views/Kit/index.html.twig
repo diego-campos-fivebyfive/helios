@@ -1,0 +1,198 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="ibox float-e-margins collapsed">
+                    <div class="ibox-title">
+                        <h5>
+                            &nbsp; <i class="fa fa-money"></i> Margens para composição de preço final de venda
+                        </h5>
+                        <a class="collapse-link btn btn-xs btn-danger pull-left"
+                           style="margin-left: 1rem; display: block;">
+                            <i class="fa fa-cog"></i> Gerenciar
+                        </a>
+                        <div class="ibox-tools" style="width: 20%; float:right;">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+
+                            <div class="panel panel-danger">
+                                <div class="panel-heading">
+                                    <i class="fa fa-cog"></i> Configurar margens aplicadas ao preço de venda
+                                </div>
+                                <div class="panel-body">
+
+                                    {{ render(controller('AppBundle:Settings/KitPricing:create',{request: app.request})) }}
+
+                                    <div class="col-md-12" id="kit_pricing_index">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>
+                            &nbsp; <i class="{{ icon('kits') }}"></i> Kits cadastrados
+                        </h5>
+
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div id="kits_container" class="ibox-content">
+                        {% include view('kit.kits') %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+    {% block scripts %}
+
+        <script>
+
+            function load_kits() {
+
+                $.ajax({
+                    url: '{{ path('kit_index') }}',
+                    success: function (response) {
+                        $('#kits_container').html(response);
+                    }
+                });
+            }
+
+            var KitPricing = {
+                form: {
+                    element: $('#kit_pricing'),
+                    button: $('#kit_pricing_btn'),
+                    action: '{{ path('kit_pricing_create') }}',
+                    define: function (data) {
+                        $('#kit_pricing_name').val(data.name);
+                        $('#kit_pricing_percent').val(data.percent);
+                        $('option[value="' + data.target + '"]').prop('selected', true);
+                    },
+                    reset: function () {
+                        KitPricing.form.define({name: '', percent: ''});
+                        KitPricing.form.action = '{{ path('kit_pricing_create') }}';
+                        KitPricing.form.button.html('<i class="fa fa-plus"></i> Adicionar').ladda();
+                    }
+                },
+                save: function () {
+                    KitPricing.form.button.ladda('start');
+                    $.ajax({
+                        url: KitPricing.form.action,
+                        method: 'post',
+                        data: KitPricing.form.element.serialize(),
+                        complete: function (xhr) {
+                            if (200 == xhr.status || 201 == xhr.status) {
+                                load_kits();
+                                KitPricing.form.define({name: '', percent: 0, target: 'general'});
+                                KitPricing.form.action = '{{ path('kit_pricing_create') }}';
+                                KitPricing.index();
+                                woopra.track('margens');
+                            } else {
+                                var response = xhr.responseJSON;
+                                if (response.hasOwnProperty('limits')) {
+                                    var limits = response.limits;
+                                    var options = {
+                                        positionClass: "toast-top-center",
+                                        preventDuplicates: true,
+                                        progressBar: true
+                                    };
+                                    if (limits.equipments > 99) {
+                                        toastr.error('Limite de percentual excedido para Equipamentos: ' + limits.equipments + '%', null, options);
+                                    }
+                                    if (limits.services > 99) {
+                                        toastr.error('Limite de percentual excedido para Serviços: ' + limits.services + '%', null, options);
+                                    }
+                                }
+                            }
+
+                            KitPricing.form.button.ladda('stop').html('<i class="fa fa-plus"></i> {{ 'Add'|trans }}').ladda();
+                        }
+                    });
+                },
+                index: function () {
+                    $.ajax({
+                        url: '{{ path('kit_pricing') }}',
+                        success: function (response) {
+                            $('#kit_pricing_index').html(response);
+                        }
+                    });
+                },
+                remove: function (url) {
+                    swal({
+                        title: "Confirmar exclusão?",
+                        text: null,
+                        type: "info",
+                        showCancelButton: true,
+                        cancelButtonText: "Cancelar",
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Excluir",
+                        closeOnConfirm: false
+                    }, function () {
+                        $.ajax({
+                            url: url,
+                            method: 'post',
+                            data: {_method: 'delete'},
+                            complete: function (xhr) {
+                                load_kits();
+                                swal("Exclusão efetuada com sucesso!", "", "success");
+                                KitPricing.index();
+                                window.setTimeout(function () {
+                                    swal.close();
+                                }, 500);
+                                woopra.track('margens');
+                            },
+                            beforeSend: function () {
+                                swal({
+                                    title: "Excluindo...",
+                                    text: "Aguarde!",
+                                    type: "info",
+                                    showConfirmButton: false
+                                });
+                            }
+                        });
+                    });
+                },
+                init: function () {
+
+                    KitPricing.index();
+
+                    KitPricing.form.button.ladda();
+
+                    this.form.element.on('submit', function (event) {
+                        event.preventDefault();
+                        KitPricing.save();
+                    });
+
+                }
+            };
+
+            KitPricing.init();
+
+        </script>
+    {% endblock %}

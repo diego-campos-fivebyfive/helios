@@ -1,0 +1,128 @@
+{% set data = project_inverter.metadataOperation %}
+
+{% if data.areas|length %}
+
+<style>
+#inverter-slider .ui-slider-tip{
+    width: 50px;
+    margin-left: -25px;
+}
+.panel-ruler .panel-body{
+    padding-top: 5rem;
+}
+.operation-filament{
+    background: transparent;
+    z-index: 999; 
+    width:100%; 
+    height: 100%;
+    position: absolute;
+}
+.ui-slider .ui-slider-handle {
+    background: #444;
+    border: 0;
+}
+/*.ruler-bar .progress-bar-success{
+    background:#5cb85c;
+}*/
+</style>
+
+<div class="row ruler-row" style="position: relative;">
+    <div class="operation-filament">
+    </div>
+
+    <div class="col-lg-12">
+
+        {# MPPT #}
+        <div class="panel panel-default panel-ruler">
+            <div class="panel-heading">
+                <span class="label label-plain">
+                    Fator de Dimensionamento (%) <i class="fa fa-chevron-right"></i>
+                    Potência de Entrada: {{ data.stc_power_max|round(2) }} kWp &mdash;
+                    Potência Nominal do Inversor: {{ data.nominal_power|round(2) }} kW
+                </span>
+            </div>
+            <div class="panel-body">
+                <div class="progress ruler-bar">
+                    <div class="progress-bar progress-bar-danger" style="width:16.66%">
+                        <span class="sr-only"></span>
+                    </div>
+                    <div class="progress-bar progress-bar-warning" style="width:16.666%">
+                        <span class="sr-only"></span>
+                    </div>
+                    <div class="progress-bar progress-bar-success" style="width:33.333%">
+                        <span class="sr-only"></span>
+                    </div>
+                    <div class="progress-bar progress-bar-warning" style="width:16.666%">
+                        <span class="sr-only"></span>
+                    </div>
+                    <div class="progress-bar progress-bar-danger" style="width:16.666%">
+                        <span class="sr-only"></span>
+                    </div>
+                </div>
+                <div id="inverter-slider"></div>
+            </div>
+        </div>
+
+    </div>
+
+    {# <table class="col-md-12 table table-bordered">
+        <thead>
+            <tr>
+                <th colspan="2" class="text-center">
+                    Fator de Dimensionamento
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-md-6"> Potência de Entrada: {{ data.stc_power_max|round(2) }} kWp </td>
+                <td class="text-right"> Potência Nominal do Inversor: {{ data.nominal_dc_power|round(2) }} kW </td>
+            </tr>
+        </tbody>
+    </table> #}
+
+    <div class="col-md-12">
+
+    </div>
+</div>
+
+<script>
+
+var inverter_slider = $('#inverter-slider');
+
+function init_inverter_operation(){
+
+    var inverter_operation_tip = inverter_slider.find('.ui-slider-tip');
+
+    if(0 == inverter_operation_tip.length){
+
+        inverter_slider.slider({
+            min: 70,
+            max: 130,
+            values: [{{ (data.fdi * 100)|round(2) }}],
+            step: 1
+        }).slider("pips", {
+            step: 10,
+            rest: "label"
+        }).slider("float");
+
+        init_inverter_operation();
+
+    }else{
+
+        inverter_operation_tip.html('{{ (data.fdi * 100)|round(2) }}'.replace('.', ','));
+    }
+
+}init_inverter_operation();
+
+</script>
+
+{% else %}
+
+    <div class="col-md-12">
+        <div class="alert alert-danger">
+            É necessário configurar as áreas para visualizar estes dados
+        </div>
+    </div>
+
+{% endif %}

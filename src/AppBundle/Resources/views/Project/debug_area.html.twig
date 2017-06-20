@@ -1,0 +1,298 @@
+{% extends view('layout') %}
+
+{% block styles %}
+
+    <link rel="stylesheet" href="{{ asset('plugins/jquery-ui/jquery-ui.css') }}">
+    <link rel="stylesheet" href="{{ asset('plugins/slider-pips/jquery-ui-slider-pips.css') }}">
+
+    <style type="text/css">
+        .ruler-row {
+            margin-top: 3rem;
+        }
+
+        .ui-slider-horizontal {
+            height: 0 !important;
+            border: 0 !important;
+        }
+
+        .ui-slider-tip {
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        .ruler-bar.progress {
+            margin-bottom: 0;
+        }
+
+        .ui-slider .ui-slider-handle {
+            width: .5em !important;
+            height: 2em !important;
+            top: -1.5em !important;
+        }
+
+        .ui-slider-pips .ui-slider-pip {
+            top: 10px !important;
+        }
+
+        .progress-bar-success {
+            background-color: #5cb85c;
+        }
+    </style>
+
+{% endblock %}
+
+{% block body %}
+
+    <div class="col-md-8 col-offset-2">
+
+        {#<div class="row ruler-row">
+
+            <table class="col-md-12 table table-bordered">
+                <thead>
+                <tr>
+                    <th colspan="2" class="text-center">
+                        MPPT Voltage [V]
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td> Min. MPPT Voltage: {{ data.mppt.min }} </td>
+                    <td> Max. MPPT Voltage: {{ data.mppt.max }} </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="col-md-12">
+                <div class="progress ruler-bar">
+                    <div class="progress-bar progress-bar-warning" style="width:{{ data.mppt.percentOffset }}%">
+                        <span class="sr-only"></span>
+                    </div>
+                    <div class="progress-bar progress-bar-success" style="width:{{ data.mppt.percentCenter }}%">
+                        <span class="sr-only"></span>
+                    </div>
+                    <div class="progress-bar progress-bar-warning" style="width:{{ data.mppt.percentLimit }}%">
+                        <span class="sr-only"></span>
+                    </div>
+                </div>
+                <div id="mppt-slider"></div>
+            </div>
+        </div>
+
+        #}{#  VOLTAGE #}{#
+        <div class="row ruler-row">
+
+            <table class="col-md-12 table table-bordered">
+                <thead>
+                <tr>
+                    <th colspan="2" class="text-center">
+                        Open Circuit Voltage [V]
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td> &nbsp; </td>
+                    <td> &nbsp; </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="col-md-12">
+                <div class="progress ruler-bar">
+                    <div class="progress-bar progress-bar-success" style="width:{{ data.voltage.percent }}%">
+                        <span class="sr-only"></span>
+                    </div>
+                    <div class="progress-bar progress-bar-warning" style="width:{{ (100-data.voltage.percent) }}%">
+                        <span class="sr-only"></span>
+                    </div>
+                </div>
+                <div id="voltage-slider"></div>
+            </div>
+        </div>
+
+        #}{#  CURRENT #}{#
+        <div class="row ruler-row">
+
+            <table class="col-md-12 table table-bordered">
+                <thead>
+                <tr>
+                    <th colspan="2" class="text-center">
+                        Current [A]
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td> &nbsp; </td>
+                    <td> &nbsp; </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="col-md-12">
+                <div class="progress ruler-bar">
+                    <div class="progress-bar progress-bar-success" style="width:{{ data.current.percent }}%">
+                        <span class="sr-only"></span>
+                    </div>
+                    <div class="progress-bar progress-bar-warning" style="width:{{ (100-data.current.percent) }}%">
+                        <span class="sr-only"></span>
+                    </div>
+                </div>
+                <div id="current-slider"></div>
+            </div>
+        </div>
+
+        #}{#  POWER #}{#
+        <div class="row ruler-row">
+
+            <table class="col-md-12 table table-bordered">
+                <thead>
+                <tr>
+                    <th colspan="2" class="text-center">
+                        Performance [kW]
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td> &nbsp; </td>
+                    <td> &nbsp; </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="col-md-12">
+                <div class="progress ruler-bar">
+                    <div class="progress-bar progress-bar-success" style="width:{{ data.power.percentOffset }}%">
+                        <span class="sr-only"></span>
+                    </div>
+                    <div class="progress-bar progress-bar-warning" style="width:{{ data.power.percentCenter }}%">
+                        <span class="sr-only"></span>
+                    </div>
+                    <div class="progress-bar progress-bar-danger" style="width:{{ (data.power.percentLimit) }}%">
+                        <span class="sr-only"></span>
+                    </div>
+                </div>
+                <div id="power-slider"></div>
+            </div>
+        </div>#}
+
+
+        <div class="row ruler-row">
+
+            <table class="col-md-12 table table-bordered">
+                <thead>
+                <tr>
+                    <th colspan="2" class="text-center">
+                        MPPT Voltage [V]
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td> Min. MPPT Voltage: 111 </td>
+                    <td> Max. MPPT Voltage: 111 </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="col-md-12">
+                <div class="progress ruler-bar">
+                    <div class="progress-bar progress-bar-danger" style="width:16.66%">
+                        <span class="sr-only"></span>
+                    </div>
+                    <div class="progress-bar progress-bar-warning" style="width:16.666%">
+                        <span class="sr-only"></span>
+                    </div>
+                    <div class="progress-bar progress-bar-success" style="width:33.333%">
+                        <span class="sr-only"></span>
+                    </div>
+                    <div class="progress-bar progress-bar-warning" style="width:16.666%">
+                        <span class="sr-only"></span>
+                    </div>
+                    <div class="progress-bar progress-bar-danger" style="width:16.666%">
+                        <span class="sr-only"></span>
+                    </div>
+                </div>
+                <div id="inverter-slider"></div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script src="{{ asset('plugins/jquery-ui/jquery-ui.js') }}"></script>
+    <script src="{{ asset('plugins/slider-pips/jquery-ui-slider-pips.js') }}"></script>
+
+    <script>
+
+        var inverter_slider = $('#inverter-slider');
+
+        inverter_slider.slider({
+            min: 70,
+            max: 130,
+            values: [{{ (data.fdi * 100)|round(2) }}],
+            step: 10
+        }).slider("pips", {
+            rest: "label"
+        }).slider("float");
+
+        function review_inverter_operation(){
+
+            var inverter_operation_tip = inverter_slider.find('.ui-slider-tip');
+            if(0 == inverter_operation_tip.length){
+                review_inverter_operation();
+            }else{
+                inverter_operation_tip.html({{ (data.fdi * 100)|round(2) }});
+            }
+
+        }review_inverter_operation();
+
+    </script>
+
+    {# <script>
+
+        $("#mppt-slider").slider({
+            min: {{ data.mppt.offset }},
+            max: {{ data.mppt.limit }},
+            values: [{{ data.mppt.vmp_min_operation }}, {{ data.mppt.vmp_max_operation }}]
+        }).slider("pips", {
+            step: 25,
+            rest: "label"
+        }).slider("float");
+
+        $("#voltage-slider").slider({
+            min: {{ data.voltage.offset }},
+            max: {{ data.voltage.limit }},
+            values: [{{ data.voltage.voc_operation }}]
+        }).slider("pips", {
+            step: 25,
+            rest: "label"
+        }).slider("float");
+
+        $("#current-slider").slider({
+            min: {{ data.current.offset }},
+            max: {{ data.current.limit }},
+            values: [{{ data.current.imp_operation }}],
+            step: 0.5
+        }).slider("pips", {
+            step: 5,
+            rest: "label"
+        }).slider("float");
+
+        $("#power-slider").slider({
+            min: {{ data.power.offset }},
+            max: {{ data.power.limit }},
+            values: [{{ data.power.max_operation }}],
+            step: 0.25
+        }).slider("pips", {
+            step: 3,
+            rest: "label"
+        }).slider("float");
+
+    </script> #}
+{% endblock %}

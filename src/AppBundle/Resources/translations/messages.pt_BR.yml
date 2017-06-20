@@ -1,0 +1,366 @@
+Access: Acesso
+Account: Conta
+Accounts: Contas
+Account and Access: Conta e Acesso
+Add: Adicionar
+Address: "Endereço"
+Add Member: Adicionar Membro
+Add User: Adicionar Usuário
+Account Owner: Dono da Conta
+Add Kit: Adicionar Kit
+Add Platform Component: Adicionar Componente da Plataforma
+Add to Catalog: "Adicionar ao Catálogo"
+Add Person: Adicionar Pessoa
+Add Company: Adicionar Empresa
+All: Todos
+Apply: Aplicar
+addition: "Acréscimo"
+absolute: Absoluto
+Advance: "Avançar"
+Administrator: Administrador
+Admin Components: Admin Componentes
+
+add:
+    person: Adicionar Pessoa
+    company: Adicionar Empresa
+    kit: Adicionar Kit
+
+confirm:
+    exclusion: "Confirmar exclusão?"
+
+select:
+    maker: Selecionar Fabricante
+    serial: "Selecionar Série"
+    model: Selecionar Modelo
+    module: "Selecionar Módulo"
+    operation: "Selecionar Operação"
+
+tag:
+    undefined: Indefinido
+    visitation: Visita
+    mail: Email
+    call: "Ligação"
+    proposal: Proposta
+    reunion: "Reunião"
+    general: Geral
+
+task:
+    add: Adicionar Tarefa
+    update: Atualizar Tarefa
+    filter:
+        enabled: Pendentes
+        done: Finalizadas
+        all: Todas
+        week: Esta semana
+        today: Hoje
+
+project:
+    design: Dimensionamento
+    financial: "Análise Financeira"
+    proposal: "Proposta"
+    calculate: "Calcular"
+    generate_budget: "Gerar Orçamento"
+    error:
+        project_inverter_not_set: "Inversor não definido"
+        kit_module_not_set: "Módulo não definido"
+        undefined_operation: "Operação não definida"
+        undefined_modules: "Áreas não configuradas"
+        undefined_module: "Área sem módulo definido"
+        empty_calculation_metadata: "O projeto não foi calculado"
+        negative_selling_price: "Para prosseguir é necessário definir o preço do kit selecionado"
+        incompatible_number_of_modules: "O número de módulos configurados é diferente do número de módulos do kit"
+        copy_not_done: "Somente projetos finalizados podem ser copiados"
+        copy_not_kit_identity: "O kit deste projeto não pode ser identificado"
+        copy_kit_not_found: "O kit relacionado com este projeto não existe"
+        no_registered_contact: Nenhum contato cadastrado
+        no_registered_kit: Nenhum kit cadastrado
+
+financial:
+    error:
+        negative_selling_price: "É necessário que o valor do kit seja maior que R$0,00"
+        analysis_not_calculated: "A análise financeira não foi calculada"
+        incompatible_number_of_modules: "O número de módulos configurados é diferente do número de módulos do kit"
+
+proposal:
+    message_editable_section: "Esta seção pode ser editada na emissão da proposta"
+
+status:
+    enabled: Ativo
+    locked: Bloqueado
+
+update:
+    account: "Atualizar Conta"
+
+kit:
+    error:
+        project_has_component: "Este %component% esta associado a %count% projeto(s) aberto(s)"
+
+Both: Ambos
+Budget: "Orçamento"
+Budget Setting: "Configuração de Orçamento"
+
+Cancel: Cancelar
+Canceled: Cancelada
+Category: Categoria
+Catalog: "Catálogo"
+City: Cidade
+Close: Fechar
+Company: Empresa
+company: Empresas
+Copy: Copiar
+Copied: Copiado
+Copying: Copiando
+Confirm copy: "Confirmar Cópia"
+Companies: Empresas
+Complement: Complemento
+Contracts: Contratos
+Contacts: Contatos
+Contact: Contato
+Content: "Conteúdo"
+Country: "País"
+Cpf: Cpf
+Current Password: Senha Atual
+Customers: Clientes
+Fantasy Name: Nome Fantasia
+Company Name: "Razão Social"
+Components: Componentes
+Component management: Gerenciamento de componentes
+Create Project: Novo Projeto
+Categories: Categorias
+Categories Setting: "Configuração de Categorias"
+Confirm: Confirmar
+contact_category: Categorias de Contato
+Climatic data: "Dados Climáticos"
+
+Definitions: "Definições"
+Dashboard: Dashboard
+Delete: Excluir
+District: Bairro
+Define Logo: Definir Logo
+Define Image: Definir Imagem
+Draft: Rascunho
+Drafts: Rascunhos
+discount: Desconto
+
+Edit: Editar
+Edit Profile: Editar Perfil
+Email: Email
+Emails: Emails
+Error: Erro
+Excluding: Excluindo
+equipments: Equipamentos
+
+Fax: Fax
+Firstname: Nome
+Folders: Pastas
+Financial analysis: "Análise Financeira"
+
+Grid: Grade
+general: Geral
+Generate: Gerar
+
+Has no members: "Não possui membros"
+
+Information: "Informações"
+Inverters: Inversores
+Inbox: Entrada
+Inverter: Inversor
+inverter published: Inversores publicados
+Important: Importante
+Items: Itens
+Invited At: Convidado em
+
+Kits: Kits
+
+Lastname: Sobrenome
+List: Lista
+Logout: Sair
+Loading: Carregando
+long_time: years anos e months meses
+
+Manage: Gerenciar
+Maker: Fabricante
+Makers: Fabricantes
+Main Informations: "Informações Principais"
+Members: Membros
+Mobile: Celular
+Modules: "Módulos"
+Module: "Módulo"
+module published: "Módulos publicados"
+Model: Modelo
+
+Name: Nome
+Number: "Número"
+New Account: Nova Conta
+Not published: "Não publicados"
+
+Office: Cargo
+Only Account: Somente da conta
+
+Paid: Pago
+Pending: Pendente
+Password: Senha
+Password Confirm: Confirmar Senha
+Phone: Telefone
+Postcode: Cep
+Profile: Perfil
+person: Pessoas
+Processing: Processando
+Power: "Potência"
+Proposal: Proposta
+price_strategy_absolute: "Valor Absoluto (R$)"
+price_strategy_incremental: "Número de Módulos"
+price_strategy_percentage: "(%) Valor do Kit"
+price_abs: "Desejo informar apenas o custo total dos equipamentos"
+price_sum: "Desejo informar o custo de cada equipamento separadamente"
+price_pct: "% do custo dos equip. (%)"
+price_abs_delivery: "Valor absoluto (R$)"
+price_pct_delivery: "% do custo dos equip. (%)"
+projects_quota_is_reached: "Você atingiu o limite mensal de projetos do plano gratuito"
+percent: Percentual
+Preview: "Pré-visualizar"
+Proposal Settings: "Configuração da Proposta"
+Published: Publicados
+
+Quantity: Quantidade
+
+Remove from Catalog: "Remover do Catálogo"
+Really delete: "Confirma exclusão"
+Region: "Região"
+Rate: Percentual
+
+Sale Step: Etapa de Venda
+Sale Steps: Etapas de Venda
+Search: Pesquisar
+Search Address: "Pesquisar Endereço"
+Save: Salvar
+Select: Selecionar
+Select Image: Selecionar Imagem
+Set Picture: Definir Imagem
+Settings: "Configurações"
+Signature: Assinatura
+Show: Visualizar
+Sponsor: Responsável
+Sponsors: Responsáveis
+State: Estado
+Street: Logradouro
+Select a company: Selecionar empresa
+Select Members: Selecionar Membros
+Select Component: Selecionar Componente
+Select Persons: Selecionar Pessoas
+Show Inverters: Mostrar Inversores
+Show Modules: "Mostrar Módulos"
+Success: Sucesso
+Services: "Serviços"
+services: "Serviços"
+Serial: "Série"
+Status: Status
+Send Invitation: Enviar Convite
+Scaling: Dimensionamento
+sale_stage: Etapas de Venda
+Subscribe: Assinar
+Support: Suporte
+
+Tasks: Tarefas
+Team: Equipe
+Teams: Equipes
+Treatment: Tratamento
+Trash: Lixeira
+Type: Tipo
+This process can not be undone: "Este processo não pode ser desfeito"
+Total Power: "Potência Total"
+Total Price: "Preço Total"
+Title: "Título"
+
+User: "Usuário"
+Username: Login
+Users: "Usuários"
+Upload Image: Carregar Imagem
+Undefined: Indefinido
+Update: Atualizar
+Unit Price: "Preço Unit."
+
+Value: Valor
+
+Operation: Operação
+
+Packages: Planos
+Privacy: Privacidade
+Peoples: Pessoas
+Product: Produto
+Products: Produtos
+Disabled: "Desativado"
+Enabled: "Ativado"
+Price: "Preço"
+Description: "Descrição"
+Action: "Ação"
+AddProduct: "Adicionar Produto"
+DeleteConfirm: "Tem certeza que deseja deletar o produto ?"
+productlist: "Lista de produtos"
+Version: "Versão"
+Package: "Plano"
+AddKit: "Adicionar Kit"
+My signature: Minha assinatura
+
+Redefine: Redefinir
+Register: Registrar
+
+DeleteConfirmKit: "Tem certeza que deseja deletar o Kit ?"
+
+Projects: "Projetos"
+NewClient: "Novo Cliente"
+DeleteConfirmClient: "Tem certeza que deseja deletar o Cliente ?"
+Manage Team: "Gerenciar Equipe"
+Set Leader: "Definir Líder"
+About Team: "Sobre a Equipe"
+Timezone: "Fuso Horário"
+
+Was successful exclusion: "Exclusão efetuada com sucesso"
+Was successful copied: "Cópia efetuada com sucesso"
+Website: Website
+Write: Escrever
+
+Validate: Validar
+View: Visualizar
+
+Yes, delete it: Sim, excluir
+
+# Phrases
+Select a team: Selecione uma equipe
+The informed email is already in use: "O e-mail informado já está sendo utilizado"
+I have company in the area of ​​photovoltaic solar energy: "Tenho empresa na área de energia solar fotovoltaica"
+I want to open a company in the area of ​​photovoltaic solar energy: "Pretendo abrir uma empresa na área de energia solar fotovoltaica"
+Commercialization of equipment: "Comercialização de equipamentos"
+Provision of services: "Prestação de serviços"
+Your name: Seu nome
+Your email: Seu email
+Your phone: Seu telefone
+Company name: Nome da empresa
+Complete registration: Concluir cadastro
+Full name is required: "É necessário informar o nome completo"
+You must accept the terms of use: "É necessário aceitar os termos de uso"
+The name entered is too short: "O nome informado é muito curto"
+The name entered is too long: "O nome informado é muito longo"
+The email entered is not valid: "O email informado não é válido"
+In what area: "Em que área?"
+How many members or partners does your team have: "Quantos membros ou parceiros a sua equipe possui?"
+Invitation sent successfully: "Convite enviado com sucesso"
+User updated successfully: "Usuário atualizado com sucesso"
+Limit of users reached: "Limite de usuários atingido"
+My data: Meus dados
+My business: Minha empresa
+No registered contacts: Nenhum contato registrado
+No applicable kit found: "Nenhum kit aplicável encontrado"
+No registered kits: Nenhum kit cadastrado
+Save on disc: Salvar em disco
+New project from this: Novo projeto a partir deste
+Sales step in use: "Esta etapa está relacionada com %count% projetos"
+The account must have at least one: "A conta deve possuir no mínimo uma %category%"
+There are kits configured with this component: Existem kits configurados com este componente
+Only validated components can be excluded: "Somente componentes validados podem ser exluídos"
+Only validated components can be published: Somente componentes validados podem ser publicados
+There are tasks associated with this contact: Existem tarefas associadas com este contato
+There are projects associated with this contact: Existem projetos associados com este contato
+Proposal issued: Proposta emitida
+Scheduled task: Tarefa agendada
+Added contact: Contato adicionado

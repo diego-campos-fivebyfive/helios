@@ -1,0 +1,49 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+    {% include view('task.modal') %}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        <div class="col-md-8">&nbsp;</div>
+        <div class="col-md-4 text-right">
+            <a href="{{ path('task_index',{mode:'calendar' == mode ? 'list' : 'calendar'}) }}" class="btn btn-md btn-default">
+                {% if 'calendar' == mode %}
+                    <i class="fa fa-list"></i> Modo Lista
+                {% else %}
+                    <i class="fa fa-calendar"></i> Modo Calendário
+                {% endif %}
+            </a>
+            <a id="task_add" class="btn btn-md btn-primary">
+                <i class="fa fa-plus"></i> Nova Tarefa
+            </a>
+        </div>
+    </div>
+
+    <div class="row" id="real-content">
+        <div class="col-md-12">
+            <div class="ibox">
+                <div class="ibox-content inspinia-timeline">
+                    <div class="row">
+
+                        {{ render(controller('AppBundle:Task:getFilter',{mode:mode})) }}
+
+                        <hr/>
+                        <div class="col-md-12" id="tasks_container">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+    {% include view('task.script_index') %}
+{% endblock %}

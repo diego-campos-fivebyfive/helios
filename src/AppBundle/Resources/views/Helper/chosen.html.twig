@@ -1,0 +1,42 @@
+
+<script>
+    $(function(){
+
+        var target = $('{{ element }}');
+
+        if(target.length){
+
+            target.chosen({
+                width: '100%',
+                no_results_text: '<button class="btn btn-xs btn-primary ladda-button" data-style="zoom-out"><i class="fa fa-plus"></i> {{ 'Add'|trans }}</button>'
+            }).on('chosen:no_results', function(event, params) {
+                var _add = $('{{ element }}_chosen').find('button.btn'), _new = params.chosen.search_field.val();
+                if (_add.length) {
+
+                    _add.ladda();
+                    _add.on('click', function(event) {
+                        _add.ladda('start');
+                        $.ajax({
+                            url: '{{ path }}',
+                            method: 'post',
+                            data: {name: _new, source: target.attr('id')},
+                            success: function(response) {
+                                _add.ladda('stop');
+                                if('success' == response.status) {
+                                    var data = response.data;
+                                    target.append('<option selected="selected" value="' + data.id + '">' + data.name + '</option>').trigger('chosen:updated').trigger('chosen:hiding_dropdown');
+                                }else{
+                                    console.log('Error on request fast create');
+                                }
+                            }
+                        });
+                    });
+                }
+            });
+
+        }else{
+            console.log('Element {{ element }} not found');
+        }
+
+    });
+</script>

@@ -1,0 +1,79 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+    {% block mail_styles %}{% endblock %}
+
+    <div class="wrapper wrapper-content">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content mailbox-content">
+                        <div class="file-manager">
+                            <a class="btn btn-block btn-primary compose-mail" href="{{ path('mail_send') }}">
+                                {{ 'Write'|trans }}
+                            </a>
+
+                            <div class="space-25"></div>
+
+                            <h5>{{ 'Folders'|trans }}</h5>
+                            <div id="email_folders">
+                                {{ render(controller('AppBundle:Mail:folders')) }}
+                            </div>
+
+                            {# <h5>Categories</h5>
+                             <ul class="category-list" style="padding: 0">
+                                 <li><a href="#"> <i class="fa fa-circle text-navy"></i> Work </a></li>
+                                 <li><a href="#"> <i class="fa fa-circle text-danger"></i> Documents</a></li>
+                                 <li><a href="#"> <i class="fa fa-circle text-primary"></i> Social</a></li>
+                                 <li><a href="#"> <i class="fa fa-circle text-info"></i> Advertising</a></li>
+                                 <li><a href="#"> <i class="fa fa-circle text-warning"></i> Clients</a></li>
+                             </ul>#}
+
+                            <h5>{{ 'Settings'|trans }}</h5>
+
+                            <ul class="folder-list m-b-md" style="padding: 0">
+                                <li>
+                                    <a href="{{ path('mail_accounts') }}">
+                                        <i class="fa fa-exchange "></i>
+                                        {{ 'Accounts'|trans }}
+                                        <span class="label label-warning pull-right"></span>
+                                    </a>
+                                </li>
+                            </ul>
+
+                            {#<h5 class="tag-title">Labels</h5>
+                            <ul class="tag-list" style="padding: 0">
+                                <li><a href=""><i class="fa fa-tag"></i> Family</a></li>
+                                <li><a href=""><i class="fa fa-tag"></i> Work</a></li>
+                                <li><a href=""><i class="fa fa-tag"></i> Home</a></li>
+                                <li><a href=""><i class="fa fa-tag"></i> Children</a></li>
+                                <li><a href=""><i class="fa fa-tag"></i> Holidays</a></li>
+                                <li><a href=""><i class="fa fa-tag"></i> Music</a></li>
+                                <li><a href=""><i class="fa fa-tag"></i> Photography</a></li>
+                                <li><a href=""><i class="fa fa-tag"></i> Film</a></li>
+                            </ul>#}
+
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox-content spinner-div" style="display: none;">
+                    <div class="spiner-example">
+                        <div class="sk-spinner sk-spinner-wandering-cubes">
+                            <div class="sk-cube1"></div>
+                            <div class="sk-cube2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="main_content" class="col-lg-9 animated fadeInRight">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+    {% block mail_scripts %}{% endblock %}
+
+{% endblock %}

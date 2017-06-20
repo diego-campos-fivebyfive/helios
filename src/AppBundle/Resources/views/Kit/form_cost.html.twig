@@ -1,0 +1,165 @@
+{{ form_start(form,{attr:{id:'form_cost'}}) }}
+
+<div class="row">
+
+    <div class="col-md-6">
+        <div class="panel panel-info" id="_invoice">
+            <div class="panel-heading">
+                Custo total dos equipamentos
+            </div>
+            <div class="panel-body">
+
+                {% if attribute(form, 'invoiceBasePrice') is defined %}
+
+                    <div class="form-group col-md-12">
+                        <label> Custo total dos equipamentos (R$) </label>
+                        <div class="input-group">
+                            {{ form_widget(form.invoiceBasePrice, {'attr':{'class':'form-control','data-btn':'#btn_invoice'}}) }}
+                            <span class="input-group-btn">
+                                <button data-btn="#btn_invoice" id="btn_invoice" type="submit"
+                                        class="btn btn-primary ladda-button" data-style="zoom-in">
+                                    Aplicar
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+
+                {% else %}
+                    <h1 class="text-center" style="padding: 1.5rem;"> {{ kit.invoicePrice|number_format_currency('BRL') }} </h1>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-6">
+        <div class="panel panel-warning" id="_delivery">
+            <div class="panel-heading">
+                Custo do frete
+            </div>
+            <div class="panel-body">
+
+                <div class="form-group col-md-6">
+                    <label> Referência </label>
+                    {{ form_widget(form.deliveryPriceStrategy, {'attr':{'class':'form-control'}}) }}
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label id="label_delivery_price"> &nbsp; </label>
+                    <div class="input-group">
+                        {{ form_widget(form.deliveryBasePrice, {'attr':{'class':'form-control','data-btn':'#btn_delivery'}}) }}
+                        <span class="input-group-btn">
+                            <button data-btn="#btn_delivery" id="btn_delivery"
+                                    type="submit" class="btn btn-primary ladda-button"
+                                    data-style="zoom-in">
+                                Aplicar
+                            </button>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                Custo final dos equipamentos
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12" id="final_cost">
+                    {% include view('kit.final_cost') %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{{ form_rest(form) }}
+
+{{ form_end(form) }}
+
+<script>
+    $(function () {
+
+        var form_cost = $('#form_cost');
+        var form_elements = form_cost.find('input, select');
+        var form_buttons = form_cost.find('button');
+        var edit_button = '<i class="fa fa-pencil"></i> {{ 'Edit'|trans }}';
+        var save_button = '<i class="fa fa-check"></i> {{ 'Apply'|trans }}';
+        var side_focus = null;
+
+        form_elements.prop('disabled', true);
+        form_buttons.ladda();
+
+        function change_button(html, rm_class, add_class, btn){
+            if(!btn){
+                btn = form_buttons;
+            }
+            btn.html(html).removeClass(rm_class).addClass(add_class).ladda();
+        }
+
+        change_button(edit_button, 'btn-primary', 'btn-success');
+
+        form_cost.on('submit', function(event){
+            event.preventDefault();
+            var side = $('#'+side_focus);
+            var input = side.find('input');
+            var button = side.find('button');
+            if(input.is(':disabled')){
+                side.find('input, select').prop('disabled', false);
+                change_button(save_button, 'btn-success', 'btn-primary', button);
+                return false;
+            }else{
+                form_elements.prop('disabled', false);
+                var data = form_cost.serialize();
+                form_elements.prop('disabled', true);
+                button.ladda('start');
+                Kit.request({
+                    url: '{{ path('kit_form_cost',{token:kit.token}) }}',
+                    method: 'post',
+                    data: data,
+                    callback: function(xhr){
+                        button.ladda('stop');
+                        Kit.items.all();
+                        Kit.services.all();
+                        Kit.costs();
+                        change_button(edit_button, 'btn-primary', 'btn-success', button);
+                    }
+                });
+            }
+
+        });
+
+        $('#_invoice, #_delivery').on('mouseover', function(){
+            side_focus = $(this).attr('id');
+        });
+
+        var base_price = $('#kit_invoiceBasePrice');
+        if(base_price.length){
+            base_price.mask('##,00',{reverse: true});
+            //Numbers.mask(base_price);
+        }
+
+        var delivery_price = $('#kit_deliveryBasePrice');
+
+        Numbers.mask(delivery_price);
+
+        /*$('#kit_deliveryPriceStrategy').on('change', function(){
+            var label = $(this).find('option:selected').html();
+            var value = delivery_price.val();
+            $('#label_delivery_price').html(label);
+            if(1 == $(this).val()){
+                $('#kit_deliveryBasePrice').mask('##,00',{reverse: true});
+            }else{
+                value = parseInt(value); if(value > 99 || isNaN(value)){ value = 0; }
+                delivery_price.mask('#0').val(value);
+            }
+        }).trigger('change');*/
+
+
+    });
+</script>

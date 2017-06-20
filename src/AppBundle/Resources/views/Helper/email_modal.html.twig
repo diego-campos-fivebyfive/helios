@@ -1,0 +1,44 @@
+<style>
+    #message_body{
+        width: 100%;
+        height: 16rem;
+        resize: none;
+    }
+</style>
+
+<div class="modal inmodal fade" id="email_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" id="email_content">
+                {% include view('kit.spinner') %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(function(){
+        var link_email = $('[data-email]');
+        if(link_email.length){
+
+            link_email.on('click', function(){
+                var url = $(this).data('email');
+                if(url){
+                    $.ajax({
+                        url: url,
+                        complete: function(xhr){
+                            if(200 == xhr.status){
+                                $('#email_content').html(xhr.responseText);
+                            }
+
+                            $('#email_modal').modal('show');
+                        }
+                    });
+                }
+                //console.log();
+
+            });
+        }
+    });
+</script>

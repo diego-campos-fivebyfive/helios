@@ -1,0 +1,40 @@
+<table id="kit_pricing_table" class="table table-condensed table-bordered">
+
+    <tbody>
+    {% for parameter in parameters %}
+
+        <tr>
+            <td> {{ parameter.name }} </td>
+            <td> {{ parameter.target|trans }} </td>
+            <td> {{ parameter.percent|decimal }}% </td>
+            <td class="col-md-1">
+                <div class="btn-group btn-group-justified">
+                    <a data-pricing="{{ parameter.toJson }}"
+                       data-update="{{ path('kit_pricing_update',{id:parameter.id}) }}"
+                       class="btn btn-success btn-sm"> <i class="fa fa-pencil"></i> </a>
+                    <a data-remove="{{ path('kit_pricing_delete',{id:parameter.id}) }}" class="btn btn-danger btn-sm">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+
+    {% endfor %}
+    </tbody>
+
+</table>
+
+<script>
+    $('#kit_pricing_table').footable();
+    $('[data-update]').on('click', function () {
+        var target = $(this), data = target.data('pricing');
+        KitPricing.form.action = target.data('update');
+        $('#kit_pricing_name').val(data.name);
+        $('#kit_pricing_percent').val(data.percent);
+        $('option[value="' + data.target + '"]').prop('selected', true);
+        KitPricing.form.button.html('<i class="fa fa-check"></i> Atualizar').ladda();
+    });
+    $('[data-remove]').on('click', function () {
+        KitPricing.remove($(this).data('remove'));
+    });
+</script>

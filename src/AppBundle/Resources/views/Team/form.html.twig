@@ -1,0 +1,102 @@
+{% extends view('layout') %}
+{% block styles %}
+
+    <link href="{{ asset('inspinia/css/plugins/chosen/chosen.css') }}" rel="stylesheet">
+{% endblock %}
+{% block body %}
+
+    <div class="wrapper wrapper-content animated fadeIn">
+        <div class="row">
+            <div class="col-lg-12">
+
+                {{ form_start(form) }}
+
+                <div class="tabs-container">
+
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a data-toggle="tab" href="#main">
+                                <i class="fa fa-sitemap"></i>
+                                {{ team.id ? 'Edit'|trans : 'Add'|trans }} {{ 'Team'|trans }}
+                            </a>
+                        </li>
+
+                        <li class="pull-right">
+                            <div class="btn-group">
+                                <button class="btn btn-white" type="button">
+                                    <i class="fa fa-save"></i>
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    {{ 'Save'|trans }}
+                                </button>
+                            </div>
+                        </li>
+
+                    </ul>
+
+                    <div class="tab-content">
+                        <div id="main" class="tab-pane active">
+                            <div class="panel-body">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-content">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+
+                                                <div class="form-group col-md-8">
+                                                    <label class="control-label">Nome</label>
+                                                    {{ form_widget(form.name,{'attr':{'class':'form-control'}}) }}
+                                                </div>
+
+                                                <div class="form-group col-md-4">
+                                                    <label class="control-label">Status</label>
+                                                    {{ form_widget(form.enabled, { 'attr' : {'class' : 'form-control'} } ) }}
+                                                </div>
+
+                                                <div class="form-group col-md-6">
+                                                    <div class="hr-line-dashed"></div>
+                                                    <label class="control-label">Descrição</label>
+                                                    {{ form_widget(form.description,{'attr':{'class':'form-control'}}) }}
+                                                </div>
+
+                                                <div class="form-group col-md-6">
+                                                    <div class="hr-line-dashed"></div>
+                                                    <label class="control-label"> {{ 'Members'|trans }} </label>
+                                                    {{ form_widget(form.members) }}
+                                                    <div class="hr-line-dashed"></div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    {{ form_end(form) }}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ asset('inspinia/js/plugins/chosen/chosen.jquery.js') }}"></script>
+    <script>
+        $('#team_members').chosen({
+            'width': '100%'
+        });
+
+        var checker = window.setInterval(function(){
+            var target = $('#team_members_chosen');
+            if(target.length){
+                clearInterval(checker);
+                target.find('a.search-choice-close').remove();
+            }
+        }, 1000);
+
+    </script>
+{% endblock %}

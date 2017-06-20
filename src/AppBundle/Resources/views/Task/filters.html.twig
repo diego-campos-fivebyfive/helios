@@ -1,0 +1,59 @@
+<style>
+    #task_filter_status_placeholder,
+    #task_filter_date_placeholder {
+        /*display: none !important;*/
+    }
+    .btn-default.active{
+        background-color: #18a689;
+        border-color: #18a689;
+        color: #FFFFFF;
+    }
+</style>
+
+{% set has_origin = origin is not null %}
+{% set is_calendar = 'calendar' == mode %}
+
+{% set hide_dates = has_origin or is_calendar %}
+
+{{ form_start(form,{attr:{id:'form_filter'}}) }}
+
+<div class="col-md-4">
+    <div class="btn-group btn-group-justified" data-toggle="buttons">
+        {% for type in form.type %}
+            <label class="btn btn-default btn-tag {{ type.vars.checked ? 'active' }}">
+                {{ form_widget(type) }}
+                <i class="fa {{ attribute(icons, type.vars.label) }}"></i>
+            </label>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="col-md-4">
+    <div class="btn-group btn-group-justified" data-toggle="buttons">
+        {% for key, status in form.status %}
+            <label class="btn btn-default btn-tag {{ status.vars.checked ? 'active' }} {{ ('placeholder' == status.vars.name) ? 'hide' }}">
+                {{ form_widget(status) }}
+                <i class="fa {{ 0 == key ? 'fa-circle-o' : 'fa-circle' }}"></i>
+                {{ ['task.filter.', status.vars.label]|join|trans }}
+            </label>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="col-md-4 {{ hide_dates ? 'hide' }} ">
+    <div class="btn-group" data-toggle="buttons">
+        {% for date in form.date %}
+            <label class="btn btn-default btn-tag {{ date.vars.checked ? 'active' }} {{ ('placeholder' == date.vars.name) ? 'hide' }}">
+                {{ form_widget(date) }}
+                <i class="fa fa-calendar"></i>
+                {{ ['task.filter.', date.vars.label]|join|trans }}
+            </label>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="hide">
+    {{ form_rest(form) }}
+</div>
+
+{{ form_end(form) }}

@@ -1,0 +1,8 @@
+imports:
+    - { resource: bundles/fos.yml }
+    - { resource: bundles/knplabs.yml }
+    - { resource: bundles/kolinalabs.yml }
+    #- { resource: bundles/oneup.yml }
+    - { resource: bundles/sonata.yml }
+    - { resource: bundles/apy.yml }
+    - { resource: bundles/jms.yml }

@@ -1,0 +1,41 @@
+<h2> {{ 'Account'|trans }} </h2>
+
+<div class="row">
+
+    <div class="col-lg-4">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <span class="label label-success pull-right"> ATUALIZADO EM {{ "now"|date('d/m/Y H:i') }} </span>
+                <h5>{{ 'Members'|trans }}</h5>
+            </div>
+            <div data-widget="members" class="ibox-content">
+                {{ helper.spinner() }}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <span class="label label-info pull-right"> GERAL </span>
+                <h5>{{ 'Projects'|trans }}</h5>
+            </div>
+            <div data-widget="projects" class="ibox-content">
+                {{ helper.spinner() }}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <span class="label label-primary pull-right">PESSOAS E EMPRESAS</span>
+                <h5>{{ 'Contacts'|trans }}</h5>
+            </div>
+            <div data-widget="contacts" class="ibox-content">
+                {{ helper.spinner() }}
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,20 @@
+<form id="form_filtration" method="get" action="{{ action }}" enctype="application/x-www-form-urlencoded">
+    <div class="col-sm-2 hide">
+        <select class="form-control m-b" name="{{ filterFieldName }}">
+            {% for field, label in fields %}
+                <option value="{{ field }}"{% if selectedField == field %} selected="selected"{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-sm-4">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="{{ 'Search'|trans }}" value="{{ selectedValue }}"
+                   name="{{ filterValueName }}"/>
+            <span class="input-group-btn">
+                <button type="submit" class="btn btn btn-primary">
+                    <i class="fa fa-search"></i> {{ 'Search'|trans }}
+                </button>
+            </span>
+        </div>
+    </div>
+</form>

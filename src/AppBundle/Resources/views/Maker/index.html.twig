@@ -1,0 +1,67 @@
+{% extends view('layout') %}
+
+{% block body %}
+    {% set makers = pagination.items %}
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <td>{{'Name'|trans}}</td>
+                                    <td>{{'Country'|trans}}</td>
+                                    <td>Tipo de Fabricante</td>
+                                    <td>Status</td>
+                                    <td>Ações</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for maker in makers %}
+                                    <tr>
+                                        <td>{{maker.name}}</td>
+                                        <td>{{maker.country}}</td>
+                                        <td>
+                                            {% if maker.context is same as('component_inverter') %}
+                                                {{'Inverter'|trans}}
+                                            {% elseif maker.context is same as('component_module') %}
+                                                {{'Module'|trans}}
+                                            {% elseif maker.context is same as('component_all')%}
+                                                {{'Both'|trans}}
+                                            {% else %}
+                                                {{'Not supported'|trans}}
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if(maker.enabled == 1) %}
+                                                {{'Enabled'|trans}}
+                                            {% else %}
+                                                {{'Disabled'|trans}}
+                                            {% endif %}
+
+                                        </td>
+                                        <td>
+                                            <a href="{{path('maker_update',{'id':maker.id})}}" class="btn btn-xs btn-default">{{'Edit'|trans}}</a>
+                                            <a href="{{path('maker_delete',{'id':maker.id})}}"class="btn btn-xs btn-default">{{'Delete'|trans}}</a>
+                                        </td>
+                                    <tr>
+                                    {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="5">
+                                        {{ knp_pagination_render(pagination) }}
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

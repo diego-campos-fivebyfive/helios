@@ -1,0 +1,35 @@
+services:
+    app.authentication.success_handler:
+        class: AppBundle\Service\Security\AuthenticationSuccessHandler
+        arguments: ['@security.http_utils']
+
+    app.authentication.failure_handler:
+        class: AppBundle\Service\Security\AuthenticationFailureHandler
+        arguments: ['@http_kernel', '@security.http_utils']
+
+    app.activity.listener:
+        class: AppBundle\EventListener\AppListener
+        arguments: ['@service_container']
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+            - { name: doctrine.event_listener, event: postLoad }
+
+    doctrine_event_listener:
+        class: AppBundle\EventListener\DoctrineListener
+        arguments: ['@service_container']
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
+
+    # Manipulators
+    contact_manipulator:
+        class: AppBundle\Service\Util\ContactManipulator
+        arguments: ['@app.customer_manager']
+
+    # Managers
+    account_manager:
+        class: AppBundle\Manager\AccountManager
+        arguments: ['AppBundle\Entity\Customer', '@doctrine']

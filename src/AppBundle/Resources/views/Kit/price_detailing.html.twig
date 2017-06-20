@@ -1,0 +1,214 @@
+
+{% set has_financial = financial is defined %}
+{% set kit = has_financial ? financial.project.kit : kit %}
+
+{% set pricing_sum = 2 == kit.invoicePriceStrategy %}
+
+{% set final_cost = kit.finalCost %}
+{% set cost_services = kit.totalPriceServices %}
+
+{% set sale_equipments = kit.priceSaleEquipments %}
+{% set sale_services = kit.priceSaleServices %}
+
+{% set inverters = kit.inverters %}
+{% set modules = kit.modules %}
+{% set items = kit.elementItems %}
+{% set services = kit.elementServices %}
+
+<div class="row">
+    <div class="col-md-12">
+
+        {% if not has_financial %}
+            <h2 class="text-center"> Resumo do Kit </h2>
+        {% endif %}
+
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th> Inversor</th>
+                <th class="col-md-3"> Preço {{ not has_financial ? 'de Venda' }} Unitário </th>
+                <th class="col-md-1 text-center"> Quantidade</th>
+                <th class="col-md-2"> Preço {{ not has_financial ? 'de Venda' }} </th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% set total_inverters = 0 %}
+            {% for inverter in inverters %}
+
+                {% set unit_price_sale = inverter.unitPriceSale %}
+                {% set total_price_sale = inverter.totalPriceSale %}
+
+                {% set total_inverters = total_inverters + total_price_sale %}
+
+                <tr>
+                    <td> {{ inverter.model }} </td>
+                    <td> {{ pricing_sum ? unit_price_sale|number_format_currency('BRL') : '-' }} </td>
+                    <td class="text-center"> {{ inverter.quantity }} </td>
+                    <td> {{ pricing_sum ? total_price_sale|number_format_currency('BRL') : '-' }} </td>
+                </tr>
+
+            {% endfor %}
+            </tbody>
+
+            <tfoot>
+            <tr>
+                <th colspan="3" class="text-right"> Total</th>
+                <th class="col-md-2"> {{ pricing_sum ? total_inverters|number_format_currency('BRL') : '-' }} </th>
+            </tr>
+            </tfoot>
+        </table>
+
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th> Módulo</th>
+                <th class="col-md-3"> Preço {{ not has_financial ? 'de Venda' }} Unitário </th>
+                <th class="col-md-1 text-center"> Quantidade</th>
+                <th class="col-md-2"> Preço {{ not has_financial ? 'de Venda' }} </th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% set total_modules = 0 %}
+            {% for module in modules %}
+
+                {% set unit_price_sale = module.unitPriceSale %}
+                {% set total_price_sale = module.totalPriceSale %}
+
+                {% set total_modules = total_modules + total_price_sale %}
+
+                <tr>
+                    <td> {{ module.model }} </td>
+                    <td> {{ pricing_sum ? unit_price_sale|number_format_currency('BRL') : '-' }} </td>
+                    <td class="text-center"> {{ module.quantity }} </td>
+                    <td> {{ pricing_sum ? total_price_sale|number_format_currency('BRL') : '-' }} </td>
+                </tr>
+
+            {% endfor %}
+            </tbody>
+
+            <tfoot>
+            <tr>
+                <th colspan="3" class="text-right"> Total</th>
+                <th class="col-md-2"> {{ pricing_sum ? total_modules|number_format_currency('BRL') : '-' }} </th>
+            </tr>
+            </tfoot>
+        </table>
+
+
+        {% if kit.hasItems %}
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th> Item </th>
+                <th class="col-md-3"> Preço {{ not has_financial ? 'de Venda' }} Unitário </th>
+                <th class="col-md-1 text-center"> Quantidade</th>
+                <th class="col-md-2"> Preço {{ not has_financial ? 'de Venda' }}</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            {% set total_items = 0 %}
+            {% for item in items %}
+
+                {% set unit_price_sale = item.unitPriceSale %}
+                {% set total_price_sale = item.totalPriceSale %}
+
+                {% set total_items = total_items + total_price_sale %}
+
+                <tr>
+                    <td> {{ item.name }} </td>
+                    <td> {{ pricing_sum ? unit_price_sale|number_format_currency('BRL') : '-' }} </td>
+                    <td class="text-center"> {{ item.quantity }} </td>
+                    <td> {{ pricing_sum ? total_price_sale|number_format_currency('BRL') : '-' }} </td>
+                </tr>
+
+            {% endfor %}
+            </tbody>
+
+            <tfoot>
+            <tr>
+                <th colspan="3" class="text-right"> Total </th>
+                <th class="col-md-2"> {{ pricing_sum ? total_items|number_format_currency('BRL') : '-' }} </th>
+            </tr>
+            </tfoot>
+        </table>
+        {% endif %}
+
+
+        {% if kit.hasServices %}
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th> Serviço</th>
+                <th class="col-md-2"> Preço {{ not has_financial ? 'de Venda' }}</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            {% set total_services = 0 %}
+            {% for service in services %}
+
+                {% set total_price_sale = service.totalPriceSale %}
+
+                {% set total_services = total_services + total_price_sale %}
+
+                <tr>
+                    <td> {{ service.name }} </td>
+                    <td> {{ total_price_sale|number_format_currency('BRL') }} </td>
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+            <tfoot>
+            <tr>
+                <th class="text-right"> Total</th>
+                <th class="col-md-2"> {{ total_services|number_format_currency('BRL') }} </th>
+            </tr>
+            </tfoot>
+        </table>
+        {% endif %}
+
+        {#{% if has_financial and financial.hasTaxes %}
+            {% include view('financial.taxes_content') with({
+            taxes: financial.taxes,
+            admin: false
+            }) %}
+        {% endif %}#}
+
+        <div class="hr-line-dashed"></div>
+
+
+        {% if not has_financial %}
+        <table class="table table-bordered">
+            <tbody>
+            <tr>
+                <td class="col-md-10">  Preço de venda dos equipamentos </td>
+                <td> {{ kit.priceSaleEquipments|currency('-') }} </td>
+            </tr>
+            <tr>
+                <td>  Preço de venda dos serviços </td>
+                <td> {{ kit.priceSaleServices|currency('BRL') }} </td>
+            </tr>
+            <tr>
+                <th>  {{ has_financial and financial.hasTaxes ? 'Total' : 'Total' }} </th>
+                <th> {{ kit.priceSale|currency('BRL') }} </th>
+            </tr>
+            </tbody>
+        </table>
+        {% endif %}
+
+    </div>
+
+    {% if kit.isPriceComputable %}
+        <div class="col-md-12">
+            Obs.: O preço do frete está diluído proporcionalmente no preço dos equipamentos
+        </div>
+    {% endif %}
+
+</div>

@@ -1,0 +1,268 @@
+{% extends view('layout') %}
+
+{% block styles %}
+    <link href="{{ asset('inspinia/css/plugins/touchspin/jquery.bootstrap-touchspin.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('inspinia/css/plugins/chosen/chosen.css') }}" rel="stylesheet">
+    <link href="{{ asset('inspinia/css/plugins/opentip/opentip.css') }}" rel="stylesheet">
+
+
+    <style>
+        .outline-remove {
+            outline: none;
+            cursor: none;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <label class="control-label ">Estado</label>
+                                <select class="form-control form-chosen">
+                                    <option>Estado</option>
+                                </select>
+                                <br>
+                                <label class="control-label">Kit</label>
+                                <select class="form-control form-chosen">
+                                    <option>Kit</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-6">
+                                <label class="control-label ">Cidade</label>
+                                <select class="form-control form-chosen">
+                                    <option>Cidade</option>
+                                </select>
+                                <br>
+                                <label class="control-label">Area</label>
+                                <input class="form-control" placeholder="Area">
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <table class="table table-responsive table-stripped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Nº</th>
+                                            <th>Inversor</th>
+                                            <th>Operação</th>
+                                            <th>Vazio</th>
+                                            <th>Módulo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Galvo 3.0-1</td>
+                                            <td>MPPT(1)</td>
+                                            <td>?</td>
+                                            <td>
+                                                <select class="mod-select">
+                                                    <option>Canadian Solar Inc.</option>
+                                                    <option>Risen Energy Co., Ltd.</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                        {% for i in 1..5 %}
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <div class="m-r-md inline">
+                                    <label class="text-center control-label">Pot. Mod</label><br>
+                                    <input class="form-control" placeholder="Pot. Mod" disabled>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="m-r-md inline">
+                                    <label class="text-center control-label">Inclinação</label><br>
+                                    <input class="form-control touchspin3 inclination-field" value="0" placeholder="Inclinação">
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="m-r-md inline">
+                                    <label class="text-center control-label">Orientação</label><br>
+                                    <input class="form-control touchspin3 orientation-field" value="0" placeholder="Orientação">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-2">
+                                <label class="control-label">Strings</label>
+                                <input class="form-control touchspin1" value="0" type="text" placeholder="Strings">
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <br>
+                        <br>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <canvas id="barChart" height="140"></canvas>
+                            <div class="col-lg-2">
+                                <label class="control-label">Mod / Strings</label>
+                                <input class="form-control touchspin2" value="0" placeholder="Mod / Strings">
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="m-r-md inline">
+                                    <label class="text-center control-label">Total Mod</label><br>
+                                    <input class="form-control" placeholder="Total Mod" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <canvas id="barChart" height="140"></canvas>
+                    </div>
+                    <div class="col-lg-6">
+                        <button class="btn btn-primary"> <i class="fa fa-calculator"></i> Calcular</button>
+                        <button class="btn btn-info get-pdf"> Gerar PDF</button>
+                    </div>
+                </div>
+                <div class="hide inclination">
+                    <input type="text" value="0" class="dial m-r-sm inclination-knob outline-remove" data-fgColor="#1AB394" data-width="100" data-height="100" data-max="180" data-cursor=true data-thickness=.2/>
+                </div>
+                <div class="hide orientation">
+                    <input type="text" value="0" class="dial m-r-sm orientation-knob outline-remove" data-fgColor="#ED5565" data-width="100" data-height="100" data-max="180" data-cursor=true data-thickness=.2/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>  
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ asset('inspinia/js/plugins/chartJs/Chart.min.js') }}"></script>
+    <script src="{{ asset('inspinia/js/plugins/jsKnob/jquery.knob.js') }}"></script>
+    <script src="{{ asset('inspinia/js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
+    <script src="{{ asset('inspinia/js/plugins/chosen/chosen.jquery.js') }}"></script>
+    <script src="{{ asset('inspinia/js/plugins/opentip/opentip-jquery.js') }}"></script>
+
+    <script>
+
+        function opennewtip(element, content, option) {
+            if (element.ot) {
+                return;
+            }
+            element.ot = new Opentip(element, content, option);
+            element.ot.show();
+            return true;
+        }
+
+
+        $(".form-chosen").chosen();
+        $('.mod-select').chosen({
+            width: '100% !important',
+        });
+        var barData = {
+            labels: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+            datasets: [
+                {
+                    label: "Data Set Meses",
+                    fillColor: "rgba(0, 128, 0, 0.75)",
+                    strokeColor: "rgba(0, 128, 0, 1",
+                    highlightFill: "rgba(0, 128, 0, 0.75)",
+                    highlightStroke: "rgba(0, 128, 0, 1)",
+                    data: [1500, 1200, 1700, 2300, 490, 800, 1560, 2752, 1524, 3200, 1222, 3000]
+                }
+            ]
+        };
+
+        var barOptions = {
+            scaleBeginAtZero: true,
+            scaleShowGridLines: true,
+            scaleGridLineColor: "rgba(0,0,0,.05)",
+            scaleGridLineWidth: 1,
+            barShowStroke: true,
+            barStrokeWidth: 2,
+            barValueSpacing: 5,
+            barDatasetSpacing: 1,
+            responsive: true,
+        }
+        var ctx = document.getElementById("barChart").getContext("2d");
+        var myNewChart = new Chart(ctx).Bar(barData, barOptions);
+
+        $(".touchspin1").TouchSpin({
+            buttondown_class: 'btn btn-white',
+            buttonup_class: 'btn btn-white'
+        });
+        $(".touchspin2").TouchSpin({
+            buttondown_class: 'btn btn-white',
+            buttonup_class: 'btn btn-white'
+        });
+        $(".touchspin3").TouchSpin({
+            max: 180,
+            buttondown_class: 'btn btn-white',
+            buttonup_class: 'btn btn-white',
+            step: 1,
+            boostat: 5,
+            maxboostedstep: 10
+        });
+
+        $('.inclination-field').on("click", function() {
+            var field = this;
+            html = $('.inclination').html();
+            opennewtip(this, html, {target: true, tipJoint: "bottom", showOn: "click", hideOn: "click"});
+            $(".inclination-knob").knob({
+                change: function(value) {
+                    $(".inclination-field").val(value);
+                    $('.inclination-field').focus();
+                }
+            });
+            this.ot._storeAndLockDimensions();
+            this.ot.reposition();
+
+        });
+
+        $('.orientation-field').on("click", function() {
+            var field = this;
+            html = $('.orientation').html();
+            opennewtip(this, html, {target: true, tipJoint: "bottom", showOn: "click", hideOn: "click"});
+            $(".orientation-knob").knob({
+                change: function(value) {
+                    $(".orientation-field").val(value);
+                    $('.orientation-field').focus();
+                }
+            });
+            this.ot._storeAndLockDimensions();
+            this.ot.reposition();
+        });
+        $('.orientation-field').on('change', function() {
+            $('.orientation-knob').val($(this).val());
+            $('.orientation-knob').trigger('change');
+        });
+        $('.inclination-field').on('change', function() {
+            $('.inclination-knob').val($(this).val());
+            $('.inclination-knob').trigger('change');
+        });
+        $(".get-pdf").on("click", function() {
+            var url_base64 = document.getElementById('barChart').toDataURL('image/png');
+            $.post("{{ path('topdf_project') }}", {
+                'image': url_base64
+            }, function(data, status) {
+                date = new Date();
+                var link = document.createElement("a");
+                link.href = data;
+                link.download = "pdf_doc_solrm_" + date.getFullYear() + date.getMonth() + date.getDay() + date.getHours() + date.getMinutes() + date.getSeconds();
+                link.target = "blank";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        });
+        
+    </script>
+
+{% endblock %}

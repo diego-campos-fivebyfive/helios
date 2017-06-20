@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Conta Bloqueada </title>
+    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
+    <style>
+        .middle-box{
+            width: 400px !important;
+        }
+    </style>
+</head>
+<body class="gray-bg">
+<div class="lock-word animated fadeInDown">
+    <span class="first-word">CONTA BLOQUEADA</span>
+    {#<span></span>#}
+</div>
+<div class="middle-box text-center lockscreen animated fadeInDown">
+    <div>
+        <div class="m-b-md">
+            {#{{ picture(app.user, 'small', {'class':'img-circle circle-border'}) }}#}
+            {#<img alt="image" class="img-circle circle-border" src="https://s3.amazonaws.com/uifaces/faces/twitter/ok/128.jpg">#}
+        </div>
+        <h3 style="margin-top: 15rem;">
+            Olá {{ app.user.info.firstname }}
+        </h3>
+        <p>
+            Desculpe, esta conta encontra-se temporariamente bloqueada. <br>
+            Para continuar desfrutando dos benefícios do Inovador Solar, clique no botão abaixo.
+        </p>
+
+        {% if not member.isOwner %}
+            <p>
+                ENTRE EM CONTATO COM O DONO DA CONTA
+            </p>
+        {% endif %}
+
+        <div class="col-md-12 text-center">
+
+            {% if member.isOwner %}
+                <a href="{{ path('signature') }}" class="btn btn-lg btn-primary btn-block">
+                    <i class="fa fa-check"></i>
+                    Assinar
+                </a>
+            {% endif %}
+
+            <a href="{{ path('fos_user_security_logout') }}" style="display: inline-block; text-align: center; margin-top: 1rem;">
+                Sair
+            </a>
+
+        </div>
+    </div>
+</div>
+{#<script src="{{ asset('inspinia/js/jquery-2.1.1.js') }}"></script>
+<script src="{{ asset('inspinia/js/bootstrap.min.js') }}"></script>#}
+</body>
+</html>

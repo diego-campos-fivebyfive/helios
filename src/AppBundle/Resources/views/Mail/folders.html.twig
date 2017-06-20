@@ -1,0 +1,30 @@
+<ul class="folder-list m-b-md" style="padding: 0">
+
+    {#<li>
+        <a href="{{ path('email_compose') }}">
+            <i class="fa fa-envelope-o"></i> {{ 'Write'|trans }}
+        </a>
+    </li>
+    <li>
+        <a href="#"> <i class="fa fa-certificate"></i> {{ 'Important'|trans }} </a></li>
+    <li>
+        <a href="#"><i class="fa fa-file-text-o"></i> {{ 'Drafts'|trans }} <span
+                    class="label label-danger pull-right">2</span></a>
+    </li>
+    <li>
+        <a href="#"> <i class="fa fa-trash-o"></i> {{ 'Trash'|trans }} </a>
+    </li>#}
+
+    {% for folder in folders %}
+
+        <li>
+            <a href="{{ path('mail_inbox',{folder:folder.id}) }}">
+                {#<i class="fa fa-inbox "></i> #}
+                {{ folder.name|trans }}
+                {#<span class="label label-warning pull-right">16</span>#}
+            </a>
+        </li>
+
+    {% endfor %}
+
+</ul>

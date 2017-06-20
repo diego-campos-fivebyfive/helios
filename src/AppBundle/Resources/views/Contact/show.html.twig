@@ -1,0 +1,252 @@
+{% extends view('layout') %}
+
+{% block styles %}
+    <style>
+        #table-detail tr td:first-child {
+            text-align: right;
+        }
+
+        #map {
+            height: 150px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    {% include view('task.modal') %}
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-md-3 col-sm-12">
+                    <h2 class="text-center" style="margin-top: 0;">
+                        {{ contact.name }}
+                    </h2>
+
+                    <div class="text-right">
+                    <p>
+                        <a href="{{ path('contact_update',{context:contact.context.id,token:contact.token}) }}">
+                            <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
+                        </a>
+                    </p>
+                    </div>
+
+                <table id="table-detail" class="table">
+                    <tbody>
+                    <tr>
+                        <td> {{ contact.isPerson ? 'CPF' : 'CNPJ' }} </td>
+                        <td> {{ contact.document }} </td>
+                    </tr>
+                    <tr>
+                        <td> {{ 'Category'|trans }} </td>
+                        <td> {{ contact.category }} </td>
+                    </tr>
+                    <tr>
+                        <td> {{ 'Email'|trans }} </td>
+                        <td> {{ contact.email }} </td>
+                    </tr>
+                    <tr>
+                        <td> {{ 'Phone'|trans }} </td>
+                        <td> {{ contact.phone }} </td>
+                    </tr>
+
+                    {% if contact.isPerson and contact.company %}
+                        <tr>
+                            <td> {{ 'Company'|trans }} </td>
+                            <td>
+                                <a href="{{ path('contact_show',{context:'company', token:contact.company.token}) }}">
+                                    {{ contact.company }}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endif %}
+
+                    <tr>
+                        <td> Observações </td>
+                        <td> {{ contact.information }} </td>
+                    </tr>
+
+                    <tr>
+                        <td> Visível por </td>
+                        <td>
+                            <span class="badge badge-default">
+                                {{ contact.member }} <br/>
+                            </span>
+                            {% for accessor in contact.accessors %}
+                                <span class="badge badge-default">
+                                    {{ accessor }} <br/>
+                                </span>
+                            {% endfor %}
+                        </td>
+                    </tr>
+
+                    {% if contact.address %}
+                        <tr>
+                            <td colspan="2" style="text-align: left;">
+
+                                <label class="hide">
+                                    <input id="latitude" value="{{ contact.coordinates.latitude }}">
+                                    <input id="longitude" value="{{ contact.coordinates.longitude }}">
+                                </label>
+
+                                {{ contact.address }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div id="map"></div>
+                            </td>
+                        </tr>
+                    {% endif %}
+
+                    <tr>
+                        <td colspan="2" class="text-right">
+                            <p>
+                                <a style="color: #ec4758;" data-delete-contact="{{ path('contact_delete',{context:contact.context.id, token:contact.token}) }}">
+                                    <i class="fa fa-trash"></i> Excluir este contato
+                                </a>
+                            </p>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-9 col-sm-12">
+                <div class="tabs-container">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a data-toggle="tab" href="#tab-3">
+                                <i class="{{ icon('tasks') }}"></i> {{ 'Tasks'|trans }}
+                            </a>
+                        </li>
+                        <li class="">
+                            <a data-toggle="tab" href="#tab-4">
+                                <i class="{{ icon('projects') }}"></i> {{ 'Projects'|trans }}
+                            </a>
+                        </li>
+                        {% if contact.isCompany %}
+                            <li class="">
+                                <a data-toggle="tab" href="#tab-5">
+                                    <i class="{{ icon('person') }}"></i> {{ 'Peoples'|trans }}
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                    <div class="tab-content">
+                        <div id="tab-3" class="tab-pane active">
+                            <div class="panel-body">
+
+                                <div class="row" style="margin-bottom: 2rem;">
+
+                                    {{ render(controller('AppBundle:Task:getFilter',{
+                                        mode:'list',
+                                        origin:'contact',
+                                        contact: contact.token
+                                    }
+                                    )) }}
+
+                                    <div class="col-md-4 pull-right text-right">
+                                        <a id="task_add" class="btn btn-success">
+                                            <i class="fa fa-plus"></i> Nova Tarefa
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div id="tasks_container">
+                                </div>
+
+                            </div>
+                        </div>
+                        <div id="tab-4" class="tab-pane">
+                            <div class="panel-body">
+
+                                <div class="row">
+                                    <div class="col-md-4 pull-right text-right">
+                                        <a href="{{ path('project_create',{contact:contact.token}) }}"
+                                           class="btn btn-success">
+                                            <i class="fa fa-plus"></i> Novo Projeto
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div id="projects_container">
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                        {% if contact.isCompany %}
+                            <div id="tab-5" class="tab-pane">
+                                <div class="panel-body">
+
+                                    <div class="row">
+                                        <div class="col-md-4 pull-right text-right">
+                                            <a href="{{ path('contact_create',{context:'person', contact:contact.token}) }}"
+                                               class="btn btn-success">
+                                                <i class="fa fa-plus"></i> Nova Pessoa
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div id="peoples_container">
+                                        {#{{ render(controller('AppBundle:Contact:index',{context:'person',contact:contact.token})) }}#}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    {% if contact.address %}
+        {# GoogleMaps #}
+        {% include view('helper.google_maps') with({
+        latitude: 'latitude',
+        longitude: 'longitude',
+        zoom: 17
+        }) %}
+    {% endif %}
+
+    {# Tasks #}
+    {% set mode = 'list' %}
+    {% include view('task.script_index') %}
+
+    {# Contact scripts #}
+    {% include view('contact.script_index') %}
+
+    <script>
+
+        Paginator = {
+            loading: null,
+            load: function (url) {
+                if(Paginator.loading != url) {
+                    Paginator.loading = url;
+                    var render = 0 == url.indexOf('/project') ? $('#projects_container') : $('#peoples_container');
+                    $.ajax({
+                        url: url,
+                        success: function (response) {
+                            render.html(response);
+                        }
+                    });
+                }
+            }
+        };
+
+        {% if contact.isCompany %}
+            Paginator.load('{{ path('contact_index',{context:'person',contact:contact.token}) }}');
+        {% endif %}
+
+        Paginator.load('{{ path('project_index',{contact:contact.token}) }}');
+
+    </script>
+
+{% endblock %}

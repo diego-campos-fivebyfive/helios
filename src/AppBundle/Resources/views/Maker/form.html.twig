@@ -1,0 +1,43 @@
+{% extends view('layout') %}
+
+{% block body  %}
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="col-lg-12">
+                        {{ form_start(form) }}
+                        <div class="col-sm-6">
+                            <label>{{'Name'|trans}}</label>
+                            {{ form_widget(form.name , {'attr' : { 'class' : 'form-control', 'placeholder' : 'Digite o nome do fabricante'}} ) }}
+                        </div>
+                        <div class="col-sm-6">
+                            <label>{{'Country'|trans}}</label>
+                            {{ form_widget(form.country , {'attr' : { 'class' : 'form-control', 'placeholder' : 'Digite o nome país ao qual o fabricante pertence'}} ) }}
+                        </div>
+                    </div>
+                    <div class="col-lg-12" style="margin-top:15px;">
+                        {{ form_start(form) }}
+                        <div class="col-sm-6">
+                            <label>Tipo de Fábrica</label>
+                            {{ form_widget(form.context, {'attr' : { 'class' : 'form-control'}} ) }}
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Status</label>
+                            {{ form_widget(form.enabled, {'attr' : { 'class' : 'form-control'}} ) }}
+                        </div>
+                    </div>
+                    <div class="col-lg-12" style="margin-top:15px; margin-right:10px;">
+                        <div class="pull-right">
+                            <input type="submit" class="btn btn-primary" value="Salvar"> 
+                        </div>
+                    </div>
+                </div>
+                {{ form_end(form) }}
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

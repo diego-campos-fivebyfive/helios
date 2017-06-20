@@ -1,0 +1,9 @@
+project:
+    empty_kits:
+        title: "Esta conta não possui kits cadastrados"
+        message: "Para inicializar um projeto é obrigatória a existência de ao menos um KIT configurado na conta"
+
+account:
+    max_members:
+        title: "Limite de usuários cadastrados atingido"
+        message: "Esta conta atingiu a cota máxima de usuários cadastrados"

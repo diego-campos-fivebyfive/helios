@@ -1,0 +1,27 @@
+<style>
+    #kit_total_cost th,
+    #kit_total_cost td {
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    #kit_total_cost h2 {
+        margin-top: 2rem;
+    }
+</style>
+
+<table id="kit_total_cost" class="table table-bordered">
+    <tr>
+        <th class="col-md-8"><h2> Custo total dos equipamentos </h2></th>
+        <td><h2>{{ kit.finalCost|number_format_currency('BRL') }}  </h2></td>
+    </tr>
+    <tr>
+        <th><h2> Custo dos serviços </h2></th>
+        <td><h2>  {{ kit.totalPriceServices|number_format_currency('BRL') }}  </h2></td>
+    </tr>
+    <tr>
+        <th><h2><strong> Total </strong></h2></th>
+        <td><h2><strong> {{ (kit.totalPriceServices + kit.finalCost)|number_format_currency('BRL') }} </strong></h2>
+        </td>
+    </tr>
+</table>

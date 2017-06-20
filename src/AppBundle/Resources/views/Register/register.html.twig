@@ -1,0 +1,215 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block title %}
+    {{ register is defined and register.isInit ? 'Criar uma conta' : 'Concluir registro' }}
+{% endblock %}
+
+{% block fos_user_content %}
+
+    <div class="modal inmodal" id="terms" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-body" style="text-align: left; background: transparent;">
+                    {% include view('register.terms') %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">
+                        {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .block-radios label{
+            width: 95%;
+            float: left;
+            cursor: pointer;
+            text-align: left;
+            padding-left: .5rem;
+        }
+        .block-radios input[type="radio"]{
+            float: left;
+            width: 5%;
+        }
+        .company-sector label,
+        .company-members label{
+            width: 100%;
+            display: inline-block;
+            text-align: left;
+            cursor: pointer;
+        }
+        .company-status label:nth-child(2){
+            margin-bottom: 10px;
+        }
+        .company-status label:nth-child(4){
+            margin-bottom: 15px;
+        }
+    </style>
+
+    <h3 style="margin-top: 2rem;">
+        {% if register is defined %}
+            {{ register.confirmationToken ? 'Concluir registro' : 'Criar uma conta' }}
+        {% else %}
+            Concluir registro
+        {% endif %}
+    </h3>
+
+    <p>
+        {% if register is defined %}
+            {% if register.confirmationToken %}
+                Informe os dados abaixo para concluir o registro
+            {% else %}
+                Informe os dados de acesso para prosseguir
+            {% endif %}
+        {% else %}
+            Informe os dados de acesso para concluir
+        {% endif %}
+    </p>
+
+    {#{% if errors|length %}
+        {% for key, error in errors if 0 == key %}
+            <div class="alert alert-danger text-left">
+                {{ error.message|trans }}
+            </div>
+        {% endfor %}
+    {% endif %}#}
+
+    {{ form_start(form,{attr:{id:'register', class:'m-t', role:'form'}}) }}
+
+    {% if register is defined %}
+
+        {% if register.isInit %}
+            <div class="form-group">
+                {{ form_widget(form.email,{attr:{class:'form-control', placeholder:'Your email'}}) }}
+            </div>
+        {% endif %}
+
+        {% if register.isInfo %}
+            <div class="form-group">
+                {{ form_widget(form.name,{attr:{class:'form-control',placeholder:'Your name'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_widget(form.phone,{attr:{class:'form-control', placeholder:'Your phone'}}) }}
+            </div>
+            <div class="form-group block-radios">
+                {{ form_widget(form.companyStatus,{attr:{class:'company-status'}}) }}
+            </div>
+            <div class="form-group company-sector hide">
+                {{ form_label(form.companySector, 'In what area') }}
+                {{ form_widget(form.companySector,{attr:{class:'form-control company-sector hide'}}) }}
+            </div>
+            <div class="form-group company-members hide">
+                {{ form_label(form.companyMembers, 'How many members or partners does your team have') }}
+                {{ form_widget(form.companyMembers,{attr:{class:'form-control '}}) }}
+            </div>
+            <div class="form-group company-name hide">
+                {{ form_widget(form.companyName,{attr:{class:'form-control', placeholder:'Company name'}}) }}
+            </div>
+        {% endif %}
+
+
+        <div class="form-group">
+            <button class="btn btn-md btn-primary btn-block">
+                {% if register.init %}
+                    <i class="fa fa-check"></i> {{ 'Register'|trans([], 'messages') }}
+                {% else %}
+                    <i class="fa fa-angle-double-right"></i> {{ 'Advance'|trans([],'messages') }}
+                {% endif %}
+            </button>
+        </div>
+
+    {% else %}
+
+        <div class="form-group">
+            <input placeholder="{{ 'Name'|trans([],'messages') }}" name="member[firstname]" value="{{ member.name }}"
+                   required="required" class="form-control">
+        </div>
+
+        <div class="form-group">
+            {{ form_widget(form.email,{attr:{class:'form-control', placeholder:'Username', readonly: true}}) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_widget(form.plainPassword.first,{attr:{class:'form-control', placeholder:['form.password'|trans,' - mín: 6 dígitos']|join}}) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_widget(form.plainPassword.second,{attr:{class:'form-control', placeholder:'form.password_confirmation'|trans}}) }}
+        </div>
+
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="member[terms]" required="required"/>
+                Aceito os <a href="#" data-toggle="modal" data-target="#terms"> Termos de uso </a>
+            </label>
+        </div>
+
+        <div class="form-group">
+            <button class="btn btn-md btn-primary btn-block">
+                <i class="fa fa-check"></i> Concluir registro
+            </button>
+        </div>
+
+    {% endif %}
+
+    <div class="hide">
+        {{ form_end(form) }}
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    {% if errors|length %}
+        <script>
+        {% for key, error in errors if 0 == key %}
+            display_error('{{ error.message|trans([],'messages') }}');
+        {% endfor %}
+        </script>
+    {% endif %}
+
+    {% if register is defined and register.isInfo %}
+    <script>
+        $(function(){
+            var accStatus = $('.company-status');
+            var accSector = $('.company-sector');
+            var accName = $('.company-name');
+            var accMembers = $('.company-members');
+            function handleStatus() {
+                var curStatus = accStatus.find('input:checked');
+                var required = false;
+
+                if(curStatus.length && accSector.hasClass('hide')){
+                    accSector.removeClass('hide');
+                }
+                if('has_company' == curStatus.val()){
+                    accMembers.removeClass('hide');
+                    accName.removeClass('hide');
+                    required = true;
+                }else{
+                    accMembers.addClass('hide').find('option').prop('selected', false);
+                    accName.addClass('hide').find('input').val('');
+                }
+                accMembers.find('select').prop('required', required);
+                accName.find('input').prop('required', required);
+            }handleStatus();
+            accStatus.find('input').on('click', function(){
+                handleStatus();
+            });
+
+            var maskPhone = function(val){
+                return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+            };
+            $('#account_register_phone').mask(maskPhone,{
+                onKeyPress: function(val, e, field, options) {
+                    field.mask(maskPhone.apply({}, arguments), options);
+                }
+            });
+        });
+    </script>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,453 @@
+{% extends view('layout') %}
+
+{% block styles %}
+    <link href="{{ asset('inspinia/css/sweetalert.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+
+    <div class="tabs-container">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#tab-1"> Configurações </a></li>
+            <li class=""><a data-toggle="tab" href="#tab-2"> Serviços </a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane active">
+                <div class="wrapper wrapper-content animated fadeInRight">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h5>Módulos</h5>
+                                </div>
+                                <div class="ibox-content">
+                                    <div class="form-horizontal">
+                                        <div class="row form-group">
+                                            <div class="col-sm-3">
+                                                <label class="control-label">Fabricante</label>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <select id="modulo_fabricante" class="form-control">
+                                                    <option value="fabricante">Fabricante</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col-sm-3">
+                                                <label class="control-label">Série</label>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <select id="modulo_serie"class="form-control">
+                                                    <option value="serie">Série</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col-sm-3">
+                                                <label class="control-label">ID</label>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <input required id="modulo_id" class="form-control" type="text" placeholder="Id">
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col-sm-3">
+                                                <label class="control-label">Qtd</label>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <input required id="modulo_qtd" class="form-control" type="text" placeholder="Qtd">
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label class="control-label">Preço: </label>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <input required id="modulo_preco" class="form-control" type="text" placeholder="Preço">
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col-sm-6">
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label class="control-label">Total: </label>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <input id="modulo_total" class="form-control" type="text" placeholder="Total" disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="row form-group">
+                                            <div class="col-lg-12">
+                                                <button class="btn btn-w-m btn-success"><i class="fa fa-info-circle"></i> Detalhes</button>
+                                                <button class="btn btn-w-m btn-primary pull-right" onclick="modulo_add();"><i class="fa fa-check"></i> Adicionar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h5>Módulos e Inversores Adicionados</h5>
+                                </div>
+                                <div class="ibox-content">
+                                    <div style="overflow-y:auto; height: 190px;">
+                                        <table class="table table-responsive table-stripped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nº</th>
+                                                    <th>Tipo</th>
+                                                    <th>Fabricante</th>
+                                                    <th>Série</th>
+                                                    <th>ID</th>
+                                                    <th>Quantidade</th>
+                                                    <th>Preço</th>
+                                                    <th>Ações</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tabela_geral" class="table-scroll">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="row form-horizontal form-group">
+                                        <div class="col-sm-1">
+                                            <label class="control-label">Total: </label>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <input type="text" id="tabela_geral_total" class="form-control" placeholder="Total" disabled>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h5>Inversor</h5>
+                                </div>
+                                <div class="ibox-content">
+                                    <div class="form-horizontal">
+                                        <div class="row form-group">
+                                            <div class="col-sm-3">
+                                                <label class="control-label">Fabricante</label>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <select id="inversor_fabricante" class="form-control">
+                                                    <option value="fabricante">Fabricante</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col-sm-3">
+                                                <label class="control-label">Série</label>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <select  id="inversor_serie" class="form-control">
+                                                    <option value="serie">Série</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col-sm-3">
+                                                <label class="control-label">ID</label>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <input id="inversor_id" class="form-control" type="text" placeholder="Id">
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col-sm-3">
+                                                <label class="control-label">Qtde</label>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <input id="inversor_qtd" class="form-control" type="text" placeholder="Qtd" onkeypress="total_inv();">
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label class="control-label">Preço: </label>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <input  id="inversor_preco" class="form-control" type="text" placeholder="Preço" onkeypress="total_inv();">
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col-sm-6">
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label class="control-label">Total: </label>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <input id="inversor_total" class="form-control" type="text" placeholder="Total" disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="row form-group">
+                                            <div class="col-lg-12">
+                                                <button class="btn btn-w-m btn-success"><i class="fa fa-info-circle"></i> Detalhes</button>
+                                                <button class="btn btn-w-m btn-primary pull-right" onclick="inversor_add();"><i class="fa fa-check"></i> Adicionar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h5>Outros Itens Opcionais</h5>
+                                </div>
+                                <div class="ibox-content">
+                                    <div style="overflow-y:auto; height: 190px;">
+                                        <table class="table table-responsive table-stripped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Item</th>
+                                                    <th>Valor Unitário</th>
+                                                    <th>Qtde</th>
+                                                    <th>Valor Total</th>
+                                                    <th>Ações</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tabela_extra">
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <div class="row form-horizontal form-group">
+                                        <div class="col-sm-1">
+                                            <label class="control-label">Total: </label>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <input type="text" id="tabela_extra_total" class="form-control" placeholder="Total" disabled>
+                                        </div>
+                                        <div class="col-sm-7">
+                                            <button class="btn btn-w-m btn-primary pull-right" data-toggle="modal" data-target="#otherProductsModal"><i class="fa fa-check"></i> Adicionar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h5>Outros Itens Opcionais</h5>
+                                </div>
+                                <div class="ibox-content">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <div class="form-horizontal">
+                                                <div class="row">
+                                                    <div class="col-lg-5 form-group">
+                                                        <input type="radio" checked="" value="option1" id="vl_absoluto_nf" name="nfKit"> Valor Absoluto 
+                                                    </div>
+                                                    <div class="col-lg-5 form-group">
+                                                        <input type="radio" value="option2" id="vl_somatorio_nf" name="nfKit"> Somatório 
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-5 form-group">
+                                                        <label class="control-label">Valor NF KIT: </label>
+                                                    </div>
+                                                    <div class="col-sm-5 form-group">
+                                                        <input type="text" id="valor_nf_kit" class="form-control" placeholder="Valor">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="form-horizontal">
+                                                <div class="row">
+                                                    <div class="col-lg-5 form-group">
+                                                        <input type="radio" checked="" value="option1" id="vl_absoluto_frete" name="freteKit"> Valor Absoluto 
+                                                    </div>
+                                                    <div class="col-lg-5 form-group">
+                                                        <input type="radio" value="option2" id="vl_porcentagem_frete" name="freteKit"> % NF KIT 
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-5 form-group">
+                                                        <label class="control-label">Valor FRETE: </label>
+                                                    </div>
+                                                    <div class="col-sm-5 form-group">
+                                                        <input type="text" id="valor_frete_kit" class="form-control" placeholder="Valor">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="row">
+                                                <div class="form-horizontal">
+                                                    <div class="col-sm-6 form-group">
+                                                        <label class="control-label">Valor Total do Kit: </label>
+                                                    </div>
+                                                    <div class="col-sm-6 form-group">
+                                                        <input type="text" id="valor_total_kit" class="form-control" placeholder="Valor" disabled>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-2" class="tab-pane">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div style="overflow-y:auto; height: 350px;">
+                                <table class="table table-responsive table-stripped">
+                                    <thead>
+                                        <tr>
+                                            <th>Nome</th>
+                                            <th>Tipo de custo</th>
+                                            <th>Valor</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tabela_servico">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="row">
+                                <div class="form-horizontal">
+                                    <div class="col-sm-4 form-group">
+                                        <label class="control-label">Valor total de Serviços: </label>
+                                    </div>
+                                    <div class="col-sm-6 form-group">
+                                        <input type="text" id="valor_total_servico" class="form-control" placeholder="Valor" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <button class="btn btn-primary btn-outline" data-toggle="modal" data-target="#addServiceModal">Adicionar Serviço</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="otherProductsModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Adicionar novo produto</h4>
+                </div>
+                <div class="modal-body">
+                    <hr>
+                    <div class="form-horizontal">
+                        <div class="row form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Nome</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input  id="extra_id" class="form-control" placeholder="Nome">
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Valor Unitário</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input id="extra_preco" class="form-control" placeholder="Valor">
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Quantidade</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input id="extra_qtd" class="form-control" placeholder="Quantidade">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="extra_add();">Adicionar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="addServiceModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Adicionar novo Serviço</h4>
+                </div>
+                <div class="modal-body">
+                    <hr>
+                    <div class="form-horizontal">
+                        <div class="row form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Nome</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input  id="servico_nome" class="form-control" placeholder="Nome">
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Tipo de Valor</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <select id="tipo_servico" class="form-control">
+                                    <option value="1">Valor absoluto</option>
+                                    <option value="2">Número de módulos</option>
+                                    <option value="3">% Valor do KIT</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">Valor</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input id="servico_valor" class="form-control" placeholder="Valor">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="add_servico();">Adicionar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    {% javascripts
+        'inspinia/js/sweetalert.min.js'
+        'kolinalabs/jquery.mask.min.js'
+        'kolinalabs/kit.js'
+        output='js/compiled/kit.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+{% endblock%}

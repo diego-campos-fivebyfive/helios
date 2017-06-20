@@ -1,0 +1,158 @@
+{{ form_start(form) }}
+
+<style>
+    .applyBtn{
+        margin-top: 2.25rem !important;
+    }
+</style>
+
+<div class="row">
+
+    <div class="form-group">
+        <div class="col-sm-12">
+            <div class="btn-group btn-group-justified" data-toggle="buttons">
+                {% for type in form.type %}
+                    <label class="btn btn-default btn-tag {{ type.vars.checked ? 'active' }}">
+                        {{ form_widget(type) }}
+                        <i class="fa {{ attribute(icons, type.vars.label) }}"></i>
+                        {{ ['tag.',type.vars.label]|join|trans }}
+                    </label>
+                {% endfor %}
+            </div>
+            <div class="hr-line-dashed"></div>
+        </div>
+    </div>
+    <div class="form-group  has-success">
+        <div class="col-lg-12">
+            {#{{ form_label(form.description, 'Descrição da tarefa') }}#}
+            {{ form_widget(form.description, {'attr':{'class':'form-control', 'placeholder' : 'Descrição da tarefa'}}) }}
+            <div class="hr-line-dashed"></div>
+        </div>
+    </div>
+
+    <div class="form-group">
+
+        <div class="col-md-6">
+            <label for="date_range"> Data e hora </label>
+            <input class="form-control" id="date_range" type="text">
+        </div>
+
+        <div class="col-lg-6">
+            {{ form_label(form.contact, 'Selecionar contato') }}
+            {{ form_widget(form.contact , {'attr':{'class':'form-control', 'data-placeholder':'Selecionar contato'}}) }}
+        </div>
+
+        <div class="col-md-12">
+            <div class="hr-line-dashed"></div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-lg-12">
+            {#{{ form_label(form.members, 'Incluir usuários na tarefa') }}#}
+            {{ form_widget(form.members , {'attr':{'class':'form-control', 'data-placeholder':'Incluir usuários na tarefa'}}) }}
+        </div>
+        <div class="col-md-12">
+            <div class="hr-line-dashed"></div>
+        </div>
+    </div>
+
+    <div class="form-group hide">
+        {{ form_rest(form) }}
+    </div>
+
+    <div class="form-group">
+        <div class="col-lg-12">
+            <div class="pull-right">
+                <button id="btn_task_save" data-style="zoom-in" class="btn btn-primary ladda-button">
+                    <i class="fa fa-save"></i> {{ 'Save'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ form_end(form) }}
+
+<script>
+    var form = $('form[name="task"]');
+    var btn_save = $('#btn_task_save');
+
+    btn_save.ladda();
+
+    form.on('submit', function(event){
+        event.preventDefault();
+
+        btn_save.ladda('start');
+
+        $.ajax({
+            url: form.attr('action'),
+            method: form.attr('method'),
+            data: form.serialize(),
+            success: function(response){
+                btn_save.ladda('stop');
+                if(response.hasOwnProperty('task')){
+                    TaskManager.saved();
+                    {% if task.id is null %}
+                        woopra.track('tarefa');
+                    {% endif %}
+                }
+            }
+        });
+    });
+
+    var customized = false;
+    $('#date_range').daterangepicker({
+        startDate: '{{ task.startAt|date('d/m/Y H:i') }}',
+        endDate: '{{ task.endAt|date('d/m/Y H:i') }}',
+        timePicker: true,
+        timePicker24Hour: true,
+        timePickerIncrement: 30,
+        opens: "center",
+        applyClass: "btn-primary",
+        cancelClass: "hide",
+        locale: {
+            format: 'DD/MM/YYYY HH:mm',
+            fromLabel: "Início",
+            toLabel: "Término",
+            customRangeLabel: "Custom",
+            applyLabel: '<i class="fa fa-check"></i>',
+            cancelLabel: '<i class="fa fa-sign-out"></i>',
+            daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+            monthNames: [
+                "Janeiro",
+                "Fevereiro",
+                "Março",
+                "Abril",
+                "Maio",
+                "Junho",
+                "Julho",
+                "Agosto",
+                "Setembro",
+                "Outubro",
+                "Novembro",
+                "Dezembro"
+            ]
+        }
+    }).on('apply.daterangepicker', function(event, picker){
+        $('#task_startAt_date').val(picker.startDate.format('DD/MM/YYYY'));
+        $('#task_startAt_time').val(picker.startDate.format('HH:mm'));
+        $('#task_endAt_date').val(picker.endDate.format('DD/MM/YYYY'));
+        $('#task_endAt_time').val(picker.endDate.format('HH:mm'));
+    }).on('show.daterangepicker', function(){
+        if(!customized) {
+            $('.calendar.left').prepend('<label style="width:100%;" class="text-center"> Início </label>');
+            $('.calendar.right').prepend('<label style="width:100%;" class="text-center"> Término </label>');
+            customized = true;
+        }
+    });
+
+    $('#task_members').chosen({
+        width:'100% !important'
+    });
+    $('#task_contact').chosen({
+        width:'100% !important'
+    });
+
+
+</script>

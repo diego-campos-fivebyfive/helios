@@ -1,0 +1,64 @@
+{% extends view('layout') %}
+
+{% block body %}
+    {% set modules = pagination.items %}
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <td>{{'ID'|trans}}</td>
+                                    <td>{{'Maker'|trans}}</td>
+                                    <td>{{'Price'|trans}}</td>
+                                    <td>Status</td>
+                                    <td>Ações</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for module in modules %}
+                                    <tr>
+                                        <td>{{module.id}}</td>
+                                        <td>{% if module.maker %}{{ module.maker.name }}{% endif %}</td>
+                                        <td>{{module.price}}</td>
+                                        <td>
+                                            {% if(module.enabled == 1) %}
+                                                {{'Enabled'|trans}}
+                                            {% else %}
+                                                {{'Disabled'|trans}}
+                                            {% endif%}
+                                        </td>
+                                        <td>
+                                            <a href="{{path('module_preview',{id:module.id})}}">
+                                                <button class="btn btn-default btn-xs">{{'View'|trans}}</button>
+                                            </a>
+                                            <a href="{{path('module_update',{ id: module.id})}}">
+                                                <button class="btn btn-default btn-xs">{{'Edit'|trans}}</button>
+                                            </a>
+                                            <a href="{{path('module_delete',{ id: module.id})}}">
+                                                <button class="btn btn-default btn-xs">{{'Delete'|trans}}</button>
+                                            </a>
+
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="5">
+                                        {{ knp_pagination_render(pagination) }}
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

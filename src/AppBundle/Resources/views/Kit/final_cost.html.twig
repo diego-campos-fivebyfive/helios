@@ -1,0 +1,14 @@
+<table class="table table-bordered">
+    <tr>
+        <th class="col-md-8"> Custo dos equipamentos </th>
+        <td> {{ kit.invoicePrice|number_format_currency('BRL') }} </td>
+    </tr>
+    <tr>
+        <th> Custo do frete </th>
+        <td> {{ kit.deliveryPrice|number_format_currency('BRL') }} </td>
+    </tr>
+    <tr>
+        <th> Total </th>
+        <td> <strong> {{ kit.finalCost|number_format_currency('BRL') }} </strong> </td>
+    </tr>
+</table>

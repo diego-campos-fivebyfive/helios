@@ -1,0 +1,23 @@
+{% extends view('layout') %}
+
+{% block styles %}
+    <style>
+        .page-heading .btn-group .btn{
+            width: 50%;
+        }
+    </style>
+
+    {% include view('helper.plugins_css') %}
+
+{% endblock %}
+
+{% block body %}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    {% include view('contact.index_content') %}
+</div>
+
+{% endblock %}
+{% block scripts %}
+    {% include view('helper.plugins_js') %}
+{% endblock %}

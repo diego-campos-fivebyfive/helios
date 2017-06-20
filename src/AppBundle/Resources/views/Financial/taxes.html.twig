@@ -1,0 +1,63 @@
+{% set taxes = financial.taxes %}
+
+<style>
+    #table_taxes_total th,
+    #table_taxes_total td{
+        text-align: center;
+    }
+</style>
+
+{% if taxes|length %}
+    {% include view('financial.taxes_content') with({
+        taxes: taxes,
+        admin: true
+    }) %}
+{% endif %}
+
+<script>
+
+    $(function () {
+        $('.table_taxes').cardtable();
+        $('a[data-remove]').on('click', function(){
+            var url = $(this).data('remove');
+            //var row = $(this).closest('tr');
+            if(url){
+                swal({title: '{{ 'confirm.exclusion'|trans }}',
+                    text: '',
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: '{{ 'Confirmar'|trans }}',
+                    cancelButtonText: '{{ 'Cancelar'|trans }}',
+                    closeOnConfirm: false
+                }, function() {
+                    $.ajax({
+                        url: url,
+                        method: 'post',
+                        data: {_method:'delete'},
+                        complete: function(xhr){
+                            if(200 == xhr.status){
+                                sweetAlert("Exclusão efetuada com sucesso!", "", "success");
+                                Financial.after_change_taxes();
+                                window.setTimeout(function(){
+                                    swal.close();
+                                },500);
+                            }else{
+                                var response = JSON.parse(xhr.responseText);
+                                sweetAlert("Falha!", response.error, "error");
+                            }
+                        },
+                        beforeSend: function(){
+                            sweetAlert({
+                                title: "Excluindo...",
+                                text:  "Aguarde!",
+                                type: "info",
+                                showConfirmButton: false
+                            });
+                        }
+                    });
+                });
+            }
+        });
+    });
+</script>

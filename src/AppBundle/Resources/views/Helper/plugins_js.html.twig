@@ -1,0 +1,31 @@
+{% javascripts output='assets/js/plugins.js' filter='uglifyjs2'
+'assetic/summernote/summernote.js'
+'assetic/summernote/lang/summernote-pt-BR.js'
+'assetic/uikit/js/uikit.min.js'
+'assetic/uikit/js/components/nestable.js'
+'assetic/colorpicker/dist/js/bootstrap-colorpicker.js'
+'assetic/touchspin/jquery.bootstrap-touchspin.min.js'
+'assetic/slider-pips/jquery-ui-slider-pips.js'
+'assetic/chart.new.js'
+'assetic/app-charts.js'
+'assetic/stacktable/stacktable.min.js'
+'assetic/card-master/dist/jquery.card.js'
+'assetic/numeraljs/numeral.js'
+'assetic/peity/jquery.peity.min.js'
+'assetic/dropzone/dropzone.js'
+%}
+<script src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+<script>
+    numeral.register('locale', 'pt_BR', {
+        delimiters: {
+            thousands: '.',
+            decimal: ','
+        },
+        currency:{
+            symbol: 'R$ '
+        }
+    });
+    numeral.locale('pt_BR');
+</script>

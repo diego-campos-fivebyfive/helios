@@ -1,0 +1,10 @@
+<script>
+    var pagination = $('ul.pagination');
+    pagination.find('a').on('click', function (event) {
+        event.preventDefault();
+        var url = $(this).attr('href');
+        if (url) {
+            Paginator.load(url);
+        }
+    });
+</script>

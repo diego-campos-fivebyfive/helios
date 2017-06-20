@@ -1,0 +1,394 @@
+{% extends view('layout') %}
+
+    {% set _route = app.request.attributes.get('_route') %}
+
+    {% set display = query.display %}
+    {% set is_module = _route == 'module_index' %}
+    {% set is_grid = 'grid' == display %}
+    {% set is_strict = 1 == query.strict %}
+
+    {% set route_create = is_module ? 'module_create' : 'inverter_create' %}
+    {% set route_index = is_module ? 'module_index' : 'inverter_index' %}
+    {% set route_update = is_module ? 'module_update' : 'inverter_update' %}
+    {% set route_show = is_module ? 'module_show' : 'inverter_show' %}
+    {% set route_copy = is_module ? 'module_copy' : 'inverter_copy' %}
+    {% set route_delete = is_module ? 'module_delete' : 'inverter_delete' %}
+
+    {% set image_link = '' %}
+    {% set parent_ids = [] %}
+
+{% block styles %}
+    <style>
+        .product-imitation {
+            background-repeat: no-repeat !important;
+            background-size: contain !important;
+            background-position: center !important;
+        }
+
+        #form_filtration > .form-group > .col-sm-2 {
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    <div class="modal inmodal fade" id="e_modal_details" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body" id="detail_component">
+                    {% include view('kit.spinner') %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">
+                        {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% set components = pagination.items %}
+
+    {% macro component_buttons(component, extra) %}
+
+        {% set data = {
+        id: component.id,
+        model: component.model,
+        token: component.token
+        } %}
+
+        {% set account = extra.account %}
+
+        <div class="btn-group btn-group-sm btn-group-justified">
+            {% if component.account and component.account.id == account.id %}
+                <a href="{{ path(extra.update, {'token':component.token}) }}" class="btn btn-success">
+                    <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
+                </a>
+            {% else %}
+                <a id="copy{{ component.id }}" title="[Copia um componente idêntico vinculado à esta Conta]"
+                   data-copy="{{ data|json_encode }}" class="btn btn-success" data-toggle="modal"
+                   data-target="#modal_select">
+                    <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
+                </a>
+            {% endif %}
+
+            <a data-url="{{ path(extra.show, {'token':component.token}) }}"
+               data-toggle="modal"
+               data-target="#modal_details"
+               class="btn btn-default">
+                <i class="fa fa-eye"></i> {{ 'View'|trans }}
+            </a>
+
+            {% if component.isPrivate %}
+                <a data-delete="{{ path(extra.delete, {'token':component.token}) }}" class="btn btn-danger">
+                    <i class="fa fa-trash"></i> {{ 'Delete'|trans }}
+                </a>
+            {% endif %}
+        </div>
+
+    {% endmacro %}
+
+    {% import _self as handler %}
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row">
+
+            {{ knp_pagination_filter(pagination, {'c.model, m.name':''}) }}
+
+            <div class="col-md-4">
+                <div class="btn-group">
+                    <a href="{{ path(_route, query|merge({'display':is_grid ? 'list' : 'grid' })) }}" class="btn btn-default">
+                        <i class="fa fa-{{ is_grid ? 'list' : 'th' }}"></i> {{ is_grid ? 'List'|trans : 'Grid'|trans }}
+                    </a>
+                    <a href="{{ path(_route, query|merge({'strict': is_strict ? 0 : 1})) }}" class="btn btn-default">
+                        <i class="fa fa-ticket"></i> {{ is_strict ? 'All'|trans : 'Meus Componentes' }}
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-4 pull-right text-right">
+                <a href="{{ path(route_create) }}" class="btn btn-md btn-primary">
+                    <i class="fa fa-plus"></i> {{ 'Add'|trans }} {{ is_module ? 'Module'|trans : 'Inverter'|trans  }}
+                </a>
+            </div>
+        </div>
+
+        <div class="row" id="real-content">
+
+            <div class="{{ not is_grid ? 'col-md-12' }}">
+                {% if is_grid %}
+
+                    {% for component in components %}
+                        {{ component.toViewMode() }}
+
+                        <div class="col-md-3" id="component{{ component.id }}">
+                            <div class="ibox">
+                                <div class="ibox-content product-box">
+
+                                    <div class="product-imitation" style="background-image: url({{ component.image|componentFilePath }})">
+                                        &nbsp;
+                                        {% if component.isPrivate %}
+                                            <span class="badge badge-info" style="margin-bottom:-155px;">Meu Componente</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="product-desc">
+
+                                        {% if component.isCopy or component.isPrivate %}
+                                            {% if component.isCopy %}
+                                                {% set parent_ids = parent_ids|merge([component.parent.id]) %}
+                                            {% endif %}
+                                        {% endif %}
+
+                                        <a data-url="{{ path(is_module ? 'module_show' : 'inverter_show' , {'token':component.token}) }}"
+                                           data-toggle="modal"
+                                           data-target="#modal_details"
+                                           class="product-name">
+                                            {{ component.model|slice(0,20) }} <br/>
+                                            <small title="{{ component.maker }}">
+                                                {{ component.maker.name|slice(0,25) }}
+                                            </small>
+                                        </a>
+
+                                        {% if is_module %}
+                                            <div class="small m-t-xs">
+                                                Tipo de Célula: {{ component.cellType }}
+                                            </div>
+                                        {% else %}
+                                            <div class="small m-t-xs">
+                                                Número de MPPT: {{ component.mpptNumber }}
+                                            </div>
+                                        {% endif %}
+
+                                        <div class="small m-t-xs">
+                                            Potência:
+                                            {{ is_module ? [component.maxPower|decimal,' W']|join : [component.nominalPower|decimal,' kW']|join }}
+                                        </div>
+
+
+                                        <div class="small m-t-xs">
+                                            Eficiência:
+                                            {{ is_module ? component.efficiency|decimal : component.maxEfficiency|decimal }}%
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="row">
+                                            {{ handler.component_buttons(component,{'account':account, 'update':route_update, 'show':route_show, 'delete':route_delete}) }}
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="ibox-content">
+
+                        <table class="table table-stripped">
+                            <thead>
+                            <tr>
+                                <th>Fabricante</th>
+                                <th>Modelo</th>
+                                <th class="col-md-2">{{ is_module ? 'Tipo de Célula' : 'Potência' }}</th>
+                                <th>{{ is_module ? 'Potência' : 'N&deg; de MPPT' }}</th>
+                                <th>Eficiência</th>
+                                <th class="col-md-3">&nbsp;</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for component in components %}
+                                {{ component.toViewMode() }}
+
+                                <tr class="gradeY">
+                                    <td> {{ component.maker.name }} </td>
+                                    <td>
+                                        {{ component.model }}
+
+                                        {% if component.isCopy %}
+                                            {% set parent_ids = parent_ids|merge([component.parent.id]) %}
+                                        {% endif %}
+
+                                        {% if component.isPrivate  %}
+                                            <span class="badge badge-info">
+                                                Meu Componente
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td> {{ is_module ? component.cellType : [component.nominalPower|decimal,' kW']|join }} </td>
+                                    <td> {{ is_module ? [component.maxPower|decimal,' W']|join : component.mpptNumber }} </td>
+                                    <td> {{ is_module ? component.efficiency|decimal : component.maxEfficiency|decimal }}%</td>
+                                    <td>
+                                        {{ handler.component_buttons(component,{'account':account, 'update':route_update, 'show':route_show, 'delete':route_delete}) }}
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <div class="row text-center">
+            <div class="btn-group">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+
+    </div>
+
+    <div class="hide" id="proto_buttons">
+    </div>
+
+    <script>
+        var parent_ids = {{ parent_ids|json_encode }};
+    </script>
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+
+        $(function () {
+
+            if (parent_ids.length) {
+                $.each(parent_ids, function (i, id) {
+                    var button = $('#copy' + id);
+                    if (button.length) {
+                        button.remove();
+                    }
+                });
+            }
+
+            var form_filtration = $('#form_filtration');
+            if (form_filtration.length) {
+                //console.log(form_filtration);
+                /*var proto_buttons = $('#proto_buttons').html();
+                form_filtration.find('.form-group').append(proto_buttons);*/
+                form_filtration.append('<input type="hidden" name="display" value="{{ display }}">')
+                            .append('<input type="hidden" name="strict" value="{{ is_strict ? '1' : '0' }}">');
+            }
+
+            var copyist = $('[data-copy]');
+            if (copyist.length) {
+                copyist.on('click', function () {
+
+                    var data = $(this).data('copy');
+
+                    swal({
+                        title: "{{ 'Confirm copy'|trans }}",
+                        text: "Ao editar este componente você estará criando uma cópia em livre edição, deseja continuar?",
+                        type: "info",
+                        showCancelButton: true,
+                        cancelButtonText: "{{ 'Cancel'|trans }}",
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Confirmar",
+                        closeOnConfirm: false
+                    }, function () {
+
+                        $.ajax({
+                            url: '{{ path(route_copy,{token:'__token__'}) }}'.replace(/__token__/g, data.token),
+                            method: 'post',
+                            success: function (response) {
+                                if (response.hasOwnProperty('error')) {
+                                    swal("{{ 'Error'|trans }}!", response.error, "error");
+                                } else {
+                                    var token = response.component.token;
+                                    var path = '{{ path(is_module ? 'module_update' : 'inverter_update',{token:'_token_'}) }}';
+                                    swal("{{ 'Success'|trans }}!", "{{ 'Was successful copied'|trans }}!", "success");
+                                    window.location.href = path.replace(/_token_/g, token);
+                                }
+                            },
+                            beforeSend: function () {
+                                swal({
+                                    title: "{{ 'Copying'|trans }}...",
+                                    text: null,
+                                    type: "info",
+                                    showConfirmButton: false
+                                });
+                            }
+                        });
+                    });
+
+                });
+            }
+
+            var deleter = $('[data-delete]');
+            if(deleter.length){
+                deleter.on('click', function(){
+                    var source = $(this);
+                    swal({
+                        title: "Confirmar exclusão?",
+                        text: null,
+                        type: "info",
+                        showCancelButton: true,
+                        cancelButtonText: "{{ 'Cancel'|trans }}",
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Confirmar",
+                        closeOnConfirm: false
+                    }, function () {
+
+                        $.ajax({
+                            url: source.data('delete'),
+                            method: 'post',
+                            data:{_method:'delete'},
+                            complete: function (xhr) {
+                                var response = xhr.responseJSON;
+                                if (200 != xhr.status) {
+                                    swal("{{ 'Error'|trans }}!", response.error, "error");
+                                }else{
+                                    swal('Sucesso!', 'Exclusão efetuada com sucesso!', 'success');
+                                    window.location.reload();
+                                }
+                            },
+                            beforeSend: function () {
+                                swal({
+                                    title: "Excluindo...",
+                                    text: null,
+                                    type: "info",
+                                    showConfirmButton: false
+                                });
+                            }
+                        });
+
+                    });
+                });
+            }
+
+            var detail_component = $('#detail_component');
+            var detail_spinner = detail_component.html();
+            $('[data-target="#modal_details"]').on('click', function(){
+                var url = $(this).data('url');
+                if (url) {
+                    $('#e_modal_details').modal('show');
+                    detail_component.html(detail_spinner);
+                    $.ajax({
+                        url: url,
+                        method: 'get',
+                        success: function (response) {
+                            detail_component.html(response);
+                        }
+                    });
+                } else {
+                    detail_component.html('<h1> Nenhum componente selecionado para visualização </h1>');
+                }
+            });
+
+        });
+
+
+    </script>
+
+{% endblock %}

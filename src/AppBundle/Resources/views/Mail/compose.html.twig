@@ -1,0 +1,227 @@
+{% extends view('mail.layout') %}
+
+{% block mail_styles %}
+
+    <link href="{{ asset('plugins/summernote/summernote.css') }}" rel="stylesheet">
+    <link href="{{ asset('plugins/dropzone/basic.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('plugins/dropzone/dropzone.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('plugins/footable/footable.core.css') }}" rel="stylesheet">
+
+    <script src="{{ asset('plugins/dropzone/dropzone.min.js') }}"></script>
+    <script src="{{ asset('plugins/footable/footable.all.min.js') }}"></script>
+
+{% endblock %}
+
+{% block content %}
+
+    <style>
+        .ui-tooltip{
+            display: none !important;
+        }
+        #modal_attachments .modal-lg{
+            width: 900px !important;
+        }
+        ul#attachment_list{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        ul#attachment_list li{
+            width: 100%;
+            display: inline-block;
+            background: #f8f8f8;
+            border: 1px solid #cdcdcd;
+            margin-top: .5rem;
+        }
+        ul#attachment_list li a{
+            float: left;
+            width: 90%;
+            display: inline-block;
+            line-height: 3rem;
+            padding-left: 1rem;
+        }
+        ul#attachment_list li span{
+            float: left;
+            cursor: pointer;
+            line-height: 3rem;
+            font-size: 2rem;
+            text-align: center;
+            width: 10%;
+        }
+        ul#attachment_list li span:hover{
+            color: #212121;
+        }
+    </style>
+
+    <div class="row">
+        <div class="modal inmodal fade" id="modal_attachments" tabindex="-1" role="dialog"  aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        {#<h4 class="modal-title">Modal title</h4>#}
+                        <small class="font-bold">
+                            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                        </small>
+                    </div>
+                    <div class="modal-body">
+                        {{ render(controller('AppBundle:Mail:explorer')) }}
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">{{ 'Close'|trans }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="mail-box-header">
+        <div class="pull-left" style="margin-right: 2rem;">
+            <a href="javascript:history.back();" class="btn btn-white btn-sm" title="Voltar">
+                <i class="fa fa-arrow-left"></i> Voltar
+            </a>
+        </div>
+        <h2>
+            Escrever Email
+        </h2>
+    </div>
+
+    <div class="mail-box">
+
+        {{ form_start(form, {'attr':{'class':'form-horizontal'}}) }}
+
+        <div class="mail-body">
+
+            <div class="form-group"><label class="col-sm-2 control-label">Para:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.to,{'attr':{'class':'form-control'}}) }}
+                </div>
+            </div>
+            <div class="form-group"><label class="col-sm-2 control-label">Assunto:</label>
+                <div class="col-sm-10">
+                    {{ form_widget(form.subject,{'attr':{'class':'form-control'}}) }}
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mail-text h-200">
+            <div class="col-md-12">
+                {{ form_widget(form.message) }}
+                <div class="clearfix"></div>
+            </div>
+        </div>
+
+        <div class="mail-body text-right tooltip-demo">
+            <div class="btn-group btn-group-sm">
+                <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal_attachments">
+                    <i class="fa fa-paperclip"></i> Anexar Aquivos
+                </button>
+                <button class="btn btn-primary" type="submit">
+                    <i class="fa fa-reply"></i> Enviar
+                </button>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div class="row">
+            <div class="col-md-12 hide">
+                {{ form_widget(form.attachments) }}
+            </div>
+            <div class="col-md-10" style="margin-left: 2rem">
+                <ul id="attachment_list"></ul>
+            </div>
+        </div>
+
+        {{ form_end(form) }}
+
+    </div>
+
+    <script>
+
+        Dropzone.options.myAwesomeDropzone = {
+
+            autoProcessQueue: true,
+            uploadMultiple: true,
+            parallelUploads: 10,
+            maxFiles: 5,
+
+            // Dropzone settings
+            init: function() {
+                var myDropzone = this;
+
+                this.on('success', function(data){
+
+                    $('form[name="explorer"]').trigger('submit');
+
+                    this.removeAllFiles();
+
+                    //console.log(data);
+                });
+            }
+        }
+
+    </script>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script src="{{ asset('plugins/summernote/summernote.js') }}"></script>
+
+    <script>
+
+        var attach_container = $('#email_compose_attachments');
+        var attach_list = $('#attachment_list');
+        var attachments = [];
+
+        function load_attachments(){
+            var current = attach_container.val();
+            if(current) {
+                attachments = JSON.parse(current);
+                refresh_attachments();
+            }
+        }load_attachments();
+
+        function refresh_attachments(){
+            //console.log(attachments);
+            if(attachments.length) {
+                attach_container.val(JSON.stringify(attachments));
+                attach_list.html('');
+
+                for(var i=0; i<attachments.length; i++){
+                    var attach = attachments[i];
+                    attach_list.append('<li><a>'+attach.name+' &mdash; ('+attach.size+')</a> <span id="'+attach.id+'" title="Excluir">&times;</span></li>');
+                }
+
+                attach_list.find('li span').on('click', function(){
+                    remove_attachment($(this).attr('id'));
+                });
+            }
+        }
+
+        function remove_attachment(id){
+            for(var i=0; i<attachments.length; i++){
+                if(id==attachments[i].id){
+                    attachments.splice(i,1);
+                    attach_container.val(JSON.stringify(attachments));
+                }
+            }
+            load_attachments();
+        }
+
+        $('#email_compose_message').summernote({
+            height: 250,
+            popover: {},
+            toolbar: [
+                ['fontsize', ['fontsize', 'color', 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript']],
+                ['para', ['ol', 'ul', 'paragraph', 'height']]
+            ]
+        });
+    </script>
+
+{% endblock %}

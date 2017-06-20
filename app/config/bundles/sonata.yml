@@ -1,0 +1,11 @@
+sonata_classification:
+    class:
+        tag: AppBundle\Entity\Tag
+        context: AppBundle\Entity\Context
+        category: AppBundle\Entity\Category
+        collection: AppBundle\Entity\Collection
+
+sonata_intl:
+    timezone:
+        locales:
+            pt_BR: America/Sao_Paulo

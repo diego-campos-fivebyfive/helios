@@ -1,0 +1,119 @@
+{#
+
+{% set route = app.request.attributes.get('_route') %}
+{% set is_service = element.isService %}
+{% set key = is_service ? 'services' : 'items' %}
+{% set form_id = ['form_manage_', key]|join %}
+
+<div class="row">
+    <div class="col-md-12">
+
+        {{ form_start(form,{'attr':{'id':form_id}}) }}
+
+        <div class="row form-group">
+            <div class="col-sm-3">
+                <label class="control-label">{{ 'Name'|trans }}</label>
+            </div>
+            <div class="col-sm-9">
+                {{ form_widget(form.name,{'attr':{'class':'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-sm-3">
+                <label>
+                    Base Valor
+                </label>
+            </div>
+            <div class="col-sm-9">
+                {{ form_widget(form.priceStrategy, {'attr':{'class':'form-control'}}) }}
+            </div>
+        </div>
+
+        {% if is_service %}
+        <div class="row form-group" id="{{ key }}_percent_block">
+            <div class="col-sm-3">
+                <label> {{ 'Rate'|trans }} </label>
+            </div>
+            <div class="col-sm-4">
+                {{ form_widget(form.rate, {'attr':{'class':'form-control'}}) }}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="row form-group" id="{{ key }}_price_block">
+            <div class="col-sm-3">
+                <label class="control-label">{{ 'Unit Price'|trans }}</label>
+            </div>
+            <div class="col-sm-4">
+                {{ form_widget(form.unitPrice,{'attr':{'class':'form-control'}}) }}
+            </div>
+            <div class="col-sm-2 {{ is_service ? 'hide' }}">
+                <label class="control-label">{{ 'Qtde'|trans }}</label>
+            </div>
+            <div class="col-sm-3 {{ is_service ? 'hide' }}">
+                {{ form_widget(form.quantity,{'attr':{'class':'form-control'}}) }}
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-sm-3">
+                &nbsp;
+            </div>
+            <div class="col-sm-4">
+                &nbsp;
+            </div>
+            <div class="col-sm-5">
+                <button type="submit" class="btn btn-sm btn-success pull-right ladda-button" data-style="zoom-in">
+                    <i class="fa fa-save"></i> {{ 'Save'|trans }}
+                </button>
+            </div>
+        </div>
+
+        {{ form_end(form) }}
+
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var form = $('#{{ form_id }}'), button = form.find('button[type="submit"]');
+
+        button.ladda();
+        form.on('submit', function (event) {
+            event.preventDefault();
+            button.ladda('start');
+            $.ajax({
+                url: form.attr('action'),
+                method: 'post',
+                data: form.serialize(),
+                success: function(response){
+                    button.ladda('stop');
+                    Kit.elements.{{ key }}.load();
+                }
+            });
+        });
+
+        var priceStrategy = form.find('[name="element[priceStrategy]"]'),
+            price_block = $('#{{ key }}_price_block'),
+            percent_block = $('#{{ key }}_percent_block');
+
+        form.find('#element_unitPrice').mask('#0.00',{reverse:true});
+
+        if(priceStrategy.length){
+            priceStrategy.on('change', function(){
+                if(3 == $(this).val()){
+                    price_block.slideUp();
+                    percent_block.slideDown();
+                }else{
+                    price_block.slideDown();
+                    percent_block.slideUp();
+                }
+            }).trigger('change');
+        }
+        if(percent_block.length){
+            $('#element_rate').mask('#0.00');
+        }
+
+    });
+</script>#}

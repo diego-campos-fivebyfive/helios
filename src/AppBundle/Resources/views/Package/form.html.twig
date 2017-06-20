@@ -1,0 +1,82 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+    <div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Registro de Plano
+                    <small>Preencha os campos corretamente.</small>
+                </h5>
+            </div>
+            <div class="ibox-content">
+                <div class="row">
+
+                    <div class="col-lg-12">
+
+                        {{ form_start(form) }}
+
+                        <div class="form-group">
+
+                            <label class="col-sm-1 control-label">Nome</label>
+                            <div class="col-sm-5">
+                                {{ form_widget(form.name,{'attr':{'class':'form-control'}}) }}
+                            </div>
+
+                            <label class="col-sm-1 control-label">Status</label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form.status, { 'attr' : {'class' : 'form-control'} } ) }}
+                            </div>
+
+                            <label class="col-sm-1 control-label">Preço</label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form.price,{'attr':{'class':'form-control'}}) }}
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="hr-line-dashed"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">Descrição</label>
+                            <div class="col-sm-11">
+                                {{ form_widget(form.description,{'attr':{'class':'form-control'}}) }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="hr-line-dashed"></div>
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="col-sm-1 control-label"> Teste </label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form.trail,{'attr':{'class':'form-control'}}) }}
+                            </div>
+
+                            <label class="col-sm-1 control-label"> Membros</label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form.maxMembers, { 'attr' : {'class' : 'form-control'} } ) }}
+                            </div>
+
+                            <label class="col-sm-1 control-label">&nbsp;</label>
+                            <div class="col-sm-5">
+                                <input type="submit" class="btn btn-primary" value="Salvar">
+                            </div>
+
+                        </div>
+
+                        {{ form_end(form) }}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

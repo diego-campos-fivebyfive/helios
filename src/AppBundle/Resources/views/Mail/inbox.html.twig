@@ -1,0 +1,94 @@
+{% extends view('mail.layout') %}
+
+{% block content %}
+
+    {% set emails = pagination.emails %}
+
+    {% set query = app.request.query.all() %}
+    {% set route_params = app.request.attributes.get('_route_params') %}
+
+   {# {% set mark_as_read_link = path('email_as_read', { account:account.token } ) %}
+    {% set mark_as_important_link = path('email_as_important', { account:account.token } ) %}
+    {% set mark_as_delete_link = path('email_as_delete', { account:account.token } ) %}#}
+
+    {% set total = pagination.total %}
+    {% set pages = pagination.pages %}
+    {% set page = pagination.page %}
+
+    {% set refresh_link = path('mail_inbox', route_params|merge(query)) %}
+    {% set folder_id = folder is not null ? folder.id : null %}
+
+    {% set next_link = path('mail_inbox',{page: page < pages ? pagination.page + 1 : pages, folder:folder_id }) %}
+    {% set prev_link = path('mail_inbox',{page: page > 1 ? pagination.page - 1 : 1, folder:folder_id }) %}
+
+    <div class="mail-box-header">
+        <form method="get" action="#" class="pull-right mail-search">
+            <div class="input-group">
+                {#<input type="text" class="form-control input-sm" name="search" placeholder="Search email">
+                <div class="input-group-btn">
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        Search
+                    </button>
+                </div>#}
+            </div>
+        </form>
+        <h2>
+            {{ folder is not null ? folder.name : 'Inbox'|trans }} ({{ pagination.total }})
+        </h2>
+        <div class="mail-tools tooltip-demo m-t-md">
+            <div class="btn-group pull-right">
+                <button class="btn btn-sm btn-info disabled">
+                    {{ pagination.range.start }} - {{ pagination.range.end }} de {{ pagination.total }}
+                </button>
+                <a href="{{ prev_link }}" class="btn btn-white btn-sm"><i class="fa fa-arrow-left"></i></a>
+                <a href="{{ next_link }}" class="btn btn-white btn-sm"><i class="fa fa-arrow-right"></i></a>
+            </div>
+            <a href="" class="btn btn-white btn-sm refresh-btn"><i class="fa fa-refresh"></i> {{ 'Refresh'|trans }}</a>
+            {#<button data-collect-action="#" class="btn btn-white btn-sm" ><i class="fa fa-eye"></i> {{ 'Mark as Read'|trans }}</button>
+            <button data-collect-action="#" class="btn btn-white btn-sm" ><i class="fa fa-exclamation"></i> {{ 'Important'|trans }}</button>
+            <button data-collect-action="#" class="btn btn-white btn-sm" ><i class="fa fa-trash-o"></i> {{ 'Delete'|trans }}</button>#}
+        </div>
+    </div>
+
+
+    <div class="mail-box">
+        <form action="#">
+            <table class="table table-hover table-mail">
+                <tbody>
+
+                {% for email in emails %}
+                    {% set read_link = path('mail_read',{id:email.uid, folder:folder_id}) %}
+
+                    <tr class="{{ email.seen ? 'read' : 'unread' }}">
+                        <td class="check-mail">
+                            <input type="checkbox" placeholder="" class="i-checks" data-id="{{ email.uid }}">
+                        </td>
+                        <td class="mail-contact">
+                            <a href="{{ read_link }}">
+                                {% if folder is null %}
+                                    {{ attribute(email, 'to') is defined ? email.to }}
+                                {% else %}
+                                    {{ attribute(email, 'from') is defined ? email.from }}
+                                {% endif %}
+                            </a>
+                        </td>
+                        <td class="mail-subject">
+                            <a href="{{ read_link }}">
+                                {{ attribute(email, 'subject') is defined ? email.subject : '(Sem assunto)' }}
+                            </a>
+                        </td>
+                        {#<td class=""><i class="fa fa-paperclip"></i></td>#}
+                        {#<td class="text-right mail-date">{{ email.date }}</td>#}
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </form>
+
+    </div>
+
+
+
+{% endblock %}

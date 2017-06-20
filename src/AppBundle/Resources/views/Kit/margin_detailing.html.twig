@@ -1,0 +1,38 @@
+{% set parameters = kit.pricingParameters %}
+
+{% set sale_equipments = kit.priceSaleEquipments %}
+{% set sale_services = kit.priceSaleServices %}
+{% set sale = sale_equipments + sale_services %}
+
+
+<div class="row">
+    <div class="col-md-12">
+
+        <h3> Preço de venda do Kit: {{ sale|number_format_currency('BRL') }} </h3>
+        <h2 class="text-center"> Margens </h2>
+
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th> Descrição </th>
+                <th> Aplicado Sobre</th>
+                <th class="col-md-2"> Valor </th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            {% for parameter in parameters %}
+
+                <tr>
+                    <td> {{ parameter.name }} </td>
+                    <td> {{ parameter.target|trans }} </td>
+                    <td> {{ parameter.value|number_format_currency('BRL') }} </td>
+                </tr>
+
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>

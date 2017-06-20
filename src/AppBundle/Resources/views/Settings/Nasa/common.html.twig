@@ -1,0 +1,79 @@
+{% set months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'] %}
+
+{% set labels, units = {
+radiation_global: 'Radiação Global Horizontal',
+radiation_diffuse: 'Radiação Difusa Horizontal',
+radiation_atmosphere: 'Radiação Topo da Atmosfera',
+air_temperature: 'Temperatura Ambiente'
+},
+{
+radiation_global: 'kwh/m2/dia',
+radiation_diffuse: 'kwh/m2/dia',
+radiation_atmosphere: 'kwh/m2/dia',
+air_temperature: 'ºC'
+}
+%}
+
+<style>
+    .nasa_catalog {
+        height: auto;
+        min-height: 25rem;
+        /*background: #444;*/
+    }
+
+    .nasa_months {
+        width: 25%;
+        float: left;
+        text-align: right;
+        /*background: #00a7d0;*/
+    }
+
+    .nasa_climatic {
+        width: 75%;
+        float: left;
+        /*background: #0d3349;*/
+    }
+
+    .nasa_column_header{
+        width: 100%;
+        display: inline-block;
+        height: auto;
+        min-height: 6rem;
+        background: #f7f7f7;
+        text-align: center;
+        padding-top: 1rem;
+    }
+
+    .nasa_climatic_item {
+        float: left;
+        width: 50%;
+        /*background: #e4e4e4;*/
+    }
+
+    .nasa_climatic_item .nasa_item_line{
+        text-align: center;
+    }
+
+    .nasa_item_line {
+        border-bottom: 1px solid #e4e4e4;
+        padding: 1rem;
+        height: 5rem;
+    }
+    .nasa_item_line input[type="text"]{
+        text-align: center;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-12 text-center">
+        <strong> Latitude.: {{ latitude|round(2) }} </strong>
+        <strong style="margin-left: 2rem;"> Longitude.: {{ longitude|round(2) }} </strong>
+        <br>
+        <span style="color: #777;">
+            Os dados climáticos têm resolução de 1x1 grau de latitude e longitude
+        </span>
+    </div>
+</div>
+{% block content %}
+
+{% endblock %}

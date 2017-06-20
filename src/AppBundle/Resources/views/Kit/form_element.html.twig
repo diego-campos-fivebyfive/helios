@@ -1,0 +1,123 @@
+{% set route = app.request.attributes.get('_route') %}
+{% set is_service = element.isService %}
+{% set key = is_service ? 'services' : 'items' %}
+{% set form_id = ['form_manage_', key]|join %}
+
+<style>
+    .form-element label {
+        width: 100%;
+        text-align: center;
+    }
+</style>
+
+<div class="row form-element">
+
+    {{ form_start(form,{'attr':{'id':form_id}}) }}
+
+    <div class="col-md-3">
+        <label> Nome </label>
+        {{ form_widget(form.name,{'attr':{'class':'form-control'}}) }}
+    </div>
+
+    {% if attribute(form, 'priceStrategy') is defined %}
+        <div class="col-md-3">
+            <label> Referência </label>
+            {{ form_widget(form.priceStrategy, {'attr':{'class':'form-control'}}) }}
+        </div>
+    {% endif %}
+
+    {% if attribute(form, 'unitPrice') is defined %}
+        <div class="col-md-2">
+            <label> {{ is_service ? 'Custo do Serviço (R$)' : 'Custo Unitário (R$)' }} </label>
+            {{ form_widget(form.unitPrice,{'attr':{'class':'form-control text-center'}}) }}
+        </div>
+    {% endif %}
+
+    {% if attribute(form, 'quantity') is defined %}
+        <div class="col-md-2" id="block_quantity">
+            <label> Qtde </label>
+            {{ form_widget(form.quantity,{'attr':{'class':'form-control text-center'}}) }}
+        </div>
+    {% endif %}
+
+    <div class="col-md-2">
+        <label style="width: 100%;">&nbsp;</label>
+        <button type="submit" class="btn btn-primary btn-block ladda-button" data-style="zoom-in">
+            <i class="fa {{ element.id ? 'fa-check' : 'fa-plus' }}"></i> {{ element.id ? 'Atualizar' : 'Adicionar' }}
+        </button>
+    </div>
+
+    {% if element.id %}
+        <div class="col-md-2 pull-right">
+            <label style="width: 100%;"> &nbsp; </label>
+            <a class="btn btn-default btn-block element_form_cancel">
+                <i class="fa fa-times"></i> {{ 'Cancel'|trans }}
+            </a>
+        </div>
+    {% endif %}
+
+    {{ form_end(form) }}
+</div>
+
+
+<script>
+    $(function () {
+        var form = $('#{{ form_id }}'), button = form.find('button[type="submit"]');
+        var add_url = '{{ path(['kit_element_', key, '_add']|join,{token:kit.token}) }}';
+
+        button.ladda();
+        form.on('submit', function (event) {
+            event.preventDefault();
+            button.ladda('start');
+            Kit.request({
+                url: form.attr('action'),
+                method: form.attr('method'),
+                data: form.serialize(),
+                callback: function (xhr) {
+                    button.ladda('stop');
+                    Kit.{{ key }}.form_element.data('url', add_url);
+                    Kit.{{ key }}.init();
+                    Kit.costs();
+                }
+            });
+
+        });
+
+        form.find('#element_unitPrice').mask('##,00', {reverse: true});
+
+        var input_quantity = form.find('#element_quantity');
+        input_quantity.TouchSpin({
+            min: 1,
+            max: 1000000000,
+            step: 1,
+            decimals: 0
+        });
+
+        var input_strategy = form.find('#element_priceStrategy');
+        var block_quantity = form.find('#block_quantity');
+
+        function check_price_strategy() {
+            var strategy = input_strategy.val();
+            if ('form_manage_services' != form.attr('id')) {
+                if (2 == strategy) {
+                    block_quantity.hide();
+                } else {
+                    block_quantity.show();
+                }
+            } else {
+                block_quantity.hide();
+            }
+        }
+
+        check_price_strategy();
+
+        input_strategy.on('change', function () {
+            check_price_strategy();
+        });
+
+        $('.element_form_cancel').on('click', function(){
+            Kit.{{ key }}.form_element.data('url', add_url);
+            Kit.{{ key }}.form();
+        });
+    });
+</script>

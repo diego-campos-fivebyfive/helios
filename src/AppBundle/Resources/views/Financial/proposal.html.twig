@@ -1,0 +1,733 @@
+{% extends view('layout') %}
+
+{% block before_styles %}
+
+    {% include view('helper.plugins_css') %}
+
+    <style>
+        .note-editor {
+            min-height: 150px !important;
+        }
+        .ui-tooltip {
+            display: none !important;
+        }
+        .note-editor .modal-footer,
+        .note-editor .note-group-image-url{
+            display: none;
+        }
+        .note-editor .note-image-input.form-control{
+            border: none !important;
+            padding: 0 20px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    {% set proposal = financial.proposal %}
+    {% set sections = proposal.sections %}
+
+    {% set fixed_sections = {
+    customer:'customer_data',
+    generation:'generation_data',
+    financial:'financial_analysis',
+    composition:'project_composition'
+    } %}
+
+    <style>
+        table.th-right th {
+            text-align: right;
+        }
+
+        table.th-right td {
+            padding-left: 4rem;
+        }
+    </style>
+
+    <div style="min-height: 1500px;" class="wrapper wrapper-content animated fadeInRight">
+
+        {% if project is defined and project.token %}
+            {% include view('project.breadcrumbs') %}
+        {% endif %}
+
+        <div class="row">
+
+            <div class="col-ld-12 hide">
+                <form target="_blank" action="{{ path('project_proposal_update',{token:project.token}) }}" method="post" id="generate_proposal">
+                    <textarea placeholder="" required="required" name="project_default_chart_data"></textarea>
+                    <textarea placeholder="" required="required" name="project_chart_data"></textarea>
+                    <textarea placeholder="" required="required" name="financial_default_chart_data"></textarea>
+                    <textarea placeholder="" required="required" name="financial_chart_data"></textarea>
+                    <input name="display" id="do_display" value="preview" placeholder="">
+                </form>
+            </div>
+
+            {% include view('financial.buttons') %}
+
+            <div class="col-lg-12">
+
+                {% for section in sections %}
+
+                    {% set is_pagebreak = 'pagebreak' == section.content %}
+                    {% set metadata = section.metadata %}
+                    {% set data = section.content|json_decode %}
+                    {% set uid = metadata.uid %}
+                    {% set editable = metadata.editable %}
+
+                    {% if not is_pagebreak %}
+
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>
+                                {% if is_pagebreak %}
+                                    {#QUEBRA DE PÁGINA#}
+                                {% else %}
+                                    {{ editable ? 'Seção Editável' : section.title }}
+                                {% endif %}
+                            </h5>
+                            <div class="ibox-tools" style="width: 20%; float:right;">
+                                {% if not is_pagebreak %}
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        {#{% if not is_pagebreak %}#}
+
+                        <div class="ibox-content">
+                            <div class="row">
+
+                                {% if metadata.fixed %}
+
+                                    {% if fixed_sections.customer == uid %}
+
+                                        {% set customer = data %}
+                                        {% set is_company = 'company' == customer.context %}
+
+                                        <table class="table table-bordered th-right col-md-12">
+                                            <tr>
+                                                <th class="col-md-1"> {{ 'Name'|trans }}:</th>
+                                                <td class="col-md-3"> {{ customer.name }} </td>
+                                                <th class="col-md-1"> {{ is_company ? 'Cnpj' : 'Cpf' }}:</th>
+                                                <td class="col-md-3"> {{ customer.document }} </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="col-md-1"> {{ 'Phone'|trans }}:</th>
+                                                <td class="col-md-3"> {{ customer.phone }} </td>
+                                                <th class="col-md-1"> {{ 'Email'|trans }}:</th>
+                                                <td class="col-md-3"> {{ customer.email }} </td>
+                                            </tr>
+                                        </table>
+
+                                    {% endif %}
+
+                                    {% if fixed_sections.generation == uid %}
+
+                                        {% set projectInfo = section.content|json_decode %}
+
+                                        <table class="table table-bordered text-center">
+                                            <thead>
+                                                <tr>
+                                                    <th class="col-md-1">&nbsp;</th>
+                                                    <th class="text-center"> Área </th>
+                                                    <th class="text-center"> Potência </th>
+                                                    <th class="text-center"> Inclinação </th>
+                                                    <th class="text-center"> Orientação </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% if projectInfo.areas|length %}
+                                                {% for area in projectInfo.areas %}
+                                                    <tr>
+                                                        <td class="text-right"> {{ loop.index }} </td>
+                                                        <td> {{ area.total_area }} m²</td>
+                                                        <td> {{ area.total_power }}kWp</td>
+                                                        <td> {{ area.inclination }}º</td>
+                                                        <td> {{ area.orientation }}º</td>
+                                                    </tr>
+                                                {% endfor %}
+                                                <tr>
+                                                    <th class="text-right"> Total: </th>
+                                                    <th class="text-center">{{ projectInfo.total_area|round(2) }} m²</th>
+                                                    <th class="text-center"> {{ projectInfo.total_power }} kWp</th>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            {% endif %}
+
+                                            <tr>
+                                                <td colspan="8" class="text-center">
+                                                    <canvas id="project_default_chart_data" width="700"
+                                                            height="500"></canvas>
+                                                    <canvas style="display:none;" id="project_chart_data" width="700"
+                                                            height="500"></canvas>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="5" class="text-center">
+                                                    <strong> Geração Anual: </strong>
+                                                    {{ projectInfo.annual_production }} kWh
+                                                    &mdash;
+                                                    <strong> Geração Mensal: </strong>
+                                                    {{ (projectInfo.annual_production/12)|round }} kWh
+                                                    &mdash;
+                                                    <strong> Localização: </strong>
+                                                    {{ projectInfo.address }}
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+                                    {% endif %}
+
+
+                                    {% if fixed_sections.financial == uid %}
+
+                                        <table class="table table-bordered th-right col-md-12">
+                                            <tr>
+                                                <th class=""> Tempo de vida:</th>
+                                                <td> {{ financial.lifetime }} anos</td>
+                                                <th> Inflação:</th>
+                                                <td> {{ financial.rate }}%</td>
+                                                <th> Perda de eficiência em {{ financial.lifetime }} anos:</th>
+                                                <td> {{ financial.efficiencyLoss }}% </td>
+                                            </tr>
+
+                                            <tr>
+                                                <th> Custo anual com operação:</th>
+                                                <td> {{ financial.annualCost|currency }} </td>
+                                                <th> Preço do kWh com impostos:</th>
+                                                <td> {{ financial.energyPrice|currency }} </td>
+                                                <th> &nbsp; </th>
+                                                <td> &nbsp; </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td colspan="6" class="text-center">
+                                                    <canvas id="financial_default_chart_data" width="700"
+                                                            height="500"></canvas>
+                                                    <canvas style="display: none;" id="financial_chart_data" width="700"
+                                                            height="500"></canvas>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <th> Valor da proposta:</th>
+                                                <td> {{ financial.finalPrice|currency }} </td>
+                                                <th> TIR:</th>
+                                                <td> {{ financial.internalRateOfReturn|round }}%</td>
+                                                <th> VPL:</th>
+                                                <td> {{ financial.netPresentValue|currency }} </td>
+                                            </tr>
+                                            <tr>
+                                                <th> Caixa acumulado:</th>
+                                                <td> {{ financial.accumulatedCash(true)|currency }} </td>
+                                                <th> Payback simples:</th>
+                                                <td> {{ 'long_time'|trans({years:financial.paybackYears, months: financial.paybackMonths}) }} </td>
+                                                <th> Payback descontado:</th>
+                                                <td> {{ 'long_time'|trans({years:financial.paybackYearsDiscounted, months:financial.paybackMonthsDiscounted}) }} </td>
+                                            </tr>
+                                        </table>
+
+                                    {% endif %}
+
+
+                                    {% if fixed_sections.composition == uid %}
+
+                                        {#{% include view('kit.price_detailing') with({financial: financial}) %}#}
+                                        {% set kit = project.kit %}
+                                        {% set showPrices = kit.isPriceComputable %}
+                                        {% set quantityClass = showPrices ? 'col-md-1' : 'col-md-2' %}
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                    <tr>
+                                                        <th> Inversor</th>
+                                                        {% if showPrices %}
+                                                        <th class="col-md-3"> Preço de Venda Unitário </th>
+                                                        {% endif %}
+                                                        <th class="{{ quantityClass }} text-center"> Quantidade </th>
+                                                        {% if showPrices %}
+                                                        <th class="col-md-2"> Preço de Venda </th>
+                                                        {% endif %}
+                                                    </tr>
+                                                    </thead>
+
+                                                    <tbody>
+
+                                                    {% set total_inverters = 0 %}
+                                                    {% for inverter in project.kit.inverters %}
+
+                                                        {% set unit_price_sale = inverter.unitPriceSale %}
+                                                        {% set total_price_sale = inverter.totalPriceSale %}
+
+                                                        {% set total_inverters = total_inverters + total_price_sale %}
+
+                                                        <tr>
+                                                            <td> {{ inverter.maker }} / {{ inverter.model }} </td>
+
+                                                            {% if showPrices %}
+                                                            <td> {{ unit_price_sale|number_format_currency('BRL') }} </td>
+                                                            {% endif %}
+
+                                                            <td class="text-center"> {{ inverter.quantity }} </td>
+
+                                                            {% if showPrices %}
+                                                            <td> {{ total_price_sale|number_format_currency('BRL') }} </td>
+                                                            {% endif %}
+                                                        </tr>
+
+                                                    {% endfor %}
+
+                                                    </tbody>
+
+                                                    {% if showPrices %}
+                                                    <tfoot>
+                                                    <tr>
+                                                        <th colspan="3" class="text-right"> Total</th>
+                                                        <th class="col-md-2"> {{ total_inverters|number_format_currency('BRL') }} </th>
+                                                    </tr>
+                                                    </tfoot>
+                                                    {% endif %}
+                                                </table>
+
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                    <tr>
+                                                        <th> Módulo</th>
+
+                                                        {% if showPrices %}
+                                                        <th class="col-md-3"> Preço de Venda Unitário </th>
+                                                        {% endif %}
+
+                                                        <th class="{{ quantityClass }}  text-center"> Quantidade</th>
+
+                                                        {% if showPrices %}
+                                                        <th class="col-md-2"> Preço de Venda </th>
+                                                        {% endif %}
+
+                                                    </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                    {% set total_modules = 0 %}
+                                                    {% for projectModule in project.modules %}
+                                                        {% set module = projectModule.module %}
+
+                                                        {% set unit_price_sale = projectModule.unitPriceSale %}
+                                                        {% set total_price_sale = projectModule.priceSale %}
+
+                                                        {% set total_modules = total_modules + total_price_sale %}
+
+                                                        <tr>
+                                                            <td> {{ module.maker }} / {{ module.model }} </td>
+
+                                                            {% if showPrices %}
+                                                            <td> {{ unit_price_sale|number_format_currency('BRL') }} </td>
+                                                            {% endif %}
+
+                                                            <td class="text-center"> {{ projectModule.quantity }} </td>
+
+                                                            {% if showPrices %}
+                                                            <td> {{ total_price_sale|number_format_currency('BRL') }} </td>
+                                                            {% endif %}
+
+                                                        </tr>
+
+                                                    {% endfor %}
+                                                    </tbody>
+
+                                                    {% if showPrices %}
+                                                    <tfoot>
+                                                    <tr>
+                                                        <th colspan="3" class="text-right"> Total</th>
+                                                        <th class="col-md-2"> {{ total_modules|number_format_currency('BRL') }} </th>
+                                                    </tr>
+                                                    </tfoot>
+                                                    {% endif %}
+                                                </table>
+
+
+                                                {% if project.kit.hasItems %}
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                        <tr>
+                                                            <th> Item </th>
+
+                                                            {% if showPrices %}
+                                                            <th class="col-md-3"> Preço de Venda Unitário </th>
+                                                            {% endif %}
+
+                                                            <th class="{{ quantityClass }} text-center"> Quantidade</th>
+
+                                                            {% if showPrices %}
+                                                            <th class="col-md-2"> Preço de Venda </th>
+                                                            {% endif%}
+
+                                                        </tr>
+                                                        </thead>
+
+                                                        <tbody>
+
+                                                        {% set total_items = 0 %}
+                                                        {% for item in project.elementItems %}
+
+                                                            {% set unit_price_sale = item.unitPriceSale %}
+                                                            {% set total_price_sale = item.totalPriceSale %}
+
+                                                            {% set total_items = total_items + total_price_sale %}
+
+                                                            <tr>
+                                                                <td> {{ item.name }} </td>
+
+                                                                {% if showPrices %}
+                                                                <td>
+                                                                    {{ unit_price_sale|number_format_currency('BRL') }}
+                                                                    {% if item.isIncremental %}
+                                                                        &nbsp; <span class="badge badge-info"> por módulo </span>
+                                                                    {% endif %}
+                                                                </td>
+                                                                {% endif %}
+
+                                                                <td class="text-center">
+                                                                    {{ item.quantity }}
+                                                                    {% if item.isIncremental %}
+                                                                        mod
+                                                                    {% endif %}
+                                                                </td>
+
+                                                                {% if showPrices %}
+                                                                <td> {{ total_price_sale|number_format_currency('BRL') }} </td>
+                                                                {% endif %}
+                                                            </tr>
+
+                                                        {% endfor %}
+                                                        </tbody>
+
+                                                        {% if showPrices %}
+                                                        <tfoot>
+                                                        <tr>
+                                                            <th colspan="3" class="text-right"> Total </th>
+                                                            <th class="col-md-2"> {{ total_items|number_format_currency('BRL') }} </th>
+                                                        </tr>
+                                                        </tfoot>
+                                                        {% endif %}
+
+                                                    </table>
+                                                {% endif %}
+
+
+                                                {% if project.kit.hasServices %}
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                        <tr>
+                                                            <th> Serviço</th>
+                                                            <th class="col-md-2"> Preço de Venda </th>
+                                                        </tr>
+                                                        </thead>
+
+                                                        <tbody>
+
+                                                        {% set total_services = 0 %}
+                                                        {% for service in project.elementServices %}
+
+                                                            {% set total_price_sale = service.totalPriceSale %}
+
+                                                            {% set total_services = total_services + total_price_sale %}
+
+                                                            <tr>
+                                                                <td> {{ service.name }} </td>
+                                                                <td> {{ total_price_sale|number_format_currency('BRL') }} </td>
+                                                            </tr>
+
+                                                        {% endfor %}
+
+                                                        </tbody>
+
+                                                        <tfoot>
+                                                        <tr>
+                                                            <th class="text-right"> Total</th>
+                                                            <th class="col-md-2"> {{ total_services|number_format_currency('BRL') }} </th>
+                                                        </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                {% endif %}
+
+                                                <div class="hr-line-dashed"></div>
+
+                                            </div>
+                                        </div>
+
+                                        {#{% set kit = financial.project.kit %}#}
+
+                                        <table class="table table-bordered">
+                                            <tbody>
+                                            <tr>
+                                                <td class="col-md-10"> Equipamentos</td>
+                                                <td>
+                                                    {#{{ project.priceSaleEquipments|currency('-') }} #}
+                                                    {% if showPrices %}
+                                                        {{ project.priceSaleEquipments|currency }}
+                                                    {% else %}
+                                                        {{ kit.priceSaleEquipments|currency }}
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td> Serviços</td>
+                                                <td> {{ project.priceSaleServices|currency('-') }} </td>
+                                            </tr>
+
+                                            {% if financial.hasTaxes %}
+                                                {% for tax in financial.taxes if not tax.discount %}
+                                                    <tr>
+                                                        <td>
+                                                            {{ tax.name }}
+                                                        </td>
+                                                        <td>
+                                                            {{ tax.amount|currency }}
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+
+                                                {% for tax in financial.taxes if tax.discount %}
+                                                    <tr>
+                                                        <td>
+                                                            {{ tax.name }}
+                                                        </td>
+                                                        <td>
+                                                            {{ tax.amount|currency }}
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            {% endif %}
+
+                                            <tr>
+                                                <th> Total</th>
+                                                <th> {{ financial.finalPrice|currency }} </th>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+
+                                    {% endif %}
+
+
+                                    {# DYNAMIC SECTIONS #}
+                                {% else %}
+
+                                    {% if editable %}
+
+                                        <form id="section_{{ metadata.uid }}_editable" class="form-editable"
+                                              method="post">
+                                            <div class="form-group">
+                                                <input name="title" type="text" class="form-control"
+                                                       value="{{ section.title }}"
+                                                       placeholder="{{ section.title }}">
+                                            </div>
+                                            <div data-name="section[content]" class="section-editable form-control"
+                                                 id="section-editable">{{ section.content|raw }}</div>
+                                        </form>
+
+                                    {% else %}
+                                        {{ section.content|raw }}
+                                    {% endif %}
+
+                                {% endif %}
+
+                            </div>
+
+                            {% if editable %}
+
+                                <div class="row">
+                                    <div class="">
+                                        <button type="button" data-section="{{ section.id }}"
+                                                data-form="#section_{{ metadata.uid }}_editable"
+                                                class="btn btn-save-editable btn-md btn-primary ladda-button pull-left"
+                                                data-style="zoom-in">
+                                            <i class="fa fa-save"></i> {{ 'Save'|trans }}
+                                        </button>
+                                    </div>
+                                </div>
+
+                            {% endif %}
+                        </div>
+
+                        {#{% endif %}#}
+
+                    </div>
+
+                    {% endif %}
+
+                {% endfor %}
+
+            </div>
+
+            {% include view('financial.buttons') %}
+
+        </div>
+
+        {% if project is defined and project.token %}
+            {% include view('project.breadcrumbs') %}
+        {% endif %}
+
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    {% include view('helper.plugins_js') %}
+
+    <script>
+
+        $(function () {
+
+            var elements = $('.section-editable');
+
+            if (elements.length) {
+
+                elements.summernote({
+                    height: 150,
+                    popover: {},
+                    lang: 'pt-BR',
+                    toolbar: [
+                        ['fontsize', ['fontname', 'fontsize', 'color', 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript']],
+                        ['para', ['ol', 'ul', 'paragraph', 'height']],
+                        ['insert', ['picture']]
+                    ],
+                    callbacks: {
+                        onPaste: function(e) {
+                            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                            e.preventDefault();
+                            setTimeout(function () {
+                                document.execCommand('insertText', false, bufferText);
+                            }, 10);
+                        }
+                    }
+                });
+
+                $('.btn-save-editable').on('click', function () {
+                    var btn = $(this);
+                    var form = $(btn.data('form'));
+                    var data = {
+                        id: btn.data('section'),
+                        title: form.find('[name="title"]').val(),
+                        content: form.find('.note-editable').html()
+                    };
+
+                    btn.ladda();
+                    btn.ladda('start');
+
+                    $.ajax({
+                        url: '{{ path('proposal_section_update',{token:project.token, id:'_id_'}) }}'.replace(/_id_/g, data.id),
+                        method: 'post',
+                        data: data,
+                        complete: function (xhr) {
+                            btn.ladda('stop');
+                            if (202 != xhr.status) {
+                                swal('Erro', 'Falha ao atualizar seção', 'error');
+                                console.log(xhr.responseText);
+                            }
+                        }
+                    });
+                });
+            }
+
+            $('[data-nav]').on('click', function (event) {
+                event.preventDefault();
+                var nav = $(this).data('nav');
+                var href = $(this).data('href');
+                if ('#' != href && 'proposal' != nav) {
+                    window.location.href = href;
+                }
+            });
+
+            var generate_proposal = $('#generate_proposal');
+            //var generate_button = generate_proposal.find('button');
+            var generate_button = $('button[data-prop]');
+            var generate_done = false;
+            generate_button.ladda();
+            generate_button.on('click', function (event) {
+                event.preventDefault();
+                if (generate_done) {
+                    $('[name="project_chart_data"]').val(AppChart.getDataUrl('project_chart_data'));
+                    $('[name="financial_chart_data"]').val(AppChart.getDataUrl('financial_chart_data'));
+                    $('[name="project_default_chart_data"]').val(AppChart.getDataUrl('project_default_chart_data'));
+                    $('[name="financial_default_chart_data"]').val(AppChart.getDataUrl('financial_default_chart_data'));
+                    if($(this).hasClass('preview')){
+                        $('#do_display').val('preview');
+                        generate_proposal.attr('target','_blank').trigger('submit');
+                    }else{
+                        swal({
+                            title: "Confirma geração da proposta?",
+                            text: "Após a geração, o projeto será bloqueado para edição",
+                            type: "warning",
+                            showCancelButton: true,
+                            cancelButtonText: "Cancelar",
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Gerar Proposta",
+                            closeOnConfirm: false
+                        }, function () {
+                            $('#do_display').val('file');
+                            swal({
+                                title: "Gerando proposta...",
+                                text: null,
+                                type: "info",
+                                showConfirmButton: false
+                            });
+                            generate_proposal.removeAttr('target').trigger('submit');
+                        });
+                    }
+                }else{
+                    swal('Atenção!', 'Aguarde a geração dos gráficos para prosseguir', 'warning');
+                }
+            });
+
+            generate_button.ladda('start');
+
+            {# Charts #}
+            AppChart.projectChart({
+                fillColor: "rgba(26,179,148,0.5)",
+                strokeColor: "rgba(26,179,148,0.8)",
+                pointColor: "rgba(26,179,148,0.75)",
+                data: {{ project_chart_data }},
+                element: 'project_default_chart_data'
+            });
+            AppChart.projectChart({
+                fillColor: "{{ chart_color }}",
+                strokeColor: "{{ chart_color }}",
+                pointColor: "{{ chart_color }}",
+                data: {{ project_chart_data }},
+                element: 'project_chart_data'
+            });
+            AppChart.financialChart({
+                fillColor: "rgba(26,179,148,0.5)",
+                strokeColor: "rgba(26,179,148,0.8)",
+                pointColor: "rgba(26,179,148,0.8)",
+                data: {{ financial_chart_data }},
+                title: false,
+                element: 'financial_default_chart_data'
+            });
+            AppChart.financialChart({
+                fillColor: "{{ chart_color }}",
+                strokeColor: "{{ chart_color }}",
+                pointColor: "{{ chart_color }}",
+                data: {{ financial_chart_data }},
+                title: false,
+                element: 'financial_chart_data',
+                callback: function () {
+                    generate_button.ladda('stop');
+                    generate_done = true;
+                }
+            });
+
+        });
+
+    </script>
+
+{% endblock %}

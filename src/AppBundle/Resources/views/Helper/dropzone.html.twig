@@ -1,0 +1,101 @@
+<link href="{{ asset('inspinia/css/plugins/dropzone/basic.css') }}" rel="stylesheet">
+<link href="{{ asset('inspinia/css/plugins/dropzone/dropzone.css') }}" rel="stylesheet">
+<script src="{{ asset('inspinia/js/plugins/dropzone/dropzone.js') }}"></script>
+
+<div class="modal inmodal" id="dropzone_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span><span class="sr-only">{{ 'Close'|trans }}</span>
+                </button>
+                <i class="fa fa-photo modal-icon"></i>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div id="dropzone_body" class="col-lg-12">
+                                <form action="{{ path('_uploader_upload_gallery') }}" class="dropzone" id="my-dropzone">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal"> {{ 'Close'|trans }} </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    {#
+        TODO: Prevent DOM manipulation adding function register helpers before running stages
+        1. Load and register helpers by [data-helper] attributes
+        2. Check helper is registered on load modal
+    #}
+
+    $(function(){
+
+        var dropzone_modal = $('#dropzone_modal'),
+            dropzone_body = dropzone_modal.find('#dropzone_body'),
+            DropzoneProvider = {data:{}},
+            options = {
+                autoProcessQueue: true,
+                uploadMultiple: true,
+                maxFiles: null,
+                acceptedFiles: null
+            };
+
+        dropzone_modal.on('show.bs.modal', function(e){
+
+            var DropzoneModal = Dropzone.instances[0];
+
+            var target = $(e.relatedTarget),
+                helper = target.data('helper');
+
+            if('undefined' == typeof(helper) || 0 == helper.length
+                || 'object' != typeof(DropzoneHelper) || !DropzoneHelper.hasOwnProperty(helper)
+            ){
+                dropzone_body.html('<h5> Check this parameters: <br> [data-helper] attribute <br> DropzoneHelper object <br> DropzoneHelper ['+helper+'] key </h5>');
+            }else{
+                DropzoneProvider = DropzoneHelper[helper];
+                DropzoneProvider.data.module = helper;
+            }
+
+            if(DropzoneProvider.hasOwnProperty('options')){
+                DropzoneProvider.options = $.extend(options, DropzoneProvider.options, true);
+            }else{
+                DropzoneProvider.options = options;
+            }
+
+            DropzoneModal.options = $.extend(DropzoneModal.options, DropzoneProvider.options);
+
+            DropzoneModal.on('addedfile', function(){
+
+            }).on("sending", function(file, xhr, data){
+
+                $.each(DropzoneProvider.data, function(key, value){
+                    data.append(key, value);
+                });
+
+            }).on('success', function(data){
+
+                var response = JSON.parse(data.xhr.responseText);
+
+                this.removeAllFiles();
+
+                if(DropzoneProvider.hasOwnProperty('success')){
+                    DropzoneProvider.success(response);
+                }
+
+                dropzone_modal.modal('hide');
+            });
+
+        });
+    });
+</script>

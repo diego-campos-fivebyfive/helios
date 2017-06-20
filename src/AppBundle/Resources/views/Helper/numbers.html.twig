@@ -1,0 +1,35 @@
+<script>
+
+    var Numbers = {
+        decimal: function(element) {
+            function clear(v) {
+                return v.replace(/\D+/g, '');
+            }
+
+            var value = element.val();
+            var backup = value.replace(/\./g, ',');
+            value = clear(value);
+            if (backup.indexOf(',') > 0) {
+                var commas = backup.split(',');
+                value = clear(commas[0]) + ',';
+                if (commas[1].length) {
+                    value += clear(commas[1]);
+                }
+            }
+            if (0 == backup.indexOf('-')) {
+                if (2 == backup.split('-').length) {
+                    value = '-' + value;
+                }
+            }
+            element.val(value);
+        },
+        mask: function(element){
+            element.on('keyup', function () {
+                Numbers.decimal(element);
+            }).trigger('keyup');
+        }
+    };
+
+
+
+</script>

@@ -1,0 +1,48 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block title %}
+    {{ register is defined and register.isInit ? 'Criar uma conta' : 'Concluir registro' }}
+{% endblock %}
+
+{% block fos_user_content %}
+
+    {% set exceeded = max_attempts < link_attempts %}
+
+    <h3 class="block-title">
+        {% if exceeded %}
+            Limite de envios excedido
+        {% else %}
+            Verifique sua caixa de entrada
+        {% endif %}
+    </h3>
+
+
+    <div class="alert alert-{{ exceeded ? 'warning' : 'success' }}">
+
+        {% if exceeded %}
+
+            Infelizmente o número máximo de tentativas de envio do link de confirmação foi excedido.
+            <br>
+
+            Entre em contato com a equipe de suporte Inovador Solar para solicitar auxílio.
+            <br>
+
+            <a class="alert-link" href="{{ path('app_index') }}">
+                Ir para a tela inicial
+            </a>
+
+        {% else %}
+
+            Enviamos um email para "{{ register.email }}" com o link de ativação. <br>
+            Ainda não recebeu o link? <br>
+
+            <a class="alert-link" href="javascript:window.location.reload();">
+                Clique aqui para reenviar o link
+            </a>
+
+        {% endif %}
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,5 @@
+<script>
+    {% if event is not null and not event.isSent %}
+        woopra.track('{{ event.name }}',{{ event.attributes|json_encode|raw }});
+    {% endif %}
+</script>

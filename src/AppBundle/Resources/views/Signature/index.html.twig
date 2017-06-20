@@ -1,0 +1,565 @@
+{% extends view('layout') %}
+
+{% block styles %}
+    {% include view('signature.styles') %}
+{% endblock %}
+
+{% set update = true %}
+
+    {% set account = app.user.info.account %}
+    {% set plan = subscription.entity.plan %}
+    {#{% set payment_profile = subscription.payment_profile.entity %}#}
+    {% set payment_company = payment_profile.payment_company %}
+
+    {% set number_users = 0 %}
+    {% for product_item in subscription.entity.product_items %}
+        {% set number_users = number_users + product_item.quantity %}
+    {% endfor %}
+
+    {# Plan Settings #}
+    {% set main = attribute(subscription.entity.product_items, 0) %}
+    {% set extra = attribute(subscription.entity.product_items, 1) %}
+
+    {% set main_discount = main.discounts|length ? attribute(main.discounts, 0).amount : 0 %}
+    {% set extra_discount = main.discounts|length ? attribute(extra.discounts, 0).amount : 0 %}
+
+    {% set prices = {
+        main: main.pricing_schema.price - main_discount,
+        extra: extra.pricing_schema.price,
+        extra_discount: extra_discount
+    } %}
+
+
+{% block body %}
+
+    {% include view('signature.terms_modal') %}
+
+    {% macro render_card(payment_company, payment_profile) %}
+
+        {% set card =  payment_company.code %}
+        {% set icon = 'credit-card' %}
+        {% set color = 'text-primary' %}
+
+        {% if 'visa' == card or 'mastercard' == card %}
+            {% set icon = ['cc-', card]|join %}
+            {% set color = 'visa' == card ? 'text-success' : 'text-warning' %}
+        {% endif %}
+
+        <div class="payment-card">
+            <i class="fa fa-{{ icon }} payment-icon-big {{ color }}"></i>
+            <h2>
+                **** **** **** {{ payment_profile.card_number_last_four }}
+            </h2>
+            <div class="row">
+                <div class="col-md-5">
+                    <small>
+                        <strong>Expiração:</strong> {{ payment_profile.card_expiration|date('m/y') }}
+                    </small>
+                </div>
+                <div class="col-md-7 text-right">
+                    <small>
+                        <strong>{{ 'Name'|trans }}:</strong> {{ payment_profile.holder_name }}
+                    </small>
+                </div>
+            </div>
+        </div>
+
+    {% endmacro %}
+
+    {% import _self as support %}
+
+    <div class="modal inmodal fade" id="modal_check" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <h2 class="text-center">
+                            Deseja efetuar a cobrança neste método?
+                        </h2>
+                        <div class="col-md-8 col-md-offset-2">
+
+                            {# Credit Card #}
+                            {% if 'credit_card' == payment_method.code %}
+                                {{ support.render_card(payment_company, payment_profile) }}
+                            {% else %}
+
+                                <div class="payment-card">
+                                    <i class="fa fa-barcode payment-icon-big"></i>
+                                    <h2>
+                                        Boleto Bancário
+                                    </h2>
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <small>
+                                                &nbsp;
+                                            </small>
+                                        </div>
+                                        <div class="col-md-7 text-right">
+                                            <small>
+                                                &nbsp;
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+                    </div>
+                    <div class="row text-center" style="margin-top:2rem;">
+                        <a id="bill_url" href="#" target="_blank">
+                            <i class="fa fa-info"></i> Outras formas de pagamento
+                        </a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="btn-group btn-group-md btn-group-justified">
+                        <a class="btn btn-md btn-block btn-default" data-dismiss="modal">
+                            <i class="fa fa-angle-left"></i> Cancelar
+                        </a>
+                        <a class="btn btn-md btn-block btn-primary" data-dismiss="modal" id="send_charge">
+                            <i class="fa fa-check"></i> Confirmar
+                        </a>
+                        <a data-toggle="modal" data-target="#modal_card" data-action="charge" data-dismiss="modal"
+                           class="btn btn-md btn-block btn-default">
+                            <i class="fa fa-credit-card"></i> Atualizar Cartão
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal fade" id="modal_upgrade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" style="width:430px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"> Alteração de Plano </h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">
+                        {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal fade" id="modal_info" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" style="width:430px;">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        {#{{ render(controller('AppBundle:Signature:customer')) }}#}
+                        {{ render(controller('AppBundle:Signature:customerUpdate')) }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">
+                        {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal fade" id="modal_card" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" style="width:430px;">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        {#{% include view('signature.form_card') %}#}
+                        {{ render(controller('AppBundle:Signature:paymentProfileCreate')) }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">
+                        {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal fade" id="modal_plan" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" style="width:430px;">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+
+                        <div class="col-md-12 hide">
+                            {# Somente para controle do contador em modo edição #}
+                            <input placeholder="" type="hidden" id="subscription_product_items_1_quantity">
+                        </div>
+
+                        {% include view('signature.form_plan') %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">
+                        {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row">
+
+            <div class="col-md-4">
+                <div class="payment-card">
+                    <div class="col-md-3">
+                        <i class="fa fa-map-marker payment-icon-big text-success pull-left"></i>
+                    </div>
+                    <div class="col-md-9">
+                        <strong> Endereço: </strong>
+                        {{ customer.address.street }},
+                        {{ customer.address.number }} -
+                        {{ customer.address.additional_details }} <br>
+
+                        {{ customer.address.neighborhood }} -
+                        {{ customer.address.city }}/{{ customer.address.state }}
+                        <input class="input_transparent pull-left" data-mask="00000-000" type="text" readonly="readonly"
+                               value="{{ customer.address.zipcode }}" placeholder="">
+
+                        <div class="hr-line-dashed"></div>
+
+                        {% if customer.registry_code %}
+                            {% set is_company = customer.registry_code|length > 11 %}
+                            {% set mask = is_company ? '00.000.000/0000-00' : '000.000.000-00' %}
+                            <strong>
+                                {{ is_company ? 'CNPJ' : 'CPF' }}:
+                            </strong>
+                            <input class="input_transparent" data-mask="{{ mask }}" type="text" readonly="readonly"
+                                   value="{{ customer.registry_code }}" placeholder="">
+                        {% else %}
+                            <strong> Documento ainda não informado </strong>
+                        {% endif %}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <small>
+                                {#<strong>Quantidade de Usuários:</strong> {{ number_users }}#}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <a data-toggle="modal" data-target="#modal_info" class="btn btn-md btn-block btn-default">
+                    <i class="fa fa-pencil"></i> Atualizar Informações
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <div class="payment-card">
+                    <div class="col-md-3">
+                        <i class="fa fa-edit payment-icon-big pull-left text-primary"></i>
+                    </div>
+                    <div class="col-md-9">
+                        <h2 style="margin-top:0 !important;">
+                            {{ plan.name }}
+                        </h2>
+                        <strong>Quantidade de Usuários:</strong> {{ number_users }}
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <small>
+                                &nbsp;
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <a data-toggle="modal" data-target="#modal_plan" class="btn btn-md btn-block btn-default">
+                    <i class="fa fa-edit"></i> Atualizar Plano
+                </a>
+            </div>
+
+            <div class="col-md-4">
+
+                {# Credit Card #}
+                {% if 'credit_card' == payment_method.code %}
+                    {{ support.render_card(payment_company, payment_profile) }}
+                {% else %}
+
+                    <div class="payment-card">
+                        <i class="fa fa-barcode payment-icon-big"></i>
+                        <h2>
+                            Boleto Bancário
+                        </h2>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <small>
+                                    &nbsp;
+                                </small>
+                            </div>
+                            <div class="col-md-7 text-right">
+                                <small>
+                                    &nbsp;
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endif %}
+
+                <a data-toggle="modal" data-target="#modal_card" data-action="card"
+                   class="btn btn-md btn-block btn-default">
+                    <i class="fa fa-credit-card"></i> Método de Pagamento
+                </a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="ibox" style="margin-top: 1rem;">
+                    <div class="ibox-content inspinia-timeline">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3>
+                                    <i class="fa fa-list-ul"></i> Histórico de Pagamentos
+                                </h3>
+                            </div>
+                            <div class="col-md-12" id="payments">
+                            </div>
+                            <div class="col-md-12">
+                                <a id="cancel_signature" class="pull-left">
+                                    <i class="fa fa-trash"></i> Cancelar assinatura
+                                </a>
+
+                                <a id="use_terms" href="#" data-toggle="modal" data-target="#terms" class="pull-right">
+                                    Termos de Uso
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    {% include view('signature.scripts') %}
+
+    <script>
+
+        var cancel_signature = $('#cancel_signature');
+        var pull_attempts = 1;
+        var pull_max_attempts = 4;
+        var pull_enabled = false;
+        var current_bill = null;
+
+        cancel_signature.on('mouseover', function () {
+            var link = $(this);
+
+            if (pull_enabled) {
+                if (pull_attempts <= pull_max_attempts) {
+                    if (link.hasClass('pull-left')) {
+                        link.removeClass('pull-left').addClass('pull-right');
+                    } else {
+                        link.removeClass('pull-right').addClass('pull-left');
+                    }
+                    pull_attempts++;
+                }
+            }
+        }).on('click', function () {
+
+            swal({
+                title: 'Deseja realmente cancelar a assinatura?',
+                text: 'Após o cancelamento, o acesso à plataforma será bloqueado',
+                type: 'warning',
+                showCancelButton: true,
+                cancelButtonText: 'Desistir',
+                confirmButtonText: 'Confirmar Cancelamento',
+                closeOnConfirm: false
+            }, function () {
+
+                Http.request({
+                    url: '{{ path('signature_cancel') }}',
+                    method: 'post',
+                    callback: function (xhr) {
+                        if (Http.accepted == xhr.status) {
+                            woopra.track('churn');
+                            Handle.success('Sua assinatura foi cancelada');
+                            Handle.redirect();
+                        } else {
+                            swal({
+                                title: 'Verifique o erro',
+                                text: xhr.responseJSON.message,
+                                type: 'error'
+                            });
+                        }
+                    },
+                    onRequest: function () {
+                        swal({
+                            title: 'Aguarde',
+                            text: 'Processando',
+                            type: 'info',
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            });
+        });
+
+        var Signature = {
+            payments: function (url) {
+                $.ajax({
+                    url: url,
+                    complete: function (xhr) {
+                        if (200 == xhr.status) {
+                            $('#payments').html(xhr.responseText);
+                        } else {
+                            console.log('error_payments');
+                        }
+                    }
+                });
+            }
+        };
+
+        $(function () {
+
+            Signature.payments('{{ path('signature_payments') }}');
+
+            var form_target = $('#form_card_target');
+
+            function apply_target(target) {
+                form_target.val(target.data('action'));
+                if (target.data('id')) {
+                    $('#target_id').val(target.data('id'));
+                }
+            }
+
+            $('#modal_card').on('show.bs.modal', function (event) {
+                //apply_target($(event.relatedTarget));
+            });
+
+            var modal_check = $('#modal_check');
+            var bill_url = $('#bill_url');
+            modal_check.on('show.bs.modal', function (event) {
+                var target_bill = $(event.relatedTarget);
+                current_bill = target_bill.data('id');
+                bill_url.attr('href', target_bill.data('url'));
+            });
+
+            bill_url.on('click', function(){
+                modal_check.modal('hide');
+            });
+
+            $('#modal_plan').on('show.bs.modal', function () {
+                form_target.val('plan');
+            });
+
+
+            function updatePlan() {
+
+                Http.request({
+                    url: '{{ path('signature_upgrade') }}',
+                    method: 'post',
+                    data: {quantity:number_users.val()-1},
+                    callback: function (xhr) {
+                        var response = xhr.responseJSON;
+                        if (Http.success == xhr.status || Http.accepted == xhr.status) {
+                            Handle.success('Configurações do plano atualizadas com sucesso!');
+                            Handle.redirect();
+                        } else {
+                            if ('upgrade' == response.message) {
+                                swal.close();
+                                $('#modal_plan').modal('hide');
+                                $('#modal_upgrade').modal('show');
+                                $('#modal_upgrade').find('.modal-body').html(response.content);
+                            } else {
+                                Handle.error(response.message);
+                            }
+                        }
+                    },
+                    onRequest: function () {
+                        Handle.processing();
+                    }
+                });
+            }
+
+            $('#update_plan').on('click', function () {
+                if(number_users.val() < {{ account.maxMembers }} ){
+                    swal({
+                        title: 'Atenção',
+                        text: 'Ao fazer isso você irá reduzir o número de usuários ativos da sua conta. Recomendamos fazer esta ação no último dia de seu período',
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Confirmar ação',
+                        cancelButtonText: 'Cancelar ação',
+                        closeOnConfirm: false
+                    }, function(){
+                        updatePlan();
+                    });
+
+                }else{
+                    updatePlan();
+                }
+            });
+
+            $('#send_charge').on('click', function () {
+                if(current_bill) {
+                    Http.request({
+                        url: '{{ path('signature_charge') }}',
+                        method: 'post',
+                        data: {bill: current_bill},
+                        callback: function (xhr) {
+                            if (Http.accepted == xhr.status) {
+                                swal({
+                                    title: 'Sucesso',
+                                    text: 'Fatura paga com sucesso!',
+                                    type: 'success',
+                                    html: true,
+                                    showConfirmButton: false
+                                });
+                                window.setTimeout(function () {
+                                    window.location.href = '{{ path('signature') }}';
+                                }, 1500);
+                            } else {
+                                swal({
+                                    title: 'Verifique o erro',
+                                    text: xhr.responseJSON.message,
+                                    type: 'error',
+                                    html: true
+                                });
+                            }
+                        },
+                        onRequest: function () {
+                            swal({
+                                title: 'Aguarde',
+                                message: 'Processando',
+                                type: 'info',
+                                showConfirmButton: false
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+
+    <script>
+        $('#form_customer').find('[type="submit"]').removeClass('hide');
+        $('#signature_process').hide();
+        $('#form_payment_profile').find('[type="submit"]').removeClass('hide');
+
+        var pay_invoice = $('#pay_invoice');
+        pay_invoice.css('margin-top', '2rem');
+        pay_invoice.find('span').html('Atualizar método de pagamento');
+
+        var block_terms = $('.block_terms');
+        block_terms.find('input[type="checkbox"]').prop('checked', true);
+        block_terms.hide();
+
+    </script>
+{% endblock %}

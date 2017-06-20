@@ -1,0 +1,74 @@
+
+{{ form_start(form,{attr:{id:'form_customer'}}) }}
+
+<div class="form-group">
+    <div class="btn-group btn-group-justified" data-toggle="buttons">
+        <label class="btn btn-default btn-type">
+            <input type="radio" name="type" value="000.000.000-00">
+            <i class="fa fa-user"></i> Pessoa
+        </label>
+        <label class="btn btn-default btn-type">
+            <input type="radio" name="type" value="00.000.000/0000-00">
+            <i class="{{ icon('company') }}"></i> Empresa
+        </label>
+    </div>
+</div>
+
+<div class="form-group">
+    {{ form_label(form.name, 'Nome') }}
+    {{ form_widget(form.name,{attr:{class:'form-control'}}) }}
+</div>
+
+<div class="form-group">
+    {{ form_label(form.registry_code, 'CPF') }}
+    {{ form_widget(form.registry_code,{attr:{class:'form-control'}}) }}
+</div>
+
+<div class="form-group" style="margin-top:1.5rem; width:100%; float: left;">
+    {{ form_label(form.address.zipcode, 'CEP') }}
+    {{ form_widget(form.address.zipcode,{attr:{class:'form-control', 'data-address':'postcode', 'data-mask':'00000-000'}}) }}
+</div>
+
+<div class="form-group">
+    <div style="width: 25%" class="pull-left">
+        {{ form_label(form.address.state, 'Estado') }}
+        {{ form_widget(form.address.state,{attr:{class:'form-control', 'data-address':'state'}}) }}
+    </div>
+    <div style="width: 75%" class="pull-left">
+        {{ form_label(form.address.city, 'Cidade') }}
+        {{ form_widget(form.address.city,{attr:{class:'form-control', 'data-address':'city'}}) }}
+    </div>
+</div>
+
+
+<div class="form-group" style="margin-top: 1.5rem; width:100%; float: left;">
+    {{ form_label(form.address.neighborhood, 'Bairro') }}
+    {{ form_widget(form.address.neighborhood,{attr:{class:'form-control', 'data-address':'district'}}) }}
+</div>
+
+<div class="form-group">
+    {{ form_label(form.address.street, 'Rua') }}
+    {{ form_widget(form.address.street,{attr:{class:'form-control', 'data-address':'street'}}) }}
+</div>
+
+<div class="form-group">
+    {{ form_label(form.address.number, 'Número') }}
+    {{ form_widget(form.address.number,{attr:{class:'form-control', 'data-address':'number'}}) }}
+</div>
+
+<div class="form-group">
+    {{ form_label(form.address.additional_details, 'Complemento') }}
+    {{ form_widget(form.address.additional_details,{attr:{class:'form-control', 'data-address':'complement'}}) }}
+</div>
+
+<div class="hide">
+    {{ form_rest(form) }}
+</div>
+
+<div class="form-group">
+    <button type="submit" class="btn btn-primary btn-block hide">
+        <i class="fa fa-check"></i> {{ 'Save'|trans }}
+    </button>
+</div>
+
+{{ form_end(form) }}

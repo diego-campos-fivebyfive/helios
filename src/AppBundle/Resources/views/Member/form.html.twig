@@ -1,0 +1,536 @@
+{% extends view('layout') %}
+
+
+{% block styles %}
+    <link href="{{ asset('inspinia/css/plugins/chosen/chosen.css') }}" rel="stylesheet"
+          xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+    <link href="{{ asset('inspinia/css/plugins/ladda/ladda-themeless.min.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+
+    {#{% set user = info.user %}#}
+    {% set user_picture = asset('inspinia/img/user-icon.png') %}
+
+    <div class="wrapper wrapper-content animated fadeIn">
+
+        <div class="row">
+
+            <div class="col-lg-12">
+
+                {{ form_start(form, {'attr':{'id':'form-member'}}) }}
+
+                <div class="tabs-container">
+
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a data-toggle="tab" href="#user-info"><i
+                                    class="fa fa-user"></i> {{ 'Main Informations'|trans }} </a>
+                        </li>
+                        {#<li> DISABLED
+                            <a data-toggle="tab" href="#user-address"><i class="fa fa-globe"></i> {{ 'Address'|trans }}
+                            </a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#user-access"><i class="fa fa-lock"></i> {{ 'Access'|trans }}
+                            </a>
+                        </li>#}
+
+                        <li class="pull-right">
+
+                            <div class="btn-group">
+                                {#<a href="#"
+                                   data-random="{{ path('random_account') }}"
+                                   data-target="#form-user"
+                                   data-prefix="#user_"
+                                   class="btn btn-sm btn-danger">
+                                    User Random Data
+                                </a>#}
+                            </div>
+
+                        </li>
+
+                    </ul>
+
+                    <div class="tab-content">
+
+                        <div id="user-info" class="tab-pane active">
+                            <div class="panel-body">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-content">
+                                        <div class="row">
+
+                                            <div class="col-md-12">
+                                                {% if errors|length %}
+                                                    {% for key, error in errors if 0 == key %}
+                                                        <div class="alert alert-danger" style="width: 50%;">
+                                                            {{ error.message|trans }}
+                                                        </div>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </div>
+
+                                            {% if attribute(form, 'firstname') is defined %}
+                                            <div class="form-group col-lg-3">
+                                                <label> {{ 'Firstname'|trans }} </label>
+                                                {{ form_widget(form.firstname,{'attr':{'class':'form-control','placeholder':'Firstname'|trans}}) }}
+                                            </div>
+                                            {% endif %}
+
+                                            <div class="form-group col-lg-4">
+                                                <label> {{ 'Email'|trans }} </label>
+                                                {{ form_widget(form.email,{'attr':{'class':'form-control','placeholder':'Email'|trans}}) }}
+                                            </div>
+
+                                            {% if attribute(form, 'attributes') is defined %}
+
+                                                <div class="col-lg-4">
+                                                    <h3>&nbsp;</h3>
+                                                    <label>
+                                                        {{ form_widget(form.attributes.is_owner) }}
+                                                        &nbsp; {{ 'Administrator'|trans }}
+                                                    </label>
+                                                </div>
+
+                                            {% endif %}
+
+                                            <div class="col-md-12">
+                                                <button type="submit" class="ladda-button btn btn-primary">
+                                                    <i class="fa fa-save"></i> {{ 'Save'|trans }}
+                                                </button>
+                                            </div>
+
+
+                                            <div class="col-sm-12">
+
+                                               {#<div class="form-group col-lg-3 text-center">
+                                                    {% include view('helper.uploader') with { helper: 'profile', source: member } %}
+                                                </div>#}
+
+                                                {#<div class="form-group col-lg-3">
+                                                    <label> {{ 'Firstname'|trans }}* </label>
+                                                    {{ form_widget(form.firstname,{'attr':{'class':'form-control','placeholder':'Firstname'|trans}}) }}
+                                                </div>#}
+
+                                                {#{% if app.user.info.isOwner %}
+
+                                                    <div class="col-sm-12">
+                                                        <h3><i class="fa fa-check"></i> {{ 'Definitions'|trans }} </h3>
+                                                        <div class="form-group col-lg-3">
+                                                            <label>
+                                                                {{ form_widget(form.isOwner) }}
+                                                                &nbsp; {{ 'Account Owner'|trans }}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                {% endif %}#}
+
+                                                <div class="hide">
+
+                                                    {#<div class="col-lg-12 teamdiv">
+                                                        <h3><i class="fa fa-sitemap"></i> {{ 'Team'|trans }} </h3>
+                                                        <div class="form-group col-lg-12">
+                                                            {{ form_widget(form.team,{'attr':{'class':'form-control','placeholder':'Team'|trans}}) }}
+                                                        </div>
+                                                    </div>#}
+
+                                                    <div class="form-group col-lg-3">
+                                                        <label> {{ 'Mobile'|trans }} </label>
+                                                        {{ form_widget(form.mobile,{'attr':{'class':'form-control','placeholder':'Mobile'|trans}}) }}
+                                                    </div>
+
+
+                                                    <div class="form-group col-lg-3 hide">
+                                                        <label> {{ 'Lastname'|trans }} </label>
+                                                        {{ form_widget(form.lastname,{'attr':{'class':'form-control','placeholder':'Lastname'|trans}}) }}
+                                                    </div>
+
+                                                    {#<div class="form-group col-lg-3 hide">
+                                                        <label>{{ 'Office'|trans }}</label>
+                                                        {{ form_widget(form.office,{'attr':{'class':'form-control','placeholder':'Office'|trans}}) }}
+                                                    </div>#}
+
+                                                    <div class="form-group col-lg-3 hide">
+                                                        <label>{{ 'Cpf'|trans }}</label>
+                                                        {{ form_widget(form.document,{'attr':{'class':'form-control','placeholder':'Cpf'|trans}}) }}
+                                                    </div>
+
+                                                    <div class="form-group col-lg-3">
+                                                        <label> {{ 'Website'|trans }} </label>
+                                                        {{ form_widget(form.website,{'attr':{'class':'form-control','placeholder':'Website'|trans}}) }}
+                                                    </div>
+
+                                                    <div class="form-group col-lg-3">
+                                                        <label> {{ 'Phone'|trans }} </label>
+                                                        {{ form_widget(form.phone,{'attr':{'class':'form-control','placeholder':'Phone'|trans}}) }}
+                                                    </div>
+
+                                                    <div class="form-group col-lg-3">
+                                                        <label> {{ 'Fax'|trans }} </label>
+                                                        {{ form_widget(form.fax,{'attr':{'class':'form-control','placeholder':'Fax'|trans}}) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        {% if attribute(form, 'user') is defined %}
+
+                                            <div class="row">
+                                                <div class="col-sm-12">
+
+                                                    <h3><i class="fa fa-lock"></i> {{ 'Access Informations' }} </h3>
+
+                                                    <div class="form-group col-lg-3">
+                                                        <label> {{ 'Email'|trans }}* </label>
+                                                        {{ form_widget(form.user.email,{'attr':{'class':'form-control','placeholder':'Email'|trans}}) }}
+                                                    </div>
+
+                                                    <div class="form-group col-lg-3">
+                                                        <label> {{ 'Username'|trans }}* </label>
+                                                        {{ form_widget(form.user.username,{'attr':{'class':'form-control','placeholder':'Username'|trans}}) }}
+                                                    </div>
+
+                                                    {% if attribute(form.user, 'plainPassword') is defined %}
+
+                                                        <div class="form-group col-lg-3">
+                                                            <label> {{ 'Password'|trans }}* </label>
+                                                            {{ form_widget(form.user.plainPassword.first,{'attr':{'class':'form-control','placeholder':'Password'|trans}}) }}
+                                                        </div>
+
+                                                        <div class="form-group col-lg-3">
+                                                            <label> {{ 'Confirm Password'|trans }}* </label>
+                                                            {{ form_widget(form.user.plainPassword.second,{'attr':{'class':'form-control','placeholder':'Confirm Password'|trans}}) }}
+                                                        </div>
+
+                                                    {% endif %}
+
+                                                    {% if attribute(form.user, 'current_password') is defined %}
+
+                                                        <div class="form-group col-lg-3">
+                                                            <label> {{ 'Current Password'|trans }}* </label>
+                                                            {{ form_widget(form.user.current_password,{'attr':{'class':'form-control','placeholder':'Current Password'|trans}}) }}
+                                                        </div>
+
+                                                    {% endif %}
+
+                                                </div>
+
+                                                {#{% if app.user.info.isOwner %}
+
+                                                    <div class="col-sm-12">
+                                                        <h3><i class="fa fa-check"></i> {{ 'Definitions'|trans }} </h3>
+                                                        <div class="form-group col-lg-3">
+                                                            <label>
+                                                                {{ form_widget(form.isOwner) }}
+                                                                &nbsp; {{ 'Account Owner'|trans }}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-12 teamdiv">
+                                                        <h3><i class="fa fa-sitemap"></i> {{ 'Team'|trans }} </h3>
+                                                        <div class="form-group col-lg-12">
+                                                            {{ form_widget(form.team,{'attr':{'class':'form-control','placeholder':'Team'|trans}}) }}
+                                                        </div>
+                                                    </div>
+
+                                                {% endif %}#}
+
+                                            </div>
+
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="user-address" class="tab-pane hide">
+                            <div class="panel-body">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-content">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+
+                                                <div class="form-group col-lg-2">
+                                                    <label> {{ 'Postcode'|trans }} </label>
+                                                    {{ form_widget(form.postcode,{'attr':{'class':'form-control','placeholder':'Postcode'|trans}}) }}
+                                                </div>
+
+                                                <div class="form-group col-lg-3">
+                                                    <label> {{ 'State'|trans }} </label>
+                                                    {{ form_widget(form.state,{'attr':{'class':'form-control','placeholder':'State'|trans}}) }}
+                                                </div>
+
+                                                <div class="form-group col-lg-4">
+                                                    <label> {{ 'City'|trans }} </label>
+                                                    {{ form_widget(form.city,{'attr':{'class':'form-control','placeholder':'City'|trans}}) }}
+                                                </div>
+
+                                                <div class="form-group col-lg-2">
+                                                    <label> {{ 'Country'|trans }} </label>
+                                                    {{ form_widget(form.country,{'attr':{'class':'form-control','placeholder':'Country'|trans}}) }}
+                                                </div>
+
+                                                <div class="form-group col-lg-3">
+                                                    <label> {{ 'District'|trans }} </label>
+                                                    {{ form_widget(form.district,{'attr':{'class':'form-control','placeholder':'District'|trans}}) }}
+                                                </div>
+
+                                                <div class="form-group col-lg-4">
+                                                    <label> {{ 'Street'|trans }} </label>
+                                                    {{ form_widget(form.street,{'attr':{'class':'form-control','placeholder':'Street'|trans}}) }}
+                                                </div>
+
+                                                <div class="form-group col-lg-2">
+                                                    <label> {{ 'Number'|trans }} </label>
+                                                    {{ form_widget(form.number,{'attr':{'class':'form-control','placeholder':'Number'|trans}}) }}
+                                                </div>
+
+                                                <div class="form-group col-lg-3">
+                                                    <label> {{ 'Complement'|trans }} </label>
+                                                    {{ form_widget(form.complement,{'attr':{'class':'form-control','placeholder':'Complement'|trans}}) }}
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="user-access" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-content">
+
+                                        {#{% if attribute(form, 'user') is defined %}
+
+                                            <div class="row">
+                                                <div class="col-sm-12">
+
+                                                    <h3><i class="fa fa-lock"></i> {{ 'Access Informations' }} </h3>
+
+                                                    <div class="form-group col-lg-3">
+                                                        <label> {{ 'Email'|trans }}* </label>
+                                                        {{ form_widget(form.user.email,{'attr':{'class':'form-control','placeholder':'Email'|trans}}) }}
+                                                    </div>
+
+                                                    <div class="form-group col-lg-3">
+                                                        <label> {{ 'Username'|trans }}* </label>
+                                                        {{ form_widget(form.user.username,{'attr':{'class':'form-control','placeholder':'Username'|trans}}) }}
+                                                    </div>
+
+                                                    {% if attribute(form.user, 'plainPassword') is defined %}
+
+                                                        <div class="form-group col-lg-3">
+                                                            <label> {{ 'Password'|trans }}* </label>
+                                                            {{ form_widget(form.user.plainPassword.first,{'attr':{'class':'form-control','placeholder':'Password'|trans}}) }}
+                                                        </div>
+
+                                                        <div class="form-group col-lg-3">
+                                                            <label> {{ 'Confirm Password'|trans }}* </label>
+                                                            {{ form_widget(form.user.plainPassword.second,{'attr':{'class':'form-control','placeholder':'Confirm Password'|trans}}) }}
+                                                        </div>
+
+                                                    {% endif %}
+
+                                                    {% if attribute(form.user, 'current_password') is defined %}
+
+                                                        <div class="form-group col-lg-3">
+                                                            <label> {{ 'Current Password'|trans }}* </label>
+                                                            {{ form_widget(form.user.current_password,{'attr':{'class':'form-control','placeholder':'Current Password'|trans}}) }}
+                                                        </div>
+
+                                                    {% endif %}
+
+                                                </div>
+
+                                                {% if app.user.info.isOwner %}
+
+                                                <div class="col-sm-12">
+                                                    <h3><i class="fa fa-check"></i> {{ 'Definitions'|trans }} </h3>
+                                                    <div class="form-group col-lg-3">
+                                                        <label>
+                                                            {{ form_widget(form.isOwner) }} &nbsp; {{ 'Account Owner'|trans }}
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-12 teamdiv">
+                                                    <h3><i class="fa fa-sitemap"></i> {{ 'Team'|trans }} </h3>
+                                                    <div class="form-group col-lg-12">
+                                                        {{ form_widget(form.team,{'attr':{'class':'form-control','placeholder':'Team'|trans}}) }}
+                                                    </div>
+                                                </div>
+
+                                                {% endif %}
+
+                                            {% endif %}#}
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    {{ form_end(form) }}
+
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-lg-7">
+                </div>
+            </div>
+
+
+        </div>
+
+    {% endblock %}
+
+    {% block scripts %}
+
+        <script src="{{ asset('inspinia/js/plugins/chosen/chosen.jquery.js') }}"></script>
+        <script src="{{ asset('inspinia/js/plugins/ladda/spin.min.js') }}"></script>
+        <script src="{{ asset('inspinia/js/plugins/ladda/ladda.min.js') }}"></script>
+        <script src="{{ asset('inspinia/js/plugins/ladda/ladda.jquery.min.js') }}"></script>
+
+        {#<script>
+            var DropzoneHelper = {
+                profile: {
+                    options: {maxFiles: 1, acceptedFiles: '.png,.jpg,.jpeg', uploadMultiple: false},
+                    data: {},
+                    success: function(response) {
+                        $('#profile-picture').attr('src', '{{ asset('uploads/') }}' + response.data.profile);
+                    }
+                }
+            };
+        </script>
+            {% include view('helper.dropzone') %}
+
+            {% include view('helper.chosen') with {
+                    element: '#member_team',
+                    path: path('team_fast_create')
+                }
+            %}#}
+        <script>
+            $(function() {
+
+                {#var member_team = $('#member_team'),
+                    member_owner = $('#member_isOwner'),
+                    team_div = $('.teamdiv');
+
+                if(member_team.length){
+
+                    member_team.chosen({
+                        'placeholder_text': 'Selecione uma equipe para o membro',
+                        width: '100%'
+                    });
+
+                    member_owner.on("change", function() {
+                        if ($(this).is(':checked')) {
+                            team_div.slideUp();
+                        } else {
+                            team_div.slideDown();
+                        }
+                    });
+                }
+
+                var form = $('#form-member');
+                var lock_fields = form.find('#member_user_plainPassword_first, #member_user_plainPassword_second');
+
+                function lock_form(){
+                    lock_fields.attr({'disabled':'disabled','readonly':'readonly'}).val('');
+                }
+                function unlock_form(){
+                    lock_fields.removeAttr('disabled').removeAttr('readonly');
+                }#}
+
+                {#$('#member_email').on('change', function(){
+                    var source = $(this), info = source.val();
+                    if(info){
+                        var backup = {
+                            value: info,
+                            placeholder: source.attr('placeholder')
+                        };
+
+                        $.ajax({
+                            url: '{{  path('member_register_checker') }}',
+                            method: 'post',
+                            data: form.serialize(),
+                            complete: function(xhr){
+                                if(226 == xhr.status){
+                                    //lock_form();
+                                    toastr.error(info + ' não está disponível para registro!', 'Credenciais duplicadas!', {
+                                        positionClass: 'toast-top-center',
+                                        preventDuplicates: true
+                                    });
+                                    source.attr('placeholder', 'Aguardando novo valor..');
+                                }else{
+                                    //unlock_form();
+                                    toastr.success(info + ' está disponível para registro!', 'Credenciais aceitas!', {
+                                        positionClass: 'toast-top-center',
+                                        preventDuplicates: true
+                                    });
+                                    source.val(backup.value).attr('placeholder', backup.placeholder);
+                                }
+                            },
+                            beforeSend: function(){ source.val('').attr('placeholder', 'Verificando...Aguarde!'); }
+                        });
+                    }
+                });#}
+
+                {#form.on('submit', function(event) {
+
+                    var error = '';
+                    var firstname = $('#member_firstname').val(),
+                      email = $('#member_user_email').val(),
+                      username = $('#member_user_username').val();
+                    if (firstname.length < 1)
+                        error += '- Informe o nome <br/>';
+                    if (email.length < 5)
+                        error += '- Informe o email na guia "Acesso" <br/>';
+                    if (username.length < 3)
+                        error += '- Informe o login na guia "Acesso" <br/>';
+
+
+                    {% if attribute(form.user, 'plainPassword') is defined %}
+
+                    var password_first = $('#member_user_plainPassword_first').val(), password_second = $('#member_user_plainPassword_second').val();
+                    if (!password_first.length)
+                        error += '- Informe a senha na guia "Acesso" <br/>';
+                    if (!password_second.length)
+                        error += '- Confirme a senha na guia "Acesso" <br/>';
+                    if (password_first != password_second)
+                        error += '- As senhas não correspondem! <br/>';
+
+                    {% endif %}
+
+                    if(member_team.length){
+                        if(!member_owner.is(':checked') && member_team.val() == ''){
+                            error += '- O membro deve pertencer à uma equipe ou ';
+                            error += 'ser definido como dono da conta';
+                        }
+                    }
+
+                    if (error.length) {
+
+                        event.preventDefault();
+                        toastr.error(error, 'Verifique estes erros!', {
+                            positionClass: 'toast-top-center',
+                            progressBar: true,
+                            preventDuplicates: true
+                        });
+                    } else {
+                        return true;
+                    }
+                });#}
+            });
+        </script>
+
+    {% endblock %}

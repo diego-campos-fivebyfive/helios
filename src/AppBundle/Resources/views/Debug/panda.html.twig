@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PandaDoc JavaScript SDK</title>
+    <script src="https://s3.amazonaws.com/pd-js-sdk/0.2.12/pandadoc-js-sdk.min.js"></script>
+    <link rel="stylesheet" href="https://s3.amazonaws.com/pd-js-sdk/0.2.12/pandadoc-js-sdk.css"/>
+    <style>
+        .pandadoc iframe {
+            width: 1100px;
+            height: 700px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="pandadoc-sdk" class="pandadoc"></div>
+
+<script>
+
+    var editor = new PandaDoc.DocEditor();
+    editor.show({
+        el: '#pandadoc-sdk',
+        data: {
+            /*metadata: {
+                YOUR_META_KEY: 'YOUR_META_VALUE'
+            }*/
+        },
+        cssClass: '',
+        events: {
+            onInit: function(){},
+            onDocumentCreated: function(){},
+            onDocumentSent: function(){},
+            onClose: function(){}
+        }
+    });
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,219 @@
+{% set grid_id = [status, 'list']|join %}
+
+{% macro renderComponents(components, status) %}
+
+    {% set is_featured = ('featured' == status) %}
+
+    {% for component in components %}
+
+        {% set is_mod = component.isModule %}
+        {% set type = is_mod ? 'module' : 'inverter' %}
+
+        <tr>
+            <td>
+                <span class="badge badge-{{ is_mod ? 'info' : 'warning' }}">
+                    {{ is_mod ? 'Módulo' : 'Inversor' }}
+                </span>
+            </td>
+            <td title="{{ component.maker }}"> {{ component.maker|slice(0,20) }} </td>
+            <td> {{ component.model }} </td>
+            <td>
+                <div class="btn-group btn-group-xs btn-group-justified">
+                    <a class="btn btn-success"
+                       href="{{ path(is_mod ? 'module_update' : 'inverter_update',{token:component.token}) }}"
+                       title="{{ 'Edit'|trans }}">
+                        <i class="fa fa-pencil"></i>
+                    </a>
+                    <a data-toggle="modal"
+                       data-target="#modal_details"
+                       data-href="{{ path([type, '_show']|join,{token:component.token}) }}"
+                       class="btn btn-default" title="{{ 'View'|trans }}">
+                        <i class="fa fa-eye"></i>
+                    </a>
+
+                    {% if is_featured %}
+                        <a data-ignore="{{ path(['ignore_', type]|join,{token:component.token}) }}"
+                           class="btn btn-danger" title="Ocultar">
+                            <i class="fa fa-ban"></i>
+                        </a>
+                    {% else %}
+                        <a data-delete="{{ path(['delete_', type]|join,{token:component.token}) }}"
+                           class="btn btn-danger" title="Excluir">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                        <a class="btn btn-primary"
+                           title="Publicar"
+                           data-publish="{{ path(['publish_', type]|join,{token:component.token}) }}">
+                            <i class="fa fa-check"></i>
+                        </a>
+                    {% endif %}
+                </div>
+            </td>
+        </tr>
+
+    {% endfor %}
+
+{% endmacro %}
+
+{% import _self as grid %}
+
+<div class="text-center">
+      <h4> {{ 'featured' == status ? 'Não validados' : 'Validados'}} </h4>
+</div>
+
+<table class="table" id="{{ grid_id }}">
+    <thead>
+    <tr>
+        <th> {{ 'Type'|trans }} </th>
+        <th> {{ 'Maker'|trans }} </th>
+        <th class="col-md-3"> {{ 'Model'|trans }} </th>
+        <th class="col-md-3"> &nbsp; </th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {{ grid.renderComponents(modules, status) }}
+
+    {{ grid.renderComponents(inverters, status) }}
+
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="3" class="text-center">
+            <ul class="pagination"></ul>
+        </td>
+    </tr>
+    </tfoot>
+</table>
+
+<script>
+    $('#{{ grid_id }}').footable();
+
+    {% if 'featured' == status %}
+
+    $('[data-ignore]').on('click', function () {
+        var url = $(this).data('ignore');
+        var row = $(this).closest('tr');
+        swal({
+            title: "Confirmar esta operação?",
+            text: null,
+            type: "info",
+            showCancelButton: true,
+            cancelButtonText: "{{ 'Cancel'|trans }}",
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "{{ 'Confirm'|trans }}!",
+            closeOnConfirm: false
+        }, function () {
+            $.ajax({
+                url: url,
+                method: 'post',
+                complete: function (xhr) {
+                    var response = xhr.responseJSON;
+                    if (200 == xhr.status) {
+                        swal("{{ 'Success'|trans }}!", "Operação executada com sucesso!", "success");
+                        window.setTimeout(function () {
+                            swal.close();
+                        }, 500);
+                        row.remove();
+                    } else {
+                        swal("{{ 'Error'|trans }}!", response.error, "error");
+                    }
+                },
+                beforeSend: function () {
+                    swal({
+                        title: "Processando...",
+                        text: "Aguarde!",
+                        type: "info",
+                        showConfirmButton: false
+                    });
+                }
+            });
+        });
+    });
+
+    {% else %}
+
+    $('[data-delete]').on('click', function () {
+        var url = $(this).data('delete');
+        var row = $(this).closest('tr');
+        swal({
+            title: "Confirmar esta operação?",
+            text: null,
+            type: "info",
+            showCancelButton: true,
+            cancelButtonText: "{{ 'Cancel'|trans }}",
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "{{ 'Confirm'|trans }}!",
+            closeOnConfirm: false
+        }, function () {
+            $.ajax({
+                url: url,
+                method: 'post',
+                data: {_method: 'delete'},
+                complete: function (xhr) {
+                    var response = xhr.responseJSON;
+                    if (200 == xhr.status) {
+                        swal("{{ 'Success'|trans }}!", "Operação executada com sucesso!", "success");
+                        window.setTimeout(function () {
+                            swal.close();
+                        }, 500);
+                        row.remove();
+                    } else {
+                        swal("{{ 'Error'|trans }}!", response.error, "error");
+                    }
+                },
+                beforeSend: function () {
+                    swal({
+                        title: "Excluindo...",
+                        text: "Aguarde!",
+                        type: "info",
+                        showConfirmButton: false
+                    });
+                }
+            });
+        });
+    });
+
+
+    $('[data-publish]').on('click', function () {
+        var url = $(this).data('publish');
+        var row = $(this).closest('tr');
+        swal({
+            title: "Confirmar esta operação?",
+            text: null,
+            type: "info",
+            showCancelButton: true,
+            cancelButtonText: "{{ 'Cancel'|trans }}",
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "{{ 'Confirm'|trans }}!",
+            closeOnConfirm: false
+        }, function () {
+            $.ajax({
+                url: url,
+                method: 'post',
+                complete: function (xhr) {
+                    var response = xhr.responseJSON;
+                    if (200 == xhr.status) {
+                        swal("{{ 'Success'|trans }}!", "Operação executada com sucesso!", "success");
+                        window.setTimeout(function () {
+                            swal.close();
+                        }, 500);
+                        row.remove();
+                    } else {
+                        swal("{{ 'Error'|trans }}!", response.error, "error");
+                    }
+                },
+                beforeSend: function () {
+                    swal({
+                        title: "Publicando...",
+                        text: "Aguarde!",
+                        type: "info",
+                        showConfirmButton: false
+                    });
+                }
+            });
+        });
+    });
+
+    {% endif %}
+</script>

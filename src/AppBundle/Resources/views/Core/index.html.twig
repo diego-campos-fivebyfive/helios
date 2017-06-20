@@ -1,0 +1,88 @@
+{% extends view('layout') %}
+
+{% block styles %}
+
+    {% stylesheets
+        'inspinia/css/plugins/jsTree/style.min.css'
+        filter='cssrewrite'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+
+{% endblock %}
+
+{% block body %}
+
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5> Application Tree</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div id="app_tree">
+
+                        <ul>
+                            <li class="jstree-open"> SOL.RM
+                                <ul>
+
+                                    <li>css
+                                        <ul>
+                                            <li data-jstree='"type":"css"}'>animate.css</li>
+                                            <li data-jstree='"type":"css"}'>bootstrap.css</li>
+                                            <li data-jstree='"type":"css"}'>style.css</li>
+                                        </ul>
+                                    </li>
+
+                                    {#<li>email-templates
+                                        <ul>
+                                            <li data-jstree='"type":"html"}'>action.html</li>
+                                            <li data-jstree='"type":"html"}'>alert.html</li>
+                                            <li data-jstree='"type":"html"}'>billing.html</li>
+                                        </ul>
+                                    </li>#}
+                                </ul>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block scripts %}
+
+    {% javascripts
+        'inspinia/js/plugins/jsTree/jstree.min.js'
+        output='js/compiled/main.js'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script>
+        $(function(){
+
+            $('#app_tree').jstree({
+                'core': {
+                    'check_callback': true
+                },
+                'plugins': ['types', 'dnd']
+            });
+
+        });
+    </script>
+
+{% endblock %}

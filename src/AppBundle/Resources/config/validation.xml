@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping
+                    http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+
+    <class name="Kolina\CustomerBundle\Entity\Customer">
+        <property name="email">
+            <constraint name="Email">
+                <option name="checkMX">true</option>
+                <option name="checkHost">true</option>
+                <option name="message">The email entered is not valid</option>
+            </constraint>
+        </property>
+        <property name="firstname">
+            <constraint name="Length">
+                <option name="min">4</option>
+                <option name="minMessage">The name entered is too short</option>
+                <option name="max">254</option>
+                <option name="maxMessage">The name entered is too long</option>
+                <option name="groups">
+                    <value>profile</value>
+                </option>
+            </constraint>
+        </property>
+    </class>
+
+    <class name="AppBundle\Entity\Extra\AccountRegister">
+        <property name="name">
+            <constraint name="NotBlank">
+                <option name="groups">
+                    <value>info</value>
+                </option>
+            </constraint>
+            <constraint name="Length">
+                <option name="min">4</option>
+                <option name="minMessage">The name entered is too short</option>
+                <option name="max">254</option>
+                <option name="maxMessage">The name entered is too long</option>
+            </constraint>
+        </property>
+        <property name="email">
+            <constraint name="Email">
+                <option name="checkMX">true</option>
+                <option name="checkHost">true</option>
+                <option name="message">The email entered is not valid</option>
+            </constraint>
+        </property>
+    </class>
+
+    <class name="AppBundle\Entity\User">
+        <property name="plainPassword">
+            <constraint name="NotBlank">
+                <option name="message">fos_user.password.blank</option>
+            </constraint>
+            <constraint name="Length">
+                <option name="min">6</option>
+                <option name="max">4096</option>
+                <option name="minMessage">fos_user.password.short</option>
+            </constraint>
+        </property>
+    </class>
+
+</constraint-mapping>

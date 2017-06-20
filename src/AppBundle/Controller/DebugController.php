@@ -1,0 +1,59 @@
+<?php
+
+namespace AppBundle\Controller;
+
+use AppBundle\Entity\BusinessInterface;
+use AppBundle\Entity\Component\ComponentInterface;
+use AppBundle\Entity\Component\Kit;
+use AppBundle\Entity\Component\Maker;
+use AppBundle\Entity\Component\PricingManager;
+use AppBundle\Entity\Customer;
+use AppBundle\Entity\Financial\ProjectFinancial;
+use AppBundle\Entity\Financial\ProjectFinancialInterface;
+use AppBundle\Entity\Financial\ProjectFinancialManager;
+use AppBundle\Entity\Financial\Tax;
+use AppBundle\Entity\ParameterManager;
+use AppBundle\Entity\Project\NasaCatalog;
+use AppBundle\Entity\Project\Project;
+use AppBundle\Entity\Project\ProjectInterface;
+use AppBundle\Entity\Project\ProjectInverterInterface;
+use AppBundle\Form\Financial\TaxType;
+use AppBundle\Form\Project\NasaCatalogType;
+use AppBundle\Form\Settings\KitPricingType;
+use AppBundle\Model\KitPricing;
+use AppBundle\Service\ProjectFilter;
+use AppBundle\Service\ProjectHelper;
+use AppBundle\Service\ProjectProcessor;
+use AppBundle\Service\ProposalFilter;
+use AppBundle\Service\Support\Project\Financial;
+use AppBundle\Service\Support\Project\FinancialAnalyzer;
+use AppBundle\Service\Woopra\Event;
+use Doctrine\Common\Collections\ArrayCollection;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Vindi\Exceptions\RequestException;
+
+/**
+ * @Route("debug")
+ */
+class DebugController extends AbstractController
+{
+    /**
+     * @Route("/", name="debug_index")
+     */
+    public function indexAction(Request $request)
+    {
+        $clientManager = $this->container->get('fos_oauth_server.client_manager.default');
+
+        /** @var \ApiBundle\Entity\Client $client */
+        $client = $clientManager->createClient();
+        $client->setRedirectUris(array('http://localhost:8000/the_page'));
+        $client->setAllowedGrantTypes(array('token', 'authorization_code', 'client_credentials'));
+        $clientManager->updateClient($client);
+
+        dump($client); die;
+    }
+}

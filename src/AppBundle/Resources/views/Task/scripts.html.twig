@@ -1,0 +1,157 @@
+<script>
+    $(function () {
+
+        var pagination = $('ul.pagination');
+        pagination.find('a').on('click', function(event){
+            event.preventDefault();
+            var url = $(this).attr('href');
+            if(url){
+                TaskManager.load(url);
+            }
+        });
+
+        /*form_filter = $('form[name="task_filter"]');
+        form_filter.on('submit', function(event){
+            event.preventDefault();
+            get_tasks('#', $(this).serialize());
+        });*/
+
+        $('.task-edit').on('click', function () {
+            //get_task_form($(this).data('url'));
+            TaskManager.form.load($(this).data('url'));
+        });
+
+        $('.task-delete').on('click', function () {
+            var url = $(this).data('url');
+            if (url) {
+
+                swal({
+                    title: "{{ 'confirm.exclusion'|trans }}",
+                    text: null,
+                    type: "info",
+                    showCancelButton: true,
+                    cancelButtonText: "{{ 'Cancel'|trans }}",
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "{{ 'Delete'|trans }}!",
+                    closeOnConfirm: false
+                }, function () {
+
+                    $.ajax({
+                        url: url,
+                        method: 'post',
+                        data: {_method: 'delete'},
+                        success: function (response) {
+                            if (response.hasOwnProperty('error')) {
+                                swal("{{ 'Error'|trans }}!", response.error, "error");
+                            } else {
+                                swal("{{ 'Success'|trans }}!", "{{ 'Was successful exclusion'|trans }}!", "success");
+                                //get_tasks();
+                                //TaskManager.filter.submit();
+                                window.setTimeout(function(){
+                                    swal.close();
+                                    TaskManager.filter.submit();
+                                }, 1000);
+                            }
+                        },
+                        beforeSend: function () {
+                            swal({
+                                title: "{{ 'Excluding'|trans }}...",
+                                text: null,
+                                type: "info",
+                                showConfirmButton: false
+                            });
+                        }
+                    });
+                });
+            }
+        });
+
+        var task_done = $('.task-done');
+        if (task_done.length) {
+            task_done.on('click', function () {
+                var button = $(this);
+                var url = button.data('url');
+                if (url && !button.hasClass('done')) {
+
+                    swal({
+                        title: 'Finalizar Tarefa?',
+                        text: null,
+                        type: "info",
+                        showCancelButton: true,
+                        cancelButtonText: "{{ 'Cancel'|trans }}",
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Finalizar",
+                        closeOnConfirm: false
+                    }, function () {
+
+                        $.ajax({
+                            url: url,
+                            method: 'post',
+                            success: function (response) {
+                                if (response.hasOwnProperty('error')) {
+                                    swal("{{ 'Error'|trans }}!", response.error, "error");
+                                } else {
+                                    swal("{{ 'Success'|trans }}!", "Tarefa finalizada com sucesso!", "success");
+                                    window.setTimeout(function(){
+                                        swal.close();
+                                        TaskManager.filter.submit();
+                                    }, 1000);
+                                }
+                            },
+                            beforeSend: function () {
+                                swal({
+                                    title: "Finalizando...",
+                                    text: null,
+                                    type: "info",
+                                    showConfirmButton: false
+                                });
+                            }
+                        });
+                    });
+                }
+            });
+        }
+
+        var taskButtons = $('[data-task-action]');
+        taskButtons.on('click', function(){
+            var btn = $(this), url = btn.data('task-action'), title = btn.data('title');
+            if(url){
+                swal({
+                    title: title,
+                    text: null,
+                    type: "info",
+                    showCancelButton: true,
+                    cancelButtonText: "{{ 'Cancel'|trans }}",
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Confirmar",
+                    closeOnConfirm: false
+                },function () {
+                    $.ajax({
+                        url: url,
+                        method: 'post',
+                        success: function (response) {
+                            if (response.hasOwnProperty('error')) {
+                                swal("{{ 'Error'|trans }}!", response.error, "error");
+                            } else {
+                                swal("{{ 'Success'|trans }}!", "Operação realizada com sucesso.", "success");
+                                window.setTimeout(function(){
+                                    swal.close();
+                                    TaskManager.filter.submit();
+                                }, 1000);
+                            }
+                        },
+                        beforeSend: function () {
+                            swal({
+                                title: "Processando...",
+                                text: null,
+                                type: "info",
+                                showConfirmButton: false
+                            });
+                        }
+                    });
+                });
+            }
+        });
+
+    });
+</script>

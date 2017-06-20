@@ -1,0 +1,22 @@
+{% set _route = app.request.attributes.get('_route') %}
+{% set is_owner = app.user.hasRole('ROLE_OWNER') %}
+
+<div class="btn-group btn-group- btn-group-justified">
+    {% if 'project_create' == _route %}
+
+        {% if is_owner %}
+            <a href="{{ path('kit_create') }}" class="btn btn-primary">
+                <i class="fa fa-th"></i> {{ 'add.kit'|trans }}
+            </a>
+        {% endif %}
+
+        <a href="{{ path('contact_create',{context:'person'}) }}" class="btn btn-primary">
+            <i class="fa fa-male"></i> {{ 'add.person'|trans }}
+        </a>
+
+        <a href="{{ path('contact_create',{context:'company'}) }}" class="btn btn-primary">
+            <i class="fa fa-building"></i> {{ 'add.company'|trans }}
+        </a>
+
+    {% endif %}
+</div>

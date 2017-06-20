@@ -1,0 +1,15 @@
+{% set background = parameters.get('section_title_background') %}
+{% set color = parameters.get('section_title_color') %}
+
+<table width="100%" border="0" cellspacing="0" cellpadding="4">
+    <thead class="header">
+    <tr>
+        <th align="left" style="background: {{ background }}; color: {{ color }}; font-weight:bold;font-size:16px;">
+            {{ section.title }}
+        </th>
+    </tr>
+    </thead>
+</table>
+<div style="width:100%;">
+    {{ section.content|raw }}
+</div>

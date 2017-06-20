@@ -1,0 +1,41 @@
+<script>
+    $(document).ready(function () {
+        $('[data-delete-contact]').on("click", function () {
+            var url = $(this).data('delete-contact');
+            var row = $(this).closest('tr');
+
+            swal({
+                title: "Confirma exclusão?",
+                text: "Os dados do contato serão perdidos",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Confirmar",
+                cancelButtonText: "Cancelar",
+                closeOnConfirm: false
+            }, function () {
+
+                $.ajax({
+                    url: url,
+                    method: 'post',
+                    data: {_method:'delete'},
+                    complete: function(xhr){
+                        if(200 == xhr.status){
+                            sweetAlert("Sucesso!", "Contato excluído com sucesso!", "success");
+                            window.setTimeout(function(){
+                                swal.close();
+                            }, 1000);
+                            //row.remove();
+                            window.location.href = '{{ path('contact_index',{context:contact.context.id}) }}';
+                        }else{
+                            var response = xhr.responseJSON;
+                            sweetAlert("Erro!", response.error, "error");
+                        }
+                    }
+                })
+
+            });
+        });
+    });
+
+</script>

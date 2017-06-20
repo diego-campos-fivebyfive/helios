@@ -1,0 +1,37 @@
+<div class="ibox float-e-margins">
+    <div class="ibox-title">
+        <span class="label label-success pull-right">
+            <i class="{{ icon('sale_stages') }}"></i>
+        </span>
+        <h5> Etapas de venda dos projetos </h5>
+    </div>
+
+    {% for data in collection %}
+
+        {% set stage = data.stage %}
+
+    <div class="ibox-content">
+        <div class="row">
+            <div class="col-xs-3">
+                <small class="stats-label"> Etapa de venda </small>
+                <h4> {{ stage.name }} </h4>
+            </div>
+
+            <div class="col-xs-3">
+                <small class="stats-label"> Quantidade de projetos </small>
+                <h4> {{ data.count }} </h4>
+            </div>
+            <div class="col-xs-3">
+                <small class="stats-label"> Valor dos projetos </small>
+                <h4> {{ data.amount|currency }} </h4>
+            </div>
+            <div class="col-xs-3">
+                <small class="stats-label"> Potência dos projetos </small>
+                <h4> {{ data.power|decimal }} kWp </h4>
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+
+</div>

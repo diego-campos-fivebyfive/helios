@@ -1,0 +1,22 @@
+{% set configured_modules = project.configuredModules %}
+{% set configured_error = false %}
+
+{% for configured in configured_modules if ((configured.available != configured.applied) and (not configured_error)) %}
+    {% set configured_error = true %}
+    <div class="alert alert-warning">
+        Aviso: O número de módulos configurados não coincide com o número de módulos do KIT.
+        {% if project.kit.isPriceComputable %}
+            O preço de venda será recalculado
+        {% endif %}
+    </div>
+{% endfor %}
+
+{% set metadata_operations = project.metadataOperations %}
+{% set metadata_error = false %}
+
+{% for metadata in metadata_operations if ((not metadata.operable) and (not metadata_error)) %}
+    {% set metadata_error = true %}
+    <div class="alert alert-warning">
+        Aviso: há inversor(es) configurado(s) fora de seus limites de operação
+    </div>
+{% endfor %}

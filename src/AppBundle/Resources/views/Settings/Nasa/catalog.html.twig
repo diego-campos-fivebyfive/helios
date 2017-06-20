@@ -1,0 +1,141 @@
+{% extends view('layout') %}
+
+{% block styles %}
+
+    <style>
+        #map {
+            width: 100%;
+            height: 400px;
+            background: #f7f7f7;
+        }
+
+        #location {
+            width: 75%;
+            margin-top: 10px;
+        }
+    </style>
+
+{% endblock %}
+
+{% block body %}
+
+    <div class="wrapper wrapper-content animated fadeIn">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5> <i class="{{ icon('sun') }}"></i> Dados Climáticos </h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <form>
+                                    <div class="hide">
+                                    <input type="text" id="latitude" name="latitude" placeholder="">
+                                    <input type="text" id="longitude" name="longitude" placeholder="">
+                                    </div>
+                                    <input id="location" class="form-control" type="text"
+                                           placeholder="Informe o endereço desejado">
+                                </form>
+                                <div id="map"></div>
+                            </div>
+
+                            <div id="nasa_container" class="col-md-6" style="margin-top:;">
+                                <h2 class="text-center"> Pesquise pela localização desejada para ter acesso aos dados climáticos </h2>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    {% include view('helper.google_maps') with({
+    latitude: 'latitude',
+    longitude: 'longitude',
+    zoom: 17,
+    input: 'location'
+    }) %}
+
+    <script>
+        var NasaCatalog = {
+            getLatitude: function(){
+                return $('#latitude').val();
+            },
+            getLongitude: function(){
+                return $('#longitude').val();
+            },
+            container: $('#nasa_container'),
+            load: function(){
+                window.setTimeout(function() {
+                    $.ajax({
+                        url: '{{ path('nasa_info') }}',
+                        data: {latitude: NasaCatalog.getLatitude(), longitude: NasaCatalog.getLongitude()},
+                        complete: function (xhr) {
+                            if (200 == xhr.status) {
+                                NasaCatalog.container.html(xhr.responseText);
+                            }
+                        }
+                    });
+                }, 1000);
+            },
+            recycle: function(){
+                swal({
+                    title: "Restaurar dados?",
+                    text: "Neste processo os dados editados serão excluídos, e os dados originais da nasa restaurados",
+                    type: "info",
+                    showCancelButton: true,
+                    cancelButtonText: "{{ 'Cancel'|trans }}",
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Restaurar",
+                    closeOnConfirm: false
+                }, function () {
+                    $.ajax({
+                        url: '{{ path('nasa_recycle') }}',
+                        method: 'post',
+                        data: {_method:'delete', latitude: NasaCatalog.getLatitude(), longitude: NasaCatalog.getLongitude()},
+                        complete: function(xhr){
+                            var response = xhr.responseJSON;
+                            if(200 == xhr.status){
+                                swal("{{ 'Success'|trans }}!", "Dados restaurados", "success");
+                                NasaCatalog.load();
+                                window.setTimeout(function(){
+                                    swal.close();
+                                },500);
+                            }else{
+                                swal("{{ 'Error'|trans }}!", response.error, "error");
+                            }
+                        },
+                        beforeSend: function(){
+                            swal({
+                                title: "Restaurando...",
+                                text:  "Aguarde!",
+                                type: "info",
+                                showConfirmButton: false
+                            });
+                        }
+                    });
+                });
+            }
+        };
+    </script>
+
+    <script>
+        $(function () {
+            $('#latitude').on('change', function () {
+                NasaCatalog.load();
+            });
+
+            if(NasaCatalog.getLatitude() && NasaCatalog.getLongitude()){
+                NasaCatalog.load();
+            }
+        });
+    </script>
+
+{% endblock %}

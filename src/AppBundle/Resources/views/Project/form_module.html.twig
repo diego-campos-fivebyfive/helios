@@ -1,0 +1,358 @@
+{% set random = random() %}
+
+{% set form_id = ['pmf', random]|join %}
+
+{% set has_module = project_module.module is not null %}
+
+{% set mod_power = has_module ? project_module.power : null %}
+{% set mod_area = has_module ? project_module.totalArea : null %}
+
+{% set op_color = project_module.metadataOperation|length ? project_module.metadataOperation.level : 'danger' %}
+
+<style>
+    .stacked-area .bootstrap-touchspin-prefix{
+        font-size: 13px;
+    }
+    .stacked-area .area-io .bootstrap-touchspin-prefix{
+        width: 120px !important;
+    }
+    .stacked-area .area-io .bootstrap-touchspin-postfix{
+        border-left: none; 
+        font-size: 18px; 
+        padding-left: 0;
+    }
+    .stacked-area .area-io input{
+        border-right: none;
+        padding: 0;
+    }
+    .stacked-area .area-strings .bootstrap-touchspin-prefix{
+        width: 140px !important;
+    }
+    .stacked-area .area-strings .form-control{
+        padding: 0 !important;
+    }
+    .stacked-area .bootstrap-touchspin .form-control:focus{
+        border-color: #e5e6e7 !important;
+    }
+    .stacked-area{
+        padding-top: 1rem;
+        background: #efefef;
+    }
+    .stacked-area table.table td{
+        border-top: 1px solid transparent;
+    }
+    form.edit-mode select[disabled],
+    form.edit-mode input[type="text"],
+    form.edit-mode .input-group-addon,
+    form.edit-mode .bootstrap-touchspin-up,
+    form.edit-mode .bootstrap-touchspin-down,
+    form.edit-mode .btn-default{
+        background: transparent;
+    }
+    .mod-pre-info .input-group-addon{
+        padding: 9px;
+        font-size: 13px;
+    }
+    .mod-pre-info .input-group-addon:first-child{
+        border-right: 1px solid #E5E6E7;
+    }
+</style>
+
+
+
+{{ form_start(form,{'attr':{'id':form_id}}) }}
+
+<div class="modal inmodal fade" id="modal_loss_module{{ random }}" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        <i class="{{ icon('modules') }} mega-icon"></i>  <br/>
+                        Módulos
+                    </div>
+                    <div class="col-md-6 text-center">
+                        {{ form_widget(form.loss,{'attr':{'class':'form-control module-loss info-loss text-center'}}) }}
+                        <button type="button" data-style="zoom-in" class="update-loss btn btn-sm btn-block btn-success ladda-button">
+                            <i class="fa fa-angle-double-left"></i>
+                                Aplicar
+                            <i class="fa fa-angle-double-right"></i>
+                        </button>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <i class="{{ icon('inverters') }} mega-icon"></i> <br/>
+                        Inversor
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white btn-sm" data-dismiss="modal">{{ 'Close'|trans }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12 stacked-area">
+
+    <div class="col-md-12 text-center">
+        <h5> {{ project_module.mpptName }} </h5>
+    </div>
+
+    <div class="col-md-3">
+        <table class="table">
+            <tr>
+                <td>
+                    {{ form_widget(form.module, {'attr':{'class':'form-control area-module'}}) }}   
+                </td>
+            </tr>   
+            <tr>
+                <td>
+
+                    <div class="input-group mod-pre-info">
+                        <span class="input-group-addon" id="mod_power{{ random }}">
+                            {{ mod_power ? mod_power : 0 }} kWp
+                        </span>
+                        <span class="input-group-addon" id="mod_area{{ random }}">
+                            {{ mod_area ? mod_area|round(2) : 0 }} m²
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        </table>   
+    </div>
+
+    <div class="col-md-3 area-io">
+        <table class="table">
+            <tr>
+                <td>
+                    {{ form_widget(form.inclination, {'attr':{'class':'form-control area-inclination text-right'}}) }}
+                </td>
+            </tr>   
+            <tr>
+                <td>
+                    {{ form_widget(form.orientation, {'attr':{'class':'form-control area-orientation text-right'}}) }}
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="col-md-3 area-strings">
+        <table class="table">
+            <tr>
+                <td>
+                    {{ form_widget(form.stringNumber, {'attr':{'class':'form-control area-strings text-center'}}) }}
+                </td>
+            </tr>   
+            <tr>
+                <td>
+                    {{ form_widget(form.moduleString, {'attr':{'class':'form-control area-per-string text-center'}}) }}
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="col-md-3">
+        <table class="table table-bordered--">
+            <tr>
+                <td>
+                    <div class="btn-group btn-group-justified">
+                        <a data-toggle="modal" data-target="#modal_loss_module{{ random }}" class="btn btn-md btn-default">
+                            Perdas %
+                        </a>
+                        <a data-toggle="modal" data-href="{{ path('area_operation',{id:project_module.id}) }}" data-target="#modal_operation_info" class="btn btn-md btn-{{ op_color }} module-info operation-info edit-unlocked">
+                            <i class="fa fa-dot-circle-o"></i> Limites
+                        </a>
+                    </div>
+                </td>
+            </tr>   
+            <tr>
+                <td>
+                    <button data-style="zoom-in" type="submit" class="btn btn-small btn-block ladda-button btn-success edit-unlocked">
+                        <i class="fa fa-save"></i> {{ 'Save'|trans }}
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+
+<div class="col-md-12">&nbsp;</div>
+
+{{ form_end(form) }}
+
+<div class="hr-line-dashed"></div>
+
+<script>
+    $(function(){
+        var mod_form = $('#{{ form_id }}');
+        var mod_button = mod_form.find('[type="submit"]');
+        var mod_mod = mod_form.find('[name="project_module[module]"]');
+        var mod_table = $('#table_mod{{ random }}'); // NOK
+        var form_mode = 'save';
+        var loss_button = mod_form.find('button.update-loss');
+
+        function update_form_module(options){
+            $.ajax({
+                url: '{{ path('project_module_update',{id:project_module.id}) }}',
+                method: 'post',
+                data: mod_form.serialize(),
+                success: function (response) {
+                    if(options.hasOwnProperty('callback')){
+                        options.callback(response);
+                    }
+                }
+            });
+        }
+
+        mod_button.ladda();
+        mod_form.on('submit', function(event){
+            event.preventDefault();
+            if('save' == form_mode) {
+                mod_button.ladda('start');
+                update_form_module({
+                    callback: function(response){
+                        mod_button.ladda('stop');
+                        if (response.hasOwnProperty('module')) {
+                            $('#mod_power{{ random }}').html(response.module.power + ' kWp');
+                            $('#mod_area{{ random }}').html(response.module.area.toFixed(2) + ' m²');
+                        }
+                        check_form();
+                        check_operations({{ project_module.inverter.id }});
+                    }
+                });
+            }else{
+                enable_form();
+            }
+        });
+
+        var area_inclination = mod_form.find('input.area-inclination');
+        var area_orientation = mod_form.find('input.area-orientation');
+        var area_strings = mod_form.find('input.area-strings');
+        var area_per_string = mod_form.find('input.area-per-string');
+        var module_loss = mod_form.find('.module-loss');
+
+        area_inclination.TouchSpin({
+            prefix: '<i class="fa fa-external-link-square"></i> Inclinação',
+            postfix: '&deg;',
+            min: 0,
+            max: 180,
+            step: 1,
+            verticalbuttons: true
+        });
+
+        area_orientation.TouchSpin({
+            prefix: '<i class="fa fa-compass"></i> Orientação',
+            postfix: '&deg;',
+            min: -359,
+            max: 359,
+            step: 1,
+            verticalbuttons: true
+        });
+
+        area_strings.TouchSpin({
+            min: 1,
+            step: 1,
+            verticalbuttons: true,
+            prefix: 'Número de strings'
+        });
+
+        area_per_string.TouchSpin({
+            min: 1,
+            step: 1,
+            verticalbuttons: true,
+            prefix: 'Módulos por string'
+        });
+
+        /*module_loss.TouchSpin({
+            step: 0.1,
+            max: 99,
+            min: 0.00,
+            decimals: 2,
+            verticalbuttons: true
+        });*/
+
+        Numbers.mask(module_loss);
+
+        function update_touchspin(element, min, max){
+            var disable = false;
+            if(null == min){
+                min = element.val(); max = min;
+                disable = true;
+            }
+            element.trigger('touchspin.updatesettings',{min:min, max:max});
+            if(disable){
+                element.attr('disabled', true);
+            }else{
+                element.removeAttr('disabled');
+            }
+        }
+
+        function check_form(){
+            if(mod_mod.val()){
+                disable_form();
+            }else{
+                enable_form();
+            }
+        }
+
+        function enable_form(){
+            form_mode = 'save';
+
+            mod_form.find('input, select').removeAttr('disabled');
+            mod_button.html('<i class="fa fa-save"></i> {{ 'Save'|trans }}').ladda();
+
+            update_touchspin(area_inclination, 0, 180);
+            update_touchspin(area_orientation, -359, 359);
+            update_touchspin(area_strings, 1, 1000);
+            update_touchspin(area_per_string, 1, 1000);
+            update_touchspin(module_loss, 0.00, 99);
+            mod_mod.removeAttr('disabled');
+            loss_button.removeAttr('disabled');
+
+            mod_form.removeClass('edit-mode');
+
+            Project.clear_info();
+        }
+
+        function disable_form(){
+            form_mode = 'edit';
+
+            update_touchspin(area_inclination);
+            update_touchspin(area_orientation);
+            update_touchspin(area_strings);
+            update_touchspin(area_per_string);
+            update_touchspin(module_loss);
+            mod_mod.attr('disabled', true);
+
+            mod_button.html('<i class="fa fa-pencil"></i> {{ 'Edit'|trans }}');
+            loss_button.attr('disabled', true);
+
+            mod_form.addClass('edit-mode');
+        }
+
+        check_form();
+
+        mod_mod.on('change', function(){
+            /*if($(this).val()){ mod_form.trigger('submit'); }*/
+        });
+
+        var modal_loss = $('#modal_loss_module{{ random }}');
+        var apply_loss = modal_loss.find('button.update-loss');
+        apply_loss.ladda();
+        apply_loss.on('click', function(event){
+            event.preventDefault();
+            apply_loss.ladda('start');
+            update_form_module({
+                callback: function(response){
+                    apply_loss.ladda('stop');
+                    modal_loss.modal('hide');
+                    check_form();
+                }
+            });
+        });
+
+    });
+</script>

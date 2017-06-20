@@ -1,0 +1,18 @@
+{% set placeholder = category.context.id == 'contact_category' ? 'Adicionar categoria' : 'Adicionar etapa de venda' %}
+
+<div class="row">
+    {{ form_start(form,{attr:{id:category.context.id}}) }}
+    <div class="input-group">
+        {{ form_widget(form.name, {attr:{class:'form-control',placeholder:placeholder}}) }}
+        <div class="input-group-btn">
+            <button type="submit" class="btn btn-md btn-primary ladda-button" data-style="zoom-in">
+                <i class="fa fa-save"></i> {{ 'Save'|trans }}
+            </button>
+            <button id="btn-cancel" class="btn btn-white hide" type="button">
+                <i class="fa fa-angle-double-left"></i> {{ 'Cancel'|trans }}
+            </button>
+        </div>
+    </div>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+</div>

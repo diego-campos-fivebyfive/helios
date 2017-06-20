@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Inovador Solar &mdash; {% block title %}{% endblock %} </title>
+    <link rel="shortcut icon" href="{{ asset('assets/img/favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('assets/img/favicon.ico') }}" type="image/x-icon">
+    {% stylesheets output='assets/css/front.css' filter='cssrewrite,uglifycss'
+        'assetic/app.css'
+        'assetic/bootstrap.min.css'
+        'assets/font-awesome/css/font-awesome.css'
+        'assetic/toastr/toastr.min.css'
+        'assetic/animate.css'
+        'assetic/style.css'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}">
+    {% endstylesheets %}
+    <style>
+        h3.block-title{
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body class="gray-bg">
+<div class="middle-box text-center loginscreen animated fadeInDown">
+    <div>
+        <div>
+            <img src="{{ asset('assets/img/logo_front.png') }}" style="width: 17rem;">
+        </div>
+        {% block fos_user_content %}
+        {% endblock fos_user_content %}
+        <p class="m-t">
+            <small> Inovador Solar &reg;{{ "now"|date('Y') }} </small>
+        </p>
+    </div>
+</div>
+{% javascripts output='assets/front.js' filter='uglifyjs2'
+    'assetic/jquery-2.1.1.js'
+    'assetic/bootstrap.min.js'
+    'assetic/toastr/toastr.min.js'
+    'assetic/jquery.mask.js'
+%}
+<script src="{{ asset_url }}"></script>
+{% endjavascripts %}
+<script>
+    function display_error(message){
+        toastr.error(message, '', {
+            positionClass: 'toast-top-center',
+            progressBar: true,
+            preventDuplicates: true
+        });
+    }
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
+
+
+

@@ -1,0 +1,260 @@
+<style>
+.ui-slider-handle > .ui-slider-tip{
+    top: -40px;
+    width: 50px;
+    margin-left: -25px;
+}
+.ui-slider .ui-slider-handle {
+    background: #444;
+    border: 0;
+}
+.tip-adjust .ui-slider-handle:first-child > .ui-slider-tip{
+    top: -20px;
+}
+.tip-adjust .ui-slider-handle:nth-child(2){
+    background: #999 !important;
+}
+.panel-ruler .panel-body{
+    padding-top: 5rem;
+}
+.operation-filament{
+    background: transparent;
+    z-index: 999; 
+    width:100%; 
+    height: 100%;
+    position: absolute;
+}
+/*.ruler-bar .progress-bar-success{
+    background:#5cb85c;
+}*/
+</style>
+
+<div class="row" style="position: relative;">
+    <div class="operation-filament">
+    </div>
+    <div class="col-lg-12">
+
+        {# MPPT #}
+        <div class="panel panel-default panel-ruler">
+            <div class="panel-heading">
+                <span class="label label-plain">
+                    Tensão de MPPT <i class="fa fa-chevron-right"></i>
+                    Min <i class="fa fa-angle-double-right"></i> {{ data.mppt.min }} V &mdash;
+                    Máx <i class="fa fa-angle-double-right"></i>  {{ data.mppt.max }} V
+                </span>
+                &nbsp;
+                <span class="label label-plain">
+                    Temperatura <i class="fa fa-chevron-right"></i>
+                    Min <i class="fa fa-angle-double-right"></i>  {{ data.mppt.air_temp_min }} ºC &mdash;
+                    Máx <i class="fa fa-angle-double-right"></i>  {{ data.mppt.air_temp_max }} ºC
+                </span>
+            </div>
+            <div class="panel-body">
+
+                <div class="progress ruler-bar">
+                    <div class="progress-bar progress-bar-danger" style="width:{{ data.mppt.percentOffset }}%">
+                        <span class="sr-only"></span>
+                    </div>
+                    <div class="progress-bar progress-bar-success" style="width:{{ data.mppt.percentCenter }}%">
+                        <span class="sr-only"></span>
+                    </div>
+                    <div class="progress-bar progress-bar-danger" style="width:{{ data.mppt.percentLimit }}%">
+                        <span class="sr-only"></span>
+                    </div>
+                </div>
+                <div id="mppt-slider"></div>
+
+            </div>
+        </div>
+
+        {# VOLTAGE #}
+        <div class="panel panel-default panel-ruler">
+            <div class="panel-heading">
+                <span class="label label-plain">
+                    Tensão de Circuito Aberto <i class="fa fa-chevron-right"></i>
+                    Máx <i class="fa fa-angle-double-right"></i> {{ data.voltage.max_dc_voltage }} V
+                </span>
+            </div>
+            <div class="panel-body">
+                <div class="progress ruler-bar">
+                    <div class="progress-bar progress-bar-success" style="width:{{ data.voltage.percent }}%">
+                        <span class="sr-only"></span>
+                    </div>
+                    <div class="progress-bar progress-bar-danger" style="width:{{ (100-data.voltage.percent) }}%">
+                        <span class="sr-only"></span>
+                    </div>
+                </div>
+                <div id="voltage-slider"></div>
+            </div>
+        </div>
+
+        {# CURRENT #}
+        <div class="panel panel-default panel-ruler">
+            <div class="panel-heading">
+                <span class="label label-plain">
+                    Corrente <i class="fa fa-chevron-right"></i>
+                    Máx <i class="fa fa-angle-double-right"></i>  {{ data.current.max_dc_current }} A
+                </span>
+            </div>
+            <div class="panel-body">
+                <div class="progress ruler-bar">
+                    <div class="progress-bar progress-bar-success" style="width:{{ data.current.percent }}%">
+                        <span class="sr-only"></span>
+                    </div>
+                    <div class="progress-bar progress-bar-danger" style="width:{{ (100-data.current.percent) }}%">
+                        <span class="sr-only"></span>
+                    </div>
+                </div>
+                <div id="current-slider"></div>
+            </div>
+        </div>
+
+        {# PERFORMANCE #}
+        <div class="panel panel-default panel-ruler">
+            <div class="panel-heading">
+                <span class="label label-plain">
+                    Potência <i class="fa fa-chevron-right"></i>
+                    Máx <i class="fa fa-angle-double-right"></i>
+                    {{ data.power.max_dc_power }} kW &mdash;
+                    Admissível <i class="fa fa-angle-double-right"></i>
+                    {{ data.power.max_dc_operation }} kW  &mdash;
+                    Tolerância <i class="fa fa-angle-double-right"></i>
+                    {{ data.power.warning_tolerance }} kW
+                </span>
+            </div>
+            <div class="panel-body">
+                <div class="progress ruler-bar">
+                    <div class="progress-bar progress-bar-success" style="width:{{ data.power.percentOffset }}%">
+                        <span class="sr-only"></span>
+                    </div>
+                    <div class="progress-bar progress-bar-warning" style="width:{{ data.power.percentCenter }}%">
+                        <span class="sr-only"></span>
+                    </div>
+                    <div class="progress-bar progress-bar-danger" style="width:{{ (data.power.percentLimit) }}%">
+                        <span class="sr-only"></span>
+                    </div>
+                </div>
+                <div id="power-slider"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+var mppt_slider = $('#mppt-slider');
+
+function init_mppt_slider(){
+
+    var m_min = {{ data.mppt.vmp_min_operation }};
+    var m_max = {{ data.mppt.vmp_max_operation }};
+
+    if(0 == mppt_slider.find('.ui-slider-tip').length){
+
+        mppt_slider.slider({
+            min: {{ data.mppt.offset }},
+            max: {{ data.mppt.limit }},
+            values: [m_min, m_max]
+        }).slider("pips", {
+            step: 50,
+            rest: "label"
+        }).slider("float");
+
+        window.setInterval(init_mppt_slider(), 2000);
+
+        if(m_max - m_min < 50){
+            mppt_slider.addClass('tip-adjust');
+        }
+
+    }else{
+        var mppt_tips = mppt_slider.find('.ui-slider-tip');
+        $(mppt_tips[0]).html(m_min.toFixed(2).replace('.', ','));
+        $(mppt_tips[1]).html(m_max.toFixed(2).replace('.', ','));
+    }
+}
+
+init_mppt_slider();
+
+var voltage_slider = $("#voltage-slider");
+function init_voltage_slider(){
+    var voltage_tips = voltage_slider.find('.ui-slider-tip');
+
+    if(0 == voltage_tips.length){
+
+        voltage_slider.slider({
+            min: {{ data.voltage.offset }},
+            max: {{ data.voltage.limit }},
+            values: [{{ data.voltage.voc_operation }}]
+        }).slider("pips", {
+            step: {{ data.voltage.limit / 15 }},
+            rest: "label"
+        }).slider("float");
+
+    }else{
+        $(voltage_tips[0]).html('{{ data.voltage.voc_operation }}'.replace('.',','));
+    }
+}init_voltage_slider();
+
+
+var current_slider = $("#current-slider");
+function init_current_slider(){
+
+    var current_tips = current_slider.find('.ui-slider-tip');
+
+    if(0 == current_tips.length){
+
+        current_slider.slider({
+            min: {{ data.current.offset }},
+            max: {{ data.current.limit }},
+            values: [{{ data.current.imp_operation }}],
+            step: 0.5
+        }).slider("pips", {
+            step: {{ data.current.step }},
+            rest: "label"
+        }).slider("float");
+
+
+        init_current_slider();
+
+    }else{
+
+        $(current_tips[0]).html('{{ data.current.imp_operation }}'.replace('.',','));
+    }
+
+}init_current_slider();
+
+
+
+var power_slider = $("#power-slider");
+
+    function init_power_slider(){
+        var power_labels = power_slider.find('.ui-slider-label');
+        if(0 == power_labels.length){
+
+            power_slider.slider({
+                min: {{ data.power.offset }},
+                max: {{ data.power.limit }},
+                values: [{{ data.power.max_operation }}],
+                step: 0.1
+            }).slider("pips", {
+                step: {{ data.power.step }},
+                rest: "label"
+            }).slider("float");
+
+            init_power_slider();
+
+        }else{
+
+            var power_tips = power_slider.find('.ui-slider-tip');
+            $(power_tips[0]).html('{{ data.power.max_operation }}'.replace('.', ','));
+
+            $.each(power_labels, function(i, label){
+                var label_value = parseFloat($(label).data('value')).toFixed(2);
+                $(label).html(label_value);
+            });
+
+        }
+    }init_power_slider();
+
+    </script>

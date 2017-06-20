@@ -1,0 +1,248 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+    {% macro list_members(members,tab) %}
+
+        {% set is_invited = 'invited' == tab %}
+        {% set is_inactive = 'inactive' == tab %}
+        {% set random = random() %}
+
+        <div class="col-md-4">
+            <div class="row">
+                <input type="text" class="form-control input-sm m-b-xs" id="filter{{ random }}" placeholder="{{ 'Search'|trans }}">
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="row">
+                {#{% if not deleted %}#}
+                <a data-href="{{ path('member_create') }}"
+                   data-toggle="modal"
+                   data-target="#user_modal"
+                   class="btn btn-md btn-primary pull-right">
+                    <i class="fa fa-plus"></i> Adicionar Usuário
+                </a>
+                {#{% endif %}#}
+            </div>
+        </div>
+
+        <table class="footable table table-stripped users_table" data-page-size="10" data-filter="#filter{{ random }}"
+               data-sorting="true">
+            <thead>
+            <tr>
+                {% if 'invited' != tab %}
+                <th> {{ 'Name'|trans }} </th>
+                {% endif %}
+                <th> {{ 'Email'|trans }} </th>
+                <th class="col-md-1"> {{ 'Status'|trans }} </th>
+                {% if 'invited' == tab %}
+                    <th> {{ 'Invited At'|trans }} </th>
+                {% endif %}
+                <th> &nbsp; </th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for member in members %}
+                {% set is_same = member.user and member.user.same(app.user) %}
+                {% set is_owner = member.isOwner or member.getAttribute('is_owner', false) %}
+                {% set is_master = member.masterOwner %}
+                {% set has_manage = not is_same and not is_master and not is_invited and not is_inactive %}
+
+            <tr>
+                {% if 'invited' != tab %}
+                    <td> {{ member.name }} </td>
+                {% endif %}
+                <td class="col-md-3">
+                    {{ member.email }}
+                </td>
+                <td data-value="{{ member.isOwner ? 'a' : 'z' }}">
+                    {% if is_owner %}
+                        <div class="label label-{{ is_master ? 'info' : 'default' }}" style="width: 100%;">
+                        {{ is_master ? 'Account Owner'|trans : 'Administrator'|trans }}
+                        </div>
+                    {% endif %}
+                </td>
+                {% if 'invited' == tab %}
+                    <td class="col-md-2">
+                        {{ member.createdAt|format_datetime }}
+                    </td>
+                {% endif %}
+                <td class="col-md-{{ has_manage ? '3' : '2' }}">
+                    <div class="btn-group btn-group-sm btn-group-justified">
+
+                        {% if member.deleted %}
+
+                            <a data-access="{{ path('member_restore', {'token': member.token }) }}"
+                               class="btn btn-xs btn-primary">
+                                <i class="fa fa-unlock"></i> Reativar
+                            </a>
+
+                        {% else %}
+
+                            {% if has_manage %}
+
+                                <a data-href="{{ path('member_update', {'token': member.token }) }}"
+                                   data-toggle="modal"
+                                   data-target="#user_modal"
+                                   class="btn btn-xs btn-success">
+                                    <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
+                                </a>
+
+                                <a data-access="{{ path('member_delete', {'token': member.token }) }}"
+                                   class="btn btn-xs btn-danger">
+                                    <i class="fa fa-lock"></i> Desativar
+                                </a>
+
+                            {% endif %}
+
+                            {% if 'invited' == tab %}
+                                <a data-access="{{ path('member_delete', {'token': member.token }) }}"
+                                   class="btn btn-xs btn-danger">
+                                    <i class="fa fa-eraser"></i> Cancelar convite
+                                </a>
+                            {% endif %}
+
+                        {% endif %}
+
+                    </div>
+                </td>
+            </tr>
+
+            {% endfor %}
+
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="4" class="text-center">
+                    <ul class="pagination"></ul>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+
+    {% endmacro %}
+
+    {% import _self as render %}
+
+
+    <div class="modal inmodal fade" id="user_modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" style="width: 400px;">
+            <div class="modal-content">
+                <div class="modal-body" id="user_modal_body">
+                    {% include view('kit.spinner') %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">
+                        {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row text-right">
+            <strong> Usuários ativos: {{ activeMembers.count }} de {{ account.maxMembers }} </strong> <br>
+            <strong> Convites pendentes: {{ invitedMembers.count }} </strong> <br>
+        </div>
+        <div class="row">
+
+            <div class="tabs-container">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#tab-current"> Usuários Ativos </a></li>
+                    <li class=""><a data-toggle="tab" href="#tab-removed"> Usuários Inativos </a></li>
+                    <li class=""><a data-toggle="tab" href="#tab-invited"> Convites Pendentes </a></li>
+                </ul>
+                <div class="tab-content">
+
+                    <div id="tab-current" class="tab-pane active">
+                        <div class="panel-body">
+                            {{ render.list_members(activeMembers, 'active') }}
+                        </div>
+                    </div>
+
+                    <div id="tab-removed" class="tab-pane">
+                        <div class="panel-body">
+                            {{ render.list_members(inactiveMembers, 'inactive') }}
+                        </div>
+                    </div>
+
+                    <div id="tab-invited" class="tab-pane">
+                        <div class="panel-body">
+                            {{ render.list_members(invitedMembers, 'invited') }}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+
+        $('[data-access]').on('click', function () {
+            var path = $(this).data('access');
+            var deleting = (path.indexOf('delete') > 1);
+
+            swal({
+                title: "Confirmar operação?",
+                text: "",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Confirmar",
+                cancelButtonText: "Cancelar",
+                closeOnConfirm: false
+            }, function () {
+
+                $.ajax({
+                    url: path,
+                    method: 'post',
+                    data: {_method: deleting ? 'delete' : 'post'},
+                    success: function (response) {
+                        if ((deleting ? 'deleted' : 'restored') == response.status) {
+                            sweetAlert("Processado!", "Atualizando informações!", "success");
+                            window.location.reload();
+                        } else {
+                            sweetAlert("Falha!", response.error, "error");
+                        }
+                    },
+                    beforeSend: function () {
+                        sweetAlert("Processando...", "Aguarde a finalização do processo!", "info");
+                    }
+                });
+            });
+
+        });
+
+        $('.users_table').footable();
+
+        var user_modal = $('#user_modal'); var user_body = user_modal.find('.modal-body');
+        var user_spinner = user_body.html();
+
+        user_modal.on('show.bs.modal', function(event){
+            var target = $(event.relatedTarget);
+            var href = target.data('href');
+            user_body.html(user_spinner);
+            $.ajax({
+                url: href,
+                method: 'get',
+                complete: function(xhr){
+                    //console.log(xhr);
+                    if(200 == xhr.status){
+                        user_body.html(xhr.responseText);
+                    }
+                }
+            });
+        });
+
+    </script>
+
+{% endblock %}

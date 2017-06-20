@@ -1,0 +1,120 @@
+{% extends view('mail.layout') %}
+
+{% block content %}
+
+    {% set attachments = email.attachments %}
+    {% set folder_id = folder is not null ? folder.id : null %}
+
+    <div class="mail-box-header">
+        <div class="pull-left" style="margin-right: 2rem;">
+            <a href="javascript:history.back();" class="btn btn-white btn-sm" title="Voltar">
+                <i class="fa fa-arrow-left"></i> Voltar
+            </a>
+            {#<a href="#" class="btn btn-white btn-sm" title="Print email"><i class="fa fa-print"></i> </a>
+            <a href="#" class="btn btn-white btn-sm" title="Move to trash"><i class="fa fa-trash-o"></i> </a>#}
+        </div>
+        <h2>
+            Visualizar Email
+        </h2>
+        <div class="mail-tools tooltip-demo m-t-md">
+            <h3>
+                <span class="font-noraml">{{ 'Subject'|trans }}: </span>
+                {{ email.subject }}
+            </h3>
+            <h5>
+                <span class="pull-right font-noraml">{{ email.date }}</span>
+                <span class="font-noraml">{{ 'From'|trans }}: </span> {{ email.fromAddress }}
+            </h5>
+        </div>
+    </div>
+
+
+    <div class="mail-box">
+        <div id="email-body" class="mail-body">
+            {#<iframe onload="$('#email-body-spinner').slideUp();" style="border:none; min-height:{{ email.contentHeight }}rem; width:100%;" src="{{ path('email_read', {id:hash_id, account:account.token, raw:true}) }}"></iframe>#}
+
+            <iframe id="mail-frame" style="width:100%; border:0;" srcdoc='{{ email.textHtml is not null ? email.textHtml|raw : email.textPlain }}'></iframe>
+
+        </div>
+
+        {% if attachments|length %}
+
+            <div class="mail-attachment">
+                <p>
+                    <span><i class="fa fa-paperclip"></i> Anexos &mdash; {{ attachments|length }} </span>
+                    {#<a href="#">Download all</a>
+                    <a href="#">View all images</a>#}
+                </p>
+
+                <div class="attachment">
+
+                    {% for attachment in attachments %}
+
+                        <div class="file-box" style="width:100%;">
+                            <div class="file">
+                                <a href="{{ path('mail_attachment',{id:email.id, folder:folder_id, file:attachment.name}) }}">
+                                    <span class="corner"></span>
+                                    {#<div class="icon">
+                                        <i class="fa fa-file"></i>
+                                    </div>#}
+                                    <div class="file-name">
+                                        {{ attachment.name }}
+                                        <br/>
+                                        <small>
+                                        </small>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                    {% endfor %}
+
+                    <div class="clearfix"></div>
+                </div>
+
+            </div>
+
+        {% endif %}
+
+        {#<div class="mail-body text-right tooltip-demo">
+            <a class="btn btn-sm btn-white" href="mail_compose.html"><i class="fa fa-reply"></i> Reply</a>
+            <a class="btn btn-sm btn-white" href="mail_compose.html"><i class="fa fa-arrow-right"></i> Forward</a>
+            <button title="" data-placement="top" data-toggle="tooltip" type="button" data-original-title="Print" class="btn btn-sm btn-white"><i class="fa fa-print"></i> Print</button>
+            <button title="" data-placement="top" data-toggle="tooltip" data-original-title="Trash" class="btn btn-sm btn-white"><i class="fa fa-trash-o"></i> Remove</button>
+        </div>#}
+        <div class="clearfix"></div>
+
+    </div>
+
+
+{#
+    {% set attachments = email.attachments %}
+    {% for attachment in attachments %}
+
+        <div class="file-box" style="width:100%;">
+            <div class="file">
+                <a href="{{ path('mail_attachment',{id:email.id, folder:folder, file:attachment.name}) }}">
+                    <span class="corner"></span>
+                    #}{#<div class="icon">
+                        <i class="fa fa-file"></i>
+                    </div>#}{#
+                    <div class="file-name">
+                        {{ attachment.name }}
+                        <br/>
+                        <small>
+                        </small>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+    {% endfor %}#}
+
+{% endblock %}
+
+{% block mail_scripts %}
+    <script>
+        var mail_frame = $('#mail-frame');
+        mail_frame.css('height', ($(window).height()-(mail_frame.offset().top)/2)+'px');
+    </script>
+{% endblock %}

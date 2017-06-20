@@ -1,0 +1,197 @@
+{% extends 'AppBundle:Settings:Nasa/common.html.twig' %}
+
+{% block content %}
+
+{% macro custom_form(form) %}
+
+    {% set form_months = attribute(form.children, 'months') %}
+
+    {{ form_start(form) }}
+
+    {% for form_month in form_months %}
+        <div class="nasa_item_line">
+            {{ form_widget(form_month,{attr:{class:'form-control'}}) }}
+        </div>
+    {% endfor %}
+
+    <div class="hide">
+        {{ form_rest(form) }}
+        <input type="submit">
+    </div>
+
+    {{ form_end(form) }}
+
+{% endmacro %}
+
+{% import _self as catalog %}
+
+    <div class="">
+
+        <div class="">
+            <div style="width: 25%; float:left;">
+                &nbsp;
+            </div>
+            <div style="width: 75%; float:left;">
+                <div id="nasa_progress" class="progress-bar progress-bar-primary" style="width:0">
+                    <span class="sr-only"></span>
+                    &nbsp;
+                </div>
+            </div>
+        </div>
+
+        <div class="nasa_catalog">
+
+            <div class="col-md-12 nasa_column_header with_form">
+                <div class="btn-group btn-group-sm" style="width: 100%;">
+                    <button id="nasa_recycle" class="btn btn-sm btn-danger" style="width: 50%;">
+                        <i class="fa fa-recycle"></i> Restaurar
+                    </button>
+                    <button id="nasa_save" class="btn btn-sm btn-primary ladda-button" style="width: 50%;" data-style="zoom-in">
+                        <i class="fa fa-save"></i> {{ 'Save'|trans }}
+                    </button>
+                </div>
+            </div>
+
+            <div class="nasa_months">
+
+                <div class="nasa_column_header">
+                    &nbsp;
+                    {#<div class="btn-group btn-group-sm" style="width: 100%;">
+                        <button id="nasa_recycle" class="btn btn-sm btn-danger" style="width: 50%;">
+                            <i class="fa fa-recycle"></i> Restaurar
+                        </button>
+                        <button id="nasa_save" class="btn btn-sm btn-primary ladda-button" style="width: 50%;" data-style="zoom-in">
+                            <i class="fa fa-save"></i> {{ 'Save'|trans }}
+                        </button>
+                    </div>#}
+                </div>
+
+                {% for month in months %}
+                    <div class="nasa_item_line">
+                        {{ month }}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div id="nasa_forms" class="nasa_climatic">
+                {% for key, form in forms %}
+                    <div class="nasa_climatic_item">
+
+                        <div class="nasa_column_header">
+                            {{ attribute(labels, key) }} <br>
+                            {{ attribute(units, key) }}
+                        </div>
+
+                        {{ catalog.custom_form(form) }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        $(function () {
+
+            var nasa_forms = $('#nasa_forms').find('form');
+            var nasa_index = 0;
+            var nasa_options = [];
+            var nasa_progress = $('#nasa_progress');
+            var nasa_save = $('#nasa_save');
+
+            var save_forms = function () {
+
+                if (nasa_options.hasOwnProperty(nasa_index)) {
+                    var options = nasa_options[nasa_index];
+
+                    $.ajax({
+                        url: options.url,
+                        method: options.method,
+                        data: options.data,
+                        complete: function (xhr) {
+
+                            var percent = (((nasa_index + 1) * 100) / 4).toString() + '%';
+                            nasa_progress.css('width', percent);
+
+                            nasa_index += 1;
+                            save_forms();
+
+                            if ((nasa_index + 1) == nasa_forms.length) {
+
+                                window.setTimeout(function () {
+                                    swal('Sucesso', 'Dados climáticos salvos!', 'success');
+                                    nasa_progress.css('width','0');
+                                }, 1000);
+
+                                nasa_save.ladda('stop');
+                            }
+                        }
+                    });
+
+                } else {
+                    nasa_index = 0;
+                    nasa_options = [];
+                }
+            };
+
+            nasa_save.ladda();
+            nasa_save.on('click', function () {
+                nasa_save.ladda('start');
+                nasa_forms.each(function (i, f) {
+                    var form = $(f);
+                    nasa_options[i] = {
+                        url: form.attr('action'),
+                        method: form.attr('method'),
+                        data: form.serialize()
+                    };
+                });
+                if (nasa_options.length) {
+                    save_forms();
+                }
+            });
+
+            var sanitize = function (element) {
+                function clear(v) {
+                    return v.replace(/\D+/g, '');
+                }
+
+                var value = element.val();
+                var backup = value.replace(/\./g, ',');
+                value = clear(value);
+                if (backup.indexOf(',') > 0) {
+                    var commas = backup.split(',');
+                    value = clear(commas[0]) + ',';
+                    if (commas[1].length) {
+                        value += clear(commas[1]);
+                    }
+                }
+                if (0 == backup.indexOf('-')) {
+                    if (2 == backup.split('-').length) {
+                        value = '-' + value;
+                    }
+                }
+                element.val(value);
+            };
+
+            var custom_mask = function (element) {
+                element.on('keyup', function () {
+                    sanitize(element);
+                }).trigger('keyup');
+            };
+
+            $.each($('.nasa_item_line input[type="text"]'), function (i, input) {
+                custom_mask($(input));
+            });
+
+            nasa_forms.on('submit', function (event) {
+                event.preventDefault();
+                swal('Atenção', 'Para garantir a integridade de dados, utilize o botão "Salvar"', 'warning');
+            });
+
+            $('#nasa_recycle').on('click', function(){
+                NasaCatalog.recycle();
+            });
+        });
+    </script>
+
+{% endblock %}

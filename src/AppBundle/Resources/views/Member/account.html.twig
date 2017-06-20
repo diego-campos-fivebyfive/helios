@@ -1,0 +1,104 @@
+{% extends view('layout') %}
+
+{% block styles %}
+
+    <style>
+        .block-radios label {
+            width: 95%;
+            float: left;
+            cursor: pointer;
+            text-align: left;
+            padding-left: .5rem;
+        }
+
+        .block-radios input[type="radio"] {
+            float: left;
+            width: 5%;
+        }
+
+        .company-sector label,
+        .company-members label {
+            width: 100%;
+            display: inline-block;
+            text-align: left;
+            cursor: pointer;
+        }
+    </style>
+
+{% endblock %}
+
+{% block body %}
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row m-b-lg m-t-lg">
+            <div class="col-md-4 col-md-offset-4">
+
+                {{ form_start(form) }}
+
+                <div class="form-group block-radios">
+                    {{ form_widget(form.attributes.companyStatus,{attr:{class:'company-status'}}) }}
+                </div>
+                <div class="form-group company-sector hide">
+                    {{ form_label(form.attributes.companySector, 'In what area') }}
+                    {{ form_widget(form.attributes.companySector,{attr:{class:'form-control company-sector hide'}}) }}
+                </div>
+                <div class="form-group company-members hide">
+                    {{ form_label(form.attributes.companyMembers, 'How many members or partners does your team have') }}
+                    {{ form_widget(form.attributes.companyMembers,{attr:{class:'form-control '}}) }}
+                </div>
+                <div class="form-group company-name hide">
+                    {{ form_widget(form.attributes.companyName,{attr:{class:'form-control', placeholder:'Company name'}}) }}
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-md btn-primary pull-right">
+                        <i class="fa fa-save"></i> {{ 'Save'|trans }}
+                    </button>
+                </div>
+
+                {{ form_end(form) }}
+
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+        $(function () {
+            var accStatus = $('.company-status');
+            var accSector = $('.company-sector');
+            var accName = $('.company-name');
+            var accMembers = $('.company-members');
+
+            function handleStatus() {
+                var curStatus = accStatus.find('input:checked');
+                var required = false;
+
+                if (curStatus.length && accSector.hasClass('hide')) {
+                    accSector.removeClass('hide');
+                }
+                if ('has_company' == curStatus.val()) {
+                    accMembers.removeClass('hide');
+                    accName.removeClass('hide');
+                    required = true;
+                } else {
+                    accMembers.addClass('hide').find('option').prop('selected', false);
+                    accName.addClass('hide').find('input').val('');
+                }
+                accMembers.find('select').prop('required', required);
+                accName.find('input').prop('required', required);
+            }
+
+            handleStatus();
+            accStatus.find('input').on('click', function () {
+                handleStatus();
+            });
+        });
+    </script>
+
+{% endblock %}

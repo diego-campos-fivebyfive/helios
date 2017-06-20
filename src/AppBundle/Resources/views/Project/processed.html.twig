@@ -1,0 +1,32 @@
+<table class="table table-bordered col-md-12">
+    <tbody>
+    <tr>
+        <th class="col-md-8"> Módulos Configurados</th>
+        <td> {{ project.totalModules }}</td>
+    </tr>
+    <tr>
+        <th class="col-md-8"> Área Configurada</th>
+        <td> {{ project.totalArea|round(2) }} m²</td>
+    </tr>
+    <tr>
+        <th class="col-md-8"> Potência Configurada</th>
+        <td> {{ project.power }} kWp</td>
+    </tr>
+    <tr>
+        <th> Geração Anual</th>
+        <td> {{ general.kwh_year }} kWh</td>
+    </tr>
+    <tr>
+        <th> Geração Mensal</th>
+        <td> {{ (general.kwh_year / 12)|round(0) }} kWh</td>
+    </tr>
+    <tr>
+        <th> kWh / kWp / Ano</th>
+        <td> {{ (general.kwh_year / project.power)|round(0) }} </td>
+    </tr>
+    <tr>
+        <th> kWh / kWp / Mês</th>
+        <td> {{ ((general.kwh_year / project.power) / 12)|round(0) }} </td>
+    </tr>
+    </tbody>
+</table>

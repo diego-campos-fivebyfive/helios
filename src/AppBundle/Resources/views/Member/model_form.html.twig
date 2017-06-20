@@ -1,0 +1,365 @@
+{% extends view('layout') %}
+
+{% block styles %}
+    <link href="{{ asset('inspinia/css/plugins/iCheck/custom.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+
+        {{ form(form) }}
+
+        <div class="col-lg-10">
+            <h2> Nova Conta </h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="#">Home</a>
+                </li>
+                <li>
+                    <a>Contas</a>
+                </li>
+                <li class="active">
+                    <strong>Nova Conta</strong>
+                </li>
+            </ol>
+        </div>
+        <div class="col-lg-2">
+        </div>
+
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeIn">
+
+        <div class="row">
+
+            <div class="col-lg-12">
+
+                <form role="form">
+
+                    <div class="tabs-container">
+
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a data-toggle="tab" href="#tab-3"> <i class="fa fa-building"></i> {{ 'Company'|trans }}
+                                </a>
+                            </li>
+                            <li class="">
+                                <a data-toggle="tab" href="#tab-4"><i class="fa fa-user"></i> {{ 'Sponsor'|trans }} </a>
+                            </li>
+                            <li class="">
+                                <a data-toggle="tab" href="#tab-5"><i
+                                            class="fa fa-sliders"></i> {{ 'Account and Access'|trans }}</a>
+                            </li>
+
+                            <li class="pull-right">
+
+                                <div class="btn-group">
+                                    <button class="btn btn-white" type="button">
+                                        <i class="fa fa-save"></i>
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        {{ 'Save'|trans }}
+                                    </button>
+                                </div>
+
+                            </li>
+
+                        </ul>
+
+                        <div class="tab-content">
+                            <div id="tab-3" class="tab-pane active">
+                                <div class="panel-body">
+
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-content">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+
+                                                    <div class="form-group col-lg-3">
+                                                        <label> Razão Social </label>
+                                                        <input type="email" placeholder="Razão Social"
+                                                               class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-lg-3">
+                                                        <label> Nome Fantasia </label>
+                                                        <input type="email" placeholder="Nome Fantasia"
+                                                               class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-lg-3">
+                                                        <label>Cnpj</label>
+                                                        <input type="email" placeholder="Cnpj" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-lg-3">
+                                                        <label>Inscrição Estadual</label>
+                                                        <input type="email" placeholder="Inscrição Estadual"
+                                                               class="form-control">
+                                                    </div>
+
+
+                                                    <div class="form-group col-lg-6">
+                                                        <label> Email </label>
+                                                        <input type="email" placeholder="Email" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-lg-2">
+                                                        <label> Telefone </label>
+                                                        <input type="email" placeholder="Telefone" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-lg-2">
+                                                        <label> Celular </label>
+                                                        <input type="email" placeholder="Celular" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-lg-2">
+                                                        <label> Fax </label>
+                                                        <input type="email" placeholder="Fax" class="form-control">
+                                                    </div>
+
+
+                                                    <div class="form-group col-lg-2">
+                                                        <label> Cep </label>
+                                                        <input type="email" placeholder="Cep" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-lg-2">
+                                                        <label> Uf </label>
+                                                        <input type="email" placeholder="Uf" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-lg-3">
+                                                        <label> Cidade </label>
+                                                        <input type="email" placeholder="Cidade" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-lg-5">
+                                                        <label> Bairro </label>
+                                                        <input type="email" placeholder="Bairro" class="form-control">
+                                                    </div>
+
+
+                                                    <div class="form-group col-lg-5">
+                                                        <label> Logradouro </label>
+                                                        <input type="email" placeholder="Logradouro"
+                                                               class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-lg-3">
+                                                        <label> Número </label>
+                                                        <input type="email" placeholder="Número" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-lg-4">
+                                                        <label> Complemento </label>
+                                                        <input type="email" placeholder="Complemento"
+                                                               class="form-control">
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div id="tab-4" class="tab-pane">
+                                <div class="panel-body">
+
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-content">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+
+                                                    <div class="form-group col-lg-3">
+                                                        <label> Nome </label>
+                                                        <input type="email" placeholder="Nome"
+                                                               class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-lg-3">
+                                                        <label> Sobrenome </label>
+                                                        <input type="email" placeholder="Sobrenome"
+                                                               class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-lg-3">
+                                                        <label>Cpf</label>
+                                                        <input type="email" placeholder="Cpf" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-lg-3">
+                                                        <label>Rg</label>
+                                                        <input type="email" placeholder="Rg"
+                                                               class="form-control">
+                                                    </div>
+
+
+                                                    <div class="form-group col-lg-6">
+                                                        <label> Email </label>
+                                                        <input type="email" placeholder="Email" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-lg-2">
+                                                        <label> Telefone </label>
+                                                        <input type="email" placeholder="Telefone" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-lg-2">
+                                                        <label> Celular </label>
+                                                        <input type="email" placeholder="Celular" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-lg-2">
+                                                        <label> Fax </label>
+                                                        <input type="email" placeholder="Fax" class="form-control">
+                                                    </div>
+
+
+                                                    <div class="form-group col-lg-2">
+                                                        <label> Cep </label>
+                                                        <input type="email" placeholder="Cep" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-lg-2">
+                                                        <label> Uf </label>
+                                                        <input type="email" placeholder="Uf" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-lg-3">
+                                                        <label> Cidade </label>
+                                                        <input type="email" placeholder="Cidade" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-lg-5">
+                                                        <label> Bairro </label>
+                                                        <input type="email" placeholder="Bairro" class="form-control">
+                                                    </div>
+
+
+                                                    <div class="form-group col-lg-5">
+                                                        <label> Logradouro </label>
+                                                        <input type="email" placeholder="Logradouro"
+                                                               class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-lg-3">
+                                                        <label> Número </label>
+                                                        <input type="email" placeholder="Número" class="form-control">
+                                                    </div>
+
+                                                    <div class="form-group col-lg-4">
+                                                        <label> Complemento </label>
+                                                        <input type="email" placeholder="Complemento"
+                                                               class="form-control">
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div id="tab-5" class="tab-pane">
+                                <div class="panel-body">
+
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-content">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+
+                                                    <div class="form-group col-lg-4">
+                                                        <label> Plano de Uso </label>
+                                                        <select class="form-control m-b" name="account">
+                                                            <option> Plano A</option>
+                                                            <option> Plano B</option>
+                                                            <option> Plano C</option>
+                                                            <option> Plano D</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="form-group col-lg-8">
+                                                        <label> &nbsp; </label>
+                                                        <div class="i-checks">
+                                                            <label>
+                                                                <input type="checkbox" value=""> <i></i> Conta Ativa
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+
+                                                            <div class="form-group col-lg-3">
+                                                                <label>Email</label>
+                                                                <input type="email" placeholder="Email"
+                                                                       class="form-control">
+                                                            </div>
+
+                                                            <div class="form-group col-lg-3">
+                                                                <label>Login</label>
+                                                                <input type="email" placeholder="Login"
+                                                                       class="form-control">
+                                                            </div>
+
+                                                            <div class="form-group col-lg-3">
+                                                                <label>Senha</label>
+                                                                <input type="email" placeholder="Senha"
+                                                                       class="form-control">
+                                                            </div>
+
+                                                            <div class="form-group col-lg-3">
+                                                                <label>Confirmar Senha</label>
+                                                                <input type="email" placeholder="Confirmar Senha"
+                                                                       class="form-control">
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-lg-7">
+            </div>
+        </div>
+
+
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script src="{{ asset('inspinia/js/plugins/iCheck/icheck.min.js') }}"></script>
+
+    <script>
+        $(function () {
+
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green'
+            });
+        });
+    </script>
+
+{% endblock %}

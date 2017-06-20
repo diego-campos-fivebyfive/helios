@@ -1,0 +1,51 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block title %} Login {% endblock %}
+
+{% block fos_user_content %}
+
+    <p style="margin-top: 2rem;">
+        A plataforma pensada exclusivamente em quem trabalha com
+        Energia Solar Fotovoltaica
+    </p>
+
+    <form action="{{ path("fos_user_security_check") }}" method="post" class="m-t">
+
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
+
+        <div class="form-group">
+            <input placeholder="{{ 'Email'|trans }}" type="email" id="username" name="_username"
+                   value="{{ last_username }}" required="required" class="form-control"/>
+        </div>
+        <div class="form-group">
+            <input placeholder="{{ 'security.login.password'|trans }}" type="password" id="password"
+                   name="_password" required="required" class="form-control"/>
+        </div>
+
+        <div class="form-group">
+            <input type="checkbox" id="remember_me" name="_remember_me" value="on"/>
+            <label for="remember_me">{{ 'security.login.remember_me'|trans }}</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary block full-width m-b">
+            <i class="fa fa-angle-double-right"></i> Login
+        </button>
+
+        <a href="{{ path('app_register') }}">
+            <small> Cadastre-se </small>
+        </a>
+        <br>
+        <a href="{{ path('fos_user_resetting_request') }}">
+            <small>Esqueceu sua senha?</small>
+        </a>
+    </form>
+
+{% endblock fos_user_content %}
+
+{% block scripts %}
+    {% if error is defined and error %}
+        {% set message = 'Invalid credentials.' == error.messageKey ? 'Login ou senha inválidos' : error.messageKey|trans(error.messageData, 'security') %}
+        <script>display_error('{{ message }}');</script>
+    {% endif %}
+{% endblock %}

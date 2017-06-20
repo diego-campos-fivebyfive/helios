@@ -1,0 +1,138 @@
+{% extends view('layout') %}
+
+{% block styles %}
+    <link href="{{ asset('inspinia/css/plugins/touchspin/jquery.bootstrap-touchspin.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('inspinia/css/plugins/chosen/chosen.css') }}" rel="stylesheet">
+    <link href="{{ asset('inspinia/css/plugins/opentip/opentip.css') }}" rel="stylesheet">
+    <link href="{{ asset('inspinia/css/uikit.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('inspinia/css/components/nestable.min.css') }}" rel="stylesheet">
+
+{% endblock %}
+{% block body %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <button class="btn btn-primary add-section"><i class="fa fa-plus"></i> Nova Seção</button>
+                    <button class="btn btn-primary save-button pull-right"><i class="fa fa-save"></i> Salvar</button>
+                    <hr class="hr-line-solid">
+                    <div class="ibox-content">
+                        <ul class="uk-nestable" data-uk-nestable="{maxDepth:1,handleClass:'uk-nestable-handle}">
+                            <li class="uk-nestable-item">
+                                <div class="uk-nestable-panel">
+                                    <i class="uk-nestable-handle fa fa-bars fa-2x text-primary uk-margin-small-right text-black"></i> <b>Position:</b> <span class="pos-counter"></span>
+                                    <i class="fa fa-trash-o fa-2x pull-right text-danger remove-section"></i>
+                                    <br>
+                                    <br>
+                                    <div class="ibox">
+                                        <div class="ibox-content">
+                                            <input class="form-control uk-nestable-nodrag section-title" placeholder="Section Title">
+                                            <br>
+                                            <textarea class="form-control uk-nestable-nodrag section-content" placeholder="Section Text"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hide bkp-nestable">
+        <li class="uk-nestable-item">
+            <div class="uk-nestable-panel">
+                <i class="uk-nestable-handle fa fa-bars fa-2x text-primary uk-margin-small-right text-black"></i> <b>Position:</b> <span class="pos-counter"></span>
+                <i class="fa fa-trash-o fa-2x pull-right text-danger remove-section"></i>
+                <br>
+                <br>
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <input class="form-control uk-nestable-nodrag section-title" placeholder="Section Title">
+                        <br>
+                        <textarea class="form-control uk-nestable-nodrag section-content" placeholder="Section Text"></textarea>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </div>
+{% endblock %}
+
+{% block scripts %} 
+    <script src="{{ asset('inspinia/js/uikit.min.js') }}"></script>
+    <script src="{{ asset('inspinia/js/components/nestable.js') }}"></script>
+
+    <script>
+
+        function updatePosition()
+        {
+            position = 1;
+            $('.uk-nestable .uk-nestable-item').each(function() {
+                $(this).find('.pos-counter').html(position);
+                position = position + 1;
+            });
+        }
+        function removeSection(section)
+        {
+            $(section).closest('.uk-nestable-item').remove();
+            toastr.success('Seção removida com sucesso', 'Sucesso !', {
+                positionClass: 'toast-top-right',
+                progressBar: true
+            });
+        }
+        function addSection()
+        {
+            content = $('.bkp-nestable').html();
+            $('.uk-nestable').append(content);
+            toastr.success('Seção adicionada com sucesso', 'Sucesso !', {
+                positionClass: 'toast-top-right',
+                progressBar: true
+            });
+        }
+        function saveBudgetSections()
+        {
+            budgetsections = [];
+            $('.uk-nestable .uk-nestable-item').each(function() {
+                budgetsections.push({
+                    'position': $(this).find('.pos-counter').html(),
+                    'title': $(this).find('.section-title').val(),
+                    'content': $(this).find('.section-content').val()
+                });
+            });
+            console.log(budgetsections);
+
+            $.post('{{  path('budgetSection_create') }}', {
+                'sections': budgetsections
+            }, function(data, status) {
+                toastr.success('Seções salvas com sucesso', 'Sucesso !', {
+                    positionClass: 'toast-top-right',
+                    progressBar: true
+                });
+            });
+
+        }
+
+        $(function() {
+            $(document).on('click', '.remove-section', function() {
+                removeSection(this);
+                updatePosition();
+            });
+            $(document).on('click', '.add-section', function() {
+                addSection();
+                updatePosition();
+            });
+            $('.uk-nestable').on('change.uk.nestable', function() {
+                updatePosition();
+            });
+            $('.save-button').on('click', function() {
+                saveBudgetSections();
+            });
+            $(document).ready(function() {
+                updatePosition();
+            });
+        });
+
+
+    </script>
+{% endblock %}

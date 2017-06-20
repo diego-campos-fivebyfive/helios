@@ -1,0 +1,29 @@
+{# <h2> Foram encontrados {{ errors|length }} erros no projeto </h2>
+
+{% for error in errors %}
+
+    <div class="col-md-12">
+        {% if 'project.error.undefined_operation' == error.message %}
+            <div class="alert alert-danger">
+                {{ 'Inverter'|trans }} &raquo; {{ error.origin.inverter.inverter.model }} &raquo; {{ error.message|trans }}
+            </div>
+        {% endif %}
+        {% if 'project.error.undefined_modules' == error.message %}
+            <div class="alert alert-danger">
+                {{ 'Inverter'|trans }} &raquo; {{ error.origin.inverter.inverter.model }} &raquo; {{ error.message|trans }}
+            </div>
+        {% endif %}
+        {% if 'project.error.undefined_module' == error.message %}
+            <div class="alert alert-danger">
+                {{ 'Inverter'|trans }} &raquo; {{ error.origin.inverter.inverter.model }} &raquo; {{ error.message|trans }}
+            </div>
+        {% endif %}
+    </div>
+
+{% endfor %} #}
+
+<div class="col-md-12">
+    <div class="alert alert-danger">
+        Existem inversores sem operação definida
+    </div>
+</div>            

@@ -1,0 +1,480 @@
+<html>
+<head>
+    <style>
+        table {
+            font-size: 12px;
+            margin-top: 2rem;
+        }
+
+        table thead.header th {
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+    </style>
+    {% set enable_cover = true %}
+    {% set enable_header = true %}
+    {% set title_styles = ['background:', background, ';','color:',color,';', 'font-weight:bold;', 'font-size:16px;']|join %}
+
+</head>
+<body style="font-family: Arial; font-size: 10pt;">
+
+{% macro _header(logo, text) %}
+
+    <table width="100%">
+        <tr>
+            <td>
+                {% if logo is not null %}
+                    <img src="{{ logo.getRealPath }}" style="height:75pt;">
+                {% endif %}
+            </td>
+            <td id="header_info" align="right" style="line-height:18px;">
+                {{ text|raw }}
+            </td>
+        </tr>
+    </table>
+
+{% endmacro %}
+{% import _self as this %}
+
+{% if enable_cover and cover is not null %}
+
+    <pageheader>
+        <img src="{{ cover.getRealPath }}" style="width:300mm; height:297mm;"/>
+    </pageheader>
+
+{% endif %}
+
+{% if enable_cover and cover is not null %}
+    <sethtmlpageheader name="defaultHeader">
+    </sethtmlpageheader>
+    <formfeed></formfeed>
+    <htmlpageheader name="defaultHeader">
+        {{ this._header(header_logo, header_text) }}
+    </htmlpageheader>
+{% elseif(enable_header) %}
+    <pageheader>
+        {{ this._header(header_logo, header_text) }}
+    </pageheader>
+    <htmlpageheader name="pageHeader">
+        {{ this._header(header_logo, header_text) }}
+    </htmlpageheader>
+    <sethtmlpageheader name="pageHeader"></sethtmlpageheader>
+{% endif %}
+
+<div style="text-align:center;width:100%;font-size:10px;">
+    <strong>{{ "now"|date('d/m/Y') }}</strong><br>
+    <strong> Nº: {{ project.number }} </strong>
+</div>
+
+{% for section in proposal.sections %}
+    {% set uid = section.getMetadata('uid') %}
+    {% set is_pagebreak = 'pagebreak' == section.content %}
+
+    {% if not is_pagebreak %}
+
+        {% if section.getMetadata('fixed') %}
+
+            {% if 'customer_data' == uid %}
+                {% set customer = section.content|json_decode %}
+                {% set is_company = 'company' == customer.context %}
+
+                <table width="100%" border="0" cellspacing="0" cellpadding="4">
+                    <thead class="header">
+                    <tr>
+                        <th colspan="6" align="left" style="{{ title_styles }}">
+                            {{ section.title }}
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th width="15%" align="right"> Nome:</th>
+                        <td width="40%" align="left"> {{ customer.name }} </td>
+                        <th width="15%" align="right"> {{ is_company ? 'Cnpj' : 'Cpf' }}:</th>
+                        <td align="left"> {{ customer.document }} </td>
+                    </tr>
+                    <tr>
+                        <th width="15%" align="right"> Telefone:</th>
+                        <td align="left"> {{ customer.phone }} </td>
+                        <th width="15%" align="right"> Email:</th>
+                        <td align="left"> {{ customer.email }} </td>
+                    </tr>
+                    </tbody>
+                </table>
+            {% endif %}
+
+
+            {% if 'generation_data' == uid %}
+                {% set project = section.content|json_decode %}
+
+                <table width="100%" border="0" cellspacing="0" cellpadding="4">
+                    <thead class="header">
+                    <tr>
+                        <th colspan="5" align="left" style="{{ title_styles }}">
+                            {{ section.title }}
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <thead>
+                    <tr>
+                        <th width="8%" align="center">&nbsp;</th>
+                        <th width="25%" align="center"> Área</th>
+                        <th width="25%" align="center"> Potência</th>
+                        <th width="21%" align="center"> Inclinação</th>
+                        <th width="21%" align="center"> Orientação</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    {% if project.areas|length %}
+                        {% for area in project.areas %}
+                            <tr>
+                                <td align="right"> {{ loop.index }} </td>
+                                <td align="center"> {{ area.total_area }} m²</td>
+                                <td align="center"> {{ area.total_power }}kWp</td>
+                                <td align="center"> {{ area.inclination }}&deg;</td>
+                                <td align="center"> {{ area.orientation }}&deg;</td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <th align="right"> Total:</th>
+                            <th align="center">{{ project.total_area|round(2) }} m²</th>
+                            <th align="center"> {{ project.total_power }} kWp</th>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    {% endif %}
+
+                    <tr>
+                        <td colspan="5" align="center">
+                            <img style="width: 80%" src="{{ financial.project.chartData }}"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="5" align="center">
+                            <strong> Geração Anual: </strong>
+                            {{ project.annual_production }} kWh
+                            &mdash;
+                            <strong> Geração Mensal: </strong>
+                            {{ (project.annual_production/12)|round }} kWh
+                            &mdash;
+                            <strong> Localização: </strong>
+                            {{ project.address }}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            {% endif %}
+
+
+            {% if 'financial_analysis' == uid %}
+
+                <table width="100%" border="0" cellspacing="0" cellpadding="4">
+                    <thead class="header">
+                    <tr>
+                        <th colspan="6" align="left" style="{{ title_styles }}">
+                            {{ section.title }}
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th width="25%" align="right"> Tempo de vida:</th>
+                        <td width="10%" align="left"> {{ financial.lifetime }} anos</td>
+                        <th width="35%" align="right"> Perda de eficiência em {{ financial.lifetime }} anos:</th>
+                        <td width="15%" align="left"> {{ financial.efficiencyLoss }}%</td>
+                        <th align="right"> Inflação:</th>
+                        <td align="left"> {{ financial.rate }}%</td>
+                    </tr>
+                    <tr>
+                        <th align="right"> Custo anual com operação:</th>
+                        <td align="left"> {{ financial.annualCost|currency }} </td>
+                        <th align="right"> Preço do kWh com impostos:</th>
+                        <td align="left"> {{ financial.energyPrice|currency }} </td>
+                        <td> &nbsp; </td>
+                        <td> &nbsp; </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <table width="100%" border="0" cellspacing="0" cellpadding="4">
+                    <tbody>
+                    <tr>
+                        <td align="center">
+                            <img style="width: 80%" src="{{ financial.chartData }}"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <table width="100%" border="0" cellspacing="0" cellpadding="4">
+                    <tbody>
+                    <tr>
+                        <th width="20%" align="right"> Valor da proposta:</th>
+                        <td width="15%" align="left"> {{ financial.finalPrice|currency }} </td>
+                        <th width="10%" align="right"> TIR:</th>
+                        <td width="15%" align="left"> {{ financial.internalRateOfReturn|round }}%</td>
+                        <th align="right"> Payback simples:</th>
+                        <td align="left"> {{ 'long_time'|trans({years:financial.paybackYears, months: financial.paybackMonths}) }} </td>
+                    </tr>
+                    <tr>
+                        <th align="right"> Caixa acumulado:</th>
+                        <td align="left"> {{ financial.accumulatedCash(true)|currency }} </td>
+                        <th align="right"> VPL:</th>
+                        <td align="left"> {{ financial.netPresentValue|currency }} </td>
+                        <th align="right"> Payback descontado:</th>
+                        <td align="left"> {{ 'long_time'|trans({years:financial.paybackYearsDiscounted, months:financial.paybackMonthsDiscounted}) }} </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            {% endif %}
+
+            {% if 'project_composition' == uid %}
+
+                {% set project = financial.project %}
+                {% set kit = project.kit %}
+                {% set pricing_sum = 2 == kit.invoicePriceStrategy %}
+                {% set showPrices = kit.isPriceComputable %}
+                {#{% set inverters = project.kitInverters %}#}
+                {% set inverters = kit.inverters %}
+                {% set modules = kit.modules %}
+                {% set items = kit.elementItems %}
+                {% set services = kit.elementServices %}
+
+                {% set nameColumn = showPrices ? '55%' : '85%' %}
+                {% set countColumn = showPrices ? '15%' : '15%' %}
+
+                <table width="100%" border="0" cellspacing="0" cellpadding="4">
+
+                    <thead class="header">
+                    <tr>
+                        <th colspan="4" align="left" style="{{ title_styles }}">
+                            {{ section.title }}
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <thead>
+                    <tr>
+                        <th width="{{ nameColumn }}" align="left"> Inversor</th>
+                        {% if showPrices %}
+                        <th width="15%" align="left"> Preço Unitário</th>
+                        {% endif %}
+                        <th width="{{ countColumn }}" align="left"> Quantidade</th>
+                        {% if showPrices %}
+                        <th width="15%" align="left"> Total</th>
+                        {% endif %}
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% set total_inverters = 0 %}
+                    {% for inverter in inverters %}
+
+                        {% set unit_price_sale = inverter.unitPriceSale %}
+                        {% set total_price_sale = inverter.totalPriceSale %}
+                        {% set total_inverters = total_inverters + total_price_sale %}
+
+                        <tr>
+                            <td> {{ inverter.maker }} / {{ inverter.model }} </td>
+                            {% if showPrices %}
+                            <td> {{ unit_price_sale|currency }} </td>
+                            {% endif %}
+                            <td> {{ inverter.quantity }} </td>
+                            {% if showPrices %}
+                            <td> {{ total_price_sale|currency }} </td>
+                            {% endif %}
+                        </tr>
+
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+                {# MODULES #}
+                <table width="100%" border="0" cellspacing="0" cellpadding="4">
+                    <thead>
+                    <tr>
+                        <th width="{{ nameColumn }}" align="left"> Módulo</th>
+                        {% if showPrices %}
+                        <th width="15%" align="left"> Preço Unitário</th>
+                        {% endif %}
+                        <th width="{{ countColumn }}" align="left"> Quantidade</th>
+                        {% if showPrices %}
+                        <th width="15%" align="left"> Total</th>
+                        {% endif %}
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% set total_modules = 0 %}
+                    {% for projectModule in project.modules %}
+                        {% set module = projectModule.module %}
+
+                        {% set unit_price_sale = projectModule.unitPriceSale %}
+                        {% set total_price_sale = projectModule.priceSale %}
+                        {% set total_inverters = total_inverters + total_price_sale %}
+
+                        <tr>
+                            <td> {{ module.maker }} / {{ module.model }} </td>
+                            {% if showPrices %}
+                            <td> {{ unit_price_sale|currency }} </td>
+                            {% endif %}
+                            <td> {{ projectModule.quantity }} </td>
+                            {% if showPrices %}
+                            <td> {{ total_price_sale|currency }} </td>
+                            {% endif %}
+                        </tr>
+
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+
+                {# ITEMS #}
+                {% if kit.hasItems %}
+                    <table width="100%" border="0" cellspacing="0" cellpadding="4">
+                        <thead>
+                        <tr>
+                            <th width="{{ nameColumn }}" align="left"> Item</th>
+                            {% if showPrices %}
+                            <th width="15%" align="left"> Preço Unitário</th>
+                            {% endif %}
+                            <th width="{{ countColumn }}" align="left"> Quantidade</th>
+                            {% if showPrices %}
+                            <th width="15%" align="left"> Total</th>
+                            {% endif %}
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% set total_items = 0 %}
+                        {% for item in project.elementItems %}
+
+                            {% set unit_price_sale = item.unitPriceSale %}
+                            {% set total_price_sale = item.totalPriceSale %}
+                            {% set total_items = total_items + total_price_sale %}
+
+                            <tr>
+                                <td> {{ item.name }} </td>
+                                {% if showPrices %}
+                                <td> {{ unit_price_sale|currency }} </td>
+                                {% endif %}
+                                <td class="text-center">
+                                    {{ item.quantity }}
+                                    {% if item.isIncremental %}
+                                        mod
+                                    {% endif %}
+                                </td>
+                                {% if showPrices %}
+                                <td> {{ total_price_sale|currency }} </td>
+                                {% endif %}
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                {% endif %}
+
+                {# SERVICES #}
+                {% if kit.hasServices %}
+                    <table width="100%" border="0" cellspacing="0" cellpadding="4">
+                        <thead>
+                        <tr>
+                            <th width="85%" align="left"> Serviço</th>
+                            <th width="15%" align="left"> Preço</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% set total_services = 0 %}
+                        {% for service in project.elementServices %}
+
+                            {% set total_price_sale = service.totalPriceSale %}
+                            {% set total_services = total_services + total_price_sale %}
+
+                            <tr>
+                                <td> {{ service.name }} </td>
+                                <td> {{ total_price_sale|number_format_currency('BRL') }} </td>
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                {% endif %}
+
+                {# TOTALS #}
+                <table width="100%" border="0" cellspacing="0" cellpadding="4">
+                    <tbody>
+                    <tr>
+                        <th width="85%" align="left"> Equipamentos</th>
+                        <td>
+                            {#{{ project.priceSaleEquipments|currency }}#}
+                            {% if showPrices %}
+                                {{ project.priceSaleEquipments|currency }}
+                            {% else %}
+                                {{ kit.priceSaleEquipments|currency }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th align="left"> Serviços</th>
+                        <td> {{ project.priceSaleServices|currency }} </td>
+                    </tr>
+
+                    {% if financial.hasTaxes %}
+                        {% for tax in financial.taxes if not tax.discount %}
+                            <tr>
+                                <th align="left">
+                                    {{ tax.name }}
+                                </th>
+                                <td>
+                                    {{ tax.amount|currency }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        {% for tax in financial.taxes if tax.discount %}
+                            <tr>
+                                <th align="left">
+                                    {{ tax.name }}
+                                </th>
+                                <td>
+                                    {{ tax.amount|currency }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+
+                    <tr>
+                        <th align="left"> Total</th>
+                        <td> {{ financial.finalPrice|currency }} </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+
+            {% endif %}
+
+        {% else %}
+
+            {# Fixed Section #}
+            {{ render(controller('AppBundle:ProjectProposal:handleSection',{section:section, parameters: parameters})) }}
+
+        {% endif %}
+
+    {% else %}
+        {% if not loop.last %}
+            <formfeed>{% endif %}
+    {% endif %}
+
+{% endfor %}
+
+</body>
+</html>

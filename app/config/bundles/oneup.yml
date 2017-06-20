@@ -1,0 +1,20 @@
+# OneUpUploaderBundle
+oneup_uploader:
+    mappings:
+        gallery:
+            #use_orphanage: true
+            root_folder: false
+            frontend: dropzone
+            namer: app.upload_helper
+            storage:
+                directory: "%kernel.root_dir%/../web/uploads/"
+
+        files:
+            frontend: dropzone
+            namer: app.upload_helper
+            storage:
+                directory: "%kernel.root_dir%/../storage/files/"
+
+    #orphanage:
+    #    maxage: 86400
+    #    directory: %kernel.cache_dir%/uploader/orphanage

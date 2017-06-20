@@ -1,0 +1,356 @@
+<div class="doc_header">
+    <div class="doc_header_logo">
+        <img src="{{ asset('uploads/documents/cc95d4d5eda97beb94877acce927784fd8dff3d2cb5340cc.jpeg') }}"/>
+    </div>
+    <div class="doc_header_info">
+
+    </div>
+</div>
+
+
+
+<html>
+    <body>
+        <style>
+
+            body {
+                font-family: Arial, sans-serif;
+                font-size: 12px;
+            }
+
+            #pdf {
+                width: 615px;
+                margin: 0 auto;
+
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                border-spacing: 0;
+                margin-bottom: 10px;
+            }
+
+            table thead {           
+                background: #008000;
+            }
+            table thead tr{ 
+                background: #008000;
+            }
+
+            table thead tr th {
+                text-transform: uppercase;
+                text-align: left;
+                color: #fff;
+                padding: 5px;
+
+            }
+
+            table tbody tr td {
+                padding: 6px;
+
+            }
+
+            .text-center {
+                text-align: center;
+            }
+
+            .bold {
+                font-weight: bold;
+            }
+
+
+            .other-infos {
+                font-size: 13px;
+                border: 2px solid #008000;
+                padding: 10px;
+                margin-bottom: 15px;
+                font-weight: bold;
+                text-align: center;
+            }
+
+            .other-infos-price {
+                font-size: 15px;
+            }
+
+            .logo {
+                float: left;
+                margin-right: 5px;
+                margin-bottom: 20px;
+                width: 285px;
+                height: 77px;
+            }
+
+            .pdf-info {
+                padding: 15px;
+
+            }
+            .pdf-info ul {
+                text-align: right;
+            }
+
+            .pdf-info ul li{
+                list-style: none;
+            }
+
+            .central-info {
+                margin-bottom: 15px;
+                text-align: center;
+            }
+
+
+        </style>
+        <div id="pdf">
+            <div class="central-info">
+                <div style="font-weight: bold">01/09/2016<br>
+                    Nº : 425</div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dados Cliente</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>Nome:</b> Gitana</td>
+                        <td><b>Telefone: </b></td>                        
+                    </tr>
+                    <tr>
+                        <td><b>Cidade:</b> João Pessoa</td>
+                        <td><b>Email: </b></td>                        
+                    </tr>
+                </tbody>
+            </table>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dados de Consumo</th>
+                        <th>Dados do Gerador Fotovoltaíco</th>                       
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>Média de Consumo Mensal: </b> 800 kWh</td>
+                        <td><b>Potência Sugerida:</b> 5,30 kWp</td>
+
+                    </tr>     
+                    <tr>
+                        <td><b>Maior Consumo no Ano: </b> -</td>                                      
+                        <td><b>Geração Média Mensal: </b> 726 kWh</td>   
+                    </tr>
+                    <tr>
+                        <td><b>Menor Consumo no Ano: </b> -</td>                                      
+                        <td><b>Área Mínima Necessária: </b> 32,2 m²</td>     
+                    </tr>
+                </tbody>
+            </table>
+            <div class="central-info">Estimativa de Geração em kWh por Mês na cidade de <strong><u>João Pessoa</u></strong></div>
+            <img src="{{ image }}">
+            <div class="central-info">Simulação considerando uma inclinação de <strong><u>10 º</u></strong> dos módulos, orientados a <strong><u>0 º</u></strong> do norte verdadeiro</div>
+            <div class="other-infos">
+                <p>Atualmente seu custo médio mensal com energia elétrica é de: <span class="other-infos-price">R$560,00</span></p>
+                <p>Após a instalação do gerador, seu custo médio mensal passará a ser de: <span class="other-infos-price">R$52,07</span></p>
+                <p>Redução média mensla de <span class="other-infos-price">R$507,93</span> ou <span class="other-infos-price">R$90,7%</span> 
+                <p>Receita anual do Gerador de Fotovoltaico <span class="other-infos-price">R$6.095,15</span> 
+            </div>
+            <br>
+            <br>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Analise Financeira</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>Consumo Anual:</b> 9.600 kWh</td>
+                        <td><b>Inflação: </b> 8,00%</td>                        
+                    </tr>
+                    <tr>
+                        <td><b>Geração Anual Estimada:</b> 8.707 kWh</td>
+                        <td><b>Vida Útil do Gerador: </b> 25 Anos</td>                        
+                    </tr>
+                    <tr>
+                        <td><b>Custo Energia + Impostos:</b> R$ 0,70</td>
+                        <td><b>Perda de Eficiência em 25 anos: </b> 20%</td>                        
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <div class="central-info">Retorno do Investimento: <b> <u>5,8 Anos </u> </b></div>
+            <img src="inspinia/img/graph02.jpg">
+            <br>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Descrição</th>
+                        <th>Potência</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>1</b></td>
+                        <td><b>Sistema Fotovoltaico Conectado à Rede (SFVCR)</b></td>
+                        <td><b>5,30 kWp </b></td>
+                        <td>R$ 38.061,301</td>                    
+                    </tr>
+                    <tr>
+                        <td><b>2</b></td>
+                        <td><b>Serviço de Instalação de SFCR</b></td>
+                        <td><b>5,30 kWp </b></td>
+                        <td>R$ 4.116,242</td>                    
+                    </tr>
+                    <tr>
+                        <td><b>3</b></td>
+                        <td><b>Consultoria Especializada em SFCR</b></td>
+                        <td><b>5,30 kWp </b></td>
+                        <td>R$ 1.605,843</td>                    
+                    </tr>
+                    <tr>
+                        <td>-</td>
+                        <td>Promoção Consultoria Grátis</td>
+                        <td>-</td>
+                        <td>-R$ 1.605,843</td>                    
+                    </tr>
+                    <tr>
+                        <td>-</td>
+                        <td><b>TOTAL</b></td>
+                        <td>-</td>
+                        <td> R$ 42.177,54</td>                    
+                    </tr>
+                </tbody>
+            </table>
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="4">ITENS INCLUÍDOS NO GERADOR FOTOVOLTAICO</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>20</b></td>
+                        <td><b>Módulos</b></td>
+                        <td><b>Canadian Solar  </b></td>
+                        <td>265,00 W</td>                    
+                    </tr>
+                    <tr>
+                        <td><b>1</b></td>
+                        <td><b>Inversor</b></td>
+                        <td><b>ABB PVI</b></td>
+                        <td>5,00 kW</td>                    
+                    </tr>
+                    <tr>
+                        <td><b>-</b></td>
+                        <td colspan="3"><b>Estrutura Completa para Fixação em Telhado</b></td>                
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>SERVIÇO DE INSTALAÇÃO DE SFVCR (SISTEMA FOTOVOLTAICO CONECTADO À REDE)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>A partir de 150 km de João Pessoa será cobrado R$1,50/km</td>
+                    </tr>
+                    <tr>
+                        <td>A partir de 300 km de João Pessoa o deslocamento será aéreo (A Verificar cotação de passagens)</td>
+                    </tr>   
+                    <tr>
+                        <td>Material de Instalação Incluído</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <table>
+                <thead>
+                    <tr>
+                        <th>CONSULTORIA ESPECIALIZADA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Projeto do SFVCR</td>
+                    </tr>
+                    <tr>
+                        <td>Projeto Elétrico com ART Assinada por Engenheiro Eletricista com Registro Ativo no CREA</td>
+                    </tr>   
+                    <tr>
+                        <td>Acompanhamento Junto à Concessionária</td>
+                    </tr>
+                    <tr>
+                        <td>Assessoria Continuada</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <table>
+                <thead>
+                    <tr>
+                        <th>PRAZO DE ENTREGA DOS EQUIPAMENTOS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>20 a 30 Dias Após o Fechamento</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <table>
+                <thead>
+                    <tr>
+                        <th>CONDIÇÕES DE PAGAMENTO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>À vista</td>
+                    </tr>
+                    <tr>
+                        <td>Financiamento bancário</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <table>
+                <thead>
+                    <tr>
+                        <th>OBSERVAÇÕES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Estudo de sombreamento, inclinação e orientação ainda a ser realizado</td>
+                    </tr>
+                    <tr>
+                        <td>Ou valor mínimo do custo de disponibilidade (monofásico: 30 kWh; bifásico: 50 kWh; trifásico: 100kWh)</td>
+                    </tr>
+                    <tr>
+                        <td>Disjuntores, Conectores, eletrodutos, cabos e miscelâneas</td>
+                    </tr>
+                    <tr>
+                        <td>Detalhes a serem definidos entre as partes</td>
+                    </tr>
+                    <tr>
+                        <td>O valor não inclui hospedagens caso haja necessidade</td>
+                    </tr>
+                    <tr>
+                        <td>Orçamento válido por 07 dias ou até o último dia do mês</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

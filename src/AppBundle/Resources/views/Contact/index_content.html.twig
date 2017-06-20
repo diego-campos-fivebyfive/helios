@@ -1,0 +1,204 @@
+{% set isPerson = 'person' == context.id %}
+{% set isCompany = not isPerson %}
+{% set hasCompany = company is not null %}
+{% set contacts = pagination.items %}
+{% set showCompany = (isPerson and not hasCompany) %}
+{% set isAjax = app.request.isXmlHttpRequest %}
+
+<div class="modal inmodal fade" id="modal_import" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>
+                    <i class="fa fa-{{ isPerson ? 'user' : 'building' }}"></i>
+                    Importar {{ isPerson ? 'Pessoas' : 'Empresas' }}
+                </h2>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="import_category">
+                            Importar para esta categoria
+                        </label>
+                        <select class="form-control" id="import_category">
+                            {% for category in categories %}
+                                <option value="{{ category.id }}"> {{ category.name }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-8">
+                        <label> Para a correta importação, formate os dados conforme nossa planilha modelo. </label>
+                        <a href="{{ asset('uploads/common/Template_Contatos_' ~ (isPerson ? 'Pessoas' : 'Empresas') ~ '.xlsx') }}" class="btn btn-primary btn-block">
+                            <i class="fa fa-file-excel-o"></i> BAIXAR PLANILHA MODELO (EXCEL)
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="hr-line-dashed"></div>
+                    <div class="col-md-12">
+                        <form action="{{ path('contacts_import', {context:context.id}) }}" class="dropzone"
+                              id="myDropzone">
+                            <div class="fallback">
+                                <input name="file" type="file"/>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">
+                    {{ 'Close'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% set isStrict = app.request.query.get('strict', false) %}
+
+    {% if not isAjax %}
+        <div class="row">
+
+            {{ knp_pagination_filter(pagination, {'c.firstname, c.email':''}) }}
+
+            <div class="col-md-3">
+                <div class="btn-group btn-group-justified">
+                    <a href="{{ path('contact_index',{context:'person', strict:isStrict and isPerson ? 0 : 1}) }}"
+                       class="btn btn-{{ isStrict and isPerson ? 'primary active' : 'default' }}">
+                        <i class="fa fa-user"></i>
+                        {{ 'Peoples'|trans }}
+                    </a>
+                    <a href="{{ path('contact_index',{context:'company', strict:isStrict and isCompany ? 0 : 1}) }}"
+                       class="btn btn-{{ isStrict and not isPerson ? 'primary active' : 'default' }}">
+                        <i class="fa fa-building"></i>
+                        {{ 'Companies'|trans }}
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-5 btn-group">
+                <a href="{{ path('contact_create',{context:'person'}) }}" class="btn btn-primary">
+                    <i class="fa fa-plus"></i> Adicionar Pessoa
+                </a>
+                <a href="{{ path('contact_create',{context:'company'}) }}" class="btn btn-primary">
+                    <i class="fa fa-plus"></i> Adicionar Empresa
+                </a>
+                <a class="btn btn-info" data-toggle="modal" data-target="#modal_import">
+                    <i class="fa fa-upload"></i> Importar {{ isPerson ? 'Pessoas' : 'Empresas' }}
+                </a>
+                <a class="btn btn-info" href="{{ path('contacts_export',{context:context.id}) }}">
+                    <i class="fa fa-download"></i> Exportar {{ isPerson ? 'Pessoas' : 'Empresas' }}
+                </a>
+            </div>
+
+        </div>
+    {% endif %}
+
+<style>
+    tr[data-contact] {
+        cursor: pointer;
+    }
+</style>
+
+<div class="row" id="real-content">
+    <div class="col-md-12">
+        <div class="ibox">
+            <div class="ibox-content">
+
+                <table class="table table-stripped table-hover">
+                    <thead>
+                    <tr>
+                        <th style="width: 5px;">&nbsp;</th>
+                        <th> {{ 'Name'|trans }} </th>
+                        <th> {{ 'Category'|trans }} </th>
+                        <th> {{ 'Email'|trans }} </th>
+                        <th> {{ 'Phone'|trans }} </th>
+                        {#<th> &nbsp; </th>#}
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for contact in contacts %}
+
+                        <tr data-contact="{{ path('contact_show',{context:contact.context.id, token:contact.token}) }}">
+                            <td><i class="fa fa-{{ contact.isPerson ? 'user' : 'building' }}"></i></td>
+                            <td> {{ contact.name }} </td>
+                            <td> {{ contact.category }} </td>
+                            <td> {{ contact.email }} </td>
+                            <td> {{ contact.phone }} </td>
+                            {#<td class="col-md-3 btn-group btn-group-sm">
+                                <a title="{{ 'View'|trans }}"
+                                   href="{{ path('contact_show',{context:context.id, token:contact.token}) }}"
+                                   class="btn btn-default col-md-4">
+                                    <i class="fa fa-eye"></i> {{ not isAjax ? 'View'|trans }}
+                                </a>
+                                <a title="{{ 'Edit'|trans }}"
+                                   href="{{ path('contact_update',{context:context.id, token:contact.token}) }}"
+                                   class="btn btn-success col-md-4">
+                                    <i class="fa fa-pencil"></i> {{ not isAjax ? 'Edit'|trans }}
+                                </a>
+                                <a title="{{ 'Delete'|trans }}"
+                                   data-delete="{{ path('contact_delete',{context:context.id, token:contact.token}) }}"
+                                   class="btn btn-danger col-md-4">
+                                    <i class="fa fa-trash"></i> {{ not isAjax ? 'Delete'|trans }}
+                                </a>
+                            </td>#}
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="{{ isPerson ? '5' : '4' }}" align="center">
+                            <div class="btn-group">
+                                {{ knp_pagination_render(pagination) }}
+                            </div>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if isAjax %}
+    {% include view('helper.pagination') %}
+    {#{% include view('contact.script_index') %}#}
+{% endif %}
+
+<script>
+
+    $('[data-contact]').on('click', function () {
+        var url = $(this).data('contact');
+        if (url) {
+            window.location.href = url;
+        }
+    });
+    {% if isStrict %}
+    $('#form_filtration').append('<input name="strict" type="hidden" value="true"/>');
+    {% endif %}
+
+    {# IMPORT CONTACTS #}
+    $(function () {
+        Dropzone.options.myDropzone = {
+            acceptedFiles: 'application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            maxFiles: 1,
+            dictDefaultMessage: 'Selecionar planilha de contatos',
+            init: function () {
+                this.on('error', function () {
+                });
+                this.on('complete', function (file) {
+                    //console.log(file.xhr);
+                    window.location.reload();
+                });
+                this.on('sending', function (file, xhr, data) {
+                    data.append('category', $('#import_category').val());
+                });
+            }
+        };
+    });
+
+</script>

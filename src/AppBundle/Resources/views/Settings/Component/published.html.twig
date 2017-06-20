@@ -1,0 +1,240 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+    {% set is_module = 'module' == context %}
+    {% set components = pagination.items %}
+
+    <style>
+        #form_filtration {
+            margin-top: 2rem;
+        }
+
+        #form_filtration .col-sm-2 {
+            display: none !important;
+        }
+
+        #form_filtration .col-sm-4 {
+            width: 100%;
+            margin-top: -20px;
+        }
+    </style>
+
+    <div class="modal inmodal fade" id="e_modal_details" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body" id="detail_component">
+                    {% include view('kit.spinner') %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">
+                        {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row">
+
+            <div class="col-md-4">
+                <div class="btn-group btn-group-sm btn-group-justified nav-links">
+
+                    <a class="btn btn-{{ not is_module ? 'info' : 'default' }}"
+                       href="{{ path('components_published',{context:'inverter'}) }}">
+                        <i class="fa fa-sliders"></i> {{ 'Inverters'|trans }}
+                    </a>
+
+                    <a class="btn btn-{{ is_module ? 'info' : 'default' }}"
+                       href="{{ path('components_published',{context:'module'}) }}">
+                        <i class="fa fa-cubes"></i> {{ 'Modules'|trans }}
+                    </a>
+
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="btn-group btn-group-sm btn-group-justified">
+
+                    <a class="btn btn-default {{ image ? 'active' }}"
+                       href="{{ path('components_published',{context:context,image:image ? 0 : 1, datasheet:datasheet}) }}">
+                        <i class="fa fa-image"></i> {{ image ? 'Sem' : 'Com' }} imagem
+                    </a>
+
+                    <a class="btn btn-default {{ datasheet ? 'active' }}"
+                       href="{{ path('components_published',{context:context,image:image, datasheet:datasheet ? 0 : 1}) }}">
+                        <i class="fa fa-file-pdf-o"></i> {{ datasheet ? 'Sem' : 'Com' }} datasheet
+                    </a>
+
+                    <a class="btn btn-default {{ datasheet or image ? '' : 'active' }} " href="{{ path('components_published',{context:context}) }}">
+                        <i class="fa fa-list"></i> Todos
+                    </a>
+
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                {{ knp_pagination_filter(pagination, {'c.model,m.name':''}) }}
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-4" style="margin-top: 1.75rem;">
+                <p style="margin-top: .5rem;">
+                    Exibindo {{ pagination.count }} de {{ pagination.getTotalItemCount }} encontrados
+                </p>
+            </div>
+
+            <div class="col-md-8">
+                <div class="btn-group">
+                    {{ knp_pagination_render(pagination) }}
+                </div>
+            </div>
+
+            <div class="col-md-12">
+
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th> {{ 'Maker'|trans }} </th>
+                        <th class="col-md-3"> {{ 'Model'|trans }} </th>
+                        <th class="col-md-1"> Imagem</th>
+                        <th class="col-sm-1"> Datasheet</th>
+                        <th class="col-md-3"> &nbsp; </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for component in components %}
+
+                        {% set view = is_module ? 'module_show' : 'inverter_show' %}
+                        {% set unpublish = is_module ? 'unpublish_module' : 'unpublish_inverter' %}
+
+                        <tr>
+                            <td> {{ component.maker|slice(0, 50) }} </td>
+                            <td>
+                                {{ component.model }}
+                                {% if component.isPrivate %}
+                                    &nbsp;
+                                    <span class="badge badge-danger pull-right">
+                                {{ component.account.name }}
+                            </span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if component.image %}
+                                    <i class="fa fa-check"></i>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if component.datasheet %}
+                                    <i class="fa fa-check"></i>
+                                {% endif %}
+                            </td>
+                            <td class="btn-group btn-group-sm">
+                                <a data-url="{{ path(view, {'token':component.token}) }}"
+                                   data-toggle="modal"
+                                   data-target="#modal_details" class="btn btn-default">
+                                    <i class="fa fa-eye"></i> Visualizar
+                                </a>
+                                <a data-unpublish="{{ path(unpublish,{token:component.token}) }}"
+                                   class="btn btn-warning">
+                                    <i class="fa fa-undo"></i> Remover Publicação
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                &nbsp;
+            </div>
+            <div class="col-md-8">
+                <div class="btn-group">
+                    {{ knp_pagination_render(pagination) }}
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+
+        var detail_component = $('#detail_component');
+        var detail_spinner = detail_component.html();
+        $('[data-target="#modal_details"]').on('click', function () {
+            var url = $(this).data('url');
+            if (url) {
+                $('#e_modal_details').modal('show');
+                detail_component.html(detail_spinner);
+                $.ajax({
+                    url: url,
+                    method: 'get',
+                    success: function (response) {
+                        detail_component.html(response);
+                    }
+                });
+            } else {
+                detail_component.html('<h1> Nenhum componente selecionado para visualização </h1>');
+            }
+        });
+
+        $('#form_filtration')
+            .append('<input type="hidden" name="datasheet" value="{{ datasheet }}">')
+            .append('<input type="hidden" name="image" value="{{ image }}">');
+
+        $('[data-unpublish]').on('click', function () {
+            var url = $(this).data('unpublish');
+            var row = $(this).closest('tr');
+            swal({
+                title: "Confirmar esta operação?",
+                text: null,
+                type: "info",
+                showCancelButton: true,
+                cancelButtonText: "{{ 'Cancel'|trans }}",
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "{{ 'Confirm'|trans }}!",
+                closeOnConfirm: false
+            }, function () {
+                $.ajax({
+                    url: url,
+                    method: 'post',
+                    complete: function (xhr) {
+                        var response = xhr.responseJSON;
+                        if (200 == xhr.status) {
+                            swal("{{ 'Success'|trans }}!", "Operação executada com sucesso!", "success");
+                            window.setTimeout(function () {
+                                swal.close();
+                            }, 500);
+                            row.remove();
+                        } else {
+                            swal("{{ 'Error'|trans }}!", response.error, "error");
+                        }
+                    },
+                    beforeSend: function () {
+                        swal({
+                            title: "Removendo publicação...",
+                            text: "Aguarde!",
+                            type: "info",
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            });
+        });
+
+    </script>
+
+{% endblock %}

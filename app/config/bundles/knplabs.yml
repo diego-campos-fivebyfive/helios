@@ -1,0 +1,25 @@
+knp_paginator:
+    page_range: 5                      # default page range used in pagination control
+    default_options:
+        page_name: page                # page query parameter name
+        sort_field_name: sort          # sort field query parameter name
+        sort_direction_name: direction # sort direction query parameter name
+        filter_field_name: filter_name
+        filter_value_name: filter_value
+        distinct: true                 # ensure distinct results, useful when ORM queries are using GROUP BY statements
+    template:
+        pagination: KnpPaginatorBundle:Pagination:twitter_bootstrap_v3_pagination.html.twig     # sliding pagination controls template
+        sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link template
+        filtration: AppBundle:Pagination:filtration.html.twig
+
+knp_menu:
+    twig:
+        template: AppBundle::menu.html.twig
+
+knp_doctrine_behaviors:
+    blameable:      ~
+    geocodable:     ~
+    loggable:       ~
+    sluggable:      true
+    soft_deletable: true
+    timestampable:  true

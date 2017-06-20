@@ -1,0 +1,131 @@
+{% set route = app.request.attributes.get('_route') %}
+{% set is_service = 'kit_element_services' == route %}
+{% set elements = is_service ? kit.elementServices : kit.elementItems %}
+{% set key = is_service ? 'services' : 'items' %}
+{% set single_prices = kit.isPriceComputable %}
+
+{% set total_quantity = 0 %}
+{% set total_price = 0 %}
+
+<div class="hr-line-dashed"></div>
+
+<table id="{{ route }}" class="table table-bordered table-responsive table-stripped">
+    <thead>
+    <tr>
+        <th> Item</th>
+
+        {% if is_service or single_prices %}
+            <th>{{ is_service ? 'Custo do Serviço (R$)' : 'Custo Unitário (R$)' }} </th>
+        {% endif %}
+
+        {% if not is_service %}
+            <th class="text-center"> Quantidade</th>
+        {% endif %}
+
+        {% if is_service or single_prices %}
+            <th> Custo Total (R$)</th>
+        {% endif %}
+
+        <th> &nbsp; </th>
+    </tr>
+    </thead>
+    <tbody class="table-scroll">
+    {% for element in elements %}
+
+        {% set total_quantity = total_quantity + element.quantity %}
+        {% set total_price = total_price + element.totalPrice %}
+
+        <tr>
+            <td> {{ element.name }} </td>
+
+            {% if is_service or single_prices %}
+                <td>
+                    {{ element.unitPrice is null ? '-' : element.unitPrice|number_format_currency('BRL') }}
+                    {% if element.isIncremental %}
+                        &nbsp; <span class="badge badge-info"> por módulo </span>
+                    {% endif %}
+                </td>
+            {% endif %}
+
+            {% if not is_service %}
+                <td class="text-center"> {{ element.quantity }} {{ element.incremental ? 'mod' }} </td>
+            {% endif %}
+
+            {% if is_service or single_prices %}
+                <td>
+                    {{ element.totalPrice is null ? '-' : element.totalPrice|number_format_currency('BRL') }}
+                </td>
+            {% endif %}
+
+            <td class="col-md-2">
+                <div class="col-md-12 btn-group btn-group-sm">
+                    <button data-update="{{ path('kit_element_update', {token:kit.token, id:element.id}) }}"
+                            data-target="#form_{{ key }}"
+                            data-style="zoom-in"
+                            class="btn col-md-6 btn-success edit_{{ key }} ladda-button">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                    <button data-delete="{{ path('kit_element_remove', {token:kit.token, id:element.id}) }}"
+                            data-style="zoom-in"
+                            class="btn col-md-6 btn-danger remove_{{ key }} ladda-button"><i class="fa fa-trash"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+
+    {% endfor %}
+    </tbody>
+
+    <tfoot>
+    <tr>
+        {% if is_service %}
+
+            <th> &nbsp; </th>
+            <th class="text-center"> {{  is_service ? '' : total_quantity }}</th>
+            <th>{{ total_price|number_format_currency('BRL') }}</th>
+            <th>&nbsp;</th>
+
+        {% else %}
+
+            <th>&nbsp;</th>
+            {% if single_prices %}
+                <th>&nbsp;</th>
+
+            {% endif %}
+
+            <th class="text-center">{{ total_quantity }}</th>
+            {% if single_prices %}
+                <th> {{ total_price|number_format_currency('BRL') }} </th>
+            {% endif %}
+            <th>&nbsp;</th>
+
+        {% endif %}
+    </tr>
+    <tr>
+        <td colspan="5" align="center">
+            <ul class="pagination"></ul>
+        </td>
+    </tr>
+    </tfoot>
+
+</table>
+
+<script>
+    $(function () {
+
+        var edit_button = $('.edit_{{ key }}'), remove_button = $('.remove_{{ key }}');
+
+        edit_button.on('click', function () {
+            Kit.update($(this));
+        });
+
+        remove_button.on('click', function () {
+            Kit.remove($(this), {
+                callback: function (xhr) {
+                    Kit.{{ key }}.all();
+                    Kit.costs();
+                }
+            });
+        });
+    });
+</script>

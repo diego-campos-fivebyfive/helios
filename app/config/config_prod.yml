@@ -1,0 +1,40 @@
+imports:
+    - { resource: config.yml }
+
+#framework:
+#    validation:
+#        cache: validator.mapping.cache.doctrine.apc
+#    serializer:
+#        cache: serializer.mapping.cache.apc
+
+#doctrine:
+#    orm:
+#        metadata_cache_driver: apc
+#        result_cache_driver: apc
+#        query_cache_driver: apc
+
+monolog:
+    handlers:
+        main:
+            type:         fingers_crossed
+            action_level: error
+            handler:      nested
+        nested:
+            type:  stream
+            path:  "%kernel.logs_dir%/%kernel.environment%.log"
+            level: debug
+        console:
+            type:  console
+
+doctrine:
+    dbal:
+        #host:     inovadorsolar.com
+        #dbname:   inovador_sandbox
+        #user:     inovador_user
+        #user:     inovador_master
+        #password: xB}6b4BJPhd.
+        #password: it~m[6^UUaKR
+        host:      "mysql-dev-test.crtwvzhue9fu.sa-east-1.rds.amazonaws.com"
+        dbname:    sices_solar
+        user:      mysqldevtest
+        password:  zvQdYaPB79muWbnpct

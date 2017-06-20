@@ -1,0 +1,90 @@
+<table id="table_taxes" class="table table-bordered table-hover-- table_taxes">
+    <thead>
+    <tr>
+        <th class=""> {{ admin ? 'Descrição' : 'Acréscimos/Descontos' }} </th>
+        {% if admin %}
+            <th class="{{ admin ? 'col-md-3' : '' }}"> Porcentagem</th>
+        {% endif %}
+        <th class="col-md-2"> Valor</th>
+        {% if admin %}
+            <th class="col-md-1"> &nbsp; </th>
+        {% endif %}
+    </tr>
+    </thead>
+    <tbody>
+
+    {% set discounts = 0 %}
+    {% set additions = 0 %}
+    {% for tax in taxes %}
+
+        {% if tax.discount %}
+            {% set discounts = discounts + tax.amount %}
+        {% else %}
+            {% set additions = additions + tax.amount %}
+        {% endif %}
+
+        <tr class="{% if admin %} {{ tax.discount ? 'success' : 'danger' }} {% endif %}">
+
+            <td>
+                {% if admin %}
+                    <i class="fa fa-arrow-{{ tax.discount ? 'down' : 'up' }}"></i>
+                {% endif %}
+                {{ tax.name }}
+
+                {% if admin %}
+                    {% if tax.targetServices %} <span class="badge info"> Serviços </span> {% endif %}
+                    {% if tax.targetEquipments %} <span class="badge info"> Equipamentos </span> {% endif %}
+                {% endif %}
+
+            </td>
+            {% if admin %}
+            <td>
+                {% if not tax.absolute %} {{ tax.percent(false) }}% {% endif %}
+            </td>
+            {% endif %}
+            <td>
+                {{ tax.amount|currency }}
+            </td>
+
+            {% if admin %}
+                <td>
+                    <div class="btn-group btn-group-sm">
+                        {#{{ tax.toArray|json_encode }}#}
+                        <a data-info="{{ tax.toJson }}" data-href="{{ path('financial_tax_update',{token:tax.token}) }}"
+                           class="btn btn-success" data-toggle="modal" data-target="#tax_modal">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                        <a data-remove="{{ path('financial_tax_delete',{token:tax.token}) }}" class="btn btn-danger">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </div>
+                </td>
+            {% endif %}
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+</table>
+
+{% if admin %}
+
+<table class="table table-bordered">
+    <tbody>
+    <tr>
+        <td class="col-md-10">  Total de Acréscimos </td>
+        <td> {{ additions|currency }} </td>
+    </tr>
+    <tr>
+        <td>  Total de Descontos </td>
+        <td> {{ discounts|currency }} </td>
+    </tr>
+    <tr>
+        <th>  Total </th>
+        <th> {{ financial.finalPrice|currency }} </th>
+    </tr>
+    </tbody>
+</table>
+
+{% endif %}

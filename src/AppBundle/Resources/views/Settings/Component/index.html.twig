@@ -1,0 +1,114 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+    <div class="modal inmodal fade" id="modal_details" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body" id="detail_component">
+                    {% include view('kit.spinner') %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">
+                        {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeIn">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <div class="btn-group btn-group-sm">
+                            <a class="btn btn-default" style="cursor: pointer; border: 0; font-weight: bold;">
+                                Componentes
+                            </a>
+                            <a href="{{ path('inverter_create') }}" class="btn btn-warning">
+                                <i class="fa fa-plus"></i> Novo Inversor
+                            </a>
+                            <a href="{{ path('module_create') }}" class="btn btn-info">
+                                <i class="fa fa-plus"></i> Novo Módulo
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-md-6" id="render_validated">
+                            </div>
+                            <div class="col-md-6" id="render_featured">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+
+        var Manager = {
+            request: function(options){
+                var config = $.extend(true,{
+                    url: null,
+                    method: 'get',
+                    data: {},
+                    callback: null
+                }, options);
+                if(config.url){
+
+                    if('function' != typeof(config.callback)){
+                        console.log('Invalid callback function');
+                        return false;
+                    }
+
+                    $.ajax({
+                        url: config.url,
+                        method: config.method,
+                        data: config.data,
+                        complete: function(xhr){
+                            config.callback(xhr);
+                        }
+                    });
+                }
+            }
+        };
+
+        function get_grid(status){
+            Manager.request({
+                url: '{{ path('components_list', {status:'_status_'}) }}'.replace(/_status_/g, status),
+                callback: function(xhr){
+                    $('#render_'+status).html(xhr.responseText);
+                }
+            });
+        }
+
+        get_grid('featured');
+        get_grid('validated');
+
+        var spinner = null;
+        $('#modal_details').on('show.bs.modal', function(event){
+            var target = $(event.relatedTarget);
+            var body = $(this).find('.modal-body');
+            if(!spinner){
+                spinner = body.html();
+            }else {
+                body.html(spinner);
+            }
+            $.ajax({
+                url: target.data('href'),
+                success: function(response){
+                    body.html(response);
+                }
+            });
+        });
+
+    </script>
+
+{% endblock %}

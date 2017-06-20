@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title> {{ app_title()|raw }}  </title>
+    <link rel="shortcut icon" href="{{ asset('assets/img/favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('assets/img/favicon.ico') }}" type="image/x-icon">
+
+    {% block before_styles %}{% endblock %}
+
+    {% stylesheets output='assets/css/main.css' filter='cssrewrite,uglifycss'
+        'assetic/app.css'
+        'assetic/bootstrap.min.css'
+        'assets/font-awesome/css/font-awesome.css'
+        'assetic/jquery-ui/jquery-ui.min.css'
+        'assetic/toastr/toastr.min.css'
+        'assetic/gritter/jquery.gritter.css'
+        'assetic/ladda/ladda-themeless.min.css'
+        'assetic/sweetalert/sweetalert.css'
+        'assetic/footable/footable.core.css'
+        'assetic/animate.css'
+        'assetic/daterangepicker/daterangepicker.css'
+        'assetic/fullcalendar/fullcalendar.css'
+        'assetic/chosen/chosen.css'
+        'assetic/style.css'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}">
+    {% endstylesheets %}
+
+    {% block styles %}{% endblock %}
+
+    {% javascripts output='assets/jquery.js' filter='uglifyjs2'
+        'assetic/jquery-2.1.1.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script>
+        {% set member = app.user.info %}
+        {% set request = app.request %}
+        {% set route = request.attributes.get('_route') %}
+        {% set host = 'localhost' == request.host ? 'kolinalabs.com' : request.host %}
+        {% set track_routes = {
+            'member_business':true,
+            'member_profile':true
+        } %}
+
+        (function(){
+            var t,i,e,n=window,o=document,a=arguments,s="script",r=["config","track","identify","visit","push","call","trackForm","trackClick"],c=function(){var t,i=this;for(i._e=[],t=0;r.length>t;t++)(function(t){i[t]=function(){return i._e.push([t].concat(Array.prototype.slice.call(arguments,0))),i}})(r[t])};for(n._w=n._w||{},t=0;a.length>t;t++)n._w[a[t]]=n[a[t]]=n[a[t]]||new c;i=o.createElement(s),i.async=1,i.src="//static.woopra.com/js/w.js",e=o.getElementsByTagName(s)[0],e.parentNode.insertBefore(i,e)
+        })("woopra");
+
+        woopra.config({
+            domain: '{{ host }}'
+        });
+
+        woopra.identify({
+            email: '{{ member.email }}',
+            name: '{{ member.name }}',
+            company: '{{ member.account }}',
+            profile: '{{ member.isOwner ? 'Dono da conta' : 'Agente' }}'
+        });
+
+    </script>
+    {% set allow_track = false %}
+    {% if woopraEvent is defined and woopraEvent is not null %}
+        {% if attribute(track_routes, route) is defined or 'turn-online' == woopraEvent.name %}
+            <script>woopra.track();</script>
+            {% set allow_track = true %}
+        {% else %}
+            {{ render(controller('AppBundle:App:woopra',{id:woopraEvent.id})) }}
+        {% endif %}
+    {% endif %}
+    {% if not allow_track %}
+        <script>woopra.track();</script>
+    {% endif %}
+
+    <style>
+        .navbar-default .support_link a{
+            background-color: #1c84c6;
+            color: white;
+        }
+        .navbar-default .support_link a:focus,
+        .navbar-default .support_link a:hover{
+            background-color: #1a7bb9 !important;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="wrapper">
+
+    {% set user = app.user %}
+    {% set companyName = app.user.info.account.name ?: null %}
+
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+
+            <ul class="nav" id="logo-menu">
+                <li class="nav-header text-center">
+                    <div class="dropdown profile-element">
+                    <span>
+                        <img src="{{ asset('assets/img/logo_small.png') }}" class="menu-logo img-circle">
+                    </span>
+                        <a href="{{ path('app_index') }}">
+                        <span class="clear">
+
+                            <span class="block m-t-xs">
+                                <strong class="font-bold"> {{ user.name }} </strong>
+                            </span>
+
+                            {% if companyName %}
+                                <span class="text-muted text-xs block">
+                                {{ companyName }}
+                                    {#<b class="caret"></b>#}
+                            </span>
+                            {% endif %}
+
+                        </span>
+                        </a>
+                    </div>
+                    <div class="logo-element">
+                        <img src="{{ asset('assets/img/logo_small.png') }}" class="menu-logo-mini img-circle">
+                    </div>
+                </li>
+            </ul>
+
+            {{ knp_menu_render('AppBundle:Main:sidebar') }}
+
+        </div>
+    </nav>
+
+
+    <div id="page-wrapper" class="gray-bg">
+
+        {% include view('navbar') %}
+
+        {#{% if 'app_index' != app.request.attributes.get('_route') %}
+            {{ render(controller('AppBundle:App:getTopbar',{'route':app.request.attributes.get('_route'), 'parameters':app.request.attributes.get('_route_params')})) }}
+        {% endif %}#}
+
+        {% block body %}{% endblock %}
+
+    </div>
+
+</div>
+
+{% javascripts output='assets/main.js' filter='uglifyjs2'
+    'assetic/http.js'
+    'assetic/bootstrap.min.js'
+    'assetic/metisMenu/jquery.metisMenu.js'
+    'assetic/slimscroll/jquery.slimscroll.min.js'
+    'assetic/inspinia.js'
+    'assetic/pace/pace.min.js'
+    'assetic/jquery-ui/jquery-ui.min.js'
+    'assetic/gritter/jquery.gritter.min.js'
+    'assetic/sparkline/jquery.sparkline.min.js'
+    'assetic/idle-timer/idle-timer.min.js'
+    'assetic/toastr/toastr.min.js'
+    'assetic/ladda/spin.min.js'
+    'assetic/ladda/ladda.min.js'
+    'assetic/ladda/ladda.jquery.min.js'
+    'assetic/sweetalert/sweetalert.min.js'
+    'assetic/chosen/chosen.jquery.js'
+    'assetic/footable/footable.all.min.js'
+    'assetic/jquery.mask.js'
+    'assetic/fullcalendar/lib/moment.min.js'
+    'assetic/fullcalendar/fullcalendar.min.js'
+    'assetic/fullcalendar/locale-all.js'
+    'assetic/daterangepicker/daterangepicker.js'
+%}
+<script src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+{% include view('helper.realtime') %}
+
+{% block scripts %}{% endblock %}
+
+{{ render(controller('AppBundle:App:intercom')) }}
+
+<script>
+    $('.support_link a').attr('target', '_blank');
+</script>
+
+</body>
+</html>

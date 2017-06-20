@@ -1,0 +1,62 @@
+{% extends view('layout') %}
+
+{% block body %}
+    {% set inverters = pagination.items %}
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <td>{{ 'ID'|trans }}</td>
+                                    <td>{{ 'Maker'|trans }}</td>
+                                    <td>Status</td>
+                                    <td>Ações</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for inverter in inverters %}
+                                    <tr>
+                                        <td>{{ inverter.id }}</td>
+                                        <td>{{ inverter.maker.name }}</td>
+                                        <td>
+                                            {% if( inverter.enabled == 1) %}
+                                                {{'Enabled'|trans}}
+                                            {% else %}
+                                                {{'Disabled'|trans}}
+                                            {% endif%}
+                                        </td>
+                                        <td>
+                                            <a href="{{ path('inverter_preview',{id:inverter.id}) }}">
+                                                <button class="btn btn-default btn-xs">{{'View'|trans}}</button>
+                                            </a>
+                                            <a href="{{ path('inverter_update',{ id: inverter.id}) }}">
+                                                <button class="btn btn-default btn-xs">{{'Edit'|trans}}</button>
+                                            </a>
+                                            <a href="{{ path('inverter_delete',{ id: inverter.id}) }}">
+                                                <button class="btn btn-default btn-xs">{{'Delete'|trans}}</button>
+                                            </a>
+
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="5">
+                                        {{ knp_pagination_render(pagination) }}
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

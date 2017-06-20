@@ -1,0 +1,231 @@
+{% extends view('layout') %}
+
+{% block styles %}
+    {% include view('helper.plugins_css') %}
+{% endblock %}
+
+{% block body %}
+
+    <div class="wrapper wrapper-content animated fadeIn">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5> {{ context.id|trans }} </h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-md-8 alert alert-warning">
+                                Atenção: Clique e arraste qualquer bloco abaixo para redefinir a ordem
+                            </div>
+                            <div class="col-md-8" id="categories_form">
+                                <div class="sk-spinner sk-spinner-circle">
+                                    {% for i in 1..12 %}
+                                        <div class="sk-circle{{ i }} sk-circle"></div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-md-8" id="categories_index">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    {% include view('helper.plugins_js') %}
+
+    <script>
+        var Classification = {
+            formContainer: $('#categories_form'),
+            indexContainer: $('#categories_index'),
+            request: function (settings) {
+                var options = $.extend(true, {
+                    method: 'get',
+                    url: null,
+                    data: {},
+                    callback: null
+                }, settings);
+                if (options.url) {
+                    $.ajax({
+                        url: options.url,
+                        method: options.method,
+                        data: options.data,
+                        complete: function (xhr) {
+                            if ('function' == typeof(options.callback)) {
+                                options.callback(xhr);
+                            }
+                        }
+                    });
+                }
+            },
+            index: function () {
+                Classification.request({
+                    url: '{{ path('categories',{context:context.id}) }}',
+                    callback: function (xhr) {
+                        Classification.indexContainer.html(xhr.responseText);
+                        Classification.afterIndex();
+                    }
+                });
+            },
+            form: function () {
+                Classification.request({
+                    url: '{{ path('categories_create',{context:context.id}) }}',
+                    callback: function (xhr) {
+                        Classification.formContainer.html(xhr.responseText);
+                        Classification.initForm();
+                    }
+                });
+            },
+            init: function () {
+                Classification.index();
+                Classification.form();
+                /* SaleCycle.deletable();
+                 SaleCycle.editable();*/
+            },
+            initForm: function(){
+                var form = Classification.formContainer.find('form');
+                var button = form.find('[type="submit"]');
+                if(form.length){
+                    button.ladda();
+                    form.on('submit', function(event){
+                        event.preventDefault();
+                        button.ladda('start');
+                        Classification.request({
+                            url: $(this).attr('action'),
+                            method: $(this).attr('method'),
+                            data: $(this).serialize(),
+                            callback: function(xhr){
+                                button.ladda('stop');
+                                if(201 == xhr.status || 200 == xhr.status){
+                                    Classification.init();
+                                }else{
+                                    var response = xhr.responseJSON;
+                                    swal('{{ 'Error'|trans }}', response.error, 'error');
+                                }
+                            }
+                        });
+                    });
+                }
+            },
+            afterIndex: function(){
+                $('[data-update]').on('click', function(){
+                    var form = Classification.formContainer.find('form');
+                    var inputName = form.find('#category_name');
+                    var prevAction = form.attr('action');
+                    var prevName = inputName.val();
+                    var placeholder = inputName.attr('placeholder');
+                    form.attr('action', $(this).data('update'));
+                    inputName.val($(this).data('value')).attr('placeholder', placeholder.replace(/Adicionar/g, 'Editar'));
+                    $('#btn-cancel').removeClass('hide').on('click', function(){
+                        form.attr('action', prevAction);
+                        inputName.val(prevName).attr('placeholder', placeholder);
+                        $(this).addClass('hide');
+                    });
+                });
+                Classification.nestable();
+                Classification.deletable();
+            },
+            sortable: function(){
+                var container = Classification.indexContainer;
+                var elements = [];
+                $.each(container.find('li.uk-nestable-item'), function(i, item){
+                    elements[elements.length] = {
+                        position: (i + 1),
+                        token: $(item).data('token')
+                    };
+                });
+                $.ajax({
+                    url: '{{ path('categories_position') }}',
+                    method: 'post',
+                    data: {elements: elements},
+                    complete: function(xhr){
+                        if(202 == xhr.status){
+                            Classification.index();
+                        }else{
+                            console.log(xhr.statusText);
+                        }
+                    }
+                });
+            },
+            nestable: function(){
+                var moved = false;
+                var nestable = UIkit.nestable('#categories-items', {
+                    handleClass: 'uk-nestable-handle',
+                    maxDepth: 1
+                }).on('stop.uk.nestable', function(event, nestable){
+                    Classification.sortable();
+                    moved = true;
+                });
+                $('.uk-nestable-handle').on('mouseout', function(){
+                    if(moved){
+                        var button = $(this).find('button');
+                        button.ladda();
+                        button.ladda('start');
+                        moved = false;
+                    }
+                });
+            },
+            deletable: function(){
+                var buttons = $('[data-delete]');
+                if(buttons.length){
+                    buttons.on('click', function(){
+                        var url = $(this).data('delete');
+                        var row = $(this).closest('li');
+                        if(url.length){
+                            swal({
+                                title: "Confirmar exclusão?",
+                                text: null,
+                                type: "info",
+                                showCancelButton: true,
+                                cancelButtonText: "{{ 'Cancel'|trans }}",
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: "{{ 'Delete'|trans }}!",
+                                closeOnConfirm: false
+                            }, function () {
+                                $.ajax({
+                                    url: url,
+                                    method: 'post',
+                                    data: {_method:'delete'},
+                                    complete: function(xhr){
+                                        var response = xhr.responseJSON;
+                                        if(200 == xhr.status){
+                                            row.remove();
+                                            Classification.sortable();
+                                            swal("{{ 'Success'|trans }}!", "{{ 'Was successful exclusion'|trans }}!", "success");
+                                            window.setTimeout(function(){
+                                                swal.close();
+                                            },500);
+                                        }else{
+                                            swal("{{ 'Error'|trans }}!", response.error, "error");
+                                        }
+                                    },
+                                    beforeSend: function(){
+                                        swal({
+                                            title: "Excluindo...",
+                                            text:  "Aguarde.",
+                                            type: "info",
+                                            showConfirmButton: false
+                                        });
+                                    }
+                                });
+                            });
+                        }
+                    });
+                }
+            }
+        };
+        Classification.init();
+    </script>
+
+{% endblock %}

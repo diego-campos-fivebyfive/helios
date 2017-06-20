@@ -1,0 +1,73 @@
+security:
+    role_hierarchy:
+        ROLE_AGENT: ROLE_USER
+        ROLE_OWNER: ROLE_AGENT
+        ROLE_ADMIN: ROLE_OWNER
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+    encoders:
+        FOS\UserBundle\Model\UserInterface: bcrypt
+
+    providers:
+        fos_userbundle:
+            id: fos_user.user_provider.username_email
+
+    firewalls:
+        oauth_token:
+            pattern:    ^/oauth/v2/token
+            security:   false
+
+        oauth_authorize:
+            pattern:    ^/oauth/v2/auth
+            form_login:
+                provider: fos_userbundle
+                check_path: /oauth/v2/auth_login_check
+                login_path: /oauth/v2/auth_login
+                #check_path: fos_user_security_check
+                #login_path: fos_user_security_login
+                use_referer: true
+            anonymous: true
+
+        #api:
+        #    pattern:    ^/api
+        #    fos_oauth:  true
+        #    stateless:  true
+        #    anonymous:  false
+
+        main:
+            anonymous: ~
+            pattern: ^/
+            form_login:
+                check_path: fos_user_security_check
+                login_path: fos_user_security_login
+                provider: fos_userbundle
+                csrf_token_generator: security.csrf.token_manager
+                success_handler: app.authentication.success_handler
+                failure_handler: app.authentication.failure_handler
+            logout:
+                path:   fos_user_security_logout
+                target: /
+
+        login:
+            pattern:  ^/login$
+            security: false
+            remember_me:
+                secret: "%secret%"
+                lifetime: 31536000
+                path: /
+                domain: ~
+
+    access_control:
+        # API
+        - { path: ^/api/*, roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }
+        # DEV
+        - { path: ^/_wdt/*, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        # ALL
+        - { path: ^/public/*, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register/*, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting/*, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/*, role: ROLE_USER }
+        # API
+        - { path: ^/api$, roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }
+        # IS_AUTHENTICATED_FULLY

@@ -1,0 +1,17 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block title %} Redefinir senha {% endblock %}
+
+{% block fos_user_content %}
+
+    <h3 class="block-title">
+        Recuperar senha de acesso
+    </h3>
+
+    <div class="alert alert-success">
+    {{ 'resetting.check_email'|trans({'%email%': email}) }}
+    </div>
+
+{% endblock %}

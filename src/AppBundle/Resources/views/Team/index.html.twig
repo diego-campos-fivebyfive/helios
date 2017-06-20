@@ -1,0 +1,153 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+{#
+    {% set teams = pagination.items %}
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-md-2">
+                <div class="btn-group btn-group-justified btn-group-sm">
+                    <a href="{{ path('team_index',{'display':'list'}) }}" class="btn btn-default"> <i class="fa fa-list"></i> Lista </a>
+                    <a href="{{ path('team_index',{'display':'grid'}) }}" class="btn btn-default"> <i class="fa fa-th"></i> Grade </a>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div class="alert alert-info alert-dismissable">
+                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                    Para definir ou remover um membro como líder da equipe clique sobre sua foto/avatar.
+                    Líderes de equipe têm sua imagem destacada.
+                </div>
+            </div>
+        </div>
+
+        {% if 'grid' == display %}
+
+            {% for team in teams %}
+
+                <div class="row">
+
+                <div class="col-lg-4 team-box">
+                    <div class="ibox">
+                        <div class="ibox-title">
+                            {% if team.enabled == 1 %}
+                                <span class="label label-primary pull-right">ATIVADO</span>
+                            {% else %}
+                                <span class="label label-danger pull-right">DESATIVADO</span>
+                            {% endif %}
+                            <h5>{{ team.name }}</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="team-members row">
+
+                                {% if team.members.count %}
+                                    {% for member in team.members %}
+
+                                        <div class="col-md-3" title="{{ member.name }}">
+                                            <div class="col-md-12">
+                                                <small> {{ member.firstname|slice(0,8) }} </small>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <a class="change_leader {{ member.isLeader ? 'is_leader' : '' }}"
+                                                   href="{{ path('team_leader', {'token': member.token}) }}">
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                    {% endfor %}
+
+                                {% else %}
+                                    <h2 style="padding-bottom: 2rem;"> {{ 'Has no members'|trans }} </h2>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <h4>{{ team.name }}</h4>
+                            </div>
+
+                            <div class="btn-group btn-group-sm">
+                                <a class="btn btn-primary"
+                                   href="{{ path('team_update',{ 'token' : team.token }) }}">{{ 'Edit'|trans }}</a>
+                                <button class="btn btn-danger buttondelete"
+                                        value="{{ path('team_delete',{ 'token' : team.token }) }}">{{ 'Delete'|trans }}</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+
+        {% else %}
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <table id="footable" class="footable table table-stripped" data-page-size="8"
+                                   data-filter=#filter>
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nome</th>
+                                    <th>Membros</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for team in teams %}
+
+                                    <tr class="team-box">
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ team.name }}</td>
+                                        <td>
+                                            {% for member in team.members %}
+                                                <a href="#">
+                                                <span class="badge badge-info">
+                                                    {{ member.firstname }}
+                                                </span>
+                                                </a>
+                                            {% endfor %}
+                                        </td>
+                                        <td class="col-md-2">
+                                            <div class="btn-group btn-group-sm">
+                                                <a class="btn btn-primary"
+                                                   href="{{ path('team_update',{ 'token' : team.token }) }}">{{ 'Edit'|trans }}</a>
+                                                <button class="btn btn-danger buttondelete"
+                                                        value="{{ path('team_delete',{ 'token' : team.token }) }}">{{ 'Delete'|trans }}</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        {% endif %}
+
+        <div class="row text-center">
+            <div class="btn-group">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+
+    </div>
+#}
+
+
+{% endblock %}

@@ -1,0 +1,115 @@
+{% set user_ids = {
+    'teste11@inovadorsolar.com':true,
+    'teste12@inovadorsolar.com':true,
+    'teste13@inovadorsolar.com':true,
+    'eng.mauroandre@gmail.com':true,
+    'cjmeas@hotmail.com':true,
+    'cjchamado@gmail.com':true
+    }
+%}
+
+{% set debug_mode = false %}
+{% set user_id = app.user.email %}
+
+<div style="width: 100%;">
+
+    <div class="form-group {{ (debug_mode and attribute(user_ids, user_id) is not defined) ? 'hide' }}">
+        <div id="payment_method_handler" class="btn-group btn-group-justified" data-toggle="buttons">
+            <label id="button_credit_card" class="btn btn-default active">
+                <i class="fa fa-credit-card"></i>
+                <input type="radio" checked="checked" name="payment_method" value="credit_card">
+                Cartão
+            </label>
+            <label id="button_invoice" class="btn btn-default">
+                <i class="fa fa-barcode"></i>
+                <input type="radio" name="payment_method" value="boleto_inovador">
+                Boleto
+            </label>
+        </div>
+    </div>
+
+    <div id="method_credit_card">
+        <div class="card-wrapper" style="height: 220px;">
+        </div>
+        <div style="width: 100%;">
+
+            {{ form_start(form,{attr:{id:'form_payment_profile'}}) }}
+
+            <div id="card_bar" class="form-group col-md-12 text-center" style="margin-bottom:10px;">
+                {#<strong> Bandeiras aceitas </strong>
+                <div id="card_icons">
+                    <i class="fa fa-cc-visa text-success"></i>
+                    <i class="fa fa-cc-mastercard text-warning"></i>
+                </div>#}
+                <img src="{{ asset('assets/img/card_bar.png') }}" width="75%"/>
+            </div>
+
+            <div class="form-group col-md-12">
+                {{ form_label(form.card_number, 'Número do cartão') }}
+                {{ form_widget(form.card_number, {attr:{class:'form-control', placeholder:'Número do cartão'}}) }}
+            </div>
+
+            <div class="form-group col-md-12">
+                {{ form_label(form.holder_name, 'Nome no cartão') }}
+                {{ form_widget(form.holder_name, {attr:{class:'form-control', placeholder:'Nome no cartão'}}) }}
+            </div>
+
+            <div class="form-group col-md-6">
+                {{ form_label(form.card_expiration, 'Vencimento') }}
+                {{ form_widget(form.card_expiration, {attr:{class:'form-control', placeholder:'MM/AA'}}) }}
+            </div>
+
+            <div class="form-group col-md-6">
+                {{ form_label(form.card_expiration, 'Código de verificação') }}
+                {{ form_widget(form.card_cvv, {attr:{class:'form-control', placeholder:'CVV'}}) }}
+            </div>
+
+            <div class="form-group col-md-12 block_terms">
+                {{ form_widget(form.terms) }}
+                <label>
+                    &nbsp; Aceito os <a href="#" data-toggle="modal" data-target="#terms"> Termos de Uso </a>
+                </label>
+            </div>
+
+            <div class="form-group col-md-12">
+                {#<label> &nbsp; </label>#}
+
+                <a id="signature_process" class="btn btn-primary btn-md btn-block">
+                    <i class="fa fa-check"></i> Assinar
+                </a>
+
+                <br>
+                <button type="submit" class="btn btn-primary btn-block hide">
+                    <i class="fa fa-check"></i> Atualizar este cartão
+                </button>
+
+            </div>
+
+            <div class="hide">
+                {{ form_rest(form) }}
+            </div>
+
+            {{ form_end(form) }}
+
+        </div>
+    </div>
+
+    <div id="method_boleto_inovador" class="hide">
+
+        <img width="100%" src="{{ asset('assets/boleto.png') }}"/>
+
+        <p class="block_terms">
+            <br>
+            <input placeholder="" type="checkbox" id="invoice_terms">
+            <label>
+                &nbsp; Aceito os <a href="#" data-toggle="modal" data-target="#terms"> Termos de Uso </a>
+            </label>
+        </p>
+
+        <a class="btn btn-primary btn-block btn-md" id="pay_invoice">
+            <i class="fa fa-barcode"></i>
+            <span> Assinar com boleto </span>
+        </a>
+    </div>
+
+</div>

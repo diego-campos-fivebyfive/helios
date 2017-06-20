@@ -1,0 +1,52 @@
+
+<table id="element_item_index" class="table table-responsive table-stripped">
+    <thead>
+    <tr>
+        <th> Item </th>
+        <th> Valor Unit. </th>
+        <th> Qtde </th>
+        <th> Valor Total </th>
+        <th> &nbsp; </th>
+    </tr>
+    </thead>
+    <tbody class="table-scroll">
+        {% for element in kit.elementServices %}
+
+            <tr>
+                <td> {{ element.name }} </td>
+                <td> {{ element.unitPrice }} </td>
+                <td> {{ element.quantity }} </td>
+                <td> {{ element.totalPrice }} </td>
+                <td>
+                    <div class="btn-group btn-group-sm">
+                        <button data-url="{{ path('kit_element_item_update',{'id': element.token}) }}" class="btn btn-success edit_button"><i class="fa fa-pencil"></i></button>
+                        <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>
+
+        {% endfor %}
+    </tbody>
+    <tfoot>
+   {# <tr>
+        <td colspan="2">
+            <a href="{{ path('kit_element_add_item',{'kit':kit.token}) }}"
+               data-toggle="modal" data-target="#otherProductsModal" class="btn btn-sm btn-success">
+                <i class="fa fa-plus"></i> {{ 'Add'|trans }}
+            </a>
+        </td>
+        <td colspan="3"></td>
+    </tr>#}
+    </tfoot>
+</table>
+
+<script>
+    $(function(){
+        var edit_button = $('.edit_button');
+        edit_button.on('click', function(){
+            Kit.element.form($(this).data('url'));
+        });
+
+        $('#element_item_index').footable();
+    });
+</script>

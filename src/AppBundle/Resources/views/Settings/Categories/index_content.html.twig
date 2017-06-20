@@ -1,0 +1,33 @@
+<div class="row">
+    <ul class="uk-nestable" id="categories-items">
+        {% for category in categories %}
+            <li class="uk-nestable-item" data-token="{{ category.token }}">
+                <div class="uk-nestable-panel">
+                    <div class="row">
+                        <div class="col-md-2 uk-nestable-handle">
+                            <button class="btn btn-info btn-md btn-block ladda-button" data-style="zoom-in">
+                                <i class="uk-icon uk-icon-bars uk-margin-small-right"></i>
+                            </button>
+                        </div>
+                        <div class="col-md-7">
+                            <a class="btn btn-block btn-md btn-default" style="text-align: left; background: transparent; border: none;">
+                                {{ category.sortedName }}
+                            </a>
+                        </div>
+                        <div class="col-md-3 btn-group btn-group-md">
+                            <a data-update="{{ path('categories_update',{token:category.token}) }}"
+                               data-value="{{ category.name }}"
+                               class="btn btn-success col-md-6">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                            <a data-delete="{{ path('categories_delete',{token:category.token}) }}"
+                               class="btn btn-danger col-md-6">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>

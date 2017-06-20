@@ -1,0 +1,660 @@
+{% extends view('layout') %}
+
+{% set extras = {'items': '', 'services': ''} %}
+{% set enable_modules = true %}
+{% set enable_inverters = true %}
+
+{% block before_styles %}
+
+    {% include view('helper.plugins_css') %}
+
+    <style>
+        form#form_init label {
+            font-weight: normal;
+        }
+
+        .heading_spinner {
+            position: absolute;
+            right: 49%;
+        }
+
+        .panel-double-top {
+            min-height: 15rem;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    <div class="modal inmodal fade" id="modal_details" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body" id="detail_component">
+                    {% include view('kit.spinner') %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">
+                        {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="wrapper wrapper-content animated fadeIn">
+
+        <div class="row">
+
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5> &nbsp; Informações iniciais
+                            <small class="m-l-sm">
+                                &nbsp;
+                            </small>
+                        </h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="ibox-content">
+
+                        {{ form_start(form,{attr:{id:'form_init',action:path('kit_manage',{token:kit.token})}}) }}
+
+
+                        <div class="row">
+                            <div id="init_spinner" class="heading_spinner">
+                                {% include view('kit.spinner') %}
+                            </div>
+                            <div class="col-md-6">
+                                <div class="panel panel-info panel-double-top">
+                                    <div class="panel-heading">
+                                        <i class="fa fa-terminal"></i> Identificador
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="input-group">
+                                            {{ form_widget(form.identifier,{attr:{class:'form-control', readonly: true, placeholder:'Opcional - até 30 caracteres'}}) }}
+                                            <span class="input-group-btn">
+                                                <button id="btn_identifier" type="button" class="btn btn-success ladda-button" data-style="zoom-in">
+                                                    <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
+                                                </button>
+                                            </span>
+                                        </div>
+                                        <i>
+                                            Insira algo que ajude a identificar o KIT (Ex.: fornecedor, tipo de estrutura etc.)
+                                        </i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="panel panel-danger panel-double-top">
+                                    <div class="panel-heading">
+                                        <i class="fa fa-toggle-on"></i> Método de cálculo
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            {% for priceStrategy in form.invoicePriceStrategy %}
+
+                                                <div class="col-md-12">
+                                                    {{ form_widget(priceStrategy) }}
+                                                    {{ form_label(priceStrategy) }}
+                                                </div>
+
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{ form_end(form) }}
+
+                    </div>
+                </div>
+            </div>
+
+            {% if enable_inverters %}
+
+                {# INVERTERS #}
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5> &nbsp; {{ 'Inverters'|trans }}
+                                <small class="m-l-sm"> &nbsp; </small>
+                            </h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="panel panel-warning">
+                                        <div class="panel-heading">
+                                            <i class="{{ icon('inverters') }}"></i> Selecionar Inversor
+                                        </div>
+                                        <div class="panel-body">
+                                            <div data-url="{{ path('kit_inverter_add',{kit:kit.token}) }}"
+                                                 id="form_inverter_container" class="form-horizontal col-md-12">
+                                            </div>
+
+                                            <div class="col-md-12"
+                                                 data-url="{{ path('kit_inverters',{kit:kit.token}) }}"
+                                                 id="kit_inverter_list">
+                                                {% include view('kit.spinner') %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ibox-footer">
+                            &nbsp;
+                        </div>
+                    </div>
+                </div>
+
+            {% endif %}
+
+            {% if enable_modules %}
+
+                {# MODULES #}
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5> &nbsp; {{ 'Modules'|trans }}
+                                <small class="m-l-sm"> &nbsp; </small>
+                            </h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <i class="{{ icon('modules') }}"></i> Selecionar Módulo
+                                        </div>
+                                        <div class="panel-body">
+                                            <div data-url="{{ path('kit_module_add',{kit:kit.token}) }}"
+                                                 id="form_module_container" class="form-horizontal col-md-12">
+                                            </div>
+
+                                            <div class="col-md-12"
+                                                 data-url="{{ path('kit_modules',{'kit':kit.token}) }}"
+                                                 id="kit_module_list">
+                                                {% include view('kit.spinner') %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ibox-footer">
+                            &nbsp;
+                        </div>
+                    </div>
+                </div>
+
+            {% endif %}
+
+            {% for key, extra in extras %}
+
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+
+                        <div class="ibox-title">
+                            <h5>  &nbsp; {{ key|capitalize|trans }}
+                                <small class="m-l-sm">
+                                    &nbsp;
+                                </small>
+                            </h5>
+
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="ibox-content">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="panel panel-success">
+                                        <div class="panel-heading">
+                                            {{ key|capitalize|trans }}
+                                        </div>
+                                        <div class="panel-body">
+                                            <div data-url="{{ path(['kit_element_', key, '_add']|join, {token:kit.token}) }}"
+                                                 id="form_{{ key }}">
+
+                                            </div>
+                                            <div data-url="{{ path(['kit_element_', key]|join, {token:kit.token}) }}"
+                                                 id="target_{{ key }}">
+                                                {% include view('kit.spinner') %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if 'items' == key %}
+
+                    <div class="col-lg-12">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5> &nbsp; Custos
+                                    <small class="m-l-sm">
+                                        &nbsp;
+                                    </small>
+                                </h5>
+                                <div class="ibox-tools">
+                                    <a class="collapse-link">
+                                        <i class="fa fa-chevron-up"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="ibox-content" data-url="{{ path('kit_form_cost',{token:kit.token}) }}"
+                                 id="form_cost_container">
+                            </div>
+                        </div>
+                    </div>
+
+                {% endif %}
+
+            {% endfor %}
+
+
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5> &nbsp; Custos totais do kit
+                            <small class="m-l-sm">
+                                &nbsp;
+                            </small>
+                        </h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="ibox-content">
+
+                        <div class="row">
+
+                            {#<div class="col-md-12" style="height: 3rem;" id="form_spinner">
+                                {% include view('kit.spinner') %}
+                            </div>#}
+
+                            <div class="col-md-12">
+                                <div class="panel panel-info">
+                                    <div class="panel-heading">
+                                        Custo totais dos kit
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="col-md-12" id="total_cost">
+                                            {% include view('kit.total_cost') %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-12">
+                <a href="{{ path('kit_index') }}" class="btn btn-md btn-primary"> Concluir </a>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="prototypes hide">
+        <label><select data-prototype="option">
+                <option value="_value_">_label_</option>
+            </select></label>
+        <table>
+            <tbody data-prototype="component_row">
+            <tr id="_prefix_">
+                <td>_maker_</td>
+                <td>_model_</td>
+                <td>_price_</td>
+                <td>_quantity_</td>
+                <td>_total_</td>
+                <td>_power_</td>
+            </tr>
+            </tbody>
+        </table>
+        <table>
+            <tbody data-prototype="table_spinner">
+            <tr>
+                <td colspan="2"></td>
+                <td colspan="3">
+                    <div class="sk-spinner sk-spinner-three-bounce">
+                        <div class="sk-bounce1"></div>
+                        <div class="sk-bounce2"></div>
+                        <div class="sk-bounce3"></div>
+                    </div>
+                </td>
+                <td colspan="2"></td>
+            </tr>
+            </tbody>
+        </table>
+        <div data-prototype="spinner_wave">
+            <div class="sk-spinner sk-spinner-wave">
+                <div class="sk-rect1"></div>
+                <div class="sk-rect2"></div>
+                <div class="sk-rect3"></div>
+                <div class="sk-rect4"></div>
+                <div class="sk-rect5"></div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    {% include view('helper.plugins_js') %}
+    {% include view('helper.numbers') %}
+
+    <script>
+        var Kit = {
+            init: function () {
+
+                Kit.inverters.init();
+                Kit.modules.init();
+                Kit.items.init();
+                Kit.services.init();
+
+                //Kit.form_cost();
+                Kit.costs();
+            },
+            request: function (options) {
+                var config = $.extend({
+                    url: null,
+                    method: 'get',
+                    data: {}
+                }, options);
+                if (config.url) {
+                    $.ajax({
+                        url: config.url,
+                        method: config.method,
+                        data: config.data,
+                        complete: function (xhr) {
+                            if (config.hasOwnProperty('callback')) {
+                                config.callback(xhr);
+                            }
+                        },
+                        beforeSend: function () {
+                            if (options.hasOwnProperty('onRequest')) {
+                                options.onRequest();
+                            }
+                        }
+                    });
+                }
+            },
+            load: function (target, options) {
+                var url = target.data('url');
+                Kit.request({
+                    url: url,
+                    callback: function (xhr) {
+                        if (200 == xhr.status) {
+                            target.html(xhr.responseText);
+                        }
+                        if (options) {
+                            if (options.hasOwnProperty('callback')) {
+                                options.callback(xhr);
+                            }
+                        }
+                    }
+                });
+            },
+            update: function (element) {
+                var target = $(element.data('target'));
+
+                target.data('url', element.data('update'));
+
+                element.ladda();
+                element.ladda('start');
+                Kit.load(target, {
+                    callback: function (xhr) {
+                        element.ladda('stop');
+                    }
+                });
+            },
+            remove: function (element, options) {
+                swal({
+                    title: "Confirmar exclusão?",
+                    text: null,
+                    type: "warning",
+                    showCancelButton: true,
+                    cancelButtonText: "{{ 'Cancel'|trans }}",
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "{{ 'Delete'|trans }}!",
+                    closeOnConfirm: true
+                }, function () {
+                    element.ladda();
+                    element.ladda('start');
+                    Kit.request({
+                        url: element.data('delete'),
+                        method: 'post',
+                        data: {_method: 'delete'},
+                        callback: function (xhr) {
+                            options.callback(xhr);
+                            element.ladda('stop');
+                        }
+                    });
+                });
+            },
+            list: function (element) {
+                Kit.load(element, {
+                    callback: function (xhr) {
+                        element.find('table').footable();
+                    }
+                });
+            },
+            inverters: {
+                form_element: $('#form_inverter_container'),
+                init: function () {
+                    Kit.inverters.form();
+                    Kit.inverters.all();
+                },
+                all: function () {
+                    Kit.list($('#kit_inverter_list'));
+                },
+                form: function (options) {
+                    Kit.load(Kit.inverters.form_element, options);
+                },
+                reset_form: function () {
+                    Kit.inverters.form_element.data('url', '{{ path('kit_inverter_add',{kit:kit.token}) }}');
+                    Kit.inverters.form();
+                }
+            },
+            modules: {
+                form_element: $('#form_module_container'),
+                init: function () {
+                    Kit.modules.form();
+                    Kit.modules.all();
+                },
+                all: function () {
+                    Kit.list($('#kit_module_list'));
+                },
+                form: function (options) {
+                    Kit.load(Kit.modules.form_element, options);
+                },
+                reset_form: function () {
+                    Kit.modules.form_element.data('url', '{{ path('kit_module_add',{kit:kit.token}) }}');
+                    Kit.modules.form();
+                }
+            },
+            items: {
+                form_element: $('#form_items'),
+                init: function () {
+                    Kit.items.form();
+                    Kit.items.all();
+                },
+                all: function () {
+                    Kit.list($('#target_items'));
+                },
+                form: function (options) {
+                    Kit.load(Kit.items.form_element, options);
+                }
+            },
+            services: {
+                form_element: $('#form_services'),
+                init: function () {
+                    Kit.services.form();
+                    Kit.services.all();
+                },
+                all: function () {
+                    Kit.list($('#target_services'));
+                },
+                form: function (options) {
+                    Kit.load(Kit.services.form_element, options);
+                }
+            },
+            form_init: {
+                element: $('#form_init'),
+                spinner: $('#init_spinner'),
+                spinner_html: null,
+                inputs: null,
+                init: function () {
+                    Kit.form_init.spinner_html = Kit.form_init.spinner.html();
+                    Kit.form_init.inputs = Kit.form_init.element.find('input[type="radio"]');
+                    Kit.form_init.inputs.on('click', function () {
+                        Kit.form_init.save();
+                    });
+                    Kit.form_init.spinner.html('');
+
+                    var btn_id = $('#btn_identifier');
+                    var input_id = $('#kit_identifier');
+
+                    btn_id.on('click', function(){
+                        if(input_id.prop('readonly')){
+                            input_id.prop('readonly', false);
+                            btn_id.html('<i class="fa fa-save"></i> {{ 'Save'|trans }}').removeClass('btn-success').addClass('btn-primary');
+                        }else{
+                            Kit.form_init.save({
+                                reload: false,
+                                button: btn_id
+                            });
+                            input_id.prop('readonly', true);
+
+                            window.setTimeout(function(){
+                                btn_id.html('<i class="fa fa-pencil"></i> {{ 'Edit'|trans }}').removeClass('btn-primary').addClass('btn-success');
+                            }, 1500);
+                        }
+                    });
+
+                    Kit.form_init.element.on('submit', function(event){
+                        event.preventDefault();
+                    });
+                },
+                save: function (options) {
+                    Kit.form_init.spinner.html(Kit.form_init.spinner_html);
+                    var form = Kit.form_init.element;
+                    var button = options && options.hasOwnProperty('button') ? options.button : false;
+
+                    if(button){
+                        button.ladda();
+                        button.ladda('start');
+                    }
+
+                    Kit.request({
+                        url: form.attr('action'),
+                        method: form.attr('method'),
+                        data: form.serialize(),
+                        callback: function (xhr) {
+
+                            Kit.form_init.spinner.html('');
+                            Kit.form_init.inputs.prop('disabled', false);
+
+                            if(button){
+                                button.ladda('stop');
+                            }
+
+                            if (options && options.hasOwnProperty('reload')) {
+                                if (!options.reload) {
+                                    return;
+                                }
+                            }
+
+                            Kit.init();
+                        },
+                        onRequest: function () {
+                            Kit.form_init.inputs.prop('disabled', true);
+                        }
+                    });
+
+                }
+            },
+            form_cost: function () {
+                //Kit.load($('#form_cost_container'));
+            },
+            costs: function () {
+
+                Kit.load($('#form_cost_container'));
+
+                Kit.request({
+                    url: '{{ path('kit_costs',{token:kit.token}) }}',
+                    callback: function (xhr) {
+                        var response = xhr.responseJSON;
+                        if (response.hasOwnProperty('final_cost')) {
+                            $('#final_cost').html(response.final_cost);
+                            $('#total_cost').html(response.total_cost);
+                        }
+                    }
+                });
+            }
+        };
+
+        Kit.init();
+        Kit.form_init.init();
+
+        var detail_component = $('#detail_component');
+        var detail_spinner = detail_component.html();
+        $('#modal_details').on('show.bs.modal', function (event) {
+            var target = $(event.relatedTarget), url = target.data('url'), path = target.data('path'), source = $(target.data('source'));
+
+            if (url || source.val()) {
+                if (!url) {
+                    if (source.val()) {
+                        url = path.replace(/_id_/g, source.val());
+                    }
+                }
+                detail_component.html(detail_spinner);
+                $.ajax({
+                    url: url,
+                    method: 'get',
+                    success: function (response) {
+                        detail_component.html(response);
+                    }
+                });
+            } else {
+                detail_component.html('<h1> Nenhum componente selecionado para visualização </h1>');
+            }
+        });
+
+    </script>
+
+{% endblock %}

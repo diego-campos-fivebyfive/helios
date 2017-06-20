@@ -1,0 +1,78 @@
+<div class="col-md-12 plan_box">
+    <table class="table">
+        <tr>
+            <td class="plan_box_header text-center">
+                <h1 id="plan_header_name"> {{ plan.name }} </h1>
+            </td>
+        </tr>
+        <tr>
+            <td class="text-center plan_box_question">
+                Quantos <strong>usuários</strong> sua equipe precisa?
+            </td>
+        </tr>
+        <tr>
+            <td class="plan_box_number">
+                <div class="input-group col-md-10 col-md-offset-1">
+                    <span class="input-group-btn">
+                        <button data-user="-1" type="button" class="btn btn-primary">
+                            <i class="fa fa-chevron-left"></i>
+                        </button>
+                    </span>
+                    <input class="form-control text-center" value="{{ number_users }}" readonly="readonly" type="text" name="number_of_users" id="number_users" placeholder="">
+                    <span class="input-group-btn">
+                        <button data-user="1" type="button" class="btn btn-primary">
+                            <i class="fa fa-chevron-right"></i>
+                        </button>
+                    </span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="plan_box_amount text-center">
+                <h2 id="amount_block">
+                    <span style="font-size:3.25rem;">
+                        R$ <span id="per_amount"></span> <br>
+                    </span>
+                    <small> por usuário/mês</small>
+                </h2>
+                <h2 id="info_block">
+                    <span style="font-size:3.25rem;">
+                        Adicione usuários extras <br>
+                    </span>
+                    <small> por apenas {{ prices.extra|currency }}/mês </small>
+                </h2>
+            </td>
+        </tr>
+        <tr>
+            <td class="plan_box_features">
+                <ul>
+                    <li><i class="fa fa-check"></i> CRM completo</li>
+                    <li><i class="fa fa-check"></i> Gestão de projetos</li>
+                    <li><i class="fa fa-check"></i> Emissão ilimitada de propostas</li>
+                    <li><i class="fa fa-check"></i> Personalização de propostas</li>
+                    <li><i class="fa fa-check"></i> Gestão de KITs e preço de venda</li>
+                    <li><i class="fa fa-check"></i> Gestão de dados climáticos</li>
+                    <li><i class="fa fa-check"></i> Suporte via chat</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td class="plan_box_amount text-center" style="padding: 0;">
+                <h3 style="padding-top:2rem;">
+                    R$ <span id="plan_amount"></span> / mês
+                </h3>
+            </td>
+        </tr>
+
+        {% if update %}
+        <tr>
+            <td>
+                <a id="update_plan" class="btn btn-primary btn-md btn-block">
+                    Atualizar Plano
+                </a>
+            </td>
+        </tr>
+        {% endif %}
+
+    </table>
+</div>

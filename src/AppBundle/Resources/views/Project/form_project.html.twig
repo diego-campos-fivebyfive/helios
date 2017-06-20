@@ -1,0 +1,93 @@
+
+
+{#
+{% for inverter in form.inverters %}
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    Danger Panel with Footer
+                </div>
+
+                <div class="panel-body">
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th> Inversor</th>
+                            <th> Operação</th>
+                            <th colspan="5"> &nbsp; </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td> {{ form_widget(inverter.inverter,{'attr':{'class':'form-control inverter-choice'}}) }} </td>
+                            <td> {{ form_widget(inverter.operation,{'attr':{'class':'form-control operation-choice'}}) }} </td>
+                            <td colspan="5"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Módulo</th>
+                            <th>Potência</th>
+                            <th>Inclinação</th>
+                            <th>Orientação</th>
+                            <th>Strings</th>
+                            <th>Mod/String</th>
+                            <th>Operação Mppt</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for module in inverter.modules %}
+                            <tr class="project-area">
+                                <td> {{ form_widget(module.module, {'attr':{'class':'form-control area-module'}}) }} </td>
+                                <td> #</td>
+                                <td style="width:10%;"> {{ form_widget(module.inclination,{'attr':{'class':'form-control area-inclination text-center'}}) }} </td>
+                                <td style="width:10%;"> {{ form_widget(module.orientation, {'attr':{'class':'form-control area-orientation text-center'}}) }} </td>
+                                <td style="width:10%;"> {{ form_widget(module.stringNumber, {'attr':{'class':'form-control area-strings text-center'}}) }} </td>
+                                <td style="width:10%;"> {{ form_widget(module.moduleString, {'attr':{'class':'form-control area-per-string text-center'}}) }} </td>
+                                <td> #</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="panel-footer">
+                    Panel Footer
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endfor %}
+#}
+
+<div class="hide_">
+    {{ form_rest(form) }}
+</div>
+
+<div class="row">
+    <div class="col-md-9">
+        &nbsp;
+    </div>
+    <div class="col-md-3">
+        <button type="submit" class="btn btn-primary btn-md col-md-12">
+            <i class="fa fa-save"></i> {{ 'Update'|trans }}
+        </button>
+    </div>
+</div>
+
+{{ form_end(form) }}
+
+<div class="row">
+    <div class="col-md-12">
+        <canvas id="bar_chart"></canvas>
+    </div>
+</div>

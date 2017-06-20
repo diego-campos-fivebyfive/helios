@@ -1,0 +1,178 @@
+{% set financial = financial is defined %}
+
+{% set kit = project.kit %}
+
+{% if kit is not null %}
+
+    {% set show_prices = kit.priceComputable %}
+
+    <div class="modal inmodal fade" id="modal_details" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body" id="detail_component">
+                    <div class="sk-spinner sk-spinner-circle">
+                        {% for i in 1..12 %}
+                            <div class="sk-circle{{ i }} sk-circle"></div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">
+                        {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-6 col-xs-12">
+            <table class="table table-bordered table-condensed table-components">
+                <thead>
+                <tr>
+                    <td colspan="{{ financial ? '5' : '3' }}" class="text-center">
+                        <i class="{{ icon('inverters') }}"></i> Inversores
+                    </td>
+                </tr>
+                <tr>
+                    <th> Fabricante</th>
+                    <th> Modelo</th>
+                    <th> Qtde</th>
+
+                    {% if financial and show_prices %}
+                        <th> Preço Unitário</th>
+                        <th> Total</th>
+                    {% endif %}
+
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for kitInverter in kit.inverters %}
+
+                    <tr>
+                        <td> {{ kitInverter.inverter.maker }} </td>
+                        <td>
+                            <a class="inverter-detail"
+                               href="{{ path('inverter_preview',{id:kitInverter.inverter.id}) }}">
+                                <i class="fa fa-info-circle"></i>
+                                {{ kitInverter.inverter.model }}
+                            </a>
+                        </td>
+                        <td> {{ kitInverter.quantity }} </td>
+
+                        {% if financial and show_prices %}
+                            <td> {{ show_prices ? kitInverter.unitPriceSale|number_format_currency('BRL') : '-' }} </td>
+                            <td> {{ show_prices ? kitInverter.totalPriceSale|number_format_currency('BRL') : '-' }} </td>
+                        {% endif %}
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-6 col-xs-12">
+            <table class="table table-bordered table-condensed table-components">
+                <thead>
+                <tr>
+                    <td colspan="{{ financial ? '5' : '3' }}" class="text-center">
+                        <i class="{{ icon('modules') }}"></i> Módulos
+                    </td>
+                </tr>
+                <tr>
+                    <th> Fabricante</th>
+                    <th> Modelo</th>
+                    <th> Qtde</th>
+                    {% if financial and show_prices %}
+                        <th> Preço Unitário</th>
+                        <th> Total</th>
+                    {% endif %}
+                </tr>
+                </thead>
+                <tbody>
+
+                {% if financial %}
+
+                    {% for projectModule in project.modules %}
+                        {% set module = projectModule.module %}
+
+                        <tr>
+                            <td> {{ module.maker }} </td>
+                            <td>
+                                <a class="module-detail" href="{{ path('module_preview',{id:module.module.id}) }}">
+                                    <i class="fa fa-info-circle"></i>
+                                    {{ module.model }}
+                                </a>
+                            </td>
+                            <td> {{ projectModule.quantity }} </td>
+                            {% if show_prices %}
+                                <td> {{ projectModule.unitPriceSale|number_format_currency('BRL') }} </td>
+                                <td> {{ projectModule.priceSale|number_format_currency('BRL') }} </td>
+                            {% endif %}
+
+                    {% endfor %}
+                    </tr>
+
+                {% else %}
+
+                    {% for kitModule in project.kit.modules %}
+
+                        <tr>
+                            <td> {{ kitModule.module.maker }} </td>
+                            <td>
+                                <a class="module-detail" href="{{ path('module_preview',{id:kitModule.module.id}) }}">
+                                    <i class="fa fa-info-circle"></i>
+                                    {{ kitModule.module.model }}
+                                </a>
+                            </td>
+                            <td> {{ kitModule.quantity }} </td>
+
+                            {% if financial %}
+                                <td> {{ show_prices ? kitModule.unitPriceSale|number_format_currency('BRL') : '-' }} </td>
+                                <td> {{ show_prices ? kitModule.totalPriceSale|number_format_currency('BRL') : '-' }} </td>
+                            {% endif %}
+                        </tr>
+
+                    {% endfor %}
+
+                {% endif %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+
+        $(function () {
+
+            var modal_details = $('#modal_details');
+            var detail_component = $('#detail_component');
+            var detail_spinner = detail_component.html();
+            var last_preview_url = null;
+
+            $('.module-detail, .inverter-detail').on('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                var url = $(this).attr('href');
+                modal_details.modal('show');
+                if (url && url != last_preview_url) {
+                    last_preview_url = url;
+                    detail_component.html(detail_spinner);
+                    $.ajax({
+                        url: url,
+                        success: function (response) {
+                            detail_component.html(response);
+                        }
+                    });
+                }
+            });
+        });
+
+    </script>
+
+{% endif %}

@@ -1,0 +1,378 @@
+{% extends view('layout') %}
+
+{% set helper = contact.isPerson ? 'profile' : 'company' %}
+
+{% block styles %}
+    <style>
+        #collection_person {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #collection_person li select {
+            display: none;
+        }
+
+        .ibox-content {
+            border-width: 0;
+        }
+
+        #map {
+            width: 100%;
+            height: 365px;
+            background: #f7f7f7;
+        }
+        #contact_street{
+            width: 75%;
+            margin-top: 10px;
+        }
+        #contact_information{
+            resize: none;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    <div class="wrapper wrapper-content animated fadeIn">
+
+        <div class="row">
+
+            <div class="col-lg-12">
+
+                {{ form_start(form) }}
+
+                <div class="tabs-container">
+
+                    <div class="tab-content">
+
+                        <div id="user-info" class="tab-pane active">
+                            <div class="panel-body">
+                                <div class="ibox">
+                                    <div class="ibox-content">
+
+                                        <h2 class="text-center">
+                                            <i class="fa {{ contact.isPerson ? 'fa-user' : 'fa-building' }}"></i>
+                                            {{ contact.isPerson ? 'Pessoa' : 'Empresa' }}
+                                        </h2>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+
+                                                {% if errors|length %}
+                                                    <div class="alert alert-danger">
+                                                        {% for error in errors %}
+                                                            {{ error.message|trans }}
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
+
+                                                <div class="form-group col-md-6">
+                                                    <label> {{ 'Name'|trans }}* </label>
+                                                    {{ form_widget(form.firstname,{'attr':{'class':'form-control','placeholder':'Name'|trans}}) }}
+                                                </div>
+
+                                                <div class="form-group col-md-6">
+                                                    {% set mask = contact.isPerson ? '000.000.000-00' : '00.000.000/0000-00' %}
+                                                    <label> {{ contact.isPerson ? 'CPF' : 'CNPJ' }}</label>
+                                                    {{ form_widget(form.document,{'attr':{'class':'form-control', 'data-mask':mask, 'placeholder': contact.isPerson ? 'CPF' : 'CNPJ' }}) }}
+                                                </div>
+
+                                                <div class="form-group {{ contact.isPerson ? 'col-md-6' : 'col-md-12' }}">
+                                                    <label>{{ 'Category'|trans }}</label>
+                                                    {{ form_widget(form.category,{'attr':{'class':'form-control'}}) }}
+                                                </div>
+
+                                                {% if contact.isPerson %}
+                                                    <div class="form-group col-md-6" style="margin-bottom: 25px;">
+                                                        <label>{{ 'Company'|trans }}</label>
+                                                        {{ form_widget(form.company,{'attr':{'class':'form-control'}}) }}
+                                                    </div>
+                                                {% endif %}
+
+                                                <div class="form-group col-md-6">
+                                                    <label> {{ 'Email'|trans }} </label>
+                                                    {{ form_widget(form.email,{'attr':{'class':'form-control','placeholder':'Email'|trans}}) }}
+                                                </div>
+
+                                                <div class="form-group col-md-6">
+                                                    <label> {{ 'Phone'|trans }} </label>
+                                                    {{ form_widget(form.phone,{'attr':{'class':'form-control','placeholder':'Phone'|trans}}) }}
+                                                </div>
+
+                                                <div class="form-group col-md-12">
+                                                    <label> Observações </label>
+                                                    {{ form_widget(form.information,{'attr':{'class':'form-control','placeholder':'Observações'}}) }}
+                                                </div>
+
+
+                                                {% if attribute(form, 'accessors') is defined %}
+                                                    <div class="form-group col-lg-12">
+                                                        <label> Este contato pode ser visto por: </label>
+                                                        {{ form_widget(form.accessors, {'attr':{'class':'col-md-12','data-placeholder':'Selecionar usuários'}}) }}
+                                                    </div>
+
+                                                {% endif %}
+
+                                            </div>
+
+                                            <div class="col-md-6">
+
+                                                <div class="form-group hide">
+                                                    <label>Latitude</label>
+                                                    {{ form_widget(form.coordinates.latitude,{'attr':{'class':'form-control','placeholder':'Longitude'|trans}}) }}
+                                                </div>
+                                                <div class="form-group hide">
+                                                    <label>Longitude</label>
+                                                    {{ form_widget(form.coordinates.longitude,{'attr':{'class':'form-control','placeholder':'Longitude'|trans}}) }}
+                                                </div>
+
+                                                <div class="form-group" style="margin-bottom:0;">
+                                                    <label> {{ 'Address'|trans }} </label>
+                                                    {{ form_widget(form.street,{'attr':{'class':'form-control','placeholder':'Address'|trans}}) }}
+                                                </div>
+                                                <div id="map"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row" style="margin-top: 2rem;">
+                                            <div class="col-md-12">
+                                                <button type="submit" class="btn btn-primary pull-right">
+                                                    <i class="fa fa-save"></i> {{ 'Save'|trans }}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="user-address" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-content">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+
+                                                <div class="form-group col-lg-2">
+                                                    <label> {{ 'Postcode'|trans }} </label>
+                                                    {{ form_widget(form.postcode,{'attr':{'class':'form-control','placeholder':'Postcode'|trans}}) }}
+                                                </div>
+
+                                                <div class="form-group col-lg-3">
+                                                    <label> {{ 'State'|trans }} </label>
+                                                    {{ form_widget(form.state,{'attr':{'class':'form-control','placeholder':'State'|trans}}) }}
+                                                </div>
+
+                                                <div class="form-group col-lg-4">
+                                                    <label> {{ 'City'|trans }} </label>
+                                                    {{ form_widget(form.city,{'attr':{'class':'form-control','placeholder':'City'|trans}}) }}
+                                                </div>
+
+                                                <div class="form-group col-lg-2">
+                                                    <label> {{ 'Country'|trans }} </label>
+                                                    {{ form_widget(form.country,{'attr':{'class':'form-control','placeholder':'Country'|trans}}) }}
+                                                </div>
+
+                                                <div class="form-group col-lg-3">
+                                                    <label> {{ 'District'|trans }} </label>
+                                                    {{ form_widget(form.district,{'attr':{'class':'form-control','placeholder':'District'|trans}}) }}
+                                                </div>
+
+                                                <div class="form-group col-lg-2">
+                                                    <label> {{ 'Number'|trans }} </label>
+                                                    {{ form_widget(form.number,{'attr':{'class':'form-control','placeholder':'Number'|trans}}) }}
+                                                </div>
+
+                                                <div class="form-group col-lg-3">
+                                                    <label> {{ 'Complement'|trans }} </label>
+                                                    {{ form_widget(form.complement,{'attr':{'class':'form-control','placeholder':'Complement'|trans}}) }}
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group col-lg-6">
+                                                    <label>Latitude</label>
+                                                    {{ form_widget(form.coordinates.latitude,{'attr':{'class':'form-control','placeholder':'Longitude'|trans}}) }}
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label>Longitude</label>
+                                                    {{ form_widget(form.coordinates.longitude,{'attr':{'class':'form-control','placeholder':'Longitude'|trans}}) }}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <div id="map-canvas"
+                                                     style="width:500px;height:380px;margin-left: 15px"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        {% if contact.isCompany %}
+
+                            <div id="peoples" class="tab-pane">
+                                <div class="panel-body">
+                                    <div class="ibox float-e-margins">
+                                        <div class="ibox-content">
+                                            <div class="row">
+                                                <div class="col-sm-2">
+                                                    <div class="btn-group btn-group-sm">
+                                                        <a id="add_person" class="btn btn-default">
+                                                            <i class="fa fa-plus"></i> {{ 'Add Person'|trans }}
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-1 text-center">
+                                                    <label> Ou </label>
+                                                </div>
+                                                <div class="col-sm-9">
+                                                    {{ form_widget(form.relatedEmployees) }}
+                                                </div>
+
+                                                <div class="col-sm-12">&nbsp;</div>
+
+                                                {% set prototype = form.employees.vars.prototype %}
+
+                                                <ul id="prototype_person" data-prototype='
+                                                    <div class="row">
+                                                    <div class="col-md-12 btn-group btn-group-sm">
+                                                    <a class="btn btn-danger btn-remove"><i class="fa fa-trash"></i></a>
+                                                    </div>
+                                                    <div class="col-md-4 form-group">
+                                                    {{ form_widget(form.employees.vars.prototype.firstname, {'attr':{'class':'form-control', 'placeholder':'Firstname'|trans }})|e }}
+                                                    </div>
+                                                    <div class="col-md-4 form-group">
+                                                    {{ form_widget(form.employees.vars.prototype.office, {'attr':{'class':'form-control', 'placeholder':'Office'|trans }})|e }}
+                                                    </div>
+                                                    <div class="col-md-4 form-group">
+                                                    {{ form_widget(form.employees.vars.prototype.email, {'attr':{'class':'form-control', 'placeholder':'Email'|trans }})|e }}
+                                                    </div>
+                                                    <div class="col-md-4 form-group">
+                                                    {{ form_widget(form.employees.vars.prototype.mobile, {'attr':{'class':'form-control', 'placeholder':'Mobile'|trans }})|e }}
+                                                    </div>
+                                                    <div class="col-md-4 form-group">
+                                                    {{ form_widget(form.employees.vars.prototype.phone, {'attr':{'class':'form-control', 'placeholder':'Phone'|trans }})|e }}
+                                                    </div>
+                                                    <div class="col-md-4 form-group">
+                                                    {{ form_widget(form.employees.vars.prototype.fax, {'attr':{'class':'form-control', 'placeholder':'Fax'|trans }})|e }}
+                                                    </div>
+                                                    <div class="col-md-4 form-group hide">
+                                                    {{ form_widget(form.employees.vars.prototype.context)|e }}
+                                                    </div>
+                                                    </div>'>
+                                                </ul>
+
+                                                <div class="col-sm-12">
+                                                    <ul id="collection_person">
+                                                        {% for employee in form.employees %}
+                                                            <li>
+                                                                <div class="row">
+                                                                    <div class="col-md-12 btn-group btn-group-sm">
+                                                                        <a class="btn btn-danger btn-remove"><i
+                                                                                    class="fa fa-trash"></i></a>
+                                                                    </div>
+                                                                    <div class="col-md-4 form-group"> {{ form_widget(employee.firstname, {'required':false, 'attr':{'class':'form-control', 'placeholder':'Firstname'|trans }}) }} </div>
+                                                                    <div class="col-md-4 form-group"> {{ form_widget(employee.office, {'attr':{'class':'form-control', 'placeholder':'Office'|trans }}) }} </div>
+                                                                    <div class="col-md-4 form-group"> {{ form_widget(employee.email, {'attr':{'class':'form-control', 'placeholder':'Email'|trans }}) }} </div>
+                                                                    <div class="col-md-4 form-group"> {{ form_widget(employee.mobile, {'attr':{'class':'form-control', 'placeholder':'Mobile'|trans }}) }} </div>
+                                                                    <div class="col-md-4 form-group"> {{ form_widget(employee.phone, {'attr':{'class':'form-control', 'placeholder':'Phone'|trans }}) }} </div>
+                                                                    <div class="col-md-4 form-group"> {{ form_widget(employee.fax, {'attr':{'class':'form-control', 'placeholder':'Fax'|trans }}) }} </div>
+                                                                    <div class="col-md-4 form-group"> {{ form_widget(employee.context) }} </div>
+                                                                </div>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+                </div>
+
+                <div class="hide">
+                    {{ form_end(form) }}
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-lg-7" id="map-canvas">
+            </div>
+        </div>
+
+
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    {% include view('helper.google_maps') with({
+        latitude: 'contact_coordinates_latitude',
+        longitude: 'contact_coordinates_longitude',
+        zoom: 17,
+        input: 'contact_street'
+    }) %}
+
+    {% if contact.isPerson %}
+        {% include view('helper.chosen') with({
+            element: '#contact_company',
+            path: path('contact_fast_create',{context:'company'})
+        }) %}
+    {% endif %}
+
+    <script>
+
+        $('#contact_accessors').chosen();
+
+        $('#contact_phone').mask(function(val){
+            return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+        },{
+            onKeyPress: function (val, e, field, options) {
+                field.mask(SPMaskBehavior.apply({}, arguments), options);
+            }
+        });
+    </script>
+
+    {% if contact.isCompany %}
+        <script>
+            var collection_person = $('ul#collection_person');
+            if (collection_person.length) {
+                var prototype_person = $('#prototype_person').data('prototype'),
+                    add_person = $('#add_person');
+                add_person.on('click', function () {
+                    var index = collection_person.find('li').length;
+                    var embed_form = prototype_person.replace(/__name__/g, index);
+                    var embed_item = $('<li>' + embed_form + '</li>');
+                    collection_person.append(embed_item);
+                    embed_item.find('.btn-remove').on('click', function () {
+                        embed_item.remove();
+                    });
+                });
+                collection_person.find('.btn-remove').on('click', function () {
+                    $(this).closest('li').remove();
+                });
+            }
+
+            $('#contact_relatedEmployees').chosen({
+                width: '100% !important',
+                placeholder_text_multiple: '{{ 'Select Persons'|trans }}'
+            });
+        </script>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends view('mail.layout') %}
+
+{% block content %}
+
+<div class="mail-box-header">
+    {#<form method="get" action="#" class="pull-right mail-search">
+        <div class="input-group">
+            <input type="text" class="form-control input-sm" name="search" placeholder="Search email">
+            <div class="input-group-btn">
+                <button type="submit" class="btn btn-sm btn-primary">
+                    Search
+                </button>
+            </div>
+        </div>
+    </form>#}
+    <h2>
+        {{ 'Accounts'|trans }} ({{ accounts.count }})
+    </h2>
+    <div class="mail-tools m-t-md">
+        {#<div class="btn-group pull-right">
+            <button class="btn btn-white btn-sm"><i class="fa fa-arrow-left"></i></button>
+            <button class="btn btn-white btn-sm"><i class="fa fa-arrow-right"></i></button>
+        </div>#}
+        <a href="{{ path('mail_account_manage') }}" class="btn btn-white btn-sm" title="{{ 'Add'|trans }} {{ 'Account'|trans }}">
+            <i class="fa fa-plus"></i> {{ 'Add'|trans }}
+        </a>
+    </div>
+</div>
+
+<div class="mail-box">
+    <table class="table table-hover table-mail">
+        <tbody>
+        {% for account in accounts %}
+            <tr class="read">
+                <td class="mail-ontact"><a href="#">{{ account.name }}</a></td>
+                <td class="mail-subject"><a href="#">{{ account.email }}</a></td>
+                <td>
+                    {% if account.current %}
+                        <span class="badge badge-info">{{ 'Current'|trans }}</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="btn-group btn-group-sm">
+                        <a href="{{ path('mail_account_manage', {token:account.token}) }}" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
+                        <a href="{#{{ path('mail_account_manage', {token:account.token}) }}#}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{#<script>
+    $(function(){
+        var main_content = $('#main_content');
+        var action_buttons = $('[data-action]');
+
+        if(action_buttons.length){
+            action_buttons.on('click', function(){
+                var href = $(this).data('action');
+
+                if(href.indexOf('delete') > 1){
+                    var row = $(this).closest('tr');
+
+                    swal({
+                        title: "{{ 'Confirm delete'|trans }}?",
+                        text: null,
+                        type: "warning",
+                        showCancelButton: true,
+                        cancelButtonText: "{{ 'Cancel'|trans }}",
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "{{ 'Delete'|trans }}!",
+                        closeOnConfirm: false
+                    },function () {
+                        $.ajax({
+                            url: href,
+                            success: function(response){
+                                if(response.hasOwnProperty('deleted')){
+                                    swal("{{ 'Success'|trans }}!", "{{ 'Was successful deleted'|trans }}!", "success");
+                                    row.remove();
+                                }
+                            },
+                            beforeSend: function(){
+                                swal({
+                                    title: "{{ 'Deleting'|trans }}...",
+                                    text: null,
+                                    type: "info",
+                                    showConfirmButton: false
+                                });
+                            }
+                        });
+                    });
+                }else {
+
+                    $.ajax({
+                        url: href,
+                        success: function (response) {
+                            if (response.hasOwnProperty('content')) {
+                                main_content.html(response.content);
+                                history.pushState({}, '', href);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    });
+</script>#}
+
+
+{% endblock %}

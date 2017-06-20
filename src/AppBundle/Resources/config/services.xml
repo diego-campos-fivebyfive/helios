@@ -1,0 +1,244 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+           http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="document_cover_dir">%kernel.root_dir%/../web/uploads/documents/</parameter>
+    </parameters>
+
+    <services>
+
+        <service id="app_mailer" class="AppBundle\Service\Mailer">
+            <argument type="service" id="mailer"/>
+            <argument type="service" id="router"/>
+            <argument type="service" id="templating"/>
+        </service>
+
+        <service id="app.parameter_manager" class="AppBundle\Entity\ParameterManager">
+            <argument>AppBundle\Entity\Parameter</argument>
+            <argument type="service" id="doctrine"/>
+        </service>
+
+        <service id="app.kit_pricing_manager" class="AppBundle\Entity\Component\PricingManager">
+            <argument type="service" id="app.parameter_manager"/>
+            <argument type="service" id="security.token_storage"/>
+        </service>
+
+        <service id="app.document_helper" class="AppBundle\Service\DocumentHelper">
+            <argument type="service" id="app.parameter_manager"/>
+            <argument type="collection">
+                <argument type="string" key="storage">%kernel.root_dir%/../web/uploads/documents/</argument>
+                <argument type="string" key="root_dir">%kernel.root_dir%</argument>
+            </argument>
+        </service>
+
+        <service id="app.register_helper" class="AppBundle\Service\RegisterHelper">
+            <argument type="service" id="service_container"/>
+        </service>
+
+        <service id="app.proposal_helper" class="AppBundle\Service\ProposalHelper">
+            <argument type="service" id="service_container"/>
+        </service>
+
+        <service id="app.project_processor" class="AppBundle\Service\ProjectProcessor">
+            <argument type="service" id="app.nasa_provider"/>
+        </service>
+
+        <service id="app.project_helper" class="AppBundle\Service\ProjectHelper">
+            <argument type="service" id="service_container"/>
+        </service>
+
+        <service id="app.project_authorization" class="AppBundle\Service\Security\ProjectAuthorization">
+            <argument type="service" id="security.token_storage"/>
+            <argument type="service" id="request_stack"/>
+        </service>
+
+        <service id="app.access_voter" class="AppBundle\Service\Security\AccessVoter" public="false">
+            <tag name="security.voter"/>
+        </service>
+
+        <service id="app.project_financial" class="AppBundle\Entity\Financial\ProjectFinancialManager">
+            <argument>AppBundle\Entity\Financial\ProjectFinancial</argument>
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="app.kit_pricing_manager"/>
+        </service>
+
+        <service id="app.mailbox" class="AppBundle\Service\MailboxHelper">
+            <argument type="service" id="app.email_account_manager"/>
+            <argument>%kernel.root_dir%/../storage/mail</argument>
+        </service>
+
+        <service id="app.customer_manager" class="AppBundle\Entity\CustomerManager">
+            <argument>AppBundle\Entity\Customer</argument>
+            <argument type="service" id="doctrine"/>
+        </service>
+
+        <service id="app.notification_manager" class="AppBundle\Entity\NotificationManager">
+            <argument>AppBundle\Entity\Notification</argument>
+            <argument type="service" id="doctrine"/>
+        </service>
+
+        <service id="app.sale_cycle_manager" class="AppBundle\Entity\SaleCycleManager">
+            <argument>AppBundle\Entity\SaleCycle</argument>
+            <argument type="service" id="doctrine"/>
+        </service>
+
+        <service id="app.account_register_manager" class="AppBundle\Entity\Extra\AccountRegisterManager">
+            <argument>AppBundle\Entity\Extra\AccountRegister</argument>
+            <argument type="service" id="doctrine"/>
+        </service>
+
+        <service id="app.customer_helper" class="AppBundle\Service\CustomerHelper">
+            <argument type="service" id="app.customer_manager"/>
+        </service>
+
+        <service id="app.email_account_manager" class="AppBundle\Entity\EmailAccountManager">
+            <argument>AppBundle\Entity\EmailAccount</argument>
+            <argument type="service" id="doctrine"/>
+        </service>
+
+        <service id="app.form_type_contact" class="AppBundle\Form\ContactType">
+            <argument type="service" id="app.customer_helper"/>
+            <tag name="form.type"/>
+        </service>
+        
+        <service id="app.maker_manager" class="AppBundle\Entity\Component\MakerManager">
+            <argument>AppBundle\Entity\Component\Maker</argument>
+            <argument type="service" id="doctrine"/>
+        </service>
+        
+        <service id="app.module_manager" class="AppBundle\Entity\Component\ModuleManager">
+            <argument>AppBundle\Entity\Component\Module</argument>
+            <argument type="service" id="doctrine"/>
+        </service>
+
+        <service id="app.module_helper" class="AppBundle\Service\Component\Helper\ModuleHelper">
+            <argument type="service" id="app.module_manager"/>
+        </service>
+        
+        <service id="app.inverter_manager" class="AppBundle\Entity\Component\InverterManager">
+            <argument>AppBundle\Entity\Component\Inverter</argument>
+            <argument type="service" id="doctrine"/>
+        </service>
+
+        <service id="app.inverter_helper" class="AppBundle\Service\Component\Helper\InverterHelper">
+            <argument type="service" id="app.inverter_manager"/>
+        </service>
+
+        <service id="app.kit_manager" class="AppBundle\Entity\Component\KitManager">
+            <argument>AppBundle\Entity\Component\Kit</argument>
+            <argument type="service" id="doctrine"/>
+        </service>
+        <service id="app.nasa_provider" class="AppBundle\Entity\Project\NasaProvider">
+            <argument>AppBundle\Entity\Project\NasaCatalog</argument>
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="security.token_storage"/>
+        </service>
+
+        <service id="app.project_manager" class="AppBundle\Entity\Project\ProjectManager">
+            <argument>AppBundle\Entity\Project\Project</argument>
+            <argument type="service" id="doctrine"/>
+        </service>
+
+        <service id="app.package_manager" class="AppBundle\Entity\PackageManager">
+            <argument>AppBundle\Entity\Package</argument>
+            <argument type="service" id="doctrine"/>
+        </service>
+
+        <service id="app.team_manager" class="AppBundle\Entity\TeamManager">
+            <argument>AppBundle\Entity\Team</argument>
+            <argument type="service" id="doctrine"/>
+        </service>
+
+        <service id="app.task_manager" class="AppBundle\Entity\TaskManager">
+            <argument>AppBundle\Entity\Task</argument>
+            <argument type="service" id="doctrine"/>
+        </service>
+
+        <service id="app.document_manager" class="AppBundle\Entity\DocumentManager">
+            <argument>AppBundle\Entity\Document</argument>
+            <argument type="service" id="doctrine"/>
+        </service>
+
+        <service id="app.notification_generator" class="AppBundle\Service\NotificationGenerator">
+            <argument type="service" id="app.notification_manager"/>
+            <argument type="service" id="twig"/>
+        </service>
+
+        <service id="app.task_filter" class="AppBundle\Service\TaskFilter">
+            <argument type="service" id="app.task_manager"/>
+        </service>
+
+        <service id="app.proposal_filter" class="AppBundle\Service\ProposalFilter">
+            <argument type="service" id="app.project_financial"/>
+        </service>
+
+        <service id="app.file_explorer" class="AppBundle\Service\FileExplorer">
+            <argument type="service" id="service_container"/>
+        </service>
+
+        <service id="app.session_storage" class="AppBundle\Service\SessionStorage" public="true">
+            <argument type="service" id="security.token_storage"/>
+            <argument type="service" id="session"/>
+        </service>
+
+        <service id="app.upload_listener" class="AppBundle\EventListener\UploadListener">
+            <!--<argument type="service" id="app.session_storage"/>-->
+            <argument type="service" id="service_container"/>
+            <tag name="kernel.event_listener" event="oneup_uploader.post_persist" method="onUpload"/>
+        </service>
+
+        <service id="app.upload_helper" class="AppBundle\Service\UploadHelper" public="true">
+            <argument type="service" id="service_container"/>
+        </service>
+
+        <service id="app.twig_extension" class="AppBundle\Twig\AppExtension" public="false">
+            <argument type="service" id="service_container"/>
+            <tag name="twig.extension"/>
+        </service>
+
+        <service id="app.number_extension" class="AppBundle\Twig\NumberExtension" public="false">
+            <argument type="service" id="sonata.intl.twig.extension.number"/>
+            <tag name="twig.extension"/>
+        </service>
+
+        <service id="app.widget_generator" class="AppBundle\Service\WidgetGenerator">
+            <argument type="service" id="service_container"/>
+        </service>
+
+        <service id="app.woopra_manager" class="AppBundle\Service\Woopra\Manager">
+            <argument type="service" id="app.session_storage"/>
+        </service>
+
+        <service id="app.email_handler_manager" class="AppBundle\Entity\Extra\EmailHandlerManager">
+            <argument>AppBundle\Entity\Extra\EmailHandler</argument>
+            <argument type="service" id="doctrine"/>
+        </service>
+
+        <service id="app.email_handler" class="AppBundle\Service\EmailHandler">
+            <argument type="service" id="app.email_handler_manager"/>
+        </service>
+
+        <service id="app.webhook_manager" class="AppBundle\Entity\WebhookManager">
+            <argument>AppBundle\Entity\Webhook</argument>
+            <argument type="service" id="doctrine"/>
+        </service>
+
+        <service id="app.vindi_helper" class="AppBundle\Service\VindiHelper">
+            <argument type="service" id="service_container"/>
+        </service>
+
+        <service id="app.signature_manager" class="AppBundle\Entity\SignatureManager">
+            <argument>AppBundle\Entity\Signature</argument>
+            <argument type="service" id="doctrine"/>
+        </service>
+
+        <!-- manipulators -->
+        <service id="account_manipulator" class="AppBundle\Service\Util\AccountManipulator">
+            <argument type="service" id="service_container"/>
+        </service>
+
+    </services>
+</container>

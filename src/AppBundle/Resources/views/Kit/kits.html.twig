@@ -1,0 +1,183 @@
+<style>
+    a.btn-price-detailing{
+        padding: 2.5px 1rem !important;
+    }
+    a.btn-price-detailing i{
+        font-size: 2rem;
+    }
+</style>
+
+
+<div class="modal inmodal fade" id="price_detailing" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body" id="prices_content">
+                {% include view('kit.spinner') %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">
+                    {{ 'Close'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal fade" id="margin_detailing" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body" id="margin_content">
+                {% include view('kit.spinner') %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">
+                    {{ 'Close'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-4">
+    <div class="row">
+        <input type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="{{ 'Search'|trans }}">
+    </div>
+</div>
+<div class="col-md-8">
+    <div class="row">
+        <a href="{{ path('kit_create') }}" class="btn btn-md btn-primary pull-right">
+            <i class="fa fa-plus"></i> Novo Kit
+        </a>
+    </div>
+</div>
+
+<table id="kits_table" class="footable table table-stripped" data-page-size="10" data-filter="#filter" data-sorting="true">
+    <thead>
+    <tr>
+        <th>
+            {{ 'Name'|trans }}
+        </th>
+        <th> Custo Total</th>
+        <th> Preço Final de Venda</th>
+        <th class="text-center"> Margens </th>
+        <th> &nbsp; </th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for kit in kits %}
+
+        <tr>
+            <td> {{ kit.name }} </td>
+            <td class="col-md-2" data-value="{{ (0 == kit.totalPrice|round ? 1 : kit.totalPrice|round) }}">
+                {{ kit.totalPrice|currency }}
+            </td>
+            <td class="col-md-2" data-value="{{ (0 == kit.priceSale|round ? 1 : kit.priceSale|round) }}">
+                <a data-url="{{ path('kit_price_detailing',{token:kit.token}) }}"
+                   data-toggle="modal"
+                   data-target="#price_detailing"
+                   class="btn btn-sm btn-primary btn-block" style="font-weight: bold;">
+                    {{ kit.priceSale|currency }}
+                </a>
+            </td>
+            <td class="text-center">
+                <a data-url="{{ path('kit_margin_detailing',{token:kit.token}) }}"
+                   data-toggle="modal"
+                   data-target="#margin_detailing"
+                   class="btn btn-sm btn-primary btn-price-detailing">
+                    <i class="fa fa-money"></i>
+                </a>
+            </td>
+            <td class="col-md-3">
+                <div class="btn-group btn-group-sm btn-group-justified">
+                    <a class="btn btn-success" href="{{ path('kit_manage', { token : kit.token }) }}">
+                        <i class="fa fa-cogs"></i> Gerenciar
+                    </a>
+                    <a class="btn btn-danger delete_button" data-href="{{ path('kit_delete',{ 'token' : kit.token }) }}">
+                        <i class="fa fa-trash"></i> Excluir
+                    </a>
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="5">
+            <ul class="pagination pull-right"></ul>
+        </td>
+    </tr>
+    </tfoot>
+</table>
+
+<script>
+
+    $(function () {
+
+        $('.delete_button').on('click', function () {
+            url = $(this).data('href');
+            swal({
+                title: "Confirmar exclusão?",
+                text: null,
+                type: "info",
+                showCancelButton: true,
+                cancelButtonText: "{{ 'Cancel'|trans }}",
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "{{ 'Delete'|trans }}!",
+                closeOnConfirm: false
+            }, function () {
+                $.ajax({
+                    url: url,
+                    method: 'post',
+                    data: {_method:'delete'},
+                    complete: function(xhr){
+                        var response = xhr.responseJSON;
+                        if(200 == xhr.status){
+                            swal("{{ 'Success'|trans }}!", "{{ 'Was successful exclusion'|trans }}!", "success");
+                            load_kits();
+                            window.setTimeout(function(){
+                                swal.close();
+                            },500);
+                        }else{
+                            swal("{{ 'Error'|trans }}!", response.error, "error");
+                        }
+                    },
+                    beforeSend: function(){
+                        swal({
+                            title: "Excluindo...",
+                            text:  "Aguarde!",
+                            type: "info",
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            });
+        });
+
+        $('#kits_table').footable();
+
+        var price_content = $('#prices_content'), price_spinner = price_content.html();
+        $('#price_detailing').on('show.bs.modal', function(event){
+            var target = $(event.relatedTarget);
+            price_content.html(price_spinner);
+            $.ajax({
+                url: target.data('url'),
+                success: function(response){
+                    price_content.html(response);
+                }
+            });
+        });
+
+        var margin_content = $('#margin_content'), margin_spinner = margin_content.html();
+        $('#margin_detailing').on('show.bs.modal', function(event){
+            var target = $(event.relatedTarget);
+            margin_content.html(margin_spinner);
+            $.ajax({
+                url: target.data('url'),
+                success: function(response){
+                    margin_content.html(response);
+                }
+            });
+        });
+
+    });
+</script>

@@ -1,0 +1,82 @@
+{% extends view('layout') %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ asset('assets/timezone/timezone.css') }}"/>
+{% endblock %}
+
+{% block body %}
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row m-b-lg m-t-lg">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="is-moment-timezone">
+                    <header class="hero hero-moment-timezone">
+                        <div class="centered">
+                            <p>
+                                Clique sobre o ponto dejado para definir o fuso horário
+                            </p>
+                            {#<div class="hero-circle">
+                                <div class="hero-world"></div>
+                            </div>#}
+                        </div>
+                    </header>
+                    <div class="map">
+                        <h4 class="map-label">
+                            <span class="map-label-name"></span>
+                            <span class="map-label-time"></span>
+                        </h4>
+                        <div class="map-wrap">
+                            <div class="map-inset">
+                                <div class="map-axis-x"></div>
+                                <div class="map-axis-y"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+        Timezone = {
+            guess: function(){
+                if('{{ timezone }}'){
+                    return '{{ timezone }}';
+                }else{
+                    return moment.tz.guess();
+                }
+            },
+            load_countries: '{{ path('member_timezone',{load:'countries'}) }}',
+            set: function (center) {
+                $.ajax({
+                    url: '{{ path('member_timezone') }}',
+                    method: 'post',
+                    data: {timezone:center.name},
+                    success: function(response){
+                        if(response.hasOwnProperty('timezone')){
+                            swal('Timezone definido', response.timezone, 'success');
+                        }else{
+                            swal('Erro', 'Falha ao definir timezone', 'error');
+                        }
+                    },
+                    beforeSend: function(){
+                        swal('Definindo...', null, 'info');
+                    }
+                });
+            },
+            listen: function(){
+                $('.map-inset').on('mouseout', function(){
+                    //console.log('OK');
+                });
+            }
+        };
+
+        Timezone.listen();
+    </script>
+    <script src="{{ asset('assets/timezone/global.js') }}"></script>
+    <script src="{{ asset('assets/timezone/timezone.js') }}"></script>
+{% endblock %}

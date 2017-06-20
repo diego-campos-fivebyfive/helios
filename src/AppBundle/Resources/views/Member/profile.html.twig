@@ -1,0 +1,84 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row m-b-lg m-t-lg">
+            <div class="col-md-4 col-md-offset-4">
+
+                {{ form_start(form) }}
+
+                <div class="form-group">
+                    {% for error in errors if "firstname" == error.cause %}
+                        <div class="alert alert-danger">
+                            {{ error.message|trans }}
+                        </div>
+                    {% endfor %}
+                    <label for="firstname"> {{ 'Name'|trans }} </label>
+                    <input id="firstname" type="text" name="firstname" required="required" class="form-control"
+                           placeholder="{{ 'Name'|trans }}" value="{{ member.name }}">
+                </div>
+
+                <div>
+                    <i class="fa fa-info-circle"></i>
+                    <i> Informe os dados abaixo apenas se desejar alterar a senha atual </i>
+                </div>
+
+                {% for error in errors if "firstname" != error.cause %}
+                    <div class="alert alert-danger">
+                        {{ error.message|trans }}
+                    </div>
+                {% endfor %}
+
+                <div class="form-group">
+                    {{ form_label(form.current_password) }}
+                    {{ form_widget(form.current_password,{attr:{class:'form-control'}}) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.plainPassword.first) }}
+                    {{ form_widget(form.plainPassword.first,{attr:{class:'form-control'}}) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.plainPassword.second) }}
+                    {{ form_widget(form.plainPassword.second,{attr:{class:'form-control'}}) }}
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-md btn-primary pull-right">
+                        <i class="fa fa-save"></i> {{ 'Save'|trans }}
+                    </button>
+                </div>
+
+                {{ form_end(form) }}
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        $(function(){
+            var prefix = '#fos_user_change_password_form_';
+            var inputs = {
+                current: $(prefix + 'current_password'),
+                first: $(prefix + 'plainPassword_first'),
+                second: $(prefix + 'plainPassword_second')
+            };
+            function redefine_inputs() {
+                var password = inputs.current.val(), require = false;
+                if(password.length){
+                    require = true;
+                }
+                inputs.current.prop('required', require);
+                inputs.first.prop('required', require);
+                inputs.second.prop('required', require);
+            }redefine_inputs();
+            inputs.current.on('keyup', function(){ redefine_inputs(); });
+        });
+    </script>
+
+
+{% endblock %}

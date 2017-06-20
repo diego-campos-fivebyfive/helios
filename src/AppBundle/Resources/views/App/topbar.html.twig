@@ -1,0 +1,75 @@
+{{ title|trans|raw }}
+
+{#
+<div class="row wrapper border-bottom white-bg page-heading">
+
+    <div class="col-lg-8">
+        #}
+{#<h2>  </h2>#}{#
+
+        {{ apy_breadcrumb_trail_render() }}
+    </div>
+
+    <div class="col-lg-4">
+        <h5>&nbsp;</h5><br/>
+
+        #}
+{#{% if buttons|length %}
+
+        <div class="col-sm-12 btn-group {{ buttons|length > 1 ? 'btn-group-justified' }}">
+
+            {% for key, type in buttons %}
+                {% for target in type.targets %}
+
+                    {% if attribute(target, 'targets') is not defined %}
+
+                        {% if attribute(target, 'parameters') is defined %}
+                            {% if not target.parameters %}
+                                {% set parameters = [] %}
+                            {% else %}
+                                {% set parameters = target.parameters %}
+                            {% endif %}
+                        {% endif %}
+
+                    <a href="{{ path(target.route, parameters) }}" class="{{ type.theme.class }} {{ 1 == buttons|length ? 'pull-right' }}">
+                        <i class="fa {{ type.theme.icon }}"></i> {{ target.label|trans }}
+                    </a>
+
+                    {% else %}
+
+                        {% for target in target.targets %}
+
+                            {% if attribute(target, 'parameters') is defined %}
+                                {% if not target.parameters %}
+                                    {% set parameters = [] %}
+                                {% else %}
+                                    {% set parameters = target.parameters %}
+                                {% endif %}
+                            {% endif %}
+
+                            {% set icon = type.theme.icon %}
+                            {% if attribute(target, 'theme') is defined %}
+                                {% if attribute(target.theme, 'icon') is defined %}
+                                    {% set icon = target.theme.icon %}
+                                {% endif %}
+                            {% endif %}
+
+                            <a href="{{ path(target.route, parameters) }}" class="{{ type.theme.class }}">
+                                <i class="fa {{ icon }}"></i> {{ target.label|trans }}
+                            </a>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+                {% endfor %}
+            {% endfor %}
+
+        </div>
+
+        {% endif %}#}{#
+
+
+    </div>
+
+</div>#}

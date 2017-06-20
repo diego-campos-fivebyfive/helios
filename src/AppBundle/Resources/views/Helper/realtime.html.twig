@@ -1,0 +1,55 @@
+<script>
+    {# general scripts #}
+    $(function () {
+
+        {% for notice in app.request.session.flashBag.get('notice') %}
+        toastr.{{ notice.type }}('{{ notice.message }}', '{{ notice.title }}', {
+            positionClass: 'toast-top-center',
+            progressBar: true
+        });
+        {% endfor %}
+    });
+
+    var Realtime = {
+        tasks: {
+            menu: function () {
+                var task_menu = $('a[href="{{ path('task_index') }}"]');
+                if (task_menu.length) {
+                    task_menu = task_menu.first();
+                    $.ajax({
+                        url: '{{ path('tasks_count') }}',
+                        complete: function (xhr) {
+                            if (200 == xhr.status) {
+                                var response = xhr.responseJSON;
+                                if (response.count) {
+                                    var counter = $('#tasks-count');
+                                    if (counter.length) {
+                                        counter.html(response.count);
+                                    } else {
+                                        task_menu.append('<span id="tasks-count" class="label label-warning pull-right">' + response.count + '</span>')
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        },
+        online: function () {
+            $.ajax({
+                url: '{{ path('app_check_online') }}',
+                complete: function (xhr) {
+                    var response = xhr.responseJSON;
+                    if(!response.online){
+                        woopra.track();
+                    }
+                }
+            });
+        }
+    };
+
+    {% if app.request.attributes.get('_route') != 'task_index' %}
+    Realtime.tasks.menu();
+    {% endif %}
+    Realtime.online();
+</script>

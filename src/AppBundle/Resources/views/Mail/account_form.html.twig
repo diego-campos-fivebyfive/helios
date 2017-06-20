@@ -1,0 +1,278 @@
+{% extends view('mail.layout') %}
+
+{% block content %}
+
+
+
+    <div class="mail-box-header">
+        {#<form method="get" action="#" class="pull-right mail-search">
+            <div class="input-group">
+                <input type="text" class="form-control input-sm" name="search" placeholder="Search email">
+                <div class="input-group-btn">
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        Search
+                    </button>
+                </div>
+            </div>
+        </form>#}
+        <h2>
+            {{ 'New Account'|trans }}
+        </h2>
+        {% if error is not null %}
+            <div class="alert alert-danger">
+                {{ error }}
+            </div>
+        {% endif %}
+        <div class="mail-tools m-t-md">
+            {#<div class="btn-group pull-right">
+                <button class="btn btn-white btn-sm"><i class="fa fa-arrow-left"></i></button>
+                <button class="btn btn-white btn-sm"><i class="fa fa-arrow-right"></i></button>
+            </div>#}
+            <a href="javascript:history.back();" class="btn btn-white btn-sm" title="{{ 'Cancel'|trans }}">
+                <i class="fa fa-arrow-left"></i> {{ 'Cancel'|trans }}
+            </a>
+        </div>
+    </div>
+
+    <div class="mail-box">
+
+        {{ form_start(form, { 'attr' : { 'class' : 'form-horizontal' } }) }}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-lg-8" style="padding-left: 35px">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h3>Informações do Usuário</h3>
+                        </div>
+                        <br>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="control-label col-lg-4">Nome </label>
+                                <div class="col-lg-8">
+                                    {{ form_widget(form.name, { 'attr' : { 'class' : 'form-control' } }) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-lg-4">Email </label>
+                                <div class="col-lg-8">
+                                    {{ form_widget(form.email, { 'attr' : { 'class' : 'form-control' } }) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-lg-4">Senha </label>
+                                <div class="col-lg-8">
+                                    {{ form_widget(form.password, { 'attr' : { 'class' : 'form-control' } }) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-lg-7 pull-left">{{ form_widget(form.current, { 'attr' : { 'class' : 'checkbox-inline' } }) }} Conta atual</label>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="col-lg-12">
+                            <h3>
+                                Informações do Servidor
+                                <a class="btn btn-info btn-xs" data-toggle="modal" data-target="#defaultMailsModal" onclick="return false;">
+                                    SELECIONAR SERVIDOR PADRÃO
+                                </a>
+                            </h3>
+                        </div>
+                        <br>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="control-label col-lg-4">Tipo </label>
+                                <div class="col-lg-8">
+                                    {{ form_widget(form.type, { 'attr' : { 'class' : 'form-control' } }) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-lg-4">Servidor de entrada</label>
+                                <div class="col-lg-4">
+                                    {{ form_widget(form.inputServer, { 'attr' : { 'class' : 'form-control' } }) }}
+                                </div>
+                                <label class="control-label col-lg-1">Porta</label>
+                                <div class="col-lg-3">
+                                    {{ form_widget(form.inputPort, { 'attr' : { 'class' : 'form-control' } }) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-lg-4">Criptografia</label>
+                                <div class="col-lg-8">
+                                    {{ form_widget(form.inputEncryption, { 'attr' : { 'class' : 'form-control' } }) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-lg-4">Servidor de Saída</label>
+                                <div class="col-lg-4">
+                                    {{ form_widget(form.outputServer, { 'attr' : { 'class' : 'form-control' } }) }}
+                                </div>
+                                <label class="control-label col-lg-1">Porta</label>
+                                <div class="col-lg-3">
+                                    {{ form_widget(form.outputPort, { 'attr' : { 'class' : 'form-control' } }) }}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    {#<button class="btn btn-success btn-sm test-btn">Testar Conexão</button>#}
+                    <button class="btn btn-primary btn-sm save-btn">Salvar Conta</button>
+                </div>
+            </div>
+        </div>
+
+        {{ form_end(form) }}
+
+    </div>
+
+    <!-- Modal -->
+    <div id="defaultMailsModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" style="text-transform: uppercase">
+                        Selecionar um serviço padrão
+                    </h4>
+                </div>
+                <div class="modal-body">
+
+                    <div id="mail_defaults" class="row">
+                        {% for key, default in defaults %}
+
+                            <label for="mail_default_{{ key }}" class="col-md-4 text-center">
+                                <input id="mail_default_{{ key }}" name="mail_default[{{ key }}]" value="{{ default|json_encode }}" type="image" src="{{ asset(['img/mails/', default.icon]|join) }}">
+                            </label>
+
+                        {% endfor %}
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Close'|trans }}</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    {#<script>
+
+        $(function() {
+            var form_account = $('form[name="email_account"]');
+            var back_link = $('.file-manager a[href="{{ path('email_accounts') }}"]');
+            var mails_type = {
+                1: {
+                    inputType: 'pop3',
+                    inputServer: 'pop3.live.com',
+                    inputPort: 995,
+                    outputServer: 'smtp.live.com',
+                    outputPort: 25,
+                    encrypt: 'ssl'
+                },
+                2: {
+                    inputType: 'imap',
+                    inputServer: 'imap.gmail.com',
+                    inputPort: 993,
+                    outputServer: 'smtp.gmail.com',
+                    outputPort: 465,
+                    encrypt: 'ssl'
+                },
+                3: {
+                    inputType: 'imap',
+                    inputServer: 'imap.mail.yahoo.com',
+                    inputPort: 993,
+                    encrypt: 'ssl',
+                    outputServer: 'smtp.mail.yahoo.com',
+                    outputPort: 465
+                }
+            };
+            $('.mail-selector').on('change', function() {
+                mail_selected = parseInt($(this).val());
+                $('#email_account_inputServer').val(mails_type[mail_selected].inputServer);
+                $('#email_account_inputPort').val(mails_type[mail_selected].inputPort);
+                $('#email_account_inputEncryption').val(mails_type[mail_selected].encrypt);
+                $('#email_account_outputServer').val(mails_type[mail_selected].outputServer);
+                $('#email_account_outputPort').val(mails_type[mail_selected].outputPort);
+                $('#email_account_type').val(mails_type[mail_selected].inputType);
+                $('#defaultMailsModal').modal('hide');
+            });
+            $('.test-btn').on('click', function(e) {
+                e.preventDefault();
+                swal({
+                    title: "Testar Conexão",
+                    text: "Pressione o botão para iniciar o teste de conexão",
+                    type: "info",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    showLoaderOnConfirm: true
+                }, function() {
+                    var form = $(form_account);
+                    $.ajax({
+                        url: '{{ path('email_account_test') }}',
+                        method: 'post',
+                        data: form.serialize(),
+                        success: function(response) {
+                            if ( response.hasOwnProperty('done') ) {
+                                $('.save-btn').removeAttr('disabled');
+                                swal("Conexão confirmada!", "Sua conta já pode ser salva !", "success");
+                            } else {
+                                $('.save-btn').attr('disabled', true);
+                                swal("Problemas ao testar conexão!", "Verifique os dados informados !", "error");
+                            }
+                        },
+                        error: function() {
+                            $('.save-btn').attr('disabled', true);
+                            swal("Problemas ao testar conexão!", "Verifique os dados informados !", "error");
+                        }
+                    });
+                });
+
+            });
+            $('.save-btn').on('click', function() {
+                e.preventDefault();
+                submitForm();
+            });
+
+            function submitForm() {
+                var form = $(form_account);
+                $.ajax({
+                    url: form.attr('action'),
+                    method: form.attr('method'),
+                    data: form.serialize(),
+                    success: function(response) {
+                        if ( response.hasOwnProperty('created') || response.hasOwnProperty('updated') ) {
+                            if ( back_link.length ) {
+                                back_link.trigger('click');
+                            }
+                        } else {
+                            //console.log(response);
+                        }
+                    }
+                });
+            }
+        });
+    </script>#}
+
+
+{% endblock %}
+
+{% block mail_scripts %}
+
+    <script>
+        var id_prefix = '#email_account_';
+        $('input[id^="mail_default_"]').on('click', function(){
+            var config = JSON.parse($(this).val());
+            $.each(config, function(name, value){
+                var el = $(id_prefix+name);
+                if(el.length){
+                    el.val(value);
+                }
+            });
+        });
+    </script>
+
+{% endblock %}

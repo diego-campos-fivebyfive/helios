@@ -1,0 +1,120 @@
+{% set table_id = ['table', random()]|join %}
+
+{% set total_quantity = 0 %}
+{% set total_price = 0 %}
+{% set total_power = 0 %}
+{% set pricing_sum = 2 == kit.invoicePriceStrategy %}
+{% set single_prices = kit.isPriceComputable %}
+
+<table id="{{ table_id }}" class="table table-bordered table-responsive table-stripped" data-paging-size="5">
+    <thead>
+    <tr>
+        <th> Fabricante</th>
+        <th> Modelo</th>
+
+        {% if single_prices %}
+            <th> Custo Unitário</th>
+        {% endif %}
+
+        <th> Potência Unitária</th>
+        <th> Qtde</th>
+
+        {% if single_prices %}
+            <th> Custo Total</th>
+        {% endif %}
+
+        <th> Potência Total</th>
+        <th> &nbsp; </th>
+    </tr>
+    </thead>
+    <tbody class="table-scroll">
+
+    {% for component in components %}
+
+        {% set total_quantity = total_quantity + component.quantity %}
+        {% set total_price = total_price + component.totalPrice %}
+        {% set total_power = total_power + component.fullPower %}
+
+        <tr>
+            <td>
+                {{ component.makerName }}
+                {% if component.module.isPrivate %}
+                    <span class="badge badge-info"> Meu Componente </span>
+                {% endif %}
+            </td>
+            <td>
+                <a data-url="{{ path('module_preview',{id:component.module.id}) }}"
+                   data-toggle="modal"
+                   data-target="#modal_details">
+                    <i class="fa fa-info-circle"></i> {{ component.model }}
+                </a>
+            </td>
+
+            {% if single_prices %}
+            <td> {{ pricing_sum ? component.price|number_format_currency('BRL') : '-' }} </td>
+            {% endif %}
+
+            <td> {{ component.module.maxPower }} W</td>
+            <td> {{ component.quantity }} </td>
+
+            {% if single_prices %}
+            <td> {{ pricing_sum ? component.totalPrice|number_format_currency('BRL') : '-' }} </td>
+            {% endif %}
+
+            <td> {{ component.fullPower / 1000 }} kW</td>
+            <td class="col-md-1">
+                <div class="btn-group btn-group-sm btn-group-expanded">
+                    <button data-update="{{ path('kit_component_update',{kit:component.kit.token, id:component.id}) }}"
+                            data-target="#form_module_container"
+                            class="btn btn-success ladda-button" data-style="zoom-in">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                    <button data-delete="{{ path('kit_component_delete',{kit:component.kit.token, id:component.id}) }}"
+                            class="btn btn-danger ladda-button" data-style="zoom-in">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+    <tfoot>
+    <tr>
+        <th colspan="{{ single_prices ? '4' : '3' }}"> &nbsp; </th>
+        <th> {{ total_quantity }} </th>
+
+        {% if single_prices %}
+            <th> {{ pricing_sum ? total_price|number_format_currency('BRL') : '-' }} </th>
+        {% endif %}
+
+        <th> {{ total_power / 1000 }} kW</th>
+        <th> &nbsp; </th>
+    </tr>
+    </tfoot>
+</table>
+
+<script>
+    $(function () {
+        $('table#{{ table_id }}').find('button[data-update]').on('click', function () {
+            Kit.update($(this));
+        });
+        $('table#{{ table_id }}').find('button[data-delete]').on('click', function () {
+            Kit.remove($(this),{
+                callback: function(xhr){
+                    if(202 == xhr.status) {
+                        Kit.modules.all();
+                        Kit.items.all();
+                        Kit.services.all();
+                        Kit.costs();
+                    }else{
+                        var response = xhr.responseJSON;
+                        swal("Falha na exclusão", response.error, "error");
+                    }
+                }
+            });
+        });
+    });
+</script>
+

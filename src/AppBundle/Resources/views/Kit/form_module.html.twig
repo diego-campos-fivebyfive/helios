@@ -1,0 +1,157 @@
+{% set e_attr = {'attr':{'class':'form-control text-center'}} %}
+{% set random_id = ['form', random()]|join %}
+{% set edit_mode = component.id %}
+
+{% set _route = app.request.attributes.get('_route') %}
+{% set _route_params = app.request.attributes.get('_route_params') %}
+
+{{ form_start(form,{'attr':{'id':random_id, 'action': path(_route, _route_params)}}) }}
+
+<style> .hide{display: none;} </style>
+
+<div class="row" style="height: 3rem;" id="{{ random_id }}loader">
+    {% include view('kit.spinner') %}
+</div>
+
+<div class="row form-group">
+
+    <div class="col-sm-4">
+        <label style="width: 100%"> {{ 'Maker'|trans }} </label>
+        {{ form_widget(form.maker, e_attr) }}
+    </div>
+
+    {#{% if attribute(form.children, 'serial') is defined %}
+        <div class="col-sm-3" id="module_loader">
+            <label style="width: 100%"> {{ 'Serial'|trans }} </label>
+            {{ form_widget(form.serial, e_attr) }}
+        </div>
+    {% endif %}#}
+
+    {% if attribute(form.children, 'module') is defined %}
+        <div class="col-sm-4 {{ component.serial and (component.maker.id != component.serial.maker.id) ? 'hide' }}"
+             id="module_loader">
+            <label style="width: 100%"> {{ 'Module'|trans }} </label>
+            {{ form_widget(form.module, e_attr) }}
+        </div>
+
+        <div class="col-sm-4">
+            <label style="width: 100%;"> &nbsp; </label>
+            <button id="btn_info_module" type="button" data-path="{{ path('module_preview',{id:'_id_'}) }}"
+                    data-source="#kit_module_module" data-toggle="modal" data-target="#modal_details"
+                    class="btn btn-success btn-block"><i class="fa fa-info-circle"></i> Detalhes
+            </button>
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+{% if attribute(form.children, 'price') is defined %}
+    <div class="row form-group">
+
+        <div class="col-sm-3 {{ 1 == kit.invoicePriceStrategy ? 'hide' }}">
+            <label style="width: 100%;"> Custo Unitário (R$) </label>
+            {{ form_widget(form.price, e_attr) }}
+        </div>
+
+        <div class="col-sm-{{ 1 == kit.invoicePriceStrategy ? '2' : '3' }}">
+            <label> Quantidade </label>
+            {{ form_widget(form.quantity, e_attr) }}
+        </div>
+
+        <div class="col-md-3">
+            <label style="width: 100%;"> &nbsp; </label>
+            <button type="submit" data-style="zoom-in"
+                    class="btn btn-primary btn-block ladda-button">
+                <i class="fa {{ component.id ? 'fa-check' : 'fa-plus' }}"></i> {{ component.id ? 'Update'|trans : 'Add'|trans }}
+            </button>
+        </div>
+
+        {#{% if component.id %}#}
+            <div class="col-md-3">
+                <label style="width: 100%;"> &nbsp; </label>
+                <a id="module_form_cancel" class="btn btn-default btn-block">
+                    <i class="fa fa-times"></i> {{ 'Cancel'|trans }}
+                </a>
+            </div>
+        {#{% endif %}#}
+
+    </div>
+{% endif %}
+
+{{ form_end(form) }}
+
+<script>
+    $(function () {
+        var form_component = $('#{{ random_id }}'), button_submit = form_component.find('button[type="submit"]');
+        var form_loader = $('#{{ random_id }}loader'), loader_spinner = form_loader.html();
+        form_loader.html('&nbsp;');
+
+        var btn_info_module = $('#btn_info_module');
+        function check_info_module() {
+
+            if(btn_info_module.length){
+                if($('#kit_module_module').val()){
+                    btn_info_module.removeClass('disabled');
+                }else{
+                    btn_info_module.addClass('disabled');
+                }
+            }
+
+        }check_info_module();
+
+        $('#kit_module_maker, #kit_module_serial').on('change', function(event){
+            if($(event.target).attr('id') == 'kit_module_maker'){
+                $('#kit_module_serial').find('option:selected').html('{{ 'Loading'|trans }}...').trigger('chosen:updated');
+                $('#kit_module_module').find('option:selected').html('{{ 'Loading'|trans }}...').trigger('chosen:updated');
+            }
+            form_component.trigger('submit');
+        }).chosen();
+
+        button_submit.ladda();
+        form_component.on('submit', function (event) {
+            event.preventDefault();
+            var form = $(this);
+
+            button_submit.ladda('start');
+            form_loader.html(loader_spinner);
+
+            Kit.request({
+                url: form.attr('action'),
+                method: form.attr('method'),
+                data: form.serialize(),
+                callback: function(xhr){
+                    button_submit.ladda('stop');
+                    form_loader.html('&nbsp;');
+                    if(200 == xhr.status){
+                        Kit.modules.form_element.html(xhr.responseText);
+                    }else{
+                        Kit.modules.form_element.data('url', '{{ path('kit_module_add',{kit:kit.token}) }}');
+                        Kit.modules.init();
+                        Kit.items.all();
+                        Kit.services.all();
+                        Kit.costs();
+                    }
+                }
+            });
+        });
+
+        $('#module_form_cancel').on('click', function(){
+            Kit.modules.reset_form();
+        });
+
+        $('#kit_module_module').on('change', function(){
+            check_info_module();
+        }).chosen({width:'100%'});
+
+        $('#kit_module_price').mask('##,00',{reverse:true});
+
+        $('#kit_module_quantity').TouchSpin({
+            min: 1,
+            max: 1000000000,
+            step: 1,
+            decimals: 0
+        });
+    });
+</script>

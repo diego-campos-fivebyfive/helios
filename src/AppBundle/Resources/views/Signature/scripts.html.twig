@@ -1,0 +1,503 @@
+{% include view('helper.plugins_js') %}
+
+<script>
+
+    var SignatureManager = {
+        // Properties
+        method_invoice: 'boleto_inovador',
+        method_credit_card: 'credit_card',
+        // Elements
+        //invoice_url_handler: $('#invoice_url_handler'),
+        payment_method_code: $('#subscription_payment_method_code'),
+
+        // Methods
+        update_payment_method: function(method_code){
+            Http.request({
+                url: '{{ path('signature_payment_method_update') }}',
+                method: 'post',
+                data: {method_code:method_code},
+                callback: function(xhr){
+                    if(Http.accepted == xhr.status){
+                        Handle.success('Método de pagamento alterado com sucesso!');
+                        Handle.redirect();
+                    }else{
+                        Handle.error(xhr.responseJSON.error);
+                    }
+                },
+                onRequest: function(){
+                    Handle.processing();
+                }
+            });
+        },
+        open_invoice: function(url){
+
+            var button = '<a id="print_invoice" href="' + url + '" target="_blank" class="btn btn-lg btn-block btn-primary">' +
+                '<i class="fa fa-barcode"></i> ' +
+                'Clique aqui para imprimir o boleto</a>';
+
+            swal({
+                title: "Assinatura efetuada com sucesso!",
+                text: button,
+                html: true,
+                type:'success',
+                showConfirmButton: false
+            });
+
+            $('#print_invoice').on('click', function(){
+                SignatureManager.redirect('{{ path('signature') }}');
+            });
+        },
+        set_payment_method_code: function(code){
+            SignatureManager.payment_method_code.val(code);
+        },
+        get_payment_method_code: function(){
+            return SignatureManager.payment_method_code.val();
+        },
+        is_method_invoice: function(){
+            return SignatureManager.get_payment_method_code() == SignatureManager.method_invoice;
+        },
+        is_method_credit_card: function(){
+            return SignatureManager.get_payment_method_code() == SignatureManager.method_credit_card;
+        },
+        redirect: function(url){
+            window.setTimeout(function () {
+                window.location.href = url;
+            }, 1500);
+        }
+    };
+
+    var _route = '{{ app.request.attributes.get('_route') }}';
+
+    var number_users = $('#number_users');
+    var number_target = $('#subscription_product_items_1_quantity');
+    var change_users = $('[data-user]');
+    var price = {{ prices.main }};
+    var extra_price = {{ prices.extra }};
+    var extra_discount = {{ prices.extra_discount ? prices.extra_discount : 0 }};
+    var min_users = {{ account.activeMembers.count }};
+    var is_update = !('signature_create' == _route);
+
+    function check_amount() {
+        var quantity = parseInt(number_target.val());
+        var amount = ((quantity * extra_price) + price) - extra_discount;
+        if(amount < 0){ amount = 0; }
+        $('#plan_amount').html(numeral(amount).format('0,0.00'));
+        $('#per_amount').html(numeral(amount / (quantity + 1)).format('0,0.00'));
+    }
+
+    check_amount();
+
+    function check_users() {
+        var val = parseInt(number_users.val());
+        if (val > 0) {
+            number_target.val(val - 1);
+        } else {
+            number_target.val(0);
+        }
+        check_amount();
+
+        if (val == 1) {
+            change_blocks('info');
+        } else {
+            change_blocks('amount');
+        }
+
+    }
+
+    check_users();
+
+    number_users.on('change', function () {
+        check_users();
+    });
+
+    function change_blocks(type) {
+        var amount_block = $('#amount_block'),
+            info_block = $('#info_block');
+        if ('info' == type) {
+            amount_block.hide();
+            info_block.show();
+        } else {
+            info_block.hide();
+            amount_block.show();
+        }
+    }
+
+    change_users.on('click', function () {
+        var val = parseInt($(this).data('user'));
+        var next = parseInt(number_users.val()) + val;
+        if (next >= min_users) {
+            if (next > 10) {
+                swal({
+                    title: 'Deseja mais usuários?',
+                    text: 'Entre em contato conosco <br> atendimento@inovadorsolar.com',
+                    type: 'info',
+                    html: true
+                });
+            } else {
+                number_users.val(next);
+                check_users();
+            }
+        } else {
+            swal({
+                title: 'Número mínimo atingido',
+                text: 'O número solicitado não deve ser inferior ao número de usuários ativos na conta',
+                type: 'info',
+                html: true
+            });
+        }
+    });
+
+</script>
+
+
+<script>
+
+    function get_address_info(postcode, options) {
+        $.ajax({
+            url: '{{ path('brazil_postcode') }}',
+            method: 'post',
+            data: {postcode: postcode},
+            complete: function (xhr) {
+                options.callback(xhr);
+            }
+        });
+    }
+
+    //if (Customer.form.length) {
+        $('[data-address="postcode"]').on('change', function () {
+            get_address_info($(this).val(), {
+                callback: function (xhr) {
+                    var response = xhr.responseJSON;
+                    if (response.hasOwnProperty('resultado') && 1 == response.resultado) {
+                        $('[data-address="state"]').val(response.uf);
+                        $('[data-address="city"]').val(response.cidade);
+                        $('[data-address="district"]').val(response.bairro);
+                        $('[data-address="street"]').val(response.tipo_logradouro + ' ' + response.logradouro);
+                        $('[data-address="number"]').focus();
+                    }
+                }
+            });
+        });
+
+        var customer_type = $('.btn-type');
+        var customer_document = $('#customer_registry_code');
+        var document_label = $('label[for="customer_registry_code"]');
+        var name_label = $('label[for="customer_name"]');
+
+        function change_document_mask(input) {
+            var apply = input.val();
+            customer_document.mask(apply).attr('placeholder', apply);
+            document_label.html(apply.indexOf('/') > 0 ? 'CNPJ' : 'CPF');
+            name_label.html(apply.indexOf('/') > 0 ? 'Nome da Empresa' : 'Nome');
+        }
+
+        customer_type.on('click', function () {
+            change_document_mask($(this).find('input'));
+            customer_type.removeClass('btn-primary').addClass('btn-default');
+            $(this).removeClass('btn-default').addClass('btn-primary');
+        });
+
+        if (!customer_document.val() || customer_document.val().length < 12) {
+            customer_type.first().trigger('click');
+
+        } else {
+            customer_type.last().trigger('click');
+        }
+    //}
+
+</script>
+
+
+<script>
+
+    Http.unprocessable_entity = 422;
+    var Handle = {
+        processing: function () {
+            swal({
+                title: 'Aguarde',
+                message: 'Processando',
+                type: 'info',
+                showConfirmButton: false
+            });
+        },
+        error: function (message) {
+            swal({
+                title: 'Verifique o erro',
+                text: message,
+                type: 'error',
+                html: true
+            });
+        },
+        success: function (message) {
+            swal({
+                title: 'Sucesso',
+                text: message,
+                type: 'success',
+                html: true,
+                showConfirmButton: false
+            });
+        },
+        redirect: function () {
+            window.setTimeout(function () {
+                window.location.href = '{{ path('signature') }}';
+            }, 1500);
+        },
+        check_terms: function(){
+            var check = $('#payment_profile_terms');
+            if(!check.is(':checked')){
+                Handle.error('Aceite os Termos de Uso para prosseguir');
+                return false;
+            }
+            return true;
+        }
+    };
+</script>
+
+<script>
+
+    function process_customer_form(form){
+        //var form = $(this);
+        Http.request({
+            url: form.attr('action'),
+            method: 'post',
+            data: form.serialize(),
+            callback: function (xhr) {
+                //swal.close();
+                var response = xhr.responseJSON;
+                if (Http.created == xhr.status || Http.accepted == xhr.status) {
+                    if (is_update) {
+                        Handle.success('Dados cadastrais atualizados com sucesso!');
+                        Handle.redirect();
+                    }else {
+                        if (SignatureManager.is_method_credit_card()) {
+                            $('#form_payment_profile').trigger('submit');
+                        } else {
+                            $('#form_subscription').find('[type="submit"]').trigger('click');
+                        }
+                    }
+                } else {
+
+                    Handle.error(response.error);
+
+                    /*if (Http.accepted == xhr.status) {
+                     if (is_update) {
+                     Handle.success('Dados cadastrais atualizados com sucesso!');
+                     Handle.redirect();
+                     } else {
+                     if(SignatureManager.is_method_credit_card()) {
+                     $('#form_payment_profile').trigger('submit');
+                     }else{
+                     $('#form_subscription').find('[type="submit"]').trigger('click');
+                     }
+                     }
+                     } else*/
+                }
+            },
+            onRequest: function () {
+                Handle.processing();
+            }
+        });
+    }
+
+    function confirm_signature(form) {
+
+        text = '<div class="row">' +
+            '<div class="col-md-6 col-md-offset-3 text-left">' +
+            '<strong>Plano: </strong> ' + $('#plan_header_name').html() + ' <br>' +
+            '<strong>Usuários: </strong>' + number_users.val() + '<br>' +
+            '<strong>Valor: </strong> R$ ' + $('#plan_amount').html() + '/mês <br>' +
+            '</div>' +
+            '</div>';
+
+        swal({
+            title: 'Configuração do Plano',
+            text: text,
+            html: true,
+            showCancelButton: true,
+            closeOnConfirm: false,
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#1ab394',
+            confirmButtonText: 'Confirmar Assinatura'
+        }, function () {
+            process_customer_form(form);
+        });
+    }
+
+    $(function(){
+
+        $('#form_customer').on('submit', function(event){
+            event.preventDefault();
+            if(Handle.check_terms()) {
+                if (!is_update) {
+                    confirm_signature($(this));
+                }else{
+                    process_customer_form($(this));
+                }
+            }
+        });
+
+    });
+</script>
+
+<script>
+    $(function(){
+
+        var form_payment_profile = $('#form_payment_profile');
+
+        form_payment_profile.on('submit', function(event){
+            event.preventDefault();
+
+            if(Handle.check_terms()) {
+
+                var form = $(this);
+                Http.request({
+                    url: form.attr('action'),
+                    method: form.attr('method'),
+                    data: form.serialize(),
+                    callback: function (xhr) {
+                        var response = xhr.responseJSON;
+                        switch (xhr.status) {
+                            case Http.created:
+                            case Http.accepted:
+                                if (is_update) {
+                                    var send_charge = $('#send_charge');
+                                    if (send_charge.length && current_bill) {
+                                        send_charge.trigger('click');
+                                    } else {
+                                        Handle.success('Perfil de pagamento atualizado com sucesso!');
+                                        Handle.redirect();
+                                    }
+                                } else {
+                                    $('#form_subscription').find('[type="submit"]').trigger('click');
+                                }
+                                break;
+                            case Http.unprocessable_entity:
+                                Handle.error(response.error);
+                                break;
+                            default:
+                                console.log('response away');
+                                break;
+                        }
+                    },
+                    onRequest: function () {
+                        Handle.processing();
+                    }
+                });
+
+            }
+        });
+
+        form_payment_profile.card({
+            container: '.card-wrapper',
+            formSelectors: {
+                numberInput: 'input#payment_profile_card_number',
+                expiryInput: 'input#payment_profile_card_expiration',
+                cvcInput: 'input#payment_profile_card_cvv',
+                nameInput: 'input#payment_profile_holder_name'
+            }
+        });
+    });
+</script>
+
+
+<script>
+    $(function(){
+        var form_subscription = $('#form_subscription');
+        form_subscription.on('submit', function(event) {
+            event.preventDefault();
+            var form = $(this);
+            Http.request({
+                url: form.attr('action'),
+                method: form.attr('method'),
+                data: form.serialize(),
+                callback: function(xhr){
+                    var response = xhr.responseJSON;
+                    if(Http.created == xhr.status){
+
+                        woopra.track('assinou', {
+                            valor: "" + $('#plan_amount').html() + ""
+                        });
+
+                        if(SignatureManager.is_method_invoice()){
+                            SignatureManager.open_invoice(response.invoice_url);
+                        }else {
+                            Handle.success('Assinatura efetuada com sucesso!');
+                            Handle.redirect();
+                        }
+
+                    }else{
+                        Handle.error(response.error);
+                    }
+                },
+                onRequest: function(){
+                    Handle.processing();
+                }
+            });
+        });
+    });
+</script>
+
+
+<script>
+    $(function(){
+        $('#signature_process').on('click', function(){
+            $('#form_customer').find('[type="submit"]').trigger('click');
+        });
+    });
+</script>
+
+
+<script>
+    $(function(){
+
+        var payment_method_handler = $('#payment_method_handler');
+        var payment_method_change = $('[name="payment_method"]');
+        var method_boleto = $('#method_boleto_inovador');
+        var method_card = $('#method_credit_card');
+        var pay_invoice = $('#pay_invoice');
+        var button_invoice = $('#button_invoice');
+        var button_credit_card = $('#button_credit_card');
+
+        function check_payment_method(){
+            var method = $('[name="payment_method"]:checked').val();
+
+            if('credit_card' == method){
+                method_boleto.addClass('hide');
+                method_card.removeClass('hide');
+                button_credit_card.removeClass('btn-default').addClass('active btn-primary');
+                button_invoice.removeClass('active btn-primary').addClass('btn-default');
+            }else{
+                method_card.addClass('hide');
+                method_boleto.removeClass('hide');
+                button_invoice.removeClass('btn-default').addClass('active btn-primary');
+                button_credit_card.removeClass('active btn-primary').addClass('btn-default');
+            }
+
+            $('#button_'+method).addClass('btn-primary active');
+
+            SignatureManager.set_payment_method_code(method);
+        }
+
+        payment_method_change.on('change', function(){
+            check_payment_method();
+        });
+
+        check_payment_method();
+
+        pay_invoice.on('click', function(){
+            if(is_update){
+                SignatureManager.update_payment_method(SignatureManager.method_invoice);
+            }else {
+                $('#form_customer').find('[type="submit"]').trigger('click');
+            }
+        });
+
+        $('#invoice_terms').on('change', function(){
+            $('#payment_profile_terms').prop('checked', $(this).is(':checked'));
+        });
+
+        $('#payment_profile_terms').on('change', function(){
+            $('#invoice_terms').prop('checked', $(this).is(':checked'));
+        });
+    });
+</script>

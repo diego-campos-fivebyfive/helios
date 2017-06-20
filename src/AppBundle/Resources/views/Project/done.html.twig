@@ -1,0 +1,91 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+    <div class="modal inmodal fade" id="email_modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">
+                        <i class="fa fa-file-text-o"></i>
+                        Enviar proposta por email
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    {% include view('kit.spinner') %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">
+                        {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="min-height: 1500px;" class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-md-6 col-md-offset-3">
+
+                                <h1 class="text-center">
+                                    {% if 'proposal' == stage %}
+                                        <i class="fa fa-thumbs-o-up"></i> Proposta gerada com sucesso!
+                                    {% else %}
+                                        <i class="fa fa-warning"></i> Este projeto já foi concluído!
+                                    {% endif %}
+                                </h1>
+
+                                <div class="row">
+                                    {% if project.customer %}
+                                        {% set contact = project.customer %}
+                                        <a href="{{ path('contact_show',{context:contact.context.id, token:contact.token}) }}" class="btn btn-success pull-left col-md-4">
+                                            <i class="{{ contact.isCompany ? icon('company') : icon('person') }}"></i> Ir para o contato
+                                        </a>
+                                    {% endif %}
+                                    <a href="{{ path('project_index') }}" class="btn btn-primary pull-left col-md-4">
+                                        <i class="fa fa-paste"></i> Ir para projetos
+                                    </a>
+                                    <a data-toggle="dropdown" class="btn btn-success dropdown-toggle pull-left col-md-4">
+                                        <i class="fa fa-file-text-o"></i> {{ 'Proposal'|trans }}
+                                        <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li><a target="_blank" href="{{ path('project_proposal_download',{token:project.token, force:false}) }}"> <i class="fa fa-eye"></i> {{ 'View'|trans }}</a></li>
+                                        <li><a href="{{ path('project_proposal_download',{token:project.token, force:true}) }}"> <i class="fa fa-download"></i> {{ 'Save on disc'|trans }}</a></li>
+                                        <li><a data-toggle="modal" data-target="#email_modal" data-url="{{ path('email_proposal',{token:project.token}) }}"><i class="fa fa-send"></i> {{ 'Enviar por email'|trans }}</a></li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+        $('#email_modal').on('show.bs.modal', function(event){
+            var modal = $(this), body = modal.find('.modal-body'), target = $(event.relatedTarget);
+            var url = target.data('url');
+            if(url){
+                $.ajax({
+                    url: url,
+                    complete: function(xhr){
+                        body.html(xhr.responseText);
+                    }
+                })
+            }
+        });
+    </script>
+
+{% endblock%}

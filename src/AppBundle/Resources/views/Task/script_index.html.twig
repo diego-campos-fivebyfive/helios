@@ -1,0 +1,164 @@
+
+<script>
+
+    var TaskManager = {
+        mode: '{{ mode }}',
+        container: $('#tasks_container'),
+        isCalendar: function(){
+            return 'calendar' == TaskManager.mode;
+        },
+        modal: {
+            element: $('#task_modal'),
+            close: function(){
+                TaskManager.modal.element.modal('hide');
+            },
+            open: function(){
+                TaskManager.modal.element.modal('show');
+            },
+            render: function(content){
+                TaskManager.modal.element.find('.modal-body').html(content);
+            }
+        },
+        form: {
+            load: function(url){
+                TaskManager.modal.open();
+                $.ajax({
+                    url: url,
+                    success: function(response){
+                        TaskManager.modal.render(response);
+                    }
+                });
+            }
+        },
+        filter: {
+            form: $('#form_filter'),
+            init: function(){
+                var form = TaskManager.filter.form;
+                var inputs = form.find('input');
+
+                inputs.on('change', function(){
+                    TaskManager.load();
+                });
+
+                form.on('submit', function(event){
+                    event.preventDefault();
+                    TaskManager.load();
+                });
+            },
+            getData: function(){
+                var form_data = TaskManager.filter.form.serializeArray();
+                var data = {};
+                var types = [];
+                $.each(form_data, function(i, item){
+                    if('task_filter[type][]' == item.name){
+                        types[types.length] = item.value;
+                    }else {
+                        data[item.name] = item.value;
+                    }
+                });
+
+                data['task_filter[type]'] = types;
+
+                return data;
+            },
+            submit: function(){
+                TaskManager.filter.form.trigger('submit');
+                Realtime.tasks.menu();
+            }
+        },
+        load: function(url){
+            if(TaskManager.isCalendar()){
+                TaskManager.calendar.load();
+            }else{
+                $.ajax({
+                    url: url ? url : '{{ path('task_index',{mode:mode}) }}',
+                    data: TaskManager.filter.getData(),
+                    success: function(response){
+                        TaskManager.container.html(response);
+                    }
+                });
+            }
+        },
+        calendar: {
+            isInitialized: false,
+            load: function(){
+                if(TaskManager.calendar.isInitialized){
+                    TaskManager.calendar.refresh();
+                }else {
+
+                    TaskManager.container.fullCalendar({
+                        header: {
+                            left: 'prev,next today',
+                            center: 'title',
+                            right: 'month,agendaWeek,agendaDay,listWeek'
+                        },
+                        buttonText: {
+                            list: 'Modo lista'
+                        },
+                        locale: 'pt-br',
+                        cache: false,
+                        editable: true,
+                        eventLimit: true, // allow "more" link when too many events
+                        navLinks: true,
+                        lazyFetching: true,
+                        refetchResourcesOnNavigate: true,
+                        eventClick: function (calEvent) {
+                            TaskManager.form.load('{{ path('task_update',{token:'_id_'}) }}'.replace(/_id_/g, calEvent.id));
+                        },
+                        eventDrop: function (event, jsEvent, ui, view) {
+                            /*console.log(event.start);
+                             console.log(event.start.format());
+                             console.log(event.end.format());*/
+                            TaskManager.updateInterval(event);
+                        },
+                        eventResize: function (event) {
+                            TaskManager.updateInterval(event);
+                            /*console.log(event);
+                             console.log();
+                             console.log();*/
+                        },
+                        events: {
+                            url: '{{ path('task_index',{mode:mode}) }}',
+                            data: function(){
+                                return TaskManager.filter.getData();
+                            }
+                        }
+                    });
+
+                    TaskManager.calendar.isInitialized = true;
+                }
+            },
+            refresh: function(){
+                TaskManager.container.fullCalendar('refetchEvents');
+            }
+        },
+        saved: function(){
+            TaskManager.modal.close();
+            TaskManager.filter.submit();
+            if('calendar' == TaskManager.mode) {
+                TaskManager.calendar.refresh();
+            }
+        },
+        updateInterval: function(event){
+            $.ajax({
+                url: '{{ path('task_interval',{token:'_id_'}) }}'.replace(/_id_/g, event.id),
+                method: 'post',
+                data: {start:event.start.format(),end:event.end.format()},
+                complete: function(xhr){
+                    console.log(xhr.status);
+                }
+            });
+        },
+        init: function(){
+            TaskManager.filter.init();
+            TaskManager.filter.submit();
+        }
+    };
+
+    $('#task_add').on('click', function(){
+        TaskManager.form.load('{{ path('task_create') }}');
+    });
+
+    TaskManager.init();
+
+</script>

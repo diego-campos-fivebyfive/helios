@@ -1,0 +1,174 @@
+{% extends view('layout') %}
+
+{% block styles %}
+<style>
+    .product-imitation{
+        background-repeat: no-repeat !important;
+        background-size: contain !important;
+        background-position: center !important;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+
+    {% set components = pagination.items %}
+    {% set is_module = type == 'module' %}
+
+    <div class="modal inmodal" id="modal_select" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">{{ 'Close'|trans }}</span>
+                    </button>
+                    <i class="fa fa-{{ is_module ? 'cubes' : 'sliders' }} modal-icon"></i>
+                    <h4 class="modal-title">
+                        Serie: <span id="component_serial"></span> <br/>
+                        Model No: <span id="component_model"></span> <br/>
+                    </h4>
+                    <small class="font-bold">
+                        Este item será adicionado ao seu catálogo para confecção de Kits
+                    </small>
+                </div>
+                <div class="modal-body">
+                    <div class="col-offset-3">
+                    {{ render(controller('AppBundle:Catalog:create',{'type':type})) }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">
+                        <i class="fa fa-sign-out"></i> {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row">
+            {{ knp_pagination_filter(pagination, {'c.serial':'Serie', 'c.model':'Model'}) }}
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <p>
+                Exibindo {{ pagination.count  }} de {{ pagination.getTotalItemCount  }}
+                {{ is_module ? 'Modules'|trans : 'Inverters'|trans }} encontrados
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+
+            {% for component in components %}
+
+                {% set data = {
+                    id: component.id,
+                    price: component.price,
+                    serial: component.serial,
+                    model: component.model
+                } %}
+
+            <div class="col-md-3" id="component{{ component.id }}">
+                <div class="ibox">
+                    <div class="ibox-content product-box">
+                        <div class="product-imitation" style="background-image: url(http://www.enfsolar.com/ApolloF/solar/Product/logo/Crystalline/576b8dc9a7a39_thumb.jpg)">
+                            &nbsp;
+                        </div>
+                        <div class="product-desc">
+                                <span class="product-price">
+                                    {{ component.price }}
+                                </span>
+                            <small class="text-muted">
+                                <strong>Serie: </strong> {{ component.serial }}
+                            </small>
+                            <a href="#" class="product-name">
+                                Model No.: {{ component.model }}
+                            </a>
+                            <div class="small m-t-xs">
+                                {{ component.maker.name }}
+                            </div>
+
+                            <div class="row">
+                                <div class="btn-group btn-group-sm">
+                                    <a href="#" class="btn btn-success"> Btn 1 </a>
+                                    <a href="#" data-component="{{ data|json_encode }}" class="btn btn-primary" data-toggle="modal" data-target="#modal_select">
+                                        {{ 'Add to Catalog'|trans }}
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    {% javascripts
+    'kolinalabs/hipper_mask.js'
+    output='js/compiled/main.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script>
+        $(function(){
+
+            var form_catalog = $('form[name="catalog"]'),
+                form_button = form_catalog.find('button.ladda-button'),
+                modal_select = $('#modal_select'),
+                catalog_price = $('#catalog_price'),
+                catalog_component = $('#catalog_component'),
+                component_serial = $('#component_serial'),
+                component_model = $('#component_model');
+
+            modal_select.on('show.bs.modal', function(event){
+                var relatedTarget = $(event.relatedTarget),
+                        component = relatedTarget.data('component');
+
+                catalog_component.val(component.id);
+                catalog_price.val(component.price);
+                component_serial.html(component.serial);
+                component_model.html(component.model);
+            });
+
+            catalog_price.mask('##.00',{reverse:true});
+
+            form_button.ladda();
+            form_catalog.on('submit', function(event){
+                event.preventDefault();
+                var form = $(this);
+                form_button.ladda('start');
+                $.ajax({
+                    url: form.attr('action'),
+                    method: form.attr('method'),
+                    data: form.serialize(),
+                    success: function(response){
+                        form_button.ladda('stop');
+                        if(response.catalog > 0){
+                            toastr.success('Componente adicionado com sucesso!',{
+                                positionClass: 'toast-top-center',
+                                progressBar: true
+                            });
+                            $('#component'+catalog_component.val()).remove();
+                            modal_select.modal('hide');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+{% endblock %}
