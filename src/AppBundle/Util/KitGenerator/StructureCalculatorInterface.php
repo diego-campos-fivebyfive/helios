@@ -22,6 +22,17 @@ interface StructureCalculatorInterface
     const POSITION_VERTICAL     = 'vertical';
 
     /**
+     * @param $roofType
+     * @return StructureCalculatorInterface
+     */
+    public function setRoofType($roofType);
+
+    /**
+     * @return int
+     */
+    public function getRoofType();
+
+    /**
      * @param $position
      * @return StructureCalculatorInterface
      */
