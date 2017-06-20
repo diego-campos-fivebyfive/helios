@@ -9,11 +9,7 @@ class PowerEstimator
      * @var float
      */
     private $consumption;
-
-    /**
-     * @var float
-     */
-
+    
     /**
      * @var float
      */
