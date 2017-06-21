@@ -15,7 +15,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 
 /**
  *
- * @Security("has_role('ROLE_OWNER')")
+ * #//@Security("has_role('ROLE_OWNER')")
  *
  * @Route("kit")
  *
