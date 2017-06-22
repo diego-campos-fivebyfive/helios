@@ -13,19 +13,21 @@
         <div class="col-md-8 col-md-offset-2">
             <div class="col-lg-12 ibox-content">
                 <div class="ibox float-e-margins">
-                    <form method="get" class="form-horizontal">
+                   <!-- <form method="get" class="form-horizontal">-->
+                    {{ form_start(form) }}
 
                         <div class="col-lg-12 ibox-content">
                             <div class="col-sm-12">
                                 <label class="col-sm-2 control-label">CNPJ </label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" placeholder="CNPJ:">
+                                    {{ form_widget(form.document,{attr:{class:'form-control'}}) }}
+                                    <!--<input type="text" class="form-control" placeholder="CNPJ:">-->
                                 </div>
 
 
                                 <label class="col-sm-2 control-label">Inscrição Estadual </label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" placeholder="Inscrição Estadual:">
+                                    {{ form_widget(form.inscription,{attr:{class:'form-control'}}) }}
                                 </div>
                             </div>
                         </div>
@@ -34,12 +36,12 @@
                             <div class="col-sm-12">
                                 <label class="col-sm-2 control-label">Razão Social </label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" placeholder="Razão Social" :">
+                                    {{ form_widget(form.lastname,{attr:{class:'form-control'}}) }}
                                 </div>
 
                                 <label class="col-sm-2 control-label">Nome-Fantasia </label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" placeholder="Nome Fantasia:">
+                                    {{ form_widget(form.firstname,{attr:{class:'form-control'}}) }}
                                 </div>
                             </div>
                         </div>
@@ -48,7 +50,7 @@
                             <div class="col-sm-12">
                                 <label class="col-sm-2 control-label">Contato </label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" placeholder="Contato: ">
+                                    {{ form_widget(form.contact,{attr:{class:'form-control'}}) }}
                                 </div>
 
                             </div>
@@ -58,39 +60,30 @@
                             <div class="col-sm-12">
                                 <label class="col-sm-2 control-label">Email </label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" placeholder="Email: ">
+                                    {{ form_widget(form.email,{attr:{class:'form-control'}}) }}
                                 </div>
 
                                 <label class="col-sm-2 control-label">Telefone </label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" placeholder="Telefone: ">
+                                    {{ form_widget(form.phone,{attr:{class:'form-control'}}) }}
                                 </div>
                             </div>
                         </div>
 
-                    </form>
-                </div>
-            </div>
-
-
-            <!-- Pré-Registro Endereços -->
-            <div class="col-lg-12 ibox-content">
-                <div class="ibox float-e-margins">
-                    <form method="get" class="form-horizontal">
                         <div class="col-lg-12 ibox-content">
                             <div class="col-sm-12">
                                 <label class="col-sm-1 control-label">CEP</label>
                                 <div class="col-sm-3">
-                                    <input type="text" class="form-control" placeholder="CEP:">
+                                    {{ form_widget(form.postcode,{attr:{class:'form-control'}}) }}
                                 </div>
 
                                 <label class="col-sm-1 control-label">Estado </label>
                                 <div class="col-sm-3">
-                                    <input type="text" class="form-control" placeholder="Estado:">
+                                    {{ form_widget(form.state,{attr:{class:'form-control'}}) }}
                                 </div>
                                 <label class="col-sm-1 control-label">Cidade </label>
                                 <div class="col-sm-3">
-                                    <input type="text" class="form-control" placeholder="Cidade:">
+                                    {{ form_widget(form.city,{attr:{class:'form-control'}}) }}
                                 </div>
 
 
@@ -101,12 +94,12 @@
                             <div class="col-sm-12">
                                 <label class="col-sm-2 control-label">Bairro </label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" placeholder="Bairro:">
+                                    {{ form_widget(form.district,{attr:{class:'form-control'}}) }}
                                 </div>
 
                                 <label class="col-sm-2 control-label">Logradouro: </label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" placeholder="Rua :">
+                                    {{ form_widget(form.street,{attr:{class:'form-control'}}) }}
                                 </div>
                             </div>
                         </div>
@@ -115,13 +108,13 @@
                             <div class="col-sm-12">
                                 <label class="col-sm-2 control-label">Número </label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" placeholder="Número: ">
+                                    {{ form_widget(form.number,{attr:{class:'form-control'}}) }}
                                 </div>
 
                             </div>
                         </div>  <!-- cep, estado, cidade,  bairro,lagradouro,  numero -->
 
-                    </form>
+                    {{ form_end(form) }}
                 </div>
             </div>
         </div>
