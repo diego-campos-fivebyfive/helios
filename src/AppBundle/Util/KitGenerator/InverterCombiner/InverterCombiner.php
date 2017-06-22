@@ -1,13 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Fabio
- * Date: 20/06/2017
- * Time: 15:38
- */
 
-namespace AppBundle\Util\KitGenerator;
+namespace AppBundle\Util\KitGenerator\InverterCombiner;
 
+use AppBundle\Util\KitGenerator\Support;
 
 class InverterCombiner
 {
@@ -80,7 +75,105 @@ class InverterCombiner
         return $this;
     }
 
-    public function combine($kwh, $lat, $lon, $mod_id)
+    public function combine(InverterCollectionInterface $collection)
+    {
+        $inverters = $collection->all();
+        $combination = 2;
+
+        $fdi_max = 1;
+        $fdi_min = 0.75;
+        //$lim_sup = $pot_mod * $fdi_max;
+        //$lim_inf = $pot_mod * $fdi_min;
+        $lim_sup = 395.59;
+        $lim_inf = 296.69949316258;
+
+        //var_dump($collection); die;
+
+        for ($i = $combination; $i <= 50; $i++) {
+
+            //var_dump('Ciclo: ' . $i);
+
+            $cont = array_fill(0, $i, 0);
+            //$max = count($inverters)-1;
+            $max = $collection->count()-1;
+
+            //var_dump(Support::combine($collection->count(), $i)); die;
+
+            for ($j = 0; $j <  Support::combine($collection->count(), $i); $j++){
+
+                $result = 0;
+                for ($y = 0; $y < count($cont); $y++) {
+
+                    //var_dump($cont[$y]);
+
+                    /**
+                     * TODO
+                     * Observado erro de undefined offset ao considerar
+                     * inversores com potências nominais abaixo de 5
+                     */
+                    $result += $inverters[$cont[$y]]->getNominalPower();//["nominal_power"];
+
+                    // var_dump($inverters[$y]->getNominalPower());
+                    // echo $busca_inv_bd[$cont[$y]]["model"];
+                    // echo "<br>";
+                    //var_dump($result."\n");
+                }
+
+                //die;
+
+                //echo "$result <br>";
+                if ($result <= $lim_sup and $result >= $lim_inf) {
+                    break 2;
+                }
+
+                $cont[$i - 1] += 1;
+                for ($k = 1; $k < $i; $k++) {
+                    if ($cont[$i - $k] > $max) {
+                        $cont[$i - ($k + 1)] += 1;
+                        for ($z = $k; $z >= 1; $z--) {
+                            $cont[$i - $z] = $cont[$i - ($z + 1)];
+                        }
+                    }
+                }
+            }
+        }
+
+        if (count($cont) == 50){
+            //$inv_out = null;
+            return false;
+            die();
+        }
+
+        rsort($cont);
+
+        //var_dump($cont); die;
+
+        //echo "<br>";
+        $inv_index[0]["inv"] = $cont[0];
+        $inv_index[0]["qte"] = 1;
+        $contador = 1;
+        for ($i = 1; $i < count($cont); $i++) {
+
+            if ($cont[$i] == $cont[$i - 1]) {
+
+                $inv_index[$contador - 1]["qte"] += 1;
+
+                $inverter = $collection->get($contador-1);
+                $collection->get($contador-1)->getQuantity();
+                $inverter->setQuantity($inverter->getQuantity() + 1);
+
+            } else {
+
+                $inv_index[$contador]["inv"] = $cont[$i];
+                $inv_index[$contador]["qte"] = 1;
+                $contador += 1;
+            }
+        }
+
+        return $collection;
+    }
+
+    public function __combine($kwh, $lat, $lon, $mod_id)
     {
         /**
          * CRITÉRIO ARBITRÁRIO

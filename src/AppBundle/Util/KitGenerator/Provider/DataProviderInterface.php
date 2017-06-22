@@ -11,5 +11,9 @@ namespace AppBundle\Util\KitGenerator\Provider;
 
 interface DataProviderInterface
 {
-    public function
+    public function getMakers();
+
+    //public function getModules($makerId);
+
+    public function findModulesByMaker();
 }

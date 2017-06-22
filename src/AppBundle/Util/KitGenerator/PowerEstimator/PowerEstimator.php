@@ -1,9 +1,13 @@
 <?php
 
-namespace AppBundle\Util\KitGenerator;
+namespace AppBundle\Util\KitGenerator\PowerEstimator;
 
+use AppBundle\Util\KitGenerator\Support;
 
-class PowerEstimator
+/**
+ * Class PowerEstimator
+ */
+class PowerEstimator implements PowerEstimatorInterface
 {
     /**
      * @var float
@@ -44,6 +48,13 @@ class PowerEstimator
      * @var float
      */
     private $temperatureCoefficient;
+
+    function __construct()
+    {
+        $this->efficiency = self::EFFICIENCY;
+        $this->temperatureOperation = self::TEMPERATURE_OPERATION;
+        $this->temperatureCoefficient = self::TEMPERATURE_COEFFICIENT;
+    }
 
     /**
      * @return float
@@ -189,66 +200,26 @@ class PowerEstimator
         return $this;
     }
 
-
-    public function estimate($kwh, $lat, $lon, $mod_id)
+    /**
+     * @return float
+     */
+    public function estimate()
     {
+        $this->validate();
 
-        // function prev_pot()
-        //  {
-
-//this script calculates an inaccurate generator power, based on a energy consumption
-
-//------USER INPUTS------
-
-        $cons = $kwh; //energy consumption (kWh)
-        $lat_degree = $lat; //this data should be provided by Google Maps
-        $lon_degree = $lon; //this data should be provided by Google Maps
-
-//------SYSTEM INPUTS------
-
-        $lat_nasa = floor($lat_degree); //each line of all NASA database tables, represents the lower left corner of a 1x1 region degrees (lat/lon)
-        $lon_nasa = floor($lon_degree);
-
-//global radiation (kWh/m2/day)
-        $gr_rad_bd = R::getAll("SELECT * FROM nasa_global_radiation WHERE lat=$lat_nasa AND lon=$lon_nasa");
-        $gr_rad = $gr_rad_bd[0];
-        $gr_rad = array_slice($gr_rad, 2);
-        $gr_rad = array_values($gr_rad);
-
-//air temperature (ºC)
-        $at_bd = R::getAll("SELECT * FROM nasa_air_temp WHERE lat=$lat_nasa AND lon=$lon_nasa");
-        $at = $at_bd[0];
-        $at = array_slice($at, 2);
-        $at = array_values($at);
+        $cons       = $this->consumption;
+        $lat_degree = $this->latitude;
+        $gr_rad     = $this->globalRadiation;
+        $at         = $this->airTemperature;
 
         $at_average = array_sum($at) / 12;
 
-
-        $n = array(12); //day of the year
-        $n[0] = 17;
-        $n[1] = 47;
-        $n[2] = 75;
-        $n[3] = 105;
-        $n[4] = 135;
-        $n[5] = 162;
-        $n[6] = 198;
-        $n[7] = 228;
-        $n[8] = 258;
-        $n[9] = 288;
-        $n[10] = 318;
-        $n[11] = 344;
-
-//$gr = 5.33; //global radiation average from NASA database
-//$toa = 9.94; //top of atmosphere radiation average from NASA database
-//$at = 25.78; //air temperature average from NASA database
-
-//------CONSTANTS------
-        $busca_mod_bd = R::getAll("SELECT * FROM app_component_module WHERE id = $mod_id ORDER BY max_power ASC");
+        $n = [17, 47, 75, 105, 135, 162, 198, 228, 258, 288, 318, 344];
 
         $loss = 13;
-        $tnoct = $busca_mod_bd[0]["temperature_operation"];
-        $stc_mod_efi = $busca_mod_bd[0]["efficiency"];
-        $coef = $busca_mod_bd[0]["temp_coefficient_max_power"];
+        $tnoct = $this->temperatureOperation;
+        $stc_mod_efi = $this->efficiency;
+        $coef = $this->temperatureCoefficient;
         $inv_efi = 0.95;
         $beta = deg2rad(abs($lat_degree));
         if ($lat_degree >= 0) {
@@ -260,22 +231,17 @@ class PowerEstimator
         $toa_acu = 0;
         $ht_acu = 0;
 
-//------CALCULATIONS------
-//converting degree to radians
         $lat = deg2rad($lat_degree);
 
-        $solar_beam_comp = array(25); //it will contain the SOLAR BEAM radiation contribution PER DAY
-        $dif_comp = array(25); //it will contain the DIFUSE radiation contribution PER DAY
-        $albedo_comp = array(25); //it will contain the ALBEDO radiation contribution PER DAY
-        $hth = array(25); //(SOLAR BEAM + DIFUSE + ALBEDO) PER DAY
+        $solar_beam_comp = array(25);
+        $dif_comp = array(25);
+        $albedo_comp = array(25);
+        $hth = array(25);
 
         for ($i = 0; $i <= 11; $i++) {
-            if ($i == 0 or $i == 2 or $i == 4 or $i == 6 or $i == 7 or $i == 9 or $i == 11) {
-                $n_days = 31;
-            } elseif ($i == 3 or $i == 5 or $i == 8 or $i == 10) {
-                $n_days = 30;
-            } else
-                $n_days = 28;
+
+            //$n_days = cal_days_in_month(CAL_GREGORIAN, ($i+1), date('Y'));
+
             $delta = deg2rad(23.45) * sin(2 * pi() * ((284 + $n[$i]) / 365));
             $ws = acos(-((tan($delta)) * (tan($lat))));
             $toa_rad = (24 * 3600 * 1367 / pi()) * (1 + (0.033 * cos(360 * $n[$i] / 365))) * ((cos($lat) * cos($delta) * sin($ws)) + ($ws * sin($lat) * sin($delta)));
@@ -307,7 +273,8 @@ class PowerEstimator
                 $hb = $hh - $hdh;
                 $cos_ozh = (cos($lat) * cos($delta) * cos($w)) + (sin($lat) * sin($delta));
                 $ozh = acos($cos_ozh);
-                $ysh = sign($w) * abs(acos((($cos_ozh * sin($lat)) - sin($delta)) / (sin($ozh) * cos($lat))));
+                //$ysh = sign($w) * abs(acos((($cos_ozh * sin($lat)) - sin($delta)) / (sin($ozh) * cos($lat))));
+                $ysh = Support::sign($w) * abs(acos((($cos_ozh * sin($lat)) - sin($delta)) / (sin($ozh) * cos($lat))));
                 $cos_oh = ($cos_ozh * (cos($beta))) + (sin($ozh) * sin($beta) * cos($ysh - $gama));
                 $rb = $cos_oh / $cos_ozh;
 
@@ -346,13 +313,20 @@ class PowerEstimator
         $tc = $at_average + ((219 + (832 * ($kt))) * (($tnoct - 20) / 800));
         $efi_mod_final = $stc_mod_efi * (1 - ((-($coef) / 100) * ($tc - 25)));
         $area = $factor / ($efi_mod_final * $inv_efi);
-        $pmax = ($area * $stc_mod_efi * 1000) / 1000;
+        $power = ($area * $stc_mod_efi * 1000) / 1000;
 
-//------OUTPUT------
-
-        return $pmax;
+        return $power;
     }
-    //  }
 
-
+    /**
+     * Validate properties
+     */
+    private function validate()
+    {
+        foreach(get_object_vars($this) as $property => $value){
+            if(is_null($value)){
+                throw new \InvalidArgumentException(sprintf('The property %s cannot be null', $property));
+            }
+        }
+    }
 }

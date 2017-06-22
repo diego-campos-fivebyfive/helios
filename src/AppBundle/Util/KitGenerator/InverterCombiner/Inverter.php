@@ -1,15 +1,55 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: claudinei
- * Date: 21/06/17
- * Time: 12:50
- */
 
 namespace AppBundle\Util\KitGenerator\InverterCombiner;
 
-
-class Inverter
+/**
+ * Class Inverter
+ */
+class Inverter implements InverterInterface
 {
+    /**
+     * @var float
+     */
+    private $nominalPower;
 
+    /**
+     * @var int
+     */
+    private $quantity = 1;
+
+    /**
+     * @inheritDoc
+     */
+    public function setNominalPower($nominalPower)
+    {
+        $this->nominalPower = $nominalPower;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getNominalPower()
+    {
+        return $this->nominalPower;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setQuantity($quantity)
+    {
+        $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getQuantity()
+    {
+        return $this->quantity;
+    }
 }
