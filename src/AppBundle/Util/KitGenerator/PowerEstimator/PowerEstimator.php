@@ -211,7 +211,6 @@ class PowerEstimator implements PowerEstimatorInterface
         $lat_degree = $this->latitude;
         $gr_rad     = $this->globalRadiation;
         $at         = $this->airTemperature;
-
         $at_average = array_sum($at) / 12;
 
         $n = [17, 47, 75, 105, 135, 162, 198, 228, 258, 288, 318, 344];

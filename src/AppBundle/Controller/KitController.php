@@ -25,6 +25,25 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 class KitController extends AbstractController
 {
     /**
+     * @Route("/generate", name="kit_generator")
+     * @Method({"get", "post"})
+     */
+    public function generateAction(Request $request)
+    {
+        return $this->render('kit.generate');
+    }
+
+    /**
+     * @Route("/map", name="map_generator")
+     * @Method({"get", "post"})
+     */
+    public function generateMap(Request $request)
+    {
+        return $this->render('kit.generate_map');
+    }
+
+
+    /**
      * @Route("/", name="kit_index")
      */
     public function indexAction(Request $request)
@@ -34,7 +53,7 @@ class KitController extends AbstractController
 
         $kits = $manager->findBy(['account' => $account]);
 
-        $template = $request->isXmlHttpRequest() ? 'kit.kits' : 'kit.index' ;
+        $template = $request->isXmlHttpRequest() ? 'kit.kits' : 'kit.index';
 
         $this->clearTemplateCache($template);
 
@@ -50,7 +69,7 @@ class KitController extends AbstractController
     public function createAction(Request $request)
     {
         $manager = $this->getKitManager();
-        
+
         /** @var Kit $kit */
         $kit = $manager->create();
         $kit
@@ -90,8 +109,8 @@ class KitController extends AbstractController
             if ($request->isXmlHttpRequest()) {
 
                 return $this->jsonResponse([
-                    'final_cost' => $this->renderView('kit.final_cost',['kit' => $kit]),
-                    'total_cost' => $this->renderView('kit.total_cost',['kit' => $kit])
+                    'final_cost' => $this->renderView('kit.final_cost', ['kit' => $kit]),
+                    'total_cost' => $this->renderView('kit.total_cost', ['kit' => $kit])
                 ]);
             }
         }
@@ -139,7 +158,7 @@ class KitController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
 
             $this->getKitManager()->save($kit);
 
@@ -158,8 +177,8 @@ class KitController extends AbstractController
     public function costsAction(Kit $kit)
     {
         return $this->jsonResponse([
-            'final_cost' => $this->renderView('kit.final_cost',['kit' => $kit]),
-            'total_cost' => $this->renderView('kit.total_cost',['kit' => $kit])
+            'final_cost' => $this->renderView('kit.final_cost', ['kit' => $kit]),
+            'total_cost' => $this->renderView('kit.total_cost', ['kit' => $kit])
         ]);
     }
 
@@ -170,12 +189,12 @@ class KitController extends AbstractController
     public function deleteAction(Request $request, Kit $kit)
     {
         $this->checkAccess($kit);
-        
+
         $projects = $this->getProjectManager()->findBy([
             'kit' => $kit
         ]);
 
-        if(0 != $count = count($projects)) {
+        if (0 != $count = count($projects)) {
             return $this->jsonResponse([
                 'error' => sprintf('Este Kit está sendo utilizado em %s dimensionamentos!', $count)
             ], Response::HTTP_IM_USED);
@@ -196,7 +215,7 @@ class KitController extends AbstractController
         $kitAccount = $kit->getAccount();
         $currentAccount = $this->getCurrentAccount();
 
-        if($kitAccount->getId() != $currentAccount->getId()){
+        if ($kitAccount->getId() != $currentAccount->getId()) {
             throw $this->createAccessDeniedException();
         }
     }

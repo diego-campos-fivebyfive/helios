@@ -59,7 +59,15 @@ class RegisterController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/link", name="app_register_link")
+     * @Route("/pre", name="pre_register")
+     */
+    public function pre_RegisterAction(){
+        return $this->render('register.pre_register');
+
+    }
+
+    /**
+     * @Route("/", name="app_register_link")
      */
     public function linkAction(AccountRegister $register)
     {
