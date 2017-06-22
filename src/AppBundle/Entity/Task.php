@@ -450,8 +450,11 @@ class Task implements TaskInterface
 
     /**
      * @inheritDoc
+     *
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
      */
-    public function preUpdate()
+    public function forceGenerateToken()
     {
         $this->generateToken();
     }
