@@ -190,7 +190,7 @@ class PowerEstimator
     }
 
 
-    public function estimate($kwh, $lat, $lon, $mod_id)
+    public static function estimate($kwh, $lat, $lon, $mod_id)
     {
 
         // function prev_pot()
@@ -210,13 +210,13 @@ class PowerEstimator
         $lon_nasa = floor($lon_degree);
 
 //global radiation (kWh/m2/day)
-        $gr_rad_bd = R::getAll("SELECT * FROM nasa_global_radiation WHERE lat=$lat_nasa AND lon=$lon_nasa");
-        $gr_rad = $gr_rad_bd[0];
+        $gr_rad_bd = array(1.5, 1.2, 1.6, 2.0, 1.5, 1.8, 2.1, 2.3, 2.4, 2.8, 1.7, 2.5); //R::getAll("SELECT * FROM nasa_global_radiation WHERE lat=$lat_nasa AND lon=$lon_nasa");
+        $gr_rad = $gr_rad_bd;
         $gr_rad = array_slice($gr_rad, 2);
         $gr_rad = array_values($gr_rad);
 
 //air temperature (ºC)
-        $at_bd = R::getAll("SELECT * FROM nasa_air_temp WHERE lat=$lat_nasa AND lon=$lon_nasa");
+        $at_bd = array(1.8, 2.1, 2.3, 2.4, 2.8, 1.7, 2.5, 1.5, 1.2, 1.6, 2.0, 1.5);              //R::getAll("SELECT * FROM nasa_air_temp WHERE lat=$lat_nasa AND lon=$lon_nasa");
         $at = $at_bd[0];
         $at = array_slice($at, 2);
         $at = array_values($at);

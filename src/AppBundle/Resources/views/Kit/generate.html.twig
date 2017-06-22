@@ -1,0 +1,169 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+
+
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+      
+    </head>
+    <body>
+    <div class="hidden-xs section">
+        <div class="container">
+            <div class="row">
+
+            </div>
+        </div>
+    </div>
+    <div class="hidden-lg hidden-md hidden-sm section">
+        <div class="container">
+            <div class="row">
+
+            </div>
+        </div>
+    </div>
+    <div class="section">
+        <div class="container">
+            <div class="row ">
+                <div class="col-md-6 col-md-offset-2 col-xs-8 col-sm-9">
+                    <form role="form" action="" method="post">
+                        <div class="form-group col-xs-8 col-sm-6">
+                            <label class="control-label" for="kwh">Consumo de seu cliente em kWh</label>
+                            <input class="form-control" name="kwh" value="" id="kwh"
+                                   placeholder="Consumo em kWh" type="number">
+                        </div>
+                        <div class="form-group col-xs-8 col-sm-6">
+                            <label class="control-label">Tipo de telhado</label>
+                            <select class="form-control" name="tipo_telhado">
+                                <option selected>
+                                    Telhas Romanas e Americanas
+                                </option>
+                                <option>Telhas de
+                                    Ficrocimento
+                                </option>
+                                <option>Laje Plana</option>
+                                <option>Chapa Metálica
+                                </option>
+                                <option>
+                                    Chapa Metálica com Perfil de 0,5m
+                                </option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary col-sm-4 col-md-offset-4">Calcular Kit
+                            <br>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="text-center text-info">Kit de 2.24 kWp</h1>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Descrição</th>
+                            <th>Quantidade</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>32433</td>
+                            <td>CS6K-280M</td>
+                            <td>8</td>
+                        </tr>
+                        <tr>
+                        <tr>
+                            <td>5790</td>
+                            <td>UNO-2.0-TL-OUTD (1 str. x 8 mod.)</td>
+                            <td>1</td>
+                        </tr>
+                        </tr>
+                        <tr>
+                        <tr>
+                            <td>SSRR2MT</td>
+                            <td>SICES SOLAR PERFIL ALUMINIO ROMAN ROOFTOP 2,10MT</td>
+                            <td>8</td>
+                        </tr>
+                        <tr>
+                            <td>SSTF</td>
+                            <td>SICES SOLAR TERMINAL FINAL 39..41MM for CAN - NACIONAL</td>
+                            <td>4</td>
+                        </tr>
+                        <tr>
+                            <td>SSTI</td>
+                            <td>SICES SOLAR TERMINAL INTERMEDIARIO 39..44MM for CAN/AVP - NACIONAL</td>
+                            <td>14</td>
+                        </tr>
+                        <tr>
+                            <td>SSJ8RR</td>
+                            <td>SICES SOLAR JUNÇÃO PARA PERFIL EM ALUMINIO - NACIONAL</td>
+                            <td>6</td>
+                        </tr>
+                        <tr>
+                            <td>SSPCM28</td>
+                            <td>SICES SOLAR PARAFUSO CABECA MARTELO M10 28/15</td>
+                            <td>12</td>
+                        </tr>
+                        <tr>
+                            <td>SSPM10</td>
+                            <td>SICES SOLAR PORCA M10 INOX A2</td>
+                            <td>12</td>
+                        </tr>
+                        <tr>
+                            <td>GCHO2P</td>
+                            <td>SICES SOLAR GANCHO AISI 316 - TELHAS REGULAÇÃO 2 PONTOS - NACIONAL</td>
+                            <td>12</td>
+                        </tr>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <p>Obs: estrutura calculada para 1 linha(s) com 8 módulos</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+   <!-- <div>
+        <form role="form" action="" method="post">
+            <div class="form-group">
+                <label class="control-label" for="lat">LAT</label>
+                <input id="project_latitude" name="lat" value="-25.3954452">
+
+                <label class="control-label" for="longt">LONG</label>
+                <input id="project_longitude" name="longt" value="-51.4714671">
+
+                <div id="map">
+
+                </div>
+
+            </div>
+        </form>
+    </div> -->
+
+    {% block scripts %}
+
+        {# Google Maps #}
+        {% include view('helper.google_maps') with({
+        latitude: 'project_latitude',
+        longitude: 'project_longitude',
+        input: 'project_address',
+        zoom: 17.3
+        }) %}
+    {% endblock %}
+
+
+    </body>
+    </html>
+{% endblock %}
+

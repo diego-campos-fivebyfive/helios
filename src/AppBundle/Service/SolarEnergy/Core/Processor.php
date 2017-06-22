@@ -22,7 +22,7 @@ class Processor implements ProcessorInterface
      */
     public function compute()
     {
-        if(!$this->isComputable())
+        if (!$this->isComputable())
             $this->createException('This processor is not computable');
 
         $latRadian = $this->project->getLatRadian();
@@ -39,9 +39,9 @@ class Processor implements ProcessorInterface
 
         $n = [17, 47, 75, 105, 135, 162, 198, 228, 258, 288, 318, 344];
 
-        foreach($areas as $area){
+        foreach ($areas as $area) {
 
-            if($area instanceof AreaInterface){
+            if ($area instanceof AreaInterface) {
 
                 $inverterEfficiency = $area->getInverterEfficiency();
                 //$moduleTemperature = $area->getModuleTemperature();
@@ -57,19 +57,19 @@ class Processor implements ProcessorInterface
                 $aggregationMonth = [];
 
                 $metadataMonths = [];
-                for ($month = 1; $month <= 12; $month++){
+                for ($month = 1; $month <= 12; $month++) {
 
                     $days = cal_days_in_month(CAL_GREGORIAN, $month, self::YEAR);
 
-                    $solarDeclination = deg2rad(23.45)*sin(2*pi()*((284+$n[$month-1])/365));
+                    $solarDeclination = deg2rad(23.45) * sin(2 * pi() * ((284 + $n[$month - 1]) / 365));
 
-                    $ws = acos(-(tan($solarDeclination))*tan($latRadian));
+                    $ws = acos(-(tan($solarDeclination)) * tan($latRadian));
 
-                    $radiationAtmosphere = (24 * 3600 * 1367 / pi()) * (1+(0.033*cos(360*$n[$month-1]/365))) * ((cos($latRadian)*cos($solarDeclination)*sin($ws))+($ws*sin($latRadian)*sin($solarDeclination)));
+                    $radiationAtmosphere = (24 * 3600 * 1367 / pi()) * (1 + (0.033 * cos(360 * $n[$month - 1] / 365))) * ((cos($latRadian) * cos($solarDeclination) * sin($ws)) + ($ws * sin($latRadian) * sin($solarDeclination)));
                     $radiationAtmosphere *= 0.00000027778;
 
-                    $a = 0.409 + (0.5016 * (sin($ws - (pi()/3))));
-                    $b = 0.6609 - (0.4767 * (sin($ws - (pi()/3))));
+                    $a = 0.409 + (0.5016 * (sin($ws - (pi() / 3))));
+                    $b = 0.6609 - (0.4767 * (sin($ws - (pi() / 3))));
 
                     /*$ns = $solarNoon[$month] - ($solarNoon[$month]/2);
                     $ps = $solarNoon[$month] + ($solarNoon[$month]/2);*/
@@ -79,11 +79,11 @@ class Processor implements ProcessorInterface
 
                     $kt = $radiationGlobal[$month] / $radiationAtmosphere;
 
-                    if($ws <= deg2rad(81.4)){
-                        $radiationDiffuse = 1.391 - (3.560*$kt) + (4.189*pow($kt,2)) - (2.137*pow($kt,3));
+                    if ($ws <= deg2rad(81.4)) {
+                        $radiationDiffuse = 1.391 - (3.560 * $kt) + (4.189 * pow($kt, 2)) - (2.137 * pow($kt, 3));
                         $radiationDiffuse *= $radiationGlobal[$month];
-                    }else {
-                        $radiationDiffuse = 1.311 - (3.022 * $kt) + (3.427*pow($kt, 2)) - (1.821 * pow($kt, 3));
+                    } else {
+                        $radiationDiffuse = 1.311 - (3.022 * $kt) + (3.427 * pow($kt, 2)) - (1.821 * pow($kt, 3));
                         $radiationDiffuse *= $radiationGlobal[$month];
                     }
 
@@ -94,17 +94,17 @@ class Processor implements ProcessorInterface
 
                     // Hours
                     $metadataHours = [];
-                    for($hour = 0; $hour <= 24; $hour++){
-                        $w = 0 == (-180 + ($hour * 15)) ? $w = deg2rad(0.0001) : deg2rad(-180 + ($hour * 15)) ;
-                        $rt = (pi()/24) * ($a + ($b * cos($w))) * ((cos($w)-cos($ws))/(sin($ws)-($ws*cos($ws))));
-                        $rd = (pi()/24) * ((cos($w)-cos($ws))/(sin($ws)-($ws*cos($ws))));
+                    for ($hour = 0; $hour <= 24; $hour++) {
+                        $w = 0 == (-180 + ($hour * 15)) ? $w = deg2rad(0.0001) : deg2rad(-180 + ($hour * 15));
+                        $rt = (pi() / 24) * ($a + ($b * cos($w))) * ((cos($w) - cos($ws)) / (sin($ws) - ($ws * cos($ws))));
+                        $rd = (pi() / 24) * ((cos($w) - cos($ws)) / (sin($ws) - ($ws * cos($ws))));
                         $hh = $rt * $radiationGlobal[$month];
                         $hdh = $rd * $radiationDiffuse;
                         $hb = $hh - $hdh;
-                        $cosOzh = (cos($latRadian)*cos($solarDeclination)*cos($w))+(sin($latRadian)*sin($solarDeclination));
+                        $cosOzh = (cos($latRadian) * cos($solarDeclination) * cos($w)) + (sin($latRadian) * sin($solarDeclination));
                         $ozh = acos($cosOzh);
-                        $ysh = self::sign($w) * abs(acos((($cosOzh*sin($latRadian))-sin($solarDeclination))/(sin($ozh)*cos($latRadian))));
-                        $cosOh = ($cosOzh*(cos($inclination)))+(sin($ozh)*sin($inclination)*cos($ysh-$orientation));
+                        $ysh = self::sign($w) * abs(acos((($cosOzh * sin($latRadian)) - sin($solarDeclination)) / (sin($ozh) * cos($latRadian))));
+                        $cosOh = ($cosOzh * (cos($inclination))) + (sin($ozh) * sin($inclination) * cos($ysh - $orientation));
                         $rb = $cosOh / $cosOzh;
 
                         //dump($radiationDiffuse);
@@ -121,30 +121,30 @@ class Processor implements ProcessorInterface
                         /**
                          * FIX 1 - SAME FIX 2 [REFACTORING]
                          *
-                        if (($w < -$ws) or ($w > $ws)){
-                            $solarBeamDay[$hour] = 0;
-                            $diffuseDay[$hour] = 0;
-                            $albedoDay[$hour] = 0;
-                        }else{
-                            if (($hb  * $rb) < 0){
-                                $solarBeamDay[$hour] = 0;
-                            }else{
-                                $solarBeamDay[$hour] = $hb  * $rb * $factor;
-                            }
-                            if (($hdh*((1+cos($inclination))/2)) < 0){
-                                $diffuseDay[$hour] = 0;
-                            }else{
-                                $diffuseDay[$hour] = $hdh*((1+cos($inclination))/2) * $factor;
-                            }
-                            if (($hh*$soloReflectance*((1-cos($inclination))/2)) < 0){
-                                $albedoDay[$hour] = 0;
-                            }else{
-                                $albedoDay[$hour] = $hh*$soloReflectance*((1-cos($inclination))/2) * $factor;
-                            }
-                        }
-                        $aggregationDay[$hour] = $solarBeamDay[$hour] + $diffuseDay[$hour] + $albedoDay[$hour];
-                        */
-                        
+                         * if (($w < -$ws) or ($w > $ws)){
+                         * $solarBeamDay[$hour] = 0;
+                         * $diffuseDay[$hour] = 0;
+                         * $albedoDay[$hour] = 0;
+                         * }else{
+                         * if (($hb  * $rb) < 0){
+                         * $solarBeamDay[$hour] = 0;
+                         * }else{
+                         * $solarBeamDay[$hour] = $hb  * $rb * $factor;
+                         * }
+                         * if (($hdh*((1+cos($inclination))/2)) < 0){
+                         * $diffuseDay[$hour] = 0;
+                         * }else{
+                         * $diffuseDay[$hour] = $hdh*((1+cos($inclination))/2) * $factor;
+                         * }
+                         * if (($hh*$soloReflectance*((1-cos($inclination))/2)) < 0){
+                         * $albedoDay[$hour] = 0;
+                         * }else{
+                         * $albedoDay[$hour] = $hh*$soloReflectance*((1-cos($inclination))/2) * $factor;
+                         * }
+                         * }
+                         * $aggregationDay[$hour] = $solarBeamDay[$hour] + $diffuseDay[$hour] + $albedoDay[$hour];
+                         */
+
                         // NEW SCRIPT
                         /*if (($w < -$ws) or ($w > $ws)){
                             $solar_beam_comp[$h] = 0;
@@ -172,19 +172,19 @@ class Processor implements ProcessorInterface
                          * FIX 2 - CORRECT WAY CALC
                          */
                         $commonZero = ($w < -$ws) || ($w > $ws);
-                        $solarBeamDay = $commonZero || (($hb  * $rb) < 0)  ? 0: ($hb  * $rb);
+                        $solarBeamDay = $commonZero || (($hb * $rb) < 0) ? 0 : ($hb * $rb);
                         // Error here!
-                        $diffuseDay = $commonZero || (($hdh*((1+cos($inclination))/2)) < 0) ? 0 : ($hdh*((1+cos($inclination))/2));
-                        $albedoDay = $commonZero || (($hh*$soloReflectance*((1-cos($inclination))/2)) < 0) ? 0 : ($hh*$soloReflectance*((1-cos($inclination))/2));
+                        $diffuseDay = $commonZero || (($hdh * ((1 + cos($inclination)) / 2)) < 0) ? 0 : ($hdh * ((1 + cos($inclination)) / 2));
+                        $albedoDay = $commonZero || (($hh * $soloReflectance * ((1 - cos($inclination)) / 2)) < 0) ? 0 : ($hh * $soloReflectance * ((1 - cos($inclination)) / 2));
 
                         $aggregationDay[$hour] = $solarBeamDay + $diffuseDay + $albedoDay;
 
                         //dump('Df: ' . $diffuseDay);
 
-                        $tc = $airTemperature[$month] + ((45-20) * ($aggregationDay[$hour] * 1000 / 800) * (1-(0.083 / 0.9)));
+                        $tc = $airTemperature[$month] + ((45 - 20) * ($aggregationDay[$hour] * 1000 / 800) * (1 - (0.083 / 0.9)));
 
-                        $finalModuleEfficiency = $moduleEfficiency * (1-((-$moduleCoefficientTemperature/100)*($tc-25)));
-                        $factor = $totalArea * $finalModuleEfficiency * ((100-$leftLoss)/100) * ($inverterEfficiency * 0.99) * ((100-$rightLoss)/100);
+                        $finalModuleEfficiency = $moduleEfficiency * (1 - ((-$moduleCoefficientTemperature / 100) * ($tc - 25)));
+                        $factor = $totalArea * $finalModuleEfficiency * ((100 - $leftLoss) / 100) * ($inverterEfficiency * 0.99) * ((100 - $rightLoss) / 100);
 
                         $aggregationDay[$hour] *= $factor;
 
@@ -245,7 +245,7 @@ class Processor implements ProcessorInterface
      */
     public function isComputable()
     {
-        if($this->project)
+        if ($this->project)
             return $this->project->isComputable();
 
         return false;
@@ -257,7 +257,7 @@ class Processor implements ProcessorInterface
      */
     private function sign($number)
     {
-        return $number < 0 ? -1 : 1 ;
+        return $number < 0 ? -1 : 1;
     }
 
     /**
