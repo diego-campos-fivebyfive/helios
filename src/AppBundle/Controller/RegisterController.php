@@ -6,6 +6,7 @@ use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Extra\AccountRegister;
 use AppBundle\Entity\UserInterface;
 use AppBundle\Form\Extra\AccountRegisterType;
+use AppBundle\Form\Extra\PreRegisterType;
 use FOS\UserBundle\Event\FilterUserResponseEvent;
 use FOS\UserBundle\FOSUserEvents;
 use Symfony\Component\Form\FormError;
