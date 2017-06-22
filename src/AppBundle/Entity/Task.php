@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * Task
@@ -15,6 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Task implements TaskInterface
 {
     use TokenizerTrait;
+    use ORMBehaviors\Timestampable\Timestampable;
 
     /**
      * @var string
@@ -50,20 +52,6 @@ class Task implements TaskInterface
      * @ORM\Column(name="end_at", type="datetime")
      */
     private $endAt;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_at", type="datetime")
-     */
-    private $createdAt;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated_at", type="datetime")
-     */
-    private $updatedAt;
 
     /**
      * @var integer
@@ -457,8 +445,6 @@ class Task implements TaskInterface
      */
     public function prePersist()
     {
-        $this->createdAt = new \DateTime;
-        $this->updatedAt = new \DateTime;
         $this->generateToken();
     }
 
@@ -467,7 +453,6 @@ class Task implements TaskInterface
      */
     public function preUpdate()
     {
-        $this->updatedAt = new \DateTime;
         $this->generateToken();
     }
 

@@ -200,14 +200,4 @@ interface TaskInterface
      * @return array
      */
     public static function getTypeIcons($index = false);
-
-    /**
-     * @return null
-     */
-    public function prePersist();
-
-    /**
-     * @return null
-     */
-    public function preUpdate();
 }
