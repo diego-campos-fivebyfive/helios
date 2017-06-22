@@ -6,7 +6,6 @@ use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Extra\AccountRegister;
 use AppBundle\Entity\UserInterface;
 use AppBundle\Form\Extra\AccountRegisterType;
-use AppBundle\Form\Extra\PreRegisterType;
 use FOS\UserBundle\Event\FilterUserResponseEvent;
 use FOS\UserBundle\FOSUserEvents;
 use Symfony\Component\Form\FormError;
@@ -62,42 +61,11 @@ class RegisterController extends AbstractController
     /**
      * @Route("/pre", name="pre_register")
      */
-    public function pre_RegisterAction(Request $request){
-
-        $form = $this->createForm(PreRegisterType::class);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            // $form->getData() holds the submitted values
-            // but, the original `$task` variable has also been updated
-            $data = $form->getData();
-            dump($data);
-            die();
-
-            // ... perform some action, such as saving the task to the database
-            // for example, if Task is a Doctrine entity, save it!
-            // $em->persist($task);
-            // $em->flush();
-
-            return $this->redirectToRoute('task_success');
-        }
-
-
-        return $this->render('register.pre_register',[
-            'form' => $form->createView()
-        ]);
+    public function pre_RegisterAction(){
+        return $this->render('register.pre_register');
 
     }
 
-    /**
-     * 
-     */
-    public function completeAction()
-    {
-        return $this->render('register.complete');
-    }
-    
     /**
      * @Route("/", name="app_register_link")
      */

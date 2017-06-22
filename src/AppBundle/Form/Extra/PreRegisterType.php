@@ -9,6 +9,8 @@
 namespace AppBundle\Form\Extra;
 
 use AppBundle\Entity\Extra\AccountRegister;
+use AppBundle\Util\Validator\Constraints\ContainsCnpj;
+use AppBundle\Util\Validator\Constraints\ContainsCnpjValidator;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -20,20 +22,22 @@ class PreRegisterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('document')
-            ->add('inscription')
-            ->add('lastname')
-            ->add('firstname')
-            ->add('contact')
+            ->add('document',TextType::class, array(
+                'constraints' => new ContainsCnpj()
+            ))
+            ->add('inscription',TextType::class)
+            ->add('lastname',TextType::class)
+            ->add('firstname',TextType::class)
+            ->add('contact',TextType::class)
             ->add('email',EmailType::class)
-            ->add('phone')
+            ->add('phone',TextType::class)
 
-            ->add('postcode')
-            ->add('state')
-            ->add('city')
-            ->add('district')
-            ->add('street')
-            ->add('number');
+            ->add('postcode',TextType::class)
+            ->add('state',TextType::class)
+            ->add('city',TextType::class)
+            ->add('district',TextType::class)
+            ->add('street',TextType::class)
+            ->add('number',TextType::class);
         
     }
 

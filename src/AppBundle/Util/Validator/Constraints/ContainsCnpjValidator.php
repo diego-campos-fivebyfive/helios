@@ -1,15 +1,21 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Fabio
- * Date: 22/06/2017
- * Time: 14:18
- */
 
 namespace AppBundle\Util\Validator\Constraints;
 
+use AppBundle\Util\Validator\Document;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidator;
 
-class ContainsCnpjValidator
+class ContainsCnpjValidator extends ConstraintValidator
 {
+
+    public function validate($value, Constraint $constraint)
+    {
+        if (!Document::isCnpj($value)) {
+            $this->context->buildViolation($constraint->message)
+                ->setParameter('{{ string }}', $value)
+                ->addViolation();
+        }
+    }
 
 }
