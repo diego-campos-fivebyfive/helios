@@ -7,6 +7,7 @@
 
 {% block fos_user_content %}
 
+<<<<<<< HEAD
     <!-- Pré-Registro Dados -->
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -20,6 +21,12 @@
                                 <div class="col-sm-4">
                                     <input type="text" class="form-control" placeholder="CNPJ:">
                                 </div>
+=======
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button type="submit">Salvar</button>
+    {{ form_end(form) }}
+>>>>>>> d3ad08ef4deb99c3997180f270ab4355712e85b1
 
                                 <label class="col-sm-2 control-label">Inscrição Estadual </label>
                                 <div class="col-sm-4">
