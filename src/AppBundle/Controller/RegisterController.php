@@ -62,12 +62,14 @@ class RegisterController extends AbstractController
     /**
      * @Route("/pre", name="pre_register")
      */
-<<<<<<< HEAD
-    public function pre_RegisterAction(){
+   // public function pre_RegisterAction()
+  //  {
 
 
-        return $this->render('register.pre_register');
-=======
+    //    return $this->render('register.pre_register');
+   //git status
+    // }
+
     public function pre_RegisterAction(Request $request){
 
         $form = $this->createForm(PreRegisterType::class);
@@ -93,7 +95,6 @@ class RegisterController extends AbstractController
         return $this->render('register.pre_register',[
             'form' => $form->createView()
         ]);
->>>>>>> d3ad08ef4deb99c3997180f270ab4355712e85b1
 
     }
 
