@@ -1,7 +1,7 @@
 <?php
 
 
-namespace AppBundle\Util\KitGenerator\Structure;
+namespace AppBundle\Util\KitGenerator\StructureCalculator;
 
 use AppBundle\Util\KitGenerator\InverterCombiner\CombinedCollectionInterface;
 /**

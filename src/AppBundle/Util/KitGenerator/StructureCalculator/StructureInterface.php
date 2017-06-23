@@ -7,7 +7,7 @@
  * Time: 15:14
  */
 
-namespace AppBundle\Util\KitGenerator\Structure;
+namespace AppBundle\Util\KitGenerator\StructureCalculator;
 
 use AppBundle\Util\KitGenerator\InverterCombiner\CombinedCollection;
 use AppBundle\Util\KitGenerator\InverterCombiner\CombinedCollectionInterface;
