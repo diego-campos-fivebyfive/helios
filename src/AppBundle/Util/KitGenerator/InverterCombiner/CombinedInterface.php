@@ -53,10 +53,10 @@ interface CombinedInterface
     public function getMpptMin();
 
     /**
-     * @param $MpptMaxDcCurrent
+     * @param $mpptMaxDcCurrent
      * @return CombinedInterface
      */
-    public function setMpptMaxDcCurrent($MpptMaxDcCurrent);
+    public function setMpptMaxDcCurrent($mpptMaxDcCurrent);
 
     /**
      * @return mixed
