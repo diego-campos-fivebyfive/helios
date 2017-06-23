@@ -5,7 +5,9 @@ namespace Tests\AppBundle\Util\KitGenerator\InverterCombiner;
 use AppBundle\Util\KitGenerator\InverterCombiner\Combined;
 use AppBundle\Util\KitGenerator\InverterCombiner\CombinedCollection;
 use AppBundle\Util\KitGenerator\InverterCombiner\CombinedInterface;
+use AppBundle\Util\KitGenerator\InverterCombiner\Module;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
+use Tests\AppBundle\Helpers\ObjectHelperTest;
 
 /**
  * Class InverterCombinerTest
@@ -13,6 +15,26 @@ use Liip\FunctionalTestBundle\Test\WebTestCase;
  */
 class InverterCombinerTest extends WebTestCase
 {
+    use ObjectHelperTest;
+
+    public function testModuleDefault()
+    {
+        $data = [
+            'id' => 250,
+            'length' => 75.25,
+            'width' => 45,
+            'cellNumber' => 60,
+            'openCircuitVoltage' => 35.75,
+            'voltageMaxPower' => 123,
+            'tempCoefficientVoc' => -25,
+            'maxPower' => 200,
+            'shortCircuitCurrent' => 20.15
+        ];
+
+        $module = new Module();
+        $this->fluentSettersTest($module, $data);
+    }
+
     public function testInverterCollection()
     {
         $data = [
@@ -30,15 +52,7 @@ class InverterCombinerTest extends WebTestCase
 
         /** @var CombinedInterface $combined */
         $combined = new Combined();
-
-        foreach($data as $property => $value) {
-
-            $setter = 'set' . ucfirst($property);
-            $getter = 'get' . ucfirst($property);
-
-            //var_dump($value); die;
-            $this->assertEquals($value, $combined->$setter($value)->$getter());
-        }
+        $this->fluentSettersTest($combined, $data);
 
         $collection->addCombined($combined);
     }
