@@ -17,6 +17,17 @@ interface ModuleInterface
 {
 
     /**
+     * @param $id
+     * @return mixed
+     */
+    public function setId($id);
+
+    /**
+     * @return mixed
+     */
+    public function getId();
+
+    /**
      * @param $length
      * @return mixed
      */
@@ -44,7 +55,7 @@ interface ModuleInterface
      * @param $cellnumber
      * @return mixed
      */
-    public function setCellNumber($cellnumber);
+    public function setCellNumber($cellNumber);
 
 
     /**
@@ -56,7 +67,7 @@ interface ModuleInterface
      * @param $openciruitvoltage
      * @return mixed
      */
-    public function setOpenCircuitVoltage($openciruitvoltage);
+    public function setOpenCircuitVoltage($openCiruitVoltage);
 
 
     /**
@@ -69,7 +80,7 @@ interface ModuleInterface
      * @param $voltagemaxpower
      * @return mixed
      */
-    public function setVoltageMaxPower($voltagemaxpower);
+    public function setVoltageMaxPower($voltageMaxPower);
 
 
     /**
@@ -81,7 +92,7 @@ interface ModuleInterface
      * @param $tempcoefficientvoc
      * @return mixed
      */
-    public function setTempCoefficientVoc($tempcoefficientvoc);
+    public function setTempCoefficientVoc($tempCoefficientVoc);
 
     /**
      * @return mixed
@@ -93,7 +104,7 @@ interface ModuleInterface
      * @param $maxpower
      * @return mixed
      */
-    public function setMaxPower($maxpower);
+    public function setMaxPower($maxPower);
 
 
     /**
@@ -106,14 +117,13 @@ interface ModuleInterface
      * @param $shortcircuitcurrent
      * @return mixed
      */
-    public function setShortCircuitCurrent($shortcircuitcurrent);
+    public function setShortCircuitCurrent($shortCircuitCurrent);
 
 
     /**
      * @return mixed
      */
     public function getShortCircuitCurrent();
-
 
 
 }

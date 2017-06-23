@@ -11,6 +11,11 @@ class Module implements ModuleInterface
 {
 
     /**
+     * @var int
+     */
+    private $id;
+
+    /**
      * @var float
      */
     private $length;
@@ -49,6 +54,25 @@ class Module implements ModuleInterface
      * @var float
      */
     private $shortCircuitCurrent;
+
+    /**
+     * @return int
+     */
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     * @return Module
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
 
     /**
      * @return float
