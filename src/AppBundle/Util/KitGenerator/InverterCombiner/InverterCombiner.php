@@ -4,6 +4,10 @@ namespace AppBundle\Util\KitGenerator\InverterCombiner;
 
 use AppBundle\Util\KitGenerator\Support;
 
+/**
+ * Class InverterCombiner
+ * @author Claudinei Machado <claudinei@kolinalabs.com>
+ */
 class InverterCombiner
 {
     /**

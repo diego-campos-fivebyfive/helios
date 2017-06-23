@@ -1,12 +1,11 @@
 <?php
 
-
 namespace AppBundle\Util\KitGenerator\InverterCombiner;
+
 /**
  * Class Module
  * @author Daniel Martins <daniel@kolinalabs.com>
  */
-
 class Module implements ModuleInterface
 {
 

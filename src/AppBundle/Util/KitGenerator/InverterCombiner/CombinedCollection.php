@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Class CombinedCollection
+ * @author Claudinei Machado <claudinei@kolinalabs.com>
  */
 class CombinedCollection extends ArrayCollection implements CombinedCollectionInterface
 {

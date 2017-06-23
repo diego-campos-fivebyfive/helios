@@ -4,6 +4,7 @@ namespace AppBundle\Util\KitGenerator\InverterCombiner;
 
 /**
  * Interface InverterInterface
+ * @author Claudinei Machado <claudinei@kolinalabs.com>
  */
 interface InverterInterface
 {

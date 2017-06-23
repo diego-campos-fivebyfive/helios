@@ -4,7 +4,7 @@ namespace AppBundle\Util\KitGenerator\InverterCombiner;
 
 /**
  * Interface CombinedInterface
- * id, nominalPower, maxDcVoltage, mpptMin, mpptMaxDcCurrent,  quantity, serial, parallel
+ * @author Daniel Martins <daniel@kolinalabs.com>
  */
 interface CombinedInterface
 {

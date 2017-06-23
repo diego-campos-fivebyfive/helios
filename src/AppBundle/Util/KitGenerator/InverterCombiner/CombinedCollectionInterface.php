@@ -2,6 +2,10 @@
 
 namespace AppBundle\Util\KitGenerator\InverterCombiner;
 
+/**
+ * Interface CombinedCollectionInterface
+ * @author Claudinei Machado <claudinei@kolinalabs.com>
+ */
 interface CombinedCollectionInterface
 {
     /**

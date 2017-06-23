@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: daniel
- * Date: 23/06/17
- * Time: 13:54
- */
 
 namespace AppBundle\Util\KitGenerator\InverterCombiner;
-
 
 /**
  * Interface ModuleInterface

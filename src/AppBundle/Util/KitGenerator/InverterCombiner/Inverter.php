@@ -4,6 +4,7 @@ namespace AppBundle\Util\KitGenerator\InverterCombiner;
 
 /**
  * Class Inverter
+ * @author Claudinei Machado <claudinei@kolinalabs.com>
  */
 class Inverter implements InverterInterface
 {

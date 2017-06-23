@@ -2,6 +2,10 @@
 
 namespace AppBundle\Util\KitGenerator\InverterCombiner;
 
+/**
+ * Class InverterCollection
+ * @author Claudinei Machado <claudinei@kolinalabs.com>
+ */
 class InverterCollection implements InverterCollectionInterface
 {
     private $inverters = [];
