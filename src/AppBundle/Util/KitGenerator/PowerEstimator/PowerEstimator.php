@@ -221,11 +221,13 @@ class PowerEstimator implements PowerEstimatorInterface
         $coef = $this->temperatureCoefficient;
         $inv_efi = 0.95;
         $beta = deg2rad(abs($lat_degree));
+
         if ($lat_degree >= 0) {
             $gama = deg2rad(0);
         } else {
             $gama = deg2rad(180);
         }
+
         $ro = 0.2;
         $toa_acu = 0;
         $ht_acu = 0;
