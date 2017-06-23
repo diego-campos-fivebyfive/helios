@@ -8,7 +8,7 @@ use AppBundle\Util\KitGenerator\InverterCombiner\CombinedCollectionInterface;
  * Class Structure
  * @author Daniel Martins <daniel@kolinalabs.com>
  */
-class Structure
+class Structure implements StructureInterface
 {
     /**
      * @var int
