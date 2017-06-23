@@ -79,9 +79,9 @@ class InverterCombiner
         return $this;
     }
 
-    public function combine(InverterCollectionInterface $collection)
+    public function combine(CombinedCollectionInterface $collection)
     {
-        $inverters = $collection->all();
+        $inverters = $collection->getCombinations();
         $combination = 2;
 
         $fdi_max = 1;
