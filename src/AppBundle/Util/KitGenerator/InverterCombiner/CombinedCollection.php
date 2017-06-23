@@ -33,7 +33,7 @@ class CombinedCollection extends ArrayCollection implements CombinedCollectionIn
     public function addCombined(CombinedInterface $combined)
     {
         if(!$this->contains($combined)){
-            $this->add($combined);
+            parent::add($combined);
         }
 
         return $this;
@@ -45,7 +45,7 @@ class CombinedCollection extends ArrayCollection implements CombinedCollectionIn
     public function removeCombined(CombinedInterface $combined)
     {
         if($this->contains($combined)){
-            $this->removeElement($combined);
+            parent::removeElement($combined);
         }
 
         return $this;

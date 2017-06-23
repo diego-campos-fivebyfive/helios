@@ -2,7 +2,10 @@
 
 namespace AppBundle\Util\KitGenerator\InverterCombiner;
 
-
+/**
+ * Class Combined
+ * @author Daniel Marting <daniel@kolinalabs.com>
+ */
 class Combined implements CombinedInterface
 {
     /**

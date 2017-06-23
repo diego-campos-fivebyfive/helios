@@ -2,12 +2,10 @@
 
 namespace Tests\AppBundle\Util\KitGenerator\InverterCombiner;
 
+use AppBundle\Util\KitGenerator\InverterCombiner\Combined;
 use AppBundle\Util\KitGenerator\InverterCombiner\CombinedCollection;
 use AppBundle\Util\KitGenerator\InverterCombiner\CombinedInterface;
-use AppBundle\Util\KitGenerator\InverterCombiner\InverterCollection;
-use AppBundle\Util\KitGenerator\InverterCombiner\InverterCombiner;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
-use AppBundle\Util\KitGenerator\InverterCombiner\Inverter;
 
 /**
  * Class InverterCombinerTest
@@ -30,17 +28,18 @@ class InverterCombinerTest extends WebTestCase
 
         $collection = new CombinedCollection();
 
+        /** @var CombinedInterface $combined */
+        $combined = new Combined();
+
         foreach($data as $property => $value) {
 
             $setter = 'set' . ucfirst($property);
-            $getter = 'set' . ucfirst($property);
+            $getter = 'get' . ucfirst($property);
 
-            /** @var CombinedInterface $combined */
-            $combined = new Combined();
-
+            //var_dump($value); die;
             $this->assertEquals($value, $combined->$setter($value)->$getter());
-
-            $collection->addCombined($combined);
         }
+
+        $collection->addCombined($combined);
     }
 }
