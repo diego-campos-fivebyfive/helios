@@ -2,6 +2,8 @@
 
 namespace Tests\AppBundle\Util\KitGenerator\InverterCombiner;
 
+use AppBundle\Util\KitGenerator\InverterCombiner\CombinedCollection;
+use AppBundle\Util\KitGenerator\InverterCombiner\CombinedInterface;
 use AppBundle\Util\KitGenerator\InverterCombiner\InverterCollection;
 use AppBundle\Util\KitGenerator\InverterCombiner\InverterCombiner;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
@@ -15,53 +17,30 @@ class InverterCombinerTest extends WebTestCase
 {
     public function testInverterCollection()
     {
-        /*$max  = 3;
-        $cont = array_fill(0, 20, 0);
-        for($j=1; $j < 20; $j++) {
-            $cont[$j - 1] += 1;
-            for ($k = 1; $k < $j; $k++) {
-                var_dump($j);
-                if ($cont[$j - $k] > $max) {
-                    $cont[$j - ($k + 1)] += 1;
-                    for ($z = $k; $z >= 1; $z--) {
-                        $cont[$j - $z] = $cont[$j - ($z + 1)];
-                    }
-                }
-            }
-        }*/
-    }
+        $data = [
+            'id' => 100,
+            'nominalPower' => 25,
+            'maxDcVoltage' => 35,
+            'mpptMin' => 5,
+            'mpptMaxDcCurrent' => 45,
+            'quantity' => 1,
+            'serial' => 3,
+            'parallel' => 4,
+        ];
 
-    public function testDefaultScenario()
-    {
-        $collection = $this->createInverterCollection();
-        $combiner = new InverterCombiner();
+        $collection = new CombinedCollection();
 
-        $combiner->combine($collection);
+        foreach($data as $property => $value) {
 
-        var_dump($collection); die;
-    }
+            $setter = 'set' . ucfirst($property);
+            $getter = 'set' . ucfirst($property);
 
-    private function createInverterCollection()
-    {
-        $collection = new InverterCollection();
-        foreach ($this->createInverters() as $inverter) {
-            $collection->add($inverter);
+            /** @var CombinedInterface $combined */
+            $combined = new Combined();
+
+            $this->assertEquals($value, $combined->$setter($value)->$getter());
+
+            $collection->addCombined($combined);
         }
-
-        return $collection;
-    }
-
-    private function createInverters()
-    {
-        $powers = [27.6, 33];
-
-        $inverters = [];
-        foreach($powers as $power){
-            $inverter = new Inverter();
-            $inverter->setNominalPower($power);
-            $inverters[] = $inverter;
-        }
-
-        return $inverters;
     }
 }
