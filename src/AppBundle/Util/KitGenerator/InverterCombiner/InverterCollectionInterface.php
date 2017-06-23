@@ -8,6 +8,7 @@ namespace AppBundle\Util\KitGenerator\InverterCombiner;
  */
 interface InverterCollectionInterface
 {
+
     /**
      * @param InverterInterface $inverter
      * @return InverterCollectionInterface

@@ -10,6 +10,10 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class CombinedCollection extends ArrayCollection implements CombinedCollectionInterface
 {
+
+    private $module;
+
+
     /**
      * @inheritDoc
      */
@@ -33,7 +37,7 @@ class CombinedCollection extends ArrayCollection implements CombinedCollectionIn
      */
     public function addCombined(CombinedInterface $combined)
     {
-        if(!$this->contains($combined)){
+        if (!$this->contains($combined)) {
             parent::add($combined);
         }
 
@@ -45,7 +49,7 @@ class CombinedCollection extends ArrayCollection implements CombinedCollectionIn
      */
     public function removeCombined(CombinedInterface $combined)
     {
-        if($this->contains($combined)){
+        if ($this->contains($combined)) {
             parent::removeElement($combined);
         }
 
@@ -61,12 +65,30 @@ class CombinedCollection extends ArrayCollection implements CombinedCollectionIn
     }
 
     /**
+     * @inheritDoc
+     */
+    public function setModule(ModuleInterface $module)
+    {
+        $this->module = $module;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getModule()
+    {
+        return $this->module;
+
+    }
+
+    /**
      * @param array $elements
      */
     private function checkElements(array $elements = [])
     {
-        foreach($elements as $element) {
-            if(!$element instanceof CombinedInterface){
+        foreach ($elements as $element) {
+            if (!$element instanceof CombinedInterface) {
                 throw new \InvalidArgumentException(sprintf('This collection accept only instance of %s', CombinedInterface::class));
             }
         }

@@ -10,6 +10,7 @@ class InverterCollection implements InverterCollectionInterface
 {
     private $inverters = [];
 
+
     /**
      * @inheritdoc
      */

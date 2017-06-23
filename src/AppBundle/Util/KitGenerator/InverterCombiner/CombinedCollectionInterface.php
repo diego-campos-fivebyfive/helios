@@ -9,6 +9,17 @@ namespace AppBundle\Util\KitGenerator\InverterCombiner;
 interface CombinedCollectionInterface
 {
     /**
+     * @param ModuleInterface $module
+     * @return CombinedCollectionInterface
+     */
+    public function setModule(ModuleInterface $module);
+
+    /**
+     * @return CombinedCollectionInterface
+     */
+    public function getModule();
+
+    /**
      * @param CombinedInterface $combined
      * @return CombinedCollectionInterface
      */
