@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Clean Blog</title>
+
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+
+    <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet">
+
+    <link href="{{ asset('assets/proposal/css/formatPdf.css') }}" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div id="myGrid" class="ge-canvas ge-editing ui-sortable ge-layout-desktop">
+
+                <div class="row ui-sortable">
+                    <div class="ge-tools-drawer"><a title="Move" class="ge-move"><span
+                                    class="glyphicon glyphicon-move"></span></a><a title="Settings" class=""><span
+                                    class="glyphicon glyphicon-cog"></span></a><a title="Remove row" class=""><span
+                                    class="glyphicon glyphicon-trash"></span></a><a title="Add column"
+                                                                                    class="ge-add-column"><span
+                                    class="glyphicon glyphicon-plus-sign"></span></a>
+                        <div class="ge-details"><input class="ge-id" placeholder="id" title="Set a unique identifier">
+                            <div class="btn-group"><a class="btn btn-xs btn-default"
+                                                      title="Toggle &quot;Example class&quot; styling">Example class</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12 column ui-sortable">
+                        <div class="ge-tools-drawer"><a title="Move" class="ge-move"><span
+                                        class="glyphicon glyphicon-move"></span></a><a title="Make column narrower
+(hold shift for min)" class="ge-decrease-col-width"><span class="glyphicon glyphicon-minus"></span></a><a title="Make column wider
+(hold shift for max)" class="ge-increase-col-width"><span class="glyphicon glyphicon-plus"></span></a><a
+                                    title="Settings" class=""><span class="glyphicon glyphicon-cog"></span></a><a
+                                    title="Remove col" class=""><span class="glyphicon glyphicon-trash"></span></a><a
+                                    title="Add row" class="ge-add-row"><span
+                                        class="glyphicon glyphicon-plus-sign"></span></a>
+                            <div class="ge-details"><input class="ge-id" placeholder="id"
+                                                           title="Set a unique identifier">
+                                <div class="btn-group"><a class="btn btn-xs btn-default"
+                                                          title="Toggle &quot;Example class&quot; styling">Example
+                                        class</a></div>
+                            </div>
+                        </div>
+
+
+                        <div class="ge-content ge-content-type-ckeditor active cke_editable cke_editable_inline cke_contents_ltr cke_show_borders"
+                             data-ge-content-type="ckeditor" tabindex="0" spellcheck="false"
+                             role="textbox" aria-label="Editor de Rich Text, editor1"
+                             title="Editor de Rich Text, editor1" aria-describedby="cke_98" style="position: relative;">
+                            <h1><strong><span
+                                            style="background-color:#e74c3c;">Lorem ipsum dolor sit amet, consectetur</span></strong>
+                            </h1>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit exercitationem eaque
+                                aperiam rem quia quibusdam dolor ducimus quo similique eos pariatur nostrum aliquam nam
+                                eius, doloremque quis voluptatum unde. Porro voluptates aspernatur voluptate ipsam,
+                                magni vero. Accusamus, iusto tempore id!</p>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae laboriosam, excepturi
+                                quas.</p></div>
+                    </div>
+                </div>
+
+                <div class="row ui-sortable">
+                    <div class="ge-tools-drawer"><a title="Move" class="ge-move"><span
+                                    class="glyphicon glyphicon-move"></span></a><a title="Settings" class=""><span
+                                    class="glyphicon glyphicon-cog"></span></a><a title="Remove row" class=""><span
+                                    class="glyphicon glyphicon-trash"></span></a><a title="Add column"
+                                                                                    class="ge-add-column"><span
+                                    class="glyphicon glyphicon-plus-sign"></span></a>
+                        <div class="ge-details"><input class="ge-id" placeholder="id" title="Set a unique identifier">
+                            <div class="btn-group"><a class="btn btn-xs btn-default"
+                                                      title="Toggle &quot;Example class&quot; styling">Example class</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-4 col-xs-4 column ui-sortable">
+                        <div class="ge-tools-drawer"><a title="Move" class="ge-move"><span
+                                        class="glyphicon glyphicon-move"></span></a><a title="Make column narrower
+(hold shift for min)" class="ge-decrease-col-width"><span class="glyphicon glyphicon-minus"></span></a><a title="Make column wider
+(hold shift for max)" class="ge-increase-col-width"><span class="glyphicon glyphicon-plus"></span></a><a
+                                    title="Settings" class=""><span class="glyphicon glyphicon-cog"></span></a><a
+                                    title="Remove col" class=""><span class="glyphicon glyphicon-trash"></span></a><a
+                                    title="Add row" class="ge-add-row"><span
+                                        class="glyphicon glyphicon-plus-sign"></span></a>
+                            <div class="ge-details"><input class="ge-id" placeholder="id"
+                                                           title="Set a unique identifier">
+                                <div class="btn-group"><a class="btn btn-xs btn-default"
+                                                          title="Toggle &quot;Example class&quot; styling">Example
+                                        class</a></div>
+                            </div>
+                        </div>
+
+                        <div class="ge-content ge-content-type-ckeditor active cke_editable cke_editable_inline cke_contents_ltr cke_show_borders"
+                             data-ge-content-type="ckeditor" tabindex="0" spellcheck="false"
+                             role="textbox" aria-label="Editor de Rich Text, editor8"
+                             title="Editor de Rich Text, editor8" aria-describedby="cke_1612"
+                             style="position: relative;"><h2><span style="color:#27ae60;">qLorem ipsum dolor</span></h2>
+                            <p><span style="color:#27ae60;">qLorem ipsum dolor sit amet, consectetur adipisicing elit. Ea facilis vel aliquam aspernatur dolor placeat totam saepe perferendis. Odio quia vel sed eveniet cupiditate, illum doloremque sint veniam eum? Corporis?</span>
+                            </p></div>
+                    </div>
+                    <div class="col-md-4 col-sm-4 col-xs-4 column ui-sortable">
+                        <div class="ge-tools-drawer"><a title="Move" class="ge-move"><span
+                                        class="glyphicon glyphicon-move"></span></a><a title="Make column narrower
+(hold shift for min)" class="ge-decrease-col-width"><span class="glyphicon glyphicon-minus"></span></a><a title="Make column wider
+(hold shift for max)" class="ge-increase-col-width"><span class="glyphicon glyphicon-plus"></span></a><a
+                                    title="Settings" class=""><span class="glyphicon glyphicon-cog"></span></a><a
+                                    title="Remove col" class=""><span class="glyphicon glyphicon-trash"></span></a><a
+                                    title="Add row" class="ge-add-row"><span
+                                        class="glyphicon glyphicon-plus-sign"></span></a>
+                            <div class="ge-details"><input class="ge-id" placeholder="id"
+                                                           title="Set a unique identifier">
+                                <div class="btn-group"><a class="btn btn-xs btn-default"
+                                                          title="Toggle &quot;Example class&quot; styling">Example
+                                        class</a></div>
+                            </div>
+                        </div>
+
+                        <div class="ge-content ge-content-type-ckeditor active cke_editable cke_editable_inline cke_contents_ltr cke_show_borders"
+                             data-ge-content-type="ckeditor" tabindex="0" spellcheck="false"
+                             role="textbox" aria-label="Editor de Rich Text, editor6"
+                             title="Editor de Rich Text, editor6" aria-describedby="cke_981"
+                             style="position: relative;"><h2><span style="font-family:Courier New,Courier,monospace;">wPariatur reprehenderit</span>
+                            </h2>
+                            <p><span style="font-family:Courier New,Courier,monospace;">wLorem ipsum dolor sit amet, consectetur adipisicing elit. Illo adipisci ipsa, consequuntur cum, sunt dolores veniam. Enim inventore in dolore deserunt vitae sequi nemo!</span>
+                            </p></div>
+                    </div>
+                    <div class="col-md-4 col-sm-4 col-xs-4 column ui-sortable">
+                        <div class="ge-tools-drawer"><a title="Move" class="ge-move"><span
+                                        class="glyphicon glyphicon-move"></span></a><a title="Make column narrower
+(hold shift for min)" class="ge-decrease-col-width"><span class="glyphicon glyphicon-minus"></span></a><a title="Make column wider
+(hold shift for max)" class="ge-increase-col-width"><span class="glyphicon glyphicon-plus"></span></a><a
+                                    title="Settings" class=""><span class="glyphicon glyphicon-cog"></span></a><a
+                                    title="Remove col" class=""><span class="glyphicon glyphicon-trash"></span></a><a
+                                    title="Add row" class="ge-add-row"><span
+                                        class="glyphicon glyphicon-plus-sign"></span></a>
+                            <div class="ge-details"><input class="ge-id" placeholder="id"
+                                                           title="Set a unique identifier">
+                                <div class="btn-group"><a class="btn btn-xs btn-default"
+                                                          title="Toggle &quot;Example class&quot; styling">Example
+                                        class</a></div>
+                            </div>
+                        </div>
+
+                        <div class="ge-content ge-content-type-ckeditor active cke_editable cke_editable_inline cke_contents_ltr cke_show_borders"
+                             data-ge-content-type="ckeditor" tabindex="0" spellcheck="false"
+                             role="textbox" aria-label="Editor de Rich Text, editor7"
+                             title="Editor de Rich Text, editor7" aria-describedby="cke_1364"
+                             style="position: relative;"><h2><span style="color:#f39c12;"><span style="font-size:10px;">Pariatur reprehenderit</span></span>
+                            </h2>
+                            <p><span style="font-size:10px;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea excepturi ducimus numquam aut error corporis aspernatur ipsum quos eius culpa!</span>
+                            </p></div>
+                    </div>
+                </div>
+
+                <div class="row ui-sortable">
+                    <div class="ge-tools-drawer"><a title="Move" class="ge-move"><span
+                                    class="glyphicon glyphicon-move"></span></a><a title="Settings" class=""><span
+                                    class="glyphicon glyphicon-cog"></span></a><a title="Remove row" class=""><span
+                                    class="glyphicon glyphicon-trash"></span></a><a title="Add column"
+                                                                                    class="ge-add-column"><span
+                                    class="glyphicon glyphicon-plus-sign"></span></a>
+                        <div class="ge-details"><input class="ge-id" placeholder="id" title="Set a unique identifier">
+                            <div class="btn-group"><a class="btn btn-xs btn-default"
+                                                      title="Toggle &quot;Example class&quot; styling">Example class</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8 col-sm-8 col-xs-8 column ui-sortable">
+                        <div class="ge-tools-drawer"><a title="Move" class="ge-move"><span
+                                        class="glyphicon glyphicon-move"></span></a><a title="Make column narrower
+(hold shift for min)" class="ge-decrease-col-width"><span class="glyphicon glyphicon-minus"></span></a><a title="Make column wider
+(hold shift for max)" class="ge-increase-col-width"><span class="glyphicon glyphicon-plus"></span></a><a
+                                    title="Settings" class=""><span class="glyphicon glyphicon-cog"></span></a><a
+                                    title="Remove col" class=""><span class="glyphicon glyphicon-trash"></span></a><a
+                                    title="Add row" class="ge-add-row"><span
+                                        class="glyphicon glyphicon-plus-sign"></span></a>
+                            <div class="ge-details"><input class="ge-id" placeholder="id"
+                                                           title="Set a unique identifier">
+                                <div class="btn-group"><a class="btn btn-xs btn-default"
+                                                          title="Toggle &quot;Example class&quot; styling">Example
+                                        class</a></div>
+                            </div>
+                        </div>
+
+                        <div class="ge-content ge-content-type-ckeditor active cke_editable cke_editable_inline cke_contents_ltr cke_show_borders"
+                             data-ge-content-type="ckeditor" tabindex="0" spellcheck="false"
+                             role="textbox" aria-label="Editor de Rich Text, editor5"
+                             title="Editor de Rich Text, editor5" aria-describedby="cke_584"
+                             style="position: relative;">
+                            <div class="active ge-content ge-content-type-ckeditor"><h2>Lorem ipsum dolor.</h2>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro distinctio atque
+                                    molestiae optio, consequuntur? Iusto ratione cumque dolor aut dolore!</p></div>
+                        </div>
+
+                        <div class="row ui-sortable">
+                            <div class="ge-tools-drawer"><a title="Move" class="ge-move"><span
+                                            class="glyphicon glyphicon-move"></span></a><a title="Settings"
+                                                                                           class=""><span
+                                            class="glyphicon glyphicon-cog"></span></a><a title="Remove row"
+                                                                                          class=""><span
+                                            class="glyphicon glyphicon-trash"></span></a><a title="Add column"
+                                                                                            class="ge-add-column"><span
+                                            class="glyphicon glyphicon-plus-sign"></span></a>
+                                <div class="ge-details"><input class="ge-id" placeholder="id"
+                                                               title="Set a unique identifier">
+                                    <div class="btn-group"><a class="btn btn-xs btn-default"
+                                                              title="Toggle &quot;Example class&quot; styling">Example
+                                            class</a></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-6 column ui-sortable">
+                                <div class="ge-tools-drawer"><a title="Move" class="ge-move"><span
+                                                class="glyphicon glyphicon-move"></span></a><a title="Make column narrower
+(hold shift for min)" class="ge-decrease-col-width"><span class="glyphicon glyphicon-minus"></span></a><a title="Make column wider
+(hold shift for max)" class="ge-increase-col-width"><span class="glyphicon glyphicon-plus"></span></a><a
+                                            title="Settings" class=""><span
+                                                class="glyphicon glyphicon-cog"></span></a><a title="Remove col"
+                                                                                              class=""><span
+                                                class="glyphicon glyphicon-trash"></span></a><a title="Add row"
+                                                                                                class="ge-add-row"><span
+                                                class="glyphicon glyphicon-plus-sign"></span></a>
+                                    <div class="ge-details"><input class="ge-id" placeholder="id"
+                                                                   title="Set a unique identifier">
+                                        <div class="btn-group"><a class="btn btn-xs btn-default"
+                                                                  title="Toggle &quot;Example class&quot; styling">Example
+                                                class</a></div>
+                                    </div>
+                                </div>
+
+                                <div class="ge-content ge-content-type-ckeditor" data-ge-content-type="ckeditor">
+                                    <hr>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis facilis
+                                        molestias voluptatum laudantium fuga ratione tempora rem dolor dicta rerum vero
+                                        ut, suscipit ex qui amet quam vel cupiditate quaerat minus assumenda reiciendis,
+                                        similique omnis delectus! Autem, repudiandae cumque eaque?</p></div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-6 column ui-sortable">
+                                <div class="ge-tools-drawer"><a title="Move" class="ge-move"><span
+                                                class="glyphicon glyphicon-move"></span></a><a title="Make column narrower
+(hold shift for min)" class="ge-decrease-col-width"><span class="glyphicon glyphicon-minus"></span></a><a title="Make column wider
+(hold shift for max)" class="ge-increase-col-width"><span class="glyphicon glyphicon-plus"></span></a><a
+                                            title="Settings" class=""><span
+                                                class="glyphicon glyphicon-cog"></span></a><a title="Remove col"
+                                                                                              class=""><span
+                                                class="glyphicon glyphicon-trash"></span></a><a title="Add row"
+                                                                                                class="ge-add-row"><span
+                                                class="glyphicon glyphicon-plus-sign"></span></a>
+                                    <div class="ge-details"><input class="ge-id" placeholder="id"
+                                                                   title="Set a unique identifier">
+                                        <div class="btn-group"><a class="btn btn-xs btn-default"
+                                                                  title="Toggle &quot;Example class&quot; styling">Example
+                                                class</a></div>
+                                    </div>
+                                </div>
+
+                                <div class="ge-content ge-content-type-ckeditor active cke_editable cke_editable_inline cke_contents_ltr cke_show_borders"
+                                     data-ge-content-type="ckeditor" tabindex="0"
+                                     spellcheck="false" role="textbox" aria-label="Editor de Rich Text, editor3"
+                                     title="Editor de Rich Text, editor3" aria-describedby="cke_351"
+                                     style="position: relative;">
+                                    <hr>
+                                    <p><span style="color:#c0392b;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eveniet molestiae quaerat illum, consequuntur iusto aspernatur quam provident? Possimus!</span>
+                                    </p></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-sm-4 col-xs-4 column ui-sortable">
+                        <div class="ge-tools-drawer"><a title="Move" class="ge-move"><span
+                                        class="glyphicon glyphicon-move"></span></a><a title="Make column narrower
+(hold shift for min)" class="ge-decrease-col-width"><span class="glyphicon glyphicon-minus"></span></a><a title="Make column wider
+(hold shift for max)" class="ge-increase-col-width"><span class="glyphicon glyphicon-plus"></span></a><a
+                                    title="Settings" class=""><span class="glyphicon glyphicon-cog"></span></a><a
+                                    title="Remove col" class=""><span class="glyphicon glyphicon-trash"></span></a><a
+                                    title="Add row" class="ge-add-row"><span
+                                        class="glyphicon glyphicon-plus-sign"></span></a>
+                            <div class="ge-details"><input class="ge-id" placeholder="id"
+                                                           title="Set a unique identifier">
+                                <div class="btn-group"><a class="btn btn-xs btn-default"
+                                                          title="Toggle &quot;Example class&quot; styling">Example
+                                        class</a></div>
+                            </div>
+                        </div>
+
+                        <div class="ge-content ge-content-type-ckeditor active cke_editable cke_editable_inline cke_contents_ltr cke_show_borders"
+                             data-ge-content-type="ckeditor" tabindex="0" spellcheck="false"
+                             role="textbox" aria-label="Editor de Rich Text, editor2"
+                             title="Editor de Rich Text, editor2" aria-describedby="cke_195"
+                             style="position: relative;"><h2><span style="font-size:16px;"><span style="color:#000000;">Lusto ratione</span></span>
+                            </h2>
+                            <p><span style="font-size:16px;"><span style="color:#000000;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis fugit quasi officiis id laudantium error aut ut aperiam dicta saepe non vel, cupiditate illum ipsam velit deleniti natus incidunt impedit molestias dolore quos dolores enim. Aliquid ipsam eaque consequuntur quaerat, suscipit a in. Praesentium repudiandae quibusdam recusandae sequi eligendi quos, dignissimos, officiis officia minima necessitatibus eaque consequatur in id adipisci qui minus voluptatum quae debitis, quas maxime iure. Tempore vero unde quia reiciendis ad beatae voluptate omnis, ipsa expedita ab, quasi, neque. Doloribus, pariatur. Aut hic voluptate.</span></span>
+                            </p></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

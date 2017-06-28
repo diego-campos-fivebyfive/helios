@@ -1,0 +1,138 @@
+{% extends view('layout') %}
+
+{% block styles %}
+
+    <link href="{{ asset('assets/proposal/gridEditor/grideditor.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/proposal/css/style.css') }}" rel="stylesheet">
+
+{% endblock %}
+
+{% block body %}
+
+
+    <div class="wrapper wrapper-content">
+        <div class="row">
+            {#<div class="col-md-12">
+                <button type="button" id="btnSavePdf" class="btn btn-warning" disabled>Download <i class="fa fa-download"></i> </button>
+            </div>#}
+            <div class="col-md-10">
+                <div id="myGrid">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1>Lorem ipsum dolor sit amet, consectetur</h1>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit exercitationem eaque aperiam rem quia quibusdam dolor ducimus quo similique eos pariatur nostrum aliquam nam eius, doloremque quis voluptatum unde. Porro voluptates aspernatur voluptate ipsam, magni vero. Accusamus, iusto tempore id!</p>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae laboriosam, excepturi quas.</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h2>qLorem ipsum dolor</h2>
+                            <p>qLorem ipsum dolor sit amet, consectetur adipisicing elit. Ea facilis vel aliquam aspernatur dolor placeat totam saepe perferendis. Odio quia vel sed eveniet cupiditate, illum doloremque sint veniam eum? Corporis?</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h2>wPariatur reprehenderit</h2>
+                            <p>wLorem ipsum dolor sit amet, consectetur adipisicing elit. Illo adipisci ipsa, consequuntur cum, sunt dolores veniam. Enim inventore in dolore deserunt vitae sequi nemo!</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h2>Pariatur reprehenderit</h2>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea excepturi ducimus numquam aut error corporis aspernatur ipsum quos eius culpa!</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h2>Lorem ipsum dolor.</h2>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro distinctio atque molestiae optio, consequuntur? Iusto ratione cumque dolor aut dolore!</p>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <hr>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis facilis molestias voluptatum laudantium fuga ratione tempora rem dolor dicta rerum vero ut, suscipit ex qui amet quam vel cupiditate quaerat minus assumenda reiciendis, similique omnis delectus! Autem, repudiandae cumque eaque?</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <hr>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eveniet molestiae quaerat illum, consequuntur iusto aspernatur quam provident? Possimus!</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <h2>Lusto ratione</h2>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis fugit quasi officiis id laudantium error aut ut aperiam dicta saepe non vel, cupiditate illum ipsam velit deleniti natus incidunt impedit molestias dolore quos dolores enim. Aliquid ipsam eaque consequuntur quaerat, suscipit a in. Praesentium repudiandae quibusdam recusandae sequi eligendi quos, dignissimos, officiis officia minima necessitatibus eaque consequatur in id adipisci qui minus voluptatum quae debitis, quas maxime iure. Tempore vero unde quia reiciendis ad beatae voluptate omnis, ipsa expedita ab, quasi, neque. Doloribus, pariatur. Aut hic voluptate.</p>
+                        </div>
+                    </div>
+
+                </div><!-- /#myGrid -->
+            </div>
+
+            <div class="tags col-md-2">
+                <h3>Drag And Drop</h3>
+                <ul id="tagsList">
+                    <li>
+                        <div class="contact h-card" data-contact="0" draggable="true" tabindex="0">
+                            <img src="http://sdk.ckeditor.com/samples/assets/draganddrop/img/hfin.png" alt="avatar"
+                                 class="u-photo">Huckleberry
+                            Finn
+                        </div>
+                    </li>
+                    <li>
+                        <div class="contact h-card" data-contact="1" draggable="true" tabindex="0">
+                            <img src="http://sdk.ckeditor.com/samples/assets/draganddrop/img/dartagnan.png" alt="avatar"
+                                 class="u-photo">D'Artagnan
+                        </div>
+                    </li>
+                    <li>
+                        <div class="contact h-card" data-contact="2" draggable="true" tabindex="0">
+                            <img src="http://sdk.ckeditor.com/samples/assets/draganddrop/img/pfog.png" alt="avatar"
+                                 class="u-photo">Phileas
+                            Fogg
+                        </div>
+                    </li>
+                    <li>
+                        <div class="contact h-card" data-contact="3" draggable="true" tabindex="0">
+                            <img src="http://sdk.ckeditor.com/samples/assets/draganddrop/img/alice.png" alt="avatar"
+                                 class="u-photo">Alice
+                        </div>
+                    </li>
+                    <li>
+                        <div class="contact h-card" data-contact="4" draggable="true" tabindex="0">
+                            <img src="http://sdk.ckeditor.com/samples/assets/draganddrop/img/lrrh.png" alt="avatar"
+                                 class="u-photo">Little
+                            Red Riding Hood
+                        </div>
+                    </li>
+                    <li>
+                        <div class="contact h-card" data-contact="5" draggable="true" tabindex="0">
+                            <img src="http://sdk.ckeditor.com/samples/assets/draganddrop/img/winetou.png" alt="avatar"
+                                 class="u-photo">Winnetou
+                        </div>
+                    </li>
+                    <li>
+                        <div class="contact h-card" data-contact="6" draggable="true" tabindex="0">
+                            <img src="http://sdk.ckeditor.com/samples/assets/draganddrop/img/edantes.png" alt="avatar"
+                                 class="u-photo">Edmond Dantès
+                        </div>
+                    </li>
+                    <li>
+                        <div class="contact h-card" data-contact="7" draggable="true" tabindex="0">
+                            <img src="http://sdk.ckeditor.com/samples/assets/draganddrop/img/rcrusoe.png" alt="avatar"
+                                 class="u-photo">Robinson Crusoe
+                        </div>
+                    </li>
+                </ul>
+            </div><!-- /.tags -->
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script src="{{ asset('assets/proposal/ckeditor/ckeditor.js') }}"></script>
+    <script src="{{ asset('assets/proposal/gridEditor/jquery.grideditor.js') }}"></script>
+    <script src="{{ asset('assets/proposal/js/draganddrop.js') }}"></script>
+    <script src="{{ asset('assets/proposal/js/script.js') }}"></script>
+
+{% endblock %}
