@@ -15,7 +15,7 @@ interface CombinedCollectionInterface
     public function setModule(ModuleInterface $module);
 
     /**
-     * @return CombinedCollectionInterface
+     * @return ModuleInterface
      */
     public function getModule();
 

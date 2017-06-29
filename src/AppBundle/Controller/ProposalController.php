@@ -21,7 +21,7 @@ class ProposalController extends Controller
     }
 
     /**
-     * @Route("/pdf")
+     * @Route("/pdf", name="proposal_pdf")
      */
     public function pdfAction()
     {

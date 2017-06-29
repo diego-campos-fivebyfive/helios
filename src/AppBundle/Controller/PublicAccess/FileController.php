@@ -4,6 +4,7 @@ namespace AppBundle\Controller\PublicAccess;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Project\Project;
+use Knp\Bundle\SnappyBundle\Snappy\LoggableGenerator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\File;
@@ -64,6 +65,39 @@ class FileController extends AbstractController
         }
 
         throw $this->createNotFoundException();
+    }
+
+    /**
+     * @Route("/pdf", name="file_proposal_pdf")
+     */
+    public function pdfAction()
+    {
+        return $this->render('AppBundle:Proposal:pdf.html.twig', array(
+
+        ));
+    }
+
+    /**
+     * @Route("/snappy")
+     */
+    public function snappyAction()
+    {
+        /** @var LoggableGenerator $snappy */
+        $snappy = $this->get('knp_snappy.pdf');
+
+        //$snappy->setOption('zoom', 4);
+        $snappy->setOption('viewport-size', '1280x1024');
+
+        $dir = $this->get('kernel')->getRootDir() . '/../storage/';
+        $filename = md5(uniqid(time())) . '.pdf';
+
+        $url = $this->generateUrl('file_proposal_pdf',[],0);
+
+        dump($snappy); die;
+
+        $snappy->generate($url, $dir . $filename);
+
+        dump($snappy); die;
     }
 
     /**

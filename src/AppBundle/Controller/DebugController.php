@@ -29,6 +29,7 @@ use AppBundle\Service\Support\Project\Financial;
 use AppBundle\Service\Support\Project\FinancialAnalyzer;
 use AppBundle\Service\Woopra\Event;
 use Doctrine\Common\Collections\ArrayCollection;
+use Knp\Bundle\SnappyBundle\Snappy\LoggableGenerator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\File\File;
@@ -55,5 +56,13 @@ class DebugController extends AbstractController
         $clientManager->updateClient($client);
 
         dump($client); die;
+    }
+
+    /**
+     * @Route("/pdf-page")
+     */
+    public function pdfPageAction()
+    {
+
     }
 }

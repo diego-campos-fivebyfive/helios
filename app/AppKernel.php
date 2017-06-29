@@ -28,6 +28,7 @@ class AppKernel extends Kernel
             new APY\BreadcrumbTrailBundle\APYBreadcrumbTrailBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new Liuggio\ExcelBundle\LiuggioExcelBundle(),
+            new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
             // API
             new FOS\RestBundle\FOSRestBundle(),
             new FOS\OAuthServerBundle\FOSOAuthServerBundle(),

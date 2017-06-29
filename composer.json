@@ -25,6 +25,7 @@
         "knplabs/knp-gaufrette-bundle": "~0.3",
         "knplabs/knp-menu-bundle": "^2.0",
         "knplabs/knp-paginator-bundle": "^2.5",
+        "knplabs/knp-snappy-bundle": "~1.4",
         "kolinalabs/customer-bundle": "dev-master",
         "liuggio/excelbundle": "^2.1",
         "mpdf/mpdf": "^6.1",

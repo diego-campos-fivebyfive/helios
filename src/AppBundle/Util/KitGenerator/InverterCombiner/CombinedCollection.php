@@ -10,9 +10,10 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class CombinedCollection extends ArrayCollection implements CombinedCollectionInterface
 {
-
+    /**
+     * @var ModuleInterface
+     */
     private $module;
-
 
     /**
      * @inheritDoc

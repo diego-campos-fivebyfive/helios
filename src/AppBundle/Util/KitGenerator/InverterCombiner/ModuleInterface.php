@@ -45,7 +45,7 @@ interface ModuleInterface
     public function getWidth();
 
     /**
-     * @param $cellnumber
+     * @param $cellNumber
      * @return mixed
      */
     public function setCellNumber($cellNumber);
@@ -57,10 +57,10 @@ interface ModuleInterface
     public function getCellNumber();
 
     /**
-     * @param $openciruitvoltage
+     * @param $openCircuitVoltage
      * @return mixed
      */
-    public function setOpenCircuitVoltage($openCiruitVoltage);
+    public function setOpenCircuitVoltage($openCircuitVoltage);
 
 
     /**
@@ -70,7 +70,7 @@ interface ModuleInterface
 
 
     /**
-     * @param $voltagemaxpower
+     * @param $voltageMaxPower
      * @return mixed
      */
     public function setVoltageMaxPower($voltageMaxPower);
@@ -82,7 +82,7 @@ interface ModuleInterface
     public function getVoltageMaxPower();
 
     /**
-     * @param $tempcoefficientvoc
+     * @param $tempCoefficientVoc
      * @return mixed
      */
     public function setTempCoefficientVoc($tempCoefficientVoc);
@@ -94,7 +94,7 @@ interface ModuleInterface
 
 
     /**
-     * @param $maxpower
+     * @param $maxPower
      * @return mixed
      */
     public function setMaxPower($maxPower);
@@ -107,7 +107,7 @@ interface ModuleInterface
 
 
     /**
-     * @param $shortcircuitcurrent
+     * @param $shortCircuitCurrent
      * @return mixed
      */
     public function setShortCircuitCurrent($shortCircuitCurrent);

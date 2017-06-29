@@ -84,13 +84,17 @@ class InverterCombiner
         $inverters = $collection->getCombinations();
         $combination = 2;
 
+        $module = $collection->getModule();
+
         $fdi_max = 1;
         $fdi_min = 0.75;
+        $lim_sup = $module->getMaxPower() * $fdi_max;
+        $lim_inf = $module->getMaxPower() * $fdi_min;
+
         //$lim_sup = $pot_mod * $fdi_max;
         //$lim_inf = $pot_mod * $fdi_min;
-        $lim_sup = 395.59;
-        $lim_inf = 296.69949316258;
-
+        //$lim_sup = 395.59;
+        //$lim_inf = 296.69949316258;
         //var_dump($collection); die;
 
         for ($i = $combination; $i <= 50; $i++) {
