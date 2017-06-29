@@ -4,10 +4,7 @@
     color: #fff;
 }
 
-
-
 .btn-primary:hover, .btn-group>.btn:hover{
-
 
     background-color: #f0c674;
     border-color: #f0c674;
@@ -26,6 +23,10 @@
     color: #fff;
 }
 
+.label-success {
+    background-color: #00A7EC;
+}
+
 .nav>li.active {
     border-left: 4px solid #F8A41A;
     background: #293846;
@@ -36,9 +37,6 @@
 
 }
 
-.btn-primary.btn-outline {
-    color: #fff;
-}
 
 
 
