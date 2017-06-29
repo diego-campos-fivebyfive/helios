@@ -1,7 +1,7 @@
 'use strict';
 
 		var CONTACTS = [
-			{ name: 'Huckleberry Finn',			tel: '+48 1345 234 235', email: 'h.finn@example.com', avatar: 'hfin' },
+			{ name: 'aaaaHuckleberry Finn',			tel: '+48 1345 234 235', email: 'h.finn@example.com', avatar: 'hfin' },
 			{ name: 'D\'Artagnan',				tel: '+45 2345 234 235', email: 'dartagnan@example.com', avatar: 'dartagnan' },
 			{ name: 'Phileas Fogg',				tel: '+44 3345 234 235', email: 'p.fogg@example.com', avatar: 'pfog' },
 			{ name: 'Alice',					tel: '+20 4345 234 235', email: 'alice@example.com', avatar: 'alice' },
@@ -34,7 +34,7 @@
 				// Handle dropping a contact by transforming the contact object into HTML.
 				// Note: All pasted and dropped content is handled in one event - editor#paste.
 				editor.on( 'paste', function( evt ) {
-					var contact = evt.data.dataTransfer.getData( 'tags' );
+					var contact = evt.data.dataTransfer.getData( 'contact' );
 					if ( !contact ) {
 						return;
 					}
@@ -52,9 +52,11 @@
 		CKEDITOR.on( 'instanceReady', function() {
 			// When an item in the contact list is dragged, copy its data into the drag and drop data transfer.
 			// This data is later read by the editor#paste listener in the hcard plugin defined above.
-			CKEDITOR.document.getById( 'tagsList' ).on( 'dragstart', function( evt ) {
+			CKEDITOR.document.getById( 'tagList' ).on( 'dragstart', function( evt ) {
 				// The target may be some element inside the draggable div (e.g. the image), so get the div.h-card.
 				var target = evt.data.getTarget().getAscendant( 'div', true );
+
+				//alert(target.data('contact'));
 
 				// Initialization of the CKEditor data transfer facade is a necessary step to extend and unify native
 				// browser capabilities. For instance, Internet Explorer does not support any other data type than 'text' and 'URL'.
@@ -68,7 +70,7 @@
 				// * It is a more elegant and logical solution that this logic is kept in the hcard plugin.
 				// * You do not know now where the content will be dropped and the HTML to be inserted
 				// might vary depending on the drop target.
-				dataTransfer.setData( 'tags', CONTACTS[ target.data( 'tags' ) ] );
+				dataTransfer.setData( 'contact', CONTACTS[ target.data( 'contact' ) ] );
 
 				// You need to set some normal data types to backup values for two reasons:
 				// * In some browsers this is necessary to enable drag and drop into text in the editor.
