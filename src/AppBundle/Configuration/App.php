@@ -9,7 +9,7 @@ class App
     const MENU = 'AppBundle::menu.html.twig';
     const VIEW_EXTENSION = 'html.twig';
     const CUSTOMER_MANAGER = 'kolina_customer.manager';
-    const APP_NAME = 'Inovador Solar';
+    const APP_NAME = 'Sices Solar';
     const APP_TITLE = 'Dashboard';
     const TRAIL_INTERVAL = '5 days';
     const PAYMENT_REJECTED_INTERVAL = '4 days';

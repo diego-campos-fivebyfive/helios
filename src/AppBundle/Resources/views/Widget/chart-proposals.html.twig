@@ -21,20 +21,35 @@
 '12':'Dezembro'
 } %}
 
+
 <style>
     .ibox-title > .col-md-4,
     .ibox-title > .col-md-2{
         margin-top: -4px;
         /*padding-right: 0;*/
     }
-
     .ibox-title select {
         width: 50%;
         float: left;
         margin-top: -3px;
         text-align: center !important;
-        border-color: #1ab394;
+        border-color: #F2A019;
+    } 
+    
+    .btn-primary.btn-outline {
+        background-color: white;
+        border-color: solid 2px #F2A019;
+        color: #F2A019;        
     }
+    .btn-primary.btn-outline.select {
+        border-color: solid 2px #F2A019;       
+    }
+    .btn-primary.btn-outline.active{
+        background-color: #F2A019;
+        border-color: #F2A019;
+        color: white;
+    }
+    
 </style>
 
 <div class="ibox float-e-margins">
@@ -168,7 +183,7 @@
                 {
                     label: "Valor das propostas",
                     data: data.amounts,
-                    color: "#1ab394",
+                    color: "#F2A019",
                     bars: {
                         show: true,
                         align: "center",
@@ -179,7 +194,7 @@
                 {
                     label: "Quantidade de propostas",
                     data: data.counts,
-                    color: "#1C84C6",
+                    color: "#00A7EC",
                     yaxis: 2,
                     lines: {
                         show: true
