@@ -7,7 +7,6 @@ app/sessions/
 bin
 storage
 vendor
-web/assetic
 web/img
 web/inspinia
 web/js

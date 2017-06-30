@@ -1,0 +1,25 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700");
+@import url("https://fonts.googleapis.com/css?family=Roboto:400,300,500,700");
+
+*{
+    outline: none !important;
+}
+.nav-header {
+    padding: 33px 25px;
+    background: url("../assets/img/header-profile.png") no-repeat;
+}
+.fa.online{ color: #00a65a; }
+.fa.offline{ color: #555555; }
+.menu-logo {  max-width: 64px; }
+.menu-logo-mini { max-width: 45px;}
+.nav-header {  padding: 10px 25px;  }
+#real-content{
+    margin-top: 1rem;
+}
+*{outline: none !important;}
+.chosen-results li:not(.highlighted) em{
+    color: #444 !important;
+}
+.chosen-results li.highlighted em{
+    color: #fff !important;
+}
