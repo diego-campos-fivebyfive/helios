@@ -25,11 +25,6 @@ class Item implements ItemInterface
     private $length;
 
     /**
-     * @var int
-     */
-    private $cellNumber;
-
-    /**
      * @var float
      */
     private $size;
@@ -101,24 +96,6 @@ class Item implements ItemInterface
     /**
      * @inheritDoc
      */
-    public function setCellNumber($cellNumber)
-    {
-        $this->cellNumber = $cellNumber;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCellNumber()
-    {
-        return $this->cellNumber;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function setSize($size)
     {
         $this->size = $size;
@@ -181,7 +158,7 @@ class Item implements ItemInterface
      */
     public function getSubtype()
     {
-        return $this->subtype;
+        return $this->subtype ? $this->subtype : $this->type ;
     }
 
     /**

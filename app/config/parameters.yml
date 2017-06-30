@@ -1,6 +1,6 @@
 # This file is auto-generated during the composer install
 parameters:
-    database_host: 192.168.28.230
+    database_host: 192.168.28.225
     database_port: 3306
     database_name: sices_solar
     database_user: root

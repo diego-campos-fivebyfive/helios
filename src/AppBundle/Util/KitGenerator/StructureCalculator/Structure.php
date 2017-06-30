@@ -3,11 +3,6 @@
 
 namespace AppBundle\Util\KitGenerator\StructureCalculator;
 
-use AppBundle\Util\KitGenerator\InverterCombiner\CombinedCollectionInterface;
-
-//use AppBundle\Util\KitGenerator\InverterCombiner\ModuleInterface;
-//use AppBundle\Util\KitGenerator\StructureCalculator\Component\ProfileInterface;
-
 /**
  * Class Structure
  * @author Daniel Martins <daniel@kolinalabs.com>
@@ -25,37 +20,14 @@ class Structure implements StructureInterface
     private $roofType;
 
     /**
-     * @var int
+     * @var ModuleInterface
      */
-    private $position;
-
-    /**
-     * @var int
-     */
-    private $modulesPerLine;
-
-    /**
-     * @var int
-     */
-    //private $totalModules;
-
-    /**
-     * @var array
-     */
-    private $groups;
-
-    /**
-     * @var array
-     */
-    private $components;
+    private $module;
 
     /**
      * @var array
      */
     private $items;
-
-
-    private $combinedCollection;
 
     /**
      * @var array
@@ -63,25 +35,48 @@ class Structure implements StructureInterface
     private $profiles;
 
     /**
-     * @var ModuleInterface
-     */
-    private $module;
-
-    public $endTerminalWidth;
-
-    public $inTerminalWith;
-
-    /**
      * @inheritDoc
      */
     public function __construct()
     {
-        $this->modulesPerLine = 1;
-        $this->position = self::POSITION_VERTICAL;
-        $this->groups = [];
-        $this->components = [];
         $this->profiles = [];
         $this->items = [];
+    }
+
+    /**
+     * @param int $id
+     * @return Structure
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setModule(ModuleInterface $module)
+    {
+        $this->module = $module;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getModule()
+    {
+        return $this->module;
     }
 
     /**
@@ -115,57 +110,13 @@ class Structure implements StructureInterface
     }
 
     /**
-     * @inheritDoc
-     */
-    public function setModule(ModuleInterface $module)
-    {
-        $this->module = $module;
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getModule()
-    {
-        return $this->module;
-    }
-
-    /** ---------------- */
-
-    /**
-     * @inheritDoc
-     */
-    public function setCombinedCollection(CombinedCollectionInterface $combinedCollection)
-    {
-        $this->combinedCollection = $combinedCollection;
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getCombinedCollection()
-    {
-        return $this->combinedCollection;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
+     * @param int $roofType
      * @return Structure
      */
-    public function setId($id)
+    public function setRoofType($roofType)
     {
-        $this->id = $id;
+        $this->roofType = $roofType;
+
         return $this;
     }
 
@@ -178,67 +129,22 @@ class Structure implements StructureInterface
     }
 
     /**
-     * @param int $roofType
-     * @return Structure
-     */
-    public function setRoofType($roofType)
-    {
-        $this->roofType = $roofType;
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setTotalModules($totalModules)
-    {
-        $this->totalModules = $totalModules;
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getTotalModules()
-    {
-        //return $this->totalModules;
-    }
-
-    /**
      * @inheritDoc
      */
     public function calculate()
     {
         $this->validate();
 
-        /**
-         * TODO: Validar existência do item [módulo]
-         */
-        /*$module           = $this->getItemByType(Item::TYPE_MODULE);
-        $this->handleGroups($module);
-
-        $dimension        = $this->isVertical() ? $module->getWidth() : $module->getLength() ;
-        $maxProfileSize   = $this->getMaxProfileSize($module);
-        $modulesPerLine   = $this->getModulesPerLine($module);
-        $terminalFinal    = $this->getItemByType(Item::TERMINAL_FINAL);
-        var_dump($terminalFinal); die;
-        $endTerminalWidth = $this->endTerminalWidth;
-        $inTerminalWidth  = $this->inTerminalWith;
-        //$modulesPerLine   = $this->modulesPerLine;
-        $countProfiles    = count($this->profiles);*/
-
         $module         = $this->module;
         $groups         = $module->getGroups();
         $dimension      = $module->getDimension();
         $maxProfileSize = $module->getMaxProfileSize();
-        $modulesPerLine = $module->getModulesPerLine();
         $linesOfModules = 1;
         $countProfiles  = count($this->profiles);
-        $base           = $this->getItemByType(Item::TYPE_BASE);
         $terminalFinal  = $this->getItemByType(Item::TERMINAL_FINAL);
         $terminalMiddle = $this->getItemByType(Item::TERMINAL_MIDDLE);
+
+        //$fixerScrew     = $this->getItemByType(Item::FIXER_SCREW);
 
         $totalUsedProfiles  = array_fill(0, $countProfiles, 0);
         $totalJunction      = 0;
@@ -505,24 +411,38 @@ class Structure implements StructureInterface
             die;*/
         }
 
-        //var_dump($this->getItemByType(Item::TYPE_JUNCTION));
+        // BASE
+        $this->items[Item::TYPE_BASE]->setQuantity($totalBase);
 
-        // Junction
-        if(null != $junction = $this->getItemByType(Item::TYPE_JUNCTION))
-            $junction->setQuantity($totalJunction);
-
-        // Terminals
+        // TERMINALS
         $terminalFinal->setQuantity($totalEndTerminal);
         $terminalMiddle->setQuantity($totalInTerminal);
 
-        //var_dump($this->profiles); die;
+        //$data = [];
+        foreach ($totalUsedProfiles as $idxProfile => $totalProfile) {
+            $this->profiles[$idxProfile]->setQuantity($totalProfile);
+        }
 
+        // JUNCTION
+        if(null != $junction = $this->getItemByType(Item::TYPE_JUNCTION)) {
+            $this->items[Item::TYPE_JUNCTION]->setQuantity($totalJunction);
+        }
 
+        // FIXER SCREW
+        if(null != $fixerScrew = $this->getItemByType(Item::FIXER_SCREW)) {
+            //$fixerScrew->setQuantity($totalScrewHammer);
+            //$data[Item::FIXER_SCREW] = $fixerScrew;
+            $this->items[Item::FIXER_SCREW]->setQuantity($totalScrewHammer);
+        }
 
-        //var_dump($this->getItemByType(Item::TYPE_JUNCTION));
-        //var_dump($totalJunction); die;
+        // FIXER NUT
+        if(null != $fixerNut = $this->getItemByType(Item::FIXER_NUT)) {
+            //$fixerNut->setQuantity($totalNutM10);
+            //$data[Item::FIXER_NUT] = $fixerNut;
+            $this->items[Item::FIXER_NUT]->setQuantity($totalNutM10);
+        }
 
-        // TODO : Continue components here!
+        return $this;
     }
 
     /**
@@ -534,19 +454,11 @@ class Structure implements StructureInterface
     }
 
     /**
-     * @return int
-     */
-    public function getPosition()
-    {
-        return $this->position;
-    }
-
-    /**
      * @inheritDoc
      */
     public function isVertical()
     {
-        return self::POSITION_VERTICAL == $this->position;
+        return $this->module->isVertical();
     }
 
     /**
@@ -554,91 +466,7 @@ class Structure implements StructureInterface
      */
     public function isHorizontal()
     {
-        return self::POSITION_HORIZONTAL == $this->position;
-    }
-
-    /**
-     * @param int $position
-     * @return Structure
-     */
-    public function setPosition($position)
-    {
-        $this->position = $position;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getModulesPerLine(ItemInterface $item)
-    {
-        $modulesPerLine = self::MODULES_PER_LINE;
-
-        if ($item->getQuantity() > 52) {
-            $modulesPerLine = 18;
-        }
-
-        if ($this->isHorizontal()) {
-
-            $modulesPerLine = 6;
-
-            if (60 == $item->getCellNumber()) {
-                $modulesPerLine = 7;
-
-                if ($item->getQuantity() > 52) {
-                    $modulesPerLine = 11;
-                }
-            }
-        }
-
-        return $modulesPerLine;
-    }
-
-    /**
-     * @param int $modulesPerLine
-     * @return Structure
-     */
-    public function setModulesPerLine($modulesPerLine)
-    {
-        $this->modulesPerLine = $modulesPerLine;
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    /*public function getDimension()
-    {
-        return self::POSITION_VERTICAL == $this->position ? $this->module->getWidth() : $this->module->getLength() ;
-    }*/
-
-    /**
-     * @return array
-     */
-    public function getGroups()
-    {
-        return $this->groups;
-    }
-
-    /**
-     * @param array $groups
-     * @return Structure
-     */
-    public function setGroups($groups)
-    {
-        $this->groups = $groups;
-        return $this;
-    }
-
-    /**
-     * @param array $components
-     * @return Structure
-     */
-    public function setComponents($components)
-    {
-        $this->components = $components;
-
-        return $this;
+        return $this->module->isHorizontal();
     }
 
     /**
@@ -651,15 +479,19 @@ class Structure implements StructureInterface
 
         $this->validateItem($item);
 
-        //if(!$item->is(Item::TYPE_PROFILE)) {
         foreach ($this->items as $currentItem) {
             if (($item->getType() == $currentItem->getType()) && ($item->getSubtype() == $currentItem->getSubtype())) {
                 throw new \InvalidArgumentException(sprintf('A component with type [%s] already exists', $item->getType()));
             }
         }
-        //}
 
-        $this->items[] = $item;
+        $index = $item->getSubtype();
+
+        if($item->is(Item::TYPE_BASE)){
+            $index = $item->getType();
+        }
+
+        $this->items[$index] = $item;
 
         return $this;
     }
@@ -669,7 +501,11 @@ class Structure implements StructureInterface
      */
     public function removeItem(ItemInterface $item)
     {
-        // TODO: Implement removeComponent() method.
+        if(null != $currentItem = $this->getItemByType($item->getType())){
+            unset($this->items[$item->getSubtype()]);
+        }
+
+        return $this;
     }
 
     /**
@@ -681,23 +517,12 @@ class Structure implements StructureInterface
     }
 
     /**
-     * Create groups distribution
+     * @inheritDoc
      */
-    /*public function handleGroups(ItemInterface $item)
+    public function getItem($type)
     {
-        $this->groups = [];
-        $totalModules = $item->getQuantity();
-        $modulesPerLine = $this->getModulesPerLine($item);
-        $remaining = $totalModules;
-
-        for($i = 0; $i < ceil($totalModules / $modulesPerLine); $i++){
-            $this->groups[$i] = $remaining;
-            if($remaining > $modulesPerLine){
-                $this->groups[$i] = $modulesPerLine;
-                $remaining -= $modulesPerLine;
-            }
-        }
-    }*/
+        return $this->getItemByType($type);
+    }
 
     /**
      * Validate profile instances
@@ -721,7 +546,7 @@ class Structure implements StructureInterface
      * @param $type
      * @return ItemInterface
      */
-    private function getItemByType($type, $checkSubtype = false)
+    private function getItemByType($type)
     {
         $items = array_filter($this->items, function (ItemInterface $item) use ($type) {
             return $item->is($type);
@@ -750,18 +575,47 @@ class Structure implements StructureInterface
         if (is_null($this->roofType))
             $this->exception('Roof Type is not defined');
 
-        if(!$this->getItemByType(Item::TYPE_BASE))
-            $this->exception('Base is not defined');
+        $this->checkItem(Item::TERMINAL_FINAL);
+        $this->checkItem(Item::TERMINAL_MIDDLE);
 
-        if(!$this->getItemByType(Item::TERMINAL_FINAL))
-            $this->exception('Terminal Middle is not defined');
+        switch($this->roofType){
 
-        if(!$this->getItemByType(Item::TERMINAL_FINAL))
-            $this->exception('Terminal Final is not defined');
+            case self::ROOF_ROMAN_AMERICAN:
 
-        if(!$this->getItemByType(Item::TYPE_JUNCTION)
-            && (in_array($this->roofType, [self::ROOF_ROMAN_AMERICAN, self::ROOF_CEMENT, self::ROOF_SHEET_METAL])))
-            $this->exception('Junction is not defined');
+                $this->checkItem(Item::TYPE_JUNCTION);
+                $this->checkItem(Item::BASE_HOOK);
+                $this->checkItem(Item::FIXER_SCREW);
+                $this->checkItem(Item::FIXER_NUT);
+
+                break;
+
+            case self::ROOF_FIBERGLASS:
+
+                $this->checkItem(Item::TYPE_JUNCTION);
+                $this->checkItem(Item::FIXER_SCREW);
+                $this->checkItem(Item::FIXER_NUT);
+
+                break;
+
+            case self::ROOF_FLAT_SLAB:
+
+                $this->checkItem(Item::BASE_SCREW_STRUCTURAL);
+                $this->checkItem($this->isVertical() ? Item::BASE_TRIANGLE_VERTICAL : Item::BASE_TRIANGLE_HORIZONTAL);
+                $this->checkItem(Item::FIXER_SCREW);
+                $this->checkItem(Item::FIXER_NUT);
+
+                break;
+
+            case self::ROOF_SHEET_METAL:
+            case self::ROOF_SHEET_METAL_PFM:
+
+                if(self::ROOF_SHEET_METAL == $this->roofType)
+                    $this->checkItem(Item::TYPE_JUNCTION);
+
+                $this->checkItem(Item::BASE_SCREW_DRILLING);
+
+                break;
+        }
     }
 
     /**
@@ -777,14 +631,14 @@ class Structure implements StructureInterface
 
             $subtypes = [
                 self::ROOF_ROMAN_AMERICAN   => [Item::BASE_HOOK],
-                self::ROOF_CEMENT           => [Item::BASE_SCREW_STRUCTURAL],
+                self::ROOF_FIBERGLASS       => [Item::BASE_SCREW_STRUCTURAL],
                 self::ROOF_FLAT_SLAB        => [Item::BASE_TRIANGLE_VERTICAL, Item::BASE_TRIANGLE_HORIZONTAL],
                 self::ROOF_SHEET_METAL      => [Item::BASE_SCREW_DRILLING],
                 self::ROOF_SHEET_METAL_PFM  => [Item::BASE_SCREW_DRILLING]
             ];
 
             if(!in_array($item->getSubtype(), $subtypes[$this->roofType])){
-                $this->exception('Unsupported base type');
+                $this->exception(sprintf('Unsupported base type [%s]', $item->getSubtype()));
             }
         }
 
@@ -793,6 +647,15 @@ class Structure implements StructureInterface
                 $this->exception('Terminal size is not defined');
             }
         }
+    }
+
+    /**
+     * @param $type
+     */
+    private function checkItem($type)
+    {
+        if(!$this->getItemByType($type))
+            $this->exception(sprintf('Item [%s] is not defined', $type));
     }
 
     /**

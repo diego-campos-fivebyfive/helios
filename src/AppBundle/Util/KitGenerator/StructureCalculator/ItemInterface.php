@@ -87,12 +87,12 @@ interface ItemInterface
      * @param $cellNumber
      * @return ItemInterface
      */
-    public function setCellNumber($cellNumber);
+    //public function setCellNumber($cellNumber);
 
     /**
      * @return int
      */
-    public function getCellNumber();
+    //public function getCellNumber();
 
     /**
      * @param $description
