@@ -136,62 +136,60 @@
                 </div><!-- /#myGrid -->
             </div>
 
-            <div class="tags col-md-2">
-                <h3>Drag And Drop</h3>
-                <ul id="tagList">
+            <div class="col-md-2 sidebar-tags">
+
+                <div id="graph" class="hidden">
+                    <img src="http://brasilescola.uol.com.br/upload/conteudo/images/graficl.JPG" alt="Gráfico" width="300" height="200" />
+                </div>
+
+                <div id="items" class="hidden">
+                    <TABLE BORDER=1>
+                        <TR>
+                            <TD>Tabela de Exemplo</TD>
+                        </TR>
+                        <TR>
+                            <TD>Variavel 1</TD>
+                            <TD>Valor 1</TD>
+                            <TD>Valor 2</TD>
+                        </TR>
+                        <TR>
+                            <TD>Variavel 2</TD>
+                            <TD>Valor 3</TD>
+                            <TD>Valor 4</TD>
+                        </TR>
+                    </TABLE>
+                </div>
+
+
+
+                <ul id="infoList" class="list-group">
+                    <div class="list-group-item active">
+                        <h3 class="">Informações Úteis</h3>
+                        (Puxar e Soltar)
+                    </div>
                     <li>
-                        <div class="contact h-card" data-contact="0" draggable="true" tabindex="0">
-                            <img src="http://sdk.ckeditor.com/samples/assets/draganddrop/img/hfin.png" alt="avatar"
-                                 class="u-photo">Huckleberry
-                            Finn
+                        <div class="list-group-item" data-info="Uzumaki Naruto" draggable="true">
+                            <i class="fa fa-user"></i> Nome do Cliente
                         </div>
                     </li>
                     <li>
-                        <div class="contact h-card" data-contact="1" draggable="true" tabindex="0">
-                            <img src="http://sdk.ckeditor.com/samples/assets/draganddrop/img/dartagnan.png" alt="avatar"
-                                 class="u-photo">D'Artagnan
+                        <div class="list-group-item" data-info="780kw" draggable="true">
+                            <i class="fa fa-bolt"></i> Potência do Projeto
                         </div>
                     </li>
                     <li>
-                        <div class="contact h-card" data-contact="2" draggable="true" tabindex="0">
-                            <img src="http://sdk.ckeditor.com/samples/assets/draganddrop/img/pfog.png" alt="avatar"
-                                 class="u-photo">Phileas
-                            Fogg
+                        <div class="list-group-item" data-info="project_graph" draggable="true">
+                            <i class="fa fa-area-chart"></i> Gráfico
                         </div>
                     </li>
                     <li>
-                        <div class="contact h-card" data-contact="3" draggable="true" tabindex="0">
-                            <img src="http://sdk.ckeditor.com/samples/assets/draganddrop/img/alice.png" alt="avatar"
-                                 class="u-photo">Alice
-                        </div>
-                    </li>
-                    <li>
-                        <div class="contact h-card" data-contact="4" draggable="true" tabindex="0">
-                            <img src="http://sdk.ckeditor.com/samples/assets/draganddrop/img/lrrh.png" alt="avatar"
-                                 class="u-photo">Little
-                            Red Riding Hood
-                        </div>
-                    </li>
-                    <li>
-                        <div class="contact h-card" data-contact="5" draggable="true" tabindex="0">
-                            <img src="http://sdk.ckeditor.com/samples/assets/draganddrop/img/winetou.png" alt="avatar"
-                                 class="u-photo">Winnetou
-                        </div>
-                    </li>
-                    <li>
-                        <div class="contact h-card" data-contact="6" draggable="true" tabindex="0">
-                            <img src="http://sdk.ckeditor.com/samples/assets/draganddrop/img/edantes.png" alt="avatar"
-                                 class="u-photo">Edmond Dantès
-                        </div>
-                    </li>
-                    <li>
-                        <div class="contact h-card" data-contact="7" draggable="true" tabindex="0">
-                            <img src="http://sdk.ckeditor.com/samples/assets/draganddrop/img/rcrusoe.png" alt="avatar"
-                                 class="u-photo">Robinson Crusoe
+                        <div class="list-group-item" data-info="project_items" draggable="true">
+                            <i class="fa fa-info"></i> Itens do projeto
                         </div>
                     </li>
                 </ul>
-            </div><!-- /.tags -->
+            </div>
+
         </div>
     </div>
 
@@ -200,8 +198,10 @@
 {% block scripts %}
 
     <script src="{{ asset('assets/proposal/ckeditor/ckeditor.js') }}"></script>
-    <script src="{{ asset('assets/proposal/gridEditor/jquery.grideditor.js') }}"></script>
-    <script src="{{ asset('assets/proposal/js/draganddrop.js') }}"></script>
+    <script src="{{ asset('assets/proposal/gridEditor/jquery.grideditor.min.js') }}"></script>
     <script src="{{ asset('assets/proposal/js/script.js') }}"></script>
+    <script>
+        UPLOADCARE_PUBLIC_KEY = '9490325b6fcc3e8d094d';
+    </script>
 
 {% endblock %}
