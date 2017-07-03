@@ -34,22 +34,35 @@
         margin-top: -3px;
         text-align: center !important;
         border-color: #F2A019;
-    } 
-    
-    .btn-primary.btn-outline {
-        background-color: white;
+    }
+    option:hover,option:focus,option:active,option:checked{
+        background-color: #F2A019 !important;
+    }
+    .btn-primary.btn-outline{
+        background-color: white !important;
         border-color: solid 2px #F2A019;
-        color: #F2A019;        
+        color: #F2A019;
+    }
+    .btn-primary.btn-outline:hover{
+        background-color: #F2A019 !important;
+        border-color: solid 2px #F2A019;
+        color: white;
     }
     .btn-primary.btn-outline.select {
         border-color: solid 2px #F2A019;       
     }
-    .btn-primary.btn-outline.active{
-        background-color: #F2A019;
+    .btn-primary.active{
+        background-color: #F2A019 !important;
         border-color: #F2A019;
         color: white;
     }
-    
+    .sel{
+        border-color: #F8A41A;
+        border-radius: 4px;
+    }
+    .sel:focus{
+        border-color: #F8A41A !important;
+    }
 </style>
 
 <div class="ibox float-e-margins">
@@ -60,13 +73,13 @@
         <div class="col-md-4">
             <div class="form-group">
                 <input id="proposal-group" value="" type="hidden">
-                <select id="proposal-month" class="form-control">
+                <select id="proposal-month" class="form-control sel">
                     {% for key, name in months %}
                         <option {{ key == currentMonth ? 'selected="selected"' }}
                                 value="{{ key }}"> {{ name }} </option>
                     {% endfor %}
                 </select>
-                <select id="proposal-year" class="form-control">
+                <select id="proposal-year" class="form-control sel">
                     {% for year in startYear..currentYear %}
                         <option {{ year == currentYear ? 'selected="selected"' }}
                                 value="{{ year }}"> {{ year }} </option>
