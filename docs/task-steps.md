@@ -32,26 +32,38 @@ $ git commit -m "[WHAT_WERE_MAKE]"
 $ git push origin [BRANCH_NAME]
 ```
 
-8. Criar Pull Request (PR),
-   Mover para review,
-   Enviar link no Slack
+8. Criar Pull Request (PR) no Bitbucket
 
-9. Deletar Branch após Merge
+9. Mover para review no Board
+
+10. Enviar link no Slack
+
+11. Voltar a Master
+```
+$ git checkout master
+```
+
+12. Deletar Branch após Merge
 ```
 $ git branch -D [BRANCH_NAME]
 ```
 
-10. ForEach((task) => { começarNovamente(task) })
+13. ForEach((task) => { começarNovamente(task) })
 
 
 ### Reviewer
 
-1. Revisar código,
-   Aprovar,
-   Fazer Merge,
-   Avisar do Merge no Slack
+1. Revisar código
+
+2. Aprovar
+
+3. Fazer Merge
+
+4. Avisar do Merge no Slack
 
 
 ### Tester
 
 1. Testar Homolog
+
+2. Mover para Done
