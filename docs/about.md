@@ -14,8 +14,15 @@ Bitbucket: @rafamikovski
 E-mail: rafamikovski@hotmail.com
 
 
+### João Zaqueu Chereta
+Full-stack developer
+Slack: @joaozaqueuchereta
+Bitbucket: @joaozaqueu
+E-mail: joaozaqueuchereta@gmail.com
+
+
 ### Nome do colaborador
 Full-stack developer
 Slack: id_slack
-Github: id_github
+Bitbucket: id_github
 E-mail: email@email.com
