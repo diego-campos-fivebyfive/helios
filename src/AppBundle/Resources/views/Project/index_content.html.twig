@@ -6,7 +6,7 @@
         {% set random = ['stages',random()]|join %}
 
         <select title="Etapa de venda" data-stage="{{ project.token }}" id="{{ random }}"
-                class="form-control col-md-12">
+                class="form-control col-md-12 sel">
             {% for stage in stages %}
                 <option {{ stage.id == current.id ? 'selected="selected"' }} value="{{ stage.token }}">
                     {{ stage.sortedName }}
@@ -28,12 +28,26 @@
 
 <style>
     .btn-success{
-        background-color: #00A7EC;
-        border-color: #00A7EC;
+        background-color: #00A7EC !important;
+        border-color: #00A7EC !important;
+    }
+    .btn-success.active:hover{
+        background-color: #00A7EC !important;
+        border-color: #00A7EC !important;
     }
     .btn-danger{
         background-color: #FF2601;
         border-color: #FF2601;
+    }
+    .btn-warning{
+        background-color: #F2A019;
+    }
+    .sel{
+        border-color: #F8A41A;
+        border-radius: 4px;
+    }
+    .sel:focus{
+        border-color: #F8A41A !important;
     }
 </style>
 
