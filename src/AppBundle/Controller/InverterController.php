@@ -59,16 +59,6 @@ class InverterController extends ComponentController
 
             return $this->saveComponent($inverter, $request);
 
-            /*$status = $this->getUser()->isAdmin() ? Inverter::STATUS_VALIDATED : Inverter::STATUS_FEATURED ;
-            $inverter->setStatus($status);
-
-            $this->uploadComponentFiles($inverter, $request->files);
-
-            $manager->save($inverter);
-
-            $this->setNotice("Inversor cadastrado com sucesso !");
-
-            return $this->redirectToRoute('inverter_index');*/
         }
 
         return $this->render("inverter.form", [

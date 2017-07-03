@@ -62,10 +62,9 @@ class RegisterController extends AbstractController
     /**
      * @Route("/pre", name="pre_register")
      */
-    public function pre_RegisterAction(Request $request){
+    public function preRegisterAction(Request $request){
 
         $form = $this->createForm(PreRegisterType::class);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

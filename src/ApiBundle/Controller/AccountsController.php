@@ -12,7 +12,7 @@ class AccountsController extends FOSRestController
 {
     public function getAccountsAction(Request $request)
     {
-        $fields = 'c.firstname, c.lastname, c.email, c.mobile, c.phone, c.website, c.document, c.createdAt';
+        $fields = 'c.firstname, c.lastname, c.email, c.mobile, c.phone, c.website, c.document, c.createdAt as created_at';
 
         $em = $this->getDoctrine()->getManager();///->getRepository(Customer::class);
 
@@ -26,7 +26,7 @@ class AccountsController extends FOSRestController
         ]);
 
         /** @var \JMS\Serializer\Serializer $serializer */
-        $serializer = $this->get('serializer');
+        /*$serializer = $this->get('serializer');
 
         $customer = $this->get('app.customer_manager');
 
@@ -34,19 +34,21 @@ class AccountsController extends FOSRestController
 
         dump($customer); die;
         dump($serializer->getMetadataFactory()); die;
-        echo ($serializer->serialize($data, 'json')); die;
+        echo ($serializer->serialize($data, 'json')); die;*/
         $query = $qb->getQuery();
 
         $paginator = $this->get('knp_paginator');
 
         $pagination = $paginator->paginate(
             $query,
-            $request->query->getInt('page')
+            $request->query->getInt('page', 1),
+            $request->query->getInt('per_page', 5)
         );
 
-        dump($pagination->getItems()); die;
+        //dump($pagination->getItems()); die;
+        //$accounts = $qb->getQuery()->getArrayResult();
 
-        $accounts = $qb->getQuery()->getArrayResult();
+        $accounts = ['accounts' => $pagination->getItems(), 'next' => 'próxima', 'prev' => 'anterior'];
 
         $view = View::create($accounts);
 

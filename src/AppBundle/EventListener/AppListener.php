@@ -52,6 +52,10 @@ class AppListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
+
+        //dump($this->container->get('security.token_storage')->getToken()->getUser()); die;
+        //dump($event->getRequest()); die;
+
         if(null != $member = $this->getMember()) {
 
             date_default_timezone_set($member->getTimezone() ?: 'America/Sao_Paulo');
