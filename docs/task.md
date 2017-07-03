@@ -3,12 +3,13 @@ Tarefas
 
 ## Etapas no Dashboard
 
-To Do -> Progress -> Blocked ou Review -> Test -> Done
+  To Do -> Progress -> Blocked ou Review -> Test -> Done
 
 
 ## Passo a Passo
 
-#### Developer
+
+#### DEVELOPER
 
 1. Puxar para Progress e analisar Tasks
 ---------------------------------------
@@ -78,7 +79,7 @@ $ git branch -D [BRANCH_NAME]
 -------------------------------------------------
 
 
-#### Reviewer
+#### REVIEWER
 
 1. Revisar código
 -----------------
@@ -93,7 +94,7 @@ $ git branch -D [BRANCH_NAME]
 ---------------------------
 
 
-#### Tester
+#### TESTER
 
 1. Testar Homolog
 -----------------
