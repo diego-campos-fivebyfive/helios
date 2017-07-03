@@ -6,13 +6,13 @@
     <title> Inovador Solar &mdash; {% block title %}{% endblock %} </title>
     <link rel="shortcut icon" href="{{ asset('assets/img/favicon.ico') }}" type="image/x-icon">
     <link rel="icon" href="{{ asset('assets/img/favicon.ico') }}" type="image/x-icon">
-    {% stylesheets output='assets/css/front.css' filter='cssrewrite,uglifycss'
-        'assetic/app.css'
-        'assetic/bootstrap.min.css'
+    {% stylesheets output='public/assets/front.css' filter='cssrewrite,uglifycss'
+        'assets/app.css'
+        'assets/bootstrap.min.css'
         'assets/font-awesome/css/font-awesome.css'
-        'assetic/toastr/toastr.min.css'
-        'assetic/animate.css'
-        'assetic/style.css'
+        'assets/toastr/toastr.min.css'
+        'assets/animate.css'
+        'assets/style.css'
     %}
     <link rel="stylesheet" href="{{ asset_url }}">
     {% endstylesheets %}
@@ -35,11 +35,11 @@
         </p>
     </div>
 </div>
-{% javascripts output='assets/front.js' filter='uglifyjs2'
-    'assetic/jquery-2.1.1.js'
-    'assetic/bootstrap.min.js'
-    'assetic/toastr/toastr.min.js'
-    'assetic/jquery.mask.js'
+{% javascripts output='public/assets/front.js' filter='uglifyjs2'
+    'assets/jquery-2.1.1.js'
+    'assets/bootstrap.min.js'
+    'assets/toastr/toastr.min.js'
+    'assets/jquery.mask.js'
 %}
 <script src="{{ asset_url }}"></script>
 {% endjavascripts %}

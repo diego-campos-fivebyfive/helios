@@ -54,14 +54,14 @@
 
     {% include view('helper.scripts') %}
 
-    {% javascripts output='assets/widgets.js' filter='uglifyjs2'
-        'inspinia/js/plugins/flot/jquery.flot.js'
-        'inspinia/js/plugins/flot/jquery.flot.tooltip.min.js'
-        'inspinia/js/plugins/flot/jquery.flot.spline.js'
-        'inspinia/js/plugins/flot/jquery.flot.resize.js'
-        'inspinia/js/plugins/flot/jquery.flot.pie.js'
-        'inspinia/js/plugins/flot/jquery.flot.symbol.js'
-        'inspinia/js/plugins/flot/jquery.flot.time.js'
+    {% javascripts output='public/assets/widgets.js' filter='uglifyjs2'
+        'assets/flot/jquery.flot.js'
+        'assets/flot/jquery.flot.tooltip.min.js'
+        'assets/flot/jquery.flot.spline.js'
+        'assets/flot/jquery.flot.resize.js'
+        'assets/flot/jquery.flot.pie.js'
+        'assets/flot/jquery.flot.symbol.js'
+        'assets/flot/jquery.flot.time.js'
     %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}

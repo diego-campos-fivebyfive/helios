@@ -10,29 +10,29 @@
 
     {% block before_styles %}{% endblock %}
 
-    {% stylesheets output='assets/css/main.css' filter='cssrewrite,uglifycss'
-        'assetic/app.css'
-        'assetic/bootstrap.min.css'
+    {% stylesheets output='public/assets/css/main.css' filter='cssrewrite,uglifycss'
+        'assets/app.css'
+        'assets/bootstrap.min.css'
         'assets/font-awesome/css/font-awesome.css'
-        'assetic/jquery-ui/jquery-ui.min.css'
-        'assetic/toastr/toastr.min.css'
-        'assetic/gritter/jquery.gritter.css'
-        'assetic/ladda/ladda-themeless.min.css'
-        'assetic/sweetalert/sweetalert.css'
-        'assetic/footable/footable.core.css'
-        'assetic/animate.css'
-        'assetic/daterangepicker/daterangepicker.css'
-        'assetic/fullcalendar/fullcalendar.css'
-        'assetic/chosen/chosen.css'
-        'assetic/style.css'
+        'assets/jquery-ui/jquery-ui.min.css'
+        'assets/toastr/toastr.min.css'
+        'assets/gritter/jquery.gritter.css'
+        'assets/ladda/ladda-themeless.min.css'
+        'assets/sweetalert/sweetalert.css'
+        'assets/footable/footable.core.css'
+        'assets/animate.css'
+        'assets/daterangepicker/daterangepicker.css'
+        'assets/fullcalendar/fullcalendar.css'
+        'assets/chosen/chosen.css'
+        'assets/style.css'
     %}
     <link rel="stylesheet" href="{{ asset_url }}">
     {% endstylesheets %}
 
     {% block styles %}{% endblock %}
 
-    {% javascripts output='assets/jquery.js' filter='uglifyjs2'
-        'assetic/jquery-2.1.1.js'
+    {% javascripts output='public/assets/jquery.js' filter='uglifyjs2'
+        'assets/jquery-2.1.1.js'
     %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -148,29 +148,29 @@
 
 </div>
 
-{% javascripts output='assets/main.js' filter='uglifyjs2'
-    'assetic/http.js'
-    'assetic/bootstrap.min.js'
-    'assetic/metisMenu/jquery.metisMenu.js'
-    'assetic/slimscroll/jquery.slimscroll.min.js'
-    'assetic/inspinia.js'
-    'assetic/pace/pace.min.js'
-    'assetic/jquery-ui/jquery-ui.min.js'
-    'assetic/gritter/jquery.gritter.min.js'
-    'assetic/sparkline/jquery.sparkline.min.js'
-    'assetic/idle-timer/idle-timer.min.js'
-    'assetic/toastr/toastr.min.js'
-    'assetic/ladda/spin.min.js'
-    'assetic/ladda/ladda.min.js'
-    'assetic/ladda/ladda.jquery.min.js'
-    'assetic/sweetalert/sweetalert.min.js'
-    'assetic/chosen/chosen.jquery.js'
-    'assetic/footable/footable.all.min.js'
-    'assetic/jquery.mask.js'
-    'assetic/fullcalendar/lib/moment.min.js'
-    'assetic/fullcalendar/fullcalendar.min.js'
-    'assetic/fullcalendar/locale-all.js'
-    'assetic/daterangepicker/daterangepicker.js'
+{% javascripts output='public/assets/main.js' filter='uglifyjs2'
+    'assets/http.js'
+    'assets/bootstrap.min.js'
+    'assets/metisMenu/jquery.metisMenu.js'
+    'assets/slimscroll/jquery.slimscroll.min.js'
+    'assets/inspinia.js'
+    'assets/pace/pace.min.js'
+    'assets/jquery-ui/jquery-ui.min.js'
+    'assets/gritter/jquery.gritter.min.js'
+    'assets/sparkline/jquery.sparkline.min.js'
+    'assets/idle-timer/idle-timer.min.js'
+    'assets/toastr/toastr.min.js'
+    'assets/ladda/spin.min.js'
+    'assets/ladda/ladda.min.js'
+    'assets/ladda/ladda.jquery.min.js'
+    'assets/sweetalert/sweetalert.min.js'
+    'assets/chosen/chosen.jquery.js'
+    'assets/footable/footable.all.min.js'
+    'assets/jquery.mask.js'
+    'assets/fullcalendar/lib/moment.min.js'
+    'assets/fullcalendar/fullcalendar.min.js'
+    'assets/fullcalendar/locale-all.js'
+    'assets/daterangepicker/daterangepicker.js'
 %}
 <script src="{{ asset_url }}"></script>
 {% endjavascripts %}
