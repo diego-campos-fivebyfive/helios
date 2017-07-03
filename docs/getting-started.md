@@ -11,11 +11,11 @@ estar sujeito a pequenas mudanças em outras distribuições.
 
 #### HTTP:
 ```
-$ git clone https://rafamikovski@bitbucket.org/kolinalabsteam/sices-solar.git
+$ git clone https://[USER_NAME]@bitbucket.org/kolinalabsdevelopers/sices.git
 ```
 #### SSH:
 ```
-$ git clone git@bitbucket.org:kolinalabsteam/sices-solar.git
+$ git clone git@bitbucket.org:kolinalabsdevelopers/sices.git
 ```
 
 

@@ -11,3 +11,9 @@ Sobre o ambiente de trabalho.
   - Waffle: Dev. Tasks
   - Slack: Bot e Chat
   - Trello: Management Tasks
+
+
+2. Tasks Steps
+--------------
+
+  To Do -> Blocked -> Progress -> Review -> Test -> Done
