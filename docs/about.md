@@ -26,8 +26,8 @@ Slack: @cjchamado
 Bitbucket: @cjchamado
 E-mail: cjchamado@gmail.com
 
-### Nome do colaborador
+### Fabio Dukievicz
 Full-stack developer
-Slack: id_slack
-Bitbucket: id_github
-E-mail: email@email.com
+Slack: @fabiojd47
+Bitbucket: @fabiojd47
+E-mail: fabiojd47@gmail.com

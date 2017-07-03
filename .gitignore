@@ -5,6 +5,7 @@ app/sessions/
 !app/logs/.gitkeep
 !app/cache/.gitkeep
 app/config/config.yml
+app/bootstrap.php.cache
 
 node_modules
 web/public

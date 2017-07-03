@@ -12,7 +12,7 @@ $ git pull origin master
 
 3. Criar nova branch
 ```
-$ git branch -d issue-[NUMBER_ISSUE]
+$ git checkout -b issue-[NUMBER_ISSUE]
 ```
 
 4. Executar tarefas
