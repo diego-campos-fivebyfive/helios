@@ -20,6 +20,11 @@ Slack: @joaozaqueuchereta
 Bitbucket: @joaozaqueu
 E-mail: joaozaqueuchereta@gmail.com
 
+### Claudinei Machado
+Full-stack developer
+Slack: @cjchamado
+Bitbucket: @cjchamado
+E-mail: cjchamado@gmail.com
 
 ### Nome do colaborador
 Full-stack developer
