@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "compile": "php app/console assetic:dump",
+    "start": "php app/console server:run"
+  },
+  "dependencies": {
+    "uglify-js": "^3.0.23",
+    "uglifycss": "^0.0.27"
+  }
+}
