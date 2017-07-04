@@ -3,7 +3,8 @@ Tarefas
 
 # Etapas no Dashboard
 
-  To Do -> Progress -> Blocked ou Review -> Test -> Done
+  To Do   ->   Progress   ->     Blocked ou Review    - >     Test      ->    Done
+  (New)   ->   (Open)     ->   (Invalid ou Resolved)  - >   (On Hold)   ->   (Close)
 
 
 # Passo a Passo
