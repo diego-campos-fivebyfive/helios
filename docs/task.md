@@ -98,3 +98,6 @@ $ git branch -D [BRANCH_NAME]
 
 2. Mover para Done
 ------------------
+
+
+Proxima leitura: [Sobre](about.md)

@@ -94,4 +94,4 @@ $ yarn start
 Após os passos acima a aplicação estará disponível em: `http://localhost:8000`
 
 
-Proximo passo: [Configurações adicionais do ambiente de trabalho](workflow.md)
+Proxima leitura: [Sobre o Workflow da Equipe](workflow.md)

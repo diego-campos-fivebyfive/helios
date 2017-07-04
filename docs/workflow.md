@@ -19,3 +19,6 @@ Sobre o ambiente de trabalho.
 
 Acessando o repositório do projeto pelo `bitbucket` haverá uma
 aba chamada `Board` onde encontram-se a Tasks do Projeto.
+
+
+Proxima leitura: [Execução de Tasks](task.md)

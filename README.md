@@ -4,14 +4,14 @@ SICES SOLAR
 Sistema de suporte para empresas do setor de energia solar fotovoltaíca.
 
 
-### Passo a Passo
+### Intalações
 
-  - [Instalação](docs/getting-started.md)
-
-  - [Workflow](docs/workflow.md)
+  - [Instalação do Sistema](docs/getting-started.md)
 
 
 ### Documentações
+
+  - [Workflow](docs/workflow.md)
 
   - [Tarefas](docs/task.md)
 
