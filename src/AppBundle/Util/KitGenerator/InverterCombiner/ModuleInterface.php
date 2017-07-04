@@ -95,16 +95,14 @@ interface ModuleInterface
 
     /**
      * @param $maxPower
-     * @return mixed
+     * @return ModuleInterface
      */
     public function setMaxPower($maxPower);
-
 
     /**
      * @return mixed
      */
     public function getMaxPower();
-
 
     /**
      * @param $shortCircuitCurrent

@@ -178,6 +178,7 @@ class Module implements ModuleInterface
     public function setTempCoefficientVoc($tempCoefficientVoc)
     {
         $this->tempCoefficientVoc = $tempCoefficientVoc;
+
         return $this;
     }
 
@@ -196,6 +197,7 @@ class Module implements ModuleInterface
     public function setMaxPower($maxPower)
     {
         $this->maxPower = $maxPower;
+
         return $this;
     }
 
