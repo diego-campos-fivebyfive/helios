@@ -18,10 +18,21 @@
             <div class="col-md-10">
                 <div id="myGrid" class="ge-canvas ge-editing ui-sortable ge-layout-desktop">
 
-                    <div class="row ui-sortable">
-
+                    <div class="row a4 ui-sortable">
+                        {#<div class="ge-tools-drawer"><a title="Move" class="ge-move"><span
+                                        class="glyphicon glyphicon-move"></span></a><a title="Settings" class=""><span
+                                        class="glyphicon glyphicon-cog"></span></a><a title="Remove row" class=""><span
+                                        class="glyphicon glyphicon-trash"></span></a><a title="Add column"
+                                                                                        class="ge-add-column"><span
+                                        class="glyphicon glyphicon-plus-sign"></span></a>
+                            <div class="ge-details"><input class="ge-id" placeholder="id"
+                                                           title="Set a unique identifier">
+                                <div class="btn-group"><a class="btn btn-xs btn-default"
+                                                          title="Toggle &quot;Example class&quot; styling">Example
+                                        class</a></div>
+                            </div>
+                        </div>#}
                         <div class="col-md-12 col-sm-12 col-xs-12 column ui-sortable">
-                            {#é preciso remover todos os elementos com essa classe ge-tools-drawer #}
                             {#<div class="ge-tools-drawer"><a title="Move" class="ge-move"><span
                                             class="glyphicon glyphicon-move"></span></a><a title="Make column narrower
 (hold shift for min)" class="ge-decrease-col-width"><span class="glyphicon glyphicon-minus"></span></a><a title="Make column wider
@@ -38,98 +49,34 @@
                                             class</a></div>
                                 </div>
                             </div>#}
-
-
-                            <div class="ge-content ge-content-type-ckeditor" data-ge-content-type="ckeditor"><h1>Lorem
-                                    ipsum dolor sit amet, consectetur</h1>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit exercitationem eaque
-                                    aperiam rem quia quibusdam dolor ducimus quo similique eos pariatur nostrum aliquam
-                                    nam eius, doloremque quis voluptatum unde. Porro voluptates aspernatur voluptate
-                                    ipsam, magni vero. Accusamus, iusto tempore id!</p>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae laboriosam, excepturi
-                                    quas.</p></div>
+                            <div class="ge-content ge-content-type-ckeditor" data-ge-content-type="ckeditor"><p>Lorem
+                                    initius... </p></div>
                         </div>
-                    </div>
-
-                    <div class="row ui-sortable">
-
-                        <div class="col-md-4 col-sm-4 col-xs-4 column ui-sortable">
-
-
-                            <div class="ge-content ge-content-type-ckeditor" data-ge-content-type="ckeditor"><h2>qLorem
-                                    ipsum dolor</h2>
-                                <p>qLorem ipsum dolor sit amet, consectetur adipisicing elit. Ea facilis vel aliquam
-                                    aspernatur dolor placeat totam saepe perferendis. Odio quia vel sed eveniet
-                                    cupiditate, illum doloremque sint veniam eum? Corporis?</p></div>
-                        </div>
-                        <div class="col-md-4 col-sm-4 col-xs-4 column ui-sortable">
-
-
-                            <div class="ge-content ge-content-type-ckeditor" data-ge-content-type="ckeditor"><h2>
-                                    wPariatur reprehenderit</h2>
-                                <p>wLorem ipsum dolor sit amet, consectetur adipisicing elit. Illo adipisci ipsa,
-                                    consequuntur cum, sunt dolores veniam. Enim inventore in dolore deserunt vitae sequi
-                                    nemo!</p></div>
-                        </div>
-                        <div class="col-md-4 col-sm-4 col-xs-4 column ui-sortable">
-
-
-                            <div class="ge-content ge-content-type-ckeditor" data-ge-content-type="ckeditor"><h2>
-                                    Pariatur reprehenderit</h2>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea excepturi ducimus
-                                    numquam aut error corporis aspernatur ipsum quos eius culpa!</p></div>
-                        </div>
-                    </div>
-
-                    <div class="row ui-sortable">
-
-                        <div class="col-md-8 col-sm-8 col-xs-8 column ui-sortable">
-
-
-                            <div class="ge-content ge-content-type-ckeditor" data-ge-content-type="ckeditor">
-                                <div class="ge-content ge-content-type-ckeditor" data-ge-content-type="ckeditor"><h2>
-                                        Lorem ipsum dolor.</h2>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro distinctio atque
-                                        molestiae optio, consequuntur? Iusto ratione cumque dolor aut dolore!</p></div>
-                            </div>
-
-                            <div class="row ui-sortable">
-
-                                <div class="col-md-6 col-sm-6 col-xs-6 column ui-sortable">
-
-                                    <div class="ge-content ge-content-type-ckeditor" data-ge-content-type="ckeditor">
-                                        <hr>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis facilis
-                                            molestias voluptatum laudantium fuga ratione tempora rem dolor dicta rerum
-                                            vero ut, suscipit ex qui amet quam vel cupiditate quaerat minus assumenda
-                                            reiciendis, similique omnis delectus! Autem, repudiandae cumque eaque?</p>
-                                    </div>
+                        <div class="bb col-md-12 col-sm-12 col-xs-12 column ui-sortable">
+                            {#<div class="ge-tools-drawer"><a title="Move" class="ge-move"><span
+                                            class="glyphicon glyphicon-move"></span></a><a title="Make column narrower
+(hold shift for min)" class="ge-decrease-col-width"><span class="glyphicon glyphicon-minus"></span></a><a title="Make column wider
+(hold shift for max)" class="ge-increase-col-width"><span class="glyphicon glyphicon-plus"></span></a><a
+                                        title="Settings" class=""><span class="glyphicon glyphicon-cog"></span></a><a
+                                        title="Remove col" class=""><span
+                                            class="glyphicon glyphicon-trash"></span></a><a title="Add row"
+                                                                                            class="ge-add-row"><span
+                                            class="glyphicon glyphicon-plus-sign"></span></a>
+                                <div class="ge-details"><input class="ge-id" placeholder="id"
+                                                               title="Set a unique identifier">
+                                    <div class="btn-group"><a class="btn btn-xs btn-default"
+                                                              title="Toggle &quot;Example class&quot; styling">Example
+                                            class</a></div>
                                 </div>
-                                <div class="col-md-6 col-sm-6 col-xs-6 column ui-sortable">
-
-
-                                    <div class="ge-content ge-content-type-ckeditor" data-ge-content-type="ckeditor">
-                                        <hr>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eveniet molestiae
-                                            quaerat illum, consequuntur iusto aspernatur quam provident? Possimus!</p>
-                                    </div>
-                                </div>
+                            </div>#}
+                            <div class="ge-content ge-content-type-ckeditor" data-ge-content-type="ckeditor"><p>Lorem
+                                    initius... </p>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <p>initius... </p>
                             </div>
-                        </div>
-
-                        <div class="col-md-4 col-sm-4 col-xs-4 column ui-sortable">
-
-
-                            <div class="ge-content ge-content-type-ckeditor" data-ge-content-type="ckeditor"><h2>Lusto
-                                    ratione</h2>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis fugit quasi officiis
-                                    id laudantium error aut ut aperiam dicta saepe non vel, cupiditate illum ipsam velit
-                                    deleniti natus incidunt impedit molestias dolore quos dolores enim. Aliquid ipsam
-                                    eaque consequuntur quaerat, suscipit a in. Praesentium repudiandae quibusdam
-                                    recusandae sequi eligendi quos, dignissimos, officiis officia minima necessitatibus
-                                    eaque consequatur in id adipisci qui minus voluptatum quae debitis, quas maxime
-                                    iure. Tempore vero unde quia reiciendis ad beatae voluptate omnis, ipsa expedita ab,
-                                    quasi, neque. Doloribus, pariatur. Aut hic voluptate.</p></div>
                         </div>
                     </div>
 
@@ -139,7 +86,8 @@
             <div class="col-md-2 sidebar-tags">
 
                 <div id="graph" class="hidden">
-                    <img src="http://brasilescola.uol.com.br/upload/conteudo/images/graficl.JPG" alt="Gráfico" width="300" height="200" />
+                    <img src="http://brasilescola.uol.com.br/upload/conteudo/images/graficl.JPG" alt="Gráfico"
+                         width="300" height="200"/>
                 </div>
 
                 <div id="items" class="hidden">
@@ -159,7 +107,6 @@
                         </TR>
                     </TABLE>
                 </div>
-
 
 
                 <ul id="infoList" class="list-group">
@@ -198,7 +145,7 @@
 {% block scripts %}
 
     <script src="{{ asset('assets/proposal/ckeditor/ckeditor.js') }}"></script>
-    <script src="{{ asset('assets/proposal/gridEditor/jquery.grideditor.min.js') }}"></script>
+    <script src="{{ asset('assets/proposal/gridEditor/jquery.grideditor.js') }}"></script>
     <script src="{{ asset('assets/proposal/js/script.js') }}"></script>
     <script>
         UPLOADCARE_PUBLIC_KEY = '9490325b6fcc3e8d094d';
