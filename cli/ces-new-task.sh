@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 cd $SICES_PATH
-echo $SICES_PATH
 
 if [[ -z $1 ]] || [[ $1 == '--help' ]] || [[ $1 == '-h' ]]; then
     printf "Iniciando uma nova tarefa.
@@ -38,9 +37,8 @@ if [[ -n $result ]]; then
     exit 0;
 fi
 
-echo "Acessando a Master..."
 git checkout master
 git fetch origin
 git pull origin master
-git checkout -b issue-$issue_name
+git checkout -b $issue_name
 echo "Done"
