@@ -94,4 +94,4 @@ $ yarn start
 Após os passos acima a aplicação estará disponível em: `http://localhost:8000`
 
 
-Proxima leitura: [Sobre o Workflow da Equipe](workflow.md)
+Proximo passo: [Configuração da Dashboard de Tasks](dashboard.md)

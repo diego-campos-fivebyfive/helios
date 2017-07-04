@@ -15,10 +15,4 @@ Sobre o ambiente de trabalho.
   - Trello: Management Task Board
 
 
-## Adicionando o Canvas For Bitbucket
-
-Acessando o repositório do projeto pelo `bitbucket` haverá uma
-aba chamada `Board` onde encontram-se a Tasks do Projeto.
-
-
-Proxima leitura: [Execução de Tasks](task.md)
+Proxima leitura: [Sobre](about.md)

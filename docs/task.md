@@ -101,4 +101,4 @@ $ git branch -D [BRANCH_NAME]
 ------------------
 
 
-Proxima leitura: [Sobre](about.md)
+Proxima leitura: [Workflow da Equipe](workflow.md)
