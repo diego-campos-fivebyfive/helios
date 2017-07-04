@@ -6,6 +6,18 @@ a elaboração deste guia e o processo de instalação abaixo pode
 estar sujeito a pequenas mudanças em outras distribuições.
 
 
+#Requisitos:
+
+  - PHP
+    - php-mbstring
+    - php-xml
+    - php-intl
+
+  - Node
+
+  - Apache2
+
+
 1. Clonando o projeto do Github
 -------------------------------
 
