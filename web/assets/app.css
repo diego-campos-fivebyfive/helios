@@ -6,7 +6,7 @@
 }
 .nav-header {
     padding: 33px 25px;
-    background: url("../assets/img/header-profile.png") no-repeat;
+    background: url("../public/assets/images/header-profile.png") no-repeat;
 }
 .fa.online{ color: #00a65a; }
 .fa.offline{ color: #555555; }
