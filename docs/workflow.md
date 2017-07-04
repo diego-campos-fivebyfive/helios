@@ -8,7 +8,9 @@ Sobre o ambiente de trabalho.
 
   - Bitbucket: Versionamento e Issue
 
-  - Canvas For Bitbucket: Development Task Board
+  - BucketBoard: Gerenciamento de Etapas das Tasks de Desenvolvimento
+
+  - Canvas For Bitbucket: Visualização de Tasks por Atributos
 
   - Slack: Bot e Chat
 

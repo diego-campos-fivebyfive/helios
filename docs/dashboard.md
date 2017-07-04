@@ -4,23 +4,21 @@ Canvas for Bitbucket
 Utilizado para gerenciamento de Tasks de desenvolvimento por meio de `Issues` do `Bitbucket`.
 
 
-## Configurando o Canvas For Bitbucket
+## Acessando Canvas For Bitbucket
 
-1. Acessando o repositório do projeto pelo `bitbucket` haverá uma
+Acessando o repositório do projeto pelo `bitbucket` haverá uma
 aba chamada `Board` onde encontram-se a Tasks do Projeto.
 
 
-2. No campo de select `Column` que aparece no canto
-superior direito selecione `Status`.
+## Adicionando o Bucket Board
+
+[Na Página do Bucket Board](https://bitbucket.org/account/addon-directory?addon=bucketboard&utm_source=BB-blog&utm_campaign=bitbucket_fy17q1-momentum-posts&_ga=2.183639907.433510956.1499090929-916732886.1494336071)
+adicione-o ao `Bitbucket` clicando em `Add` e em seguida em `Grant Access`.
 
 
-3. Organize as colunas clicando sobre elas conforme a ordem:
-
-  New -> Open -> Invalid ou Resolved -> On Hold -> Close
-
-
-4. No botão de menu no canto superior direito selecione
-`Save as` e salve o projeto com o nome `Sices Dashboard`
+Acessando o repositório do projeto pelo `bitbucket` deverá
+aparecer uma nova aba chamada `BucketBoard`. Clique
+novamente em `Grant Access`, caso apareça.
 
 
 Proxima leitura: [Execução de Tasks](task.md)

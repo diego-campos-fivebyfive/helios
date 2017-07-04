@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-cd $CLIPP_PATH
+cd $SICES_PATH
+echo $SICES_PATH
 
 if [[ -z $1 ]] || [[ $1 == '--help' ]] || [[ $1 == '-h' ]]; then
     printf "Iniciando uma nova tarefa.
@@ -39,9 +40,7 @@ fi
 
 echo "Acessando a Master..."
 git checkout master
-echo "Realizando o Pull..."
 git fetch origin
 git pull origin master
-echo "Criando nova Branch..."
 git checkout -b issue-$issue_name
 echo "Done"
