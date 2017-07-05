@@ -74,6 +74,13 @@ class Maker implements MakerInterface
     private $inverters;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Component\Structure", mappedBy="maker")
+     */
+    private $structure;
+
+    /**
      * @var \AppBundle\Entity\Customer
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer")
@@ -88,6 +95,7 @@ class Maker implements MakerInterface
         $this->enabled = true;
         $this->inverters = new ArrayCollection();
         $this->modules = new ArrayCollection();
+        $this->structures = new ArrayCollection();
     }
 
     /**
@@ -204,6 +212,15 @@ class Maker implements MakerInterface
 
     /**
      * @inheritDoc
+     */
+    public function isMakerStructure()
+    {
+        return $this->context === self::CONTEXT_STRUCTURE;
+        //|| $this->context === self::CONTEXT_ALL;
+    }
+
+    /**
+     * @inheritDoc
      * @deprecated context ALL is removed
      */
     public function isMakerAll()
@@ -276,6 +293,39 @@ class Maker implements MakerInterface
     public function getInverters()
     {
         return $this->inverters;
+    }
+
+     /**
+     * @inheritDoc
+     */
+    public function addStructure(StructureInterface $structure)
+    {
+        if(!$this->structures->contains($structure)){
+            $this->structures->add($structure);
+            $structure->setMaker($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeStructure(StructureInterface $structure)
+    {
+        if($this->structures->contains($structure)){
+            $this->structures->removeElement($structure);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getStructures()
+    {
+        return $this->structures;
     }
 
     /**
