@@ -13,8 +13,8 @@ Sistema de suporte para empresas do setor de energia solar fotovoltaíca.
 
 ### Documentações
 
+  - [Tarefas](docs/tasks/tasks.md)
+
   - [Workflow](docs/workflow.md)
 
-  - [Tarefas](docs/task.md)
-
-  - [Colaboradores](docs/contributors.md)
+  - [Sobre](docs/about.md)

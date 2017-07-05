@@ -26,16 +26,10 @@ Sendo que Tasks do tipo `Bug` sempre são prioritárias.
   - Os comentários referentes a PR devem ser feitos através do bitbucket e avisados via Slack.
 
 
-## Documentações
+## Execução de Tarefas
 
-  - Configurações:
-    - [Configurando os Dashboards do Bitbucket](task.md)
-
-
-  - Criação de Tasks:
-    - [Criando Tarefas com o BucketBoard](task.md)
+  - [Utilizando o ces new-task (novo)](tasks/new-task-ces.md)
+  - [Utilizando comandos nativos do Git](tasks/new-task-git.md)
 
 
-  - Execução de Tasks:
-    - [Utilizando o ces new-task (novo)](task.md)
-    - [Utilizando comandos nativos do Git](task.md)
+[Voltar](../tasks.md)

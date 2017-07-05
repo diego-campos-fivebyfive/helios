@@ -21,4 +21,4 @@ aparecer uma nova aba chamada `BucketBoard`. Clique
 novamente em `Grant Access`, caso apareça.
 
 
-Proxima leitura: [Execução de Tasks](task.md)
+[Voltar](../README.md)

@@ -32,5 +32,18 @@ Sobre o ambiente de trabalho.
   - Reuniões diárias incluem: review do dia anterior, tarefas abertas, proximas tarefas e assuntos importantes.
 
 
+## Flags
 
-Proxima leitura: [Sobre](about.md)
+Padrão de flags utilizadas para notificações no Slack:
+
+#### Com @here
+
+  - HELP: para pedir ajuda
+  - REVIEW: para solicitar review
+  - TEST: para solicitar test
+
+#### Com @[USER_NAME]
+  Para responder a Flag, pode-se utilizar o `:+1:` para curta resposta.
+
+
+[Voltar](../README.md)

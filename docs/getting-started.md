@@ -6,7 +6,14 @@ a elaboração deste guia e o processo de instalação abaixo pode
 estar sujeito a pequenas mudanças em outras distribuições.
 
 
-## Requisitos
+
+
+1. Instalação de Dependências
+-----------------------------
+
+Caso você já possua os requisitos abaixo intalados, pule para a proxima etapa:
+
+#### Requisitos
 
   - Apache2
 
@@ -23,11 +30,17 @@ estar sujeito a pequenas mudanças em outras distribuições.
 
   - Git
 
+Para instalação das dependências siga os passos do documento:
 
-## Instalação de Dependências
-
-
-## Instalação do Sistema
+  - [Instalação de dependências](install/dependencies.md)
 
 
-Proximo passo: [Configuração da Dashboard de Tasks](dashboard.md)
+2. Instalação do Sistema
+------------------------
+
+Para instalação do sistema siga os passos do documento:
+
+  - [Instalação do sistema](install/system.md)
+
+
+[Voltar](../README.md)
