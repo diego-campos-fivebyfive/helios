@@ -16,7 +16,7 @@ use AppBundle\Form\Component\StructureType;
 
 /**
  * Class StructureController
- * @author Joao Zaqueu <joaozaqueuchereta@gmail.com>
+ * @author Claudinei Machado <claudinei@kolinalabs.com>
  *
  * @Route("structure")
  *
