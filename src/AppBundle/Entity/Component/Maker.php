@@ -78,7 +78,7 @@ class Maker implements MakerInterface
      *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Component\Structure", mappedBy="maker")
      */
-    private $structure;
+    private $structures;
 
     /**
      * @var \AppBundle\Entity\Customer

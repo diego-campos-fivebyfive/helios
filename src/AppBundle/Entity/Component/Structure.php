@@ -79,7 +79,6 @@ class Structure implements StructureInterface
      */
     public function __construct()
     {
-        $this->childrens = new ArrayCollection();
     }
 
     /**
