@@ -10,11 +10,12 @@ interface MakerInterface
 
     const CONTEXT_INVERTER = 'component_inverter';
     const CONTEXT_MODULE = 'component_module';
+    const CONTEXT_STRUCTURE = 'component_structure';
     const CONTEXT_ALL = 'component_all';
-    
+
     const STATUS_ENABLED = 1;
     const STATUS_DISABLED = 0;
-    
+
     const ERROR_UNSUPPORTED_CONTEXT = 'The context is not supported';
 
     const REMOVE_ZERO_CHILD = true;
@@ -45,7 +46,7 @@ interface MakerInterface
      * @return string
      */
     public function getName();
-    
+
     /**
      * @param $enabled
      * @return MakerInterface
@@ -66,6 +67,11 @@ interface MakerInterface
      * @return bool
      */
     public function isMakerModule();
+
+    /**
+     * @return bool
+     */
+    public function isMakerStructure();
 
     /**
      * @return bool
@@ -105,6 +111,23 @@ interface MakerInterface
      * @return ArrayCollection
      */
     public function getInverters();
+
+    /**
+     * @param StructureInterface $structure
+     * @return MakerInterface
+     */
+    public function addStructure(StructureInterface $structure);
+
+    /**
+     * @param StructureInterface $structure
+     * @return MakerInterface
+     */
+    public function removeStructure(StructureInterface $structure);
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getStructures();
 
     /**
      * @param BusinessInterface|null $account
