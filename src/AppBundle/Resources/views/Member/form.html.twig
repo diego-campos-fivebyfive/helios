@@ -2,15 +2,15 @@
 
 
 {% block styles %}
-    <link href="{{ asset('inspinia/css/plugins/chosen/chosen.css') }}" rel="stylesheet"
+    <link href="{{ asset('assets/inspinia/css/plugins/chosen/chosen.css') }}" rel="stylesheet"
           xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
-    <link href="{{ asset('inspinia/css/plugins/ladda/ladda-themeless.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/inspinia/css/plugins/ladda/ladda-themeless.min.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
 
     {#{% set user = info.user %}#}
-    {% set user_picture = asset('inspinia/img/user-icon.png') %}
+    {% set user_picture = asset('assets/inspinia/img/user-icon.png') %}
 
     <div class="wrapper wrapper-content animated fadeIn">
 
@@ -395,10 +395,10 @@
 
     {% block scripts %}
 
-        <script src="{{ asset('inspinia/js/plugins/chosen/chosen.jquery.js') }}"></script>
-        <script src="{{ asset('inspinia/js/plugins/ladda/spin.min.js') }}"></script>
-        <script src="{{ asset('inspinia/js/plugins/ladda/ladda.min.js') }}"></script>
-        <script src="{{ asset('inspinia/js/plugins/ladda/ladda.jquery.min.js') }}"></script>
+        <script src="{{ asset('assets/inspinia/js/plugins/chosen/chosen.jquery.js') }}"></script>
+        <script src="{{ asset('assets/inspinia/js/plugins/ladda/spin.min.js') }}"></script>
+        <script src="{{ asset('assets/inspinia/js/plugins/ladda/ladda.min.js') }}"></script>
+        <script src="{{ asset('assets/inspinia/js/plugins/ladda/ladda.jquery.min.js') }}"></script>
 
         {#<script>
             var DropzoneHelper = {

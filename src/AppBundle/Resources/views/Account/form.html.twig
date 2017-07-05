@@ -2,9 +2,9 @@
 
 
 {% block styles %}
-    <link href="{{ asset('inspinia/css/plugins/ladda/ladda-themeless.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('inspinia/css/plugins/dropzone/basic.css') }}" rel="stylesheet">
-    <link href="{{ asset('inspinia/css/plugins/dropzone/dropzone.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/inspinia/css/plugins/ladda/ladda-themeless.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/inspinia/css/plugins/dropzone/basic.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/inspinia/css/plugins/dropzone/dropzone.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
@@ -35,7 +35,7 @@
                            class="btn btn-sm btn-danger">
                             Company Random Data
                         </a>
-    
+
                         <a href="#"
                            data-random="{{ path('random_account') }}"
                            data-target="#form-account"
@@ -43,7 +43,7 @@
                            class="btn btn-sm btn-info">
                             Owner Random Data
                         </a>
-    
+
                         <a href="#"
                            data-random="{{ path('random_account') }}"
                            data-target="#form-account"
@@ -318,7 +318,7 @@
 
                                 /*phone_stack = phone.length >= 14;
                                  console.log(phone_stack + '' + phone.length);
-                                 
+
                                  var masks = ['(00) 0000-0000', '(00) 00000-0000'],
                                  mask = phone_stack ? masks[1] : masks[0];
                                  $('#company_phone').mask(mask, options);*/
