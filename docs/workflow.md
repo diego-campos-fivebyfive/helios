@@ -4,20 +4,46 @@ Workflow
 Sobre o ambiente de trabalho.
 
 
-## Ferramentas
+## Ferramentas utilizadas
 
-  - Git: Versionamento e Issues
-  - Bucket Board: Development Tasks
+  - Bitbucket: Versionamento e Issue
+
+  - BucketBoard: Gerenciamento de Etapas das Tasks de Desenvolvimento
+
+  - Canvas For Bitbucket: Visualização de Tasks por Atributos
+
   - Slack: Bot e Chat
-  - Trello: Management Tasks
+
+  - Trello: Management Task Board
 
 
-## Adicionando o Bucket Board
+## Metodologia
 
-[Na Página do Bucket Board](https://bitbucket.org/account/addon-directory?addon=bucketboard&utm_source=BB-blog&utm_campaign=bitbucket_fy17q1-momentum-posts&_ga=2.183639907.433510956.1499090929-916732886.1494336071)
-adicione-o ao `Bitbucket` clicando em `Add` e em seguida em `Grant Access`.
+  - Devemos buscar reduzidas ao máximo o tempo gasto com Reuniões e conversas externas;
+
+  - Buscar resolver os assuntos sempre primeiramente pelo Slack;
+
+  - Caso haja necessidade resolver externamente, buscar envolver no máximo 2 pessoas na discução;
+
+  - Caso necessário incluir a equipe devemos convocar uma reunião extra ou esperar a reunião diária;
+
+  - A reunião diária deve tentar ser o mais breve possível, entre 10 à 20 minutos.
+
+  - Reuniões diárias incluem: review do dia anterior, tarefas abertas, proximas tarefas e assuntos importantes.
 
 
-Acessando o repositório do projeto pelo `bitbucket` deverá
-aparecer uma nova aba chamada `BucketBoard`. Clique
-novamente em `Grant Access`, caso apareça.
+## Flags
+
+Padrão de flags utilizadas para notificações no Slack:
+
+#### Com @here
+
+  - HELP: para pedir ajuda
+  - REVIEW: para solicitar review
+  - TEST: para solicitar test
+
+#### Com @[USER_NAME]
+  Para responder a Flag, pode-se utilizar o `:+1:` para curta resposta.
+
+
+[Voltar](../README.md)

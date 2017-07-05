@@ -1,17 +1,10 @@
-Tarefas
-=======
+Nova Task - GIT
+===============
 
-# Etapas no Dashboard
+## DEVELOPER
 
-  To Do -> Progress -> Blocked ou Review -> Test -> Done
-
-
-# Passo a Passo
-
-
-#### DEVELOPER
-1. Puxar para Progress e analisar Tasks
----------------------------------------
+1. Puxar a Task para Open (Progress) no BucketBoard e analisa-la
+----------------------------------------------------------------
 
 2. Atualiza a Master
 --------------------
@@ -54,8 +47,8 @@ $ git push origin [BRANCH_NAME]
 8. Criar Pull Request (PR) no Bitbucket
 ---------------------------------------
 
-9. Mover para review no Board
------------------------------
+9. Mover a Task para Resolved (Review) no BucketBoard
+-----------------------------------------------------
 
 10. Enviar link no Slack
 ------------------------
@@ -78,7 +71,8 @@ $ git branch -D [BRANCH_NAME]
 -------------------------------------------------
 
 
-#### REVIEWER
+## REVIEWER
+
 1. Revisar código
 -----------------
 
@@ -91,10 +85,17 @@ $ git branch -D [BRANCH_NAME]
 4. Avisar do Merge no Slack
 ---------------------------
 
+5. Mover Task para Hold On (Test) no BucketBoard
+------------------------------------------------
 
-#### TESTER
+
+## TESTER
+
 1. Testar Homolog
 -----------------
 
-2. Mover para Done
-------------------
+2. Mover a Task para Closed (Done) no BucketBoard
+-------------------------------------------------
+
+
+[Voltar](../tasks.md)
