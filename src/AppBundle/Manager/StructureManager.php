@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\Component;
+namespace AppBundle\Manager;
 
 use Sonata\CoreBundle\Model\BaseEntityManager;
 
