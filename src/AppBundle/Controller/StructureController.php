@@ -32,9 +32,22 @@ class StructureController extends ComponentController
      */
     public function indexAction(Request $request)
     {
-        $data = $this->prepareIndexData();
+        $manager = $this->getStructureManager();
+        $paginator = $this->getPaginator();
 
-        return $this->render('component.index', $data);
+        $query = $manager->getEntityManager()->createQueryBuilder();
+        $query->select('s')->from('AppBundle\Entity\Component\Structure', 's');
+
+        $pagination = $paginator->paginate(
+            $query->getQuery(), $request->query->getInt('page', 1), 10
+        );
+
+        dump($pagination);
+        die;
+
+        return $this->render('structure.index', [
+            'pagination' => $pagination
+        ]);
     }
 
     /**
@@ -140,25 +153,5 @@ class StructureController extends ComponentController
     public function previewAction(Request $request, Structure $structure)
     {
         return $this->showAction($request, $structure);
-    }
-
-    /**
-     * @Route("/{token}/copy", name="structure_copy")
-     */
-    public function copyAction(Request $request, Structure $structure)
-    {
-        $this->checkAccess($structure);
-
-        $account = $this->getCurrentAccount();
-        $helper = $this->getStructureHelper();
-
-        $copy = $helper->cloneToAccount($structure, $account);
-
-        return $this->jsonResponse([
-            'component' => [
-                'id' => $copy->getId(),
-                'token' => $copy->getToken()
-            ]
-        ]);
     }
 }

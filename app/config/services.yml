@@ -33,3 +33,7 @@ services:
     account_manager:
         class: AppBundle\Manager\AccountManager
         arguments: ['AppBundle\Entity\Customer', '@doctrine']
+
+    structure_manager:
+        class: AppBundle\Manager\StructureManager
+        arguments: ['AppBundle\Entity\Component\Structure', '@doctrine']
