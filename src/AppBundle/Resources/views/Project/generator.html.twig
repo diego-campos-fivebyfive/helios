@@ -1,0 +1,137 @@
+<html>
+<head>
+    <title> Kit Generator </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"
+          type="text/css">
+    <link href="http://sunconnect.com.br/estilo_sices.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="hidden-xs section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <img src="http://sunconnect.com.br/imgs/SICES_logo.png" class="center-block img-responsive" width="50%">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="hidden-lg hidden-md hidden-sm section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <img src="http://sunconnect.com.br/imgs/SICES_logo.png" class="center-block img-responsive">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+
+                {{ form_start(form) }}
+
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        {{ form_label(form.latitude) }}
+                        {{ form_widget(form.latitude,{attr:{class:'form-control'}}) }}
+                    </div>
+                    <div class="col-md-6 form-group">
+                        {{ form_label(form.longitude) }}
+                        {{ form_widget(form.longitude,{attr:{class:'form-control'}}) }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="kwh">Consumo de seu cliente em kWh</label>
+                    {{ form_widget(form.kwh,{attr:{class:'form-control'}}) }}
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Tipo de telhado</label>
+                    {{ form_widget(form.tipo_telhado,{attr:{class:'form-control'}}) }}
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Fabricante da estrutura</label>
+                    {{ form_widget(form.maker_est,{attr:{class:'form-control'}}) }}
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Calcular Kit
+                </button>
+
+                {{ form_end(form) }}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if mod is not null %}
+
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="text-center text-info">
+                    {{  "Kit de " ~ pot_kit ~ " kWp" }}
+                </h1>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Descrição</th>
+                        <th>Quantidade</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td> {{ mod.id }} </td>
+                        <td> {{ mod.model }} </td>
+                        <td> {{ mod_qte }} </td>
+                    </tr>
+
+                    {% for inverter in inv %}
+
+                        <tr>
+                            <td> {{ inverter.inv_id }} </td>
+                            <td> {{ inverter.descricao }} </td>
+                            <td> {{ inverter.qte }} </td>
+                        </tr>
+
+                    {% endfor %}
+
+                    {% for key, structure in est %}
+
+                        {% if 'obs' != key %}
+                            <tr>
+                                <td> {{ structure.est_id }} </td>
+                                <td> {{ structure.descricao }} </td>
+                                <td> {{ structure.qte }} </td>
+                            </tr>
+                        {% endif %}
+
+                    {% endfor %}
+
+                    <tr>
+                        <td colspan="3">
+                            {{ attribute(est, 'obs') }}
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+
+</body>
+</html>

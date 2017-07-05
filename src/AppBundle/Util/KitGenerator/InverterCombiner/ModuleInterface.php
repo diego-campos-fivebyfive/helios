@@ -21,6 +21,17 @@ interface ModuleInterface
     public function getId();
 
     /**
+     * @param $model
+     * @return ModuleInterface
+     */
+    public function setModel($model);
+
+    /**
+     * @return string
+     */
+    public function getModel();
+
+    /**
      * @param $length
      * @return mixed
      */
@@ -95,16 +106,14 @@ interface ModuleInterface
 
     /**
      * @param $maxPower
-     * @return mixed
+     * @return ModuleInterface
      */
     public function setMaxPower($maxPower);
-
 
     /**
      * @return mixed
      */
     public function getMaxPower();
-
 
     /**
      * @param $shortCircuitCurrent

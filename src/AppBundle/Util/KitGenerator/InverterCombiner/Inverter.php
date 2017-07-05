@@ -9,6 +9,16 @@ namespace AppBundle\Util\KitGenerator\InverterCombiner;
 class Inverter implements InverterInterface
 {
     /**
+     * @var int|string
+     */
+    private $id;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
      * @var float
      */
     private $nominalPower;
@@ -17,6 +27,42 @@ class Inverter implements InverterInterface
      * @var int
      */
     private $quantity = 1;
+
+    /**
+     * @inheritDoc
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * @inheritDoc
