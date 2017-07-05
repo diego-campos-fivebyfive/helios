@@ -31,7 +31,7 @@ Edite o arquivo `/etc/apache2/mods-enabled/dir.conf` com o seguinte conteúdo:
 
 4. Instalando os pacotes do PHP
 
-Instale os pacotes `php-mbstring`, `php-xml` e `php-intl` usando o comando:
+Instale os pacotes `php-mbstring`, `php-xml`, `php-mysql` e `php-intl` usando o comando:
 
 ```
 $ sudo apt install [PACOTE_NAME]

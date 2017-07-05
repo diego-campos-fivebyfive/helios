@@ -20,6 +20,7 @@ Caso você já possua os requisitos abaixo intalados, pule para a proxima etapa:
   - PHP
     - php-mbstring
     - php-xml
+    - php-mysql
     - php-intl
 
   - Node
