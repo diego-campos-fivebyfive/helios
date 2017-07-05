@@ -8,8 +8,6 @@ estar sujeito a pequenas mudanças em outras distribuições.
 
 ## Requisitos
 
-  - Apache2
-
   - PHP
     - php-mbstring
     - php-xml
@@ -17,17 +15,21 @@ estar sujeito a pequenas mudanças em outras distribuições.
 
   - Node
 
-  - Yarn
-
-  - Composer
+  - Apache2
 
   - Git
 
 
-## Instalação de Dependências
+## Instalação
 
+1. Clonando o projeto do Github
+-------------------------------
 
-## Instalação do Sistema
-
-
-Proximo passo: [Configuração da Dashboard de Tasks](dashboard.md)
+#### HTTP:
+```
+$ git clone https://[USER_NAME]@bitbucket.org/kolinalabsdevelopers/sices.git
+```
+#### SSH:
+```
+$ git clone git@bitbucket.org:kolinalabsdevelopers/sices.git
+```

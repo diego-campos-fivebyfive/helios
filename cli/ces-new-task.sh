@@ -23,4 +23,4 @@ git checkout master
 git fetch origin
 git pull origin master
 git checkout -b $issue_name
-echo "Done"
+echo "Done, Agora na branch: $issue_name"

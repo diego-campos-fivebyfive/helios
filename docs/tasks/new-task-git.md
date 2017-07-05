@@ -1,16 +1,8 @@
-Tarefas
-=======
+Nova Task - GIT
+===============
 
-# Etapas no Dashboard
+## DEVELOPER
 
-  To Do   ->   Progress   ->     Blocked ou Review    - >     Test      ->    Done
-  (New)   ->   (Open)     ->   (Invalid ou Resolved)  - >   (On Hold)   ->   (Close)
-
-
-# Passo a Passo
-
-
-#### DEVELOPER
 1. Puxar a Task para Open (Progress) no BucketBoard e analisa-la
 ----------------------------------------------------------------
 
@@ -79,7 +71,8 @@ $ git branch -D [BRANCH_NAME]
 -------------------------------------------------
 
 
-#### REVIEWER
+## REVIEWER
+
 1. Revisar código
 -----------------
 
@@ -96,7 +89,8 @@ $ git branch -D [BRANCH_NAME]
 ------------------------------------------------
 
 
-#### TESTER
+## TESTER
+
 1. Testar Homolog
 -----------------
 
