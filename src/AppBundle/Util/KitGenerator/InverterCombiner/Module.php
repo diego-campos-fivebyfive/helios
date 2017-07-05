@@ -15,6 +15,11 @@ class Module implements ModuleInterface
     private $id;
 
     /**
+     * @var string
+     */
+    private $model;
+
+    /**
      * @var float
      */
     private $length;
@@ -71,6 +76,24 @@ class Module implements ModuleInterface
     {
         $this->id = $id;
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setModel($model)
+    {
+        $this->model = $model;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getModel()
+    {
+        return $this->model;
     }
 
     /**

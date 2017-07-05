@@ -21,6 +21,17 @@ interface ModuleInterface
     public function getId();
 
     /**
+     * @param $model
+     * @return ModuleInterface
+     */
+    public function setModel($model);
+
+    /**
+     * @return string
+     */
+    public function getModel();
+
+    /**
      * @param $length
      * @return mixed
      */

@@ -83,9 +83,13 @@ class InverterCombiner implements InverterCombinerInterface
         $max     = $count - 1;
         $cont    = [];
 
+        $inv_index = [];
+
         for ($i = $unions; $i <= 50; $i++) {
 
             $cont = array_fill(0, $i, 0);
+
+            //var_dump($cont);
 
             for ($j = 0; $j <  Support::combine($count, $i); $j++){
 
@@ -97,7 +101,11 @@ class InverterCombiner implements InverterCombinerInterface
                      * inversores com potências nominais abaixo de 5
                      */
                     $nominalPower += $this->inverters[$cont[$y]]->getNominalPower();
+                    //var_dump($cont[$y]);
                 }
+
+                //var_dump(Support::combine($count, $i));
+                //var_dump($nominalPower);
 
                 if ($nominalPower <= $lim_sup and $nominalPower >= $lim_inf) {
                     break 2;
@@ -107,6 +115,7 @@ class InverterCombiner implements InverterCombinerInterface
                     $this->inverters[$i -1]->getQuantity() + 1
                 );*/
 
+                //var_dump($max);
                 $cont[$i - 1] += 1;
                 for ($k = 1; $k < $i; $k++) {
                     if ($cont[$i - $k] > $max) {
@@ -119,11 +128,13 @@ class InverterCombiner implements InverterCombinerInterface
             }
         }
 
+        //var_dump($cont); die;
+
         if (count($cont) == 50){
             return false;
         }
 
-        //var_dump($this->inverters); die;
+        //var_dump($cont); die;
         /*$inv_index[0]["inv"] = $cont[0];
         $inv_index[0]["qte"] = 1;
         $contador = 1;
@@ -137,26 +148,29 @@ class InverterCombiner implements InverterCombinerInterface
             }
         }*/
         
-        $this->inverters[0]->setQuantity(1);
+        //$this->inverters[0]->setQuantity(1);
         $index = 1;
+        $inv_index[0] = ['inv' => $cont[0], 'qtde' => 1];
+        //$contador = 1;
         //var_dump($this->inverters); die;
         for ($x = 1; $x < count($cont); $x++) {
             //var_dump($cont[$x-1]); die;
-            //if ($cont[$x] == $cont[$x - 1]) {
-            if ($cont[$x] == $this->inverters[$x-1]->getQuantity()) {
-                //$xnv_index[$contador - 1]["qte"] += 1;
-                $this->inverters[$index - 1]->setQuantity(
+            if ($cont[$x] == $cont[$x - 1]) {
+            //if ($cont[$x] == $this->inverters[$x-1]->getQuantity()) {
+                $inv_index[$index - 1]["qte"] += 1;
+                /*$this->inverters[$index - 1]->setQuantity(
                     $this->inverters[$index - 1]->getQuantity() + 1
-                );
+                );*/
             } else {
                 $this->inverters[$index]->setQuantity(1);
-                //$xnv_index[$contador]["inv"] = $cont[$x];
-                //$xnv_index[$contador]["qte"] = 1;
+                $inv_index[$index]["inv"] = $cont[$x];
+                $inv_index[$index]["qte"] = 1;
                 $index++;
             }
         }
-        
-        var_dump($this->inverters); die;
+
+        var_dump($inv_index); die;
+        //var_dump($this->inverters); die;
     }
 
     /**
