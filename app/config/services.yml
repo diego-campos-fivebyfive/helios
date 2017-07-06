@@ -33,3 +33,15 @@ services:
     account_manager:
         class: AppBundle\Manager\AccountManager
         arguments: ['AppBundle\Entity\Customer', '@doctrine']
+
+    module_manager:
+        class: AppBundle\Manager\ModuleManager
+        arguments: ['AppBundle\Entity\Component\Module', '@doctrine']
+
+    inverter_manager:
+        class: AppBundle\Manager\InverterManager
+        arguments: ['AppBundle\Entity\Component\Inverter', '@doctrine']
+
+    project_manager:
+        class: AppBundle\Manager\ProjectManager
+        arguments: ['AppBundle\Entity\Component\Project', '@doctrine']
