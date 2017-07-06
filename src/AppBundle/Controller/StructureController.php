@@ -60,15 +60,15 @@ class StructureController extends ComponentController
 
         /** @var Structure $structure */
         $structure = $manager->create();
-        $structure->toViewMode();
 
         $form = $this->createForm(StructureType::class, $structure);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            return $this->saveComponent($structure, $request);
+            $manager->save($structure);
 
+            return $this->redirectToRoute('structure_index');
         }
 
         return $this->render("structure.form", [
