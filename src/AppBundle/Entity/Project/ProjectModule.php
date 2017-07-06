@@ -8,7 +8,7 @@ use AppBundle\Entity\Component\KitComponentInterface;
 /**
  * ProjectModule
  *
- * @ORM\Table(name="app_project_module")
+ * @ORM\Table(name="app_project_module_legacy")
  * @ORM\Entity
  */
 class ProjectModule implements ProjectModuleInterface

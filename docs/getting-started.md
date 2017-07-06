@@ -14,20 +14,16 @@ Caso você já possua os requisitos abaixo intalados, pule para a proxima etapa:
 #### Requisitos
 
   - Apache2
-
   - PHP
-    - php-mbstring
-    - php-xml
-    - php-mysql
-    - php-intl
-
+    * php-mbstring
+    * php-xml
+    * php-mysql
+    * php-intl
   - Node
-
   - Yarn
-
   - Composer
-
   - Git
+
 
 Para instalação das dependências siga os passos do documento:
 

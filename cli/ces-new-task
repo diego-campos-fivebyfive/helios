@@ -3,16 +3,16 @@
 cd $SICES_PATH
 
 if [[ -z $1 ]] || [[ $1 == '--help' ]] || [[ $1 == '-h' ]]; then
-    printf "Iniciando uma nova tarefa.
+  printf "Initing new Task:
 
-    Usage:
+  Usage:
 
-    ces-new-task issue-[NUMBER]
+  ces-new-task issue-[NUMBER]
 
-    Ex:
+  Exemple:
 
-    ces-new-task issue-3084\n"
-    exit 0;
+  ces-new-task issue-3084\n"
+  exit 0;
 fi
 
 issue_name=$1
@@ -23,4 +23,4 @@ git checkout master
 git fetch origin
 git pull origin master
 git checkout -b $issue_name
-echo "Done, Agora na branch: $issue_name"
+echo "Done, now into Branch: $issue_name"

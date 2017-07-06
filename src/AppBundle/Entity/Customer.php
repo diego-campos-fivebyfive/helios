@@ -15,7 +15,8 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  * @ORM\Table(name="app_customer")
  * @ORM\Entity
  */
-class Customer extends AbstractCustomer implements BusinessInterface, AccountInterface
+class Customer extends AbstractCustomer
+    implements BusinessInterface, AccountInterface, MemberInterface, CustomerInterface
 {
     use TokenizerTrait;
     use ORMBehaviors\SoftDeletable\SoftDeletable;
@@ -258,10 +259,7 @@ class Customer extends AbstractCustomer implements BusinessInterface, AccountInt
     /**
      * @var \AppBundle\Entity\Context
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Context")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="context", referencedColumnName="id", nullable=false)
-     * })
+     * @ORM\Column()
      */
     private $context;
 
@@ -415,7 +413,7 @@ class Customer extends AbstractCustomer implements BusinessInterface, AccountInt
      */
     public function isAccount()
     {
-        return $this->context ? $this->context->getId() == self::CONTEXT_ACCOUNT : false;
+        return $this->context ? $this->context == self::CONTEXT_ACCOUNT : false;
     }
 
     /**
@@ -423,7 +421,7 @@ class Customer extends AbstractCustomer implements BusinessInterface, AccountInt
      */
     public function isMember()
     {
-        return $this->context ? $this->context->getId() == self::CONTEXT_MEMBER : false;
+        return $this->context ? $this->context == self::CONTEXT_MEMBER : false;
     }
 
     /**
@@ -431,7 +429,7 @@ class Customer extends AbstractCustomer implements BusinessInterface, AccountInt
      */
     public function isPerson()
     {
-        return $this->context ? $this->context->getId() == self::CONTEXT_PERSON : false;
+        return $this->context ? $this->context == self::CONTEXT_PERSON : false;
     }
 
     /**
@@ -439,7 +437,7 @@ class Customer extends AbstractCustomer implements BusinessInterface, AccountInt
      */
     public function isCompany()
     {
-        return $this->context->getId() == self::CONTEXT_COMPANY;
+        return $this->context == self::CONTEXT_COMPANY;
     }
 
     /**
@@ -1103,7 +1101,7 @@ class Customer extends AbstractCustomer implements BusinessInterface, AccountInt
     /**
      * @inheritDoc
      */
-    public function setContext(ContextInterface $context)
+    public function setContext($context)
     {
         $this->context = $context;
 
@@ -1602,7 +1600,7 @@ class Customer extends AbstractCustomer implements BusinessInterface, AccountInt
         return [
             'id' => $this->id,
             'token' => $this->token,
-            'context' => $this->context->getId(),
+            'context' => $this->context,
             'title' => $this->title,
             'office' => $this->office ?: '',
             'firstname' => $this->firstname ?: '',
