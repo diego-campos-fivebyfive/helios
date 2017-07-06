@@ -1,13 +1,24 @@
 <?php
 
+/*
+ * This file is part of the SicesSolar package.
+ *
+ * (c) SicesSolar <http://sicesbrasil.com.br/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace AppBundle\Entity\Component;
 
-use AppBundle\Entity\TokenizerTrait;
-use AppBundle\Model\Snapshot;
 use Doctrine\ORM\Mapping as ORM;
+use AppBundle\Entity\TokenizerTrait;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * Module
+ *
+ * @author Claudinei Machado <claudinei@kolinalabs.com>
  *
  * @ORM\Table(name="app_component_module")
  * @ORM\Entity
@@ -16,8 +27,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Module implements ModuleInterface
 {
     use TokenizerTrait;
-    use ComponentTrait;
-    use Snapshot;
+    use ORMBehaviors\Timestampable\Timestampable;
 
     /**
      * @var integer
@@ -31,9 +41,16 @@ class Module implements ModuleInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="cell_type", type="string", length=100, nullable=true)
+     * @ORM\Column(name="code", type="string", nullable=true)
      */
-    private $cellType;
+    private $code;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="model", type="string", nullable=true)
+     */
+    private $model;
 
     /**
      * @var integer
@@ -103,28 +120,49 @@ class Module implements ModuleInterface
      *
      * @ORM\Column(name="temp_coefficient_voc", type="float")
      */
-    private $tempCoefficientOpenCircuitVoltage;
+    private $tempCoefficientVoc;
 
     /**
      * @var float
      *
      * @ORM\Column(name="temp_coefficient_isc", type="float")
      */
-    private $tempCoefficientShortCircuitCurrent;
+    private $tempCoefficientIsc;
 
     /**
-     * @var \DateTime
+     * @var float
      *
-     * @ORM\Column(name="created_at", type="datetime")
+     * @ORM\Column(name="length", type="float", nullable=true)
      */
-    private $createdAt;
+    private $length;
 
     /**
-     * @var \DateTime
+     * @var float
      *
-     * @ORM\Column(name="updated_at", type="datetime")
+     * @ORM\Column(name="width", type="float", nullable=true)
      */
-    private $updatedAt;
+    private $width;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cell_type", type="string", length=100, nullable=true)
+     */
+    private $cellType;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="data_sheet", type="string", nullable=true)
+     */
+    protected $dataSheet;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="image", type="string", nullable=true)
+     */
+    protected $image;
 
     /**
      * @var MakerInterface
@@ -135,11 +173,53 @@ class Module implements ModuleInterface
     protected $maker;
 
     /**
+     * This property is used by management only
+     * @var bool
+     */
+    public $viewMode = false;
+
+    /**
      * @return string
      */
     public function __toString()
     {
         return $this->getModel();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setModel($model)
+    {
+        $this->model = $model;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getModel()
+    {
+        return $this->model;
     }
 
     /**
@@ -356,67 +436,11 @@ class Module implements ModuleInterface
     }
 
     /**
-     * Set createdAt
-     *
-     * @param \DateTime $createdAt
-     * @return Module
-     */
-    public function setCreatedAt($createdAt)
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    /**
-     * Get createdAt
-     *
-     * @return \DateTime
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * Set updatedAt
-     *
-     * @param \DateTime $updatedAt
-     * @return Module
-     */
-    public function setUpdatedAt($updatedAt)
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    /**
-     * Get updatedAt
-     *
-     * @return \DateTime
-     */
-    public function getUpdatedAt()
-    {
-        return $this->updatedAt;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function isModule()
-    {
-        return $this instanceof ModuleInterface;
-    }
-
-    /**
      * @inheritDoc
      */
     public function setTempCoefficientShortCircuitCurrent($tempCoefficientShortCircuitCurrent)
     {
-        $this->tempCoefficientShortCircuitCurrent = $tempCoefficientShortCircuitCurrent;
-
-        return $this;
+        return $this->setTempCoefficientIsc($tempCoefficientShortCircuitCurrent);
     }
 
     /**
@@ -424,7 +448,7 @@ class Module implements ModuleInterface
      */
     public function getTempCoefficientShortCircuitCurrent()
     {
-        return $this->tempCoefficientShortCircuitCurrent;
+        return $this->getTempCoefficientIsc();
     }
 
     /**
@@ -432,9 +456,7 @@ class Module implements ModuleInterface
      */
     public function setTempCoefficientOpenCircuitVoltage($tempCoefficientOpenCircuitVoltage)
     {
-        $this->tempCoefficientOpenCircuitVoltage = $tempCoefficientOpenCircuitVoltage;
-
-        return $this;
+        return $this->setTempCoefficientVoc($tempCoefficientOpenCircuitVoltage);
     }
 
     /**
@@ -442,20 +464,114 @@ class Module implements ModuleInterface
      */
     public function getTempCoefficientOpenCircuitVoltage()
     {
-        return $this->tempCoefficientOpenCircuitVoltage;
+        return $this->getTempCoefficientVoc();
     }
 
-    public function prePersist()
+    /**
+     * @inheritDoc
+     */
+    public function setTempCoefficientIsc($tempCoefficientIsc)
     {
-        $this->createdAt = new \DateTime;
-        $this->updatedAt = new \DateTime;
-        $this->generateToken();
+        $this->tempCoefficientIsc = $tempCoefficientIsc;
+
+        return $this;
     }
 
-    public function preUpdate()
+    /**
+     * @inheritDoc
+     */
+    public function getTempCoefficientIsc()
     {
-        $this->updatedAt = new \DateTime;
-        $this->generateToken();
+        return $this->tempCoefficientIsc;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setTempCoefficientVoc($tempCoefficientVoc)
+    {
+        $this->tempCoefficientVoc = $tempCoefficientVoc;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTempCoefficientVoc()
+    {
+        return $this->tempCoefficientVoc;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setLength($length)
+    {
+        $this->length = $length;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLength()
+    {
+        return $this->length;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setWidth($width)
+    {
+        $this->width = $width;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getWidth()
+    {
+        return $this->width;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setDatasheet($dataSheet)
+    {
+        $this->dataSheet = $dataSheet;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDatasheet()
+    {
+        return $this->dataSheet;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getImage()
+    {
+        return $this->image;
     }
 }
-
