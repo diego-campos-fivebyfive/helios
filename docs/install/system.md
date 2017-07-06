@@ -34,6 +34,18 @@ export SICES_PATH=PROJECT_PATH
 export PATH=$PATH:$SICES_PATH/cli
 ```
 
+Carregue as alterações do arquivo bash:
+```
+$ source ~/.bashrc
+```
+
+Na variavel PATH agora devem estar disponiveis: o caminho para o projeto e o caminho da pasta cli:
+```
+$ echo $PATH
+```
+
+Caso os caminhos não apareçam, reinicie a maquina.
+
 
 3. Instalando dependências do Sistema
 -------------------------------------
