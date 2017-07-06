@@ -9,6 +9,28 @@ namespace AppBundle\Util\KitGenerator\InverterCombiner;
 interface InverterInterface
 {
     /**
+     * @param $id
+     * @return InverterInterface
+     */
+    public function setId($id);
+
+    /**
+     * @return string|int
+     */
+    public function getId();
+
+    /**
+     * @param $name
+     * @return InverterInterface
+     */
+    public function setName($name);
+
+    /**
+     * @return string
+     */
+    public function getName();
+
+    /**
      * @param $nominalPower
      * @return InverterInterface
      */

@@ -8,6 +8,8 @@ use AppBundle\Entity\Component\InverterInterface;
 use AppBundle\Entity\Component\InverterManager;
 use AppBundle\Entity\Component\ModuleInterface;
 use AppBundle\Entity\Component\ModuleManager;
+use AppBundle\Entity\Component\StructureInterface;
+use AppBundle\Manager\StructureManager;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\FileBag;
@@ -456,5 +458,13 @@ class ComponentController extends AbstractController
     {
         dump($args);
         die;
+    }
+
+    /**
+     * @return \AppBundle\Manager\StructureManager
+     */
+    protected function getStructureManager()
+    {
+        return $this->get('structure_manager');
     }
 }

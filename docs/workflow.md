@@ -4,21 +4,46 @@ Workflow
 Sobre o ambiente de trabalho.
 
 
-## Ferramentas
+## Ferramentas utilizadas
 
   - Bitbucket: Versionamento e Issue
 
-  - Canvas For Bitbucket: Development Task Board
+  - BucketBoard: Gerenciamento de Etapas das Tasks de Desenvolvimento
+
+  - Canvas For Bitbucket: Visualização de Tasks por Atributos
 
   - Slack: Bot e Chat
 
   - Trello: Management Task Board
 
 
-## Adicionando o Canvas For Bitbucket
+## Metodologia
 
-Acessando o repositório do projeto pelo `bitbucket` haverá uma
-aba chamada `Board` onde encontram-se a Tasks do Projeto.
+  - Devemos buscar reduzidas ao máximo o tempo gasto com Reuniões e conversas externas;
+
+  - Buscar resolver os assuntos sempre primeiramente pelo Slack;
+
+  - Caso haja necessidade resolver externamente, buscar envolver no máximo 2 pessoas na discução;
+
+  - Caso necessário incluir a equipe devemos convocar uma reunião extra ou esperar a reunião diária;
+
+  - A reunião diária deve tentar ser o mais breve possível, entre 10 à 20 minutos.
+
+  - Reuniões diárias incluem: review do dia anterior, tarefas abertas, proximas tarefas e assuntos importantes.
 
 
-Proxima leitura: [Execução de Tasks](task.md)
+## Flags
+
+Padrão de flags utilizadas para notificações no Slack:
+
+#### Com @here
+
+  - HELP: para pedir ajuda
+  - REVIEW: para solicitar review
+  - TEST: para solicitar test
+
+#### Com @[USER_NAME]
+  Para responder a Flag, pode-se utilizar o `:+1:` para curta resposta.
+
+
+[Voltar](../README.md)
