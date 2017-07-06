@@ -19,8 +19,6 @@ class Structure implements StructureInterface
 {
 
     use TokenizerTrait;
-    use ComponentTrait;
-    use Snapshot;
 
      /**
      * @var integer
@@ -79,6 +77,7 @@ class Structure implements StructureInterface
      */
     public function __construct()
     {
+        $this->generateToken();
     }
 
     /**

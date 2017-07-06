@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity\Component;
 
-interface StructureInterface extends ComponentInterface
+interface StructureInterface
 {
     /**
      * @param $code
