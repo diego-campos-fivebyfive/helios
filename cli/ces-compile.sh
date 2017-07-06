@@ -2,6 +2,8 @@
 
 cd $SICES_PATH
 
+rm -rf web/public
+
 mkdir web/public
 mkdir web/public/assets
 

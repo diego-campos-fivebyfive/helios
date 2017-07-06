@@ -79,6 +79,6 @@ $ git config --global user.name "Full Name"
 ```
 
 
-[Proximo passo: instalação do sistema](../system.md)
+[Proximo passo: instalação do sistema](system.md)
 
 [Voltar](../getting-started.md)
