@@ -1,15 +1,24 @@
 <?php
 
+/*
+ * This file is part of the SicesSolar package.
+ *
+ * (c) SicesSolar <http://sicesbrasil.com.br/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace AppBundle\Entity\Component;
 
-use AppBundle\Entity\AccountInterface;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\TokenizerTrait;
-use AppBundle\Model\Snapshot;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * Inverter
+ *
+ * @author Claudinei Machado <claudinei@kolinalabs.com>
  *
  * @ORM\Table(name="app_component_inverter")
  * @ORM\Entity
@@ -18,8 +27,7 @@ use AppBundle\Model\Snapshot;
 class Inverter implements InverterInterface
 {
     use TokenizerTrait;
-    use ComponentTrait;
-    use Snapshot;
+    use ORMBehaviors\Timestampable\Timestampable;
 
     /**
      * @var integer
@@ -29,6 +37,20 @@ class Inverter implements InverterInterface
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="code", type="string", nullable=true)
+     */
+    private $code;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="model", type="string", nullable=true)
+     */
+    private $model;
 
     /**
      * @var float
@@ -87,18 +109,18 @@ class Inverter implements InverterInterface
     private $mpptNumber;
 
     /**
-     * @var \DateTime
+     * @var string
      *
-     * @ORM\Column(name="created_at", type="datetime")
+     * @ORM\Column(name="data_sheet", type="string", nullable=true)
      */
-    private $createdAt;
+    protected $dataSheet;
 
     /**
-     * @var \DateTime
+     * @var string
      *
-     * @ORM\Column(name="updated_at", type="datetime")
+     * @ORM\Column(name="image", type="string", nullable=true)
      */
-    private $updatedAt;
+    protected $image;
 
     /**
      * @var MakerInterface
@@ -109,12 +131,10 @@ class Inverter implements InverterInterface
     protected $maker;
 
     /**
-     * Constructor
+     * This property is used by management only
+     * @var bool
      */
-    public function __construct()
-    {
-        $this->childrens = new ArrayCollection();
-    }
+    public $viewMode = false;
 
     /**
      * @return string
@@ -122,6 +142,24 @@ class Inverter implements InverterInterface
     public function __toString()
     {
         return (string) $this->getModel();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCode()
+    {
+        return $this->code;
     }
 
     /**
@@ -287,48 +325,10 @@ class Inverter implements InverterInterface
 
     /**
      * @inheritDoc
-     * @deprecated
-     * @see $mpptMaxDcCurrent property
      */
-    public function setMaxDcCurrentMppt($maxDcCurrentMppt)
+    public function setDatasheet($dataSheet)
     {
-        return $this->setMpptMaxDcCurrent($maxDcCurrentMppt);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getMaxDcCurrentMppt()
-    {
-        return $this->getMpptMaxDcCurrent();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * Get updatedAt
-     *
-     * @return \DateTime
-     */
-    public function getUpdatedAt()
-    {
-        return $this->updatedAt;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function prePersist()
-    {
-        $this->createdAt = new \DateTime;
-        $this->updatedAt = new \DateTime;
-        $this->generateToken();
+        $this->dataSheet = $dataSheet;
 
         return $this;
     }
@@ -336,12 +336,26 @@ class Inverter implements InverterInterface
     /**
      * @inheritDoc
      */
-    public function preUpdate()
+    public function getDatasheet()
     {
-        $this->updatedAt = new \DateTime;
-        $this->generateToken();
+        return $this->dataSheet;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
 
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getImage()
+    {
+        return $this->image;
     }
 }
-

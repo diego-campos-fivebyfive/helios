@@ -11,6 +11,11 @@
             "app/AppCache.php"
         ]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
     "require": {
         "php": ">=5.3.9",
         "apy/breadcrumbtrail-bundle": "^1.4",

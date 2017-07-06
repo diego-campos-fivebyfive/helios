@@ -1,9 +1,45 @@
 <?php
 
+/*
+ * This file is part of the SicesSolar package.
+ *
+ * (c) SicesSolar <http://sicesbrasil.com.br/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace AppBundle\Entity\Component;
 
-interface InverterInterface extends ComponentInterface
+/**
+ * Interface InverterInterface
+ *
+ * @author Claudinei Machado <claudinei@kolinalabs.com>
+ */
+interface InverterInterface
 {
+    /**
+     * @param $code
+     * @return InverterInterface
+     */
+    public function setCode($code);
+
+    /**
+     * @return string
+     */
+    public function getCode();
+
+    /**
+     * @param $model
+     * @return ComponentInterface
+     */
+    public function setModel($model);
+
+    /**
+     * @return string
+     */
+    public function getModel();
+
     /**
      * @param $maxDcPower
      * @return mixed
@@ -91,6 +127,28 @@ interface InverterInterface extends ComponentInterface
      * @return mixed
      */
     public function getMpptNumber();
+
+    /**
+     * @param $dataSheet
+     * @return ComponentInterface
+     */
+    public function setDataSheet($dataSheet);
+
+    /**
+     * @return string
+     */
+    public function getDataSheet();
+
+    /**
+     * @param $image
+     * @return ComponentInterface
+     */
+    public function setImage($image);
+
+    /**
+     * @return string
+     */
+    public function getImage();
 
     /**
      * @return mixed

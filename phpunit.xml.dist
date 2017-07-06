@@ -16,7 +16,7 @@
             <directory>tests</directory>
         </testsuite>
         <testsuite name="API Test Suite">
-            <directory>src/ApiBundle/Tests</directory>
+            <!--<directory>src/ApiBundle/Tests</directory>-->
         </testsuite>
     </testsuites>
 

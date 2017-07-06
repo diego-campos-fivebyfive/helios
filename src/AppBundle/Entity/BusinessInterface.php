@@ -500,13 +500,13 @@ interface BusinessInterface extends CustomerInterface
     public function getAssignedTasks();
     
     /**
-     * @param ContextInterface $context
-     * @return mixed
+     * @param $context
+     * @return $this
      */
-    public function setContext(ContextInterface $context);
+    public function setContext($context);
 
     /**
-     * @return ContextInterface
+     * @return string
      */
     public function getContext();
 

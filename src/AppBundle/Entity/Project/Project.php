@@ -17,7 +17,7 @@ use Knp\DoctrineBehaviors\Model\Timestampable\Timestampable;
 /**
  * Project
  *
- * @ORM\Table(name="app_project")
+ * @ORM\Table(name="app_project_legacy")
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  */

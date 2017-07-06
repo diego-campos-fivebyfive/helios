@@ -1,9 +1,56 @@
 <?php
 
+/*
+ * This file is part of the SicesSolar package.
+ *
+ * (c) SicesSolar <http://sicesbrasil.com.br/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace AppBundle\Entity\Component;
 
-interface ModuleInterface extends ComponentInterface
+/**
+ * Interface ModuleInterface
+ *
+ * @author Claudinei Machado <claudinei@kolinalabs.com>
+ */
+interface ModuleInterface
 {
+    /**
+     * @param $code
+     * @return ModuleInterface
+     */
+    public function setCode($code);
+
+    /**
+     * @return string
+     */
+    public function getCode();
+
+    /**
+     * @param $model
+     * @return ComponentInterface
+     */
+    public function setModel($model);
+
+    /**
+     * @return string
+     */
+    public function getModel();
+
+    /**
+     * @param $cellNumber
+     * @return ModuleInterface
+     */
+    public function setCellNumber($cellNumber);
+
+    /**
+     * @return int
+     */
+    public function getCellNumber();
+
     /**
      * @param $maxPower
      * @return ModuleInterface
@@ -14,7 +61,7 @@ interface ModuleInterface extends ComponentInterface
      * @return float
      */
     public function getMaxPower();
-    
+
     /**
      * @param $voltageMaxPower
      * @return ModuleInterface
@@ -93,26 +140,74 @@ interface ModuleInterface extends ComponentInterface
     public function getTempCoefficientMaxPower();
 
     /**
+     * @deprecated use self::setTempCoefficientIsc()
      * @param $tempCoefficientShortCircuitCurrent
      * @return ModuleInterface
      */
     public function setTempCoefficientShortCircuitCurrent($tempCoefficientShortCircuitCurrent);
 
     /**
+     * @deprecated use self::getTempCoefficientIsc()
      * @return float
      */
     public function getTempCoefficientShortCircuitCurrent();
 
     /**
+     * @param $tempCoefficientIsc
+     * @return ModuleInterface
+     */
+    public function setTempCoefficientIsc($tempCoefficientIsc);
+
+    /**
+     * @return float
+     */
+    public function getTempCoefficientIsc();
+
+    /**
+     * @deprecated use self::setTempCoefficientVoc()
      * @param $tempCoefficientOpenCircuitVoltage
      * @return ModuleInterface
      */
     public function setTempCoefficientOpenCircuitVoltage($tempCoefficientOpenCircuitVoltage);
 
     /**
+     * @deprecated use self::getTempCoefficientVoc()
      * @return float
      */
     public function getTempCoefficientOpenCircuitVoltage();
+
+    /**
+     * @param $tempCoefficientVoc
+     * @return ModuleInterface
+     */
+    public function setTempCoefficientVoc($tempCoefficientVoc);
+
+    /**
+     * @return float
+     */
+    public function getTempCoefficientVoc();
+
+    /**
+     * @param $length
+     * @return ModuleInterface
+     */
+    public function setLength($length);
+
+    /**
+     * @return float
+     */
+    public function getLength();
+
+    /**
+     * @param $width
+     * @return ModuleInterface
+     */
+    public function setWidth($width);
+
+    /**
+     * @return float
+     */
+    public function getWidth();
 
     /**
      * @param $cellType
@@ -124,4 +219,36 @@ interface ModuleInterface extends ComponentInterface
      * @return string
      */
     public function getCellType();
+
+    /**
+     * @param $dataSheet
+     * @return ComponentInterface
+     */
+    public function setDataSheet($dataSheet);
+
+    /**
+     * @return string
+     */
+    public function getDataSheet();
+
+    /**
+     * @param $image
+     * @return ComponentInterface
+     */
+    public function setImage($image);
+
+    /**
+     * @return string
+     */
+    public function getImage();
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt();
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt();
 }

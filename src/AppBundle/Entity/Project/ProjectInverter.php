@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ProjectInverter
  *
- * @ORM\Table(name="app_project_inverter")
+ * @ORM\Table(name="app_project_inverter_legacy")
  * @ORM\Entity
  */
 class ProjectInverter implements ProjectInverterInterface
