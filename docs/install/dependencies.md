@@ -26,7 +26,7 @@ Edite o arquivo `/etc/apache2/mods-enabled/dir.conf` com o seguinte conteúdo:
 
 Instale os pacotes `php-mbstring`, `php-xml`, `php-mysql` e `php-intl` usando o comando:
 ```
-$ sudo apt install [PACOTE_NAME]
+$ sudo apt install php-mbstring php-xml php-mysql php-intl
 ```
 
 
