@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "compile": "./cli/ces-compile",
+    "compile": "ces-frontend-compile",
     "start": "php app/console server:run"
   },
   "dependencies": {
