@@ -6,8 +6,6 @@ a elaboração deste guia e o processo de instalação abaixo pode
 estar sujeito a pequenas mudanças em outras distribuições.
 
 
-
-
 1. Instalação de Dependências
 -----------------------------
 
