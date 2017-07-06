@@ -34,6 +34,9 @@ services:
         class: AppBundle\Manager\AccountManager
         arguments: ['AppBundle\Entity\Customer', '@doctrine']
 
+
+
+
     module_manager:
         class: AppBundle\Manager\ModuleManager
         arguments: ['AppBundle\Entity\Component\Module', '@doctrine']
