@@ -21,6 +21,16 @@ class ProposalController extends Controller
     }
 
     /**
+     * @Route("/editor", name="proposal_editor")
+     */
+    public function editorAction()
+    {
+        return $this->render('AppBundle:Proposal:editor.html.twig', array(
+
+        ));
+    }
+
+    /**
      * @Route("/pdf", name="proposal_pdf")
      */
     public function pdfAction()

@@ -1,0 +1,142 @@
+body, .separator{
+    background-color: #f3f3f3;
+}
+.separator{
+    height: 5mm;
+    width: 100%;
+}
+#bloco {
+    margin-bottom: 0;
+    height: auto;
+    width: 210mm;
+    background-color: #FFFFFF;
+}
+
+.page{
+    margin-left: 21mm !important;
+    margin-right: 25mm !important;
+    margin-top: 12mm !important;
+    margin-bottom: 20mm !important;
+    height: 239mm;
+    overflow: hidden;
+}
+.del{
+    margin: 0 !important;
+    color: #FFFFFF;
+    width: 5mm;
+    border-radius: 3px;
+    background-color: #2e6da4;
+}
+.del:hover{
+    background-color: #843534;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+.tag{
+    color: #843534;
+}
+.margBottom{
+    margin-bottom: 50px;
+}
+
+.marginLeft4{
+    margin-left: 4mm !important;
+}
+.edit{
+    min-height: 50mm !important;
+    height: auto;
+    margin: 0 !important;
+}
+
+
+.edit2{
+    min-height: 25mm !important;
+    height: auto;
+}
+.edit:focus, .edit2:focus{
+    border: 1px #f7f7f7 solid;
+}
+.semMargem{
+    margin: 0 !important;
+}
+.ocultar{
+    display: none;
+}
+
+li{
+    list-style: none;
+}
+.sidebar-tags{
+    margin-top: 30px;
+    float: right;
+    right: 0;
+    position: fixed;
+}
+
+.col-m-160mm {
+    position: relative;
+    min-height: 1px;
+    float: left;
+    width: 160mm;
+}
+.col-m-80mm {
+    position: relative;
+    min-height: 1px;
+    float: left;
+    width: 80mm;
+}
+.col-m-53mm {
+    position: relative;
+    min-height: 1px;
+    float: left;
+    width: 53.333333333mm;
+}
+
+.col-m-4mm {
+    position: relative;
+    min-height: 1px;
+    float: left;
+    width: 4mm;
+}
+
+.col-m-1, .col-m-2, .col-m-3, .col-m-4, .col-m-5,
+.col-m-6, .col-m-7, .col-m-8, .col-m-9,  .col-m-10, .col-m-11, .col-m-12 {
+    position: relative;
+    min-height: 1px;
+}
+.col-m-12 {
+    width: 100%;
+}
+.col-m-11 {
+    width: 91.66666667%;
+}
+.col-m-10 {
+    width: 83.33333333%;
+}
+.col-m-9 {
+    width: 75%;
+}
+.col-m-8 {
+    width: 66.66666667%;
+}
+.col-m-7 {
+    width: 58.33333333%;
+}
+.col-m-6 {
+    width: 50%;
+}
+.col-m-5 {
+    width: 41.66666667%;
+}
+.col-m-4 {
+    width: 33.33333333%;
+}
+.col-m-3 {
+    width: 25%;
+}
+.col-m-2 {
+    width: 16.66666667%;
+}
+.col-m-1 {
+    width: 8.33333333%;
+}

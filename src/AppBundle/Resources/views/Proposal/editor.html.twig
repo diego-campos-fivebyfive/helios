@@ -1,0 +1,149 @@
+{% extends view('layout') %}
+
+{% block styles %}
+
+    {#<link href="{{ asset('assets/proposal/gridEditor/grideditor.css') }}" rel="stylesheet">#}
+
+    <link href="{{ asset('assets/proposal2/style.css') }}" rel="stylesheet">
+
+{% endblock %}
+
+{% block body %}
+
+
+    <div class="wrapper wrapper-content">
+        <div class="row">
+            <div class="ocultar">
+
+                <div class="col-m-12" id="btSessions">
+                    <button type="button" class="btn btn-danger col-md-3" onclick="set(this)" data-model="del">Excluir Página</button>
+                    <button type="button" class="btn btn-info col-md-2" onclick="set(this)" data-model="12-0">1 Coluna</button>
+                    <button type="button" class="btn btn-info col-md-2" onclick="set(this)" data-model="6-6"> 2 Colunas</button>
+                    <button type="button" class="btn btn-info col-md-2" onclick="set(this)" data-model="4-4-4"> 3 Colunas</button>
+                    <button type="button" class="btn btn-info col-md-3" onclick="set(this)" data-model="12-6-6">1 Linha e 2 Colunas</button>
+                </div>
+
+                <div id="page" class="page"></div>
+
+                <div id="conjunct"></div>
+
+                <div id="separator" class="separator">
+
+                </div>
+
+                <div id="sessao-12" class="col-m-12 semMargem row">
+                    <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSes(this)"><center>X</center></a>
+                    <div class="col-m-160mm edit">Conteúdo</div>
+                </div>
+
+                <div id="sessao-6-6" class="col-m-12 semMargem row" >
+                    <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSes(this)" ><center>X</center></a>
+                    <div class="col-m-80mm edit">Conteúdo</div>
+                    <div class="col-m-80mm edit">Conteúdo</div>
+                </div>
+
+                <div id="sessao-4-4-4" class="col-m-12 semMargem row" >
+                    <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSes(this)" ><center>X</center></a>
+                    <div class="col-m-53mm edit">Conteúdo</div>
+                    <div class="col-m-53mm edit">Conteúdo</div>
+                    <div class="col-m-53mm edit">Conteúdo</div>
+                </div>
+                <div id="sessao-12-6-6" class="col-m-12 semMargem row" >
+                    <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSes(this)" ><center>X</center></a>
+                    <div class="col-m-160mm edit2">Conteúdo</div>
+                    <div class="col-m-80mm edit2 marginLeft4">Conteúdo</div>
+                    <div class="col-m-80mm edit2">Conteúdo</div>
+                </div>
+            </div>
+
+
+            <div class="col-md-10">
+                <div id="bloco">
+
+                </div>
+
+                <button class="btn btn-primary col-md-2 margBottom" onclick="newPage()">New Page</button>
+            </div>
+
+            <div class="col-md-2 sidebar-tags">
+
+                <div class="hidden">
+                    <div id="client">
+                        <i class="tag"> Uzumaki Naruto <!--variavel php com nome do client--></i>
+                    </div>
+
+                    <div id="power">
+                        780kw
+                    </div>
+
+                    <div id="graph">
+                        <img src="http://brasilescola.uol.com.br/upload/conteudo/images/graficl.JPG" alt="Gráfico"
+                             width="300" height="200"/>
+                    </div>
+
+                    <div id="items">
+                        <TABLE BORDER=1>
+                            <TR>
+                                <TD>Tabela de Exemplo</TD>
+                            </TR>
+                            <TR>
+                                <TD>Variavel 1</TD>
+                                <TD>Valor 1</TD>
+                                <TD>Valor 2</TD>
+                            </TR>
+                            <TR>
+                                <TD>Variavel 2</TD>
+                                <TD>Valor 3</TD>
+                                <TD>Valor 4</TD>
+                            </TR>
+                        </TABLE>
+                    </div>
+                </div>
+
+                <ul id="infoList" class="list-group">
+                    <div class="list-group-item active">
+                        <h3 class="">Informações Úteis</h3>
+                        (Puxar e Soltar)
+                    </div>
+                    <li>
+                        <div class="list-group-item" data-info="project_client" draggable="true">
+                            <i class="fa fa-user"></i> Nome do Cliente
+                        </div>
+                    </li>
+                    <li>
+                        <div class="list-group-item" data-info="project_power" draggable="true">
+                            <i class="fa fa-bolt"></i> Potência do Projeto
+                        </div>
+                    </li>
+                    <li>
+                        <div class="list-group-item" data-info="project_graph" draggable="true">
+                            <i class="fa fa-area-chart"></i> Gráfico
+                        </div>
+                    </li>
+                    <li>
+                        <div class="list-group-item" data-info="project_items" draggable="true">
+                            <i class="fa fa-info"></i> Itens do projeto
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    {#<script src="{{ asset('assets/proposal/ckeditor/ckeditor.js') }}"></script>
+    <script src="{{ asset('assets/proposal/gridEditor/jquery.grideditor.js') }}"></script>#}
+
+
+    <script src="{{ asset('assets/proposal2/script.js') }}"></script>
+    <script src="http://cdn.ckeditor.com/4.7.0/standard-all/ckeditor.js"></script>
+    <script src="{{ asset('assets/proposal2/dragable.js') }}"></script>
+
+    {#<script>
+        UPLOADCARE_PUBLIC_KEY = '9490325b6fcc3e8d094d';
+    </script>#}
+
+{% endblock %}
