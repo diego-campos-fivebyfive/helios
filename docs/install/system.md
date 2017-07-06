@@ -22,9 +22,15 @@ Abra o Arquivo `.bashrc` com seu editor (Vim, Nano ou outro):
 $ sudo vim ~/.bashrc
 ```
 
+Copie o caminho do seu projeto e o substitua no lugar de `PROJECT_PATH`, do proximo passo:
+```
+$ cd [PROJECT_FOLDER]
+$ pwd
+```
+
 Adicione ao final do arquivo as linhas:
 ```
-export SICES_PATH=/home/knd/sices
+export SICES_PATH=PROJECT_PATH
 export PATH=$PATH:$SICES_PATH/cli
 ```
 
