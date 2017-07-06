@@ -11,32 +11,29 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <td>{{ 'ID'|trans }}</td>
-                                    <td>{{ 'Maker'|trans }}</td>
-                                    <td>Status</td>
+                                    <td>Código</td>
+                                    <td>Tipo</td>
+                                    <td>Sub Tipo</td>
+                                    <td>Descrição</td>
+                                    <td>Tamanho</td>
                                     <td>Ações</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for structure in structures %}
                                     <tr>
-                                        <td>{{ structure.id }}</td>
-                                        <td>{{ structure.maker.name }}</td>
+                                        <td></td>
+                                        <td></td>
                                         <td>
-                                            {% if( structure.enabled == 1) %}
-                                                {{'Enabled'|trans}}
-                                            {% else %}
-                                                {{'Disabled'|trans}}
-                                            {% endif%}
                                         </td>
                                         <td>
-                                            <a href="{{ path('structure_preview',{id:structure.id}) }}">
+                                            <a href="">
                                                 <button class="btn btn-default btn-xs">{{'View'|trans}}</button>
                                             </a>
-                                            <a href="{{ path('structure_update',{ id: structure.id}) }}">
+                                            <a href="">
                                                 <button class="btn btn-default btn-xs">{{'Edit'|trans}}</button>
                                             </a>
-                                            <a href="{{ path('structure_delete',{ id: structure.id}) }}">
+                                            <a href="">
                                                 <button class="btn btn-default btn-xs">{{'Delete'|trans}}</button>
                                             </a>
 

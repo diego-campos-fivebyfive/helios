@@ -43,12 +43,9 @@ class StructureController extends ComponentController
             $query->getQuery(), $request->query->getInt('page', 1), 10
         );
 
-        dump($pagination);
-        die;
-
-        return $this->render('structure.index', [
+        return $this->render('structure.index', array(
             'pagination' => $pagination
-        ]);
+        ));
     }
 
     /**
@@ -86,9 +83,8 @@ class StructureController extends ComponentController
     {
         $this->checkAccess($structure);
 
-        $structure->toViewMode();
+        $manager = $this->getStructureManager();
 
-        //$manager = $this->getStructureManager();
         $form = $this->createForm(StructureType::class, $structure, [
             'is_validation' => $this->getUser()->isAdmin()
         ]);
