@@ -7,11 +7,11 @@ if [[ -z $1 ]] || [[ $1 == '--help' ]] || [[ $1 == '-h' ]]; then
 
     Usage:
 
-    cpf-new-task issue-[NUMBER]
+    ces-new-task issue-[NUMBER]
 
     Ex:
 
-    cpf-new-task issue-3084\n"
+    ces-new-task issue-3084\n"
     exit 0;
 fi
 
