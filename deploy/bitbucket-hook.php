@@ -28,9 +28,6 @@ function updateHomolog ($branch = 'No Branch')
 
 function updateCases ($commits)
 {
-  exec("echo $commits");
-  return;
-
   if (empty($commits)) {
     updateHomolog();
     return;
