@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "compile": "php app/console assetic:dump",
+    "compile": "./cli/ces-compile.sh",
     "start": "php app/console server:run"
   },
   "dependencies": {
