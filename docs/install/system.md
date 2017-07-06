@@ -60,7 +60,7 @@ $ cp config-sample.yml config.yml
 #### Atribuindo o caminho padrão do Node:
 
 Na sessão `Assetic configuration` atribua a váriavel
-`node` o caminho do node em seu equipamento.
+`node` usada em seu sistema operacional para rodar o node (ex: node, nodejs, /urs/bin/node ...)
 
 
 5. Instalando o Assetic
