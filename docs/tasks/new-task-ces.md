@@ -9,7 +9,7 @@ Nova Task - CES
 2. Iniciar nova Branch
 
 ```
-$ ./cli/ces-new-task.sh issue-[NUMBER_ISSUE]
+$ ces-new-task issue-[NUMBER_ISSUE]
 ```
 
 3. Executar task
