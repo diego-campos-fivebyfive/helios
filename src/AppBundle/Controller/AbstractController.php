@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\BusinessInterface;
+use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\UserInterface;
 use AppBundle\Twig\Resolver;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -49,12 +50,25 @@ abstract class AbstractController extends Controller
     }
 
     /**
+     * @deprecated use self::json()
+     *
      * @param array $data
      * @param int $status
      * @param array $headers
      * @return JsonResponse
      */
     public function jsonResponse(array $data = [], $status = 200, array $headers = [])
+    {
+        return $this->json($data, $status, $headers);
+    }
+
+    /**
+     * @param array $data
+     * @param int $status
+     * @param array $headers
+     * @return JsonResponse
+     */
+    protected function json(array $data = [], $status = 200, array $headers = [])
     {
         return new JsonResponse($data, $status, $headers);
     }
@@ -518,7 +532,16 @@ abstract class AbstractController extends Controller
     }
 
     /**
-     * @return BusinessInterface|null
+     * @param $id
+     * @return object|\AppBundle\Manager\AbstractManager
+     */
+    protected function manager($id)
+    {
+        return $this->get(sprintf('%s_manager', $id));
+    }
+
+    /**
+     * @return BusinessInterface|MemberInterface
      */
     protected function member()
     {

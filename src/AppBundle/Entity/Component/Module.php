@@ -189,6 +189,14 @@ class Module implements ModuleInterface
     /**
      * @inheritDoc
      */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setCode($code)
     {
         $this->code = $code;

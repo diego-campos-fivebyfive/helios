@@ -45,4 +45,9 @@ interface ProjectModuleInterface extends ProjectElementInterface
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getProjectAreas();
+
+    /**
+     * @return array
+     */
+    public function getDistribution();
 }

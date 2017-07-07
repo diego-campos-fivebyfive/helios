@@ -2,21 +2,17 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Component\ProjectArea;
+use AppBundle\Entity\Component\ProjectInterface;
+
 use AppBundle\Entity\Component\KitComponentInterface;
 use AppBundle\Entity\Project\NasaProviderInterface;
-use AppBundle\Entity\Project\ProjectInterface;
 use AppBundle\Entity\Project\ProjectModuleInterface;
 use AppBundle\Service\SolarEnergy\Core\Area;
 use AppBundle\Service\SolarEnergy\Core\Project;
 use AppBundle\Service\SolarEnergy\Core\Processor;
 use AppBundle\Service\SolarEnergy\Nasa\AirTemperature;
-use AppBundle\Service\SolarEnergy\Nasa\DaylightHours;
-use AppBundle\Service\SolarEnergy\Nasa\RadiationAtmosphere;
-use AppBundle\Service\SolarEnergy\Nasa\RadiationDiffuse;
 use AppBundle\Service\SolarEnergy\Nasa\RadiationGlobal;
-use AppBundle\Service\SolarEnergy\Nasa\SolarDeclination;
-use AppBundle\Service\SolarEnergy\Nasa\SolarNoon;
-
 
 class ProjectProcessor
 {
@@ -32,21 +28,60 @@ class ProjectProcessor
 
     public function process(ProjectInterface $project)
     {
+        $latitude = $project->getLatitude();
+        $longitude = $project->getLongitude();
+
         /** Create Energy Project */
         $energyProject = new Project();
 
-        $projectInverters = $project->getInverters();
+        $energyProject
+            ->setLatDegree($latitude)
+            ->setLngDegree($longitude)
+        ;
 
+        /** @var ProjectArea $projectArea */
+        foreach ($project->getAreas() as $projectArea){
+
+            $projectInverter = $projectArea->getProjectInverter();
+            $projectModule = $projectArea->getProjectModule();
+
+            $inverter = $projectInverter->getInverter();
+            $module = $projectModule->getModule();
+
+
+            /** Create area */
+            $area = new Area(
+                null,
+                $inverter->getMaxEfficiency(),
+                $module->getMaxPower(),
+                $module->getEfficiency(),
+                $module->getTemperatureOperation(),
+                $module->getTempCoefficientMaxPower(),
+                $projectArea->getStringNumber(),
+                $projectArea->getModuleString()
+            );
+
+            $area
+                ->setInclinationDegree($projectArea->getInclination())
+                ->setOrientationDegree($projectArea->getOrientation())
+                ->setInverterSideLoss($projectInverter->getLoss())
+                ->setModuleSideLoss($projectArea->getLoss())
+            ;
+
+            $energyProject->addArea($area);
+        }
+
+        /*
         foreach($projectInverters as $projectInverter){
 
             $projectModules = $projectInverter->getModules();
             
-            /** @var KitComponentInterface $kitInverter */
+            /** @var KitComponentInterface $kitInverter *
             $kitInverter = $projectInverter->getInverter();
 
             $inverter = $kitInverter->getInverter();
 
-            /** Inverter data */
+            /** Inverter data *
             $inverterEfficiency = $inverter->getMaxEfficiency();
             
             foreach($projectModules as $projectModule){
@@ -56,13 +91,13 @@ class ProjectProcessor
 
                     $module = $kitModule->getModule();
 
-                    /** Module data */
+                    /** Module data *
                     $moduleMaxPower = $module->getMaxPower();
                     $moduleEfficiency = $module->getEfficiency();
                     $moduleTemperature = $module->getTemperatureOperation();
                     $moduleCoefficientTemperature = $module->getTempCoefficientMaxPower();
 
-                    /** Area data */
+                    /** Area data *
                     $stringNumber = $projectModule->getStringNumber();
                     $stringDistribution = $projectModule->getModuleString();
                     $inclinationDegree = $projectModule->getInclination();
@@ -70,7 +105,7 @@ class ProjectProcessor
                     $inverterSideLoss = $projectInverter->getLoss();
                     $moduleSideLoss = $projectModule->getLoss();
 
-                    /** Create area */
+                    /** Create area *
                     $area = new Area(
                         null,
                         $inverterEfficiency,
@@ -97,11 +132,10 @@ class ProjectProcessor
         $latitude = $project->getLatitude();
         $longitude = $project->getLongitude();
 
-        /** Energy Project data */
         $energyProject
             ->setLatDegree($latitude)
             ->setLngDegree($longitude)
-        ;
+        ;*/
 
 
         $radiationGlobal = new RadiationGlobal(
@@ -141,7 +175,23 @@ class ProjectProcessor
         $processor = new Processor($energyProject);
 
         $processor->compute();
-        
-        return $energyProject->getMetadata();
+
+        $metadata = $energyProject->getMetadata();
+
+        $metadata['total'] = [
+            'kwh_year' => 0,
+            'kwh_month' => 0,
+            'kwh_kwp_year' => 0,
+            'kwh_kwp_month' => 0
+        ];
+
+        foreach ($metadata['areas'] as $area) {
+            $metadata['total']['kwh_year'] += $area['kwh_year'];
+            $metadata['total']['kwh_month'] += $area['kwh_month'];
+            $metadata['total']['kwh_kwp_year'] += $area['kwh_kwp_year'];
+            $metadata['total']['kwh_kwp_month'] += $area['kwh_kwp_month'];
+        }
+
+        return $metadata;
     }
 }

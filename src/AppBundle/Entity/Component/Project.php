@@ -105,6 +105,13 @@ class Project implements ProjectInterface
     private $longitude;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(name="metadata", type="json", nullable=true)
+     */
+    private $metadata;
+
+    /**
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="ProjectModule", mappedBy="project", cascade={"persist"})
@@ -137,8 +144,13 @@ class Project implements ProjectInterface
      */
     public function __construct()
     {
-        $this->projectModules = new ArrayCollection();
-        $this->projectInverters = new ArrayCollection();
+        $this->invoicePriceStrategy  = self::PRICE_STRATEGY_ABSOLUTE;
+        $this->deliveryPriceStrategy = self::PRICE_STRATEGY_ABSOLUTE;
+        $this->invoiceBasePrice      = 0;
+        $this->deliveryBasePrice     = 0;
+        $this->projectModules        = new ArrayCollection();
+        $this->projectInverters      = new ArrayCollection();
+        $this->metadata              = [];
     }
 
     /**
@@ -336,6 +348,143 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
+    public function setMetadata(array $metadata)
+    {
+        $this->metadata = $metadata;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMetadata($key = null, $default = null)
+    {
+        if ($key) {
+            return $this->hasMetadata($key) ? $this->metadata[$key] : $default;
+        }
+
+        return $this->metadata;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasMetadata($key = null)
+    {
+        if ($this->metadata) {
+            if (!$key) {
+                return !empty($this->metadata);
+            }
+            return array_key_exists($key, $this->metadata);
+        }
+        return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAnnualProduction()
+    {
+        if (null != $kwhYear = $this->getMetadata('kwh_year'))
+            return $kwhYear;
+
+        return 0;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMonthlyProduction($deep = false)
+    {
+        $production = [];
+        if ($this->hasMetadata('areas')) {
+            foreach ($this->getMetadata('areas') as $area) {
+                $months = $area['months'];
+                foreach ($months as $month => $data) {
+                    if (!array_key_exists($month, $production))
+                        $production[$month] = 0;
+
+                    $production[$month] += $data['total_month'];
+                }
+            }
+        }
+
+        return $deep ? $production : array_values($production);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDistribution()
+    {
+        $distribution = [];
+
+        $modulesAvailable = 0;
+        $modulesConfigured = 0;
+        /** @var ProjectModuleInterface $projectModule */
+        foreach($this->projectModules as $projectModule){
+            $distributionModule = $projectModule->getDistribution();
+            $distribution['modules'][$projectModule->getModule()->getId()] = $distributionModule;
+
+            $modulesAvailable += $distributionModule['available'];
+            $modulesConfigured += $distributionModule['configured'];
+        }
+
+        $distribution['modules_available'] = $modulesAvailable;
+        $distribution['modules_configured'] = $modulesConfigured;
+
+        return $distribution;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function countConfiguredModules()
+    {
+        $count = 0;
+        foreach ($this->projectInverters as $projectInverter){
+            /** @var ProjectAreaInterface $projectArea */
+            foreach ($projectInverter->getProjectAreas() as $projectArea){
+                $count += $projectArea->getStringNumber() * $projectArea->getModuleString();
+            }
+        }
+
+        return $count;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getArea()
+    {
+        $area = 0;
+        foreach ($this->projectInverters as $projectInverter) {
+            /** @var ProjectAreaInterface $projectArea */
+            foreach ($projectInverter->getProjectAreas() as $projectArea) {
+                $area += $projectArea->getArea();
+            }
+        }
+
+        return $area;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPower()
+    {
+        $power = 0;
+        foreach ($this->projectInverters as $projectInverter) {
+            $power += $projectInverter->getPower();
+        }
+
+        return $power;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setMember(MemberInterface $member)
     {
         $this->member = $member;
@@ -439,6 +588,22 @@ class Project implements ProjectInterface
     public function getProjectInverters()
     {
         return $this->projectInverters;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAreas()
+    {
+        $areas = new ArrayCollection();
+
+        foreach ($this->projectInverters as $projectInverter){
+            foreach ($projectInverter->getProjectAreas() as $projectArea){
+                $areas->add($projectArea);
+            }
+        }
+
+        return $areas;
     }
 
     /**

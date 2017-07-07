@@ -143,6 +143,55 @@ interface ProjectInterface
     public function getSalePrice();
 
     /**
+     * @param array $metadata
+     * @return ProjectInterface
+     */
+    public function setMetadata(array $metadata);
+
+    /**
+     * @param null $key
+     * @return mixed
+     */
+    public function getMetadata($key = null, $default = null);
+
+    /**
+     * @param null $key
+     * @return bool
+     */
+    public function hasMetadata($key = null);
+
+    /**
+     * @return float
+     */
+    public function getAnnualProduction();
+
+    /**
+     * @param bool $deep Keys represent months
+     * @return array
+     */
+    public function getMonthlyProduction($deep = false);
+
+    /**
+     * @return array
+     */
+    public function getDistribution();
+
+    /**
+     * @return int
+     */
+    public function countConfiguredModules();
+
+    /**
+     * @return float
+     */
+    public function getArea();
+
+    /**
+     * @return float
+     */
+    public function getPower();
+
+    /**
      * @return \DateTime
      */
     public function getCreatedAt();
@@ -207,6 +256,11 @@ interface ProjectInterface
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getProjectInverters();
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getAreas();
 
     /**
      * @return array
