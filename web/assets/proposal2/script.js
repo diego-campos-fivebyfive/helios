@@ -149,6 +149,27 @@ function up(btn) {
             $(bloc.children()[o]).html($(bloc.children()[o-1]).html());
             $(bloc.children()[o - 1]).html(temp);
 
+            //ativador do ck editor
+            var q = $(bloc.children()[o]).children("div.page").children().children("div").length;
+            for(r=0;r<q;r++){
+                var edit = $(bloc.children()[o]).children("div.page").children().children("div")[r];
+                console.log($(edit).attr("id"));
+                var idEdit = $(edit).attr("id");
+                CKEDITOR.inline( idEdit, {
+                    extraPlugins: 'hcard,sourcedialog,justify'
+                } );
+            }
+            q = $(bloc.children()[o-1]).children("div.page").children().children("div").length;
+            for(r=0;r<q;r++){
+                var edit = $(bloc.children()[o-1]).children("div.page").children().children("div")[r];
+                console.log($(edit).attr("id"));
+                var idEdit = $(edit).attr("id");
+                CKEDITOR.inline( idEdit, {
+                    extraPlugins: 'hcard,sourcedialog,justify'
+                } );
+            }
+
+
             return;
             //
         }/*else{
@@ -180,6 +201,28 @@ function down(btn) {
             var temp = $($(bloc.children()[o]).html());
             $(bloc.children()[o]).html($(bloc.children()[o+1]).html());
             $(bloc.children()[o + 1]).html(temp);
+
+
+            //ativador do ck editor
+            var q = $(bloc.children()[o]).children("div.page").children().children("div").length;
+            for(r=0;r<q;r++){
+                var edit = $(bloc.children()[o]).children("div.page").children().children("div")[r];
+                console.log($(edit).attr("id"));
+                var idEdit = $(edit).attr("id");
+                CKEDITOR.inline( idEdit, {
+                    extraPlugins: 'hcard,sourcedialog,justify'
+                } );
+            }
+            q = $(bloc.children()[o+1]).children("div.page").children().children("div").length;
+            for(r=0;r<q;r++){
+                var edit = $(bloc.children()[o+1]).children("div.page").children().children("div")[r];
+                console.log($(edit).attr("id"));
+                var idEdit = $(edit).attr("id");
+                CKEDITOR.inline( idEdit, {
+                    extraPlugins: 'hcard,sourcedialog,justify'
+                } );
+            }
+
             return;
 
         }
