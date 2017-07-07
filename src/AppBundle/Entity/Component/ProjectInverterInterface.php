@@ -19,6 +19,11 @@ namespace AppBundle\Entity\Component;
 interface ProjectInverterInterface extends ProjectElementInterface
 {
     /**
+     * @return int
+     */
+    public function getId();
+
+    /**
      * @param InverterInterface $inverter
      * @return ProjectInverterInterface
      */
@@ -50,6 +55,21 @@ interface ProjectInverterInterface extends ProjectElementInterface
      * @return float
      */
     public function getLoss();
+
+    /**
+     * @return float
+     */
+    public function getPower();
+
+    /**
+     * @return bool
+     */
+    public function operationIsChanged();
+
+    /**
+     * @return array
+     */
+    public function getMetadata();
 
     /**
      * @param ProjectAreaInterface $projectArea

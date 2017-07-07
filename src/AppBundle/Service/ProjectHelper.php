@@ -4,11 +4,12 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\Component\KitComponentInterface;
 use AppBundle\Entity\Component\KitInterface;
+use AppBundle\Entity\Component\ProjectAreaInterface;
 use AppBundle\Entity\Financial\ProjectFinancialInterface;
 use AppBundle\Entity\Financial\Tax;
 use AppBundle\Entity\Financial\TaxInterface;
-use AppBundle\Entity\Project\ProjectInterface;
-use AppBundle\Entity\Project\ProjectInverterInterface;
+use AppBundle\Entity\Component\ProjectInterface;
+use AppBundle\Entity\Component\ProjectInverterInterface;
 use AppBundle\Entity\Project\ProjectModuleInterface;
 use AppBundle\Service\Support\Project\AreaDebugger;
 use AppBundle\Service\Support\Project\PowerEstimator;
@@ -197,15 +198,16 @@ class ProjectHelper
     }
 
 
-    public function debugArea(ProjectModuleInterface &$projectModule)
+    public function debugArea(ProjectAreaInterface &$projectArea)
     {
-        if ($projectModule->isComputable()) {
+        if ($projectArea->getProjectInverter() && $projectArea->getProjectModule()) {
 
-            $projectInverter = $projectModule->getInverter();
+            //$projectInverter = $projectModule->getInverter();
+            $projectInverter = $projectArea->getProjectInverter();
             $project = $projectInverter->getProject();
 
-            $inverter = $projectInverter->getInverter()->getInverter();
-            $module = $projectModule->getModule()->getModule();
+            $inverter = $projectInverter->getInverter();
+            $module = $projectArea->getProjectModule()->getModule();
 
             $latitude = $project->getLatitude();
             $longitude = $project->getLongitude();
@@ -244,12 +246,10 @@ class ProjectHelper
                 'global' => $global,
                 'atmosphere' => $atmosphere,
                 'temperature' => $temperature,
-                'mppt_factor' => $projectModule->getMpptFactor(),
-                'n_string' => $projectModule->getStringNumber(),
-                'n_mod_string' => $projectModule->getModuleString()
+                'mppt_factor' => $projectArea->getMpptFactor(),
+                'n_string' => $projectArea->getStringNumber(),
+                'n_mod_string' => $projectArea->getModuleString()
             ];
-
-            //dump($metadata); die;
 
             $debugger = new AreaDebugger();
 
@@ -261,11 +261,11 @@ class ProjectHelper
 
             $this->hydrateAreaMetadataOperation($metadataOperation);
 
-            $projectModule->setMetadataOperation($metadataOperation);
+            $projectArea->setMetadata($metadataOperation);
 
             $manager = $this->getManager();
 
-            $manager->persist($projectModule);
+            $manager->persist($projectArea);
             $manager->flush();
 
             return $metadataOperation;
@@ -277,22 +277,15 @@ class ProjectHelper
     /**
      * @param ProjectInterface $project
      */
-    public function calculateProject(ProjectInterface &$project)
+    public function processProject(ProjectInterface $project)
     {
         /** @var ProjectProcessor $processor */
         $processor = $this->container->get('app.project_processor');
+        $metadata = $processor->process($project);
 
-        $result = $processor->process($project);
+        if (array_key_exists('areas', $metadata)) {
 
-        if (array_key_exists('areas', $result)) {
-
-            $kwhYear = 0;
-            foreach ($result['areas'] as $area) {
-                $kwhYear += $area['kwh_year'];
-            }
-
-            $project->setMetadata('kwh_year', $kwhYear);
-            $project->setMetadata('areas', $result['areas']);
+            $project->setMetadata($metadata);
 
             $this->getProjectManager()->save($project);
         }
@@ -471,11 +464,11 @@ class ProjectHelper
     }
 
     /**
-     * @return \AppBundle\Entity\Project\ProjectManager|object
+     * @return \AppBundle\Manager\ProjectManager|object
      */
     private function getProjectManager()
     {
-        return $this->container->get('app.project_manager');
+        return $this->container->get('project_manager');
     }
 
     /**

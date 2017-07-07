@@ -100,6 +100,22 @@ class ProjectModule implements ProjectModuleInterface
     /**
      * @inheritDoc
      */
+    public function getDistribution()
+    {
+        $applied = 0;
+        foreach ($this->projectAreas as $projectArea){
+            $applied += $projectArea->countModules();
+        }
+
+        return [
+            'available' => $this->quantity,
+            'configured' => $applied
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function addProjectArea(ProjectAreaInterface $projectArea)
     {
         if(!$this->projectAreas->contains($projectArea)){

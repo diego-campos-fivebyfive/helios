@@ -63,6 +63,11 @@ class ProjectInverter implements ProjectInverterInterface
     private $projectAreas;
 
     /**
+     * @var bool
+     */
+    private $operationIsChanged = false;
+
+    /**
      * @inheritDoc
      */
     public function __construct()
@@ -118,6 +123,9 @@ class ProjectInverter implements ProjectInverterInterface
      */
     public function setOperation($operation)
     {
+        if($operation != $this->operation)
+            $this->operationIsChanged = true;
+
         $this->operation = $operation;
 
         return $this;
@@ -147,6 +155,83 @@ class ProjectInverter implements ProjectInverterInterface
     public function getLoss()
     {
         return $this->loss;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPower()
+    {
+        $power = 0;
+        if (!$this->projectAreas->isEmpty()) {
+            foreach ($this->projectAreas as $projectArea) {
+                $power += $projectArea->getPower();
+            }
+        }
+
+        return $power;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function operationIsChanged()
+    {
+        return $this->operationIsChanged;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMetadata()
+    {
+        $metadata = [
+            'nominal_power' => 0,
+            'stc_power_max' => 0,
+            'areas' => [],
+            'fdi' => 0,
+            'operable' => false,
+            'level' => 'danger',
+            'color' => 'red'
+        ];
+
+        if ($this->inverter) {
+
+            $nominalPower = $this->inverter->getNominalPower();
+
+            if ($this->operation) {
+
+                $stcPowerMax = $this->getPower();
+
+                if ($stcPowerMax) {
+
+                    //$fdi = $nominalDcPower / $stcPowerMax;
+                    $fdi = $stcPowerMax / $nominalPower;
+
+                    $level = ($fdi >= .8 && $fdi <= 1.2) ? (($fdi >= .9 && $fdi <= 1.1) ? 'success' : 'warning') : 'danger';
+
+                    $metadata['color'] = 'danger' == $level ? 'red' : ('warning' == $level ? 'yellow' : 'green');
+
+                    $metadata['level'] = $level;
+                    $metadata['fdi'] = $fdi;
+                    $metadata['operable'] = 'danger' == $level ? false : true;
+
+                    $metadata['stc_power_max'] = $stcPowerMax;
+
+                    $metadata['areas'] = [];
+                    foreach ($this->projectAreas as $projectArea) {
+                        $metadata['areas'][] = $projectArea->getMetadata();
+                    }
+                }
+            }
+
+            $metadata['nominal_power'] = $nominalPower;
+
+            return $metadata;
+        }
+
+
+        return $metadata;
     }
 
     /**

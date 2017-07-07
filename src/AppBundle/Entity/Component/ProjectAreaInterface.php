@@ -94,4 +94,45 @@ interface ProjectAreaInterface
      * @return string
      */
     public function getLoss();
+
+    /**
+     * @return int
+     */
+    public function getIndex();
+
+    /**
+     * @return string
+     */
+    public function getMpptName();
+
+    /**
+     * @return int
+     */
+    public function getMpptFactor();
+
+    /**
+     * @param array $metadata
+     * @return ProjectAreaInterface
+     */
+    public function setMetadata(array $metadata);
+
+    /**
+     * @return array
+     */
+    public function getMetadata();
+
+    /**
+     * @return float
+     */
+    public function getPower();
+
+    /**
+     * @return float
+     */
+    public function getArea();
+
+    /**
+     * @return int
+     */
+    public function countModules();
 }

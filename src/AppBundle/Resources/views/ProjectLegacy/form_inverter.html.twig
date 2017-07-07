@@ -1,0 +1,231 @@
+{% set random = random() %}
+
+{% set form_id = ['pif', random]|join %}
+
+{% set inverter = project_inverter.inverter.inverter %}
+
+{% set op_color = project_inverter.metadataOperation is null ? 'danger' : project_inverter.metadataOperation.level %}
+
+<style type="text/css">
+    .stacked-inverter .table tr td{
+        border-top: 0 !important;
+    }
+</style>
+
+<div class="row">
+
+    <div class="col-md-12" data-operation="{{ project_inverter.id }}">
+
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                {{ inverter.maker ? inverter.maker.name : 'N/A' }} / {{ inverter.model }}
+            </div>
+
+            <div class="panel-body">
+
+                {{ form_start(form,{'attr':{'id':form_id}}) }}
+
+                <div class="modal inmodal fade" id="modal_loss_inverter{{ random }}" tabindex="-1" role="dialog"  aria-hidden="true">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-3 text-center">
+                                        <i class="{{ icon('inverters') }} mega-icon"></i> <br/>
+                                        Inversor
+                                    </div>
+                                    <div class="col-md-6 text-center">
+                                        {{ form_widget(form.loss,{'attr':{'class':'form-control inverter-loss info-loss text-center'}}) }}
+                                        <button type="button" data-style="zoom-in" class="update-loss btn btn-sm btn-block btn-success ladda-button">
+                                            <i class="fa fa-angle-double-left"></i>
+                                            Aplicar
+                                            <i class="fa fa-angle-double-right"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col-md-3 text-center">
+                                        <i class="{{ icon('plug') }} mega-icon"></i>  <br/>
+                                        Rede
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-white btn-sm" data-dismiss="modal">{{ 'Close'|trans }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 stacked-inverter">
+
+                        <div class="col-md-1 col-xs-12">
+                            <table class="table"> 
+                                <tr>
+                                    <td>
+                                        <label> Operação </label>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>                            
+
+                        <div class="col-md-8 col-xs-12">
+                            <table class="table"> 
+                                <tr>
+                                    <td>
+                                        <div class="hide">
+                                            {{ form_widget(form.inverter,{'attr':{'class':'form-control inverter-choice'}}) }}
+                                        </div>
+                                        {{ form_widget(form.operation,{'attr':{'class':'form-control operation-choice'}}) }}                                    
+                                    </td>
+                                    <td class="col-md-1">
+                                        <div style="margin-top: .5rem;" id="spinner{{ random }}" class="sk-spinner sk-spinner-circle pull-left">
+                                            {% for i in 1..12 %}
+                                            <div class="sk-circle{{ i }} sk-circle"></div>
+                                            {% endfor %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="col-md-3">
+                            <table class="table"> 
+                                <tr>
+                                    <td>
+                                        <div class="btn-group btn-group-justified">
+                                            <a data-toggle="modal" data-target="#modal_loss_inverter{{ random }}" class="btn btn-md btn-default">
+                                                Perdas %
+                                            </a>
+                                            <a data-toggle="modal" data-href="{{ path('project_inverter_operation',{id:project_inverter.id}) }}" data-target="#modal_operation_info" class="btn btn-md btn-{{ op_color }} inverter-info operation-info">
+                                                <i class="fa fa-dot-circle-o"></i> FD
+                                            </a>
+                                        </div>                                    
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+
+    {#<table class="table">
+                    <tbody>
+                    <tr>
+                        <td class="col-md-3">
+                            {# <div class="hide">{{ form_widget(form.inverter,{'attr':{'class':'form-control inverter-choice'}}) }}</div>
+                            {{ form_widget(form.operation,{'attr':{'class':'form-control operation-choice'}}) }}
+                        </td>
+                        <td class="col-md-5">
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <a data-toggle="modal" data-target="#modal_loss_inverter{{ random }}" class="btn btn-md btn-default">
+                                        (%) Perdas <i class="fa fa-question"></i>
+                                    </a>
+                                    <a data-toggle="modal" data-href="{{ path('project_inverter_operation',{id:project_inverter.id}) }}" data-target="#modal_operation_info" class="btn btn-md btn-{{ op_color }} inverter-info operation-info">
+                                        <i class="fa fa-dot-circle-o"></i> Operação
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="padding-top:1.5rem;">
+                            {# <div id="spinner{{ random }}" class="sk-spinner sk-spinner-circle pull-left">
+                                {% for i in 1..12 %}
+                                    <div class="sk-circle{{ i }} sk-circle"></div>
+                                {% endfor %}
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody></table> #}
+
+                {{ form_end(form) }}
+
+                {% set areas_id = ['ca', random]|join %}
+
+                <div class="row" id="{{ areas_id }}">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var inverter_form = $('#{{ form_id }}');
+        var container_areas = $('#{{ areas_id }}');
+        var modules_spinner = $('#spinner{{ random }}');
+
+        var get_modules_forms = function(){
+            modules_spinner.fadeIn();
+            $.ajax({
+                url: '{{ path('project_modules_forms',{id:project_inverter.id}) }}',
+                success: function(response){
+                    modules_spinner.fadeOut();
+                    if (response.hasOwnProperty('forms')) {
+                        container_areas.html('');
+                        var forms = response.forms;
+                        for (var i = 0; i < forms.length; i++) {
+                            container_areas.append(forms[i]);
+                        }
+                    }
+                }
+            });
+        }; get_modules_forms();
+
+
+        function update_form_inverter(options) {
+            $.ajax({
+                url: '{{ path('project_inverter_update',{id:project_inverter.id}) }}',
+                method: 'post',
+                data: inverter_form.serialize(),
+                success: function (response) {
+                    if(options.hasOwnProperty('callback')){
+                        options.callback(response);
+                    }
+                }
+            });
+        }
+
+        inverter_form.find('[name="project_inverter[operation]"]').on('change', function () {
+            if ($(this).val()) {
+                modules_spinner.fadeIn();
+                update_form_inverter({
+                    callback: function(response){
+                        get_modules_forms();
+                        check_operations({{ project_inverter.id }});
+                    }
+                });
+            }
+        });
+
+        var inverters = inverter_form.find('[name="project_inverter[inverter]"]');
+        inverters.find('option:not(:selected)').remove();
+        inverters.attr('readonly', 'readonly');
+
+        /*inverter_form.find('.inverter-loss').TouchSpin({
+            step: 0.1,
+            max: 99,
+            min: 0.00,
+            decimals: 2,
+            verticalbuttons: true
+        });*/
+
+        Numbers.mask(inverter_form.find('.inverter-loss'));
+
+        var modal_loss = $('#modal_loss_inverter{{ random }}');
+        var apply_loss = modal_loss.find('button.update-loss');
+        apply_loss.ladda();
+        apply_loss.on('click', function(event){
+            event.preventDefault();
+            apply_loss.ladda('start');
+            update_form_inverter({
+                callback: function(response){
+                    apply_loss.ladda('stop');
+                    modal_loss.modal('hide');
+                    Project.clear_info();
+                }
+            });
+        });
+
+    });
+</script>

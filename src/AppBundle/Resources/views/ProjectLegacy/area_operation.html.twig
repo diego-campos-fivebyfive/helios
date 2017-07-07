@@ -29,8 +29,6 @@
 }*/
 </style>
 
-{% if data|length %}
-
 <div class="row" style="position: relative;">
     <div class="operation-filament">
     </div>
@@ -259,14 +257,4 @@ var power_slider = $("#power-slider");
         }
     }init_power_slider();
 
-</script>
-
-{% else %}
-
-    <div class="col-md-12">
-        <div class="alert alert-danger text-center">
-            <i class="fa fa-info-circle"></i> É necessário configurar a área para visualizar estes dados
-        </div>
-    </div>
-
-{% endif %}
+    </script>

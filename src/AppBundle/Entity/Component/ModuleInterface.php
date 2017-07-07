@@ -19,6 +19,11 @@ namespace AppBundle\Entity\Component;
 interface ModuleInterface
 {
     /**
+     * @return int
+     */
+    public function getId();
+
+    /**
      * @param $code
      * @return ModuleInterface
      */

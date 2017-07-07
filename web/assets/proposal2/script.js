@@ -32,13 +32,10 @@ function newPage() {
 
     var page = $("#page").clone().removeAttr('id');
     $(page).attr("id","page_"+idPage);
-    /*idPage++;*/
 
     var btSessions = $("#btSessions").clone().removeAttr('id');
     $(btSessions).attr("id","btSessions_"+idPage);
 
-
-    // alert($(btSessions).children().length);
     for (n=0;n<$(btSessions).children().length;n++){
         var btn = $(btSessions).children()[n];
         $(btn).attr("data-pg","page_"+idPage);
@@ -51,9 +48,7 @@ function newPage() {
     $("#conjunct_"+idPage+"").append(page);
     var separator = $('#separator').clone().removeAttr('id');
     $("#conjunct_"+idPage+"").append(separator);
-
     idPage++;
-
 }
 
 function delSes(btn) {
@@ -63,7 +58,6 @@ function delSes(btn) {
     }
 }
 
-//
 var i = 0;
 var s = 0;
 function set(btn) {
@@ -91,97 +85,50 @@ function set(btn) {
     for (n=1;n<session.children().length;n++){
         cont++;
         var editor = session.children()[n];
-        //console.log(editor);
         $(editor).attr("id","editor_"+i);
         $(editor).attr("contenteditable","true");
-
-        /*$(editor).attr("class","col-lg-12 editor");*/
-
         i++;
-
     }
     i-=cont;
     var pg = $(btn).data("pg");
     $("#"+pg+"").append(session);
-
     for (n = 0;n<session.children().length;n++){
         CKEDITOR.inline( "editor_"+i, {
             extraPlugins: 'hcard,sourcedialog,justify'
         } );
         i++;
     }
-
 }
 
 function up(btn) {
     var dataPosAt = $(btn).data("pos");
-
     var bloc = $("#bloco");
 
-    console.log($(bloc).children()[0]);
-    console.log($(bloc.children()[0]).data("position"));
-
-    // console.log($(bloc).children());
-    var newBloc;
-    // console.log(bloc.children().length);
-    //   alert(bloc.children().length);
     for (o=0;o<$(bloc).children().length;o++){
-        // alert($(bloc.children()[o]).data("position"));
-
-        // console.log(newBloc.html());
         var current = $(bloc.children()[o]).data("position");
-        var before = $(bloc.children()[o-1]).data("position");
-        var forward = $(bloc.children()[o+1]).data("position");
-        //alert(dataPosAt+" e "+ current);
-        /*if(dataPosAt === forward){
-         //alert(dataPosAt+" e " +current);
-         //newBloc[o] = $(bloc).children()[o+1];
-         }else */
 
-        if(dataPosAt === current /*&& o>0*/){
-            //  alert("y");
-
-            //$(temp).attr("data-position",23);
-            $(bloc.children()[o]).attr("data-position",before);
-            $(bloc.children()[o-1]).attr("data-position",dataPosAt);
-            //console.log($(temp).html());
-            var temp = $($(bloc.children()[o]).html());
-            $(bloc.children()[o]).html($(bloc.children()[o-1]).html());
-            $(bloc.children()[o - 1]).html(temp);
-
+        if(dataPosAt === current && o>0){
+            var temp = bloc.children()[o];
+            var prev = bloc.children()[o-1];
+            $( $( '#'+$(temp).attr('id') ) ).insertBefore( $( '#'+$(prev).attr('id') )  );
             return;
-            //
-        }/*else{
-         newBloc[o] = $(bloc).children()[o];
-         }*/
-
-        //console.log($(bloc).children()[o]);
-
+        }
     }
 }
 
 function down(btn) {
     var dataPosAt = $(btn).data("pos");
-
     var bloc = $("#bloco");
-    // console.log($(bloc).children()[0]);
 
     for (o=0;o<$(bloc).children().length;o++){
-
         var current = $(bloc.children()[o]).data("position");
-        var before = $(bloc.children()[o-1]).data("position");
-        var forward = $(bloc.children()[o+1]).data("position");
 
         if(dataPosAt === current && o<$(bloc).children().length - 1){
 
-            $(bloc.children()[o]).attr("data-position",forward);
-            $(bloc.children()[o+1]).attr("data-position",dataPosAt);
-
-            var temp = $($(bloc.children()[o]).html());
-            $(bloc.children()[o]).html($(bloc.children()[o+1]).html());
-            $(bloc.children()[o + 1]).html(temp);
+            var temp = bloc.children()[o];
+            var next = bloc.children()[o+1];
+            $( $( '#'+$(temp).attr('id') ) ).insertAfter( $( '#'+$(next).attr('id') )  );
             return;
-
         }
     }
 }
