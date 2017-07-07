@@ -47,16 +47,7 @@ $ echo $PATH
 Caso os caminhos não apareçam, reinicie a maquina.
 
 
-3. Instalando dependências do Sistema
--------------------------------------
-
-```
-$ cd [PROJECT_FOLDER]
-$ composer install
-```
-
-
-4. Configurações do App
+3. Configurações do App
 -----------------------
 
 #### Criando o arquivo de configurações:
@@ -65,8 +56,7 @@ Entre na pasta de configurações do app em `app/config` e
 duplique o arquivo `config-sample.yml` com o nome `config.yml`
 
 ```
-$ cd app/config
-$ cp config-sample.yml config.yml
+$ cp app/config/config-sample.yml app/config/config.yml
 ```
 
 #### Atribuindo o caminho padrão do Node:
@@ -75,15 +65,15 @@ Na sessão `Assetic configuration` atribua a váriavel
 `node` usada em seu sistema operacional para rodar o node (ex: node, nodejs, /urs/bin/node ...)
 
 
-5. Instalando o Assetic
------------------------
+4. Instalando dependências do Sistema
+-------------------------------------
 
 ```
-$ yarn install
+$ yarn install && composer install
 ```
 
 
-6. Compilando o front-end
+5. Compilando o frontend
 -------------------------
 
 ```
@@ -91,7 +81,7 @@ $ yarn compile
 ```
 
 
-7. Rodando a Plataforma
+6. Rodando a Plataforma
 -----------------------
 
 ```
