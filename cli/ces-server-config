@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+cd $SICES_PATH
+
+if [ -z ${1+x} ] || [ $1 == '--development' ]; then
+  FLAG=dev
+elif [ $1 == '--homolog' ]; then
+  FLAG=hm
+elif [ $1 == '--production' ]; then
+  FLAG=prod
+else [ $1 == '--test' ];
+  FLAG=test
+fi
+
+cp app/config/parameters_$FLAG.yml app/config/parameters.yml
+cp app/config/config_sample.yml app/config/config.yml
