@@ -1,0 +1,60 @@
+    {% for projectInverter in project.projectInverters %}
+
+    <div class="row">
+
+        <div class="col-md-12" data-operation="{{ projectInverter.id }}">
+
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    {#{{ inverter.maker ? inverter.maker.name : 'N/A' }} / {{ inverter.model }}#}
+                    {{ projectInverter.inverter.model }}
+                </div>
+
+                <div class="panel-body">
+
+                    <div class="row">
+                    <div id="{{ 'inverter' ~ projectInverter.id }}"
+                         data-load="{{ path('project_inverter_update',{id:projectInverter.id}) }}"
+                         class="col-md-12">
+                        <div class="sk-spinner sk-spinner-circle">
+                            {% for i in 1..12 %}
+                                <div class="sk-circle{{ i }} sk-circle"></div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="row">
+                        <div id="{{ 'areas' ~ projectInverter.id }}"
+                             data-load="{{ path('project_areas',{id:projectInverter.id}) }}"
+                             class="col-md-12">
+                            <div class="sk-spinner sk-spinner-circle">
+                                {% for i in 1..12 %}
+                                    <div class="sk-circle{{ i }} sk-circle"></div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <script>
+            ProjectManager.load($('#inverter{{ projectInverter.id }}'));
+            ProjectManager.load($('#areas{{ projectInverter.id }}'));
+        </script>
+
+    </div>
+    {% endfor %}
+
+{#
+<script>
+    $(function () {
+        $.each($('[data-block]'), function (i, e) {
+            var element = $(e);
+            ProjectManager.load(element);
+        });
+    });
+</script>
+#}

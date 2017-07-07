@@ -53,6 +53,14 @@ trait ProjectElementTrait
     /**
      * @inheritDoc
      */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setQuantity($quantity)
     {
         $this->quantity = $quantity;

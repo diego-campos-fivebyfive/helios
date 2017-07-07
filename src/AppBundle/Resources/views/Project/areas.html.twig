@@ -1,0 +1,16 @@
+{% for projectArea in projectInverter.projectAreas %}
+
+    <div id="{{ 'area' ~ projectArea.id }}" data-load="{{ path('project_area_update', {id:projectArea.id}) }}">
+        <div class="sk-spinner sk-spinner-circle">
+            {% for i in 1..12 %}
+                <div class="sk-circle{{ i }} sk-circle"></div>
+            {% endfor %}
+        </div>
+        <br>
+    </div>
+
+    <script>
+        ProjectManager.load($('#area{{ projectArea.id }}'));
+    </script>
+
+{% endfor %}

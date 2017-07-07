@@ -1,4 +1,4 @@
-{% set data = projectInverter.metadata %}
+{% set data = project_inverter.metadataOperation %}
 
 {% if data.areas|length %}
 
@@ -120,8 +120,8 @@ function init_inverter_operation(){
 {% else %}
 
     <div class="col-md-12">
-        <div class="alert alert-danger text-center">
-            <i class="fa fa-info-circle"></i> É necessário configurar as áreas para visualizar estes dados
+        <div class="alert alert-danger">
+            É necessário configurar as áreas para visualizar estes dados
         </div>
     </div>
 
