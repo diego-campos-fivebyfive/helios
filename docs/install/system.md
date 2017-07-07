@@ -6,11 +6,11 @@ Instalação do Sistema
 
 #### HTTP:
 ```
-$ git clone https://[USER_NAME]@bitbucket.org/kolinalabsdevelopers/sices.git
+$ git clone https://[USER_NAME]@bitbucket.org/cjchamado/sices.git
 ```
 #### SSH:
 ```
-$ git clone git@bitbucket.org:kolinalabsdevelopers/sices.git
+$ git clone git@bitbucket.org:cjchamado/sices.git
 ```
 
 
@@ -70,23 +70,27 @@ $ yarn compile
 $ yarn start
 ```
 
-
 Após os passos acima a aplicação estará disponível em: `http://localhost:8000`
 
 
-## Resolução de Problemas:
+6. Adicionando Virtual Host (Opcional)
+--------------------------------------
 
-#### Erro devido sistema não ter encontrado o node
+Abra o arquivo `/etc/hosts` com seu editor (Vim, Nano ...):
+```
+$ sudo vim /etc/hosts
+```
 
-1. Verifique a instalação do node
---------------------------------
+Adicione na lista de hosts a linha abaixo:
+```
+127.0.0.1     sicessolar.dev
+```
 
-2. Verifique a variavel node
-----------------------------
+Com isso o sistema estará disponível na url: `sicessolar.dev:8000`
 
-Na sessão `Assetic configuration` do documento `app/config/config.yml` verifique se o campo
-`node` está com a mesma váriavel usada em seu sistema operacional para rodar o node
-(ex: node, nodejs, /urs/bin/node ...)
+
+Caso haja algum problema com a instalação consulte a
+[Sessão de resolução de problemas](system-install-problems.md)
 
 
 [Voltar](../getting-started.md)
