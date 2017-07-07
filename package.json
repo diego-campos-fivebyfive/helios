@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "compile": "ces-frontend-compile",
+    "start": "ces-server-start"
+  },
   "dependencies": {
     "uglify-js": "^3.0.23",
     "uglifycss": "^0.0.27"
