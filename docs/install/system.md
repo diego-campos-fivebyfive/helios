@@ -6,11 +6,11 @@ Instalação do Sistema
 
 #### HTTP:
 ```
-$ git clone https://[USER_NAME]@bitbucket.org/kolinalabsdevelopers/sices.git
+$ git clone https://[USER_NAME]@bitbucket.org/cjchamado/sices.git
 ```
 #### SSH:
 ```
-$ git clone git@bitbucket.org:kolinalabsdevelopers/sices.git
+$ git clone git@bitbucket.org:cjchamado/sices.git
 ```
 
 
