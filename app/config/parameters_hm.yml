@@ -1,0 +1,12 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_host: mysql-dev-test.crtwvzhue9fu.sa-east-1.rds.amazonaws.com
+    database_port: 3306
+    database_name: sices_solar
+    database_user: mysqldevtest
+    database_password: zvQdYaPB79muWbnpct
+    mailer_transport: smtp
+    mailer_host: mail.inovadorsolar.com
+    mailer_user: no-reply@inovadorsolar.com
+    mailer_password: TB^ipr$7eik8
+    secret: b7552e60db4c89c9a846954a9f2b91cb0723a267

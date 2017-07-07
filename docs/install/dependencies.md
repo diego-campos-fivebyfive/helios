@@ -25,8 +25,8 @@ ou
 #### [Instalando uma a uma](dependencies-list.md)
 
 
-3. Configurando o PHP
----------------------
+3. Configurando o PHP (Opcional)
+--------------------------------
 
 Edite o arquivo `/etc/apache2/mods-enabled/dir.conf` com o seguinte conteúdo:
 
@@ -37,8 +37,8 @@ Edite o arquivo `/etc/apache2/mods-enabled/dir.conf` com o seguinte conteúdo:
 ```
 
 
-4. Configurando o Git
----------------------
+4. Configurando o Git (Opcional)
+--------------------------------
 
 ```
 $ git config --global user.email "mail@mail.com"

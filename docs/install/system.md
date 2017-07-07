@@ -22,13 +22,13 @@ Abra o Arquivo `.bashrc` com seu editor (Vim, Nano ou outro):
 $ sudo vim ~/.bashrc
 ```
 
-Copie o caminho do seu projeto e o substitua no lugar de `PROJECT_PATH`, do proximo passo:
+Copie o caminho do seu projeto:
 ```
 $ cd [PROJECT_FOLDER]
 $ pwd
 ```
 
-Adicione ao final do arquivo as linhas:
+Adicione ao final do arquivo as linhas substituindo PROJECT_PATH pelo caminho do projeto do passo anterior:
 ```
 export SICES_PATH=PROJECT_PATH
 export PATH=$PATH:$SICES_PATH/cli
@@ -47,42 +47,24 @@ $ echo $PATH
 Caso os caminhos não apareçam, reinicie a maquina.
 
 
-3. Configurações do App
------------------------
-
-#### Criando o arquivo de configurações:
-
-Entre na pasta de configurações do app em `app/config` e
-duplique o arquivo `config-sample.yml` com o nome `config.yml`
+3. Instalando e configurando dependências do Sistema
+----------------------------------------------------
 
 ```
-$ cp app/config/config-sample.yml app/config/config.yml
-```
-
-#### Atribuindo o caminho padrão do Node:
-
-Na sessão `Assetic configuration` atribua a váriavel
-`node` usada em seu sistema operacional para rodar o node (ex: node, nodejs, /urs/bin/node ...)
-
-
-4. Instalando dependências do Sistema
--------------------------------------
-
-```
-$ yarn install && composer install
+$ yarn install && composer install && ces-server-config
 ```
 
 
-5. Compilando o frontend
--------------------------
+4. Compilando o Frontend
+------------------------
 
 ```
 $ yarn compile
 ```
 
 
-6. Rodando a Plataforma
------------------------
+5. Rodando o Sistema
+--------------------
 
 ```
 $ yarn start
@@ -90,6 +72,21 @@ $ yarn start
 
 
 Após os passos acima a aplicação estará disponível em: `http://localhost:8000`
+
+
+## Resolução de Problemas:
+
+#### Erro devido sistema não ter encontrado o node
+
+1. Verifique a instalação do node
+--------------------------------
+
+2. Verifique a variavel node
+----------------------------
+
+Na sessão `Assetic configuration` do documento `app/config/config.yml` verifique se o campo
+`node` está com a mesma váriavel usada em seu sistema operacional para rodar o node
+(ex: node, nodejs, /urs/bin/node ...)
 
 
 [Voltar](../getting-started.md)
