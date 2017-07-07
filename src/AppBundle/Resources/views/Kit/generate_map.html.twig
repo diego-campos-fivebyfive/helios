@@ -1,17 +1,132 @@
 {% extends view('layout') %}
+{% block styles %}
+    <style>
+        #map {
+            width: 100%;
+            height: 400px;
+            background: #f7f7f7;
+        }
+
+        #location {
+            width: 75%;
+            margin-top: 10px;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
+    <div class="wrapper wrapper-content animated fadeIn">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                Localização do Cliente
+                            </div>
 
-    <html>
-    <body>
-    <head>
-        MAP
-    </head>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <div class="col-lg-12 text-center">
+                                        <label> Endereço </label>
+                                    </div>
 
-    <script src='https://maps.googleapis.com/maps/api/js?v=3.exp'></script><div style='overflow:hidden;height:450px;width:800px;'><div id='gmap_canvas' style='height:450px;width:800px;'></div><div><small><a href="http://embedgooglemaps.com">embed google map</a></small></div><div><small><a href="http://www.proxysitereviews.com /lime-proxies/">lime proxies</a></small></div><style>#gmap_canvas img{max-width:none!important;background:none!important}</style></div><script type='text/javascript'>function init_map(){var myOptions = {zoom:7,center:new google.maps.LatLng(-25.4289541,-49.26713699999999),mapTypeId: google.maps.MapTypeId.ROADMAP};map = new google.maps.Map(document.getElementById('gmap_canvas'), myOptions);marker = new google.maps.Marker({map: map,position: new google.maps.LatLng(-25.4289541,-49.26713699999999)});infowindow = new google.maps.InfoWindow({content:'<strong>Título</strong><br>Curitiba<br>'});google.maps.event.addListener(marker, 'click', function(){infowindow.open(map,marker);});infowindow.open(map,marker);}google.maps.event.addDomListener(window, 'load', init_map);</script>
+                                    <div class="col-lg-12">
 
-    </body>
-    </html>
+                                        <div id="map"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    {# Google Maps #}
+    {% include view('helper.google_maps') with({
+    latitude: 'latitude',
+    longitude: 'longitude',
+    input: 'address',
+    zoom: 17
+    }) %}
 
+{% block scripts %}
+    <script>
+        var NasaCatalog = {
+            getLatitude: function(){
+                return $('#latitude').val();
+            },
+            getLongitude: function(){
+                return $('#longitude').val();
+            },
+            container: $('#nasa_container'),
+            load: function(){
+                window.setTimeout(function() {
+                    $.ajax({
+                        url: '{{ path('nasa_info') }}',
+                        data: {latitude: NasaCatalog.getLatitude(), longitude: NasaCatalog.getLongitude()},
+                        complete: function (xhr) {
+                            if (200 == xhr.status) {
+                                NasaCatalog.container.html(xhr.responseText);
+                            }
+                        }
+                    });
+                }, 1000);
+            },
+            recycle: function(){
+                swal({
+                    title: "Restaurar dados?",
+                    text: "Neste processo os dados editados serão excluídos, e os dados originais da nasa restaurados",
+                    type: "info",
+                    showCancelButton: true,
+                    cancelButtonText: "{{ 'Cancel'|trans }}",
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Restaurar",
+                    closeOnConfirm: false
+                }, function () {
+                    $.ajax({
+                        url: '{{ path('nasa_recycle') }}',
+                        method: 'post',
+                        data: {_method:'delete', latitude: NasaCatalog.getLatitude(), longitude: NasaCatalog.getLongitude()},
+                        complete: function(xhr){
+                            var response = xhr.responseJSON;
+                            if(200 == xhr.status){
+                                swal("{{ 'Success'|trans }}!", "Dados restaurados", "success");
+                                NasaCatalog.load();
+                                window.setTimeout(function(){
+                                    swal.close();
+                                },500);
+                            }else{
+                                swal("{{ 'Error'|trans }}!", response.error, "error");
+                            }
+                        },
+                        beforeSend: function(){
+                            swal({
+                                title: "Restaurando...",
+                                text:  "Aguarde!",
+                                type: "info",
+                                showConfirmButton: false
+                            });
+                        }
+                    });
+                });
+            }
+        };
+    </script>
+
+    <script>
+        $(function () {
+            $('#latitude').on('change', function () {
+                NasaCatalog.load();
+            });
+
+            if(NasaCatalog.getLatitude() && NasaCatalog.getLongitude()){
+                NasaCatalog.load();
+            }
+        });
+    </script>
+{% endblock %}
 
 {% endblock %}
