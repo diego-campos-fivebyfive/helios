@@ -16,20 +16,22 @@
             <div class="ocultar">
 
                 <div class="col-m-12" id="btSessions">
-                    <button type="button" class="btn btn-danger col-md-3" onclick="set(this)" data-model="del">Excluir Página</button>
+                    <button type="button" class="btn btn-success col-md-1" onclick="up(this)">up</button>
+
+                    <button type="button" class="btn btn-danger col-md-2" onclick="set(this)" data-model="del">Del Page</button>
                     <button type="button" class="btn btn-info col-md-2" onclick="set(this)" data-model="12-0">1 Coluna</button>
                     <button type="button" class="btn btn-info col-md-2" onclick="set(this)" data-model="6-6"> 2 Colunas</button>
                     <button type="button" class="btn btn-info col-md-2" onclick="set(this)" data-model="4-4-4"> 3 Colunas</button>
-                    <button type="button" class="btn btn-info col-md-3" onclick="set(this)" data-model="12-6-6">1 Linha e 2 Colunas</button>
+                    <button type="button" class="btn btn-info col-md-2" onclick="set(this)" data-model="12-6-6">1 L e 2 C</button>
+
+                    <button type="button" class="btn btn-success col-md-1" onclick="down(this)">down</button>
                 </div>
 
                 <div id="page" class="page"></div>
 
                 <div id="conjunct"></div>
 
-                <div id="separator" class="separator">
-
-                </div>
+                <div id="separator" class="separator"></div>
 
                 <div id="sessao-12" class="col-m-12 semMargem row">
                     <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSes(this)"><center>X</center></a>
