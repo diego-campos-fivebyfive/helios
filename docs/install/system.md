@@ -77,7 +77,7 @@ $ yarn install && composer install
 -------------------------
 
 ```
-$ yarn compile
+$ ces-frontend-compile
 ```
 
 
@@ -85,7 +85,7 @@ $ yarn compile
 -----------------------
 
 ```
-$ yarn start
+$ ces-server-start
 ```
 
 
