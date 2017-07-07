@@ -7,6 +7,8 @@ app/sessions/
 app/config/config.yml
 app/bootstrap.php.cache
 
-node_modules
 web/public
+web/deploy/deploy.log
+
+node_modules
 vendor
