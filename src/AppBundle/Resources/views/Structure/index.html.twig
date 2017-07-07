@@ -13,12 +13,12 @@
                 </label>
             </div>
 
-            <div class="col-md-2">
+{#            <div class="col-md-2">
                 <div class="btn-group btn-group-justified btn-group-sm">
                     <a href="{{ path('structure_index',{'display':'list'}) }}" class="btn btn-default"> <i class="fa fa-list"></i> Lista </a>
                     <a href="{{ path('structure_index',{'display':'grid'}) }}" class="btn btn-default"> <i class="fa fa-th"></i> Grade </a>
                 </div>
-            </div>
+            </div>#}
 
             <div class="col-md-2 pull-right text-right">
                 <a href="{{ path('structure_create') }}" class="btn btn-md btn-primary">
@@ -26,7 +26,7 @@
                 </a>
             </div>
         </div>
-
+        {% include view('structure.script_index') %}
         {% include view('structure.index_content') %}
     </div>
 

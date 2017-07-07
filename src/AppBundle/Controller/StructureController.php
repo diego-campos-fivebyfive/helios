@@ -23,7 +23,7 @@ use AppBundle\Form\Component\StructureType;
  * @Security("has_role('ROLE_OWNER')")
  *
  * @Breadcrumb("Dashboard", route={"name"="app_index"})
- * @Breadcrumb("Structures", route={"name"="structure_index"})
+ * @Breadcrumb("Estruturas", route={"name"="structure_index"})
  */
 class StructureController extends ComponentController
 {
@@ -109,26 +109,16 @@ class StructureController extends ComponentController
 
     /**
      * @Route("/{id}/delete", name="structure_delete")
-     * @Method("delete")
      */
-    public function deleteAction(Request $request, Structure $structure)
+    public function deleteAction(Request $request, Structure $structure, $id)
     {
-        $this->checkAccess($structure);
+        $structure = $this->getStructureManager()->find($id);
 
-        $usages = $this->getDoctrine()
-            ->getManager()
-            ->getRepository(KitComponent::class)
-            ->findBy(['structure' => $structure]);
-
-        if(0 != $count = count($usages)){
-            return $this->jsonResponse([
-                'error' => sprintf('Esta estrutura está sendo utilizada em %s kits', $count)
-            ], Response::HTTP_IM_USED);
-        }
-
-        $this->getStructureManager()->delete($structure);
+        $manager = $this->getStructureManager();
+        $manager->delete($structure);
 
         return $this->jsonResponse([], Response::HTTP_OK);
+
     }
 
     /**

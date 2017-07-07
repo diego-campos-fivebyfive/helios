@@ -3,9 +3,8 @@
 {% block body %}
 
     <style>
-        .input-group.m-b,
-        #inverter_mpptNumber{
-            width: 50%;
+        .btn {
+            margin: 2px;
         }
     </style>
 
@@ -75,6 +74,9 @@
                                         <button type="submit" name="intention" value="save" class="btn btn-primary pull-right">
                                             <i class="fa fa-save"></i> {{ 'Save'|trans }}
                                         </button>
+                                        <a href="{{ path('structure_index') }}">
+                                            <button class="btn btn-success btn-xd pull-right">{{'Voltar'|trans}}</button>
+                                        </a>
                                 </div>
 
                                 {{ form_end(form) }}

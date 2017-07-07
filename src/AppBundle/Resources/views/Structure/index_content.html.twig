@@ -37,14 +37,15 @@
                             <td>{{ structure.subtype }}</td>
                             <td>{{ structure.description }}</td>
                             <td>{{ structure.size }}</td>
-                            <td>
+                            <td style="width: 25%">
                                 <a href="{{ path('structure_preview', { id: structure.id }) }}">
                                     <button class="btn btn-success btn-xd">{{'View'|trans}}</button>
                                 </a>
                                 <a href="{{ path('structure_update', { id: structure.id }) }}">
                                     <button class="btn btn-warning btn-xd">{{'Edit'|trans}}</button>
                                 </a>
-                                <a href="{{ path('structure_delete', { id: structure.id }) }}">
+                                <a title="{{ 'Delete'|trans }}"
+                                   data-delete="{{ path('structure_delete',{id:structure.id}) }}">
                                     <button class="btn btn-danger btn-xd">{{'Delete'|trans}}</button>
                                 </a>
 
@@ -64,3 +65,4 @@
         </div>
     </div>
 </div>
+{% include view('structure.script_index') %}

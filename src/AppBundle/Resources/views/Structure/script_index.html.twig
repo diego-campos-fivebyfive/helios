@@ -1,0 +1,139 @@
+<script>
+    $(function () {
+
+        /*var dataCopy = $('[data-copy]');
+        if (dataCopy.length) {
+            dataCopy.on('click', function () {
+                var url = $(this).data('copy');
+                swal({
+                    title: "Confirma cópia deste projeto?",
+                    text: null,
+                    type: "info",
+                    showCancelButton: true,
+                    cancelButtonText: "{#{{ 'Cancel'|trans }}#}",
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "{#{{ 'Confirm'|trans }}#}!",
+                    closeOnConfirm: false
+                }, function () {
+                    $.ajax({
+                        url: url,
+                        method: 'post',
+                        //data: {_method:'delete'},
+                        complete: function (xhr) {
+                            var response = xhr.responseJSON;
+                            if (200 == xhr.status) {
+                                swal("{#{{ 'Success'|trans }}#}!", "Cópia efetuada com sucesso!", "success");
+                                window.location.href = response.url;
+                            } else {
+                                swal("{#{{ 'Error'|trans }}#}!", response.error, "error");
+                            }
+                        },
+                        beforeSend: function () {
+                            swal({
+                                title: "Copiando...",
+                                text: "Aguarde!",
+                                type: "info",
+                                showConfirmButton: false
+                            });
+                        }
+                    });
+                });
+            });
+        }
+
+        var choiceStages = $('[data-stage]');
+        if(choiceStages.length){
+            choiceStages.on('change', function(){
+                var choice = $(this);
+                var token = choice.data('stage');
+                var spinner = $('[data-spinner="'+choice.attr('id')+'"]');
+                spinner.removeClass('hide');
+                $.ajax({
+                    url: '{#{{ path('project_change',{token:'_token_'}) }}#}'.replace(/_token_/g, token),
+                    method: 'post',
+                    data: {target:'stage',stage:choice.val()},
+                    complete: function(xhr){
+                        spinner.addClass('hide');
+                        //console.log(xhr.status);
+                    }
+                });
+            });
+        }*/
+
+        var dataDelete = $('[data-delete]');
+        if(dataDelete.length){
+            dataDelete.on('click', function () {
+                var url = $(this).data('delete');
+                var row = $(this).closest('tr');
+                swal({
+                    title: "Confirma exclusão deste projeto?",
+                    text: null,
+                    type: "info",
+                    showCancelButton: true,
+                    cancelButtonText: "{{ 'Cancel'|trans }}",
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "{{ 'Confirm'|trans }}",
+                    closeOnConfirm: false
+                }, function () {
+                    $.ajax({
+                        url: url,
+                        method: 'post',
+                        data: {_method:'delete'},
+                        complete: function (xhr) {
+                            //var response = xhr.responseJSON;
+                            if (200 == xhr.status) {
+                                swal("{{ 'Success'|trans }}", "Exclusão efetuada com sucesso!", "success");
+                                row.remove();
+                                window.setTimeout(function(){
+                                    swal.close();
+                                }, 1000);
+                            } else {
+                                //swal("{{ 'Error'|trans }}!", response.error, "error");
+                                console.log(xhr.statusText);
+                            }
+                        },
+                        beforeSend: function () {
+                            swal({
+                                title: "Excluindo...",
+                                text: "Aguarde",
+                                type: "info",
+                                showConfirmButton: false
+                            });
+                        }
+                    });
+                });
+            });
+        }
+/*
+        var form_filtration = $('#form_filtration');
+        var current_stage = '{#{{ current_stage }}#}';
+        var current_member = '{#{{ current_member ? current_member.id }}#}';
+        var filter_stage = $('#filter-stage');
+        var filter_member = $('#filter-member');
+        if(form_filtration.length){
+            form_filtration.append($('<input type="hidden" name="stage"/>').val(current_stage));
+            form_filtration.append($('<input type="hidden" name="member"/>').val(current_member));
+            filter_stage.on('change', function(){
+                $('input[name="stage"]').val($(this).val());
+                form_filtration.trigger('submit');
+            });
+            filter_member.on('change', function(){
+                $('input[name="member"]').val($(this).val());
+                form_filtration.trigger('submit');
+            });
+        }
+
+        $('#email_modal').on('show.bs.modal', function(event){
+            var modal = $(this), body = modal.find('.modal-body'), target = $(event.relatedTarget);
+            var url = target.data('url');
+            if(url){
+                $.ajax({
+                    url: url,
+                    complete: function(xhr){
+                        body.html(xhr.responseText);
+                    }
+                })
+            }
+        });*/
+    });
+</script>
