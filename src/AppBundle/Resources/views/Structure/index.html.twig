@@ -5,54 +5,29 @@
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
-            <div class="ibox-content">
-                <div class="row">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <td>Código</td>
-                                    <td>Tipo</td>
-                                    <td>Sub Tipo</td>
-                                    <td>Descrição</td>
-                                    <td>Tamanho</td>
-                                    <td>Ações</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for structure in structures %}
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td>
-                                        </td>
-                                        <td>
-                                            <a href="">
-                                                <button class="btn btn-default btn-xs">{{'View'|trans}}</button>
-                                            </a>
-                                            <a href="">
-                                                <button class="btn btn-default btn-xs">{{'Edit'|trans}}</button>
-                                            </a>
-                                            <a href="">
-                                                <button class="btn btn-default btn-xs">{{'Delete'|trans}}</button>
-                                            </a>
 
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="5">
-                                        {{ knp_pagination_render(pagination) }}
-                                    </td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
+            {{ knp_pagination_filter(pagination, {'p.number, c.firstname, s.name':''}) }}
+
+            <div style="padding-right:0;padding-top:7px;" class="col-md-1 text-right">
+                <label style="width: 100%;">
+                </label>
+            </div>
+
+            <div class="col-md-2">
+                <div class="btn-group btn-group-justified btn-group-sm">
+                    <a href="{{ path('structure_index',{'display':'list'}) }}" class="btn btn-default"> <i class="fa fa-list"></i> Lista </a>
+                    <a href="{{ path('structure_index',{'display':'grid'}) }}" class="btn btn-default"> <i class="fa fa-th"></i> Grade </a>
                 </div>
             </div>
+
+            <div class="col-md-2 pull-right text-right">
+                <a href="{{ path('structure_create') }}" class="btn btn-md btn-primary">
+                    <i class="fa fa-plus"></i> Nova Estrutura
+                </a>
+            </div>
         </div>
+
+        {% include view('structure.index_content') %}
     </div>
 
 

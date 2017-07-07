@@ -32,9 +32,19 @@ class InverterController extends ComponentController
      */
     public function indexAction(Request $request)
     {
-        $data = $this->prepareIndexData();
+        $manager = $this->getStructureManager();
+        $paginator = $this->getPaginator();
 
-        return $this->render('component.index', $data);
+        $query = $manager->getEntityManager()->createQueryBuilder();
+        $query->select('i')->from('AppBundle\Entity\Component\Inverter', 'i');
+
+        $pagination = $paginator->paginate(
+            $query->getQuery(), $request->query->getInt('page', 1), 10
+        );
+
+        return $this->render('inverter.index', array(
+            'pagination' => $pagination
+        ));
     }
 
     /**
@@ -46,11 +56,6 @@ class InverterController extends ComponentController
 
         /** @var Inverter $inverter */
         $inverter = $manager->create();
-        $inverter->toViewMode();
-
-        if ($this->getUser()->isOwner()) {
-            $inverter->setAccount($this->getCurrentAccount());
-        }
 
         $form = $this->createForm(InverterType::class, $inverter);
         $form->handleRequest($request);
@@ -69,14 +74,12 @@ class InverterController extends ComponentController
 
     /**
      * @Breadcrumb("{inverter.model}")
-     * @Route("/{token}/update", name="inverter_update")
+     * @Route("/{id}/update", name="inverter_update")
      * @Method({"get","post"})
      */
     public function updateAction(Request $request, Inverter $inverter)
     {
         $this->checkAccess($inverter);
-
-        $inverter->toViewMode();
 
         //$manager = $this->getInverterManager();
         $form = $this->createForm(InverterType::class, $inverter, [
@@ -112,7 +115,7 @@ class InverterController extends ComponentController
     }
 
     /**
-     * @Route("/{token}/delete", name="inverter_delete")
+     * @Route("/{id}/delete", name="inverter_delete")
      * @Method("delete")
      */
     public function deleteAction(Request $request, Inverter $inverter)

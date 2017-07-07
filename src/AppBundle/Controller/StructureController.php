@@ -44,7 +44,8 @@ class StructureController extends ComponentController
         );
 
         return $this->render('structure.index', array(
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'display' => $request->get('display', 'grid')
         ));
     }
 
@@ -75,24 +76,25 @@ class StructureController extends ComponentController
     }
 
     /**
-     * @Breadcrumb("{structure.model}")
-     * @Route("/{token}/update", name="structure_update")
-     * @Method({"get","post"})
+     * @Breadcrumb("Edit")
+     * @Route("/{id}/update", name="structure_update")
+     * @Method({"GET","POST"})
      */
     public function updateAction(Request $request, Structure $structure)
     {
-        $this->checkAccess($structure);
 
         $manager = $this->getStructureManager();
 
         $form = $this->createForm(StructureType::class, $structure, [
-            'is_validation' => $this->getUser()->isAdmin()
         ]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            return $this->saveComponent($structure, $request);
+            $manager->save($structure);
+
+            return $this->redirectToRoute('structure_index');
         }
 
         if($request->isMethod('get')) {
@@ -106,7 +108,7 @@ class StructureController extends ComponentController
     }
 
     /**
-     * @Route("/{token}/delete", name="structure_delete")
+     * @Route("/{id}/delete", name="structure_delete")
      * @Method("delete")
      */
     public function deleteAction(Request $request, Structure $structure)
@@ -131,13 +133,10 @@ class StructureController extends ComponentController
 
     /**
      * @Breadcrumb("{structure.model}")
-     * @Route("/{token}/show", name="structure_show")
+     * @Route("/{id}/show", name="structure_show")
      */
     public function showAction(Request $request, Structure $structure)
     {
-        $this->checkAccess($structure);
-
-        $structure->toViewMode();
 
         return $this->render($request->isXmlHttpRequest() ? 'structure.show_content' : 'structure.show', [
             'structure' => $structure

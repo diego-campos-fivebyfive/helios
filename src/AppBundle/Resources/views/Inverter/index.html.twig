@@ -23,11 +23,7 @@
                                         <td>{{ inverter.id }}</td>
                                         <td>{{ inverter.maker.name }}</td>
                                         <td>
-                                            {% if( inverter.enabled == 1) %}
-                                                {{'Enabled'|trans}}
-                                            {% else %}
-                                                {{'Disabled'|trans}}
-                                            {% endif%}
+
                                         </td>
                                         <td>
                                             <a href="{{ path('inverter_preview',{id:inverter.id}) }}">

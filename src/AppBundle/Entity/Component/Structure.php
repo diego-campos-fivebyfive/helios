@@ -80,6 +80,25 @@ class Structure implements StructureInterface
         $this->generateToken();
     }
 
+
+    /**
+     * @inheritDoc
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
     /**
      * @inheritDoc
      */
@@ -210,4 +229,22 @@ class Structure implements StructureInterface
 
         return $this;
     }
+
+    /**
+     * @param $maker
+     */
+    public function setMaker($maker)
+    {
+        $this->maker = $maker;
+    }
+
+    /**
+     * @return MakerInterface
+     */
+    public function getMaker()
+    {
+        return $this->maker;
+    }
+
+
 }

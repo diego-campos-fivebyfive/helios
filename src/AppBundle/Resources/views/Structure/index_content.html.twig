@@ -1,0 +1,66 @@
+<style>
+
+    .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open .dropdown-toggle.btn-primary, .btn-primary:active:focus, .btn-primary:active:hover, .btn-primary.active:hover, .btn-primary.active:focus {
+        background-color: #f0c674;
+        border-color: #f0c674;
+        color: #fff;
+    }
+    .btn-warning{
+        background-color: #F8A41A !important;
+    }
+    .btn-danger{
+        background-color: #F81118;
+    }
+
+</style>
+
+<div class="row" id="real-content">
+    <div class="col-md-12">
+        <div class="ibox-content">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <td>Código</td>
+                        <td>Tipo</td>
+                        <td>Sub Tipo</td>
+                        <td>Descrição</td>
+                        <td>Tamanho</td>
+                        <td>Ações</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for structure in structures %}
+                        <tr>
+                            <td>{{ structure.code }}</td>
+                            <td>{{ structure.type }}</td>
+                            <td>{{ structure.subtype }}</td>
+                            <td>{{ structure.description }}</td>
+                            <td>{{ structure.size }}</td>
+                            <td>
+                                <a href="{{ path('structure_preview', { id: structure.id }) }}">
+                                    <button class="btn btn-success btn-xd">{{'View'|trans}}</button>
+                                </a>
+                                <a href="{{ path('structure_update', { id: structure.id }) }}">
+                                    <button class="btn btn-warning btn-xd">{{'Edit'|trans}}</button>
+                                </a>
+                                <a href="{{ path('structure_delete', { id: structure.id }) }}">
+                                    <button class="btn btn-danger btn-xd">{{'Delete'|trans}}</button>
+                                </a>
+
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="5">
+                            {{ knp_pagination_render(pagination) }}
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

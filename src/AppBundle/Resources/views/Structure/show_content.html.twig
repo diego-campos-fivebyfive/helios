@@ -1,0 +1,76 @@
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="ibox product-detail">
+                <div class="ibox-content">
+
+                    <div class="row">
+
+                        <div class="col-md-5">
+                            <div class="product-images">
+                                <div>
+                                    <img class="col-md-12" src=""/>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-7">
+                            <div class="table-responsive">
+                                <table class="table table-stripped table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th colspan="2">
+                                            Dados Gerais
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td width="40%"> Código</td>
+                                            <td>{{ structure.code }}</td>
+                                        </tr>
+
+                                    </tbody>
+
+                                    <thead>
+                                    <tr>
+                                        <th colspan="2">
+                                            Dados Técnicos
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>Tipo</td>
+                                        <td>{{ structure.type }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Sub-Tipo</td>
+                                        <td>{{ structure.subtype }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Descrição</td>
+                                        <td>{{ structure.description }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tamanho</td>
+                                        <td>{{ structure.size }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <a href="{{ path('structure_index') }}">
+                                <button class="btn btn-success btn-xd pull-right">{{'Voltar'|trans}}</button>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
