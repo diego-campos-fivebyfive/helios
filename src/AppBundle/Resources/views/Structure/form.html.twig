@@ -3,9 +3,8 @@
 {% block body %}
 
     <style>
-        .input-group.m-b,
-        #inverter_mpptNumber{
-            width: 50%;
+        .btn {
+            margin: 2px;
         }
     </style>
 
@@ -27,15 +26,9 @@
 
                                 {{ form_start(form,{attr:{enctype:'multipart/form-data'}}) }}
 
-                                <div class="panel panel-primary">
-                                    <div class="panel-heading">
-                                        &nbsp; Dados gerais
-                                    </div>
-
-                                </div>
                                 <div class="panel panel-warning input_data">
                                     <div class="panel-heading">
-                                        &nbsp; Dados de Entrada
+                                        &nbsp; Dados Técnicos
                                     </div>
                                     <div class="panel-body">
 
@@ -48,22 +41,15 @@
 
                                         <div class="form-group col-md-3">
                                             {{ form_label(form.type, 'Tipo') }}
-                                            <div class="input-group m-b">
+                                            <div class="input-group">
                                                 {{ form_widget(form.type,{attr:{class:'form-control'}}) }}
                                             </div>
                                         </div>
 
                                         <div class="form-group col-md-3">
                                             {{ form_label(form.subtype, 'Sub-Tipo') }}
-                                            <div class="input-group m-b">
+                                            <div class="input-group">
                                                 {{ form_widget(form.subtype,{attr:{class:'form-control'}}) }}
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-md-3">
-                                            {{ form_label(form.description, 'Descrição da Estrutura') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.description,{attr:{class:'form-control'}}) }}
                                             </div>
                                         </div>
 
@@ -74,6 +60,13 @@
                                             </div>
                                         </div>
 
+                                        <div class="form-group col-md-3">
+                                            {{ form_label(form.description, 'Descrição da Estrutura') }}
+                                            <div class="input-group m-b">
+                                                {{ form_widget(form.description,{attr:{class:'form-control'}}) }}
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
 
@@ -81,9 +74,9 @@
                                         <button type="submit" name="intention" value="save" class="btn btn-primary pull-right">
                                             <i class="fa fa-save"></i> {{ 'Save'|trans }}
                                         </button>
-                                        <button type="submit" name="intention" value="validate" class="btn btn-primary pull-right">
-                                            <i class="fa fa-check"></i> {{ 'Validate'|trans }}
-                                        </button>
+                                        <a href="{{ path('structure_index') }}">
+                                            <button class="btn btn-success btn-xd pull-right">{{'Voltar'|trans}}</button>
+                                        </a>
                                 </div>
 
                                 {{ form_end(form) }}

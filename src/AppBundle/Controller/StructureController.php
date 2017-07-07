@@ -23,7 +23,7 @@ use AppBundle\Form\Component\StructureType;
  * @Security("has_role('ROLE_OWNER')")
  *
  * @Breadcrumb("Dashboard", route={"name"="app_index"})
- * @Breadcrumb("Structures", route={"name"="structure_index"})
+ * @Breadcrumb("Estruturas", route={"name"="structure_index"})
  */
 class StructureController extends ComponentController
 {
@@ -43,12 +43,10 @@ class StructureController extends ComponentController
             $query->getQuery(), $request->query->getInt('page', 1), 10
         );
 
-        dump($pagination);
-        die;
-
-        return $this->render('structure.index', [
-            'pagination' => $pagination
-        ]);
+        return $this->render('structure.index', array(
+            'pagination' => $pagination,
+            'display' => $request->get('display', 'grid')
+        ));
     }
 
     /**
@@ -78,25 +76,25 @@ class StructureController extends ComponentController
     }
 
     /**
-     * @Breadcrumb("{structure.model}")
-     * @Route("/{token}/update", name="structure_update")
-     * @Method({"get","post"})
+     * @Breadcrumb("Edit")
+     * @Route("/{id}/update", name="structure_update")
+     * @Method({"GET","POST"})
      */
     public function updateAction(Request $request, Structure $structure)
     {
-        $this->checkAccess($structure);
 
-        $structure->toViewMode();
+        $manager = $this->getStructureManager();
 
-        //$manager = $this->getStructureManager();
         $form = $this->createForm(StructureType::class, $structure, [
-            'is_validation' => $this->getUser()->isAdmin()
         ]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            return $this->saveComponent($structure, $request);
+            $manager->save($structure);
+
+            return $this->redirectToRoute('structure_index');
         }
 
         if($request->isMethod('get')) {
@@ -110,38 +108,25 @@ class StructureController extends ComponentController
     }
 
     /**
-     * @Route("/{token}/delete", name="structure_delete")
-     * @Method("delete")
+     * @Route("/{id}/delete", name="structure_delete")
      */
-    public function deleteAction(Request $request, Structure $structure)
+    public function deleteAction(Request $request, Structure $structure, $id)
     {
-        $this->checkAccess($structure);
+        $structure = $this->getStructureManager()->find($id);
 
-        $usages = $this->getDoctrine()
-            ->getManager()
-            ->getRepository(KitComponent::class)
-            ->findBy(['structure' => $structure]);
-
-        if(0 != $count = count($usages)){
-            return $this->jsonResponse([
-                'error' => sprintf('Esta estrutura está sendo utilizada em %s kits', $count)
-            ], Response::HTTP_IM_USED);
-        }
-
-        $this->getStructureManager()->delete($structure);
+        $manager = $this->getStructureManager();
+        $manager->delete($structure);
 
         return $this->jsonResponse([], Response::HTTP_OK);
+
     }
 
     /**
      * @Breadcrumb("{structure.model}")
-     * @Route("/{token}/show", name="structure_show")
+     * @Route("/{id}/show", name="structure_show")
      */
     public function showAction(Request $request, Structure $structure)
     {
-        $this->checkAccess($structure);
-
-        $structure->toViewMode();
 
         return $this->render($request->isXmlHttpRequest() ? 'structure.show_content' : 'structure.show', [
             'structure' => $structure

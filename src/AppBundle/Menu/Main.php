@@ -160,6 +160,11 @@ class Main implements ContainerAwareInterface
             'route' => 'inverter_index',
             'extras' => ['icon' => App::icons('inverters')]
         ]);
+
+        $components->addChild('Estruturas', [
+            'route' => 'structure_index',
+            'extras' => ['icon' => App::icons('structures')]
+        ]);
     }
 
     /**

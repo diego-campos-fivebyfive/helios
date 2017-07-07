@@ -358,4 +358,29 @@ class Inverter implements InverterInterface
     {
         return $this->image;
     }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param MakerInterface $maker
+     */
+    public function setMaker($maker)
+    {
+        $this->maker = $maker;
+    }
+
+    /**
+     * @return MakerInterface
+     */
+    public function getMaker()
+    {
+        return $this->maker;
+    }
+
 }
