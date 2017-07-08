@@ -51,6 +51,7 @@ class App
             'unpublished' => 'fa fa-ban',
             'users' => 'fa fa-users',
             'signature' => 'fa fa-credit-card',
+            'structure' => 'fa fa-sitemap',
             'support' => 'fa fa-support'
         ];
 

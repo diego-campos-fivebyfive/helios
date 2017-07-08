@@ -165,7 +165,7 @@ class Main implements ContainerAwareInterface
 
         $components->addChild('Estruturas', [
             'route' => 'structure_index',
-            'extras' => ['icon' => App::icons('structures')]
+            'extras' => ['icon' => App::icons('structure')]
         ]);
     }
 
