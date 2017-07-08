@@ -10,11 +10,11 @@ use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("components/{type}")
@@ -66,6 +66,21 @@ class ComponentController extends AbstractController
                 'display' => 'grid',
                 'strict' => 0
             ], $request->query->all())
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/show", name="component_show")
+     */
+    public function showAction(Request $request, $type, $id)
+    {
+        $component = $this->findComponent($type, $id);
+
+        return $this->render(
+            $request->isXmlHttpRequest()
+                ? sprintf('%s.show_content', $type)
+                : sprintf('%s.show', $type), [
+            $type => $component
         ]);
     }
 

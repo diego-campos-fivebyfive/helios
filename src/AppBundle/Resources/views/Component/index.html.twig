@@ -62,7 +62,7 @@
         {% set account = extra.account %}
 
         <div class="btn-group btn-group-sm btn-group-justified">
-            <a data-url="{{ path(extra.show, {'token':component.token}) }}"
+            <a data-url="{{ path('component_show', {type:extra.type, id:component.id}) }}"
                data-toggle="modal"
                data-target="#modal_details"
                class="btn btn-default">
@@ -108,7 +108,7 @@
                                     </div>
                                     <div class="product-desc">
 
-                                        <a data-url="{{ path(is_module ? 'module_show' : 'inverter_show' , {'token':component.token}) }}"
+                                        <a data-url="{{ path('component_show', {type:type, id:component.id}) }}"
                                            data-toggle="modal"
                                            data-target="#modal_details"
                                            class="product-name">
