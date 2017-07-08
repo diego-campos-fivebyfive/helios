@@ -13,16 +13,43 @@
         <div class="row">
             <div class="ocultar">
 
-                <div class="col-m-12" id="btSessions">
-                    <button type="button" class="btn btn-success col-md-1" onclick="up(this)">up</button>
+                <span id="idConjunct">0</span>
+                <span id="idEditor">0</span>
 
-                    <button type="button" class="btn btn-danger col-md-2" onclick="set(this)" data-model="del">Del Page</button>
-                    <button type="button" class="btn btn-info col-md-2" onclick="set(this)" data-model="12-0">1 Coluna</button>
-                    <button type="button" class="btn btn-info col-md-2" onclick="set(this)" data-model="6-6"> 2 Colunas</button>
-                    <button type="button" class="btn btn-info col-md-2" onclick="set(this)" data-model="4-4-4"> 3 Colunas</button>
-                    <button type="button" class="btn btn-info col-md-2" onclick="set(this)" data-model="12-6-6">1 L e 2 C</button>
+                <div class="col-m-12" id="btModal">
+                    <button type="button" class="btn btn-primary margLeft3" data-toggle="modal" data-target="#idModal">Nova Sessão</button>
+                    <button type="button" class="btn btn-danger" onclick="set(this)" data-model="del" data-dismiss="modal">Excluir Página</button>
 
-                    <button type="button" class="btn btn-success col-md-1" onclick="down(this)">down</button>
+                    <button type="button" class="btn btn-success pr margRight3" title="Descer página" onclick="down(this)"><i class="fa fa-arrow-circle-down"></i></button>
+                    <button type="button" class="btn btn-success pr margRight3" title="Subir página" onclick="up(this)"><i class="fa fa-arrow-circle-up"></i></button>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="idModal" role="dialog">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Modelos de Sessão</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p>Escolha uma sessão.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="col-m-12 margBottom10" id="btSessions">
+
+                    <button type="button" class="btn btn-info col-md-2 margLeft3" onclick="set(this)" data-model="12-0" data-dismiss="modal"><i class="fa fa-align-justify l1"></i> </button>
+                    <button type="button" class="btn btn-info col-md-2 margLeft3" onclick="set(this)" data-model="6-6" data-dismiss="modal"><i class="fa fa-align-justify c2"></i><i class="fa fa-align-justify c2"></i></button>
+                    <button type="button" class="btn btn-info col-md-2 margLeft3" onclick="set(this)" data-model="4-4-4" data-dismiss="modal"><i class="fa fa-align-justify c3"></i><i class="fa fa-align-justify c3"></i><i class="fa fa-align-justify c3"></i></button>
+                    <button type="button" class="btn btn-info col-md-2 margLeft3" onclick="set(this)" data-model="12-6-6" data-dismiss="modal">====</button>
+
                 </div>
 
                 <div id="page" class="page"></div>
@@ -62,18 +89,65 @@
 
                 </div>
 
-                <button class="btn btn-primary col-md-2 margBottom" onclick="newPage()">New Page</button>
+                <button class="btn btn-primary col-md-2 margBottom" onclick="newPage()">Nova Página</button>
             </div>
 
             <div class="col-md-2 sidebar-tags">
 
                 <div class="hidden">
+
                     <div id="client">
-                        <i class="tag"> Uzumaki Naruto <!--variavel php com nome do client--></i>
+				<span tabindex="-1" data-cke-widget-wrapper="1" data-cke-filter="off"
+                      class="cke_widget_wrapper cke_widget_inline cke_widget_hcard cke_widget_wrapper_h-card"
+                      data-cke-display-name="hcard" data-cke-widget-id="3" role="region" aria-label="hcard widget"
+                      contenteditable="false">
+					<span class="h-card cke_widget_element"
+                          data-cke-widget-data="%7B%22classes%22%3A%7B%22h-card%22%3A1%7D%7D"
+                          data-cke-widget-upcasted="1" data-cke-widget-keep-attr="0"
+                          data-widget="hcard">
+
+						<!--content-->
+						<a data-cke-saved-href="mailto:alice@example.com" href="mailto:alice@example.com"
+                           class="client">Uzumaki Naruto</a>
+                        <!--<span class="p-tel">+20 4345 234 235</span>-->
+
+					</span>
+					<span class="cke_reset cke_widget_drag_handler_container"
+                          style="background: rgba(220, 220, 220, 0.5)
+						url(&quot;http://sdk.ckeditor.com/vendor/ckeditor/plugins/widget/images/handle.png&quot;)
+						repeat scroll 0% 0%; top: -14px; left: 0px; display: block;">
+						<img class="cke_reset cke_widget_drag_handler" data-cke-widget-drag-handler="1"
+                             src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw=="
+                             title="Click e arraste para mover" role="presentation" draggable="true" width="15"
+                             height="15">
+					</span>
+				</span>
                     </div>
 
                     <div id="power">
-                        780kw
+				<span tabindex="-1" data-cke-widget-wrapper="1" data-cke-filter="off"
+                      class="cke_widget_wrapper cke_widget_inline cke_widget_hcard cke_widget_wrapper_h-card"
+                      data-cke-display-name="hcard" data-cke-widget-id="3" role="region" aria-label="hcard widget"
+                      contenteditable="false">
+					<span class="h-card cke_widget_element"
+                          data-cke-widget-data="%7B%22classes%22%3A%7B%22h-card%22%3A1%7D%7D"
+                          data-cke-widget-upcasted="1" data-cke-widget-keep-attr="0"
+                          data-widget="hcard">
+
+						<!--content-->
+						<span class="power">780kw</span>
+
+					</span>
+					<span class="cke_reset cke_widget_drag_handler_container"
+                          style="background: rgba(220, 220, 220, 0.5)
+						url(&quot;http://sdk.ckeditor.com/vendor/ckeditor/plugins/widget/images/handle.png&quot;)
+						repeat scroll 0% 0%; top: -14px; left: 0px; display: block;">
+						<img class="cke_reset cke_widget_drag_handler" data-cke-widget-drag-handler="1"
+                             src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw=="
+                             title="Click e arraste para mover" role="presentation" draggable="true" width="15"
+                             height="15">
+					</span>
+				</span>
                     </div>
 
                     <div id="graph">
