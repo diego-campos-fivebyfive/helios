@@ -5,6 +5,12 @@ namespace AppBundle\Entity\Component;
 
 interface ItemInterface
 {
+    const TYPE_PRODUCT = 0;
+    const TYPE_SERVICE = 1;
+
+    const PRICING_FIXED = 0;
+    const PRICING_POWER = 1;
+
     /**
      * @param $description
      * @return mixed
@@ -48,4 +54,14 @@ interface ItemInterface
      * @return mixed
      */
     public function getCostPrice();
+
+    /**
+     * @return array
+     */
+    public static function getTypes();
+
+    /**
+     * @return array
+     */
+    public static function getPricingOptions();
 }
