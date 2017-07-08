@@ -38,7 +38,18 @@ body, .separator{
 .margBottom{
     margin-bottom: 50px;
 }
-
+.margBottom10{
+    margin-bottom: 10px;
+}
+.margLeft3{
+    margin-left: 3px;
+}
+.margRight3{
+    margin-right: 3px;
+}
+.l1:before{
+    width: 100%;
+}
 .marginLeft4{
     margin-left: 4mm !important;
 }
@@ -47,8 +58,6 @@ body, .separator{
     height: auto;
     margin: 0 !important;
 }
-
-
 .edit2{
     min-height: 25mm !important;
     height: auto;
@@ -62,7 +71,18 @@ body, .separator{
 .ocultar{
     display: none;
 }
-
+.client{
+    color: #000000;
+}
+.power{
+    color: #843534;
+}
+.pr{
+    float: right;
+}
+.pl{
+    float: left;
+}
 li{
     list-style: none;
 }

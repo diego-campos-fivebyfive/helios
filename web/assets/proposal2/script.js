@@ -24,8 +24,10 @@ document.getElementById('infoList').addEventListener('dragstart', function drag(
     evt.data.dataTransfer.setData('text/html', content);
 });
 
-var idPage = 0;
+//var idPage = 0;
 function newPage() {
+    var idPage = $("#idConjunct").html();
+
     var conjunct = $("#conjunct").clone().removeAttr('id');
     $(conjunct).attr("id","conjunct_"+idPage);
     $(conjunct).attr("data-position",idPage);
@@ -39,16 +41,39 @@ function newPage() {
     for (n=0;n<$(btSessions).children().length;n++){
         var btn = $(btSessions).children()[n];
         $(btn).attr("data-pg","page_"+idPage);
-        $(btn).attr("data-pos",idPage);
-
+        //$(btn).attr("data-pos",idPage);
     }
 
+    var btModal = $("#btModal").clone().removeAttr('id');
+    $(btModal).attr("id","btModal_"+idPage);
+    for (n=0;n<$(btModal).children().length;n++){
+        var btM = $(btModal).children()[n];
+        if(n===0){
+            $(btM).attr("data-target","#idModal_"+idPage);
+        }else {
+            $(btM).attr("data-pg","page_"+idPage);
+            $(btM).attr("data-pos",idPage);
+        }
+    }
+
+
+    var modal = $("#idModal").clone().removeAttr('id');
+    $(modal).attr("id","idModal_"+idPage);
+
+    console.log("md "+$($(modal[0]).children().children().children()[1]).html());
+
+    $($(modal[0]).children().children().children()[1]).append(btSessions);
+
+
     $("#bloco").append(conjunct);
-    $("#conjunct_"+idPage+"").append(btSessions);
+    $("#conjunct_"+idPage+"").append(btModal);
+    $("#conjunct_"+idPage+"").append(modal);
     $("#conjunct_"+idPage+"").append(page);
     var separator = $('#separator').clone().removeAttr('id');
     $("#conjunct_"+idPage+"").append(separator);
     idPage++;
+
+    $("#idConjunct").html(idPage);
 }
 
 function delSes(btn) {
@@ -58,9 +83,11 @@ function delSes(btn) {
     }
 }
 
-var i = 0;
-var s = 0;
+//var i = 0;
+//var s = 0;
 function set(btn) {
+
+    var idEditor = $("#idEditor").html();
 
     var dataModel = $(btn).data("model");
     var session;
@@ -76,7 +103,7 @@ function set(btn) {
     }else if (dataModel==="del"){
         var page = $(btn).data("pg");
         var conj = $("#"+page+"").parent();
-        console.log($(conj)[0]);
+       // console.log($(conj)[0]);
         $(conj)[0].remove();
         return;
     }
@@ -85,19 +112,20 @@ function set(btn) {
     for (n=1;n<session.children().length;n++){
         cont++;
         var editor = session.children()[n];
-        $(editor).attr("id","editor_"+i);
+        $(editor).attr("id","editor_"+idEditor);
         $(editor).attr("contenteditable","true");
-        i++;
+        idEditor++;
     }
-    i-=cont;
+    idEditor-=cont;
     var pg = $(btn).data("pg");
     $("#"+pg+"").append(session);
-    for (n = 0;n<session.children().length;n++){
-        CKEDITOR.inline( "editor_"+i, {
+    for (n = 1;n<session.children().length;n++){
+        CKEDITOR.inline( "editor_"+idEditor, {
             extraPlugins: 'hcard,sourcedialog,justify'
         } );
-        i++;
+        idEditor++;
     }
+    $("#idEditor").html(idEditor);
 }
 
 function up(btn) {
