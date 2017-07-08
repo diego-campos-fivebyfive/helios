@@ -48,10 +48,10 @@
 .uk-dotnav > * {
   float: left;
 }
-/* Items
+/* Item
  ========================================================================== */
 /*
- * Items
+ * Item
  * 1. Hide text if present
  */
 .uk-dotnav > * > * {
