@@ -3,9 +3,11 @@
     {% set _route = app.request.attributes.get('_route') %}
 
     {% set display = query.display %}
-    {% set is_module = _route == 'module_index' %}
+    {% set is_module = attribute(app.request.attributes.get('_route_params'), 'type') == 'module' %}
     {% set is_grid = 'grid' == display %}
     {% set is_strict = 1 == query.strict %}
+
+    {% set _route_params = app.request.attributes.get('_route_params')|merge(query|merge({'display':is_grid ? 'list' : 'grid' })) %}
 
     {% set route_create = is_module ? 'module_create' : 'inverter_create' %}
     {% set route_index = is_module ? 'module_index' : 'inverter_index' %}
@@ -15,7 +17,6 @@
     {% set route_delete = is_module ? 'module_delete' : 'inverter_delete' %}
 
     {% set image_link = '' %}
-    {% set parent_ids = [] %}
 
 {% block styles %}
     <style>
@@ -27,10 +28,6 @@
 
         #form_filtration > .form-group > .col-sm-2 {
             display: none;
-        }
-        .btn-success{
-        background-color: #00A7EC !important;
-        border-color: #00A7EC !important;
         }
     </style>
 {% endblock %}
@@ -65,18 +62,6 @@
         {% set account = extra.account %}
 
         <div class="btn-group btn-group-sm btn-group-justified">
-            {% if component.account and component.account.id == account.id %}
-                <a href="{{ path(extra.update, {'token':component.token}) }}" class="btn btn-success">
-                    <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
-                </a>
-            {% else %}
-                <a id="copy{{ component.id }}" title="[Copia um componente idêntico vinculado à esta Conta]"
-                   data-copy="{{ data|json_encode }}" class="btn btn-success" data-toggle="modal"
-                   data-target="#modal_select">
-                    <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
-                </a>
-            {% endif %}
-
             <a data-url="{{ path(extra.show, {'token':component.token}) }}"
                data-toggle="modal"
                data-target="#modal_details"
@@ -84,11 +69,11 @@
                 <i class="fa fa-eye"></i> {{ 'View'|trans }}
             </a>
 
-            {% if component.isPrivate %}
-                <a data-delete="{{ path(extra.delete, {'token':component.token}) }}" class="btn btn-danger">
-                    <i class="fa fa-trash"></i> {{ 'Delete'|trans }}
-                </a>
-            {% endif %}
+            <a href="{{ path('component_update',{type:extra.type,id:component.id}) }}"
+               class="btn btn-success">
+                <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
+            </a>
+
         </div>
 
     {% endmacro %}
@@ -101,20 +86,9 @@
 
             {{ knp_pagination_filter(pagination, {'c.model, m.name':''}) }}
 
-            <div class="col-md-4">
-                <div class="btn-group">
-                    <a href="{{ path(_route, query|merge({'display':is_grid ? 'list' : 'grid' })) }}" class="btn btn-default">
-                        <i class="fa fa-{{ is_grid ? 'list' : 'th' }}"></i> {{ is_grid ? 'List'|trans : 'Grid'|trans }}
-                    </a>
-                    <a href="{{ path(_route, query|merge({'strict': is_strict ? 0 : 1})) }}" class="btn btn-default">
-                        <i class="fa fa-ticket"></i> {{ is_strict ? 'All'|trans : 'Meus Componentes' }}
-                    </a>
-                </div>
-            </div>
-
-            <div class="col-md-4 pull-right text-right">
-                <a href="{{ path(route_create) }}" class="btn btn-md btn-primary">
-                    <i class="fa fa-plus"></i> {{ 'Add'|trans }} {{ is_module ? 'Module'|trans : 'Inverter'|trans  }}
+            <div class="col-md-2">
+                <a href="{{ path(_route, _route_params) }}" class="btn btn-default btn-block">
+                    <i class="fa fa-{{ is_grid ? 'list' : 'th' }}"></i> {{ is_grid ? 'Exibir Lista'|trans : 'Exibir Grade'|trans }}
                 </a>
             </div>
         </div>
@@ -125,25 +99,14 @@
                 {% if is_grid %}
 
                     {% for component in components %}
-                        {{ component.toViewMode() }}
 
                         <div class="col-md-3" id="component{{ component.id }}">
                             <div class="ibox">
                                 <div class="ibox-content product-box">
 
                                     <div class="product-imitation" style="background-image: url({{ component.image|componentFilePath }})">
-                                        &nbsp;
-                                        {% if component.isPrivate %}
-                                            <span class="badge badge-info" style="margin-bottom:-155px;">Meu Componente</span>
-                                        {% endif %}
                                     </div>
                                     <div class="product-desc">
-
-                                        {% if component.isCopy or component.isPrivate %}
-                                            {% if component.isCopy %}
-                                                {% set parent_ids = parent_ids|merge([component.parent.id]) %}
-                                            {% endif %}
-                                        {% endif %}
 
                                         <a data-url="{{ path(is_module ? 'module_show' : 'inverter_show' , {'token':component.token}) }}"
                                            data-toggle="modal"
@@ -179,7 +142,7 @@
                                         <div class="hr-line-dashed"></div>
 
                                         <div class="row">
-                                            {{ handler.component_buttons(component,{'account':account, 'update':route_update, 'show':route_show, 'delete':route_delete}) }}
+                                            {{ handler.component_buttons(component,{type:type, 'account':account, 'update':route_update, 'show':route_show, 'delete':route_delete}) }}
                                         </div>
 
                                     </div>
@@ -207,22 +170,11 @@
                             <tbody>
 
                             {% for component in components %}
-                                {{ component.toViewMode() }}
 
                                 <tr class="gradeY">
                                     <td> {{ component.maker.name }} </td>
                                     <td>
                                         {{ component.model }}
-
-                                        {% if component.isCopy %}
-                                            {% set parent_ids = parent_ids|merge([component.parent.id]) %}
-                                        {% endif %}
-
-                                        {% if component.isPrivate  %}
-                                            <span class="badge badge-info">
-                                                Meu Componente
-                                            </span>
-                                        {% endif %}
                                     </td>
                                     <td> {{ is_module ? component.cellType : [component.nominalPower|decimal,' kW']|join }} </td>
                                     <td> {{ is_module ? [component.maxPower|decimal,' W']|join : component.mpptNumber }} </td>
@@ -256,9 +208,6 @@
     <div class="hide" id="proto_buttons">
     </div>
 
-    <script>
-        var parent_ids = {{ parent_ids|json_encode }};
-    </script>
 {% endblock %}
 
 {% block scripts %}
@@ -267,108 +216,11 @@
 
         $(function () {
 
-            if (parent_ids.length) {
-                $.each(parent_ids, function (i, id) {
-                    var button = $('#copy' + id);
-                    if (button.length) {
-                        button.remove();
-                    }
-                });
-            }
-
             var form_filtration = $('#form_filtration');
             if (form_filtration.length) {
-                //console.log(form_filtration);
-                /*var proto_buttons = $('#proto_buttons').html();
-                form_filtration.find('.form-group').append(proto_buttons);*/
-                form_filtration.append('<input type="hidden" name="display" value="{{ display }}">')
-                            .append('<input type="hidden" name="strict" value="{{ is_strict ? '1' : '0' }}">');
-            }
-
-            var copyist = $('[data-copy]');
-            if (copyist.length) {
-                copyist.on('click', function () {
-
-                    var data = $(this).data('copy');
-
-                    swal({
-                        title: "{{ 'Confirm copy'|trans }}",
-                        text: "Ao editar este componente você estará criando uma cópia em livre edição, deseja continuar?",
-                        type: "info",
-                        showCancelButton: true,
-                        cancelButtonText: "{{ 'Cancel'|trans }}",
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "Confirmar",
-                        closeOnConfirm: false
-                    }, function () {
-
-                        $.ajax({
-                            url: '{{ path(route_copy,{token:'__token__'}) }}'.replace(/__token__/g, data.token),
-                            method: 'post',
-                            success: function (response) {
-                                if (response.hasOwnProperty('error')) {
-                                    swal("{{ 'Error'|trans }}!", response.error, "error");
-                                } else {
-                                    var token = response.component.token;
-                                    var path = '{{ path(is_module ? 'module_update' : 'inverter_update',{token:'_token_'}) }}';
-                                    swal("{{ 'Success'|trans }}!", "{{ 'Was successful copied'|trans }}!", "success");
-                                    window.location.href = path.replace(/_token_/g, token);
-                                }
-                            },
-                            beforeSend: function () {
-                                swal({
-                                    title: "{{ 'Copying'|trans }}...",
-                                    text: null,
-                                    type: "info",
-                                    showConfirmButton: false
-                                });
-                            }
-                        });
-                    });
-
-                });
-            }
-
-            var deleter = $('[data-delete]');
-            if(deleter.length){
-                deleter.on('click', function(){
-                    var source = $(this);
-                    swal({
-                        title: "Confirmar exclusão?",
-                        text: null,
-                        type: "info",
-                        showCancelButton: true,
-                        cancelButtonText: "{{ 'Cancel'|trans }}",
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "Confirmar",
-                        closeOnConfirm: false
-                    }, function () {
-
-                        $.ajax({
-                            url: source.data('delete'),
-                            method: 'post',
-                            data:{_method:'delete'},
-                            complete: function (xhr) {
-                                var response = xhr.responseJSON;
-                                if (200 != xhr.status) {
-                                    swal("{{ 'Error'|trans }}!", response.error, "error");
-                                }else{
-                                    swal('Sucesso!', 'Exclusão efetuada com sucesso!', 'success');
-                                    window.location.reload();
-                                }
-                            },
-                            beforeSend: function () {
-                                swal({
-                                    title: "Excluindo...",
-                                    text: null,
-                                    type: "info",
-                                    showConfirmButton: false
-                                });
-                            }
-                        });
-
-                    });
-                });
+                form_filtration
+                    .append('<input type="hidden" name="display" value="{{ display }}">')
+                    .append('<input type="hidden" name="strict" value="{{ is_strict ? '1' : '0' }}">');
             }
 
             var detail_component = $('#detail_component');

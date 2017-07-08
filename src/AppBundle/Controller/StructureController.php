@@ -25,15 +25,14 @@ use AppBundle\Form\Component\StructureType;
  * @Breadcrumb("Dashboard", route={"name"="app_index"})
  * @Breadcrumb("Estruturas", route={"name"="structure_index"})
  */
-class StructureController extends ComponentController
+class StructureController extends AbstractController
 {
     /**
      * @Route("/", name="structure_index")
      */
     public function indexAction(Request $request)
     {
-
-        $manager = $this->getStructureManager();
+        $manager = $this->manager('structure');
         $paginator = $this->getPaginator();
 
         $query = $manager->getEntityManager()->createQueryBuilder();

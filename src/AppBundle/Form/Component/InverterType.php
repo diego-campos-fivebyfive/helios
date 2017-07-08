@@ -24,8 +24,8 @@ class InverterType extends AbstractType
         /** @var \AppBundle\Entity\Component\ComponentInterface $component */
         $component = $options['data'];
 
-        $account = $component->getAccount();
-        $makerId = $options['is_validation'] ? $component->getMaker()->getId() : null;
+        //$account = $component->getAccount();
+        //$makerId = $options['is_validation'] ? $component->getMaker()->getId() : null;
 
         $builder->add(
             'maker', 'entity', array(
@@ -33,7 +33,7 @@ class InverterType extends AbstractType
                 'multiple' => false,
                 'property' => 'name',
                 'class' => 'AppBundle\Entity\Component\Maker',
-                'query_builder' => function (\Doctrine\ORM\EntityRepository $er) use ($account, $makerId) {
+                'query_builder' => function (\Doctrine\ORM\EntityRepository $er){
 
                     $parameters = ['context' => MakerInterface::CONTEXT_INVERTER];
 
@@ -42,7 +42,7 @@ class InverterType extends AbstractType
                         ->where('m.context = :context')
                         ->orderBy('m.name', 'ASC');
 
-                    if (!$makerId) {
+                    /*if (!$makerId) {
 
                         $qb->andWhere(
                             $qb->expr()->orX(
@@ -58,7 +58,7 @@ class InverterType extends AbstractType
                         $qb->andWhere('m.id = :id');
 
                         $parameters['id'] = $makerId;
-                    }
+                    }*/
 
                     $qb->setParameters($parameters);
 

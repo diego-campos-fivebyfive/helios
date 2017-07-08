@@ -62,6 +62,10 @@ services:
         class: AppBundle\Manager\ProjectInverterManager
         arguments: ['AppBundle\Entity\Component\ProjectInverter', '@doctrine']
 
+    project_module_manager:
+        class: AppBundle\Manager\ProjectModuleManager
+        arguments: ['AppBundle\Entity\Component\ProjectModule', '@doctrine']
+
     structure_manager:
         class: AppBundle\Manager\StructureManager
         arguments: ['AppBundle\Entity\Component\Structure', '@doctrine']
