@@ -2,9 +2,9 @@
 
 {% block body %}
 
-    {% set componentAccount = module.account %}
+    {#{% set componentAccount = module.account %}
     {% set currentAccount = app.user.info.account %}
-    {% set isEdition = (componentAccount is null) or (currentAccount.id == componentAccount.id) %}
+    {% set isEdition = (componentAccount is null) or (currentAccount.id == componentAccount.id) %}#}
 
     <style>
         .input-group.m-b {
@@ -60,7 +60,7 @@
 
                                         <div class="form-group col-md-4">
                                             <label> Datasheet (PDF) </label>
-                                            <input type="file" name="datasheet" accept="application/pdf">
+                                            <input type="file" name="dataSheet" accept="application/pdf">
                                             {% if module.datasheet %}
                                                 <span class="label info">
                                                     Este componente já possui datasheet
@@ -179,15 +179,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    {% if isEdition %}
-                                        <button type="submit" name="intention" value="save" class="btn btn-primary pull-right">
-                                            <i class="fa fa-save"></i> {{ 'Save'|trans }}
-                                        </button>
-                                    {% else %}
-                                        <button type="submit" name="intention" value="validate" class="btn btn-primary pull-right">
-                                            <i class="fa fa-check"></i> {{ 'Validate'|trans }}
-                                        </button>
-                                    {% endif %}
+                                    <button type="submit" name="intention" value="save" class="btn btn-primary pull-right">
+                                        <i class="fa fa-save"></i> {{ 'Save'|trans }}
+                                    </button>
                                 </div>
 
                                 {{ form_end(form) }}

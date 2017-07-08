@@ -582,4 +582,22 @@ class Module implements ModuleInterface
     {
         return $this->image;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setMaker(MakerInterface $maker)
+    {
+        $this->maker = $maker;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMaker()
+    {
+        return $this->maker;
+    }
 }

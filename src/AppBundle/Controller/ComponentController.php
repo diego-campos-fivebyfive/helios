@@ -2,70 +2,36 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\BusinessInterface;
-use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Component\InverterInterface;
-use AppBundle\Entity\Component\InverterManager;
 use AppBundle\Entity\Component\ModuleInterface;
-use AppBundle\Entity\Component\ModuleManager;
-use AppBundle\Entity\Component\StructureInterface;
-use AppBundle\Manager\StructureManager;
+use AppBundle\Form\Component\InverterType;
+use AppBundle\Form\Component\ModuleType;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\FileBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 
+/**
+ * @Route("components/{type}")
+ *
+ * @Security("has_role('ROLE_OWNER')")
+ *
+ * @Breadcrumb("Dashboard", route={"name"="app_index"})
+ * @Breadcrumb("{type}s", route={"name"="components", "parameters"={"type":"{type}"}})
+ */
 class ComponentController extends AbstractController
 {
     /**
-     * @param ComponentInterface $component
+     * @Route("/", name="components")
      */
-    protected function checkAccess(ComponentInterface $component)
+    public function indexAction($type)
     {
-        $method = $this->getMethodController();
-
-        $user = $this->getUser();
-        $isAdmin = $user->isAdmin();
-        $currentAccount = $this->getCurrentAccount();
-        $hasAccount = null != $account = $component->getAccount();
-        $isAccount = $hasAccount ? $account->getId() === $currentAccount->getId() : false;
-        $hasCopy = $this->accountContainsCopy($component, $currentAccount);
-
-        if ($isAdmin)
-            return;
-
-        switch ($method) {
-            case 'updateAction':
-                if ($hasAccount && $isAccount || ($user->isSuperAdmin()))
-                    return;
-                break;
-            case 'deleteAction':
-                if ($hasAccount && $isAccount)
-                    return;
-                break;
-
-            case 'showAction':
-            case 'previewAction':
-                if (!$hasAccount || (!$isAdmin && $isAccount))
-                    return;
-                break;
-
-            case 'copyAction':
-                if (!$hasAccount && !$hasCopy)
-                    return;
-                break;
-        }
-
-        throw $this->createAccessDeniedException();
-    }
-
-    /**
-     * @return array
-     */
-    protected function prepareIndexData()
-    {
-        $account = $this->getCurrentAccount();
+        $account = $this->account();
         $request = $this->getCurrentRequest();
         $route = $request->attributes->get('_route');
         $path = str_replace('_index', '', $route);
@@ -74,35 +40,15 @@ class ComponentController extends AbstractController
 
         $powerField = $isModule ? 'c.maxPower' : 'c.nominalPower';
 
-        $manager = $this->getComponentManager($path);
+        $manager = $this->manager($type);
 
         $qb = $manager->getEntityManager()->createQueryBuilder();
 
         $qb->select('c')
-            ->from(sprintf('AppBundle\Entity\Component\%s', $entity), 'c')
+            ->from(sprintf('AppBundle\Entity\Component\%s', ucfirst($type)), 'c')
             ->join('c.maker', 'm', 'WITH')
             ->orderBy('m.name', 'asc')
             ->addOrderBy('c.model', 'asc');
-
-        $parameters = [
-            'account' => $account
-        ];
-
-        if (1 == $request->get('strict', 0)) {
-            $qb->where('c.account = :account');
-        }else{
-
-            $qb->where(
-                $qb->expr()->orX(
-                    $qb->expr()->eq('c.status', ':published'),
-                    $qb->expr()->eq('c.account', ':account')
-                )
-            );
-
-            $parameters['published'] = ComponentInterface::STATUS_PUBLISHED;
-        }
-
-        $qb->setParameters($parameters);
 
         $this->makerQueryBuilderFilter($qb, $request, $powerField);
 
@@ -112,201 +58,137 @@ class ComponentController extends AbstractController
             'grid' == $request->query->get('display', 'grid') ? 8 : 20
         );
 
-        return [
+        return $this->render('component.index', [
+            'type' => $type,
             'pagination' => $pagination,
             'account' => $account,
             'query' => array_merge([
                 'display' => 'grid',
                 'strict' => 0
             ], $request->query->all())
-        ];
+        ]);
     }
 
     /**
-     * @param ComponentInterface $component
+     * @Route("/{id}/show", name="component_show")
+     */
+    public function showAction(Request $request, $type, $id)
+    {
+        $component = $this->findComponent($type, $id);
+
+        return $this->render(
+            $request->isXmlHttpRequest()
+                ? sprintf('%s.show_content', $type)
+                : sprintf('%s.show', $type), [
+            $type => $component
+        ]);
+    }
+
+    /**
+     * @Security("has_role('ROLE_ADMIN')")
+     *
+     * @Route("/{id}/update", name="component_update")
+     * @Method({"get","post"})
+     */
+    public function updateAction(Request $request, $type, $id)
+    {
+        $component = $this->findComponent($type, $id);
+
+        $formClass = 'module' == $type ? ModuleType::class : InverterType::class ;
+
+        $form = $this->createForm($formClass, $component);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            return $this->saveComponent($component, $type, $request);
+        }
+
+        return $this->render($type.'.form', [
+            'form' => $form->createView(),
+            $type => $component
+        ]);
+    }
+
+    /**
+     * @Security("has_role('ROLE_ADMIN')")
+     *
+     * @Route("/{id}/delete", name="component_delete")
+     * @Method({"delete"})
+     */
+    public function deleteAction(Request $request, $type, $id)
+    {
+        $component = $this->findComponent($type, $id);
+
+        $projects = $this->manager(sprintf('project_%s', $type))->findBy([$type => $component->getId()]);
+
+        if(count($projects)) {
+            return $this->json([
+                'error' => 'Este módulo está sendo utilizado projetos'
+            ], Response::HTTP_IM_USED);
+        }
+
+        $dataSheet = $this->getComponentsDir() . $component->getDataSheet();
+        $image = $this->getComponentsDir() . $component->getImage();
+
+        if(file_exists($image)) unlink($image);
+        if(file_exists($dataSheet)) unlink($dataSheet);
+
+        $this->manager($type)->delete($component);
+
+        return $this->json([]);
+    }
+
+    /**
+     * @param ModuleInterface|InverterInterface|object $component
      * @param Request $request
      * @return RedirectResponse
      */
-    protected function saveComponent(ComponentInterface &$component, Request $request)
+    private function saveComponent($component, $type, Request $request)
     {
-        $isAdmin = $this->getUser()->isAdmin();
-        $isModule = $component->isModule();
-        $hasId = $component->getId();
+        $manager = $this->manager($type);
 
-        $manager = $isModule ? $this->getModuleManager() : $this->getInverterManager();
-        $id = $hasId ?: $manager->findOneBy([], ['id' => 'desc'])->getId() + 1;
+        $manager->save($component);
 
-        /**
-         * Register a new component
-         */
-        if (!$hasId) {
+        $uploadDir = $this->getComponentsDir();
 
-            $id = $manager->findOneBy([], ['id' => 'desc'])->getId() + 1;
+        foreach ($request->files->all() as $field => $uploadedFile) {
 
-            $this->uploadComponentFiles($component, $request->files, $id);
+            if ($uploadedFile instanceof UploadedFile) {
 
-            $component->setStatus(ComponentInterface::STATUS_FEATURED);
+                $getter = 'get' . ucfirst($field);
+                $setter = 'set' . ucfirst($field);
 
-            if($isAdmin){
-                $component
-                    ->setStatus(ComponentInterface::STATUS_VALIDATED)
-                    ->setAccount(null);
-            }
+                $ext = $uploadedFile->getClientOriginalExtension();
+                $currentFile = $component->$getter();
 
-            $manager->save($component);
+                $format = 'pdf' == $ext ? '%s_%s.%s' : '%s_%s_thumb.%s';
 
-            $this->setNotice('Componente cadastrado com sucesso!');
+                $filename = sprintf($format, $type, $component->getId(), $ext);
 
-            $route = $isAdmin ? 'components' : ($isModule ? 'module_index' : 'inverter_index');
-
-            return $this->redirectToRoute($route);
-
-        } else {
-            /**
-             * Updating component
-             */
-            $copy = $this->checkComponentValidation($component, $request);
-
-            if (!$copy) {
-
-                /**
-                 * Component is updating for account administrator
-                 */
-
-                $this->uploadComponentFiles($component, $request->files, $id);
-
-                $manager->save($component);
-
-                $this->setNotice('Componente atualizado com sucesso!');
-
-                if (null == $url = $this->restore('referer')) {
-                    $url = $this->generateUrl($isModule ? 'module_index' : 'inverter_index');
-                }
-
-                return $this->redirect($url);
-
-            } else {
-
-                /**
-                 * Component is validating by platform administrator
-                 * Copy a component data on another component
-                 * Define the copy with status validated
-                 * Define the component with status ignored
-                 */
-
-                $id = $manager->findOneBy([], ['id' => 'desc'])->getId() + 1;
-
-                $this->uploadComponentFiles($copy, $request->files, $id);
-
-                $this->normalizeComponentFiles($component, $copy, $id);
-
-                $copy->setStatus(ComponentInterface::STATUS_VALIDATED);
-                $component->setStatus(ComponentInterface::STATUS_IGNORED);
-
-                $manager->save($copy);
-
-                return $this->redirectToRoute('components');
-            }
-        }
-    }
-
-    /**
-     * @param ComponentInterface $component
-     * @param FileBag $fileBag
-     * @param $id
-     */
-    protected function uploadComponentFiles(ComponentInterface &$component, FileBag $fileBag, $id)
-    {
-        if ($fileBag->count()) {
-
-            $uploadDir = $this->getComponentsDir();
-
-            foreach ($fileBag->all() as $meta => $uploadedFile) {
-                if ($uploadedFile instanceof UploadedFile) {
-
-                    $getter = 'get' . ucfirst($meta);
-                    $setter = 'set' . ucfirst($meta);
-
-                    $currentFile = $component->$getter();
-
-                    $tag = $component->isModule() ? 'module' : 'inverter';
-                    $ext = $uploadedFile->getClientOriginalExtension();
-
-                    $format = 'pdf' == $ext ? '%s_%s.%s' : '%s_%s_thumb.%s';
-
-                    $filename = sprintf($format, $tag, $id, $ext);
-
-                    if ($currentFile) {
-                        $currentFilePath = $uploadDir . $currentFile;
-                        if (file_exists($currentFilePath)) {
-                            unlink($currentFilePath);
-                        }
+                if ($currentFile) {
+                    $currentFilePath = $uploadDir . $currentFile;
+                    if (file_exists($currentFilePath)) {
+                        unlink($currentFilePath);
                     }
-
-                    $uploadedFile->move($uploadDir, $filename);
-                    $component->$setter($filename);
                 }
-            }
-        }
-    }
 
-    /**
-     * @param ComponentInterface | ModuleInterface | InverterInterface $component
-     * @param Request $request
-     * @return \AppBundle\Entity\Component\InverterInterface|ModuleInterface|bool
-     */
-    protected function checkComponentValidation(ComponentInterface $component, Request $request)
-    {
-        if ($this->getUser()->isAdmin()
-            && $component->isFeatured()
-            && 'validate' == $request->request->get('intention')
-        ) {
+                $uploadedFile->move($uploadDir, $filename);
 
-            $helper = $component->isModule() ? $this->getModuleHelper() : $this->getInverterHelper();
-
-            $component->viewMode = false;
-
-            return $helper->copyComponent($component);
-        }
-
-        return false;
-    }
-
-    /**
-     * @param ComponentInterface $source
-     * @param ComponentInterface $target
-     * @param $id
-     */
-    protected function normalizeComponentFiles(ComponentInterface $source, ComponentInterface &$target, $id)
-    {
-        $dir = $this->getComponentsDir();
-
-        if (null != $datasheet = $target->getDatasheet()) {
-            if ($datasheet == $source->getDatasheet()) {
-                $filename = $dir . $datasheet;
-                if (file_exists($filename)) {
-                    $destination = str_replace($source->getId(), $id, $filename);
-                    copy($filename, $destination);
-                    $target->setDatasheet(str_replace($source->getId(), $id, $datasheet));
-                } else {
-                    $target->setDatasheet(null);
-                }
+                $component->$setter($filename);
             }
         }
 
-        if (null != $image = $target->getImage()) {
-            if ($image == $source->getImage()) {
-                $filename = $dir . $image;
-                if (file_exists($filename)) {
-                    $destination = str_replace($source->getId(), $id, $filename);
-                    copy($filename, $destination);
-                    $target->setImage(str_replace($source->getId(), $id, $image));
-                } else {
-                    $target->setImage(null);
-                }
-            }
+        $manager->save($component);
+
+        $this->setNotice('Componente atualizado com sucesso!');
+
+        if (null == $url = $this->restore('referer')) {
+            $url = $this->generateUrl('components', ['type' => $type]);
         }
 
+        return $this->redirect($url);
     }
 
     /**
@@ -337,113 +219,23 @@ class ComponentController extends AbstractController
         } else {
             $this->overrideGetFilters();
         }
-
     }
 
-
-    /*
-    protected function copyComponentToPlatform(ComponentInterface $component)
+    /**
+     * @param $type
+     * @param $id
+     * @return null|object|ModuleInterface|InverterInterface
+     */
+    private function findComponent($type, $id)
     {
-        $manager = $component->isModule() ? $this->getModuleManager() : $this->getInverterManager() ;
-        $helper = $component->isModule() ? $this->getModuleHelper() : $this->getInverterHelper() ;
+        $manager = $this->manager($type);
+        $component = $manager->find($id);
 
-        $copy = $helper->copyComponent($component);
-
-        $manager->save($copy);
-
-        $componentId = $component->getId();
-        $copyId = $copy->getId();
-        $dir = $this->getComponentsDir();
-
-        if(null != $image = $component->getImage()){
-            $filename = $dir . $image;
-            if(file_exists($filename)){
-                $destination = str_replace($componentId, $copyId, $filename);
-                copy($filename, $destination);
-                $copy->setImage(str_replace($componentId, $copyId, $image));
-            }
+        if(!$component){
+            throw $this->createNotFoundException('Component not found');
         }
 
-        if(null != $datasheet = $component->getDatasheet()){
-            $filename = $dir . $datasheet;
-            if(file_exists($filename)){
-                $destination = str_replace($componentId, $copyId, $filename);
-                copy($filename, $destination);
-                $copy->setDatasheet(str_replace($componentId, $copyId, $datasheet));
-            }
-        }
-
-        $copy->setStatus(ComponentInterface::STATUS_VALIDATED);
-        $component->setStatus(ComponentInterface::STATUS_IGNORED);
-
-        $manager->save($copy);
-        $manager->save($component);
-
-        return $copy;
-    }
-    */
-
-    /**
-     * @return \AppBundle\Service\Component\Helper\ModuleHelper
-     */
-    protected function getModuleHelper()
-    {
-        return $this->get('app.module_helper');
-    }
-
-    /**
-     * @return \AppBundle\Service\Component\Helper\InverterHelper
-     */
-    protected function getInverterHelper()
-    {
-        return $this->get('app.inverter_helper');
-    }
-
-    /**
-     * @param ComponentInterface $component
-     * @param BusinessInterface $account
-     * @return bool
-     */
-    private function accountContainsCopy(ComponentInterface $component, BusinessInterface $account)
-    {
-        $isModule = $component instanceof ModuleInterface;
-
-        return $component->getChildrens()->filter(function (ComponentInterface $component) use ($account, $isModule) {
-
-                if (null != $cAccount = $component->getAccount()) {
-                    if ($cAccount->getId() == $account->getId()) {
-                        return $isModule ? $component->isModule() : !$component->isModule();
-                    }
-                }
-
-                return false;
-            })->count() > 0;
-    }
-
-    /**
-     * @return string
-     */
-    private function getMethodController()
-    {
-        list($controller, $method) = explode('::', $this->getRequestController());
-        return $method;
-    }
-
-    /**
-     * @return string
-     */
-    private function getRequestController()
-    {
-        return $this->getCurrentRequest()->attributes->get('_controller');
-    }
-
-    /**
-     * @param $path
-     * @return ModuleManager | InverterManager
-     */
-    private function getComponentManager($path)
-    {
-        return $this->get(sprintf('app.%s_manager', $path));
+        return $component;
     }
 
     /**
@@ -452,19 +244,5 @@ class ComponentController extends AbstractController
     private function getComponentsDir()
     {
         return $this->get('kernel')->getRootDir() . '/../web/uploads/components/';
-    }
-
-    private function addExtraExpressionFilter($args)
-    {
-        dump($args);
-        die;
-    }
-
-    /**
-     * @return \AppBundle\Manager\StructureManager
-     */
-    protected function getStructureManager()
-    {
-        return $this->get('structure_manager');
     }
 }
