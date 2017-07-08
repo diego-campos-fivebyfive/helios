@@ -91,7 +91,7 @@ trait ProjectElementTrait
      */
     public function getUnitCostPrice()
     {
-        return $this->unitCostPrice;
+        return (float) $this->unitCostPrice;
     }
 
     /**
@@ -109,7 +109,7 @@ trait ProjectElementTrait
      */
     public function getUnitSalePrice()
     {
-        return $this->unitSalePrice;
+        return (float) $this->unitSalePrice;
     }
 
     /**

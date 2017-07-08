@@ -192,6 +192,31 @@ interface ProjectInterface
     public function getPower();
 
     /**
+     * @return float
+     */
+    public function getCostPriceModules();
+
+    /**
+     * @return float
+     */
+    public function getCostPriceInverters();
+
+    /**
+     * @return float
+     */
+    public function getCostPriceComponents();
+
+    /**
+     * @return float
+     */
+    public function getDeliveryPrice();
+
+    /**
+     * @return float
+     */
+    public function getCostPriceTotal();
+
+    /**
      * @return \DateTime
      */
     public function getCreatedAt();

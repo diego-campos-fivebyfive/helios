@@ -59,10 +59,75 @@ class DebugController extends AbstractController
     }
 
     /**
-     * @Route("/pdf-page")
+     * @Route("/pricing")
      */
     public function pdfPageAction()
     {
+        /** @var \AppBundle\Entity\Component\ProjectInterface $project */
+        $project = $this->manager('project')->find(103);
 
+        $projectModules = $project->getProjectModules();
+        $projectInverters = $project->getProjectInverters();
+
+        /** @var \AppBundle\Entity\Component\ProjectModuleInterface $projectModule */
+        $projectModule = $projectModules->first();
+        /** @var \AppBundle\Entity\Component\ProjectInverterInterface $projectInverter */
+        $projectInverter = $projectInverters->first();
+
+        $pricingParameters = $this->container->get('app.kit_pricing_manager')->findAll();
+
+        $percentGeneral = 0;
+        $percentEquipments = 0;
+        $percentServices = 0;
+
+        foreach ($pricingParameters as $pricingParameter){
+
+            $percent = (float) $pricingParameter->percent;
+
+            switch($pricingParameter->target){
+                case KitPricing::TARGET_EQUIPMENTS:
+                    $percentEquipments += $percent;
+                    break;
+                case KitPricing::TARGET_SERVICES:
+                    $percentServices += $percent;
+                    break;
+                case KitPricing::TARGET_GENERAL:
+                    $percentGeneral += $percent;
+                    break;
+            }
+        }
+
+        $costEquipments = $project->getCostPriceComponents();
+
+        $costTotal = $project->getCostPriceTotal();
+
+        dump($costEquipments);
+        dump($costTotal);
+        dump($percentEquipments);
+        dump($percentServices);
+        dump($percentGeneral);
+
+        /*
+        $finalCost = $this->getFinalCost();
+        $this->priceSaleEquipments = (100 * $finalCost) / (100-($this->getTotalPercentEquipments(true)));
+        $this->priceSaleServices = (100 * $this->getTotalPriceServices()) / (100-($this->getTotalPercentServices(true)));
+        $this->priceSale = $this->getPriceSaleEquipments() + $this->getPriceSaleServices();
+        */
+
+        $salePriceEquipments = (100 * $costTotal) / (100 - ($percentEquipments));
+        //$salePriceServices = (100 * $)
+
+        dump($salePriceEquipments); die;
+
+        //dump($pricingParameters); die;
+
+        //$projectInverter->setUnitCostPrice(6000);
+        //$this->manager('project_inverter')->save($projectInverter);
+
+        //$projectModule->setUnitCostPrice(200);
+        //$this->manager('project_module')->save($projectModule);
+        //dump($projectModule->getUnitCostPrice());
+
+        dump($project->getCostPriceModules()); die;
     }
 }

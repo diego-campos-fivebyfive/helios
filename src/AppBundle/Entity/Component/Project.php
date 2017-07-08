@@ -332,6 +332,57 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
+    public function getCostPriceModules()
+    {
+        $price = 0;
+        foreach ($this->projectModules as $projectModule){
+            $price += $projectModule->getTotalCostPrice();
+        }
+
+        return $price;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCostPriceInverters()
+    {
+        $price = 0;
+        foreach ($this->projectInverters as $projectInverter){
+            $price += $projectInverter->getTotalCostPrice();
+        }
+
+        return $price;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCostPriceComponents()
+    {
+        return $this->getCostPriceModules() + $this->getCostPriceInverters();
+    }
+
+    /**
+     * @inheritDoc
+     * @todo fixed value!
+     */
+    public function getDeliveryPrice()
+    {
+        return 1000;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCostPriceTotal()
+    {
+        return $this->getCostPriceComponents() + $this->getDeliveryPrice();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getCostPrice()
     {
         // TODO: Implement getCostPrice() method.
