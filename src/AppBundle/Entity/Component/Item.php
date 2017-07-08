@@ -11,7 +11,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 /**
  * Item
  *
- * @ORM\Table(name="app_items")
+ * @ORM\Table(name="app_item")
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  */
@@ -132,6 +132,28 @@ class Item implements ItemInterface
     public function getCostPrice()
     {
         return $this->costPrice;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function getTypes()
+    {
+        return [
+            self::TYPE_PRODUCT => 'product',
+            self::TYPE_SERVICE => 'service'
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function getPricingOptions()
+    {
+        return [
+            self::PRICING_FIXED => 'fixed',
+            self::PRICING_POWER => 'by power'
+        ];
     }
 }
 
