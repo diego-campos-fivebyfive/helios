@@ -3,7 +3,7 @@
 namespace AppBundle\Entity\Component;
 
 
-interface ItemsInterface
+interface ItemInterface
 {
     /**
      * @param $description

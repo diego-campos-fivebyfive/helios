@@ -9,13 +9,13 @@ use AppBundle\Entity\TokenizerTrait;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
- * Items
+ * Item
  *
  * @ORM\Table(name="app_items")
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  */
-class Items implements ItemsInterface
+class Item implements ItemInterface
 {
     /**
      * @var int

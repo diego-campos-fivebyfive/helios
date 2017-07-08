@@ -1761,7 +1761,7 @@ iframe {
   list-style: none;
 }
 /*
- * Items
+ * Item
  */
 .uk-nav li > a {
   display: block;
@@ -1826,7 +1826,7 @@ ul.uk-nav-sub {
 /* Modifier `uk-nav-side`
  ========================================================================== */
 /*
- * Items
+ * Item
  */
 .uk-nav-side > li > a {
   color: #444;
@@ -1877,7 +1877,7 @@ ul.uk-nav-sub {
 /* Modifier `uk-nav-dropdown`
  ========================================================================== */
 /*
- * Items
+ * Item
  */
 .uk-nav-dropdown > li > a {
   color: #444;
@@ -1920,7 +1920,7 @@ ul.uk-nav-sub {
 /* Modifier `uk-nav-navbar`
  ========================================================================== */
 /*
- * Items
+ * Item
  */
 .uk-nav-navbar > li > a {
   color: #444;
@@ -1963,7 +1963,7 @@ ul.uk-nav-sub {
 /* Modifier `uk-nav-offcanvas`
  ========================================================================== */
 /*
- * Items
+ * Item
  */
 .uk-nav-offcanvas > li > a {
   color: #ccc;
@@ -2347,7 +2347,7 @@ html:not(.uk-touch) .uk-nav-offcanvas ul a:hover {
 .uk-subnav > * {
   float: left;
 }
-/* Items
+/* Item
  ========================================================================== */
 .uk-subnav > * > * {
   display: inline-block;
@@ -2432,7 +2432,7 @@ html:not(.uk-touch) .uk-nav-offcanvas ul a:hover {
   /* 2 */
   font-size: 0.001px;
 }
-/* Items
+/* Item
  ========================================================================== */
 /*
  * Reset whitespace hack
@@ -2486,7 +2486,7 @@ html:not(.uk-touch) .uk-nav-offcanvas ul a:hover {
 .uk-pagination:after {
   clear: both;
 }
-/* Items
+/* Item
  ========================================================================== */
 /*
  * 1. Reset whitespace hack
@@ -2602,7 +2602,7 @@ html:not(.uk-touch) .uk-nav-offcanvas ul a:hover {
   clear: both;
 }
 /*
- * Items
+ * Item
  * 1. Create position context for dropdowns
  */
 .uk-tab > li {
@@ -2929,7 +2929,7 @@ html:not(.uk-touch) .uk-nav-offcanvas ul a:hover {
 .uk-thumbnav > * {
   float: left;
 }
-/* Items
+/* Item
  ========================================================================== */
 .uk-thumbnav > * > * {
   display: block;
@@ -7953,7 +7953,7 @@ a.uk-thumbnail:focus {
   touch-action: cross-slide-y pinch-zoom double-tap-zoom;
 }
 /*
- * Items
+ * Item
  */
 .uk-switcher > :not(.uk-active) {
   display: none;
