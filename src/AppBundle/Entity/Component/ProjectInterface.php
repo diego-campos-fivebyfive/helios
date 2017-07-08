@@ -283,6 +283,23 @@ interface ProjectInterface
     public function getProjectInverters();
 
     /**
+     * @param ProjectItemInterface $projectItem
+     * @return ProjectInterface
+     */
+    public function addProjectItem(ProjectItemInterface $projectItem);
+
+    /**
+     * @param ProjectItemInterface $projectItem
+     * @return ProjectInterface
+     */
+    public function removeProjectItem(ProjectItemInterface $projectItem);
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getProjectItems();
+
+    /**
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getAreas();

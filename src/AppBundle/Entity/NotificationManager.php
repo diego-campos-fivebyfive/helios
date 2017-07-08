@@ -4,7 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Query\Expr\Join;
 use Sonata\CoreBundle\Model\BaseEntityManager;
-use AppBundle\Entity\BusinessInterface as MemberInterface;
+//use AppBundle\Entity\BusinessInterface as MemberInterface;
 
 class NotificationManager extends BaseEntityManager
 {

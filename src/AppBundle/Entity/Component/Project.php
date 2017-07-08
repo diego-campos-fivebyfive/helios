@@ -126,6 +126,13 @@ class Project implements ProjectInterface
     private $projectInverters;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="ProjectItem", mappedBy="project", indexBy="project", cascade={"persist"})
+     */
+    private $projectItems;
+
+    /**
      * @var Customer|MemberInterface
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer")
@@ -148,9 +155,10 @@ class Project implements ProjectInterface
         $this->deliveryPriceStrategy = self::PRICE_STRATEGY_ABSOLUTE;
         $this->invoiceBasePrice      = 0;
         $this->deliveryBasePrice     = 0;
+        $this->metadata              = [];
         $this->projectModules        = new ArrayCollection();
         $this->projectInverters      = new ArrayCollection();
-        $this->metadata              = [];
+        $this->projectItems          = new ArrayCollection();
     }
 
     /**
@@ -639,6 +647,42 @@ class Project implements ProjectInterface
     public function getProjectInverters()
     {
         return $this->projectInverters;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function addProjectItem(ProjectItemInterface $projectItem)
+    {
+        if(!$this->projectItems->contains($projectItem)){
+
+            $this->projectItems->add($projectItem);
+
+            if(!$projectItem->getProject())
+                $projectItem->setProject($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeProjectItem(ProjectItemInterface $projectItem)
+    {
+        if($this->projectItems->contains($projectItem)){
+            $this->projectItems->removeElement($projectItem);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getProjectItems()
+    {
+        return $this->projectItems;
     }
 
     /**
