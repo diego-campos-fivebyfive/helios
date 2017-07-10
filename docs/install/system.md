@@ -14,7 +14,7 @@ $ git clone git@bitbucket.org:cjchamado/sices.git
 ```
 
 
-2. Adicionando o `PATH` do Projeto
+2. Adicionando o PATH do Projeto
 ----------------------------------
 
 Abra o Arquivo `.bashrc` com seu editor (Vim, Nano ou outro):
