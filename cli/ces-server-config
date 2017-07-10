@@ -12,8 +12,13 @@ else [ $1 == '--test' ];
   FLAG=test
 fi
 
-echo 'Creating parameters.yml and config.yml into app/config'
+echo 'Sices creating files...'
 cp app/config/parameters_$FLAG.yml app/config/parameters.yml
 cp app/config/config_sample.yml app/config/config.yml
 touch web/deploy/deploy.log
+
+if [ $FLAG == 'dev' ]; then
+  cp cli/ces-pre-push .git/hooks/pre-push
+fi
+
 echo 'Done.'

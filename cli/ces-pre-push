@@ -1,0 +1,17 @@
+#!/bin/bash
+
+protected_branch='master'
+current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+
+if [ $protected_branch = $current_branch ]
+then
+  read -p "Lembre-se, pushs devem ser feitos para a Branch e não para a Master, gostaria de continuar? [y|n] " -n 1 -r < /dev/tty
+  echo
+  if echo $REPLY | grep -E '^[Yy]$' > /dev/null
+  then
+    exit 0
+  fi
+  exit 1
+else
+  exit 0
+fi
