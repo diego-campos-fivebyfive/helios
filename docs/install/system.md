@@ -28,7 +28,7 @@ $ cd [PROJECT_FOLDER]
 $ pwd
 ```
 
-Adicione ao final do arquivo as linhas substituindo PROJECT_PATH pelo caminho do projeto do passo anterior:
+Adicione ao final do arquivo as linhas substituindo `PROJECT_PATH` pelo caminho do projeto do passo anterior:
 ```
 export SICES_PATH=PROJECT_PATH
 export PATH=$PATH:$SICES_PATH/cli
