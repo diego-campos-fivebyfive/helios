@@ -3,7 +3,7 @@
 namespace AppBundle\Entity\Component;
 
 
-interface ItemInterface
+interface ExtraInterface
 {
     const TYPE_PRODUCT = 0;
     const TYPE_SERVICE = 1;

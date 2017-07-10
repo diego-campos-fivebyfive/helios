@@ -11,11 +11,11 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 /**
  * Item
  *
- * @ORM\Table(name="app_item")
+ * @ORM\Table(name="app_extra")
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  */
-class Item implements ItemInterface
+class Extra implements ExtraInterface
 {
     /**
      * @var int
@@ -140,8 +140,8 @@ class Item implements ItemInterface
     public static function getTypes()
     {
         return [
-            self::TYPE_PRODUCT => 'product',
-            self::TYPE_SERVICE => 'service'
+            self::TYPE_PRODUCT => 'Produto',
+            self::TYPE_SERVICE => 'Serviço'
         ];
     }
 
@@ -151,8 +151,8 @@ class Item implements ItemInterface
     public static function getPricingOptions()
     {
         return [
-            self::PRICING_FIXED => 'fixed',
-            self::PRICING_POWER => 'by power'
+            self::PRICING_FIXED => 'Fixo',
+            self::PRICING_POWER => 'Por Potência'
         ];
     }
 }
