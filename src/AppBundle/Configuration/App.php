@@ -31,6 +31,7 @@ class App
             'contacts' => 'fa fa-book',
             'dashboard' => 'fa fa-dashboard',
             'default' => 'fa fa-info',
+            'extras' => 'fa fa-plus-square',
             'globe' => 'fa fa-globe',
             'inverters' => 'fa fa-exchange',
             'kits' => 'fa fa-cubes',

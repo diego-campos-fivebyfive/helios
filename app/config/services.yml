@@ -38,6 +38,10 @@ services:
         class: AppBundle\Manager\CustomerManager
         arguments: ['AppBundle\Entity\Customer', '@doctrine']
 
+    extra_manager:
+        class: AppBundle\Manager\ExtraManager
+        arguments: ['AppBundle\Entity\Component\Extra', '@doctrine']
+
     module_manager:
         class: AppBundle\Manager\ModuleManager
         arguments: ['AppBundle\Entity\Component\Module', '@doctrine']
@@ -49,10 +53,6 @@ services:
     inverter_manager:
         class: AppBundle\Manager\InverterManager
         arguments: ['AppBundle\Entity\Component\Inverter', '@doctrine']
-
-    item_manager:
-        class: AppBundle\Manager\ItemManager
-        arguments: ['AppBundle\Entity\Component\Item', '@doctrine']
 
     project_manager:
         class: AppBundle\Manager\ProjectManager
