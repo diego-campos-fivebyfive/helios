@@ -6,7 +6,7 @@
   },
   "pre-commit": [
     "compile"
-  ]
+  ],
   "dependencies": {
     "uglify-js": "^3.0.23",
     "uglifycss": "^0.0.27"
