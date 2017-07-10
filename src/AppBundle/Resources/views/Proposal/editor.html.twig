@@ -985,7 +985,7 @@
                     </div>
 
                     <div id="accumulatedCashChart">
-                        <img src="http://brasilescola.uol.com.br/upload/conteudo/images/graficl.JPG" alt="Gráfico"
+                        <img src="{{ asset('assets/proposal2/images/caixaAcumulado.png') }}" alt="Gráfico"
                              width="300" height="200"/>
                     </div>
 
@@ -1154,7 +1154,8 @@
 {% block scripts %}
 
     <script src="{{ asset('assets/proposal2/script.js') }}"></script>
-    <script src="http://cdn.ckeditor.com/4.7.0/standard-all/ckeditor.js"></script>
+    {#<script src="http://cdn.ckeditor.com/4.7.0/standard-all/ckeditor.js"></script>#}
+    <script src="{{ asset('assets/proposal2/ckeditor/ckeditor.js') }}"></script>
     <script src="{{ asset('assets/proposal2/dragable.js') }}"></script>
 
     {#<script>
