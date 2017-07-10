@@ -14,7 +14,7 @@ $ sudo apt-get update
 
 Você pode instalar as dependências do sistema individualmente ou utilizando o comando `ces-install-dependencies`:
 
-#### Instalando todas com o comando ces-install-dependencies:
+#### Instalando todas as dependências com o comando ces-install-dependencies:
 
 ```
 $ ces-install-dependencies
