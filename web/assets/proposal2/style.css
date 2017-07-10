@@ -80,9 +80,7 @@ body, .separator{
 .client{
     color: #000000;
 }
-.power{
-    color: #843534;
-}
+
 .pr{
     float: right;
 }
@@ -92,11 +90,20 @@ body, .separator{
 li{
     list-style: none;
 }
+.sidebar-tags::after{
+    top: 0;
+    position: fixed;
+
+}
+
 .sidebar-tags{
     margin-top: 30px;
     float: right;
     right: 0;
     position: fixed;
+    height:  60%;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .col-m-160mm {

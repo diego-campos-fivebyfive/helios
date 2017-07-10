@@ -3,10 +3,13 @@ document.getElementById('infoList').addEventListener('dragstart', function drag(
     var evt = {data: {$: $evt}}; // Create CKEditor event.
     var element = $evt.target;
     var content = $(element).data('info');
-    if(content === 'project_graph'){
+
+    var clone = $('#'+content).clone().removeAttr('id');
+    content = $(clone).html();
+
+    /*if(content === 'project_graph'){
         var clone = $('#graph').clone().removeAttr('id');
         content = $(clone).html();
-
     }else if(content === 'project_items'){
         var clone = $('#items').clone().removeAttr('id');
         content = $(clone).html();
@@ -16,7 +19,8 @@ document.getElementById('infoList').addEventListener('dragstart', function drag(
     }else if(content === 'project_power'){
         var clone = $('#power').clone().removeAttr('id');
         content = $(clone).html();
-    }
+    }*/
+
     // Crie a fachada de transferência de dados para que possa definir tipos de dados personalizados.
     CKEDITOR.plugins.clipboard.initDragDataTransfer(evt);
     evt.data.dataTransfer.setData('infoList', true);
@@ -102,10 +106,10 @@ function delSes(btn) {
 
 $(document).ready(function(){
     var editors = document.getElementsByClassName("edit");
-    console.log($($(editors)).length);
+   // console.log($($(editors)).length);
     for (n = 1;n<$($(editors)).length;n++){
         if(! ($($(editors)[n]).attr("id") === undefined)){
-            console.log($($(editors)[n]).attr("id"));
+            //console.log($($(editors)[n]).attr("id"));
             CKEDITOR.inline( $($(editors)[n]).attr("id"), {
                 extraPlugins: 'hcard,sourcedialog,justify'
             } );
