@@ -71,7 +71,7 @@ swiftmailer:
 assetic:
     debug:          '%kernel.debug%'
     use_controller: '%kernel.debug%'
-    node: node
+    node: nodejs
     filters:
         cssrewrite: ~
         uglifycss:
