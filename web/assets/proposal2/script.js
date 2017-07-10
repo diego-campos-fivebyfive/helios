@@ -35,6 +35,22 @@ function newPage() {
     var page = $("#page").clone().removeAttr('id');
     $(page).attr("id","page_"+idPage);
 
+    //bts principais
+    var btModal = $("#btModal").clone().removeAttr('id');
+    $(btModal).attr("id","btModal_"+idPage);
+    for (n=0;n<$(btModal).children().length;n++){
+        var btM = $(btModal).children()[n];
+        if(n===0){
+            $(btM).attr("data-target","#idModal_"+idPage);
+        }else if(n===1) {
+            $(btM).attr("data-target","#idModalDel_"+idPage);
+        }else{
+           // $(btM).attr("data-pg","page_"+idPage);
+            $(btM).attr("data-pos",idPage);
+        }
+    }
+
+    //bt nova sessao
     var btSessions = $("#btSessions").clone().removeAttr('id');
     $(btSessions).attr("id","btSessions_"+idPage);
 
@@ -43,31 +59,31 @@ function newPage() {
         $(btn).attr("data-pg","page_"+idPage);
         //$(btn).attr("data-pos",idPage);
     }
-
-    var btModal = $("#btModal").clone().removeAttr('id');
-    $(btModal).attr("id","btModal_"+idPage);
-    for (n=0;n<$(btModal).children().length;n++){
-        var btM = $(btModal).children()[n];
-        if(n===0){
-            $(btM).attr("data-target","#idModal_"+idPage);
-        }else {
-            $(btM).attr("data-pg","page_"+idPage);
-            $(btM).attr("data-pos",idPage);
-        }
-    }
-
-
+    //modal sessao
     var modal = $("#idModal").clone().removeAttr('id');
     $(modal).attr("id","idModal_"+idPage);
-
-    console.log("md "+$($(modal[0]).children().children().children()[1]).html());
-
+    //console.log("md "+$($(modal[0]).children().children().children()[1]).html());
     $($(modal[0]).children().children().children()[1]).append(btSessions);
 
+    //bt Delete
+    var btDelete = $("#btDelete").clone().removeAttr('id');
+    $(btDelete).attr("id","btDelete_"+idPage);
+    for (n=0;n<$(btDelete).children().length;n++) {
+        var btD = $(btDelete).children()[n];
+        $(btD).attr("data-pg", "page_" + idPage);
+    }
+    //modal delete
+    var modalDel = $("#idModalDel").clone().removeAttr('id');
+    $(modalDel).attr("id","idModalDel_"+idPage);
+   // console.log("mddd "+$($(modalDel[0]).children().children().children()[1]).html());
 
+    $($(modalDel[0]).children().children().children()[1]).append(btDelete);
+
+    //adiciona no bloco
     $("#bloco").append(conjunct);
     $("#conjunct_"+idPage+"").append(btModal);
     $("#conjunct_"+idPage+"").append(modal);
+    $("#conjunct_"+idPage+"").append(modalDel);
     $("#conjunct_"+idPage+"").append(page);
     var separator = $('#separator').clone().removeAttr('id');
     $("#conjunct_"+idPage+"").append(separator);
@@ -83,8 +99,21 @@ function delSes(btn) {
     }
 }
 
-//var i = 0;
-//var s = 0;
+
+$(document).ready(function(){
+    var editors = document.getElementsByClassName("edit");
+    console.log($($(editors)).length);
+    for (n = 1;n<$($(editors)).length;n++){
+        if(! ($($(editors)[n]).attr("id") === undefined)){
+            console.log($($(editors)[n]).attr("id"));
+            CKEDITOR.inline( $($(editors)[n]).attr("id"), {
+                extraPlugins: 'hcard,sourcedialog,justify'
+            } );
+        }
+
+    }
+});
+
 function set(btn) {
 
     var idEditor = $("#idEditor").html();
@@ -96,6 +125,10 @@ function set(btn) {
         session = $("#sessao-12").clone().removeAttr('id');
     }else if (dataModel==="6-6"){
         session = $("#sessao-6-6").clone().removeAttr('id');
+    }else if (dataModel==="8-4"){
+        session = $("#sessao-8-4").clone().removeAttr('id');
+    }else if (dataModel==="4-8"){
+        session = $("#sessao-4-8").clone().removeAttr('id');
     }else if (dataModel==="4-4-4"){
         session = $("#sessao-4-4-4").clone().removeAttr('id');
     }else if (dataModel==="12-6-6"){

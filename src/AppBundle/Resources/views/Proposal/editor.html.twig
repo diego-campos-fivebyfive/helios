@@ -13,19 +13,19 @@
         <div class="row">
             <div class="ocultar">
 
-                <span id="idConjunct">0</span>
-                <span id="idEditor">0</span>
+                {#<span id="idConjunct">0</span>
+                <span id="idEditor">0</span>#}
 
                 <div class="col-m-12" id="btModal">
                     <button type="button" class="btn btn-primary margLeft3" data-toggle="modal" data-target="#idModal">Nova Sessão</button>
-                    <button type="button" class="btn btn-danger" onclick="set(this)" data-model="del" data-dismiss="modal">Excluir Página</button>
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#idModalDel">Excluir Página</button>
 
                     <button type="button" class="btn btn-success pr margRight3" title="Descer página" onclick="down(this)"><i class="fa fa-arrow-circle-down"></i></button>
                     <button type="button" class="btn btn-success pr margRight3" title="Subir página" onclick="up(this)"><i class="fa fa-arrow-circle-up"></i></button>
                 </div>
                 <!-- Modal -->
                 <div class="modal fade" id="idModal" role="dialog">
-                    <div class="modal-dialog modal-lg">
+                    <div class="modal-dialog ">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -41,14 +41,36 @@
                     </div>
                 </div>
 
+                <!-- Modal -->
+                <div class="modal fade" id="idModalDel" role="dialog">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Deseja excluir essa página?</h4>
+                            </div>
+                            <div class="modal-body">
 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-m-12 margBottom30" id="btDelete">
+
+                    <button type="button" class="btn btn-default pr margLeft3" data-dismiss="modal">Não</button>
+                    <button type="button" class="btn btn-danger pr margRight3" onclick="set(this)" data-model="del" data-dismiss="modal">Sim</button>
+
+                </div>
 
                 <div class="col-m-12 margBottom10" id="btSessions">
 
-                    <button type="button" class="btn btn-info col-md-2 margLeft3" onclick="set(this)" data-model="12-0" data-dismiss="modal"><i class="fa fa-align-justify l1"></i> </button>
-                    <button type="button" class="btn btn-info col-md-2 margLeft3" onclick="set(this)" data-model="6-6" data-dismiss="modal"><i class="fa fa-align-justify c2"></i><i class="fa fa-align-justify c2"></i></button>
-                    <button type="button" class="btn btn-info col-md-2 margLeft3" onclick="set(this)" data-model="4-4-4" data-dismiss="modal"><i class="fa fa-align-justify c3"></i><i class="fa fa-align-justify c3"></i><i class="fa fa-align-justify c3"></i></button>
-                    <button type="button" class="btn btn-info col-md-2 margLeft3" onclick="set(this)" data-model="12-6-6" data-dismiss="modal">====</button>
+                    <button type="button" class="btn btn-info " onclick="set(this)" data-model="12-0" data-dismiss="modal"><img src="{{ asset('assets/proposal2/images/l1.png') }}"></button>
+                    <button type="button" class="btn btn-info " onclick="set(this)" data-model="6-6" data-dismiss="modal"><img src="{{ asset('assets/proposal2/images/c2.png') }}"></button>
+                    <button type="button" class="btn btn-info " onclick="set(this)" data-model="8-4" data-dismiss="modal"><img src="{{ asset('assets/proposal2/images/c1c2p.png') }}"></button>
+                    <button type="button" class="btn btn-info " onclick="set(this)" data-model="4-8" data-dismiss="modal"><img src="{{ asset('assets/proposal2/images/c1pc2.png') }}"></button>
+                    <button type="button" class="btn btn-info " onclick="set(this)" data-model="4-4-4" data-dismiss="modal"><img src="{{ asset('assets/proposal2/images/c3.png') }}"></button>
+                    <button type="button" class="btn btn-info " onclick="set(this)" data-model="12-6-6" data-dismiss="modal"><img src="{{ asset('assets/proposal2/images/l1c2.png') }}"></button>
 
                 </div>
 
@@ -60,33 +82,395 @@
 
                 <div id="sessao-12" class="col-m-12 semMargem row">
                     <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSes(this)"><center>X</center></a>
-                    <div class="col-m-160mm edit">Conteúdo</div>
+                    <div class="col-m-160mm edit minHeight50">Conteúdo</div>
                 </div>
 
                 <div id="sessao-6-6" class="col-m-12 semMargem row" >
                     <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSes(this)" ><center>X</center></a>
-                    <div class="col-m-80mm edit">Conteúdo</div>
-                    <div class="col-m-80mm edit">Conteúdo</div>
+                    <div class="col-m-80mm edit minHeight50">Conteúdo</div>
+                    <div class="col-m-80mm edit minHeight50">Conteúdo</div>
+                </div>
+
+                <div id="sessao-8-4" class="col-m-12 semMargem row" >
+                    <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSes(this)" ><center>X</center></a>
+                    <div class="col-m-106mm edit minHeight50">Conteúdo</div>
+                    <div class="col-m-53mm edit minHeight50">Conteúdo</div>
+                </div>
+
+                <div id="sessao-4-8" class="col-m-12 semMargem row" >
+                    <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSes(this)" ><center>X</center></a>
+                    <div class="col-m-53mm edit minHeight50">Conteúdo</div>
+                    <div class="col-m-106mm edit minHeight50">Conteúdo</div>
                 </div>
 
                 <div id="sessao-4-4-4" class="col-m-12 semMargem row" >
                     <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSes(this)" ><center>X</center></a>
-                    <div class="col-m-53mm edit">Conteúdo</div>
-                    <div class="col-m-53mm edit">Conteúdo</div>
-                    <div class="col-m-53mm edit">Conteúdo</div>
+                    <div class="col-m-53mm edit minHeight50">Conteúdo</div>
+                    <div class="col-m-53mm edit minHeight50">Conteúdo</div>
+                    <div class="col-m-53mm edit minHeight50">Conteúdo</div>
                 </div>
                 <div id="sessao-12-6-6" class="col-m-12 semMargem row" >
                     <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSes(this)" ><center>X</center></a>
-                    <div class="col-m-160mm edit2">Conteúdo</div>
-                    <div class="col-m-80mm edit2 marginLeft4">Conteúdo</div>
-                    <div class="col-m-80mm edit2">Conteúdo</div>
+                    <div class="col-m-160mm edit minHeight25">Conteúdo</div>
+                    <div class="col-m-80mm edit minHeight25 marginLeft4">Conteúdo</div>
+                    <div class="col-m-80mm edit minHeight25">Conteúdo</div>
                 </div>
             </div>
 
 
             <div class="col-md-10">
+                <div><h3>Editor de Proposta</h3><br/></div>
                 <div id="bloco">
+                    <div class="ocultar">
+                        <span id="idConjunct">2</span>
+                        <span id="idEditor">12</span>
+                    </div>
 
+
+                    <div id="conjunct_0" data-position="0">
+                        <div class="col-m-12" id="btModal_0">
+                            <button type="button" class="btn btn-primary margLeft3" data-toggle="modal"
+                                    data-target="#idModal_0">Nova Sessão
+                            </button>
+                            <button type="button" class="btn btn-danger" data-toggle="modal"
+                                    data-target="#idModalDel_0">Excluir Página
+                            </button>
+
+                            <button type="button" class="btn btn-success pr margRight3" title="Descer página"
+                                    onclick="down(this)" data-pos="0"><i class="fa fa-arrow-circle-down"></i></button>
+                            <button type="button" class="btn btn-success pr margRight3" title="Subir página"
+                                    onclick="up(this)" data-pos="0"><i class="fa fa-arrow-circle-up"></i></button>
+                        </div>
+                        <div class="modal fade" role="dialog" id="idModal_0" style="display: none;">
+                            <div class="modal-dialog ">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">×</button>
+                                        <h4 class="modal-title">Modelos de Sessão</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Escolha uma sessão.</p>
+                                        <div class="col-m-12 margBottom10" id="btSessions_0">
+
+                                            <button type="button" class="btn btn-info " onclick="set(this)"
+                                                    data-model="12-0" data-dismiss="modal" data-pg="page_0"><img
+                                                        src="/assets/proposal2/images/l1.png"></button>
+                                            <button type="button" class="btn btn-info " onclick="set(this)"
+                                                    data-model="6-6" data-dismiss="modal" data-pg="page_0"><img
+                                                        src="/assets/proposal2/images/c2.png"></button>
+                                            <button type="button" class="btn btn-info " onclick="set(this)"
+                                                    data-model="8-4" data-dismiss="modal" data-pg="page_0"><img
+                                                        src="/assets/proposal2/images/c1c2p.png"></button>
+                                            <button type="button" class="btn btn-info " onclick="set(this)"
+                                                    data-model="4-8" data-dismiss="modal" data-pg="page_0"><img
+                                                        src="/assets/proposal2/images/c1pc2.png"></button>
+                                            <button type="button" class="btn btn-info " onclick="set(this)"
+                                                    data-model="4-4-4" data-dismiss="modal" data-pg="page_0"><img
+                                                        src="/assets/proposal2/images/c3.png"></button>
+                                            <button type="button" class="btn btn-info " onclick="set(this)"
+                                                    data-model="12-6-6" data-dismiss="modal" data-pg="page_0"><img
+                                                        src="/assets/proposal2/images/l1c2.png"></button>
+
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" role="dialog" id="idModalDel_0" style="display: none;">
+                            <div class="modal-dialog modal-sm">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">×</button>
+                                        <h4 class="modal-title">Deseja excluir essa página?</h4>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <div class="col-m-12 margBottom30" id="btDelete_0">
+
+                                            <button type="button" class="btn btn-default pr margLeft3"
+                                                    data-dismiss="modal" data-pg="page_0">Não
+                                            </button>
+                                            <button type="button" class="btn btn-danger pr margRight3"
+                                                    onclick="set(this)" data-model="del" data-dismiss="modal"
+                                                    data-pg="page_0">Sim
+                                            </button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="page" id="page_0">
+                            <div class="col-m-12 semMargem row">
+                                <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSes(this)">
+                                    <center>X</center>
+                                </a>
+                                <div class="col-m-160mm edit minHeight50 cke_editable cke_editable_inline cke_contents_ltr cke_show_borders"
+                                     id="editor_3" tabindex="0" spellcheck="false" style="position: relative;"
+                                     role="textbox" aria-label="Editor de Rich Text, editor_3"
+                                     title="Editor de Rich Text, editor_3" aria-describedby="cke_225"
+                                     contenteditable="true"><h2>content1 <br></h2>
+                                    <h3>adjective</h3>
+                                    <ul>
+                                        <li><p>1In a state of peaceful happiness.</p>
+                                            <p><em>‘he seemed more content, less bitter’</em></p></li>
+                                    </ul>
+                                    <ol>
+                                        <li>1.1 Willing to accept something; satisfied.<p><em>‘he had to be content with
+                                                    third place’</em></p>
+                                            <p>with infinitive <em>‘the duke was content to act as Regent’</em></p></li>
+                                    </ol>
+                                    <ul>
+                                        <li>
+                                            <ol>
+                                                <li><br></li>
+                                            </ol>
+                                        </li>
+                                    </ul>
+                                    <h3>verb</h3>
+                                    <p>[WITH OBJECT]</p>
+                                    <ul>
+                                        <li><p>1Satisfy (someone)</p>
+                                            <p><em>‘nothing would content her apart from going off to Barcelona’</em>
+                                            </p></li>
+                                    </ul>
+                                    <ol>
+                                        <li>1.1<strong>content oneself with</strong> Accept as adequate despite wanting
+                                            more or better.<p><em>‘we contented ourselves with a few small
+                                                    purchases’</em></p></li>
+                                    </ol>
+                                    <ul>
+                                        <li>
+                                            <ol>
+                                                <li><br></li>
+                                            </ol>
+                                        </li>
+                                    </ul>
+                                    <h3>noun</h3>
+                                    <ul>
+                                        <li><p>1mass noun A state of satisfaction.</p>
+                                            <p><em>‘the greater part of the century was a time of content’</em></p></li>
+                                    </ul>
+                                    <ul>
+                                        <li><br></li>
+                                        <li><p>2A member of the British House of Lords who votes for a particular
+                                                motion.</p></li>
+                                    </ul>
+                                    <ul>
+                                        <li><br></li>
+                                    </ul>
+                                    <h3><strong>Origin</strong></h3>
+                                    <p>Late Middle English: via Old French from Latin contentus ‘satisfied’, past
+                                        participle of continere (see contain).<br></p>
+                                    <p><br></p></div>
+                            </div>
+                        </div>
+                        <div class="separator"></div>
+                    </div>
+
+                    <div id="conjunct_1" data-position="1">
+                        <div class="col-m-12" id="btModal_1">
+                            <button type="button" class="btn btn-primary margLeft3" data-toggle="modal"
+                                    data-target="#idModal_1">Nova Sessão
+                            </button>
+                            <button type="button" class="btn btn-danger" data-toggle="modal"
+                                    data-target="#idModalDel_1">Excluir Página
+                            </button>
+
+                            <button type="button" class="btn btn-success pr margRight3" title="Descer página"
+                                    onclick="down(this)" data-pos="1"><i class="fa fa-arrow-circle-down"></i></button>
+                            <button type="button" class="btn btn-success pr margRight3" title="Subir página"
+                                    onclick="up(this)" data-pos="1"><i class="fa fa-arrow-circle-up"></i></button>
+                        </div>
+                        <div class="modal fade" role="dialog" id="idModal_1" style="display: none;">
+                            <div class="modal-dialog ">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">×</button>
+                                        <h4 class="modal-title">Modelos de Sessão</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Escolha uma sessão.</p>
+                                        <div class="col-m-12 margBottom10" id="btSessions_1">
+
+                                            <button type="button" class="btn btn-info " onclick="set(this)"
+                                                    data-model="12-0" data-dismiss="modal" data-pg="page_1"><img
+                                                        src="/assets/proposal2/images/l1.png"></button>
+                                            <button type="button" class="btn btn-info " onclick="set(this)"
+                                                    data-model="6-6" data-dismiss="modal" data-pg="page_1"><img
+                                                        src="/assets/proposal2/images/c2.png"></button>
+                                            <button type="button" class="btn btn-info " onclick="set(this)"
+                                                    data-model="8-4" data-dismiss="modal" data-pg="page_1"><img
+                                                        src="/assets/proposal2/images/c1c2p.png"></button>
+                                            <button type="button" class="btn btn-info " onclick="set(this)"
+                                                    data-model="4-8" data-dismiss="modal" data-pg="page_1"><img
+                                                        src="/assets/proposal2/images/c1pc2.png"></button>
+                                            <button type="button" class="btn btn-info " onclick="set(this)"
+                                                    data-model="4-4-4" data-dismiss="modal" data-pg="page_1"><img
+                                                        src="/assets/proposal2/images/c3.png"></button>
+                                            <button type="button" class="btn btn-info " onclick="set(this)"
+                                                    data-model="12-6-6" data-dismiss="modal" data-pg="page_1"><img
+                                                        src="/assets/proposal2/images/l1c2.png"></button>
+
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" role="dialog" id="idModalDel_1">
+                            <div class="modal-dialog modal-sm">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">×</button>
+                                        <h4 class="modal-title">Deseja excluir essa página?</h4>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <div class="col-m-12 margBottom30" id="btDelete_1">
+
+                                            <button type="button" class="btn btn-default pr margLeft3"
+                                                    data-dismiss="modal" data-pg="page_1">Não
+                                            </button>
+                                            <button type="button" class="btn btn-danger pr margRight3"
+                                                    onclick="set(this)" data-model="del" data-dismiss="modal"
+                                                    data-pg="page_1">Sim
+                                            </button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="page" id="page_1">
+                            <div class="col-m-12 semMargem row">
+                                <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSes(this)">
+                                    <center>X</center>
+                                </a>
+                                <div class="col-m-80mm edit minHeight50 cke_editable cke_editable_inline cke_contents_ltr cke_show_borders"
+                                     id="editor_4" tabindex="0" spellcheck="false" style="position: relative;"
+                                     role="textbox" aria-label="Editor de Rich Text, editor_4"
+                                     title="Editor de Rich Text, editor_4" aria-describedby="cke_283"
+                                     contenteditable="true"><p>Gráfico:<br></p>
+                                    <p>&nbsp;<img
+                                                data-cke-saved-src="http://brasilescola.uol.com.br/upload/conteudo/images/graficl.JPG"
+                                                src="http://brasilescola.uol.com.br/upload/conteudo/images/graficl.JPG"
+                                                alt="Gráfico" width="267" height="178"> <br></p></div>
+                                <div class="col-m-80mm edit minHeight50 cke_editable cke_editable_inline cke_contents_ltr cke_show_borders"
+                                     id="editor_5" tabindex="0" spellcheck="false" style="position: relative;"
+                                     role="textbox" aria-label="Editor de Rich Text, editor_5"
+                                     title="Editor de Rich Text, editor_5" aria-describedby="cke_337"
+                                     contenteditable="true"><p>Tabela:<br></p>
+                                    <table border="1">
+                                        <tbody>
+                                        <tr>
+                                            <td>Tabela de Exemplo</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Variavel 1</td>
+                                            <td>Valor 1</td>
+                                            <td>Valor 2</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Variavel 2</td>
+                                            <td>Valor 3</td>
+                                            <td>Valor 4<br></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-m-12 semMargem row">
+                                <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSes(this)">
+                                    <center>X</center>
+                                </a>
+                                <div class="col-m-160mm edit minHeight25 cke_editable cke_editable_inline cke_contents_ltr cke_show_borders"
+                                     id="editor_6" tabindex="0" spellcheck="false" style="position: relative;"
+                                     role="textbox" aria-label="Editor de Rich Text, editor_6"
+                                     title="Editor de Rich Text, editor_6" aria-describedby="cke_396"
+                                     contenteditable="true"><p>Nome: <span tabindex="-1" data-cke-widget-wrapper="1"
+                                                                           data-cke-filter="off"
+                                                                           class="cke_widget_wrapper cke_widget_inline cke_widget_hcard cke_widget_wrapper_h-card"
+                                                                           data-cke-display-name="hcard"
+                                                                           data-cke-widget-id="0" role="region"
+                                                                           aria-label="hcard widget"
+                                                                           contenteditable="false"><span
+                                                    class="h-card cke_widget_element"
+                                                    data-cke-widget-data="%7B%22classes%22%3A%7B%22h-card%22%3A1%7D%7D"
+                                                    data-cke-widget-upcasted="1" data-cke-widget-keep-attr="0"
+                                                    data-widget="hcard"> <!--{cke_protected}{C}%3C!%2D%2Dcontent%2D%2D%3E--> <a
+                                                        data-cke-saved-href="mailto:alice@example.com"
+                                                        href="mailto:alice@example.com"
+                                                        class="client">Uzumaki Naruto</a>
+                                                <!--{cke_protected}{C}%3C!%2D%2D%3Cspan%20class%3D%22p-tel%22%3E%2B20%204345%20234%20235%3C%2Fspan%3E%2D%2D%3E--> </span><span
+                                                    class="cke_reset cke_widget_drag_handler_container"
+                                                    style="background:rgba(220,220,220,0.5);background-image:url(http://cdn.ckeditor.com/4.7.0/standard-all/plugins/widget/images/handle.png)"><img
+                                                        class="cke_reset cke_widget_drag_handler"
+                                                        data-cke-widget-drag-handler="1"
+                                                        src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw=="
+                                                        title="Click e arraste para mover" role="presentation"
+                                                        draggable="true" width="15" height="15"></span></span> <br></p>
+                                </div>
+                                <div class="col-m-80mm edit minHeight25 marginLeft4 cke_editable cke_editable_inline cke_contents_ltr cke_show_borders"
+                                     id="editor_7" tabindex="0" spellcheck="false" style="position: relative;"
+                                     role="textbox" aria-label="Editor de Rich Text, editor_7"
+                                     title="Editor de Rich Text, editor_7" aria-describedby="cke_450"
+                                     contenteditable="true"><p>Potencia: <span tabindex="-1" data-cke-widget-wrapper="1"
+                                                                               data-cke-filter="off"
+                                                                               class="cke_widget_wrapper cke_widget_inline cke_widget_hcard cke_widget_wrapper_h-card"
+                                                                               data-cke-display-name="hcard"
+                                                                               data-cke-widget-id="0" role="region"
+                                                                               aria-label="hcard widget"
+                                                                               contenteditable="false"><span
+                                                    class="h-card cke_widget_element"
+                                                    data-cke-widget-data="%7B%22classes%22%3A%7B%22h-card%22%3A1%7D%7D"
+                                                    data-cke-widget-upcasted="1" data-cke-widget-keep-attr="0"
+                                                    data-widget="hcard"> <!--{cke_protected}{C}%3C!%2D%2Dcontent%2D%2D%3E--> <span
+                                                        class="power">780kw</span> </span><span
+                                                    class="cke_reset cke_widget_drag_handler_container"
+                                                    style="background:rgba(220,220,220,0.5);background-image:url(http://cdn.ckeditor.com/4.7.0/standard-all/plugins/widget/images/handle.png)"><img
+                                                        class="cke_reset cke_widget_drag_handler"
+                                                        data-cke-widget-drag-handler="1"
+                                                        src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw=="
+                                                        title="Click e arraste para mover" role="presentation"
+                                                        draggable="true" width="15" height="15"></span></span> <br></p>
+                                </div>
+                                <div class="col-m-80mm edit minHeight25 cke_editable cke_editable_inline cke_contents_ltr cke_show_borders"
+                                     id="editor_8" tabindex="0" spellcheck="false" style="position: relative;"
+                                     role="textbox" aria-label="Editor de Rich Text, editor_8"
+                                     title="Editor de Rich Text, editor_8" aria-describedby="cke_504"
+                                     contenteditable="true"><p>Conteúdo</p></div>
+                            </div>
+                            <div class="col-m-12 semMargem row">
+                                <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSes(this)">
+                                    <center>X</center>
+                                </a>
+                                <div class="col-m-53mm edit minHeight50 cke_editable cke_editable_inline cke_contents_ltr cke_show_borders"
+                                     id="editor_9" tabindex="0" spellcheck="false" style="position: relative;"
+                                     role="textbox" aria-label="Editor de Rich Text, editor_9"
+                                     title="Editor de Rich Text, editor_9" aria-describedby="cke_565"
+                                     contenteditable="true"><p>Conteúdo</p></div>
+                                <div class="col-m-53mm edit minHeight50 cke_editable cke_editable_inline cke_contents_ltr cke_show_borders"
+                                     id="editor_10" tabindex="0" spellcheck="false" style="position: relative;"
+                                     role="textbox" aria-label="Editor de Rich Text, editor_10"
+                                     title="Editor de Rich Text, editor_10" aria-describedby="cke_619"
+                                     contenteditable="true"><p>Conteúdo</p></div>
+                                <div class="col-m-53mm edit minHeight50 cke_editable cke_editable_inline cke_contents_ltr cke_show_borders"
+                                     id="editor_11" tabindex="0" spellcheck="false" style="position: relative;"
+                                     role="textbox" aria-label="Editor de Rich Text, editor_11"
+                                     title="Editor de Rich Text, editor_11" aria-describedby="cke_673"
+                                     contenteditable="true"><p>Conteúdo</p></div>
+                            </div>
+                        </div>
+                        <div class="separator"></div>
+                    </div>
                 </div>
 
                 <button class="btn btn-primary col-md-2 margBottom" onclick="newPage()">Nova Página</button>
