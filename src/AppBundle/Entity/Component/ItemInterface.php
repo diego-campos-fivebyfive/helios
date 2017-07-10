@@ -56,6 +56,16 @@ interface ItemInterface
     public function getCostPrice();
 
     /**
+     * @return bool
+     */
+    public function isService();
+
+    /**
+     * @return bool
+     */
+    public function isProduct();
+
+    /**
      * @return array
      */
     public static function getTypes();

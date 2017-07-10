@@ -192,6 +192,17 @@ interface ProjectInterface
     public function getPower();
 
     /**
+     * @param $taxPercent
+     * @return ProjectInterface
+     */
+    public function setTaxPercent($taxPercent);
+
+    /**
+     * @return float
+     */
+    public function getTaxPercent();
+
+    /**
      * @return float
      */
     public function getCostPriceModules();
@@ -215,6 +226,26 @@ interface ProjectInterface
      * @return float
      */
     public function getCostPriceTotal();
+
+    /**
+     * @return float
+     */
+    public function getSalePriceModules();
+
+    /**
+     * @return float
+     */
+    public function getSalePriceInverters();
+
+    /**
+     * @return float
+     */
+    public function getSalePriceEquipments();
+
+    /**
+     * @return float
+     */
+    public function getSalePriceServices();
 
     /**
      * @return \DateTime
@@ -302,7 +333,32 @@ interface ProjectInterface
     /**
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
+    public function getProjectItemsProducts();
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getProjectItemsServices();
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
     public function getAreas();
+
+    /**
+     * @return float
+     */
+    public function getCostPriceExtraServices();
+
+    /**
+     * @return float
+     */
+    public function getCostPriceExtraProducts();
+
+    /**
+     * @return float
+     */
+    public function getCostPriceExtra();
 
     /**
      * @return array

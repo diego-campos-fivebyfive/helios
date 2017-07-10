@@ -41,6 +41,17 @@ interface ProjectElementInterface
     public function getQuantity();
 
     /**
+     * @param object $markup
+     * @return ProjectElementInterface
+     */
+    public function setMarkup($markup);
+
+    /**
+     * @return object
+     */
+    public function getMarkup();
+
+    /**
      * @param $unitCostPrice
      * @return $this
      */

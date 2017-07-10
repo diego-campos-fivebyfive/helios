@@ -151,6 +151,17 @@ interface InverterInterface
     public function getImage();
 
     /**
+     * @param $currentPrice
+     * @return InverterInterface
+     */
+    public function setCurrentPrice($currentPrice);
+
+    /**
+     * @return float
+     */
+    public function getCurrentPrice();
+
+    /**
      * @return mixed
      */
     public function getCreatedAt();

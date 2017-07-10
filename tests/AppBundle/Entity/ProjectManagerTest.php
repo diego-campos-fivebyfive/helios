@@ -18,46 +18,6 @@ class ProjectManagerTest extends AppTestCase
 
     public function testProjectAssociations()
     {
-        /** @var ProjectArea $projectArea */
-        $projectArea = $this->getFixture('project-area');
 
-        $project = $projectArea->getProjectModule()->getProject();
-
-        $items = $this->createItems();
-
-        foreach ($items as $item) {
-            $projectItem = new ProjectItem();
-            $projectItem
-                ->setItem($item)
-                ->setProject($project)
-            ;
-        }
-
-        $this->assertCount(count($items), $project->getProjectItems()->toArray());
-    }
-
-    private function createItems()
-    {
-        $items = [];
-        $manager = $this->getContainer()->get('item_manager');
-        for($i = 0; $i < 10; $i++){
-
-            $data = [
-                'type' => $i >= 5 ? Item::TYPE_PRODUCT : Item::TYPE_SERVICE,
-                'description' => self::randomString(50),
-                'pricingBy' => Item::PRICING_FIXED,
-                'costPrice' => self::randomFloat() * 100
-            ];
-
-            $item = $manager->create();
-
-            self::fluentSettersTest($item, $data);
-
-            $manager->save($item, ($i == 9));
-
-            $items[] = $item;
-        }
-
-        return $items;
     }
 }

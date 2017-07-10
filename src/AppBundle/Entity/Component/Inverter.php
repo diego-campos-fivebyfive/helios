@@ -123,6 +123,13 @@ class Inverter implements InverterInterface
     protected $image;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    private $currentPrice;
+
+    /**
      * @var MakerInterface
      *
      * @ORM\ManyToOne(targetEntity="Maker", inversedBy="inverters")
@@ -357,6 +364,24 @@ class Inverter implements InverterInterface
     public function getImage()
     {
         return $this->image;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setCurrentPrice($currentPrice)
+    {
+        $this->currentPrice = $currentPrice;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCurrentPrice()
+    {
+        return (float) $this->currentPrice;
     }
 
     /**

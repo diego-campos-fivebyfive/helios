@@ -39,6 +39,13 @@ trait ProjectElementTrait
     /**
      * @var float
      *
+     * @ORM\Column(type="object", nullable=true)
+     */
+    private $markup;
+
+    /**
+     * @var float
+     *
      * @ORM\Column(name="unit_cost_price", type="decimal", precision=10, scale=2)
      */
     private $unitCostPrice;
@@ -46,7 +53,7 @@ trait ProjectElementTrait
     /**
      * @var float
      *
-     * @ORM\Column(name="unit_sale_price", type="decimal", precision=10, scale=2)
+     * @ORM\Column(name="unit_sale_price", type="decimal", precision=10, scale=2, nullable=true)
      */
     private $unitSalePrice;
 
@@ -74,6 +81,24 @@ trait ProjectElementTrait
     public function getQuantity()
     {
         return $this->quantity;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setMarkup($markup)
+    {
+        $this->markup = $markup;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMarkup()
+    {
+        return $this->markup;
     }
 
     /**

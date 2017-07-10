@@ -12,21 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ProjectItem implements ProjectItemInterface
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="quantity", type="integer")
-     */
-    private $quantity;
+    use ProjectElementTrait;
 
     /**
      * @var ItemInterface
@@ -79,9 +65,26 @@ class ProjectItem implements ProjectItemInterface
     /**
      * @inheritDoc
      */
+    public function isService()
+    {
+        return $this->item->isService();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isProduct()
+    {
+        return $this->item->isProduct();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setItem(ItemInterface $item)
     {
         $this->item = $item;
+        $this->unitCostPrice = $item->getCostPrice();
 
         return $this;
     }
@@ -113,4 +116,20 @@ class ProjectItem implements ProjectItemInterface
     {
         return $this->project;
     }
+
+    /*/**
+     * @inheritDoc
+     *
+    public function getUnitCostPrice()
+    {
+        return $this->item->getCostPrice();
+    }
+
+    /**
+     * @inheritDoc
+     *
+    public function getTotalCostPrice()
+    {
+        return $this->quantity * $this->getUnitCostPrice();
+    }*/
 }
