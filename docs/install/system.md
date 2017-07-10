@@ -90,7 +90,7 @@ Com isso o sistema estará disponível na url: `sicessolar.dev:8000`
 
 
 Caso haja algum problema com a instalação consulte a
-[Sessão de resolução de problemas](system-install-problems.md)
+[Sessão de resolução de problemas](system-install-problems.md).
 
 
 [Voltar](../getting-started.md)
