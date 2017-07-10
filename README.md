@@ -15,7 +15,7 @@ Sistema de suporte para empresas do setor de energia solar fotovoltaíca.
 
   - [Comandos Frontend](docs/frontend.md)
 
-  - [Tarefas](docs/tasks/tasks.md)
+  - [Tarefas](docs/tasks.md)
 
   - [Workflow](docs/workflow.md)
 
