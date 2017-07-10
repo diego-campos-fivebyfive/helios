@@ -12,17 +12,15 @@ $ sudo apt-get update
 2. Instalação das dependências
 ------------------------------
 
-Você pode instalar as dependências do sistema individualmente ou utilizando o comando `ces-install-dependencies`:
-
-#### Instalando todas as dependências com o comando ces-install-dependencies:
-
+Você pode instalar as dependências do sistema individualmente ou utilizando o comando?
 ```
 $ ces-install-dependencies
 ```
 
 ou
 
-#### [Instalando dependências "uma a uma"](dependencies-list.md)
+Instala-las individualmente:
+  - [Instalando dependências individualmente](dependencies-list.md)
 
 
 3. Configurando o PHP (Opcional)
