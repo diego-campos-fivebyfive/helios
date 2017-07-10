@@ -41,6 +41,9 @@ body, .separator{
 .margBottom10{
     margin-bottom: 10px;
 }
+.margBottom30{
+    margin-bottom: 30px;
+}
 .margLeft3{
     margin-left: 3px;
 }
@@ -54,14 +57,17 @@ body, .separator{
     margin-left: 4mm !important;
 }
 .edit{
-    min-height: 50mm !important;
     height: auto;
     margin: 0 !important;
 }
-.edit2{
+.minHeight25{
     min-height: 25mm !important;
-    height: auto;
 }
+.minHeight50{
+    min-height: 50mm !important;
+    /*margin: 0 !important;*/
+}
+
 .edit:focus, .edit2:focus{
     border: 1px #f7f7f7 solid;
 }
@@ -104,6 +110,12 @@ li{
     min-height: 1px;
     float: left;
     width: 80mm;
+}
+.col-m-106mm {
+    position: relative;
+    min-height: 1px;
+    float: left;
+    width: 106.666666667mm;
 }
 .col-m-53mm {
     position: relative;
