@@ -1,0 +1,58 @@
+{% extends view('layout') %}
+
+{% block body %}
+{#    {% set extras = pagination.items %}#}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-2 pull-right text-right">
+            <a href="{{ path('extras_create') }}" class="btn btn-md btn-primary">
+                <i class="fa fa-plus"></i> Novo Extra
+            </a>
+        </div>
+    </div>
+
+    <div class="row" id="real-content">
+        <div class="col-md-12">
+            <div class="ibox-content">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Descrição</th>
+                            <th>Tipo</th>
+                            <th>Preço por</th>
+                            <th>Preço</th>
+                            <th>Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tbody>
+                        {% for extra in extras %}
+                            <tr>
+                                <td>{{ extra.description }}</td>
+                                <td>{{ extra.type }}</td>
+                                <td>{{ extra.pricingBy }}</td>
+                                <td>{{ extra.costPrice }}</td>
+                                <td>
+                                    <a href="{{ path('extras_edit', { 'id': extra.id }) }}}">
+                                        <button class="btn btn-warning btn-xd">{{'Edit'|trans}}</button>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+{#                        <tfoot>
+                        <tr>
+                            <td colspan="5">
+                                {{ knp_pagination_render(pagination) }}
+                            </td>
+                        </tr>
+                        </tfoot>#}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -44,11 +44,6 @@
                                 <a href="{{ path('structure_update', { id: structure.id }) }}">
                                     <button class="btn btn-warning btn-xd">{{'Edit'|trans}}</button>
                                 </a>
-                                <a title="{{ 'Delete'|trans }}"
-                                   data-delete="{{ path('structure_delete',{id:structure.id}) }}">
-                                    <button class="btn btn-danger btn-xd">{{'Delete'|trans}}</button>
-                                </a>
-
                             </td>
                         </tr>
                     {% endfor %}
