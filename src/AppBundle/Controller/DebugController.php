@@ -36,6 +36,9 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Vindi\Exceptions\RequestException;
+use AppBundle\Entity\Pricing\Memorial;
+use AppBundle\Entity\Pricing\Level;
+use AppBundle\Entity\Pricing\Range;
 
 /**
  * @Route("debug")
@@ -56,6 +59,29 @@ class DebugController extends AbstractController
         $clientManager->updateClient($client);
 
         dump($client); die;
+    }
+
+    /**
+     * @Route("/teste", name="debug_teste")
+     */
+    public function testeAction()
+    {
+        $level = $this->manager('level');
+        $range = $this->manager('range');
+
+        $manager = $this->manager('memorial');
+
+        $memorial = $manager->create();
+        $memorial->setName('módulo ABX14');
+        $memorial->setVersion(4.2);
+        $memorial->setStartAt(new \DateTime());
+        $memorial->setEndAt(new \DateTime());
+        $memorial->setStatus(1);
+
+        $manager->save($memorial);
+
+        dump($memorial); die;
+
     }
 
     /**

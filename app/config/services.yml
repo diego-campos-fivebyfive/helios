@@ -42,6 +42,14 @@ services:
         class: AppBundle\Manager\ExtraManager
         arguments: ['AppBundle\Entity\Component\Extra', '@doctrine']
 
+    level_manager:
+        class: AppBundle\Manager\Pricing\LevelManager
+        arguments: ['AppBundle\Entity\Pricing\Level', '@doctrine']
+
+    memorial_manager:
+        class: AppBundle\Manager\Pricing\MemorialManager
+        arguments: ['AppBundle\Entity\Pricing\Memorial', '@doctrine']
+
     module_manager:
         class: AppBundle\Manager\ModuleManager
         arguments: ['AppBundle\Entity\Component\Module', '@doctrine']
@@ -69,6 +77,10 @@ services:
     project_module_manager:
         class: AppBundle\Manager\ProjectModuleManager
         arguments: ['AppBundle\Entity\Component\ProjectModule', '@doctrine']
+
+    range_manager:
+        class: AppBundle\Manager\Pricing\RangeManager
+        arguments: ['AppBundle\Entity\Pricing\Range', '@doctrine']
 
     structure_manager:
         class: AppBundle\Manager\StructureManager
