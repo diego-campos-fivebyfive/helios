@@ -1,16 +1,17 @@
 <?php
 
-namespace Tests\AppBundle\Entity\DataFixtures;
+namespace Tests\AppBundle\Entity\DataFixtures\Component;
 
 use AppBundle\Entity\Component\Inverter;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Tests\AppBundle\Entity\DataFixtures\DataFixtureHelper;
 use Tests\AppBundle\Helpers\ObjectHelperTest;
 
-class LoadInverterData extends AbstractFixture implements OrderedFixtureInterface
+class InverterData extends AbstractFixture implements OrderedFixtureInterface
 {
-    use ObjectHelperTest;
+    use DataFixtureHelper;
 
     /**
      * @inheritDoc
@@ -34,12 +35,7 @@ class LoadInverterData extends AbstractFixture implements OrderedFixtureInterfac
 
         $inverter = new Inverter();
 
-        self::fluentSetters($inverter, $data);
-
-        $manager->persist($inverter);
-        $manager->flush();
-
-        $this->addReference('inverter', $inverter);
+        $this->fillAndSave($inverter, $data, $manager, 'inverter');
     }
 
     /**

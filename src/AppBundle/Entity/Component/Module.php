@@ -165,6 +165,13 @@ class Module implements ModuleInterface
     protected $image;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    private $currentPrice;
+
+    /**
      * @var MakerInterface
      *
      * @ORM\ManyToOne(targetEntity="Maker", inversedBy="inverters")
@@ -581,6 +588,24 @@ class Module implements ModuleInterface
     public function getImage()
     {
         return $this->image;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setCurrentPrice($currentPrice)
+    {
+        $this->currentPrice = $currentPrice;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCurrentPrice()
+    {
+        return (float) $this->currentPrice;
     }
 
     /**

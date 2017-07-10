@@ -105,6 +105,13 @@ class Project implements ProjectInterface
     private $longitude;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(type="float")
+     */
+    private $taxPercent;
+
+    /**
      * @var array
      *
      * @ORM\Column(name="metadata", type="json", nullable=true)
@@ -124,6 +131,13 @@ class Project implements ProjectInterface
      * @ORM\OneToMany(targetEntity="ProjectInverter", mappedBy="project", cascade={"persist"})
      */
     private $projectInverters;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="ProjectItem", mappedBy="project", indexBy="project", cascade={"persist"})
+     */
+    private $projectItems;
 
     /**
      * @var Customer|MemberInterface
@@ -146,10 +160,12 @@ class Project implements ProjectInterface
     {
         $this->invoicePriceStrategy  = self::PRICE_STRATEGY_ABSOLUTE;
         $this->deliveryPriceStrategy = self::PRICE_STRATEGY_ABSOLUTE;
-        $this->invoiceBasePrice      = 0;
-        $this->deliveryBasePrice     = 0;
         $this->projectModules        = new ArrayCollection();
         $this->projectInverters      = new ArrayCollection();
+        $this->projectItems          = new ArrayCollection();
+        $this->invoiceBasePrice      = 0;
+        $this->deliveryBasePrice     = 0;
+        $this->taxPercent            = 0;
         $this->metadata              = [];
     }
 
@@ -332,6 +348,125 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
+    public function setTaxPercent($taxPercent)
+    {
+        $this->taxPercent = $taxPercent;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTaxPercent()
+    {
+        return $this->taxPercent;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCostPriceModules()
+    {
+        $price = 0;
+        foreach ($this->projectModules as $projectModule){
+            $price += $projectModule->getTotalCostPrice();
+        }
+
+        return $price;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCostPriceInverters()
+    {
+        $price = 0;
+        foreach ($this->projectInverters as $projectInverter){
+            $price += $projectInverter->getTotalCostPrice();
+        }
+
+        return $price;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCostPriceComponents()
+    {
+        return $this->getCostPriceModules() + $this->getCostPriceInverters();
+    }
+
+    /**
+     * @inheritDoc
+     * @todo fixed value!
+     */
+    public function getDeliveryPrice()
+    {
+        return 1000;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSalePriceModules()
+    {
+        $price = 0;
+        /** @var ProjectElementInterface $projectModule */
+        foreach ($this->projectModules as $projectModule){
+            $price += $projectModule->getTotalSalePrice();
+        }
+
+        return $price;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSalePriceInverters()
+    {
+        $price = 0;
+        /** @var ProjectElementInterface $projectInverter */
+        foreach ($this->projectInverters as $projectInverter){
+            $price += $projectInverter->getTotalSalePrice();
+        }
+
+        return $price;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSalePriceEquipments()
+    {
+        return $this->getSalePriceInverters() + $this->getSalePriceModules();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSalePriceServices()
+    {
+        $price = 0;
+        /** @var ProjectItemInterface $projectItemService */
+        foreach ($this->getProjectItemsServices() as $projectItemService){
+            $price += $projectItemService->getTotalSalePrice();
+        }
+
+        return $price;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCostPriceTotal()
+    {
+        return $this->getCostPriceComponents() + $this->getDeliveryPrice();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getCostPrice()
     {
         // TODO: Implement getCostPrice() method.
@@ -342,7 +477,7 @@ class Project implements ProjectInterface
      */
     public function getSalePrice()
     {
-        // TODO: Implement getSalePrice() method.
+        return $this->getSalePriceEquipments() + $this->getSalePriceServices();
     }
 
     /**
@@ -588,6 +723,96 @@ class Project implements ProjectInterface
     public function getProjectInverters()
     {
         return $this->projectInverters;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function addProjectItem(ProjectItemInterface $projectItem)
+    {
+        if(!$this->projectItems->contains($projectItem)){
+
+            $this->projectItems->add($projectItem);
+
+            if(!$projectItem->getProject())
+                $projectItem->setProject($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeProjectItem(ProjectItemInterface $projectItem)
+    {
+        if($this->projectItems->contains($projectItem)){
+            $this->projectItems->removeElement($projectItem);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getProjectItems()
+    {
+        return $this->projectItems;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getProjectItemsProducts()
+    {
+        return $this->projectItems->filter(function(ProjectItemInterface $projectItem){
+            return $projectItem->isProduct();
+        });
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getProjectItemsServices()
+    {
+        return $this->projectItems->filter(function(ProjectItemInterface $projectItem){
+            return $projectItem->isService();
+        });
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCostPriceExtraServices()
+    {
+        $price = 0;
+        foreach ($this->getProjectItemsServices() as $projectExtraService){
+            $price += $projectExtraService->getTotalCostPrice();
+        }
+
+        return $price;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCostPriceExtraProducts()
+    {
+        $price = 0;
+        foreach ($this->getProjectItemsProducts() as $projectExtraProduct){
+            $price += $projectExtraProduct->getTotalCostPrice();
+        }
+
+        return $price;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCostPriceExtra()
+    {
+        return $this->getCostPriceExtraServices() + $this->getCostPriceExtraProducts();
     }
 
     /**

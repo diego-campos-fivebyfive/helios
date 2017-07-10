@@ -470,7 +470,7 @@ class Customer extends AbstractCustomer
     /**
      * @inheritDoc
      */
-    public function setAccount(BusinessInterface $account)
+    public function setAccount(AccountInterface $account)
     {
         if (!$account->isAccount() || !$this->isMember())
             $this->unsupportedContextException();

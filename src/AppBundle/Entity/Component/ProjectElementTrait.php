@@ -39,6 +39,13 @@ trait ProjectElementTrait
     /**
      * @var float
      *
+     * @ORM\Column(type="object", nullable=true)
+     */
+    private $markup;
+
+    /**
+     * @var float
+     *
      * @ORM\Column(name="unit_cost_price", type="decimal", precision=10, scale=2)
      */
     private $unitCostPrice;
@@ -46,7 +53,7 @@ trait ProjectElementTrait
     /**
      * @var float
      *
-     * @ORM\Column(name="unit_sale_price", type="decimal", precision=10, scale=2)
+     * @ORM\Column(name="unit_sale_price", type="decimal", precision=10, scale=2, nullable=true)
      */
     private $unitSalePrice;
 
@@ -79,6 +86,24 @@ trait ProjectElementTrait
     /**
      * @inheritDoc
      */
+    public function setMarkup($markup)
+    {
+        $this->markup = $markup;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMarkup()
+    {
+        return $this->markup;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setUnitCostPrice($unitCostPrice)
     {
         $this->unitCostPrice = $unitCostPrice;
@@ -91,7 +116,7 @@ trait ProjectElementTrait
      */
     public function getUnitCostPrice()
     {
-        return $this->unitCostPrice;
+        return (float) $this->unitCostPrice;
     }
 
     /**
@@ -109,7 +134,7 @@ trait ProjectElementTrait
      */
     public function getUnitSalePrice()
     {
-        return $this->unitSalePrice;
+        return (float) $this->unitSalePrice;
     }
 
     /**

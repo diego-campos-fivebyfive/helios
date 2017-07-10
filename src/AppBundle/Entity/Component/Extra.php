@@ -57,6 +57,15 @@ class Extra implements ExtraInterface
     /**
      * @inheritDoc
      */
+    public function __construct()
+    {
+        $this->type = self::TYPE_PRODUCT;
+        $this->pricingBy = self::PRICING_FIXED;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getId()
     {
         return $this->id;
@@ -132,6 +141,22 @@ class Extra implements ExtraInterface
     public function getCostPrice()
     {
         return $this->costPrice;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isService()
+    {
+        return self::TYPE_SERVICE == $this->type;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isProduct()
+    {
+        return self::TYPE_PRODUCT == $this->type;
     }
 
     /**

@@ -3,14 +3,7 @@
 namespace Tests\AppBundle;
 
 use Liip\FunctionalTestBundle\Test\WebTestCase;
-use Tests\AppBundle\Entity\DataFixtures\LoadCustomerData;
-use Tests\AppBundle\Entity\DataFixtures\LoadInverterData;
-use Tests\AppBundle\Entity\DataFixtures\LoadMemberData;
-use Tests\AppBundle\Entity\DataFixtures\LoadModuleData;
-use Tests\AppBundle\Entity\DataFixtures\LoadProjectAreaData;
-use Tests\AppBundle\Entity\DataFixtures\LoadProjectData;
-use Tests\AppBundle\Entity\DataFixtures\LoadProjectInverterData;
-use Tests\AppBundle\Entity\DataFixtures\LoadProjectModuleData;
+use Tests\AppBundle\Entity\DataFixtures as Fixtures;
 
 /**
  * Class BaseTestCase
@@ -26,15 +19,18 @@ class AppTestCase extends WebTestCase
     {
         $this->fixtures = $this->loadFixtures([
             // Actors
-            LoadMemberData::class,
-            LoadCustomerData::class,
+            Fixtures\LoadMemberData::class,
+            Fixtures\LoadCustomerData::class,
+
             // Components
-            LoadModuleData::class,
-            LoadInverterData::class,
-            LoadProjectData::class,
-            LoadProjectModuleData::class,
-            LoadProjectInverterData::class,
-            LoadProjectAreaData::class
+            Fixtures\Component\ExtraProductData::class,
+            Fixtures\Component\ExtraServiceData::class,
+            Fixtures\Component\ModuleData::class,
+            Fixtures\Component\InverterData::class,
+            Fixtures\LoadProjectData::class,
+            Fixtures\LoadProjectModuleData::class,
+            Fixtures\LoadProjectInverterData::class,
+            Fixtures\LoadProjectAreaData::class
         ])->getReferenceRepository();
     }
 

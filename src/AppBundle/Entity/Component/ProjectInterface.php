@@ -192,6 +192,62 @@ interface ProjectInterface
     public function getPower();
 
     /**
+     * @param $taxPercent
+     * @return ProjectInterface
+     */
+    public function setTaxPercent($taxPercent);
+
+    /**
+     * @return float
+     */
+    public function getTaxPercent();
+
+    /**
+     * @return float
+     */
+    public function getCostPriceModules();
+
+    /**
+     * @return float
+     */
+    public function getCostPriceInverters();
+
+    /**
+     * @return float
+     */
+    public function getCostPriceComponents();
+
+    /**
+     * @return float
+     */
+    public function getDeliveryPrice();
+
+    /**
+     * @return float
+     */
+    public function getCostPriceTotal();
+
+    /**
+     * @return float
+     */
+    public function getSalePriceModules();
+
+    /**
+     * @return float
+     */
+    public function getSalePriceInverters();
+
+    /**
+     * @return float
+     */
+    public function getSalePriceEquipments();
+
+    /**
+     * @return float
+     */
+    public function getSalePriceServices();
+
+    /**
      * @return \DateTime
      */
     public function getCreatedAt();
@@ -258,9 +314,51 @@ interface ProjectInterface
     public function getProjectInverters();
 
     /**
+     * @param ProjectItemInterface $projectItem
+     * @return ProjectInterface
+     */
+    public function addProjectItem(ProjectItemInterface $projectItem);
+
+    /**
+     * @param ProjectItemInterface $projectItem
+     * @return ProjectInterface
+     */
+    public function removeProjectItem(ProjectItemInterface $projectItem);
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getProjectItems();
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getProjectItemsProducts();
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getProjectItemsServices();
+
+    /**
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getAreas();
+
+    /**
+     * @return float
+     */
+    public function getCostPriceExtraServices();
+
+    /**
+     * @return float
+     */
+    public function getCostPriceExtraProducts();
+
+    /**
+     * @return float
+     */
+    public function getCostPriceExtra();
 
     /**
      * @return array

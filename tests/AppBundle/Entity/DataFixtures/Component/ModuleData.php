@@ -1,16 +1,16 @@
 <?php
 
-namespace Tests\AppBundle\Entity\DataFixtures;
+namespace Tests\AppBundle\Entity\DataFixtures\Component;
 
 use AppBundle\Entity\Component\Module;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Tests\AppBundle\Helpers\ObjectHelperTest;
+use Tests\AppBundle\Entity\DataFixtures\DataFixtureHelper;
 
-class LoadModuleData extends AbstractFixture implements OrderedFixtureInterface
+class ModuleData extends AbstractFixture implements OrderedFixtureInterface
 {
-    use ObjectHelperTest;
+    use DataFixtureHelper;
 
     /**
      * @inheritDoc
@@ -40,12 +40,7 @@ class LoadModuleData extends AbstractFixture implements OrderedFixtureInterface
 
         $module = new Module();
 
-        self::fluentSetters($module, $data);
-
-        $manager->persist($module);
-        $manager->flush();
-
-        $this->addReference('module', $module);
+        $this->fillAndSave($module, $data, $manager, 'module');
     }
 
     /**

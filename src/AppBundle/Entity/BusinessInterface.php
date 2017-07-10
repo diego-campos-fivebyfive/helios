@@ -3,17 +3,15 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Kolina\CustomerBundle\Entity\CustomerInterface;
-//use Sonata\ClassificationBundle\Model\CategoryInterface;
+use Kolina\CustomerBundle\Entity\CustomerInterface as BaseCustomerInterface;
 use Sonata\ClassificationBundle\Model\ContextInterface;
-//use Sonata\MediaBundle\Model\MediaInterface;
 
 /**
  * CustomerInterface
  *
  * @author Claudinei Machado <claudinei@kolinalabs.com>
  */
-interface BusinessInterface extends CustomerInterface
+interface BusinessInterface extends BaseCustomerInterface
 {
     /**
      * ACCOUNT is the first link to the platform
@@ -212,12 +210,12 @@ interface BusinessInterface extends CustomerInterface
      * @param BusinessInterface $account
      * @return BusinessInterface
      */
-    public function setAccount(BusinessInterface $account);
+    //public function setAccount(BusinessInterface $account);
 
     /**
      * @return BusinessInterface
      */
-    public function getAccount();
+    //public function getAccount();
 
     /**
      * @param BusinessInterface $member

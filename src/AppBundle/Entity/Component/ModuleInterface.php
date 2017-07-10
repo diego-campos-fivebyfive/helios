@@ -248,6 +248,17 @@ interface ModuleInterface
     public function getImage();
 
     /**
+     * @param $currentPrice
+     * @return ModuleInterface
+     */
+    public function setCurrentPrice($currentPrice);
+
+    /**
+     * @return float
+     */
+    public function getCurrentPrice();
+
+    /**
      * @return \DateTime
      */
     public function getCreatedAt();
