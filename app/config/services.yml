@@ -50,6 +50,10 @@ services:
         class: AppBundle\Manager\InverterManager
         arguments: ['AppBundle\Entity\Component\Inverter', '@doctrine']
 
+    item_manager:
+        class: AppBundle\Manager\ItemManager
+        arguments: ['AppBundle\Entity\Component\Item', '@doctrine']
+
     project_manager:
         class: AppBundle\Manager\ProjectManager
         arguments: ['AppBundle\Entity\Component\Project', '@doctrine']
@@ -61,6 +65,10 @@ services:
     project_inverter_manager:
         class: AppBundle\Manager\ProjectInverterManager
         arguments: ['AppBundle\Entity\Component\ProjectInverter', '@doctrine']
+
+    project_module_manager:
+        class: AppBundle\Manager\ProjectModuleManager
+        arguments: ['AppBundle\Entity\Component\ProjectModule', '@doctrine']
 
     structure_manager:
         class: AppBundle\Manager\StructureManager

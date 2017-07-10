@@ -10,7 +10,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Component\Structure;
 use AppBundle\Form\Component\StructureType;
 
@@ -25,22 +24,26 @@ use AppBundle\Form\Component\StructureType;
  * @Breadcrumb("Dashboard", route={"name"="app_index"})
  * @Breadcrumb("Estruturas", route={"name"="structure_index"})
  */
-class StructureController extends ComponentController
+class StructureController extends AbstractController
 {
     /**
      * @Route("/", name="structure_index")
      */
     public function indexAction(Request $request)
     {
-
-        $manager = $this->getStructureManager();
+        $manager = $this->manager('structure');
         $paginator = $this->getPaginator();
 
-        $query = $manager->getEntityManager()->createQueryBuilder();
-        $query->select('s')->from('AppBundle\Entity\Component\Structure', 's');
+        $qb = $manager->getEntityManager()->createQueryBuilder();
+        $qb->select('s')->from(Structure::class, 's');
+
+        $this->overrideGetFilters();
 
         $pagination = $paginator->paginate(
-            $query->getQuery(), $request->query->getInt('page', 1), 10
+            $qb->getQuery(),
+            $request->query->getInt('page', 1),
+            10,
+            ['distinct' => false]
         );
 
         return $this->render('structure.index', array(
@@ -51,10 +54,11 @@ class StructureController extends ComponentController
 
     /**
      * @Route("/create", name="structure_create")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function createAction(Request $request)
     {
-        $manager = $this->getStructureManager();
+        $manager = $this->manager('structure');
 
         /** @var Structure $structure */
         $structure = $manager->create();
@@ -65,6 +69,8 @@ class StructureController extends ComponentController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $manager->save($structure);
+
+            $this->setNotice('Estrutura cadastrada com sucesso!');
 
             return $this->redirectToRoute('structure_index');
         }
@@ -79,11 +85,11 @@ class StructureController extends ComponentController
      * @Breadcrumb("Edit")
      * @Route("/{id}/update", name="structure_update")
      * @Method({"GET","POST"})
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function updateAction(Request $request, Structure $structure)
     {
-
-        $manager = $this->getStructureManager();
+        $manager = $this->manager('structure');
 
         $form = $this->createForm(StructureType::class, $structure, [
         ]);
@@ -94,11 +100,9 @@ class StructureController extends ComponentController
 
             $manager->save($structure);
 
-            return $this->redirectToRoute('structure_index');
-        }
+            $this->setNotice('Estrutura atualizada com sucesso!');
 
-        if($request->isMethod('get')) {
-            $this->store('referer', $request->server->get('HTTP_REFERER'));
+            return $this->redirectToRoute('structure_index');
         }
 
         return $this->render("structure.form", [
@@ -109,15 +113,16 @@ class StructureController extends ComponentController
 
     /**
      * @Route("/{id}/delete", name="structure_delete")
+     * @Method("delete")
+     * @Security("has_role('ROLE_ADMIN')")
      */
-    public function deleteAction(Request $request, Structure $structure, $id)
+    public function deleteAction(Request $request, Structure $structure)
     {
-        $structure = $this->getStructureManager()->find($id);
+        // TODO - Check project reference
 
-        $manager = $this->getStructureManager();
-        $manager->delete($structure);
+        //$this->manager('structure')->delete($structure);
 
-        return $this->jsonResponse([], Response::HTTP_OK);
+        return $this->json([], Response::HTTP_OK);
 
     }
 
@@ -127,7 +132,6 @@ class StructureController extends ComponentController
      */
     public function showAction(Request $request, Structure $structure)
     {
-
         return $this->render($request->isXmlHttpRequest() ? 'structure.show_content' : 'structure.show', [
             'structure' => $structure
         ]);

@@ -35,7 +35,7 @@ class Main implements ContainerAwareInterface
         /**
          * ROLE_ADMIN
          */
-        if($user->isAdmin()) {
+        /*if($user->isAdmin()) {
 
             $menu->addChild('Accounts', [
                 'route' => 'account_index',
@@ -54,7 +54,7 @@ class Main implements ContainerAwareInterface
             $this->resolveActiveMenu($menu);
 
             return $menu;
-        }
+        }*/
 
         $menu->addChild('Contacts', [
             'route' => 'contact_index',
@@ -152,18 +152,20 @@ class Main implements ContainerAwareInterface
         ]);
 
         $components->addChild('Modules', [
-            'route' => 'module_index',
+            'route' => 'components',
+            'routeParameters' => ['type' => 'module'],
             'extras' => ['icon' => App::icons('modules')]
         ]);
 
         $components->addChild('Inverters', [
-            'route' => 'inverter_index',
+            'route' => 'components',
+            'routeParameters' => ['type' => 'inverter'],
             'extras' => ['icon' => App::icons('inverters')]
         ]);
 
         $components->addChild('Estruturas', [
             'route' => 'structure_index',
-            'extras' => ['icon' => App::icons('structures')]
+            'extras' => ['icon' => App::icons('structure')]
         ]);
     }
 

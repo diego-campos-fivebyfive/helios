@@ -256,4 +256,15 @@ interface ModuleInterface
      * @return \DateTime
      */
     public function getUpdatedAt();
+
+    /**
+     * @param MakerInterface $maker
+     * @return ModuleInterface
+     */
+    public function setMaker(MakerInterface $maker);
+
+    /**
+     * @return MakerInterface
+     */
+    public function getMaker();
 }
