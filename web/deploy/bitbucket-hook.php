@@ -1,6 +1,6 @@
 <?php
 
-exec('cd $SICES_PATH && ces-server-update');
+exec('cd $SICES_PATH && cli/ces-server-update');
 
 $date = date('m/d/Y h:i:s a');
 $log = "Date: $date | Commit: MERGED \n";

@@ -21,4 +21,7 @@ if [ $FLAG == 'dev' ]; then
   cp cli/ces-pre-push .git/hooks/pre-push
 fi
 
+echo 'Sices updating schema...'
+php app/console doctrine:schema:update --force
+
 echo 'Done.'
