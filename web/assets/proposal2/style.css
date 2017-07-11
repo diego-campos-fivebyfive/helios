@@ -58,7 +58,7 @@
 }
 .edit{
     height: auto;
-    margin: 0 !important;
+    /*margin: 0 !important;*/
 }
 .minHeight25{
     min-height: 25mm !important;

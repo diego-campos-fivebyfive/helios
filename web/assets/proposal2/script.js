@@ -105,18 +105,37 @@ function delSes(btn) {
 
 
 $(document).ready(function(){
-    var editors = document.getElementsByClassName("edit");
-   // console.log($($(editors)).length);
+    //ativa os plugins para os ckEditors salvos
+    /*var editors = document.getElementsByClassName("edit");
     for (n = 1;n<$($(editors)).length;n++){
         if(! ($($(editors)[n]).attr("id") === undefined)){
             //console.log($($(editors)[n]).attr("id"));
             CKEDITOR.inline( $($(editors)[n]).attr("id"), {
                 extraPlugins: 'hcard,sourcedialog,justify'
-            } );
+            }, );
+
         }
 
+    }*/
+
+    //coloca os dados dinamicos nas tags e no ckeditor
+    var tags = document.getElementById("tagsProposal");
+    //console.log($(tags).children().length);
+
+    for (n = 0;n<$(tags).children().length;n++){
+        var idTag = $($(tags).children()[n]).attr("id");
+        /*pega todas na proposta*/
+        var contentOfTag = document.getElementsByClassName("d"+idTag);
+        /*pega conteúdo a ser colocado nas tags*/
+        var content = $("#d"+idTag+"").html();
+        /*coloca em todas as tags que encontrou na proposta*/
+        for(x=0;x<$(contentOfTag).length;x++){
+            $(contentOfTag[x]).html(content);
+        }
     }
+
 });
+
 
 function set(btn) {
 
