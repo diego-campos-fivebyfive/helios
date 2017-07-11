@@ -448,9 +448,9 @@ class Project implements ProjectInterface
     public function getSalePriceServices()
     {
         $price = 0;
-        /** @var ProjectExtraInterface $projectExtra */
-        foreach ($this->getProjectExtrasServices() as $projectExtra){
-            $price += $projectExtra->getTotalSalePrice();
+        /** @var ProjectExtraInterface $projectItemService */
+        foreach ($this->getProjectExtraServices() as $projectItemService){
+            $price += $projectItemService->getTotalSalePrice();
         }
 
         return $price;
@@ -764,7 +764,7 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
-    public function getProjectExtrasProducts()
+    public function getProjectExtraProducts()
     {
         return $this->projectExtras->filter(function(ProjectExtraInterface $projectExtra){
             return $projectExtra->isProduct();
@@ -774,7 +774,7 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
-    public function getProjectExtrasServices()
+    public function getProjectExtraServices()
     {
         return $this->projectExtras->filter(function(ProjectExtraInterface $projectExtra){
             return $projectExtra->isService();
@@ -787,7 +787,7 @@ class Project implements ProjectInterface
     public function getCostPriceExtraServices()
     {
         $price = 0;
-        foreach ($this->getProjectExtrasServices() as $projectExtraService){
+        foreach ($this->getProjectExtraServices() as $projectExtraService){
             $price += $projectExtraService->getTotalCostPrice();
         }
 
@@ -800,7 +800,7 @@ class Project implements ProjectInterface
     public function getCostPriceExtraProducts()
     {
         $price = 0;
-        foreach ($this->getProjectExtrasProducts() as $projectExtraProduct){
+        foreach ($this->getProjectExtraProducts() as $projectExtraProduct){
             $price += $projectExtraProduct->getTotalCostPrice();
         }
 

@@ -320,7 +320,7 @@ interface ProjectInterface
     public function addProjectExtra(ProjectExtraInterface $projectExtra);
 
     /**
-     * @param ProjectExtraInterface $projectItem
+     * @param ProjectExtraInterface $projectExtra
      * @return ProjectInterface
      */
     public function removeProjectExtra(ProjectExtraInterface $projectExtra);
@@ -333,12 +333,12 @@ interface ProjectInterface
     /**
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getProjectExtrasProducts();
+    public function getProjectExtraProducts();
 
     /**
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getProjectExtrasServices();
+    public function getProjectExtraServices();
 
     /**
      * @return \Doctrine\Common\Collections\ArrayCollection

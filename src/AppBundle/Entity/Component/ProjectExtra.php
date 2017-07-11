@@ -24,7 +24,7 @@ class ProjectExtra implements ProjectExtraInterface
     /**
      * @var ProjectInterface
      *
-     * @ORM\ManyToOne(targetEntity="Project", inversedBy="projectItems")
+     * @ORM\ManyToOne(targetEntity="Project", inversedBy="projectExtras")
      */
     private $project;
 
