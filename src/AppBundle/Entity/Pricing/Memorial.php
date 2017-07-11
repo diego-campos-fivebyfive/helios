@@ -12,7 +12,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  * @ORM\Entity
  * @ORM\Table(name="app_pricing_memorial")
  */
-class Memorial implements MemorialInteface
+class Memorial implements MemorialInterface
 {
     /**
      * @var int
@@ -26,9 +26,9 @@ class Memorial implements MemorialInteface
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Level", mappedBy="memorial", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Range", mappedBy="memorial", cascade={"persist"})
      */
-    private $levels;
+    private $ranges;
 
     /**
      * @var string
@@ -67,7 +67,7 @@ class Memorial implements MemorialInteface
 
     function __construct()
     {
-        $this->levels = new ArrayCollection();
+        $this->ranges = new ArrayCollection();
     }
 
     /**
@@ -203,18 +203,23 @@ class Memorial implements MemorialInteface
     /**
      * @inheritDoc
      */
-    public function addLevel($level)
+    public function addRange(RangeInterface $range)
     {
-        if(!$this->levels->contains($level)) {
-            $this->levels->add($level);
+        if(!$this->ranges->contains($range)) {
+            $this->ranges->add($range);
 
-            if(!$level->getMemorial()){
-                $level->setMemorial($this);
+            if(!$range->getMemorial()){
+                $range->setMemorial($this);
             }
         }
-
         return $this;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function getRanges()
+    {
+        return $this->ranges;
+    }
 }
-
