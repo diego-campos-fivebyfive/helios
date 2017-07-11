@@ -174,7 +174,7 @@ class Module implements ModuleInterface
     /**
      * @var MakerInterface
      *
-     * @ORM\ManyToOne(targetEntity="Maker", inversedBy="inverters")
+     * @ORM\ManyToOne(targetEntity="Maker")
      * @ORM\JoinColumn(name="maker")
      */
     protected $maker;
