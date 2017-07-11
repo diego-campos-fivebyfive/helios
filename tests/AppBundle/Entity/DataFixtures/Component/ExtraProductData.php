@@ -5,7 +5,7 @@ namespace Tests\AppBundle\Entity\DataFixtures\Component;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use AppBundle\Entity\Component\Item as Extra;
+use AppBundle\Entity\Component\Extra;
 use Tests\AppBundle\Entity\DataFixtures\DataFixtureHelper;
 
 class ExtraProductData extends AbstractFixture implements OrderedFixtureInterface

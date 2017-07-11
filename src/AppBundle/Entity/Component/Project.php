@@ -135,9 +135,9 @@ class Project implements ProjectInterface
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="ProjectItem", mappedBy="project", indexBy="project", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="ProjectExtra", mappedBy="project", indexBy="project", cascade={"persist"})
      */
-    private $projectItems;
+    private $projectExtras;
 
     /**
      * @var Customer|MemberInterface
@@ -162,7 +162,7 @@ class Project implements ProjectInterface
         $this->deliveryPriceStrategy = self::PRICE_STRATEGY_ABSOLUTE;
         $this->projectModules        = new ArrayCollection();
         $this->projectInverters      = new ArrayCollection();
-        $this->projectItems          = new ArrayCollection();
+        $this->projectExtras         = new ArrayCollection();
         $this->invoiceBasePrice      = 0;
         $this->deliveryBasePrice     = 0;
         $this->taxPercent            = 0;
@@ -448,9 +448,9 @@ class Project implements ProjectInterface
     public function getSalePriceServices()
     {
         $price = 0;
-        /** @var ProjectItemInterface $projectItemService */
-        foreach ($this->getProjectItemsServices() as $projectItemService){
-            $price += $projectItemService->getTotalSalePrice();
+        /** @var ProjectExtraInterface $projectExtra */
+        foreach ($this->getProjectExtrasServices() as $projectExtra){
+            $price += $projectExtra->getTotalSalePrice();
         }
 
         return $price;
@@ -728,14 +728,14 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
-    public function addProjectItem(ProjectItemInterface $projectItem)
+    public function addProjectExtra(ProjectExtraInterface $projectExtra)
     {
-        if(!$this->projectItems->contains($projectItem)){
+        if(!$this->projectExtras->contains($projectExtra)){
 
-            $this->projectItems->add($projectItem);
+            $this->projectExtras->add($projectExtra);
 
-            if(!$projectItem->getProject())
-                $projectItem->setProject($this);
+            if(!$projectExtra->getProject())
+                $projectExtra->setProject($this);
         }
 
         return $this;
@@ -744,10 +744,10 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
-    public function removeProjectItem(ProjectItemInterface $projectItem)
+    public function removeProjectExtra(ProjectExtraInterface $projectExtra)
     {
-        if($this->projectItems->contains($projectItem)){
-            $this->projectItems->removeElement($projectItem);
+        if($this->projectExtras->contains($projectExtra)){
+            $this->projectExtras->removeElement($projectExtra);
         }
 
         return $this;
@@ -756,28 +756,28 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
-    public function getProjectItems()
+    public function getProjectExtras()
     {
-        return $this->projectItems;
+        return $this->projectExtras;
     }
 
     /**
      * @inheritDoc
      */
-    public function getProjectItemsProducts()
+    public function getProjectExtrasProducts()
     {
-        return $this->projectItems->filter(function(ProjectItemInterface $projectItem){
-            return $projectItem->isProduct();
+        return $this->projectExtras->filter(function(ProjectExtraInterface $projectExtra){
+            return $projectExtra->isProduct();
         });
     }
 
     /**
      * @inheritDoc
      */
-    public function getProjectItemsServices()
+    public function getProjectExtrasServices()
     {
-        return $this->projectItems->filter(function(ProjectItemInterface $projectItem){
-            return $projectItem->isService();
+        return $this->projectExtras->filter(function(ProjectExtraInterface $projectExtra){
+            return $projectExtra->isService();
         });
     }
 
@@ -787,7 +787,7 @@ class Project implements ProjectInterface
     public function getCostPriceExtraServices()
     {
         $price = 0;
-        foreach ($this->getProjectItemsServices() as $projectExtraService){
+        foreach ($this->getProjectExtrasServices() as $projectExtraService){
             $price += $projectExtraService->getTotalCostPrice();
         }
 
@@ -800,7 +800,7 @@ class Project implements ProjectInterface
     public function getCostPriceExtraProducts()
     {
         $price = 0;
-        foreach ($this->getProjectItemsProducts() as $projectExtraProduct){
+        foreach ($this->getProjectExtrasProducts() as $projectExtraProduct){
             $price += $projectExtraProduct->getTotalCostPrice();
         }
 

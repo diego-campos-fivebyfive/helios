@@ -10,16 +10,16 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="app_project_item")
  * @ORM\Entity()
  */
-class ProjectItem implements ProjectItemInterface
+class ProjectExtra implements ProjectExtraInterface
 {
     use ProjectElementTrait;
 
     /**
-     * @var ItemInterface
+     * @var ExtraInterface
      *
-     * @ORM\ManyToOne(targetEntity="Item")
+     * @ORM\ManyToOne(targetEntity="Extra")
      */
-    private $item;
+    private $extra;
 
     /**
      * @var ProjectInterface
@@ -67,7 +67,7 @@ class ProjectItem implements ProjectItemInterface
      */
     public function isService()
     {
-        return $this->item->isService();
+        return $this->extra->isService();
     }
 
     /**
@@ -75,16 +75,16 @@ class ProjectItem implements ProjectItemInterface
      */
     public function isProduct()
     {
-        return $this->item->isProduct();
+        return $this->extra->isProduct();
     }
 
     /**
      * @inheritDoc
      */
-    public function setItem(ItemInterface $item)
+    public function setExtra(ExtraInterface $extra)
     {
-        $this->item = $item;
-        $this->unitCostPrice = $item->getCostPrice();
+        $this->extra = $extra;
+        $this->unitCostPrice = $extra->getCostPrice();
 
         return $this;
     }
@@ -92,9 +92,9 @@ class ProjectItem implements ProjectItemInterface
     /**
      * @inheritDoc
      */
-    public function getItem()
+    public function getExtra()
     {
-        return $this->item;
+        return $this->extra;
     }
 
     /**
@@ -104,7 +104,7 @@ class ProjectItem implements ProjectItemInterface
     {
         $this->project = $project;
 
-        $project->addProjectItem($this);
+        $project->addProjectExtra($this);
 
         return $this;
     }
@@ -116,20 +116,4 @@ class ProjectItem implements ProjectItemInterface
     {
         return $this->project;
     }
-
-    /*/**
-     * @inheritDoc
-     *
-    public function getUnitCostPrice()
-    {
-        return $this->item->getCostPrice();
-    }
-
-    /**
-     * @inheritDoc
-     *
-    public function getTotalCostPrice()
-    {
-        return $this->quantity * $this->getUnitCostPrice();
-    }*/
 }

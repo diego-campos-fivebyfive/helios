@@ -314,31 +314,31 @@ interface ProjectInterface
     public function getProjectInverters();
 
     /**
-     * @param ProjectItemInterface $projectItem
+     * @param ProjectExtraInterface $projectExtra
      * @return ProjectInterface
      */
-    public function addProjectItem(ProjectItemInterface $projectItem);
+    public function addProjectExtra(ProjectExtraInterface $projectExtra);
 
     /**
-     * @param ProjectItemInterface $projectItem
+     * @param ProjectExtraInterface $projectItem
      * @return ProjectInterface
      */
-    public function removeProjectItem(ProjectItemInterface $projectItem);
+    public function removeProjectExtra(ProjectExtraInterface $projectExtra);
 
     /**
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getProjectItems();
+    public function getProjectExtras();
 
     /**
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getProjectItemsProducts();
+    public function getProjectExtrasProducts();
 
     /**
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getProjectItemsServices();
+    public function getProjectExtrasServices();
 
     /**
      * @return \Doctrine\Common\Collections\ArrayCollection
