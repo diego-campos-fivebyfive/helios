@@ -16,6 +16,15 @@ use Doctrine\ORM\Mapping as ORM;
 class Maker implements MakerInterface
 {
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="context", type="string", length=20)
@@ -50,52 +59,10 @@ class Maker implements MakerInterface
      */
     private $updatedAt;
 
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Component\Module", mappedBy="maker")
-     */
-    private $modules;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Component\Inverter", mappedBy="maker")
-     */
-    private $inverters;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Component\Structure", mappedBy="maker")
-     */
-    private $structures;
-
-    /**
-     * @var \AppBundle\Entity\Customer
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="account_id", referencedColumnName="id")
-     * })
-     */
-    private $account;
 
     function __construct()
     {
         $this->enabled = true;
-        $this->inverters = new ArrayCollection();
-        $this->modules = new ArrayCollection();
-        $this->structures = new ArrayCollection();
     }
 
     /**
@@ -180,18 +147,6 @@ class Maker implements MakerInterface
         return $this->enabled;
     }
 
-    public function setAccount(BusinessInterface $account = null)
-    {
-        $this->account = $account;
-
-        return $this;
-    }
-
-    public function getAccount()
-    {
-        return $this->account;
-    }
-
     /**
      * @inheritDoc
      */
@@ -227,105 +182,6 @@ class Maker implements MakerInterface
     {
         throw new \BadMethodCallException('This method is disabled');
         //return $this->context == self::CONTEXT_ALL;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function addModule(ModuleInterface $module)
-    {
-        if(!$this->modules->contains($module)){
-            $this->modules->add($module);
-            $module->setMaker($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function removeModule(ModuleInterface $module)
-    {
-        if($this->modules->contains($module)){
-            $this->modules->removeElement($module);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getModules()
-    {
-        return $this->modules;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function addInverter(InverterInterface $inverter)
-    {
-        if(!$this->inverters->contains($inverter)){
-            $this->inverters->add($inverter);
-            $inverter->setMaker($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function removeInverter(InverterInterface $inverter)
-    {
-        if($this->inverters->contains($inverter)){
-            $this->inverters->removeElement($inverter);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getInverters()
-    {
-        return $this->inverters;
-    }
-
-     /**
-     * @inheritDoc
-     */
-    public function addStructure(StructureInterface $structure)
-    {
-        if(!$this->structures->contains($structure)){
-            $this->structures->add($structure);
-            $structure->setMaker($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function removeStructure(StructureInterface $structure)
-    {
-        if($this->structures->contains($structure)){
-            $this->structures->removeElement($structure);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getStructures()
-    {
-        return $this->structures;
     }
 
     /**
