@@ -9,8 +9,9 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * Range
- * @ORM\Entity
+ *
  * @ORM\Table(name="app_pricing_range")
+ * @ORM\Entity
  */
 class Range implements RangeInterface
 {
@@ -24,15 +25,18 @@ class Range implements RangeInterface
     private $id;
 
     /**
-     * @var LevelInterface
+     * @var ArrayCollection
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Pricing\Level", inversedBy="ranges")
+     * @ORM\ManyToOne(targetEntity="Memorial", inversedBy="ranges")
      */
-    private $level;
+    private $memorial;
 
     /**
-     * @ORM
+     * @var string
+     *
+     * @ORM\Column(name="code", type="string", length=255)
      */
+    private $code;
 
     /**
      * @var float
@@ -49,11 +53,30 @@ class Range implements RangeInterface
     private $finalPower;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="level", type="string", length=255)
+     */
+    private $level;
+
+    /**
      * @var float
      *
      * @ORM\Column(name="markup", type="float")
      */
     private $markup;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="price", type="decimal", precision=10, scale=2)
+     */
+    private $price;
+
+    public function __construct()
+    {
+        $this->memorial = new ArrayCollection();
+    }
 
 
     /**
@@ -64,6 +87,30 @@ class Range implements RangeInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set code
+     *
+     * @param string $code
+     *
+     * @return Range
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * Get code
+     *
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
     }
 
     /**
@@ -115,6 +162,30 @@ class Range implements RangeInterface
     }
 
     /**
+     * Set level
+     *
+     * @param string $level
+     *
+     * @return Range
+     */
+    public function setLevel($level)
+    {
+        $this->level = $level;
+
+        return $this;
+    }
+
+    /**
+     * Get level
+     *
+     * @return string
+     */
+    public function getLevel()
+    {
+        return $this->level;
+    }
+
+    /**
      * Set markup
      *
      * @param float $markup
@@ -139,13 +210,37 @@ class Range implements RangeInterface
     }
 
     /**
+     * Set price
+     *
+     * @param string $price
+     *
+     * @return Range
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * Get price
+     *
+     * @return string
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
      * @inheritDoc
      */
-    public function setLevel($level)
+    public function setMemorial($memorial)
     {
-        $this->level = $level;
+        $this->memorial = $memorial;
 
-        $level->addRange($this);
+        $memorial->addRange($this);
 
         return $this;
     }
@@ -153,11 +248,9 @@ class Range implements RangeInterface
     /**
      * @inheritDoc
      */
-    public function getLevel()
+    public function getMemorial()
     {
-        return $this->level;
+        return $this->memorial;
     }
-
-
 }
 

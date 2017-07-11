@@ -9,7 +9,7 @@
 namespace AppBundle\Entity\Pricing;
 
 
-interface MemorialInteface
+interface MemorialInterface
 {
 
     /**
@@ -66,4 +66,15 @@ interface MemorialInteface
      * @return mixed
      */
     public function getStatus();
+
+    /**
+     * @param RangeInterface $range
+     * @return RangeInterface
+     */
+    public function addRange(RangeInterface $range);
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getRanges();
 }
