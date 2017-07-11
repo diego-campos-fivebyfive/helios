@@ -2,5 +2,7 @@
 
 cd $SICES_PATH
 
+echo 'Sices writing correct owner...'
 sudo chown -R www-data:admin /var/www/*
 sudo chmod -R g+rwx /var/www/*
+echo 'Done.'
