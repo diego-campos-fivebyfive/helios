@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ProjectItem
  *
- * @ORM\Table(name="app_project_item")
+ * @ORM\Table(name="app_project_extra")
  * @ORM\Entity()
  */
 class ProjectExtra implements ProjectExtraInterface

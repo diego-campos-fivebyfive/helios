@@ -3,7 +3,10 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Component\Inverter;
+use AppBundle\Entity\Component\MakerInterface;
+use AppBundle\Entity\Component\ModuleInterface;
 use AppBundle\Form\Extra\KitGeneratorType;
+use AppBundle\Service\KitGenerator\InverterLoader;
 use AppBundle\Util\KitGenerator\InverterCombiner\Module;
 use AppBundle\Util\KitGenerator\PowerEstimator\PowerEstimator;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -20,10 +23,30 @@ class GeneratorController extends AbstractController
      */
     public function indexAction(Request $request)
     {
+        ini_set('max_execution_time', '120');
+
         $data = [
             'latitude' => -15.79,
             'longitude' => -47.88
         ];
+
+        $modId = 32433;
+        /** @var ModuleInterface $module */
+        $module = $this->manager('module')->find($modId);
+        $pot = $this->previewPower(10000, $data['latitude'], $data['longitude']);
+
+        // Makers
+        $makers = $this->manager('maker')->findBy([
+            'context' => 'component_inverter'
+        ], null, 1);
+
+        $inverters = [];
+        foreach ($makers as $key => $maker) {
+            dump($key);
+            $inverters[] = $this->calculateInverter($pot, $module, $maker);
+        }
+
+        dump($inverters); die;
 
         $form = $this->createForm(KitGeneratorType::class, $data);
 
@@ -126,23 +149,7 @@ class GeneratorController extends AbstractController
     private function prev_pot($kwh, $lat, $lon)
     {
         // SYSTEM INPUTS
-        $lat_nasa = floor($lat);
-        $lon_nasa = floor($lon);
-        $gr_rad_bd = $this->getNasaProvider()->radiationGlobal($lat_nasa, $lon_nasa);
-        $gr_rad = array_values($gr_rad_bd);
-
-        $at = $this->getNasaProvider()->airTemperature($lat_nasa, $lon_nasa);
-
-        // POWER ESTIMATOR
-        $powerEstimator = new PowerEstimator();
-        $powerEstimator
-            ->setConsumption($kwh)
-            ->setGlobalRadiation($gr_rad)
-            ->setAirTemperature($at)
-            ->setLatitude($lat_nasa)
-            ->setLongitude($lon_nasa);
-
-        return $powerEstimator->estimate();
+        return $this->previewPower($kwh, $lat, $lon);
     }
 
     private function fatorial($num)
@@ -869,5 +876,145 @@ class GeneratorController extends AbstractController
         }
 
         return $busca_inv_bd;
+    }
+
+    private function calculateInverter($modPower, ModuleInterface $module, MakerInterface $maker)
+    {
+        $fdiMin = 0.75;
+        $fdiMax = 1;
+
+        $nominalPowerMin = $fdiMin * $modPower;
+        $nominalPowerMax = $fdiMax * $modPower;
+
+        /** @var \AppBundle\Manager\InverterManager $manager */
+        $manager = $this->manager('inverter');
+        $makerManager = $this->manager('maker');
+
+        $inverterLoader = new InverterLoader($manager, $makerManager);
+        $inverters = $inverterLoader->loadFromRanges($nominalPowerMin, $nominalPowerMax, $maker);
+
+        $combination = $inverterLoader->getCombination();
+        $countInverters = count($inverters);
+
+        if($countInverters){
+
+            $inverters[0]['quantity'] = 2 == $combination ? 0 : 1 ;
+
+            if(2 == $combination) {
+
+                for ($j = $combination; $j <= 50; $j++) {
+
+                    $cont = array_fill(0, $j, 0);
+
+                    $max = $countInverters - 1;
+                    $repetitions = $this->comb_rep($countInverters, $j);
+
+                    for ($i = 0; $i < $repetitions; $i++) {
+
+                        $result = 0;
+                        for ($y = 0; $y < count($cont); $y++) {
+                            if(array_key_exists($cont[$y], $inverters)) {
+                                $result += $inverters[$cont[$y]]["nominalPower"];
+                            }
+                        }
+
+                        if ($result <= $nominalPowerMax && $result >= $nominalPowerMin) {
+                            break 2;
+                        }
+
+                        $cont[$j - 1] += 1;
+                        for ($k = 1; $k < $j; $k++) {
+                            if ($cont[$j - $k] > $max) {
+                                $cont[$j - ($k + 1)] += 1;
+                                for ($z = $k; $z >= 1; $z--) {
+                                    $cont[$j - $z] = $cont[$j - ($z + 1)];
+                                }
+                            }
+                        }
+                    }
+                }
+
+                rsort($cont);
+
+                //$inv_index[0]["inv"] = $cont[0];
+                $inverters[0]["quantity"] = 1;
+                $contador = 1;
+                for ($x = 1; $x < count($cont); $x++) {
+                    if ($cont[$x] == $cont[$x - 1]) {
+                        $inverters[$contador - 1]["quantity"] += 1;
+                    } else {
+                        $inverters[$contador]["quantity"] = 1;
+                        $contador += 1;
+                    }
+                }
+            }
+        }
+
+        foreach ($inverters as $key => $inverter){
+            if(!$inverter['quantity'])
+                unset($inverters[$key]);
+        }
+
+        $totalInverterPower = 0;
+        for ($i = 0; $i < count($inverters); $i++) {
+            $totalInverterPower += $inverters[$i]['nominalPower'] * 1;
+        }
+
+        $percentPower = array();
+        for ($i = 0; $i < count($inverters); $i++) {
+            $percentPower[$i] = $inverters[$i]["nominalPower"] / $totalInverterPower;
+        }
+
+        $tnoct  = 45;
+        $tc_min = 10;
+        $tc_max = 70;
+
+        //$vmax_mod = $busca_mod_bd[0]["open_circuit_voltage"];
+        $vmax_mod = $module->getOpenCircuitVoltage();
+        //$vmin_mod = $busca_mod_bd[0]["voltage_max_power"] * (1 + (($tc_max - $tnoct) * ($busca_mod_bd[0]["temp_coefficient_voc"] / 100)));
+        $vmin_mod = $module->getVoltageMaxPower() * (1 + (($tc_max - $tnoct) * ($module->getTempCoefficientVoc() / 100)));
+
+        // calculando número de strings e módulos/string de cada inversor
+        for ($i = 0; $i < count($inverters); $i++) {
+            $qte_max_mod_ser = floor($inverters[$i]["maxDcVoltage"] / $vmax_mod);
+            $qte_min_mod_ser = ceil($inverters[$i]["mpptMin"] / $vmin_mod);
+            $qte_max_mod_par = floor(($inverters[$i]["mpptMaxDcCurrent"] * $inverters[$i]["mpptNumber"]) / ($module->getShortCircuitCurrent()));
+
+            for ($p = 1; $p <= $qte_max_mod_par; $p++) {
+                for ($s = $qte_min_mod_ser; $s <= $qte_max_mod_ser; $s++) {
+                    $pot = ($p * $s) * ($module->getMaxPower() / 1000);
+                    $n_mod = $p * $s;
+                    if ($pot >= ($modPower * $percentPower[$i])) {
+                        $inverters[$i]["serial"] = (int) $s;
+                        $inverters[$i]["parallel"] = (int) $p;
+                        break 2;
+                    }
+                }
+            }
+        }
+
+        return $inverters;
+    }
+
+    private function previewPower($kwh, $latitude, $longitude)
+    {
+        $lat_nasa = floor($latitude);
+        $lon_nasa = floor($longitude);
+        $gr_rad_bd = $this->getNasaProvider()->radiationGlobal($lat_nasa, $lon_nasa);
+        $gr_rad = array_values($gr_rad_bd);
+
+        $at = $this->getNasaProvider()->airTemperature($lat_nasa, $lon_nasa);
+
+        // POWER ESTIMATOR
+        $powerEstimator = new PowerEstimator();
+        $powerEstimator
+            ->setConsumption($kwh)
+            ->setGlobalRadiation($gr_rad)
+            ->setAirTemperature($at)
+            ->setLatitude($lat_nasa)
+            ->setLongitude($lon_nasa)
+        ;
+
+        return $powerEstimator->estimate();
     }
 }

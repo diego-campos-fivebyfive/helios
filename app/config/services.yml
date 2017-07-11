@@ -85,3 +85,7 @@ services:
     structure_manager:
         class: AppBundle\Manager\StructureManager
         arguments: ['AppBundle\Entity\Component\Structure', '@doctrine']
+
+    maker_manager:
+        class: AppBundle\Manager\MakerManager
+        arguments: ['AppBundle\Entity\Component\Maker', '@doctrine']
