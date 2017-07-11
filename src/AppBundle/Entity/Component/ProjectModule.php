@@ -44,7 +44,7 @@ class ProjectModule implements ProjectModuleInterface
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="ProjectArea", mappedBy="projectInverter", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="ProjectArea", mappedBy="projectModule", cascade={"persist"})
      */
     private $projectAreas;
 

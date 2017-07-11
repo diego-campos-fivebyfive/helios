@@ -23,4 +23,5 @@ git checkout master
 git fetch origin
 git pull origin master
 git checkout -b $issue_name
+php app/console doctrine:schema:update --force
 echo "Done, now into Branch: $issue_name"

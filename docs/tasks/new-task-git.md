@@ -1,5 +1,5 @@
-Nova Task - GIT
-===============
+Nova Task - GIT (DEPRECATED)
+============================
 
 ## DEVELOPER
 

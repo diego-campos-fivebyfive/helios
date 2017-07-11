@@ -67,7 +67,7 @@ class Structure implements StructureInterface
     /**
      * @var MakerInterface
      *
-     * @ORM\ManyToOne(targetEntity="Maker", inversedBy="structures")
+     * @ORM\ManyToOne(targetEntity="Maker")
      * @ORM\JoinColumn(name="maker")
      */
     protected $maker;
