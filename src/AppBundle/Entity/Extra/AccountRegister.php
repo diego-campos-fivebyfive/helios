@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Extra;
 
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * AccountRegister
@@ -13,6 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AccountRegister
 {
+    use ORMBehaviors\Timestampable\Timestampable;
+
     const STAGE_INIT = 'init';
     const STAGE_INFO = 'info';
     const STAGE_DONE = 'done';
@@ -86,20 +89,6 @@ class AccountRegister
      * @ORM\Column(name="stage", type="string", length=10)
      */
     private $stage;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_at", type="datetime")
-     */
-    private $createdAt;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated_at", type="datetime")
-     */
-    private $updatedAt;
 
     /**
      * @var integer
@@ -409,23 +398,6 @@ class AccountRegister
     public function getStage()
     {
         return $this->stage;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function prePersist()
-    {
-        $this->createdAt = new \DateTime;
-        $this->updatedAt = new \DateTime;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function preUpdate()
-    {
-        $this->updatedAt = new \DateTime;
     }
 
     /**
