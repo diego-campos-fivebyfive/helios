@@ -15,7 +15,7 @@ use AppBundle\Entity\Financial\ProjectFinancialManager;
 use AppBundle\Entity\Financial\Tax;
 use AppBundle\Entity\ParameterManager;
 use AppBundle\Entity\Project\NasaCatalog;
-use AppBundle\Entity\Project\Project;
+use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Project\ProjectInterface;
 use AppBundle\Entity\Project\ProjectInverterInterface;
 use AppBundle\Form\Financial\TaxType;
@@ -249,6 +249,72 @@ class DebugController extends AbstractController
 
     private function calculatePrice()
     {
+
+    }
+
+    /**
+     * @Route("/range", name="debug_range")
+     */
+    public function testRangeAction(){
+
+        /*$manager = $this->manager('memorial');*/
+
+        /** @var Memorial $memorial */
+        /*$memorial = $manager->create();
+        $memorial
+            ->setStatus(1)
+            ->setStartAt(new \DateTime)
+            ->setEndAt(new \DateTime('1 month'))
+            ->setName('Teste')
+            ->setVersion('0001')
+        ;
+
+        for($i = 1; $i <= 10; $i++) {
+
+            $range = new Range();
+            $range
+                ->setMemorial($memorial)
+                ->setCode('6473' * $i)
+                ->setInitialPower(150 * $i)
+                ->setFinalPower(300 * $i)
+                ->setLevel('gold')
+                ->setMarkup(.1)
+                ->setPrice(2500 * $i)
+            ;
+
+            $memorial->addRange($range);
+        }
+        $manager->save($memorial);
+        dump($memorial);
+        die;*/
+
+//        $manager = $this->manager('range');
+//
+//        $qb = $manager->getEntityManager()->createQueryBuilder();
+//
+//        $qb->select('r')->from(Range::class, 'r');
+//        $qb->where('r.code = :code');
+//        $qb->andwhere('r.level = :level');
+//        $qb->andWhere('r.initialPower <= :power');
+//        $qb->andWhere('r.finalPower >= :power');
+//
+//        $qb->setParameters([
+//            'code' => 6473,
+//            'level' => 'gold',
+//            'power' => 200
+//        ]);
+//
+//        $query = $qb->getQuery();
+//
+//        $result = $query->getOneOrNullResult();
+
+        $project = new Project();
+
+        $projectPricifier = new ProjectPrecifier($this->manager('project'));
+
+        $projectPricifier->priceCost($project);
+
+        dump($projectPricifier); die();
 
     }
 }
