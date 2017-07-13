@@ -7,20 +7,6 @@ document.getElementById('infoList').addEventListener('dragstart', function drag(
     var clone = $('#'+content).clone().removeAttr('id');
     content = $(clone).html();
 
-    /*if(content === 'project_graph'){
-        var clone = $('#graph').clone().removeAttr('id');
-        content = $(clone).html();
-    }else if(content === 'project_items'){
-        var clone = $('#items').clone().removeAttr('id');
-        content = $(clone).html();
-    }else if(content === 'project_client'){
-        var clone = $('#client').clone().removeAttr('id');
-        content = $(clone).html();
-    }else if(content === 'project_power'){
-        var clone = $('#power').clone().removeAttr('id');
-        content = $(clone).html();
-    }*/
-
     // Crie a fachada de transferência de dados para que possa definir tipos de dados personalizados.
     CKEDITOR.plugins.clipboard.initDragDataTransfer(evt);
     evt.data.dataTransfer.setData('infoList', true);
@@ -40,55 +26,25 @@ function newPage() {
     $(page).attr("id","page_"+idPage);
 
     //bts principais
-    var btModal = $("#btModal").clone().removeAttr('id');
-    $(btModal).attr("id","btModal_"+idPage);
-    for (n=0;n<$(btModal).children().length;n++){
-        var btM = $(btModal).children()[n];
+    var topPageButtons = $("#topPageButtons").clone().removeAttr('id');
+    $(topPageButtons).attr("id","topPageButtons_"+idPage);
+    for (n=0;n<$(topPageButtons).children().length;n++){
+        var btM = $(topPageButtons).children()[n];
         if(n===0){
-            $(btM).attr("data-target","#idModal_"+idPage);
+           // $(btM).attr("data-target","#idModal_"+idPage);
+            $(btM).attr("onclick","addSessionModal("+idPage+")");
         }else if(n===1) {
-            $(btM).attr("data-target","#idModalDel_"+idPage);
+            $(btM).attr("onclick","delPageModal("+idPage+")");
         }else{
            // $(btM).attr("data-pg","page_"+idPage);
             $(btM).attr("data-pos",idPage);
         }
     }
 
-    //bt nova sessao
-    var btSessions = $("#btSessions").clone().removeAttr('id');
-    $(btSessions).attr("id","btSessions_"+idPage);
-
-    for (n=0;n<$(btSessions).children().length;n++){
-        var btn = $(btSessions).children()[n];
-        $(btn).attr("data-pg","page_"+idPage);
-        //$(btn).attr("data-pos",idPage);
-    }
-    //modal sessao
-    var modal = $("#idModal").clone().removeAttr('id');
-    $(modal).attr("id","idModal_"+idPage);
-    //console.log("md "+$($(modal[0]).children().children().children()[1]).html());
-    $($(modal[0]).children().children().children()[1]).append(btSessions);
-
-    //bt Delete
-    var btDelete = $("#btDelete").clone().removeAttr('id');
-    $(btDelete).attr("id","btDelete_"+idPage);
-    for (n=0;n<$(btDelete).children().length;n++) {
-        var btD = $(btDelete).children()[n];
-        $(btD).attr("data-pg", "page_" + idPage);
-    }
-    //modal delete
-    var modalDel = $("#idModalDel").clone().removeAttr('id');
-    $(modalDel).attr("id","idModalDel_"+idPage);
-   // console.log("mddd "+$($(modalDel[0]).children().children().children()[1]).html());
-
-    $($(modalDel[0]).children().children().children()[1]).append(btDelete);
-
     //adiciona no bloco
     $("#bloco").append(conjunct);
-    $("#conjunct_"+idPage+"").append(btModal);
-    $("#conjunct_"+idPage+"").append(modal);
-    $("#conjunct_"+idPage+"").append(modalDel);
-    $("#conjunct_"+idPage+"").append(page);
+    $("#conjunct_"+idPage+"").append(topPageButtons);
+   $("#conjunct_"+idPage+"").append(page);
     var separator = $('#separator').clone().removeAttr('id');
     $("#conjunct_"+idPage+"").append(separator);
     idPage++;
@@ -96,48 +52,21 @@ function newPage() {
     $("#idConjunct").html(idPage);
 }
 
-function delSes(btn) {
-    var decision = confirm("Deseja excluir esta sessão?");
-    if (decision === true){
-        $(btn).parent().remove();
+function addSessionModal(idPage) {
+    //bt nova sessao
+    var btSessionsInsideTheModal = $("#btSessionsInsideTheModal").clone().removeAttr('id');
+
+    for (n=0;n<$(btSessionsInsideTheModal).children().length;n++){
+        var btn = $(btSessionsInsideTheModal).children()[n];
+        $(btn).attr("data-pg","page_"+idPage);
     }
+    //modal sessao
+    var modal = $("#idModal")/*.clone().removeAttr('id')*/;
+    $($(modal[0]).children().children().children()[1]).html('<p>Escolha uma sessão.</p>');
+    $($(modal[0]).children().children().children()[1]).append(btSessionsInsideTheModal);
 }
 
-
-$(document).ready(function(){
-    //ativa os plugins para os ckEditors salvos
-    /*var editors = document.getElementsByClassName("edit");
-    for (n = 1;n<$($(editors)).length;n++){
-        if(! ($($(editors)[n]).attr("id") === undefined)){
-            //console.log($($(editors)[n]).attr("id"));
-            CKEDITOR.inline( $($(editors)[n]).attr("id"), {
-                extraPlugins: 'hcard,sourcedialog,justify'
-            }, );
-
-        }
-
-    }*/
-
-    //coloca os dados dinamicos nas tags e no ckeditor
-    var tags = document.getElementById("tagsProposal");
-    //console.log($(tags).children().length);
-
-    for (n = 0;n<$(tags).children().length;n++){
-        var idTag = $($(tags).children()[n]).attr("id");
-        /*pega todas na proposta*/
-        var contentOfTag = document.getElementsByClassName("d"+idTag);
-        /*pega conteúdo a ser colocado nas tags*/
-        var content = $("#d"+idTag+"").html();
-        /*coloca em todas as tags que encontrou na proposta*/
-        for(x=0;x<$(contentOfTag).length;x++){
-            $(contentOfTag[x]).html(content);
-        }
-    }
-
-});
-
-
-function set(btn) {
+function setSession(btn) {
 
     var idEditor = $("#idEditor").html();
 
@@ -156,12 +85,6 @@ function set(btn) {
         session = $("#sessao-4-4-4").clone().removeAttr('id');
     }else if (dataModel==="12-6-6"){
         session = $("#sessao-12-6-6").clone().removeAttr('id');
-    }else if (dataModel==="del"){
-        var page = $(btn).data("pg");
-        var conj = $("#"+page+"").parent();
-       // console.log($(conj)[0]);
-        $(conj)[0].remove();
-        return;
     }
 
     cont = 0;
@@ -182,6 +105,79 @@ function set(btn) {
         idEditor++;
     }
     $("#idEditor").html(idEditor);
+}
+
+function delPageModal(idPage) {
+    //bt Delete
+    var btDeleteInsideTheModal = $("#btDeleteInsideTheModal").clone().removeAttr('id');
+
+    for (n=0;n<$(btDeleteInsideTheModal).children().length;n++) {
+        var btD = $(btDeleteInsideTheModal).children()[n];
+        $(btD).attr("data-pg", "page_" + idPage);
+    }
+    //modal delete
+    var modalDel = $("#idModalDel");
+    $($(modalDel[0]).children().children().children()[1]).html('');
+    $($(modalDel[0]).children().children().children()[1]).append(btDeleteInsideTheModal);
+}
+
+function delPage(btn) {
+    var page = $(btn).data("pg");
+    var conj = $("#"+page+"").parent();
+    // console.log($(conj)[0]);
+    $(conj)[0].remove();
+}
+
+function delSes(btn) {
+    var decision = confirm("Deseja excluir esta sessão?");
+    if (decision === true){
+        $(btn).parent().remove();
+    }
+}
+
+/*coloca os novos dados nas tags drag e no ckEditor*/
+$(document).ready(function(){
+    /*pega as tags ocultas de dragAndDrop disponiveis para uso*/
+    var tags = document.getElementById("tagsProposal");
+
+    for (n = 0;n<$(tags).children().length;n++){
+        /*pega o id de cada tag*/
+        var idTag = $($(tags).children()[n]).attr("id");
+        /*pega todos os elementos com classe relacionada a essa
+        tag na proposta para recebimento dos dados*/
+        var contentOfTag = document.getElementsByClassName("d"+idTag);
+        /*pega conteúdo a ser colocado nas tags*/
+        /*e se for base64 transforma em img*/
+        if($("#d"+idTag+"").data("type")==='base64'){
+            /*coloca em todas as tags que encontrou na proposta*/
+            for(x=0;x<$(contentOfTag).length;x++){
+                //console.log($($(contentOfTag)[x]).attr('id'));
+                var src = $($($(contentOfTag)[x]).children()[0]).attr('src');
+
+                if(!(src===undefined)){
+                    $($($(contentOfTag)[x]).children()[0]).attr('src','data:image/png;base64,'+$("#d"+idTag+"").html());
+                }else if((src===undefined) && !($($(contentOfTag)[x]).attr('id')===undefined)){
+                    $($(contentOfTag)[x]).attr('id','');
+                    var image = decodeBase64($("#d"+idTag+"").html());
+                    $(contentOfTag[x]).html('');
+                    $($(contentOfTag)[x]).append(image);
+                }
+            }
+        }else {
+            var content = $("#d"+idTag+"").html();
+            /*coloca em todas as tags que encontrou na proposta*/
+            for(x=0;x<$(contentOfTag).length;x++){
+                $(contentOfTag[x]).html(content);
+            }
+        }
+    }
+});
+
+function decodeBase64(base64) {
+     var image = new Image();
+     image.src = 'data:image/png;base64,'+base64;
+     //document.body.appendChild(image);
+     return image;
 }
 
 function up(btn) {
