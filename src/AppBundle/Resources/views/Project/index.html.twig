@@ -1,7 +1,83 @@
 {% extends view('layout') %}
 
 {% block body %}
+
+    {% set member = app.user.info %}
+    <style>
+        .btn-primary:hover,
+        .btn-primary:focus,
+        .btn-primary:active,
+        .btn-primary:active:focus,
+        .btn-primary:active:hover,
+        .btn-primary.active,
+        .btn-primary.active:hover,
+        .btn-primary.active:focus,
+        .open .dropdown-toggle.btn-primary {
+            background-color: #f0c674;
+            border-color: #f0c674;
+            color: #fff;
+        }
+        .row {
+            border-color: #f8a41a;
+        }
+        .selected {
+            border-color: #f8a41a;
+            border-radius: 4px;
+        }
+        .selected:focus {
+            border-color: #f8a41a !important;
+        }
+    </style>
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row">
+
+            {{ knp_pagination_filter(pagination, {'p.number, c.firstname, s.name':''}) }}
+
+            <div style="padding-right:0;padding-top:7px;" class="col-md-1 text-right">
+                <label style="width: 100%;">
+                    <i class="fa fa-filter"></i> Filtro
+                </label>
+            </div>
+
+            <div class="col-md-3">
+                <select id="filter-stage" class="form-control selected" title="Etapa de venda"
+                        style=";width: 98%;">
+                    <option value=""> Etapa de vendas &raquo; Todas </option>
+                    {% for stage in sale_stages %}
+                        <option {{ current_stage == stage.token ? 'selected="selected"' }} value="{{ stage.token }}"> {{ stage.position }} - {{ stage.name }} </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            {% if member.isOwner %}
+
+            <div class="col-md-2">
+                <select id="filter-member" class="form-control selected" title="Usuário"
+                        style="width: 98%;">
+                    <option value=""> Usuário &raquo; Todos </option>
+                    {% for member in member.account.members %}
+                        <option {{ current_member ? (current_member.id == member.id ? 'selected="selected"') }}  value="{{ member.id }}"> {{ member.name }} </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            {% endif %}
+
+            <div class="col-md-2 pull-right text-right">
+                <a href="{{ path('project_create') }}" class="btn btn-md btn-primary">
+                    <i class="fa fa-plus"></i> Novo Projeto
+                </a>
+            </div>
+        </div>
+
+        {% include view('project.index_content') %}
+
+    </div>
+
 {% endblock %}
 
 {% block scripts %}
+    {% include view('project.script_index') %}
 {% endblock %}

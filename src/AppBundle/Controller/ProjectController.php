@@ -13,6 +13,7 @@ use AppBundle\Service\ProjectHelper;
 use AppBundle\Service\ProjectProcessor;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use AppBundle\Entity\MemberInterface;
 
 /**
  * Class ProjectController
@@ -20,6 +21,71 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
  */
 class ProjectController extends AbstractController
 {
+    /**
+     * @Route("/", name="project_index")
+     */
+    public function indexAction(Request $request)
+    {
+        $member = $this->member();
+        $account = $member->getAccount();
+
+        $ids = [$member->getId()];
+
+        if ($member->isOwner()) {
+            $ids = $account->getMembers()->map(function (MemberInterface $m) {
+                return $m->getId();
+            })->toArray();
+        }
+
+        $filterMember = null;
+        if($member->isOwner() && null != $memberId = $request->get('member')){
+            $filterMember = $this->getCustomerManager()->find($memberId);
+            if($filterMember instanceof BusinessInterface
+                && $filterMember->getAccount()->getId() == $account->getId()){
+                $ids = [$filterMember->getId()];
+            }
+        }
+
+        $qb = $this->manager('project')->getEntityManager()->createQueryBuilder();
+
+        $qb->select('p')
+            ->from($this->manager('project')->getClass(), 'p')
+            ->join('p.customer', 'c', 'WITH')
+            //->join('p.saleStage', 's')
+            ->where($qb->expr()->in('p.member', $ids))
+            ->orderBy('p.number', 'desc');
+
+        if(null != $customer = $this->getCustomerReferrer($request)){
+            $qb->andWhere('p.customer = :customer')->setParameter('customer', $customer);
+        }
+
+        if(null != $stage = $request->get('stage', null)){
+            $qb->andWhere('s.token = :stage');
+            $qb->setParameter('stage', $stage);
+        }
+
+        $this->overrideGetFilters();
+
+        $pagination = $this->getPaginator()->paginate(
+            $qb->getQuery(),
+            $request->query->getInt('page', 1),
+            8
+        );
+
+        //$saleStages = $account->getCategories(Category::CONTEXT_SALE_STAGE);
+        $saleStages = [];
+
+        $view = $request->isXmlHttpRequest() ? 'project.index_content' : 'project.index';
+
+        return $this->render($view, [
+            'current_stage' => $stage,
+            'sale_stages' => $saleStages,
+            'pagination' => $pagination,
+            'customer' => $customer,
+            'current_member' => $filterMember
+        ]);
+    }
+
     /**
      * @Route("/configure")
      */
@@ -290,5 +356,22 @@ class ProjectController extends AbstractController
                 $projectAreaManager->save($projectArea, ($i == $operation->count()-1));
             }
         }
+    }
+
+    /**
+     * @param Request $request
+     * @return BusinessInterface|null|object
+     */
+    private function getCustomerReferrer(Request $request)
+    {
+        if(null != $token = $request->get('contact')) {
+            $contact = $this->getCustomerManager()->findByToken($token);
+
+            $this->denyAccessUnlessGranted('edit', $contact);
+
+            return $contact;
+        }
+
+        return null;
     }
 }
