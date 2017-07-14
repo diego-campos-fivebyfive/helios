@@ -4,7 +4,7 @@ namespace ApiBundle\Controller;
 
 use AppBundle\Entity\Costumer;
 use AppBundle\Entity\Project\Project;
-use AppBundle\Manager\InverterManager;;
+use AppBundle\Manager\InverterManager;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\JsonResponse;
