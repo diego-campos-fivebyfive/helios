@@ -21,14 +21,15 @@ const splitProduct = (product) => {
   switch (product.family) {
     case 'module':
       const module = splitModule(product)
-      Sices.sendInveter(module)
+      Sices.sendModule(module)
 
     case 'inverter':
       const inverter = splitInveter(product)
       Sices.sendInveter(inverter)
 
     case 'structure':
-      return splitStructure(product)
+      const structure = splitStructure(product)
+      Sices.sendStructure(structure)
   }
 }
 
