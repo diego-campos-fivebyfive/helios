@@ -30,6 +30,7 @@ class FileController extends AbstractController
      */
     public function testePDFAction()
     {
+
         $snappy = $this->get('knp_snappy.pdf');
 
         $snappy->setOption('viewport-size', '1280x1024');
@@ -39,10 +40,18 @@ class FileController extends AbstractController
 
         // $url = 'https://www.google.com.br/';//
         $url2 = $this->generateUrl('files_pdf',[],0);
+        //$url2 = 'http://localhost:8000/login';
 
         //dump($url); die;
 
-        $snappy->generate($url2, $dir . $filename);
+        try{
+            $snappy->generate($url2, $dir . $filename);
+        }catch (\Exception $e){
+
+        }
+
+
+
 
         dump($snappy); die;
 
