@@ -4,20 +4,15 @@ const Isquik = require('../../models/isquik')
 
 const splitMemorial = (object) => {
   const memorial = {
-    code: object.code,
-    description: object.description
+    version: object.version,
+    status: object.status
   }
   return Sices.sendMemorial(memorial)
 }
 
 const send = ({ object }) => {
-  return new Promise((resolve, reject) => {
-    object.forEach((range) => {
-      const memorial = Isquik.getMemorial(range)
-      memorial.then((data) => splitMemorial(data))
-    })
-    resolve(200)
-  })
+  const memorial = Isquik.getMemorial(object.id)
+  return memorial.then((data) => splitMemorial(data))
 }
 
 module.exports = {

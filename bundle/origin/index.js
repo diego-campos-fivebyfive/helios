@@ -1,17 +1,17 @@
 'use strict'
 const express = require('express')
 const request = require('request-promise')
-const notification = require('./mocks/notification')
+const notifications = require('./mocks/notifications')
 const products = require('./mocks/products')
 const memorial = require('./mocks/memorial')
 
 const app = express()
 app.listen(process.env.SERVER_PORT)
 
-const sendNotification = () => {
+const sendNotifications = (req, res, notification) => {
   const options = {
     method: 'POST',
-    uri: `http://localhost:2002/api/v1/notification`,
+    uri: 'http://localhost:2002/api/v1/notifications',
     body: notification,
     json: true,
     headers: {
@@ -19,24 +19,33 @@ const sendNotification = () => {
       'Authorization': '123'
     }
   }
-  return request(options)
-}
 
-app.get('/', (req, res) => {
-  sendNotification().then(() => {
-    res.status(200).send('Notification posted!')
+  request(options).then(() => {
+    res.status(200).send('Notification posted!').end()
   })
-  .catch((error) => {
-    res.status(500).send(error.message)
+  .catch(error => {
+    res.status(500).send(error.message).end()
   })
-})
+}
 
 app.get('/product/:code', (req, res) => {
   const { code } = req.params
-  const product = products.find((x) => x.code === code)
+  const product = products.find(x => x.code === code)
   res.status(200).json(product)
 })
 
 app.get('/memorial/:id', (req, res) => {
   res.status(200).json(memorial)
 })
+
+app.get('/', (req, res) => {
+  res.send(`
+    <a href="/action/product-create">product-create</a>
+    <a href="/action/memorial-create">memorial-create</a>
+  `)
+})
+
+const { productCreated, memorialCreated } = notifications
+
+app.get('/action/product-create', (req, res) => sendNotifications(req, res, productCreated))
+app.get('/action/memorial-create', (req, res) => sendNotifications(req, res, memorialCreated))
