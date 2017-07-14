@@ -21,22 +21,28 @@ const splitProduct = (product) => {
   switch (product.family) {
     case 'module':
       const module = splitModule(product)
-      Sices.sendInveter(module)
+      return Sices.sendModule(module)
 
     case 'inverter':
       const inverter = splitInveter(product)
-      Sices.sendInveter(inverter)
+      return Sices.sendInveter(inverter)
 
     case 'structure':
-      return splitStructure(product)
+      const structure = splitStructure(product)
+      return Sices.sendStructure(structure)
   }
 }
 
-const product = ({ object }) => {
-  object.forEach((product) => {
-    const item = Isquik.getProduct(product)
-    item.then((data) => splitProduct(data))
+const send = ({ object }) => {
+  return new Promise((resolve, reject) => {
+    object.forEach((productCode) => {
+      const product = Isquik.getProduct(productCode)
+      product.then((data) => splitProduct(data))
+    })
+    resolve(200)
   })
 }
 
-module.exports = product
+module.exports = {
+  send
+}

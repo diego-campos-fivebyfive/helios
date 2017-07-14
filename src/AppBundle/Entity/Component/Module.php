@@ -97,35 +97,35 @@ class Module implements ModuleInterface
     /**
      * @var float
      *
-     * @ORM\Column(name="efficiency", type="float")
+     * @ORM\Column(name="efficiency", type="float", nullable=true)
      */
     private $efficiency;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="temperature_operation", type="smallint")
+     * @ORM\Column(name="temperature_operation", type="smallint", nullable=true)
      */
     private $temperatureOperation;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="temp_coefficient_max_power", type="float")
+     * @ORM\Column(name="temp_coefficient_max_power", type="float", nullable=true)
      */
     private $tempCoefficientMaxPower;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="temp_coefficient_voc", type="float")
+     * @ORM\Column(name="temp_coefficient_voc", type="float", nullable=true)
      */
     private $tempCoefficientVoc;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="temp_coefficient_isc", type="float")
+     * @ORM\Column(name="temp_coefficient_isc", type="float", nullable=true)
      */
     private $tempCoefficientIsc;
 

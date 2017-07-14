@@ -1,15 +1,17 @@
 'use strict'
 const request = require('request-promise')
-const { app } = require('../config')
-const { router } = app
+const { app, config } = require('../config')
+const { ISQUIK_API } = config
 
-const getProduct = (code) => {
-  const options = {
-    method: 'GET',
-    uri: `http://localhost:2001/product/${code}`
+const sendRequest = (uri) => {
+  let options = {
+    method: 'GET'
   }
+  options = Object.assign(options, { uri })
   return request(options).then((data) => JSON.parse(data))
 }
+
+const getProduct = (code) => sendRequest(`${ISQUIK_API}/product/${code}`)
 
 module.exports = {
   getProduct

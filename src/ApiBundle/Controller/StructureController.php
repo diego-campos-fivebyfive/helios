@@ -11,13 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class StructureController extends FOSRestController
 {
-    public function getStructuresAction(Request $request)
-    {
-        return $this->json([
-            'info' => 'success'
-        ]);
-    }
-
     public function postStructuresAction(Request $request)
     {
         $data = json_decode($request->getContent(), true);
@@ -29,5 +22,8 @@ class StructureController extends FOSRestController
         $structure  ->setCode($data['code'])
                     ->getDescription($data['description']);
         $structureManager->save($structure);
+
+        $view = View::create();
+        return $this->handleView($view);
     }
 }
