@@ -1,5 +1,5 @@
 'use strict'
-//const sices = require('../../models/sices')
+const sices = require('../../models/sices')
 
 const splitModule = (object) => ({
   code: object.code,
@@ -16,8 +16,8 @@ const splitStructure = (object) => ({
   description: object.description
 })
 
-const splitData = (data) => {
-  data.map((product) => {
+const splitProduct = (products) => {
+  products.map((product) => {
     switch (product.family) {
       case 'module': return splitModule(product)
       case 'inverter': return splitInveter(product)
@@ -26,6 +26,6 @@ const splitData = (data) => {
   })
 }
 
-const product = ({ object }) => object.then((data) => splitData(data))
+const product = ({ object }) => object.then((products) => splitProduct(products))
 
 module.exports = product
