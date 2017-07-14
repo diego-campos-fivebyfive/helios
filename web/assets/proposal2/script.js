@@ -135,49 +135,209 @@ function delSes(btn) {
     }
 }
 
+var generate_project = false;
+var generate_financial = false;
+
 /*coloca os novos dados nas tags drag e no ckEditor*/
-$(document).ready(function(){
-    /*pega as tags ocultas de dragAndDrop disponiveis para uso*/
-    var tags = document.getElementById("tagsProposal");
+function loadDatas() {
+    /*só carrega se os dois graficos estiverem gerados*/
+    if(generate_project === true && generate_financial === true){
+        $('#bloco').removeClass('hidden');
+        $('#idNewPage').removeClass('hidden');
 
-    for (n = 0;n<$(tags).children().length;n++){
-        /*pega o id de cada tag*/
-        var idTag = $($(tags).children()[n]).attr("id");
-        /*pega todos os elementos com classe relacionada a essa
-        tag na proposta para recebimento dos dados*/
-        var contentOfTag = document.getElementsByClassName("d"+idTag);
-        /*pega conteúdo a ser colocado nas tags*/
-        /*e se for base64 transforma em img*/
-        if($("#d"+idTag+"").data("type")==='base64'){
-            /*coloca em todas as tags que encontrou na proposta*/
-            for(x=0;x<$(contentOfTag).length;x++){
-                //console.log($($(contentOfTag)[x]).attr('id'));
-                var src = $($($(contentOfTag)[x]).children()[0]).attr('src');
+        var tagsDrag = document.getElementById("tagsProposal");
+        for (n = 0; n < $(tagsDrag).children().length; n++) {
+            /*pega o id de cada tag*/
+            var idTag = $($(tagsDrag).children()[n]).attr("id");
+            /*pega todos os elementos com classe relacionada a essa
+             tag na proposta para recebimento dos dados*/
+            var contentOfTag = document.getElementsByClassName("d" + idTag);
 
-                if(!(src===undefined)){
-                    $($($(contentOfTag)[x]).children()[0]).attr('src','data:image/png;base64,'+$("#d"+idTag+"").html());
-                }else if((src===undefined) && !($($(contentOfTag)[x]).attr('id')===undefined)){
-                    $($(contentOfTag)[x]).attr('id','');
-                    var image = decodeBase64($("#d"+idTag+"").html());
-                    $(contentOfTag[x]).html('');
-                    $($(contentOfTag)[x]).append(image);
+            if ($("#d" + idTag + "").data("type") === 'chart') {
+                for (x = 0; x < $(contentOfTag).length; x++) {
+                    var src = $($($(contentOfTag)[x]).children()[0]).attr('src');
+                    var newSrc;
+                    /*se ele esta no editor só troca o src, else if se tem o id entao é tag drag ai gera a img*/
+                    if (!(src === undefined)) {
+                        if($("#d"+idTag+"").data("chart") === 'generation'){
+                            newSrc = chartGeneration();
+                            $($($(contentOfTag)[x]).children()[0]).attr('src',newSrc);
+                        }else if($("#d"+idTag+"").data("chart") === 'financial'){
+                            newSrc = chartFinancial();
+                            $($($(contentOfTag)[x]).children()[0]).attr('src',newSrc);
+                        }
+
+                    } else if ((src === undefined) && !($($(contentOfTag)[x]).attr('id') === undefined)) {
+                        /*o id é usado apenas para verificar se é tag drag*/
+                        $($(contentOfTag)[x]).attr('id','');
+                        if($("#d"+idTag+"").data("chart") === 'generation'){
+                            newSrc = chartGeneration();
+                            var image = generateImage(newSrc);
+                            $(contentOfTag[x]).html('');
+                            $($(contentOfTag)[x]).attr('data-typeChart','generation');
+                            $($($(contentOfTag)[x])).attr('data-color', $('#colorChartGeneration').val());
+                            $($(contentOfTag)[x]).append(image);
+                        }else if($("#d"+idTag+"").data("chart") === 'financial'){
+                            newSrc = chartFinancial();
+                            var image = generateImage(newSrc);
+                            $(contentOfTag[x]).html('');
+                            $($(contentOfTag)[x]).attr('data-typeChart','financial');
+                            $($($(contentOfTag)[x])).attr('data-color', $('#colorChartFinancial').val());
+                            $($(contentOfTag)[x]).append(image);
+                        }
+                    }
                 }
-            }
-        }else {
-            var content = $("#d"+idTag+"").html();
-            /*coloca em todas as tags que encontrou na proposta*/
-            for(x=0;x<$(contentOfTag).length;x++){
-                $(contentOfTag[x]).html(content);
+            } else {
+                var content = $("#d" + idTag + "").html();
+                /*coloca em todas as tags que encontrou na proposta*/
+                for (x = 0; x < $(contentOfTag).length; x++) {
+                    $(contentOfTag[x]).html(content);
+                }
             }
         }
     }
+}
+
+
+$(document).ready(function(){
+    generateChart();
 });
 
-function decodeBase64(base64) {
-     var image = new Image();
-     image.src = 'data:image/png;base64,'+base64;
+function generateChart() {
+
+    var colorGeneration = null;
+    var imageContainers = $('[data-typeChart="generation"]');
+    $.each(imageContainers, function(i, c){
+        var container = $(c);
+        colorGeneration = container.attr('data-color');
+    });
+    if(colorGeneration===null){
+        colorGeneration = $('#colorChartGeneration').val();
+    }
+    $('#tagGenerationChart').attr('style','background-color: #'+colorGeneration+';');
+
+    var colorFinancial = null;
+    var gimageContainers = $('[data-typeChart="financial"]');
+    $.each(gimageContainers, function(i, c){
+        var container = $(c);
+        colorFinancial = container.attr('data-color');
+    });
+    if(colorFinancial===null){
+        colorFinancial = $('#colorChartFinancial').val();
+    }
+    $('#tagAccumulatedCashChart').attr('style','background-color: #'+colorFinancial+';');
+
+    AppChart.projectChart({
+        element:'project_chart',
+        data: $('#dgenerationChart').data('json'),
+        fillColor: "#"+colorGeneration,
+        strokeColor: "#868686",
+        animationSteps: 30,
+        pointColor: "rgba(26,179,148,0.75)",
+        callback: function () {
+            generate_project = true;
+            loadDatas();
+        }
+    });
+    AppChart.financialChart({
+        fillColor: "#"+colorFinancial,
+        strokeColor: "#868686",
+        pointColor: "#B8C1C3",
+        animationSteps: 31,
+        data: $('#daccumulatedCashChart').data('json'),
+        title: false,
+        element: 'financial_chart',
+        callback: function () {
+            generate_financial = true;
+            loadDatas();
+        }
+    });
+}
+function chartGeneration() {
+    return AppChart.getDataUrl('project_chart');
+}
+function chartFinancial() {
+    return AppChart.getDataUrl('financial_chart');
+}
+
+function changeColorGeneration(color){
+    var canvas = $('#project_chart').clone().removeAttr('id');
+    $(canvas).attr('id','project_chart_2');
+    var tempColor = $('#canvasChartGeneration');
+    $(tempColor).html('');
+    $(tempColor).append(canvas);
+
+    AppChart.projectChart({
+        element:'project_chart_2',
+        data: $('#dgenerationChart').data('json'),
+        fillColor: "#"+color,
+        strokeColor: "#868686",
+        pointColor: "rgba(26,179,148,0.75)",
+        animationSteps: 1,
+        callback: function () {
+            $('#generationChart').children().html(generateImage(AppChart.getDataUrl('project_chart_2')));
+            $('#generationChart').children().attr('data-typeChart','generation');
+            $('#generationChart').children().attr('data-color',color);
+            $('#tagGenerationChart').attr('style','background-color: #'+color+';');
+
+            var imageContainers = $('[data-typeChart="generation"]');
+            $.each(imageContainers, function(i, c){
+                var container = $(c);
+                var image = container.find('img');
+                //console.log(container.attr('data-typeChart'));
+                if(image.length){
+                    image.attr('src',AppChart.getDataUrl('project_chart_2'));
+                    container.attr('data-color',color);
+                    //console.log(image.attr('src'));
+                }
+            });
+        }
+    });
+}
+
+function changeColorFinancial(color){
+    var canvas = $('#financial_chart').clone().removeAttr('id');
+    $(canvas).attr('id','financial_chart_2');
+    var tempColor = $('#canvasChartFinancial');
+    $(tempColor).html('');
+    $(tempColor).append(canvas);
+
+    AppChart.financialChart({
+        fillColor: "#"+color,
+        strokeColor: "#868686",
+        pointColor: "#B8C1C3",
+        animationSteps: 1,
+        data: $('#daccumulatedCashChart').data('json'),
+        title: false,
+        element: 'financial_chart_2',
+        callback: function () {
+            $('#accumulatedCashChart').children().html(generateImage(AppChart.getDataUrl('financial_chart_2')));
+            $('#accumulatedCashChart').children().attr('data-typeChart','financial');
+            $('#accumulatedCashChart').children().attr('data-color',color);
+            $('#tagAccumulatedCashChart').attr('style','background-color: #'+color+';');
+
+            var imageContainers = $('[data-typeChart="financial"]');
+            $.each(imageContainers, function(i, c){
+                var container = $(c);
+                var image = container.find('img');
+                if(image.length){
+                    image.attr('src',AppChart.getDataUrl('financial_chart_2'));
+                    container.attr('data-color',color);
+                }
+            });
+        }
+    });
+}
+
+
+function generateImage(src) {
+
+    var image = new Image();
+    image.src = src;
      //document.body.appendChild(image);
-     return image;
+   // console.log($(image).attr('color'));
+    return image;
+
 }
 
 function up(btn) {
