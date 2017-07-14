@@ -17,3 +17,6 @@ body{
 .edit:focus, .edit2:focus{
     border: none;
 }
+.sf-toolbar{
+    display: none !important;
+}
