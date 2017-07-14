@@ -33,11 +33,13 @@ const splitProduct = (product) => {
   }
 }
 
-const product = ({ object }) => {
-  object.forEach((product) => {
-    const item = Isquik.getProduct(product)
-    item.then((data) => splitProduct(data))
+const send = ({ object }) => {
+  object.forEach((productCode) => {
+    const product = Isquik.getProduct(productCode)
+    product.then((data) => splitProduct(data))
   })
 }
 
-module.exports = product
+module.exports = {
+  send
+}

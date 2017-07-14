@@ -1,4 +1,8 @@
 'use strict'
-const product = require('./product')
+const { send } = require('./create')
+
+const product = {
+  send
+}
 
 module.exports = product
