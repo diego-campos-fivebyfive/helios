@@ -3,7 +3,7 @@ const { app } = require('../config')
 const { router, sendResponse } = app
 
 const product = require('./product')
-const memorial = require('./product')
+const memorial = require('./memorial')
 
 router.post('/api/v1/notification', ((request, response) => {
   const { body, callback } = request.body

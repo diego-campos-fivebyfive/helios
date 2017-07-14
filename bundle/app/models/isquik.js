@@ -12,7 +12,9 @@ const sendRequest = (uri) => {
 }
 
 const getProduct = (code) => sendRequest(`${ISQUIK_API}/product/${code}`)
+const getMemorial = () => sendRequest(`${ISQUIK_API}/memorial`)
 
 module.exports = {
-  getProduct
+  getProduct,
+  getMemorial
 }
