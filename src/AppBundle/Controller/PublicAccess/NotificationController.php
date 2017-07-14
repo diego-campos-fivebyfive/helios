@@ -1,21 +1,46 @@
 <?php
 
-namespace ApiBundle\Controller;
+namespace AppBundle\Controller\PublicAccess;
 
-use AppBundle\Entity\Costumer;
-use AppBundle\Entity\Project\Project;
-use AppBundle\Manager\InverterManager;;
-use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\View\View;
+use AppBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Entity\Pricing\Memorial;
-use AppBundle\Controller\AbstractController;
-use Symfony\Component\Validator\Constraints\DateTime;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 
-class ProductsController extends AbstractController
+/**
+ * @Route("notification")
+ */
+class NotificationController extends AbstractController
 {
-    public function postProductsAction(Request $request)
+    /**
+     * @Route("/isquik", name="isquik_notifications")
+     * @Method("POST")
+     */
+    public function postIndexAction(Request $request)
+    {
+        $data = json_decode($request->getContent(), true);
+        $notifications = $data;
+
+        switch ($notifications['callback']) {
+            case 'product_create':
+            case 'memorial_create':
+            case 'account_create':
+            case 'order_create':
+        }
+    }
+
+    /**
+     * @Route("/sices", name="sices_notifications")
+     * @Method("GET")
+     */
+    public function getIndexAction(Request $request)
+    {
+
+    }
+
+    public function ProductsCreate(Request $request)
     {
 
         $inverterManager = $this->manager('inverter');
@@ -32,8 +57,8 @@ class ProductsController extends AbstractController
                     /** @var Inverter $inverter */
                     $inverter = $inverterManager->create();
                     $inverter   ->setCode($product['code'])
-                    ->setModel($product['description'])
-                    ->setMaxEfficiency(0.97);
+                        ->setModel($product['description'])
+                        ->setMaxEfficiency(0.97);
                     $inverterManager->save($inverter);
                     break;
 
@@ -58,11 +83,11 @@ class ProductsController extends AbstractController
                         ->setTempCoefficientIsc(0.055);
                     $moduleManager->save($module);
                     break;
-                }
             }
+        }
     }
 
-    public function postMemorialAction(Request $request)
+    public function postMemorialCreate(Request $request)
     {
         $rangeManager = $this->manager('range');
         $memorialManager = $this->manager('memorial');
@@ -83,7 +108,7 @@ class ProductsController extends AbstractController
                 ->setStatus(1);
             $memorialManager->save($memorial);
 
-                    $markups = $product['markups'];
+            $markups = $product['markups'];
 
             foreach ($markups as $level => $config) {
 
