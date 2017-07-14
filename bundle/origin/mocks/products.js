@@ -1,27 +1,27 @@
 const products = [
   {
     code: 'ABC',
-    description: 'Description',
+    description: 'Description ABC',
     family: 'inverter'
   },
   {
     code: 'DEF',
-    description: 'Description',
+    description: 'Description DEF',
     family: 'structure'
   },
   {
     code: 'HIJ',
-    description: 'Description',
+    description: 'Description HIJ',
     family: 'structure'
   },
   {
     code: 'KLM',
-    description: 'Description',
+    description: 'Description KLM',
     family: 'module'
   },
   {
     code: 'NOP',
-    description: 'Description',
+    description: 'Description NOP',
     family: 'inverter'
   }
 ]
