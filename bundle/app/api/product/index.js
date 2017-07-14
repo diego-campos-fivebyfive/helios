@@ -1,8 +1,4 @@
 'use strict'
-const { list } = require('./get')
-
-const product = {
-  list
-}
+const product = require('./product')
 
 module.exports = product

@@ -8,7 +8,7 @@ const getNotificationData = (id) => {
     method: 'GET',
     uri: `http://localhost:2001/notification/:${id}`
   }
-  return request(options)
+  return request(options).then((data) => JSON.parse(data))
 }
 
 module.exports = {

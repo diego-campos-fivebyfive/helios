@@ -8,8 +8,8 @@ const memorial = require('./product')
 
 const getTypeAction = (type) => {
   switch (type) {
-    case 'product': return product.list
-    case 'memorial': return memorial.list
+    case 'product': return product
+    case 'memorial': return memorial
   }
 }
 

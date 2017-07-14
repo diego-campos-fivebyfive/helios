@@ -1,26 +1,26 @@
 const products = [
   {
-    id: 1,
+    code: 1,
     description: 'Description',
     family: 'inverter'
   },
   {
-    id: 2,
+    code: 2,
     description: 'Description',
     family: 'structure'
   },
   {
-    id: 3,
+    code: 3,
     description: 'Description',
     family: 'structure'
   },
   {
-    id: 4,
+    code: 4,
     description: 'Description',
     family: 'module'
   },
   {
-    id: 5,
+    code: 5,
     description: 'Description',
     family: 'inverter'
   }

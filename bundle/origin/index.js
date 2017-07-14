@@ -10,7 +10,7 @@ app.listen(process.env.SERVER_PORT)
 const sendNotification = () => {
   const options = {
     method: 'POST',
-    uri: `http://localhost:2002/api/v1/notification/:${notification.id}`,
+    uri: `http://localhost:2002/api/v1/notification/:${notification.code}`,
     body: notification,
     json: true,
     headers: {
@@ -30,6 +30,6 @@ app.get('/', (req, res) => {
   })
 })
 
-app.get('/notification/:id', (req, res) => {
+app.get('/notification/:code', (req, res) => {
   res.status(200).json(products)
 })
