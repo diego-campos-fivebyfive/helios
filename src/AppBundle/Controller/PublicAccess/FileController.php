@@ -14,6 +14,42 @@ use Symfony\Component\HttpFoundation\File\File;
  */
 class FileController extends AbstractController
 {
+
+    /**
+     * @Route("/proposalPDF", name="files_pdf")
+     */
+    public function proposalPDFAction()
+    {
+        return $this->render('AppBundle:Proposal:proposalPDF.html.twig', array(
+
+        ));
+    }
+
+    /**
+     * @Route("/pdfGenerator", name="files_pdfGenerator")
+     */
+    public function testePDFAction()
+    {
+        $snappy = $this->get('knp_snappy.pdf');
+
+        $snappy->setOption('viewport-size', '1280x1024');
+
+        $dir = $this->get('kernel')->getRootDir() . '/../storage/';
+        $filename = md5(uniqid(time())) . '.pdf';
+
+        // $url = 'https://www.google.com.br/';//
+        $url2 = $this->generateUrl('files_pdf',[],0);
+
+        //dump($url); die;
+
+        $snappy->generate($url2, $dir . $filename);
+
+        dump($snappy); die;
+
+    }
+//
+
+
     /**
      * @Route("/{token}/proposal", name="file_proposal")
      */
