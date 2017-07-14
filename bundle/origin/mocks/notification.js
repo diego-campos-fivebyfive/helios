@@ -2,7 +2,7 @@ const notification = {
   id: 1,
   callback: 'product_create',
   body: {
-    codes: ['ABC']
+    codes: ['ABC', 'DEF', 'HIJ', 'KLM', 'NOP']
   }
 }
 

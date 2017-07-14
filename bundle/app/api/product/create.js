@@ -34,9 +34,12 @@ const splitProduct = (product) => {
 }
 
 const send = ({ object }) => {
-  object.forEach((productCode) => {
-    const product = Isquik.getProduct(productCode)
-    product.then((data) => splitProduct(data))
+  return new Promise((resolve, reject) => {
+    object.forEach((productCode) => {
+      const product = Isquik.getProduct(productCode)
+      product.then((data) => splitProduct(data))
+    })
+    resolve(200)
   })
 }
 

@@ -17,9 +17,9 @@ const sendRequest = (uri, data) => {
   return request(options)
 }
 
-const sendInveter = (product) => sendRequest(`${SICES_API}/inverters/${product.code}`, product)
-const sendStructure = (product) => sendRequest(`${SICES_API}/structure/${product.code}`, product)
-const sendModule = (product) => sendRequest(`${SICES_API}/module/${product.code}`, product)
+const sendInveter = (product) => sendRequest(`${SICES_API}/inverters`, product)
+const sendStructure = (product) => sendRequest(`${SICES_API}/structures`, product)
+const sendModule = (product) => sendRequest(`${SICES_API}/modules`, product)
 
 module.exports = {
   sendInveter,
