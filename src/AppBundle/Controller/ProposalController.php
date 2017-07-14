@@ -29,14 +29,14 @@ class ProposalController extends Controller
 
         $project = [
             'customer' => [
-                'name' => '2-Uzumaki Naruto',
+                'name' => 'Uzumaki Naruto',
                 'averageConsumption' => '572 kWh',
                 'document' => '123.456.789-10',
                 'phone' => '(42) 9 1234-5678',
                 'email' => 'name@mail.com',
 
                 'tableAreas' => 'tabela com as areas',
-                'generationChart' => [5200,550,347,805,474,647,864,275,759,584,967,847],
+                'generationChart' => [20,550,347,805,474,647,864,275,759,584,967,847],
                 'annualGeneration' => 'geração anual',
                 'monthlyAverageGeneration' => 'geração média mensal',
 
@@ -51,7 +51,7 @@ class ProposalController extends Controller
                 'tir' => 'tir',
                 'simplePayback' => 'payback simples',
                 'discountedPayback' => 'payback descontado',
-                'accumulatedCashChart' => [50.0,-30.0,-1.7,15.05,25.74,35.7,43.4,50.75,57.59,66.84,76.7,84.7],
+                'accumulatedCashChart' => [-10.0,-30.0,-1.7,15.05,25.74,35.7,43.4,50.75,57.59,66.84,76.7,84.7],
 
                 'tableEquipmentAndServices' => 'tabela de equipamentos e serviços'
             ]
