@@ -55,7 +55,7 @@ class Module implements ModuleInterface
     /**
      * @var integer
      *
-     * @ORM\Column(name="cell_number", type="integer")
+     * @ORM\Column(name="cell_number", type="integer", nullable=true)
      */
     private $cellNumber;
 
