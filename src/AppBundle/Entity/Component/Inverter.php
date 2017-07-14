@@ -83,7 +83,7 @@ class Inverter implements InverterInterface
     /**
      * @var float
      *
-     * @ORM\Column(name="max_efficiency", type="float", nullable=false)
+     * @ORM\Column(name="max_efficiency", type="float", nullable=true)
      */
     private $maxEfficiency;
 
