@@ -1,25 +1,21 @@
 'use strict'
 const { app } = require('../config')
 const { router, sendResponse } = app
-const { getNotificationData } = require('../models/isquik')
 
 const product = require('./product')
 const memorial = require('./product')
 
-const getTypeAction = (type) => {
-  switch (type) {
-    case 'product': return product
+const getAction = (callback) => {
+  switch (callback) {
+    case 'product_create': return product
     case 'memorial': return memorial
   }
 }
 
-router.post('/api/v1/notification/:id', ((request, response) => {
-  const params = {
-    id: request.params.id,
-    type: request.body.callback
-  }
+router.post('/api/v1/notification', ((request, response) => {
+  const { body, callback } = request.body
   const requestCopy = request
-  requestCopy.body = getNotificationData(params.id)
-  const action = getTypeAction(params.type)
+  requestCopy.body = body.codes
+  const action = getAction(callback)
   sendResponse(requestCopy, response, action)
 }))

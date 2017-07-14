@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "SERVER_PORT=2001 nodemon index.js"
+    "start": "SERVER_PORT=2001 node index.js"
   },
   "dependencies": {
     "express": "4.14.0",

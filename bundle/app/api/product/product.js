@@ -1,5 +1,6 @@
 'use strict'
-const sices = require('../../models/sices')
+const Sices = require('../../models/sices')
+const Isquik = require('../../models/isquik')
 
 const splitModule = (object) => ({
   code: object.code,
@@ -16,16 +17,26 @@ const splitStructure = (object) => ({
   description: object.description
 })
 
-const splitProduct = (products) => {
-  products.map((product) => {
-    switch (product.family) {
-      case 'module': return splitModule(product)
-      case 'inverter': return splitInveter(product)
-      case 'structure': return splitStructure(product)
-    }
-  })
+const splitProduct = (product) => {
+  switch (product.family) {
+    case 'module':
+      const module = splitModule(product)
+      Sices.sendInveter(module)
+
+    case 'inverter':
+      const inverter = splitInveter(product)
+      Sices.sendInveter(inverter)
+
+    case 'structure':
+      return splitStructure(product)
+  }
 }
 
-const product = ({ object }) => object.then((products) => splitProduct(products))
+const product = ({ object }) => {
+  object.forEach((product) => {
+    const item = Isquik.getProduct(product)
+    item.then((data) => splitProduct(data))
+  })
+}
 
 module.exports = product
