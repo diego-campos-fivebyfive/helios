@@ -1,0 +1,25 @@
+{
+   "products":[
+      {
+         "code":"ABC",
+         "description":"The product A",
+         "family": "inverter"
+      },
+      {
+         "code":"GHI",
+         "description":"The product C",
+         "family": "inverter"
+      },
+      {
+         "code":"CDE",
+         "description":"The product B",
+         "family": "structure"
+      },
+      
+      {
+         "code":"XYZ",
+         "description":"The product D",
+         "family": "module"
+      }
+   ]
+}
