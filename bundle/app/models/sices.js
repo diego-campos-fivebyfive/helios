@@ -13,8 +13,8 @@ const sendRequest = (uri, data) => {
       'Authorization': '123'
     }
   }
-  options = Object.assign(options, uri)
-  request(options)
+  options = Object.assign(options, { uri })
+  return request(options)
 }
 
 const sendInveter = (product) => sendRequest(`${SICES_API}/inverters/${product.code}`, product)
