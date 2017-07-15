@@ -1,7 +1,7 @@
 {
   "scripts": {
     "compile": "ces-frontend-compile",
-    "start": "php app/console server:run"
+    "start": "ces-bundle-start && php app/console server:run"
   },
   "dependencies": {
     "uglify-js": "^3.0.23",

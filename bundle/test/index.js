@@ -11,7 +11,7 @@ app.listen(process.env.SERVER_PORT)
 const sendNotifications = (req, res, notification) => {
   const options = {
     method: 'POST',
-    uri: 'http://localhost:2002/api/v1/notifications',
+    uri: 'http://localhost:3000/api/v1/notifications',
     body: notification,
     json: true,
     headers: {
