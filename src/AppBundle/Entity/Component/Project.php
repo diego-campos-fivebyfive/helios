@@ -14,6 +14,7 @@ namespace AppBundle\Entity\Component;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\CustomerInterface;
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Util\KitGenerator\StructureCalculator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\TokenizerTrait;
@@ -58,6 +59,13 @@ class Project implements ProjectInterface
     /**
      * @var string
      *
+     * @ORM\Column(type="string", length=25)
+     */
+    private $roofType;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="invoice_base_price", type="decimal", precision=10, scale=2, nullable=true)
      */
     private $invoiceBasePrice;
@@ -89,6 +97,27 @@ class Project implements ProjectInterface
      * @ORM\Column(name="address", type="string", length=255)
      */
     private $address;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="float")
+     */
+    private $infConsumption;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="float")
+     */
+    private $infPower;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=10)
+     */
+    private $structureType;
 
     /**
      * @var float
@@ -135,6 +164,13 @@ class Project implements ProjectInterface
     /**
      * @var ArrayCollection
      *
+     * @ORM\OneToMany(targetEntity="ProjectStructure", mappedBy="project", cascade={"persist"})
+     */
+    private $projectStructures;
+
+    /**
+     * @var ArrayCollection
+     *
      * @ORM\OneToMany(targetEntity="ProjectExtra", mappedBy="project", indexBy="project", cascade={"persist"})
      */
     private $projectExtras;
@@ -162,6 +198,7 @@ class Project implements ProjectInterface
         $this->deliveryPriceStrategy = self::PRICE_STRATEGY_ABSOLUTE;
         $this->projectModules        = new ArrayCollection();
         $this->projectInverters      = new ArrayCollection();
+        $this->projectStructures     = new ArrayCollection();
         $this->projectExtras         = new ArrayCollection();
         $this->invoiceBasePrice      = 0;
         $this->deliveryBasePrice     = 0;
@@ -211,6 +248,78 @@ class Project implements ProjectInterface
     public function getIdentifier()
     {
         return $this->identifier;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setInfConsumption($infConsumption)
+    {
+        $this->infConsumption = $infConsumption;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getInfConsumption()
+    {
+        return $this->infConsumption;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setInfPower($infPower)
+    {
+        $this->infPower = $infPower;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getInfPower()
+    {
+        return $this->infPower;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setRoofType($roofType)
+    {
+        $this->roofType = $roofType;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getRoofType()
+    {
+        return $this->roofType;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setStructureType($structureType)
+    {
+        $this->structureType = $structureType;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getStructureType()
+    {
+        return $this->structureType;
     }
 
     /**
@@ -361,6 +470,38 @@ class Project implements ProjectInterface
     public function getTaxPercent()
     {
         return $this->taxPercent;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getChecklist($tag = null)
+    {
+        $errors = [
+            'modules' => !$this->getProjectModules()->isEmpty(),
+            'inverters' => !$this->getProjectInverters()->isEmpty(),
+            'areas' => !$this->getAreas()->isEmpty()
+        ];
+
+        /** @var ProjectAreaInterface $projectArea */
+        foreach ($this->getAreas() as $projectArea){
+            if(!$projectArea->isConfigured()) {
+                $errors['areas'] = false;
+                break;
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isComputable()
+    {
+        $checklist = $this->getChecklist();
+
+        return array_sum($checklist) == count($checklist);
     }
 
     /**
@@ -575,6 +716,32 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
+    public function countAssociatedModules()
+    {
+        $count = 0;
+        foreach ($this->projectModules as $projectModule){
+            $count += $projectModule->getQuantity();
+        }
+
+        return $count;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function countAssociatedInverters()
+    {
+        $count = 0;
+        foreach($this->projectInverters as $projectInverter){
+            $count += $projectInverter->getQuantity();
+        }
+
+        return $count;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function countConfiguredModules()
     {
         $count = 0;
@@ -728,6 +895,42 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
+    public function addProjectStructure(ProjectStructureInterface $projectStructure)
+    {
+        if(!$this->projectStructures->contains($projectStructure)){
+
+            $this->projectStructures->add($projectStructure);
+
+            if(!$projectStructure->getProject())
+                $projectStructure->setProject($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeProjectStructure(ProjectStructureInterface $projectStructure)
+    {
+        if($this->projectStructures->contains($projectStructure)){
+            $this->projectStructures->removeElement($projectStructure);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getProjectStructures()
+    {
+        return $this->projectStructures;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function addProjectExtra(ProjectExtraInterface $projectExtra)
     {
         if(!$this->projectExtras->contains($projectExtra)){
@@ -841,5 +1044,23 @@ class Project implements ProjectInterface
             self::PRICE_STRATEGY_SUM => 'sum',
             self::PRICE_STRATEGY_PERCENT => 'percent'
         ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function getRootTypes()
+    {
+        return array_combine(StructureCalculator::getRoofTypes(), StructureCalculator::getRoofTypes());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function getStructureTypes()
+    {
+        $types = [self::STRUCTURE_SICES, self::STRUCTURE_K2_SYSTEM];
+
+        return array_combine($types, $types);
     }
 }

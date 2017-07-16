@@ -4,7 +4,10 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Component\ProjectArea;
+use AppBundle\Entity\Component\ProjectAreaInterface;
+use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverter;
+use AppBundle\Entity\Component\ProjectInverterInterface;
 use AppBundle\Entity\Component\ProjectModule;
 use AppBundle\Form\Component\ProjectAreaType;
 use AppBundle\Form\Component\ProjectType;
@@ -21,27 +24,50 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 class ProjectController extends AbstractController
 {
     /**
-     * @Route("/configure")
+     * @Route("/create", name="project_create")
      */
-    public function configureAction()
+    public function createAction(Request $request)
     {
-        $project = $this->debugProject();
+        $manager = $this->manager('project');
 
-        /** @var ProjectProcessor $processor */
-        //$processor = $this->container->get('app.project_processor');
-        //$metadata = $processor->process($project);
-
-        //$member  = $this->member();
-        //$manager = $this->manager('project');
-
-        //$project = $manager->create();
-        //$project->setMember($member);
+        /** @var Project $project */
+        $project = $manager->create();
 
         $form = $this->createForm(ProjectType::class, $project);
 
-        //dump($project); die;
+        $form->handleRequest($request);
 
-        return $this->render('project.configure', [
+        if($form->isSubmitted() && $form->isValid()){
+
+            /** @var \AppBundle\Entity\Component\ModuleInterface $module */
+            $module = $this->manager('module')->find(32433);
+            //$kwh = (int) $request->request->get('consumption');
+            $project->setInfPower((int) $project->getInfConsumption());
+
+            $power = $this->get('power_estimator')->estimate($project->getInfPower(), $project->getLatitude(), $project->getLongitude());
+            $inverters = $this->get('inverter_combinator')->combine($module, $power, 60627);
+
+            /** @var \AppBundle\Service\ProjectGenerator\ProjectGenerator $projectGenerator */
+            $projectGenerator = $this->get('project_generator');
+            $projectGenerator->project($project);
+
+            $project = $projectGenerator->fromCombination([
+                'inverters' => $inverters,
+                'module' => $module
+            ]);
+
+            $this->get('structure_calculator')->calculate($project);
+
+            $this->get('project_manipulator')->generateAreas($project);
+
+            return $this->json([
+                'project' => [
+                    'id' => $project->getId()
+                ]
+            ]);
+        }
+
+        return $this->render('project.form_project', [
             'form' => $form->createView(),
             'project' => $project
         ]);
@@ -58,12 +84,26 @@ class ProjectController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()){
 
-            dump($project); die;
+            return $this->json([
+                'project' => [
+                    'id' => $project->getId()
+                ]
+            ]);
         }
 
-        return $this->render('project.form', [
+        return $this->render('project.form_project', [
             'project' => $project,
             'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/components", name="project_components")
+     */
+    public function componentsAction(Project $project)
+    {
+        return $this->render('project.components', [
+            'project' => $project
         ]);
     }
 
@@ -72,22 +112,26 @@ class ProjectController extends AbstractController
      */
     public function processAction(Request $request, Project $project)
     {
-        /** @var ProjectHelper $helper */
-        $helper = $this->get('app.project_helper');
-        $helper->processProject($project);
+        if($project->isComputable()) {
+            /** @var ProjectHelper $helper */
+            $helper = $this->get('app.project_helper');
+            $helper->processProject($project);
 
-        $metadata = $project->getMetadata();
+            $metadata = $project->getMetadata();
 
-        return $this->json([
-            'data' => $project->getMonthlyProduction(),
-            'info' => $this->renderView('project.info_processed', [
-                'general' => $metadata['total'],
-                'project' => $project
-            ]),
-            'warnings' => $this->renderView('project.info_warnings', [
-                'project' => $project
-            ])
-        ]);
+            return $this->json([
+                'data' => $project->getMonthlyProduction(),
+                'info' => $this->renderView('project.info_processed', [
+                    'general' => $metadata['total'],
+                    'project' => $project
+                ]),
+                'warnings' => $this->renderView('project.info_warnings', [
+                    'project' => $project
+                ])
+            ]);
+        }
+
+        return $this->json([]);
     }
 
     /**
@@ -117,7 +161,7 @@ class ProjectController extends AbstractController
 
             $this->manager('project_inverter')->save($projectInverter);
 
-            $this->resetProjectAreas($projectInverter);
+            $this->onUpdateProjectInverter($projectInverter);
 
             return $this->json([]);
         }
@@ -139,9 +183,9 @@ class ProjectController extends AbstractController
     /**
      * @Route("/inverters/{id}/operation", name="project_inverter_operation")
      */
-    public function inverterOperationAction(ProjectInverter $projectInverter)
+    public function operationInverterAction(ProjectInverter $projectInverter)
     {
-        return $this->render('project.inverter_operation', [
+        return $this->render('project.operation_inverter', [
             'projectInverter' => $projectInverter
         ]);
     }
@@ -171,6 +215,8 @@ class ProjectController extends AbstractController
             $helper = $this->get('app.project_helper');
             $helper->debugArea($projectArea);
 
+            $this->onUpdateProjectArea($projectArea);
+
             return $this->json([
                 'module' => [
                     'power' => $projectArea->getPower(),
@@ -188,7 +234,7 @@ class ProjectController extends AbstractController
     /**
      * @Route("/areas/{id}/operation", name="project_area_operation")
      */
-    public function areaOperationAction(ProjectArea $projectArea)
+    public function operationAreaAction(ProjectArea $projectArea)
     {
         /** @var ProjectHelper $processor */
         $helper = $this->get('app.project_helper');
@@ -202,71 +248,9 @@ class ProjectController extends AbstractController
     }
 
     /**
-     * @return Project|null|object
-     * TODO Remove before send homolog
-     */
-    private function debugProject()
-    {
-        $manager = $this->manager('project');
-
-        $project = $manager->find(103);
-
-        return $project;
-
-        /** @var Project $project */
-        $project = $manager->create();
-        $project
-            ->setNumber(rand(1, 500))
-            ->setMember($this->member())
-            ->setIdentifier('Abc-125')
-            ->setAddress('This is a address')
-            ->setLatitude(-25.4237919)
-            ->setLongitude(-49.216131)
-        ;
-
-        /** @var \AppBundle\Entity\CustomerInterface $customer */
-        $customer = $this->manager('customer')->find(34);
-        /** @var \AppBundle\Entity\Component\InverterInterface $inverter */
-        $inverter = $this->manager('inverter')->find(5861);
-        /** @var \AppBundle\Entity\Component\ModuleInterface $module */
-        $module = $this->manager('module')->find(32432);
-
-        $projectInverter = new ProjectInverter();
-        $projectInverter
-            ->setProject($project)
-            ->setInverter($inverter)
-            ->setQuantity(1)
-        ;
-
-        $projectModule = new ProjectModule();
-        $projectModule
-            ->setProject($project)
-            ->setModule($module)
-            ->setQuantity(24)
-        ;
-
-        $project->setCustomer($customer);
-
-        /*for($i = 1; $i < 3; $i++){
-            $projectArea = new ProjectArea();
-            $projectArea
-                ->setProjectInverter($projectInverter)
-                ->setProjectModule($projectModule)
-                ->setInclination(20)
-                ->setStringNumber(1)
-                ->setModuleString(4)
-            ;
-        }*/
-
-        $manager->save($project);
-
-        dump($project); die;
-    }
-
-    /**
      * @param ProjectInverter $projectInverter
      */
-    private function resetProjectAreas(ProjectInverter $projectInverter)
+    private function resetProjectAreas(ProjectInverterInterface $projectInverter)
     {
         if($projectInverter->operationIsChanged()){
 
@@ -290,5 +274,29 @@ class ProjectController extends AbstractController
                 $projectAreaManager->save($projectArea, ($i == $operation->count()-1));
             }
         }
+    }
+
+    /**
+     * @param ProjectInverterInterface $projectInverter
+     */
+    private function onUpdateProjectInverter(ProjectInverterInterface $projectInverter)
+    {
+        $this->resetProjectAreas($projectInverter);
+
+        $project = $projectInverter->getProject();
+
+        $this->get('project_manipulator')->synchronize($project);
+        $this->get('structure_calculator')->calculate($project);
+    }
+
+    /**
+     * @param ProjectAreaInterface $projectArea
+     */
+    private function onUpdateProjectArea(ProjectAreaInterface $projectArea)
+    {
+        $project = $projectArea->getProjectModule()->getProject();
+
+        $this->get('project_manipulator')->synchronize($project);
+        $this->get('structure_calculator')->calculate($project);
     }
 }

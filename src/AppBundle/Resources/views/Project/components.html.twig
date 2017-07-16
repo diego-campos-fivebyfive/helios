@@ -1,0 +1,41 @@
+
+<table class="table">
+
+    <thead>
+        <tr>
+            <th> Código </th>
+            <th> Descrição </th>
+            <th> Quantidade </th>
+        </tr>
+    </thead>
+    <tbody>
+
+    {# INVERTERS #}
+    {% for projectInverter in project.projectInverters %}
+        <tr>
+            <td> {{ projectInverter.inverter.id }} </td>
+            <td> {{ projectInverter.inverter.model }} </td>
+            <td> {{ projectInverter.quantity }} </td>
+        </tr>
+    {% endfor %}
+
+    {# MODULES #}
+    {% for projectModule in project.projectModules %}
+        <tr>
+            <td> {{ projectModule.module.id }} </td>
+            <td> {{ projectModule.module.model }} </td>
+            <td> {{ projectModule.quantity }} </td>
+        </tr>
+    {% endfor %}
+
+    {# STRUCTURES #}
+    {% for projectStructure in project.projectStructures %}
+        <tr>
+            <td> {{ projectStructure.structure.code }} </td>
+            <td> {{ projectStructure.structure.description }} </td>
+            <td> {{ projectStructure.quantity }} </td>
+        </tr>
+    {% endfor %}
+
+    </tbody>
+</table>

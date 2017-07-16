@@ -17,6 +17,11 @@ class Structure implements StructureInterface
     /**
      * @var int
      */
+    private $maker;
+
+    /**
+     * @var int
+     */
     private $roofType;
 
     /**
@@ -40,7 +45,8 @@ class Structure implements StructureInterface
     public function __construct()
     {
         $this->profiles = [];
-        $this->items = [];
+        $this->items    = [];
+        $this->maker    = self::MAKER_SICES_SOLAR;
     }
 
     /**
@@ -59,6 +65,24 @@ class Structure implements StructureInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setMaker($maker)
+    {
+        $this->maker = $maker;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMaker()
+    {
+        return $this->maker;
     }
 
     /**
@@ -347,7 +371,7 @@ class Structure implements StructureInterface
             $profileMiddlePlate = ($endTerminal + $inTerminal);
             $base = 2 * (ceil(($lineSize - (2 * 0.35)) / 1.65) + 1) * $linesOfModules;
 
-            //var_dump($base); die;
+            //var_dump($quantityModules); die;
 
             if ($quantityModules == 1) {
                 $base = 4 * $linesOfModules;
@@ -411,16 +435,28 @@ class Structure implements StructureInterface
             die;*/
         }
 
+        /*dump($totalTriangle);
+        die;*/
+
+        $baseQuantity = $totalBase;
+        switch ($this->roofType){
+            case self::ROOF_FLAT_SLAB:
+                $baseQuantity = $totalTriangle;
+                break;
+            case self::ROOF_SHEET_METAL:
+                $baseQuantity = $totalScrewAuto;
+                break;
+        }
+
         // BASE
-        $this->items[Item::TYPE_BASE]->setQuantity($totalBase);
+        $this->items[Item::TYPE_BASE]->setQuantity($baseQuantity);
 
         // TERMINALS
         $terminalFinal->setQuantity($totalEndTerminal);
         $terminalMiddle->setQuantity($totalInTerminal);
 
-        //$data = [];
         foreach ($totalUsedProfiles as $idxProfile => $totalProfile) {
-            $this->profiles[$idxProfile]->setQuantity($totalProfile);
+            $this->profiles[$idxProfile]->setQuantity((int) $totalProfile);
         }
 
         // JUNCTION
@@ -430,16 +466,22 @@ class Structure implements StructureInterface
 
         // FIXER SCREW
         if(null != $fixerScrew = $this->getItemByType(Item::FIXER_SCREW)) {
-            //$fixerScrew->setQuantity($totalScrewHammer);
-            //$data[Item::FIXER_SCREW] = $fixerScrew;
             $this->items[Item::FIXER_SCREW]->setQuantity($totalScrewHammer);
         }
 
         // FIXER NUT
         if(null != $fixerNut = $this->getItemByType(Item::FIXER_NUT)) {
-            //$fixerNut->setQuantity($totalNutM10);
-            //$data[Item::FIXER_NUT] = $fixerNut;
             $this->items[Item::FIXER_NUT]->setQuantity($totalNutM10);
+        }
+
+        // CATCH BAND
+        if(null != $catchBand = $this->getItemByType(Item::CATCH_BAND)) {
+            $this->items[Item::CATCH_BAND]->setQuantity($totalPlate);
+        }
+
+        // CATCH SPEED CLIP
+        if(null != $catchSpeedClip = $this->getItemByType(Item::CATCH_SPEED_CLIP)) {
+            $this->items[Item::CATCH_SPEED_CLIP]->setQuantity($totalSpeedClip);
         }
 
         return $this;
@@ -569,6 +611,9 @@ class Structure implements StructureInterface
      */
     private function validate()
     {
+        if(empty($this->profiles))
+            $this->exception('This profiles is empty');
+
         if (!$this->module)
             $this->exception('Module is not defined');
 
@@ -599,7 +644,7 @@ class Structure implements StructureInterface
 
             case self::ROOF_FLAT_SLAB:
 
-                $this->checkItem(Item::BASE_SCREW_STRUCTURAL);
+                //$this->checkItem(Item::BASE_SCREW_STRUCTURAL);
                 $this->checkItem($this->isVertical() ? Item::BASE_TRIANGLE_VERTICAL : Item::BASE_TRIANGLE_HORIZONTAL);
                 $this->checkItem(Item::FIXER_SCREW);
                 $this->checkItem(Item::FIXER_NUT);
@@ -613,6 +658,9 @@ class Structure implements StructureInterface
                     $this->checkItem(Item::TYPE_JUNCTION);
 
                 $this->checkItem(Item::BASE_SCREW_DRILLING);
+                $this->checkItem(
+                    $this->maker == self::MAKER_SICES_SOLAR ? Item::CATCH_BAND : Item::CATCH_SPEED_CLIP
+                );
 
                 break;
         }
@@ -625,6 +673,10 @@ class Structure implements StructureInterface
     {
         if (!$item->isValid()) {
             $this->exception('This item is not valid');
+        }
+
+        if($item->getMaker() != $this->getMaker()){
+            $this->exception('Incompatible makers');
         }
 
         if($item->is(Item::TYPE_BASE)){
@@ -646,6 +698,10 @@ class Structure implements StructureInterface
             if(is_null($item->getSize())){
                 $this->exception('Terminal size is not defined');
             }
+        }
+
+        if($item->is(Item::TYPE_CATCH) && !in_array($this->roofType,[self::ROOF_SHEET_METAL, self::ROOF_SHEET_METAL_PFM])){
+            $this->exception(sprintf('Unsupported item type %s', $item->getSubtype()));
         }
     }
 

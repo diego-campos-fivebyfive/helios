@@ -23,6 +23,9 @@ services:
         tags:
             - { name: doctrine.event_subscriber, connection: default }
 
+    # Aliased Services
+    nasa_provider:
+        alias: app.nasa_provider
 
     # Manipulators
     contact_manipulator:
@@ -78,6 +81,10 @@ services:
         class: AppBundle\Manager\ProjectModuleManager
         arguments: ['AppBundle\Entity\Component\ProjectModule', '@doctrine']
 
+    project_structure_manager:
+        class: AppBundle\Manager\ProjectStructureManager
+        arguments: ['AppBundle\Entity\Component\ProjectStructure', '@doctrine']
+
     range_manager:
         class: AppBundle\Manager\Pricing\RangeManager
         arguments: ['AppBundle\Entity\Pricing\Range', '@doctrine']
@@ -89,3 +96,24 @@ services:
     maker_manager:
         class: AppBundle\Manager\MakerManager
         arguments: ['AppBundle\Entity\Component\Maker', '@doctrine']
+
+    # Services
+    inverter_combinator:
+        class: AppBundle\Service\InverterCombinator\InverterCombinator
+        arguments: ['@inverter_manager']
+
+    power_estimator:
+        class: AppBundle\Service\PowerEstimator\PowerEstimator
+        arguments: ['@nasa_provider']
+
+    project_generator:
+        class: AppBundle\Service\ProjectGenerator\ProjectGenerator
+        arguments: ['@service_container']
+
+    project_manipulator:
+        class: AppBundle\Service\ProjectManipulator
+        arguments: ['@project_manager']
+
+    structure_calculator:
+        class: AppBundle\Service\StructureCalculator\StructureCalculator
+        arguments: ['@project_manager', '@structure_manager', '@project_structure_manager']

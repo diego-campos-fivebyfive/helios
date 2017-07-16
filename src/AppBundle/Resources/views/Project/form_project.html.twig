@@ -35,7 +35,7 @@
         }
         #project_address{
             margin-top: 10px;
-            width: 80%;
+            width: 90%;
             border-color: #1ab394 !important;
         }
         .ibox-content{
@@ -196,7 +196,7 @@
 
                                     <div class="panel-body">
 
-                                        {{ form_start(form, {'attr':{'class':'form-horizontal'}}) }}
+                                        {{ form_start(form, {attr:{id:'form_project', class:'form-horizontal'}}) }}
 
                                         <div class="form-group">
                                             <label class="col-sm-1 control-label">Contato</label>
@@ -222,26 +222,53 @@
                                             </div>
                                         </div>
 
+                                        <div class="hr-line-dashed"></div>
+
                                         <div class="form-group">
-                                            <div class="col-md-6 col-xs-12 btn-group">
-                                                <a class="btn btn-info col-md-6 col-xs-12" data-toggle="modal" data-target="#modal_info">
+                                            <div class="col-md-3">
+                                                <label><br></label>
+                                                <a class="btn btn-info col-xs-12" data-toggle="modal" data-target="#modal_info">
                                                     <i class="fa fa-info-circle"></i>
                                                     Informações Climáticas
                                                 </a>
-                                                <a data-toggle="modal" data-target="#modal_estimate_power" id="btn-estimate-power" class="btn btn-default col-md-6 col-xs-12">
-                                                    <i class="fa fa-unsorted"></i> Estimar Potência
-                                                </a>
                                             </div>
-                                            <div class="col-md-6 col-xs-12">
+                                            <div class="col-md-2">
+                                                {{ form_label(form.structureType, 'Fabricante da Estrutura') }}
+                                                {{ form_widget(form.structureType,{attr:{class:'form-control'}}) }}
+                                            </div>
+                                            <div class="col-md-3">
+                                                {{ form_label(form.roofType, 'Tipo de Telhado') }}
+                                                {{ form_widget(form.roofType,{attr:{class:'form-control'}}) }}
+                                            </div>
+                                            <div class="col-md-2">
+                                                {{ form_label(form.infConsumption, 'Consumo') }}
+                                                {{ form_widget(form.infConsumption,{attr:{class:'form-control'}}) }}
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label><br></label>
+                                                <button type="submit" data-style="zoom-in" class="btn btn-success btn-md pull-right col-xs-12 ladda-button">
+                                                    <i class="fa fa-save"></i>
+                                                    {{ project.token ? 'Atualizar' : 'Iniciar' }}
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-6 col-xs-12 btn-group">
+                                                {#<a data-toggle="modal" data-target="#modal_estimate_power" id="btn-estimate-power" class="btn btn-default col-md-6 col-xs-12">
+                                                    <i class="fa fa-unsorted"></i> Estimar Potência
+                                                </a>#}
+                                            </div>
+                                            {#<div class="col-md-6 col-xs-12">
                                                 <div class="row">
                                                     <label class="col-sm-1 col-xs-12 control-label">
                                                         KIT
                                                     </label>
                                                     <div class="col-sm-11 col-xs-12">
-                                                        {#{{ form_widget(form.kit,{'attr':{'class':'form-control'}}) }}#}
+                                                        {{ form_widget(form.kit,{'attr':{'class':'form-control'}}) }}
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div>#}
                                         </div>
 
                                         <div class="form-group hide">
@@ -255,17 +282,6 @@
                                             </div>
                                         </div>
 
-                                        <div class="hr-line-dashed"></div>
-
-                                        <div class="form-group">
-                                            <div class="col-md-12 col-xs-12">
-                                                <button type="submit" data-style="zoom-in" class="btn btn-success btn-md pull-right col-md-3 col-xs-12 ladda-button">
-                                                    <i class="fa fa-save"></i>
-                                                    {{ project.token ? 'Atualizar' : 'Iniciar projeto' }}
-                                                </button>
-                                            </div>
-                                        </div>
-
                                         <div class="hide_">
                                             {{ form_rest(form) }}
                                         </div>
@@ -276,39 +292,92 @@
                                 </div>
                             </div>
 
-                            {#<div class="col-md-12">
-                                <div class="panel panel-primary">
+                            <div class="col-md-12">
+                                <div class="panel panel-info">
                                     <div class="panel-heading">
                                         Inversores e Módulos do Kit
                                     </div>
-                                    <div class="panel-body" id="project_info">
-                                        {% if project.token %}
-                                            <div class="sk-spinner sk-spinner-circle">
-                                                {% for i in 1..12 %}
-                                                    <div class="sk-circle{{ i }} sk-circle"></div>
-                                                {% endfor %}
-                                            </div>
-                                        {% else %}
-                                            <h2> Aguardando iniciar projeto </h2>
+                                    <div class="panel-body" id="project_components" data-load="{{ project.id ? path('project_components',{id:project.id}) }}">
+                                        {% if project.id %}
+                                            {% include view('helper.spinner') %}
                                         {% endif %}
                                     </div>
                                 </div>
-                            </div>#}
+                            </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 class="hipper-label"> 2. Configuração do Sistema </h3>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div id="project_inverters" data-load="{{ project.id ? path('project_inverters',{id:project.id}) }}" class="col-md-12">
+                                {% if project.id %}
+                                    {% include view('helper.spinner') %}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 class="hipper-label"> 3. Resultados </h3>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-12">
+                                <div class="panel panel-warning">
+                                    <div class="panel-heading">
+                                        Gráfico e Dados
+                                    </div>
+                                    <div class="panel-body">
+
+                                        <div class="row">
+                                            <div id="calc_errors" class="col-md-12"></div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                &nbsp;
+                                            </div>
+                                            <div class="col-md-4">
+                                                <button id="process_button" data-style="zoom-in"
+                                                        class="btn hide btn-bg btn-block btn-warning ladda-button pull-right">
+                                                    <i class="fa fa-calculator"></i>
+                                                    {{ 'project.calculate'|trans }}
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="row">
+                                            <div class="col-md-8" id="chart_container">
+                                                <canvas id="default_chart" height="500"></canvas>
+                                            </div>
+
+                                            <div class="col-md-4" style="margin-top:5rem;" id="info_process">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
 
                         {% if project.token %}
 
-                            <div class="row">
+                            {#<div class="row">
                                 <div class="col-md-12">
                                     <h3 class="hipper-label"> 2. Configuração do Sistema </h3>
                                 </div>
-                            </div>
+                            </div>#}
 
-                            <button id="debug_button" class="btn btn-info">
-                                Debug
-                            </button>
-
-                            <div class="row">
+                            {#<div class="row">
                                 <div id="project_inverters" data-load="{{ path('project_inverters',{id:project.id}) }}" class="col-md-12">
                                     <div class="sk-spinner sk-spinner-circle">
                                         {% for i in 1..12 %}
@@ -316,7 +385,7 @@
                                         {% endfor %}
                                     </div>
                                 </div>
-                            </div>
+                            </div>#}
 
                             {#<div class="row">
                                 <div id="inverter_forms" class="col-md-12">
@@ -328,7 +397,7 @@
                                 </div>
                             </div>#}
 
-                            <div class="row">
+                            {#<div class="row">
                                 <div class="col-md-12">
                                     <h3 class="hipper-label"> 3. Resultados </h3>
                                 </div>
@@ -352,7 +421,7 @@
                                                     &nbsp;
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <button id="calc_button" data-style="zoom-in"
+                                                    <button id="process_button" data-style="zoom-in"
                                                             class="btn btn-bg btn-block btn-warning ladda-button pull-right">
                                                         <i class="fa fa-calculator"></i>
                                                         {{ 'project.calculate'|trans }}
@@ -367,14 +436,14 @@
                                                     <canvas id="default_chart" height="500"></canvas>
                                                 </div>
 
-                                                <div class="col-md-4" style="margin-top:5rem;" id="calc_info">
+                                                <div class="col-md-4" style="margin-top:5rem;" id="info_process">
                                                 </div>
 
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>#}
 
                         {% endif %}
 
@@ -398,7 +467,25 @@
 
     <script>
 
+        /*form_project.on('submit', function(event){
+            if(!project_customer.val() && 'save' == form_mode){
+                event.preventDefault();
+                swal({
+                    title: "Contato indefinido",
+                    text: "Para prosseguir é necessário selecionar um contato!",
+                    type: "error",
+                    showConfirmButton: true
+                });
+                return false;
+            }
+        });*/
+
         var ProjectManager = {
+            btnProcess: $('#process_button'),
+            infoProcess: $('#info_process'),
+            project: {
+                id: {{ project.id is not null ? project.id : 'null' }}
+            },
             request: function(config){
                 var options = $.extend({},{
                     url: null,
@@ -441,13 +528,10 @@
 
             },
             change: function(element, path, reload){
-                element.data('load', path);
+                element.attr('data-load', path);
                 if(reload){
                     ProjectManager.load(element);
                 }
-            },
-            inverters: function(){
-                ProjectManager.load($('#project_inverters'));
             },
             submit: function(form, callback){
                 ProjectManager.request({
@@ -490,20 +574,163 @@
                         element: ProjectManager.chart.element
                     });
                 },
+                clear: function(){
+                    var canvas = AppChart.getCanvas(ProjectManager.chart.element);
+                    if(canvas) {
+                        var context = canvas.getContext('2d');
+                        context.clearRect(0, 0, canvas.width, canvas.height);
+                    }
+                },
                 init: function(){
+
                     var chart_container = $('#chart_container');
                     $('#'+ProjectManager.chart.element).attr('width', chart_container.width());
-                    window.setTimeout(function(){
+                    /*window.setTimeout(function(){
                         Project.isLoaded = true;
-                    }, 1000);
+                    }, 1000);*/
                 }
+            },
+            /**
+             * Process project and generate chart
+             */
+            process: function(){
+                if(ProjectManager.project.id){
+                    ProjectManager.request({
+                        url: '{{ path('project_process',{id:'_id_'}) }}'.replace(/_id_/g, ProjectManager.project.id),
+                        method: 'post',
+                        callback: function(xhr){
+                            var response = xhr.responseJSON;
+                            if(response.hasOwnProperty('data')){
+                                ProjectManager.chart.generate(response.data);
+                                ProjectManager.infoProcess.html(response.info);
+                            }
+                        }
+                    });
+                }
+            },
+            configureProjectForm: function(){
+                {% if true %}
+                var form_project = $('#form_project');
+                button = form_project.find('button[type="submit"]');
+                button.ladda();
+                form_project.on('submit', function(event){
+                    event.preventDefault();
+                    var customer = $('#project_customer').val();
+                    if(!customer){
+                        swal({
+                            title: "Contato indefinido",
+                            text: "Para prosseguir é necessário selecionar um contato!",
+                            type: "error",
+                            showConfirmButton: true
+                        });
+                    }else {
+
+                        button.ladda('start');
+
+                        ProjectManager.submit(form_project, function (xhr) {
+                            var response = xhr.responseJSON;
+                            if(response.hasOwnProperty('project')){
+                                ProjectManager.project = response.project;
+
+                                ProjectManager.onSaveProject();
+                            }
+                            button.ladda('stop');
+                        });
+                    }
+                });
+                {% endif %}
+            },
+            loadComponents: function(){
+                ProjectManager.load($('#project_components'));
+            },
+            loadInverters: function(){
+                ProjectManager.load($('#project_inverters'));
+            },
+            loadModalInfo: function(){
+
+                var area_operation_inner = $('#area_operation_inner');
+                var area_operation_spinner = area_operation_inner.html();
+                $('#modal_operation_info').on('show.bs.modal', function(event){
+                    var target = $(event.relatedTarget);
+                    var href = target.data('href');
+                    if(href) {
+                        area_operation_inner.html(area_operation_spinner);
+                        $.ajax({
+                            url: href,
+                            success: function (response) {
+                                area_operation_inner.html(response);
+                            }
+                        });
+                    }
+                });
+
+            },
+            onProjectCreate: function(project){
+                //console.log(project);
+                ProjectManager.loadComponents();
+            },
+            onProjectUpdate: function(){
+                //console.log('project_updated');
+            },
+            onSaveProject: function(){
+
+                var project_url = '{{ path('project_update',{id:'_id_'}) }}'.replace(/_id_/g, ProjectManager.project.id);
+                window.history.pushState({}, null, project_url);
+                $('#form_project').attr('action', project_url);
+
+                var components_url = '{{ path('project_components',{id:'_id_'}) }}'.replace(/_id_/g, ProjectManager.project.id);
+                $('#project_components').attr('data-load', components_url);
+                ProjectManager.loadComponents();
+
+                var inverters_url = '{{ path('project_inverters',{id:'_id_'}) }}'.replace(/_id_/g, ProjectManager.project.id);
+                $('#project_inverters').attr('data-load', inverters_url);
+                ProjectManager.loadInverters();
+
+                ProjectManager.process();
+            },
+            onUpdateInverter: function(){
+                ProjectManager.loadComponents();
+            },
+            beforeUpdateArea: function(){
+                ProjectManager.infoProcess.html('');
+                ProjectManager.chart.clear();
+
+            },
+            onUpdateArea: function(){
+                ProjectManager.loadComponents();
+                ProjectManager.process();
+            },
+            /**
+             * Initialize Manager
+             */
+            onLoadManager: function(){
+
+                ProjectManager.configureProjectForm();
+                ProjectManager.chart.init();
+
+                if(ProjectManager.project.id) {
+                    ProjectManager.loadComponents();
+                    ProjectManager.loadInverters();
+                    ProjectManager.process();
+                }
+
+                ProjectManager.btnProcess.on('click', function(){
+                    // TODO - Check project here
+                    //ProjectManager.process();
+                });
+
+                ProjectManager.loadModalInfo();
             }
         };
 
-        ProjectManager.inverters();
-        ProjectManager.chart.init();
+        ProjectManager.onLoadManager();
+
+        //ProjectManager.loadInverters();
+        //ProjectManager.chart.init();
 
 
+
+        {#
         $('#debug_button').on('click', function(){
             /*ProjectManager.change(
                 $('#project_inverters'),
@@ -529,6 +756,7 @@
                 }
             });
         });
+        #}
 
         /*------------------------------------------------------------*/
 
@@ -536,7 +764,7 @@
         var form_project = $('form[name="project"]');
         var form_mode = 'save';
 
-        var Project = {
+        /*var Project = {
             isLoaded: false,
             chart: {
                 element: 'default_chart',
@@ -576,7 +804,7 @@
             }
         };
 
-        Project.init();
+        Project.init();*/
 
         var project_chart = null;
         var editing_project = false;
@@ -643,7 +871,7 @@
                 });
             }
 
-            form_project.on('submit', function(event){
+            /*form_project.on('submit', function(event){
                 if(!project_customer.val() && 'save' == form_mode){
                     event.preventDefault();
                     swal({
@@ -654,7 +882,7 @@
                     });
                     return false;
                 }
-            });
+            });*/
 
 
             {% if project.id is null %}
@@ -690,7 +918,7 @@
                 project_saleStage.chosen();
                 //clear_calculation_boxes();
                 $('#project_saleStage').chosen();
-                Project.clear_info();
+                //Project.clear_info();
             }
 
             function check_form_project(){
@@ -731,7 +959,7 @@
             }
             //get_inverters_forms();
 
-            var project_info = $('#project_info');
+            /*var project_info = $('#project_info');
             var project_info_loader = project_info.html();
             function load_project_info(){
                 project_info.html(project_info_loader);
@@ -741,7 +969,7 @@
                         project_info.html(response);
                     }
                 });
-            }
+            }*/
             //load_project_info();
 
             form_button.ladda();
@@ -759,7 +987,7 @@
                             if (current_kit != project_kit.val()) {
                                 current_kit = project_kit.val();
                                 get_inverters_forms();
-                                load_project_info();
+                                //load_project_info();
                             }
                             after_update_kit();
                         }
@@ -778,7 +1006,7 @@
             var input_lng = $('#project_longitude');
             var modal_info = $('#modal_info');
 
-            choice_state.on('change', function(){
+            {#choice_state.on('change', function(){
                 var state = $(this).val();
                 choice_city.find('option').remove();
                 choice_city.append('<option>{{ 'Loading'|trans }}...</option');
@@ -799,8 +1027,9 @@
                     }
                 });
             }){% if project.id is null %}.trigger('change'){% endif %};
+            #}
 
-            function load_geocode(){
+            /*function load_geocode(){
                 var state = choice_state.val();
                 var city = choice_city.val();
 
@@ -818,11 +1047,11 @@
                         }
                     });
                 }
-            }//load_geocode();
+            }*///load_geocode();
 
-            choice_city.on('change', function(){
+            /*choice_city.on('change', function(){
                 load_geocode();
-            });
+            });*/
 
             var modal_body = modal_info.find('.modal-body'), modal_spinner = modal_body.html();
             modal_info.on('show.bs.modal', function(){
@@ -881,11 +1110,10 @@
                     });
                 }
             });
-
         });
 
         {% if project.id %}
-
+/*
         var calc_button = $('#calc_button');
         var calc_status = $('#calc_status');
         var calc_spinner = calc_status.html();
@@ -910,7 +1138,7 @@
                     Project.processing = false;
                 }
             });
-        }
+        }*/
 
         {#{% if project.computable %}
             process_project();
@@ -918,7 +1146,8 @@
 
         var common_error = 'Para prosseguir é necessário salvar as “Informações Principais” e todas as áreas de projeto';
         calc_button.on('click', function(){
-            var alerts = '';
+            //process_project();
+            /*var alerts = '';
             if(editing_project || $('select.area-module:not(:disabled)').length){
                 alerts = create_alert_box('danger', '', common_error);
             }
@@ -926,7 +1155,7 @@
                 process_project();
             }else{
                 calc_errors.html(alerts);
-            }
+            }*/
         });
 
 
@@ -956,9 +1185,10 @@
         }
         #}
 
-        var area_operation_inner = $('#area_operation_inner');
+        /*var area_operation_inner = $('#area_operation_inner');
         var area_operation_spinner = area_operation_inner.html();
         $('#modal_operation_info').on('show.bs.modal', function(event){
+            alert('ok');
             var target = $(event.relatedTarget);
             var href = target.data('href');
             if(href) {
@@ -970,7 +1200,7 @@
                     }
                 });
             }
-        });
+        });*/
 
         {% endif %}
 
@@ -1023,14 +1253,12 @@
 
     </script>
 
-{# Google Maps #}{#
-
+    {# GOOGLE MAPS #}
     {% include view('helper.google_maps') with({
-    latitude: 'project_latitude',
-    longitude: 'project_longitude',
-    input: 'project_address',
-    zoom: project.latitude ? 17 : 3
+        latitude: 'project_latitude',
+        longitude: 'project_longitude',
+        input: 'project_address',
+        zoom: project.latitude ? 17 : 3
     }) %}
-    #}
 
 {% endblock %}

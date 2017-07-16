@@ -30,6 +30,12 @@ interface ProjectInterface
     const PRICE_STRATEGY_PERCENT  = 3;
 
     /**
+     * Structure type definitions
+     */
+    const STRUCTURE_SICES         = 'SICES';
+    const STRUCTURE_K2_SYSTEM     = 'K2_SYSTEM';
+
+    /**
      * @return int
      */
     public function getId();
@@ -40,9 +46,59 @@ interface ProjectInterface
     public function getToken();
 
     /**
+     * @param $number
+     * @return ProjectInterface
+     */
+    public function setNumber($number);
+
+    /**
      * @return int
      */
     public function getNumber();
+
+    /**
+     * @param $infConsumption
+     * @return ProjectInterface
+     */
+    public function setInfConsumption($infConsumption);
+
+    /**
+     * @return float
+     */
+    public function getInfConsumption();
+
+    /**
+     * @param $infPower
+     * @return ProjectInterface
+     */
+    public function setInfPower($infPower);
+
+    /**
+     * @return float
+     */
+    public function getInfPower();
+
+    /**
+     * @param $roofType
+     * @return ProjectInterface
+     */
+    public function setRoofType($roofType);
+
+    /**
+     * @return string
+     */
+    public function getRoofType();
+
+    /**
+     * @param $structureType
+     * @return ProjectInterface
+     */
+    public function setStructureType($structureType);
+
+    /**
+     * @return string
+     */
+    public function getStructureType();
 
     /**
      * @param $identifier
@@ -177,6 +233,18 @@ interface ProjectInterface
     public function getDistribution();
 
     /**
+     * Count modules referred without areas
+     * @return int
+     */
+    public function countAssociatedModules();
+
+    /**
+     * Count inverters referred without areas
+     * @return int
+     */
+    public function countAssociatedInverters();
+
+    /**
      * @return int
      */
     public function countConfiguredModules();
@@ -256,6 +324,17 @@ interface ProjectInterface
      * @return \DateTime
      */
     public function getUpdatedAt();
+
+    /**
+     * @param null $tag
+     * @return array
+     */
+    public function getChecklist($tag = null);
+
+    /**
+     * @return bool
+     */
+    public function isComputable();
 
     /**
      * @param MemberInterface $member
@@ -346,6 +425,23 @@ interface ProjectInterface
     public function getAreas();
 
     /**
+     * @param ProjectStructureInterface $projectStructure
+     * @return ProjectInterface
+     */
+    public function addProjectStructure(ProjectStructureInterface $projectStructure);
+
+    /**
+     * @param ProjectStructureInterface $projectStructure
+     * @return ProjectInterface
+     */
+    public function removeProjectStructure(ProjectStructureInterface $projectStructure);
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getProjectStructures();
+
+    /**
      * @return float
      */
     public function getCostPriceExtraServices();
@@ -364,4 +460,14 @@ interface ProjectInterface
      * @return array
      */
     public static function getPriceStrategies();
+
+    /**
+     * @return array
+     */
+    public static function getRootTypes();
+
+    /**
+     * @return array
+     */
+    public static function getStructureTypes();
 }

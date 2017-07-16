@@ -4,6 +4,8 @@ namespace AppBundle\Util\KitGenerator\StructureCalculator;
 
 class Profile implements ProfileInterface
 {
+    use MakerDefinition;
+
     private $id;
 
     private $description;
@@ -15,9 +17,13 @@ class Profile implements ProfileInterface
     /**
      * @inheritDoc
      */
-    public function __construct()
+    public function __construct($id = null, $description = null, $size = 0, $quantity = 0)
     {
-        $this->quantity = 0;
+        $this->id = $id;
+        $this->description = $description;
+        $this->size = $size;
+        $this->quantity = $quantity;
+        $this->maker    = Structure::MAKER_SICES_SOLAR;
     }
 
     /**

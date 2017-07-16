@@ -16,6 +16,7 @@ interface ItemInterface
     const TYPE_FIXER    = 'fixer';
     const TYPE_BASE     = 'base';
     const TYPE_MODULE   = 'module';
+    const TYPE_CATCH    = 'catch';
 
     // --- Subtypes
     # BASE
@@ -36,6 +37,9 @@ interface ItemInterface
     # TERMINAL
     const TERMINAL_FINAL     = 'terminal_final';        // Terminal Final
     const TERMINAL_MIDDLE    = 'terminal_middle';       // Terminal Intermediário
+    # CATCH
+    const CATCH_BAND         = 'catch_band';
+    const CATCH_SPEED_CLIP   = 'catch_speed_clip';
 
     # JUNCTION and MODULE has no subtype
 
@@ -49,6 +53,17 @@ interface ItemInterface
      * @return int
      */
     public function getId();
+
+    /**
+     * @param $maker
+     * @return ProfileInterface
+     */
+    public function setMaker($maker);
+
+    /**
+     * @return int
+     */
+    public function getMaker();
 
     /**
      * @param $size
