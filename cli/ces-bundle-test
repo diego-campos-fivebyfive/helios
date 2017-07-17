@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-cd $SICES_PATH/bundle/app
+cd $SICES_PATH/bundle/test
 
 nodemon index.js

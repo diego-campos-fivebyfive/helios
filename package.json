@@ -1,7 +1,9 @@
 {
   "scripts": {
     "compile": "ces-frontend-compile",
-    "start": "ces-bundle-start && php app/console server:run"
+    "start:dev": "BUNDLE_PORT=2021 ces-bundle-start --development && php app/console server:run",
+    "start": "BUNDLE_PORT=3000 ces-bundle-start && php app/console server:run",
+    "test:bundle": "TEST_BUNDLE_PORT=2020 ces-bundle-test"
   },
   "dependencies": {
     "uglify-js": "^3.0.23",
