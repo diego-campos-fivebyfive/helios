@@ -13,7 +13,7 @@ Sistema de suporte para empresas do setor de energia solar fotovoltaíca.
 
 ### Documentações
 
-  - [Comandos Frontend](docs/frontend.md)
+  - [Comandos do Sices](docs/commands.md)
 
   - [Tarefas](docs/tasks.md)
 
