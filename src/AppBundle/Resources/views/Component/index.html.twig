@@ -180,7 +180,7 @@
                                     <td> {{ is_module ? [component.maxPower|decimal,' W']|join : component.mpptNumber }} </td>
                                     <td> {{ is_module ? component.efficiency|decimal : component.maxEfficiency|decimal }}%</td>
                                     <td>
-                                        {{ handler.component_buttons(component,{'account':account, 'update':route_update, 'show':route_show, 'delete':route_delete}) }}
+                                        {{ handler.component_buttons(component,{type:type, 'account':account, 'update':route_update, 'show':route_show, 'delete':route_delete}) }}
                                     </td>
                                 </tr>
 
