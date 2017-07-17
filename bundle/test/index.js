@@ -33,7 +33,7 @@ const sendNotifications = (req, res, notification) => {
 }
 
 app.post('/notifications', (req, res) => {
-  res.status(200).json(JSON.stringify(req.body))
+  res.status(200).json(req.body)
 })
 
 app.get('/product/:code', (req, res) => {
@@ -57,3 +57,4 @@ const { productCreated, memorialCreated } = notifications
 
 app.get('/action/product-create', (req, res) => sendNotifications(req, res, productCreated))
 app.get('/action/memorial-create', (req, res) => sendNotifications(req, res, memorialCreated))
+
