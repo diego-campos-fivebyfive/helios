@@ -263,6 +263,13 @@ class Project implements ProjectInterface
     /**
      * @var ArrayCollection
      *
+     * @ORM\OneToMany(targetEntity="ProjectStringBox", mappedBy="project", cascade={"persist", "remove"})
+     */
+    private $projectStringBoxs;
+
+    /**
+     * @var ArrayCollection
+     *
      * @ORM\OneToMany(targetEntity="ProjectTax", mappedBy="project", indexBy="project", cascade={"persist", "remove"})
      */
     private $projectTaxes;
@@ -299,6 +306,7 @@ class Project implements ProjectInterface
         $this->projectInverters      = new ArrayCollection();
         $this->projectStructures     = new ArrayCollection();
         $this->projectExtras         = new ArrayCollection();
+        $this->projectStringBoxs     = new ArrayCollection();
         $this->projectTaxes          = new ArrayCollection();
         $this->invoiceBasePrice      = 0;
         $this->deliveryBasePrice     = 0;
@@ -1306,6 +1314,8 @@ class Project implements ProjectInterface
         return $this->projectExtras;
     }
 
+
+
     /**
      * @inheritDoc
      */
@@ -1325,6 +1335,43 @@ class Project implements ProjectInterface
             return $projectExtra->isService();
         });
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function addProjectStringBox(ProjectStringBoxInterface $projectStringBox)
+    {
+        if(!$this->projectStringBoxs->contains($projectStringBox)){
+
+            $this->projectStringBoxs->add($projectStringBox);
+
+            if(!$projectStringBox->getProject())
+                $projectStringBox->setProject($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeProjecStringBox(ProjectStringBoxInterface $projectStringBox)
+    {
+        if($this->projectStringBoxs->contains($projectStringBox)){
+            $this->projectStringBoxs->removeElement($projectStringBox);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getProjectStringBoxs()
+    {
+        return $this->projectStringBoxs;
+    }
+
 
     /**
      * @inheritDoc

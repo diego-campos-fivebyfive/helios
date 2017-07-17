@@ -564,6 +564,23 @@ interface ProjectInterface
     public function getProjectExtraServices();
 
     /**
+     * @param ProjectStringBoxInterface $projectStrinBox
+     * @return ProjectInterface
+     */
+    public function addProjectStringBox(ProjectStringBoxInterface $projectStringBox);
+
+    /**
+     * @param ProjectStringBoxInterface $projectStrinBox
+     * @return ProjectInterface
+     */
+    public function removeProjectStringBox(ProjectStringBoxInterface $projectStringBox);
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getProjectStringBoxs();
+
+    /**
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getAreas();
