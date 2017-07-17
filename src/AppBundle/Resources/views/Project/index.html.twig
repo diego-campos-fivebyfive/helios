@@ -46,7 +46,7 @@
                         style=";width: 98%;">
                     <option value=""> Etapa de vendas &raquo; Todas </option>
                     {% for stage in stages %}
-                        <option {{ current_stage == stage.token ? 'selected="selected"' }} value="{{ stage.token }}"> {{ stage.position }} - {{ stage.name }} </option>
+                        <option {{ current_stage == stage.id ? 'selected="selected"' }} value="{{ stage.id }}"> {{ stage.position }} - {{ stage.name }} </option>
                     {% endfor %}
                 </select>
             </div>
