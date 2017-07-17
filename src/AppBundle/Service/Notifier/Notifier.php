@@ -12,15 +12,17 @@ Use  GuzzleHttp\Client;
 
 class Notifier
 {
-    public function notifier(){
+    public function notify(array $data){
 
-        $port = getenv('ISQUIK_PORT');
+        //$port = getenv('ISQUIK_PORT');
+        $port = 2021;
 
         $client = new Client(['base_uri' => "http://localhost:$port"]);
 
-        $response = $client->post('/notifications', [
-           'callback' => 'product_create',
-           'body'  => 'id'
+        $response = $client->request('POST','/notifications', [
+           'form_params'  => $data
         ]);
+
+        //dump($response->getBody()->getContents());die;
     }
 }

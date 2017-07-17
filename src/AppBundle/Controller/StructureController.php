@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\Component\Structure;
 use AppBundle\Form\Component\StructureType;
+use AppBundle\Service\Notifier\Notifier;
 
 /**
  * Class StructureController
@@ -104,6 +105,10 @@ class StructureController extends AbstractController
 
             return $this->redirectToRoute('structure_index');
         }
+
+        $notifier = new Notifier();
+
+        $notifier->notifier('product_validate', [$manager->find(id)]);
 
         return $this->render("structure.form", [
             'form' => $form->createView(),

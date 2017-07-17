@@ -33,7 +33,6 @@ const sendNotifications = (req, res, notification) => {
 }
 
 app.post('/notifications', (req, res) => {
-  console.log(req.body)
   res.status(200).json(req.body)
 })
 

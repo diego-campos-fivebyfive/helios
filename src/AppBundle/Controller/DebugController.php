@@ -323,13 +323,14 @@ class DebugController extends AbstractController
      */
     public function notifierAction()
     {
-        $test = [];
+        $this->get('notifier')->notify([
+            'callback' => 'product_validate',
+            'body' => [
+                'id' => '62'
+            ]
+        ]);
 
-        $notifier = new Notifier();
-
-        $notifier->notifier($test);
-
-
+        return $this->json();
 
     }
 }
