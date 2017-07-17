@@ -7,10 +7,7 @@ const products = require('./mocks/products')
 const memorial = require('./mocks/memorial')
 
 const app = express()
-app.listen(process.env.ISQUIK_PORT || 2021)
-
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+app.listen(process.env.ISQUIK_BUNDLE_PORT || 2021)
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -36,7 +33,8 @@ const sendNotifications = (req, res, notification) => {
 }
 
 app.post('/notifications', (req, res) => {
-  res.status(200).json(JSON.stringify(req.body))
+  console.log(req.body)
+  res.status(200).json(req.body)
 })
 
 app.get('/product/:code', (req, res) => {
@@ -60,3 +58,4 @@ const { productCreated, memorialCreated } = notifications
 
 app.get('/action/product-create', (req, res) => sendNotifications(req, res, productCreated))
 app.get('/action/memorial-create', (req, res) => sendNotifications(req, res, memorialCreated))
+
