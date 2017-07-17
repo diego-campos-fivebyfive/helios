@@ -2,9 +2,8 @@
 
 namespace AppBundle\Entity\Component;
 
-use AppBundle\Entity\BusinessInterface;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * Maker
@@ -15,6 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Maker implements MakerInterface
 {
+    use ORMBehaviors\Timestampable\Timestampable;
+
     /**
      * @var integer
      *
@@ -44,21 +45,6 @@ class Maker implements MakerInterface
      * @ORM\Column(name="enabled", type="boolean")
      */
     private $enabled;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_at", type="datetime")
-     */
-    private $createdAt;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated_at", type="datetime")
-     */
-    private $updatedAt;
-
 
     function __construct()
     {
@@ -220,17 +206,6 @@ class Maker implements MakerInterface
             self::CONTEXT_INVERTER => self::CONTEXT_INVERTER
             //self::CONTEXT_ALL => self::CONTEXT_ALL
         ];
-    }
-
-    public function prePersist()
-    {
-        $this->createdAt = new \DateTime;
-        $this->updatedAt = new \DateTime;
-    }
-
-    public function preUpdate()
-    {
-        $this->updatedAt = new \DateTime;
     }
 
     /**

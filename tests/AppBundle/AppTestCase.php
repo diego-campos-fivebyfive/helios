@@ -23,10 +23,12 @@ class AppTestCase extends WebTestCase
             Fixtures\LoadCustomerData::class,
 
             // Components
+            Fixtures\Component\MakerData::class,
             Fixtures\Component\ExtraProductData::class,
             Fixtures\Component\ExtraServiceData::class,
             Fixtures\Component\ModuleData::class,
             Fixtures\Component\InverterData::class,
+            Fixtures\Component\StringBoxData::class,
             Fixtures\LoadProjectData::class,
             Fixtures\LoadProjectModuleData::class,
             Fixtures\LoadProjectInverterData::class,
