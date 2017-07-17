@@ -632,7 +632,7 @@ class LegacyProjectController extends AbstractController
     }
 
     /**
-     * @Route("/{token}/delete", name="project_delete")
+     * @Route("/{token}/delete", name="project_delete_legacy")
      * @Method("delete")
      */
     public function deleteAction(Project $project)

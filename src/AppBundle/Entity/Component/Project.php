@@ -235,35 +235,35 @@ class Project implements ProjectInterface
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="ProjectModule", mappedBy="project", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="ProjectModule", mappedBy="project", cascade={"persist", "remove"})
      */
     private $projectModules;
 
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="ProjectInverter", mappedBy="project", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="ProjectInverter", mappedBy="project", cascade={"persist", "remove"})
      */
     private $projectInverters;
 
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="ProjectStructure", mappedBy="project", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="ProjectStructure", mappedBy="project", cascade={"persist", "remove"})
      */
     private $projectStructures;
 
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="ProjectExtra", mappedBy="project", indexBy="project", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="ProjectExtra", mappedBy="project", indexBy="project", cascade={"persist", "remove"})
      */
     private $projectExtras;
 
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="ProjectTax", mappedBy="project", indexBy="project", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="ProjectTax", mappedBy="project", indexBy="project", cascade={"persist", "remove"})
      */
     private $projectTaxes;
 
@@ -1410,6 +1410,14 @@ class Project implements ProjectInterface
         }
 
         return $areas;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isClosed()
+    {
+        return false;
     }
 
     /**

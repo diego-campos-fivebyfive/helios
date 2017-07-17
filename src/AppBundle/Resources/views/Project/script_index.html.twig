@@ -45,16 +45,15 @@
         if(choiceStages.length){
             choiceStages.on('change', function(){
                 var choice = $(this);
-                var token = choice.data('stage');
+                var id = choice.data('stage');
+                var stage = choice.val();
                 var spinner = $('[data-spinner="'+choice.attr('id')+'"]');
                 spinner.removeClass('hide');
                 $.ajax({
-                    url: '{{ path('project_change',{token:'_token_'}) }}'.replace(/_token_/g, token),
+                    url: '{{ path('project_stage',{id:'_id_', stage:'_stage_'}) }}'.replace(/_id_/g, id).replace(/_stage_/g, stage),
                     method: 'post',
-                    data: {target:'stage',stage:choice.val()},
                     complete: function(xhr){
                         spinner.addClass('hide');
-                        //console.log(xhr.status);
                     }
                 });
             });
@@ -81,7 +80,7 @@
                         data: {_method:'delete'},
                         complete: function (xhr) {
                             //var response = xhr.responseJSON;
-                            if (202 == xhr.status) {
+                            if (200 == xhr.status) {
                                 swal("{{ 'Success'|trans }}", "Exclusão efetuada com sucesso!", "success");
                                 row.remove();
                                 window.setTimeout(function(){

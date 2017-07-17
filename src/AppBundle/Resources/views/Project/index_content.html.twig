@@ -2,13 +2,13 @@
 
     {% macro choiceStages(stages, project) %}
 
-        {#{% set current = project.saleStage %}
+        {% set current = project.stage %}
         {% set random = ['stages',random()]|join %}
 
-        <select title="Etapa de venda" data-stage="{{ project.token }}" id="{{ random }}"
+        <select title="Etapa de venda" data-stage="{{ project.id }}" id="{{ random }}"
                 class="form-control col-md-12 sel">
             {% for stage in stages %}
-                <option {{ stage.id == current.id ? 'selected="selected"' }} value="{{ stage.token }}">
+                <option {{ stage.id == current.id ? 'selected="selected"' }} value="{{ stage.id }}">
                     {{ stage.sortedName }}
                 </option>
             {% endfor %}
@@ -17,7 +17,7 @@
             {% for i in 1..12 %}
                 <div class="sk-circle{{ i }} sk-circle"></div>
             {% endfor %}
-        </div> #}
+        </div>
 
     {% endmacro %}
 
@@ -145,7 +145,7 @@
                             </td>
 
                             <td class="col-md-3">
-                                {{ helper.choiceStages(sale_stages, project) }}
+                                {{ helper.choiceStages(stages, project) }}
                             </td>
 
                             <td class="col-md-2">
@@ -201,16 +201,15 @@
 
                             <td class="col-md-2">
                                 <div class="btn-group btn-group-sm col-md-12 btn-group-justified">
-                                    {#% if not project.isDone %#}
-                                    {% if 1 == 2 %}
+                                    {% if not project.isClosed %}
                                         <a title="{{ 'Manage'|trans }}"
-                                           href="{{ path('project_update',{token:project.token}) }}"
+                                           href="{{ path('project_update',{id:project.id}) }}"
                                            class="btn btn-success btn-sm">
                                             <i class="fa fa-pencil"></i>
                                         </a>
                                     {% endif %}
                                     <a title="{{ 'Delete'|trans }}"
-                                       data-delete="{{ path('project_delete',{token:project.token}) }}"
+                                       data-delete="{{ path('project_delete',{id:project.id}) }}"
                                        class="btn btn-danger btn-sm">
                                         <i class="fa fa-trash"></i>
                                     </a>

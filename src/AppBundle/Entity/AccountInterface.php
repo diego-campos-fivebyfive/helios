@@ -18,6 +18,11 @@ interface AccountInterface
     const PROJECTS_QUOTA = 4;
 
     /**
+     * @return int
+     */
+    public function getId();
+
+    /**
      * Checks whether the account is free or has a linked subscription
      *
      * @return bool
@@ -64,4 +69,9 @@ interface AccountInterface
      * @return BusinessInterface
      */
     public function setAttribute($key, $value);
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getMembers();
 }

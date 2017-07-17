@@ -4,6 +4,8 @@ namespace AppBundle\Form\Component;
 
 use AppBundle\Entity\Category;
 use AppBundle\Entity\Component\Project;
+use AppBundle\Entity\Customer;
+use AppBundle\Entity\CustomerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -20,10 +22,21 @@ class ProjectType extends AbstractType
     {
         /** @var \AppBundle\Entity\Component\ProjectInterface $project */
         $project = $options['data'];
-        $account = $project->getMember()->getAccount();
+        $member = $project->getMember();
+        $account = $member->getAccount();
+
+        $customers = $member->getAllowedContacts()->toArray();
+
+        uasort($customers, function(CustomerInterface $prev, CustomerInterface $next){
+            return $prev->getFirstname() > $next->getFirstname();
+        });
 
         $builder
-            ->add('customer')
+            ->add('customer', EntityType::class, [
+                'class' => Customer::class,
+                'choices' => $customers,
+                'required' => true
+            ])
             ->add('stage', EntityType::class, [
                 'class' => Category::class,
                 'property' => 'sortedName',
