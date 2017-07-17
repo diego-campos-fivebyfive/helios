@@ -28,6 +28,10 @@ const sendNotifications = (req, res, notification) => {
   })
 }
 
+app.post('/notifications', (req, res) => {
+  res.status(200).json(JSON.stringify(req.body))
+})
+
 app.get('/product/:code', (req, res) => {
   const { code } = req.params
   const product = products.find(x => x.code === code)
