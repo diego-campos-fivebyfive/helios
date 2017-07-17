@@ -2,15 +2,16 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Component\Precifier;
+use AppBundle\Entity\Component\ProjectTax;
 use AppBundle\Entity\Financial\ProjectFinancial;
 use AppBundle\Entity\Financial\ProjectFinancialInterface;
 use AppBundle\Entity\Financial\ProjectFinancialManager;
 use AppBundle\Entity\Financial\Tax;
-use AppBundle\Entity\Project\Project;
+use AppBundle\Entity\Component\Project;
 use AppBundle\Form\Financial\FinancialType;
 use AppBundle\Form\Financial\TaxType;
 use AppBundle\Service\Support\Project\FinancialAnalyzer;
+use AppBundle\Util\ProjectPricing\SalePrice;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -20,17 +21,34 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 /**
  * @Breadcrumb("Dashboard", route={"name"="app_index"})
  * @Breadcrumb("Projects", route={"name"="project_index"})
- * @Route("/financial")
+ * @Route("/project/financial")
  */
 class ProjectFinancialController extends AbstractController
 {
     /**
      * @Breadcrumb("Análise Financeira - N&deg; {project.number}")
-     * @Route("/{token}", name="project_financial")
+     * @Route("/{id}", name="project_financial")
      */
     public function configAction(Project $project)
     {
-        if($project->isDone()){
+        /*$tax = new ProjectTax();
+        $tax
+            ->setName('The Tax')
+            ->setOperation(ProjectTax::OPERATION_ADDITION)
+            ->setTarget(ProjectTax::TARGET_EQUIPMENTS)
+            ->setType(ProjectTax::TYPE_ABSOLUTE)
+            ->setValue(1000)
+            ->setProject($project)
+        ;
+
+        dump('Equipments: ' . $project->getSalePriceEquipments());
+        dump('Services: ' . $project->getSalePriceServices());
+        dump('Tax: ' . $tax->getAmount());
+        dump('Sale: ' . $project->getSalePrice());
+        die;*/
+
+
+        /*if($project->isDone()){
             return $this->render('project.done', [
                 'project' => $project,
                 'stage' => 'financial'
@@ -39,106 +57,102 @@ class ProjectFinancialController extends AbstractController
         
         if(!$project->isAnalysable()) {
             return $this->redirectToRoute('project_update',['token' => $project->getToken()]);
-        }
+        }*/
         
-        $financial = $this->getProjectFinancial($project);
+        //$financial = $this->getProjectFinancial($project);
 
-        $form = $this->createForm(FinancialType::class, $financial);
+        // TODO : REVIEW THIS PROCESS
+        /*SalePrice::calculate($project, 10, 10);
+        $this->manager('project')->save($project);
+        dump($project->getSalePrice()); die;*/
 
-        $formTax = $this->createForm(TaxType::class, $financial->createTax());
+        $form = $this->createForm(FinancialType::class, $project);
 
-        /*dump($project->getKit()->countModules());
-        dump($project->getKit()->getElementServices());
-        dump($project->getTotalModules());
-        dump($project->getElementServices());
-        die;*/
+        //dump($form); die;
+        $formTax = $this->createForm(TaxType::class, new ProjectTax());
 
-        /*foreach ($project->getElementItems() as $item){
-            dump($item);
-        }
-        die;*/
-
-        return $this->render('financial.analysis', [
+        return $this->render('project.financial', [
             'project' => $project,
-            'financial' => $financial,
+            //'financial' => $financial,
             'form' => $form->createView(),
             'form_tax' => $formTax->createView()
         ]);
     }
 
     /**
-     * @Route("/{token}/calculate", name="financial_calculate")
+     * @Route("/{id}/calculate", name="financial_calculate")
      */
-    public function calculateAction(Request $request, ProjectFinancial $financial)
+    public function calculateAction(Request $request, Project $project)
     {
         $response = ['error' => 'Unprocessed metadata'];
 
         if ($request->isMethod('post')) {
 
-            $form = $this->createForm(FinancialType::class, $financial);
+            $form = $this->createForm(FinancialType::class, $project);
 
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
                 
-                FinancialAnalyzer::analyze($financial);
+                FinancialAnalyzer::analyze($project);
 
-                $this->getFinancialManager()->save($financial);
+                $this->manager('project')->save($project);
 
             } else {
                 $response['error'] = 'Invalid form data';
             }
         }
 
-        $this->clearTemplateCache('financial.info');
+        $this->clearTemplateCache('project.financial_info');
 
-        if ($financial->getAccumulatedCash()) {
+        if ($project->getAccumulatedCash()) {
             $response = [
-                'data' => $financial->getAccumulatedCash(),
-                'info' => $this->renderView('financial.info', [ 'financial' => $financial ])
+                'data' => $project->getAccumulatedCash(),
+                'info' => $this->renderView('project.financial_info', [ 'project' => $project ])
             ];
         }
 
         if($request->isXmlHttpRequest()) {
-            return $this->jsonResponse($response);
+            return $this->json($response);
         }
 
         return $this->createNotFoundException();
     }
 
     /**
-     * @Route("/{token}/taxes", name="financial_taxes")
+     * @Route("/{id}/taxes", name="financial_taxes")
      */
-    public function taxesAction(Request $request, ProjectFinancial $financial)
+    public function taxesAction(Request $request, Project $project)
     {
-        return $this->jsonResponse([
-            'content' => $this->renderView('financial.taxes', ['financial' => $financial])
+        return $this->json([
+            'content' => $this->renderView('project.financial_taxes', ['project' => $project])
         ]);
     }
 
     /**
-     * @Route("/tax/{token}/create", name="financial_tax_create")
+     * @Route("/{id}/taxes/create", name="financial_tax_create")
      */
-    public function createTaxAction(Request $request, ProjectFinancial $financial)
+    public function createTaxAction(Request $request, Project $project)
     {
-        $tax = $financial->createTax();
+        $tax = new ProjectTax();
+        $tax->setProject($project);
 
         return $this->handleTaxApplication($request, $tax);
     }
 
     /**
-     * @Route("/tax/{token}/update", name="financial_tax_update")
+     * @Route("/tax/{id}/update", name="financial_tax_update")
      */
-    public function updateTaxAction(Request $request, Tax $tax)
+    public function updateTaxAction(Request $request, ProjectTax $tax)
     {
         return $this->handleTaxApplication($request, $tax);
     }
     
     /**
-     * @Route("/tax/{token}/delete", name="financial_tax_delete")
+     * @Route("/tax/{id}/delete", name="financial_tax_delete")
      * @Method("delete")
      */
-    public function deleteTaxAction(Request $request, Tax $tax)
+    public function deleteTaxAction(Request $request, ProjectTax $tax)
     {
         // For errors
         /* return $this->jsonResponse([
@@ -150,16 +164,18 @@ class ProjectFinancialController extends AbstractController
         $manager->remove($tax);
         $manager->flush();
 
-        return $this->jsonResponse([], Response::HTTP_OK);
+        return $this->json([], Response::HTTP_OK);
     }
 
     /**
-     * @param Tax $tax
+     * @param ProjectTax $tax
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    private function handleTaxApplication(Request $request, Tax $tax)
+    private function handleTaxApplication(Request $request, ProjectTax $tax)
     {
-        $financial = $tax->getFinancial();
+        //$financial = $tax->getFinancial();
+
+        $project = $tax->getProject();
 
         /** @var Tax $backupTax */
         $backupTax = $tax->getId() ?  clone $tax : null ;
@@ -177,12 +193,13 @@ class ProjectFinancialController extends AbstractController
             $status = Response::HTTP_ACCEPTED;
             $data = [];
 
-            if ($financial->getFinalPrice() <= 0.01) {
+            //if ($financial->getFinalPrice() <= 0.01) {
+            if ($project->getSalePrice() <= 0.01) {
 
                 $status = Response::HTTP_CONFLICT;
                 $data = [
                     'error' => $this->get('translator')->trans('financial.error.negative_selling_price'),
-                    'total' => $financial->getFinalPrice(),
+                    'total' => $project->getSalePrice(),
                     'tax_value' => $tax->getValue()
                 ];
 
@@ -200,10 +217,10 @@ class ProjectFinancialController extends AbstractController
                 $manager->flush();
             }
 
-            return $this->jsonResponse($data, $status);
+            return $this->json($data, $status);
         }
 
-        return $this->jsonResponse([], Response::HTTP_NO_CONTENT);
+        return $this->json([], Response::HTTP_NO_CONTENT);
     }
 
     /**

@@ -4,8 +4,8 @@
 
 {% set inverter = projectInverter.inverter %}
 
-{#{% set op_color = project_inverter.metadataOperation is null ? 'danger' : project_inverter.metadataOperation.level %}#}
-{% set op_color = 'danger' %}
+{% set op_color = projectInverter.metadata is null ? 'danger' : projectInverter.metadata.level %}
+{#{% set op_color = 'danger' %}#}
 
 <style type="text/css">
     .stacked-inverter .table tr td {
@@ -138,11 +138,15 @@
                     }
                     mppt_spinner.fadeOut();
                     ProjectManager.operations({{ projectInverter.id }});
+
+                    ProjectManager.onUpdateInverter();
                 });
             }
 
             mppt.on('change', function(){
-                submit_form_inverter(false);
+                if($(this).val()) {
+                    submit_form_inverter(false);
+                }
             });
 
             apply_loss.on('click', function(event){

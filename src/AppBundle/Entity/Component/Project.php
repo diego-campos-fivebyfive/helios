@@ -14,6 +14,7 @@ namespace AppBundle\Entity\Component;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\CustomerInterface;
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Util\KitGenerator\StructureCalculator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\TokenizerTrait;
@@ -58,6 +59,13 @@ class Project implements ProjectInterface
     /**
      * @var string
      *
+     * @ORM\Column(type="string", length=25)
+     */
+    private $roofType;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="invoice_base_price", type="decimal", precision=10, scale=2, nullable=true)
      */
     private $invoiceBasePrice;
@@ -93,6 +101,27 @@ class Project implements ProjectInterface
     /**
      * @var float
      *
+     * @ORM\Column(type="float")
+     */
+    private $infConsumption;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="float")
+     */
+    private $infPower;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=10)
+     */
+    private $structureType;
+
+    /**
+     * @var float
+     *
      * @ORM\Column(name="latitude", type="float")
      */
     private $latitude;
@@ -119,6 +148,90 @@ class Project implements ProjectInterface
     private $metadata;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $lifetime;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $inflation;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $efficiencyLoss;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $annualCostOperation;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $energyPrice;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    private $internalRateOfReturn;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    private $netPresentValue;
+
+    /**
+     * @var array
+     *
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $accumulatedCash;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $paybackYears;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $paybackMonths;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $paybackYearsDisc;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $paybackMonthsDisc;
+
+    /**
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="ProjectModule", mappedBy="project", cascade={"persist"})
@@ -135,9 +248,23 @@ class Project implements ProjectInterface
     /**
      * @var ArrayCollection
      *
+     * @ORM\OneToMany(targetEntity="ProjectStructure", mappedBy="project", cascade={"persist"})
+     */
+    private $projectStructures;
+
+    /**
+     * @var ArrayCollection
+     *
      * @ORM\OneToMany(targetEntity="ProjectExtra", mappedBy="project", indexBy="project", cascade={"persist"})
      */
     private $projectExtras;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="ProjectTax", mappedBy="project", indexBy="project", cascade={"persist"})
+     */
+    private $projectTaxes;
 
     /**
      * @var Customer|MemberInterface
@@ -162,11 +289,14 @@ class Project implements ProjectInterface
         $this->deliveryPriceStrategy = self::PRICE_STRATEGY_ABSOLUTE;
         $this->projectModules        = new ArrayCollection();
         $this->projectInverters      = new ArrayCollection();
+        $this->projectStructures     = new ArrayCollection();
         $this->projectExtras         = new ArrayCollection();
+        $this->projectTaxes          = new ArrayCollection();
         $this->invoiceBasePrice      = 0;
         $this->deliveryBasePrice     = 0;
         $this->taxPercent            = 0;
         $this->metadata              = [];
+        $this->accumulatedCash       = [];
     }
 
     /**
@@ -211,6 +341,78 @@ class Project implements ProjectInterface
     public function getIdentifier()
     {
         return $this->identifier;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setInfConsumption($infConsumption)
+    {
+        $this->infConsumption = $infConsumption;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getInfConsumption()
+    {
+        return $this->infConsumption;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setInfPower($infPower)
+    {
+        $this->infPower = $infPower;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getInfPower()
+    {
+        return $this->infPower;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setRoofType($roofType)
+    {
+        $this->roofType = $roofType;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getRoofType()
+    {
+        return $this->roofType;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setStructureType($structureType)
+    {
+        $this->structureType = $structureType;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getStructureType()
+    {
+        return $this->structureType;
     }
 
     /**
@@ -366,6 +568,254 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
+    public function setLifetime($lifetime)
+    {
+        $this->lifetime = $lifetime;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLifetime()
+    {
+        return $this->lifetime;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setInflation($inflation)
+    {
+        $this->inflation = $inflation;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getInflation()
+    {
+        return $this->inflation;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setEfficiencyLoss($efficiencyLoss)
+    {
+        $this->efficiencyLoss = $efficiencyLoss;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getEfficiencyLoss()
+    {
+        return $this->efficiencyLoss;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setAnnualCostOperation($annualCostOperation)
+    {
+        $this->annualCostOperation = $annualCostOperation;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAnnualCostOperation()
+    {
+        return (float) $this->annualCostOperation;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setEnergyPrice($energyPrice)
+    {
+        $this->energyPrice = $energyPrice;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getEnergyPrice()
+    {
+        return (float) $this->energyPrice;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setInternalRateOfReturn($internalRateOfReturn)
+    {
+        $this->internalRateOfReturn = $internalRateOfReturn;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getInternalRateOfReturn()
+    {
+        return (float) $this->internalRateOfReturn;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setNetPresentValue($netPresentValue)
+    {
+        $this->netPresentValue = $netPresentValue;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getNetPresentValue()
+    {
+        return (float) $this->netPresentValue;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setAccumulatedCash(array $accumulatedCash = [])
+    {
+        $this->accumulatedCash = $accumulatedCash;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAccumulatedCash($total = false)
+    {
+        return !$total ? $this->accumulatedCash : $this->accumulatedCash[count($this->accumulatedCash)-1];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setPaybackYears($paybackYears)
+    {
+        $this->paybackYears = $paybackYears;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPaybackYears()
+    {
+        return $this->paybackYears;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setPaybackMonths($paybackMonths)
+    {
+        $this->paybackMonths = $paybackMonths;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPaybackMonths()
+    {
+        return $this->paybackMonths;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setPaybackYearsDisc($paybackYearsDisc)
+    {
+        $this->paybackYearsDisc = $paybackYearsDisc;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPaybackYearsDisc()
+    {
+        return $this->paybackYearsDisc;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setPaybackMonthsDisc($paybackMonthsDisc)
+    {
+        $this->paybackMonthsDisc = $paybackMonthsDisc;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPaybackMonthsDisc()
+    {
+        return $this->paybackMonthsDisc;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getChecklist($tag = null)
+    {
+        $errors = [
+            'modules' => !$this->getProjectModules()->isEmpty(),
+            'inverters' => !$this->getProjectInverters()->isEmpty(),
+            'areas' => !$this->getAreas()->isEmpty()
+        ];
+
+        /** @var ProjectAreaInterface $projectArea */
+        foreach ($this->getAreas() as $projectArea){
+            if(!$projectArea->isConfigured()) {
+                $errors['areas'] = false;
+                break;
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isComputable()
+    {
+        $checklist = $this->getChecklist();
+
+        return array_sum($checklist) == count($checklist);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getCostPriceModules()
     {
         $price = 0;
@@ -477,7 +927,14 @@ class Project implements ProjectInterface
      */
     public function getSalePrice()
     {
-        return $this->getSalePriceEquipments() + $this->getSalePriceServices();
+        $price = $this->getSalePriceEquipments() + $this->getSalePriceServices();
+
+        /** @var ProjectTaxInterface $projectTax */
+        foreach ($this->projectTaxes as $projectTax){
+            $price += $projectTax->getAmount();
+        }
+
+        return $price;
     }
 
     /**
@@ -570,6 +1027,32 @@ class Project implements ProjectInterface
         $distribution['modules_configured'] = $modulesConfigured;
 
         return $distribution;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function countAssociatedModules()
+    {
+        $count = 0;
+        foreach ($this->projectModules as $projectModule){
+            $count += $projectModule->getQuantity();
+        }
+
+        return $count;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function countAssociatedInverters()
+    {
+        $count = 0;
+        foreach($this->projectInverters as $projectInverter){
+            $count += $projectInverter->getQuantity();
+        }
+
+        return $count;
     }
 
     /**
@@ -728,6 +1211,42 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
+    public function addProjectStructure(ProjectStructureInterface $projectStructure)
+    {
+        if(!$this->projectStructures->contains($projectStructure)){
+
+            $this->projectStructures->add($projectStructure);
+
+            if(!$projectStructure->getProject())
+                $projectStructure->setProject($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeProjectStructure(ProjectStructureInterface $projectStructure)
+    {
+        if($this->projectStructures->contains($projectStructure)){
+            $this->projectStructures->removeElement($projectStructure);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getProjectStructures()
+    {
+        return $this->projectStructures;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function addProjectExtra(ProjectExtraInterface $projectExtra)
     {
         if(!$this->projectExtras->contains($projectExtra)){
@@ -779,6 +1298,42 @@ class Project implements ProjectInterface
         return $this->projectExtras->filter(function(ProjectExtraInterface $projectExtra){
             return $projectExtra->isService();
         });
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function addProjectTax(ProjectTaxInterface $projectTax)
+    {
+        if(!$this->projectTaxes->contains($projectTax)){
+
+            $this->projectTaxes->add($projectTax);
+
+            if(!$projectTax->getProject())
+                $projectTax->setProject($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeProjectTax(ProjectTaxInterface $projectTax)
+    {
+        if($this->projectTaxes->contains($projectTax)){
+            $this->projectTaxes->removeElement($projectTax);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getProjectTaxes()
+    {
+        return $this->projectTaxes;
     }
 
     /**
@@ -841,5 +1396,23 @@ class Project implements ProjectInterface
             self::PRICE_STRATEGY_SUM => 'sum',
             self::PRICE_STRATEGY_PERCENT => 'percent'
         ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function getRootTypes()
+    {
+        return array_combine(StructureCalculator::getRoofTypes(), StructureCalculator::getRoofTypes());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function getStructureTypes()
+    {
+        $types = [self::STRUCTURE_SICES, self::STRUCTURE_K2_SYSTEM];
+
+        return array_combine($types, $types);
     }
 }

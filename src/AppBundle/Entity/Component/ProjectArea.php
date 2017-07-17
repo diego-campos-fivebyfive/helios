@@ -210,6 +210,27 @@ class ProjectArea implements ProjectAreaInterface
     /**
      * @inheritDoc
      */
+    public function isConfigured()
+    {
+        $properties = [
+            'moduleString',
+            'stringNumber',
+            'projectInverter',
+            'projectModule'
+        ];
+
+        foreach ($properties as $property){
+            if(!$this->$property) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setMetadata(array $metadata)
     {
         $this->metadata = $metadata;

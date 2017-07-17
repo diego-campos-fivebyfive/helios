@@ -1,4 +1,3 @@
-{#
 {% set _route = app.request.attributes.get('_route') %}
 
 {% set has_project = project.token is not null %}
@@ -6,8 +5,8 @@
 {% set is_analysis = 'project_financial' == _route %}
 {% set is_budget = 'project_proposal' == _route %}
 
-{% set link_project = not is_manage and has_project ? path('project_update', {token:project.token}) : '#' %}
-{% set link_analysis = not is_analysis and has_project ?  path('project_financial', {token:project.token}) : '#'  %}
+{% set link_project = not is_manage and has_project ? path('project_update', {id:project.id}) : '#' %}
+{% set link_analysis = not is_analysis and has_project ?  path('project_financial', {id:project.id}) : '#'  %}
 {% set link_budget = not is_budget and has_project ?  path('project_proposal', {token:project.token}) : '#'  %}
 
 <div class="row">
@@ -35,4 +34,4 @@
         </div>
     </div>
 </div>
-<div class="hr-line-dashed"></div>#}
+<div class="hr-line-dashed"></div>

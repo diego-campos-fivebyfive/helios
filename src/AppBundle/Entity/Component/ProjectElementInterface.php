@@ -19,6 +19,11 @@ namespace AppBundle\Entity\Component;
 interface ProjectElementInterface
 {
     /**
+     * @return int
+     */
+    public function getId();
+
+    /**
      * @param ProjectInterface $project
      * @return ProjectElementInterface
      */

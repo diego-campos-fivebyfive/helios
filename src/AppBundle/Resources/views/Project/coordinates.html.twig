@@ -1,0 +1,91 @@
+{% set months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'] %}
+
+{% set total_global, total_diffuse, total_atmosphere, total_temperature, total_solar_noon = 0,0,0,0,0 %}
+
+<style>
+    #info_names * {
+        font-size: 12px;
+        text-align: center;
+    }
+
+    #table-info tbody tr th,
+    #table-info tfoot tr th:first-child {
+        text-align: right;
+    }
+
+    #table-info tbody tr td,
+    #table-info tfoot tr th:not(:first-child) {
+        text-align: center;
+    }
+    #table-info tfoot th{
+        color: #444;
+    }
+</style>
+
+<table id="table-info" class="table table-bordered table-stripped">
+
+    <thead id="info_names">
+    <tr>
+        <td>&nbsp;</td>
+        <th> Latitude.: {{ latitude|round(2) }} </th>
+        <th> Longitude.: {{ longitude|round(2) }} </th>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td> Radiação Global Horizontal</td>
+        {#<td> Radiação Difusa Horizontal</td>
+        <td> Radiação Topo da Atmosfera</td>#}
+        <td> Temperatura Ambiente</td>
+        {# <td> Horas de Sol</td> #}
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td> kwh/m2/dia</td>
+        <td> ºC </td>
+        {#<td> kwh/m2/dia</td>
+        <td> ºC</td>#}
+        {# <td> horas</td> #}
+    </tr>
+    </thead>
+
+    {% for month in months %}
+
+        {% set radiation_global = attribute(infos.radiation_global, loop.index) %}
+        {#{% set radiation_diffuse = attribute(infos.radiation_diffuse, loop.index) %}
+        {% set radiation_atmosphere = attribute(infos.radiation_atmosphere, loop.index) %}#}
+        {% set air_temperature = attribute(infos.air_temperature, loop.index) %}
+        {% set solar_noon = attribute(infos.solar_noon, loop.index) %}
+
+        <tr>
+            <th> {{ month }} </th>
+            <td> {{ radiation_global|decimal }} </td>
+            {#<td> {{ radiation_diffuse|decimal }} </td>
+            <td> {{ radiation_atmosphere|decimal }} </td>#}
+            <td> {{ air_temperature|decimal }} </td>
+        </tr>
+
+        {% set total_global = total_global + radiation_global %}
+        {#{% set total_diffuse = total_diffuse + radiation_diffuse %}
+        {% set total_atmosphere = total_atmosphere + radiation_atmosphere %}#}
+        {% set total_temperature = total_temperature + air_temperature %}
+        {% set total_solar_noon = total_solar_noon + solar_noon %}
+
+    {% endfor %}
+
+    <tfoot>
+    <tr>
+        <th> Média</th>
+        <th> {{ (total_global / 12)|round(2)|decimal }} </th>
+        {#<th> {{ (total_diffuse / 12)|round(2)|decimal }} </th>
+        <th> {{ (total_atmosphere / 12)|round(2)|decimal }} </th>#}
+        <th> {{ (total_temperature / 12)|round(2)|decimal }} </th>
+    </tr>
+    <tr>
+        <th align="right"> Fonte: </th>
+        <th colspan="4" style="text-align: left !important;" class="text-left">
+            {{ accountGlobal is null ? 'Nasa' : 'Meus dados' }}
+        </th>
+    </tr>
+    </tfoot>
+
+</table>

@@ -10,8 +10,8 @@
 {#{% set mod_area  = has_module ? project_module.totalArea : null %}#}
 {% set mod_area = 0 %}
 
-{#{% set op_color = project_module.metadataOperation|length ? project_module.metadataOperation.level : 'danger' %}#}
-{% set op_color = 'danger' %}
+{% set op_color = projectArea.metadata|length ? projectArea.metadata.level : 'danger' %}
+{#{% set op_color = 'danger' %}#}
 
 <style>
     .stacked-area .bootstrap-touchspin-prefix {
@@ -176,7 +176,7 @@
                            class="btn btn-md btn-default">
                             Perdas %
                         </a>
-                        <a data-toggle="modal" data-href="{{ path('area_operation',{id:projectArea.id}) }}"
+                        <a data-toggle="modal" data-href="{{ path('project_area_operation',{id:projectArea.id}) }}"
                            data-target="#modal_operation_info"
                            class="btn btn-md btn-{{ op_color }} module-info operation-info edit-unlocked">
                             <i class="fa fa-dot-circle-o"></i> Limites
@@ -286,7 +286,8 @@
 
                 form.removeClass('edit-mode');
 
-                Project.clear_info();
+                //Project.clear_info();
+                ProjectManager.beforeUpdateArea();
             }
 
             function disable_form(){
@@ -336,6 +337,7 @@
                         check_form();
                         ProjectManager.operations({{ projectArea.projectInverter.id }});
 
+                        ProjectManager.onUpdateArea();
                     });
                 } else {
                     enable_form();
