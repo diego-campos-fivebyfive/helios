@@ -14,10 +14,13 @@ class Notifier
 {
     public function notifier(){
 
-        $client = new Client(['base_uri' => 'http://localhost:8000/debug/']);
+        $port = getenv('ISQUIK_PORT');
 
-        $response  = $client->request('post', '/range');
+        $client = new Client(['base_uri' => "http://localhost:$port"]);
+
+        $response = $client->post('/notifications', [
+           'callback' => 'product_create',
+           'body'  => 'id'
+        ]);
     }
-
-
 }

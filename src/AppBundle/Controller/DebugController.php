@@ -317,4 +317,19 @@ class DebugController extends AbstractController
 //        dump($projectPricifier); die();
 
     }
+
+    /**
+     * @Route("/notifier", name="debug_notifier")
+     */
+    public function notifierAction()
+    {
+        $test = [];
+
+        $notifier = new Notifier();
+
+        $notifier->notifier($test);
+
+
+
+    }
 }
