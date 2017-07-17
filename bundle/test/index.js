@@ -8,6 +8,9 @@ const memorial = require('./mocks/memorial')
 const app = express()
 app.listen(process.env.ISQUIK_BUNDLE_PORT || 2021)
 
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
 const sendNotifications = (req, res, notification) => {
   const options = {
     method: 'POST',
