@@ -9,6 +9,7 @@ if [ -z ${1+x} ] || [ $1 == '--development' ]; then
   php app/console server:run &
 
   cd bundle/app
+  yarn install
   node_modules/.bin/nodemon index.js &
 
   # Enable job control
@@ -27,18 +28,12 @@ if [ -z ${1+x} ] || [ $1 == '--development' ]; then
 
   done
 
-elif [ $1 == '--production' ]; then
-
-  echo "Starting Production Bundle App on port: $BUNDLE_PORT"
-
-  cd bundle/app
-  node_modules/.bin/nodemon index.js &>/dev/null &
-
-else [ $1 == '--test' ];
+elif [ $1 == '--test' ];
 
   echo "Starting Bundle Test (Isquik Mock) on port: $ISQUIK_BUNDLE_PORT"
 
   cd bundle/test
+  yarn install
   node_modules/.bin/nodemon index.js
 
 fi

@@ -44,7 +44,7 @@ Na variavel PATH agora devem estar disponiveis: o caminho para o projeto e o cam
 $ echo $PATH
 ```
 
-Caso os caminhos não apareçam, reinicie a maquina.
+Caso os caminhos não apareçam, verifique se o mesmo está correto e reinicie a maquina.
 
 
 3. Instalando e configurando dependências do Sistema
