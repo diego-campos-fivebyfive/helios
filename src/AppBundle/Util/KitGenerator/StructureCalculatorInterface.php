@@ -22,6 +22,7 @@ interface StructureCalculatorInterface
     const MODULE                = 'MODULE';
     const PROFILES              = 'PROFILES';
     const PROFILE_MIDDLE        = 'PROFILE_MIDDLE';
+    const GROUPS                = 'GROUPS';
 
     const TERMINAL_FINAL        = 'TERMINAL_FINAL';
     const TERMINAL_INTERMEDIARY = 'TERMINAL_INTERMEDIARY';

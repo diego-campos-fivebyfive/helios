@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service\StructureCalculator;
 
+use AppBundle\Entity\Component\ProjectModuleInterface;
 use AppBundle\Entity\Component\ProjectStructure;
 use AppBundle\Entity\Component\StructureInterface;
 use AppBundle\Manager\ProjectStructureManager;
@@ -66,6 +67,11 @@ class StructureCalculator
         $this->resetStructures($project);
 
         $projectModule = $project->getProjectModules()->first();
+
+        if(!$projectModule->getGroups()) {
+            $this->generateGroups($projectModule);
+        }
+
         /** @var \AppBundle\Entity\Component\ModuleInterface $module */
         $module = $projectModule->getModule();
         $profiles = $this->findStructure(['type' => 'perfil', 'subtype' => 'roman'], false);
@@ -79,7 +85,8 @@ class StructureCalculator
                 'quantity' => $projectModule->getQuantity(),
                 'position' => Calculator::POSITION_VERTICAL
             ],
-            Calculator::PROFILES => $profiles
+            Calculator::PROFILES => $profiles,
+            Calculator::GROUPS => $projectModule->getGroups()
         ];
 
         foreach ($this->mappingCriteria as $field => $criteria){
@@ -97,7 +104,6 @@ class StructureCalculator
         }
 
         $this->projectManager->save($project);
-
     }
 
     /**
@@ -167,5 +173,32 @@ class StructureCalculator
             $project->removeProjectStructure($projectStructure);
             $this->projectStructureManager->delete($projectStructure, !$projectStructures->next());
         }
+    }
+
+    /**
+     * @param ProjectModuleInterface $projectModule
+     */
+    private function generateGroups(ProjectModuleInterface $projectModule)
+    {
+        $quantity = $projectModule->getQuantity();
+        $position = $projectModule->getPosition();
+
+        $limit = $position == Calculator::POSITION_VERTICAL ? 20 : 12 ;
+
+        $groups = array();
+        if (0 != ($quantity % $limit) && ($quantity > $limit)) {
+            $groups[0]['string_number'] = (int) floor($quantity / $limit);
+            $groups[0]['module_string'] = $limit;
+            $groups[0]['position']      = $position;
+            $groups[1]['string_number'] = 1;
+            $groups[1]['module_string'] = (int) (($quantity / $limit) - floor($quantity / $limit)) * $limit;
+            $groups[1]['position']      = $position;
+        } else {
+            $groups[0]['string_number'] = (int) ceil($quantity / $limit);
+            $groups[0]['module_string'] = (int) $quantity / ceil($quantity / $limit);
+            $groups[0]['position'] = $position;
+        }
+
+        $projectModule->setGroups($groups);
     }
 }

@@ -28,6 +28,20 @@ class ProjectModule implements ProjectModuleInterface
     use ProjectElementTrait;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="smallint")
+     */
+    private $position;
+
+    /**
+     * @var array
+     *
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $groups;
+
+    /**
      * @var ProjectInterface
      *
      * @ORM\ManyToOne(targetEntity="Project", inversedBy="projectModules")
@@ -53,10 +67,48 @@ class ProjectModule implements ProjectModuleInterface
      */
     public function __construct()
     {
+        $this->position      = self::POSITION_VERTICAL;
+        $this->groups        = [];
         $this->quantity      = 1;
         $this->unitCostPrice = 0;
         $this->unitSalePrice = 0;
         $this->projectAreas  = new ArrayCollection();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setGroups(array $groups)
+    {
+        $this->groups = $groups;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getGroups()
+    {
+        return $this->groups;
     }
 
     /**

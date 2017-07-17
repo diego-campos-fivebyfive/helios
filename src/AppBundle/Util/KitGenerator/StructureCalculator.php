@@ -9,9 +9,17 @@ class StructureCalculator implements StructureCalculatorInterface
      */
     public static function calculate(array &$data)
     {
+        $groups = $data[self::GROUPS];
+        $countModules = 0;
+        foreach ($groups as $group){
+            $countModules += $group['string_number'] * $group['module_string'];
+        }
+
+        //dump($countModules); die;
+
         $profiles = $data[self::PROFILES];
         $module = $data[self::MODULE];
-        $countModules = $module['quantity'];
+        //$countModules = $module['quantity'];
         $roof = $data[self::ROOF];
 
         uasort($profiles, function($a, $b){
@@ -19,7 +27,7 @@ class StructureCalculator implements StructureCalculatorInterface
         });
 
         $position = $module['position'];
-        $linesOfModules = 1;
+        //$linesOfModules = 1;
         $maxProfileSize = 0;
 
         if ($countModules <= 52) {
@@ -33,11 +41,11 @@ class StructureCalculator implements StructureCalculatorInterface
         }
 
         $cellNumber = $module["cell_number"];
-        $dimension = $module['width'];
-        $moduleLimit = 12;
+        //$dimension = $module['width'];
+        /*$moduleLimit = 12;
         if ($countModules > 52) {
             $moduleLimit = 18;
-        }
+        }*/
 
         if ($position == self::POSITION_HORIZONTAL) {
             $dimension = $module['length'];
@@ -50,7 +58,7 @@ class StructureCalculator implements StructureCalculatorInterface
             }
         }
 
-        $groups = array(ceil($countModules / $moduleLimit));
+        /*$groups = array(ceil($countModules / $moduleLimit));
         $resto_mod = $countModules;
 
         for ($i = 0; $i < ceil($countModules / $moduleLimit); $i++) {
@@ -59,7 +67,7 @@ class StructureCalculator implements StructureCalculatorInterface
                 $groups[$i] = $moduleLimit;
                 $resto_mod -= $moduleLimit;
             }
-        }
+        }*/
 
         //------- ACESSANDO BD --------
         /*$subtipo = "roman";
@@ -72,9 +80,8 @@ class StructureCalculator implements StructureCalculatorInterface
         $term_final_bd = $data[self::ITEMS][self::TERMINAL_FINAL];
         $term_inter_bd = $data[self::ITEMS][self::TERMINAL_INTERMEDIARY];
 
-        $ter_final_largura = (float)$term_final_bd["size"];
-        $ter_int_largura = (float)$term_inter_bd["size"];
-
+        //$ter_final_largura = (float)$term_final_bd["size"];
+        //$ter_int_largura = (float)$term_inter_bd["size"];
 
         //inicializando quantidades de perfis
         $total_perfil_usado = array(count($data2));
@@ -103,9 +110,14 @@ class StructureCalculator implements StructureCalculatorInterface
         $terminalIntermediarySize = $term_inter_bd['size'];
         $countProfiles = count($profiles);
 
-        for ($i = 0; $i < count($groups); $i++) {
+        //for ($i = 0; $i < count($groups); $i++) {
+        foreach($groups as $i => $group){
 
-            $quantityModules = $groups[$i];
+            //$quantityModules = $groups[$i];
+            $linesOfModules = $groups[$i]['string_number'];
+            $quantityModules = $groups[$i]['module_string'];
+            $position = $group['position'];
+            $dimension = self::POSITION_VERTICAL ==  $position ? $module['width'] : $module['length'] ;
 
             $lineSize = ($quantityModules * $dimension) + (($quantityModules - 1) * $terminalIntermediarySize) + (2 * $terminalIntermediarySize);
 

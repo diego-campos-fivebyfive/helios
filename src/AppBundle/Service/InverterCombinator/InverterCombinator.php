@@ -22,6 +22,12 @@ class InverterCombinator
         $this->loader = new InverterLoader($manager);
     }
 
+    /**
+     * @param ModuleInterface $module
+     * @param $power
+     * @param $maker
+     * @return array
+     */
     public function combine(ModuleInterface $module, $power, $maker)
     {
         $this->loader->power($power);
