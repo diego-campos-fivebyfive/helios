@@ -7,6 +7,7 @@ Nova Task - CES
 ----------------------------------------------------------------
 
 2. Iniciar nova Branch
+----------------------
 
 ```
 $ ces-new-task issue-[NUMBER_ISSUE]

@@ -77,9 +77,9 @@ class Main implements ContainerAwareInterface
          */
         if($user->isOwner()){
 
-            $menu->addChild('Kits', [
+            $menu->addChild('Preço de Venda', [
                 'route' => 'kit_index',
-                'extras' => ['icon' => App::icons('kits')]
+                'extras' => ['icon' => App::icons('money')]
             ]);
 
             $this->addComponents($menu, $user);
