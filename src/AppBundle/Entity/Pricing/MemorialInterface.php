@@ -11,18 +11,6 @@ namespace AppBundle\Entity\Pricing;
 
 interface MemorialInterface
 {
-
-    /**
-     * @param $name
-     * @return mixed
-     */
-    public function setName($name);
-
-    /**
-     * @return mixed
-     */
-    public function getName();
-
     /**
      * @param $version
      * @return mixed

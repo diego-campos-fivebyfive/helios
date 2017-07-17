@@ -31,37 +31,30 @@ class Memorial implements MemorialInterface
     private $ranges;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255)
-     */
-    private $name;
-
-    /**
      * @var float
      *
-     * @ORM\Column(name="version", type="float")
+     * @ORM\Column(name="version", type="float", nullable=true)
      */
     private $version;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="startAt", type="datetime")
+     * @ORM\Column(name="startAt", type="datetime", nullable=true)
      */
     private $startAt;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="endAt", type="datetime")
+     * @ORM\Column(name="endAt", type="datetime", nullable=true)
      */
     private $endAt;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="status", type="integer")
+     * @ORM\Column(name="status", type="integer", nullable=true)
      */
     private $status;
 
@@ -69,6 +62,7 @@ class Memorial implements MemorialInterface
     {
         $this->ranges = new ArrayCollection();
     }
+
 
     /**
      * Get id
@@ -78,30 +72,6 @@ class Memorial implements MemorialInterface
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return Memorial
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**

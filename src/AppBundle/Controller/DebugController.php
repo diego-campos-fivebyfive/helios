@@ -45,6 +45,7 @@ use Vindi\Exceptions\RequestException;
 use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Entity\Pricing\Level;
 use AppBundle\Entity\Pricing\Range;
+use AppBundle\Service\Notifier\Notifier;
 
 /**
  * @Route("debug")
@@ -257,17 +258,16 @@ class DebugController extends AbstractController
      */
     public function testRangeAction(){
 
-        /*$manager = $this->manager('memorial');*/
+        $manager = $this->manager('memorial');
 
         /** @var Memorial $memorial */
-        /*$memorial = $manager->create();
+        $memorial = $manager->create();
         $memorial
             ->setStatus(1)
             ->setStartAt(new \DateTime)
             ->setEndAt(new \DateTime('1 month'))
             ->setName('Teste')
-            ->setVersion('0001')
-        ;
+            ->setVersion('0001');
 
         for($i = 1; $i <= 10; $i++) {
 
@@ -279,14 +279,14 @@ class DebugController extends AbstractController
                 ->setFinalPower(300 * $i)
                 ->setLevel('gold')
                 ->setMarkup(.1)
-                ->setPrice(2500 * $i)
-            ;
+                ->setPrice(2500 * $i);
 
             $memorial->addRange($range);
         }
+
         $manager->save($memorial);
         dump($memorial);
-        die;*/
+        die;
 
 //        $manager = $this->manager('range');
 //
@@ -308,13 +308,13 @@ class DebugController extends AbstractController
 //
 //        $result = $query->getOneOrNullResult();
 
-        $project = new Project();
-
-        $projectPricifier = new ProjectPrecifier($this->manager('project'));
-
-        $projectPricifier->priceCost($project);
-
-        dump($projectPricifier); die();
+//        $project = new Project();
+//
+//        $projectPricifier = new ProjectPrecifier($this->manager('project'));
+//
+//        $projectPricifier->priceCost($project);
+//
+//        dump($projectPricifier); die();
 
     }
 }
