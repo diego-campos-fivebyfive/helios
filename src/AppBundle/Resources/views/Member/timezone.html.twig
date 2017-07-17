@@ -1,7 +1,7 @@
 {% extends view('layout') %}
 
 {% block styles %}
-    <link rel="stylesheet" href="{{ asset('assets/timezone/timezone.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('assets/plugins/timezone/timezone.css') }}"/>
 {% endblock %}
 
 {% block body %}
@@ -77,6 +77,6 @@
 
         Timezone.listen();
     </script>
-    <script src="{{ asset('assets/timezone/global.js') }}"></script>
-    <script src="{{ asset('assets/timezone/timezone.js') }}"></script>
+    <script src="{{ asset('assets/plugins/timezone/global.js') }}"></script>
+    <script src="{{ asset('assets/plugins/timezone/timezone.js') }}"></script>
 {% endblock %}
