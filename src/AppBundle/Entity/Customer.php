@@ -835,8 +835,8 @@ class Customer extends AbstractCustomer
      */
     public function setMember(BusinessInterface $member)
     {
-        if (!$this->isContact() || !$member->isMember())
-            $this->unsupportedContextException();
+        /*if (!$this->isContact() || !$member->isMember())
+            $this->unsupportedContextException();*/
 
         $this->member = $member;
     }
