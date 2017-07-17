@@ -2,7 +2,10 @@
 
 namespace AppBundle\Form\Component;
 
+use AppBundle\Entity\Category;
 use AppBundle\Entity\Component\Project;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,9 +20,25 @@ class ProjectType extends AbstractType
     {
         /** @var \AppBundle\Entity\Component\ProjectInterface $project */
         $project = $options['data'];
+        $account = $project->getMember()->getAccount();
 
         $builder
             ->add('customer')
+            ->add('stage', EntityType::class, [
+                'class' => Category::class,
+                'property' => 'sortedName',
+                'query_builder' => function(EntityRepository $er) use($account){
+                    return $er
+                        ->createQueryBuilder('c')
+                        ->where('c.account = :account')
+                        ->andWhere('c.context = :context')
+                        ->orderBy('c.position', 'asc')
+                        ->setParameters([
+                            'account' => $account,
+                            'context' => Category::CONTEXT_SALE_STAGE
+                        ]);
+                }
+            ])
             ->add('address')
             ->add('latitude')
             ->add('longitude')
