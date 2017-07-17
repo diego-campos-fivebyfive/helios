@@ -58,7 +58,7 @@ class ProjectInverter implements ProjectInverterInterface
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="ProjectArea", mappedBy="projectInverter", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="ProjectArea", mappedBy="projectInverter", cascade={"persist", "remove"})
      */
     private $projectAreas;
 
