@@ -25,7 +25,8 @@
 
                     <div class="text-right">
                     <p>
-                        <a href="{{ path('contact_update',{context:contact.context.id,token:contact.token}) }}">
+
+                        <a href="{{ path('contact_update',{context:contact.context,token:contact.token}) }}">
                             <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
                         </a>
                     </p>
@@ -102,7 +103,7 @@
                     <tr>
                         <td colspan="2" class="text-right">
                             <p>
-                                <a style="color: #ec4758;" data-delete-contact="{{ path('contact_delete',{context:contact.context.id, token:contact.token}) }}">
+                                <a style="color: #ec4758;" data-delete-contact="{{ path('contact_delete',{context:contact.context, token:contact.token}) }}">
                                     <i class="fa fa-trash"></i> Excluir este contato
                                 </a>
                             </p>
