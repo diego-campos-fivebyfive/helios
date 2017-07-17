@@ -1415,6 +1415,14 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
+    public function isClosed()
+    {
+        return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public static function getPriceStrategies()
     {
         return [

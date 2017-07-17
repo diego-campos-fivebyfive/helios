@@ -618,6 +618,11 @@ interface ProjectInterface
     public function getCostPriceExtra();
 
     /**
+     * @return bool
+     */
+    public function isClosed();
+
+    /**
      * @return array
      */
     public static function getPriceStrategies();
