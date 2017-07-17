@@ -7,6 +7,6 @@ GIT_WORK_TREE=$SICES_PATH git checkout -f
 git pull origin master -f
 
 php app/console doctrine:schema:update --force
-ces-frontend-compile
 
-ces-permission-fix
+cli/ces-frontend-compile
+cli/ces-permission-fix
