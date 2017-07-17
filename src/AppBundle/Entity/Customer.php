@@ -292,6 +292,8 @@ class Customer extends AbstractCustomer
      */
     private $alloweds;
 
+    private $edition = false;
+
     /**
      * Constructor
      */
@@ -429,7 +431,8 @@ class Customer extends AbstractCustomer
      */
     public function isPerson()
     {
-        return $this->context ? $this->context == self::CONTEXT_PERSON : false;
+        //dump($this->context); die();
+        return $this->context ? $this->context == self::CONTEXT_PERSON2 : false;
     }
 
     /**

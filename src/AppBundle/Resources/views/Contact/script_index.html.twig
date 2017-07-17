@@ -26,7 +26,7 @@
                                 swal.close();
                             }, 1000);
                             //row.remove();
-                            window.location.href = '{{ path('contact_index',{context:contact.context.id}) }}';
+                            window.location.href = '{{ path('contact_index',{context:contact.context}) }}';
                         }else{
                             var response = xhr.responseJSON;
                             sweetAlert("Erro!", response.error, "error");

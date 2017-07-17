@@ -112,6 +112,7 @@ class ContactController extends AbstractController
 
             $event = $this->createWoopraEvent('contato');
 
+            //dump($event);die;
             return $this->redirectToRoute('contact_show', [
                 'context' => $context->getId(),
                 'token' => $contact->getToken(),
@@ -292,7 +293,7 @@ class ContactController extends AbstractController
             $this->setNotice("Contato Atualizado com sucesso !");
 
             return $this->redirectToRoute('contact_show', [
-                'context' => $contact->getContext()->getId(),
+                'context' => $contact->getContext(),
                 'token' => $contact->getToken()
             ]);
         }
