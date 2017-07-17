@@ -75,7 +75,7 @@ class Range implements RangeInterface
 
     public function __construct()
     {
-        $this->memorial = new ArrayCollection();
+        //$this->memorial = new ArrayCollection();
     }
 
 
@@ -239,8 +239,6 @@ class Range implements RangeInterface
     public function setMemorial($memorial)
     {
         $this->memorial = $memorial;
-
-        $memorial->addRange($this);
 
         return $this;
     }

@@ -84,7 +84,7 @@
                 <a href="{{ path('contact_create',{context:'company'}) }}" class="btn btn-primary">
                     <i class="fa fa-plus"></i> Adicionar Empresa
                 </a>
-                
+
                 {#<a class="btn btn-info" data-toggle="modal" data-target="#modal_import">
                     <i class="fa fa-upload"></i> Importar {{ isPerson ? 'Pessoas' : 'Empresas' }}
                 </a>
@@ -100,7 +100,7 @@
     tr[data-contact] {
         cursor: pointer;
     }
-    
+
     .btn-info {
         background-color: #00A7EC;
     }
@@ -131,7 +131,7 @@
 
                     {% for contact in contacts %}
 
-                        <tr data-contact="{{ path('contact_show',{context:contact.context.id, token:contact.token}) }}">
+                        <tr data-contact="{{ path('contact_show',{context:context.id, token:contact.token}) }}">
                             <td><i class="fa fa-{{ contact.isPerson ? 'user' : 'building' }}"></i></td>
                             <td> {{ contact.name }} </td>
                             <td> {{ contact.category }} </td>

@@ -1,0 +1,239 @@
+{% set projects = pagination.items %}
+
+    {% macro choiceStages(stages, project) %}
+
+        {#{% set current = project.saleStage %}
+        {% set random = ['stages',random()]|join %}
+
+        <select title="Etapa de venda" data-stage="{{ project.token }}" id="{{ random }}"
+                class="form-control col-md-12 sel">
+            {% for stage in stages %}
+                <option {{ stage.id == current.id ? 'selected="selected"' }} value="{{ stage.token }}">
+                    {{ stage.sortedName }}
+                </option>
+            {% endfor %}
+        </select>
+        <div data-spinner="{{ random }}" class="sk-spinner sk-spinner-circle hide" style="margin-top: 1rem;">
+            {% for i in 1..12 %}
+                <div class="sk-circle{{ i }} sk-circle"></div>
+            {% endfor %}
+        </div> #}
+
+    {% endmacro %}
+
+    {% import _self as helper %}
+
+
+    {% set hasCustomer = customer is not null %}
+
+<style>
+    .btn-success{
+        background-color: #00A7EC !important;
+        border-color: #00A7EC !important;
+    }
+    .btn-success.active:hover{
+        background-color: #00A7EC !important;
+        border-color: #00A7EC !important;
+    }
+    .btn-danger{
+        background-color: #FF2601;
+        border-color: #FF2601;
+    }
+    .btn-warning{
+        background-color: #F2A019;
+    }
+    .sel{
+        border-color: #F8A41A;
+        border-radius: 4px;
+    }
+    .sel:focus{
+        border-color: #F8A41A !important;
+    }
+</style>
+
+<div class="modal inmodal fade" id="email_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">
+                    <i class="fa fa-file-text-o"></i>
+                    Enviar proposta por email
+                </h4>
+            </div>
+            <div class="modal-body">
+                {% include view('kit.spinner') %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">
+                    {{ 'Close'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="real-content">
+    <div class="col-md-12">
+        <div class="ibox">
+            <div class="ibox-content">
+
+                <table class="table table-stripped">
+                    <thead>
+                    <tr>
+                        <th class="text-center"> Número</th>
+                        {% if not hasCustomer %}
+                            <th> Contato </th>
+                        {% endif %}
+                        <th class="text-center"> Email </th>
+                        <th class="text-center"> Potência</th>
+                        <th class="text-center"> Etapa de venda</th>
+                        <th> &nbsp; </th>
+                        <th> &nbsp; </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for project in projects %}
+
+                        <tr>
+                            <td class="text-center">
+                                <h4> {{ project.number }} </h4>
+                                <small>
+                                    {{ project.createdAt|format_date }}
+                                </small>
+                            </td>
+
+                            {% if not hasCustomer %}
+                                {% set contact = project.customer %}
+                                <td>
+                                    <h4>
+                                        <a href="{{ path('contact_show',{context:contact.context, token:contact.token}) }}">
+                                            {{ contact.name }}
+                                        </a>
+                                    </h4>
+                                    <small>
+                                        {% if contact.category %}
+                                            {{ contact.category.name }}
+                                        {% endif %}
+                                    </small>
+                                </td>
+                            {% endif %}
+
+                            <td class="text-center">
+                                {% set email = project.metadata('email') %}
+                                {% if email is not null %}
+                                    {% set tag = email > 1 ? 'vezes' : 'vez' %}
+                                    <h4>
+                                    <i style="color: #444;"
+                                       title="{{ email > 0 ? ['Proposta visualizada ', email, ' ', tag]|join : 'Email enviado' }}"
+                                       class="fa {{ 0 == project.metadata('email') ? 'fa-send' : 'fa-eye' }}"></i>
+                                    </h4>
+                                    <small>
+                                        {{ email > 0 ? [email, ' ', tag]|join  : 'Enviado' }}
+                                    </small>
+                                {% endif %}
+                            </td>
+
+                            <td class="text-center">
+                                <h4> {{ project.power|decimal }} kWp </h4>
+                                {#<small>
+                                    {% if project.hasProposal %}
+                                        {{ project.financial.finalPrice|currency }}
+                                    {% endif %}
+                                </small> #}
+                            </td>
+
+                            <td class="col-md-3">
+                                {{ helper.choiceStages(sale_stages, project) }}
+                            </td>
+
+                            <td class="col-md-2">
+
+                                {#% if project.isDone %#}
+                                {% if 1 == 2 %}
+
+                                    <div class="col-md-12">
+                                        <a data-toggle="dropdown"
+                                           class="btn btn-success btn-sm btn-block dropdown-toggle">
+                                            <i class="fa fa-file-text-o"></i> {{ 'Proposal'|trans }}
+                                            <span class="caret"></span>
+                                        </a>
+
+                                        <ul class="dropdown-menu pull-right">
+                                            <li>
+                                                <a target="_blank" href="{{ path('project_proposal_download',{token:project.token, force:false}) }}">
+                                                    <i class="fa fa-eye"></i> {{ 'View'|trans }}</a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ path('project_proposal_download',{token:project.token, force:true}) }}">
+                                                    <i class="fa fa-download"></i> {{ 'Save on disc'|trans }}
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a data-toggle="modal"
+                                                   data-target="#email_modal"
+                                                   data-url="{{ path('email_proposal',{token:project.token}) }}">
+                                                    <i class="fa fa-send"></i> {{ 'Enviar por email'|trans }}
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-12">
+
+                                    </div>
+                                    <div class="col-md-12">
+                                        <a data-container="body"
+                                           data-toggle="popover"
+                                           data-placement="left"
+                                           data-title="Copiar Projeto"
+                                           data-content="Gerar um novo projeto a partir deste"
+                                           data-trigger="hover"
+                                           data-copy="{{ path('project_copy',{token:project.token}) }}"
+                                           class="btn btn-block btn-warning btn-sm btn-block">
+                                            <i class="fa fa-copy"></i> {{ 'Copy'|trans }}
+                                        </a>
+                                    </div>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td class="col-md-2">
+                                <div class="btn-group btn-group-sm col-md-12 btn-group-justified">
+                                    {#% if not project.isDone %#}
+                                    {% if 1 == 2 %}
+                                        <a title="{{ 'Manage'|trans }}"
+                                           href="{{ path('project_update',{token:project.token}) }}"
+                                           class="btn btn-success btn-sm">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>
+                                    {% endif %}
+                                    <a title="{{ 'Delete'|trans }}"
+                                       data-delete="{{ path('project_delete',{token:project.token}) }}"
+                                       class="btn btn-danger btn-sm">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row text-center">
+        <div class="btn-group">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    </div>
+
+    {% if  hasCustomer %}
+        {% include view('helper.pagination') %}
+        {% include view('project.script_index') %}
+    {% endif %}

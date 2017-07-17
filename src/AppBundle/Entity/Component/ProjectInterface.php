@@ -337,6 +337,138 @@ interface ProjectInterface
     public function isComputable();
 
     /**
+     * @param $lifetime
+     * @return ProjectInterface
+     */
+    public function setLifetime($lifetime);
+
+    /**
+     * @return int
+     */
+    public function getLifetime();
+
+    /**
+     * @param $inflation
+     * @return ProjectInterface
+     */
+    public function setInflation($inflation);
+
+    /**
+     * @return float
+     */
+    public function getInflation();
+
+    /**
+     * @param $efficiencyLoss
+     * @return ProjectInterface
+     */
+    public function setEfficiencyLoss($efficiencyLoss);
+
+    /**
+     * @return float
+     */
+    public function getEfficiencyLoss();
+
+    /**
+     * @param $annualCostOperation
+     * @return ProjectInterface
+     */
+    public function setAnnualCostOperation($annualCostOperation);
+
+    /**
+     * @return float
+     */
+    public function getAnnualCostOperation();
+
+    /**
+     * @param $energyPrice
+     * @return ProjectInterface
+     */
+    public function setEnergyPrice($energyPrice);
+
+    /**
+     * @return float
+     */
+    public function getEnergyPrice();
+
+    /**
+     * @param $internalRateOfReturn
+     * @return ProjectInterface
+     */
+    public function setInternalRateOfReturn($internalRateOfReturn);
+
+    /**
+     * @return float
+     */
+    public function getInternalRateOfReturn();
+
+    /**
+     * @param $netPresentValue
+     * @return ProjectInterface
+     */
+    public function setNetPresentValue($netPresentValue);
+
+    /**
+     * @return float
+     */
+    public function getNetPresentValue();
+
+    /**
+     * @param $accumulatedCash
+     * @return ProjectInterface
+     */
+    public function setAccumulatedCash(array $accumulatedCash = []);
+
+    /**
+     * @return array
+     */
+    public function getAccumulatedCash($total = false);
+
+    /**
+     * @param $paybackYears
+     * @return ProjectInterface
+     */
+    public function setPaybackYears($paybackYears);
+
+    /**
+     * @return int
+     */
+    public function getPaybackYears();
+
+    /**
+     * @param $paybackMonths
+     * @return ProjectInterface
+     */
+    public function setPaybackMonths($paybackMonths);
+
+    /**
+     * @return int
+     */
+    public function getPaybackMonths();
+
+    /**
+     * @param $paybackYearsDisc
+     * @return ProjectInterface
+     */
+    public function setPaybackYearsDisc($paybackYearsDisc);
+
+    /**
+     * @return int
+     */
+    public function getPaybackYearsDisc();
+
+    /**
+     * @param $paybackMonthsDisc
+     * @return ProjectInterface
+     */
+    public function setPaybackMonthsDisc($paybackMonthsDisc);
+
+    /**
+     * @return int
+     */
+    public function getPaybackMonthsDisc();
+
+    /**
      * @param MemberInterface $member
      * @return ProjectInterface
      */
@@ -440,6 +572,23 @@ interface ProjectInterface
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getProjectStructures();
+
+    /**
+     * @param ProjectStructureInterface $projectTax
+     * @return ProjectInterface
+     */
+    public function addProjectTax(ProjectTaxInterface $projectTax);
+
+    /**
+     * @param ProjectStructureInterface $projectTax
+     * @return ProjectInterface
+     */
+    public function removeProjectTax(ProjectTaxInterface $projectTax);
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getProjectTaxes();
 
     /**
      * @return float

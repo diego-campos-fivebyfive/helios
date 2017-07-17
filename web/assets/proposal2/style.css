@@ -58,7 +58,13 @@
 }
 .edit{
     height: auto;
-    margin: 0 !important;
+    /*margin: 0 !important;*/
+}
+.border{
+    border: solid 1px #EEEEEE;
+}
+.borderBlack{
+    border: solid 1px #555555;
 }
 .minHeight25{
     min-height: 25mm !important;

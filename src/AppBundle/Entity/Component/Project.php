@@ -148,6 +148,90 @@ class Project implements ProjectInterface
     private $metadata;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $lifetime;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $inflation;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $efficiencyLoss;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $annualCostOperation;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $energyPrice;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    private $internalRateOfReturn;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    private $netPresentValue;
+
+    /**
+     * @var array
+     *
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $accumulatedCash;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $paybackYears;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $paybackMonths;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $paybackYearsDisc;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $paybackMonthsDisc;
+
+    /**
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="ProjectModule", mappedBy="project", cascade={"persist"})
@@ -176,6 +260,13 @@ class Project implements ProjectInterface
     private $projectExtras;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="ProjectTax", mappedBy="project", indexBy="project", cascade={"persist"})
+     */
+    private $projectTaxes;
+
+    /**
      * @var Customer|MemberInterface
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer")
@@ -200,10 +291,12 @@ class Project implements ProjectInterface
         $this->projectInverters      = new ArrayCollection();
         $this->projectStructures     = new ArrayCollection();
         $this->projectExtras         = new ArrayCollection();
+        $this->projectTaxes          = new ArrayCollection();
         $this->invoiceBasePrice      = 0;
         $this->deliveryBasePrice     = 0;
         $this->taxPercent            = 0;
         $this->metadata              = [];
+        $this->accumulatedCash       = [];
     }
 
     /**
@@ -475,6 +568,222 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
+    public function setLifetime($lifetime)
+    {
+        $this->lifetime = $lifetime;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLifetime()
+    {
+        return $this->lifetime;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setInflation($inflation)
+    {
+        $this->inflation = $inflation;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getInflation()
+    {
+        return $this->inflation;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setEfficiencyLoss($efficiencyLoss)
+    {
+        $this->efficiencyLoss = $efficiencyLoss;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getEfficiencyLoss()
+    {
+        return $this->efficiencyLoss;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setAnnualCostOperation($annualCostOperation)
+    {
+        $this->annualCostOperation = $annualCostOperation;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAnnualCostOperation()
+    {
+        return (float) $this->annualCostOperation;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setEnergyPrice($energyPrice)
+    {
+        $this->energyPrice = $energyPrice;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getEnergyPrice()
+    {
+        return (float) $this->energyPrice;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setInternalRateOfReturn($internalRateOfReturn)
+    {
+        $this->internalRateOfReturn = $internalRateOfReturn;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getInternalRateOfReturn()
+    {
+        return (float) $this->internalRateOfReturn;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setNetPresentValue($netPresentValue)
+    {
+        $this->netPresentValue = $netPresentValue;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getNetPresentValue()
+    {
+        return (float) $this->netPresentValue;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setAccumulatedCash(array $accumulatedCash = [])
+    {
+        $this->accumulatedCash = $accumulatedCash;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAccumulatedCash($total = false)
+    {
+        return !$total ? $this->accumulatedCash : $this->accumulatedCash[count($this->accumulatedCash)-1];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setPaybackYears($paybackYears)
+    {
+        $this->paybackYears = $paybackYears;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPaybackYears()
+    {
+        return $this->paybackYears;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setPaybackMonths($paybackMonths)
+    {
+        $this->paybackMonths = $paybackMonths;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPaybackMonths()
+    {
+        return $this->paybackMonths;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setPaybackYearsDisc($paybackYearsDisc)
+    {
+        $this->paybackYearsDisc = $paybackYearsDisc;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPaybackYearsDisc()
+    {
+        return $this->paybackYearsDisc;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setPaybackMonthsDisc($paybackMonthsDisc)
+    {
+        $this->paybackMonthsDisc = $paybackMonthsDisc;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPaybackMonthsDisc()
+    {
+        return $this->paybackMonthsDisc;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getChecklist($tag = null)
     {
         $errors = [
@@ -618,7 +927,14 @@ class Project implements ProjectInterface
      */
     public function getSalePrice()
     {
-        return $this->getSalePriceEquipments() + $this->getSalePriceServices();
+        $price = $this->getSalePriceEquipments() + $this->getSalePriceServices();
+
+        /** @var ProjectTaxInterface $projectTax */
+        foreach ($this->projectTaxes as $projectTax){
+            $price += $projectTax->getAmount();
+        }
+
+        return $price;
     }
 
     /**
@@ -982,6 +1298,42 @@ class Project implements ProjectInterface
         return $this->projectExtras->filter(function(ProjectExtraInterface $projectExtra){
             return $projectExtra->isService();
         });
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function addProjectTax(ProjectTaxInterface $projectTax)
+    {
+        if(!$this->projectTaxes->contains($projectTax)){
+
+            $this->projectTaxes->add($projectTax);
+
+            if(!$projectTax->getProject())
+                $projectTax->setProject($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeProjectTax(ProjectTaxInterface $projectTax)
+    {
+        if($this->projectTaxes->contains($projectTax)){
+            $this->projectTaxes->removeElement($projectTax);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getProjectTaxes()
+    {
+        return $this->projectTaxes;
     }
 
     /**
