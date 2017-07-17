@@ -355,7 +355,6 @@ class ProjectController extends AbstractController
     }
 
     /**
-<<<<<<< HEAD
      * @param ProjectInverterInterface $projectInverter
      */
     private function onUpdateProjectInverter(ProjectInverterInterface $projectInverter)
