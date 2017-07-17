@@ -51,7 +51,7 @@ Caso os caminhos não apareçam, reinicie a maquina.
 ----------------------------------------------------
 
 ```
-$ yarn install && composer install && ces-server-config
+$ yarn install && composer install && ces-server-config --development
 ```
 
 

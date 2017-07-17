@@ -79,68 +79,6 @@ interface MakerInterface
     public function isMakerAll();
 
     /**
-     * @param ModuleInterface $module
-     * @return MakerInterface
-     */
-    public function addModule(ModuleInterface $module);
-
-    /**
-     * @param ModuleInterface $module
-     * @return MakerInterface
-     */
-    public function removeModule(ModuleInterface $module);
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getModules();
-
-    /**
-     * @param InverterInterface $inverter
-     * @return MakerInterface
-     */
-    public function addInverter(InverterInterface $inverter);
-
-    /**
-     * @param InverterInterface $inverter
-     * @return MakerInterface
-     */
-    public function removeInverter(InverterInterface $inverter);
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getInverters();
-
-    /**
-     * @param StructureInterface $structure
-     * @return MakerInterface
-     */
-    public function addStructure(StructureInterface $structure);
-
-    /**
-     * @param StructureInterface $structure
-     * @return MakerInterface
-     */
-    public function removeStructure(StructureInterface $structure);
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getStructures();
-
-    /**
-     * @param BusinessInterface|null $account
-     * @return MakerInterface
-     */
-    public function setAccount(BusinessInterface $account = null);
-
-    /**
-     * @return BusinessInterface|null
-     */
-    public function getAccount();
-
-    /**
      * @return \DateTimeInterface
      */
     public function getCreatedAt();

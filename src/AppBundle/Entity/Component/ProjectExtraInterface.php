@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity\Component;
 
-interface ProjectItemInterface
+interface ProjectExtraInterface
 {
     /**
      * @return int
@@ -11,7 +11,7 @@ interface ProjectItemInterface
 
     /**
      * @param $quantity
-     * @return ProjectItemInterface
+     * @return ProjectExtraInterface
      */
     public function setQuantity($quantity);
 
@@ -31,19 +31,19 @@ interface ProjectItemInterface
     public function isProduct();
 
     /**
-     * @param ItemInterface $item
-     * @return ProjectItemInterface
+     * @param ExtraInterface $extra
+     * @return ProjectExtraInterface
      */
-    public function setItem(ItemInterface $item);
+    public function setExtra(ExtraInterface $extra);
 
     /**
-     * @return ItemInterface
+     * @return ExtraInterface
      */
-    public function getItem();
+    public function getExtra();
 
     /**
      * @param ProjectInterface $project
-     * @return ProjectItemInterface
+     * @return ProjectExtraInterface
      */
     public function setProject(ProjectInterface $project);
 
@@ -59,7 +59,7 @@ interface ProjectItemInterface
 
     /**
      * @param $unitSalePrice
-     * @return ProjectItemInterface
+     * @return ProjectExtraInterface
      */
     public function setUnitSalePrice($unitSalePrice);
 

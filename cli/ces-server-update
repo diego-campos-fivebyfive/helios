@@ -8,3 +8,5 @@ git pull origin master -f
 
 php app/console doctrine:schema:update --force
 ces-frontend-compile
+
+ces-permission-fix

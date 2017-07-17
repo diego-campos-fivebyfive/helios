@@ -29,7 +29,7 @@ Sendo que Tasks do tipo `Bug` sempre são prioritárias.
 ## Execução de Tarefas
 
   - [Utilizando o ces new-task (novo)](tasks/new-task-ces.md)
-  - [Utilizando comandos nativos do Git](tasks/new-task-git.md)
+  - [Utilizando comandos nativos do Git (depecated)](tasks/new-task-git.md)
 
 
 [Voltar](../tasks.md)

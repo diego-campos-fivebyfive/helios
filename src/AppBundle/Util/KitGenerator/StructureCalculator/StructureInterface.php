@@ -18,6 +18,9 @@ use AppBundle\Util\KitGenerator\InverterCombiner\CombinedCollectionInterface;
  */
 interface StructureInterface
 {
+    const MAKER_SICES_SOLAR     = 1;    // Fabricante Sices Solar
+    const MAKER_K2_SYSTEM       = 2;    // Fabricante K2 System
+
     const ROOF_ROMAN_AMERICAN   = 0;    // Telhas Romanas e Americanas
     const ROOF_FIBERGLASS       = 1;    // Telhas de Fibrocimento
     const ROOF_FLAT_SLAB        = 2;    // Laje Plana
@@ -41,11 +44,21 @@ interface StructureInterface
      */
     public function setId($id);
 
-
     /**
      * @return mixed
      */
     public function getId();
+
+    /**
+     * @param $maker
+     * @return StructureInterface
+     */
+    public function setMaker($maker);
+
+    /**
+     * @return int
+     */
+    public function getMaker();
 
     /**
      * @param ModuleInterface $module

@@ -83,7 +83,7 @@ class Inverter implements InverterInterface
     /**
      * @var float
      *
-     * @ORM\Column(name="max_efficiency", type="float", nullable=false)
+     * @ORM\Column(name="max_efficiency", type="float", nullable=true)
      */
     private $maxEfficiency;
 
@@ -132,7 +132,7 @@ class Inverter implements InverterInterface
     /**
      * @var MakerInterface
      *
-     * @ORM\ManyToOne(targetEntity="Maker", inversedBy="inverters")
+     * @ORM\ManyToOne(targetEntity="Maker")
      * @ORM\JoinColumn(name="maker")
      */
     protected $maker;

@@ -489,7 +489,7 @@ class LegacyProjectController extends AbstractController
     }
 
     /**
-     * @Route("/{token}/check_step", name="project_check_step")
+     * @Route("/{token}/check_step", name="project_check_step_legacy")
      */
     public function checkStepAction(Request $request, Project $project)
     {

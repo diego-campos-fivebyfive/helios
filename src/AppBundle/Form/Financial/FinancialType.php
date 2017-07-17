@@ -19,13 +19,13 @@ class FinancialType extends AbstractType
             ->add('lifetime', TextType::class, [
                 'required' => true
             ])
-            ->add('rate', null, [
+            ->add('inflation', null, [
                 'required' => false
             ])
             ->add('efficiencyLoss', null, [
                 'required' => false
             ])
-            ->add('annualCost', MoneyType::class, [
+            ->add('annualCostOperation', MoneyType::class, [
                 'currency' => false,
                 'required' => false
             ])

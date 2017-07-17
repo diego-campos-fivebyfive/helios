@@ -1,0 +1,100 @@
+{% set py = project.paybackYears %}
+{% set pm = project.paybackMonths %}
+{% set pyd = project.paybackYearsDisc %}
+{% set pmd = project.paybackMonthsDisc %}
+
+{% macro popup(key) %}
+
+    {% set popups = {
+    tir: {
+    title: 'Taxa Interna de Retorno',
+    content: 'Taxa de atratividade do investimento. Para que outro investimento seja melhor que este, é necessário ter rendimento anual superior.'
+    },
+    vpl: {
+    title: 'Valor Presente Líquido',
+    content: 'Valor total acumulado do investimento reajustado para valor presente.'
+    },
+    caixa: {
+    title: 'Caixa Acumulado',
+    content: 'Valor total acumulado do investimento. Pode-se interpretar que é o valor a ser deixado de pagar nas contas de energia ao longo do investimento'
+    },
+    payback: {
+    title: 'Tempo de Retorno do Investimento',
+    content: 'Tempo necessário para retorno do capital investido devido aos descontos periódicos em contas de energia'
+    },
+    payback_d: {
+    title: 'Tempo Reajustado de Retorno do Investimento',
+    content: 'Tempo necessário para retorno do capital investido devido aos descontos periódicos em contas de energia, considerando reajuste para valor presente.'
+    }
+    } %}
+
+    {% set info = attribute(popups, key) %}
+
+    <a data-container="body"
+       data-toggle="popover"
+       data-placement="left"
+       data-title="{{ info.title }}"
+       data-content="{{ info.content }}">
+        <i class="fa fa-info-circle"></i>
+    </a>
+{% endmacro %}
+
+{% import _self as info %}
+
+<table class="table table-bordered" style="margin-top: 3.5rem;">
+    <tr>
+        <th class="col-md-7"> Valor da Proposta: </th>
+        <td>
+            {{ project.salePrice|currency }}
+        </td>
+    </tr>
+    <tr>
+        <th>
+            {{ info.popup('tir') }}
+            TIR:
+        </th>
+        <td> {{ project.internalRateOfReturn|round }}%</td>
+    </tr>
+    <tr>
+        <th>
+            {{ info.popup('vpl') }}
+            VPL:
+        </th>
+        <td> {{ project.netPresentValue|currency }} </td>
+    </tr>
+    <tr>
+        <th>
+            {{ info.popup('caixa') }}
+            Caixa Acumulado:
+        </th>
+        <td> {{ project.accumulatedCash(true)|currency }} </td>
+    </tr>
+    <tr>
+        <th>
+            {{ info.popup('payback') }}
+            Payback Simples:
+        </th>
+        <td> {{ py }} ano{{ py > 1 ? 's' }} e {{ pm }} {{ pm > 1 ? 'meses' : 'mês' }} </td>
+    </tr>
+    <tr>
+        <th>
+            {{ info.popup('payback_d') }}
+            Payback Descontado:
+        </th>
+        <td>
+            {% if pyd is not null and pmd is not null %}
+                {{ pyd }} ano{{ pyd > 1 ? 's' }} e {{ pmd }} {{ pmd > 1 ? 'meses' : 'mês' }}
+            {% else %}
+                Sem informações
+            {% endif %}
+        </td>
+    </tr>
+</table>
+
+<script>
+    $('[data-toggle="popover"]').on('click', function(){
+        $(this).popover('show');
+    }).on('mouseout', function(){
+        $(this).popover('hide');
+    });
+</script>

@@ -61,7 +61,7 @@ interface InverterInterface
      * @return mixed
      */
     public function getMaxDcVoltage();
-    
+
     /**
      * @param $nominalPower
      * @return InverterInterface

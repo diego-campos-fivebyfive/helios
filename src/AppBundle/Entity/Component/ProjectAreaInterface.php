@@ -135,4 +135,9 @@ interface ProjectAreaInterface
      * @return int
      */
     public function countModules();
+
+    /**
+     * @return bool
+     */
+    public function isConfigured();
 }

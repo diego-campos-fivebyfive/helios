@@ -2,11 +2,12 @@
 
 namespace AppBundle\Entity\Project;
 
+use AppBundle\Service\PowerEstimator\DataProviderInterface;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Sonata\CoreBundle\Model\BaseEntityManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class NasaProvider extends BaseEntityManager implements NasaProviderInterface
+class NasaProvider extends BaseEntityManager implements NasaProviderInterface, DataProviderInterface
 {
     //use NasaBadMethod;
     /**
@@ -22,6 +23,22 @@ class NasaProvider extends BaseEntityManager implements NasaProviderInterface
         parent::__construct($class, $registry);
 
         $this->tokenStorage = $tokenStorage;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getGlobalRadiation($latitude, $longitude)
+    {
+        return $this->radiationGlobal($latitude, $longitude);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAirTemperature($latitude, $longitude)
+    {
+        return $this->airTemperature($latitude, $longitude);
     }
 
     /**

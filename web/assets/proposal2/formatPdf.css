@@ -1,0 +1,22 @@
+body{
+    background-color: #f7f7f7;
+}
+
+.ocultar, .pdfHidden, .cke_reset, .cke_widget_drag_handler_container {
+    display: none;
+}
+#bloco, .separator{
+    padding-top: 8mm;
+    border-top: solid 1px #000000;
+    background-color: #FFFFFF !important;
+}
+.del{
+    background-color: #FFFFFF !important;
+    color: #FFFFFF !important;
+}
+.edit:focus, .edit2:focus{
+    border: none;
+}
+.sf-toolbar{
+    display: none !important;
+}

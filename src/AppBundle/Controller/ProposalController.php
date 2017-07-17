@@ -25,13 +25,47 @@ class ProposalController extends Controller
      */
     public function editorAction()
     {
-        return $this->render('AppBundle:Proposal:editor.html.twig', array(
+        /*projeto fake*/
 
-        ));
+        $project = [
+            'customer' => [
+                'name' => 'Uzumaki Naruto',
+                'averageConsumption' => '572 kWh',
+                'document' => '123.456.789-10',
+                'phone' => '(42) 9 1234-5678',
+                'email' => 'name@mail.com',
+
+                'tableAreas' => 'tabela com as areas',
+                'generationChart' => [20,550,347,805,474,647,864,275,759,584,967,847],
+                'annualGeneration' => 'geração anual',
+                'monthlyAverageGeneration' => 'geração média mensal',
+
+                'lifetime' => '20 anos',
+                'inflation' => 'inflação',
+                'lossOfEfficiency' => 'perda de eficiencia',
+                'annualOperatingCost' => 'custo anual de operação',
+                'priceOfKWh' => 'preço do Kwh mais impostos',
+                'proposalValue' => 'valor da proposta',
+                'accumulatedCash' => 'caixa acumulado',
+                'vpl' => 'vpl',
+                'tir' => 'tir',
+                'simplePayback' => 'payback simples',
+                'discountedPayback' => 'payback descontado',
+                'accumulatedCashChart' => [-10.0,-30.0,-1.7,15.05,25.74,35.7,43.4,50.75,57.59,66.84,76.7,84.7],
+
+                'tableEquipmentAndServices' => 'tabela de equipamentos e serviços'
+            ]
+        ];
+
+        //$tagCustomer = $this->render('proposal.tag_customer', ['project' => $project])->getContent();
+        /*dump($tagCustomer);
+        die;*/
+
+        return $this->render('AppBundle:Proposal:editor.html.twig', ['project' => $project]);
     }
 
     /**
-     * @Route("/pdf", name="proposal_pdf")
+     * @Route("/pdf", name="proposal_pdf_legacy")
      */
     public function pdfAction()
     {
@@ -39,5 +73,15 @@ class ProposalController extends Controller
 
         ));
     }
-    
+
+    /**
+     * @Route("/proposalPDF", name="proposal_pdf")
+     */
+    public function proposalPDFAction()
+    {
+        return $this->render('AppBundle:Proposal:proposalPDF.html.twig', array(
+
+        ));
+    }
+
 }
