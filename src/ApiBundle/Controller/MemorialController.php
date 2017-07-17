@@ -16,18 +16,26 @@ class MemorialController extends FOSRestController
 
         $memorialManager = $this->get('memorial_manager');
 
+        $startAt = new \DateTime($data['start_at']);
+        $endAt = new \DateTime($data['end_at']);
+
         /** @var Memorial $memorial */
         $memorial = $memorialManager->create();
         $memorial   ->setVersion($data['version'])
-                    ->setStatus($data['status']);
-
+                    ->setStatus($data['status'])
+                    ->setStartAt($startAt)
+                    ->setEndAt($endAt);
         $memorialManager->save($memorial);
+
+        $view = View::create();
+        return $this->handleView($view);
     }
 
     public function postRangesAction(Request $request)
     {
-        $rangeManager = $this->get('range_manager');
         $data = json_decode($request->getContent(), true);
+
+        $rangeManager = $this->get('range_manager');
 
         $markups = $data['markups'];
 
@@ -41,11 +49,8 @@ class MemorialController extends FOSRestController
                     ->setFinalPower($item['end'])
                     ->setMarkup($item['markup'])
                     ->setPrice(35);
-
-
                 $rangeManager->save($range);
             }
         }
-
     }
 }
