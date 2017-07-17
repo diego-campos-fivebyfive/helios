@@ -45,7 +45,7 @@
                 <select id="filter-stage" class="form-control selected" title="Etapa de venda"
                         style=";width: 98%;">
                     <option value=""> Etapa de vendas &raquo; Todas </option>
-                    {% for stage in sale_stages %}
+                    {% for stage in stages %}
                         <option {{ current_stage == stage.token ? 'selected="selected"' }} value="{{ stage.token }}"> {{ stage.position }} - {{ stage.name }} </option>
                     {% endfor %}
                 </select>
