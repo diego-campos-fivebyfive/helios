@@ -11,6 +11,7 @@
 
 namespace AppBundle\Entity\Component;
 
+use AppBundle\Entity\CategoryInterface;
 use AppBundle\Entity\CustomerInterface;
 use AppBundle\Entity\MemberInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -489,6 +490,17 @@ interface ProjectInterface
      * @return CustomerInterface
      */
     public function getCustomer();
+
+    /**
+     * @param CategoryInterface $stage
+     * @return ProjectInterface
+     */
+    public function setStage(CategoryInterface $stage);
+
+    /**
+     * @return CategoryInterface
+     */
+    public function getStage();
 
     /**
      * @param ProjectModuleInterface $projectModule
