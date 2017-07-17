@@ -2,7 +2,8 @@
 
 namespace AppBundle\Entity;
 
-interface CustomerInterface
-{
+use Kolina\CustomerBundle\Entity\CustomerInterface as BaseCustomerInterface;
 
+interface CustomerInterface extends BaseCustomerInterface
+{
 }

@@ -19,4 +19,9 @@ interface MemberInterface
      * @return AccountInterface
      */
     public function getAccount();
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getAllowedContacts();
 }
