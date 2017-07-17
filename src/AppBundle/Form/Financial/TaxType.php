@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form\Financial;
 
+use AppBundle\Entity\Component\ProjectTax;
 use AppBundle\Entity\Financial\Tax;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -43,7 +44,7 @@ class TaxType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Financial\Tax'
+            'data_class' => ProjectTax::class
         ));
     }
 }

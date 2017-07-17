@@ -26,7 +26,7 @@ class SalePrice
      * @param $percentEquipments
      * @param $percentServices
      */
-    public function calculate(ProjectInterface $project, $percentEquipments, $percentServices)
+    public static function calculate(ProjectInterface $project, $percentEquipments, $percentServices)
     {
         $costProducts = $project->getCostPriceExtraProducts();
         $costServices = $project->getCostPriceExtraServices();
@@ -37,15 +37,19 @@ class SalePrice
         $saleServices = (100 * $costServices) / (100 - $percentServices);
 
         foreach ($project->getProjectModules() as $projectModule){
-            $this->resolveUnitPriceComponent($projectModule, $costEquipments, $saleEquipments);
+            self::resolveUnitPriceComponent($projectModule, $costEquipments, $saleEquipments);
         }
 
         foreach ($project->getProjectInverters() as $projectInverter){
-            $this->resolveUnitPriceComponent($projectInverter, $costEquipments, $saleEquipments);
+            self::resolveUnitPriceComponent($projectInverter, $costEquipments, $saleEquipments);
         }
 
-        /** @var \AppBundle\Entity\Component\ProjectItemInterface $projectExtra */
-        foreach ($project->getProjectItems() as $projectExtra){
+        foreach ($project->getProjectStructures() as $projectStructure){
+            self::resolveUnitPriceComponent($projectStructure, $costEquipments, $saleEquipments);
+        }
+
+        /** @var \AppBundle\Entity\Component\ProjectExtraInterface $projectExtra */
+        foreach ($project->getProjectExtras() as $projectExtra){
 
             $price = $projectExtra->getUnitCostPrice();
             $cost = $projectExtra->isProduct() ? $costEquipments : $costServices ;
@@ -64,7 +68,7 @@ class SalePrice
      * @param $costEquipments
      * @param $saleEquipments
      */
-    private function resolveUnitPriceComponent(ProjectElementInterface $component, $costEquipments, $saleEquipments)
+    private static function resolveUnitPriceComponent(ProjectElementInterface $component, $costEquipments, $saleEquipments)
     {
         $unitCostPrice = $component->getUnitCostPrice();
         $percent = $unitCostPrice / $costEquipments;

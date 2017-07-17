@@ -9,6 +9,8 @@ namespace AppBundle\Util\KitGenerator\StructureCalculator;
  */
 class Item implements ItemInterface
 {
+    use MakerDefinition;
+
     /**
      * @var int|string
      */
@@ -55,6 +57,7 @@ class Item implements ItemInterface
     public function __construct()
     {
         $this->quantity = 1;
+        $this->maker = Structure::MAKER_SICES_SOLAR;
     }
 
     /**
@@ -263,6 +266,10 @@ class Item implements ItemInterface
             $errors[] = 'The size is undefined';
         }
 
+        if(!$this->is(self::TYPE_CATCH) && !is_int($this->maker)){
+            $errors[] = 'The maker is undefined';
+        }
+
         return $errors;
     }
 
@@ -306,6 +313,11 @@ class Item implements ItemInterface
                 self::BASE_SPEED_CLIP,
                 self::BASE_TRIANGLE_HORIZONTAL,
                 self::BASE_TRIANGLE_VERTICAL
+            ],
+
+            self::TYPE_CATCH => [
+                self::CATCH_BAND,
+                self::CATCH_SPEED_CLIP
             ],
 
             self::TYPE_FIXER => [

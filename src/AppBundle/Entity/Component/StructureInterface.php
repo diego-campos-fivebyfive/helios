@@ -5,6 +5,11 @@ namespace AppBundle\Entity\Component;
 interface StructureInterface
 {
     /**
+     * @return int
+     */
+    public function getId();
+
+    /**
      * @param $code
      * @return mixed
      */

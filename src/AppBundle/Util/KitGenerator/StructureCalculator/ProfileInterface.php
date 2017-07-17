@@ -20,6 +20,17 @@ interface ProfileInterface
     public function getId();
 
     /**
+     * @param $maker
+     * @return ProfileInterface
+     */
+    public function setMaker($maker);
+
+    /**
+     * @return int
+     */
+    public function getMaker();
+
+    /**
      * @param $description
      * @return mixed
      */

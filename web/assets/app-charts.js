@@ -25,11 +25,12 @@ var AppChart = {
         var range = AppChart.utils.range(options.data);
         var endValue = Math.ceil(range.max / 100) * 100;
         var stepValue = endValue / 10;
+        var animationSteps = options.hasOwnProperty('animationSteps')?options.animationSteps:25;
         
         var chartOptions = {
             animationStartWithDataset : 1,
             animationStartWithData : 1,
-            animationSteps: 25,
+            animationSteps: animationSteps,
             scaleOverride: true,
             scaleSteps: endValue / stepValue,
             scaleStepWidth: stepValue,
@@ -45,6 +46,10 @@ var AppChart = {
             footNote: "",
             annotateLabel: "<%=(v3)%>"
         };
+
+        if(options.hasOwnProperty('callback')){
+            chartOptions.onAnimationComplete = options.callback;
+        }
 
         AppChart.Bar(options.element, dataSettings, chartOptions);
     },
@@ -70,12 +75,14 @@ var AppChart = {
             datasets: [options]
         };
 
+        var animationSteps = options.hasOwnProperty('animationSteps')?options.animationSteps:100;
+
         var chartOptions = {
             animationStartWithDataset: 1,
             animationStartWithData: 1,
             animationLeftToRight: true,
             animationByDataset: true,
-            animationSteps: 100,
+            animationSteps: animationSteps,
             animationEasing: "linear",
             canvasBorders: false,
             canvasBordersWidth: 0,
@@ -101,7 +108,7 @@ var AppChart = {
             chartOptions.onAnimationComplete = options.callback;
         }
 
-        return AppChart.Line(options.element, dataSettings, chartOptions);
+        AppChart.Line(options.element, dataSettings, chartOptions);
 
         //return new Chart(document.getElementById("chart_analysis").getContext("2d")).Line(dataSettings, chartOptions);
         //Financial.analysis_chart.Line(data, options);

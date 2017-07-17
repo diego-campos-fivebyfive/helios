@@ -3,9 +3,8 @@
 namespace Tests\AppBundle\Util\ProjectPricing;
 
 use AppBundle\Entity\Component\ProjectInterface;
-use AppBundle\Entity\Component\ProjectItem as ProjectExtra;
+use AppBundle\Entity\Component\ProjectExtra;
 use AppBundle\Util\ProjectPricing\CostPrice;
-use FOS\RestBundle\Tests\Functional\WebTestCase;
 use Tests\AppBundle\AppTestCase;
 
 /**
@@ -30,13 +29,13 @@ class ProjectPricingTest extends AppTestCase
         $projectProduct
             ->setQuantity(5)
             ->setProject($project)
-            ->setItem($product);
+            ->setExtra($product);
 
         $projectService = new ProjectExtra();
         $projectService
             ->setProject($project)
             ->setQuantity(5)
-            ->setItem($service);
+            ->setExtra($service);
 
         /** @var \AppBundle\Entity\Component\ProjectInverterInterface $projectInverter */
         foreach ($project->getProjectInverters() as $projectInverter) {

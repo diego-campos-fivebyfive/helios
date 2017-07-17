@@ -1,7 +1,8 @@
 <?php
 
 namespace AppBundle\Service\Support\Project;
-use AppBundle\Entity\Financial\ProjectFinancialInterface;
+
+use AppBundle\Entity\Component\ProjectInterface;
 
 /**
  * Interface ProjectAnalyzerInterface
@@ -12,5 +13,5 @@ interface FinancialAnalyzerInterface
     /**
      * @return FinancialAnalyzerInterface
      */
-    public static function analyze(ProjectFinancialInterface &$projectFinancial);
+    public static function analyze(ProjectInterface $project);
 }

@@ -19,11 +19,6 @@ namespace AppBundle\Entity\Component;
 interface ProjectInverterInterface extends ProjectElementInterface
 {
     /**
-     * @return int
-     */
-    public function getId();
-
-    /**
      * @param InverterInterface $inverter
      * @return ProjectInverterInterface
      */
