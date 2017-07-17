@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\BusinessInterface;
+use AppBundle\Entity\Category;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Component\ProjectArea;
 use AppBundle\Entity\Component\ProjectAreaInterface;
@@ -16,8 +17,9 @@ use AppBundle\Form\Project\ProjectInverterType;
 use AppBundle\Service\ProjectHelper;
 use AppBundle\Service\ProjectProcessor;
 use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\MemberInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
  * Class ProjectController
@@ -55,7 +57,7 @@ class ProjectController extends AbstractController
         $qb->select('p')
             ->from($this->manager('project')->getClass(), 'p')
             ->join('p.customer', 'c', 'WITH')
-            //->join('p.saleStage', 's')
+            ->join('p.stage', 's')
             ->where($qb->expr()->in('p.member', $ids))
             ->orderBy('p.number', 'desc');
 
@@ -64,7 +66,7 @@ class ProjectController extends AbstractController
         }
 
         if(null != $stage = $request->get('stage', null)){
-            $qb->andWhere('s.token = :stage');
+            $qb->andWhere('s.id = :stage');
             $qb->setParameter('stage', $stage);
         }
 
@@ -76,14 +78,16 @@ class ProjectController extends AbstractController
             8
         );
 
-        //$saleStages = $account->getCategories(Category::CONTEXT_SALE_STAGE);
-        $saleStages = [];
+        $stages = $this->manager('category')->findBy([
+            'context' => Category::CONTEXT_SALE_STAGE,
+            'account' => $account
+        ],['position' => 'asc']);
 
         $view = $request->isXmlHttpRequest() ? 'project.index_content' : 'project.index';
 
         return $this->render($view, [
             'current_stage' => $stage,
-            'sale_stages' => $saleStages,
+            'stages' => $stages,
             'pagination' => $pagination,
             'customer' => $customer,
             'current_member' => $filterMember
@@ -99,6 +103,8 @@ class ProjectController extends AbstractController
 
         /** @var Project $project */
         $project = $manager->create();
+
+        $project->setMember($this->member());
 
         $form = $this->createForm(ProjectType::class, $project);
 
@@ -323,6 +329,35 @@ class ProjectController extends AbstractController
         $error = null;
 
         return $this->json(['error' => $error], $status);
+    }
+
+    /**
+     * @Route("/{id}/stage/{stage}", name="project_stage")
+     * @Method("post")
+     */
+    public function stageAction(Project $project, Category $stage)
+    {
+        if($this->account() == $stage->getAccount()) {
+
+            $project->setStage($stage);
+
+            $this->manager('project')->save($project);
+        }
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/{id}/delete", name="project_delete")
+     * @Method("delete")
+     */
+    public function deleteAction(Project $project)
+    {
+        //$this->checkAccess($project);
+
+        $this->manager('project')->delete($project);
+
+        return $this->json([]);
     }
 
     /**
