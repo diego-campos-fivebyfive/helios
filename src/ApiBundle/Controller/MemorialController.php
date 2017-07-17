@@ -14,12 +14,12 @@ class MemorialController extends FOSRestController
     public function postMemorialsAction(Request $request)
     {
         $data = json_decode($request->getContent(), true);
-        $data_ranges = $data['range'];
+        $dataRanges = $data['range'];
 
         $memorialManager = $this->get('memorial_manager');
         $rangeManager = $this->get('range_manager');
 
-        foreach ($data_ranges as $ranges) {
+        foreach ($dataRanges as $ranges) {
             $startAt = new \DateTime($data['start_at']);
             $endAt = new \DateTime($data['end_at']);
 
