@@ -6,7 +6,7 @@ const products = require('./mocks/products')
 const memorial = require('./mocks/memorial')
 
 const app = express()
-app.listen(process.env.TEST_BUNDLE_PORT || 2020)
+app.listen(process.env.TEST_BUNDLE_PORT || 2021)
 
 const sendNotifications = (req, res, notification) => {
   const options = {

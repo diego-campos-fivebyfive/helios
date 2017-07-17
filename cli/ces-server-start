@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+cd $SICES_PATH/bundle
+
+if [ -z ${1+x} ] || [ $1 == '--development' ]; then
+
+  echo "Starting Development Bundle App on port: $BUNDLE_PORT and Sices server on port: 8000"
+
+  cd app
+  node_modules/.bin/nodemon index.js &
+  then echo 'Bundle done'
+
+  cd $SICES_PATH
+  php app/console server:run &
+
+  # Enable job control
+  set -m
+
+  while :
+  do
+    read input
+    [[ $input == finish ]] && break
+
+    # Run the command in background
+    bash -c "$input" &
+
+    # Move the command back-into foreground
+    fg %-
+
+  done
+
+elif [ $1 == '--production' ]; then
+
+  echo "Starting Production Bundle App server on port: $BUNDLE_PORT"
+
+  cd app
+  node_modules/.bin/nodemon index.js &
+
+else [ $1 == '--test' ];
+
+  echo "Starting Bundle Test server on port: $TEST_BUNDLE_PORT"
+
+  cd test
+  node_modules/.bin/nodemon index.js &
+
+fi
+

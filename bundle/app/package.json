@@ -1,7 +1,4 @@
 {
-  "scripts": {
-    "start:dev": "BUNDLE_PORT=2021 nodemon index.js"
-  },
   "dependencies": {
     "body-parser": "^1.17.2",
     "express": "^4.14.0",

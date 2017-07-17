@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-cd $SICES_PATH/bundle/app
-
-nodemon index.js
