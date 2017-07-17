@@ -1,5 +1,6 @@
 'use strict'
 const express = require('express')
+const bodyParser = require('body-parser')
 const request = require('request-promise')
 const notifications = require('./mocks/notifications')
 const products = require('./mocks/products')
@@ -7,6 +8,9 @@ const memorial = require('./mocks/memorial')
 
 const app = express()
 app.listen(process.env.ISQUIK_BUNDLE_PORT || 2021)
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 const sendNotifications = (req, res, notification) => {
   const options = {
@@ -27,6 +31,10 @@ const sendNotifications = (req, res, notification) => {
     res.status(500).send(error.message).end()
   })
 }
+
+app.post('/notifications', (req, res) => {
+  res.status(200).json(JSON.stringify(req.body))
+})
 
 app.get('/product/:code', (req, res) => {
   const { code } = req.params
