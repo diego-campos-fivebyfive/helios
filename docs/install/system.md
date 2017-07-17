@@ -67,7 +67,7 @@ $ yarn compile
 --------------------
 
 ```
-$ yarn start
+$ yarn start:dev
 ```
 
 Após os passos acima a aplicação estará disponível em: `http://localhost:8000`
