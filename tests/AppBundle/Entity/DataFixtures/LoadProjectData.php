@@ -21,6 +21,10 @@ class LoadProjectData extends AbstractFixture implements OrderedFixtureInterface
         $customer = $this->getReference('customer');
 
         $data = [
+            'roofType' => 'TYPE_OF_ROOF',
+            'infConsumption' => 15000,
+            'infPower' => 240,
+            'structureType' => Project::STRUCTURE_SICES,
             'customer' => $customer,
             'member' => $member,
             'number' => self::randomInt(),

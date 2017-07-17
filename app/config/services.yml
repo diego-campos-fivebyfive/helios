@@ -92,6 +92,10 @@ services:
         class: AppBundle\Manager\Pricing\RangeManager
         arguments: ['AppBundle\Entity\Pricing\Range', '@doctrine']
 
+    string_box_manager:
+        class: AppBundle\Manager\StringBoxManager
+        arguments: ['AppBundle\Entity\Component\StringBox', '@doctrine']
+
     structure_manager:
         class: AppBundle\Manager\StructureManager
         arguments: ['AppBundle\Entity\Component\Structure', '@doctrine']
