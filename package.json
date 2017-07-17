@@ -3,7 +3,7 @@
     "compile": "ces-frontend-compile",
     "start": "BUNDLE_PORT=3000 ces-server-start --production",
     "start:dev": "BUNDLE_PORT=2020 ces-server-start --development",
-    "start:isquik": "TEST_BUNDLE_PORT=2021 ces-server-start --test"
+    "start:isquik": "ISQUIK_BUNDLE_PORT=2021 ces-server-start --test"
   },
   "dependencies": {
     "uglify-js": "^3.0.23",

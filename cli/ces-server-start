@@ -36,10 +36,10 @@ elif [ $1 == '--production' ]; then
 
 else [ $1 == '--test' ];
 
-  echo "Starting Bundle Test server on port: $TEST_BUNDLE_PORT"
+  echo "Starting Bundle Test (Isquik Mock) on port: $ISQUIK_BUNDLE_PORT"
 
   cd bundle/test
-  node_modules/.bin/nodemon index.js &
+  node_modules/.bin/nodemon index.js
 
 fi
 
