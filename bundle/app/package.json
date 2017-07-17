@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start:dev": "SERVER_PORT=2002 nodemon index.js"
+    "start:dev": "BUNDLE_PORT=2021 nodemon index.js"
   },
   "dependencies": {
     "body-parser": "^1.17.2",

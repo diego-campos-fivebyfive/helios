@@ -6,12 +6,12 @@ const products = require('./mocks/products')
 const memorial = require('./mocks/memorial')
 
 const app = express()
-app.listen(process.env.SERVER_PORT)
+app.listen(process.env.TEST_BUNDLE_PORT || 2020)
 
 const sendNotifications = (req, res, notification) => {
   const options = {
     method: 'POST',
-    uri: 'http://localhost:2002/api/v1/notifications',
+    uri: 'http://localhost:3000/api/v1/notifications',
     body: notification,
     json: true,
     headers: {

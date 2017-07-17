@@ -6,7 +6,7 @@ const { sendResponse, preRequest } = require('./components')
 
 const expressApp = () => {
   const app = express()
-  app.listen(process.env.SERVER_PORT)
+  app.listen(process.env.BUNDLE_PORT || 3000)
 
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({ extended: true }))

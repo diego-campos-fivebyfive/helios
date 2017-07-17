@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "SERVER_PORT=2001 nodemon index.js"
+    "start": "TEST_BUNDLE_PORT=2020 nodemon index.js"
   },
   "dependencies": {
     "express": "4.14.0",
