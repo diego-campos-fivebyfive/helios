@@ -483,6 +483,7 @@
         var ProjectManager = {
             btnProcess: $('#process_button'),
             infoProcess: $('#info_process'),
+            processing: false,
             project: {
                 id: {{ project.id is not null ? project.id : 'null' }}
             },
@@ -580,6 +581,9 @@
                         var context = canvas.getContext('2d');
                         context.clearRect(0, 0, canvas.width, canvas.height);
                     }
+                },
+                getData: function(){
+                    return AppChart.getDataUrl(ProjectManager.chart.element);
                 },
                 init: function(){
 
@@ -1145,9 +1149,9 @@
         {% endif %}#}
 
         var common_error = 'Para prosseguir é necessário salvar as “Informações Principais” e todas as áreas de projeto';
-        calc_button.on('click', function(){
+        /*calc_button.on('click', function(){
             //process_project();
-            /*var alerts = '';
+            /!*var alerts = '';
             if(editing_project || $('select.area-module:not(:disabled)').length){
                 alerts = create_alert_box('danger', '', common_error);
             }
@@ -1155,8 +1159,8 @@
                 process_project();
             }else{
                 calc_errors.html(alerts);
-            }*/
-        });
+            }*!/
+        });*/
 
 
         {# OPERATION - INVERTERS AND AREAS #}
@@ -1209,16 +1213,16 @@
             var nav = $(this).data('nav');
             var href = $(this).data('href');
             if('#' != href){
-                if('project' != nav && Project.isLoaded) {
-                    var chart_data = Project.getChartData();
-                    if (editing_project || $('select.area-module:not(:disabled)').length) {
+                if('project' != nav /*&& Project.isLoaded*/) {
+                    var chart_data = ProjectManager.chart.getData();
+                    if (/*editing_project ||*/ $('select.area-module:not(:disabled)').length) {
                         swal('Editando', 'Para prosseguir é necessário salvar as "Informações Principais" e todas as áreas do projeto!', 'error');
-                    } else if(!chart_data || !$('#calc_info').html()) {
+                    } else if(!chart_data || !$('#info_process').html()) {
                         swal('Calcular', 'Para prosseguir é necessário efetuar o cálculo!', 'error');
-                    } else if(Project.processing){
-                        swal('Calculando', 'Aguarde a finalizaçã do cálculo!', 'error');
+                    } else if(ProjectManager.processing){
+                        swal('Calculando', 'Aguarde a finalização do cálculo!', 'error');
                     }else{
-                        {% if project.token %}
+                        {% if project.id %}
                         swal({
                             title: 'Aguarde...',
                             text: '',
@@ -1226,7 +1230,7 @@
                             showConfirmButton: false
                         });
                         $.ajax({
-                            url: '{{ path('project_check_step',{token:project.token}) }}',
+                            url: '{{ path('project_check_step',{id:project.id}) }}',
                             method: 'post',
                             data: {step: nav},
                             complete: function (xhr) {

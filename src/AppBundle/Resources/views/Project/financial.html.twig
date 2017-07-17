@@ -1,0 +1,774 @@
+{% extends view('layout') %}
+
+{% block styles %}
+
+    {% include view('helper.plugins_css') %}
+
+    <style>
+        #form_tax span.input-group-addon {
+            width: 150px;
+            text-align: right;
+        }
+
+        #form_tax input[type="radio"] {
+            display: none;
+        }
+
+        #form_analysis .input-group-addon {
+            font-size: 13px;
+            width: 225px;
+            text-align: right;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    {#{% set kit = project.kit %}#}
+
+    <div class="modal inmodal" id="tax_modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-body">
+
+                    {{ form_start(form_tax,{attr:{id:'form_tax'}}) }}
+
+                    <div class="form-group">
+                        <label> Descrição </label>
+                        {{ form_widget(form_tax.name,{attr:{class:'form-control'}}) }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Aplicado sobre </label>
+                        {{ form_widget(form_tax.target,{attr:{class:'form-control'}}) }}
+                    </div>
+
+                    <div class="form-group">
+                        <label> Tipo </label>
+                        {{ form_widget(form_tax.type,{attr:{class:'form-control'}}) }}
+                    </div>
+
+                    <div class="form-group">
+                        <label> Valor base - (Reais ou Percentual) </label>
+                        {{ form_widget(form_tax.value,{attr:{class:'form-control'}}) }}
+                    </div>
+
+                    {#<div class="hr-line-dashed"></div>#}
+
+                    <div class="hide">
+                        {{ form_rest(form_tax) }}
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-sm btn-success btn-block ladda-button"
+                                data-style="zoom-in">
+                            <i class="fa fa-check"></i> Aplicar
+                        </button>
+                    </div>
+
+                    <div id="tax_errors" class="form-group alert alert-danger" style="display: none;">
+                    </div>
+
+                    {{ form_end(form_tax) }}
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">
+                        {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        {% include view('project.breadcrumbs') %}
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        {#<h5>Bootstrap Panels
+                            <small>Custom background colors.</small>
+                        </h5>#}
+                    </div>
+                    <div class="ibox-content">
+
+                        {#<div class="row">
+                            <div class="col-lg-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <i class="{{ icon('summary') }}"></i>
+                                        Resumo dos equipamentos
+                                    </div>
+                                    <div class="panel-body">
+
+                                        {% include view('project.financial_equipments') %}
+
+                                        #}{#{% if kit.hasItems %}#}{#
+                                        {% if false %}
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <table id="table_items" class="table table-bordered table-hover">
+                                                        <thead>
+                                                        <tr>
+                                                            <th class="col-md-6"> Descrição</th>
+
+                                                            {% if kit.priceComputable %}
+                                                                <th class="col-md-2"> Preço Unitário</th>
+                                                            {% endif %}
+
+                                                            <th class="col-md-2"> Quantidade</th>
+
+                                                            {% if kit.priceComputable %}
+                                                                <th class="col-md-2"> Total</th>
+                                                            {% endif %}
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                        {% for element in project.elementItems %}
+                                                            <tr>
+                                                                <td> {{ element.name }} </td>
+
+                                                                {% if kit.priceComputable %}
+                                                                <td>
+                                                                    {{ element.unitPriceSale|currency('-') }}
+                                                                    {% if element.isIncremental %}
+                                                                        &nbsp; <span class="badge badge-info"> por módulo </span>
+                                                                    {% endif %}
+                                                                </td>
+                                                                {% endif %}
+
+                                                                <td>
+                                                                    {{ element.quantity }}
+                                                                    {% if element.isIncremental %}
+                                                                        mod
+                                                                    {% endif %}
+                                                                </td>
+
+                                                                {% if kit.priceComputable %}
+                                                                    <td> {{ element.totalPriceSale|currency('-') }} </td>
+                                                                {% endif %}
+                                                            </tr>
+                                                        {% endfor %}
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>#}
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <i class="{{ icon('summary') }}"></i>
+                                        Itens
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <table id="table_items" class="table table-bordered table-hover">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="col-md-2"> Código </th>
+                                                        <th class="col-md-4"> Descrição </th>
+                                                        {% if true %}
+                                                            <th> Custo Unitário</th>
+                                                        {% endif %}
+                                                        <th> Preço Unitário</th>
+                                                        <th class="col-md-1"> Quantidade</th>
+                                                        <th> Total</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                    <tr>
+                                                        <th class="text-center" colspan="6">
+                                                            Módulos
+                                                        </th>
+                                                    </tr>
+
+                                                    {% for projectModule in project.projectModules %}
+                                                    <tr>
+                                                        <td class="col-md-2"> {{ projectModule.module.code }} </td>
+                                                        <td class="col-md-4"> {{ projectModule.module.model }} </td>
+                                                        {% if true %}
+                                                            <td> {{ projectModule.unitCostPrice|currency }} </td>
+                                                        {% endif %}
+                                                        <td> {{ projectModule.unitSalePrice|currency }} </td>
+                                                        <td class="col-md-1"> {{ projectModule.quantity }} </td>
+                                                        <td> {{ projectModule.totalSalePrice|currency }} </td>
+                                                    </tr>
+                                                    {% endfor %}
+
+                                                    <tr>
+                                                        <th class="text-center" colspan="6">
+                                                            Inversores
+                                                        </th>
+                                                    </tr>
+
+                                                    {% for projectInverter in project.projectInverters %}
+                                                        <tr>
+                                                            <td class="col-md-2"> {{ projectInverter.inverter.code }} </td>
+                                                            <td class="col-md-4"> {{ projectInverter.inverter.model }} </td>
+                                                            {% if true %}
+                                                                <td> {{ projectInverter.unitCostPrice|currency }} </td>
+                                                            {% endif %}
+                                                            <td> {{ projectInverter.unitSalePrice|currency }} </td>
+                                                            <td class="col-md-1"> {{ projectInverter.quantity }} </td>
+                                                            <td> {{ projectInverter.totalSalePrice|currency }} </td>
+                                                        </tr>
+                                                    {% endfor %}
+
+                                                    <tr>
+                                                        <th class="text-center" colspan="6">
+                                                            Estruturas
+                                                        </th>
+                                                    </tr>
+
+                                                    {% for projectStructure in project.projectStructures %}
+                                                        <tr>
+                                                            <td class="col-md-2"> {{ projectStructure.structure.code }} </td>
+                                                            <td class="col-md-4"> {{ projectStructure.structure.description }} </td>
+                                                            {% if true %}
+                                                                <td> {{ projectStructure.unitCostPrice|currency }} </td>
+                                                            {% endif %}
+                                                            <td> {{ projectStructure.unitSalePrice|currency }} </td>
+                                                            <td class="col-md-1"> {{ projectStructure.quantity }} </td>
+                                                            <td> {{ projectStructure.totalSalePrice|currency }} </td>
+                                                        </tr>
+                                                    {% endfor %}
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        {#{% if kit.hasServices %}#}
+                        {% if false %}
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <i class="{{ icon('summary') }}"></i>
+                                            Resumo dos Serviços
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <table id="table_services" class="table table-bordered table-hover">
+                                                        <thead>
+                                                        <tr>
+                                                            <th class="col-md-10"> Descrição</th>
+                                                            <th> Total</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                        {% for element in project.elementServices %}
+                                                            <tr>
+                                                                <td> {{ element.name }} </td>
+                                                                <td> {{ element.totalPriceSale|currency('-') }} </td>
+                                                            </tr>
+                                                        {% endfor %}
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% endif %}
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <i class="{{ icon('money') }}"></i>
+                                        Preços Finais
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="row">
+
+                                            <div class="col-md-12">
+                                                <table class="table table-bordered">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td class="col-md-10"> Preço dos equipamentos</td>
+                                                        <td>
+                                                            {{ project.salePriceEquipments|currency }}
+                                                            {#{% if kit.priceComputable %}
+                                                                {{ project.priceSaleEquipments|currency }}
+                                                            {% else %}
+                                                                {{ kit.priceSaleEquipments|currency }}
+                                                            {% endif %}#}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td> Preço dos serviços</td>
+                                                        <td>
+                                                            {{ project.salePriceServices|currency }}
+                                                            {#{% if kit.priceComputable %}
+                                                                {{ project.priceSaleServices|currency('-') }}
+                                                            {% else %}
+                                                                {{ kit.priceSaleServices|currency }}
+                                                            {% endif %}#}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th> Subtotal</th>
+                                                        <th>
+                                                            {{ (project.salePriceEquipments + project.salePriceServices)|currency }}
+                                                            {#{% if kit.priceComputable %}
+                                                                {{ project.priceSale|currency }}
+                                                            {% else %}
+                                                                {{ kit.priceSale|currency }}
+                                                            {% endif %}#}
+                                                        </th>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <div id="spinner_tax" class="col-md-8">
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="btn-group btn-group-sm btn-group-justified">
+                                                    <a data-info="{{ {operation:'discount', value:'', name:''}|json_encode }}"
+                                                       data-href="{{ path('financial_tax_create',{id:project.id}) }}"
+                                                       data-toggle="modal" data-target="#tax_modal"
+                                                       class="btn btn-primary">
+                                                        <i class="fa fa-arrow-down"></i> Aplicar Desconto </a>
+                                                    <a data-info="{{ {operation:'addition', value:'', name:''}|json_encode }}"
+                                                       data-href="{{ path('financial_tax_create',{id:project.id}) }}"
+                                                       data-toggle="modal" data-target="#tax_modal"
+                                                       class="btn btn-danger">
+                                                        <i class="fa fa-arrow-up"></i> Aplicar Acréscimo </a>
+                                                    {#<a id="refresh_taxes" class="btn btn-info"> <i
+                                                                class="fa fa-refresh"></i> Atualizar </a>#}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row" style="margin-top: 2rem;">
+                                            {#<div class="hr-line-dashed"></div>#}
+                                            <div id="show_taxes" class="col-md-12">
+                                                <div class="sk-spinner sk-spinner-circle">
+                                                    {% for i in 1..12 %}
+                                                        <div class="sk-circle{{ i }} sk-circle"></div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="panel panel-info">
+                                    <div class="panel-heading">
+                                        <i class="fa fa-info-circle"></i> Resultados
+                                    </div>
+                                    <div class="panel-body">
+
+                                        {{ form_start(form, {'attr':{id:'form_analysis', target:'_blank', action:path('financial_calculate',{id:project.id})}}) }}
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="input-group m-b">
+                                                    <span class="input-group-addon"> Tempo de vida (anos) </span>
+                                                    {{ form_widget(form.lifetime,{attr:{class:'form-control text-center'}}) }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="input-group m-b">
+                                                    <span class="input-group-addon">
+                                                        <a data-container="body"
+                                                           data-toggle="popover"
+                                                           data-placement="left"
+                                                           data-title="Perda de eficiência"
+                                                           data-content="Perda de eficiência ao longo do tempo de vida">
+                                                            <i class="fa fa-info-circle"></i>
+                                                        </a>
+                                                        Perda de eficiência (%)
+                                                    </span>
+                                                    {{ form_widget(form.efficiencyLoss,{attr:{class:'form-control text-center'}}) }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="input-group m-b">
+                                                    <span class="input-group-addon"> Custo anual com operação (R$) </span>
+                                                    {{ form_widget(form.annualCostOperation,{attr:{class:'form-control text-center'}}) }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="input-group m-b">
+                                                    <span class="input-group-addon">
+                                                        Inflação anual (%)
+                                                    </span>
+                                                    {{ form_widget(form.inflation,{attr:{class:'form-control text-center'}}) }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="input-group m-b">
+                                                    <span class="input-group-addon">  Preço do kWh com impostos (R$) </span>
+                                                    {{ form_widget(form.energyPrice,{attr:{class:'form-control text-center'}}) }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                {{ form_rest(form) }}
+                                                <button id="btn_analysis" type="submit"
+                                                        class="btn btn-block btn-info ladda-button"
+                                                        data-style="zoom-in">
+                                                    <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        {{ form_end(form) }}
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="row">
+                                            <div id="chart_container" class="col-md-8">
+                                                <canvas id="chart_analysis" height="500"></canvas>
+                                            </div>
+
+                                            <div id="info_analysis" class="col-md-4"></div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% include view('project.breadcrumbs') %}
+
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    {% include view('helper.plugins_js') %}
+    {% include view('helper.numbers') %}
+
+    <script>
+        var sanitize = function (element) {
+            function clear(v) {
+                return v.replace(/\D+/g, '');
+            }
+
+            var value = element.val();
+            var backup = value.replace(/\./g, ',');
+            value = clear(value);
+            if (backup.indexOf(',') > 0) {
+                var commas = backup.split(',');
+                value = clear(commas[0]) + ',';
+                if (commas[1].length) {
+                    value += clear(commas[1]);
+                }
+            }
+            if (0 == backup.indexOf('-')) {
+                if (2 == backup.split('-').length) {
+                    value = '-' + value;
+                }
+            }
+            element.val(value);
+        };
+
+        var custom_mask = function (element) {
+            element.on('keyup', function () {
+                sanitize(element);
+            });
+        };
+
+    </script>
+
+    <script>
+
+        var Financial = {
+            form_analysis: $('#form_analysis'),
+            btn_analysis: $('#btn_analysis'),
+            form_editing: false,
+            info_analysis: $('#info_analysis'),
+            analysis_chart: null,
+            show_taxes: $('#show_taxes'),
+            spinner_tax: $('#spinner_tax'),
+            lock_form: function () {
+                Financial.form_editing = false;
+                Financial.form_analysis.find('input[type="text"]').prop('disabled', true);
+                Financial.btn_analysis.html('<i class="fa fa-pencil"></i> {{ 'Edit'|trans }}').ladda();
+            },
+            unlock_form: function () {
+                Financial.form_editing = true;
+                Financial.form_analysis.find('input[type="text"]').prop('disabled', false);
+                Financial.btn_analysis.html('<i class="fa fa-calculator"></i> {{ 'project.calculate'|trans }}').ladda();
+                Financial.clear_calculations();
+            },
+            force_calculations: function () {
+                if (!Financial.form_editing) {
+                    Financial.btn_analysis.trigger('click');
+                }
+                window.setTimeout(function () {
+                    Financial.btn_analysis.trigger('click');
+                }, 500);
+            },
+            clear_calculations: function () {
+                Financial.info_analysis.html('');
+                if (Financial.analysis_chart) {
+                    var canvas = document.getElementById('chart_analysis');
+                    var context = canvas.getContext('2d');
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            },
+            get_taxes: function () {
+                Financial.spinner_tax.html(Financial.spinner);
+                $.ajax({
+                    url: '{{ path('financial_taxes',{id:project.id}) }}',
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.hasOwnProperty('content')) {
+                            Financial.show_taxes.html(response.content);
+                        } else {
+                            console.log('Error request...');
+                        }
+                        Financial.spinner_tax.html('');
+                    }
+                });
+            },
+            get_chart_data: function () {
+                var canvas = document.getElementById('chart_analysis');
+                return canvas.toDataURL();
+            },
+            after_change_taxes: function () {
+                Financial.get_taxes();
+                Financial.force_calculations();
+            },
+            init: function () {
+                Financial.lock_form();
+                Financial.spinner = Financial.show_taxes.html();
+                Financial.show_taxes.html('');
+                Financial.get_taxes();
+            }
+        };
+
+        Financial.init();
+
+        function addCommas(nStr) {
+            nStr += '';
+            x = nStr.split('.');
+            x1 = x[0];
+            x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + '.' + '$2');
+            }
+            return x1 + x2;
+        }
+        function formatCurrency(value) {
+            return 'R$ ' + addCommas(value);
+        }
+        function formatTooltip(value) {
+            return formatCurrency(value.toFixed(0));
+        }
+    </script>
+
+    <script>
+
+        $(function () {
+
+            var chart_container = $('#chart_container');
+            $('#chart_analysis').attr('width', chart_container.width());
+            function render_analysis_chart(data) {
+                Financial.analysis_chart = AppChart.financialChart({
+                    fillColor: "rgba(26,179,148,0.5)",
+                    strokeColor: "rgba(26,179,148,0.8)",
+                    pointColor: "rgba(26,179,148,0.8)",
+                    data: data,
+                    title: false,
+                    element: 'chart_analysis'
+                });
+            }
+
+            Financial.form_analysis.on('submit', function (event) {
+                if (Financial.form_editing) {
+                    {% if true %}
+                    event.preventDefault();
+                    var form = $(this);
+                    Financial.btn_analysis.ladda('start');
+                    $.ajax({
+                        url: form.attr('action'),
+                        method: form.attr('method'),
+                        data: form.serialize(),
+                        complete: function (xhr) {
+                            if (500 == xhr.status) {
+                                swal('Erro', 'O cálculo não pode ser efetuado, verifique os valores informados', 'error');
+                            } else {
+                                var response = xhr.responseJSON;
+                                if (response.hasOwnProperty('data')) {
+                                    Financial.info_analysis.html(response.info);
+                                    render_analysis_chart(response.data);
+                                } else {
+                                    if (response.hasOwnProperty('error')) {
+                                        console.log(error);
+                                    }
+                                }
+                            }
+                            Financial.btn_analysis.ladda('stop');
+                            Financial.lock_form();
+                        }
+                    });
+                    {% endif %}
+                } else {
+                    event.preventDefault();
+                    Financial.unlock_form();
+                }
+            });
+
+            {% if project.accumulatedCash|length %}
+            Financial.force_calculations();
+            {% else %}
+            Financial.unlock_form();
+            {% endif %}
+
+            {# TAX #}
+            var form_tax = $('#form_tax');
+            var tax_value = $('#tax_value');
+            var tax_modal = $('#tax_modal');
+            var tax_errors = $('#tax_errors');
+            var button_tax = form_tax.find('[type="submit"]');
+
+            function populate_form_tax(data) {
+                form_tax.find('#tax_name').val(data.name);
+                form_tax.find('#tax_value').val(data.value).trigger('keyup');
+                form_tax.find('option[value="' + data.operation + '"]').prop('selected', true);
+                form_tax.find('option[value="' + data.type + '"]').prop('selected', true);
+                form_tax.find('option[value="' + data.target + '"]').prop('selected', true);
+            }
+
+            button_tax.ladda();
+            form_tax.on('submit', function (event) {
+                event.preventDefault();
+                var form = $(this);
+                button_tax.ladda('start');
+                tax_errors.hide().html('');
+                $.ajax({
+                    url: form.attr('action'),
+                    method: form.attr('method'),
+                    data: form.serialize(),
+                    complete: function (xhr) {
+                        button_tax.ladda('stop');
+                        if (201 == xhr.status || 202 == xhr.status) {
+                            Financial.after_change_taxes();
+                            tax_modal.modal('toggle');
+                        } else {
+                            var response = xhr.responseJSON;
+                            var error = response.error;
+                            tax_errors.show().html(error);
+                        }
+                    }
+                });
+            });
+
+            //tax_value.mask('##,00', {reverse: true});
+
+            Numbers.mask(tax_value);
+
+
+            $('#table_services, #table_items').cardtable();
+            $('.table-components').cardtable();
+
+            tax_modal.on('show.bs.modal', function (event) {
+                var target = $(event.relatedTarget);
+                var info = target.data('info');
+                form_tax.attr('action', target.data('href'));
+                populate_form_tax(info);
+            }).on('hide.bs.modal', function () {
+                tax_errors.html('').hide();
+            });
+
+            $('#financial_lifetime').mask('#00');
+            //$('#financial_rate, #financial_efficiencyLoss').mask('##,0', {reverse: true});
+            $('#financial_annualCostOperation, #financial_energyPrice').mask('##,00', {reverse: true});
+
+            custom_mask($('#financial_rate'));
+            custom_mask($('#financial_efficiencyLoss'));
+
+            $('[data-nav]').on('click', function (event) {
+                event.preventDefault();
+                var nav = $(this).data('nav');
+                var href = $(this).data('href');
+                if ('#' != href && 'financial' != nav) {
+                    if ('project' == nav) {
+                        window.location.href = href;
+                    } else {
+                        var chart_data = Financial.get_chart_data();
+                        if (!Financial.analysis_chart || !Financial.info_analysis.html() || !chart_data) {
+                            swal('Calcular', 'Para prosseguir é necessário efetuar o cálculo!', 'error');
+                        } else {
+                            swal({
+                                title: 'Aguarde...',
+                                text: '',
+                                type: 'info',
+                                showConfirmButton: false
+                            });
+                            $.ajax({
+                                url: '{{ path('project_check_step',{id:project.id}) }}',
+                                method: 'post',
+                                data: {step: 'proposal'},
+                                complete: function (xhr) {
+                                    if (202 == xhr.status) {
+                                        window.location.href = href;
+                                    } else {
+                                        var response = xhr.responseJSON;
+                                        swal('Erro', response.error + '!', 'error');
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+        });
+
+    </script>
+
+    <script>
+        $('[data-toggle="popover"]').on('click', function () {
+            $(this).popover('show');
+        }).on('mouseout', function () {
+            $(this).popover('hide');
+        });
+    </script>
+
+{% endblock %}

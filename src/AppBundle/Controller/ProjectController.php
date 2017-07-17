@@ -248,6 +248,17 @@ class ProjectController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/check_step", name="project_check_step")
+     */
+    public function checkStepAction(Request $request, Project $project)
+    {
+        $status = 202;
+        $error = null;
+
+        return $this->json(['error' => $error], $status);
+    }
+
+    /**
      * @param ProjectInverter $projectInverter
      */
     private function resetProjectAreas(ProjectInverterInterface $projectInverter)
