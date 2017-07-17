@@ -1,17 +1,15 @@
 #!/usr/bin/env bash
 
-cd $SICES_PATH/bundle
+cd $SICES_PATH
 
 if [ -z ${1+x} ] || [ $1 == '--development' ]; then
 
-  echo "Starting Development Bundle App on port: $BUNDLE_PORT and Sices server on port: 8000"
+  echo "Starting Development Bundle App on port: $BUNDLE_PORT and Sices Server on port: 8000"
 
-  cd app
-  node_modules/.bin/nodemon index.js &
-  then echo 'Bundle done'
-
-  cd $SICES_PATH
   php app/console server:run &
+
+  cd bundle/app
+  node_modules/.bin/nodemon index.js &
 
   # Enable job control
   set -m
