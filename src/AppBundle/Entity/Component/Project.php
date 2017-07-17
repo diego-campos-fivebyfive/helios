@@ -11,6 +11,7 @@
 
 namespace AppBundle\Entity\Component;
 
+use AppBundle\Entity\CategoryInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\CustomerInterface;
 use AppBundle\Entity\MemberInterface;
@@ -279,6 +280,13 @@ class Project implements ProjectInterface
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer")
      */
     private $customer;
+
+    /**
+     * @var \AppBundle\Entity\Category
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Category")
+     */
+    private $stage;
 
     /**
      * @inheritDoc
@@ -1134,6 +1142,24 @@ class Project implements ProjectInterface
     public function getCustomer()
     {
         return $this->customer;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setStage(CategoryInterface $stage)
+    {
+        $this->stage = $stage;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getStage()
+    {
+        return $this->stage;
     }
 
     /**
