@@ -223,10 +223,10 @@ class Main implements ContainerAwareInterface
          */
         if($user->isOwner()){
 
-            $settings->addChild('Proposal', [
+           /* $settings->addChild('Proposal', [
                 'route' => 'document_configure',
                 'extras' => ['icon' => App::icons('proposal')]
-            ]);
+            ]);*/
 
             $settings->addChild('Categories', [
                 'route' => 'categories',
