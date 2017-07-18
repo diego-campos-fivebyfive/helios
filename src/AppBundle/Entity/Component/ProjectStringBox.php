@@ -36,7 +36,7 @@ class ProjectStringBox implements ProjectStringBoxInterface
     /**
      * @var StringBoxInterface
      *
-     * @ORM\ManyToOne(targetEntity="ProjectArea")
+     * @ORM\ManyToOne(targetEntity="StringBox")
      */
     private $stringBox;
 
