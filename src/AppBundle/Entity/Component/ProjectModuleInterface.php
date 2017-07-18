@@ -19,6 +19,12 @@ namespace AppBundle\Entity\Component;
 interface ProjectModuleInterface extends ProjectElementInterface
 {
     /**
+     * Positions
+     */
+    const POSITION_VERTICAL = 0;
+    const POSITION_HORIZONTAL = 1;
+
+    /**
      * @param ModuleInterface $module
      * @return ProjectModuleInterface
      */
@@ -50,4 +56,26 @@ interface ProjectModuleInterface extends ProjectElementInterface
      * @return array
      */
     public function getDistribution();
+
+    /**
+     * @param $position
+     * @return ProjectModuleInterface
+     */
+    public function setPosition($position);
+
+    /**
+     * @return int
+     */
+    public function getPosition();
+
+    /**
+     * @param array $groups
+     * @return ProjectModuleInterface
+     */
+    public function setGroups(array $groups);
+
+    /**
+     * @return array
+     */
+    public function getGroups();
 }

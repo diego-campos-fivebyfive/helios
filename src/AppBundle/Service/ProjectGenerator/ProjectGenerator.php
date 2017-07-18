@@ -126,7 +126,7 @@ class ProjectGenerator
         $moduleCount  = 0;
         foreach ($data['inverters'] as $inverter){
             $inverterData[$inverter['id']] = $inverter['quantity'];
-            $moduleCount += $inverter['serial'] + $inverter['parallel'];
+            $moduleCount += ($inverter['serial'] * $inverter['parallel'] * $inverter['quantity']);
         }
 
         return $this->fromArray([
