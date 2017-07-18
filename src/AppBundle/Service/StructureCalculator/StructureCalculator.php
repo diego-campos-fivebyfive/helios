@@ -72,21 +72,23 @@ class StructureCalculator
             $this->generateGroups($projectModule);
         }
 
+        $groups = $projectModule->getGroups();
+
         /** @var \AppBundle\Entity\Component\ModuleInterface $module */
         $module = $projectModule->getModule();
         $profiles = $this->findStructure(['type' => 'perfil', 'subtype' => 'roman'], false);
 
         $data = [
-            Calculator::ROOF => Calculator::ROOF_ROMAN_AMERICAN,
+            Calculator::ROOF => $project->getRoofType(),
             Calculator::MODULE => [
                 'cell_number' => $module->getCellNumber(),
                 'length' => 1.65,   //$module->getLength(),
                 'width' => 0.992,   //$module->getWidth(),
                 'quantity' => $projectModule->getQuantity(),
-                'position' => Calculator::POSITION_VERTICAL
+                'position' => 0 == $groups[0]['position'] ? Calculator::POSITION_VERTICAL : Calculator::POSITION_HORIZONTAL
             ],
             Calculator::PROFILES => $profiles,
-            Calculator::GROUPS => $projectModule->getGroups()
+            Calculator::GROUPS => $groups
         ];
 
         foreach ($this->mappingCriteria as $field => $criteria){
