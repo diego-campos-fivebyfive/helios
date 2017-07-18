@@ -31,6 +31,7 @@ $ pwd
 Adicione ao final do arquivo as linhas substituindo `PROJECT_PATH` pelo caminho do projeto do passo anterior:
 ```
 export SICES_PATH=PROJECT_PATH
+source $SICES_PATH/cli/ces-variables
 export PATH=$PATH:$SICES_PATH/cli
 ```
 

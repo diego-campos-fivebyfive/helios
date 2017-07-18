@@ -6,8 +6,14 @@ const notifications = require('./mocks/notifications')
 const products = require('./mocks/products')
 const memorial = require('./mocks/memorial')
 
+const SICES_HOST = process.env.CES_SICES_HOST
+const SICES_PORT = process.env.CES_SICES_PORT
+const BUNDLE_HOST = process.env.CES_BUNDLE_HOST
+const BUNDLE_PORT = process.env.CES_BUNDLE_PORT
+const ISQUIK_PORT = process.env.CES_ISQUIK_PORT
+
 const app = express()
-app.listen(process.env.ISQUIK_BUNDLE_PORT || 2021)
+app.listen(ISQUIK_PORT)
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -15,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 const sendNotifications = (req, res, notification) => {
   const options = {
     method: 'POST',
-    uri: 'http://localhost:3000/api/v1/notifications',
+    uri: `${BUNDLE_HOST}:${BUNDLE_PORT}/api/v1/notifications`,
     body: notification,
     json: true,
     headers: {
@@ -40,14 +46,13 @@ const getData = (uri) => {
   return request(options).then((data) => JSON.parse(data))
 }
 
-
 app.post('/notifications', (req, res) => {
   const { callback, body } = req.body
   let data
 
   switch (callback) {
     case 'product_created':
-      data = getData(`http://localhost:8000/${body.family}/${body.code}`)
+      data = getData(`${SICES_HOST}:${SICES_PORT}/${body.family}/${body.code}`)
       break
 
     default:
