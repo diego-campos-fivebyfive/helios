@@ -1,20 +1,7 @@
 Instalação do Sistema
 =====================
 
-1. Clonando o projeto do Github
--------------------------------
-
-#### HTTP:
-```
-$ git clone https://[USER_NAME]@bitbucket.org/cjchamado/sices.git
-```
-#### SSH:
-```
-$ git clone git@bitbucket.org:cjchamado/sices.git
-```
-
-
-2. Adicionando o PATH do Projeto
+1. Adicionando o PATH do Projeto
 ----------------------------------
 
 Abra o Arquivo `.bashrc` com seu editor (Vim, Nano ou outro):
@@ -47,7 +34,7 @@ $ echo $PATH
 Caso os caminhos não apareçam, verifique se o mesmo está correto e reinicie a maquina.
 
 
-3. Instalando e configurando dependências do Sistema
+2. Instalando e configurando dependências do Sistema
 ----------------------------------------------------
 
 ```
@@ -55,7 +42,7 @@ $ yarn install && composer install && ces-server-config --development
 ```
 
 
-4. Compilando o Frontend
+3. Compilando o Frontend
 ------------------------
 
 ```
@@ -63,7 +50,7 @@ $ yarn compile
 ```
 
 
-5. Rodando o Sistema
+4. Rodando o Sistema
 --------------------
 
 ```
@@ -73,7 +60,7 @@ $ yarn start:dev
 Após os passos acima a aplicação estará disponível em: `http://localhost:8000`
 
 
-6. Adicionando Virtual Host (Opcional)
+5. Adicionando Virtual Host (Opcional)
 --------------------------------------
 
 Abra o arquivo `/etc/hosts` com seu editor (Vim, Nano ...):
