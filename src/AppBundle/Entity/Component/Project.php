@@ -1355,7 +1355,7 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
-    public function removeProjecStringBox(ProjectStringBoxInterface $projectStringBox)
+    public function removeProjectStringBox(ProjectStringBoxInterface $projectStringBox)
     {
         if($this->projectStringBoxes->contains($projectStringBox)){
             $this->projectStringBoxes->removeElement($projectStringBox);
