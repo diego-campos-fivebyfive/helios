@@ -7,11 +7,14 @@ use AppBundle\Entity\Component\StringBox;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * Stringbox controller.
  *
  * @Route("stringbox")
+ *
+ * @Security("has_role('ROLE_OWNER')")
  */
 class StringBoxController extends AbstractController
 {
@@ -91,6 +94,8 @@ class StringBoxController extends AbstractController
     /**
      * Displays a form to edit an existing stringBox entity.
      *
+     * @Security("has_role('ROLE_ADMIN')")
+     *
      * @Route("/{id}/edit", name="stringbox_edit")
      * @Method({"GET", "POST"})
      */
@@ -115,6 +120,8 @@ class StringBoxController extends AbstractController
 
     /**
      * Deletes a stringBox entity.
+     *
+     * @Security("has_role('ROLE_ADMIN')")
      *
      * @Route("/{id}", name="stringbox_delete")
      * @Method("DELETE")
