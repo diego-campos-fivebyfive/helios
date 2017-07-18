@@ -98,6 +98,7 @@ class ProjectGenerator
                 ->setProject($project)
                 ->setStructure($structure)
             ;
+
         }
 
         foreach ($extras as $extra) {
