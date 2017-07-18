@@ -128,3 +128,6 @@ services:
     string_box_calculator:
         class: AppBundle\Service\StringBoxCalculator\StringBoxCalculator
         arguments: ['@string_box_manager']
+
+    notifier:
+        class: AppBundle\Service\Notifier\Notifier

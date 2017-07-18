@@ -32,6 +32,7 @@ interface BusinessInterface extends BaseCustomerInterface
      */
     const CONTEXT_COMPANY = 'company';
     const CONTEXT_PERSON = 'person';
+    const CONTEXT_PERSON2 = 'Peoples';
 
     /**
      * Used in categories manager and forms

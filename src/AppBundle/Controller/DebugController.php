@@ -317,4 +317,20 @@ class DebugController extends AbstractController
 //        dump($projectPricifier); die();
 
     }
+
+    /**
+     * @Route("/notifier", name="debug_notifier")
+     */
+    public function notifierAction()
+    {
+        $this->get('notifier')->notify([
+            'callback' => 'product_validate',
+            'body' => [
+                'id' => '62'
+            ]
+        ]);
+
+        return $this->json();
+
+    }
 }
