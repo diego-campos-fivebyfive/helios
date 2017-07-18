@@ -32,8 +32,30 @@ const sendNotifications = (req, res, notification) => {
   })
 }
 
+const getData = (uri) => {
+  let options = {
+    method: 'GET'
+  }
+  options = Object.assign(options, { uri })
+  return request(options).then((data) => JSON.parse(data))
+}
+
+
 app.post('/notifications', (req, res) => {
-  res.status(200).json(req.body)
+  const { callback, body } = req.body
+  let data
+
+  switch (callback) {
+    case 'product_created':
+      data = getData(`http://localhost:8000/${body.family}/${body.code}`)
+      break
+
+    default:
+      response.status(404).end('callback action not found')
+      return
+  }
+
+  res.status(200).json({ callback, body: data })
 })
 
 app.get('/product/:code', (req, res) => {
