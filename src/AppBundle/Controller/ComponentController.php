@@ -19,7 +19,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 /**
  * @Route("components/{type}")
  *
- * TODO//@Security("has_role('ROLE_OWNER')")
+ * @Security("has_role('ROLE_OWNER')")
  *
  * @Breadcrumb("Dashboard", route={"name"="app_index"})
  * @Breadcrumb("{type}s", route={"name"="components", "parameters"={"type":"{type}"}})
@@ -85,7 +85,7 @@ class ComponentController extends AbstractController
     }
 
     /**
-     * TODO//@Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_ADMIN')")
      *
      * @Route("/{id}/update", name="component_update")
      * @Method({"get","post"})
@@ -103,7 +103,17 @@ class ComponentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             return $this->saveComponent($component, $type, $request);
+
+            if ($component->getStatus()) {
+                $this->get('notifier')->notify([
+                    'callback' => 'product_validate',
+                    'body' => [
+                        'id' => $component->getId()
+                    ]
+                ]);
+            }
         }
+
 
         return $this->render($type.'.form', [
             'form' => $form->createView(),
