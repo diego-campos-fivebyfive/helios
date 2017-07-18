@@ -6,13 +6,19 @@ if [ -z ${1+x} ] || [ $1 == '--development' ]; then
   cp cli/ces-pre-push .git/hooks/pre-push
   FLAG=development
 elif [ $1 == '--homolog' ]; then
-  ces-server-start --bundle
   FLAG=homolog
 elif [ $1 == '--production' ]; then
-  ces-server-start --bundle
   FLAG=production
 elif [ $1 == '--test' ];
   FLAG=test
+fi
+
+echo "Importing Sices $FLAG variables..."
+source ces-variables-ci --$FLAG
+
+# remote automatic start bundle app
+if [ $FLAG == 'development' ] || [ $FLAG == 'production' ]; then
+  ces-server-start --bundle
 fi
 
 echo 'Sices creating files...'

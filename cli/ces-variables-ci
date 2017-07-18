@@ -1,3 +1,13 @@
 #!/usr/bin/env bash
 
 source $SICES_PATH/cli/ces-variables
+
+if [ -z ${1+x} ] || [ $1 == '--development' ]; then
+
+elif [ $1 == '--homolog' ]; then
+
+elif [ $1 == '--production' ]; then
+
+elif [ $1 == '--test' ];
+
+fi
