@@ -120,13 +120,16 @@ class ProjectController extends AbstractController
             $power = $this->get('power_estimator')->estimate($project->getInfPower(), $project->getLatitude(), $project->getLongitude());
             $inverters = $this->get('inverter_combinator')->combine($module, $power, 60627);
 
+            $stringBoxes = $this->get('string_box_calculator')->calculate($inverters);
+
             /** @var \AppBundle\Service\ProjectGenerator\ProjectGenerator $projectGenerator */
             $projectGenerator = $this->get('project_generator');
             $projectGenerator->project($project);
 
             $project = $projectGenerator->fromCombination([
                 'inverters' => $inverters,
-                'module' => $module
+                'module' => $module,
+                'string_boxes' => $stringBoxes
             ]);
 
             $this->get('structure_calculator')->calculate($project);
@@ -176,6 +179,16 @@ class ProjectController extends AbstractController
     public function componentsAction(Project $project)
     {
         return $this->render('project.components', [
+            'project' => $project
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/groups", name="project_groups")
+     */
+    public function groupsAction(Project $project)
+    {
+        return $this->render('project.form_groups', [
             'project' => $project
         ]);
     }

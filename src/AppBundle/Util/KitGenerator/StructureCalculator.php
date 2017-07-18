@@ -12,7 +12,7 @@ class StructureCalculator implements StructureCalculatorInterface
         $groups = $data[self::GROUPS];
         $countModules = 0;
         foreach ($groups as $group){
-            $countModules += $group['string_number'] * $group['module_string'];
+            $countModules += $group['lines'] * $group['modules'];
         }
 
         //dump($countModules); die;
@@ -114,8 +114,8 @@ class StructureCalculator implements StructureCalculatorInterface
         foreach($groups as $i => $group){
 
             //$quantityModules = $groups[$i];
-            $linesOfModules = $groups[$i]['string_number'];
-            $quantityModules = $groups[$i]['module_string'];
+            $linesOfModules = $groups[$i]['lines'];
+            $quantityModules = $groups[$i]['modules'];
             $position = $group['position'];
             $dimension = self::POSITION_VERTICAL ==  $position ? $module['width'] : $module['length'] ;
 

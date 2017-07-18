@@ -6,6 +6,7 @@ use AppBundle\Entity\Component\ProjectExtra;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverter;
 use AppBundle\Entity\Component\ProjectModule;
+use AppBundle\Entity\Component\ProjectStringBox;
 use AppBundle\Entity\Component\ProjectStructure;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -45,6 +46,7 @@ class ProjectGenerator
     {
         $inverters = $this->findByIds('inverter', array_keys($data['inverters']));
         $modules = $this->findByIds('module', array_keys($data['modules']));
+        $stringBoxes = $this->findByIds('stringBox', array_keys($data['string_boxes']));
 
         $structures = [];
         if($this->hasData($data, 'structures')) {
@@ -79,6 +81,15 @@ class ProjectGenerator
             ;
         }
 
+        foreach($stringBoxes as $stringBox){
+            $projectStringBox = new ProjectStringBox();
+            $projectStringBox
+                ->setQuantity($data['string_boxes'][$stringBox->getId()])
+                ->setProject($project)
+                ->setStringBox($stringBox)
+            ;
+        }
+
         foreach($structures as $structure){
 
             $projectStructure = new ProjectStructure();
@@ -109,7 +120,7 @@ class ProjectGenerator
                 }
             }
         }
-
+        
         $manager->save($project);
 
         return $project;
@@ -129,8 +140,14 @@ class ProjectGenerator
             $moduleCount += ($inverter['serial'] * $inverter['parallel'] * $inverter['quantity']);
         }
 
+        $stringBoxes = [];
+        foreach ($data['string_boxes'] as $stringBox){
+            $stringBoxes[$stringBox['id']] = $stringBox['quantity'];
+        }
+
         return $this->fromArray([
             'inverters' => $inverterData,
+            'string_boxes' => $stringBoxes,
             'modules' => [
                 $module->getId() => $moduleCount
             ],
