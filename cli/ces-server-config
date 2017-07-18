@@ -3,13 +3,30 @@
 cd $SICES_PATH
 
 if [ -z ${1+x} ] || [ $1 == '--development' ]; then
-  FLAG=dev
+
+  cp cli/ces-pre-push .git/hooks/pre-push
+  FLAG=development
+
 elif [ $1 == '--homolog' ]; then
-  FLAG=hm
+
+  echo "Sices starting bundle on port $BUNDLE_PORT"
+  cd bundle/app
+  yarn install
+  node_modules/.bin/pm2 start index.js -n "homolog-bundle"
+  FLAG=homolog
+
 elif [ $1 == '--production' ]; then
-  FLAG=prod
+
+  echo "Sices starting bundle on port $BUNDLE_PORT"
+  cd bundle/app
+  yarn install
+  node_modules/.bin/pm2 start index.js -n "production-bundle"
+  FLAG=production
+
 else [ $1 == '--test' ];
+
   FLAG=test
+
 fi
 
 echo 'Sices creating files...'
@@ -19,16 +36,5 @@ touch web/deploy/deploy.log
 
 echo 'Sices updating schema...'
 php app/console doctrine:schema:update --force
-
-if [ $FLAG == 'dev' ]; then
-  cp cli/ces-pre-push .git/hooks/pre-push
-elif [ $FLAG == 'prod' ]; then
-  BUNDLE_PORT=3000
-  echo "Sices starting bundle on port $BUNDLE_PORT"
-
-  cd bundle/app
-  yarn install
-  node_modules/.bin/pm2 start index.js -n "bundle"
-fi
 
 echo 'Done.'
