@@ -1,0 +1,197 @@
+{#{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Stringboxes list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Code</th>
+                <th>Description</th>
+                <th>Inputs</th>
+                <th>Outputs</th>
+                <th>Fuses</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for stringBox in stringBoxes %}
+            <tr>
+                <td><a href="{{ path('stringbox_show', { 'id': stringBox.id }) }}">{{ stringBox.id }}</a></td>
+                <td>{{ stringBox.code }}</td>
+                <td>{{ stringBox.description }}</td>
+                <td>{{ stringBox.inputs }}</td>
+                <td>{{ stringBox.outputs }}</td>
+                <td>{{ stringBox.fuses }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('stringbox_show', { 'id': stringBox.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('stringbox_edit', { 'id': stringBox.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('stringbox_new') }}">Create a new stringBox</a>
+        </li>
+    </ul>
+{% endblock %}#}
+
+{% extends view('layout') %}
+
+
+{% block body %}
+
+    <div class="modal inmodal fade" id="e_modal_details" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body" id="detail_stringbox">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">
+                        {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% set stringBoxes = pagination.items %}
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row">
+{#
+            {{ knp_pagination_filter(pagination, {'c.model, m.name':''}) }}#}
+
+            {#<div class="col-md-2">
+                <a href="{{ path(_route, _route_params) }}" class="btn btn-default btn-block">
+                    <i class="fa fa-{{ is_grid ? 'list' : 'th' }}"></i> {{ is_grid ? 'Exibir Lista'|trans : 'Exibir Grade'|trans }}
+                </a>
+            </div>#}
+        </div>
+
+        <div class="row" id="real-content">
+
+            <div class="col-md-12">
+
+
+                    <div class="ibox-content">
+
+                        <table class="table table-stripped">
+                            <thead>
+                            <tr>
+                                {#<th>id</th>
+                                #}<th>Código</th>
+                                <th>Descrição</th>
+                                <th>Entradas</th>
+                                <th>Saídas</th>
+                                <th>Fusíveis</th>
+                                <th class="col-md-3">&nbsp;</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for stringBox in stringBoxes %}
+
+                                <tr class="gradeY">
+                                    {#<td> <a href="{{ path('stringbox_show', { 'id': stringBox.id }) }}">{{ stringBox.id }}</a> </td>
+                                    #}<td> {{ stringBox.code }} </td>
+                                    <td> {{ stringBox.description }} </td>
+                                    <td> {{ stringBox.inputs }} </td>
+                                    <td> {{ stringBox.outputs }} </td>
+                                    <td> {{ stringBox.fuses }} </td>
+                                    <td>
+
+                                        <div class="btn-group btn-group-sm btn-group-justified">
+                                            <a data-url="{{ path('stringbox_show', { 'id': stringBox.id }) }}"
+                                               data-toggle="modal"
+                                               data-target="#modal_details"
+                                               class="btn btn-default">
+                                                <i class="fa fa-eye"></i> {{ 'View'|trans }}
+                                            </a>
+
+                                            <a href="{{ path('stringbox_edit', { 'id': stringBox.id }) }}"
+                                               class="btn btn-success">
+                                                <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
+                                            </a>
+
+                                        </div>
+
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+
+
+            </div>
+
+        </div>
+
+        <div class="row text-center">
+            <div class="btn-group">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+
+    </div>
+
+    {#<div class="hide" id="proto_buttons">
+    </div>#}
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+
+        $(function () {
+
+           /* var form_filtration = $('#form_filtration');
+            if (form_filtration.length) {
+                form_filtration
+                    .append('<input type="hidden" name="display" value="{#{{ display }}#}">')
+                    .append('<input type="hidden" name="strict" value="{#{{ is_strict ? '1' : '0' }}#}">');
+            }*/
+
+            var detail_stringbox = $('#detail_stringbox');
+            var detail_spinner = detail_stringbox.html();
+            $('[data-target="#modal_details"]').on('click', function(){
+                var url = $(this).data('url');
+                if (url) {
+                    $('#e_modal_details').modal('show');
+                    detail_stringbox.html(detail_spinner);
+                    $.ajax({
+                        url: url,
+                        method: 'get',
+                        success: function (response) {
+                            detail_stringbox.html(response);
+                        }
+                    });
+                } else {
+                    detail_stringbox.html('<h1> Nenhum componente selecionado para visualização </h1>');
+                }
+            });
+
+        });
+
+
+    </script>
+
+{% endblock %}

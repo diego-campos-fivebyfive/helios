@@ -1,0 +1,130 @@
+
+{#
+    <h1>Stringbox</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ stringBox.id }}</td>
+            </tr>
+            <tr>
+                <th>Code</th>
+                <td>{{ stringBox.code }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ stringBox.description }}</td>
+            </tr>
+            <tr>
+                <th>Inputs</th>
+                <td>{{ stringBox.inputs }}</td>
+            </tr>
+            <tr>
+                <th>Outputs</th>
+                <td>{{ stringBox.outputs }}</td>
+            </tr>
+            <tr>
+                <th>Fuses</th>
+                <td>{{ stringBox.fuses }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('stringbox_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('stringbox_edit', { 'id': stringBox.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>#}
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="ibox product-detail">
+                    <div class="ibox-content">
+
+                        <div class="row">
+
+                            <div class="col-md-5">
+
+                                {#<h2 class="font-bold m-b-xs">
+
+                                </h2>#}
+                                <div class="m-t-md">
+                                    <h2 class="product-main-price">
+                                        {{ stringBox.description }}
+                                    </h2>
+                                </div>
+                                <hr>
+                                <div class="product-images">
+                                    <div>
+                                        {#<img class="col-md-12" src="{{ inverter.image|componentFilePath }}"/>#}
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-7">
+                                <div class="table-responsive">
+                                    <table class="table table-stripped table-bordered table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th colspan="2">
+                                                Dados Gerais
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td width="35%">Código</td>
+                                            <td>{{ stringBox.code }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Descrição</td>
+                                            <td>{{ stringBox.description }}</td>
+                                        </tr>
+
+                                        </tbody>
+
+                                        <thead>
+                                        <tr>
+                                            <th colspan="2">
+                                                Dados Técnicos
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>Entradas</td>
+                                            <td>{{ stringBox.inputs }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Saídas</td>
+                                            <td>{{ stringBox.outputs }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Fusíveis</td>
+                                            <td>{{ stringBox.fuses }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
