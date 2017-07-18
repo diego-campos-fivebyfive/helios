@@ -18,6 +18,9 @@ namespace AppBundle\Entity\Component;
  */
 interface ModuleInterface
 {
+    const DISABLE = 0;
+    const ACTIVE = 1;
+
     /**
      * @return int
      */
@@ -257,6 +260,32 @@ interface ModuleInterface
      * @return float
      */
     public function getCurrentPrice();
+
+    /**
+     * @param $status
+     * @return mixed
+     */
+    public function setStatus($status);
+
+    /**
+     * @return mixed
+     */
+    public function getStatus();
+
+    /**
+     * @return bool
+     */
+    public function isDisable();
+
+    /**
+     * @return bool
+     */
+    public function isActive();
+
+    /**
+     * @return array
+     */
+    public static function getStatusOptions();
 
     /**
      * @return \DateTime

@@ -2,11 +2,13 @@
 
 namespace AppBundle\Form\Component;
 
+use Sonata\AdminBundle\Form\Type\Filter\ChoiceType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use AppBundle\Entity\Component\MakerInterface;
+use AppBundle\Entity\Component\Inverter;
 
 class InverterType extends AbstractType
 {
@@ -65,6 +67,10 @@ class InverterType extends AbstractType
         ]);
         $builder->add('mpptNumber', null, [
             'required' => true
+        ]);
+        $builder->add('status', ChoiceType::class, [
+            'choices'  => Status::getStatusOptions(),
+            'expanded' => true
         ]);
     }
 

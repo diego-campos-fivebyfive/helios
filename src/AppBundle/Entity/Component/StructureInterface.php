@@ -4,6 +4,9 @@ namespace AppBundle\Entity\Component;
 
 interface StructureInterface
 {
+    const DISABLE = 0;
+    const ACTIVE = 1;
+
     /**
      * @return int
      */
@@ -63,6 +66,32 @@ interface StructureInterface
       * @return mixed
       */
     public function getSize();
+
+    /**
+     * @param $status
+     * @return mixed
+     */
+    public function setStatus($status);
+
+    /**
+     * @return mixed
+     */
+    public function getStatus();
+
+    /**
+     * @return bool
+     */
+    public function isDisable();
+
+    /**
+     * @return bool
+     */
+    public function isActive();
+
+    /**
+     * @return array
+     */
+    public static function getStatusOptions();
 
     /**
      * @return mixed

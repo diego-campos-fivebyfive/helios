@@ -130,6 +130,13 @@ class Inverter implements InverterInterface
     private $currentPrice;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="status", type="string", nullable=true)
+     */
+    private $status;
+
+    /**
      * @var MakerInterface
      *
      * @ORM\ManyToOne(targetEntity="Maker")
@@ -144,12 +151,21 @@ class Inverter implements InverterInterface
     public $viewMode = false;
 
     /**
+     * @inheritDoc
+     */
+    public function __construct()
+    {
+        $this->status = self::DISABLE;
+    }
+
+    /**
      * @return string
      */
     public function __toString()
     {
         return (string) $this->getModel();
     }
+
 
     /**
      * @inheritDoc
@@ -408,4 +424,46 @@ class Inverter implements InverterInterface
         return $this->maker;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isDisable()
+    {
+        return self::DISABLE == $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isActive()
+    {
+        return self::ACTIVE == $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function getStatusOptions()
+    {
+        return [
+            self::DISABLE  => 'Inativo',
+            self::ACTIVE => 'Ativo'
+        ];
+    }
 }

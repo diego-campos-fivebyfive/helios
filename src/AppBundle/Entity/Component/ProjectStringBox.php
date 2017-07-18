@@ -29,14 +29,14 @@ class ProjectStringBox implements ProjectStringBoxInterface
     /**
      * @var ProjectInterface
      *
-     * @ORM\ManyToOne(targetEntity="Project", inversedBy="projectStringBoxs")
+     * @ORM\ManyToOne(targetEntity="Project", inversedBy="projectStringBoxes")
      */
     private $project;
 
     /**
      * @var StringBoxInterface
      *
-     * @ORM\ManyToOne(targetEntity="ProjectArea")
+     * @ORM\ManyToOne(targetEntity="StringBox")
      */
     private $stringBox;
 
@@ -71,18 +71,20 @@ class ProjectStringBox implements ProjectStringBoxInterface
     }
 
     /**
-     * @return StringBoxInterface
-     */
-    public function getStringBox()
-    {
-        return $this->stringBox;
-    }
-
-    /**
      * @inheritDoc
      */
     public function setStringBox($stringBox)
     {
         $this->stringBox = $stringBox;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getStringBox()
+    {
+        return $this->stringBox;
     }
 }

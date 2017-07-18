@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use AppBundle\Entity\Component\MakerInterface;
+use AppBundle\Entity\Component\Module;
 
 class ModuleType extends AbstractType
 {
@@ -81,6 +82,10 @@ class ModuleType extends AbstractType
         ]);
         $builder->add('tempCoefficientShortCircuitCurrent', null, [
             'required' => true
+        ]);
+        $builder->add('status', ChoiceType::class, [
+            'choices'  => Status::getStatusOptions(),
+            'expanded' => true
         ]);
     }
 
