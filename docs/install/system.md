@@ -61,8 +61,8 @@ $ yarn start:dev
 Após os passos acima a aplicação estará disponível em: `http://localhost:8000`
 
 
-5. Adicionando Virtual Host (Opcional)
---------------------------------------
+5. Adicionando Virtual Host
+---------------------------
 
 Abra o arquivo `/etc/hosts` com seu editor (Vim, Nano ...):
 ```
