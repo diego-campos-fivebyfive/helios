@@ -14,10 +14,10 @@ class Notifier
 {
     public function notify(array $data){
 
-        //$port = getenv('ISQUIK_PORT');
-        $port = 2021;
+        $host = getenv('CES_ISQUIK_HOST');
+        $port = getenv('CES_ISQUIK_PORT');
 
-        $client = new Client(['base_uri' => "http://localhost:$port"]);
+        $client = new Client(['base_uri' => "$host:$port"]);
 
         $response = $client->request('POST','/notifications', [
            'form_params'  => $data
