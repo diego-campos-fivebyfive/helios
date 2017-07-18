@@ -7,6 +7,7 @@ use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectStructure;
 use AppBundle\Entity\Component\StructureInterface;
 use AppBundle\Form\Extra\KitGeneratorType;
+use AppBundle\Service\StringBoxCalculator\StringBoxCalculator;
 use AppBundle\Util\KitGenerator\InverterCombiner\Module;
 use AppBundle\Util\KitGenerator\StructureCalculator;
 use GuzzleHttp\Client;
@@ -34,11 +35,12 @@ class GeneratorController extends AbstractController
         //$this->previewPower(1000, -15.79, -47.88);
         //$this->generateJson();
         //$this->calculateStructure();
+        //$this->calculateStringBoxes();
 
         $member = $this->member();
         $contacts = $member->getContacts();
         $customer = $contacts->get(rand(0, $contacts->count() - 1));
-        $kwh = 2000;
+        $kwh = 500;
 
         $latitude = -15.79;
         $longitude = -47.88;
@@ -57,40 +59,18 @@ class GeneratorController extends AbstractController
 
         $inverters = $this->get('inverter_combinator')->combine($module, $power, $maker);
 
-        //dump($inverters); die;
+        $stringBoxCalculator = $this->get('string_box_calculator');
 
-        $data = [
-            'inverters' => $inverters,
-            'module' => $module
-        ];
+        $stringBoxes = $stringBoxCalculator->calculate($inverters);
 
-        /** @var ProjectInterface $project */
-        /*$project = $this->manager('project')->create();
-        $project
-            ->setAddress('Address')
-            ->setInfConsumption($kwh)
-            ->setInfPower($power)
-            ->setStructureType(ProjectInterface::STRUCTURE_SICES)
-            ->setRoofType(StructureCalculator::ROOF_ROMAN_AMERICAN)
-            ->setLatitude($latitude)
-            ->setLongitude($longitude)
-        ;
 
-        $generator = $this->get('project_generator');
-        $generator->project($project);
 
-        $generator->fromCombination($data);*/
+        dump($stringBoxes); die;
+    }
 
-        $project = $this->manager('project')->find(153);
+    private function calculateStringBoxes(array $inverters)
+    {
 
-        //$projectModule = $project->getProjectModules()->first();
-        //dump($projectModule); die;
-
-        $structureCalculator = $this->get('structure_calculator');
-
-        $structureCalculator->calculate($project);
-
-        dump($project); die;
     }
 
     private function generateJson()

@@ -124,3 +124,7 @@ services:
     structure_calculator:
         class: AppBundle\Service\StructureCalculator\StructureCalculator
         arguments: ['@project_manager', '@structure_manager', '@project_structure_manager']
+
+    string_box_calculator:
+        class: AppBundle\Service\StringBoxCalculator\StringBoxCalculator
+        arguments: ['@string_box_manager']
