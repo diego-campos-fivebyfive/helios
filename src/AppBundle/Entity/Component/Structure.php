@@ -65,6 +65,13 @@ class Structure implements StructureInterface
     private $size;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="status", type="string", nullable=true)
+     */
+    private $status;
+
+    /**
      * @var MakerInterface
      *
      * @ORM\ManyToOne(targetEntity="Maker")
@@ -77,6 +84,7 @@ class Structure implements StructureInterface
      */
     public function __construct()
     {
+        $this->status = self::DISABLE;
         $this->generateToken();
     }
 
@@ -192,6 +200,50 @@ class Structure implements StructureInterface
     /**
      * @inheritDoc
      */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function isDisable()
+    {
+        return self::DISABLE == $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isActive()
+    {
+        return self::ACTIVE == $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function getStatusOptions()
+    {
+        return [
+            self::DISABLE  => 'Inativo',
+            self::ACTIVE => 'Ativo'
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getCreatedAt()
     {
         return $this->createdAt;
@@ -245,6 +297,4 @@ class Structure implements StructureInterface
     {
         return $this->maker;
     }
-
-
 }

@@ -7,10 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Doctrine\Common\Collections\ArrayCollection;
-use AppBundle\Entity\Component\Maker;
-use AppBundle\Entity\Component\MakerInterface;
 use AppBundle\Entity\Component\Structure;
-use AppBundle\Entity\Component\StructureInterface;
 
 class StructureType extends AbstractType
 {
@@ -26,7 +23,10 @@ class StructureType extends AbstractType
                 ->add('subtype')
                 ->add('description')
                 ->add('size')
-                ;
+                ->add('status', ChoiceType::class, [
+                            'choices'  => Status::getStatusOptions(),
+                            'expanded' => true
+                ]);
     }
 
     /**

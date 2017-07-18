@@ -29,7 +29,7 @@ class ProjectStringBox implements ProjectStringBoxInterface
     /**
      * @var ProjectInterface
      *
-     * @ORM\ManyToOne(targetEntity="Project", inversedBy="projectStringBoxs")
+     * @ORM\ManyToOne(targetEntity="Project", inversedBy="projectStringBoxes")
      */
     private $project;
 
@@ -83,6 +83,6 @@ class ProjectStringBox implements ProjectStringBoxInterface
      */
     public function setStringBox(StringBoxInterface $stringBox)
     {
-        $this->stringBox = $stringBox;
+        return $this->stringBox;
     }
 }

@@ -18,6 +18,9 @@ namespace AppBundle\Entity\Component;
  */
 interface InverterInterface
 {
+    const DISABLE = 0;
+    const ACTIVE = 1;
+
     /**
      * @param $code
      * @return InverterInterface
@@ -160,6 +163,32 @@ interface InverterInterface
      * @return float
      */
     public function getCurrentPrice();
+
+    /**
+     * @param $status
+     * @return mixed
+     */
+    public function setStatus($status);
+
+    /**
+     * @return mixed
+     */
+    public function getStatus();
+
+    /**
+     * @return bool
+     */
+    public function isDisable();
+
+    /**
+     * @return bool
+     */
+    public function isActive();
+
+    /**
+     * @return array
+     */
+    public static function getStatusOptions();
 
     /**
      * @return mixed
