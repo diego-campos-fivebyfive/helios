@@ -48,17 +48,16 @@ const getData = (uri) => {
 
 app.post('/notifications', (req, res) => {
   const { callback, body } = req.body
-  console.log(callback, body)
-  return
   let data
 
   switch (callback) {
-    case 'product_created':
-      data = getData(`${SICES_HOST}:${SICES_PORT}/${body.family}/${body.code}`)
+    case 'product_validate':
+      //data = getData(`${SICES_HOST}:${SICES_PORT}/${body.family}/${body.code}`)
+      data = 'test'
       break
 
     default:
-      response.status(404).end('callback action not found')
+      res.status(404).end('callback action not found')
       return
   }
 
