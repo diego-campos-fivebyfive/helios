@@ -23,7 +23,7 @@ elif [ $1 == '--production' ]; then
   node_modules/.bin/pm2 start index.js -n "production-bundle"
   FLAG=production
 
-else [ $1 == '--test' ];
+elif [ $1 == '--test' ];
 
   FLAG=test
 
