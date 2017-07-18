@@ -172,6 +172,11 @@ class Main implements ContainerAwareInterface
             'route' => 'extras_index',
             'extras' => ['icon' => App::icons('extras')]
         ]);
+
+        $components->addChild('String Box', [
+            'route' => 'stringbox_index',
+            'extras' => ['icon' => 'fa fa-minus-square'/*App::icons('extras')*/]
+        ]);
     }
 
     /**
