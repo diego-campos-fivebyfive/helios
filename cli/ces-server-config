@@ -3,30 +3,16 @@
 cd $SICES_PATH
 
 if [ -z ${1+x} ] || [ $1 == '--development' ]; then
-
   cp cli/ces-pre-push .git/hooks/pre-push
   FLAG=development
-
 elif [ $1 == '--homolog' ]; then
-
-  echo "Sices starting bundle on port $BUNDLE_PORT"
-  cd bundle/app
-  yarn install
-  node_modules/.bin/pm2 start index.js -n "homolog-bundle"
+  ces-server-start --bundle
   FLAG=homolog
-
 elif [ $1 == '--production' ]; then
-
-  echo "Sices starting bundle on port $BUNDLE_PORT"
-  cd bundle/app
-  yarn install
-  node_modules/.bin/pm2 start index.js -n "production-bundle"
+  ces-server-start --bundle
   FLAG=production
-
 elif [ $1 == '--test' ];
-
   FLAG=test
-
 fi
 
 echo 'Sices creating files...'

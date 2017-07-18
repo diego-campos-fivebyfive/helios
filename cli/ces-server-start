@@ -28,6 +28,13 @@ if [ -z ${1+x} ] || [ $1 == '--development' ]; then
 
   done
 
+elif [ $1 == '--bundle' ]; then
+
+  echo "Sices starting bundle on port $BUNDLE_PORT"
+  cd bundle/app
+  yarn install
+  node_modules/.bin/pm2 start index.js -n "bundle"
+
 elif [ $1 == '--isquikmock' ]; then
 
   echo "Starting Bundle Test (Isquik Mock) on port: $ISQUIK_PORT"
