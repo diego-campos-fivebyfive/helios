@@ -304,6 +304,20 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="col-md-12">
+                                <div class="panel panel-warning">
+                                    <div class="panel-heading">
+                                        Disposição dos Módulos
+                                    </div>
+                                    <div class="panel-body" id="project_groups" data-load="{{ project.id ? path('project_groups',{id:project.id}) }}">
+                                        {% if project.id %}
+                                            {% include view('helper.spinner') %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
 
                         <div class="row">
@@ -647,6 +661,9 @@
             loadComponents: function(){
                 ProjectManager.load($('#project_components'));
             },
+            loadGroups: function(){
+                ProjectManager.load($('#project_groups'));
+            },
             loadInverters: function(){
                 ProjectManager.load($('#project_inverters'));
             },
@@ -686,6 +703,10 @@
                 $('#project_components').attr('data-load', components_url);
                 ProjectManager.loadComponents();
 
+                var groups_url = '{{ path('project_groups',{id:'_id_'}) }}'.replace(/_id_/g, ProjectManager.project.id);
+                $('#project_groups').attr('data-load', groups_url);
+                ProjectManager.loadGroups();
+
                 var inverters_url = '{{ path('project_inverters',{id:'_id_'}) }}'.replace(/_id_/g, ProjectManager.project.id);
                 $('#project_inverters').attr('data-load', inverters_url);
                 ProjectManager.loadInverters();
@@ -714,6 +735,7 @@
 
                 if(ProjectManager.project.id) {
                     ProjectManager.loadComponents();
+                    ProjectManager.loadGroups();
                     ProjectManager.loadInverters();
                     ProjectManager.process();
                 }
