@@ -265,7 +265,7 @@ class Project implements ProjectInterface
      *
      * @ORM\OneToMany(targetEntity="ProjectStringBox", mappedBy="project", cascade={"persist", "remove"})
      */
-    private $projectStringBoxs;
+    private $projectStringBoxes;
 
     /**
      * @var ArrayCollection
@@ -306,7 +306,7 @@ class Project implements ProjectInterface
         $this->projectInverters      = new ArrayCollection();
         $this->projectStructures     = new ArrayCollection();
         $this->projectExtras         = new ArrayCollection();
-        $this->projectStringBoxs     = new ArrayCollection();
+        $this->projectStringBoxes     = new ArrayCollection();
         $this->projectTaxes          = new ArrayCollection();
         $this->invoiceBasePrice      = 0;
         $this->deliveryBasePrice     = 0;
@@ -1341,9 +1341,9 @@ class Project implements ProjectInterface
      */
     public function addProjectStringBox(ProjectStringBoxInterface $projectStringBox)
     {
-        if(!$this->projectStringBoxs->contains($projectStringBox)){
+        if(!$this->projectStringBoxes->contains($projectStringBox)){
 
-            $this->projectStringBoxs->add($projectStringBox);
+            $this->projectStringBoxes->add($projectStringBox);
 
             if(!$projectStringBox->getProject())
                 $projectStringBox->setProject($this);
@@ -1357,8 +1357,8 @@ class Project implements ProjectInterface
      */
     public function removeProjecStringBox(ProjectStringBoxInterface $projectStringBox)
     {
-        if($this->projectStringBoxs->contains($projectStringBox)){
-            $this->projectStringBoxs->removeElement($projectStringBox);
+        if($this->projectStringBoxes->contains($projectStringBox)){
+            $this->projectStringBoxes->removeElement($projectStringBox);
         }
 
         return $this;
@@ -1367,9 +1367,9 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
-    public function getProjectStringBoxs()
+    public function getProjectStringBoxes()
     {
-        return $this->projectStringBoxs;
+        return $this->projectStringBoxes;
     }
 
 

@@ -82,7 +82,7 @@ class ProjectPrecifier
             $components[$projectStructure->getStructure()->getCode()] = $projectStructure;
         }
 
-        foreach ($project->getProjectStringBoxs() as $projectStringBox){
+        foreach ($project->getProjectStringBoxes() as $projectStringBox){
             $components[$projectStringBox->getStringBox()->getCode()] = $projectStringBox;
         }
 

@@ -578,7 +578,7 @@ interface ProjectInterface
     /**
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getProjectStringBoxs();
+    public function getProjectStringBoxes();
 
     /**
      * @return \Doctrine\Common\Collections\ArrayCollection

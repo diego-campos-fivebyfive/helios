@@ -41,13 +41,6 @@ class ProjectStringBox implements ProjectStringBoxInterface
     private $stringBox;
 
     /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="ProjectArea", mappedBy="projectStringBox", cascade={"persist", "remove"})
-     */
-    private $projectAreas;
-
-    /**
      * ProjectStringBox constructor.
      */
     public function __construct()
@@ -55,7 +48,6 @@ class ProjectStringBox implements ProjectStringBoxInterface
         $this->quantity      = 1;
         $this->unitCostPrice = 0;
         $this->unitSalePrice = 0;
-        $this->projectAreas = new ArrayCollection();
     }
 
     /**
@@ -93,38 +85,4 @@ class ProjectStringBox implements ProjectStringBoxInterface
     {
         $this->stringBox = $stringBox;
     }
-
-    public function addProjectArea(ProjectAreaInterface $projectArea)
-    {
-        if(!$this->projectAreas->contains($projectArea)){
-            $this->projectAreas->add($projectArea);
-
-            if(!$projectArea->getProjectStringBox()){
-                $projectArea->setProjectStringBox($this);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function removeProjectArea(ProjectAreaInterface $projectArea)
-    {
-        if($this->projectAreas->contains($projectArea)){
-            $this->projectAreas->removeElement($projectArea);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getProjectAreas()
-    {
-        return $this->projectAreas;
-    }
-
 }
