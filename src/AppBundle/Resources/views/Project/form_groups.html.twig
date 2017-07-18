@@ -1,6 +1,6 @@
 {% set projectModule = project.projectModules.first %}
 
-<table>
+<table class="hide">
     <tbody id="template_lines">
     <tr class="dist-line">
         <td class="col-md-4">
@@ -10,15 +10,13 @@
             <input placeholder="Módulos por Linha" type="text" value="__modules__" class="form-control dist-line-module">
         </td>
         <td class="col-md-3">
-            <label>
-                <select class="form-control">
-                    <option value="0"> Vertical</option>
-                    <option value="1"> Horizontal</option>
-                </select>
-            </label>
+            <select class="form-control dist-line-position">
+                <option value="0"> Vertical</option>
+                <option value="1"> Horizontal</option>
+            </select>
         </td>
         <td class="col-md-1">
-            <button class="remove-dist-line btn btn-danger">
+            <button class="remove-dist-line btn btn-danger btn-block">
                 <i class="fa fa-trash"></i>
             </button>
         </td>
@@ -29,41 +27,30 @@
 <table class="table">
     <thead>
     <tr>
-        <td colspan="3">
+        <td colspan="4">
             <div class="btn-group btn-group-md">
                 <button id="add-dist-line" class="btn btn-primary">
                     <i class="fa fa-plus"></i>
+                </button>
+                <button id="dist-counter" class="btn btn-success">
+                    {{ projectModule.quantity }}
                 </button>
             </div>
         </td>
     </tr>
     </thead>
     <tbody id="dist-container">
-
     </tbody>
-    {#{% for key, group in projectModule.groups %}
-
-        <tr class="dist-line">
-            <td class="col-md-4">
-                <input placeholder="Número de Linhas" type="text" value="{{ group.lines }}" class="form-control dist-line-number">
-            </td>
-            <td class="col-md-4">
-                <input placeholder="Módulos por Linha" type="text" value="{{ group.modules }}" class="form-control dist-line-module">
-            </td>
-            <td class="col-md-3">
-                <select class="form-control">
-                    <option value="0"> Vertical </option>
-                    <option value="1"> Horizontal </option>
-                </select>
-            </td>
-            <td class="col-md-1">
-                <button class="remove-dist-line btn btn-danger">
-                    <i class="fa fa-trash"></i>
+    <tfoot>
+        <tr>
+            <td colspan="4">
+                <button data-style="zoom-in" class="btn btn-success pull-right ladda-button" id="btn-dist-submit">
+                    <i class="fa fa-refresh"></i>
+                    <span> Recalcular </span>
                 </button>
             </td>
         </tr>
-
-    {% endfor %}#}
+    </tfoot>
 </table>
 
 <script>
@@ -72,7 +59,9 @@
         groups: {{ projectModule.groups|json_encode|raw }},
         container: $('#dist-container'),
         template: $('#template_lines').html(),
-        max_count: 401,
+        counter: $('#dist-counter'),
+        max_count: {{ projectModule.quantity }},
+        submit: $('#btn-dist-submit'),
         getInt: function (e) {
             return parseInt(e.val());
         },
@@ -85,31 +74,20 @@
 
             return count;
         },
-        refresh: function () {
-            $('.remove-dist-line').on('click', function (event) {
-                event.stopPropagation();
-                if ($('.remove-dist-line').length > 1) {
-                    GroupManager.remove($(this));
-                }
-            });
-
-        },
-        add: function () {
-            var template = $('.dist-line').first().clone();
-            var lines = template.find('.dist-line-number');
-            $('#dist-container').append(template);
-
-            GroupManager.touchspin.update(lines);
-
-            //GroupManager.refresh();
-        },
         remove: function (target) {
             var line = target.closest('.dist-line');
             line.remove();
         },
         check: function(){
             var count = GroupManager.count();
-            console.log(count);
+            if(GroupManager.max_count == count){
+                GroupManager.submit.removeAttr('disabled');
+                GroupManager.counter.removeClass('btn-danger').addClass('btn-success');
+            }else{
+                GroupManager.submit.attr('disabled', 'disabled');
+                GroupManager.counter.removeClass('btn-success').addClass('btn-danger');
+            }
+            GroupManager.counter.html(count);
         },
         touchspin: {
             update: function (input) {
@@ -121,17 +99,21 @@
                     step: 1,
                     verticalbuttons: true,
                     prefix: 'Número de Linhas'
-                }).on('touchspin.on.stopspin', function () {
+                }).on('change', function () {
                     var value = parseInt($(this).val());
                     var index = $(this).closest('tr').index();
-                    var current_lines = GroupManager.groups[index].lines;
-
-                    GroupManager.groups[index].lines = value;
-
-                    if(GroupManager.count() > GroupManager.max_count){
-                        $(this).val(current_lines);
-                        console.log(current_lines);
+                    var current = GroupManager.groups[index].lines;
+                    if(value > current) {
+                        if (GroupManager.count() >= GroupManager.max_count) {
+                            $(this).val(current);
+                        } else {
+                            GroupManager.groups[index].lines = value;
+                        }
+                    }else{
+                        GroupManager.groups[index].lines = value;
                     }
+
+                    GroupManager.check();
                 });
             },
             modules: function (input) {
@@ -140,64 +122,97 @@
                     step: 1,
                     verticalbuttons: true,
                     prefix: 'Módulos por Linha'
-                }).on('touchspin.on.stopspin', function () {
-
-
-
+                }).on('change', function () {
                     var value = parseInt($(this).val());
                     var index = $(this).closest('tr').index();
-                    GroupManager.groups[index].modules = value;
+                    var current = GroupManager.groups[index].modules;
+                    if(value > current) {
+                        if (GroupManager.count() >= GroupManager.max_count) {
+                            $(this).val(current);
+                        } else {
+                            GroupManager.groups[index].modules = value;
+                        }
+                    }else{
+                        GroupManager.groups[index].modules = value;
+                    }
+
+                    GroupManager.check();
                 });
             }
         },
         register: function(line){
             var lines = line.find('.dist-line-number');
             var modules = line.find('.dist-line-module');
+            var position = line.find('.dist-line-position');
+            var btnDelete = line.find('.remove-dist-line');
             GroupManager.touchspin.lines(lines);
             GroupManager.touchspin.modules(modules);
+
+            btnDelete.on('click', function(){
+                if(GroupManager.groups.length > 1) {
+                    var line = $(this).closest('tr');
+                    GroupManager.groups.splice(line.index(), 1);
+                    line.remove();
+                    GroupManager.check();
+                }
+            });
+
+            position.on('change', function(){
+                var index = $(this).closest('tr').index();
+                GroupManager.groups[index].position = parseInt($(this).val());
+            });
         },
-        render: function () {
+        render: function(group){
+            if (!group.hasOwnProperty('rendered')) {
+
+                var render = $(GroupManager.template
+                    .replace(/__lines__/g, group.lines)
+                    .replace(/__modules__/g, group.modules));
+
+                GroupManager.container.append(render);
+
+                render.find('option[value="'+group.position+'"]').prop('selected', true);
+
+                group.rendered = true;
+
+                GroupManager.register(render);
+            }
+        },
+        refresh: function () {
             $.each(GroupManager.groups, function (i, group) {
-                if (!group.hasOwnProperty('rendered')) {
-                    var render = $(GroupManager.template
-                        .replace(/__lines__/g, group.lines)
-                        .replace(/__modules__/g, group.modules));
-
-                    GroupManager.container.append(render);
-
-                    group.rendered = true;
-
-                    GroupManager.register(render);
+                GroupManager.render(group);
+                if(i == GroupManager.groups.length-1){
+                    GroupManager.check();
                 }
             });
         }
     };
 
-    GroupManager.render();
+    GroupManager.refresh();
 
-    /*$('.dist-line-number').TouchSpin({
-     min: 1,
-     step: 1,
-     verticalbuttons: true,
-     prefix: 'Número de Linhas'
-     });*/
-
-    //$('.dist-line-module')
-
-    //alert(GroupManager.count());
     $('#add-dist-line').on('click', function () {
-        GroupManager.add();
+        GroupManager.groups[GroupManager.groups.length] = {lines: 1, modules: 1, position: 0};
+        GroupManager.refresh();
     });
 
-    //GroupManager.refresh();
-
-    /*$.each($('.dist-line'), function(i, line){
-     var lines = $(line).find('.dist-line-number');
-     var modules = $(line).find('.dist-line-module');
-     GroupManager.touchspin.lines(lines);
-     GroupManager.touchspin.modules(modules)
-     });*/
-
-    //console.log(GroupManager.groups);
+    GroupManager.submit.ladda();
+    GroupManager.submit.on('click', function(){
+        $(this).ladda('start');
+        $.each(GroupManager.groups, function(i, group){
+            delete group.rendered;
+        });
+        ProjectManager.request({
+            url: '{{ path('project_groups',{id:project.id}) }}',
+            method: 'post',
+            data: {groups:GroupManager.groups},
+            callback: function(xhr){
+                GroupManager.submit.ladda('stop');
+                ProjectManager.loadComponents();
+            }
+        });
+        $.each(GroupManager.groups, function(i, group){
+            group.rendered = true;
+        });
+    });
 
 </script>
