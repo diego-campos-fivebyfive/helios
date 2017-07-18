@@ -15,5 +15,5 @@ export BUNDLE_HOMOLOG_HOST=54.233.150.10
 
 export ISQUIK_MOCK_PORT=2021
 export ISQUIK_MOCK_HOST='http://localhost'
-export ISQUIK_PORT=2021
-export ISQUIK_HOST=54.233.150.10
+export ISQUIK_SERVER_PORT=2021
+export ISQUIK_SERVER_HOST='http://localhost'

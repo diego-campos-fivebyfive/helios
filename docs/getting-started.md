@@ -69,8 +69,8 @@ Instala-las individualmente:
   - [Instalando dependências individualmente](install/dependencies-list.md)
 
 
-4. Configuração do PHP
-----------------------
+4. Configuração do Apache (Opicional)
+-------------------------------------
 
 Edite o arquivo `/etc/apache2/mods-enabled/dir.conf` com o seguinte conteúdo:
 
@@ -79,6 +79,7 @@ Edite o arquivo `/etc/apache2/mods-enabled/dir.conf` com o seguinte conteúdo:
   DirectoryIndex index.php index.html index.cgi index.pl index.xhtml index.htm
 </IfModule>
 ```
+
 
 5. Instalação do Sistema
 ------------------------

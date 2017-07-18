@@ -16,8 +16,8 @@ fi
 echo "Importing Sices $FLAG variables..."
 source ces-variables-ci --$FLAG
 
-# remote automatic start bundle app
-if [ $FLAG == 'development' ] || [ $FLAG == 'production' ]; then
+# Remote automatic start Bundle App
+if [ $FLAG == 'homolog' ] || [ $FLAG == 'production' ]; then
   ces-server-start --bundle
 fi
 

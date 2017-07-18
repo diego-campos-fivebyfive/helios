@@ -4,7 +4,7 @@ cd $SICES_PATH
 
 if [ -z ${1+x} ] || [ $1 == '--development' ]; then
 
-  echo "Starting Development Bundle App on port: $BUNDLE_PORT and Sices Server on port: 8000"
+  echo "Starting Development Bundle App on http://$CES_BUNDLE_HOST:$CES_BUNDLE_PORT and Sices Server on http://$CES_SICES_HOST:$CES_SICES_PORT"
 
   php app/console server:run &
 
@@ -30,14 +30,14 @@ if [ -z ${1+x} ] || [ $1 == '--development' ]; then
 
 elif [ $1 == '--bundle' ]; then
 
-  echo "Sices starting Bundle App on port: $BUNDLE_PORT"
+  echo "Sices starting Bundle App on: http://$CES_BUNDLE_HOST:$CES_BUNDLE_PORT"
   cd bundle/app
   yarn install
   node_modules/.bin/pm2 start index.js -n "bundle"
 
 elif [ $1 == '--isquikmock' ]; then
 
-  echo "Starting Bundle Test (Isquik Mock) on port: $ISQUIK_PORT"
+  echo "Starting Bundle Test (Isquik Mock) on: http://$CES_ISQUIK_HOST:$CES_ISQUIK_PORT"
   cd bundle/test
   yarn install
   node_modules/.bin/nodemon index.js
