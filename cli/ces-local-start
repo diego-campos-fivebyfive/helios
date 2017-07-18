@@ -2,10 +2,10 @@
 
 cd $SICES_PATH
 
-if [ -z ${1+x} ] || [ $1 == '--development' ]; then
+echo "Importing Sices development variables..."
+source ces-variables-ci --development
 
-  echo "Importing Sices development variables..."
-  source ces-variables-ci --development
+if [ -z ${1+x} ] || [ $1 == '--development' ]; then
 
   echo "Starting Development Bundle App on $CES_BUNDLE_HOST:$CES_BUNDLE_PORT and Sices Server on $CES_SICES_HOST:$CES_SICES_PORT"
 
@@ -32,9 +32,6 @@ if [ -z ${1+x} ] || [ $1 == '--development' ]; then
   done
 
 elif [ $1 == '--isquikmock' ]; then
-
-  echo "Importing Sices development variables..."
-  source ces-variables-ci --development
 
   echo "Starting Bundle Test (Isquik Mock) on: $CES_ISQUIK_HOST:$CES_ISQUIK_PORT"
   cd bundle/test
