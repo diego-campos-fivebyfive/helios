@@ -65,9 +65,9 @@ class Structure implements StructureInterface
     private $size;
 
     /**
-     * @var string
+     * @var boolean
      *
-     * @ORM\Column(name="status", type="string", nullable=true)
+     * @ORM\Column(name="status", type="boolean", nullable=true)
      */
     private $status;
 
