@@ -71,19 +71,17 @@ class ProjectStringBox implements ProjectStringBoxInterface
     }
 
     /**
-     * @inheritDoc
+     * @return StringBoxInterface
      */
-    public function setStringBox($stringBox)
+    public function getStringBox()
     {
-        $this->stringBox = $stringBox;
-
-        return $this;
+        return $this->stringBox;
     }
 
     /**
      * @inheritDoc
      */
-    public function getStringBox()
+    public function setStringBox(StringBoxInterface $stringBox)
     {
         return $this->stringBox;
     }
