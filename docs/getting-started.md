@@ -6,15 +6,7 @@ a elaboração deste guia e o processo de instalação abaixo pode
 estar sujeito a pequenas mudanças em outras distribuições.
 
 
-1. Atualizando o Sistema
-------------------------
-
-```
-$ sudo apt-get update
-```
-
-
-2. Instalando e Configurando o Git
+1. Instalando e Configurando o Git
 ----------------------------------
 
 ### Instalando o Git
@@ -35,15 +27,16 @@ $ git config --global user.name "Full Name"
 ```
 
 
-3. Clonando o repositório
+2. Clonando o repositório
 -------------------------
 
 ```
+$ cd [PROJECT_FOLDER]
 $ git clone git@bitbucket.org:cjchamado/sices.git
 ```
 
 
-4. Instalação de Dependências
+3. Instalação de Dependências
 -----------------------------
 
 Caso você já possua os requisitos abaixo intalados, pule para a proxima etapa:
@@ -72,10 +65,11 @@ $ ./cli/ces-install-dependencies
 ou
 
 Instala-las individualmente:
-  - [Instalando dependências individualmente](dependencies-list.md)
+
+  - [Instalando dependências individualmente](install/dependencies-list.md)
 
 
-5. Configuração do PHP
+4. Configuração do PHP
 ----------------------
 
 Edite o arquivo `/etc/apache2/mods-enabled/dir.conf` com o seguinte conteúdo:
@@ -86,7 +80,7 @@ Edite o arquivo `/etc/apache2/mods-enabled/dir.conf` com o seguinte conteúdo:
 </IfModule>
 ```
 
-6. Instalação do Sistema
+5. Instalação do Sistema
 ------------------------
 
 Para instalação do sistema siga os passos do documento:

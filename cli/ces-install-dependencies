@@ -2,4 +2,5 @@
 
 curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-sudo apt-get install apache2 php php-mbstring php-xml php-mysql php-intl nodejs yarn composer git
+sudo apt-get update
+sudo apt-get install curl apache2 php php-mbstring php-xml php-mysql php-intl nodejs yarn composer git -y
