@@ -13,12 +13,17 @@ elif [ $1 == '--test' ];
   FLAG=test
 fi
 
-echo "Importing Sices $FLAG variables..."
-source ces-variables-ci --$FLAG
-
-# Remote automatic start Bundle App
+# Remote automatic start Bundle App and Server
 if [ $FLAG == 'homolog' ] || [ $FLAG == 'production' ]; then
-  ces-server-start --bundle
+
+  echo "Importing Sices $FLAG variables..."
+  source ces-variables-ci --$FLAG
+
+  echo "Sices starting Bundle App on: $CES_BUNDLE_HOST:$CES_BUNDLE_PORT"
+  cd bundle/app
+  yarn install
+  node_modules/.bin/pm2 start index.js -n "bundle"
+
 fi
 
 echo 'Sices creating files...'

@@ -31,13 +31,6 @@ if [ -z ${1+x} ] || [ $1 == '--development' ]; then
 
   done
 
-elif [ $1 == '--bundle' ]; then
-
-  echo "Sices starting Bundle App on: $CES_BUNDLE_HOST:$CES_BUNDLE_PORT"
-  cd bundle/app
-  yarn install
-  node_modules/.bin/pm2 start index.js -n "bundle"
-
 elif [ $1 == '--isquikmock' ]; then
 
   echo "Importing Sices development variables..."
