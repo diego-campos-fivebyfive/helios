@@ -20,7 +20,7 @@ use AppBundle\Service\Notifier\Notifier;
  *
  * @Route("structure")
  *
- * @Security("has_role('ROLE_OWNER')")
+ * TODO//@Security("has_role('ROLE_OWNER')")
  *
  * @Breadcrumb("Dashboard", route={"name"="app_index"})
  * @Breadcrumb("Estruturas", route={"name"="structure_index"})
@@ -86,7 +86,7 @@ class StructureController extends AbstractController
      * @Breadcrumb("Edit")
      * @Route("/{id}/update", name="structure_update")
      * @Method({"GET","POST"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * TODO//@Security("has_role('ROLE_ADMIN')")
      */
     public function updateAction(Request $request, Structure $structure)
     {
@@ -106,9 +106,12 @@ class StructureController extends AbstractController
             return $this->redirectToRoute('structure_index');
         }
 
-        $notifier = new Notifier();
-
-        $notifier->notifier('product_validate', [$manager->find(id)]);
+        $this->get('notifier')->notify([
+           'callback' => 'product_validate',
+            'body' => [
+                $manager->findAll('id')
+            ]
+        ]);
 
         return $this->render("structure.form", [
             'form' => $form->createView(),

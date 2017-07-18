@@ -19,7 +19,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 /**
  * @Route("components/{type}")
  *
- * @Security("has_role('ROLE_OWNER')")
+ * TODO//@Security("has_role('ROLE_OWNER')")
  *
  * @Breadcrumb("Dashboard", route={"name"="app_index"})
  * @Breadcrumb("{type}s", route={"name"="components", "parameters"={"type":"{type}"}})
@@ -85,7 +85,7 @@ class ComponentController extends AbstractController
     }
 
     /**
-     * @Security("has_role('ROLE_ADMIN')")
+     * TODO//@Security("has_role('ROLE_ADMIN')")
      *
      * @Route("/{id}/update", name="component_update")
      * @Method({"get","post"})

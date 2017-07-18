@@ -48,6 +48,8 @@ const getData = (uri) => {
 
 app.post('/notifications', (req, res) => {
   const { callback, body } = req.body
+  console.log(callback, body)
+  return
   let data
 
   switch (callback) {
