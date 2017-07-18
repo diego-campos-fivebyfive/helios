@@ -3,13 +3,28 @@
 cd $SICES_PATH
 
 if [ -z ${1+x} ] || [ $1 == '--development' ]; then
-  FLAG=dev
+  cp cli/ces-pre-push .git/hooks/pre-push
+  FLAG=development
 elif [ $1 == '--homolog' ]; then
-  FLAG=hm
+  FLAG=homolog
 elif [ $1 == '--production' ]; then
-  FLAG=prod
-else [ $1 == '--test' ];
+  FLAG=production
+elif [ $1 == '--test' ]; then
   FLAG=test
+fi
+
+# Remote automatic start Bundle App and Server
+if [ $FLAG == 'homolog' ] || [ $FLAG == 'production' ]; then
+
+  echo "Importing Sices $FLAG variables..."
+  source ces-variables-ci --$FLAG
+
+  echo "Sices starting Bundle App on: $CES_BUNDLE_HOST:$CES_BUNDLE_PORT"
+  cd bundle/app
+  yarn install
+  node_modules/.bin/pm2 start index.js -n "bundle"
+  cd $SICES_PATH
+
 fi
 
 echo 'Sices creating files...'
@@ -19,16 +34,5 @@ touch web/deploy/deploy.log
 
 echo 'Sices updating schema...'
 php app/console doctrine:schema:update --force
-
-if [ $FLAG == 'dev' ]; then
-  cp cli/ces-pre-push .git/hooks/pre-push
-elif [ $FLAG == 'prod' ]; then
-  BUNDLE_PORT=3000
-  echo "Sices starting bundle on port $BUNDLE_PORT"
-
-  cd bundle/app
-  yarn install
-  node_modules/.bin/pm2 start index.js -n "bundle"
-fi
 
 echo 'Done.'

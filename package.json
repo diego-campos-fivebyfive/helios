@@ -1,8 +1,8 @@
 {
   "scripts": {
     "compile": "ces-frontend-compile",
-    "start:dev": "BUNDLE_PORT=2020 ces-server-start --development",
-    "start:isquik": "ISQUIK_PORT=2021 ces-server-start --test"
+    "start:dev": "ces-local-start --development",
+    "start:isquik": "ces-local-start --isquikmock"
   },
   "dependencies": {
     "uglify-js": "^3.0.23",
