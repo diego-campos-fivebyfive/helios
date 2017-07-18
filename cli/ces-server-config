@@ -9,7 +9,7 @@ elif [ $1 == '--homolog' ]; then
   FLAG=homolog
 elif [ $1 == '--production' ]; then
   FLAG=production
-elif [ $1 == '--test' ];
+elif [ $1 == '--test' ]; then
   FLAG=test
 fi
 
