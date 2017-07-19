@@ -142,6 +142,13 @@ class Project implements ProjectInterface
     private $taxPercent;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    private $costPrice;
+
+    /**
      * @var array
      *
      * @ORM\Column(name="metadata", type="json", nullable=true)
@@ -933,9 +940,19 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
+    public function setCostPrice($costPrice)
+    {
+        $this->costPrice = $costPrice;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getCostPrice()
     {
-        // TODO: Implement getCostPrice() method.
+        return $this->costPrice;
     }
 
     /**

@@ -11,7 +11,6 @@
 
 namespace AppBundle\Service\Component;
 
-
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Manager\ProjectManager;
@@ -37,18 +36,13 @@ class ProjectPrecifier
     public function priceCost(ProjectInterface $project)
     {
         $memorial = $this->findMemorial();
-
         $components = $this->filterComponents($project);
-
-        //$codes = array_keys($components);
-        $codes = [6475, 6473, 19419, 32365, 12946];
-
-        $level = 'gold';
-        $power = 200;
-
-        $ranges = $this->findRanges($codes, $level, $power);
-
+        $codes = array_keys($components);
+        $level = 'platinum';
+        $ranges = $this->findRanges($codes, $level, $project->getPower());
         $taxPercent = 0.1;
+
+        $costPrice = 0;
 
         /**
          * @var  $code
@@ -61,11 +55,19 @@ class ProjectPrecifier
            $price = $range->getPrice() * (1 + $range->getMarkup()) / (1 - $taxPercent);
 
            $component->setUnitCostPrice($price);
+
+           $costPrice += $price;
         }
+
+        $project->setCostPrice($costPrice);
 
         $this->projectManager->save($project);
     }
 
+    /**
+     * @param ProjectInterface $project
+     * @return array
+     */
     private function filterComponents(ProjectInterface $project)
     {
         $components=[];
@@ -129,7 +131,8 @@ class ProjectPrecifier
     /**
      * @return Memorial
      */
-    private function findMemorial(){
+    private function findMemorial()
+    {
         return $this->projectManager
             ->getEntityManager()
             ->createQueryBuilder()
@@ -137,7 +140,7 @@ class ProjectPrecifier
             ->from(Memorial::class, 'm')
             ->where('m.id = :id')
             ->setParameters([
-                'id'=> 2
+                'id'=> 87
             ])
             ->getQuery()
             ->getOneOrNullResult();
