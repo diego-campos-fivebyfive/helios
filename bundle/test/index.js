@@ -83,4 +83,3 @@ const { productCreated, memorialCreated } = notifications
 
 app.get('/action/product-create', (req, res) => sendNotifications(req, res, productCreated))
 app.get('/action/memorial-create', (req, res) => sendNotifications(req, res, memorialCreated))
-
