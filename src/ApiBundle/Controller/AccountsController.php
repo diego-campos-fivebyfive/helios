@@ -16,8 +16,9 @@ class AccountsController extends FOSRestController
      *  description="This method return a specific account"
      * )
      */
-    public function getAccountAction(Customer $account)
+    public function getAccountAction(Customer $id)
     {
+        $account = $id;
         if(!$account->isAccount()){
             return $this->createNotFoundException('Account not found');
         }
