@@ -3,21 +3,16 @@ const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
 const Google = require('../../models/google')
 
-const splitMemorial = (object) => {
-  const memorial = {
-    version: object.version,
-    status: object.status,
-    start_at: object.start_at,
-    end_at: object.end_at,
-    range: object.products
-  }
-  return Sices.sendMemorial(memorial)
-}
+const splitMemorial = (object) => Sices.sendMemorial({
+  version: object.version,
+  status: object.status,
+  start_at: object.start_at,
+  end_at: object.end_at,
+  range: object.products
+})
 
 const send = ({ object }) => {
   const auth = Google.getAuthentication()
-  console.log(auth)
-  return
   const memorial = Isquik.getMemorial(object.id)
   return memorial.then((data) => new Promise((resolve) => {
     splitMemorial(data)
