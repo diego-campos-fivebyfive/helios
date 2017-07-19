@@ -30,6 +30,7 @@ class AppKernel extends Kernel
             new Liuggio\ExcelBundle\LiuggioExcelBundle(),
             new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
             // API
+            new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
             new FOS\RestBundle\FOSRestBundle(),
             new FOS\OAuthServerBundle\FOSOAuthServerBundle(),
             new ApiBundle\ApiBundle(),
