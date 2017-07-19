@@ -10,6 +10,7 @@ if [ -z ${1+x} ] || [ $1 == '--development' ]; then
   echo "Starting Development Bundle App on $CES_BUNDLE_HOST:$CES_BUNDLE_PORT and Sices Server on $CES_SICES_HOST:$CES_SICES_PORT"
 
   php app/console server:run &
+  composer install
 
   cd bundle/app
   yarn install

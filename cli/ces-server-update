@@ -6,6 +6,7 @@ git fetch origin
 GIT_WORK_TREE=$SICES_PATH git checkout -f
 git pull origin master -f
 
+composer install
 php app/console doctrine:schema:update --force
 
 cli/ces-frontend-compile
