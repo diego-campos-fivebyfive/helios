@@ -23,6 +23,6 @@ class Notifier
            'form_params'  => $data
         ]);
 
-        dump($response->getBody()->getContents());die;
+        //dump($response->getBody()->getContents());die;
     }
 }

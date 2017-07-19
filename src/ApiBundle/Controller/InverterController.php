@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\Version;
-use FOS\RestBundle\Controller\Annotations\Route;
+use Symfony\Component\HttpFoundation\Response;
 
 class InverterController extends FOSRestController
 {
@@ -27,5 +27,28 @@ class InverterController extends FOSRestController
 
         $view = View::create();
         return $this->handleView($view);
+    }
+
+    public function getInvertersAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        /** @var \Doctrine\ORM\QueryBuilder $qb */
+        $qb = $em->createQueryBuilder();
+
+        $qb->select('i')
+            ->from(Inverter::class, 'i')
+            ->where('i.id = :id')
+            ->setParameters([
+                'id' => $id
+            ]);
+        $query = $qb->getQuery();
+
+        $inverters = $query->getArrayResult();
+
+        $response = new Response(json_encode($inverters));
+        $response->headers->set('inverter', 'aplication/json');
+
+        return $response;
     }
 }

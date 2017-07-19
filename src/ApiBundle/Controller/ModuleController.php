@@ -8,6 +8,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ModuleController extends FOSRestController
 {
@@ -25,5 +26,28 @@ class ModuleController extends FOSRestController
 
         $view = View::create();
         return $this->handleView($view);
+    }
+
+    public function getModulesAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        /** @var \Doctrine\ORM\QueryBuilder $qb */
+        $qb = $em->createQueryBuilder();
+
+        $qb->select('m')
+            ->from(Module::class, 'm')
+            ->where('m.id = :id')
+            ->setParameters([
+                'id' => $id
+            ]);
+        $query = $qb->getQuery();
+
+        $modules = $query->getArrayResult();
+
+        $response = new Response(json_encode($modules));
+        $response->headers->set('module', 'aplication/json');
+
+        return $response;
     }
 }
