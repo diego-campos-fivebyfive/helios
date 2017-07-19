@@ -2,99 +2,38 @@
 
 namespace ApiBundle\Controller;
 
-use AppBundle\Entity\Customer;
+use AppBundle\Entity\MemberInterface;
 use FOS\RestBundle\Controller\FOSRestController;
+use AppBundle\Entity\Customer;
 use FOS\RestBundle\View\View;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 class AccountsController extends FOSRestController
 {
-    public function getAccountsAction(Request $request)
+    /**
+     * @ApiDoc(
+     *  resource=true,
+     *  description="This method return a specific account"
+     * )
+     */
+    public function getAccountAction(Customer $account)
     {
-        $fields = 'c.firstname, c.lastname, c.email, c.mobile, c.phone, c.website, c.document, c.createdAt as created_at';
+        $data = [
+            'id' => $account->getId(),
+            'firstname' => $account->getFirstname(),
+            'lastname' => $account->getLastname(),
+            'email' => $account->getEmail(),
+            'phone' => $account->getPhone()
+        ];
 
-        $em = $this->getDoctrine()->getManager();///->getRepository(Customer::class);
+        $members = $account->getMembers()->map(function(MemberInterface $member){
+            return $member->getId();
+        });
 
-        /** @var \Doctrine\ORM\QueryBuilder $qb */
-        $qb = $em->createQueryBuilder();
+        $data['users'] = $members;
 
-        $qb->select($fields)->from(Customer::class, 'c');
-        $qb->where('c.context = :context');
-        $qb->setParameters([
-            'context' => Customer::CONTEXT_ACCOUNT
-        ]);
-
-        /** @var \JMS\Serializer\Serializer $serializer */
-        /*$serializer = $this->get('serializer');
-
-        $customer = $this->get('app.customer_manager');
-
-        $json = $serializer->serialize($customer, 'json');
-
-        dump($customer); die;
-        dump($serializer->getMetadataFactory()); die;
-        echo ($serializer->serialize($data, 'json')); die;*/
-        $query = $qb->getQuery();
-
-        $paginator = $this->get('knp_paginator');
-
-        $pagination = $paginator->paginate(
-            $query,
-            $request->query->getInt('page', 1),
-            $request->query->getInt('per_page', 5)
-        );
-
-        //dump($pagination->getItems()); die;
-        //$accounts = $qb->getQuery()->getArrayResult();
-
-        $accounts = ['accounts' => $pagination->getItems(), 'next' => 'próxima', 'prev' => 'anterior'];
-
-        $view = View::create($accounts);
+        $view = View::create($data);
 
         return $this->handleView($view);
-
-        foreach($accounts as $account){
-            foreach ($account as $property => $value){
-                if($value instanceof \DateTime){
-                    $account[$property] = $value->format('Y-m-dTH:i:s');
-                }
-            }
-            $accounts[] = $account;
-        }
-
-        /** @var \JMS\Serializer\Serializer $serializer */
-        $serializer = $this->get('serializer');
-
-        //dump($serializer->serialize($accounts,'json')); die;
-        return new JsonResponse($accounts);
-
-        $paginator = $this->get('knp_paginator');
-
-        $pagination = $paginator->paginate($accounts);
-
-        dump($pagination);
-
-        //$manager = $this->get('account_manager');
-        ///$accounts = $manager->
-        //dump($paginator);
-        die;
-
-        $accounts = $this->get('app.customer_manager')->findBy([
-            'context' => 'account'
-        ]);
-
-
-
-        //dump($serializer->serialize($accounts, 'json')); die;
-
-        return $this->handleView($this->view($accounts));
-    }
-
-    public function postAccountAction()
-    {
-        /*return $this->json([
-            'info' => 'success'
-        ]);*/
     }
 }
