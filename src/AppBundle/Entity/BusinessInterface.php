@@ -31,9 +31,7 @@ interface BusinessInterface extends BaseCustomerInterface
      * PERSON and COMPANY are not without link a MEMBER
      */
     const CONTEXT_COMPANY = 'company';
-    const CONTEXT_COMPANY2 = 'Companies';
     const CONTEXT_PERSON = 'person';
-    const CONTEXT_PERSON2 = 'Peoples';
 
     /**
      * Used in categories manager and forms
@@ -266,38 +264,6 @@ interface BusinessInterface extends BaseCustomerInterface
      * @return BusinessInterface
      */
     public function getCompany();
-
-    /**
-     * Accepted only $this->isCompany and $employee->isPerson()
-     * 
-     * @param BusinessInterface $employee
-     * @return BusinessInterface
-     */
-    public function addEmployee(BusinessInterface $employee);
-
-    /**
-     * @param BusinessInterface $employee
-     * @return BusinessInterface
-     */
-    public function removeEmployee(BusinessInterface $employee);
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getEmployees();
-
-    /**
-     * @see \AppBundle\Form\ContactType $builder->add('relatedEmployees')
-     * @param ArrayCollection $relatedEmployees
-     * @return BusinessInterface
-     */
-    public function setRelatedEmployees(array $relatedEmployees = []);
-
-    /**
-     * @see \AppBundle\Form\ContactType $builder->add('relatedEmployees')
-     * @return ArrayCollection
-     */
-    public function getRelatedEmployees();
 
     /**
      * @return bool

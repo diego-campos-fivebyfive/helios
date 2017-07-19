@@ -50,7 +50,7 @@ class ContactController extends AbstractController
 
         $company = null;
 
-        if(Customer::CONTEXT_PERSON2 == $context) {
+        if(Customer::CONTEXT_PERSON == $context) {
             if (null != $company = $this->getCustomerReferer($request)) {
                 if($company->isCompany()) {
                     $qb->andWhere('c.company = :company')->setParameter('company', $company);
@@ -108,16 +108,16 @@ class ContactController extends AbstractController
 
             $this->processAndPersist($contact);
 
-            $this->getNotificationGenerator()->createdContact($contact);
+            //$this->getNotificationGenerator()->createdContact($contact);
 
             $this->setNotice("Contato criado com sucesso !");
 
-            $event = $this->createWoopraEvent('contato');
+            //$event = $this->createWoopraEvent('contato');
 
             return $this->redirectToRoute('contact_show', [
-                'context' => $context,
+                'context' => $contact->getContext(),
                 'token' => $contact->getToken(),
-                'woopra_event' => $event->getId()
+                //'woopra_event' => $event->getId()
             ]);
         }
 
