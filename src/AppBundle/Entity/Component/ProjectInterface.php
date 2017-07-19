@@ -476,6 +476,17 @@ interface ProjectInterface
     public function getPaybackMonthsDisc();
 
     /**
+     * @param $proposal
+     * @return ProjectInterface
+     */
+    public function setProposal($proposal);
+
+    /**
+     * @return string
+     */
+    public function getProposal();
+
+    /**
      * @param MemberInterface $member
      * @return ProjectInterface
      */
