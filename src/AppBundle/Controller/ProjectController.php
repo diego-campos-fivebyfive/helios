@@ -186,8 +186,24 @@ class ProjectController extends AbstractController
     /**
      * @Route("/{id}/groups", name="project_groups")
      */
-    public function groupsAction(Project $project)
+    public function groupsAction(Request $request, Project $project)
     {
+        if($request->isMethod('post')){
+
+            /** @var ProjectModule $projectModule */
+            $projectModule = $project->getProjectModules()->first();
+
+            $groups = $request->request->get('groups');
+
+            $projectModule->setGroups($groups);
+
+            $this->manager('project_module')->save($projectModule);
+
+            $this->get('structure_calculator')->calculate($project);
+
+            return $this->json();
+        }
+
         return $this->render('project.form_groups', [
             'project' => $project
         ]);

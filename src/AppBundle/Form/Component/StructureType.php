@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\Component\Structure;
 
@@ -23,9 +24,9 @@ class StructureType extends AbstractType
                 ->add('subtype')
                 ->add('description')
                 ->add('size')
-                ->add('status', ChoiceType::class, [
-                            'choices'  => Status::getStatusOptions(),
-                            'expanded' => true
+                ->add('status', CheckboxType::class, [
+                    'label'  => 'Ativo',
+                    'required' => false
                 ]);
     }
 

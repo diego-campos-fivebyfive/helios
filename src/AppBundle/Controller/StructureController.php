@@ -101,14 +101,19 @@ class StructureController extends AbstractController
 
             $manager->save($structure);
 
+            if ($structure->getStatus()) {
+                $this->get('notifier')->notify([
+                    'callback' => 'product_validate',
+                    'body' => [
+                        'id' => $structure->getId()
+                    ]
+                ]);
+            }
+
             $this->setNotice('Estrutura atualizada com sucesso!');
 
             return $this->redirectToRoute('structure_index');
         }
-
-        $notifier = new Notifier();
-
-        $notifier->notifier('product_validate', [$manager->find(id)]);
 
         return $this->render("structure.form", [
             'form' => $form->createView(),

@@ -69,7 +69,11 @@
 
                                     </div>
                                 </div>
-
+                                <div class="form-group col-md-6">
+                                    {{ form_label(form.status, 'Ativo') }}
+                                    <br>
+                                    {{ form_widget(form.status) }}
+                                </div>
                                 <div class="form-group">
                                         <button type="submit" name="intention" value="save" class="btn btn-primary pull-right">
                                             <i class="fa fa-save"></i> {{ 'Save'|trans }}
