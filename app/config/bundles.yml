@@ -6,3 +6,4 @@ imports:
     - { resource: bundles/sonata.yml }
     - { resource: bundles/apy.yml }
     - { resource: bundles/jms.yml }
+    - { resource: bundles/nelmio.yml }
