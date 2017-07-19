@@ -5,6 +5,7 @@ const request = require('request-promise')
 const notifications = require('./mocks/notifications')
 const products = require('./mocks/products')
 const memorial = require('./mocks/memorial')
+const users = require('./mocks/users')
 
 const SICES_HOST = process.env.CES_SICES_HOST
 const SICES_PORT = process.env.CES_SICES_PORT
@@ -22,6 +23,8 @@ app.get('/', (req, res) => {
   res.send(`
     <a href="/action/product-create">product-create</a>
     <a href="/action/memorial-create">memorial-create</a>
+    <a href="/action/user-create">user-create</a>
+    <a href="/action/user-approve">user-approve</a>
   `)
 })
 
@@ -33,6 +36,12 @@ app.get('/product/:code', (req, res) => {
 
 app.get('/memorial/:id', (req, res) => {
   res.status(200).json(memorial)
+})
+
+app.get('/user/:id', (req, res) => {
+  const { id } = req.params
+  const user = users.find(x => x.id === Number(id))
+  res.status(200).json(user)
 })
 
 const getData = (uri) => request({ method: 'GET', uri }).then((x) => JSON.parse(x))
@@ -79,7 +88,9 @@ const sendNotifications = (req, res, notification) => {
   })
 }
 
-const { productCreated, memorialCreated } = notifications
+const { productCreated, memorialCreated, userCreated, userApproved } = notifications
 
 app.get('/action/product-create', (req, res) => sendNotifications(req, res, productCreated))
 app.get('/action/memorial-create', (req, res) => sendNotifications(req, res, memorialCreated))
+app.get('/action/user-create', (req, res) => sendNotifications(req, res, userCreated))
+app.get('/action/user-approve', (req, res) => sendNotifications(req, res, userApproved))
