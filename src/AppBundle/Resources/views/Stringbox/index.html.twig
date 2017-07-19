@@ -97,7 +97,7 @@
                                 <th>Entradas</th>
                                 <th>Saídas</th>
                                 <th>Fusíveis</th>
-                                <th class="col-md-3">&nbsp;</th>
+                                <th class="col-md-2">&nbsp;</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -121,10 +121,12 @@
                                                 <i class="fa fa-eye"></i> {{ 'View'|trans }}
                                             </a>
 
+                                            {% if member.isAdmin %}
                                             <a href="{{ path('stringbox_edit', { 'id': stringBox.id }) }}"
                                                class="btn btn-success">
                                                 <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
                                             </a>
+                                            {% endif %}
 
                                         </div>
 
