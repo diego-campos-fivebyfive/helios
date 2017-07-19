@@ -190,6 +190,12 @@ interface ProjectInterface
     public function getLongitude();
 
     /**
+     * @param $costPrice
+     * @return ProjectInterface
+     */
+    public function setCostPrice($costPrice);
+
+    /**
      * @return float
      */
     public function getCostPrice();
@@ -564,13 +570,13 @@ interface ProjectInterface
     public function getProjectExtraServices();
 
     /**
-     * @param ProjectStringBoxInterface $projectStrinBox
+     * @param ProjectStringBoxInterface $projectStringBox
      * @return ProjectInterface
      */
     public function addProjectStringBox(ProjectStringBoxInterface $projectStringBox);
 
     /**
-     * @param ProjectStringBoxInterface $projectStrinBox
+     * @param ProjectStringBoxInterface $projectStringBox
      * @return ProjectInterface
      */
     public function removeProjectStringBox(ProjectStringBoxInterface $projectStringBox);

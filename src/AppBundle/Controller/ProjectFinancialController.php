@@ -2,14 +2,19 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Component\ProjectExtra;
 use AppBundle\Entity\Component\ProjectTax;
 use AppBundle\Entity\Financial\ProjectFinancial;
 use AppBundle\Entity\Financial\ProjectFinancialInterface;
 use AppBundle\Entity\Financial\ProjectFinancialManager;
 use AppBundle\Entity\Financial\Tax;
 use AppBundle\Entity\Component\Project;
+use AppBundle\Entity\Pricing\Range;
+use AppBundle\Form\Component\ProjectExtraType;
 use AppBundle\Form\Financial\FinancialType;
 use AppBundle\Form\Financial\TaxType;
+use AppBundle\Model\KitPricing;
+use AppBundle\Service\Component\ProjectPrecifier;
 use AppBundle\Service\Support\Project\FinancialAnalyzer;
 use AppBundle\Util\ProjectPricing\SalePrice;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,46 +34,49 @@ class ProjectFinancialController extends AbstractController
      * @Breadcrumb("Análise Financeira - N&deg; {project.number}")
      * @Route("/{id}", name="project_financial")
      */
-    public function configAction(Project $project)
+    public function configAction(Request $request, Project $project)
     {
-        /*$tax = new ProjectTax();
-        $tax
-            ->setName('The Tax')
-            ->setOperation(ProjectTax::OPERATION_ADDITION)
-            ->setTarget(ProjectTax::TARGET_EQUIPMENTS)
-            ->setType(ProjectTax::TYPE_ABSOLUTE)
-            ->setValue(1000)
-            ->setProject($project)
-        ;
+        //$formExtra = $this->addExtraAction($request, $project, 0);
+        //dump($formExtra); die;
 
-        dump('Equipments: ' . $project->getSalePriceEquipments());
-        dump('Services: ' . $project->getSalePriceServices());
-        dump('Tax: ' . $tax->getAmount());
-        dump('Sale: ' . $project->getSalePrice());
-        die;*/
+        /**
+         * TODO: Calculate cost prices
+         */
+        //$precifier = new ProjectPrecifier($this->manager('project'));
+        //$precifier->priceCost($project);
 
-
-        /*if($project->isDone()){
-            return $this->render('project.done', [
-                'project' => $project,
-                'stage' => 'financial'
-            ]);
+        /**
+         * TODO: Calculate sale prices
+         */
+        /** @var \AppBundle\Entity\Component\PricingManager $pricingManager */
+        $pricingManager = $this->get('app.kit_pricing_manager');
+        $margins = $pricingManager->findAll();
+        $percentEquipments = 0;
+        $percentServices = 0;
+        /** @var \AppBundle\Model\KitPricing $margin */
+        foreach ($margins as $margin){
+            switch ($margin->target){
+                case KitPricing::TARGET_EQUIPMENTS:
+                    $percentEquipments += $margin->percent;
+                    break;
+                case KitPricing::TARGET_SERVICES:
+                    $percentServices += $margin->percent;
+                    break;
+                default:
+                    $percentServices += $margin->percent;
+                    $percentEquipments += $margin->percent;
+                    break;
+            }
         }
-        
-        if(!$project->isAnalysable()) {
-            return $this->redirectToRoute('project_update',['token' => $project->getToken()]);
-        }*/
-        
-        //$financial = $this->getProjectFinancial($project);
 
-        // TODO : REVIEW THIS PROCESS
-        /*SalePrice::calculate($project, 10, 10);
+        //dump($percentEquipments); die;
+
+        SalePrice::calculate($project, $percentEquipments, $percentServices);
+
         $this->manager('project')->save($project);
-        dump($project->getSalePrice()); die;*/
 
         $form = $this->createForm(FinancialType::class, $project);
 
-        //dump($form); die;
         $formTax = $this->createForm(TaxType::class, new ProjectTax());
 
         return $this->render('project.financial', [
@@ -117,6 +125,84 @@ class ProjectFinancialController extends AbstractController
         }
 
         return $this->createNotFoundException();
+    }
+
+    /**
+     * @Route("/{id}/extras", name="financial_extras")
+     */
+    public function getExtrasAction(Project $project)
+    {
+        return $this->render('project.extras', [
+            'project' => $project
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/extras/create/{type}", name="financial_extras_create")
+     */
+    public function createExtraAction(Request $request, Project $project, $type)
+    {
+        $projectExtra = new ProjectExtra();
+        $projectExtra->setProject($project);
+
+        $form = $this->createForm(ProjectExtraType::class, $projectExtra, [
+            'type' => $type,
+            'action' => $request->getUri()
+        ]);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            $this->manager('project')->save($project);
+
+            return $this->json([]);
+        }
+
+        return $this->render('project.form_extra', [
+            'form' => $form->createView(),
+            'type' => $type,
+            'project' => $project,
+            'projectExtra' => $projectExtra
+        ]);
+    }
+
+    /**
+     * @Route("/extras/{id}/update", name="financial_extras_update")
+     */
+    public function updateExtraAction(Request $request, ProjectExtra $projectExtra)
+    {
+        $form = $this->createForm(ProjectExtraType::class, $projectExtra, [
+            'type' => $projectExtra->getExtra()->getType(),
+            'action' => $request->getUri()
+        ]);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            $this->manager('project')->save($projectExtra->getProject());
+
+            return $this->json([]);
+        }
+
+        return $this->render('project.form_extra', [
+            'form' => $form->createView(),
+            'type' => $projectExtra->getExtra()->getType(),
+            'project' => $projectExtra->getProject(),
+            'projectExtra' => $projectExtra
+        ]);
+    }
+
+    /**
+     * @Route("/extras/{id}/delete", name="financial_extras_delete")
+     * @Method("delete")
+     */
+    public function deleteExtraAction(Request $request, ProjectExtra $projectExtra)
+    {
+        $this->manager('project_extra')->delete($projectExtra);
+
+        return $this->json([]);
     }
 
     /**
