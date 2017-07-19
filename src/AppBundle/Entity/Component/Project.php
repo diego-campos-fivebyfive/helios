@@ -15,6 +15,7 @@ use AppBundle\Entity\CategoryInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\CustomerInterface;
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Util\KitGenerator\StructureCalculator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -308,6 +309,13 @@ class Project implements ProjectInterface
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Category")
      */
     private $stage;
+
+    /**
+     * @var OrderInterface
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Order\Order", inversedBy="projects")
+     */
+    private $order;
 
     /**
      * @inheritDoc
@@ -1538,4 +1546,23 @@ class Project implements ProjectInterface
 
         return array_combine($types, $types);
     }
+
+    /**
+     * @param OrderInterface $order
+     */
+    public function setOrder($order)
+    {
+        $this->order = $order;
+        return $this;
+    }
+
+    /**
+     * @return OrderInterface
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+
 }
