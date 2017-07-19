@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
  * @Route("contact/{context}")
  *
  * @Breadcrumb("Dashboard", routeName="app_index")
- * @Breadcrumb("Contacts", routeName="contact_index", routeParameters={"context"="{context.Id}"})
+ * @Breadcrumb("Contacts", routeName="contact_index", routeParameters={"context"="{context}"})
  */
 class ContactController extends AbstractController
 {
@@ -49,7 +49,8 @@ class ContactController extends AbstractController
         $qb = $this->createQueryBuilder($context, $request->query->get('strict', false));
 
         $company = null;
-        if(Customer::CONTEXT_PERSON == $context->getId()) {
+
+        if(Customer::CONTEXT_PERSON2 == $context) {
             if (null != $company = $this->getCustomerReferer($request)) {
                 if($company->isCompany()) {
                     $qb->andWhere('c.company = :company')->setParameter('company', $company);
@@ -72,6 +73,7 @@ class ContactController extends AbstractController
             'company' => $company,
             'pagination' => $pagination,
             'categories' => $this->getCategoryManager()->findBy(['account' => $this->account(), 'context' => 'contact_category'])
+
         ));
     }
 
@@ -88,10 +90,10 @@ class ContactController extends AbstractController
         /** @var Customer $contact */
         $contact = $manager->create();
 
-        $contact
-            ->setContext($context)
-            ->setMember($member);
 
+        $contact
+            ->setContext($context->getId())
+            ->setMember($member);
         if($contact->isPerson()) {
             if (null != $company = $this->getCustomerReferer($request)) {
                 $contact->setCompany($company);
@@ -112,9 +114,8 @@ class ContactController extends AbstractController
 
             $event = $this->createWoopraEvent('contato');
 
-            //dump($event);die;
             return $this->redirectToRoute('contact_show', [
-                'context' => $context->getId(),
+                'context' => $context,
                 'token' => $contact->getToken(),
                 'woopra_event' => $event->getId()
             ]);
@@ -200,7 +201,7 @@ class ContactController extends AbstractController
     public function exportAction(Request $request, Context $context)
     {
         $name = sprintf('%s_%s_%s.xlsx',
-            'person' == $context->getId()  ? 'Pessoas' : 'Empresas',
+            'person' == $context  ? 'Pessoas' : 'Empresas',
             $this->account()->getEmail(),
             uniqid(time())
         );
@@ -238,7 +239,7 @@ class ContactController extends AbstractController
     /**
      * @Route("/{token}/show", name="contact_show")
      */
-    public function showAction(Request $request, Customer $contact, Context $context)
+    public function showAction(Request $request, Customer $contact, $context)
     {
         $this->checkAccess($contact);
 
@@ -257,7 +258,7 @@ class ContactController extends AbstractController
      * @Route("/{token}/update", name="contact_update")
      * @Method({"GET", "POST"})
      */
-    public function updateAction(Request $request, Context $context, Customer $contact)
+    public function updateAction(Request $request, $context, Customer $contact)
     {
         $this->checkAccess($contact);
 
@@ -309,7 +310,7 @@ class ContactController extends AbstractController
      * @Route("/{token}/delete", name="contact_delete")
      * @Method("delete")
      */
-    public function deleteAction(Request $request, Customer $contact, Context $context)
+    public function deleteAction(Request $request, Customer $contact, $context)
     {
         $this->checkAccess($contact);
 
