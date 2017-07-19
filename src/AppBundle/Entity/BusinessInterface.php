@@ -31,6 +31,7 @@ interface BusinessInterface extends BaseCustomerInterface
      * PERSON and COMPANY are not without link a MEMBER
      */
     const CONTEXT_COMPANY = 'company';
+    const CONTEXT_COMPANY2 = 'Companies';
     const CONTEXT_PERSON = 'person';
     const CONTEXT_PERSON2 = 'Peoples';
 

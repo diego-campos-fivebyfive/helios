@@ -440,7 +440,7 @@ class Customer extends AbstractCustomer
      */
     public function isCompany()
     {
-        return $this->context == self::CONTEXT_COMPANY;
+        return $this->context == self::CONTEXT_COMPANY2;
     }
 
     /**
