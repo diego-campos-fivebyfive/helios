@@ -41,6 +41,8 @@ class ExtraController extends AbstractController
         $manager = $this->manager('extra');
         $extra = $manager->create();
 
+        $extra->setAccount($this->account());
+
         $form = $this->createForm(ExtraType::class, $extra);
         $form->handleRequest($request);
 
