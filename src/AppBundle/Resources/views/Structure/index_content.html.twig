@@ -26,7 +26,7 @@
                         <td>Sub Tipo</td>
                         <td>Descrição</td>
                         <td>Tamanho</td>
-                        <td>Ações</td>
+                        <td class="col-md-2">Ações</td>
                     </tr>
                     </thead>
                     <tbody>
@@ -37,13 +37,15 @@
                             <td>{{ structure.subtype }}</td>
                             <td>{{ structure.description }}</td>
                             <td>{{ structure.size }}</td>
-                            <td style="width: 25%">
-                                <a href="{{ path('structure_preview', { id: structure.id }) }}">
-                                    <button class="btn btn-success btn-xd">{{'View'|trans}}</button>
+                            <td class="btn-group btn-group-md btn-group-justified">
+                                <a href="{{ path('structure_preview', { id: structure.id }) }}" class="btn btn-success">
+                                    {{'View'|trans}}
                                 </a>
-                                <a href="{{ path('structure_update', { id: structure.id }) }}">
-                                    <button class="btn btn-warning btn-xd">{{'Edit'|trans}}</button>
+                                {% if member.isAdmin %}
+                                <a href="{{ path('structure_update', { id: structure.id }) }}" class="btn btn-warning">
+                                    {{'Edit'|trans}}
                                 </a>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
