@@ -7,7 +7,7 @@
     <class name="Kolina\CustomerBundle\Entity\Customer">
         <property name="email">
             <constraint name="Email">
-                <option name="checkMX">true</option>
+                <!--<option name="checkMX">true</option>-->
                 <option name="checkHost">true</option>
                 <option name="message">The email entered is not valid</option>
             </constraint>
