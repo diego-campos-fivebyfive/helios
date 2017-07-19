@@ -52,8 +52,7 @@ app.post('/notifications', (req, res) => {
 
   switch (callback) {
     case 'product_validate':
-      //data = getData(`${SICES_HOST}:${SICES_PORT}/${body.family}/${body.code}`)
-      data = 'test'
+      data = getData(`${SICES_HOST}:${SICES_PORT}/api/${body.family}/${body.id}`)
       break
 
     default:

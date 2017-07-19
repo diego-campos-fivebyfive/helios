@@ -105,7 +105,8 @@ class StructureController extends AbstractController
                 $this->get('notifier')->notify([
                     'callback' => 'product_validate',
                     'body' => [
-                        'id' => $structure->getId()
+                        'id' => $structure->getId(),
+                        'family' => 'structures'
                     ]
                 ]);
             }
