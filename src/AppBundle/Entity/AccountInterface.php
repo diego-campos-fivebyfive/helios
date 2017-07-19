@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Order\OrderInterface;
+
 /**
  * Interface AccountInterface
  * This interface is exclusively account properties and methods
@@ -74,4 +76,15 @@ interface AccountInterface
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getMembers();
+
+    /**
+     * @param OrderInterface $orders
+     * @return OrderInterface
+     */
+    public function setOrders($orders);
+
+    /**
+     * @return mixed
+     */
+    public function getOrders();
 }

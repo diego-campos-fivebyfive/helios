@@ -14,6 +14,7 @@ namespace AppBundle\Entity\Component;
 use AppBundle\Entity\CategoryInterface;
 use AppBundle\Entity\CustomerInterface;
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\Order\OrderInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -670,4 +671,16 @@ interface ProjectInterface
      * @return array
      */
     public static function getStructureTypes();
+
+    /**
+     * @param OrderInterface $order
+     * @return OrderInterface
+     */
+    public function setOrder($order);
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOrder();
+
 }

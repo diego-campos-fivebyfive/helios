@@ -292,6 +292,13 @@ class Customer extends AbstractCustomer
      */
     private $alloweds;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Order\Order", mappedBy="Costumer", cascade={"persist"})
+     */
+    private $orders;
+
     private $edition = false;
 
     /**
@@ -312,6 +319,7 @@ class Customer extends AbstractCustomer
         $this->assignedTasks = new \Doctrine\Common\Collections\ArrayCollection();
         $this->accessors = new \Doctrine\Common\Collections\ArrayCollection();
         $this->alloweds = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->orders = new \Doctrine\Common\Collections\ArrayCollection();
 
         $this->coordinates = [];
         $this->attributes = [];
@@ -1672,6 +1680,22 @@ class Customer extends AbstractCustomer
         if(!$this->isAccount()){
             $this->unsupportedContextException();
         }
+    }
+
+    /**
+     * @param ArrayCollection $orders
+     */
+    public function setOrders($orders)
+    {
+        $this->orders = $orders;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getOrders()
+    {
+        return $this->orders;
     }
 }
 
