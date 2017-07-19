@@ -2,39 +2,34 @@
 
 namespace ApiBundle\Controller;
 
-use AppBundle\Entity\MemberInterface;
 use FOS\RestBundle\Controller\FOSRestController;
 use AppBundle\Entity\Customer;
 use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
-class AccountsController extends FOSRestController
+class UsersController extends FOSRestController
 {
     /**
      * @ApiDoc(
      *  resource=true,
-     *  description="This method return a specific account"
+     *  description="This method return a specific user"
      * )
      */
-    public function getAccountAction(Customer $account)
+    public function getUserAction(Customer $id)
     {
-        if(!$account->isAccount()){
-            return $this->createNotFoundException('Account not found');
+        $data = [];
+        $member = $id;
+
+        if($member->isMember()) {
+
+            $data = [
+                'id' => $member->getId(),
+                'firstname' => $member->getFirstname(),
+                'lastname' => $member->getLastname(),
+                'email' => $member->getEmail(),
+                'phone' => $member->getPhone()
+            ];
         }
-
-        $data = [
-            'id' => $account->getId(),
-            'firstname' => $account->getFirstname(),
-            'lastname' => $account->getLastname(),
-            'email' => $account->getEmail(),
-            'phone' => $account->getPhone()
-        ];
-
-        $members = $account->getMembers()->map(function(MemberInterface $member){
-            return $member->getId();
-        });
-
-        $data['users'] = $members;
 
         $view = View::create($data);
 
