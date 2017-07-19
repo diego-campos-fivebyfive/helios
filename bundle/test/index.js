@@ -18,33 +18,24 @@ app.listen(ISQUIK_PORT)
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-const sendNotifications = (req, res, notification) => {
-  const options = {
-    method: 'POST',
-    uri: `${BUNDLE_HOST}:${BUNDLE_PORT}/api/v1/notifications`,
-    body: notification,
-    json: true,
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': '123'
-    }
-  }
+app.get('/', (req, res) => {
+  res.send(`
+    <a href="/action/product-create">product-create</a>
+    <a href="/action/memorial-create">memorial-create</a>
+  `)
+})
 
-  request(options).then(() => {
-    res.status(200).send('Notification posted!').end()
-  })
-  .catch(error => {
-    res.status(500).send(error.message).end()
-  })
-}
+app.get('/product/:code', (req, res) => {
+  const { code } = req.params
+  const product = products.find(x => x.code === code)
+  res.status(200).json(product)
+})
 
-const getData = (uri) => {
-  let options = {
-    method: 'GET'
-  }
-  options = Object.assign(options, { uri })
-  return request(options).then((data) => JSON.parse(data))
-}
+app.get('/memorial/:id', (req, res) => {
+  res.status(200).json(memorial)
+})
+
+const getData = (uri) => request({ method: 'GET', uri }).then((x) => JSON.parse(x))
 
 app.post('/notifications', (req, res) => {
   const { callback, body } = req.body
@@ -68,22 +59,25 @@ app.post('/notifications', (req, res) => {
   res.status(200).json({ callback, body: data })
 })
 
-app.get('/product/:code', (req, res) => {
-  const { code } = req.params
-  const product = products.find(x => x.code === code)
-  res.status(200).json(product)
-})
+const sendNotifications = (req, res, notification) => {
+  const options = {
+    method: 'POST',
+    uri: `${BUNDLE_HOST}:${BUNDLE_PORT}/api/v1/notifications`,
+    body: notification,
+    json: true,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': '123'
+    }
+  }
 
-app.get('/memorial/:id', (req, res) => {
-  res.status(200).json(memorial)
-})
-
-app.get('/', (req, res) => {
-  res.send(`
-    <a href="/action/product-create">product-create</a>
-    <a href="/action/memorial-create">memorial-create</a>
-  `)
-})
+  request(options).then(() => {
+    res.status(200).send('Notification posted!').end()
+  })
+  .catch(error => {
+    res.status(500).send(error.message).end()
+  })
+}
 
 const { productCreated, memorialCreated } = notifications
 
