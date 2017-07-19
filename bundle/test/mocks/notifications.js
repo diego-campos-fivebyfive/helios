@@ -10,6 +10,18 @@ const notifications = {
     body: {
       id: 1
     }
+  },
+  userCreated: {
+    callback: 'user_created',
+    body: {
+      id: 1
+    }
+  },
+  userApproved: {
+    callback: 'user_approved',
+    body: {
+      id: 1
+    }
   }
 }
 
