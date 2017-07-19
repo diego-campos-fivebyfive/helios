@@ -9,8 +9,7 @@ const sendRequest = (uri, data) => {
     body: data,
     json: true,
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': '123'
+      'Content-Type': 'application/json'
     }
   }
   options = Object.assign(options, { uri })

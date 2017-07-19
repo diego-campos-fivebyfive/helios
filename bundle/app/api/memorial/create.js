@@ -1,6 +1,7 @@
 'use strict'
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
+const Google = require('../../models/google')
 
 const splitMemorial = (object) => {
   const memorial = {
@@ -14,6 +15,9 @@ const splitMemorial = (object) => {
 }
 
 const send = ({ object }) => {
+  const auth = Google.getAuthentication()
+  console.log(auth)
+  return
   const memorial = Isquik.getMemorial(object.id)
   return memorial.then((data) => new Promise((resolve) => {
     splitMemorial(data)
