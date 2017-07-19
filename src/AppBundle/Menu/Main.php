@@ -77,6 +77,11 @@ class Main implements ContainerAwareInterface
          */
         if($user->isOwner()){
 
+            $menu->addChild('Extras', [
+                'route' => 'extras_index',
+                'extras' => ['icon' => App::icons('extras')]
+            ]);
+
             $menu->addChild('Preço de Venda', [
                 'route' => 'kit_index',
                 'extras' => ['icon' => App::icons('money')]
@@ -166,11 +171,6 @@ class Main implements ContainerAwareInterface
         $components->addChild('Estruturas', [
             'route' => 'structure_index',
             'extras' => ['icon' => App::icons('structure')]
-        ]);
-
-        $components->addChild('Extras', [
-            'route' => 'extras_index',
-            'extras' => ['icon' => App::icons('extras')]
         ]);
 
         $components->addChild('String Box', [
