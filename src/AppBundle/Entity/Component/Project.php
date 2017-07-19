@@ -240,6 +240,13 @@ class Project implements ProjectInterface
     private $paybackMonthsDisc;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $proposal;
+
+    /**
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="ProjectModule", mappedBy="project", cascade={"persist", "remove"})
@@ -802,6 +809,24 @@ class Project implements ProjectInterface
     public function getPaybackMonthsDisc()
     {
         return $this->paybackMonthsDisc;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setProposal($proposal)
+    {
+        $this->proposal = $proposal;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getProposal()
+    {
+        return $this->proposal;
     }
 
     /**
