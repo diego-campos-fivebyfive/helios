@@ -2,11 +2,15 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\BusinessInterface;
+use AppBundle\Entity\Customer;
 use AppBundle\Entity\Extra\AccountRegister;
+use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\UserInterface;
 use AppBundle\Form\Extra\AccountRegisterType;
 use AppBundle\Form\Extra\PreRegisterType;
+use AppBundle\Model\Document\Account;
 use FOS\UserBundle\Event\FilterUserResponseEvent;
 use FOS\UserBundle\FOSUserEvents;
 use Symfony\Component\Form\FormError;
@@ -63,32 +67,48 @@ class RegisterController extends AbstractController
      * @Route("/pre", name="pre_register")
      */
     public function preRegisterAction(Request $request){
-        $registerManager = $this->getAccountRegisterManager();
-        $register = $registerManager->create();
+        $accountManager = $this->getCustomerManager();
 
         $form = $this->createForm(PreRegisterType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // $form->getData() holds the submitted values
-            // but, the original `$task` variable has also been updated
-            //$data = $form->getData();
-            //dump($data);die();
-            // ... perform some action, such as saving the task to the database
-            // for example, if Task is a Doctrine entity, save it!
-            // $em->persist($task);
-            // $em->flush();
 
-            if ($request->getUser()) {
+            $data = $form->getData();
+            /** @var AccountInterface $account */
+            $account = $accountManager->create();
+            /** @var MemberInterface $member */
+            $member = $accountManager->create();
+            $member->setConfirmationToken($this->getTokenGenerator()->generateToken())
+                ->setFirstname($data['contact'])
+                ->setPhone($data['phone'])
+                ->setEmail($data['email'])
+                ->setContext(BusinessInterface::CONTEXT_MEMBER);
+
+            $account->setConfirmationToken($this->getTokenGenerator()->generateToken())
+                     ->setFirstName($data['firstname'])
+                     ->setLastName($data['lastname'])
+                     ->setExtraDocument($data['extraDocument'])
+                     ->setDocument($data['document'])
+                     ->setEmail($data['email'])
+                     ->setState($data['state'])
+                     ->setCity($data['city'])
+                     ->setDistrict($data['district'])
+                     ->setStreet($data['street'])
+                     ->setNumber($data['number'])
+                     ->setPostcode($data['postcode'])
+                     ->setContext(BusinessInterface::CONTEXT_ACCOUNT);
+            $member->setAccount($account);
+            $accountManager->save($account);
+
             $this->get('notifier')->notify([
                 'callback' => 'account_created',
-                'body' => [
-                    'account' => $request
-                    ]
-                ]);
-            }
+                'body' => ['id' => $account->getId()]
+            ]);
 
-            return $this->redirectToRoute('task_success');
+            $this->setNotice('Cadastro realizado com sucesso, verifique seu e-mail !');
+
+            return $this->redirectToRoute('register.pre_register');
         }
 
         return $this->render('register.pre_register',[

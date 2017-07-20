@@ -69,14 +69,14 @@ class Customer extends AbstractCustomer
     /**
      * @var integer
      *
-     * @ORM\Column(name="status", type="smallint", nullable=false)
+     * @ORM\Column(name="status", type="smallint", nullable=true)
      */
     private $status;
 
     /**
      * @var json
      *
-     * @ORM\Column(name="attributes", type="json")
+     * @ORM\Column(name="attributes", type="json", nullable=true)
      */
     private $attributes;
 
@@ -482,10 +482,11 @@ class Customer extends AbstractCustomer
      */
     public function setAccount(AccountInterface $account)
     {
-        if (!$account->isAccount() || !$this->isMember())
+        if (!$account->isAccount())
             $this->unsupportedContextException();
 
         $this->account = $account;
+            $account->addMember($this);
 
         return $this;
     }
@@ -504,8 +505,10 @@ class Customer extends AbstractCustomer
     public function addMember(BusinessInterface $member)
     {
         if (!$this->members->contains($member)) {
-            $member->setAccount($this);
             $this->members->add($member);
+
+            if (!$member->getAccount())
+                    $member->setAcccount();
         }
 
         return $this;
@@ -1561,6 +1564,7 @@ class Customer extends AbstractCustomer
             'name' => $this->getName() ?: '',
             'email' => $this->email ?: '',
             'document' => $this->document ?: '',
+            'extraDocument' => $this->extraDocument ?: '',
             'mobile' => $this->mobile ?: '',
             'phone' => $this->phone ?: '',
             'fax' => $this->fax ?: '',

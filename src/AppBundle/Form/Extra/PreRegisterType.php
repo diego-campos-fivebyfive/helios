@@ -25,19 +25,19 @@ class PreRegisterType extends AbstractType
             ->add('document',TextType::class, array(
                 'constraints' => new ContainsCnpj()
             ))
-            ->add('inscription',TextType::class)
+            ->add('extraDocument',TextType::class)
             ->add('lastname',TextType::class)
             ->add('firstname',TextType::class)
-            ->add('contact',TextType::class)
-            ->add('email',EmailType::class)
-            ->add('phone',TextType::class)
-
             ->add('postcode',TextType::class)
             ->add('state',TextType::class)
             ->add('city',TextType::class)
             ->add('district',TextType::class)
             ->add('street',TextType::class)
-            ->add('number',TextType::class);
+            ->add('number',TextType::class)
+
+            ->add('contact',TextType::class)
+            ->add('email',EmailType::class)
+            ->add('phone',TextType::class);
         
     }
 
