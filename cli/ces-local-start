@@ -17,6 +17,7 @@ if [ -z ${1+x} ] || [ $1 == '--development' ]; then
   node_modules/.bin/nodemon index.js &
 
   sensible-browser "http://sicessolar.dev:$CES_SICES_PORT"
+  echo 'Done.'
 
   # Enable job control
   set -m
@@ -44,5 +45,3 @@ elif [ $1 == '--isquikmock' ]; then
   sensible-browser "$CES_ISQUIK_HOST:$CES_ISQUIK_PORT"
 
 fi
-
-echo 'Done.'
