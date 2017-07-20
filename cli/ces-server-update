@@ -8,6 +8,7 @@ git pull origin master -f
 
 composer install
 php app/console doctrine:schema:update --force
+bundle/app/node_modules/.bin/pm2 restart 0
 
 cli/ces-frontend-compile
 cli/ces-permission-fix

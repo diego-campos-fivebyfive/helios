@@ -7,13 +7,14 @@ source ces-variables-ci --development
 
 if [ -z ${1+x} ] || [ $1 == '--development' ]; then
 
-  echo "Starting Development Bundle App on $CES_BUNDLE_HOST:$CES_BUNDLE_PORT and Sices Server on $CES_SICES_HOST:$CES_SICES_PORT"
-
-  php app/console server:run &
   composer install
+  php app/console doctrine:schema:update --force
+  echo "Sices Server starting on $CES_SICES_HOST:$CES_SICES_PORT"
+  php app/console server:run &
 
   cd bundle/app
   yarn install
+  echo "Bundle App starting on $CES_BUNDLE_HOST:$CES_BUNDLE_PORT"
   node_modules/.bin/nodemon index.js &
 
   sensible-browser "http://sicessolar.dev:$CES_SICES_PORT"
@@ -37,9 +38,9 @@ if [ -z ${1+x} ] || [ $1 == '--development' ]; then
 
 elif [ $1 == '--isquikmock' ]; then
 
-  echo "Starting Bundle Test (Isquik Mock) on: $CES_ISQUIK_HOST:$CES_ISQUIK_PORT"
   cd bundle/test
   yarn install
+  echo "Starting Bundle Test (Isquik Mock) on: $CES_ISQUIK_HOST:$CES_ISQUIK_PORT"
   node_modules/.bin/nodemon index.js
 
   sensible-browser "$CES_ISQUIK_HOST:$CES_ISQUIK_PORT"

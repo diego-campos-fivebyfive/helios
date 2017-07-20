@@ -7,6 +7,7 @@ const memorial = require('./memorial')
 const account = require('./account')
 
 router.post('/api/v1/notifications', ((request, response) => {
+
   const { body, callback } = request.body
   const requestCopy = request
   let action
