@@ -1,4 +1,5 @@
 'use strict'
+const Google = require('../models/google')
 const { app } = require('../config')
 const { router, sendResponse } = app
 
@@ -7,6 +8,11 @@ const memorial = require('./memorial')
 const account = require('./account')
 
 router.post('/api/v1/notifications', ((request, response) => {
+  const auth = Google.getAuthentication()
+
+  console.log(auth)
+  return
+
   const { body, callback } = request.body
   const requestCopy = request
   let action
