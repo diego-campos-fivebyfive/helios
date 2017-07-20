@@ -15,7 +15,7 @@ const config = {
   isquik: {
     uri: `${ISQUIK_HOST}:${ISQUIK_PORT}`,
     auth: {
-      password: ISQUIK_AUTH_PASS',
+      password: ISQUIK_AUTH_PASS,
       mail: ISQUIK_AUTH_USER,
       key: ISQUIK_AUTH_KEY
     }
