@@ -75,7 +75,7 @@
 }
 
 .edit:focus, .edit2:focus{
-    border: 1px #f7f7f7 solid;
+    border: 1px #AAAAAA solid;
 }
 .semMargem{
     margin: 0 !important;
