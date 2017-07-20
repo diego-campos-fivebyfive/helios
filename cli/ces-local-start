@@ -8,13 +8,15 @@ source ces-variables-ci --development
 if [ -z ${1+x} ] || [ $1 == '--development' ]; then
 
   composer install
-  echo "Starting Development Bundle App on $CES_BUNDLE_HOST:$CES_BUNDLE_PORT and Sices Server on $CES_SICES_HOST:$CES_SICES_PORT"
+  php app/console doctrine:schema:update --force
   php app/console server:run &
 
   cd bundle/app
   yarn install
   node_modules/.bin/nodemon index.js &
 
+  echo "Sices Server starting on $CES_SICES_HOST:$CES_SICES_PORT"
+  echo "Bundle App starting on $CES_BUNDLE_HOST:$CES_BUNDLE_PORT"
   sensible-browser "http://sicessolar.dev:$CES_SICES_PORT"
   echo 'Done.'
 
