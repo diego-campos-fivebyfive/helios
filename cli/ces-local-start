@@ -41,8 +41,7 @@ elif [ $1 == '--isquikmock' ]; then
   cd bundle/test
   yarn install
   echo "Starting Bundle Test (Isquik Mock) on: $CES_ISQUIK_HOST:$CES_ISQUIK_PORT"
-  node_modules/.bin/nodemon index.js
-
   sensible-browser "$CES_ISQUIK_HOST:$CES_ISQUIK_PORT"
+  node_modules/.bin/nodemon index.js
 
 fi
