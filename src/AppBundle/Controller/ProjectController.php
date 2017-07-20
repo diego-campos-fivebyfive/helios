@@ -150,6 +150,14 @@ class ProjectController extends AbstractController
     }
 
     /**
+     * @Route("/create/multi",name="project_create_multi")
+     */
+    public function multiCreateAction()
+    {
+        return $this->render('');
+    }
+
+    /**
      * @Route("/{id}/update", name="project_update")
      */
     public function updateAction(Request $request, Project $project)
