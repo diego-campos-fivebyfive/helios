@@ -66,6 +66,9 @@
 .borderBlack{
     border: solid 1px #555555;
 }
+.minHeight5{
+    min-height: 5mm !important;
+}
 .minHeight25{
     min-height: 25mm !important;
 }
