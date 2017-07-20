@@ -14,6 +14,7 @@ namespace AppBundle\Entity\Component;
 use AppBundle\Entity\CategoryInterface;
 use AppBundle\Entity\CustomerInterface;
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\Order\OrderInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -188,6 +189,12 @@ interface ProjectInterface
      * @return float
      */
     public function getLongitude();
+
+    /**
+     * @param $costPrice
+     * @return ProjectInterface
+     */
+    public function setCostPrice($costPrice);
 
     /**
      * @return float
@@ -470,6 +477,17 @@ interface ProjectInterface
     public function getPaybackMonthsDisc();
 
     /**
+     * @param $proposal
+     * @return ProjectInterface
+     */
+    public function setProposal($proposal);
+
+    /**
+     * @return string
+     */
+    public function getProposal();
+
+    /**
      * @param MemberInterface $member
      * @return ProjectInterface
      */
@@ -564,13 +582,13 @@ interface ProjectInterface
     public function getProjectExtraServices();
 
     /**
-     * @param ProjectStringBoxInterface $projectStrinBox
+     * @param ProjectStringBoxInterface $projectStringBox
      * @return ProjectInterface
      */
     public function addProjectStringBox(ProjectStringBoxInterface $projectStringBox);
 
     /**
-     * @param ProjectStringBoxInterface $projectStrinBox
+     * @param ProjectStringBoxInterface $projectStringBox
      * @return ProjectInterface
      */
     public function removeProjectStringBox(ProjectStringBoxInterface $projectStringBox);
@@ -653,4 +671,16 @@ interface ProjectInterface
      * @return array
      */
     public static function getStructureTypes();
+
+    /**
+     * @param OrderInterface $order
+     * @return OrderInterface
+     */
+    public function setOrder($order);
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOrder();
+
 }

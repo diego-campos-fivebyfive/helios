@@ -67,10 +67,11 @@ class MemberController extends AbstractController
         }
 
         $manager = $this->getCustomerManager();
-        $context = $this->getContextManager()->find(BusinessInterface::CONTEXT_MEMBER);
+        //$context = $this->getContextManager()->find();
 
         $member = $manager->create();
-        $member->setContext($context)
+        $member
+            ->setContext(BusinessInterface::CONTEXT_MEMBER)
             ->setAccount($account);
 
         $form = $this->createForm(MemberType::class, $member, [

@@ -68,6 +68,10 @@ services:
         class: AppBundle\Manager\InverterManager
         arguments: ['AppBundle\Entity\Component\Inverter', '@doctrine']
 
+    order_manager:
+        class: AppBundle\Manager\OrderManager
+        arguments: ['AppBundle\Entity\Order\Order', '@doctrine']
+
     project_manager:
         class: AppBundle\Manager\ProjectManager
         arguments: ['AppBundle\Entity\Component\Project', '@doctrine']
@@ -75,6 +79,10 @@ services:
     project_area_manager:
         class: AppBundle\Manager\ProjectAreaManager
         arguments: ['AppBundle\Entity\Component\ProjectArea', '@doctrine']
+
+    project_extra_manager:
+        class: AppBundle\Manager\ProjectExtraManager
+        arguments: ['AppBundle\Entity\Component\ProjectExtra', '@doctrine']
 
     project_inverter_manager:
         class: AppBundle\Manager\ProjectInverterManager

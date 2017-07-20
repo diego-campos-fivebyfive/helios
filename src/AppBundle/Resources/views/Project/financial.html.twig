@@ -170,6 +170,38 @@
 
                         <div class="row">
                             <div class="col-lg-12">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <i class="{{ icon('summary') }}"></i>
+                                        Meus Itens
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="row" style="margin-bottom: 1rem;">
+                                            <div class="form-group">
+                                                <div class="col-md-2">
+                                                    <select class="form-control" id="financial_extra_type">
+                                                        <option value="0"> Produtos </option>
+                                                        <option value="1"> Serviços </option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-10" id="financial_extra_form">
+                                                    &nbsp;
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12" id="financial_extras">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-lg-12">
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <i class="{{ icon('summary') }}"></i>
@@ -566,6 +598,23 @@
                     }
                 });
             },
+            get_extras: function(){
+                $.ajax({
+                    url: '{{ path('financial_extras',{id:project.id}) }}',
+                    success: function(response){
+                        $('#financial_extras').html(response);
+                    }
+                });
+            },
+            get_extra_form: function(url){
+                $.ajax({
+                    url: url,
+                    method: 'get',
+                    success: function(response){
+                        $('#financial_extra_form').html(response);
+                    }
+                });
+            },
             get_chart_data: function () {
                 var canvas = document.getElementById('chart_analysis');
                 return canvas.toDataURL();
@@ -579,6 +628,12 @@
                 Financial.spinner = Financial.show_taxes.html();
                 Financial.show_taxes.html('');
                 Financial.get_taxes();
+                Financial.get_extras();
+
+                $('#financial_extra_type').on('change', function(){
+                    var url = '{{ path('financial_extras_create',{id:project.id, type:'_type_'}) }}'.replace(/_type_/g, $(this).val());
+                    Financial.get_extra_form(url);
+                }).trigger('change');
             }
         };
 

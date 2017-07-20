@@ -55,12 +55,27 @@ class Extra implements ExtraInterface
     private $costPrice;
 
     /**
+     * @var AccountInterface
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer")
+     */
+    private $account;
+
+    /**
      * @inheritDoc
      */
     public function __construct()
     {
         $this->type = self::TYPE_PRODUCT;
         $this->pricingBy = self::PRICING_FIXED;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    function __toString()
+    {
+        return $this->description;
     }
 
     /**
@@ -157,6 +172,24 @@ class Extra implements ExtraInterface
     public function isProduct()
     {
         return self::TYPE_PRODUCT == $this->type;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setAccount(AccountInterface $account)
+    {
+        $this->account = $account;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAccount()
+    {
+        return $this->account;
     }
 
     /**

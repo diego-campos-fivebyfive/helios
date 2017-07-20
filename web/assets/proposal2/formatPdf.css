@@ -1,13 +1,13 @@
 body{
-    background-color: #f7f7f7;
+    background-color: #1a2d41;
 }
 
-.ocultar, .pdfHidden, .cke_reset, .cke_widget_drag_handler_container {
+.ocultar, .pdfHidden, .cke_reset, .cke_widget_drag_handler_container{
     display: none;
 }
 #bloco, .separator{
     padding-top: 8mm;
-    border-top: solid 1px #000000;
+   // border-top: solid 1px #000000;
     background-color: #FFFFFF !important;
 }
 .del{

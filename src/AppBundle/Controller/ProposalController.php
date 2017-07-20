@@ -2,13 +2,15 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Component\Project;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/proposal")
  */
-class ProposalController extends Controller
+class ProposalController extends AbstractController
 {
     /**
      * @Route("/")
@@ -21,47 +23,38 @@ class ProposalController extends Controller
     }
 
     /**
-     * @Route("/editor", name="proposal_editor")
+     * @Route("/{id}/save", name="proposal_save")
      */
-    public function editorAction()
+    public function saveContentAction(Request $request, Project $project){
+        $content = $request->request->get('content');
+
+        $project->setProposal($content);
+
+        $this->manager('project')->save($project);
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/{id}/editor", name="proposal_editor")
+     */
+    public function editorAction(Project $project)
     {
-        /*projeto fake*/
+        //$customer = $project->getCustomer()->getUser()->getEmail();
+        //dump($project);die();
 
-        $project = [
+        $projectFake = [
             'customer' => [
-                'name' => 'Uzumaki Naruto',
-                'averageConsumption' => '572 kWh',
-                'document' => '123.456.789-10',
-                'phone' => '(42) 9 1234-5678',
-                'email' => 'name@mail.com',
-
-                'tableAreas' => 'tabela com as areas',
-                'generationChart' => [20,550,347,805,474,647,864,275,759,584,967,847],
-                'annualGeneration' => 'geração anual',
-                'monthlyAverageGeneration' => 'geração média mensal',
-
-                'lifetime' => '20 anos',
-                'inflation' => 'inflação',
-                'lossOfEfficiency' => 'perda de eficiencia',
-                'annualOperatingCost' => 'custo anual de operação',
-                'priceOfKWh' => 'preço do Kwh mais impostos',
-                'proposalValue' => 'valor da proposta',
-                'accumulatedCash' => 'caixa acumulado',
-                'vpl' => 'vpl',
-                'tir' => 'tir',
-                'simplePayback' => 'payback simples',
-                'discountedPayback' => 'payback descontado',
-                'accumulatedCashChart' => [-10.0,-30.0,-1.7,15.05,25.74,35.7,43.4,50.75,57.59,66.84,76.7,84.7],
-
-                'tableEquipmentAndServices' => 'tabela de equipamentos e serviços'
+                'generationChart' => [20,550,347,805,474,647,864,275,759,584,967,847]
             ]
         ];
 
-        //$tagCustomer = $this->render('proposal.tag_customer', ['project' => $project])->getContent();
-        /*dump($tagCustomer);
-        die;*/
 
-        return $this->render('AppBundle:Proposal:editor.html.twig', ['project' => $project]);
+        return $this->render('AppBundle:Proposal:editor.html.twig',
+            [
+                'project' => $project,
+                'projectFake' => $projectFake,
+            ]);
     }
 
     /**
@@ -75,13 +68,13 @@ class ProposalController extends Controller
     }
 
     /**
-     * @Route("/proposalPDF", name="proposal_pdf")
+     * @Route("/{id}/proposalPDF", name="proposal_pdf")
      */
-    public function proposalPDFAction()
+    public function proposalPDFAction(Project $project)
     {
-        return $this->render('AppBundle:Proposal:proposalPDF.html.twig', array(
-
-        ));
+        return $this->render('AppBundle:Proposal:proposalPDF.html.twig', [
+            'project' => $project
+        ]);
     }
 
 }

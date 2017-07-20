@@ -4,6 +4,7 @@ const { router, sendResponse } = app
 
 const product = require('./product')
 const memorial = require('./memorial')
+const account = require('./account')
 
 router.post('/api/v1/notifications', ((request, response) => {
   const { body, callback } = request.body
@@ -18,6 +19,11 @@ router.post('/api/v1/notifications', ((request, response) => {
 
     case 'memorial_created':
       action = memorial.send
+      requestCopy.body = body
+      break
+
+    case 'account_created':
+      action = account.send
       requestCopy.body = body
       break
 

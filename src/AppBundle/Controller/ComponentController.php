@@ -94,7 +94,14 @@ class ComponentController extends AbstractController
     {
         $component = $this->findComponent($type, $id);
 
-        $formClass = 'module' == $type ? ModuleType::class : InverterType::class ;
+        if ('module' == $type) {
+            $formClass = ModuleType::class;
+            $family = 'modules';
+        }
+        else {
+            $formClass = InverterType::class;
+            $family = 'inverters';
+        }
 
         $form = $this->createForm($formClass, $component);
 
@@ -102,16 +109,18 @@ class ComponentController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            return $this->saveComponent($component, $type, $request);
-
             if ($component->getStatus()) {
+
                 $this->get('notifier')->notify([
                     'callback' => 'product_validate',
                     'body' => [
-                        'id' => $component->getId()
+                        'id' => $component->getId(),
+                        'family' => $family
                     ]
                 ]);
             }
+
+            return $this->saveComponent($component, $type, $request);
         }
 
 
