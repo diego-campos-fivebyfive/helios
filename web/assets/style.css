@@ -68,7 +68,7 @@ h5 {
   border: 0;
 }
 .navbar-default {
-  background-color: transparent;
+  background-color: #080C17 !important;
   border-color: #2f4050;
 }
 .navbar-top-links li {
