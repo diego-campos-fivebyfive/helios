@@ -3331,6 +3331,7 @@ body.boxed-layout #wrapper {
 .clear {
   display: block;
   overflow: hidden;
+  color: #ffffff;
 }
 a {
   cursor: pointer;
