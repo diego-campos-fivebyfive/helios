@@ -63,6 +63,8 @@ class RegisterController extends AbstractController
      * @Route("/pre", name="pre_register")
      */
     public function preRegisterAction(Request $request){
+        $registerManager = $this->getAccountRegisterManager();
+        $register = $registerManager->create();
 
         $form = $this->createForm(PreRegisterType::class);
         $form->handleRequest($request);
@@ -70,14 +72,21 @@ class RegisterController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // $form->getData() holds the submitted values
             // but, the original `$task` variable has also been updated
-            $data = $form->getData();
-            dump($data);
-            die();
-
+            //$data = $form->getData();
+            //dump($data);die();
             // ... perform some action, such as saving the task to the database
             // for example, if Task is a Doctrine entity, save it!
             // $em->persist($task);
             // $em->flush();
+
+            if ($request->getUser()) {
+            $this->get('notifier')->notify([
+                'callback' => 'account_created',
+                'body' => [
+                    'account' => $request
+                    ]
+                ]);
+            }
 
             return $this->redirectToRoute('task_success');
         }
