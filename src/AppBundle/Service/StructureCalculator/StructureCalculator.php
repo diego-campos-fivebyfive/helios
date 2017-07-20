@@ -113,7 +113,7 @@ class StructureCalculator
      * @param bool $single
      * @return mixed
      */
-    private function findStructure(array $criteria, $single = true)
+    public function findStructure(array $criteria, $single = true)
     {
         $method = $single ? 'findOneBy' : 'findBy';
 

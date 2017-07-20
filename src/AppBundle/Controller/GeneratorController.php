@@ -3,10 +3,14 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Component\ModuleInterface;
+use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectStructure;
 use AppBundle\Entity\Component\StructureInterface;
 use AppBundle\Form\Extra\KitGeneratorType;
+use AppBundle\Service\InverterCombinator\InverterLoader;
+use AppBundle\Service\ProjectGenerator\Combiner;
+use AppBundle\Service\ProjectGenerator\Structure;
 use AppBundle\Service\StringBoxCalculator\StringBoxCalculator;
 use AppBundle\Util\KitGenerator\InverterCombiner\Module;
 use AppBundle\Util\KitGenerator\StructureCalculator;
@@ -32,7 +36,59 @@ class GeneratorController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-        //$this->previewPower(1000, -15.79, -47.88);
+        $power = 1000;
+        /** @var \AppBundle\Entity\Component\Module $mod */
+        $mod = $this->manager('module')->find(32433);
+        $maker = $this->manager('maker')->find(60627);
+        $rootType = StructureCalculator::ROOF_ROMAN_AMERICAN;
+        $structureType = Project::STRUCTURE_SICES;
+        $position = 0; // VERTICAL
+
+        $module = \AppBundle\Service\ProjectGenerator\Module::create(
+            $mod->getId(),
+            $power,
+            $mod->getMaxPower(),
+            $mod->getOpenCircuitVoltage(),
+            $mod->getVoltageMaxPower(),
+            $mod->getTempCoefficientVoc(),
+            $mod->getShortCircuitCurrent()
+        );
+
+        $inverterLoader = new InverterLoader($this->manager('inverter'));
+        $inverters = $inverterLoader->power($power)->maker($maker)->get();
+
+        Combiner::combine($inverters, $module);
+
+        $strCalculator = $this->get('structure_calculator');
+
+        $profiles = $strCalculator->findStructure(['type' => 'perfil', 'subtype' => 'roman'], false);
+
+        dump($profiles); die;
+        dump($strCalculator); die;
+
+        //\AppBundle\Service\ProjectGenerator\Project::create([$module], $inverters);
+
+
+        //Structure::calculate()
+
+        dump($inverters); die;
+
+        //dump($inverters); die;
+        dump($module); die;
+
+        $inverterLoader = new InverterLoader($this->manager('inverter'));
+
+        $inverters = $inverterLoader->power($power)->maker($maker)->get();
+
+        $this->get('inverter_combinator')->distribute($inverters, $module);
+
+        dump($inverters); die;
+        dump($inverterLoader); die;
+
+        die;
+
+
+                //$this->previewPower(1000, -15.79, -47.88);
         //$this->generateJson();
         //$this->calculateStructure();
         //$this->calculateStringBoxes();

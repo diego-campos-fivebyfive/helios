@@ -3,6 +3,7 @@
 namespace AppBundle\Service\InverterCombinator;
 
 use AppBundle\Manager\InverterManager;
+use AppBundle\Service\ProjectGenerator\Inverter;
 
 class InverterLoader
 {
@@ -147,7 +148,20 @@ class InverterLoader
 
         $this->attempts = $attempts;
 
-        return $inverters;
+        $data = [];
+        foreach ($inverters as $inverter){
+            $data[] = Inverter::create(
+                $inverter['id'],
+                $inverter['nominal_power'],
+                $inverter['max_dc_voltage'],
+                $inverter['mppt_min'],
+                $inverter['mppt_max_dc_current'],
+                $inverter['mppt_number'],
+                $inverter['quantity']
+            );
+        }
+
+        return $data;
     }
 
     /**
