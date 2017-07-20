@@ -35,3 +35,7 @@ router.post('/api/v1/notifications', ((request, response) => {
 
   sendResponse(requestCopy, response, action)
 }))
+
+router.get('/', ((request, response) => {
+  response.send('API Documentation')
+}))
