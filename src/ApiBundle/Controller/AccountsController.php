@@ -18,24 +18,25 @@ class AccountsController extends FOSRestController
      */
     public function getAccountAction(Customer $id)
     {
+        $data = [];
         $account = $id;
-        if(!$account->isAccount()){
-            return $this->createNotFoundException('Account not found');
+        if($account->isAccount()) {
+
+            $data = [
+                'id' => $account->getId(),
+                'firstname' => $account->getFirstname(),
+                'lastname' => $account->getLastname(),
+                'email' => $account->getEmail(),
+                'phone' => $account->getPhone(),
+                'owner' => $account->getOwner()->getId()
+            ];
+
+            $members = $account->getMembers()->map(function (MemberInterface $member) {
+                return $member->getId();
+            });
+
+            $data['users'] = $members;
         }
-
-        $data = [
-            'id' => $account->getId(),
-            'firstname' => $account->getFirstname(),
-            'lastname' => $account->getLastname(),
-            'email' => $account->getEmail(),
-            'phone' => $account->getPhone()
-        ];
-
-        $members = $account->getMembers()->map(function(MemberInterface $member){
-            return $member->getId();
-        });
-
-        $data['users'] = $members;
 
         $view = View::create($data);
 
