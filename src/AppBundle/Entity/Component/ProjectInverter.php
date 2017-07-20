@@ -42,6 +42,20 @@ class ProjectInverter implements ProjectInverterInterface
     private $loss;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $serial;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $parallel;
+
+    /**
      * @var ProjectInterface
      *
      * @ORM\ManyToOne(targetEntity="Project", inversedBy="projectInverters")
@@ -170,6 +184,42 @@ class ProjectInverter implements ProjectInverterInterface
         }
 
         return $power;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setSerial($serial)
+    {
+        $this->serial = $serial;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSerial()
+    {
+        return $this->serial;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setParallel($parallel)
+    {
+        $this->parallel = $parallel;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getParallel()
+    {
+        return $this->parallel;
     }
 
     /**

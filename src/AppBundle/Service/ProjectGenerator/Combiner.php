@@ -2,50 +2,97 @@
 
 namespace AppBundle\Service\ProjectGenerator;
 
+use AppBundle\Entity\Component\ProjectInterface;
+
+/**
+ * Class Combiner
+ * @author Claudinei Machado <cjchamado@gmail.com>
+ */
 class Combiner
 {
     /**
-     * @param array $inverters
-     * @param Module $module
+     * @param ProjectInterface $project
      */
-    public static function combine(array &$inverters, Module $module)
+    public static function combine(ProjectInterface $project)
     {
+        /** @var \AppBundle\Entity\Component\ProjectModuleInterface $projectModule */
+        $projectModule = $project->getProjectModules()->first();
+        /** @var \AppBundle\Entity\Component\ModuleInterface $module */
+        $module = $projectModule->getModule();
         $totalPower = 0;
-        /** @var Inverter $inverter */
-        foreach($inverters as $inverter){
-            $totalPower += $inverter->nominalPower;
+        foreach ($project->getProjectInverters() as $projectInverter){
+            $totalPower += $projectInverter->getInverter()->getNominalPower();
         }
 
         $tnoct  = 45;
         $tc_max = 70;
 
         $percentPower = [];
-        foreach ($inverters as $inverter){
-            $percentPower[] = $inverter->nominalPower / $totalPower;
+        foreach ($project->getProjectInverters() as $projectInverter){
+            $percentPower[] = $projectInverter->getInverter()->getNominalPower()  / $totalPower;
         }
-        $vmax_mod = $module->openCircuitVoltage;
-        $vmin_mod = $module->voltageMaxPower * (1 + (($tc_max - $tnoct) * ($module->tempCoefficientVoc / 100)));
-        foreach ($inverters as $key => $inverter){
-            $qte_max_mod_ser = floor($inverter->maxDcVoltage / $vmax_mod);
-            $qte_min_mod_ser = ceil($inverter->mpptMin / $vmin_mod);
-            $qte_max_mod_par = floor(($inverter->mpptMaxCcCurrent * $inverter->mpptNumber) / ($module->shortCircuitCurrent));
+
+        $vmax_mod = $module->getOpenCircuitVoltage();
+        $vmin_mod = $module->getVoltageMaxPower() * (1 + (($tc_max - $tnoct) * ($module->getTempCoefficientVoc() / 100)));
+
+        /**
+         * @var  $key
+         * @var \AppBundle\Entity\Component\ProjectInverterInterface $projectInverter
+         */
+        foreach ($project->getProjectInverters() as $key => $projectInverter){
+            /** @var \AppBundle\Entity\Component\InverterInterface $inverter */
+            $inverter = $projectInverter->getInverter();
+
+            $qte_max_mod_ser = floor($inverter->getMaxDcVoltage() / $vmax_mod);
+            $qte_min_mod_ser = ceil($inverter->getMpptMin() / $vmin_mod);
+            $qte_max_mod_par = floor(($inverter->getMpptMaxDcCurrent() * $inverter->getMpptNumber()) / ($module->getShortCircuitCurrent()));
 
             for ($p = 1; $p <= $qte_max_mod_par; $p++) {
                 for ($s = $qte_min_mod_ser; $s <= $qte_max_mod_ser; $s++) {
-                    $pot = ($p * $s) * ($module->maxPower / 1000);
-                    $n_mod = $p * $s;
-                    if ($pot >= ($module->power * $percentPower[$key])) {
-                        $inverters[$key]->serial = (int) $s;
-                        $inverters[$key]->parallel = (int) $p; // NRO DE STRINGS
+                    $pot = ($p * $s) * ($module->getMaxPower() / 1000);
+                    if ($pot >= ($project->getInfPower() * $percentPower[$key])) {
+                        $projectInverter->setSerial((int) $s);
+                        $projectInverter->setParallel((int) $p); // TODO: NRO STRINGS
                         break 2;
                     }
                 }
             }
         }
 
-        /** @var Inverter $inverter */
-        foreach ($inverters as $inverter){
-            $module->quantity += $inverter->count();
+        $quantity = 0;
+        foreach ($project->getProjectInverters() as $projectInverter){
+            $quantity += $projectInverter->getSerial() * $projectInverter->getParallel() * $projectInverter->getQuantity();
         }
+
+        $position = $projectModule->getPosition();
+        $limit = $position == 0 ? 20 : 12 ;
+
+        $groups = [];
+        if (0 != ($quantity % $limit) && ($quantity > $limit)) {
+
+            $groups[] = [
+                'lines' => ((int) floor($quantity / $limit)),
+                'modules' => $limit,
+                'position' => $position
+            ];
+
+            $groups[] = [
+                'lines' => 1,
+                'modules' => (int) ceil((($quantity / $limit) - floor($quantity / $limit)) * $limit),
+                'position' => $position
+            ];
+
+        } else {
+
+            $groups[] = [
+                'lines' => ((int) ceil($quantity / $limit)),
+                'modules' => (int) $quantity / ceil($quantity / $limit),
+                'position' => $position
+            ];
+        }
+
+        $projectModule
+            ->setGroups($groups)
+            ->setQuantity($quantity);
     }
 }
