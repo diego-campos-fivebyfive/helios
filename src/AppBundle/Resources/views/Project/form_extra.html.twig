@@ -1,0 +1,49 @@
+
+{{ form_start(form,{attr:{id:'form_project_extra'}}) }}
+<div class="col-md-4">
+    {{ form_widget(form.extra,{attr:{class:'form-control'}}) }}
+</div>
+<div class="col-md-4">
+    {{ form_widget(form.quantity,{attr:{class:'form-control text-center'}}) }}
+</div>
+<div class="col-md-4">
+    <div class="form-group">
+        <button class="btn btn-success col-md-6">
+            <i class="fa fa-save"></i> Salvar
+        </button>
+        {% if projectExtra.id %}
+            <button class="btn btn-default col-md-6" id="btn_cancel_extra">
+                <i class="fa fa-save"></i> Cancelar
+            </button>
+        {% endif %}
+    </div>
+</div>
+
+{{ form_end(form) }}
+
+<script>
+
+    $('#project_extra_quantity').TouchSpin({
+        min: 1,
+        step: 1,
+        verticalbuttons: true,
+        prefix: 'Quantidade'
+    });
+
+    $('#form_project_extra').on('submit', function(event){
+        event.preventDefault();
+        $.ajax({
+            url: $(this).attr('action'),
+            method: $(this).attr('method'),
+            data: $(this).serialize(),
+            success: function(response){
+                Financial.get_extras();
+            }
+        })
+    });
+
+    $('#btn_cancel_extra').on('click', function(){
+        Financial.get_extra_form('{{ path('financial_extras_create',{id:project.id, type:0}) }}');
+    });
+
+</script>

@@ -198,6 +198,17 @@ function loadDatas() {
     }
 }
 
+$('#saveProposal').click(function () {
+    //console.log($('#contentProposal').html());
+    $.ajax({
+        url:$(this).data('url'),
+        method:'post',
+        data:{content:$('#contentProposal').html()},
+        complete:function (xhr) {
+            alert(xhr.status);
+        }
+    })
+});
 
 $(document).ready(function(){
     generateChart();

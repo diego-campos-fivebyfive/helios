@@ -67,7 +67,7 @@ class ProjectExtra implements ProjectExtraInterface
      */
     public function isService()
     {
-        return $this->extra->isService();
+        return $this->extra ? $this->extra->isService() : false;
     }
 
     /**
@@ -75,7 +75,7 @@ class ProjectExtra implements ProjectExtraInterface
      */
     public function isProduct()
     {
-        return $this->extra->isProduct();
+        return $this->extra ? $this->extra->isProduct() : false;
     }
 
     /**

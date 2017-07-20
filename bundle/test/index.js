@@ -5,6 +5,7 @@ const request = require('request-promise')
 const notifications = require('./mocks/notifications')
 const products = require('./mocks/products')
 const memorial = require('./mocks/memorial')
+const users = require('./mocks/users')
 
 const SICES_HOST = process.env.CES_SICES_HOST
 const SICES_PORT = process.env.CES_SICES_PORT
@@ -17,6 +18,55 @@ app.listen(ISQUIK_PORT)
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+
+app.get('/', (req, res) => {
+  res.send(`
+    <a href="/action/product-create">product-create</a>
+    <a href="/action/memorial-create">memorial-create</a>
+    <a href="/action/user-create">user-create</a>
+    <a href="/action/user-approve">user-approve</a>
+  `)
+})
+
+app.get('/product/:code', (req, res) => {
+  const { code } = req.params
+  const product = products.find(x => x.code === code)
+  res.status(200).json(product)
+})
+
+app.get('/memorial/:id', (req, res) => {
+  res.status(200).json(memorial)
+})
+
+app.get('/user/:id', (req, res) => {
+  const { id } = req.params
+  const user = users.find(x => x.id === Number(id))
+  res.status(200).json(user)
+})
+
+const getData = (uri) => request({ method: 'GET', uri }).then((x) => JSON.parse(x))
+
+app.post('/notifications', (req, res) => {
+  const { callback, body } = req.body
+  let data
+
+  switch (callback) {
+    case 'product_validate':
+      data = getData(`${SICES_HOST}:${SICES_PORT}/api/${body.family}/${body.id}`)
+      break
+
+    case 'account_created':
+      const accounts = getData(`${SICES_HOST}:${SICES_PORT}/api/accounts/${body.id}`)
+      data = accounts.users.map((x) => getData(`${SICES_HOST}:${SICES_PORT}/api/users/${body.id}`))
+      break
+
+    default:
+      res.status(404).end('callback action not found')
+      return
+  }
+
+  res.status(200).json({ callback, body: data })
+})
 
 const sendNotifications = (req, res, notification) => {
   const options = {
@@ -38,51 +88,9 @@ const sendNotifications = (req, res, notification) => {
   })
 }
 
-const getData = (uri) => {
-  let options = {
-    method: 'GET'
-  }
-  options = Object.assign(options, { uri })
-  return request(options).then((data) => JSON.parse(data))
-}
-
-app.post('/notifications', (req, res) => {
-  const { callback, body } = req.body
-  let data
-
-  switch (callback) {
-    case 'product_validate':
-      //data = getData(`${SICES_HOST}:${SICES_PORT}/${body.family}/${body.code}`)
-      data = 'test'
-      break
-
-    default:
-      res.status(404).end('callback action not found')
-      return
-  }
-
-  res.status(200).json({ callback, body: data })
-})
-
-app.get('/product/:code', (req, res) => {
-  const { code } = req.params
-  const product = products.find(x => x.code === code)
-  res.status(200).json(product)
-})
-
-app.get('/memorial/:id', (req, res) => {
-  res.status(200).json(memorial)
-})
-
-app.get('/', (req, res) => {
-  res.send(`
-    <a href="/action/product-create">product-create</a>
-    <a href="/action/memorial-create">memorial-create</a>
-  `)
-})
-
-const { productCreated, memorialCreated } = notifications
+const { productCreated, memorialCreated, userCreated, userApproved } = notifications
 
 app.get('/action/product-create', (req, res) => sendNotifications(req, res, productCreated))
 app.get('/action/memorial-create', (req, res) => sendNotifications(req, res, memorialCreated))
-
+app.get('/action/user-create', (req, res) => sendNotifications(req, res, userCreated))
+app.get('/action/user-approve', (req, res) => sendNotifications(req, res, userApproved))

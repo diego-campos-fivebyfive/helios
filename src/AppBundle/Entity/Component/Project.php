@@ -15,6 +15,7 @@ use AppBundle\Entity\CategoryInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\CustomerInterface;
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Util\KitGenerator\StructureCalculator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -142,6 +143,13 @@ class Project implements ProjectInterface
     private $taxPercent;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    private $costPrice;
+
+    /**
      * @var array
      *
      * @ORM\Column(name="metadata", type="json", nullable=true)
@@ -233,6 +241,13 @@ class Project implements ProjectInterface
     private $paybackMonthsDisc;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $proposal;
+
+    /**
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="ProjectModule", mappedBy="project", cascade={"persist", "remove"})
@@ -294,6 +309,13 @@ class Project implements ProjectInterface
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Category")
      */
     private $stage;
+
+    /**
+     * @var OrderInterface
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Order\Order", inversedBy="projects")
+     */
+    private $order;
 
     /**
      * @inheritDoc
@@ -800,6 +822,24 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
+    public function setProposal($proposal)
+    {
+        $this->proposal = $proposal;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getProposal()
+    {
+        return $this->proposal;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getChecklist($tag = null)
     {
         $errors = [
@@ -933,9 +973,19 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
+    public function setCostPrice($costPrice)
+    {
+        $this->costPrice = $costPrice;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getCostPrice()
     {
-        // TODO: Implement getCostPrice() method.
+        return $this->costPrice;
     }
 
     /**
@@ -1496,4 +1546,23 @@ class Project implements ProjectInterface
 
         return array_combine($types, $types);
     }
+
+    /**
+     * @param OrderInterface $order
+     */
+    public function setOrder($order)
+    {
+        $this->order = $order;
+        return $this;
+    }
+
+    /**
+     * @return OrderInterface
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+
 }

@@ -36,7 +36,7 @@
                 <div class="row">
                     <div class="hr-line-dashed"></div>
                     <div class="col-md-12">
-                        <form action="{{ path('contacts_import', {context:context.id}) }}" class="dropzone"
+                        <form action="{{ path('contacts_import', {context:context}) }}" class="dropzone"
                               id="myDropzone">
                             <div class="fallback">
                                 <input name="file" type="file"/>
@@ -88,7 +88,7 @@
                 {#<a class="btn btn-info" data-toggle="modal" data-target="#modal_import">
                     <i class="fa fa-upload"></i> Importar {{ isPerson ? 'Pessoas' : 'Empresas' }}
                 </a>
-                <a class="btn btn-info" href="{{ path('contacts_export',{context:context.id}) }}">
+                <a class="btn btn-info" href="{{ path('contacts_export',{context:context}) }}">
                     <i class="fa fa-download"></i> Exportar {{ isPerson ? 'Pessoas' : 'Empresas' }}
                 </a>#}
             </div>
@@ -131,7 +131,7 @@
 
                     {% for contact in contacts %}
 
-                        <tr data-contact="{{ path('contact_show',{context:context.id, token:contact.token}) }}">
+                        <tr data-contact="{{ path('contact_show',{context:contact.context, token:contact.token}) }}">
                             <td><i class="fa fa-{{ contact.isPerson ? 'user' : 'building' }}"></i></td>
                             <td> {{ contact.name }} </td>
                             <td> {{ contact.category }} </td>
@@ -139,17 +139,17 @@
                             <td> {{ contact.phone }} </td>
                             {#<td class="col-md-3 btn-group btn-group-sm">
                                 <a title="{{ 'View'|trans }}"
-                                   href="{{ path('contact_show',{context:context.id, token:contact.token}) }}"
+                                   href="{{ path('contact_show',{context:context, token:contact.token}) }}"
                                    class="btn btn-default col-md-4">
                                     <i class="fa fa-eye"></i> {{ not isAjax ? 'View'|trans }}
                                 </a>
                                 <a title="{{ 'Edit'|trans }}"
-                                   href="{{ path('contact_update',{context:context.id, token:contact.token}) }}"
+                                   href="{{ path('contact_update',{context:context, token:contact.token}) }}"
                                    class="btn btn-success col-md-4">
                                     <i class="fa fa-pencil"></i> {{ not isAjax ? 'Edit'|trans }}
                                 </a>
                                 <a title="{{ 'Delete'|trans }}"
-                                   data-delete="{{ path('contact_delete',{context:context.id, token:contact.token}) }}"
+                                   data-delete="{{ path('contact_delete',{context:context, token:contact.token}) }}"
                                    class="btn btn-danger col-md-4">
                                     <i class="fa fa-trash"></i> {{ not isAjax ? 'Delete'|trans }}
                                 </a>

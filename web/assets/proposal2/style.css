@@ -96,6 +96,11 @@
 li{
     list-style: none;
 }
+.sidebar-save{
+    float: right;
+    right: 0;
+    position: fixed;
+}
 .sidebar-tags::after{
     top: 0;
     position: fixed;
@@ -103,7 +108,7 @@ li{
 }
 
 .sidebar-tags{
-    margin-top: 30px;
+    margin-top: 35px;
     float: right;
     right: 0;
     position: fixed;

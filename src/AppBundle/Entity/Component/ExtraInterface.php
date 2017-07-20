@@ -3,6 +3,8 @@
 namespace AppBundle\Entity\Component;
 
 
+use AppBundle\Entity\AccountInterface;
+
 interface ExtraInterface
 {
     const TYPE_PRODUCT = 0;
@@ -64,6 +66,17 @@ interface ExtraInterface
      * @return bool
      */
     public function isProduct();
+
+    /**
+     * @param AccountInterface $account
+     * @return ExtraInterface
+     */
+    public function setAccount(AccountInterface $account);
+
+    /**
+     * @return AccountInterface
+     */
+    public function getAccount();
 
     /**
      * @return array

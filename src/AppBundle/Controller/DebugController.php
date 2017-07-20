@@ -13,6 +13,7 @@ use AppBundle\Entity\Financial\ProjectFinancial;
 use AppBundle\Entity\Financial\ProjectFinancialInterface;
 use AppBundle\Entity\Financial\ProjectFinancialManager;
 use AppBundle\Entity\Financial\Tax;
+use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Entity\ParameterManager;
 use AppBundle\Entity\Project\NasaCatalog;
 use AppBundle\Entity\Component\Project;
@@ -45,6 +46,7 @@ use Vindi\Exceptions\RequestException;
 use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Entity\Pricing\Level;
 use AppBundle\Entity\Pricing\Range;
+use AppBundle\Entity\Order\Order;
 use AppBundle\Service\Notifier\Notifier;
 
 /**
@@ -318,19 +320,39 @@ class DebugController extends AbstractController
 
     }
 
+//    /**
+//     * @Route("/notifier", name="debug_notifier")
+//     */
+//    public function notifierAction()
+//    {
+//        $this->get('notifier')->notify([
+//            'callback' => 'product_validate',
+//            'body' => [
+//                'id' => '62'
+//            ]
+//        ]);
+//
+//        return $this->json();
+//    }
+
     /**
-     * @Route("/notifier", name="debug_notifier")
+     * @Route("/order", name="debug_order")
      */
-    public function notifierAction()
+    public function orderAction()
     {
-        $this->get('notifier')->notify([
-            'callback' => 'product_validate',
-            'body' => [
-                'id' => '62'
-            ]
-        ]);
+        /** @var Customer $accounts */
+        $accounts = $this->manager('customer')->find(19);
+        /** @var Project $project */
+        $project = $this->manager('project')->find(102);
+        $manager = $this->manager('order');
 
-        return $this->json();
+        /** @var OrderInterface $order */
+        $order = $manager->create();
+        $order->setStatus(1)
+              ->setAccount($accounts);
+        $project->setOrder($order);
 
+        $manager->save($order);
+        //
     }
 }

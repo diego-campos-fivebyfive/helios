@@ -16,11 +16,18 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  * @ORM\Entity
  */
 class Customer extends AbstractCustomer
-    implements BusinessInterface, AccountInterface, MemberInterface, CustomerInterface
+    implements
+    BusinessInterface,
+    AccountInterface,
+    MemberInterface,
+    CustomerInterface,
+    ContactInterface,
+    CompanyInterface
 {
     use TokenizerTrait;
     use ORMBehaviors\SoftDeletable\SoftDeletable;
     use AccountTrait;
+    use CompanyTrait;
 
     /**
      * @var integer
@@ -136,13 +143,6 @@ class Customer extends AbstractCustomer
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Customer", mappedBy="account", cascade={"persist"})
      */
     private $members;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Customer", mappedBy="company", cascade={"persist"})
-     */
-    private $employees;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -292,6 +292,13 @@ class Customer extends AbstractCustomer
      */
     private $alloweds;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Order\Order", mappedBy="Costumer", cascade={"persist"})
+     */
+    private $orders;
+
     private $edition = false;
 
     /**
@@ -312,6 +319,7 @@ class Customer extends AbstractCustomer
         $this->assignedTasks = new \Doctrine\Common\Collections\ArrayCollection();
         $this->accessors = new \Doctrine\Common\Collections\ArrayCollection();
         $this->alloweds = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->orders = new \Doctrine\Common\Collections\ArrayCollection();
 
         $this->coordinates = [];
         $this->attributes = [];
@@ -423,7 +431,7 @@ class Customer extends AbstractCustomer
      */
     public function isMember()
     {
-        return $this->context ? $this->context == self::CONTEXT_MEMBER : false;
+        return $this->context == self::CONTEXT_MEMBER;
     }
 
     /**
@@ -431,8 +439,7 @@ class Customer extends AbstractCustomer
      */
     public function isPerson()
     {
-        //dump($this->context); die();
-        return $this->context ? $this->context == self::CONTEXT_PERSON2 : false;
+        return $this->context == self::CONTEXT_PERSON;
     }
 
     /**
@@ -605,63 +612,6 @@ class Customer extends AbstractCustomer
     public function getCompany()
     {
         return $this->company;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function addEmployee(BusinessInterface $employee)
-    {
-        if (!$this->isCompany() || !$employee->isPerson())
-            $this->unsupportedContextException();
-
-        if (!$this->employees->contains($employee)) {
-            $this->employees->add($employee);
-            $employee->setCompany($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function removeEmployee(BusinessInterface $employee)
-    {
-        if ($this->employees->contains($employee)) {
-            $this->employees->removeElement($employee);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getEmployees()
-    {
-        return $this->employees;
-    }
-
-    public function addRelatedEmployee(BusinessInterface $employee){
-        dump($employee); die;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setRelatedEmployees(array $relatedEmployees = [])
-    {
-        foreach($this->getMember()->getAllowedPersons() as $person){
-            if(in_array($person->getId(), array_values($relatedEmployees))){
-                $person->setCompany($this);
-            }
-        }
-    }
-
-    public function getRelatedEmployees()
-    {
-        return $this->relatedEmployees;
     }
 
     /**
@@ -1730,6 +1680,22 @@ class Customer extends AbstractCustomer
         if(!$this->isAccount()){
             $this->unsupportedContextException();
         }
+    }
+
+    /**
+     * @param ArrayCollection $orders
+     */
+    public function setOrders($orders)
+    {
+        $this->orders = $orders;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getOrders()
+    {
+        return $this->orders;
     }
 }
 

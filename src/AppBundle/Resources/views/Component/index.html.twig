@@ -59,6 +59,7 @@
         token: component.token
         } %}
 
+        {% set member = extra.member %}
         {% set account = extra.account %}
 
         <div class="btn-group btn-group-sm btn-group-justified">
@@ -69,10 +70,12 @@
                 <i class="fa fa-eye"></i> {{ 'View'|trans }}
             </a>
 
+            {% if member.isAdmin %}
             <a href="{{ path('component_update',{type:extra.type,id:component.id}) }}"
                class="btn btn-success">
                 <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
             </a>
+            {% endif %}
 
         </div>
 
@@ -142,7 +145,7 @@
                                         <div class="hr-line-dashed"></div>
 
                                         <div class="row">
-                                            {{ handler.component_buttons(component,{type:type, 'account':account, 'update':route_update, 'show':route_show, 'delete':route_delete}) }}
+                                            {{ handler.component_buttons(component,{type:type, member:member, 'account':account, 'update':route_update, 'show':route_show, 'delete':route_delete}) }}
                                         </div>
 
                                     </div>
@@ -180,7 +183,7 @@
                                     <td> {{ is_module ? [component.maxPower|decimal,' W']|join : component.mpptNumber }} </td>
                                     <td> {{ is_module ? component.efficiency|decimal : component.maxEfficiency|decimal }}%</td>
                                     <td>
-                                        {{ handler.component_buttons(component,{type:type, 'account':account, 'update':route_update, 'show':route_show, 'delete':route_delete}) }}
+                                        {{ handler.component_buttons(component,{type:type, member:member, 'account':account, 'update':route_update, 'show':route_show, 'delete':route_delete}) }}
                                     </td>
                                 </tr>
 
