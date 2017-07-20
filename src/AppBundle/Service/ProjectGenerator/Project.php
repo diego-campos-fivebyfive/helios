@@ -5,6 +5,11 @@ namespace AppBundle\Service\ProjectGenerator;
 class Project
 {
     /**
+     * @var int
+     */
+    public $roofType;
+
+    /**
      * @var array
      */
     public $inverters = [];
@@ -13,5 +18,4 @@ class Project
      * @var array
      */
     public $modules = [];
-
 }

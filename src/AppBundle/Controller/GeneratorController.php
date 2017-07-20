@@ -46,12 +46,14 @@ class GeneratorController extends AbstractController
 
         $module = \AppBundle\Service\ProjectGenerator\Module::create(
             $mod->getId(),
+            \AppBundle\Service\ProjectGenerator\Module::VERTICAL,
             $power,
             $mod->getMaxPower(),
             $mod->getOpenCircuitVoltage(),
             $mod->getVoltageMaxPower(),
             $mod->getTempCoefficientVoc(),
-            $mod->getShortCircuitCurrent()
+            $mod->getShortCircuitCurrent(),
+            $mod->getCellNumber()
         );
 
         $inverterLoader = new InverterLoader($this->manager('inverter'));
@@ -59,10 +61,39 @@ class GeneratorController extends AbstractController
 
         Combiner::combine($inverters, $module);
 
+        // Groups
+        //dump($module->groups()); die;
+        $groups = $module->groups();
+
         $strCalculator = $this->get('structure_calculator');
 
-        $profiles = $strCalculator->findStructure(['type' => 'perfil', 'subtype' => 'roman'], false);
+        $prof = $strCalculator->findStructure(['type' => 'perfil', 'subtype' => 'roman'], false);
+        $itemEntities = $strCalculator->loadItems();
 
+        $items = [];
+        foreach($itemEntities as $type => $itemEntity){
+            $items[$type] = Structure\Item::create($type);
+        }
+
+        //dump($items); die;
+
+        $profiles = [];
+        foreach ($prof as $pf){
+            $profiles[] = Structure\Profile::create($pf['code'], $pf['size']);
+        }
+
+        $project = new \AppBundle\Service\ProjectGenerator\Project();
+        $project->modules = [$module];
+        $project->roofType = 0;
+
+        $data = [
+            'profiles' => $profiles,
+            'items' => $items
+        ];
+
+        Structure::calculate($project, $data);
+
+        dump($project); die;
         dump($profiles); die;
         dump($strCalculator); die;
 

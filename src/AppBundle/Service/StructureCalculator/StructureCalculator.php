@@ -108,6 +108,17 @@ class StructureCalculator
         $this->projectManager->save($project);
     }
 
+    public function loadItems()
+    {
+        $items = [];
+        foreach ($this->mappingCriteria as $field => $criteria){
+            //$data[Calculator::ITEMS][$field] = $this->findStructure($criteria);
+            $items[$field] = $this->findStructure($criteria);
+        }
+
+        return $items;
+    }
+
     /**
      * @param array $criteria
      * @param bool $single
