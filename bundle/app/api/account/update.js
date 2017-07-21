@@ -21,7 +21,11 @@ const sendAccount = (account) => Sices.sendAccount({
   sendUser(account)
 })
 
-const create = ({ object }) => Isquik.getAccount(object.id).then(sendAccount)
+const create = ({ object }) => Isquik.getAccount(object.id).then((isquikAccount) => {
+  sicesUser = Sices.getUser(isquikAccount.owner)
+  sicesAccount = Sices.getAccount(sicesUser.owner)
+  return
+})
 
 module.exports = {
   create
