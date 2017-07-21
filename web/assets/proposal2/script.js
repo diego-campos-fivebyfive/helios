@@ -87,10 +87,6 @@ function setSession(btn) {
         session = $("#sessao-12-6-6").clone().removeAttr('id');
     }
 
-    //cofiguração de excluir session
-    var btDelSession = session.children()[0];
-    $(btDelSession).attr("onclick","delSessionModal(this)");
-
     cont = 0;
     for (n=1;n<session.children().length;n++){
         cont++;
@@ -112,45 +108,42 @@ function setSession(btn) {
 }
 
 function delPageModal(idPage) {
-    //bt Delete
-    var btDeleteInsideTheModal = $("#btDeleteInsideTheModal").clone().removeAttr('id');
-
-    for (n=0;n<$(btDeleteInsideTheModal).children().length;n++) {
-        var btD = $(btDeleteInsideTheModal).children()[n];
-        $(btD).attr("data-pg", "page_" + idPage);
-    }
-    //modal delete
-    var modalDel = $("#idModalDel");
-    $($(modalDel[0]).children().children().children()[1]).html('');
-    $($(modalDel[0]).children().children().children()[1]).append(btDeleteInsideTheModal);
-}
-
-function delPage(btn) {
-    var page = $(btn).data("pg");
-    var conj = $("#"+page+"").parent();
-    // console.log($(conj)[0]);
-    $(conj)[0].remove();
+    swal({
+        title: "Confirma exclusão?",
+        text: "Todo o conteúdo da página será perdido",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Confirmar",
+        cancelButtonText: "Cancelar",
+        closeOnConfirm: false
+    }, function () {
+        var conj = $("#page_"+idPage+"").parent();
+        $(conj)[0].remove();
+        sweetAlert("Sucesso!", "Página excluída com sucesso!", "success");
+        window.setTimeout(function(){
+            swal.close();
+        }, 1000);
+    });
 }
 
 function delSessionModal(btThis) {
-    //bt Delete
-    var bt = $(btThis);
-    var btDelSessionInsideModal = $("#btDelSessionInsideModal").clone().removeAttr('id');
-
-    var btD = $(btDelSessionInsideModal).children()[1];
-    $(btD).attr("onclick", "delSes("+bt+")");
-
-    //modal delete
-    var modalDel = $("#idModalDel");
-    $($(modalDel[0]).children().children().children()[1]).html('');
-    $($(modalDel[0]).children().children().children()[1]).append(btDelSessionInsideModal);
-}
-function delSes(btn) {
-    $(btn).parent().remove();
-   /* var decision = confirm("Deseja excluir esta sessão?");
-    if (decision === true){
-        $(btn).parent().remove();
-    }*/
+    swal({
+        title: "Confirma exclusão?",
+        text: "Todo o conteúdo da sessão será perdido",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Confirmar",
+        cancelButtonText: "Cancelar",
+        closeOnConfirm: false
+    }, function () {
+        $(btThis).parent().remove();
+        sweetAlert("Sucesso!", "Sessão excluída com sucesso!", "success");
+        window.setTimeout(function(){
+            swal.close();
+        }, 1000);
+    });
 }
 
 var generate_project = false;
