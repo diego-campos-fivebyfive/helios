@@ -132,6 +132,61 @@ interface InverterInterface
     public function getMpptNumber();
 
     /**
+     * @param $mpptConnections
+     * @return InverterInterface
+     */
+    public function setMpptConnections($mpptConnections);
+
+    /**
+     * @return int
+     */
+    public function getMpptConnections();
+
+    /**
+     * @param $connectionType
+     * @return InverterInterface
+     */
+    public function setConnectionType($connectionType);
+
+    /**
+     * @return string
+     */
+    public function getConnectionType();
+
+    /**
+     * @param $mpptParallel
+     * @return InverterInterface
+     */
+    public function setMpptParallel($mpptParallel);
+
+    /**
+     * @return bool
+     */
+    public function getMpptParallel();
+
+    /**
+     * @param $inProtection
+     * @return InverterInterface
+     */
+    public function setInProtection($inProtection);
+
+    /**
+     * @return bool
+     */
+    public function hasInProtection();
+
+    /**
+     * @param $phases
+     * @return InverterInterface
+     */
+    public function setPhases($phases);
+
+    /**
+     * @return int
+     */
+    public function getPhases();
+
+    /**
      * @param $dataSheet
      * @return ComponentInterface
      */

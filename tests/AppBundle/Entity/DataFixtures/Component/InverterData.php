@@ -29,6 +29,11 @@ class InverterData extends AbstractFixture implements OrderedFixtureInterface
             'mpptMax' => self::randomFloat(),
             'mpptMin' => self::randomFloat(),
             'mpptNumber' => self::randomFloat(),
+            'mpptConnections' => self::randomInt(5, 15),
+            'connectionType' => self::randomString(15),
+            'mpptParallel' => false,
+            'inProtection' => true,
+            'phases' => 5,
             'dataSheet' => self::randomString(15),
             'image' => self::randomString(10),
         ];

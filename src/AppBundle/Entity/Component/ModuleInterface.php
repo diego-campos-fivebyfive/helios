@@ -229,6 +229,17 @@ interface ModuleInterface
     public function getCellType();
 
     /**
+     * @param $connectionType
+     * @return ModuleInterface
+     */
+    public function setConnectionType($connectionType);
+
+    /**
+     * @return string
+     */
+    public function getConnectionType();
+
+    /**
      * @param $dataSheet
      * @return ComponentInterface
      */
