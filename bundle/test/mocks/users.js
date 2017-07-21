@@ -9,7 +9,8 @@ const users = [
     id: 2,
     name: 'Name DEF',
     status: 0,
-    owner: 101
+    owner: 101,
+    dangerousField: 'Mal'
   },
   {
     id: 3,
