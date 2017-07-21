@@ -144,6 +144,13 @@ class Module implements ModuleInterface
     private $width;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(name="height", type="float", nullable=true)
+     */
+    private $height;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="cell_type", type="string", length=100, nullable=true)
@@ -592,6 +599,24 @@ class Module implements ModuleInterface
     public function getWidth()
     {
         return $this->width;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setHeight($height)
+    {
+        $this->height = $height;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getHeight()
+    {
+        return $this->height;
     }
 
     /**
