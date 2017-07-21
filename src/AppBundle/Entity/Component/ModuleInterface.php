@@ -218,6 +218,17 @@ interface ModuleInterface
     public function getWidth();
 
     /**
+     * @param $height
+     * @return ModuleInterface
+     */
+    public function setHeight($height);
+
+    /**
+     * @return float
+     */
+    public function getHeight();
+
+    /**
      * @param $cellType
      * @return ModuleInterface
      */
