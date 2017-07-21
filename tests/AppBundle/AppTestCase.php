@@ -29,6 +29,7 @@ class AppTestCase extends WebTestCase
             Fixtures\Component\ModuleData::class,
             Fixtures\Component\InverterData::class,
             Fixtures\Component\StringBoxData::class,
+            Fixtures\Component\VarietyData::class,
             Fixtures\LoadProjectData::class,
             Fixtures\LoadProjectModuleData::class,
             Fixtures\LoadProjectInverterData::class,
