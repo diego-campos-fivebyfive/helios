@@ -4,39 +4,21 @@ namespace Tests\AppBundle\Entity;
 
 use AppBundle\Entity\Component\Inverter;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
+use Tests\AppBundle\AppTestCase;
 use Tests\AppBundle\Helpers\ObjectHelperTest;
 
 /**
  * Class InverterManagerTest
- * @group inverter_manager
+ * @group inverter
  */
-class InverterManagerTest extends WebTestCase
+class InverterManagerTest extends AppTestCase
 {
     use ObjectHelperTest;
 
     public function testDefault()
     {
-        $data = [
-            'code' => self::randomString(8),
-            'model' => self::randomString(4),
-            'maxDcPower' => self::randomFloat(),
-            'maxDcVoltage' => self::randomFloat(),
-            'nominalPower' => self::randomFloat(),
-            'mpptMaxDcCurrent' => self::randomFloat(),
-            'maxEfficiency' => self::randomFloat(),
-            'mpptMax' => self::randomFloat(),
-            'mpptMin' => self::randomFloat(),
-            'mpptNumber' => self::randomFloat(),
-            'dataSheet' => self::randomString(15),
-            'image' => self::randomString(10),
-        ];
+        $inverter = $this->getFixture('inverter');
 
-        $inverter = new Inverter();
-        $this->fluentSettersTest($inverter, $data);
-
-        $this->getContainer()->get('inverter_manager')->save($inverter);
-
-        $this->assertNotNull($inverter->getToken());
         $this->assertNotNull($inverter->getCreatedAt());
     }
 }
