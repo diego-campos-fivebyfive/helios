@@ -33,7 +33,7 @@ const sendProduct = (product) => {
   }
 }
 
-const send = ({ object }) => new Promise((resolve, reject) => {
+const create = ({ object }) => new Promise((resolve, reject) => {
   object.forEach((code) => Isquik.getProduct(code)
     .then(sendProduct)
     .then(resolve)
@@ -42,5 +42,5 @@ const send = ({ object }) => new Promise((resolve, reject) => {
 })
 
 module.exports = {
-  send
+  create
 }
