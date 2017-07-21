@@ -55,16 +55,17 @@ const getData = (uri) => request({ method: 'GET', uri }).then((x) => JSON.parse(
 
 app.post('/notifications', (req, res) => {
   const { callback, body } = req.body
-  let data
 
   switch (callback) {
     case 'product_validate':
-      data = getData(`${SICES_HOST}:${SICES_PORT}/api/${body.family}/${body.id}`)
+      const data = getData(`${SICES_HOST}:${SICES_PORT}/api/${body.family}/${body.id}`)
+      res.status(200).json({ callback, body: data })
       break
 
     case 'account_created':
       getData(`${SICES_HOST}:${SICES_PORT}/api/accounts/${body.id}`).then((account) => {
-          data = getData(`${SICES_HOST}:${SICES_PORT}/api/users/${account.owner}`)
+        const data = getData(`${SICES_HOST}:${SICES_PORT}/api/users/${account.owner}`)
+        res.status(200).json({ callback, body: data })
       })
       break
 
@@ -72,8 +73,6 @@ app.post('/notifications', (req, res) => {
       res.status(404).end('callback action not found')
       return
   }
-
-  res.status(200).json({ callback, body: data })
 })
 
 const sendNotifications = (req, res, notification) => {
