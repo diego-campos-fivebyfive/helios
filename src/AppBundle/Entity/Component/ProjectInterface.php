@@ -621,6 +621,23 @@ interface ProjectInterface
     public function getProjectStructures();
 
     /**
+     * @param ProjectVarietyInterface $projectVariety
+     * @return ProjectInterface
+     */
+    public function addProjectVariety(ProjectVarietyInterface $projectVariety);
+
+    /**
+     * @param ProjectVarietyInterface $projectVariety
+     * @return ProjectInterface
+     */
+    public function removeProjectVariety(ProjectVarietyInterface $projectVariety);
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getProjectVarieties();
+
+    /**
      * @param ProjectStructureInterface $projectTax
      * @return ProjectInterface
      */

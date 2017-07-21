@@ -104,19 +104,26 @@ class ProjectGenerator
         if(!$this->project->getStructureType())
             $this->exception('Structure Type is undefined');
 
+        // INVERTER COMBINATIONS
         Combiner::combine($this->project);
 
+        // CABLES AND CONNECTORS
+        /** @var \AppBundle\Manager\VarietyManager $varietyManager */
+        $varietyManager = $this->manager('variety');
+        $varietyCalculator = new VarietyCalculator($varietyManager);
+        $varietyCalculator->calculate($this->project);
+
+        // STRUCTURES
         /** @var \AppBundle\Manager\StructureManager $structureManager */
         $structureManager = $this->manager('structure');
         $structureCalculator = new StructureCalculator($structureManager);
-
         $structureCalculator->calculate($this->project);
 
+        // STRING BOXES
         /** @var \AppBundle\Manager\StringBoxManager $stringBoxManager */
         $stringBoxManager = $this->manager('string_box');
         $stringBoxLoader = new StringBoxLoader($stringBoxManager);
         $stringBoxCalculator = new StringBoxCalculator($stringBoxLoader);
-
         $stringBoxCalculator->calculate($this->project);
 
         $this->manager('project')->save($this->project);
