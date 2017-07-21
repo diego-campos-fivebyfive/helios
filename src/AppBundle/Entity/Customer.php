@@ -74,6 +74,14 @@ class Customer extends AbstractCustomer
     private $status;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="extraDocument", type="string", nullable=true)
+     */
+    protected $extraDocument;
+
+
+    /**
      * @var json
      *
      * @ORM\Column(name="attributes", type="json", nullable=true)
@@ -719,6 +727,25 @@ class Customer extends AbstractCustomer
     {
         return $this->status;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setExtraDocument($extraDocument)
+    {
+        $this->extraDocument = $extraDocument;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getExtraDocument()
+    {
+        return $this->extraDocument;
+    }
+
+
 
     /**
      * @inheritDoc
