@@ -83,6 +83,8 @@ class ProjectStringBox implements ProjectStringBoxInterface
      */
     public function setStringBox(StringBoxInterface $stringBox)
     {
-        return $this->stringBox;
+        $this->stringBox = $stringBox;
+
+        return $this;
     }
 }

@@ -4,13 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Component\ModuleInterface;
 use AppBundle\Entity\Component\ProjectInterface;
-use AppBundle\Entity\Component\ProjectStructure;
-use AppBundle\Entity\Component\StructureInterface;
-use AppBundle\Form\Extra\KitGeneratorType;
-use AppBundle\Service\StringBoxCalculator\StringBoxCalculator;
-use AppBundle\Util\KitGenerator\InverterCombiner\Module;
-use AppBundle\Util\KitGenerator\StructureCalculator;
-use GuzzleHttp\Client;
+use AppBundle\Service\ProjectGenerator\Combiner;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
@@ -32,6 +26,84 @@ class GeneratorController extends AbstractController
      */
     public function indexAction(Request $request)
     {
+        $project = $this->manager('project')->find(207);
+
+        $area = $project->getAreas()->first();
+
+        dump($area->getMetadata()); die;
+
+
+        for($i = 1; $i <= 1; $i++) {
+
+            $power = 15 * rand($i, 3);
+
+            //$power = $this->get('power_estimator')->estimate($project->getInfPower(), $project->getLatitude(), $project->getLongitude());
+
+            /** @var \AppBundle\Entity\Component\Module $mod */
+            $mod = $this->manager('module')->find(32433);
+
+            /** @var \AppBundle\Entity\Component\MakerInterface $maker */
+            $maker = $this->manager('maker')->find(60627);
+            $roofType = 1;
+            $position = 0;
+
+            /** @var \AppBundle\Service\ProjectGenerator\ProjectGenerator $generator */
+            $generator = $this->get('project_generator');
+
+            /** @var ProjectInterface $project */
+            $project = $this->manager('project')->create();
+
+            $project
+                ->setStructureType(ProjectInterface::STRUCTURE_SICES)
+                ->setRoofType($roofType);
+
+            $project = $generator
+                ->project($project)
+                ->power($power)
+                ->module($mod, $position)
+                ->maker($maker)
+                ->generate();
+
+            dump('Projeto Gerado: ' . $project->getId());
+        }
+
+        die;
+
+        $strCalculator = $this->get('structure_calculator');
+        $prof = $strCalculator->findStructure(['type' => 'perfil', 'subtype' => 'roman'], false);
+
+        $profiles = [];
+        foreach ($prof as $pf){
+            $profiles[] = Structure\Profile::create($pf['code'], $pf['size']);
+        }
+
+        $itemEntities = $strCalculator->loadItems();
+
+        $items = [];
+        foreach($itemEntities as $type => $itemEntity){
+            $items[$type] = Structure\Item::create($type, $itemEntity['size']);
+        }
+
+        $project = Project::create(
+            $roofType,
+            $inverters,
+            [$module],
+            $profiles,
+            $items
+        );
+
+        Combiner::combine($project);
+        Structure::calculate($project);
+
+        // StringBox
+        $loader = new StringBoxLoader($this->manager('string_box'));
+
+        $calculator = new Calculator();
+        $calculator->setLoader($loader);
+        $calculator->calculate($project);
+
+        dump($project); die;
+
         //$this->previewPower(1000, -15.79, -47.88);
         //$this->generateJson();
         //$this->calculateStructure();

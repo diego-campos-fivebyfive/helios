@@ -1,26 +1,19 @@
 'use strict'
 const request = require('request-promise')
 const { app, config } = require('../config')
-const { SICES_API } = config
+const { sices } = config
 
-const sendRequest = (uri, data) => {
-  let options = {
-    method: 'POST',
-    body: data,
-    json: true,
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': '123'
-    }
-  }
-  options = Object.assign(options, { uri })
-  return request(options)
-}
+const sendRequest = (uri, data) => request({
+  headers: { 'Content-Type': 'application/json' },
+  method: 'POST',
+  json: data,
+  uri
+})
 
-const sendInveter = (product) => sendRequest(`${SICES_API}/inverters`, product)
-const sendStructure = (product) => sendRequest(`${SICES_API}/structures`, product)
-const sendModule = (product) => sendRequest(`${SICES_API}/modules`, product)
-const sendMemorial = (memorial) => sendRequest(`${SICES_API}/memorials`, memorial)
+const sendInveter = (product) => sendRequest(`${sices.uri}/inverters`, product)
+const sendStructure = (product) => sendRequest(`${sices.uri}/structures`, product)
+const sendModule = (product) => sendRequest(`${sices.uri}/modules`, product)
+const sendMemorial = (memorial) => sendRequest(`${sices.uri}/memorials`, memorial)
 
 module.exports = {
   sendInveter,

@@ -85,6 +85,7 @@
             background-color: #1a7bb9 !important;
             color: white;
         }
+
     </style>
     <link rel="stylesheet" href="{{ asset('assets/sices.css') }}">
 </head>
@@ -109,12 +110,12 @@
                         <span class="clear">
 
                             <span class="block m-t-xs">
-                                <strong class="font-bold"> {{ user.name }} </strong>
+                                <strong class="font-bold"  style="color: #ffffff !important;"> {{ user.name }} </strong>
                             </span>
 
                             {% if companyName %}
-                                <span class="text-muted text-xs block">
-                                {{ companyName }}
+                                <span class="text-muted text-xs block" style="color: #ffffff !important;">
+                                {{ companyName }}minha impresa
                                     {#<b class="caret"></b>#}
                             </span>
                             {% endif %}

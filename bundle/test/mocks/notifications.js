@@ -12,13 +12,13 @@ const notifications = {
     }
   },
   userCreated: {
-    callback: 'user_created',
+    callback: 'account_created',
     body: {
       id: 1
     }
   },
   userApproved: {
-    callback: 'user_approved',
+    callback: 'account_approved',
     body: {
       id: 1
     }
