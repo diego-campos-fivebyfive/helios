@@ -4,7 +4,19 @@ const Isquik = require('../../models/isquik')
 
 const sendUser = (account) => Sices.sendUser({
   name: account.name,
-  owner: account.owner,
+  firstname: account.firstname,
+  lastname: account.lastname,
+  email: account.email,
+  phone: account.phone,
+  document: account.document,
+  extraDocument: account.extraDocument,
+  state: account.state,
+  city: account.city,
+  contact: account.contact,
+  district: account.district,
+  street: account.street,
+  number: account.number,
+  postcode: account.postcode,
   status: account.status
 })
 .then(status => {
@@ -13,7 +25,19 @@ const sendUser = (account) => Sices.sendUser({
 
 const sendAccount = (account) => Sices.sendAccount({
   name: account.name,
-  owner: account.owner,
+  firstname: account.firstname,
+  lastname: account.lastname,
+  email: account.email,
+  phone: account.phone,
+  document: account.document,
+  extraDocument: account.extraDocument,
+  state: account.state,
+  city: account.city,
+  contact: account.contact,
+  district: account.district,
+  street: account.street,
+  number: account.number,
+  postcode: account.postcode,
   status: account.status
 })
 .then(status => {

@@ -30,8 +30,8 @@ class AccountsController extends FOSRestController
                 ->setStreet($data['street'])
                 ->setNumber($data['number'])
                 ->setPostcode($data['postcode'])
+                ->setStatus($data['status'])
                 ->setContext(Customer::CONTEXT_ACCOUNT);
-            //dump($account);die;
             $accountManager->save($account);
 
         $view = View::create($data);
