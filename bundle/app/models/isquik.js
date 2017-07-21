@@ -1,7 +1,7 @@
 'use strict'
 const Google = require('./google')
 const request = require('request-promise')
-const { app, config } = require('../config')
+const { config } = require('../config')
 const { isquik } = config
 
 const getRequest = (uri) => Google.getAuthentication().then((auth) => (
