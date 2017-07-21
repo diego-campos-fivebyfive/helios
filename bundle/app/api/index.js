@@ -2,9 +2,9 @@
 const { app } = require('../config')
 const { router, sendResponse } = app
 
-const product = require('./product')
-const memorial = require('./memorial')
 const account = require('./account')
+const memorial = require('./memorial')
+const product = require('./product')
 
 router.post('/api/v1/notifications', ((request, response) => {
 
@@ -13,23 +13,23 @@ router.post('/api/v1/notifications', ((request, response) => {
   let action
 
   switch (callback) {
-    case 'product_created':
-      action = product.send
-      requestCopy.body = body.codes
+    case 'account_created':
+      action = account.create
+      requestCopy.body = body
       break
 
     case 'memorial_created':
-      action = memorial.send
+      action = memorial.create
       requestCopy.body = body
       break
 
-    case 'account_created':
-      action = account.send
-      requestCopy.body = body
+    case 'product_created':
+      action = product.create
+      requestCopy.body = body.codes
       break
 
     default:
-      response.status(404).end()
+      response.status(404).send('callback action not found').end()
       return
   }
 

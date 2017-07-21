@@ -2,22 +2,16 @@
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
 
-const splitMemorial = (object) => Sices.sendMemorial({
-  version: object.version,
-  status: object.status,
-  start_at: object.start_at,
-  end_at: object.end_at,
-  range: object.products
+const sendMemorial = (memorial) => Sices.sendMemorial({
+  version: memorial.version,
+  status: memorial.status,
+  start_at: memorial.start_at,
+  end_at: memorial.end_at,
+  range: memorial.products
 })
 
-const send = ({ object }) => {
-  const memorial = Isquik.getMemorial(object.id)
-  return memorial.then((data) => new Promise((resolve) => {
-    splitMemorial(data)
-    resolve(200)
-  }))
-}
+const create = ({ object }) => Isquik.getMemorial(object.id).then(sendMemorial)
 
 module.exports = {
-  send
+  create
 }

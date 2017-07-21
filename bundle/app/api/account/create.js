@@ -2,18 +2,27 @@
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
 
-const send = ({ object }) => new Promise((resolve, reject) => {
-  Isquik.getAccount(object.id).then((data) => {
-    Sices.sendAccount({
-      name: data.name,
-      owner: data.owner,
-      status: data.status
-    })
-    .then(resolve)
-    .catch(reject)
-  })
+const sendUser = (account) => Sices.sendUser({
+  name: account.name,
+  owner: account.owner,
+  status: account.status
+})
+.then(status => {
+  return (status != 304) ? 'Can not create User' : 'User and Account created successfully'
 })
 
+const sendAccount = (account) => Sices.sendAccount({
+  name: account.name,
+  owner: account.owner,
+  status: account.status
+})
+.then(status => {
+  if (status != 304) return 'Can not create Account'
+  sendUser(account)
+})
+
+const create = ({ object }) => Isquik.getAccount(object.id).then(sendAccount)
+
 module.exports = {
-  send
+  create
 }
