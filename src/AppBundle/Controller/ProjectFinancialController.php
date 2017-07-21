@@ -42,8 +42,8 @@ class ProjectFinancialController extends AbstractController
         /**
          * TODO: Calculate cost prices
          */
-        //$precifier = new ProjectPrecifier($this->manager('project'));
-        //$precifier->priceCost($project);
+        $precifier = new ProjectPrecifier($this->manager('project'));
+        $precifier->priceCost($project);
 
         /**
          * TODO: Calculate sale prices
