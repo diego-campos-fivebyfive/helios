@@ -284,6 +284,13 @@ class Project implements ProjectInterface
     /**
      * @var ArrayCollection
      *
+     * @ORM\OneToMany(targetEntity="ProjectVariety", mappedBy="project", cascade={"persist", "remove"})
+     */
+    private $projectVarieties;
+
+    /**
+     * @var ArrayCollection
+     *
      * @ORM\OneToMany(targetEntity="ProjectTax", mappedBy="project", indexBy="project", cascade={"persist", "remove"})
      */
     private $projectTaxes;
@@ -326,8 +333,9 @@ class Project implements ProjectInterface
         $this->projectModules        = new ArrayCollection();
         $this->projectInverters      = new ArrayCollection();
         $this->projectStructures     = new ArrayCollection();
+        $this->projectVarieties      = new ArrayCollection();
         $this->projectExtras         = new ArrayCollection();
-        $this->projectStringBoxes     = new ArrayCollection();
+        $this->projectStringBoxes    = new ArrayCollection();
         $this->projectTaxes          = new ArrayCollection();
         $this->invoiceBasePrice      = 0;
         $this->deliveryBasePrice     = 0;
@@ -1325,6 +1333,42 @@ class Project implements ProjectInterface
     public function getProjectStructures()
     {
         return $this->projectStructures;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function addProjectVariety(ProjectVarietyInterface $projectVariety)
+    {
+        if(!$this->projectVarieties->contains($projectVariety)){
+
+            $this->projectVarieties->add($projectVariety);
+
+            if(!$projectVariety->getProject())
+                $projectVariety->setProject($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeProjectVariety(ProjectVarietyInterface $projectVariety)
+    {
+        if($this->projectVarieties->contains($projectVariety)){
+            $this->projectVarieties->removeElement($projectVariety);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getProjectVarieties()
+    {
+        return $this->projectVarieties;
     }
 
     /**

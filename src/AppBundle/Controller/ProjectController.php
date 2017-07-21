@@ -112,32 +112,10 @@ class ProjectController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
 
-            /** @var \AppBundle\Entity\Component\ModuleInterface $module */
-            //$module = $this->manager('module')->find(32433);
-            //$kwh = (int) $request->request->get('consumption');
-            //$project->setInfPower((int) $project->getInfConsumption());
-
             $power = $this->get('power_estimator')->estimate($project->getInfConsumption(), $project->getLatitude(), $project->getLongitude());
 
-            //dump($power); die;
-            //$inverters = $this->get('inverter_combinator')->combine($module, $power, 60627);
-            //$stringBoxes = $this->get('string_box_calculator')->calculate($inverters);
-
-            /** @var \AppBundle\Service\ProjectGenerator\ProjectGenerator $projectGenerator */
-            //$projectGenerator = $this->get('project_generator');
-            //$projectGenerator->project($project);
-
-            /*$project = $projectGenerator->fromCombination([
-                'inverters' => $inverters,
-                'module' => $module,
-                'string_boxes' => $stringBoxes
-            ]);
-
-            $this->get('structure_calculator')->calculate($project);
-            $this->get('project_manipulator')->generateAreas($project);*/
-
-            /** @var \AppBundle\Entity\Component\Module $mod */
-            $mod = $this->manager('module')->find(32433);
+            /** @var \AppBundle\Entity\Component\Module $module */
+            $module = $this->manager('module')->find(32433);
 
             /** @var \AppBundle\Entity\Component\MakerInterface $maker */
             $maker = $this->manager('maker')->find(60627);
@@ -157,7 +135,7 @@ class ProjectController extends AbstractController
             $project = $generator
                 ->project($project)
                 ->power($power)
-                ->module($mod, $position)
+                ->module($module, $position)
                 ->maker($maker)
                 ->generate();
 

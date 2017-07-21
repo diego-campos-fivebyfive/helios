@@ -20,7 +20,7 @@ class GeneratorController extends AbstractController
      */
     public function xhrAction(Request $request)
     {
-        $json = "{}";
+        $json = '{}';
         $components = (json_decode($json, true));
         $makerManager = $this->manager('maker');
         $inverterManager = $this->manager('inverter');
@@ -28,13 +28,13 @@ class GeneratorController extends AbstractController
         $makersNF = '';
         foreach ($components['app_component_inverter'] as $data) {
 
-            //$maker = $makerManager->find($data['maker']);
+            $maker = $makerManager->find($data['maker']);
 
             /** @var InverterInterface $inverter */
-            //$inverter = $inverterManager->create();
+            $inverter = $inverterManager->create();
 
-            /*$inverter
-                ->setCode(uniqid(time()))
+            $inverter
+                ->setCode(strtoupper(uniqid(time())))
                 ->setModel($data['model'])
                 ->setMaxDcPower($data['max_dc_power'])
                 ->setMaxDcVoltage($data['max_dc_voltage'])
@@ -52,8 +52,11 @@ class GeneratorController extends AbstractController
                 ->setMaker($maker)
             ;
 
-            $inverterManager->save($inverter);*/
+            //$inverterManager->save($inverter);
+            //dump($inverter->getId());
         }
+
+        die;
     }
 
     /**
