@@ -75,15 +75,26 @@ class RegisterController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $data = $form->getData();
+
             /** @var AccountInterface $account */
             $account = $accountManager->create();
             /** @var MemberInterface $member */
             $member = $accountManager->create();
+
+            /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+            $userManager = $this->get('fos_user.user_manager');
+            $user = $userManager->createUser();
+            $user->setEmail($data['email'])
+                 ->setUsername($data['email'])
+                 ->setPlainPassword(uniqid())
+                 ->addRole(UserInterface::ROLE_OWNER_MASTER);
+
             $member->setConfirmationToken($this->getTokenGenerator()->generateToken())
                 ->setFirstname($data['contact'])
                 ->setPhone($data['phone'])
                 ->setEmail($data['email'])
-                ->setContext(BusinessInterface::CONTEXT_MEMBER);
+                ->setContext(BusinessInterface::CONTEXT_MEMBER)
+                ->setUser($user);
 
             $account->setConfirmationToken($this->getTokenGenerator()->generateToken())
                      ->setFirstName($data['firstname'])
@@ -106,9 +117,9 @@ class RegisterController extends AbstractController
                 'body' => ['id' => $account->getId()]
             ]);
 
-            $this->setNotice('Cadastro realizado com sucesso, verifique seu e-mail !');
+            $this->setNotice('Cadastro realizado com sucesso, verifique seu e-mail!');
 
-            return $this->redirectToRoute('register.pre_register');
+            return $this->redirectToRoute('app_register_link');
         }
 
         return $this->render('register.pre_register',[
