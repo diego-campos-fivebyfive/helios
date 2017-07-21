@@ -15,7 +15,6 @@ const ISQUIK_PORT = process.env.CES_ISQUIK_PORT
 
 const app = express()
 app.listen(ISQUIK_PORT)
-
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -56,24 +55,24 @@ const getData = (uri) => request({ method: 'GET', uri }).then((x) => JSON.parse(
 
 app.post('/notifications', (req, res) => {
   const { callback, body } = req.body
-  let data
 
   switch (callback) {
     case 'product_validate':
-      data = getData(`${SICES_HOST}:${SICES_PORT}/api/${body.family}/${body.id}`)
+      const data = getData(`${SICES_HOST}:${SICES_PORT}/api/${body.family}/${body.id}`)
+      res.status(200).json({ callback, body: data })
       break
 
     case 'account_created':
-      const accounts = getData(`${SICES_HOST}:${SICES_PORT}/api/accounts/${body.id}`)
-      data = accounts.users.map((x) => getData(`${SICES_HOST}:${SICES_PORT}/api/users/${body.id}`))
+      getData(`${SICES_HOST}:${SICES_PORT}/api/accounts/${body.id}`).then((account) => {
+        const data = getData(`${SICES_HOST}:${SICES_PORT}/api/users/${account.owner}`)
+        res.status(200).json({ callback, body: data })
+      })
       break
 
     default:
       res.status(404).end('callback action not found')
       return
   }
-
-  res.status(200).json({ callback, body: data })
 })
 
 const sendNotifications = (req, res, notification) => {

@@ -17,9 +17,6 @@ use AppBundle\Model\Snapshot;
  */
 class Structure implements StructureInterface
 {
-
-    use TokenizerTrait;
-
      /**
      * @var integer
      *

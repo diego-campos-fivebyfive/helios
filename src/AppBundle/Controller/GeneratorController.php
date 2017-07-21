@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Component\InverterInterface;
 use AppBundle\Entity\Component\ModuleInterface;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Service\ProjectGenerator\Combiner;
@@ -14,11 +15,44 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 class GeneratorController extends AbstractController
 {
     /**
-     * @Route("/xhr", name="generator_xhr")
+     * @Route("/", name="generator_xhr")
      */
     public function xhrAction(Request $request)
     {
-        return $this->json();
+        $json = "{}";
+        $components = (json_decode($json, true));
+        $makerManager = $this->manager('maker');
+        $inverterManager = $this->manager('inverter');
+
+        $makersNF = '';
+        foreach ($components['app_component_inverter'] as $data) {
+
+            //$maker = $makerManager->find($data['maker']);
+
+            /** @var InverterInterface $inverter */
+            //$inverter = $inverterManager->create();
+
+            /*$inverter
+                ->setCode(uniqid(time()))
+                ->setModel($data['model'])
+                ->setMaxDcPower($data['max_dc_power'])
+                ->setMaxDcVoltage($data['max_dc_voltage'])
+                ->setNominalPower($data['nominal_power'])
+                ->setMpptMaxDcCurrent($data['mppt_max_dc_current'])
+                ->setMaxEfficiency($data['max_efficiency'])
+                ->setMpptMax($data['mppt_max'])
+                ->setMpptMin($data['mppt_min'])
+                ->setMpptNumber($data['mppt_number'])
+                ->setMpptConnections($data['number_con_mppt'])
+                ->setConnectionType($data['con_type'])
+                ->setMpptParallel($data['mppt_parallel'])
+                ->setInProtection($data['in_protections'])
+                ->setPhases($data['phase_number'])
+                ->setMaker($maker)
+            ;
+
+            $inverterManager->save($inverter);*/
+        }
     }
 
     /**
@@ -30,10 +64,11 @@ class GeneratorController extends AbstractController
 
         $area = $project->getAreas()->first();
 
-        dump($area->getMetadata()); die;
+        dump($area->getMetadata());
+        die;
 
 
-        for($i = 1; $i <= 1; $i++) {
+        for ($i = 1; $i <= 1; $i++) {
 
             $power = 15 * rand($i, 3);
 
@@ -73,14 +108,14 @@ class GeneratorController extends AbstractController
         $prof = $strCalculator->findStructure(['type' => 'perfil', 'subtype' => 'roman'], false);
 
         $profiles = [];
-        foreach ($prof as $pf){
+        foreach ($prof as $pf) {
             $profiles[] = Structure\Profile::create($pf['code'], $pf['size']);
         }
 
         $itemEntities = $strCalculator->loadItems();
 
         $items = [];
-        foreach($itemEntities as $type => $itemEntity){
+        foreach ($itemEntities as $type => $itemEntity) {
             $items[$type] = Structure\Item::create($type, $itemEntity['size']);
         }
 
@@ -102,7 +137,8 @@ class GeneratorController extends AbstractController
         $calculator->setLoader($loader);
         $calculator->calculate($project);
 
-        dump($project); die;
+        dump($project);
+        die;
 
         //$this->previewPower(1000, -15.79, -47.88);
         //$this->generateJson();
@@ -136,8 +172,8 @@ class GeneratorController extends AbstractController
         $stringBoxes = $stringBoxCalculator->calculate($inverters);
 
 
-
-        dump($stringBoxes); die;
+        dump($stringBoxes);
+        die;
     }
 
     private function calculateStringBoxes(array $inverters)
@@ -218,7 +254,8 @@ class GeneratorController extends AbstractController
         ];
 
 
-        dump(json_encode($data)); die;
+        dump(json_encode($data));
+        die;
     }
 
 }
