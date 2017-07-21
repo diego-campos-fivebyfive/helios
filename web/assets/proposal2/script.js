@@ -210,13 +210,13 @@ function loadDatas() {
 }
 
 $('#saveProposal').click(function () {
-    //console.log($('#contentProposal').html());
+    //console.log($('#bloco').html());
     $.ajax({
         url:$(this).data('url'),
         method:'post',
-        data:{content:$('#contentProposal').html()},
+        data:{content:$('#bloco').html()},
         complete:function (xhr) {
-            alert(xhr.status);
+            alert(xhr);
         }
     })
 });
