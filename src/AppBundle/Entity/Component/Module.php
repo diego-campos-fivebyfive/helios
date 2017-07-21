@@ -153,6 +153,13 @@ class Module implements ModuleInterface
     /**
      * @var string
      *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $connectionType;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="data_sheet", type="string", nullable=true)
      */
     protected $dataSheet;
@@ -463,6 +470,24 @@ class Module implements ModuleInterface
     public function getCellNumber()
     {
         return $this->cellNumber;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setConnectionType($connectionType)
+    {
+        $this->connectionType = $connectionType;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getConnectionType()
+    {
+        return $this->connectionType;
     }
 
     /**
