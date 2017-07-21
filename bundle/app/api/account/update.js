@@ -2,25 +2,27 @@
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
 
-const splitAccount = (object) => ({
-  name: object.name,
-  status: object.status,
-  sices_account: object.sices_account,
-  sices_user: object.sices_user
+const sendUser = (account) => Sices.sendUser({
+  name: account.name,
+  owner: account.owner,
+  status: account.status
+})
+.then(status => {
+  if (status == 304) return 'Can not create User'
 })
 
-const send = ({ object }) => {
-  let isquikAccount = Isquik.getAccount(object.id)
-  isquikAccount = splitAccount(isquikAccount)
+const sendAccount = (account) => Sices.sendAccount({
+  name: account.name,
+  owner: account.owner,
+  status: account.status
+})
+.then(status => {
+  if (status == 304) return 'Can not create Account'
+  sendUser(account)
+})
 
-  const sicesAccount = Sices.getAccount(isquikAccount.sices_account)
-  const sicesUsers = sicesAccount.users.map((userID) => Sices.getUser(userID))
-
-  return account.then((data) => new Promise((resolve) => {
-    resolve(200)
-  }))
-}
+const update = ({ object }) => Isquik.getAccount(object.id).then(sendAccount)
 
 module.exports = {
-  send
+  update
 }

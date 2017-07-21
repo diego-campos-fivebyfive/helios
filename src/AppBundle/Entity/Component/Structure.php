@@ -82,7 +82,6 @@ class Structure implements StructureInterface
     public function __construct()
     {
         $this->status = self::DISABLE;
-        $this->generateToken();
     }
 
 

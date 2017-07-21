@@ -2,22 +2,22 @@
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
 
-const splitModule = (object) => ({
-  code: object.code,
-  model: object.description
+const splitModule = (product) => ({
+  code: product.code,
+  model: product.description
 })
 
-const splitInveter = (object) => ({
-  code: object.code,
-  model: object.description
+const splitInveter = (product) => ({
+  code: product.code,
+  model: product.description
 })
 
-const splitStructure = (object) => ({
-  code: object.code,
-  description: object.description
+const splitStructure = (product) => ({
+  code: product.code,
+  description: product.description
 })
 
-const splitProduct = (product) => {
+const sendProduct = (product) => {
   switch (product.family) {
     case 'module':
       const module = splitModule(product)
@@ -33,16 +33,14 @@ const splitProduct = (product) => {
   }
 }
 
-const send = ({ object }) => {
-  return new Promise((resolve, reject) => {
-    object.forEach((productCode) => {
-      const product = Isquik.getProduct(productCode)
-      product.then((data) => splitProduct(data))
-    })
-    resolve(200)
-  })
-}
+const create = ({ object }) => new Promise((resolve, reject) => {
+  object.forEach((code) => Isquik.getProduct(code)
+    .then(sendProduct)
+    .then(resolve)
+    .catch(reject)
+  )
+})
 
 module.exports = {
-  send
+  create
 }

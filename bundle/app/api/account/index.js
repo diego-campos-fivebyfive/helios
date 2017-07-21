@@ -1,8 +1,8 @@
 'use strict'
-const { send } = require('./create')
+const { create } = require('./create')
 
 const account = {
-  send
+  create
 }
 
 module.exports = account

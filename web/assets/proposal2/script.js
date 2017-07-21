@@ -108,31 +108,42 @@ function setSession(btn) {
 }
 
 function delPageModal(idPage) {
-    //bt Delete
-    var btDeleteInsideTheModal = $("#btDeleteInsideTheModal").clone().removeAttr('id');
-
-    for (n=0;n<$(btDeleteInsideTheModal).children().length;n++) {
-        var btD = $(btDeleteInsideTheModal).children()[n];
-        $(btD).attr("data-pg", "page_" + idPage);
-    }
-    //modal delete
-    var modalDel = $("#idModalDel");
-    $($(modalDel[0]).children().children().children()[1]).html('');
-    $($(modalDel[0]).children().children().children()[1]).append(btDeleteInsideTheModal);
+    swal({
+        title: "Confirma exclusão?",
+        text: "Todo o conteúdo da página será perdido",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Confirmar",
+        cancelButtonText: "Cancelar",
+        closeOnConfirm: false
+    }, function () {
+        var conj = $("#page_"+idPage+"").parent();
+        $(conj)[0].remove();
+        sweetAlert("Sucesso!", "Página excluída com sucesso!", "success");
+        window.setTimeout(function(){
+            swal.close();
+        }, 1000);
+    });
 }
 
-function delPage(btn) {
-    var page = $(btn).data("pg");
-    var conj = $("#"+page+"").parent();
-    // console.log($(conj)[0]);
-    $(conj)[0].remove();
-}
-
-function delSes(btn) {
-    var decision = confirm("Deseja excluir esta sessão?");
-    if (decision === true){
-        $(btn).parent().remove();
-    }
+function delSessionModal(btThis) {
+    swal({
+        title: "Confirma exclusão?",
+        text: "Todo o conteúdo da sessão será perdido",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Confirmar",
+        cancelButtonText: "Cancelar",
+        closeOnConfirm: false
+    }, function () {
+        $(btThis).parent().remove();
+        sweetAlert("Sucesso!", "Sessão excluída com sucesso!", "success");
+        window.setTimeout(function(){
+            swal.close();
+        }, 1000);
+    });
 }
 
 var generate_project = false;
@@ -199,13 +210,13 @@ function loadDatas() {
 }
 
 $('#saveProposal').click(function () {
-    //console.log($('#contentProposal').html());
+    //console.log($('#bloco').html());
     $.ajax({
         url:$(this).data('url'),
         method:'post',
-        data:{content:$('#contentProposal').html()},
+        data:{content:$('#bloco').html()},
         complete:function (xhr) {
-            alert(xhr.status);
+            alert(xhr);
         }
     })
 });

@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Component\InverterInterface;
 use AppBundle\Entity\Component\ModuleInterface;
 use AppBundle\Entity\Component\ProjectInterface;
+use AppBundle\Entity\Pricing\Range;
 use AppBundle\Service\ProjectGenerator\Combiner;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -19,7 +20,7 @@ class GeneratorController extends AbstractController
      */
     public function xhrAction(Request $request)
     {
-        $json = "{}";
+        $json = '{}';
         $components = (json_decode($json, true));
         $makerManager = $this->manager('maker');
         $inverterManager = $this->manager('inverter');
@@ -27,13 +28,13 @@ class GeneratorController extends AbstractController
         $makersNF = '';
         foreach ($components['app_component_inverter'] as $data) {
 
-            //$maker = $makerManager->find($data['maker']);
+            $maker = $makerManager->find($data['maker']);
 
             /** @var InverterInterface $inverter */
-            //$inverter = $inverterManager->create();
+            $inverter = $inverterManager->create();
 
-            /*$inverter
-                ->setCode(uniqid(time()))
+            $inverter
+                ->setCode(strtoupper(uniqid(time())))
                 ->setModel($data['model'])
                 ->setMaxDcPower($data['max_dc_power'])
                 ->setMaxDcVoltage($data['max_dc_voltage'])
@@ -51,8 +52,126 @@ class GeneratorController extends AbstractController
                 ->setMaker($maker)
             ;
 
-            $inverterManager->save($inverter);*/
+            //$inverterManager->save($inverter);
+            //dump($inverter->getId());
         }
+
+        die;
+    }
+
+    /**
+     * @Route("/ranges")
+     */
+    public function rangesAction()
+    {
+        $getCode = function () {
+            return strtoupper(substr(md5(uniqid(time())), 0, 10));
+        };
+
+        $codes = [];
+
+        // MODULES
+        $moduleManager = $this->manager('module');
+        $modules = $moduleManager->findAll();
+
+        foreach ($modules as $module) {
+            if (null == $code = $module->getCode()) {
+                $code = $getCode();
+                $module->setCode($code);
+                $moduleManager->save($module);
+            }
+            $codes[] = $code;
+        }
+
+        // INVERTERS
+        $inverterManager = $this->manager('inverter');
+        $inverters = $inverterManager->findAll();
+
+        foreach ($inverters as $inverter) {
+            if (null == $code = $inverter->getCode()) {
+                $code = $getCode();
+                $inverter->setCode($code);
+                $inverterManager->save($inverter);
+            }
+            $codes[] = $code;
+        }
+
+        // STRUCTURES
+        $structureManager = $this->manager('structure');
+        $structures = $structureManager->findAll();
+        foreach ($structures as $structure) {
+            if (null == $code = $structure->getCode()) {
+                $code = $getCode();
+                $structure->setCode($code);
+                $structureManager->save($structure);
+            }
+            $codes[] = $code;
+        }
+
+        // STRING_BOXES
+        $stringBoxManager = $this->manager('string_box');
+        $stringBoxes = $stringBoxManager->findAll();
+        foreach ($stringBoxes as $stringBox) {
+            if (null == $code = $stringBox->getCode()) {
+                $code = $getCode();
+                $stringBox->setCode($code);
+                $stringBoxManager->save($stringBox);
+            }
+            $codes[] = $code;
+        }
+
+        // VARIETIES
+        $varietyManager = $this->manager('string_box');
+        $varieties = $varietyManager->findAll();
+        foreach ($varieties as $variety) {
+            if (null == $code = $variety->getCode()) {
+                $code = $getCode();
+                $variety->setCode($code);
+                $varietyManager->save($variety);
+            }
+            $codes[] = $code;
+        }
+
+        // MEMORIAL + RANGES
+        $memorialManager = $this->manager('memorial');
+        $memorial = $memorialManager->findOneBy(['status' => 1]);
+
+        if (!$memorial) {
+            $memorial = $memorialManager->create();
+
+            $memorial
+                ->setStartAt(new \DateTime('-15 days'))
+                ->setEndAt(new \DateTime('15 days'))
+                ->setStatus(1);
+
+            $memorialManager->save($memorial);
+        }
+
+        $rangeManager = $this->manager('range');
+
+        foreach ($codes as $code) {
+
+            if(null == $range = $rangeManager->findOneBy(['code' => $code, 'memorial' => $memorial])){
+
+                $range = $rangeManager->create();
+                $range
+                    ->setMemorial($memorial)
+                    ->setLevel('platinum')
+                    ->setInitialPower(20)
+                    ->setFinalPower(500)
+                    ->setMarkup(.1)
+                    ->setCode($code)
+                    ->setPrice(1000);
+
+                $memorial->addRange($range);
+
+                $rangeManager->save($range);
+            }
+        }
+
+        //$memorialManager->save($memorial);
+        dump($memorial);
+        die;
     }
 
     /**
