@@ -91,8 +91,8 @@ class ProjectManipulator
                 ->setProjectModule($projectModule)
                 ->setInclination($inclination)
                 ->setOrientation($orientation)
-                ->setStringNumber(1)
-                ->setModuleString($modulePerString)
+                ->setStringNumber($projectInverter->getParallel())
+                ->setModuleString($projectInverter->getSerial())
             ;
 
             $projectInverter

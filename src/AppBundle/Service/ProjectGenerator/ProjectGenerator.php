@@ -2,6 +2,8 @@
 
 namespace AppBundle\Service\ProjectGenerator;
 
+use AppBundle\Entity\Component\MakerInterface;
+use AppBundle\Entity\Component\ModuleInterface;
 use AppBundle\Entity\Component\ProjectExtra;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverter;
@@ -10,6 +12,10 @@ use AppBundle\Entity\Component\ProjectStringBox;
 use AppBundle\Entity\Component\ProjectStructure;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Class ProjectGenerator
+ * @author Claudinei Machado <cjchamado@gmail.com>
+ */
 class ProjectGenerator
 {
     /**
@@ -28,6 +34,94 @@ class ProjectGenerator
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+        $this->project = $this->manager('project')->create();
+    }
+
+    /**
+     * @param $power
+     * @return $this
+     */
+    public function power($power)
+    {
+        $this->project->setInfPower($power);
+
+        return $this;
+    }
+
+    public function consumption($consumption)
+    {
+        // TODO: CALL POWER ESTIMATOR HERE!
+        dump($consumption); die;
+    }
+
+    public function module(ModuleInterface $module, $position = 0)
+    {
+        $projectModule = new ProjectModule();
+        $projectModule
+            ->setModule($module)
+            ->setProject($this->project)
+            ->setPosition($position)
+        ;
+
+        return $this;
+    }
+
+    public function maker(MakerInterface $maker)
+    {
+        if(!$maker->isMakerInverter())
+            $this->exception('Invalid maker');
+
+        /** @var \AppBundle\Manager\InverterManager $manager */
+        $manager = $this->manager('inverter');
+        $loader = new InverterLoader($manager);
+
+        $inverters = $loader->maker($maker)->project($this->project)->get();
+
+        foreach ($inverters as $inverter){
+            $projectInverter = new ProjectInverter();
+            $projectInverter
+                ->setProject($this->project)
+                ->setInverter($inverter)
+                ->setQuantity($inverter->quantity)
+            ;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return ProjectInterface|mixed|object
+     */
+    public function generate()
+    {
+        if(!$this->project->getInfPower()){
+            $this->exception('Undefined project power');
+        }
+
+        if(is_null($this->project->getRoofType()))
+            $this->exception('Roof Type is undefined');
+
+        if(!$this->project->getStructureType())
+            $this->exception('Structure Type is undefined');
+
+        Combiner::combine($this->project);
+
+        /** @var \AppBundle\Manager\StructureManager $structureManager */
+        $structureManager = $this->manager('structure');
+        $structureCalculator = new StructureCalculator($structureManager);
+
+        $structureCalculator->calculate($this->project);
+
+        /** @var \AppBundle\Manager\StringBoxManager $stringBoxManager */
+        $stringBoxManager = $this->manager('string_box');
+        $stringBoxLoader = new StringBoxLoader($stringBoxManager);
+        $stringBoxCalculator = new StringBoxCalculator($stringBoxLoader);
+
+        $stringBoxCalculator->calculate($this->project);
+
+        $this->manager('project')->save($this->project);
+
+        return $this->project;
     }
 
     /**
@@ -36,6 +130,8 @@ class ProjectGenerator
     public function project(ProjectInterface $project)
     {
         $this->project = $project;
+
+        return $this;
     }
 
     /**
@@ -195,6 +291,27 @@ class ProjectGenerator
     }
 
     /**
+     * @return array
+     */
+    /*public function groups(ProjectModule $module)
+    {
+        $limit = $module->getPosition() == 0 ? 20 : 12 ;
+
+        $groups = [];
+        if (0 != ($modulequantity % $limit) && ($this->quantity > $limit)) {
+
+            $groups[] = Group::create(((int) floor($this->quantity / $limit)), $limit, $this->position);
+            $groups[] = Group::create(1,((($this->quantity / $limit) - floor($this->quantity / $limit)) * $limit), $this->position);
+
+        } else {
+
+            $groups[] = Group::create(((int) ceil($this->quantity / $limit)), (int) $this->quantity / ceil($this->quantity / $limit), $this->position);
+        }
+
+        return $groups;
+    }*/
+
+    /**
      * @param $id
      * @return object|\AppBundle\Manager\AbstractManager
      */
@@ -211,5 +328,10 @@ class ProjectGenerator
     private function hasData(array $data, $string)
     {
         return array_key_exists($string, $data) && !empty($data[$string]);
+    }
+
+    private function exception($message)
+    {
+        throw new \InvalidArgumentException($message);
     }
 }

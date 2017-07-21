@@ -1,11 +1,15 @@
 <?php
 
-namespace AppBundle\Service\InverterCombinator;
+namespace AppBundle\Service\ProjectGenerator;
 
+use AppBundle\Entity\Component\MakerInterface;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Manager\InverterManager;
-use AppBundle\Service\ProjectGenerator\Inverter;
 
+/**
+ * Class InverterLoader
+ * @author Claudinei Machado <cjchamado@gmail.com>
+ */
 class InverterLoader
 {
     /**
@@ -19,17 +23,8 @@ class InverterLoader
     private $manager;
 
     /**
-     * @var array
+     * @var string
      */
-    /*private $fields = [
-        'i.id',
-        'i.mpptMin mppt_min',
-        'i.mpptNumber mppt_number',
-        'i.mpptMaxDcCurrent mppt_max_dc_current',
-        'i.nominalPower nominal_power',
-        'i.maxDcVoltage max_dc_voltage'
-    ];*/
-
     private $fields = 'i';
 
     /**
@@ -82,7 +77,7 @@ class InverterLoader
      */
     public function maker($maker)
     {
-        if ($maker instanceof \AppBundle\Entity\Component\MakerInterface) {
+        if ($maker instanceof MakerInterface) {
             $maker = $maker->getId();
         }
 
@@ -114,6 +109,7 @@ class InverterLoader
 
     /**
      * @param ProjectInterface $project
+     * @return InverterLoader
      */
     public function project(ProjectInterface $project)
     {
@@ -147,10 +143,12 @@ class InverterLoader
                     break;
                 }
             }
+        }else{
+            array_splice($inverters, 1);
         }
 
         array_walk($inverters, function (&$inverter) use($attempts) {
-            //$inverter['quantity'] = $attempts > 1 ? 0 : 1 ;
+            $inverter->quantity = $attempts > 1 ? 0 : 1 ;
         });
 
         if ($attempts > 1) {
@@ -159,22 +157,7 @@ class InverterLoader
 
         $this->attempts = $attempts;
 
-        dump($inverters); die;
-
-        $data = [];
-        foreach ($inverters as $inverter){
-            $data[] = Inverter::create(
-                $inverter['id'],
-                $inverter['nominal_power'],
-                $inverter['max_dc_voltage'],
-                $inverter['mppt_min'],
-                $inverter['mppt_max_dc_current'],
-                $inverter['mppt_number'],
-                $inverter['quantity']
-            );
-        }
-
-        return $data;
+        return $inverters;
     }
 
     /**
@@ -205,7 +188,7 @@ class InverterLoader
 
                 $result = 0;
                 for ($y = 0; $y < count($cont); $y++) {
-                    $result += $inverters[$cont[$y]]["nominal_power"];
+                    $result += $inverters[$cont[$y]]->getNominalPower();
                 }
 
                 if ($result <= $max and $result >= $min) {
@@ -231,11 +214,11 @@ class InverterLoader
         rsort($cont);
 
         foreach ($cont as $attachKey) {
-            $inverters[$attachKey]['quantity'] += 1;
+            $inverters[$attachKey]->quantity += 1;
         }
 
         foreach ($inverters as $key => $inverter) {
-            if (!$inverter['quantity']) {
+            if (!$inverter->quantity) {
                 unset($inverters[$key]);
             }
         }
@@ -251,7 +234,6 @@ class InverterLoader
         $this->qb = $this->manager
             ->getEntityManager()
             ->createQueryBuilder()
-            //->select(implode(',', $this->fields))
             ->select($this->fields)
             ->from($this->manager->getClass(), 'i')
             ->orderBy('i.nominalPower', 'asc');
