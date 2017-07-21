@@ -9,6 +9,7 @@ use AppBundle\Entity\Customer;
 use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class AccountsController extends FOSRestController
 {
@@ -16,27 +17,28 @@ class AccountsController extends FOSRestController
     {
         $data = json_decode($request->getContent(), true);
 
-            /** @var AccountInterface $accountManager */
-            $accountManager = $this->get('account_manager');
-            $account = $accountManager->create();
-            $account->setFirstName($data['firstname'])
-                ->setLastName($data['lastname'])
-                ->setExtraDocument($data['extraDocument'])
-                ->setDocument($data['document'])
-                ->setEmail($data['email'])
-                ->setState($data['state'])
-                ->setCity($data['city'])
-                ->setDistrict($data['district'])
-                ->setStreet($data['street'])
-                ->setNumber($data['number'])
-                ->setPostcode($data['postcode'])
-                ->setStatus($data['status'])
-                ->setContext(Customer::CONTEXT_ACCOUNT);
-            $accountManager->save($account);
+        /** @var AccountInterface $accountManager */
+        $accountManager = $this->get('account_manager');
+        $account = $accountManager->create();
+        $account->setFirstName($data['firstname'])
+            ->setLastName($data['lastname'])
+            ->setExtraDocument($data['extraDocument'])
+            ->setDocument($data['document'])
+            ->setEmail($data['email'])
+            ->setState($data['state'])
+            ->setCity($data['city'])
+            ->setPhone($data['phone'])
+            ->setDistrict($data['district'])
+            ->setStreet($data['street'])
+            ->setNumber($data['number'])
+            ->setPostcode($data['postcode'])
+            ->setStatus($data['status'])
+            ->setContext(Customer::CONTEXT_ACCOUNT);
+        $accountManager->save($account);
 
-        $view = View::create($data);
+       // $view = View::create($data);
 
-        return $this->handleView($view);
+        return Response::create($data, 200);
 
     }
     /**
