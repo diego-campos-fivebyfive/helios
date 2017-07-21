@@ -47,7 +47,7 @@ class Project implements ProjectInterface
     /**
      * @var int
      *
-     * @ORM\Column(name="number", type="integer")
+     * @ORM\Column(name="number", type="integer", nullable=true)
      */
     private $number;
 
@@ -95,15 +95,14 @@ class Project implements ProjectInterface
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="address", type="string", length=255)
+     ** @ORM\Column(name="address", type="string", length=255, nullable=true)
      */
     private $address;
 
     /**
      * @var float
      *
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float", nullable=true)
      */
     private $infConsumption;
 
@@ -124,14 +123,14 @@ class Project implements ProjectInterface
     /**
      * @var float
      *
-     * @ORM\Column(name="latitude", type="float")
+     * @ORM\Column(name="latitude", type="float", nullable=true)
      */
     private $latitude;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="longitude", type="float")
+     * @ORM\Column(name="longitude", type="float", nullable=true)
      */
     private $longitude;
 

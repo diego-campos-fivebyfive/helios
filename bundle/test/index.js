@@ -27,6 +27,14 @@ app.get('/', (req, res) => {
   `)
 })
 
+const validateAuth = (req, res, next) => {
+  if (typeof req.query.auth === 'string') {
+    next()
+    return
+  }
+  res.status(403).end('token invalid')
+}
+
 app.get('/product/:code', (req, res) => {
   const { code } = req.params
   const product = products.find(x => x.code === code)
@@ -37,7 +45,7 @@ app.get('/memorial/:id', (req, res) => {
   res.status(200).json(memorial)
 })
 
-app.get('/user/:id', (req, res) => {
+app.get('/user/:id', validateAuth, (req, res) => {
   const { id } = req.params
   const user = users.find(x => x.id === Number(id))
   res.status(200).json(user)

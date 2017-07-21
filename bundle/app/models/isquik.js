@@ -1,20 +1,22 @@
 'use strict'
+const Google = require('./google')
 const request = require('request-promise')
 const { app, config } = require('../config')
-const { ISQUIK_API } = config
+const { isquik } = config
 
-const sendRequest = (uri) => {
-  let options = {
-    method: 'GET'
-  }
-  options = Object.assign(options, { uri })
-  return request(options).then((data) => JSON.parse(data))
-}
+const sendRequest = (uri) => Google.getAuthentication().then((auth) => (
+  request({
+    method: 'GET', uri, qs: { auth: auth.idToken }
+  })
+  .then((x) => JSON.parse(x))
+))
 
-const getProduct = (code) => sendRequest(`${ISQUIK_API}/product/${code}`)
-const getMemorial = (id) => sendRequest(`${ISQUIK_API}/memorial/${id}`)
+const getAccount = (id) => sendRequest(`${isquik.uri}/user/${id}`)
+const getMemorial = (id) => sendRequest(`${isquik.uri}/memorial/${id}`)
+const getProduct = (code) => sendRequest(`${isquik.uri}/product/${code}`)
 
 module.exports = {
+  getMemorial,
   getProduct,
-  getMemorial
+  getAccount
 }

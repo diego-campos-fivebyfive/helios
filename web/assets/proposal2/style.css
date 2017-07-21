@@ -1,4 +1,4 @@
-.wrapper-content .separator{
+.wrapper-content .separator {
     background-color: #f3f3f3;
 }
 .separator{
@@ -66,6 +66,9 @@
 .borderBlack{
     border: solid 1px #555555;
 }
+.minHeight5{
+    min-height: 5mm !important;
+}
 .minHeight25{
     min-height: 25mm !important;
 }
@@ -75,7 +78,7 @@
 }
 
 .edit:focus, .edit2:focus{
-    border: 1px #f7f7f7 solid;
+    border: 1px #AAAAAA solid;
 }
 .semMargem{
     margin: 0 !important;

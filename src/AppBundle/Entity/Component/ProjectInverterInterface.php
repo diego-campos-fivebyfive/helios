@@ -57,6 +57,28 @@ interface ProjectInverterInterface extends ProjectElementInterface
     public function getPower();
 
     /**
+     * @param $serial
+     * @return ProjectInverterInterface
+     */
+    public function setSerial($serial);
+
+    /**
+     * @return int
+     */
+    public function getSerial();
+
+    /**
+     * @param $parallel
+     * @return ProjectInverterInterface
+     */
+    public function setParallel($parallel);
+
+    /**
+     * @return int
+     */
+    public function getParallel();
+
+    /**
      * @return bool
      */
     public function operationIsChanged();
