@@ -14,10 +14,12 @@ const sendInveter = (inverter) => sendRequest(`${sices.uri}/inverters`, inverter
 const sendStructure = (structure) => sendRequest(`${sices.uri}/structures`, structure)
 const sendModule = (module) => sendRequest(`${sices.uri}/modules`, module)
 const sendMemorial = (memorial) => sendRequest(`${sices.uri}/memorials`, memorial)
+const sendAccount = (account) => sendRequest(`${sices.uri}/accounts`, account)
 
 module.exports = {
   sendInveter,
   sendStructure,
   sendModule,
-  sendMemorial
+  sendMemorial,
+  sendAccount
 }
