@@ -87,6 +87,10 @@ function setSession(btn) {
         session = $("#sessao-12-6-6").clone().removeAttr('id');
     }
 
+    //cofiguração de excluir session
+    var btDelSession = session.children()[0];
+    $(btDelSession).attr("onclick","delSessionModal(this)");
+
     cont = 0;
     for (n=1;n<session.children().length;n++){
         cont++;
@@ -128,11 +132,25 @@ function delPage(btn) {
     $(conj)[0].remove();
 }
 
+function delSessionModal(btThis) {
+    //bt Delete
+    var bt = $(btThis);
+    var btDelSessionInsideModal = $("#btDelSessionInsideModal").clone().removeAttr('id');
+
+    var btD = $(btDelSessionInsideModal).children()[1];
+    $(btD).attr("onclick", "delSes("+bt+")");
+
+    //modal delete
+    var modalDel = $("#idModalDel");
+    $($(modalDel[0]).children().children().children()[1]).html('');
+    $($(modalDel[0]).children().children().children()[1]).append(btDelSessionInsideModal);
+}
 function delSes(btn) {
-    var decision = confirm("Deseja excluir esta sessão?");
+    $(btn).parent().remove();
+   /* var decision = confirm("Deseja excluir esta sessão?");
     if (decision === true){
         $(btn).parent().remove();
-    }
+    }*/
 }
 
 var generate_project = false;
