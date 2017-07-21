@@ -15,7 +15,6 @@ const ISQUIK_PORT = process.env.CES_ISQUIK_PORT
 
 const app = express()
 app.listen(ISQUIK_PORT)
-
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -56,8 +55,8 @@ app.post('/notifications', (req, res) => {
       break
 
     case 'account_created':
-      const accounts = getData(`${SICES_HOST}:${SICES_PORT}/api/accounts/${body.id}`)
-      data = accounts.users.map((x) => getData(`${SICES_HOST}:${SICES_PORT}/api/users/${body.id}`))
+      const account = getData(`${SICES_HOST}:${SICES_PORT}/api/accounts/${body.id}`)
+      data = getData(`${SICES_HOST}:${SICES_PORT}/api/users/${accounts.owner}`)
       break
 
     default:
