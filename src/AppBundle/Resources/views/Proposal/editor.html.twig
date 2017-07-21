@@ -40,36 +40,16 @@
                 </div>
             </div>
 
-            <!-- Modal delete pagina-->
-            <div class="modal fade" id="idModalDel" role="dialog">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Deseja excluir essa página?</h4>
-                        </div>
-                        <div class="modal-body">
-
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <div class="ocultar">
 
                 {#Botoes do topo da pagina#}
                 <div class="col-m-12 pdfHidden" id="topPageButtons">
                     <button type="button" class="btn btn-primary margLeft3" data-toggle="modal" data-target="#idModal">Nova Sessão</button>
-                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#idModalDel">Excluir Página</button>
+                    <button type="button" class="btn btn-danger">Excluir Página</button>
 
                     <button type="button" class="btn btn-success pr margRight3" title="Descer página" onclick="down(this)"><i class="fa fa-arrow-circle-down"></i></button>
                     <button type="button" class="btn btn-success pr margRight3" title="Subir página" onclick="up(this)"><i class="fa fa-arrow-circle-up"></i></button>
-                </div>
-
-                {#botão deletar pagina q vai na modal#}
-                <div class="col-m-12 margBottom30" id="btDeleteInsideTheModal">
-                    <button type="button" class="btn btn-default pr margLeft3" data-dismiss="modal">Não</button>
-                    <button type="button" class="btn btn-danger pr margRight3" onclick="delPage(this)" data-dismiss="modal">Sim</button>
                 </div>
 
                 {#botoes das sessoes q mostra na modal#}
@@ -93,7 +73,7 @@
 
                 {#modelos de sessao#}
                 <div id="sessao-12" class="col-m-12 semMargem row">
-                    <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSes(this)"><center>X</center></a>
+                    <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSessionModal(this)"><center>X</center></a>
                     <div class="col-m-160mm edit minHeight5">
                         <p style="text-align:center"><strong><span style="color:#000000">Lorem Ipsum</span></strong><br></p>
                         <p style="text-align:justify"><span style="color:#000000">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras euismod luctus tortor vel iaculis. Ut interdum eleifend velit nec consequat. Nullam sagittis odio metus, vitae dictum tellus pulvinar quis. Morbi sit amet enim vel ante aliquet eleifend. Nam purus metus, varius fermentum pulvinar aliquet, fermentum vitae augue.</span><br></p>
@@ -101,7 +81,7 @@
                 </div>
 
                 <div id="sessao-6-6" class="col-m-12 semMargem row" >
-                    <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSes(this)" ><center>X</center></a>
+                    <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSessionModal(this)" ><center>X</center></a>
                     <div class="col-m-80mm edit minHeight5">
                         <p style="text-align:center"><strong><span style="color:#000000">Lorem Ipsum</span></strong><br></p>
                         <p style="text-align:justify"><span style="color:#000000">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras euismod luctus tortor vel iaculis. Ut interdum eleifend velit nec consequat. Nullam sagittis odio metus, vitae dictum tellus pulvinar quis. Morbi sit amet enim vel ante aliquet eleifend. Nam purus metus, varius fermentum pulvinar aliquet, fermentum vitae augue.</span><br></p>
@@ -113,7 +93,7 @@
                 </div>
 
                 <div id="sessao-8-4" class="col-m-12 semMargem row" >
-                    <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSes(this)" ><center>X</center></a>
+                    <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSessionModal(this)" ><center>X</center></a>
                     <div class="col-m-106mm edit minHeight5">
                         <p style="text-align:center"><strong><span style="color:#000000">Lorem Ipsum</span></strong><br></p>
                         <p style="text-align:justify"><span style="color:#000000">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras euismod luctus tortor vel iaculis. Ut interdum eleifend velit nec consequat. Nullam sagittis odio metus, vitae dictum tellus pulvinar quis. Morbi sit amet enim vel ante aliquet eleifend. Nam purus metus, varius fermentum pulvinar aliquet, fermentum vitae augue.</span><br></p>
@@ -125,7 +105,7 @@
                 </div>
 
                 <div id="sessao-4-8" class="col-m-12 semMargem row" >
-                    <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSes(this)" ><center>X</center></a>
+                    <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSessionModal(this)" ><center>X</center></a>
                     <div class="col-m-53mm edit minHeight5">
                         <p style="text-align:center"><strong><span style="color:#000000">Lorem Ipsum</span></strong><br></p>
                         <p style="text-align:justify"><span style="color:#000000">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras euismod luctus tortor vel iaculis. Ut interdum eleifend velit nec consequat. Nullam sagittis odio metus, vitae dictum tellus pulvinar quis. Morbi sit amet enim vel ante aliquet eleifend. Nam purus metus, varius fermentum pulvinar aliquet, fermentum vitae augue.</span><br></p>
@@ -137,7 +117,7 @@
                 </div>
 
                 <div id="sessao-4-4-4" class="col-m-12 semMargem row" >
-                    <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSes(this)" ><center>X</center></a>
+                    <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSessionModal(this)" ><center>X</center></a>
                     <div class="col-m-53mm edit minHeight5">
                         <p style="text-align:center"><strong><span style="color:#000000">Lorem Ipsum</span></strong><br></p>
                         <p style="text-align:justify"><span style="color:#000000">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras euismod luctus tortor vel iaculis. Ut interdum eleifend velit nec consequat. Nullam sagittis odio metus, vitae dictum tellus pulvinar quis. Morbi sit amet enim vel ante aliquet eleifend. Nam purus metus, varius fermentum pulvinar aliquet, fermentum vitae augue.</span><br></p>
@@ -152,7 +132,7 @@
                     </div>
                 </div>
                 <div id="sessao-12-6-6" class="col-m-12 semMargem row" >
-                    <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSes(this)" ><center>X</center></a>
+                    <a class="col-m-4mm del" title="Excluir Sessão" onclick="delSessionModal(this)" ><center>X</center></a>
                     <div class="col-m-160mm edit minHeight5">
                         <p style="text-align:center"><strong><span style="color:#000000">Lorem Ipsum</span></strong><br></p>
                         <p style="text-align:justify"><span style="color:#000000">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras euismod luctus tortor vel iaculis. Ut interdum eleifend velit nec consequat. Nullam sagittis odio metus, vitae dictum tellus pulvinar quis. Morbi sit amet enim vel ante aliquet eleifend. Nam purus metus, varius fermentum pulvinar aliquet, fermentum vitae augue.</span><br></p>
@@ -278,23 +258,23 @@
                 <div id="dataProposal" class="hidden">
                     {#dados do client#}
                     <div id="dclient">
-                        {{ project.customer.name }}
+                       {# {{ project.customer.name }}#}
                     </div>
 
                     <div id="daverageConsumption">
-                        {{ project.infConsumption }}
+                       {# {{ project.infConsumption }}#}
                     </div>
 
                     <div id="ddocument">
-                        {{ project.customer.document }}
+                       {# {{ project.customer.document }}#}
                     </div>
 
                     <div id="dphone">
-                        {{ project.customer.phone }}
+                       {# {{ project.customer.phone }}#}
                     </div>
 
                     <div id="demail">
-                        {{ project.customer.email }}
+                       {# {{ project.customer.email }}#}
                     </div>
 
                     {#dados da geração#}
@@ -316,51 +296,52 @@
 
                     {#análise financeira#}
                     <div id="dlifetime">
-                        {{ project.lifetime }}
+                        {#{{ project.lifetime }}#}
                     </div>
 
                     <div id="dinflation">
-                        {{ project.inflation }}
+                       {# {{ project.inflation }}#}
                     </div>
 
                     <div id="dlossOfEfficiency">
-                        {{ project.efficiencyLoss }}
+                        {#{{ project.efficiencyLoss }}#}
                     </div>
 
                     <div id="dannualOperatingCost">
-                        {{ project.annualCostOperation }}
+                      {#  {{ project.annualCostOperation }}#}
                     </div>
 
                     <div id="dpriceOfKWh">
-                        {{ project.energyPrice }}
+                       {# {{ project.energyPrice }}#}
                     </div>
 
                     <div id="dproposalValue">
-                        {{ project.salePrice|currency }}
+                       {# {{ project.salePrice|currency }}#}
                     </div>
 
                     <div id="daccumulatedCash">
-                        {{ project.accumulatedCash(true)|currency }}
+                       {# {{ project.accumulatedCash(true)|currency }}#}
                     </div>
 
                     <div id="dvpl">
-                        {{ project.netPresentValue|currency }}
+           {#             {{ project.netPresentValue|currency }}#}
                     </div>
 
                     <div id="dtir">
-                        {{ project.internalRateOfReturn|round }}
+                      {#  {{ project.internalRateOfReturn|round }}#}
                     </div>
 
                     <div id="dsimplePayback">
-                        {{ project.paybackYears }}
+                       {# {{ project.paybackYears }}#}
                     </div>
 
                     <div id="ddiscountedPayback">
-                        {{ project.paybackYearsDisc }}
+                       {# {{ project.paybackYearsDisc }}#}
                     </div>
 
                     <div id="daccumulatedCashChart" data-type="chart" data-chart="financial"
-                         data-json="{{ project.accumulatedCash|json_encode }}">
+                         data-json="{{ projectFake.customer.generationChart|json_encode }}">
+                        {#project.accumulatedCash#}
                     </div>
 
                     {#equipamentos e serviços#}
