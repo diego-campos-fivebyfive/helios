@@ -1,8 +1,8 @@
 'use strict'
-const { send } = require('./create')
+const { create } = require('./create')
 
 const memorial = {
-  send
+  create
 }
 
 module.exports = memorial
