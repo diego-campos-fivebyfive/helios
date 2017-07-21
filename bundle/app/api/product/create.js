@@ -17,7 +17,7 @@ const splitStructure = (object) => ({
   description: object.description
 })
 
-const splitProduct = (product) => {
+const sendProduct = (product) => {
   switch (product.family) {
     case 'module':
       const module = splitModule(product)
@@ -33,15 +33,13 @@ const splitProduct = (product) => {
   }
 }
 
-const send = ({ object }) => {
-  return new Promise((resolve, reject) => {
-    object.forEach((productCode) => {
-      const product = Isquik.getProduct(productCode)
-      product.then((data) => splitProduct(data))
-    })
-    resolve(200)
-  })
-}
+const send = ({ object }) => new Promise((resolve, reject) => {
+  object.forEach((code) => Isquik.getProduct(code)
+    .then(sendProduct)
+    .then(resolve)
+    .catch(reject)
+  )
+})
 
 module.exports = {
   send
