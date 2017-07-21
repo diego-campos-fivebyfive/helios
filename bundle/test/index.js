@@ -63,8 +63,9 @@ app.post('/notifications', (req, res) => {
       break
 
     case 'account_created':
-      const account = getData(`${SICES_HOST}:${SICES_PORT}/api/accounts/${body.id}`)
-      data = getData(`${SICES_HOST}:${SICES_PORT}/api/users/${accounts.owner}`)
+      getData(`${SICES_HOST}:${SICES_PORT}/api/accounts/${body.id}`).then((account) => {
+          data = getData(`${SICES_HOST}:${SICES_PORT}/api/users/${account.owner}`)
+      })
       break
 
     default:
