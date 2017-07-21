@@ -18,6 +18,11 @@ router.post('/api/v1/notifications', ((request, response) => {
       requestCopy.body = body
       break
 
+    case 'account_approved':
+      action = account.update
+      requestCopy.body = body
+      break
+
     case 'memorial_created':
       action = memorial.create
       requestCopy.body = body
