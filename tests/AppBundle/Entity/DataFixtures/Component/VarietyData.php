@@ -2,13 +2,13 @@
 
 namespace Tests\AppBundle\Entity\DataFixtures\Component;
 
-use AppBundle\Entity\Component\Module;
+use AppBundle\Entity\Component\Variety;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Tests\AppBundle\Entity\DataFixtures\DataFixtureHelper;
 
-class ModuleData extends AbstractFixture implements OrderedFixtureInterface
+class VarietyData extends AbstractFixture implements OrderedFixtureInterface
 {
     use DataFixtureHelper;
 
@@ -18,29 +18,16 @@ class ModuleData extends AbstractFixture implements OrderedFixtureInterface
     public function load(ObjectManager $manager)
     {
         $data = [
-            'model' => self::randomString(4),
-            'code' => self::randomString(8),
-            'cellNumber' => self::randomInt(),
-            'maxPower' => self::randomFloat(),
-            'voltageMaxPower' => self::randomFloat(),
-            'currentMaxPower' => self::randomFloat(),
-            'openCircuitVoltage' => self::randomFloat(),
-            'shortCircuitCurrent' => self::randomFloat(),
-            'efficiency' => self::randomFloat(),
-            'temperatureOperation' => self::randomFloat(),
-            'tempCoefficientMaxPower' => self::randomFloat(),
-            'tempCoefficientVoc' => self::randomFloat(),
-            'tempCoefficientIsc' => self::randomFloat(),
-            'length' => self::randomFloat(),
-            'width' => self::randomFloat(),
-            'cellType' => self::randomString(10),
-            'dataSheet' => self::randomString(15),
-            'image' => self::randomString(10),
+            'code' => md5(uniqid(time())),
+            'description' => 'This is a Variety ' . uniqid(),
+            'type' => 'cable',
+            'subtype' => 'connector',
+            'maker' => $this->getReference('maker')
         ];
 
-        $module = new Module();
+        $variety = new Variety();
 
-        $this->fillAndSave($module, $data, $manager, 'module');
+        $this->fillAndSave($variety, $data, $manager, 'variety');
     }
 
     /**
