@@ -109,6 +109,49 @@ class Inverter implements InverterInterface
     private $mpptNumber;
 
     /**
+     * `number_con_mppt` int(11) NOT NULL,
+    `con_type` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+    `mppt_parallel` tinyint(1) NOT NULL,
+    `in_protections` tinyint(1) NOT NULL,
+    `phase_number` int(11) NOT NULL,
+     */
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $mpptConnections;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $connectionType;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $mpptParallel;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $inProtection;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $phases;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="data_sheet", type="string", nullable=true)
@@ -344,6 +387,96 @@ class Inverter implements InverterInterface
     public function getMpptNumber()
     {
         return $this->mpptNumber;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setMpptConnections($mpptConnections)
+    {
+        $this->mpptConnections = $mpptConnections;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMpptConnections()
+    {
+        return $this->mpptConnections;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setConnectionType($connectionType)
+    {
+        $this->connectionType = $connectionType;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getConnectionType()
+    {
+        return $this->connectionType;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setMpptParallel($mpptParallel)
+    {
+        $this->mpptParallel = $mpptParallel;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMpptParallel()
+    {
+        return $this->mpptParallel;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setInProtection($inProtection)
+    {
+        $this->inProtection = $inProtection;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasInProtection()
+    {
+        return $this->inProtection;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setPhases($phases)
+    {
+        $this->phases = $phases;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPhases()
+    {
+        return $this->phases;
     }
 
     /**
