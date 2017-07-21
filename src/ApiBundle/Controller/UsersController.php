@@ -22,19 +22,20 @@ class UsersController extends FOSRestController
              ->setUsername($data['email'])
              ->setPlainPassword(uniqid())
              ->addRole(UserInterface::ROLE_OWNER_MASTER);
-        dump($user);
+        $userManager->updateUser($user);
 
         /** @var AccountInterface $memberManager */
         $memberManager = $this->get('account_manager');
         $member = $memberManager->create();
-        $member->setFirstname($data['contact'])
-            ->setPhone($data['phone'])
-            ->setEmail($data['email'])
-            ->setContext(Customer::CONTEXT_MEMBER)
-            ->setUser($user);
-        dump($member);die;
+        $member ->setFirstname($data['contact'])
+                ->setPhone($data['phone'])
+                ->setEmail($data['email'])
+                ->setContext(Customer::CONTEXT_MEMBER)
+                ->setUser($user);
         $memberManager->save($member);
 
+        $view = View::create($data);
+        return $this->handleView($view);
     }
     /**
      * @ApiDoc(
@@ -54,7 +55,7 @@ class UsersController extends FOSRestController
                 'firstname' => $member->getFirstname(),
                 'lastname' => $member->getLastname(),
                 'email' => $member->getEmail(),
-                'phone' => $member->getPhone()
+                'phone' => $member->getPhone(),
             ];
         }
 
