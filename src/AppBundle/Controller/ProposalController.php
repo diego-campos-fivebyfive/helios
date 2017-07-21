@@ -57,22 +57,13 @@ class ProposalController extends AbstractController
             ]);
     }
 
-    /**
-     * @Route("/pdf", name="proposal_pdf_legacy")
-     */
-    public function pdfAction()
-    {
-        return $this->render('AppBundle:Proposal:pdf.html.twig', array(
-
-        ));
-    }
 
     /**
-     * @Route("/{id}/proposalPDF", name="proposal_pdf")
+     * @Route("/{id}/pdf", name="proposal_pdf")
      */
-    public function proposalPDFAction(Project $project)
+    public function pdfAction(Project $project)
     {
-        return $this->render('AppBundle:Proposal:proposalPDF.html.twig', [
+        return $this->render('AppBundle:Proposal:pdf.html.twig', [
             'project' => $project
         ]);
     }
