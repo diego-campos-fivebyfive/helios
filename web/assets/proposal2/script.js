@@ -225,7 +225,7 @@ function generateChart() {
     if(colorGeneration===null){
         colorGeneration = $('#colorChartGeneration').val();
     }
-    $('#tagGenerationChart').attr('style','background-color: #'+colorGeneration+';');
+    $('#colorChartGeneration').val(colorGeneration);
 
     var colorFinancial = null;
     var gimageContainers = $('[data-typeChart="financial"]');
@@ -236,7 +236,7 @@ function generateChart() {
     if(colorFinancial===null){
         colorFinancial = $('#colorChartFinancial').val();
     }
-    $('#tagAccumulatedCashChart').attr('style','background-color: #'+colorFinancial+';');
+    $('#colorChartFinancial').val(colorFinancial);
 
     AppChart.projectChart({
         element:'project_chart',
@@ -289,7 +289,6 @@ function changeColorGeneration(color){
             $('#generationChart').children().html(generateImage(AppChart.getDataUrl('project_chart_2')));
             $('#generationChart').children().attr('data-typeChart','generation');
             $('#generationChart').children().attr('data-color',color);
-            $('#tagGenerationChart').attr('style','background-color: #'+color+';');
 
             var imageContainers = $('[data-typeChart="generation"]');
             $.each(imageContainers, function(i, c){
@@ -325,7 +324,6 @@ function changeColorFinancial(color){
             $('#accumulatedCashChart').children().html(generateImage(AppChart.getDataUrl('financial_chart_2')));
             $('#accumulatedCashChart').children().attr('data-typeChart','financial');
             $('#accumulatedCashChart').children().attr('data-color',color);
-            $('#tagAccumulatedCashChart').attr('style','background-color: #'+color+';');
 
             var imageContainers = $('[data-typeChart="financial"]');
             $.each(imageContainers, function(i, c){

@@ -32,6 +32,14 @@
     color: #FFFFFF;
     cursor: pointer;
 }
+.list-group-item:hover{
+    cursor: move;
+    background-color: #DDD;
+}
+.list-group-item{
+    border: solid #DDD 1px;
+    background-color: #EEE;
+}
 .tag{
     color: #843534;
 }
