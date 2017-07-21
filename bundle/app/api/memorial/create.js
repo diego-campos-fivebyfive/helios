@@ -3,13 +3,13 @@ const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
 
 const send = ({ object }) => new Promise((resolve, reject) => {
-  Isquik.getMemorial(object.id).then((data) => {
+  Isquik.getMemorial(object.id).then((memorial) => {
     Sices.sendMemorial({
-      version: data.version,
-      status: data.status,
-      start_at: data.start_at,
-      end_at: data.end_at,
-      range: data.products
+      version: memorial.version,
+      status: memorial.status,
+      start_at: memorial.start_at,
+      end_at: memorial.end_at,
+      range: memorial.products
     })
     .then(resolve)
     .catch(reject)

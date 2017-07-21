@@ -3,11 +3,11 @@ const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
 
 const send = ({ object }) => new Promise((resolve, reject) => {
-  Isquik.getAccount(object.id).then((data) => {
+  Isquik.getAccount(object.id).then((account) => {
     Sices.sendAccount({
-      name: data.name,
-      owner: data.owner,
-      status: data.status
+      name: account.name,
+      owner: account.owner,
+      status: account.status
     })
     .then(resolve)
     .catch(reject)

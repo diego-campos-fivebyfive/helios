@@ -2,19 +2,19 @@
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
 
-const splitModule = (object) => ({
-  code: object.code,
-  model: object.description
+const splitModule = (product) => ({
+  code: product.code,
+  model: product.description
 })
 
-const splitInveter = (object) => ({
-  code: object.code,
-  model: object.description
+const splitInveter = (product) => ({
+  code: product.code,
+  model: product.description
 })
 
-const splitStructure = (object) => ({
-  code: object.code,
-  description: object.description
+const splitStructure = (product) => ({
+  code: product.code,
+  description: product.description
 })
 
 const sendProduct = (product) => {
