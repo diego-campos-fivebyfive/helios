@@ -216,7 +216,7 @@ $('#saveProposal').click(function () {
         method:'post',
         data:{content:$('#bloco').html()},
         complete:function (xhr) {
-            alert(xhr);
+            alert(xhr.status);
         }
     })
 });
