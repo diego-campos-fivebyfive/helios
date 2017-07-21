@@ -21,7 +21,7 @@ class Combiner
         $module = $projectModule->getModule();
         $totalPower = 0;
         foreach ($project->getProjectInverters() as $projectInverter){
-            $totalPower += $projectInverter->getInverter()->getNominalPower();
+            $totalPower += ($projectInverter->getInverter()->getNominalPower() * $projectInverter->getQuantity());
         }
 
         $tnoct  = 45;
@@ -43,7 +43,7 @@ class Combiner
             /** @var \AppBundle\Entity\Component\InverterInterface $inverter */
             $inverter = $projectInverter->getInverter();
 
-            $qte_max_mod_ser = floor($inverter->getMaxDcVoltage() / $vmax_mod);
+            $qte_max_mod_ser = ceil($inverter->getMaxDcVoltage() / $vmax_mod);
             $qte_min_mod_ser = ceil($inverter->getMpptMin() / $vmin_mod);
             $qte_max_mod_par = floor(($inverter->getMpptMaxDcCurrent() * $inverter->getMpptNumber()) / ($module->getShortCircuitCurrent()));
 

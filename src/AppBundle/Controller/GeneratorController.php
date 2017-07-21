@@ -4,15 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Component\ModuleInterface;
 use AppBundle\Entity\Component\ProjectInterface;
-use AppBundle\Entity\Component\ProjectModule;
-use AppBundle\Service\InverterCombinator\InverterLoader;
 use AppBundle\Service\ProjectGenerator\Combiner;
-use AppBundle\Service\ProjectGenerator\Module;
-use AppBundle\Service\ProjectGenerator\Project;
-use AppBundle\Service\ProjectGenerator\ProjectGenerator;
-use AppBundle\Service\ProjectGenerator\StringBox\Calculator;
-use AppBundle\Service\ProjectGenerator\Structure;
-use AppBundle\Service\StringBoxCalculator\StringBoxLoader;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
@@ -34,34 +26,48 @@ class GeneratorController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-        $power = 1000;
-        /** @var \AppBundle\Entity\Component\Module $mod */
-        $mod = $this->manager('module')->find(32433);
+        $project = $this->manager('project')->find(207);
 
-        /** @var \AppBundle\Entity\Component\MakerInterface $maker */
-        $maker = $this->manager('maker')->find(60627);
-        $roofType = 3;
-        $position = 1;
+        $area = $project->getAreas()->first();
 
-        /** @var \AppBundle\Service\ProjectGenerator\ProjectGenerator $generator */
-        $generator = $this->get('project_generator');
+        dump($area->getMetadata()); die;
 
-        /** @var ProjectInterface $project */
-        $project = $this->manager('project')->create();
 
-        $project
-            ->setStructureType(ProjectInterface::STRUCTURE_SICES)
-            ->setRoofType($roofType);
+        for($i = 1; $i <= 1; $i++) {
 
-        $project = $generator
-            ->project($project)
-            ->power(1000)
-            ->module($mod, $position)
-            ->maker($maker)
-            ->generate()
-        ;
+            $power = 15 * rand($i, 3);
 
-        dump($project); die;
+            //$power = $this->get('power_estimator')->estimate($project->getInfPower(), $project->getLatitude(), $project->getLongitude());
+
+            /** @var \AppBundle\Entity\Component\Module $mod */
+            $mod = $this->manager('module')->find(32433);
+
+            /** @var \AppBundle\Entity\Component\MakerInterface $maker */
+            $maker = $this->manager('maker')->find(60627);
+            $roofType = 1;
+            $position = 0;
+
+            /** @var \AppBundle\Service\ProjectGenerator\ProjectGenerator $generator */
+            $generator = $this->get('project_generator');
+
+            /** @var ProjectInterface $project */
+            $project = $this->manager('project')->create();
+
+            $project
+                ->setStructureType(ProjectInterface::STRUCTURE_SICES)
+                ->setRoofType($roofType);
+
+            $project = $generator
+                ->project($project)
+                ->power($power)
+                ->module($mod, $position)
+                ->maker($maker)
+                ->generate();
+
+            dump('Projeto Gerado: ' . $project->getId());
+        }
+
+        die;
 
         $strCalculator = $this->get('structure_calculator');
         $prof = $strCalculator->findStructure(['type' => 'perfil', 'subtype' => 'roman'], false);

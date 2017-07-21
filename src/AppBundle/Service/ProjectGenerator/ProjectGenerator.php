@@ -82,6 +82,7 @@ class ProjectGenerator
             $projectInverter
                 ->setProject($this->project)
                 ->setInverter($inverter)
+                ->setQuantity($inverter->quantity)
             ;
         }
 

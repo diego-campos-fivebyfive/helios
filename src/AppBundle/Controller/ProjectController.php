@@ -113,28 +113,59 @@ class ProjectController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
 
             /** @var \AppBundle\Entity\Component\ModuleInterface $module */
-            $module = $this->manager('module')->find(32433);
+            //$module = $this->manager('module')->find(32433);
             //$kwh = (int) $request->request->get('consumption');
-            $project->setInfPower((int) $project->getInfConsumption());
+            //$project->setInfPower((int) $project->getInfConsumption());
 
-            $power = $this->get('power_estimator')->estimate($project->getInfPower(), $project->getLatitude(), $project->getLongitude());
-            $inverters = $this->get('inverter_combinator')->combine($module, $power, 60627);
+            $power = $this->get('power_estimator')->estimate($project->getInfConsumption(), $project->getLatitude(), $project->getLongitude());
 
-            $stringBoxes = $this->get('string_box_calculator')->calculate($inverters);
+            //dump($power); die;
+            //$inverters = $this->get('inverter_combinator')->combine($module, $power, 60627);
+            //$stringBoxes = $this->get('string_box_calculator')->calculate($inverters);
 
             /** @var \AppBundle\Service\ProjectGenerator\ProjectGenerator $projectGenerator */
-            $projectGenerator = $this->get('project_generator');
-            $projectGenerator->project($project);
+            //$projectGenerator = $this->get('project_generator');
+            //$projectGenerator->project($project);
 
-            $project = $projectGenerator->fromCombination([
+            /*$project = $projectGenerator->fromCombination([
                 'inverters' => $inverters,
                 'module' => $module,
                 'string_boxes' => $stringBoxes
             ]);
 
             $this->get('structure_calculator')->calculate($project);
+            $this->get('project_manipulator')->generateAreas($project);*/
+
+            /** @var \AppBundle\Entity\Component\Module $mod */
+            $mod = $this->manager('module')->find(32433);
+
+            /** @var \AppBundle\Entity\Component\MakerInterface $maker */
+            $maker = $this->manager('maker')->find(60627);
+            $roofType = 1;
+            $position = 0;
+
+            /** @var \AppBundle\Service\ProjectGenerator\ProjectGenerator $generator */
+            $generator = $this->get('project_generator');
+
+            /** @var ProjectInterface $project */
+            //$project = $this->manager('project')->create();
+
+            $project
+                ->setStructureType(ProjectInterface::STRUCTURE_SICES)
+                ->setRoofType($roofType);
+
+            $project = $generator
+                ->project($project)
+                ->power($power)
+                ->module($mod, $position)
+                ->maker($maker)
+                ->generate();
 
             $this->get('project_manipulator')->generateAreas($project);
+
+            /** @var ProjectHelper $helper */
+            $helper = $this->get('app.project_helper');
+            $helper->processProject($project);
 
             return $this->json([
                 'project' => [

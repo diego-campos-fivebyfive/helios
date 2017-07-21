@@ -143,10 +143,12 @@ class InverterLoader
                     break;
                 }
             }
+        }else{
+            array_splice($inverters, 1);
         }
 
         array_walk($inverters, function (&$inverter) use($attempts) {
-            //$inverter['quantity'] = $attempts > 1 ? 0 : 1 ;
+            $inverter->quantity = $attempts > 1 ? 0 : 1 ;
         });
 
         if ($attempts > 1) {
@@ -186,7 +188,7 @@ class InverterLoader
 
                 $result = 0;
                 for ($y = 0; $y < count($cont); $y++) {
-                    $result += $inverters[$cont[$y]]["nominal_power"];
+                    $result += $inverters[$cont[$y]]->getNominalPower();
                 }
 
                 if ($result <= $max and $result >= $min) {
@@ -212,11 +214,11 @@ class InverterLoader
         rsort($cont);
 
         foreach ($cont as $attachKey) {
-            $inverters[$attachKey]['quantity'] += 1;
+            $inverters[$attachKey]->quantity += 1;
         }
 
         foreach ($inverters as $key => $inverter) {
-            if (!$inverter['quantity']) {
+            if (!$inverter->quantity) {
                 unset($inverters[$key]);
             }
         }
@@ -232,7 +234,6 @@ class InverterLoader
         $this->qb = $this->manager
             ->getEntityManager()
             ->createQueryBuilder()
-            //->select(implode(',', $this->fields))
             ->select($this->fields)
             ->from($this->manager->getClass(), 'i')
             ->orderBy('i.nominalPower', 'asc');

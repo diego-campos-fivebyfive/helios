@@ -56,6 +56,9 @@ class StructureCalculator
         $this->manager = $manager;
     }
 
+    /**
+     * @param ProjectInterface $project
+     */
     public function calculate(ProjectInterface $project)
     {
         /** @var \AppBundle\Entity\Component\StructureInterface[] $profiles */
@@ -65,9 +68,6 @@ class StructureCalculator
         foreach ($this->mappingCriteria as $field => $criteria) {
             $items[$field] = $this->findStructure($criteria);
         }
-
-        //dump($items); die;
-        //$base = $this->filterBase($project->getRoofType());
 
         /** @var \AppBundle\Entity\Component\ProjectModuleInterface $projectModule */
         $projectModule = $project->getProjectModules()->first();
@@ -94,7 +94,6 @@ class StructureCalculator
             }
         }
 
-        //$items = $project->items;
         $term_inter_bd = $items[self::TERMINAL_INTERMEDIARY];
         $total_perfil_usado = array_fill(0, count($profiles), 0);
 
@@ -253,13 +252,6 @@ class StructureCalculator
         $totalProfiles = $total_perfil_usado;
         foreach ($totalProfiles as $key => $totalProfile) {
             if ($totalProfile) {
-
-                /*$projectStructure = new ProjectStructure();
-                $projectStructure
-                    ->setStructure($profiles[$key])
-                    ->setProject($project)
-                    ->setQuantity((int)$totalProfile);*/
-
                 $structures[] = [
                     'structure' => $profiles[$key],
                     'quantity' => (int) $totalProfile
