@@ -112,6 +112,10 @@ services:
         class: AppBundle\Manager\MakerManager
         arguments: ['AppBundle\Entity\Component\Maker', '@doctrine']
 
+    variety_manager:
+        class: AppBundle\Manager\VarietyManager
+        arguments: ['AppBundle\Entity\Component\Variety', '@doctrine']
+
     # Services
     inverter_combinator:
         class: AppBundle\Service\InverterCombinator\InverterCombinator
