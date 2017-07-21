@@ -40,6 +40,11 @@
     border: solid #DDD 1px;
     background-color: #EEE;
 }
+.list-group{
+    border-left: solid 2px #5fa2db;
+    border-right: solid 2px #5fa2db;
+    border-radius: 4px;
+}
 .tag{
     color: #843534;
 }
