@@ -2,18 +2,14 @@
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
 
-const send = ({ object }) => new Promise((resolve, reject) => {
-  Isquik.getAccount(object.id).then((account) => {
-    Sices.sendAccount({
-      name: account.name,
-      owner: account.owner,
-      status: account.status
-    })
-    .then(resolve)
-    .catch(reject)
-  })
+const sendAccount = (account) => Sices.sendAccount({
+  status: account.status,
+  owner: account.owner,
+  name: account.name
 })
 
+const create = ({ object }) => Isquik.getAccount(object.id).then(sendAccount)
+
 module.exports = {
-  send
+  create
 }
