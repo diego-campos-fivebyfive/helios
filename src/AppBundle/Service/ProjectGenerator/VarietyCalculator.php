@@ -10,6 +10,12 @@ use AppBundle\Manager\VarietyManager;
 class VarietyCalculator
 {
     /**
+     * Default cable length
+     * @var int
+     */
+    const CABLE_LENGTH = 30;
+
+    /**
      * @var VarietyManager
      */
     private $manager;
@@ -47,20 +53,44 @@ class VarietyCalculator
 
         foreach($connectors as $subtype => $quantity){
 
-            $connector = $this->manager->findOneBy([
-                'type' => 'conector',
-                'subtype' => $subtype
-            ]);
+            $connector = $this->findVariety('conector', $subtype);
 
             if($connector instanceof VarietyInterface){
-
-                $projectVariety = new ProjectVariety();
-                $projectVariety
-                    ->setProject($project)
-                    ->setVariety($connector)
-                    ->setQuantity($quantity)
-                ;
+                $this->addVariety($project, $connector, $quantity);
             }
         }
+
+        $cables = array_sum($connectors) * self::CABLE_LENGTH;
+
+        $blackCable = $this->findVariety('cabo', 'preto');
+        $redCable = $this->findVariety('cabo', 'vermelho');
+
+        $this->addVariety($project, $blackCable, $cables);
+        $this->addVariety($project, $redCable, $cables);
+    }
+
+    /**
+     * @param ProjectInterface $project
+     * @param VarietyInterface $variety
+     * @param $quantity
+     */
+    private function addVariety(ProjectInterface $project, VarietyInterface $variety, $quantity)
+    {
+        $projectVariety = new ProjectVariety();
+        $projectVariety
+            ->setProject($project)
+            ->setVariety($variety)
+            ->setQuantity($quantity)
+        ;
+    }
+
+    /**
+     * @param $type
+     * @param $subtype
+     * @return null|object|VarietyInterface
+     */
+    private function findVariety($type, $subtype)
+    {
+        return $this->manager->findOneBy(['type' => $type, 'subtype' => $subtype]);
     }
 }
