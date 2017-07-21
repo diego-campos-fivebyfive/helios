@@ -8,7 +8,7 @@ const sendUser = (account) => Sices.sendUser({
   status: account.status
 })
 .then(status => {
-  if (status == 304) return 'Can not create User'
+  return (status != 304) ? 'Can not create User' : 'User and Account created successfully'
 })
 
 const sendAccount = (account) => Sices.sendAccount({
@@ -17,12 +17,12 @@ const sendAccount = (account) => Sices.sendAccount({
   status: account.status
 })
 .then(status => {
-  if (status == 304) return 'Can not create Account'
+  if (status != 304) return 'Can not create Account'
   sendUser(account)
 })
 
-const update = ({ object }) => Isquik.getAccount(object.id).then(sendAccount)
+const create = ({ object }) => Isquik.getAccount(object.id).then(sendAccount)
 
 module.exports = {
-  update
+  create
 }
