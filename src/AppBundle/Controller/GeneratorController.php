@@ -169,7 +169,7 @@ class GeneratorController extends AbstractController
             }
         }
 
-        //$memorialManager->save($memorial);
+        $memorialManager->save($memorial);
         dump($memorial);
         die;
     }

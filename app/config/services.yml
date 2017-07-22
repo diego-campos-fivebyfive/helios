@@ -92,9 +92,17 @@ services:
         class: AppBundle\Manager\ProjectModuleManager
         arguments: ['AppBundle\Entity\Component\ProjectModule', '@doctrine']
 
+    project_string_box_manager:
+        class: AppBundle\Manager\ProjectStringBoxManager
+        arguments: ['AppBundle\Entity\Component\ProjectStringBox', '@doctrine']
+
     project_structure_manager:
         class: AppBundle\Manager\ProjectStructureManager
         arguments: ['AppBundle\Entity\Component\ProjectStructure', '@doctrine']
+
+    project_variety_manager:
+        class: AppBundle\Manager\ProjectVarietyManager
+        arguments: ['AppBundle\Entity\Component\ProjectVariety', '@doctrine']
 
     range_manager:
         class: AppBundle\Manager\Pricing\RangeManager

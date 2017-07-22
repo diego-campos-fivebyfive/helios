@@ -120,6 +120,7 @@
                 input.TouchSpin({
                     min: 1,
                     step: 1,
+                    max: 20,
                     verticalbuttons: true,
                     prefix: 'Módulos por Linha'
                 }).on('change', function () {
@@ -208,6 +209,7 @@
             callback: function(xhr){
                 GroupManager.submit.ladda('stop');
                 ProjectManager.loadComponents();
+                ProjectManager.loadInverters();
             }
         });
         $.each(GroupManager.groups, function(i, group){

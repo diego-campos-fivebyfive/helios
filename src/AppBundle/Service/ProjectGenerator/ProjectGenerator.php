@@ -10,6 +10,9 @@ use AppBundle\Entity\Component\ProjectInverter;
 use AppBundle\Entity\Component\ProjectModule;
 use AppBundle\Entity\Component\ProjectStringBox;
 use AppBundle\Entity\Component\ProjectStructure;
+use AppBundle\Service\ProjectHelper;
+use AppBundle\Service\ProjectProcessor;
+use AppBundle\Service\Support\Project\FinancialAnalyzer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -29,12 +32,34 @@ class ProjectGenerator
     private $project;
 
     /**
+     * @var bool
+     */
+    private $autoSave;
+
+    /**
+     * @var \AppBundle\Manager\ProjectManager
+     */
+    private $manager;
+
+    /**
      * @inheritDoc
      */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
         $this->project = $this->manager('project')->create();
+        $this->autoSave = true;
+    }
+
+    /**
+     * @param $autoSave
+     * @return $this
+     */
+    public function autoSave($autoSave)
+    {
+        $this->autoSave = (bool) $autoSave;
+
+        return $this;
     }
 
     /**
@@ -66,25 +91,13 @@ class ProjectGenerator
         return $this;
     }
 
+    /**
+     * @param MakerInterface $maker
+     * @return $this
+     */
     public function maker(MakerInterface $maker)
     {
-        if(!$maker->isMakerInverter())
-            $this->exception('Invalid maker');
-
-        /** @var \AppBundle\Manager\InverterManager $manager */
-        $manager = $this->manager('inverter');
-        $loader = new InverterLoader($manager);
-
-        $inverters = $loader->maker($maker)->project($this->project)->get();
-
-        foreach ($inverters as $inverter){
-            $projectInverter = new ProjectInverter();
-            $projectInverter
-                ->setProject($this->project)
-                ->setInverter($inverter)
-                ->setQuantity($inverter->quantity)
-            ;
-        }
+        $this->generateInverters($this->project, $maker);
 
         return $this;
     }
@@ -104,29 +117,21 @@ class ProjectGenerator
         if(!$this->project->getStructureType())
             $this->exception('Structure Type is undefined');
 
-        // INVERTER COMBINATIONS
-        Combiner::combine($this->project);
-
-        // CABLES AND CONNECTORS
-        /** @var \AppBundle\Manager\VarietyManager $varietyManager */
-        $varietyManager = $this->manager('variety');
-        $varietyCalculator = new VarietyCalculator($varietyManager);
-        $varietyCalculator->calculate($this->project);
+        // AREAS
+        $this->generateAreas($this->project);
 
         // STRUCTURES
-        /** @var \AppBundle\Manager\StructureManager $structureManager */
-        $structureManager = $this->manager('structure');
-        $structureCalculator = new StructureCalculator($structureManager);
-        $structureCalculator->calculate($this->project);
+        $this->generateStructures($this->project);
+
+        // CABLES AND CONNECTORS
+        $this->generateVarieties($this->project);
 
         // STRING BOXES
-        /** @var \AppBundle\Manager\StringBoxManager $stringBoxManager */
-        $stringBoxManager = $this->manager('string_box');
-        $stringBoxLoader = new StringBoxLoader($stringBoxManager);
-        $stringBoxCalculator = new StringBoxCalculator($stringBoxLoader);
-        $stringBoxCalculator->calculate($this->project);
+        $this->generateStringBoxes($this->project);
 
-        $this->manager('project')->save($this->project);
+        // SAVING...
+        //$this->autoSave(true);
+        $this->save($this->project);
 
         return $this->project;
     }
@@ -137,6 +142,271 @@ class ProjectGenerator
     public function project(ProjectInterface $project)
     {
         $this->project = $project;
+
+        return $this;
+    }
+
+    /**
+     * @param ProjectInterface $project
+     * @return $this
+     */
+    public function process(ProjectInterface $project)
+    {
+        if(!$project->isComputable()){
+            $this->exception('Project is not computable. Call the getChecklist() method to view the status');
+        }
+
+        /** @var ProjectProcessor $processor */
+        $processor = $this->container->get('app.project_processor');
+        $processor->process($project);
+
+        $this->save($project);
+
+        return $this;
+    }
+
+    /**
+     * @param ProjectInterface $project
+     * @return $this
+     */
+    public function pricing(ProjectInterface $project)
+    {
+        /** @var \AppBundle\Manager\Pricing\RangeManager $manager */
+        $manager = $this->manager('range');
+        $precifier = new Precifier($manager);
+
+        $precifier->priceCost($project);
+
+        /** @var \AppBundle\Entity\Component\PricingManager $pricingManager */
+        $pricingManager = $this->container->get('app.kit_pricing_manager');
+        $precifier->priceSale($project, $pricingManager);
+
+        //FinancialAnalyzer::analyze($project);
+        $this->save($project);
+
+        return $this;
+    }
+
+    /**
+     * @param ProjectInterface $project
+     * @param MakerInterface $maker
+     * @return $this
+     */
+    public function generateInverters(ProjectInterface $project, MakerInterface $maker)
+    {
+        if(!$maker->isMakerInverter())
+            $this->exception('Invalid maker');
+
+        $this->resetInverters($project);
+
+        /** @var \AppBundle\Manager\InverterManager $manager */
+        $manager = $this->manager('inverter');
+        $loader = new InverterLoader($manager);
+
+        $inverters = $loader
+            ->maker($maker)
+            ->project($project)
+            ->get();
+
+        $power = $project->getInfPower();
+
+        // Progressive loader, if inverters is empty
+        while (empty($inverters)){
+            $power += 0.2;
+            $inverters = $loader->power($power)->get();
+        }
+
+        $project->setInfPower($power);
+
+        foreach ($inverters as $inverter){
+            $projectInverter = new ProjectInverter();
+            $projectInverter
+                ->setInverter($inverter)
+                ->setQuantity($inverter->quantity)
+            ;
+
+            $project->addProjectInverter($projectInverter);
+        }
+
+        // INVERTER COMBINATIONS
+        Combiner::combine($project);
+
+        $this->save($project);
+
+        return $this;
+    }
+
+    /**
+     * @param ProjectInterface $project
+     * @return $this
+     */
+    public function generateAreas(ProjectInterface $project)
+    {
+        $this->resetAreas($project);
+
+        $manager = $this->manager('project_area');
+
+        $latitude = $project->getLatitude();
+        $longitude = $project->getLongitude();
+        $inclination = (int) abs($latitude);
+        $orientation = $longitude < 0 ? 0 : 180;
+        $projectModule = $project->getProjectModules()->first();
+        $projectInverters = $project->getProjectInverters();
+
+        foreach ($projectInverters as $projectInverter){
+            /** @var \AppBundle\Entity\Component\InverterInterface $inverter */
+            $inverter = $projectInverter->getInverter();
+            //$mppt = $this->getMpptOptions($inverter->getMpptNumber());
+            $mppt = $inverter->getMpptNumber();
+
+            $projectArea = $manager->create();
+            $projectArea
+                ->setProjectInverter($projectInverter)
+                ->setProjectModule($projectModule)
+                ->setInclination($inclination)
+                ->setOrientation($orientation)
+                ->setStringNumber($projectInverter->getParallel())
+                ->setModuleString($projectInverter->getSerial())
+            ;
+
+            $projectInverter
+                ->setLoss(10)
+                ->setOperation($mppt);
+        }
+
+        $this->save($project);
+
+        return $this;
+    }
+
+    /**
+     * @param ProjectInterface $project
+     * @return $this
+     */
+    public function generateStructures(ProjectInterface $project)
+    {
+        $this->resetStructures($project);
+
+        /** @var \AppBundle\Manager\StructureManager $manager */
+        $manager = $this->manager('structure');
+        $calculator = new StructureCalculator($manager);
+        $calculator->calculate($project);
+
+        $this->save($project);
+
+        return $this;
+    }
+
+    /**
+     * @param ProjectInterface $project
+     * @return $this
+     */
+    public function generateVarieties(ProjectInterface $project)
+    {
+        $this->resetVarieties($project);
+
+        /** @var \AppBundle\Manager\VarietyManager $manager */
+        $manager = $this->manager('variety');
+        $calculator = new VarietyCalculator($manager);
+        $calculator->calculate($project);
+
+        $this->save($project);
+
+        return $this;
+    }
+
+    /**
+     * @param ProjectInterface $project
+     * @return $this
+     */
+    public function generateStringBoxes(ProjectInterface $project)
+    {
+        $this->resetStringBoxes($project);
+
+        /** @var \AppBundle\Manager\StringBoxManager $manager */
+        $manager = $this->manager('string_box');
+        $loader = new StringBoxLoader($manager);
+        $calculator = new StringBoxCalculator($loader);
+        $calculator->calculate($project);
+
+        $this->save($project);
+
+        return $this;
+    }
+
+    /**
+     * @param ProjectInterface $project
+     * @return $this
+     */
+    public function resetInverters(ProjectInterface $project)
+    {
+        $manager = $this->manager('project_inverter');
+        foreach ($project->getProjectInverters() as $projectInverter){
+            $project->removeProjectInverter($projectInverter);
+            $manager->delete($projectInverter, !$project->getProjectInverters()->next());
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ProjectInterface $project
+     * @return $this
+     */
+    public function resetAreas(ProjectInterface $project)
+    {
+        $manager = $this->manager('project_area');
+        $projectAreas = $project->getAreas();
+
+        $count = $projectAreas->count();
+        foreach ($project->getAreas() as $key => $projectArea){
+            $manager->delete($projectArea, ($key == $count-1));
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ProjectInterface $project
+     * @return $this
+     */
+    public function resetStructures(ProjectInterface $project)
+    {
+        $manager = $this->manager('project_structure');
+        foreach ($project->getProjectStructures() as $projectStructure){
+            $project->removeProjectStructure($projectStructure);
+            $manager->delete($projectStructure, !$project->getProjectStructures()->next());
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ProjectInterface $project
+     * @return $this
+     */
+    public function resetVarieties(ProjectInterface $project)
+    {
+        $manager = $this->manager('project_variety');
+        foreach ($project->getProjectVarieties() as $projectVariety){
+            $project->removeProjectVariety($projectVariety);
+            $manager->delete($projectVariety, !$project->getProjectVarieties()->next());
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ProjectInterface $project
+     * @return $this
+     */
+    public function resetStringBoxes(ProjectInterface $project)
+    {
+        $manager = $this->manager('project_string_box');
+        foreach ($project->getProjectStringBoxes() as $projectStringBox){
+            $project->removeProjectStringBox($projectStringBox);
+            $manager->delete($projectStringBox, !$project->getProjectStringBoxes()->next());
+        }
 
         return $this;
     }
@@ -340,5 +610,19 @@ class ProjectGenerator
     private function exception($message)
     {
         throw new \InvalidArgumentException($message);
+    }
+
+    /**
+     * @param $project
+     */
+    private function save($project)
+    {
+        if(!$this->manager){
+            $this->manager = $this->manager('project');
+        }
+
+        if($this->autoSave){
+            $this->manager->save($project);
+        }
     }
 }

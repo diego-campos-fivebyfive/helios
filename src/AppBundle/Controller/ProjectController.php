@@ -14,6 +14,7 @@ use AppBundle\Entity\Component\ProjectModule;
 use AppBundle\Form\Component\ProjectAreaType;
 use AppBundle\Form\Component\ProjectType;
 use AppBundle\Form\Project\ProjectInverterType;
+use AppBundle\Service\ProjectGenerator\StructureCalculator;
 use AppBundle\Service\ProjectHelper;
 use AppBundle\Service\ProjectProcessor;
 use Symfony\Component\HttpFoundation\Request;
@@ -119,18 +120,15 @@ class ProjectController extends AbstractController
 
             /** @var \AppBundle\Entity\Component\MakerInterface $maker */
             $maker = $this->manager('maker')->find(60627);
-            $roofType = 1;
+            //$roofType = 1;
             $position = 0;
 
             /** @var \AppBundle\Service\ProjectGenerator\ProjectGenerator $generator */
             $generator = $this->get('project_generator');
+            $generator->autoSave(false);
 
             /** @var ProjectInterface $project */
-            //$project = $this->manager('project')->create();
-
-            $project
-                ->setStructureType(ProjectInterface::STRUCTURE_SICES)
-                ->setRoofType($roofType);
+            $project->setStructureType(ProjectInterface::STRUCTURE_SICES);
 
             $project = $generator
                 ->project($project)
@@ -139,11 +137,7 @@ class ProjectController extends AbstractController
                 ->maker($maker)
                 ->generate();
 
-            $this->get('project_manipulator')->generateAreas($project);
-
-            /** @var ProjectHelper $helper */
-            $helper = $this->get('app.project_helper');
-            $helper->processProject($project);
+            $manager->save($project);
 
             return $this->json([
                 'project' => [
@@ -171,11 +165,61 @@ class ProjectController extends AbstractController
      */
     public function updateAction(Request $request, Project $project)
     {
+        $previous = [
+            'power' => $project->getInfPower(),
+            'consumption' => $project->getInfConsumption(),
+            'latitude' => $project->getLatitude(),
+            'longitude' => $project->getLongitude(),
+            'roof' => $project->getRoofType(),
+            'structure' => $project->getStructureType()
+        ];
+
         $form = $this->createForm(ProjectType::class, $project);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
+
+            $manager = $this->manager('project');
+
+            $generator = $this->getGenerator();
+
+            /**
+             * REPROCESS INVERTERS IF FIELDS IS CHANGED
+             * consumption || latitude || longitude
+             */
+            if($previous['consumption'] != $project->getInfConsumption()
+                || $previous['latitude'] != $project->getLatitude()
+                || $previous['longitude'] != $project->getLongitude()){
+
+                $power = $this->get('power_estimator')->estimate(
+                    $project->getInfConsumption(),
+                    $project->getLatitude(),
+                    $project->getLongitude()
+                );
+
+                $project->setInfPower($power);
+
+                /** @var \AppBundle\Entity\Component\MakerInterface $maker */
+                $maker = $this->manager('maker')->find(60627);
+                $generator
+                    ->generateInverters($project, $maker)
+                    ->generateStructures($project)
+                    ->generateStringBoxes($project)
+                    ->generateVarieties($project);
+            }
+
+            /**
+             * REPROCESS STRUCTURES IF FIELDS IS CHANGED
+             * roof || structure
+             */
+            if($previous['roof'] != $project->getRoofType()
+                || $previous['structure'] != $project->getStructureType()){
+
+                $generator->generateStructures($project);
+            }
+
+            $manager->save($project);
 
             return $this->json([
                 'project' => [
@@ -210,15 +254,31 @@ class ProjectController extends AbstractController
             /** @var ProjectModule $projectModule */
             $projectModule = $project->getProjectModules()->first();
 
+            $current = $projectModule->getGroups();
+
             $groups = $request->request->get('groups');
 
-            $projectModule->setGroups($groups);
+            foreach ($current as $key => $data){
+                if(array_sum($data) != array_sum($groups[$key])){
 
-            $this->manager('project_module')->save($projectModule);
+                    $generator = $this->getGenerator();
+                    $generator->autoSave(false);
 
-            $this->get('structure_calculator')->calculate($project);
+                    $projectModule->setGroups($groups);
 
-            return $this->json();
+                    $generator
+                        ->generateAreas($project)
+                        ->generateStructures($project)
+                        ->generateVarieties($project)
+                    ;
+
+                    $this->manager('project')->save($project);
+
+                    break;
+                }
+            }
+
+            return $this->json([]);
         }
 
         return $this->render('project.form_groups', [
@@ -232,9 +292,8 @@ class ProjectController extends AbstractController
     public function processAction(Request $request, Project $project)
     {
         if($project->isComputable()) {
-            /** @var ProjectHelper $helper */
-            $helper = $this->get('app.project_helper');
-            $helper->processProject($project);
+
+            $this->get('project_generator')->process($project);
 
             $metadata = $project->getMetadata();
 
@@ -278,9 +337,20 @@ class ProjectController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
 
-            $this->manager('project_inverter')->save($projectInverter);
+            $generator = $this->getGenerator();
 
-            $this->onUpdateProjectInverter($projectInverter);
+            if($projectInverter->operationIsChanged()) {
+
+                $project = $projectInverter->getProject();
+                $generator
+                    ->generateStringBoxes($project)
+                    ->generateVarieties($project);
+
+                //$this->manager('project_inverter')->save($projectInverter);
+                //$this->onUpdateProjectInverter($projectInverter);
+
+                $generator->process($project);
+            }
 
             return $this->json([]);
         }
@@ -440,12 +510,10 @@ class ProjectController extends AbstractController
      */
     private function onUpdateProjectInverter(ProjectInverterInterface $projectInverter)
     {
-        $this->resetProjectAreas($projectInverter);
-
-        $project = $projectInverter->getProject();
-
-        $this->get('project_manipulator')->synchronize($project);
-        $this->get('structure_calculator')->calculate($project);
+        //$this->resetProjectAreas($projectInverter);
+        ///$project = $projectInverter->getProject();
+        //$this->get('project_manipulator')->synchronize($project);
+        //$this->get('structure_calculator')->calculate($project);
     }
 
     /**
@@ -475,5 +543,13 @@ class ProjectController extends AbstractController
         }
 
         return null;
+    }
+
+    /**
+     * @return object|\AppBundle\Service\ProjectGenerator\ProjectGenerator
+     */
+    private function getGenerator()
+    {
+        return $this->get('project_generator');
     }
 }

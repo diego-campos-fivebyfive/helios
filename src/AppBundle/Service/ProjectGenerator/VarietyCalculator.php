@@ -30,15 +30,18 @@ class VarietyCalculator
      */
     public function calculate(ProjectInterface $project)
     {
-        $moduleConnector = $project->getProjectModules()->first()->getModule()->getConnectionType();
+        $projectAreas = $project->getAreas();
+        $moduleConnector = $projectAreas->first()->getProjectModule()->getModule()->getConnectionType();
 
         $connectors = [
             $moduleConnector => 0
         ];
-        foreach ($project->getProjectInverters() as $projectInverter){
 
-            $connector = $projectInverter->getInverter()->getConnectionType();
-            $strings = $projectInverter->getSerial() * $projectInverter->getParallel();
+        /** @var \AppBundle\Entity\Component\ProjectAreaInterface $projectArea */
+        foreach ($project->getAreas() as $projectArea){
+
+            $connector = $projectArea->getProjectInverter()->getInverter()->getConnectionType();
+            $strings = $projectArea->getStringNumber() * $projectArea->getModuleString();
 
             if('borne' == $connector){
                 $connector = 'mc4';

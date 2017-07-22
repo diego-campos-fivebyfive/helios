@@ -13,6 +13,12 @@ use AppBundle\Manager\StructureManager;
  */
 class StructureCalculator
 {
+    const ROOF_ROMAN_AMERICAN   = 'ROOF_ROMAN_AMERICAN';    //0
+    const ROOF_CEMENT           = 'ROOF_CEMENT';            //1
+    const ROOF_FLAT_SLAB        = 'ROOF_FLAT_SLAB';         //2
+    const ROOF_SHEET_METAL      = 'ROOF_SHEET_METAL';       //3
+    const ROOF_SHEET_METAL_PFM  = 'ROOF_SHEET_METAL_PFM';   //4
+
     const PROFILE_MIDDLE = 'PROFILE_MIDDLE';
     const TERMINAL_FINAL = 'TERMINAL_FINAL';
     const TERMINAL_INTERMEDIARY = 'TERMINAL_INTERMEDIARY';
@@ -47,6 +53,15 @@ class StructureCalculator
     ];
 
     /**
+     * Database "id" from structure makers
+     * @var array
+     */
+    private $makers = [
+        ProjectInterface::STRUCTURE_SICES => 1,
+        ProjectInterface::STRUCTURE_K2_SYSTEM => 2
+    ];
+
+    /**
      * @var StructureManager
      */
     private $manager;
@@ -61,22 +76,27 @@ class StructureCalculator
      */
     public function calculate(ProjectInterface $project)
     {
+        $makerId = $this->makers[$project->getStructureType()];
+
         /** @var \AppBundle\Entity\Component\StructureInterface[] $profiles */
-        $profiles = $this->findStructure(['type' => 'perfil', 'subtype' => 'roman'], false);
+        $profiles = $this->findStructure(['maker' => $makerId, 'type' => 'perfil', 'subtype' => 'roman'], false);
 
         $items = [];
         foreach ($this->mappingCriteria as $field => $criteria) {
+            $criteria['maker'] = $makerId;
             $items[$field] = $this->findStructure($criteria);
         }
 
         /** @var \AppBundle\Entity\Component\ProjectModuleInterface $projectModule */
         $projectModule = $project->getProjectModules()->first();
         $countModules = 0;
-        foreach ($projectModule->getGroups() as $group) {
+        /*foreach ($projectModule->getGroups() as $group) {
             $countModules += $group['lines'] * $group['modules'];
+        }*/
+        /** @var \AppBundle\Entity\Component\ProjectAreaInterface $projectArea */
+        foreach ($project->getAreas() as $projectArea){
+            $countModules += $projectArea->getStringNumber() * $projectArea->getModuleString();
         }
-
-        $roof = $project->getRoofType();
 
         uasort($profiles, function (Structure $a, Structure $b) {
             return $b->getSize() > $a->getSize();
@@ -189,7 +209,7 @@ class StructureCalculator
                 }
 
                 if (!$key) {
-                    $profiles[$a] += 1;
+                    $usedProfiles[$a] += 1;
                 } else {
                     $usedProfiles[$key] += 2;
                 }
@@ -219,9 +239,9 @@ class StructureCalculator
             $screwHammer = $base;
             $nutM10 = $base;
             $screwStr = $base;
-            $screwAuto = 4 * (ceil(($lineSize) / 0.4) + 1) * $linesOfModules;
+            $screwAuto = 4 * (ceil(($lineSize) / 0.4) + 1);
 
-            if (4 == $roof) {
+            if (self::ROOF_SHEET_METAL_PFM == $project->getRoofType()) {
                 $screwAuto = $profileMiddlePlate * 4;
             }
 
@@ -260,22 +280,22 @@ class StructureCalculator
         }
 
         switch ($project->getRoofType()) {
-            case 0:
+            case self::ROOF_ROMAN_AMERICAN:
                 $baseStructure = $items[self::BASE_HOOK];
                 $structures[] = ['quantity' => (int) $total_base, 'structure' => $baseStructure];
                 break;
-            case 1:
+            case self::ROOF_CEMENT:
                 $baseStructure = $items[self::BASE_SCREW_FRAME];
                 $structures[] = ['quantity' => (int) $total_base, 'structure' => $baseStructure];
                 break;
 
-            case 2:
+            case self::ROOF_FLAT_SLAB:
                 $baseStructure = 0 == $position ? $items[self::BASE_TRIANGLE_VERTICAL] : $items[self::BASE_TRIANGLE_HORIZONTAL];
                 $structures[] = ['quantity' => (int) $total_term_inter, 'structure' => $baseStructure];
                 break;
 
-            case 3:
-            case 4:
+            case self::ROOF_SHEET_METAL:
+            case self::ROOF_SHEET_METAL_PFM:
                 $baseStructure = $items[self::BASE_SCREW_AUTO];
                 $structures[] = ['quantity' => (int) $total_parafuso_auto, 'structure' => $baseStructure];
 
@@ -313,5 +333,19 @@ class StructureCalculator
         $method = $single ? 'findOneBy' : 'findBy';
 
         return $this->manager->$method($criteria);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function getRoofTypes()
+    {
+        return [
+            self::ROOF_ROMAN_AMERICAN,
+            self::ROOF_CEMENT,
+            self::ROOF_FLAT_SLAB,
+            self::ROOF_SHEET_METAL,
+            self::ROOF_SHEET_METAL_PFM
+        ];
     }
 }
