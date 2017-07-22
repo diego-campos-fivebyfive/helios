@@ -33,7 +33,7 @@
     animation-name: map;
 }
 .map-wrap {
-    background: #1ab394 url(bg.png);
+    background: #00A7EC url(bg.png);
     padding: 1px;
     border-radius: 3px;
     position: relative;
@@ -42,7 +42,7 @@
     line-height: 60px;
     font-size: 24px;
     margin: 0;
-    color: #1ab394;
+    color: #00A7EC;
 }
 .map-label span {
     display: block;
