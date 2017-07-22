@@ -46,5 +46,15 @@
         </tr>
     {% endfor %}
 
+
+    {# VARIETIES #}
+    {% for projectVariety in project.projectVarieties %}
+        <tr>
+            <td> {{ projectVariety.variety.code }} </td>
+            <td> {{ projectVariety.variety.description }} </td>
+            <td> {{ projectVariety.quantity }} </td>
+        </tr>
+    {% endfor %}
+
     </tbody>
 </table>

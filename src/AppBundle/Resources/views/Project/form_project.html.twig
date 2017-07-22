@@ -627,7 +627,7 @@
                 }
             },
             configureProjectForm: function(){
-                {% if false %}
+                {% if true %}
                 var form_project = $('#form_project');
                 button = form_project.find('button[type="submit"]');
                 button.ladda();
@@ -646,13 +646,13 @@
                         button.ladda('start');
 
                         ProjectManager.submit(form_project, function (xhr) {
+                            button.ladda('stop');
                             var response = xhr.responseJSON;
                             if(response.hasOwnProperty('project')){
                                 ProjectManager.project = response.project;
 
                                 ProjectManager.onSaveProject();
                             }
-                            button.ladda('stop');
                         });
                     }
                 });
@@ -999,7 +999,7 @@
             //load_project_info();
 
             form_button.ladda();
-            form_project.on('submit', function(event) {
+            /*form_project.on('submit', function(event) {
                 event.preventDefault();
                 if('save' == form_mode) {
                     var form = $(this);
@@ -1021,7 +1021,7 @@
                 }else{
                     unlock_form_project();
                 }
-            });
+            });*/
 
             {% endif %}
 

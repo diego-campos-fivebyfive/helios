@@ -9,32 +9,41 @@
  * file that was distributed with this source code.
  */
 
-namespace AppBundle\Service\Component;
+namespace AppBundle\Service\ProjectGenerator;
 
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Pricing\Memorial;
+use AppBundle\Manager\Pricing\RangeManager;
 use AppBundle\Manager\ProjectManager;
 use AppBundle\Entity\Pricing\Range;
+use AppBundle\Model\KitPricing;
 
 /**
  * ProjectPrecifier
  *
  * @author João Zaqueu Chereta <joaozaqueu@kolinalabs.com>
  */
-class ProjectPrecifier
+class Precifier
 {
     /**
-     * @var ProjectManager
+     * @var RangeManager
      */
-    private $projectManager;
+    private $manager;
 
-    public function __construct(ProjectManager $projectManager)
+    /**
+     * Precifier constructor.
+     * @param RangeManager $manager
+     */
+    public function __construct(RangeManager $manager)
     {
-        $this->projectManager = $projectManager;
+        $this->manager = $manager;
     }
 
     public function priceCost(ProjectInterface $project)
     {
+        if(!$project->getPower())
+            $this->exception('Project power is null');
+
         $memorial = $this->findMemorial();
         $components = $this->filterComponents($project);
         $codes = array_keys($components);
@@ -60,8 +69,35 @@ class ProjectPrecifier
         }
 
         $project->setCostPrice($costPrice);
+    }
 
-        $this->projectManager->save($project);
+    /**
+     * @param ProjectInterface $project
+     * @param \AppBundle\Entity\Component\PricingManager $pricingManager
+     */
+    public function priceSale(ProjectInterface $project, $pricingManager)
+    {
+        //$pricingManager = $this->get('app.kit_pricing_manager');
+        $margins = $pricingManager->findAll();
+        $percentEquipments = 0;
+        $percentServices = 0;
+        /** @var \AppBundle\Model\KitPricing $margin */
+        foreach ($margins as $margin){
+            switch ($margin->target){
+                case KitPricing::TARGET_EQUIPMENTS:
+                    $percentEquipments += $margin->percent;
+                    break;
+                case KitPricing::TARGET_SERVICES:
+                    $percentServices += $margin->percent;
+                    break;
+                default:
+                    $percentServices += $margin->percent;
+                    $percentEquipments += $margin->percent;
+                    break;
+            }
+        }
+
+        SalePrice::calculate($project, $percentEquipments, $percentServices);
     }
 
     /**
@@ -100,7 +136,7 @@ class ProjectPrecifier
     private function findRanges(array $codes, $level, $power)
     {
 
-        $qb = $this->projectManager->getEntityManager()->createQueryBuilder();
+        $qb = $this->manager->getEntityManager()->createQueryBuilder();
         $qb->select('r')->from(Range::class, 'r');
         $qb->where(
             $qb->expr()->in('r.code', $codes)
@@ -133,7 +169,7 @@ class ProjectPrecifier
      */
     private function findMemorial()
     {
-        return $this->projectManager
+        return $this->manager
             ->getEntityManager()
             ->createQueryBuilder()
             ->select('m')
@@ -146,4 +182,11 @@ class ProjectPrecifier
             ->getOneOrNullResult();
     }
 
+    /**
+     * @param $message
+     */
+    private function exception($message)
+    {
+        throw new \InvalidArgumentException($message);
+    }
 }

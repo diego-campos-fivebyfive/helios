@@ -16,7 +16,7 @@ use AppBundle\Entity\Customer;
 use AppBundle\Entity\CustomerInterface;
 use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\Order\OrderInterface;
-use AppBundle\Util\KitGenerator\StructureCalculator;
+use AppBundle\Service\ProjectGenerator\StructureCalculator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\TokenizerTrait;

@@ -275,6 +275,7 @@ class ProjectHelper
     }
 
     /**
+     * @deprecated
      * @param ProjectInterface $project
      */
     public function processProject(ProjectInterface $project)

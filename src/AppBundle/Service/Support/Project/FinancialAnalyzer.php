@@ -16,11 +16,8 @@ abstract class FinancialAnalyzer implements FinancialAnalyzerInterface
 
         $metadata = $project->getMetadata();
 
-        /*dump($metadata); die;
-        dump($project); die;*/
-
         $finalPrice = $project->getSalePrice();
-        $lifeTime = $project->getLifetime();
+        $lifeTime = (int) $project->getLifetime();
         $energyProduction = $metadata['total']['kwh_year'];
         $energyPrice = $project->getEnergyPrice();
         $rate = $project->getInflation();
