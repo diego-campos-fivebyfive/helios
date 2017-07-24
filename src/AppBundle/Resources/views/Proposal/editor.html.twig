@@ -249,11 +249,43 @@
                     </div>
 
                     <div id="dsimplePayback">
-                        {{ project.paybackYears }}
+                        {% if project.paybackYears == 1 %}
+                            1 ano
+                        {% elseif project.paybackYears > 1 %}
+                            {{ project.paybackYears }} anos
+                        {% endif %}
+
+                        {% if project.paybackYears >= 1 and project.paybackMonths >= 1 %}
+                            e
+                        {% elseif project.paybackYears < 1 and project.paybackMonths < 1 %}
+                            0
+                        {% endif %}
+
+                        {% if project.paybackMonths == 1 %}
+                            1 mês
+                        {% elseif project.paybackMonths > 1 %}
+                            {{ project.paybackMonths }} meses
+                        {% endif %}
                     </div>
 
                     <div id="ddiscountedPayback">
-                        {{ project.paybackYearsDisc }}
+                        {% if project.paybackYearsDisc == 1 %}
+                            1 ano
+                        {% elseif project.paybackYearsDisc > 1 %}
+                            {{ project.paybackYearsDisc }} anos
+                        {% endif %}
+
+                        {% if project.paybackYearsDisc >= 1 and project.paybackMonthsDisc >= 1 %}
+                            e
+                        {% elseif project.paybackYearsDisc < 1 and project.paybackMonthsDisc < 1 %}
+                            0
+                        {% endif %}
+
+                        {% if project.paybackMonthsDisc == 1 %}
+                            1 mês
+                        {% elseif project.paybackMonthsDisc > 1 %}
+                            {{ project.paybackMonthsDisc }} meses
+                        {% endif %}
                     </div>
 
                     <div id="daccumulatedCashChart" data-type="chart" data-chart="financial"
