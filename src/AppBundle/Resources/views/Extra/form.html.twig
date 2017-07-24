@@ -22,32 +22,25 @@
 
                                 <div class="panel panel-primary input_data">
                                     <div class="panel-heading">
-                                        &nbsp; Dados Técnicos
+                                        &nbsp; Dados
                                     </div>
                                     <div class="panel-body">
 
-                                        <div class="form-group col-md-3">
-                                            {{ form_label(form.description, 'Descrição') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.description,{attr:{class:'form-control'}}) }}
-                                            </div>
+                                        <div class="form-group col-lg-12">
+                                            {{ form_widget(form.description,{attr:{class:'form-control', 'placeholder':'Descrição do Extra'}}) }}
+                                            <div class="hr-line-dashed"></div>
                                         </div>
-
-                                        <div class="form-group col-md-3">
-                                            {{ form_label(form.type, 'Tipo') }}
-                                            {{ form_widget(form.type) }}
+                                        <div class="form-group col-md-4">
+                                            {{ form_label(form.type, 'Tipo do Extra') }}
+                                            {{ form_widget(form.type,{attr:{class:'form-control'}}) }}
                                         </div>
-
-                                        <div class="form-group col-md-3">
+                                        <div class="form-group col-lg-4">
                                             {{ form_label(form.pricingBy, 'Preço por') }}
-                                                {{ form_widget(form.pricingBy) }}
+                                                {{ form_widget(form.pricingBy,{attr:{class:'form-control'}}) }}
                                         </div>
-
-                                        <div class="form-group col-md-3">
-                                            {{ form_label(form.costPrice, 'Preço') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.costPrice,{attr:{class:'form-control'}}) }}
-                                            </div>
+                                        <div class="form-group col-lg-4">
+                                            {{ form_label(form.costPrice, 'Valor do Extra') }}
+                                            {{ form_widget(form.costPrice,{attr:{class:'form-control', 'placeholder': 'R$ 000,00'}}) }}
                                         </div>
                                     </div>
                                 </div>

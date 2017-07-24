@@ -68,6 +68,7 @@ class Extra implements ExtraInterface
     {
         $this->type = self::TYPE_PRODUCT;
         $this->pricingBy = self::PRICING_FIXED;
+        $this->type = self::LABEL_PRODUCT;
     }
 
     /**
@@ -102,6 +103,16 @@ class Extra implements ExtraInterface
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLabel()
+    {
+        $labels = [0=>'Produto', 1=>'Serviço'];
+
+        return $labels[$this->type];
     }
 
     /**

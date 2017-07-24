@@ -87,4 +87,9 @@ interface ExtraInterface
      * @return array
      */
     public static function getPricingOptions();
+
+    /**
+     * @return array
+     */
+    public function getLabel();
 }
