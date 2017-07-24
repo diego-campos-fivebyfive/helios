@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form\Component;
 
+use AppBundle\Entity\Component\Inverter;
 use AppBundle\Entity\Component\Maker;
 use AppBundle\Entity\Component\Module;
 use AppBundle\Entity\Component\Project;
@@ -26,12 +27,14 @@ class GeneratorType extends AbstractType
             ->add('maker', EntityType::class, [
                 'class' => Maker::class,
                 'query_builder' => function(EntityRepository $er){
+
                     return $er->createQueryBuilder('m')
+                        ->join(Inverter::class, 'i', 'WITH', 'i.maker = m.id')
                         ->where('m.context = :context')
                         ->setParameters([
                             'context' => 'component_inverter'
                         ]);
-                }
+                },
             ])
             ->add('roof', ChoiceType::class, [
                 'choices' => Project::getRootTypes()
