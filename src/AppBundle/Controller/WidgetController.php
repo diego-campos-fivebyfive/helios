@@ -44,26 +44,26 @@ class WidgetController extends AbstractController
         $month = $request->get('month', $today->format('m'));
         $day = $today->format('d');
 
-        $filter = $this->getProposalFilter();
+        //$filter = $this->getProposalFilter();
 
-        $member = $this->getCurrentMember();
+        $member = $this->member();
 
         $date = new \DateTime(sprintf('%s-%s-%s', $year, $month, $day));
         $lastDay = cal_days_in_month(CAL_GREGORIAN, $date->format('m'), $date->format('Y'));
 
-        $filter
+        /*$filter
             ->date($date)
-            ->at($group);
+            ->at($group);*/
 
         if (!$member->isAdmin()) {
             if ($member->isOwner()) {
-                $filter->account($member->getAccount());
+                //$filter->account($member->getAccount());
             } else {
-                $filter->member($member);
+                //$filter->member($member);
             }
         }
 
-        $data = $filter->get();
+        //$data = $filter->get();
 
         //$this->dd($data);
 
@@ -78,8 +78,9 @@ class WidgetController extends AbstractController
             ];
         }
 
+        $data = [];
         foreach ($data as $financial) {
-            if ($financial instanceof ProjectFinancialInterface && $financial->isIssued()) {
+            //if ($financial instanceof ProjectFinancialInterface && $financial->isIssued()) {
                 $project = $financial->getProject();
 
                 /**
@@ -99,10 +100,10 @@ class WidgetController extends AbstractController
                 $groups[$index]['power'] += $project->getPower();
                 $groups[$index]['amount'] += $project->getPrice();
 
-            }
+            //}
         }
 
-        return $this->jsonResponse([
+        return $this->json([
             'options' => [
                 'last_day' => $lastDay
             ],
@@ -115,25 +116,25 @@ class WidgetController extends AbstractController
      */
     public function summaryAction()
     {
-        $member = $this->getCurrentMember();
-        $filter = $this->getProposalFilter();
+        $member = $this->member();
+        //$filter = $this->getProposalFilter();
 
         if (!$member->isAdmin()) {
             if ($member->isOwner()) {
-                $filter->account($member->getAccount());
+                //$filter->account($member->getAccount());
             } else {
-                $filter->member($member);
+                //$filter->member($member);
             }
         }
 
-        $data = $filter->get();
+        //$data = $filter->get();
 
         $summary = [
             'count' => 0,
             'amount' => 0,
             'power' => 0
         ];
-        foreach ($data as $financial) {
+        /*foreach ($data as $financial) {
             if ($financial instanceof ProjectFinancialInterface && $financial->isIssued()) {
 
                 $project = $financial->getProject();
@@ -142,9 +143,9 @@ class WidgetController extends AbstractController
                 $summary['amount'] += $project->getPrice();
                 $summary['power'] += $project->getPower();
             }
-        }
+        }*/
 
-        return $this->jsonResponse([
+        return $this->json([
             'data' => $summary
         ], Response::HTTP_OK);
     }

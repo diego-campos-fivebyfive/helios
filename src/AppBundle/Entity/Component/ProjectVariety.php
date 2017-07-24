@@ -28,7 +28,7 @@ class ProjectVariety implements ProjectVarietyInterface
     /**
      * @var ProjectInterface
      *
-     * @ORM\ManyToOne(targetEntity="Project", inversedBy="projectStringBoxes")
+     * @ORM\ManyToOne(targetEntity="Project", inversedBy="projectVarieties")
      */
     private $project;
 

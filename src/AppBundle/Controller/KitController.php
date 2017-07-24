@@ -48,14 +48,16 @@ class KitController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-        $manager = $this->getKitManager();
+        /*$manager = $this->getKitManager();
         $account = $this->getCurrentAccount();
 
-        $kits = $manager->findBy(['account' => $account]);
+        $kits = $manager->findBy(['account' => $account]);*/
 
         $template = $request->isXmlHttpRequest() ? 'kit.kits' : 'kit.index';
 
         $this->clearTemplateCache($template);
+
+        $kits = [];
 
         return $this->render($template, array(
             'kits' => $kits
