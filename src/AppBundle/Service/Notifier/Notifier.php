@@ -1,9 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: joao
- * Date: 14/07/17
- * Time: 14:40
+ * @author João Zaqueu Chereta <joaozaqueu@kolinalabs.com>
  */
 
 namespace AppBundle\Service\Notifier;

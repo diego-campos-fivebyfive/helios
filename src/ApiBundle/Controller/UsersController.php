@@ -21,7 +21,7 @@ class UsersController extends FOSRestController
 
         /** @var AccountInterface $accountManager */
         $accountManager = $this->get('account_manager');
-        $account = $accountManager->find($data['account_id']);
+        $account = $accountManager->find($data['account']);
 
         /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
         $userManager = $this->get('fos_user.user_manager');
@@ -66,7 +66,7 @@ class UsersController extends FOSRestController
                 'lastname' => $member->getLastname(),
                 'email' => $member->getEmail(),
                 'phone' => $member->getPhone(),
-                'account_id' => $member->getAccount()->getId()
+                'account' => $member->getAccount()->getId()
             ];
         }
 

@@ -28,7 +28,6 @@ class AccountsController extends FOSRestController
             ->setEmail($data['email'])
             ->setState($data['state'])
             ->setCity($data['city'])
-            ->setPhone($data['phone'])
             ->setDistrict($data['district'])
             ->setStreet($data['street'])
             ->setNumber($data['number'])
