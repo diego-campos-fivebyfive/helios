@@ -20,7 +20,7 @@ const sendMemorial = memorial => postRequest(`${sices.uri}/memorials`, memorial)
 const sendAccount = account => postRequest(`${sices.uri}/accounts`, account)
 
 const getAccount = id => getRequest(`${sices.uri}/accounts/${id}`)
-const getUser = id => getRequest(`${sices.uri}/Users/${id}`)
+const getUser = id => getRequest(`${sices.uri}/users/${id}`)
 
 module.exports = {
   sendInveter,
