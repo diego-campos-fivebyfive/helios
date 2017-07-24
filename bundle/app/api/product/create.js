@@ -1,7 +1,10 @@
 'use strict'
 
+const { helpers } = require('../../config')
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
+
+const { pipe } = helpers
 
 const splitModule = product => ({
   code: product.code,
@@ -18,24 +21,12 @@ const splitStructure = product => ({
   description: product.description
 })
 
-let data
-
 const sendProduct = product => {
   switch (product.family) {
-    case 'module':
-      data = splitModule(product)
-      return Sices.sendModule(data)
-
-    case 'inverter':
-      data = splitInveter(product)
-      return Sices.sendInveter(data)
-
-    case 'structure':
-      data = splitStructure(product)
-      return Sices.sendStructure(data)
-
-    default:
-      return new Promise((resolve, reject) => reject(404))
+    case 'module': return pipe(Sices.sendModule, splitModule(product))
+    case 'inverter': return pipe(Sices.sendInveter, splitInveter(product))
+    case 'structure': return pipe(Sices.sendStructure, splitStructure(product))
+    default: return new Promise((resolve, reject) => reject(404))
   }
 }
 

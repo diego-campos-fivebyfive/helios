@@ -19,14 +19,12 @@ class ExtraType extends AbstractType
         $builder
             ->add('description', TextareaType::class)
             ->add('type', ChoiceType::class, [
-                'choices' => Extra::getTypes(),
-                'expanded' => true
+                'choices' => Extra::getTypes()
             ])
             ->add('pricingBy', ChoiceType::class, [
-                'choices' => Extra::getPricingOptions(),
-                'expanded' => true
+                'choices' => Extra::getPricingOptions()
             ])
-            ->add('costPrice')        ;
+            ->add('costPrice');
     }
     
     /**
