@@ -9,13 +9,12 @@ use AppBundle\Entity\Customer;
 use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AccountsController extends FOSRestController
 {
     public function postAccountAction(Request $request)
     {
-        dump($request);die;
         $data = json_decode($request->getContent(), true);
 
         /** @var AccountInterface $accountManager */
@@ -36,15 +35,9 @@ class AccountsController extends FOSRestController
             ->setContext(Customer::CONTEXT_ACCOUNT);
         $accountManager->save($account);
 
-        $view = View::create([
-            'id' => $account->getId(),
-            'firstname' => $account->getFirstname(),
-            'lastname' => $account->getLastname(),
-            'email' => $account->getEmail(),
-            'phone' => $account->getPhone()
-        ]);
-        $view->setStatusCode(Response::HTTP_CREATED);
-        return $this->handleView($view);
+        $account_id = $accountManager->flush();
+
+        return JsonResponse::create($account_id, 201);
 
     }
     /**

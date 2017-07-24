@@ -10,7 +10,7 @@ use FOS\RestBundle\View\View;
 use AppBundle\Entity\UserInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class UsersController extends FOSRestController
 {
@@ -43,9 +43,7 @@ class UsersController extends FOSRestController
                 ->setUser($user);
         $memberManager->save($member);
 
-        $view = View::create($data);
-        $view->setStatusCode(Response::HTTP_CREATED);
-        return $this->handleView($view);
+        return JsonResponse::create($member, 201);
     }
     /**
      * @ApiDoc(
