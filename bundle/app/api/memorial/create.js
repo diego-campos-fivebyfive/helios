@@ -1,8 +1,9 @@
 'use strict'
+
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
 
-const sendMemorial = (memorial) => Sices.sendMemorial({
+const sendMemorial = memorial => Sices.sendMemorial({
   version: memorial.version,
   status: memorial.status,
   start_at: memorial.start_at,

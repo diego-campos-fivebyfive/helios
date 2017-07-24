@@ -14,34 +14,8 @@ const users = [
     street: 'av. brasil',
     number: 1589,
     postcode: '80254369',
-    owner_id: 101,
-    user_id: 102,
+    owner: 36,
     status: 1
-  },
-    {
-    id: 2,
-    name: 'Name DEF',
-    status: 0,
-    owner: 101,
-    dangerousField: 'Mal'
-  },
-  {
-    id: 3,
-    name: 'Name HIJ',
-    status: 0,
-    owner: 102
-  },
-  {
-    id: 4,
-    name: 'Name KLM',
-    status: 0,
-    owner: 103
-  },
-  {
-    id: 5,
-    name: 'Name NOP',
-    status: 1,
-    owner: 104
   }
 ]
 

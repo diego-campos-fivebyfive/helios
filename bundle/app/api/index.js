@@ -1,13 +1,14 @@
 'use strict'
+
 const { app } = require('../config')
-const { router, sendResponse } = app
 
 const account = require('./account')
 const memorial = require('./memorial')
 const product = require('./product')
 
-router.post('/api/v1/notifications', ((request, response) => {
+const { router, sendResponse } = app
 
+router.post('/api/v1/notifications', ((request, response) => {
   const { body, callback } = request.body
   const requestCopy = request
   let action
@@ -15,6 +16,11 @@ router.post('/api/v1/notifications', ((request, response) => {
   switch (callback) {
     case 'account_created':
       action = account.create
+      requestCopy.body = body
+      break
+
+    case 'account_approved':
+      action = account.update
       requestCopy.body = body
       break
 

@@ -21,3 +21,10 @@ $ yarn start:dev
 ```
 $ yarn start:isquik
 ```
+
+### Para lint do bundle App:
+
+```
+$ cd bundle/app
+$ yarn lint
+```

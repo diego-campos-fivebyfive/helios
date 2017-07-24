@@ -1,8 +1,11 @@
 'use strict'
+
 const { create } = require('./create')
+const { update } = require('./update')
 
 const account = {
-  create
+  create,
+  update
 }
 
 module.exports = account
