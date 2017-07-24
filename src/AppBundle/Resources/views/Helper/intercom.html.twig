@@ -13,7 +13,8 @@
         conta: '{{ member.account.email }}',
         title: document.title,
         plano: '{{ plan }}',
-        n_kits: {{ member.account.kits.count }},
+        {#n_kits: {{ member.account.kits.count }},#}
+        n_kits: 0,
         n_projetos: {{ projects }},
         n_propostas: {{ proposals }},
         n_tarefas: {{ tasks }},

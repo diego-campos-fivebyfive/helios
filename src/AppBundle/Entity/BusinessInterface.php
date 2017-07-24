@@ -333,12 +333,6 @@ interface BusinessInterface extends BaseCustomerInterface
     public function getAllowedPersons();
 
     /**
-     * Access strict by account instance
-     * @return ArrayCollection
-     */
-    public function getKits();
-
-    /**
      * @param $work
      * @return BusinessInterface
      */
@@ -348,55 +342,6 @@ interface BusinessInterface extends BaseCustomerInterface
      * @return string
      */
     public function getOffice();
-
-    /**
-     * @return PackageInterface
-     */
-    public function getPackage();
-
-    /**
-     * @param PackageInterface $package
-     * @return CustomerInterface
-     */
-    public function setPackage(PackageInterface $package);
-
-    /**
-     * @see self::CONTEXT_ACCOUNT
-     *
-     * @param TeamInterface $team
-     * @return BusinessInterface
-     */
-    public function addTeam(TeamInterface $team);
-
-    /**
-     * @see self::CONTEXT_ACCOUNT
-     *
-     * @param TeamInterface $team
-     * @return BusinessInterface
-     */
-    public function removeTeam(TeamInterface $team);
-
-    /**
-     * @see self::CONTEXT_ACCOUNT
-     *
-     * @return ArrayCollection
-     */
-    public function getTeams();
-
-    /**
-     * @see self::CONTEXT_MEMBER
-     *
-     * @return TeamInterface
-     */
-    public function getTeam();
-
-    /**
-     * @see self::CONTEXT_MEMBER
-     *
-     * @param TeamInterface $teamsF
-     * @return CustomerInterface
-     */
-    public function setTeam(TeamInterface $team = null);
 
     /**
      * @param null $isLeader
@@ -545,11 +490,6 @@ interface BusinessInterface extends BaseCustomerInterface
      * @return BusinessInterface
      */
     public function removeClassification(CategoryInterface $classification);
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getProjects();
 
     /**
      * @param $title

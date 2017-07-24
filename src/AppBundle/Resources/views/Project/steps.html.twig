@@ -1,0 +1,43 @@
+
+{% if true %}
+
+<script>
+    $('[data-nav]').on('click', function(event) {
+        event.preventDefault();
+        var nav = $(this).data('nav');
+        var href = $(this).data('href');
+        var source = $(this).data('source');
+        if ('#' != href) {
+
+            swal({
+                title: 'Aguarde...',
+                text: '',
+                type: 'info',
+                showConfirmButton: false
+            });
+
+            var step = source+nav;
+
+            Request.send({
+                url: '{{ path('project_steps',{id:'_id_'}) }}'.replace(/_id_/g, Project.id),
+                method: 'post',
+                data: {step:step},
+                callback: function(xhr){
+                    if (202 == xhr.status) {
+                        window.location.href = href;
+                    } else {
+                        var response = xhr.responseJSON;
+                        swal({
+                            title: 'Ooops',
+                            text: response.errors[0],
+                            type: 'error',
+                            html: true
+                        });
+                    }
+                }
+            })
+        }
+    });
+</script>
+
+{% endif %}

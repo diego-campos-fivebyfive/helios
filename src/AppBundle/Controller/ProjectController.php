@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\MemberInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class ProjectController
@@ -262,15 +263,10 @@ class ProjectController extends AbstractController
                 if(array_sum($data) != array_sum($groups[$key])){
 
                     $generator = $this->getGenerator();
-                    $generator->autoSave(false);
 
                     $projectModule->setGroups($groups);
 
-                    $generator
-                        ->generateAreas($project)
-                        ->generateStructures($project)
-                        ->generateVarieties($project)
-                    ;
+                    $generator->generateStructures($project);
 
                     $this->manager('project')->save($project);
 
@@ -400,11 +396,20 @@ class ProjectController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
 
-            /** @var ProjectHelper $processor */
-            $helper = $this->get('app.project_helper');
-            $helper->debugArea($projectArea);
+            $project = $projectArea->getProjectInverter()->getProject();
 
-            $this->onUpdateProjectArea($projectArea);
+            $generator = $this->getGenerator();
+
+            $generator
+                ->autoSave(false)
+                ->synchronize($project)
+                ->generateStructures($project)
+                ->generateStringBoxes($project)
+                // TODO: This method has a high impact on the calculation performance
+                ->handleAreas($project)
+            ;
+
+            $generator->save($project, true);
 
             return $this->json([
                 'module' => [
@@ -477,32 +482,48 @@ class ProjectController extends AbstractController
     }
 
     /**
-     * @param ProjectInverter $projectInverter
+     * @Route("/{id}/steps", name="project_steps")
+     * //@Method("post")
      */
-    private function resetProjectAreas(ProjectInverterInterface $projectInverter)
+    public function stepAction(Request $request, Project $project)
     {
-        if($projectInverter->operationIsChanged()){
+        $step = $request->get('step');
+        $errors  = [];
 
-            $projectAreaManager = $this->manager('project_area');
-            $projectAreas = $projectInverter->getProjectAreas();
-
-            foreach($projectAreas as $key => $projectArea){
-                $projectAreaManager->delete($projectArea, ($key == $projectAreas->count()-1));
+        $toFinancial = function() use($project, &$errors){
+            if(empty($project->getMetadata())){
+                $errors[] = $this->translate('project.error.empty_calculation_metadata');
             }
+        };
 
-            /** @var \AppBundle\Entity\Project\MpptOperation $operation */
-            $operation = $this->manager('mppt')->find($projectInverter->getOperation());
-
-            for ($i = 0; $i < $operation->count(); $i++) {
-
-                /** @var \AppBundle\Entity\Component\ProjectArea $projectArea */
-                $projectArea = $projectAreaManager->create();
-
-                $projectArea->setProjectInverter($projectInverter);
-
-                $projectAreaManager->save($projectArea, ($i == $operation->count()-1));
+        $toProposal = function() use($project, &$errors){
+            if(empty($project->getAccumulatedCash())){
+                $errors[] = $this->translate('financial.error.analysis_not_calculated');
             }
+        };
+
+        switch($step) {
+            case 'scaling_financial':
+                $toFinancial();
+                break;
+
+            case 'scaling_proposal':
+                $toFinancial();
+                $toProposal();
+                break;
+
+            case 'financial_proposal':
+
+                break;
+            case 'financial_scaling': break;
+
+            case 'proposal_financial': break;
+            case 'proposal_scaling': break;
         }
+
+        return $this->json([
+            'errors' => $errors
+        ], empty($errors) ? Response::HTTP_ACCEPTED : Response::HTTP_CONFLICT);
     }
 
     /**
@@ -521,11 +542,9 @@ class ProjectController extends AbstractController
      */
     private function onUpdateProjectArea(ProjectAreaInterface $projectArea)
     {
-        $project = $projectArea->getProjectModule()->getProject();
-
-        $this->get('project_manipulator')->synchronize($project);
-        $this->get('structure_calculator')->calculate($project);
-
+        //$project = $projectArea->getProjectModule()->getProject();
+        //$this->get('project_manipulator')->synchronize($project);
+        //$this->get('structure_calculator')->calculate($project);
     }
 
     /*
