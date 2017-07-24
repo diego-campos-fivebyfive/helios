@@ -38,7 +38,7 @@
                                             {{ form_label(form.pricingBy, 'Preço por') }}
                                                 {{ form_widget(form.pricingBy,{attr:{class:'form-control'}}) }}
                                         </div>
-                                        <div class="form-group col-lg-4">
+                                        <div class="form-group col-lg-4" id="costPrice">
                                             {{ form_label(form.costPrice, 'Valor do Extra') }}
                                             {{ form_widget(form.costPrice,{attr:{class:'form-control', 'placeholder': 'R$ 000,00'}}) }}
                                         </div>
@@ -63,4 +63,10 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block scripts %}
+<script>
+    $(function() {
+    $('#costPrice').maskMoney({prefix:'R$ ', allowNegative: true, thousands:'.', decimal:',', affixesStay: false}); })
+</script>
 {% endblock %}

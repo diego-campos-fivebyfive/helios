@@ -60,13 +60,13 @@ class ExtraController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/update", name="extra_update")
+     * @Route("/{id}/update", name="extras_update")
      * @Method({"GET", "POST"})
      * @Breadcrumb("Extras")
      */
     public function updateAction(Request $request, Extra $extra)
     {
-        $editForm = $this->createForm(ExtraType::class, $extra);
+        $editForm = $this->createForm(ExtraType::class, $extra, []);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
