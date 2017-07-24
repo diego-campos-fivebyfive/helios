@@ -1,0 +1,18 @@
+{
+  "extends": "airbnb-base",
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "parserOptions": {
+    "sourceType": "strict"
+  },
+  "rules": {
+    "semi": ["error", "never"],
+    "max-len": ["error", 100],
+    "strict": ["error", "global"],
+    "comma-dangle": ["error", "never"],
+    "arrow-parens": ["error", "as-needed"],
+    "consistent-return": ["off", "always"]
+  }
+}
