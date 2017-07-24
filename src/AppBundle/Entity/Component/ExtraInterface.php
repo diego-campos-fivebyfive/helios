@@ -7,6 +7,12 @@ use AppBundle\Entity\AccountInterface;
 
 interface ExtraInterface
 {
+    const LABEL_PRODUCT = 0;
+    const LABEL_SERVICE = 1;
+
+    const LABEL_FIXED = 0;
+    const LABEL_POWER = 1;
+
     const TYPE_PRODUCT = 0;
     const TYPE_SERVICE = 1;
 
@@ -87,4 +93,14 @@ interface ExtraInterface
      * @return array
      */
     public static function getPricingOptions();
+
+    /**
+     * @return array
+     */
+    public function getLabel();
+
+    /**
+     * @return array
+     */
+    public function getPriceLabel();
 }
