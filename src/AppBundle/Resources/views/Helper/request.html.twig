@@ -1,0 +1,23 @@
+<script>
+
+    var Request = {
+        send: function(config){
+            var options = $.extend({},{
+                url: null,
+                method: 'get',
+                data: {}
+            }, config);
+            $.ajax({
+                url: options.url,
+                method: options.method,
+                data: options.data,
+                complete: function(xhr){
+                    if(options.hasOwnProperty('callback')){
+                        options.callback(xhr);
+                    }
+                }
+            })
+        }
+    }
+
+</script>

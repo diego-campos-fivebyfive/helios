@@ -175,23 +175,23 @@
                 <div id="dataProposal" class="hidden">
                     {#dados do client#}
                     <div id="dclient">
-                       {# {{ project.customer.name }}#}
+                        {{ project.customer.name }}
                     </div>
 
                     <div id="daverageConsumption">
-                       {# {{ project.infConsumption }}#}
+                        {{ project.infConsumption }}
                     </div>
 
                     <div id="ddocument">
-                       {# {{ project.customer.document }}#}
+                        {{ project.customer.document }}
                     </div>
 
                     <div id="dphone">
-                       {# {{ project.customer.phone }}#}
+                        {{ project.customer.phone }}
                     </div>
 
                     <div id="demail">
-                       {# {{ project.customer.email }}#}
+                        {{ project.customer.email }}
                     </div>
 
                     {#dados da geração#}
@@ -213,52 +213,51 @@
 
                     {#análise financeira#}
                     <div id="dlifetime">
-                        {#{{ project.lifetime }}#}
+                        {{ project.lifetime }}
                     </div>
 
                     <div id="dinflation">
-                       {# {{ project.inflation }}#}
+                        {{ project.inflation }}
                     </div>
 
                     <div id="dlossOfEfficiency">
-                        {#{{ project.efficiencyLoss }}#}
+                        {{ project.efficiencyLoss }}
                     </div>
 
                     <div id="dannualOperatingCost">
-                      {#  {{ project.annualCostOperation }}#}
+                        {{ project.annualCostOperation }}
                     </div>
 
                     <div id="dpriceOfKWh">
-                       {# {{ project.energyPrice }}#}
+                        {{ project.energyPrice }}
                     </div>
 
                     <div id="dproposalValue">
-                       {# {{ project.salePrice|currency }}#}
+                        {{ project.salePrice|currency }}
                     </div>
 
                     <div id="daccumulatedCash">
-                       {# {{ project.accumulatedCash(true)|currency }}#}
+                        {{ project.accumulatedCash(true)|currency }}
                     </div>
 
                     <div id="dvpl">
-           {#             {{ project.netPresentValue|currency }}#}
+                        {{ project.netPresentValue|currency }}
                     </div>
 
                     <div id="dtir">
-                      {#  {{ project.internalRateOfReturn|round }}#}
+                        {{ project.internalRateOfReturn|round }}
                     </div>
 
                     <div id="dsimplePayback">
-                       {# {{ project.paybackYears }}#}
+                        {{ project.paybackYears }}
                     </div>
 
                     <div id="ddiscountedPayback">
-                       {# {{ project.paybackYearsDisc }}#}
+                        {{ project.paybackYearsDisc }}
                     </div>
 
                     <div id="daccumulatedCashChart" data-type="chart" data-chart="financial"
-                         data-json="{{ projectFake.customer.generationChart|json_encode }}">
-                        {#project.accumulatedCash#}
+                         data-json="{{ project.accumulatedCash|json_encode }}">
                     </div>
 
                     {#equipamentos e serviços#}

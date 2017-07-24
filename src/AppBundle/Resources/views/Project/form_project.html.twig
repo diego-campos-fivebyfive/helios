@@ -292,7 +292,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-12">
+                            <div class="col-md-12" id="block_components">
                                 <div class="panel panel-info">
                                     <div class="panel-heading">
                                         Inversores e Módulos do Kit
@@ -305,7 +305,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-12">
+                            <div class="col-md-12" id="block_groups">
                                 <div class="panel panel-primary">
                                     <div class="panel-heading">
                                         Disposição dos Módulos
@@ -320,13 +320,11 @@
 
                         </div>
 
-                        <div class="row">
+                        <div class="row" id="block_config">
                             <div class="col-md-12">
                                 <h3 class="hipper-label"> 2. Configuração do Sistema </h3>
                             </div>
-                        </div>
 
-                        <div class="row">
                             <div id="project_inverters" data-load="{{ project.id ? path('project_inverters',{id:project.id}) }}" class="col-md-12">
                                 {% if project.id %}
                                     {% include view('helper.spinner') %}
@@ -334,13 +332,10 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row" id="block_results">
                             <div class="col-md-12">
                                 <h3 class="hipper-label"> 3. Resultados </h3>
                             </div>
-                        </div>
-
-                        <div class="row">
 
                             <div class="col-md-12">
                                 <div class="panel panel-primary">
@@ -381,86 +376,6 @@
                                 </div>
                             </div>
                         </div>
-
-
-                        {% if project.token %}
-
-                            {#<div class="row">
-                                <div class="col-md-12">
-                                    <h3 class="hipper-label"> 2. Configuração do Sistema </h3>
-                                </div>
-                            </div>#}
-
-                            {#<div class="row">
-                                <div id="project_inverters" data-load="{{ path('project_inverters',{id:project.id}) }}" class="col-md-12">
-                                    <div class="sk-spinner sk-spinner-circle">
-                                        {% for i in 1..12 %}
-                                            <div class="sk-circle{{ i }} sk-circle"></div>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            </div>#}
-
-                            {#<div class="row">
-                                <div id="inverter_forms" class="col-md-12">
-                                    <div class="sk-spinner sk-spinner-circle">
-                                        {% for i in 1..12 %}
-                                            <div class="sk-circle{{ i }} sk-circle"></div>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            </div>#}
-
-                            {#<div class="row">
-                                <div class="col-md-12">
-                                    <h3 class="hipper-label"> 3. Resultados </h3>
-                                </div>
-                            </div>
-
-                            <div class="row">
-
-                                <div class="col-md-12">
-                                    <div class="panel panel-warning">
-                                        <div class="panel-heading">
-                                            Gráfico e Dados
-                                        </div>
-                                        <div class="panel-body">
-
-                                            <div class="row">
-                                                <div id="calc_errors" class="col-md-12"></div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-md-8">
-                                                    &nbsp;
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <button id="process_button" data-style="zoom-in"
-                                                            class="btn btn-bg btn-block btn-warning ladda-button pull-right">
-                                                        <i class="fa fa-calculator"></i>
-                                                        {{ 'project.calculate'|trans }}
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                            <div class="hr-line-dashed"></div>
-
-                                            <div class="row">
-                                                <div class="col-md-8" id="chart_container">
-                                                    <canvas id="default_chart" height="500"></canvas>
-                                                </div>
-
-                                                <div class="col-md-4" style="margin-top:5rem;" id="info_process">
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>#}
-
-                        {% endif %}
-
                     </div>
                 </div>
             </div>
@@ -476,10 +391,15 @@
 
     {% include view('helper.plugins_js') %}
     {% include view('helper.numbers') %}
+    {% include view('helper.request') %}
 
     {% set ajax_process = true %}
 
     <script>
+
+        var Project = {
+            id: {{ project.id is not null ? project.id : 'null' }}
+        };
 
         /*form_project.on('submit', function(event){
             if(!project_customer.val() && 'save' == form_mode){
@@ -502,7 +422,8 @@
                 id: {{ project.id is not null ? project.id : 'null' }}
             },
             request: function(config){
-                var options = $.extend({},{
+                Request.send(config);
+                /*var options = $.extend({},{
                     url: null,
                     method: 'get',
                     data: {}
@@ -516,7 +437,8 @@
                             options.callback(xhr);
                         }
                     }
-                })
+                });*/
+
             },
             operations: function(id){
 
@@ -627,7 +549,7 @@
                 }
             },
             configureProjectForm: function(){
-                {% if false %}
+                {% if true %}
                 var form_project = $('#form_project');
                 button = form_project.find('button[type="submit"]');
                 button.ladda();
@@ -646,17 +568,23 @@
                         button.ladda('start');
 
                         ProjectManager.submit(form_project, function (xhr) {
+                            button.ladda('stop');
                             var response = xhr.responseJSON;
                             if(response.hasOwnProperty('project')){
                                 ProjectManager.project = response.project;
-
                                 ProjectManager.onSaveProject();
                             }
-                            button.ladda('stop');
                         });
                     }
                 });
                 {% endif %}
+            },
+            configureBlocks: function(){
+                if(ProjectManager.project.id){
+                    $('#block_components, #block_groups, #block_config, #block_results').show();
+                }else{
+                    $('#block_components, #block_groups, #block_config, #block_results').hide();
+                }
             },
             loadComponents: function(){
                 ProjectManager.load($('#project_components'));
@@ -711,6 +639,8 @@
                 $('#project_inverters').attr('data-load', inverters_url);
                 ProjectManager.loadInverters();
 
+                ProjectManager.configureBlocks();
+
                 ProjectManager.process();
             },
             onUpdateInverter: function(){
@@ -740,52 +670,14 @@
                     ProjectManager.process();
                 }
 
-                ProjectManager.btnProcess.on('click', function(){
-                    // TODO - Check project here
-                    //ProjectManager.process();
-                });
-
+                ProjectManager.configureBlocks();
                 ProjectManager.loadModalInfo();
             }
         };
 
         ProjectManager.onLoadManager();
 
-        //ProjectManager.loadInverters();
-        //ProjectManager.chart.init();
-
-
-
-        {#
-        $('#debug_button').on('click', function(){
-            /*ProjectManager.change(
-                $('#project_inverters'),
-                '{{ path('project_inverters',{id:'_id_'}) }}'.replace(/_id_/g, 99),
-                true
-            );*/
-
-            var calc_errors = $('#calc_errors');
-            ProjectManager.request({
-                url: '{{ path('project_process',{id:project.id}) }}',
-                method: 'post',
-                callback: function(xhr){
-                    var response = xhr.responseJSON;
-                    if(response.hasOwnProperty('data')) {
-                        ProjectManager.chart.generate(response.data);
-                        $('#calc_info').html(response.info);
-                        calc_errors.html(response.warnings);
-                    }else{
-                        //calc_errors.html(response);
-                    }
-                    //calc_button.ladda('stop');
-                    //Project.processing = false;
-                }
-            });
-        });
-        #}
-
         /*------------------------------------------------------------*/
-
 
         var form_project = $('form[name="project"]');
         var form_mode = 'save';
@@ -999,7 +891,7 @@
             //load_project_info();
 
             form_button.ladda();
-            form_project.on('submit', function(event) {
+            /*form_project.on('submit', function(event) {
                 event.preventDefault();
                 if('save' == form_mode) {
                     var form = $(this);
@@ -1021,7 +913,7 @@
                 }else{
                     unlock_form_project();
                 }
-            });
+            });*/
 
             {% endif %}
 
@@ -1093,7 +985,6 @@
                             modal_body.html(response);
                         }
                     });
-
                 }
             });
 
@@ -1230,7 +1121,7 @@
 
         {% endif %}
 
-        $('[data-nav]').on('click', function(event){
+        {#$('[data-nav]').on('click', function(event){
             event.preventDefault();
             var nav = $(this).data('nav');
             var href = $(this).data('href');
@@ -1276,6 +1167,7 @@
                 swal('Erro', 'O projeto não foi inicializado!', 'error');
             }
         });
+        #}
 
     </script>
 
@@ -1286,5 +1178,9 @@
         input: 'project_address',
         zoom: project.latitude ? 17 : 3
     }) %}
+
+
+    {# VALIDATE STEPS #}
+    {% include view('project.steps') %}
 
 {% endblock %}

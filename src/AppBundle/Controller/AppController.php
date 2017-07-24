@@ -21,7 +21,7 @@ class AppController extends AbstractController
 
         $this->getTopbarAction('app_index');
         
-        $member = $this->getCurrentMember();
+        $member = $this->member();
 
         return $this->render('dashboard.default', array(
             'member' => $member,
@@ -109,9 +109,11 @@ class AppController extends AbstractController
      */
     public function intercomAction()
     {
-        $member = $this->getCurrentMember();
+        $member = $this->member();
         $account = $member->getAccount();
-        $filter = $this->getProposalFilter();
+
+
+        /*$filter = $this->getProposalFilter();
 
         if (!$member->isAdmin()) {
             if ($member->isOwner()) {
@@ -123,12 +125,14 @@ class AppController extends AbstractController
 
         $data = array_filter($filter->get(), function(ProjectFinancialInterface $financial){
             return $financial->isIssued();
-        });
+        });*/
 
         $contacts = $member->isOwner() ? $member->getAccountContacts() : $member->getContacts() ;
 
         $tasks = $member->getAssignedTasks();
-        $projects = $member->isOwner() ? $member->getAccount()->getProjects() : $member->getProjects();
+        //$projects = $member->isOwner() ? $member->getAccount()->getProjects() : $member->getProjects();
+        $projects = 10;
+        $data = array_fill(0, 10, 2);
 
         /*if(!$account->isLocked()) {
             $plan = 'Trial';
@@ -146,7 +150,7 @@ class AppController extends AbstractController
         return $this->render('helper.intercom', [
             'member' => $member,
             'proposals' => count($data),
-            'projects' => $projects->count(),
+            'projects' => $projects,
             'tasks' => $tasks->count(),
             'contacts' => $contacts->count(),
             'plan' => $plan,

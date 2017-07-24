@@ -513,6 +513,7 @@
 
     {% include view('helper.plugins_js') %}
     {% include view('helper.numbers') %}
+    {% include view('helper.request') %}
 
     <script>
         var sanitize = function (element) {
@@ -779,6 +780,7 @@
             custom_mask($('#financial_rate'));
             custom_mask($('#financial_efficiencyLoss'));
 
+            {#
             $('[data-nav]').on('click', function (event) {
                 event.preventDefault();
                 var nav = $(this).data('nav');
@@ -814,6 +816,7 @@
                     }
                 }
             });
+            #}
         });
 
     </script>
@@ -825,5 +828,8 @@
             $(this).popover('hide');
         });
     </script>
+
+    {# VALIDATE STEPS #}
+    {% include view('project.steps') %}
 
 {% endblock %}

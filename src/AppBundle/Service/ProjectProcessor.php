@@ -26,6 +26,9 @@ class ProjectProcessor
         $this->nasaProvider = $nasaProvider;
     }
 
+    /**
+     * @param ProjectInterface $project
+     */
     public function process(ProjectInterface $project)
     {
         $latitude = $project->getLatitude();
@@ -192,6 +195,6 @@ class ProjectProcessor
             $metadata['total']['kwh_kwp_month'] += $area['kwh_kwp_month'];
         }
 
-        return $metadata;
+        $project->setMetadata($metadata);
     }
 }

@@ -32,14 +32,14 @@ class Order implements OrderInterface
     /**
      * @var ArrayCollection
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer", inversedBy="orders")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer")
      */
     private $account;
 
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Component\Project", mappedBy="Order", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Component\Project", mappedBy="order", cascade={"persist"})
      */
     private $projects;
 

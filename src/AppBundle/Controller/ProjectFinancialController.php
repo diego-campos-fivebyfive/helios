@@ -4,19 +4,14 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Component\ProjectExtra;
 use AppBundle\Entity\Component\ProjectTax;
-use AppBundle\Entity\Financial\ProjectFinancial;
 use AppBundle\Entity\Financial\ProjectFinancialInterface;
 use AppBundle\Entity\Financial\ProjectFinancialManager;
 use AppBundle\Entity\Financial\Tax;
 use AppBundle\Entity\Component\Project;
-use AppBundle\Entity\Pricing\Range;
 use AppBundle\Form\Component\ProjectExtraType;
 use AppBundle\Form\Financial\FinancialType;
 use AppBundle\Form\Financial\TaxType;
-use AppBundle\Model\KitPricing;
-use AppBundle\Service\Component\ProjectPrecifier;
 use AppBundle\Service\Support\Project\FinancialAnalyzer;
-use AppBundle\Util\ProjectPricing\SalePrice;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -36,44 +31,9 @@ class ProjectFinancialController extends AbstractController
      */
     public function configAction(Request $request, Project $project)
     {
-        //$formExtra = $this->addExtraAction($request, $project, 0);
-        //dump($formExtra); die;
+        $generator = $this->get('project_generator');
 
-        /**
-         * TODO: Calculate cost prices
-         */
-        $precifier = new ProjectPrecifier($this->manager('project'));
-        $precifier->priceCost($project);
-
-        /**
-         * TODO: Calculate sale prices
-         */
-        /** @var \AppBundle\Entity\Component\PricingManager $pricingManager */
-        $pricingManager = $this->get('app.kit_pricing_manager');
-        $margins = $pricingManager->findAll();
-        $percentEquipments = 0;
-        $percentServices = 0;
-        /** @var \AppBundle\Model\KitPricing $margin */
-        foreach ($margins as $margin){
-            switch ($margin->target){
-                case KitPricing::TARGET_EQUIPMENTS:
-                    $percentEquipments += $margin->percent;
-                    break;
-                case KitPricing::TARGET_SERVICES:
-                    $percentServices += $margin->percent;
-                    break;
-                default:
-                    $percentServices += $margin->percent;
-                    $percentEquipments += $margin->percent;
-                    break;
-            }
-        }
-
-        //dump($percentEquipments); die;
-
-        SalePrice::calculate($project, $percentEquipments, $percentServices);
-
-        $this->manager('project')->save($project);
+        $generator->pricing($project);
 
         $form = $this->createForm(FinancialType::class, $project);
 
@@ -101,7 +61,7 @@ class ProjectFinancialController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                
+
                 FinancialAnalyzer::analyze($project);
 
                 $this->manager('project')->save($project);

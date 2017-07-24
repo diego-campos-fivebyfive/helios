@@ -208,7 +208,9 @@ class InverterLoader
         }
 
         if (count($cont) == 50) {
-            throw new \Exception('Exhausted combinations');
+            //throw new \Exception('Exhausted combinations');
+            // TODO RECURSIVE ATTEMPTS DETECTOR
+            return [];
         }
 
         rsort($cont);

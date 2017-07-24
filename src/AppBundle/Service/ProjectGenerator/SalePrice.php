@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace AppBundle\Util\ProjectPricing;
+namespace AppBundle\Service\ProjectGenerator;
 
 use AppBundle\Entity\Component\ProjectElementInterface;
 use AppBundle\Entity\Component\ProjectInterface;

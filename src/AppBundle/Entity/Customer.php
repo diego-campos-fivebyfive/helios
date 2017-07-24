@@ -155,20 +155,6 @@ class Customer extends AbstractCustomer
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Team", mappedBy="account")
-     */
-    private $teams;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Project\Project", mappedBy="member")
-     */
-    private $projects;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Task", mappedBy="author")
      */
     private $authoredTasks;
@@ -183,46 +169,12 @@ class Customer extends AbstractCustomer
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Component\Kit", mappedBy="account")
-     */
-    private $kits;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\EmailAccount", mappedBy="owner")
-     */
-    private $emailAccounts;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Category", mappedBy="account")
      * @ORM\OrderBy({
      *     "position"="ASC"
      * })
      */
     private $categories;
-
-    /**
-     * @var \AppBundle\Entity\Package
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Package", inversedBy="accounts")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="package", referencedColumnName="id")
-     * })
-     */
-    private $package;
-
-    /**
-     * @var \AppBundle\Entity\Team
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Team", inversedBy="members")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="team", referencedColumnName="id")
-     * })
-     */
-    private $team;
 
     /**
      * @var \AppBundle\Entity\Customer
@@ -300,13 +252,6 @@ class Customer extends AbstractCustomer
      */
     private $alloweds;
 
-    /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Order\Order", mappedBy="Costumer", cascade={"persist"})
-     */
-    private $orders;
-
     private $edition = false;
 
     /**
@@ -317,12 +262,8 @@ class Customer extends AbstractCustomer
         $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
         $this->members = new \Doctrine\Common\Collections\ArrayCollection();
         $this->employees = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->teams = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->projects = new \Doctrine\Common\Collections\ArrayCollection();
         $this->authoredTasks = new \Doctrine\Common\Collections\ArrayCollection();
         $this->contactTasks = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->kits = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->emailAccounts = new \Doctrine\Common\Collections\ArrayCollection();
         $this->categories = new \Doctrine\Common\Collections\ArrayCollection();
         $this->assignedTasks = new \Doctrine\Common\Collections\ArrayCollection();
         $this->accessors = new \Doctrine\Common\Collections\ArrayCollection();
@@ -333,31 +274,6 @@ class Customer extends AbstractCustomer
         $this->attributes = [];
         $this->status = self::STATUS_ENABLED;
     }
-
-    /*
-    public function __construct()
-    {
-        //$this->members = new ArrayCollection();
-        //$this->contacts = new ArrayCollection();
-        //$this->employees = new ArrayCollection();
-        //$this->accessors = new ArrayCollection();
-        //$this->alloweds = new ArrayCollection();
-        #### TODO $this->classifications = new ArrayCollection();
-        //$this->teams = new ArrayCollection();
-        //$this->kits = new ArrayCollection();
-        //$this->emailAccounts = new ArrayCollection();
-        //$this->projects = new ArrayCollection();
-
-        // Tasks
-        //$this->authoredTasks = new ArrayCollection();
-        //$this->contactTasks = new ArrayCollection();
-        //$this->assignedTasks = new ArrayCollection();
-        //$this->categories = new ArrayCollection();
-
-        //$this->coordinates = [];
-        //$this->attributes = [];
-        //$this->status = self::STATUS_ENABLED;
-    }*/
 
     function __toString()
     {
@@ -631,14 +547,6 @@ class Customer extends AbstractCustomer
     public function isEmployee()
     {
         //return $this->type == self::TYPE_EMPLOYEE || $this->type == self::TYPE_OWNER;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getKits()
-    {
-        return $this->kits;
     }
 
 
@@ -1007,70 +915,6 @@ class Customer extends AbstractCustomer
     /**
      * @inheritDoc
      */
-    function getPackage()
-    {
-        return $this->package;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    function setPackage(PackageInterface $package)
-    {
-        $this->package = $package;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function addTeam(TeamInterface $team)
-    {
-        if (!$this->isAccount())
-            $this->unsupportedContextException();
-
-        if (!$this->teams->contains($team)) {
-
-            $this->teams->add($team);
-            $team->setAccount($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function removeTeam(TeamInterface $team)
-    {
-        if ($this->teams->contains($team)) {
-
-            $this->teams->removeElement($team);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    function getTeams()
-    {
-        return $this->teams;
-    }
-
-    public function getTeam()
-    {
-        return $this->team;
-    }
-
-    public function setTeam(TeamInterface $team = null)
-    {
-        $this->team = $team;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function isLeader($isLeader = null)
     {
         if (is_null($isLeader))
@@ -1250,30 +1094,6 @@ class Customer extends AbstractCustomer
         return $this->getCategories()->filter(function(\AppBundle\Entity\CategoryInterface $category){
             return $category->getContext()->getId() == Category::CONTEXT_SALE_STAGE;
         });
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getProjects()
-    {
-        if($this->isMember()) {
-            return $this->projects;
-        }
-
-        if($this->isAccount()) {
-
-            $projects = new ArrayCollection();
-            foreach ($this->getMembers() as $member) {
-                foreach($member->getProjects() as $project){
-                    $projects->add($project);
-                }
-            }
-
-            return $projects;
-        }
-
-        return $this->unsupportedContextException();
     }
 
     /**
@@ -1711,22 +1531,6 @@ class Customer extends AbstractCustomer
         if(!$this->isAccount()){
             $this->unsupportedContextException();
         }
-    }
-
-    /**
-     * @param ArrayCollection $orders
-     */
-    public function setOrders($orders)
-    {
-        $this->orders = $orders;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getOrders()
-    {
-        return $this->orders;
     }
 }
 

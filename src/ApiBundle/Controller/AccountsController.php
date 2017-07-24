@@ -2,14 +2,51 @@
 
 namespace ApiBundle\Controller;
 
+use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\MemberInterface;
 use FOS\RestBundle\Controller\FOSRestController;
 use AppBundle\Entity\Customer;
 use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class AccountsController extends FOSRestController
 {
+    public function postAccountAction(Request $request)
+    {
+        dump($request);die;
+        $data = json_decode($request->getContent(), true);
+
+        /** @var AccountInterface $accountManager */
+        $accountManager = $this->get('account_manager');
+        $account = $accountManager->create();
+        $account->setFirstName($data['firstname'])
+            ->setLastName($data['lastname'])
+            ->setExtraDocument($data['extraDocument'])
+            ->setDocument($data['document'])
+            ->setEmail($data['email'])
+            ->setState($data['state'])
+            ->setCity($data['city'])
+            ->setDistrict($data['district'])
+            ->setStreet($data['street'])
+            ->setNumber($data['number'])
+            ->setPostcode($data['postcode'])
+            ->setStatus($data['status'])
+            ->setContext(Customer::CONTEXT_ACCOUNT);
+        $accountManager->save($account);
+
+        $view = View::create([
+            'id' => $account->getId(),
+            'firstname' => $account->getFirstname(),
+            'lastname' => $account->getLastname(),
+            'email' => $account->getEmail(),
+            'phone' => $account->getPhone()
+        ]);
+        $view->setStatusCode(Response::HTTP_CREATED);
+        return $this->handleView($view);
+
+    }
     /**
      * @ApiDoc(
      *  resource=true,
