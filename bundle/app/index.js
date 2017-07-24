@@ -4,5 +4,4 @@
  *
  */
 
-require('./config');
 require('./api');
