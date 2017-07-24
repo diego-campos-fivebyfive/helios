@@ -22,17 +22,9 @@ const splitStructure = (product) => ({
 
 const sendProduct = (product) => {
   switch (product.family) {
-    case 'module':
-      const module = splitModule(product)
-      return Sices.sendModule(module)
-
-    case 'inverter':
-      const inverter = splitInveter(product)
-      return Sices.sendInveter(inverter)
-
-    case 'structure':
-      const structure = splitStructure(product)
-      return Sices.sendStructure(structure)
+    case 'module': return pipe(Sices.sendModule, splitModule(product))
+    case 'inverter': return pipe(Sices.sendInveter, splitInveter(product))
+    case 'structure': return pipe(Sices.sendStructure, splitStructure(product))
   }
 }
 
