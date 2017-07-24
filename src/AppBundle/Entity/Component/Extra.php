@@ -116,6 +116,17 @@ class Extra implements ExtraInterface
     }
 
     /**
+     * @return mixed
+     */
+    public function getPriceLabel()
+    {
+        $labelPrice = [0=>'Fixo', 1=>'Potência'];
+
+       return $labelPrice[$this->type];
+    }
+
+
+    /**
      * @inheritDoc
      */
     public function setType($type)
