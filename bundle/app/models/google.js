@@ -1,6 +1,8 @@
 'use strict'
+
 const request = require('request-promise')
-const { app, config } = require('../config')
+const { config } = require('../config')
+
 const { auth } = config.isquik
 
 const getAuthentication = () => request({
