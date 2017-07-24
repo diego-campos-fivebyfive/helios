@@ -76,15 +76,4 @@ interface AccountInterface
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getMembers();
-
-    /**
-     * @param OrderInterface $orders
-     * @return OrderInterface
-     */
-    public function setOrders($orders);
-
-    /**
-     * @return mixed
-     */
-    public function getOrders();
 }
