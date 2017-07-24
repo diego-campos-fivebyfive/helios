@@ -1,11 +1,24 @@
 const users = [
   {
     id: 1,
-    name: 'Name ABC',
-    status: 1,
-    owner: 100
+    firstname: 'I9 solar',
+    lastname: 'Energia Fotovoltaica',
+    email: 'caldeira.silva@gmail.com',
+    phone: '(84) 99949-8113',
+    document: '25614585698',
+    extraDocument: '125468458',
+    state: 'Paraiba',
+    city: 'joão',
+    contact: 'Caldeira Silva',
+    district: 'centro',
+    street: 'av. brasil',
+    number: 1589,
+    postcode: '80254369',
+    owner_id: 101,
+    user_id: 102,
+    status: 1
   },
-  {
+    {
     id: 2,
     name: 'Name DEF',
     status: 0,

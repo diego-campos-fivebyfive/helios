@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Service\Notifier\Sender;
 
 /**
  * @Route("/register")
@@ -75,7 +76,6 @@ class RegisterController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $data = $form->getData();
-
             /** @var AccountInterface $account */
             $account = $accountManager->create();
             /** @var MemberInterface $member */
