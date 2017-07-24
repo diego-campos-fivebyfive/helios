@@ -120,6 +120,10 @@ class ProjectGenerator
         // AREAS
         $this->generateAreas($this->project);
 
+        if($this->project->getLatitude() && $this->project->getLongitude()) {
+            $this->handleAreas($this->project);
+        }
+
         // STRUCTURES
         $this->generateStructures($this->project);
 
@@ -272,6 +276,62 @@ class ProjectGenerator
             $projectInverter
                 ->setLoss(10)
                 ->setOperation($mppt);
+
+            $projectModule->setQuantity(
+                $projectArea->getStringNumber() * $projectArea->getModuleString()
+            );
+        }
+
+        $this->save($project);
+
+        return $this;
+    }
+
+    /**
+     * @param ProjectInterface $project
+     */
+    public function handleAreas(ProjectInterface $project)
+    {
+        /** @var \AppBundle\Entity\Project\NasaProvider $provider */
+        $provider = $this->container->get('app.nasa_provider');
+        $handler = new AreaHandler($provider);
+
+        foreach ($project->getAreas() as $projectArea){
+            $handler->handle($projectArea);
+        }
+
+        $this->save($project);
+
+        return $this;
+    }
+
+    /**
+     * Sync Project Configuration
+     * 1. Resolve modules quantity by config string areas
+     *
+     * @param ProjectInterface $project
+     */
+    public function synchronize(ProjectInterface $project)
+    {
+        $countModules = [];
+        /** @var \AppBundle\Entity\Component\ProjectAreaInterface $area */
+        foreach($project->getAreas() as $area){
+            if(null != $projectModule = $area->getProjectModule()) {
+                $module = $projectModule->getModule();
+
+                if(!array_key_exists($module->getId(), $countModules))
+                    $countModules[$module->getId()] = 0;
+
+                $countModules[$module->getId()] += $area->countModules();
+            }
+        }
+
+        foreach($project->getProjectModules() as $projectModule){
+            if(array_key_exists($projectModule->getModule()->getId(), $countModules)) {
+                $projectModule->setQuantity(
+                    $countModules[$projectModule->getModule()->getId()]
+                );
+            }
         }
 
         $this->save($project);
@@ -613,15 +673,16 @@ class ProjectGenerator
     }
 
     /**
-     * @param $project
+     * @param ProjectInterface $project
+     * @param bool $force
      */
-    private function save($project)
+    public function save(ProjectInterface $project, $force = false)
     {
         if(!$this->manager){
             $this->manager = $this->manager('project');
         }
 
-        if($this->autoSave){
+        if($this->autoSave || $force){
             $this->manager->save($project);
         }
     }
