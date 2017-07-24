@@ -28,25 +28,18 @@ class ProjectGeneratorController extends AbstractController
 
             $data = $form->getData();
 
-            $power = (float) $data['power'];
-            $module = $data['module'];
-            $maker = $data['maker'];
-            $roof = $data['roof'];
-            $position = $data['position'];
-            $structure = $data['structure'];
-
             $generator = $this->getGenerator();
             $generator->autoSave(false);
 
             $project
-                ->setRoofType($roof)
-                ->setStructureType($structure);
+                ->setRoofType($data['roof'])
+                ->setStructureType($data['structure']);
 
             $project = $generator
                 ->project($project)
-                ->power($power)
-                ->module($module, $position)
-                ->maker($maker)
+                ->power((float) $data['power'])
+                ->module($data['module'], $data['position'])
+                ->maker($data['maker'])
                 ->generate();
         }
 
