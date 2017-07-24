@@ -18,6 +18,7 @@ const sendStructure = structure => postRequest(`${sices.uri}/structures`, struct
 const sendModule = module => postRequest(`${sices.uri}/modules`, module)
 const sendMemorial = memorial => postRequest(`${sices.uri}/memorials`, memorial)
 const sendAccount = account => postRequest(`${sices.uri}/accounts`, account)
+
 const getAccount = id => getRequest(`${sices.uri}/accounts/${id}`)
 const getUser = id => getRequest(`${sices.uri}/Users/${id}`)
 

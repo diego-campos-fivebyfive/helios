@@ -24,9 +24,11 @@ const sendAccount = account => Sices.sendAccount({
 
 
 const update = ({ object }) => Isquik.getAccount(object.id).then(isquikAccount => {
+  console.log('is', isquikAccount)
   Sices.getUser(isquikAccount.owner).then(sicesUser => {
+    console.log('us', sicesUser)
     Sices.getAccount(sicesUser.account).then(sicesAccount => {
-      console.log(sicesUser, sicesAccount)
+      console.log('ac', sicesAccount)
     })
   })
 })

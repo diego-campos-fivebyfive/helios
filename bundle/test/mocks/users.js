@@ -3,7 +3,7 @@ const users = [
     id: 1,
     name: 'Name ABC',
     status: 1,
-    owner: 100
+    owner: 36
   },
   {
     id: 2,
