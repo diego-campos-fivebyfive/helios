@@ -263,15 +263,10 @@ class ProjectController extends AbstractController
                 if(array_sum($data) != array_sum($groups[$key])){
 
                     $generator = $this->getGenerator();
-                    //$generator->autoSave(false);
 
                     $projectModule->setGroups($groups);
 
-                    $generator
-                        //->generateAreas($project)
-                        ->generateStructures($project)
-                        //->generateVarieties($project)
-                    ;
+                    $generator->generateStructures($project);
 
                     $this->manager('project')->save($project);
 

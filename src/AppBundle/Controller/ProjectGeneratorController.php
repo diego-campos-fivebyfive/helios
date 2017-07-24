@@ -38,7 +38,6 @@ class ProjectGeneratorController extends AbstractController
             $generator = $this->getGenerator();
             $generator->autoSave(false);
 
-
             $project
                 ->setRoofType($roof)
                 ->setStructureType($structure);
@@ -49,8 +48,6 @@ class ProjectGeneratorController extends AbstractController
                 ->module($module, $position)
                 ->maker($maker)
                 ->generate();
-
-            //dump($project); die;
         }
 
         return $this->render('generator.index', [
