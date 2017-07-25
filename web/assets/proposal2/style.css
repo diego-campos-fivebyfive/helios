@@ -48,6 +48,10 @@
 .tag{
     color: #843534;
 }
+.h-card{
+    background-color: #00ff00;
+    filter: alpha(opacity=50);
+}
 .margBottom{
     margin-bottom: 50px;
 }
@@ -71,6 +75,7 @@
 }
 .edit{
     height: auto;
+    border: 1px solid transparent;
     /*margin: 0 !important;*/
 }
 .border{

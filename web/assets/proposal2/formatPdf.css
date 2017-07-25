@@ -11,11 +11,11 @@ body{
     background-color: #FFFFFF !important;
 }
 .del{
-    background-color: #FFFFFF !important;
-    color: #FFFFFF !important;
+    background-color: transparent !important;
+    color: transparent !important;
 }
 .edit:focus, .edit2:focus{
-    border: none;
+    border: transparent;
 }
 .sf-toolbar{
     display: none !important;
