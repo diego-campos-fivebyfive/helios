@@ -216,7 +216,7 @@ $('#saveProposal').click(function () {
 $('#pdfProposal').click(function () {
     var btnSave = $('#saveProposal');
     saveProposal(btnSave);
-    alert('Gerar pdf');
+    alert('Gerar pdf, esperar retornar 200, ta pulando');
 });
 
 function saveProposal(btn) {
