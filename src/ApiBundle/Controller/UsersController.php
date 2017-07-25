@@ -21,7 +21,7 @@ class UsersController extends FOSRestController
 
         /** @var AccountInterface $accountManager */
         $accountManager = $this->get('account_manager');
-        $account = $accountManager->find($data['account']);
+        $account = $accountManager->find($data['account_id']);
 
         /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
         $userManager = $this->get('fos_user.user_manager');
@@ -43,7 +43,13 @@ class UsersController extends FOSRestController
                 ->setUser($user);
         $memberManager->save($member);
 
-        return JsonResponse::create($member, 201);
+        $view = View::create([
+            'firstname' => $member->getFirstname(),
+            'lastname' => $member->getLastname(),
+            'email' => $member->getEmail(),
+            'phone' => $member->getPhone()
+        ]);
+        return JsonResponse::create($view, 201);
     }
     /**
      * @ApiDoc(

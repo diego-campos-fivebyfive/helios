@@ -27,6 +27,7 @@ class AccountsController extends FOSRestController
             ->setEmail($data['email'])
             ->setState($data['state'])
             ->setCity($data['city'])
+            ->setPhone($data['phone'])
             ->setDistrict($data['district'])
             ->setStreet($data['street'])
             ->setNumber($data['number'])
@@ -35,9 +36,14 @@ class AccountsController extends FOSRestController
             ->setContext(Customer::CONTEXT_ACCOUNT);
         $accountManager->save($account);
 
-        $account_id = $accountManager->flush();
-
-        return JsonResponse::create($account_id, 201);
+        $view = View::create([
+            'account_id' => $account->getId(),
+            'firstname' => $account->getFirstname(),
+            'lastname' => $account->getLastname(),
+            'email' => $account->getEmail(),
+            'phone' => $account->getPhone()
+        ]);
+        return JsonResponse::create($view, 201);
 
     }
     /**
@@ -67,7 +73,6 @@ class AccountsController extends FOSRestController
 
             $data['users'] = $members;
         }
-
         $view = View::create($data);
 
         return $this->handleView($view);

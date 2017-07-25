@@ -25,8 +25,12 @@ class InverterController extends FOSRestController
                     ->setModel($data['model']);
         $inverterManager->save($inverter);
 
-        $view = View::create();
-        return $this->handleView($view);
+        $view = View::create([
+            'code' => $inverter->getCode(),
+            'Model' => $inverter->getModel()
+        ]);
+
+        return JsonResponse::create($view, 201);
     }
 
     public function getInvertersAction(Request $request, $id)

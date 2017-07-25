@@ -24,8 +24,11 @@ class ModuleController extends FOSRestController
                 ->setModel($data['model']);
         $moduleManager->save($module);
 
-        $view = View::create();
-        return $this->handleView($view);
+        $view = View::create([
+            'code' => $module->getCode(),
+            'model' => $module->getModel()
+        ]);
+        return JsonResponse::create($view, 201);
     }
 
     public function getModulesAction(Request $request, $id)
