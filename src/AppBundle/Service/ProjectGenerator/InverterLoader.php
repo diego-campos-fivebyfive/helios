@@ -53,6 +53,16 @@ class InverterLoader
     private $fdiMax = 1;
 
     /**
+     * @var bool
+     */
+    private $increasing = false;
+
+    /**
+     * @var ProjectInterface
+     */
+    private $project;
+
+    /**
      * @inheritDoc
      */
     public function __construct(InverterManager $manager)
@@ -113,6 +123,8 @@ class InverterLoader
      */
     public function project(ProjectInterface $project)
     {
+        $this->project = $project;
+
         return $this->power($project->getInfPower());
     }
 
@@ -129,13 +141,13 @@ class InverterLoader
         $inverters = $query->getResult();
 
         if (empty($inverters)) {
-            for ($i = 0.3; $i > 0.025; $i -= 0.015) {
+            for ($i = 300; $i >= 0; $i -= 15) {
 
                 sleep($this->delay);
 
                 $attempts++;
 
-                $this->qb->setParameter('min', ($min * $i));
+                $this->qb->setParameter('min', ($min * ($i / 1000)));
 
                 $inverters = $this->qb->getQuery()->getResult();
 
@@ -152,10 +164,15 @@ class InverterLoader
         });
 
         if ($attempts > 1) {
-            self::resolveCombinations($inverters, $min, $max);
+            $this->resolveCombinations($inverters, $min, $max);
         }
 
         $this->attempts = $attempts;
+
+        if(!$this->increasing) {
+            $this->increasing = true;
+            $inverters = $this->increase($inverters);
+        }
 
         return $inverters;
     }
@@ -170,16 +187,31 @@ class InverterLoader
 
     /**
      * @param array $inverters
+     * @return array
+     */
+    private function increase(array $inverters)
+    {
+        while (empty($inverters)){
+            $power = $this->project->getInfPower() + 0.2;
+            $this->project->setInfPower($power);
+            $inverters = $this->project($this->project)->get();
+        }
+
+        return $inverters;
+    }
+
+    /**
+     * @param array $inverters
      * @param $min
      * @param $max
-     * @throws \Exception
+     * @return array
      */
-    public static function resolveCombinations(array &$inverters, $min, $max)
+    private function resolveCombinations(array &$inverters, $min, $max)
     {
         $comb = 2;
 
         $cont = [];
-        for ($j = $comb; $j <= 50; $j++) {
+        for ($j = $comb; $j <= 10; $j++) {
 
             $cont = array_fill(0, $j, 0);
             $top = count($inverters) - 1;
@@ -201,16 +233,22 @@ class InverterLoader
                         $cont[$j - ($k + 1)] += 1;
                         for ($z = $k; $z >= 1; $z--) {
                             $cont[$j - $z] = $cont[$j - ($z + 1)];
+                            if($cont[0] > $top){
+                                break 3;
+                            }
                         }
                     }
                 }
             }
         }
 
-        if (count($cont) == 50) {
-            //throw new \Exception('Exhausted combinations');
-            // TODO RECURSIVE ATTEMPTS DETECTOR
-            return [];
+        if (count($cont) == 10) {
+
+            $power = $this->project->getInfPower() - 1;
+
+            $this->project->setInfPower($power);
+
+            return $this->project($this->project)->get();
         }
 
         rsort($cont);

@@ -212,15 +212,9 @@ class ProjectGenerator
             ->project($project)
             ->get();
 
-        $power = $project->getInfPower();
 
-        // Progressive loader, if inverters is empty
-        while (empty($inverters)){
-            $power += 0.2;
-            $inverters = $loader->power($power)->get();
-        }
-
-        $project->setInfPower($power);
+        dump($inverters);
+        dump($project->getInfPower()); die;
 
         foreach ($inverters as $inverter){
             $projectInverter = new ProjectInverter();

@@ -45,14 +45,14 @@ class Combiner
 
             $qte_max_mod_ser = ceil($inverter->getMaxDcVoltage() / $vmax_mod);
             $qte_min_mod_ser = ceil($inverter->getMpptMin() / $vmin_mod);
-            $qte_max_mod_par = floor(($inverter->getMpptMaxDcCurrent() * $inverter->getMpptNumber()) / ($module->getShortCircuitCurrent()));
+            $qte_max_mod_par = ceil(($inverter->getMpptMaxDcCurrent() * $inverter->getMpptNumber()) / ($module->getShortCircuitCurrent()));
 
             for ($p = 1; $p <= $qte_max_mod_par; $p++) {
                 for ($s = $qte_min_mod_ser; $s <= $qte_max_mod_ser; $s++) {
                     $pot = ($p * $s) * ($module->getMaxPower() / 1000);
                     if ($pot >= ($project->getInfPower() * $percentPower[$key])) {
                         $projectInverter->setSerial((int) $s);
-                        $projectInverter->setParallel((int) $p); // TODO: NRO STRINGS
+                        $projectInverter->setParallel((int) $p);
                         break 2;
                     }
                 }
