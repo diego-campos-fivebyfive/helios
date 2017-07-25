@@ -3,32 +3,11 @@
 {% block body %}
     {% set structures = pagination.items %}
 
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-
-            {{ knp_pagination_filter(pagination, {'s.description, s.type, s.subtype, s.code':''}) }}
-
-            <div style="padding-right:0;padding-top:7px;" class="col-md-1 text-right">
-                <label style="width: 100%;">
-                </label>
-            </div>
-
-{#            <div class="col-md-2">
-                <div class="btn-group btn-group-justified btn-group-sm">
-                    <a href="{{ path('structure_index',{'display':'list'}) }}" class="btn btn-default"> <i class="fa fa-list"></i> Lista </a>
-                    <a href="{{ path('structure_index',{'display':'grid'}) }}" class="btn btn-default"> <i class="fa fa-th"></i> Grade </a>
-                </div>
-            </div>#}
-
-            <div class="col-md-2 pull-right text-right">
-                <a href="{{ path('structure_create') }}" class="btn btn-md btn-primary">
-                    <i class="fa fa-plus"></i> Nova Estrutura
-                </a>
-            </div>
-        </div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        {{ knp_pagination_filter(pagination, {'s.description, s.type, s.subtype, s.code':''}) }}
+    </div>
         {% include view('structure.script_index') %}
         {% include view('structure.index_content') %}
-    </div>
-
-
+</div>
 {% endblock %}
