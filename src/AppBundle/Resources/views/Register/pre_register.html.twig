@@ -14,7 +14,8 @@
                     <div class="col-lg-12 ibox-content">
                         <div class="col-sm-12">
                             <div class="col-sm-6">
-                                {{ form_widget(form.document,{attr:{class:'form-control', 'placeholder':'CNPJ'}}) }}
+                                {% set mask = '00.000.000/0000-00' %}
+                                {{ form_widget(form.document,{attr:{class:'form-control', 'data-mask':mask, 'placeholder':'CNPJ'}}) }}
                             </div>
                             <div class="col-sm-6">
                                 {{ form_widget(form.extraDocument,{attr:{class:'form-control', 'placeholder':'Inscrição Estadual'}}) }}
@@ -34,7 +35,9 @@
                 <div class="col-lg-12 ibox-content">
                     <div class="col-sm-12">
                         <div class="col-sm-4">
-                            {{ form_widget(form.postcode,{attr:{class:'form-control', 'placeholder':'CEP'}}) }}
+                            {% set maskCep = '00.000-000' %}
+                            {{ form_widget(form.postcode,{attr:{class:'form-control', 'data-mask':maskCep, 'placeholder':'CEP'}}) }}
+                            <div id="urlSearch" data-url="{{ path('brazil_postcode') }}"></div>
                         </div>
                         <div class="col-sm-4">
                             {{ form_widget(form.state,{attr:{class:'form-control', 'placeholder':'Estado'}}) }}
@@ -60,7 +63,7 @@
                     <div class="col-lg-12 ibox-content">
                         <div class="col-sm-12">
                             <div class="col-sm-4">
-                                {{ form_widget(form.contact,{attr:{class:'form-control', 'placeholder':'Contato'}}) }}
+                                {{ form_widget(form.contact,{attr:{class:'form-control', 'placeholder':'Pessoa para contato'}}) }}
                             </div>
                             <div class="col-sm-4">
                                 {{ form_widget(form.email,{attr:{class:'form-control', 'placeholder':'E-mail'}}) }}
@@ -88,5 +91,19 @@
         $(function () {
             $('.middle-box').removeClass('middle-box');
         });
+        $('#pre_register_postcode').change(function () {
+             $.ajax({
+                url:$('#urlSearch').data('url'),
+                method:'post',
+                data:{postcode:$('#pre_register_postcode').val()},
+                complete:function (xhr) {
+                    $('#pre_register_state').val(xhr.responseJSON.uf);
+                    $('#pre_register_city').val(xhr.responseJSON.cidade);
+                    $('#pre_register_district').val(xhr.responseJSON.bairro);
+                    $('#pre_register_street').val(xhr.responseJSON.logradouro);
+                }
+            })
+        });
+
     </script>
 {% endblock %}
