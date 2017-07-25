@@ -40,8 +40,6 @@ class ProposalController extends AbstractController
      */
     public function editorAction(Project $project)
     {
-        //$customer = $project->getCustomer()->getUser()->getEmail();
-        //dump($project);die();
 
         $projectFake = [
             'customer' => [
