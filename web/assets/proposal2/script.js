@@ -216,7 +216,7 @@ $('#saveProposal').click(function () {
 $('#pdfProposal').click(function () {
     var btnSave = $('#saveProposal');
     saveProposal(btnSave);
-    alert('Gerar pdf, esperar retornar 200, ta pulando');
+    alert('Gerar pdf, esperar retornar 200');
 });
 
 function saveProposal(btn) {
@@ -370,13 +370,10 @@ function changeColorFinancial(color){
 
 
 function generateImage(src) {
-
     var image = new Image();
     image.src = src;
-     //document.body.appendChild(image);
-   // console.log($(image).attr('color'));
-    return image;
-
+    $(image).attr('style','width: 100%');
+     return image;
 }
 
 function up(btn) {
