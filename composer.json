@@ -36,6 +36,7 @@
         "liuggio/excelbundle": "^2.1",
         "mpdf/mpdf": "^6.1",
         "nelmio/api-doc-bundle": "^2.13",
+        "nelmio/cors-bundle": "^1.5",
         "oneup/uploader-bundle": "~1.4",
         "sensio/distribution-bundle": "~5.0",
         "sensio/framework-extra-bundle": "^3.0.2",
