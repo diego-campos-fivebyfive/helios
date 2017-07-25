@@ -368,12 +368,11 @@ function changeColorFinancial(color){
     });
 }
 
-
 function generateImage(src) {
     var image = new Image();
     image.src = src;
-    $(image).attr('style','width: 100%');
-     return image;
+    $(image).attr('style','width: 100%;');
+    return image;
 }
 
 function up(btn) {
