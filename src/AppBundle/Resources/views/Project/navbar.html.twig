@@ -1,0 +1,124 @@
+
+{% set _step = app.request.attributes.get('_route') %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="btn-group btn-group-sm btn-group-justified">
+
+            <a data-step="project_update" class="btn btn-default nav-link project_scaling">
+                <i class="fa fa-sliders"></i>
+                {{ 'project.design'|trans|upper }}
+            </a>
+
+            <a data-step="project_financial" class="btn btn-default nav-link project_financial">
+                <i class="fa fa-line-chart"></i>
+                {{ 'project.financial'|trans|upper }}
+            </a>
+
+            <a data-step="proposal_editor" class="btn btn-default nav-link project_proposal">
+                <i class="fa fa-file-text-o"></i>
+                {{ 'project.proposal'|trans|upper }}
+            </a>
+
+        </div>
+    </div>
+</div>
+<div class="hr-line-dashed"></div>
+
+{% if true %}
+
+    <script>
+
+        if('undefined' == typeof Navbar){
+
+            Navbar = {
+                path: function(){
+                    return window.location.pathname;
+                },
+                nav: function(id){
+                    if('all' != id) {
+                        return $('.project_' + id);
+                    }else{
+                        return $('.project_scaling, .project_financial, .project_proposal');
+                    }
+                },
+                init: function(){
+
+                    Navbar.nav('all').on('click', function(){
+
+                        swal({
+                            title: 'Aguarde...',
+                            text: '',
+                            type: 'info',
+                            showConfirmButton: false
+                        });
+
+                        Request.send({
+                            url: '{{ path('project_steps',{id:'_id_'}) }}'.replace(/_id_/g, Project.id),
+                            method: 'post',
+                            data: {step:$(this).data('step')},
+                            callback: function(xhr){
+                                var response = xhr.responseJSON;
+                                if(202 == xhr.status && response.url && 0 == response.errors.length){
+                                    window.location.href = response.url;
+                                } else {
+                                    swal({
+                                        title: 'Ooops',
+                                        text: response.errors[0],
+                                        type: 'error',
+                                        html: true
+                                    });
+                                }
+                            }
+                        });
+
+                    });
+                }
+            };
+
+        }else{
+            Navbar.init();
+        }
+
+        {#
+    $('[data-nav]').on('click', function(event) {
+        event.preventDefault();
+        var nav = $(this).data('nav');
+        var href = $(this).data('href');
+        var source = $(this).data('source');
+        if ('#' != href) {
+
+            swal({
+                title: 'Aguarde...',
+                text: '',
+                type: 'info',
+                showConfirmButton: false
+            });
+
+            var step = source+nav;
+
+            Request.send({
+                url: '{{ path('project_steps',{id:'_id_'}) }}'.replace(/_id_/g, Project.id),
+                method: 'post',
+                data: {step:step},
+                callback: function(xhr){
+                    if (202 == xhr.status) {
+                        window.location.href = href;
+                    } else {
+                        var response = xhr.responseJSON;
+                        swal({
+                            title: 'Ooops',
+                            text: response.errors[0],
+                            type: 'error',
+                            html: true
+                        });
+                    }
+                }
+            })
+        }
+    });
+    #}
+
+    </script>
+
+{% endif %}

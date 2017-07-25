@@ -483,7 +483,7 @@ class ProjectController extends AbstractController
 
     /**
      * @Route("/{id}/steps", name="project_steps")
-     * //@Method("post")
+     * @Method("post")
      */
     public function stepAction(Request $request, Project $project)
     {
@@ -503,26 +503,21 @@ class ProjectController extends AbstractController
         };
 
         switch($step) {
-            case 'scaling_financial':
+            case 'project_financial':
                 $toFinancial();
                 break;
 
-            case 'scaling_proposal':
+            case 'project_proposal':
                 $toFinancial();
                 $toProposal();
                 break;
-
-            case 'financial_proposal':
-
-                break;
-            case 'financial_scaling': break;
-
-            case 'proposal_financial': break;
-            case 'proposal_scaling': break;
         }
 
+        $url = empty($errors) ? $this->generateUrl($step, ['id' => $project->getId()]) : null ;
+
         return $this->json([
-            'errors' => $errors
+            'errors' => $errors,
+            'url' => $url
         ], empty($errors) ? Response::HTTP_ACCEPTED : Response::HTTP_CONFLICT);
     }
 
