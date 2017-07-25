@@ -10,7 +10,7 @@ use AppBundle\Manager\InverterManager;
  * Class InverterLoader
  * @author Claudinei Machado <cjchamado@gmail.com>
  */
-class InverterLoader
+class DoctrineInverterLoader
 {
     /**
      * @var float
@@ -107,9 +107,11 @@ class InverterLoader
      */
     public function range($min, $max)
     {
-        $this->qb->andWhere(
-            $this->qb->expr()->between('i.nominalPower', ':min', ':max')
-        );
+        if(!$this->increasing) {
+            $this->qb->andWhere(
+                $this->qb->expr()->between('i.nominalPower', ':min', ':max')
+            );
+        }
 
         $this->qb->setParameter('min', $min);
         $this->qb->setParameter('max', $max);
@@ -140,10 +142,8 @@ class InverterLoader
 
         $inverters = $query->getResult();
 
-        if (empty($inverters)) {
+        if (!count($inverters)) {
             for ($i = 300; $i >= 0; $i -= 15) {
-
-                sleep($this->delay);
 
                 $attempts++;
 
@@ -159,20 +159,36 @@ class InverterLoader
             array_splice($inverters, 1);
         }
 
-        array_walk($inverters, function (&$inverter) use($attempts) {
-            $inverter->quantity = $attempts > 1 ? 0 : 1 ;
+        $power = $this->project->getInfPower();
+        while (!count($inverters)){
+
+            $this->increasing = true;
+            $power += 0.2;
+            $min = $power * $this->fdiMin;
+            $max = $power * $this->fdiMax;
+
+            $this->qb->setParameters([
+                'min' => $min,
+                'max' => $max,
+                'maker' => $this->maker
+            ]);
+
+            $inverters = $this->qb->getQuery()->getResult();
+        }
+
+        $this->project->setInfPower($power);
+
+        $quantity = $attempts && !$this->increasing ? 0 : 1;
+
+        array_walk($inverters, function (&$inverter) use($quantity) {
+            $inverter->quantity = $quantity;
         });
 
-        if ($attempts > 1) {
+        if ($attempts > 1 && !$this->increasing) {
             $this->resolveCombinations($inverters, $min, $max);
         }
 
         $this->attempts = $attempts;
-
-        if(!$this->increasing) {
-            $this->increasing = true;
-            $inverters = $this->increase($inverters);
-        }
 
         return $inverters;
     }
@@ -191,9 +207,11 @@ class InverterLoader
      */
     private function increase(array $inverters)
     {
-        while (empty($inverters)){
+        while (!count($inverters)){
             $power = $this->project->getInfPower() + 0.2;
             $this->project->setInfPower($power);
+            $this->power($power);
+
             $inverters = $this->project($this->project)->get();
         }
 
@@ -209,7 +227,6 @@ class InverterLoader
     private function resolveCombinations(array &$inverters, $min, $max)
     {
         $comb = 2;
-
         $cont = [];
         for ($j = $comb; $j <= 10; $j++) {
 
@@ -243,12 +260,7 @@ class InverterLoader
         }
 
         if (count($cont) == 10) {
-
-            $power = $this->project->getInfPower() - 1;
-
-            $this->project->setInfPower($power);
-
-            return $this->project($this->project)->get();
+            return [];
         }
 
         rsort($cont);
