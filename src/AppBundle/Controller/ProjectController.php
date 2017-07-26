@@ -208,7 +208,8 @@ class ProjectController extends AbstractController
                     ->generateAreas($project)
                     ->generateStructures($project)
                     ->generateStringBoxes($project)
-                    ->generateVarieties($project);
+                    ->generateVarieties($project)
+                    ->handleAreas($project);
             }
 
             /**

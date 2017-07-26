@@ -31,6 +31,7 @@ class VarietyCalculator
     public function calculate(ProjectInterface $project)
     {
         $projectAreas = $project->getAreas();
+
         $moduleConnector = $projectAreas->first()->getProjectModule()->getModule()->getConnectionType();
 
         $connectors = [
