@@ -205,6 +205,7 @@ class ProjectController extends AbstractController
                 $maker = $this->manager('maker')->find(60627);
                 $generator
                     ->generateInverters($project, $maker)
+                    ->generateAreas($project)
                     ->generateStructures($project)
                     ->generateStringBoxes($project)
                     ->generateVarieties($project);
