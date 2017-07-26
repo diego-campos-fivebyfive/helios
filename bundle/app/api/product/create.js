@@ -23,10 +23,20 @@ const splitStructure = product => ({
 
 const sendProduct = product => {
   switch (product.family) {
-    case 'module': return pipe(Sices.sendModule, splitModule(product))
-    case 'inverter': return pipe(Sices.sendInveter, splitInveter(product))
-    case 'structure': return pipe(Sices.sendStructure, splitStructure(product))
-    default: return new Promise((resolve, reject) => reject(404))
+    case 'module':
+      return pipe(splitModule(product), Sices.sendModule)
+      break
+
+    case 'inverter':
+      return pipe(splitInveter(product), Sices.sendInveter)
+      break
+
+    case 'structure':
+      return pipe(splitStructure(product), Sices.sendStructure)
+      break
+
+    default:
+      return new Promise((resolve, reject) => reject(404))
   }
 }
 
