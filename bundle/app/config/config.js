@@ -23,6 +23,7 @@ const config = {
   },
   bundle: {
     headers: (request, response, next) => {
+      request.header('Access-Control-Allow-Origin', 'CES_SICES_HOST,CES_ISQUIK_HOST')
       response.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
       response.header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With')
       response.header('Access-Control-Allow-Credentials', 'true')
