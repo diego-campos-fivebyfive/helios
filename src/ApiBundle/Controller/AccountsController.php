@@ -43,7 +43,7 @@ class AccountsController extends FOSRestController
             'email' => $account->getEmail(),
             'phone' => $account->getPhone()
         ]);
-        return JsonResponse::create($view, 200);
+        return JsonResponse::create($view, 201);
 
     }
     /**
