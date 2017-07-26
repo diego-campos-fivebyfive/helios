@@ -36,14 +36,7 @@ class AccountsController extends FOSRestController
             ->setContext(Customer::CONTEXT_ACCOUNT);
         $accountManager->save($account);
 
-        $view = View::create([
-            'account_id' => $account->getId(),
-            'firstname' => $account->getFirstname(),
-            'lastname' => $account->getLastname(),
-            'email' => $account->getEmail(),
-            'phone' => $account->getPhone()
-        ]);
-        return JsonResponse::create($view, 201);
+        return JsonResponse::create($account->getId(),201);
 
     }
     /**
