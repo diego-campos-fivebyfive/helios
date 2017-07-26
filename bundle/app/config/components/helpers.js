@@ -1,6 +1,6 @@
 'use strict'
 
-const pipe = (...functions) => x => functions.reduce((y, f) => f(y), x)
+const pipe = (...fns) => fns.reduce((y, f) => f(y))
 
 module.exports = {
   pipe

@@ -3,25 +3,14 @@
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
 
-const sendUser = account => Sices.sendUser({
-  name: account.name,
-  firstname: account.firstname,
-  lastname: account.lastname,
+const sendUser = (account, id) => Sices.sendUser({
   email: account.email,
   phone: account.phone,
-  document: account.document,
-  extraDocument: account.extraDocument,
-  state: account.state,
-  city: account.city,
   contact: account.contact,
-  district: account.district,
-  street: account.street,
-  number: account.number,
-  postcode: account.postcode,
-  status: account.status
+  account_id: id
 })
-  .then(status => (
-    (status !== 304) ? 'Can not create User' : 'User and Account created successfully'
+  .then(data => (
+    (data) ? 201 : 500
   ))
 
 const sendAccount = account => Sices.sendAccount({
@@ -41,12 +30,9 @@ const sendAccount = account => Sices.sendAccount({
   postcode: account.postcode,
   status: account.status
 })
-  .then(status => {
-    if (status !== 304) {
-      return 'Can not create Account'
-    }
-    sendUser(account)
-  })
+  .then(id => (
+    (id) ? sendUser(account, id) : 500
+  ))
 
 const create = ({ object }) => Isquik.getAccount(object.id).then(sendAccount)
 
