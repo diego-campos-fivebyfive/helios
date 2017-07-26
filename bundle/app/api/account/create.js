@@ -7,12 +7,9 @@ const sendUser = (account, id) => Sices.sendUser({
   email: account.email,
   phone: account.phone,
   contact: account.contact,
-  account: id
+  account_id: id
 })
-  .then(status => (
-      console.log(status)
-    (status !== 304) ? 'Can not create User' : 'User and Account created successfully'
-  ))
+  .then((data, status) => status)
 
 const sendAccount = account => Sices.sendAccount({
   name: account.name,
@@ -31,14 +28,9 @@ const sendAccount = account => Sices.sendAccount({
   postcode: account.postcode,
   status: account.status
 })
-  .then((data) => {
-    console.log(data)
-    if (data) {
-      sendUser(account, data.account)
-      return 200
-    }
-      return 500
-  })
+  .then((data, status) => (
+    (data) ? sendUser(account, data.account_id) : status
+  ))
 
 const create = ({ object }) => Isquik.getAccount(object.id).then(sendAccount)
 
