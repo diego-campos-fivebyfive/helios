@@ -178,7 +178,7 @@ class DoctrineInverterLoader
 
         $this->project->setInfPower($power);
 
-        $quantity = $attempts && !$this->increasing ? 0 : 1;
+        $quantity = $attempts > 1 && !$this->increasing ? 0 : 1;
 
         array_walk($inverters, function (&$inverter) use($quantity) {
             $inverter->quantity = $quantity;
