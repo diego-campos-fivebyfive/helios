@@ -9,12 +9,15 @@ const ISQUIK_AUTH_KEY = process.env.CES_ISQUIK_AUTH_KEY
 const ISQUIK_AUTH_USER = process.env.CES_ISQUIK_AUTH_USER
 const ISQUIK_AUTH_PASS = process.env.CES_ISQUIK_AUTH_PASS
 
+const sicesBase = `${SICES_HOST}:${SICES_PORT}`
+const isquikBase = `${ISQUIK_HOST}:${ISQUIK_PORT}`
+
 const config = {
   sices: {
-    uri: `${SICES_HOST}:${SICES_PORT}/api`
+    uri: `${sicesBase}/api`
   },
   isquik: {
-    uri: `${ISQUIK_HOST}:${ISQUIK_PORT}`,
+    uri: isquikBase,
     auth: {
       password: ISQUIK_AUTH_PASS,
       mail: ISQUIK_AUTH_USER,
@@ -23,7 +26,8 @@ const config = {
   },
   bundle: {
     headers: (request, response, next) => {
-      response.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+      response.header('Access-Control-Allow-Origin', `${sicesBase}, ${isquikBase}`)
+      response.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE')
       response.header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With')
       response.header('Access-Control-Allow-Credentials', 'true')
       next()
