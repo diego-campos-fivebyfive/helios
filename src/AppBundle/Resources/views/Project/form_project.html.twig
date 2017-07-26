@@ -399,19 +399,6 @@
 
     <script>
 
-        /*form_project.on('submit', function(event){
-            if(!project_customer.val() && 'save' == form_mode){
-                event.preventDefault();
-                swal({
-                    title: "Contato indefinido",
-                    text: "Para prosseguir é necessário selecionar um contato!",
-                    type: "error",
-                    showConfirmButton: true
-                });
-                return false;
-            }
-        });*/
-
         var ProjectManager = {
             btnProcess: $('#process_button'),
             infoProcess: $('#info_process'),
@@ -421,22 +408,6 @@
             },
             request: function(config){
                 Request.send(config);
-                /*var options = $.extend({},{
-                    url: null,
-                    method: 'get',
-                    data: {}
-                }, config);
-                $.ajax({
-                    url: options.url,
-                    method: options.method,
-                    data: options.data,
-                    complete: function(xhr){
-                        if(options.hasOwnProperty('callback')){
-                            options.callback(xhr);
-                        }
-                    }
-                });*/
-
             },
             operations: function(id){
 
@@ -520,17 +491,10 @@
                     return AppChart.getDataUrl(ProjectManager.chart.element);
                 },
                 init: function(){
-
                     var chart_container = $('#chart_container');
                     $('#'+ProjectManager.chart.element).attr('width', chart_container.width());
-                    /*window.setTimeout(function(){
-                        Project.isLoaded = true;
-                    }, 1000);*/
                 }
             },
-            /**
-             * Process project and generate chart
-             */
             process: function(){
                 if(ProjectManager.project.id){
                     ProjectManager.request({
@@ -546,6 +510,28 @@
                     });
                 }
             },
+            getErrors: function(){
+                var errors = [];
+
+                var customer = $('#project_customer').val();
+                var latitude = $('#project_latitude').val();
+                var longitude = $('#project_longitude').val();
+                var consumption = $('#project_infConsumption').val();
+
+                if(!customer){
+                    errors[errors.length] = 'Selecione um contato.';
+                }
+
+                if(!latitude || !longitude){
+                    errors[errors.length] = 'Informe o endereço do projeto.';
+                }
+
+                if(!consumption){
+                    errors[errors.length] = 'Informe o consumo.';
+                }
+
+                return errors;
+            },
             configureProjectForm: function(){
                 {% if true %}
                 var form_project = $('#form_project');
@@ -553,18 +539,16 @@
                 button.ladda();
                 form_project.on('submit', function(event){
                     event.preventDefault();
-                    var customer = $('#project_customer').val();
-                    if(!customer){
+                    var errors = ProjectManager.getErrors();
+                    if(errors.length){
                         swal({
-                            title: "Contato indefinido",
-                            text: "Para prosseguir é necessário selecionar um contato!",
-                            type: "error",
+                            title: 'Ooops',
+                            text: errors[0],
+                            type: 'error',
                             showConfirmButton: true
                         });
                     }else {
-
                         button.ladda('start');
-
                         ProjectManager.submit(form_project, function (xhr) {
                             button.ladda('stop');
                             var response = xhr.responseJSON;
@@ -856,25 +840,6 @@
             project_customer.find('optgroup:last-child').attr('label','{{ 'Companies'|trans }}');
             check_form_project();
 
-            function get_inverters_forms(){
-                inverter_forms.html(inverter_spinner);
-                $.ajax({
-                    url: '{{ path('project_inverters_forms', {token:project.token}) }}',
-                    success: function(response){
-                        if(response.hasOwnProperty('forms')){
-                            var forms = response.forms;
-                            if(forms.length){
-                                inverter_forms.html('');
-                                for(var i=0; i<forms.length;i++){
-                                    inverter_forms.append(forms[i]);
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-            //get_inverters_forms();
-
             /*var project_info = $('#project_info');
             var project_info_loader = project_info.html();
             function load_project_info(){
@@ -1026,146 +991,6 @@
                 }
             });
         });
-
-        {% if project.id %}
-/*
-        var calc_button = $('#calc_button');
-        var calc_status = $('#calc_status');
-        var calc_spinner = calc_status.html();
-        var calc_errors = $('#calc_errors');
-        calc_status.html('');
-        calc_button.ladda();
-        function process_project(){
-            Project.processing = true;
-            calc_button.ladda('start');
-            $.ajax({
-                url: '{{ path('project_process',{id:project.id}) }}',
-                method: 'post',
-                success: function(response){
-                    if(response.hasOwnProperty('data')) {
-                        Project.chart.generate(response.data);
-                        $('#calc_info').html(response.info);
-                        calc_errors.html(response.warnings);
-                    }else{
-                        calc_errors.html(response);
-                    }
-                    calc_button.ladda('stop');
-                    Project.processing = false;
-                }
-            });
-        }*/
-
-        {#{% if project.computable %}
-            process_project();
-        {% endif %}#}
-
-        var common_error = 'Para prosseguir é necessário salvar as “Informações Principais” e todas as áreas de projeto';
-        /*calc_button.on('click', function(){
-            //process_project();
-            /!*var alerts = '';
-            if(editing_project || $('select.area-module:not(:disabled)').length){
-                alerts = create_alert_box('danger', '', common_error);
-            }
-            if(!alerts.length) {
-                process_project();
-            }else{
-                calc_errors.html(alerts);
-            }*!/
-        });*/
-
-
-        {# OPERATION - INVERTERS AND AREAS #}
-        {#
-        function check_operations(id){
-            var url = '{{ path('project_check_operations',{id:'_id_'}) }}'.replace(/_id_/g,id);
-            var container = $('[data-operation="'+id+'"]');
-            var inverter_info = container.find('.inverter-info');
-            var classes_info = 'btn-info btn-success btn-danger btn-warning';
-            var areas_info = container.find('a.module-info');
-
-            $.ajax({
-                url: url,
-                dataType: 'json',
-                success: function(response){
-                    if(response.hasOwnProperty('operable')){
-                        inverter_info.removeClass(classes_info).addClass('btn-'+response.level);
-                        $.each(response.areas, function(i, area){
-                            if(area.hasOwnProperty('level')){
-                                $(areas_info[i]).removeClass(classes_info).addClass('btn-'+area.level);
-                            }
-                        });
-                    }
-                }
-            });
-        }
-        #}
-
-        /*var area_operation_inner = $('#area_operation_inner');
-        var area_operation_spinner = area_operation_inner.html();
-        $('#modal_operation_info').on('show.bs.modal', function(event){
-            alert('ok');
-            var target = $(event.relatedTarget);
-            var href = target.data('href');
-            if(href) {
-                area_operation_inner.html(area_operation_spinner);
-                $.ajax({
-                    url: href,
-                    success: function (response) {
-                        area_operation_inner.html(response);
-                    }
-                });
-            }
-        });*/
-
-        {% endif %}
-
-        {#$('[data-nav]').on('click', function(event){
-            event.preventDefault();
-            var nav = $(this).data('nav');
-            var href = $(this).data('href');
-            if('#' != href){
-                if('project' != nav /*&& Project.isLoaded*/) {
-                    var chart_data = ProjectManager.chart.getData();
-                    if (/*editing_project ||*/ $('select.area-module:not(:disabled)').length) {
-                        swal('Editando', 'Para prosseguir é necessário salvar as "Informações Principais" e todas as áreas do projeto!', 'error');
-                    } else if(!chart_data || !$('#info_process').html()) {
-                        swal('Calcular', 'Para prosseguir é necessário efetuar o cálculo!', 'error');
-                    } else if(ProjectManager.processing){
-                        swal('Calculando', 'Aguarde a finalização do cálculo!', 'error');
-                    }else{
-                        {% if project.id %}
-                        swal({
-                            title: 'Aguarde...',
-                            text: '',
-                            type: 'info',
-                            showConfirmButton: false
-                        });
-                        $.ajax({
-                            url: '{{ path('project_check_step',{id:project.id}) }}',
-                            method: 'post',
-                            data: {step: nav},
-                            complete: function (xhr) {
-                                if (202 == xhr.status) {
-                                    window.location.href = href;
-                                } else {
-                                    var response = xhr.responseJSON;
-                                    swal({
-                                        title: 'Erro',
-                                        text: response.error,
-                                        type: 'error',
-                                        html: true
-                                    });
-                                }
-                            }
-                        });
-                        {% endif %}
-                    }
-                }
-            }else{
-                swal('Erro', 'O projeto não foi inicializado!', 'error');
-            }
-        });
-        #}
 
     </script>
 
