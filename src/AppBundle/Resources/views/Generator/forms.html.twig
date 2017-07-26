@@ -4,7 +4,7 @@
         {% for key, form in forms %}
 
             <div class="row">
-                {{ form_start(form,{attr:{class:'form-horizontal form-generate'}}) }}
+                {{ form_start(form,{attr:{action: path('project_generator_generate'),class:'form-horizontal form-generate'}}) }}
                 <div class="col-md-2">
                     {{ form_label(form.power, 'Potência') }}
                     {{ form_widget(form.power,{attr:{class:'form-control'}}) }}
@@ -31,6 +31,10 @@
                 </div>
 
                 {{ form_rest(form) }}
+
+                <button class="btn" type="submit">
+                    Gerar
+                </button>
 
                 {{ form_end(form) }}
 

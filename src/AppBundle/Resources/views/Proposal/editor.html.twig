@@ -165,8 +165,12 @@
 
             {#botao salvar e pdf da proposta#}
             <div class="col-md-2 sidebar-save">
-                <button id="saveProposal" class="btn btn-primary" data-url="{{ path('proposal_save',{id:project.id}) }}">Salvar</button>
-                <button id="pdfProposal" class="btn btn-primary" data-url="{{ path('proposal_pdf',{id:project.id}) }}">Gerar PDF</button>
+                <button id="saveProposal" class="btn btn-primary ladda-button" data-style="zoom-in" data-url="{{ path('proposal_save',{id:project.id}) }}">
+                    <span class="ladda-label">Salvar</span>
+                </button>
+                <button id="pdfProposal" class="btn btn-primary ladda-button" data-style="zoom-in" data-url="{{ path('proposal_pdf',{id:project.id}) }}">
+                    <span class="ladda-label">Gerar PDF</span>
+                </button>
             </div>
 
             {#dados da proposta e tags laterais#}
@@ -179,7 +183,7 @@
                     </div>
 
                     <div id="daverageConsumption">
-                        {{ project.infConsumption }}
+                        {{ project.infConsumption }} kWh
                     </div>
 
                     <div id="ddocument">
@@ -196,7 +200,7 @@
 
                     {#dados da geração#}
                     <div id="dtableAreas">
-                        1ver{#{{ project.customer.tableAreas }}#}
+                        1-{#{{ project.customer.tableAreas }}#}
                     </div>
 
                     <div id="dgenerationChart" data-type="chart" data-chart="generation"
@@ -204,32 +208,38 @@
                     </div>
 
                     <div id="dannualGeneration">
-                        2ver{#{{ project.customer.annualGeneration }}#}
+                        3-{#{{ project.customer.annualGeneration }}#}
                     </div>
 
                     <div id="dmonthlyAverageGeneration">
-                        3ver{#{{ project.customer.monthlyAverageGeneration }}#}
+                        4-{#{{ project.customer.monthlyAverageGeneration }}#}
                     </div>
 
                     {#análise financeira#}
                     <div id="dlifetime">
-                        {{ project.lifetime }}
+                        {% if project.lifetime == 1 %}
+                            1 ano
+                        {% elseif project.lifetime > 1 %}
+                            {{ project.lifetime }} anos
+                        {% else %}
+                            0
+                        {% endif %}
                     </div>
 
                     <div id="dinflation">
-                        {{ project.inflation }}
+                        {{ project.inflation }}%
                     </div>
 
                     <div id="dlossOfEfficiency">
-                        {{ project.efficiencyLoss }}
+                        {{ project.efficiencyLoss }}%
                     </div>
 
                     <div id="dannualOperatingCost">
-                        {{ project.annualCostOperation }}
+                        {{ project.annualCostOperation|currency }}
                     </div>
 
                     <div id="dpriceOfKWh">
-                        {{ project.energyPrice }}
+                        {{ project.energyPrice|currency }}
                     </div>
 
                     <div id="dproposalValue">
@@ -245,7 +255,7 @@
                     </div>
 
                     <div id="dtir">
-                        {{ project.internalRateOfReturn|round }}
+                        {{ project.internalRateOfReturn|round }} %
                     </div>
 
                     <div id="dsimplePayback">
@@ -294,7 +304,7 @@
 
                     {#equipamentos e serviços#}
                     <div id="dtableEquipmentAndServices">
-                       5ver{# {{ project.customer.tableEquipmentAndServices }}#}
+                       5-{# {{ project.customer.tableEquipmentAndServices }}#}
                     </div>
 
                 </div>

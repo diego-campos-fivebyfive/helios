@@ -210,19 +210,38 @@ function loadDatas() {
 }
 
 $('#saveProposal').click(function () {
-    //console.log($('#bloco').html());
+    saveProposal(this);
+});
+
+$('#pdfProposal').click(function () {
+    var btnSave = $('#saveProposal');
+    saveProposal(btnSave);
+    alert('Gerar pdf, esperar retornar 200');
+});
+
+function saveProposal(btn) {
+    var saveBtn = $('#saveProposal').ladda();
+    saveBtn.ladda('start');
+    var pdfBtn = $('#pdfProposal').ladda();
+    pdfBtn.ladda('start');
     $.ajax({
-        url:$(this).data('url'),
+        url:$(btn).data('url'),
         method:'post',
         data:{content:$('#bloco').html()},
         complete:function (xhr) {
-            alert(xhr.status);
+            saveBtn.ladda('stop');
+            pdfBtn.ladda('stop');
         }
     })
-});
+}
 
 $(document).ready(function(){
     generateChart();
+
+    setInterval(function () {
+        var btnSave = $('#saveProposal');
+        saveProposal(btnSave);
+    },60000);
 });
 
 function generateChart() {
@@ -349,15 +368,11 @@ function changeColorFinancial(color){
     });
 }
 
-
 function generateImage(src) {
-
     var image = new Image();
     image.src = src;
-     //document.body.appendChild(image);
-   // console.log($(image).attr('color'));
+    $(image).attr('style','width: 100%;');
     return image;
-
 }
 
 function up(btn) {

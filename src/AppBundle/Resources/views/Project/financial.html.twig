@@ -24,6 +24,8 @@
 
 {% block body %}
 
+    {% include view('project.common') %}
+
     {#{% set kit = project.kit %}#}
 
     <div class="modal inmodal" id="tax_modal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -84,7 +86,7 @@
 
     <div class="wrapper wrapper-content animated fadeInRight">
 
-        {% include view('project.breadcrumbs') %}
+        {% include view('project.navbar') %}
 
         <div class="row">
             <div class="col-lg-12">
@@ -503,7 +505,7 @@
             </div>
         </div>
 
-        {% include view('project.breadcrumbs') %}
+        {% include view('project.navbar') %}
 
     </div>
 
@@ -828,8 +830,5 @@
             $(this).popover('hide');
         });
     </script>
-
-    {# VALIDATE STEPS #}
-    {% include view('project.steps') %}
 
 {% endblock %}

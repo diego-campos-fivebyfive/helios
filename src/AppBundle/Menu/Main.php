@@ -102,19 +102,6 @@ class Main implements ContainerAwareInterface
 
         $this->menuSettings($menu, $user);
 
-        $this->menuSupport($menu);
-
-        if($user->isOwnerMaster() && $account->isFreeAccount()) {
-
-            $menu->addChild('Subscribe', [
-                'route' => 'signature',
-                'extras' => ['icon' => App::icons('signature')],
-                'attributes' => [
-                    'class' => 'special_link'
-                ]
-            ]);
-        }
-
         $this->resolveActiveMenu($menu);
 
         return $menu;
@@ -228,11 +215,6 @@ class Main implements ContainerAwareInterface
          */
         if($user->isOwner()){
 
-           /* $settings->addChild('Proposal', [
-                'route' => 'document_configure',
-                'extras' => ['icon' => App::icons('proposal')]
-            ]);*/
-
             $settings->addChild('Categories', [
                 'route' => 'categories',
                 'routeParameters' => ['context' => 'contact_category'],
@@ -255,20 +237,6 @@ class Main implements ContainerAwareInterface
         $menu->addChild('Timezone', [
             'route' => 'member_timezone',
             'extras' => ['icon' => App::icons('globe')]
-        ]);
-    }
-
-    /**
-     * @param ItemInterface $menu
-     */
-    private function menuSupport(ItemInterface &$menu)
-    {
-        $menu->addChild('Support', [
-            'uri' => 'http://suporte.inovadorsolar.com/',
-            'extras' => ['icon' => App::icons('support')],
-            'attributes' => [
-                'class' => 'support_link'
-            ]
         ]);
     }
 

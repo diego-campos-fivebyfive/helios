@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service\ProjectGenerator;
 
+use AppBundle\Entity\Component\InverterInterface;
 use AppBundle\Entity\Component\MakerInterface;
 use AppBundle\Entity\Component\ModuleInterface;
 use AppBundle\Entity\Component\ProjectExtra;
@@ -10,9 +11,7 @@ use AppBundle\Entity\Component\ProjectInverter;
 use AppBundle\Entity\Component\ProjectModule;
 use AppBundle\Entity\Component\ProjectStringBox;
 use AppBundle\Entity\Component\ProjectStructure;
-use AppBundle\Service\ProjectHelper;
 use AppBundle\Service\ProjectProcessor;
-use AppBundle\Service\Support\Project\FinancialAnalyzer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -205,28 +204,34 @@ class ProjectGenerator
 
         /** @var \AppBundle\Manager\InverterManager $manager */
         $manager = $this->manager('inverter');
-        $loader = new InverterLoader($manager);
 
-        $inverters = $loader
-            ->maker($maker)
-            ->project($project)
-            ->get();
+        /*$loader = new InverterLoader(
+            $this->container->getParameter('database_host'),
+            $this->container->getParameter('database_name'),
+            $this->container->getParameter('database_user'),
+            $this->container->getParameter('database_password')
+        );
 
-        $power = $project->getInfPower();
+        $loader->project($project)->maker($maker->getId());
 
-        // Progressive loader, if inverters is empty
-        while (empty($inverters)){
-            $power += 0.2;
-            $inverters = $loader->power($power)->get();
-        }
+        $data = $loader->get();*/
 
-        $project->setInfPower($power);
+        $loader = new DoctrineInverterLoader($manager);
+
+        $inverters = $loader->project($project)->maker($maker)->get();
 
         foreach ($inverters as $inverter){
+
+            $quantity = $inverter->quantity;
+
+            if(!$inverter instanceof InverterInterface) {
+                $inverter = $manager->find($inverter->id);
+            }
+
             $projectInverter = new ProjectInverter();
             $projectInverter
                 ->setInverter($inverter)
-                ->setQuantity($inverter->quantity)
+                ->setQuantity($quantity)
             ;
 
             $project->addProjectInverter($projectInverter);
