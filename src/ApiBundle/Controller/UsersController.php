@@ -43,13 +43,7 @@ class UsersController extends FOSRestController
                 ->setUser($user);
         $memberManager->save($member);
 
-        $view = View::create([
-            'firstname' => $member->getFirstname(),
-            'lastname' => $member->getLastname(),
-            'email' => $member->getEmail(),
-            'phone' => $member->getPhone()
-        ]);
-        return JsonResponse::create($view, 201);
+        return JsonResponse::create($member, 200);
     }
     /**
      * @ApiDoc(

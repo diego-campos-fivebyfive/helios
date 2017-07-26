@@ -49,8 +49,12 @@ class MemorialController extends FOSRestController
                     $rangeManager->save($range);
                 }
             }
-            $view = View::create();
-            return $this->handleView($view);
+            $view = View::create([
+                'memorial_id' => $memorial->getId(),
+                'version' => $memorial->getVersion(),
+                'status' => $memorial->getStatus()
+            ]);
+            return JsonResponse::create($view, 200);
         }
     }
 }
