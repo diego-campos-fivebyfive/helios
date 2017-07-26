@@ -24,8 +24,7 @@ class StructureController extends FOSRestController
                     ->getDescription($data['description']);
         $structureManager->save($structure);
 
-        $view = View::create();
-        return $this->handleView($view);
+        return JsonResponse::create($structure, 201);
     }
 
     public function getStructuresAction(Request $request, $id)
