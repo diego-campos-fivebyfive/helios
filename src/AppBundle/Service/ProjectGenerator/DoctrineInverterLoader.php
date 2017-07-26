@@ -10,7 +10,7 @@ use AppBundle\Manager\InverterManager;
  * Class InverterLoader
  * @author Claudinei Machado <cjchamado@gmail.com>
  */
-class InverterLoader
+class DoctrineInverterLoader
 {
     /**
      * @var float
@@ -51,6 +51,16 @@ class InverterLoader
      * @var float
      */
     private $fdiMax = 1;
+
+    /**
+     * @var bool
+     */
+    private $increasing = false;
+
+    /**
+     * @var ProjectInterface
+     */
+    private $project;
 
     /**
      * @inheritDoc
@@ -97,9 +107,11 @@ class InverterLoader
      */
     public function range($min, $max)
     {
-        $this->qb->andWhere(
-            $this->qb->expr()->between('i.nominalPower', ':min', ':max')
-        );
+        if(!$this->increasing) {
+            $this->qb->andWhere(
+                $this->qb->expr()->between('i.nominalPower', ':min', ':max')
+            );
+        }
 
         $this->qb->setParameter('min', $min);
         $this->qb->setParameter('max', $max);
@@ -113,6 +125,8 @@ class InverterLoader
      */
     public function project(ProjectInterface $project)
     {
+        $this->project = $project;
+
         return $this->power($project->getInfPower());
     }
 
@@ -128,14 +142,12 @@ class InverterLoader
 
         $inverters = $query->getResult();
 
-        if (empty($inverters)) {
-            for ($i = 0.3; $i > 0.025; $i -= 0.015) {
-
-                sleep($this->delay);
+        if (!count($inverters)) {
+            for ($i = 300; $i >= 0; $i -= 15) {
 
                 $attempts++;
 
-                $this->qb->setParameter('min', ($min * $i));
+                $this->qb->setParameter('min', ($min * ($i / 1000)));
 
                 $inverters = $this->qb->getQuery()->getResult();
 
@@ -147,12 +159,33 @@ class InverterLoader
             array_splice($inverters, 1);
         }
 
-        array_walk($inverters, function (&$inverter) use($attempts) {
-            $inverter->quantity = $attempts > 1 ? 0 : 1 ;
+        $power = $this->project->getInfPower();
+        while (!count($inverters)){
+
+            $this->increasing = true;
+            $power += 0.2;
+            $min = $power * $this->fdiMin;
+            $max = $power * $this->fdiMax;
+
+            $this->qb->setParameters([
+                'min' => $min,
+                'max' => $max,
+                'maker' => $this->maker
+            ]);
+
+            $inverters = $this->qb->getQuery()->getResult();
+        }
+
+        $this->project->setInfPower($power);
+
+        $quantity = $attempts && !$this->increasing ? 0 : 1;
+
+        array_walk($inverters, function (&$inverter) use($quantity) {
+            $inverter->quantity = $quantity;
         });
 
-        if ($attempts > 1) {
-            self::resolveCombinations($inverters, $min, $max);
+        if ($attempts > 1 && !$this->increasing) {
+            $this->resolveCombinations($inverters, $min, $max);
         }
 
         $this->attempts = $attempts;
@@ -170,16 +203,32 @@ class InverterLoader
 
     /**
      * @param array $inverters
+     * @return array
+     */
+    private function increase(array $inverters)
+    {
+        while (!count($inverters)){
+            $power = $this->project->getInfPower() + 0.2;
+            $this->project->setInfPower($power);
+            $this->power($power);
+
+            $inverters = $this->project($this->project)->get();
+        }
+
+        return $inverters;
+    }
+
+    /**
+     * @param array $inverters
      * @param $min
      * @param $max
-     * @throws \Exception
+     * @return array
      */
-    public static function resolveCombinations(array &$inverters, $min, $max)
+    private function resolveCombinations(array &$inverters, $min, $max)
     {
         $comb = 2;
-
         $cont = [];
-        for ($j = $comb; $j <= 50; $j++) {
+        for ($j = $comb; $j <= 10; $j++) {
 
             $cont = array_fill(0, $j, 0);
             $top = count($inverters) - 1;
@@ -201,15 +250,16 @@ class InverterLoader
                         $cont[$j - ($k + 1)] += 1;
                         for ($z = $k; $z >= 1; $z--) {
                             $cont[$j - $z] = $cont[$j - ($z + 1)];
+                            if($cont[0] > $top){
+                                break 3;
+                            }
                         }
                     }
                 }
             }
         }
 
-        if (count($cont) == 50) {
-            //throw new \Exception('Exhausted combinations');
-            // TODO RECURSIVE ATTEMPTS DETECTOR
+        if (count($cont) == 10) {
             return [];
         }
 

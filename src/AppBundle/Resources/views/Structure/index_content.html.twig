@@ -38,8 +38,8 @@
                             <td>{{ structure.description }}</td>
                             <td>{{ structure.size }}</td>
                             <td class="btn-group btn-group-md btn-group-justified">
-                                <a href="{{ path('structure_preview', { id: structure.id }) }}" class="btn btn-success">
-                                    {{'View'|trans}}
+                                <a href="{{ path('structure_preview', { id: structure.id }) }}" class="btn btn-default">
+                                    <i class="fa fa-eye"></i>{{'View'|trans}}
                                 </a>
                                 {% if member.isAdmin %}
                                 <a href="{{ path('structure_update', { id: structure.id }) }}" class="btn btn-warning">

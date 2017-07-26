@@ -40,12 +40,10 @@ class ProposalController extends AbstractController
      */
     public function editorAction(Project $project)
     {
-        //$customer = $project->getCustomer()->getUser()->getEmail();
-        //dump($project);die();
 
         $projectFake = [
             'customer' => [
-                'generationChart' => [20,550,347,805,474,647,864,275,759,584,967,847]
+                'generationChart' => [560,550,447,405,374,347,364,405,459,504,567,597]
             ]
         ];
 

@@ -17,7 +17,6 @@ if [ -z ${1+x} ] || [ $1 == '--development' ]; then
   echo "Bundle App starting on $CES_BUNDLE_HOST:$CES_BUNDLE_PORT"
   node_modules/.bin/node-supervisor index.js &
 
-  sensible-browser "http://sicessolar.dev:$CES_SICES_PORT"
   echo 'Done.'
 
   # Enable job control
@@ -41,7 +40,6 @@ elif [ $1 == '--isquikmock' ]; then
   cd bundle/test
   yarn install
   echo "Starting Bundle Test (Isquik Mock) on: $CES_ISQUIK_HOST:$CES_ISQUIK_PORT"
-  sensible-browser "$CES_ISQUIK_HOST:$CES_ISQUIK_PORT"
   node_modules/.bin/node-supervisor index.js
 
 fi

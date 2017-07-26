@@ -48,6 +48,9 @@
 .tag{
     color: #843534;
 }
+.h-card{
+    background-color: #FFFDE3;
+}
 .margBottom{
     margin-bottom: 50px;
 }
@@ -71,7 +74,10 @@
 }
 .edit{
     height: auto;
-    /*margin: 0 !important;*/
+    border: 1px solid transparent;
+}
+.image{
+    width: 100%;
 }
 .border{
     border: solid 1px #EEEEEE;
@@ -87,7 +93,6 @@
 }
 .minHeight50{
     min-height: 50mm !important;
-    /*margin: 0 !important;*/
 }
 
 .edit:focus, .edit2:focus{
