@@ -322,14 +322,14 @@ class ContactController extends AbstractController
             ], Response::HTTP_IM_USED);
         }*/
 
-        /*$projects = $this->getProjectManager()->findByCustomer($contact);
+        $projects = $this->getProjectManager()->findByCustomer($contact);
 
         if(count($projects)){
 
             return $this->jsonResponse([
                 'error' => $this->translate('There are projects associated with this contact')
             ], Response::HTTP_IM_USED);
-        }*/
+        }
 
         if ($contact->isPerson()) {
 

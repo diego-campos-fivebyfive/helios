@@ -18,14 +18,14 @@
                     url: url,
                     method: 'post',
                     data: {_method:'delete'},
-                    complete: function(response){
-                        if(response.hasOwnProperty('success')){
-                            swal("Sucesso!", "Contato excluído com sucesso!", "success");
+                    complete: function(xhr){
+                        if(200 == xhr.status){
+                            sweetAlert("Sucesso!", "Contato excluído com sucesso!", "success");
                             window.setTimeout(function(){
                                 swal.close();
                             }, 1000);
-                            window.location.href = "{{ path('contact_index',{context:contact.context}) }}";
-                            row.remove();
+                            //row.remove();
+                            window.location.href = '{{ path('contact_index',{context:contact.context}) }}';
                         }else{
                             var response = xhr.responseJSON;
                             sweetAlert("Erro!", response.error, "error");
