@@ -72,7 +72,7 @@ class ContactController extends AbstractController
             'context' => $context,
             'company' => $company,
             'pagination' => $pagination,
-            'categories' => $this->getCategoryManager()->findBy(['account' => $this->account(), 'context' => 'contact_category'])
+            'categories' => $this->manager('category')->findBy(['account' => $this->account(), 'context' => 'contact_category'])
 
         ));
     }
@@ -85,11 +85,10 @@ class ContactController extends AbstractController
     {
         $member = $this->getUser()->getInfo();
 
-        $manager = $this->getCustomerManager();
+        $manager = $this->manager('customer');
 
         /** @var Customer $contact */
         $contact = $manager->create();
-
 
         $contact
             ->setContext($context->getId())
@@ -147,7 +146,7 @@ class ContactController extends AbstractController
 
             $member     = $this->member();
 
-            $category = $this->getCategoryManager()->findOneBy([
+            $category = $this->manager('category')->findOneBy([
                 'account' => $member->getAccount(),
                 'context' => 'contact_category',
                 'id' => $request->get('category')
@@ -277,7 +276,7 @@ class ContactController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $manager = $this->getCustomerManager();
+            $manager = $this->manager('customer');
             
             foreach ($employees as $employee) {
                 if (!$contact->getEmployees()->contains($employee)) {
@@ -322,7 +321,7 @@ class ContactController extends AbstractController
             ], Response::HTTP_IM_USED);
         }*/
 
-        $projects = $this->getProjectManager()->findByCustomer($contact);
+        $projects = $this->manager('project')->find($contact);
 
         if(count($projects)){
 
@@ -333,17 +332,17 @@ class ContactController extends AbstractController
 
         if ($contact->isPerson()) {
 
-            $this->getCustomerManager()->delete($contact);
+            $this->manager('customer')->delete($contact);
 
         } elseif ($contact->isCompany()) {
 
             foreach ($contact->getEmployees() as $employee) {
                 $employee->setCompany(null);
 
-                $this->getCustomerManager()->save($employee);
+                $this->manager('customer')->save($employee);
             }
 
-            $this->getCustomerManager()->delete($contact);
+            $this->manager('customer')->delete($contact);
         }
 
         return $this->jsonResponse([], Response::HTTP_OK);
@@ -356,7 +355,7 @@ class ContactController extends AbstractController
     {
         $name = $request->request->get('name');
 
-        $manager = $this->getCustomerManager();
+        $manager = $this->manager('customer');
         $company = $manager->create();
 
         //$context = $this->getContextManager()->find(BusinessInterface::CONTEXT_COMPANY);
@@ -399,7 +398,7 @@ class ContactController extends AbstractController
 
         $this->getSessionStorage()->remove($context);*/
 
-        $manager = $this->getCustomerManager();
+        $manager = $this->manager('customer');
 
         $manager->save($entity);
 
@@ -434,7 +433,7 @@ class ContactController extends AbstractController
      */
     private function createQueryBuilder(Context $context, $strict = false)
     {
-        $manager = $this->getCustomerManager();
+        $manager = $this->manager('customer');
         $member = $this->getUser()->getInfo();
 
         if (!$member instanceof BusinessInterface || !$member->isMember())
@@ -515,7 +514,7 @@ class ContactController extends AbstractController
     private function getCustomerReferer(Request $request)
     {
         if(null != $token = $request->query->get('contact')) {
-            if(null != $contact = $this->getCustomerManager()->findByToken($token)) {
+            if(null != $contact = $this->manager('customer')->findByToken($token)) {
 
                 $this->denyAccessUnlessGranted('edit', $contact);
             }
