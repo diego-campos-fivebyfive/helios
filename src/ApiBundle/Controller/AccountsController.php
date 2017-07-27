@@ -4,12 +4,14 @@ namespace ApiBundle\Controller;
 
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Model\Document\Account;
 use FOS\RestBundle\Controller\FOSRestController;
 use AppBundle\Entity\Customer;
 use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class AccountsController extends FOSRestController
 {
@@ -69,5 +71,35 @@ class AccountsController extends FOSRestController
         $view = View::create($data);
 
         return $this->handleView($view);
+    }
+
+    public function putAccountAction(Request $request, Customer $id)
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $account = $id;
+
+        if (!$account->isAccount()) {
+            return JsonResponse::HTTP_NOT_FOUND;
+        }
+
+        /** @var AccountInterface $accountManager */
+        $accountManager = $this->get('account_manager');
+        $account->setFirstName($data['firstname'])
+                ->setLastName($data['lastname'])
+                ->setExtraDocument($data['extraDocument'])
+                ->setDocument($data['document'])
+                ->setEmail($data['email'])
+                ->setState($data['state'])
+                ->setCity($data['city'])
+                ->setPhone($data['phone'])
+                ->setDistrict($data['district'])
+                ->setStreet($data['street'])
+                ->setNumber($data['number'])
+                ->setPostcode($data['postcode'])
+                ->setStatus($data['status']);
+        $accountManager->save($account);
+
+        return JsonResponse::create('Conta Atualizada',Response::HTTP_OK);
     }
 }

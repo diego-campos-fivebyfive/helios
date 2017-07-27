@@ -3,6 +3,7 @@
 namespace ApiBundle\Controller;
 
 use AppBundle\Entity\AccountInterface;
+use AppBundle\Entity\User;
 use AppBundle\Model\Document\Account;
 use FOS\RestBundle\Controller\FOSRestController;
 use AppBundle\Entity\Customer;
@@ -11,6 +12,7 @@ use AppBundle\Entity\UserInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class UsersController extends FOSRestController
 {
@@ -71,5 +73,32 @@ class UsersController extends FOSRestController
         $view = View::create($data);
 
         return $this->handleView($view);
+    }
+
+    public function putUserAction(Request $request, Customer $id)
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $member = $id;
+
+        if ($member->isMember()){
+            /** @var AccountInterface $accountManager */
+            $accountManager = $this->get('account_manager');
+            $account = $accountManager->find($data['account_id']);
+
+            /** @var AccountInterface $memberManager */
+            $memberManager = $this->get('account_manager');
+            $member ->setAccount($account)
+                ->setFirstname($data['contact'])
+                ->setPhone($data['phone'])
+                ->setEmail($data['email']);
+            $memberManager->save($member);
+
+            return JsonResponse::create('Usuario atualizado', Response::HTTP_OK);
+        }
+        else{
+            return JsonResponse::HTTP_NOT_FOUND;
+        }
+
     }
  }
