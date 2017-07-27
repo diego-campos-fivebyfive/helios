@@ -80,7 +80,7 @@ class AccountsController extends FOSRestController
         $account = $id;
 
         if (!$account->isAccount()) {
-            return JsonResponse::HTTP_NOT_FOUND;
+            return JsonResponse::create("Invalid Account ID",Response::HTTP_NOT_FOUND);
         }
 
         /** @var AccountInterface $accountManager */
@@ -98,8 +98,17 @@ class AccountsController extends FOSRestController
                 ->setNumber($data['number'])
                 ->setPostcode($data['postcode'])
                 ->setStatus($data['status']);
-        $accountManager->save($account);
 
-        return JsonResponse::create('Conta Atualizada',Response::HTTP_OK);
+        try {
+            $accountManager->save($account);
+            $status = Response::HTTP_ACCEPTED;
+        }catch (\Exception $exception ){
+            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+            $data = 'Can not update Account';
+        }
+
+        $view = View::create($data)->setStatusCode($status);
+
+        return $this->handleView($view);
     }
 }
