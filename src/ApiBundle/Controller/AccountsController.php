@@ -57,6 +57,8 @@ class AccountsController extends FOSRestController
                 'lastname' => $account->getLastname(),
                 'email' => $account->getEmail(),
                 'phone' => $account->getPhone(),
+                'document' => $account->getDocument(),
+                'extradocument' => $account->getExtraDocument(),
                 'owner' => $account->getOwner()->getId()
             ];
 
