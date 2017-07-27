@@ -7,6 +7,9 @@ use AppBundle\Entity\Component\ModuleInterface;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Pricing\Range;
 use AppBundle\Service\ProjectGenerator\Combiner;
+use AppBundle\Service\ProjectGenerator\InverterCombiner;
+use AppBundle\Service\ProjectGenerator\InverterLoader;
+use AppBundle\Service\ProjectGenerator\MakerDetector;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
@@ -57,6 +60,50 @@ class GeneratorController extends AbstractController
         }
 
         die;
+    }
+
+    /**
+     * @Route("/inverter-combiner", name="inverter_combiner")
+     */
+    public function testInverterCombinerAction()
+    {
+        // MAKER DETECTOR
+        /*$power = 500;
+        /** @var \AppBundle\Manager\InverterManager $manager *
+        $manager = $this->manager('inverter');
+
+        $makerDetector = new MakerDetector($manager);
+
+        $makers = $makerDetector->fromPower($power);
+
+        dump($makers); die;*/
+
+        /// INVERTER LOADER
+        $sungrow = 61208;
+        $canadian = 60694;
+        $fronius = 60630;
+        $abb = 60627;
+
+        $power = 0.5;
+        $maker = $canadian;
+        $min = $power * 0.75;
+
+        $manager = $this->manager('inverter');
+
+        $loader = new InverterLoader($manager);
+
+        $inverters = $loader->load($power, $maker);
+
+        // INVERTER COMBINER
+        /*$inverters = [
+            $manager->find(6435),
+            $manager->find(6434)
+        ];*/
+        //dump($inverters); die;
+
+        InverterCombiner::combine($inverters, $min);
+
+        dump($inverters); die;
     }
 
     /**
