@@ -40,7 +40,6 @@ class ProposalController extends AbstractController
      */
     public function editorAction(Project $project)
     {
-
         $projectFake = [
             'customer' => [
                 'generationChart' => [560,550,447,405,374,347,364,405,459,504,567,597]
