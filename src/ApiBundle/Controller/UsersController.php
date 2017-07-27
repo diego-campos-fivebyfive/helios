@@ -81,24 +81,32 @@ class UsersController extends FOSRestController
 
         $member = $id;
 
-        if ($member->isMember()){
-            /** @var AccountInterface $accountManager */
-            $accountManager = $this->get('account_manager');
-            $account = $accountManager->find($data['account_id']);
+        if (!$member->isMember()) {
+            return JsonResponse::create("Invalid Member ID", Response::HTTP_NOT_FOUND);
+        }
 
-            /** @var AccountInterface $memberManager */
-            $memberManager = $this->get('account_manager');
-            $member ->setAccount($account)
-                ->setFirstname($data['contact'])
-                ->setPhone($data['phone'])
-                ->setEmail($data['email']);
+        /** @var AccountInterface $accountManager */
+        $accountManager = $this->get('account_manager');
+        $account = $accountManager->find($data['account_id']);
+
+        /** @var AccountInterface $memberManager */
+        $memberManager = $this->get('account_manager');
+        $member ->setAccount($account)
+            ->setFirstname($data['contact'])
+            ->setPhone($data['phone'])
+            ->setEmail($data['email']);
+
+        try {
             $memberManager->save($member);
+            $status = Response::HTTP_ACCEPTED;
+        }catch (\Exception $exception){
+            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+            $data = 'Can not update Member';
+        }
 
-            return JsonResponse::create('Usuario atualizado', Response::HTTP_OK);
-        }
-        else{
-            return JsonResponse::HTTP_NOT_FOUND;
-        }
+        $view = View::create($data)->setStatusCode($status);
+
+        return $this->handleView($view);
 
     }
  }
