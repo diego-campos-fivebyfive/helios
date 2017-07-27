@@ -304,7 +304,144 @@
 
                     {#equipamentos e serviços#}
                     <div id="dtableEquipmentAndServices">
-                       5-{# {{ project.customer.tableEquipmentAndServices }}#}
+                        <table>
+                            <thead>
+                            <tr>
+                                <th> Código </th>
+                                <th> Descrição </th>
+                                <th> Quantidade </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {# MODULES #}
+                            {% if project.projectModules.count >= 1 %}
+                                <tr>
+                                    <th>
+                                        Módulos
+                                    </th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            {% endif %}
+                            {% for projectModule in project.projectModules %}
+                                <tr>
+                                    <td> {{ projectModule.module.id }} </td>
+                                    <td> {{ projectModule.module.model }} </td>
+                                    <td> {{ projectModule.quantity }} </td>
+                                </tr>
+                            {% endfor %}
+
+                            {# INVERTERS #}
+                            {% if project.projectInverters.count >= 1 %}
+                                <tr>
+                                    <th>
+                                        Inversores
+                                    </th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            {% endif %}
+                            {% for projectInverter in project.projectInverters %}
+                                <tr>
+                                    <td> {{ projectInverter.inverter.id }} </td>
+                                    <td> {{ projectInverter.inverter.model }} </td>
+                                    <td> {{ projectInverter.quantity }} </td>
+                                </tr>
+                            {% endfor %}
+
+                            {# STRING_BOXES #}
+                            {% if project.projectStringBoxes.count >= 1 %}
+                                <tr>
+                                    <th>
+                                        String Boxes
+                                    </th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            {% endif %}
+                            {% for projectStringBox in project.projectStringBoxes %}
+                                <tr>
+                                    <td> {{ projectStringBox.stringBox.code }} </td>
+                                    <td> {{ projectStringBox.stringBox.description }} </td>
+                                    <td> {{ projectStringBox.quantity }} </td>
+                                </tr>
+                            {% endfor %}
+
+                            {# STRUCTURES #}
+                            {% if project.projectStructures.count >= 1 %}
+                                <tr>
+                                    <th>
+                                        Estrutura
+                                    </th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            {% endif %}
+                            {% for projectStructure in project.projectStructures %}
+                                <tr>
+                                    <td> {{ projectStructure.structure.code }} </td>
+                                    <td> {{ projectStructure.structure.description }} </td>
+                                    <td> {{ projectStructure.quantity }} </td>
+                                </tr>
+                            {% endfor %}
+
+
+                            {# VARIETIES #}
+                            {% if project.projectVarieties.count >= 1 %}
+                                <tr>
+                                    <th>
+                                        Variedades
+                                    </th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            {% endif %}
+                            {% for projectVariety in project.projectVarieties %}
+                                <tr>
+                                    <td> {{ projectVariety.variety.code }} </td>
+                                    <td> {{ projectVariety.variety.description }} </td>
+                                    <td> {{ projectVariety.quantity }} </td>
+                                </tr>
+                            {% endfor %}
+
+                            {# EXTRAS #}
+                            {% if project.projectExtras.count >= 1 %}
+                                <tr>
+                                    <th>
+                                        Extras
+                                    </th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            {% endif %}
+                            {% for projectExtras in project.projectExtras %}
+                                <tr>
+                                    <td> {#{{ projectExtras.extra.type }}#} </td>
+                                    <td> {{ projectExtras.extra.description }} </td>
+                                    <td> {{ projectExtras.quantity }} </td>
+                                </tr>
+                            {% endfor %}
+
+                            {# EXTRAS #}
+                            {% if project.projectTaxes.count >= 1 %}
+                                <tr>
+                                    <th>
+                                        Taxas
+                                    </th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            {% endif %}
+                            {% for projectTaxes in project.projectTaxes %}
+                                <tr>
+                                    <td> {{ projectTaxes.variety.code }} </td>
+                                    <td> {{ projectTaxes.variety.description }} </td>
+                                    <td> {{ projectTaxes.quantity }} </td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
                     </div>
 
                 </div>
@@ -809,13 +946,12 @@
                                 data-cke-widget-data="%7B%22hasCaption%22%3Atrue%2C%22src%22%3A%22http%3A%2F%2Fc.cksource.com%2Fa%2F1%2Fimg%2Fdemo%2Fbrownie.jpg%22%2C%22alt%22%3A%22%22%2C%22width%22%3A401%2C%22height%22%3A267%2C%22lock%22%3Atrue%2C%22align%22%3A%22left%22%2C%22classes%22%3A%7B%7D%7D"
                                 data-cke-widget-upcasted="1" data-cke-widget-keep-attr="0" data-widget="image">
 
-                                {#<span class="daccumulatedCashChart"></span>#}
                         </span>
                     </div>
 
                     {#equipamentos e serviços#}
                     <div id="tableEquipmentAndServices">
-                        <span tabindex="-1" data-cke-widget-wrapper="1" data-cke-filter="off"
+                        {#<span tabindex="-1" data-cke-widget-wrapper="1" data-cke-filter="off"
                               class="cke_widget_wrapper cke_widget_inline cke_widget_hcard cke_widget_wrapper_h-card"
                               data-cke-display-name="hcard" data-cke-widget-id="3" role="region" aria-label="hcard widget"
                               contenteditable="false">
@@ -837,6 +973,11 @@
                                      title="Click e arraste para mover" role="presentation" draggable="true" width="15"
                                      height="15">
                             </span>
+                        </span>#}
+                        <span class="image cke_widget_element dtableEquipmentAndServices"
+                              data-cke-widget-data="%7B%22hasCaption%22%3Atrue%2C%22src%22%3A%22http%3A%2F%2Fc.cksource.com%2Fa%2F1%2Fimg%2Fdemo%2Fbrownie.jpg%22%2C%22alt%22%3A%22%22%2C%22width%22%3A401%2C%22height%22%3A267%2C%22lock%22%3Atrue%2C%22align%22%3A%22left%22%2C%22classes%22%3A%7B%7D%7D"
+                              data-cke-widget-upcasted="1" data-cke-widget-keep-attr="0" data-widget="image" contenteditable="false">
+
                         </span>
                     </div>
 

@@ -20,3 +20,6 @@ body{
 .sf-toolbar{
     display: none !important;
 }
+.h-card{
+    background-color: transparent;
+}
