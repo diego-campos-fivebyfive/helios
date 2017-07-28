@@ -3,37 +3,42 @@
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
 
-const sendUser = account => Sices.sendUser({
-  name: account.name,
-  owner: account.owner,
-  status: account.status
+const updateUser = (sicesAccount, isquikAccount) => Sices.updateUser(sicesAccount.owner, {
+  email: isquikAccount.email,
+  phone: isquikAccount.phone,
+  contact: isquikAccount.contact,
+  account_id: sicesAccount.id
 })
-  .then(status => (
-    (status !== 202) ? 'Can not update User' : 'User and Account updated successfully'
+  .then(data => (
+    (data) ? 201 : 422
   ))
 
-const sendAccount = account => Sices.sendAccount({
-  name: account.name,
-  owner: account.owner,
-  status: account.status
+const updateAccount = sicesUser => isquikAccount => Sices.updateAccount(sicesUser.account, {
+  name: isquikAccount.name,
+  firstname: isquikAccount.firstname,
+  lastname: isquikAccount.lastname,
+  email: isquikAccount.email,
+  phone: isquikAccount.phone,
+  document: isquikAccount.document,
+  extraDocument: isquikAccount.extraDocument,
+  state: isquikAccount.state,
+  city: isquikAccount.city,
+  contact: isquikAccount.contact,
+  district: isquikAccount.district,
+  street: isquikAccount.street,
+  number: isquikAccount.number,
+  postcode: isquikAccount.postcode,
+  status: isquikAccount.status
 })
-  .then(status => {
-    if (status !== 202) {
-      return 'Can not update Account'
-    }
+  .then(sicesAccount => (
+    (sicesAccount) ? updateUser(sicesAccount, isquikAccount) : 422
+  ))
 
-    sendUser(account)
-  })
-
-const update = ({ object }) => Isquik.getAccount(object.id).then(isquikAccount => {
-  console.log('is', isquikAccount)
-  Sices.getUser(isquikAccount.owner).then(sicesUser => {
-    console.log('us', sicesUser)
-    Sices.getAccount(sicesUser.account).then(sicesAccount => {
-      console.log('ac', sicesAccount)
-    })
-  })
-})
+const update = ({ object }) => Isquik.getAccount(object.id)
+  .then(isquikAccount => (
+    Sices.getUser(isquikAccount.owner)
+      .then(updateAccount(isquikAccount))
+  ))
 
 module.exports = {
   update
