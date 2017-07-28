@@ -3,15 +3,14 @@
 const request = require('request-promise')
 const { config } = require('../config')
 
-const { auth } = config.isquik
+const { isquik } = config
 
 const getAuthentication = () => request({
   method: 'POST',
-  uri: `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=${auth.key}`,
+  uri: `${isquik.uri}/auth`,
   json: {
-    email: auth.mail,
-    password: auth.password,
-    returnSecureToken: true
+    Chave: isquik.auth.key
+    Dominio: isquik.auth.user
   }
 })
 
