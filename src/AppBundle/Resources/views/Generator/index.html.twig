@@ -43,48 +43,11 @@
 
     <script>
 
-
         var ProjectGenerator = {
             register: function(form){
                 console.log(form);
             }
         };
-
-        /*var generator_projects = $('#generator_projects');
-        var prototype = generator_projects.data('prototype');
-        var container = $('#generator_container');
-
-        $('#generator_start').on('submit', function(event){
-            event.preventDefault();
-            var number = parseInt($('#generate_number').val());
-            if(number > 0){
-
-                var childrens = container.find('li');
-                var index = childrens.length;
-
-                var item = $('<li>' + prototype.replace(/__name__/g, index) + '</li>');
-                var item_id = '#generator_projects_' + index;
-
-                container.append(item);
-
-                var item_container = $(item_id);
-
-                //item_container.closest('div').find('label').remove();
-
-                $.each(item_container.find('div'), function(i, e){
-                    $(e).addClass('col-md-2');
-                    $(e).find('input, select').addClass('form-control');
-                });
-
-                //console.log(prototype);
-                /*Request.send({
-                    data: {number:number},
-                    callback: function(xhr){
-                        $('#generator_forms').html(xhr.responseText);
-                    }
-                });*
-            }
-        });*/
 
         $('#btn-get-form').on('click', function(){
 

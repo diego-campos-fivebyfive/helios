@@ -275,28 +275,4 @@
     {% include view('helper.request') %}
     {% include view('helper.plugins_js') %}
 
-    <script>
-
-        var project_container = $('#project_{{ project.id }}');
-
-        console.log(project_container);
-
-        /*var manage_quantities = $('#table_project_{{ project.id }}').find('input');
-        manage_quantities.TouchSpin({
-            min: 1
-        });
-
-        Request.send({
-            url: '{{ path('project_generator_update',{id:project.id}) }}',
-            method: 'post',
-            data: $('#form_project_{{ project.id }}').serialize(),
-            callback: function (xhr) {
-                console.log(xhr.responseJSON);
-            }
-        });*/
-
-        //console.log($('#form_project_{{ project.id }}').serialize());
-
-    </script>
-
 {% endblock %}

@@ -44,6 +44,15 @@ class MakerDetector
             ->getResult()
         ;
 
+        return $this->sanitize($inverters);
+    }
+
+    /**
+     * @param array $inverters
+     * @return array
+     */
+    private function sanitize(array $inverters)
+    {
         return array_map(function(InverterInterface $inverter){
             return $inverter->getMaker();
         }, $inverters);

@@ -55,8 +55,6 @@ class ProjectGeneratorController extends AbstractController
 
         return $this->render('generator.index', [
             'form' => $form->createView()
-            //'form' => $form->createView(),
-            //'project' => $project
         ]);
     }
 
@@ -75,7 +73,7 @@ class ProjectGeneratorController extends AbstractController
     /**
      * @Route("/{id}/inverters/create", name="project_inverter_create")
      */
-    public function updateCreateAction(Project $project, Request $request)
+    public function createInverterAction(Project $project, Request $request)
     {
         $manager = $this->manager('project_inverter');
         $projectInverter = $manager->create();
@@ -91,7 +89,9 @@ class ProjectGeneratorController extends AbstractController
             $manager->save($projectInverter);
 
             return $this->json([
-
+                'project_inverter' => [
+                    'id' => $projectInverter->getId()
+                ]
             ]);
         }
 
