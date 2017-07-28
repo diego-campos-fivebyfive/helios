@@ -401,10 +401,8 @@ function changeColorFinancial(color){
 function generateImage(src) {
     var image = new Image();
     image.src = src;
-    image.setAttribute('style','width: 100%;');
-    //$(image).attr('style','width: 100%;');
+    image.setAttribute('width','295');
     return image;
-
 }
 
 function up(btn) {
