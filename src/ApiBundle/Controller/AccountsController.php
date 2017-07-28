@@ -59,6 +59,11 @@ class AccountsController extends FOSRestController
                 'phone' => $account->getPhone(),
                 'document' => $account->getDocument(),
                 'extradocument' => $account->getExtraDocument(),
+                'state' => $account->getState(),
+                'city' => $account->getCity(),
+                'street' => $account->getStreet(),
+                'number' => $account->getNumber(),
+                'created_at' => $account->getCreatedAt(),
                 'owner' => $account->getOwner()->getId()
             ];
 
