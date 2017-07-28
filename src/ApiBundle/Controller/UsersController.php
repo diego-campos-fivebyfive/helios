@@ -48,7 +48,7 @@ class UsersController extends FOSRestController
             $status = Response::HTTP_CREATED;
             $data = $member;
         }catch (\Exception $exception){
-            $status = Response::HTTP_NOT_FOUND;
+            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
             $data = 'Can not create User';
         }
 
