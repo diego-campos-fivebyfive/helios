@@ -205,20 +205,11 @@ class ProjectGenerator
         /** @var \AppBundle\Manager\InverterManager $manager */
         $manager = $this->manager('inverter');
 
-        /*$loader = new InverterLoader(
-            $this->container->getParameter('database_host'),
-            $this->container->getParameter('database_name'),
-            $this->container->getParameter('database_user'),
-            $this->container->getParameter('database_password')
-        );
+        $loader = new InverterLoader($manager);
 
-        $loader->project($project)->maker($maker->getId());
-
-        $data = $loader->get();*/
-
-        $loader = new DoctrineInverterLoader($manager);
-
-        $inverters = $loader->project($project)->maker($maker)->get();
+        $power = $project->getInfPower();
+        $inverters = $loader->load($power, $maker);
+        $project->setInfPower($power);
 
         foreach ($inverters as $inverter){
 
@@ -231,8 +222,7 @@ class ProjectGenerator
             $projectInverter = new ProjectInverter();
             $projectInverter
                 ->setInverter($inverter)
-                ->setQuantity($quantity)
-            ;
+                ->setQuantity($quantity);
 
             $project->addProjectInverter($projectInverter);
         }

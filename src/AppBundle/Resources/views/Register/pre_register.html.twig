@@ -14,8 +14,7 @@
                     <div class="col-lg-12 ibox-content">
                         <div class="col-sm-12">
                             <div class="col-sm-6">
-                                {% set mask = '00.000.000/0000-00' %}
-                                {{ form_widget(form.document,{attr:{class:'form-control', 'data-mask':mask, 'placeholder':'CNPJ'}}) }}
+                                {{ form_widget(form.document,{attr:{class:'form-control', 'data-mask':'00.000.000/0000-00', 'placeholder':'CNPJ'}}) }}
                             </div>
                             <div class="col-sm-6">
                                 {{ form_widget(form.extraDocument,{attr:{class:'form-control', 'placeholder':'Inscrição Estadual'}}) }}
@@ -35,8 +34,7 @@
                 <div class="col-lg-12 ibox-content">
                     <div class="col-sm-12">
                         <div class="col-sm-4">
-                            {% set maskCep = '00000-000' %}
-                            {{ form_widget(form.postcode,{attr:{class:'form-control', 'data-mask':maskCep, 'placeholder':'CEP'}}) }}
+                            {{ form_widget(form.postcode,{attr:{class:'form-control', 'data-mask':'00000-000', 'placeholder':'CEP'}}) }}
                             <div id="urlSearch" data-url="{{ path('brazil_postcode') }}"></div>
                         </div>
                         <div class="col-sm-4">

@@ -14,7 +14,7 @@ document.getElementById('infoList').addEventListener('dragstart', function drag(
     evt.data.dataTransfer.setData('text/html', content);
 });
 
-//var idPage = 0;
+///var idPage = 0;
 function newPage() {
     var idPage = $("#idConjunct").html();
 
@@ -209,39 +209,69 @@ function loadDatas() {
     }
 }
 
+/*
 $('#saveProposal').click(function () {
     saveProposal(this);
 });
+*/
 
 $('#pdfProposal').click(function () {
-    var btnSave = $('#saveProposal');
-    saveProposal(btnSave);
-    alert('Gerar pdf, esperar retornar 200');
-});
-
-function saveProposal(btn) {
-    var saveBtn = $('#saveProposal').ladda();
+    var saveBtn = $('#saveProposal');
+    $(saveBtn).ladda();
     saveBtn.ladda('start');
     var pdfBtn = $('#pdfProposal').ladda();
     pdfBtn.ladda('start');
     $.ajax({
-        url:$(btn).data('url'),
+        url:$(saveBtn).data('url'),
         method:'post',
         data:{content:$('#bloco').html()},
         complete:function (xhr) {
             saveBtn.ladda('stop');
             pdfBtn.ladda('stop');
+            alert('Gerar pdf');
+        }
+    })
+});
+
+function saveProposal() {
+    var saveBtn = $('#saveProposal');
+    $(saveBtn).ladda();
+    saveBtn.ladda('start');
+    var pdfBtn = $('#pdfProposal').ladda();
+    pdfBtn.ladda('start');
+    $.ajax({
+        url:$(saveBtn).data('url'),
+        method:'post',
+        data:{content:$('#bloco').html()},
+        complete:function (xhr) {
+            saveBtn.ladda('stop');
+            pdfBtn.ladda('stop');
+            setTimeout(function () {
+                saveProposal();
+            },1000);
         }
     })
 }
-
+var aa = 1;
 $(document).ready(function(){
     generateChart();
+    setTimeout(function () {
+        saveProposal();
+    },1000);
 
-    setInterval(function () {
+    //alert(aa);aa++;
+    CKEDITOR.on('instanceReady', function (ev) {
+        // Prevent drag-and-drop.
+        ev.editor.document.on('drop', function (ev) {
+           /* console.log(ev.data);*/
+
+            //ev.data.preventDefault(true);
+        });
+    });
+   /* setInterval(function () {
         var btnSave = $('#saveProposal');
         saveProposal(btnSave);
-    },60000);
+    },60000);*/
 });
 
 function generateChart() {
@@ -371,7 +401,7 @@ function changeColorFinancial(color){
 function generateImage(src) {
     var image = new Image();
     image.src = src;
-    $(image).attr('style','width: 100%;');
+    image.setAttribute('width','295');
     return image;
 }
 
