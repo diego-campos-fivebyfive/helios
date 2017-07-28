@@ -78,8 +78,18 @@ class StructureCalculator
     {
         $makerId = $this->makers[$project->getStructureType()];
 
+        $profileSubtype = 'roman';
+        switch ($project->getRoofType()){
+            case self::ROOF_SHEET_METAL:
+                $profileSubtype = 'industrial';
+                break;
+            case self::ROOF_SHEET_METAL_PFM:
+                $profileSubtype = 'meio_metro';
+                break;
+        }
+
         /** @var \AppBundle\Entity\Component\StructureInterface[] $profiles */
-        $profiles = $this->findStructure(['maker' => $makerId, 'type' => 'perfil', 'subtype' => 'roman'], false);
+        $profiles = $this->findStructure(['maker' => $makerId, 'type' => 'perfil', 'subtype' => $profileSubtype], false);
 
         $items = [];
         foreach ($this->mappingCriteria as $field => $criteria) {
@@ -115,6 +125,7 @@ class StructureCalculator
         }
 
         $term_inter_bd = $items[self::TERMINAL_INTERMEDIARY];
+        $term_final_bd = $items[self::TERMINAL_FINAL];
         $total_perfil_usado = array_fill(0, count($profiles), 0);
 
         $total_juncao = 0;
@@ -131,102 +142,119 @@ class StructureCalculator
         $total_fita = 0;
 
         $terminalIntermediarySize = $term_inter_bd->getSize();
+        $terminalFinalSize = $term_final_bd->getSize();
         $countProfiles = count($profiles);
         $dimension = 0 == $projectModule->getPosition() ? $projectModule->getModule()->getWidth() : $projectModule->getModule()->getLength();
 
+        /*dump($project->getPower());
+        dump($projectModule);
+        dump($projectModule->getGroups()); die;*/
         foreach ($projectModule->getGroups() as $i => $group) {
 
-            $linesOfModules = $group['lines'];
-            $quantityModules = $group['modules'];
+            $linesOfModules = (int) $group['lines'];
+            $quantityModules = (int) $group['modules'];
             $position = $group['position'];
 
-            $lineSize = ($quantityModules * $dimension) + (($quantityModules - 1) * $terminalIntermediarySize) + (2 * $terminalIntermediarySize);
+            $lineSize = ($quantityModules * $dimension) + (($quantityModules - 1) * $terminalIntermediarySize) + (2 * $terminalFinalSize);
 
             $usedProfiles = array_fill(0, $countProfiles, 0);
-            $profileSize = $profiles[$maxProfileSize]->getSize();
 
-            $usedProfiles[$maxProfileSize] = floor($lineSize / $profileSize);
+            if($project->getRoofType() != self::ROOF_SHEET_METAL_PFM) {
 
-            $remaining = (($lineSize / $profileSize) - $usedProfiles[$maxProfileSize]) * $profileSize;
+                $profileSize = $profiles[$maxProfileSize]->getSize();
 
-            $firstOptionSize = 0;
-            for ($j = $countProfiles - 1; $j >= $maxProfileSize; $j--) {
-                $firstOptionSize = $j;
-                if (($remaining - $profiles[$j]->getSize()) < 0) {
-                    break;
-                }
-            }
+                $usedProfiles[$maxProfileSize] = floor($lineSize / $profileSize);
 
-            if (($remaining * 2) > $profiles[$firstOptionSize]->getSize()) {
-                if ($maxProfileSize == $firstOptionSize) {
-                    $usedProfiles[$maxProfileSize] = ($usedProfiles[$maxProfileSize] * 2) + 2;
-                } else {
-                    $usedProfiles[$maxProfileSize] = ($usedProfiles[$maxProfileSize] * 2);
-                    $usedProfiles[$firstOptionSize] += 2;
-                }
-            } else {
-                $usedProfiles[$maxProfileSize] *= 2;
-                if ($maxProfileSize == $firstOptionSize) {
-                    $usedProfiles[$maxProfileSize] += 1;
-                } else {
-                    $usedProfiles[$firstOptionSize] += 1;
-                }
-            }
+                $remaining = (($lineSize / $profileSize) - $usedProfiles[$maxProfileSize]) * $profileSize;
 
-            $usedSize = 0;
-            for ($k = 0; $k < $countProfiles; $k++) {
-                $usedSize += $usedProfiles[$k] * $profiles[$k]->getSize();
-            }
-
-            $leftover = $usedSize - ($lineSize * 2);
-
-            if ($leftover > 2) {
-
-                $usedProfiles[$maxProfileSize] -= 1;
-
-                $usedSize = 0;
-                for ($k2 = 0; $k2 < $countProfiles; $k2++) {
-                    $usedSize += $usedProfiles[$k2] * $profiles[$k2]->getSize();
-                }
-
-                $leftover = abs($usedSize - ($lineSize * 2));
-
-                $a = 0;
-                for ($k3 = $countProfiles - 1; $k3 >= $maxProfileSize; $k3--) {
-                    $a = $k3;
-                    if (($leftover - $profiles[$k3]->getSize()) < 0) {
+                $firstOptionSize = 0;
+                for ($j = $countProfiles - 1; $j >= $maxProfileSize; $j--) {
+                    $firstOptionSize = $j;
+                    if (($remaining - $profiles[$j]->getSize()) < 0) {
                         break;
                     }
                 }
 
-                $baseSize = $profiles[$a]->getSize();
-                $baseSizeSplit = $baseSize / 2;
-                $key = false;
-                for ($k4 = 0; $k4 < $countProfiles; $k4++) {
-                    if ($profiles[$k4]->getSize() == $baseSizeSplit) {
-                        $key = $k4;
+                if (($remaining * 2) > $profiles[$firstOptionSize]->getSize()) {
+                    if ($maxProfileSize == $firstOptionSize) {
+                        $usedProfiles[$maxProfileSize] = ($usedProfiles[$maxProfileSize] * 2) + 2;
+                    } else {
+                        $usedProfiles[$maxProfileSize] = ($usedProfiles[$maxProfileSize] * 2);
+                        $usedProfiles[$firstOptionSize] += 2;
+                    }
+                } else {
+                    $usedProfiles[$maxProfileSize] *= 2;
+                    if ($maxProfileSize == $firstOptionSize) {
+                        $usedProfiles[$maxProfileSize] += 1;
+                    } else {
+                        $usedProfiles[$firstOptionSize] += 1;
                     }
                 }
 
-                if (!$key) {
-                    $usedProfiles[$a] += 1;
-                } else {
-                    $usedProfiles[$key] += 2;
+                $usedSize = 0;
+                for ($k = 0; $k < $countProfiles; $k++) {
+                    $usedSize += $usedProfiles[$k] * $profiles[$k]->getSize();
                 }
+
+                $leftover = $usedSize - ($lineSize * 2);
+
+                if ($leftover > 2) {
+
+                    $usedProfiles[$maxProfileSize] -= 1;
+
+                    $usedSize = 0;
+                    for ($k2 = 0; $k2 < $countProfiles; $k2++) {
+                        $usedSize += $usedProfiles[$k2] * $profiles[$k2]->getSize();
+                    }
+
+                    $leftover = abs($usedSize - ($lineSize * 2));
+
+                    $a = 0;
+                    for ($k3 = $countProfiles - 1; $k3 >= $maxProfileSize; $k3--) {
+                        $a = $k3;
+                        if (($leftover - $profiles[$k3]->getSize()) < 0) {
+                            break;
+                        }
+                    }
+
+                    $baseSize = $profiles[$a]->getSize();
+                    $baseSizeSplit = $baseSize / 2;
+                    $key = false;
+                    for ($k4 = 0; $k4 < $countProfiles; $k4++) {
+                        if ($profiles[$k4]->getSize() == $baseSizeSplit) {
+                            $key = $k4;
+                        }
+                    }
+
+                    if (!$key) {
+                        $usedProfiles[$a] += 1;
+                    } else {
+                        $usedProfiles[$key] += 2;
+                    }
+                }
+
             }
 
-            $junction = array_sum($usedProfiles);
+            if(!in_array($project->getRoofType(), [self::ROOF_SHEET_METAL, self::ROOF_SHEET_METAL_PFM])) {
+                $junction = array_sum($usedProfiles);
 
-            if (($junction % 2) != 0) {
-                $junction += 1;
+                if (($junction % 2) != 0) {
+                    $junction += 1;
+                }
+                $junction -= 2;
+                $junction *= $linesOfModules;
+                $total_juncao += $junction;
             }
-            $junction -= 2;
 
             for ($x1 = 0; $x1 < $countProfiles; $x1++) {
                 $usedProfiles[$x1] *= $linesOfModules;
             }
 
-            $junction *= $linesOfModules;
+            for ($z = 0; $z < $countProfiles; $z++) {
+                $total_perfil_usado[$z] += $usedProfiles[$z];
+            }
+
+
             $terminalFinal = 4 * $linesOfModules;
             $terminalIntermediary = ($quantityModules - 1) * 2 * $linesOfModules;
             $profileMiddlePlate = ($terminalFinal + $terminalIntermediary);
@@ -249,11 +277,6 @@ class StructureCalculator
             $triangle = (ceil(($lineSize - (2 * 0.35)) / 1.65) + 1) * $linesOfModules;
             $plate = ($screwAuto / 2) * 0.1;
 
-            $total_juncao += $junction;
-            for ($z = 0; $z < $countProfiles; $z++) {
-                $total_perfil_usado[$z] += $usedProfiles[$z];
-            }
-
             $total_term_final += $terminalFinal;
             $total_term_inter += $terminalIntermediary;
             $total_perfil_chapa_meio += $profileMiddlePlate;
@@ -268,7 +291,6 @@ class StructureCalculator
         }
 
         $structures = [];
-
         $totalProfiles = $total_perfil_usado;
         foreach ($totalProfiles as $key => $totalProfile) {
             if ($totalProfile) {
@@ -281,21 +303,49 @@ class StructureCalculator
 
         switch ($project->getRoofType()) {
             case self::ROOF_ROMAN_AMERICAN:
-                $baseStructure = $items[self::BASE_HOOK];
-                $structures[] = ['quantity' => (int) $total_base, 'structure' => $baseStructure];
+
+                $structures[] = ['quantity' => (int) $total_juncao, 'structure' => $items[self::JUNCTION]];
+                $structures[] = ['quantity' => (int) $total_term_final, 'structure' => $items[self::TERMINAL_FINAL]];
+                $structures[] = ['quantity' => (int) $total_term_inter, 'structure' => $items[self::TERMINAL_INTERMEDIARY]];
+                $structures[] = ['quantity' => (int) $total_parafuso_martelo, 'structure' => $items[self::FIXER_BOLT]];
+                $structures[] = ['quantity' => (int) $total_porca_m10, 'structure' => $items[self::FIXER_NUT]];
+                $structures[] = ['quantity' => (int) $total_base, 'structure' => $items[self::BASE_HOOK]];
+
                 break;
             case self::ROOF_CEMENT:
-                $baseStructure = $items[self::BASE_SCREW_FRAME];
-                $structures[] = ['quantity' => (int) $total_base, 'structure' => $baseStructure];
+
+                $structures[] = ['quantity' => (int) $total_juncao, 'structure' => $items[self::JUNCTION]];
+                $structures[] = ['quantity' => (int) $total_term_final, 'structure' => $items[self::TERMINAL_FINAL]];
+                $structures[] = ['quantity' => (int) $total_term_inter, 'structure' => $items[self::TERMINAL_INTERMEDIARY]];
+                $structures[] = ['quantity' => (int) $total_parafuso_martelo, 'structure' => $items[self::FIXER_BOLT]];
+                $structures[] = ['quantity' => (int) $total_porca_m10, 'structure' => $items[self::FIXER_NUT]];
+                $structures[] = ['quantity' => (int) $total_parafuso_est, 'structure' => $items[self::BASE_SCREW_FRAME]];
+
                 break;
 
             case self::ROOF_FLAT_SLAB:
+
                 $baseStructure = 0 == $position ? $items[self::BASE_TRIANGLE_VERTICAL] : $items[self::BASE_TRIANGLE_HORIZONTAL];
-                $structures[] = ['quantity' => (int) $total_term_inter, 'structure' => $baseStructure];
+
+                $structures[] = ['quantity' => (int) $total_juncao, 'structure' => $items[self::JUNCTION]];
+                $structures[] = ['quantity' => (int) $total_term_final, 'structure' => $items[self::TERMINAL_FINAL]];
+                $structures[] = ['quantity' => (int) $total_term_inter, 'structure' => $items[self::TERMINAL_INTERMEDIARY]];
+                $structures[] = ['quantity' => (int) $total_parafuso_martelo, 'structure' => $items[self::FIXER_BOLT]];
+                $structures[] = ['quantity' => (int) $total_porca_m10, 'structure' => $items[self::FIXER_NUT]];
+                $structures[] = ['quantity' => (int) $total_triangulo, 'structure' => $baseStructure];
+
                 break;
 
             case self::ROOF_SHEET_METAL:
             case self::ROOF_SHEET_METAL_PFM:
+
+                if(self::ROOF_SHEET_METAL_PFM == $project->getRoofType()){
+                    $structures[] = ['quantity' => $total_perfil_chapa_meio, 'structure' => $profiles[0]];
+                }
+
+                $structures[] = ['quantity' => (int) $total_term_final, 'structure' => $items[self::TERMINAL_FINAL]];
+                $structures[] = ['quantity' => (int) $total_term_inter, 'structure' => $items[self::TERMINAL_INTERMEDIARY]];
+
                 $baseStructure = $items[self::BASE_SCREW_AUTO];
                 $structures[] = ['quantity' => (int) $total_parafuso_auto, 'structure' => $baseStructure];
 
@@ -307,7 +357,7 @@ class StructureCalculator
                     $subBaseQuantity = $total_speedclip;
                 }
 
-                $structures[] = ['quantity' => (int) $subBaseQuantity, 'structure' => $subBaseStructure];
+                $structures[] = ['quantity' => $subBaseQuantity, 'structure' => $subBaseStructure];
 
                 break;
         }
@@ -323,7 +373,6 @@ class StructureCalculator
     }
 
     /**
-     * TODO: ADD MAKER FIELD CRITERIA HERE!
      * @param array $criteria
      * @param bool $single
      * @return mixed

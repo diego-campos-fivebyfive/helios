@@ -128,9 +128,6 @@ class ProjectController extends AbstractController
             $generator = $this->get('project_generator');
             $generator->autoSave(false);
 
-            /** @var ProjectInterface $project */
-            $project->setStructureType(ProjectInterface::STRUCTURE_SICES);
-
             $project = $generator
                 ->project($project)
                 ->power($power)

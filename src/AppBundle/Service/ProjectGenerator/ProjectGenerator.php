@@ -78,22 +78,6 @@ class ProjectGenerator
         dump($consumption); die;
     }
 
-    /**
-     * Detect makers by the desired power of the system
-     *
-     * @param $power
-     * @return array
-     */
-    public function detectMakers($power)
-    {
-        /** @var \AppBundle\Manager\InverterManager $manager */
-        $manager = $this->manager('inverter');
-
-        $detector = new MakerDetector($manager);
-
-        return $detector->fromPower($power);
-    }
-
     public function module(ModuleInterface $module, $position = 0)
     {
         $projectModule = new ProjectModule();
@@ -398,7 +382,7 @@ class ProjectGenerator
         $manager = $this->manager('string_box');
         $loader = new StringBoxLoader($manager);
         $calculator = new StringBoxCalculator($loader);
-        $calculator->calculate($project);
+        $calculator->calculate($project, false);
 
         $this->save($project);
 
