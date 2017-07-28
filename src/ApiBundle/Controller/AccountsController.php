@@ -117,7 +117,9 @@ class AccountsController extends FOSRestController
         try {
             $accountManager->save($account);
             $status = Response::HTTP_ACCEPTED;
-        }catch (\Exception $exception ){
+            $data['owner'] = $account->getOwner()->getId();
+        }
+        catch (\Exception $exception ) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
             $data = 'Can not update Account';
         }
