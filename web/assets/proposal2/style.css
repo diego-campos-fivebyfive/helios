@@ -54,9 +54,9 @@
 
 table{
     border: solid #AAA 1px;
+    color: #000000;
 }
 thead tr th{
-    background-color: #4B545F;
     text-align: center;
     color: #FFFFFF;
 }
@@ -64,13 +64,6 @@ td, th{
     border: solid #AAA 1px;
     padding-left: 1mm;
     padding-right: 1mm;
-}
-th{
-
-}
-tbody tr th{
-    background-color: #97B1C5;
-
 }
 
 .margBottom{

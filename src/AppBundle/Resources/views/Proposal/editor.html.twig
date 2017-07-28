@@ -15,10 +15,10 @@
             <div>
                 <canvas style="display:none;" id="project_chart" width="600"
                         height="428.6"></canvas>
+                <div id="canvasChartGeneration"></div>
 
                 <canvas style="display:none;" id="financial_chart" width="600"
                         height="428.6"></canvas>
-                <div id="canvasChartGeneration"></div>
                 <div id="canvasChartFinancial"></div>
             </div>
 
@@ -157,17 +157,16 @@
                         <span id="idConjunct">0</span>
                         <span id="idEditor">0</span>
                     </div>
-
                 </div>
+
 
                 <button id="idNewPage" class="btn btn-primary col-md-2 margBottom" onclick="newPage()">Nova Página</button>
             </div>
 
             {#botao salvar e pdf da proposta#}
             <div class="col-md-2 sidebar-save">
-                <button id="saveProposal" class="btn btn-primary ladda-button" data-style="zoom-in" data-url="{{ path('proposal_save',{id:project.id}) }}">
-                    <span class="ladda-label">Salvar</span>
-                </button>
+                <span id="saveProposal" data-url="{{ path('proposal_save',{id:project.id}) }}">
+                </span>
                 <button id="pdfProposal" class="btn btn-primary ladda-button" data-style="zoom-in" data-url="{{ path('proposal_pdf',{id:project.id}) }}">
                     <span class="ladda-label">Gerar PDF</span>
                 </button>
@@ -304,7 +303,7 @@
 
                     {#equipamentos e serviços#}
                     <div id="dtableEquipmentAndServices">
-                        <table>
+                        <table id="tableEquipServ" class="tableEquipServ" data-color="00A7EC">
                             <thead>
                             <tr>
                                 <th> Código </th>
@@ -605,7 +604,8 @@
 
                     <div id="generationChart">
                         <span id="copyGenerationChart" class="image cke_widget_element dgenerationChart"
-                              data-widget="image">
+                              data-cke-widget-data="" data-cke-widget-upcasted="1"
+                              data-cke-widget-keep-attr="0" data-widget="image">
 
                         </span>
                     </div>
@@ -941,15 +941,17 @@
 
                     <div id="accumulatedCashChart">
                         <span id="copyAccumulatedCashChart" class="image cke_widget_element daccumulatedCashChart"
-                              data-widget="image">
+                              data-cke-widget-data="" data-cke-widget-upcasted="1"
+                              data-cke-widget-keep-attr="0" data-widget="image">
 
                         </span>
                     </div>
 
                     {#equipamentos e serviços#}
                     <div id="tableEquipmentAndServices">
-                        <span class="image  dtableEquipmentAndServices"
-                              contenteditable="false">
+                        <span class="image cke_widget_element dtableEquipmentAndServices"
+                              data-cke-widget-data="" data-cke-widget-upcasted="1"
+                              data-cke-widget-keep-attr="0" data-widget="image" contenteditable="false">
 
                         </span>
                     </div>
@@ -1081,7 +1083,9 @@
                     </div>
                     <li>
                         <div class="list-group-item" data-info="tableEquipmentAndServices" draggable="true">
-                            Tabela com equipamentos e serviços
+                            Equipamentos e serviços
+                            <input type="hidden" id="colorTableEquipServ" onchange="changeColorTableEquipServ(this.value)" value="00A7EC">
+                            <button type="button" class="btn border jscolor {valueElement: 'colorTableEquipServ'}">Escolher cor</button>
                         </div>
                     </li>
                 </ul>

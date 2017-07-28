@@ -252,26 +252,12 @@ function saveProposal() {
         }
     })
 }
-var aa = 1;
+
 $(document).ready(function(){
     generateChart();
-    setTimeout(function () {
+    /*setTimeout(function () {
         saveProposal();
-    },1000);
-
-    //alert(aa);aa++;
-    CKEDITOR.on('instanceReady', function (ev) {
-        // Prevent drag-and-drop.
-        ev.editor.document.on('drop', function (ev) {
-           /* console.log(ev.data);*/
-
-            //ev.data.preventDefault(true);
-        });
-    });
-   /* setInterval(function () {
-        var btnSave = $('#saveProposal');
-        saveProposal(btnSave);
-    },60000);*/
+    },1000);*/
 });
 
 function generateChart() {
@@ -329,6 +315,31 @@ function chartGeneration() {
 }
 function chartFinancial() {
     return AppChart.getDataUrl('financial_chart');
+}
+
+function darker(hex,darkerPercent) {
+    var bigint = parseInt(hex, 16);
+    var r = (bigint >> 16) & 255;
+    var g = (bigint >> 8) & 255;
+    var b = bigint & 255;
+    r = parseInt(r-((r/100)*darkerPercent));
+    g = parseInt(g-((g/100)*darkerPercent));
+    b = parseInt(b-((b/100)*darkerPercent));
+    return rgbToHex(r,g,b);
+}
+
+function rgbToHex(r, g, b) {
+    return ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+}
+
+function changeColorTableEquipServ(color){
+    var tableThead = $('.tableEquipServ thead tr th' );
+    var tableTbadyTrTh = $('.tableEquipServ tbody tr th' );
+    // em % mais escuro
+    var darkerPercent = 50;
+    var darkcolor = darker(color,darkerPercent);
+    $(tableThead).attr('style','background-color: #'+darkcolor+';');
+    $(tableTbadyTrTh).attr('style','background-color: #'+color+';');
 }
 
 function changeColorGeneration(color){
