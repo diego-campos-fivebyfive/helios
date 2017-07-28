@@ -5,7 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\CategoryInterface;
 use AppBundle\Entity\Financial\ProjectFinancialInterface;
 use AppBundle\Entity\Notification;
-use AppBundle\Entity\Project\ProjectInterface;
+use AppBundle\Entity\Component\ProjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
