@@ -9,11 +9,11 @@ const updateUser = (sicesAccount, isquikAccount) => Sices.updateUser(sicesAccoun
   contact: isquikAccount.contact,
   account_id: sicesAccount.id
 })
-  .then(data => (
-    (data) ? 201 : 422
+  .then(sicesUser => (
+    (sicesUser) ? 201 : 422
   ))
 
-const updateAccount = sicesUser => isquikAccount => Sices.updateAccount(sicesUser.account, {
+const updateAccount = isquikAccount => Sices.updateAccount(isquikAccount.account_id, {
   name: isquikAccount.name,
   firstname: isquikAccount.firstname,
   lastname: isquikAccount.lastname,
@@ -34,11 +34,7 @@ const updateAccount = sicesUser => isquikAccount => Sices.updateAccount(sicesUse
     (sicesAccount) ? updateUser(sicesAccount, isquikAccount) : 422
   ))
 
-const update = ({ object }) => Isquik.getAccount(object.id)
-  .then(isquikAccount => (
-    Sices.getUser(isquikAccount.owner)
-      .then(updateAccount(isquikAccount))
-  ))
+const update = ({ object }) => Isquik.getAccount(object.id).then(updateAccount)
 
 module.exports = {
   update
