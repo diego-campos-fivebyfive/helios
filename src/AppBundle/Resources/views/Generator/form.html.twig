@@ -1,0 +1,58 @@
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-md-6" style="font-size: 20px;">
+                <i class="{{ icon('summary') }}"></i>
+                Gerar Sistema
+            </div>
+            <div class="col-md-6 text-right">
+                <a class="btn btn-danger">
+                    <i class="fa fa-trash"></i> Excluir este sistema
+                </a>
+            </div>
+        </div>
+
+    </div>
+    <div class="panel-body">
+        <div class="row">
+
+            {{ form_start(form,{attr:{action: path('project_generator_generate'),class:'form-horizontal form-generate'}}) }}
+
+            <div class="col-md-2">
+                {{ form_label(form.power, 'Potência') }}
+                {{ form_widget(form.power,{attr:{class:'form-control'}}) }}
+            </div>
+            <div class="col-md-2">
+                {{ form_label(form.module, 'Módulo') }}
+                {{ form_widget(form.module,{attr:{class:'form-control'}}) }}
+            </div>
+            <div class="col-md-2">
+                {{ form_label(form.maker, 'Fabricante do Inversor') }}
+                {{ form_widget(form.maker,{attr:{class:'form-control'}}) }}
+            </div>
+            <div class="col-md-2">
+                {{ form_label(form.roof, 'Tipo de Telhado') }}
+                {{ form_widget(form.roof,{attr:{class:'form-control'}}) }}
+            </div>
+            <div class="col-md-2">
+                {{ form_label(form.structure, 'Fabricante da Estrutura') }}
+                {{ form_widget(form.structure,{attr:{class:'form-control'}}) }}
+            </div>
+            <div class="col-md-2">
+                {{ form_label(form.position, 'Posição de Montagem') }}
+                {{ form_widget(form.position,{attr:{class:'form-control'}}) }}
+            </div>
+
+            {{ form_rest(form) }}
+
+            <button class="btn" type="submit">
+                Gerar
+            </button>
+
+            {{ form_end(form) }}
+
+        </div>
+        <div class="hr-line-dashed"></div>
+
+    </div>
+</div>

@@ -84,6 +84,13 @@ class Structure implements StructureInterface
         $this->status = self::DISABLE;
     }
 
+    /**
+     * @inheritDoc
+     */
+    function __toString()
+    {
+        return (string) $this->description;
+    }
 
     /**
      * @inheritDoc

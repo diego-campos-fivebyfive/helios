@@ -68,15 +68,18 @@ class GeneratorController extends AbstractController
     public function testInverterCombinerAction()
     {
         // MAKER DETECTOR
-        /*$power = 500;
-        /** @var \AppBundle\Manager\InverterManager $manager *
+        $power = 1500;
+
+        // VIA GENERATOR
+        $generator = $this->get('project_generator');
+        $makers = $generator->detectMakers($power);
+
+        /** @var \AppBundle\Manager\InverterManager $manager */
         $manager = $this->manager('inverter');
 
         $makerDetector = new MakerDetector($manager);
 
         $makers = $makerDetector->fromPower($power);
-
-        dump($makers); die;*/
 
         /// INVERTER LOADER
         $sungrow = 61208;
@@ -102,8 +105,6 @@ class GeneratorController extends AbstractController
         //dump($inverters); die;
 
         InverterCombiner::combine($inverters, $min);
-
-        dump($inverters); die;
     }
 
     /**

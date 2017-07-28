@@ -1,0 +1,278 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+    <style>
+        .header-name {
+            background: #e8f8ff;
+            color: #444;
+        }
+
+        .header-name .btn {
+            background-color: #f4a21a;
+            border: 0;
+            box-shadow: none;
+        }
+    </style>
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row">
+
+            <div class="panel panel-success" id="project_{{ project.id }}">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-6" style="font-size: 20px;">
+                            <i class="{{ icon('summary') }}"></i>
+                            Sistema de {{ project.power }} kWp
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <a class="btn btn-danger">
+                                <i class="fa fa-trash"></i> Excluir este sistema
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="panel-body">
+
+                    <div class="row">
+
+                        <form id="form_project_{{ project.id }}">
+
+                            <table id="table_project_{{ project.id }}" class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th class="col-md-2"> Código</th>
+                                    <th> Descrição</th>
+                                    <th width="12%"> Quantidade</th>
+                                    <th width="12%" class="text-center"> Preço Unitário</th>
+                                    <th width="12%" class="text-center"> Total</th>
+                                    <th width="10%">Ações</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <tr class="header-name">
+                                    <th></th>
+                                    <th colspan="4" class="text-left">
+                                        MÓDULOS
+                                    </th>
+                                </tr>
+
+                                {% for projectModule in project.projectModules %}
+
+                                    <tr>
+                                        <td> {{ projectModule.module.code }} </td>
+                                        <td> {{ projectModule.module.model }} </td>
+                                        <td> {{ projectModule.quantity }} </td>
+                                        <td class="text-center"> {{ projectModule.unitCostPrice|currency }} </td>
+                                        <td class="text-center"> {{ projectModule.totalCostPrice|currency }} </td>
+                                    </tr>
+
+                                {% endfor %}
+
+                                <tr class="header-name">
+                                    <th></th>
+                                    <th colspan="4" class="text-left">
+                                        <a data-form="{{ path('') }}" class="btn btn-sm btn-success">
+                                            <i class="fa fa-plus"></i>
+                                        </a>
+                                        &nbsp;
+                                        INVERSORES
+                                    </th>
+                                </tr>
+
+                                {% for projectInverter in project.projectInverters %}
+
+                                    <tr>
+                                        <td> {{ projectInverter.inverter.code }} </td>
+                                        <td> {{ projectInverter.inverter.model }} </td>
+                                        <td> {{ projectInverter.quantity }} </td>
+                                        <td class="text-center"> {{ projectInverter.unitCostPrice|currency }} </td>
+                                        <td class="text-center"> {{ projectInverter.totalCostPrice|currency }} </td>
+                                        <td class="btn-group btn-group-justified">
+                                            <a class="btn btn-primary">
+                                                <i class="fa fa-pencil"></i>
+                                            </a>
+                                            <a class="btn btn-danger">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            <select class="form-control">
+                                                <option> ASSDASDSD</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text">
+                                        </td>
+                                        <td>
+
+                                        </td>
+                                        <td></td>
+                                        <td class="btn-group btn-group-justified">
+                                            <a class="btn btn-success">
+                                                <i class="fa fa-check"></i>
+                                            </a>
+                                            <a class="btn btn-danger">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+
+                                {% endfor %}
+
+                                <tr class="header-name">
+                                    <th></th>
+                                    <th colspan="4" class="text-left">
+                                        <a class="btn btn-sm btn-success">
+                                            <i class="fa fa-plus"></i>
+                                        </a>
+                                        &nbsp;
+                                        STRING BOX
+                                    </th>
+                                </tr>
+
+                                {% for projectStringBox in project.projectStringBoxes %}
+
+                                    <tr>
+                                        <td> {{ projectStringBox.stringBox.code }} </td>
+                                        <td> {{ projectStringBox.stringBox.description }} </td>
+                                        <td> {{ projectStringBox.quantity }} </td>
+                                        <td class="text-center"> {{ projectStringBox.unitCostPrice|currency }} </td>
+                                        <td class="text-center"> {{ projectStringBox.totalCostPrice|currency }} </td>
+                                    </tr>
+
+                                {% endfor %}
+
+                                <tr class="header-name">
+                                    <th></th>
+                                    <th colspan="4" class="text-left">
+                                        <a class="btn btn-sm btn-success">
+                                            <i class="fa fa-plus"></i>
+                                        </a>
+                                        &nbsp;
+                                        ESTRUTURA DE FIXAÇÃO
+                                    </th>
+                                </tr>
+
+                                {% for projectStructure in project.projectStructures %}
+
+                                    <tr>
+                                        <td> {{ projectStructure.structure.code }} </td>
+                                        <td> {{ projectStructure.structure.description }} </td>
+                                        <td> {{ projectStructure.quantity }} </td>
+                                        <td class="text-center"> {{ projectStructure.unitCostPrice|currency }} </td>
+                                        <td class="text-center"> {{ projectStructure.totalCostPrice|currency }} </td>
+                                    </tr>
+
+                                {% endfor %}
+
+                                <tr class="header-name">
+                                    <th></th>
+                                    <th colspan="4" class="text-left">
+                                        <a class="btn btn-sm btn-success">
+                                            <i class="fa fa-plus"></i>
+                                        </a>
+                                        &nbsp;
+                                        CABOS E CONECTORES
+                                    </th>
+                                </tr>
+
+                                {% for projectVariety in project.projectVarieties %}
+
+                                    <tr>
+                                        <td> {{ projectVariety.variety.code }} </td>
+                                        <td> {{ projectVariety.variety.description }} </td>
+                                        <td> {{ projectVariety.quantity }} </td>
+                                        <td class="text-center"> {{ projectVariety.unitCostPrice|currency }} </td>
+                                        <td class="text-center"> {{ projectVariety.totalCostPrice|currency }} </td>
+                                    </tr>
+
+                                {% endfor %}
+
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <button class="btn btn-success btn-block">
+                                            <i class="fa fa-save"></i> Salvar
+                                        </button>
+                                    </td>
+                                    <td colspan="2" class="text-center"> {{ project.salePrice|currency }} </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+
+                        </form>
+
+                        {% set projectModule = project.projectModules.first %}
+
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <td colspan="4">
+                                    <div class="btn-group">
+                                        <button class="btn btn-primary">
+                                            <i class="fa fa-plus"></i> Grupo
+                                        </button>
+                                        <button class="btn btn-success">
+                                            25
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for group in projectModule.groups %}
+
+                                <tr>
+                                    <td>
+                                        <input placeholder="Número de Linhas" type="text" value="{{ group.lines }}"
+                                               class="form-control dist-line-number">
+                                    </td>
+                                    <td>
+                                        <input placeholder="Módulos por Linha" type="text" value="{{ group.modules }}"
+                                               class="form-control dist-line-module">
+                                    </td>
+                                    <td>
+                                        <select class="form-control dist-line-position">
+                                            <option value="0"> Vertical</option>
+                                            <option value="1"> Horizontal</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button class="remove-dist-line btn btn-danger btn-block">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    {% include view('helper.request') %}
+    {% include view('helper.plugins_js') %}
+
+{% endblock %}

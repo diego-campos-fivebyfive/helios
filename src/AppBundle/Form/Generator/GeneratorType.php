@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form\Component;
+namespace AppBundle\Form\Generator;
 
 use AppBundle\Entity\Component\Inverter;
 use AppBundle\Entity\Component\Maker;
