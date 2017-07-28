@@ -382,7 +382,7 @@ class ProjectGenerator
         $manager = $this->manager('string_box');
         $loader = new StringBoxLoader($manager);
         $calculator = new StringBoxCalculator($loader);
-        $calculator->calculate($project, true);
+        $calculator->calculate($project);
 
         $this->save($project);
 
