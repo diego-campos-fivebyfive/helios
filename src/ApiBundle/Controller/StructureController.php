@@ -26,6 +26,11 @@ class StructureController extends FOSRestController
         try {
             $structureManager->save($structure);
             $status = Response::HTTP_CREATED;
+            $data = [
+                'id' => $structure->getId(),
+                'code' => $structure->getCode(),
+                'model' => $structure->getDescription()
+            ];
         }catch (\Exception $exception){
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
             $data = 'Can not create Structure';

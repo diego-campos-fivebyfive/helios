@@ -46,8 +46,15 @@ class UsersController extends FOSRestController
         try {
             $memberManager->save($member);
             $status = Response::HTTP_CREATED;
-            $data = $member;
-        }catch (\Exception $exception){
+            $data = [
+                'id' => $member->getId(),
+                'firstname' => $member->getFirstname(),
+                'email' => $member->getEmail(),
+                'phone' => $member->getPhone(),
+                'account' => $member->getAccount()->getId()
+            ];
+        }
+        catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
             $data = 'Can not create User';
         }
@@ -107,7 +114,15 @@ class UsersController extends FOSRestController
         try {
             $memberManager->save($member);
             $status = Response::HTTP_ACCEPTED;
-        }catch (\Exception $exception){
+            $data = [
+                'id' => $member->getId(),
+                'firstname' => $member->getFirstname(),
+                'email' => $member->getEmail(),
+                'phone' => $member->getPhone(),
+                'account' => $member->getAccount()->getId()
+            ];
+        }
+        catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
             $data = 'Can not update Member';
         }

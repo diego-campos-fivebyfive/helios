@@ -25,7 +25,13 @@ class ModuleController extends FOSRestController
         try {
             $moduleManager->save($module);
             $status = Response::HTTP_CREATED;
-        }catch (\Exception $exception){
+            $data = [
+                'id' => $module->getId(),
+                'code' => $module->getCode(),
+                'model' => $module->getModel()
+            ];
+        }
+        catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
             $data = 'Can not create Module';
         }

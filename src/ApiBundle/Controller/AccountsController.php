@@ -39,7 +39,25 @@ class AccountsController extends FOSRestController
         try {
             $accountManager->save($account);
             $status = Response::HTTP_CREATED;
-        }catch (\Exception $exception){
+            $data = [
+                'id' => $account->getId(),
+                'firstname' => $account->getFirstName(),
+                'lastname' => $account->getLastName(),
+                'extraDocument' => $account->getExtraDocument(),
+                'document' => $account->getDocument(),
+                'email' => $account->getEmail(),
+                'state' => $account->getState(),
+                'city' => $account->getCity(),
+                'phone' => $account->getPhone(),
+                'district' => $account->getDistrict(),
+                'street' => $account->getStreet(),
+                'number' => $account->getNumber(),
+                'postcode' => $account->getPostcode(),
+                'status' => $account->getStatus(),
+                'owner' => $account->getOwner()->getId()
+            ];
+        }
+        catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
             $data = 'Can not create Account';
         }
