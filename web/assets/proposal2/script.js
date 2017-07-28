@@ -14,7 +14,7 @@ document.getElementById('infoList').addEventListener('dragstart', function drag(
     evt.data.dataTransfer.setData('text/html', content);
 });
 
-//var idPage = 0;
+///var idPage = 0;
 function newPage() {
     var idPage = $("#idConjunct").html();
 
