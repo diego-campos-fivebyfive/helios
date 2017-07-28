@@ -26,7 +26,13 @@ class InverterController extends FOSRestController
         try{
             $inverterManager->save($inverter);
             $status = Response::HTTP_CREATED;
-        }catch (\Exception $exception){
+            $data = [
+               'id' => $inverter->getId(),
+               'code' => $inverter->getCode(),
+               'model' => $inverter->getModel()
+            ];
+        }
+        catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
             $data = 'Can not create Inverter';
         }
