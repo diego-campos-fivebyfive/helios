@@ -78,6 +78,14 @@ class StringBox implements StringBoxInterface
     /**
      * @inheritDoc
      */
+    function __toString()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getId()
     {
         return $this->id;

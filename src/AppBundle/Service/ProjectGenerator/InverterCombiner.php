@@ -16,7 +16,7 @@ class InverterCombiner
         }
 
 
-        $limit = AbstractConfig::$maxInverterCombinations;
+        $limit = AbstractConfig::$maxInverters;
         $comb = 2;
         $cont = [];
         for ($j = $comb; $j <= $limit; $j++) {
