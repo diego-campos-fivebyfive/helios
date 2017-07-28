@@ -23,9 +23,8 @@ class StringBoxLoader
     /**
      * @inheritDoc
      */
-    public function load($inputs = null, $outputs)
+    public function load(&$inputs = null, &$outputs)
     {
-        //$fields = 's.id, s.inputs, s.outputs';
         $fields = 's';
 
         $qb = $this->manager
@@ -40,6 +39,7 @@ class StringBoxLoader
             $qb
                 ->where('s.inputs >= :inputs')
                 ->andWhere('s.outputs >= :outputs')
+                ->andWhere('s.maker = :maker')
                 ->orderBy('s.inputs', 'asc')
                 ->addOrderBy('s.outputs', 'asc')
                 ->setParameters([
@@ -51,6 +51,7 @@ class StringBoxLoader
 
             $qb
                 ->andWhere('s.outputs >= :outputs')
+                ->andWhere('s.maker = :maker')
                 ->orderBy('s.inputs', 'desc')
                 ->addOrderBy('s.outputs', 'asc')
                 ->setParameters([
@@ -58,10 +59,13 @@ class StringBoxLoader
                 ]);
         }
 
+        $qb->setParameter('maker', 61124);
+
         $stringBoxes = $qb->getQuery()->getResult();
 
         if(empty($stringBoxes)){
-            return $this->load(null, $outputs);
+            $inputs = null;
+            return $this->load($inputs, $outputs);
         }
 
         return $stringBoxes;
