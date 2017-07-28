@@ -36,9 +36,17 @@ class AccountsController extends FOSRestController
             ->setPostcode($data['postcode'])
             ->setStatus($data['status'])
             ->setContext(Customer::CONTEXT_ACCOUNT);
-        $accountManager->save($account);
+        try {
+            $accountManager->save($account);
+            $status = Response::HTTP_CREATED;
+        }catch (\Exception $exception){
+            $status = Response::HTTP_NOT_FOUND;
+            $data = 'Can not create Account';
+        }
 
-        return JsonResponse::create($account->getId(),201);
+        $view = View::create($data)->setStatusCode($status);
+
+        return $this->handleView($view);
 
     }
     /**

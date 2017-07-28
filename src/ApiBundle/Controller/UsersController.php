@@ -43,9 +43,18 @@ class UsersController extends FOSRestController
                 ->setEmail($data['email'])
                 ->setContext(Customer::CONTEXT_MEMBER)
                 ->setUser($user);
-        $memberManager->save($member);
+        try {
+            $memberManager->save($member);
+            $status = Response::HTTP_CREATED;
+            $data = $member;
+        }catch (\Exception $exception){
+            $status = Response::HTTP_NOT_FOUND;
+            $data = 'Can not create User';
+        }
 
-        return JsonResponse::create($member, 201);
+        $view = View::create($data)->setStatusCode($status);
+
+        return $this->handleView($view);
     }
     /**
      * @ApiDoc(

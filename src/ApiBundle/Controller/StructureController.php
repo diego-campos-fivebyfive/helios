@@ -4,6 +4,7 @@ namespace ApiBundle\Controller;
 
 use AppBundle\Entity\Component\Structure;
 use AppBundle\Entity\Customer;
+use Doctrine\Common\Cache\VoidCache;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,9 +23,17 @@ class StructureController extends FOSRestController
         $structure = $structureManager->create();
         $structure  ->setCode($data['code'])
                     ->getDescription($data['description']);
-        $structureManager->save($structure);
+        try {
+            $structureManager->save($structure);
+            $status = Response::HTTP_CREATED;
+        }catch (\Exception $exception){
+            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+            $data = 'Can not create Structure';
+        }
 
-        return JsonResponse::create($structure, 201);
+        $view = View::create($data)->setStatusCode($status);
+
+        return $this->handleView($view);
     }
 
     public function getStructuresAction(Request $request, $id)
