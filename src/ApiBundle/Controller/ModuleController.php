@@ -22,9 +22,17 @@ class ModuleController extends FOSRestController
         $module = $moduleManager->create();
         $module ->setCode($data['code'])
                 ->setModel($data['model']);
-        $moduleManager->save($module);
+        try {
+            $moduleManager->save($module);
+            $status = Response::HTTP_CREATED;
+        }catch (\Exception $exception){
+            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+            $data = 'Can not create Module';
+        }
 
-        return JsonResponse::create($module, 201);
+        $view = View::create($data)->setStatusCode($status);
+
+        return $this->handleView($view);
     }
 
     public function getModulesAction(Request $request, $id)

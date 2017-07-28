@@ -3,6 +3,7 @@
 namespace ApiBundle\Controller;
 
 use AppBundle\Entity\AccountInterface;
+use AppBundle\Entity\User;
 use AppBundle\Model\Document\Account;
 use FOS\RestBundle\Controller\FOSRestController;
 use AppBundle\Entity\Customer;
@@ -11,6 +12,7 @@ use AppBundle\Entity\UserInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class UsersController extends FOSRestController
 {
@@ -41,9 +43,18 @@ class UsersController extends FOSRestController
                 ->setEmail($data['email'])
                 ->setContext(Customer::CONTEXT_MEMBER)
                 ->setUser($user);
-        $memberManager->save($member);
+        try {
+            $memberManager->save($member);
+            $status = Response::HTTP_CREATED;
+            $data = $member;
+        }catch (\Exception $exception){
+            $status = Response::HTTP_NOT_FOUND;
+            $data = 'Can not create User';
+        }
 
-        return JsonResponse::create($member, 201);
+        $view = View::create($data)->setStatusCode($status);
+
+        return $this->handleView($view);
     }
     /**
      * @ApiDoc(
@@ -70,5 +81,40 @@ class UsersController extends FOSRestController
         $view = View::create($data);
 
         return $this->handleView($view);
+    }
+
+    public function putUserAction(Request $request, Customer $id)
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $member = $id;
+
+        if (!$member->isMember()) {
+            return JsonResponse::create("Invalid Member ID", Response::HTTP_NOT_FOUND);
+        }
+
+        /** @var AccountInterface $accountManager */
+        $accountManager = $this->get('account_manager');
+        $account = $accountManager->find($data['account_id']);
+
+        /** @var AccountInterface $memberManager */
+        $memberManager = $this->get('account_manager');
+        $member ->setAccount($account)
+            ->setFirstname($data['contact'])
+            ->setPhone($data['phone'])
+            ->setEmail($data['email']);
+
+        try {
+            $memberManager->save($member);
+            $status = Response::HTTP_ACCEPTED;
+        }catch (\Exception $exception){
+            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+            $data = 'Can not update Member';
+        }
+
+        $view = View::create($data)->setStatusCode($status);
+
+        return $this->handleView($view);
+
     }
  }
