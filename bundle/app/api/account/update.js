@@ -9,7 +9,7 @@ const sendUser = account => Sices.sendUser({
   status: account.status
 })
   .then(status => (
-    (status !== 304) ? 'Can not update User' : 'User and Account updated successfully'
+    (status !== 202) ? 'Can not update User' : 'User and Account updated successfully'
   ))
 
 const sendAccount = account => Sices.sendAccount({
@@ -18,10 +18,12 @@ const sendAccount = account => Sices.sendAccount({
   status: account.status
 })
   .then(status => {
-    if (status !== 304) return 'Can not update Account'
+    if (status !== 202) {
+      return 'Can not update Account'
+    }
+
     sendUser(account)
   })
-
 
 const update = ({ object }) => Isquik.getAccount(object.id).then(isquikAccount => {
   console.log('is', isquikAccount)

@@ -40,7 +40,7 @@ class AccountsController extends FOSRestController
             $accountManager->save($account);
             $status = Response::HTTP_CREATED;
         }catch (\Exception $exception){
-            $status = Response::HTTP_NOT_FOUND;
+            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
             $data = 'Can not create Account';
         }
 
