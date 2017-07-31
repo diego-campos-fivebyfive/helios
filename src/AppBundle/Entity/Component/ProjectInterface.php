@@ -59,6 +59,17 @@ interface ProjectInterface
     public function getNumber();
 
     /**
+     * @param array $defaults
+     * @return ProjectInterface
+     */
+    public function setDefaults(array $defaults = []);
+
+    /**
+     * @return array
+     */
+    public function getDefaults();
+
+    /**
      * @param $infConsumption
      * @return ProjectInterface
      */
@@ -699,5 +710,4 @@ interface ProjectInterface
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getOrder();
-
 }
