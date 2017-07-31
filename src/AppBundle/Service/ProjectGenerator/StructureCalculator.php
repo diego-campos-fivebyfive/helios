@@ -146,9 +146,6 @@ class StructureCalculator
         $countProfiles = count($profiles);
         $dimension = 0 == $projectModule->getPosition() ? $projectModule->getModule()->getWidth() : $projectModule->getModule()->getLength();
 
-        /*dump($project->getPower());
-        dump($projectModule);
-        dump($projectModule->getGroups()); die;*/
         foreach ($projectModule->getGroups() as $i => $group) {
 
             $linesOfModules = (int) $group['lines'];
@@ -232,7 +229,6 @@ class StructureCalculator
                         $usedProfiles[$key] += 2;
                     }
                 }
-
             }
 
             if(!in_array($project->getRoofType(), [self::ROOF_SHEET_METAL, self::ROOF_SHEET_METAL_PFM])) {
@@ -253,7 +249,6 @@ class StructureCalculator
             for ($z = 0; $z < $countProfiles; $z++) {
                 $total_perfil_usado[$z] += $usedProfiles[$z];
             }
-
 
             $terminalFinal = 4 * $linesOfModules;
             $terminalIntermediary = ($quantityModules - 1) * 2 * $linesOfModules;

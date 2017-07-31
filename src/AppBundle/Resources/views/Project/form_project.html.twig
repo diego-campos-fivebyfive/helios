@@ -533,7 +533,7 @@
                 return errors;
             },
             configureProjectForm: function(){
-                {% if true %}
+                {% if false %}
                 var form_project = $('#form_project');
                 button = form_project.find('button[type="submit"]');
                 button.ladda();
@@ -635,6 +635,7 @@
             },
             onUpdateArea: function(){
                 ProjectManager.loadComponents();
+                ProjectManager.loadGroups();
                 ProjectManager.process();
             },
             /**

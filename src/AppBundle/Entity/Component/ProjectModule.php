@@ -78,6 +78,19 @@ class ProjectModule implements ProjectModuleInterface
     /**
      * @inheritDoc
      */
+    public function getQuantity()
+    {
+        $count = 0;
+        foreach ($this->projectAreas as $projectArea){
+            $count += $projectArea->countModules();
+        }
+
+        return $count;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setPosition($position)
     {
         $this->position = $position;
