@@ -6,8 +6,11 @@ const { config } = require('../config')
 const { isquik } = config
 
 const getAuthentication = () => request({
+  uri: 'https://api.isquik.com/auth',
   method: 'POST',
-  uri: `${isquik.uri}/auth`,
+  headers: {
+    'Content-Type': 'application/json'
+  },
   json: {
     Chave: isquik.auth.key,
     Dominio: isquik.auth.user
