@@ -335,6 +335,8 @@ class ProjectArea implements ProjectAreaInterface
     {
         $this->projectModule = $projectModule;
 
+        $projectModule->addProjectArea($this);
+
         return $this;
     }
 

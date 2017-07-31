@@ -5,6 +5,7 @@ namespace AppBundle\Service\ProjectGenerator;
 use AppBundle\Entity\Component\InverterInterface;
 use AppBundle\Entity\Component\MakerInterface;
 use AppBundle\Entity\Component\ModuleInterface;
+use AppBundle\Entity\Component\ProjectArea;
 use AppBundle\Entity\Component\ProjectExtra;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverter;
@@ -219,12 +220,15 @@ class ProjectGenerator
                 $inverter = $manager->find($inverter->id);
             }
 
-            $projectInverter = new ProjectInverter();
-            $projectInverter
-                ->setInverter($inverter)
-                ->setQuantity($quantity);
+            for($i = 0; $i < $quantity; $i++) {
 
-            $project->addProjectInverter($projectInverter);
+                $projectInverter = new ProjectInverter();
+                $projectInverter
+                    ->setInverter($inverter)
+                    ->setQuantity(1);
+
+                $project->addProjectInverter($projectInverter);
+            }
         }
 
         // INVERTER COMBINATIONS
@@ -253,33 +257,153 @@ class ProjectGenerator
         $projectInverters = $project->getProjectInverters();
 
         foreach ($projectInverters as $projectInverter){
+
+            $projectInverter->getProjectAreas()->clear();
+
             /** @var \AppBundle\Entity\Component\InverterInterface $inverter */
             $inverter = $projectInverter->getInverter();
-            //$mppt = $this->getMpptOptions($inverter->getMpptNumber());
             $mppt = $inverter->getMpptNumber();
 
-            $projectArea = $manager->create();
-            $projectArea
-                ->setProjectInverter($projectInverter)
-                ->setProjectModule($projectModule)
-                ->setInclination($inclination)
-                ->setOrientation($orientation)
-                ->setStringNumber($projectInverter->getParallel())
-                ->setModuleString($projectInverter->getSerial())
-            ;
+            $mppts = explode('.', $projectInverter->getOperation());
+
+            foreach ($mppts as $item) {
+                for ($i = 0; $i < $projectInverter->getQuantity(); $i++) {
+
+                    $this->createArea(
+                        $projectInverter,
+                        $projectModule,
+                        $inclination,
+                        $orientation,
+                        $projectInverter->getParallel(),
+                        $projectInverter->getSerial()
+                    );
+                }
+            }
 
             $projectInverter
                 ->setLoss(10)
                 ->setOperation($mppt);
-
-            $projectModule->setQuantity(
-                $projectArea->getStringNumber() * $projectArea->getModuleString()
-            );
         }
+
+        $this->generateGroups($project);
 
         $this->save($project);
 
         return $this;
+    }
+
+    public function generateGroups(ProjectInterface $project)
+    {
+        $projectModule = $project->getProjectModules()->first();
+
+        $quantity = 0;
+        foreach ($project->getAreas() as $projectArea){
+            $quantity += $projectArea->countModules();
+        }
+
+        $position = $projectModule->getPosition();
+        $limit = $position == 0 ? 18 : 11 ;
+
+        $groups = [];
+        if (0 != ($quantity % $limit) && ($quantity > $limit)) {
+
+            $groups[] = [
+                'lines' => (int) (floor($quantity / $limit)),
+                'modules' => (int) $limit,
+                'position' => $position
+            ];
+
+            $groups[] = [
+                'lines' => 1,
+                'modules' => (int) (round((($quantity / $limit) - (floor($quantity / $limit))) * $limit)),
+                'position' => $position
+            ];
+
+        } else {
+
+            $groups[] = [
+                'lines' => ((int) ceil($quantity / $limit)),
+                'modules' => (int) ($quantity / ceil($quantity / $limit)),
+                'position' => $position
+            ];
+        }
+
+        $projectModule
+            ->setGroups($groups)
+            ->setQuantity($quantity)
+        ;
+
+        $this->save($project);
+
+        return $this;
+    }
+
+    public function generateAreasViaProjectInverter(ProjectInverter $projectInverter)
+    {
+        $manager = $this->manager('project_area');
+        $areas = $projectInverter->getProjectAreas();
+        $count = $areas->count();
+        foreach ($areas as $key => $projectArea){
+            $manager->delete($projectArea, ($key == $count-1));
+        }
+
+        $project = $projectInverter->getProject();
+        $latitude = $project->getLatitude();
+        $longitude = $project->getLongitude();
+        $inclination = (int) abs($latitude);
+        $orientation = $longitude < 0 ? 0 : 180;
+
+        $projectModule = $project->getProjectModules()->first();
+        $projectInverter->getProjectAreas()->clear();
+
+        $mppts = explode('.', $projectInverter->getOperation());
+
+        foreach ($mppts as $item) {
+            for ($i = 0; $i < $projectInverter->getQuantity(); $i++) {
+
+                $projectArea = $this->createArea(
+                    $projectInverter,
+                    $projectModule,
+                    $inclination,
+                    $orientation,
+                    $projectInverter->getParallel(),
+                    $projectInverter->getSerial()
+                );
+
+                $manager->save($projectArea);
+            }
+        }
+    }
+
+    /**
+     * @param ProjectInverter $projectInverter
+     * @param ProjectModule $projectModule
+     * @param $inclination
+     * @param $orientation
+     * @param $stringNumber
+     * @param $moduleString
+     * @return ProjectArea
+     */
+    public function createArea(
+        ProjectInverter $projectInverter,
+        ProjectModule $projectModule,
+        $inclination,
+        $orientation,
+        $stringNumber,
+        $moduleString
+    ){
+
+        $projectArea = new ProjectArea();
+        $projectArea
+            ->setProjectInverter($projectInverter)
+            ->setProjectModule($projectModule)
+            ->setInclination($inclination)
+            ->setOrientation($orientation)
+            ->setStringNumber($stringNumber)
+            ->setModuleString($moduleString)
+        ;
+
+        return $projectArea;
     }
 
     /**
@@ -382,7 +506,7 @@ class ProjectGenerator
         $manager = $this->manager('string_box');
         $loader = new StringBoxLoader($manager);
         $calculator = new StringBoxCalculator($loader);
-        $calculator->calculate($project, false);
+        $calculator->calculate($project, true);
 
         $this->save($project);
 
@@ -399,6 +523,21 @@ class ProjectGenerator
         foreach ($project->getProjectInverters() as $projectInverter){
             $project->removeProjectInverter($projectInverter);
             $manager->delete($projectInverter, !$project->getProjectInverters()->next());
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ProjectInterface $project
+     * @return $this
+     */
+    public function resetModules(ProjectInterface $project)
+    {
+        $manager = $this->manager('project_module');
+        foreach ($project->getProjectModules() as $projectModule){
+            $project->removeProjectModule($projectModule);
+            $manager->delete($projectModule, !$project->getProjectModules()->next());
         }
 
         return $this;
@@ -623,25 +762,35 @@ class ProjectGenerator
     }
 
     /**
-     * @return array
+     * @param ProjectInterface $project
      */
-    /*public function groups(ProjectModule $module)
+    public function reset(ProjectInterface $project)
     {
-        $limit = $module->getPosition() == 0 ? 20 : 12 ;
+        $this->autoSave(false);
+        $this->resetAreas($project);
+        $this->resetStructures($project);
+        $this->resetStringBoxes($project);
+        $this->resetVarieties($project);
+        $this->resetInverters($project);
+        $this->resetModules($project);
 
-        $groups = [];
-        if (0 != ($modulequantity % $limit) && ($this->quantity > $limit)) {
+        //$this->save($project, true);
+    }
 
-            $groups[] = Group::create(((int) floor($this->quantity / $limit)), $limit, $this->position);
-            $groups[] = Group::create(1,((($this->quantity / $limit) - floor($this->quantity / $limit)) * $limit), $this->position);
-
-        } else {
-
-            $groups[] = Group::create(((int) ceil($this->quantity / $limit)), (int) $this->quantity / ceil($this->quantity / $limit), $this->position);
+    /**
+     * @param ProjectInterface $project
+     * @param bool $force
+     */
+    public function save(ProjectInterface $project, $force = false)
+    {
+        if(!$this->manager){
+            $this->manager = $this->manager('project');
         }
 
-        return $groups;
-    }*/
+        if($this->autoSave || $force){
+            $this->manager->save($project);
+        }
+    }
 
     /**
      * @param $id
@@ -665,20 +814,5 @@ class ProjectGenerator
     private function exception($message)
     {
         throw new \InvalidArgumentException($message);
-    }
-
-    /**
-     * @param ProjectInterface $project
-     * @param bool $force
-     */
-    public function save(ProjectInterface $project, $force = false)
-    {
-        if(!$this->manager){
-            $this->manager = $this->manager('project');
-        }
-
-        if($this->autoSave || $force){
-            $this->manager->save($project);
-        }
     }
 }

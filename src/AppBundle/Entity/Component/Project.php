@@ -59,6 +59,13 @@ class Project implements ProjectInterface
     private $identifier;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $defaults;
+
+    /**
      * @var string
      *
      * @ORM\Column(type="string", length=25)
@@ -340,6 +347,7 @@ class Project implements ProjectInterface
         $this->invoiceBasePrice      = 0;
         $this->deliveryBasePrice     = 0;
         $this->taxPercent            = 0;
+        $this->defaults              = [];
         $this->metadata              = [];
         $this->accumulatedCash       = [];
     }
@@ -368,6 +376,24 @@ class Project implements ProjectInterface
     public function getNumber()
     {
         return $this->number;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setDefaults(array $defaults = [])
+    {
+        $this->defaults = $defaults;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDefaults()
+    {
+        return $this->defaults;
     }
 
     /**

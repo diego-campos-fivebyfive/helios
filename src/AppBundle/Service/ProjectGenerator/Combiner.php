@@ -58,41 +58,5 @@ class Combiner
                 }
             }
         }
-
-        $quantity = 0;
-        foreach ($project->getProjectInverters() as $projectInverter){
-            $quantity += $projectInverter->getSerial() * $projectInverter->getParallel() * $projectInverter->getQuantity();
-        }
-
-        $position = $projectModule->getPosition();
-        $limit = $position == 0 ? 20 : 12 ;
-
-        $groups = [];
-        if (0 != ($quantity % $limit) && ($quantity > $limit)) {
-
-            $groups[] = [
-                'lines' => ((int) floor($quantity / $limit)),
-                'modules' => $limit,
-                'position' => $position
-            ];
-
-            $groups[] = [
-                'lines' => 1,
-                'modules' => (int) ceil((($quantity / $limit) - floor($quantity / $limit)) * $limit),
-                'position' => $position
-            ];
-
-        } else {
-
-            $groups[] = [
-                'lines' => ((int) ceil($quantity / $limit)),
-                'modules' => (int) $quantity / ceil($quantity / $limit),
-                'position' => $position
-            ];
-        }
-
-        $projectModule
-            ->setGroups($groups)
-            ->setQuantity($quantity);
     }
 }
