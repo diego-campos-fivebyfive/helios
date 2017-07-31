@@ -9,8 +9,8 @@ use AppBundle\Entity\Component\Kit;
 use AppBundle\Entity\Component\KitComponent;
 use AppBundle\Entity\Component\KitInterface;
 use AppBundle\Entity\Customer;
-use AppBundle\Entity\Project\ProjectInterface;
-use AppBundle\Entity\Project\ProjectInverter;
+use AppBundle\Entity\Component\ProjectInterface;
+use AppBundle\Entity\Component\ProjectInverter;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -106,7 +106,7 @@ class ProjectType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Project\Project'
+            'data_class' => 'AppBundle\Entity\Component\Project'
         ));
     }
 }
