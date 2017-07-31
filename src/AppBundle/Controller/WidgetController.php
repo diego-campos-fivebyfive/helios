@@ -5,7 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\CategoryInterface;
 use AppBundle\Entity\Financial\ProjectFinancialInterface;
 use AppBundle\Entity\Notification;
-use AppBundle\Entity\Project\ProjectInterface;
+use AppBundle\Entity\Component\ProjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -155,12 +155,12 @@ class WidgetController extends AbstractController
      */
     private function saleStagesWidget()
     {
-        $projectManager = $this->getProjectManager();
+        $projectManager = $this->manager('project');
 
-        $member = $this->getCurrentMember();
+        $member = $this->member();
 
         if ($member->isOwner()) {
-            $projects = $projectManager->findByAccount($member->getAccount());
+            $projects = $projectManager->getObjectManager($member->getAccount());
         } else {
             $projects = $member->getProjects()->toArray();
         }
