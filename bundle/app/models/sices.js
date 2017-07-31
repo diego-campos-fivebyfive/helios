@@ -12,14 +12,18 @@ const getRequest = uri => request({
   .then(x => JSON.parse(x))
 
 const postRequest = (uri, data) => request({
-  headers: { 'Content-Type': 'application/json' },
+  headers: {
+    'Content-Type': 'application/json'
+  },
   method: 'POST',
   json: data,
   uri
 })
 
 const putRequest = (uri, data) => request({
-  headers: { 'Content-Type': 'application/json' },
+  headers: {
+    'Content-Type': 'application/json'
+  },
   method: 'PUT',
   json: data,
   uri
