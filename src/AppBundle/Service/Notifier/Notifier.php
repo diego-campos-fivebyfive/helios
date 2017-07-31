@@ -5,8 +5,6 @@
 
 namespace AppBundle\Service\Notifier;
 
-Use  GuzzleHttp\Client;
-
 class Notifier
 {
     public function notify(array $data){
@@ -14,13 +12,20 @@ class Notifier
         $host = getenv('CES_ISQUIK_HOST');
         $port = getenv('CES_ISQUIK_PORT');
 
-        $client = new Client(['base_uri' => "$host:$port"]);
+        $ch = curl_init();
 
-        $response = $client->request('POST','/notifications', [
-           'form_params'  => $data
-        ]);
+        curl_setopt($ch, CURLOPT_URL, "$host:$port/notifications");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
 
-        //dump($response->getBody()->getContents());die;
+        $output = curl_exec($ch);
+        $info = curl_getinfo($ch);
+
+        curl_close($ch);
+
+        //dump($output);die;
     }
 
 }
