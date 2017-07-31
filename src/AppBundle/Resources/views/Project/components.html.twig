@@ -1,7 +1,66 @@
 
 <table class="table">
-
     <thead>
+        <tr>
+            <td colspan="3">
+
+                {#
+                    Potência        -- *
+                    Módulo          -- CS6K-280M
+                    Fab Inversor    -- ABB
+                    Fab String Box  -- Onesto
+                    Tipo de Telhado -- *
+                    Fab Estrutura   -- Sices
+                #}
+
+                <form>
+                    <div class="row">
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <label> Potência </label>
+                            {{ form_widget(form.power) }}
+                        </div>
+                        <div class="col-md-4">
+                            <label> Potência </label>
+                            {{ form_widget(form.module) }}
+                        </div>
+                        <div class="col-md-4">
+                            <label> Potência </label>
+                            {{ form_widget(form.inverter_maker) }}
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="row">
+                    <div class="hr-line-dashed"></div>
+                    </div>
+
+                    <div class="row">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <label> Fab String Box </label>
+                            {{ form_widget(form.string_box_maker) }}
+                        </div>
+                        <div class="col-md-3">
+                            <label> Tipo de Telhado </label>
+                            {{ form_widget(form.roof) }}
+                        </div>
+                        <div class="col-md-3">
+                            <label> Fab Estrutura </label>
+                            {{ form_widget(form.structure_maker) }}
+                        </div>
+                        <div class="col-md-3">
+                            <label> &nbsp; </label>
+                            <button type="submit" class="btn btn-success btn-block">
+                                <i class="fa fa-save"></i> Recalcular
+                            </button>
+                        </div>
+                    </div>
+                    </div>
+                </form>
+
+            </td>
+        </tr>
         <tr>
             <th> Código </th>
             <th> Descrição </th>

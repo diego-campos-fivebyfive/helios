@@ -12,7 +12,9 @@ use AppBundle\Entity\Component\ProjectInverter;
 use AppBundle\Entity\Component\ProjectInverterInterface;
 use AppBundle\Entity\Component\ProjectModule;
 use AppBundle\Form\Component\ProjectAreaType;
+use AppBundle\Form\Component\ProjectConfigType;
 use AppBundle\Form\Component\ProjectType;
+use AppBundle\Form\Generator\GeneratorType;
 use AppBundle\Form\Project\ProjectInverterType;
 use AppBundle\Service\ProjectGenerator\StructureCalculator;
 use AppBundle\Service\ProjectHelper;
@@ -195,7 +197,11 @@ class ProjectController extends AbstractController
      */
     public function componentsAction(Project $project)
     {
+        $form = $this->createForm(GeneratorType::class);
+
+        //dump($form->count()); die;
         return $this->render('project.components', [
+            'form' => $form->createView(),
             'project' => $project
         ]);
     }

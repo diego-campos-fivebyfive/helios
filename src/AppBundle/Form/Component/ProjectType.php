@@ -62,9 +62,6 @@ class ProjectType extends AbstractType
             ->add('roofType', ChoiceType::class, [
                 'choices' => Project::getRootTypes()
             ])
-            ->add('structureType', ChoiceType::class, [
-                'choices' => Project::getStructureTypes()
-            ])
         ;
     }
 

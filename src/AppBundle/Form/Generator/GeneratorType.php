@@ -24,7 +24,7 @@ class GeneratorType extends AbstractType
             ->add('module', EntityType::class, [
                 'class' => Module::class
             ])
-            ->add('maker', EntityType::class, [
+            ->add('inverter_maker', EntityType::class, [
                 'class' => Maker::class,
                 'query_builder' => function(EntityRepository $er){
 
@@ -39,7 +39,10 @@ class GeneratorType extends AbstractType
             ->add('roof', ChoiceType::class, [
                 'choices' => Project::getRootTypes()
             ])
-            ->add('structure', ChoiceType::class, [
+            ->add('structure_maker', ChoiceType::class, [
+                'choices' => Project::getStructureTypes()
+            ])
+            ->add('structure_maker', ChoiceType::class, [
                 'choices' => Project::getStructureTypes()
             ])
             ->add('position', ChoiceType::class, [
