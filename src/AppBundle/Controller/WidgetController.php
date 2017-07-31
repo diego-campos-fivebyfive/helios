@@ -155,12 +155,12 @@ class WidgetController extends AbstractController
      */
     private function saleStagesWidget()
     {
-        $projectManager = $this->getProjectManager();
+        $projectManager = $this->manager('project');
 
-        $member = $this->getCurrentMember();
+        $member = $this->member();
 
         if ($member->isOwner()) {
-            $projects = $projectManager->findByAccount($member->getAccount());
+            $projects = $projectManager->getObjectManager($member->getAccount());
         } else {
             $projects = $member->getProjects()->toArray();
         }
