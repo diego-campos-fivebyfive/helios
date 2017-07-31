@@ -38,21 +38,25 @@ class VarietyCalculator
             $moduleConnector => 0
         ];
 
+        $totalStrings = 0;
         /** @var \AppBundle\Entity\Component\ProjectAreaInterface $projectArea */
-        foreach ($project->getAreas() as $projectArea){
+        foreach ($projectAreas as $projectArea){
 
             $connector = $projectArea->getProjectInverter()->getInverter()->getConnectionType();
-            $strings = $projectArea->getStringNumber() * $projectArea->getModuleString();
+            $strings = $projectArea->getStringNumber();
 
             if('borne' == $connector){
                 $connector = 'mc4';
             }
 
             if(!array_key_exists($connector, $connectors)){
-                $connectors[$connector] = 0;
+                $connectors[$connector] = $strings;
+            }else{
+                $connectors[$connector] += $strings;
             }
 
-            $connectors[$connector] += $strings;
+            $connectors[$moduleConnector] += $strings;
+            $totalStrings += $strings;
         }
 
         foreach($connectors as $subtype => $quantity){
@@ -64,7 +68,7 @@ class VarietyCalculator
             }
         }
 
-        $cables = array_sum($connectors) * self::CABLE_LENGTH;
+        $cables = $totalStrings * self::CABLE_LENGTH;
 
         $blackCable = $this->findVariety('cabo', 'preto');
         $redCable = $this->findVariety('cabo', 'vermelho');

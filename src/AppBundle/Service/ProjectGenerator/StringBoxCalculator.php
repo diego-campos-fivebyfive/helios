@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service\ProjectGenerator;
 
+use AppBundle\Entity\Component\ProjectAreaInterface;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectStringBox;
 
@@ -28,32 +29,42 @@ class StringBoxCalculator
     {
         $collection = [];
         $entities = [];
+
+        /**
+         * @var  $key
+         * @var \AppBundle\Entity\Component\ProjectInverterInterface $projectInverter
+         */
         foreach ($project->getProjectInverters() as $key => $projectInverter) {
 
-            if(!$projectInverter->getInverter()->hasInProtection() || $includeProtected) {
+            if (!$projectInverter->getInverter()->hasInProtection() || $includeProtected) {
 
-                $quantity = $projectInverter->getQuantity();
-                $strings = $projectInverter->getParallel();
+                $strings = 0;
+                foreach($projectInverter->getProjectAreas() as $projectArea){
+                    $strings += $projectArea->getStringNumber();
+                }
+
+                $quantity = 1;
                 $mpptNumber = 1;
+                $inputs = $strings;
 
-                $stringBoxes = $this->loader->load($strings, $mpptNumber);
+                $stringBoxes = $this->loader->load($inputs, $mpptNumber);
 
-                if(!is_null($strings)){
+                if (!is_null($inputs)) {
 
                     /** @var \AppBundle\Entity\Component\StringBoxInterface $stringBox */
                     $stringBox = $stringBoxes[0];
 
-                    if(array_key_exists($stringBox->getId(), $collection)){
+                    if (array_key_exists($stringBox->getId(), $collection)) {
                         $quantity += $collection[$stringBox->getId()];
                     }
 
                     $collection[$stringBox->getId()] = $quantity;
 
-                    if(!array_key_exists($stringBox->getId(), $entities)){
+                    if (!array_key_exists($stringBox->getId(), $entities)) {
                         $entities[$stringBox->getId()] = $stringBox;
                     }
 
-                }else{
+                } else {
 
                     $count = count($stringBoxes);
 
@@ -68,24 +79,37 @@ class StringBoxCalculator
 
                             $total = ($firstStringBox->getInputs() * $j) + $lastStringBox->getInputs();
 
-                            if($total >= $projectInverter->getParallel()) {
+                            if ($total >= $strings) {
 
                                 $firstQuantity = $j * $quantity;
                                 $lastQuantity = 1 * $quantity;
                                 $stringEquals = $firstStringBox == $lastStringBox;
 
-                                if(!array_key_exists($firstStringBox->getId(), $collection)){
+                                if (!array_key_exists($firstStringBox->getId(), $collection)) {
+
                                     $collection[$firstStringBox->getId()] = $firstQuantity;
                                     $entities[$firstStringBox->getId()] = $firstStringBox;
-                                }else{
+
+                                } else {
+
                                     $collection[$firstStringBox->getId()] += $firstQuantity;
                                 }
 
-                                if($stringEquals){
+                                if ($stringEquals) {
+
                                     $collection[$firstStringBox->getId()] += $quantity;
-                                }else{
-                                    $collection[$lastStringBox->getId()] = $lastQuantity;
-                                    $entities[$lastStringBox->getId()] = $lastStringBox;
+
+                                } else {
+
+                                    if (!array_key_exists($lastStringBox->getId(), $collection)) {
+
+                                        $collection[$lastStringBox->getId()] = $lastQuantity;
+                                        $entities[$lastStringBox->getId()] = $lastStringBox;
+
+                                    }else{
+
+                                        $collection[$lastStringBox->getId()] += $lastQuantity;
+                                    }
                                 }
 
                                 break 2;
@@ -97,14 +121,13 @@ class StringBoxCalculator
             }
         }
 
-        foreach ($collection as $id => $quantity){
+        foreach ($collection as $id => $quantity) {
             $stringBox = $entities[$id];
             $projectStringBox = new ProjectStringBox();
             $projectStringBox
                 ->setProject($project)
                 ->setQuantity($quantity)
-                ->setStringBox($stringBox)
-            ;
+                ->setStringBox($stringBox);
         }
     }
 }

@@ -114,28 +114,7 @@ class ProjectController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
 
-            $power = $this->get('power_estimator')->estimate($project->getInfConsumption(), $project->getLatitude(), $project->getLongitude());
-
-            /** @var \AppBundle\Entity\Component\Module $module */
-            $module = $this->manager('module')->find(32433);
-
-            /** @var \AppBundle\Entity\Component\MakerInterface $maker */
-            $maker = $this->manager('maker')->find(60627);
-            //$roofType = 1;
-            $position = 0;
-
-            /** @var \AppBundle\Service\ProjectGenerator\ProjectGenerator $generator */
-            $generator = $this->get('project_generator');
-            $generator->autoSave(false);
-
-            $project = $generator
-                ->project($project)
-                ->power($power)
-                ->module($module, $position)
-                ->maker($maker)
-                ->generate();
-
-            $manager->save($project);
+            $this->configureProjectFromDefaults($project);
 
             return $this->json([
                 'project' => [
@@ -148,14 +127,6 @@ class ProjectController extends AbstractController
             'form' => $form->createView(),
             'project' => $project
         ]);
-    }
-
-    /**
-     * @Route("/create/multi",name="project_create_multi")
-     */
-    public function multiCreateAction()
-    {
-        return $this->render('');
     }
 
     /**
@@ -190,23 +161,9 @@ class ProjectController extends AbstractController
                 || $previous['latitude'] != $project->getLatitude()
                 || $previous['longitude'] != $project->getLongitude()){
 
-                $power = $this->get('power_estimator')->estimate(
-                    $project->getInfConsumption(),
-                    $project->getLatitude(),
-                    $project->getLongitude()
-                );
+                $generator->reset($project);
 
-                $project->setInfPower($power);
-
-                /** @var \AppBundle\Entity\Component\MakerInterface $maker */
-                $maker = $this->manager('maker')->find(60627);
-                $generator
-                    ->generateInverters($project, $maker)
-                    ->generateAreas($project)
-                    ->generateStructures($project)
-                    ->generateStringBoxes($project)
-                    ->generateVarieties($project)
-                    ->handleAreas($project);
+                $this->configureProjectFromDefaults($project);
             }
 
             /**
@@ -215,7 +172,6 @@ class ProjectController extends AbstractController
              */
             if($previous['roof'] != $project->getRoofType()
                 || $previous['structure'] != $project->getStructureType()){
-
                 $generator->generateStructures($project);
             }
 
@@ -264,10 +220,7 @@ class ProjectController extends AbstractController
                     $generator = $this->getGenerator();
 
                     $projectModule->setGroups($groups);
-
                     $generator->generateStructures($project);
-
-                    $this->manager('project')->save($project);
 
                     break;
                 }
@@ -337,12 +290,16 @@ class ProjectController extends AbstractController
             if($projectInverter->operationIsChanged()) {
 
                 $project = $projectInverter->getProject();
+
+                $generator->autoSave(false);
+                $generator->generateAreasViaProjectInverter($projectInverter);
+
                 $generator
+                    ->handleAreas($project)
                     ->generateStringBoxes($project)
                     ->generateVarieties($project);
 
-                //$this->manager('project_inverter')->save($projectInverter);
-                //$this->onUpdateProjectInverter($projectInverter);
+                $generator->save($project, true);
 
                 $generator->process($project);
             }
@@ -401,11 +358,11 @@ class ProjectController extends AbstractController
 
             $generator
                 ->autoSave(false)
-                ->synchronize($project)
+                ->generateGroups($project)
                 ->generateStructures($project)
                 ->generateStringBoxes($project)
-                // TODO: This method has a high impact on the calculation performance
                 ->handleAreas($project)
+                ->generateVarieties($project)
             ;
 
             $generator->save($project, true);
@@ -520,25 +477,31 @@ class ProjectController extends AbstractController
         ], empty($errors) ? Response::HTTP_ACCEPTED : Response::HTTP_CONFLICT);
     }
 
-    /**
-     * @param ProjectInverterInterface $projectInverter
-     */
-    private function onUpdateProjectInverter(ProjectInverterInterface $projectInverter)
+    private function configureProjectFromDefaults(ProjectInterface $project)
     {
-        //$this->resetProjectAreas($projectInverter);
-        ///$project = $projectInverter->getProject();
-        //$this->get('project_manipulator')->synchronize($project);
-        //$this->get('structure_calculator')->calculate($project);
-    }
+        $power = $this->get('power_estimator')->estimate($project->getInfConsumption(), $project->getLatitude(), $project->getLongitude());
 
-    /**
-     * @param ProjectAreaInterface $projectArea
-     */
-    private function onUpdateProjectArea(ProjectAreaInterface $projectArea)
-    {
-        //$project = $projectArea->getProjectModule()->getProject();
-        //$this->get('project_manipulator')->synchronize($project);
-        //$this->get('structure_calculator')->calculate($project);
+        /** @var \AppBundle\Entity\Component\Module $module */
+        $module = $this->manager('module')->find(32433);
+
+        /** @var \AppBundle\Entity\Component\MakerInterface $maker */
+        $maker = $this->manager('maker')->find(60627);
+        //$roofType = 1;
+        $position = 0;
+
+        /** @var \AppBundle\Service\ProjectGenerator\ProjectGenerator $generator */
+        $generator = $this->get('project_generator');
+        $generator->autoSave(false);
+
+        $generator
+            ->project($project)
+            ->power($power)
+            ->module($module, $position)
+            ->maker($maker)
+            ->generate()
+        ;
+
+        $generator->save($project, true);
     }
 
     /*
