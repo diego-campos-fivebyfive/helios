@@ -82,6 +82,8 @@ class RegisterController extends AbstractController
             ]);
         }
 
+        $data = $form->getData();
+
         /** @var AccountInterface $account */
         $account = $accountManager->create();
         /** @var MemberInterface $member */
@@ -90,30 +92,30 @@ class RegisterController extends AbstractController
         /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
         $userManager = $this->get('fos_user.user_manager');
         $user = $userManager->createUser();
-        $user->setEmail($form['email'])
-            ->setUsername($form['email'])
+        $user->setEmail($data['email'])
+            ->setUsername($data['email'])
             ->setPlainPassword(uniqid())
             ->addRole(UserInterface::ROLE_OWNER_MASTER);
 
         $member->setConfirmationToken($this->getTokenGenerator()->generateToken())
-            ->setFirstname($form['contact'])
-            ->setPhone($form['phone'])
-            ->setEmail($form['email'])
+            ->setFirstname($data['contact'])
+            ->setPhone($data['phone'])
+            ->setEmail($data['email'])
             ->setContext(BusinessInterface::CONTEXT_MEMBER)
             ->setUser($user);
 
         $account->setConfirmationToken($this->getTokenGenerator()->generateToken())
-            ->setFirstName($form['firstname'])
-            ->setLastName($form['lastname'])
-            ->setExtraDocument($form['extraDocument'])
-            ->setDocument($form['document'])
-            ->setEmail($form['email'])
-            ->setState($form['state'])
-            ->setCity($form['city'])
-            ->setDistrict($form['district'])
-            ->setStreet($form['street'])
-            ->setNumber($form['number'])
-            ->setPostcode($form['postcode'])
+            ->setFirstName($data['firstname'])
+            ->setLastName($data['lastname'])
+            ->setExtraDocument($data['extraDocument'])
+            ->setDocument($data['document'])
+            ->setEmail($data['email'])
+            ->setState($data['state'])
+            ->setCity($data['city'])
+            ->setDistrict($data['district'])
+            ->setStreet($data['street'])
+            ->setNumber($data['number'])
+            ->setPostcode($data['postcode'])
             ->setContext(BusinessInterface::CONTEXT_ACCOUNT);
         $member->setAccount($account);
         $accountManager->save($account);
@@ -124,8 +126,8 @@ class RegisterController extends AbstractController
         ]);
 
         $this->setNotice('Cadastro realizado com sucesso, verifique seu e-mail!');
-        return $this->redirectToRoute('app_register_link');
 
+        return $this->redirectToRoute('app_register_link');
     }
 
     /**
