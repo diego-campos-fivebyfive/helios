@@ -14,6 +14,21 @@
 
 </style>
 
+<div class="modal inmodal fade" id="e_modal_details" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body" id="detail_structure">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">
+                    {{ 'Close'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row" id="real-content">
     <div class="col-md-12">
         <div class="ibox-content">
@@ -38,8 +53,11 @@
                             <td>{{ structure.description }}</td>
                             <td>{{ structure.size }}</td>
                             <td class="btn-group btn-group-md btn-group-justified">
-                                <a href="{{ path('structure_preview', { id: structure.id }) }}" class="btn btn-default">
-                                    <i class="fa fa-eye"></i>{{'View'|trans}}
+                                <a data-url="{{ path('structure_preview', { id: structure.id }) }}"
+                                   data-toggle="modal"
+                                   data-target="#modal_details"
+                                   class="btn btn-default">
+                                    <i class="fa fa-eye"></i> {{ 'View'|trans }}
                                 </a>
                                 {% if member.isAdmin %}
                                 <a href="{{ path('structure_update', { id: structure.id }) }}" class="btn btn-warning">

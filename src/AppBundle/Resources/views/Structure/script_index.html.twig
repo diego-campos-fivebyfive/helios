@@ -1,6 +1,26 @@
 <script>
     $(function () {
 
+        var detail_structure = $('#detail_structure');
+        var detail_spinner = detail_structure.html();
+        $('[data-target="#modal_details"]').on('click', function(){
+            var url = $(this).data('url');
+            if (url) {
+                $('#e_modal_details').modal('show');
+                detail_structure.html(detail_spinner);
+                $.ajax({
+                    url: url,
+                    method: 'get',
+                    success: function (response) {
+                        detail_structure.html(response);
+                    }
+                });
+            } else {
+                detail_structure.html('<h1> Nenhum componente selecionado para visualização </h1>');
+            }
+        });
+
+
         /*var dataCopy = $('[data-copy]');
         if (dataCopy.length) {
             dataCopy.on('click', function () {
