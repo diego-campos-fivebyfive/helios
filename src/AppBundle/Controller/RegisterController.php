@@ -128,6 +128,11 @@ class RegisterController extends AbstractController
             $this->setNotice('Cadastro realizado com sucesso, verifique seu e-mail!');
             return $this->redirectToRoute('app_register_link');
         }
+
+        return $this->render('register.pre_register', [
+            'form' => $form->createView(),
+            'errors' => $form->getErrors(true)
+        ]);
     }
 
     /**
