@@ -290,7 +290,28 @@ function saveProposal() {
 }
 
 $(document).ready(function(){
-    generateChart();
+
+
+    /*var cks = [];
+    var editors = $('.edit');
+    var cont = 0;
+    for (x = 0; x < editors.length; x++) {
+        if (!($(editors[x]).attr('id') == undefined)) {
+            cks[cont] = $(editors[x]).attr('id');
+            cont++;
+        }
+    }
+    var ins = CKEDITOR.instances;
+    console.log(Object.keys(ins).length);
+    var interval = window.setInterval(function () {
+        var ins = CKEDITOR.instances;
+        if (Object.keys(ins).length == cks.length) {*/
+            generateChart();
+           /* clearInterval(interval);
+        }
+        console.log("x");
+    }, 50);
+*/
     /*setTimeout(function () {
         saveProposal();
     },1000);*/
