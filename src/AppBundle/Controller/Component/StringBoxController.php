@@ -45,7 +45,11 @@ class StringBoxController extends AbstractController
         //dump($pagination);die;
         return $this->render('Stringbox.index', array(
             //'stringBoxes' => $stringBoxes,
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'query' => array_merge([
+                'display' => 'grid',
+                'strict' => 0
+            ], $request->query->all())
         ));
     }
 
