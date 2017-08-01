@@ -36,35 +36,35 @@ class StringBox implements StringBoxInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="code", type="string", length=255)
+     * @ORM\Column(name="code", type="string", length=255, nullable=true)
      */
     private $code;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="text")
+     * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="inputs", type="smallint")
+     * @ORM\Column(name="inputs", type="smallint", nullable=true)
      */
     private $inputs;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="outputs", type="smallint")
+     * @ORM\Column(name="outputs", type="smallint", nullable=true)
      */
     private $outputs;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="fuses", type="smallint")
+     * @ORM\Column(name="fuses", type="smallint", nullable=true)
      */
     private $fuses;
 
