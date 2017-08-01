@@ -85,6 +85,14 @@
 {% endblock %}
 
 {% block scripts %}
+
+    {% if errors|length %}
+        <script>
+            {% for key, error in errors if 0 == key %}
+            display_error('{{ error.message|trans([],'messages') }}');
+            {% endfor %}
+        </script>
+    {% endif %}
     <script>
         $(function () {
             $('.middle-box').removeClass('middle-box');
