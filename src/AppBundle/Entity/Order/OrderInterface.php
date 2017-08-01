@@ -23,7 +23,7 @@ interface OrderInterface
 
     /**
      * @param $account
-     * @return AccountInterface
+     * @return OrderInterface
      */
     public function setAccount($account);
 
@@ -44,10 +44,16 @@ interface OrderInterface
     public function getStatus();
 
     /**
-     * @param ProjectInterface $projects
-     * @return ProjectInterface
+     * @param ProjectInterface $project
+     * @return OrderInterface
      */
-    public function setProjects($projects);
+    public function addProject(ProjectInterface $project);
+
+    /**
+     * @param ProjectInterface $project
+     * @return OrderInterface
+     */
+    public function removeProject(ProjectInterface $project);
 
     /**
      * @return ProjectInterface
