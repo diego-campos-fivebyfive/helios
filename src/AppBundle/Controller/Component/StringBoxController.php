@@ -42,7 +42,7 @@ class StringBoxController extends AbstractController
             $request->query->getInt('page', 1),
             'grid' == $request->query->get('display', 'grid') ? 8 : 20
         );
-        //dump($pagination);die;
+
         return $this->render('Stringbox.index', array(
             //'stringBoxes' => $stringBoxes,
             'pagination' => $pagination,
