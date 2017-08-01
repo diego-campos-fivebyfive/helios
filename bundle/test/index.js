@@ -64,8 +64,9 @@ app.post('/notifications', (req, res) => {
 
     case 'account_created':
       getData(`${SICES_HOST}:${SICES_PORT}/api/accounts/${body.id}`).then((account) => {
-        const data = getData(`${SICES_HOST}:${SICES_PORT}/api/users/${account.owner}`)
-        res.status(200).json({ callback, body: data })
+        getData(`${SICES_HOST}:${SICES_PORT}/api/users/${account.owner}`).then((user) => {
+          res.status(200).json({ callback, body: user })
+        })
       })
       break
 

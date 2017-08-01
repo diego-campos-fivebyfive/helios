@@ -8,9 +8,12 @@ const { isquik } = config
 
 const getRequest = uri => Google.getAuthentication().then(auth => (
   request({
+    headers: {
+      'Content-Type': 'application/json'
+    },
     method: 'GET',
     qs: {
-      auth: auth.idToken
+      auth: auth.access_token
     },
     uri
   })
