@@ -74,60 +74,60 @@ class RegisterController extends AbstractController
         $form = $this->createForm(PreRegisterType::class);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if (!$form->isSubmitted() || !$form->isValid()) {
 
-            if (!$form->isValid()) {
-
-                return $this->render('register.pre_register', [
-                    'form' => $form->createView(),
-                    'errors' => $form->getErrors(true)
-                ]);
-            }
-
-            /** @var AccountInterface $account */
-            $account = $accountManager->create();
-            /** @var MemberInterface $member */
-            $member = $accountManager->create();
-
-            /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
-            $userManager = $this->get('fos_user.user_manager');
-            $user = $userManager->createUser();
-            $user->setEmail($form['email'])
-                ->setUsername($form['email'])
-                ->setPlainPassword(uniqid())
-                ->addRole(UserInterface::ROLE_OWNER_MASTER);
-
-            $member->setConfirmationToken($this->getTokenGenerator()->generateToken())
-                ->setFirstname($form['contact'])
-                ->setPhone($form['phone'])
-                ->setEmail($form['email'])
-                ->setContext(BusinessInterface::CONTEXT_MEMBER)
-                ->setUser($user);
-
-            $account->setConfirmationToken($this->getTokenGenerator()->generateToken())
-                ->setFirstName($form['firstname'])
-                ->setLastName($form['lastname'])
-                ->setExtraDocument($form['extraDocument'])
-                ->setDocument($form['document'])
-                ->setEmail($form['email'])
-                ->setState($form['state'])
-                ->setCity($form['city'])
-                ->setDistrict($form['district'])
-                ->setStreet($form['street'])
-                ->setNumber($form['number'])
-                ->setPostcode($form['postcode'])
-                ->setContext(BusinessInterface::CONTEXT_ACCOUNT);
-            $member->setAccount($account);
-            $accountManager->save($account);
-
-            $this->get('notifier')->notify([
-                'callback' => 'account_created',
-                'body' => ['id' => $account->getId()]
+            return $this->render('register.pre_register', [
+                'form' => $form->createView(),
+                'errors' => $form->getErrors(true)
             ]);
-
-            $this->setNotice('Cadastro realizado com sucesso, verifique seu e-mail!');
-            return $this->redirectToRoute('app_register_link');
         }
+
+        $data = $form->getData();
+
+        /** @var AccountInterface $account */
+        $account = $accountManager->create();
+        /** @var MemberInterface $member */
+        $member = $accountManager->create();
+
+        /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+        $userManager = $this->get('fos_user.user_manager');
+        $user = $userManager->createUser();
+        $user->setEmail($data['email'])
+            ->setUsername($data['email'])
+            ->setPlainPassword(uniqid())
+            ->addRole(UserInterface::ROLE_OWNER_MASTER);
+
+        $member->setConfirmationToken($this->getTokenGenerator()->generateToken())
+            ->setFirstname($data['contact'])
+            ->setPhone($data['phone'])
+            ->setEmail($data['email'])
+            ->setContext(BusinessInterface::CONTEXT_MEMBER)
+            ->setUser($user);
+
+        $account->setConfirmationToken($this->getTokenGenerator()->generateToken())
+            ->setFirstName($data['firstname'])
+            ->setLastName($data['lastname'])
+            ->setExtraDocument($data['extraDocument'])
+            ->setDocument($data['document'])
+            ->setEmail($data['email'])
+            ->setState($data['state'])
+            ->setCity($data['city'])
+            ->setDistrict($data['district'])
+            ->setStreet($data['street'])
+            ->setNumber($data['number'])
+            ->setPostcode($data['postcode'])
+            ->setContext(BusinessInterface::CONTEXT_ACCOUNT);
+        $member->setAccount($account);
+        $accountManager->save($account);
+
+        $this->get('notifier')->notify([
+            'callback' => 'account_created',
+            'body' => ['id' => $account->getId()]
+        ]);
+
+        $this->setNotice('Cadastro realizado com sucesso, verifique seu e-mail!');
+
+        return $this->redirectToRoute('app_register_link');
     }
 
     /**
