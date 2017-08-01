@@ -204,7 +204,6 @@ class Maker implements MakerInterface
         return [
             self::CONTEXT_MODULE => self::CONTEXT_MODULE,
             self::CONTEXT_INVERTER => self::CONTEXT_INVERTER
-            //self::CONTEXT_ALL => self::CONTEXT_ALL
         ];
     }
 

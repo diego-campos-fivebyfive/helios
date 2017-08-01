@@ -23,7 +23,7 @@ class StringBoxLoader
     /**
      * @inheritDoc
      */
-    public function load(&$inputs = null, &$outputs)
+    public function load(&$inputs = null, &$outputs, $maker)
     {
         $fields = 's';
 
@@ -59,13 +59,13 @@ class StringBoxLoader
                 ]);
         }
 
-        $qb->setParameter('maker', 61124);
+        $qb->setParameter('maker', $maker);
 
         $stringBoxes = $qb->getQuery()->getResult();
 
         if(empty($stringBoxes)){
             $inputs = null;
-            return $this->load($inputs, $outputs);
+            return $this->load($inputs, $outputs, $maker);
         }
 
         return $stringBoxes;

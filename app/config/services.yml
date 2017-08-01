@@ -151,3 +151,10 @@ services:
 
     notifier:
         class: AppBundle\Service\Notifier\Notifier
+
+    # Form Services
+    project_generator_type:
+        class: AppBundle\Form\Component\GeneratorType
+        arguments: ['@doctrine.orm.entity_manager']
+        tags:
+            - { name: form.type }

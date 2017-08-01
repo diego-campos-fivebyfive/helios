@@ -7,11 +7,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 interface MakerInterface
 {
-
-    const CONTEXT_INVERTER = 'component_inverter';
-    const CONTEXT_MODULE = 'component_module';
-    const CONTEXT_STRUCTURE = 'component_structure';
-    const CONTEXT_ALL = 'component_all';
+    const CONTEXT_INVERTER = 'inverter';
+    const CONTEXT_MODULE = 'module';
+    const CONTEXT_STRUCTURE = 'structure';
+    const CONTEXT_STRING_BOX = 'string_box';
 
     const STATUS_ENABLED = 1;
     const STATUS_DISABLED = 0;
