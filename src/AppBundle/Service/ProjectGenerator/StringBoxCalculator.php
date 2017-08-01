@@ -27,6 +27,8 @@ class StringBoxCalculator
      */
     public function calculate(ProjectInterface $project, $includeProtected = false)
     {
+        $defaults = $project->getDefaults();
+        $maker = $defaults['string_box_maker'];
         $collection = [];
         $entities = [];
 
@@ -47,7 +49,7 @@ class StringBoxCalculator
                 $mpptNumber = 1;
                 $inputs = $strings;
 
-                $stringBoxes = $this->loader->load($inputs, $mpptNumber);
+                $stringBoxes = $this->loader->load($inputs, $mpptNumber, $maker);
 
                 if (!is_null($inputs)) {
 

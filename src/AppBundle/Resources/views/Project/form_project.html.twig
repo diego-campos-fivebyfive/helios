@@ -234,11 +234,11 @@
                                                     Informações Climáticas
                                                 </a>
                                             </div>
-                                            <div class="col-md-2">
+                                            {#<div class="col-md-2">
                                                 {{ form_label(form.structureType, 'Fabricante da Estrutura') }}
                                                 {{ form_widget(form.structureType,{attr:{class:'form-control'}}) }}
-                                            </div>
-                                            <div class="col-md-3">
+                                            </div>#}
+                                            <div class="col-md-4">
                                                 {{ form_label(form.roofType, 'Tipo de Telhado') }}
                                                 {{ form_widget(form.roofType,{attr:{class:'form-control'}}) }}
                                             </div>
@@ -246,7 +246,7 @@
                                                 {{ form_label(form.infConsumption, 'Consumo') }}
                                                 {{ form_widget(form.infConsumption,{attr:{class:'form-control'}}) }}
                                             </div>
-                                            <div class="col-md-2">
+                                            <div class="col-md-3">
                                                 <label><br></label>
                                                 <button type="submit" data-style="zoom-in" class="btn btn-success btn-md pull-right col-xs-12 ladda-button">
                                                     <i class="fa fa-save"></i>

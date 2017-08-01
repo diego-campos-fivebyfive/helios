@@ -76,10 +76,12 @@ class StructureCalculator
      */
     public function calculate(ProjectInterface $project)
     {
-        $makerId = $this->makers[$project->getStructureType()];
+        $defaults = $project->getDefaults();
+        $makerId = $defaults['structure_maker'];
+        $roofType = $defaults['roof_type'];
 
         $profileSubtype = 'roman';
-        switch ($project->getRoofType()){
+        switch ($roofType){
             case self::ROOF_SHEET_METAL:
                 $profileSubtype = 'industrial';
                 break;
@@ -144,19 +146,20 @@ class StructureCalculator
         $terminalIntermediarySize = $term_inter_bd->getSize();
         $terminalFinalSize = $term_final_bd->getSize();
         $countProfiles = count($profiles);
-        $dimension = 0 == $projectModule->getPosition() ? $projectModule->getModule()->getWidth() : $projectModule->getModule()->getLength();
+        $module = $projectModule->getModule();
 
         foreach ($projectModule->getGroups() as $i => $group) {
 
             $linesOfModules = (int) $group['lines'];
             $quantityModules = (int) $group['modules'];
-            $position = $group['position'];
+            $position = (int) $group['position'];
+            $dimension = 0 == $position ? $module->getWidth() : $module->getLength() ;
 
             $lineSize = ($quantityModules * $dimension) + (($quantityModules - 1) * $terminalIntermediarySize) + (2 * $terminalFinalSize);
 
             $usedProfiles = array_fill(0, $countProfiles, 0);
 
-            if($project->getRoofType() != self::ROOF_SHEET_METAL_PFM) {
+            if($roofType != self::ROOF_SHEET_METAL_PFM) {
 
                 $profileSize = $profiles[$maxProfileSize]->getSize();
 
@@ -231,7 +234,7 @@ class StructureCalculator
                 }
             }
 
-            if(!in_array($project->getRoofType(), [self::ROOF_SHEET_METAL, self::ROOF_SHEET_METAL_PFM])) {
+            if(!in_array($roofType, [self::ROOF_SHEET_METAL, self::ROOF_SHEET_METAL_PFM])) {
                 $junction = array_sum($usedProfiles);
 
                 if (($junction % 2) != 0) {
@@ -264,7 +267,7 @@ class StructureCalculator
             $screwStr = $base;
             $screwAuto = 4 * (ceil(($lineSize) / 0.4) + 1);
 
-            if (self::ROOF_SHEET_METAL_PFM == $project->getRoofType()) {
+            if (self::ROOF_SHEET_METAL_PFM == $roofType) {
                 $screwAuto = $profileMiddlePlate * 4;
             }
 
@@ -296,7 +299,7 @@ class StructureCalculator
             }
         }
 
-        switch ($project->getRoofType()) {
+        switch ($roofType) {
             case self::ROOF_ROMAN_AMERICAN:
 
                 $structures[] = ['quantity' => (int) $total_juncao, 'structure' => $items[self::JUNCTION]];
@@ -334,7 +337,7 @@ class StructureCalculator
             case self::ROOF_SHEET_METAL:
             case self::ROOF_SHEET_METAL_PFM:
 
-                if(self::ROOF_SHEET_METAL_PFM == $project->getRoofType()){
+                if(self::ROOF_SHEET_METAL_PFM == $roofType){
                     $structures[] = ['quantity' => $total_perfil_chapa_meio, 'structure' => $profiles[0]];
                 }
 

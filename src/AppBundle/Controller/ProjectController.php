@@ -6,22 +6,19 @@ use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Category;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Component\ProjectArea;
-use AppBundle\Entity\Component\ProjectAreaInterface;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverter;
-use AppBundle\Entity\Component\ProjectInverterInterface;
 use AppBundle\Entity\Component\ProjectModule;
+use AppBundle\Entity\MemberInterface;
 use AppBundle\Form\Component\ProjectAreaType;
 use AppBundle\Form\Component\ProjectType;
+use AppBundle\Form\Component\GeneratorType;
 use AppBundle\Form\Project\ProjectInverterType;
-use AppBundle\Service\ProjectGenerator\StructureCalculator;
 use AppBundle\Service\ProjectHelper;
-use AppBundle\Service\ProjectProcessor;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Entity\MemberInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class ProjectController
@@ -114,6 +111,8 @@ class ProjectController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
 
+            $project->setStructureType(Project::STRUCTURE_SICES);
+
             $this->configureProjectFromDefaults($project);
 
             return $this->json([
@@ -193,9 +192,38 @@ class ProjectController extends AbstractController
     /**
      * @Route("/{id}/components", name="project_components")
      */
-    public function componentsAction(Project $project)
+    public function componentsAction(Project $project, Request $request)
     {
+        $defaults = $project->getDefaults();
+        $defaults['power'] = $project->getPower();
+
+        $form = $this->createForm(GeneratorType::class, $defaults);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            $generator = $this->getGenerator();
+
+            $defaults = $form->getData();
+
+            $generator->reset($project);
+            $generator->project($project);
+            $generator->defaults($defaults);
+            $generator->generate();
+
+            $generator->save($project, true);
+
+            return $this->json([
+                'project' => [
+                    'id' => $project->getId(),
+                    'power' => $project->getPower()
+                ]
+            ]);
+        }
+
         return $this->render('project.components', [
+            'form' => $form->createView(),
             'project' => $project
         ]);
     }
@@ -481,25 +509,25 @@ class ProjectController extends AbstractController
     {
         $power = $this->get('power_estimator')->estimate($project->getInfConsumption(), $project->getLatitude(), $project->getLongitude());
 
-        /** @var \AppBundle\Entity\Component\Module $module */
-        $module = $this->manager('module')->find(32433);
+        $defaults = $project->getDefaults();
 
-        /** @var \AppBundle\Entity\Component\MakerInterface $maker */
-        $maker = $this->manager('maker')->find(60627);
-        //$roofType = 1;
-        $position = 0;
+        if(empty($defaults)) {
+            $defaults['module'] = 32433;
+            $defaults['inverter_maker'] = 60627;
+            $defaults['structure_maker'] = 61211;
+            $defaults['string_box_maker'] = 61209;
+        }
+
+        $defaults['roof_type'] = $project->getRoofType();
+        $defaults['power'] = $power;
 
         /** @var \AppBundle\Service\ProjectGenerator\ProjectGenerator $generator */
         $generator = $this->get('project_generator');
         $generator->autoSave(false);
 
-        $generator
-            ->project($project)
-            ->power($power)
-            ->module($module, $position)
-            ->maker($maker)
-            ->generate()
-        ;
+        $project->setDefaults($defaults);
+
+        $generator->project($project)->generate();
 
         $generator->save($project, true);
     }

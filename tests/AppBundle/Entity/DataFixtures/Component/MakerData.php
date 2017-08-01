@@ -18,7 +18,7 @@ class MakerData extends AbstractFixture implements OrderedFixtureInterface
     public function load(ObjectManager $manager)
     {
         $data = [
-            'context' => Maker::CONTEXT_ALL,
+            'context' => Maker::CONTEXT_INVERTER,
             'name' => 'This is a Maker',
             'enabled' => true
         ];

@@ -1,21 +1,37 @@
 {% set projectModule = project.projectModules.first %}
 
+{% if projectModule %}
+
+    <style>
+        .line-padding{
+            padding-top: 4rem !important;
+        }
+    </style>
+
 <table class="hide">
     <tbody id="template_lines">
     <tr class="dist-line">
-        <td class="col-md-4">
+        <td class="col-md-4 line-padding">
             <input placeholder="Número de Linhas" type="text" value="__lines__" class="form-control dist-line-number">
         </td>
-        <td class="col-md-4">
+        <td class="col-md-4 line-padding">
             <input placeholder="Módulos por Linha" type="text" value="__modules__" class="form-control dist-line-module">
         </td>
         <td class="col-md-3">
-            <select class="form-control dist-line-position">
-                <option value="0"> Vertical</option>
-                <option value="1"> Horizontal</option>
-            </select>
+            <div class="btn-group btn-group-justified" data-toggle="buttons">
+                <label class="btn btn-default btn-position" data-position="0">
+                    Vertical <br>
+                    <img src="{{ asset('public/assets/images/opt_vertical.png') }}"/>
+                    <input name="line-position" type="radio" value="0">
+                </label>
+                <label class="btn btn-default btn-position" data-position="1">
+                    Horizontal <br>
+                    <img src="{{ asset('public/assets/images/opt_horizontal.png') }}"/>
+                    <input name="line-position" type="radio" value="1">
+                </label>
+            </div>
         </td>
-        <td class="col-md-1">
+        <td class="col-md-1 line-padding">
             <button class="remove-dist-line btn btn-danger btn-block">
                 <i class="fa fa-trash"></i>
             </button>
@@ -116,11 +132,11 @@
                     GroupManager.check();
                 });
             },
-            modules: function (input) {
+            modules: function (input, max) {
                 input.TouchSpin({
                     min: 1,
                     step: 1,
-                    max: 20,
+                    max: max,
                     verticalbuttons: true,
                     prefix: 'Módulos por Linha'
                 }).on('change', function () {
@@ -144,10 +160,12 @@
         register: function(line){
             var lines = line.find('.dist-line-number');
             var modules = line.find('.dist-line-module');
-            var position = line.find('.dist-line-position');
+            var position = line.find('input[name="line-position"]');
             var btnDelete = line.find('.remove-dist-line');
             GroupManager.touchspin.lines(lines);
-            GroupManager.touchspin.modules(modules);
+
+            var currentPosition = line.find('.btn-position.active').data('position');
+            GroupManager.touchspin.modules(modules, 0 == currentPosition ? 20 : 12);
 
             btnDelete.on('click', function(){
                 if(GroupManager.groups.length > 1) {
@@ -159,8 +177,21 @@
             });
 
             position.on('change', function(){
-                var index = $(this).closest('tr').index();
-                GroupManager.groups[index].position = parseInt($(this).val());
+                var line = $(this).closest('tr');
+                var value = parseInt($(this).val());
+                $.each($(this).closest('.btn-group').find('label'), function(i,e){
+                    var label = $(e);
+                    if(value == label.data('position')){
+                        label.addClass('active');
+                    }else{
+                        label.removeClass('active');
+                    }
+                });
+                GroupManager.groups[line.index()].position = value;
+
+                modules.trigger('touchspin.updatesettings',{
+                    max: 0 == value ? 20 : 12
+                });
             });
         },
         render: function(group){
@@ -172,7 +203,9 @@
 
                 GroupManager.container.append(render);
 
-                render.find('option[value="'+group.position+'"]').prop('selected', true);
+                var position = render.find('[data-position="'+group.position+'"]');
+                position.addClass('active');
+                position.find('input').attr('checked', 'checked');
 
                 group.rendered = true;
 
@@ -218,3 +251,5 @@
     });
 
 </script>
+
+{% endif %}

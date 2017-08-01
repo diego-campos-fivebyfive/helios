@@ -81,14 +81,14 @@ class ProjectGenerator
 
     public function module(ModuleInterface $module, $position = 0)
     {
-        $projectModule = new ProjectModule();
+        /*$projectModule = new ProjectModule();
         $projectModule
             ->setModule($module)
             ->setProject($this->project)
             ->setPosition($position)
         ;
 
-        return $this;
+        return $this;*/
     }
 
     /**
@@ -97,7 +97,7 @@ class ProjectGenerator
      */
     public function maker(MakerInterface $maker)
     {
-        $this->generateInverters($this->project, $maker);
+        $this->generateInverters($this->project);
 
         return $this;
     }
@@ -107,7 +107,10 @@ class ProjectGenerator
      */
     public function generate()
     {
-        if(!$this->project->getInfPower()){
+        if(empty($this->project->getDefaults()))
+            $this->exception('The project defaults is empty');
+
+        /*if(!$this->project->getInfPower()){
             $this->exception('Undefined project power');
         }
 
@@ -115,11 +118,18 @@ class ProjectGenerator
             $this->exception('Roof Type is undefined');
 
         if(!$this->project->getStructureType())
-            $this->exception('Structure Type is undefined');
+            $this->exception('Structure Type is undefined');*/
+
+        // MODULES
+        $this->generateModules($this->project);
+
+        // INVERTERS
+        $this->generateInverters($this->project);
 
         // AREAS
         $this->generateAreas($this->project);
 
+        // HANDLE AREAS
         if($this->project->getLatitude() && $this->project->getLongitude()) {
             $this->handleAreas($this->project);
         }
@@ -133,18 +143,37 @@ class ProjectGenerator
         // STRING BOXES
         $this->generateStringBoxes($this->project);
 
-        // SAVING...
-        //$this->autoSave(true);
+        // SAVING
         $this->save($this->project);
 
         return $this->project;
     }
 
     /**
-     * @param ProjectInterface $project
+     * @param array $defaults
+     * @return ProjectGenerator
      */
-    public function project(ProjectInterface $project)
+    public function defaults(array $defaults)
     {
+        if(null == $project = $this->project)
+            $project = $this->manager('project')->create();
+
+        $project->setDefaults($defaults);
+
+        return $this->project($project);
+    }
+
+    /**
+     * @param ProjectInterface|null $project
+     */
+    public function project(ProjectInterface $project = null)
+    {
+        if(!$project)
+            return $this->project;
+
+        if(empty($project->getDefaults()))
+            $this->exception('The project defaults is undefined');
+
         $this->project = $project;
 
         return $this;
@@ -193,13 +222,34 @@ class ProjectGenerator
 
     /**
      * @param ProjectInterface $project
+     * @return $this
+     */
+    public function generateModules(ProjectInterface $project)
+    {
+        $defaults = $project->getDefaults();
+        $module = $this->manager('module')->find($defaults['module']);
+        $position = 0;
+
+        $projectModule = new ProjectModule();
+        $projectModule
+            ->setModule($module)
+            ->setProject($this->project)
+            ->setPosition($position)
+        ;
+
+        return $this;
+    }
+
+    /**
+     * @param ProjectInterface $project
      * @param MakerInterface $maker
      * @return $this
      */
-    public function generateInverters(ProjectInterface $project, MakerInterface $maker)
+    public function generateInverters(ProjectInterface $project)
     {
-        if(!$maker->isMakerInverter())
-            $this->exception('Invalid maker');
+        $defaults = $project->getDefaults();
+
+        $maker = $this->manager('maker')->find($defaults['inverter_maker']);
 
         $this->resetInverters($project);
 
@@ -208,7 +258,7 @@ class ProjectGenerator
 
         $loader = new InverterLoader($manager);
 
-        $power = $project->getInfPower();
+        $power = (float) $defaults['power'];
         $inverters = $loader->load($power, $maker);
         $project->setInfPower($power);
 
@@ -302,7 +352,7 @@ class ProjectGenerator
         }
 
         $position = $projectModule->getPosition();
-        $limit = $position == 0 ? 18 : 11 ;
+        $limit = $position == 0 ? 20 : 12 ;
 
         $groups = [];
         if (0 != ($quantity % $limit) && ($quantity > $limit)) {
@@ -506,7 +556,7 @@ class ProjectGenerator
         $manager = $this->manager('string_box');
         $loader = new StringBoxLoader($manager);
         $calculator = new StringBoxCalculator($loader);
-        $calculator->calculate($project, true);
+        $calculator->calculate($project);
 
         $this->save($project);
 
@@ -774,7 +824,7 @@ class ProjectGenerator
         $this->resetInverters($project);
         $this->resetModules($project);
 
-        //$this->save($project, true);
+        $this->save($project, true);
     }
 
     /**
