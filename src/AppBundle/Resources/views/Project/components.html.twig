@@ -11,7 +11,15 @@
                 <div class="form-group">
                     <div class="col-md-4">
                         {{ form_label(form.power, 'Potência') }}
-                        {{ form_widget(form.power,{attr:{class:'form-control'}}) }}
+                        <div class="input-group">
+                            <label class="input-group-addon">
+                                <input type="radio" name="option"> Consumo
+                            </label>
+                            <label class="input-group-addon">
+                                <input type="radio" name=option> Potência
+                            </label>
+                            {{ form_widget(form.power,{attr:{class:'form-control'}}) }}
+                        </div>
                     </div>
                     <div class="col-md-4">
                         {{ form_label(form.module, 'Módulo') }}
@@ -38,6 +46,11 @@
                         {{ form_label(form.structure_maker, 'Fabricante da Estrutura') }}
                         {{ form_widget(form.structure_maker,{attr:{class:'form-control'}}) }}
                     </div>
+
+                    <div class="hide">
+                        {{ form_rest(form) }}
+                    </div>
+
                     <div class="col-md-3">
                         <label> &nbsp; </label>
                         <button type="submit" class="btn btn-success btn-block ladda-button" data-style="zoom-in">
