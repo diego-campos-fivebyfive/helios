@@ -129,6 +129,10 @@ services:
         class: AppBundle\Service\InverterCombinator\InverterCombinator
         arguments: ['@inverter_manager']
 
+    maker_detector:
+        class: AppBundle\Service\ProjectGenerator\MakerDetector
+        arguments: ['@inverter_manager']
+
     power_estimator:
         class: AppBundle\Service\PowerEstimator\PowerEstimator
         arguments: ['@nasa_provider']
