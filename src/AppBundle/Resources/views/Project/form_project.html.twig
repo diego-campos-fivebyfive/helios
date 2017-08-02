@@ -229,48 +229,30 @@
                                         <div class="form-group">
                                             <div class="col-md-3">
                                                 <label><br></label>
-                                                <a class="btn btn-info col-xs-12" data-toggle="modal" data-target="#modal_info">
+                                                <a class="btn btn-info col-xs-12" data-toggle="modal"
+                                                   data-target="#modal_info">
                                                     <i class="fa fa-info-circle"></i>
                                                     Informações Climáticas
                                                 </a>
                                             </div>
-                                            {#<div class="col-md-2">
-                                                {{ form_label(form.structureType, 'Fabricante da Estrutura') }}
-                                                {{ form_widget(form.structureType,{attr:{class:'form-control'}}) }}
-                                            </div>#}
-                                            <div class="col-md-4">
-                                                {{ form_label(form.roofType, 'Tipo de Telhado') }}
-                                                {{ form_widget(form.roofType,{attr:{class:'form-control'}}) }}
-                                            </div>
-                                            <div class="col-md-2">
-                                                {{ form_label(form.infConsumption, 'Consumo') }}
-                                                {{ form_widget(form.infConsumption,{attr:{class:'form-control'}}) }}
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label><br></label>
-                                                <button type="submit" data-style="zoom-in" class="btn btn-success btn-md pull-right col-xs-12 ladda-button">
-                                                    <i class="fa fa-save"></i>
-                                                    {{ project.token ? 'Atualizar' : 'Iniciar' }}
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <div class="col-md-6 col-xs-12 btn-group">
-                                                {#<a data-toggle="modal" data-target="#modal_estimate_power" id="btn-estimate-power" class="btn btn-default col-md-6 col-xs-12">
-                                                    <i class="fa fa-unsorted"></i> Estimar Potência
-                                                </a>#}
-                                            </div>
-                                            {#<div class="col-md-6 col-xs-12">
-                                                <div class="row">
-                                                    <label class="col-sm-1 col-xs-12 control-label">
-                                                        KIT
-                                                    </label>
-                                                    <div class="col-sm-11 col-xs-12">
-                                                        {{ form_widget(form.kit,{'attr':{'class':'form-control'}}) }}
-                                                    </div>
+                                            <div class="col-md-9 {{ project.id ? 'hide' }}" id="block_init">
+                                                <div class="col-md-4">
+                                                    {{ form_label(form.roofType, 'Tipo de Telhado') }}
+                                                    {{ form_widget(form.roofType,{attr:{class:'form-control'}}) }}
                                                 </div>
-                                            </div>#}
+                                                <div class="col-md-4">
+                                                    {{ form_label(form.infConsumption, 'Consumo') }}
+                                                    {{ form_widget(form.infConsumption,{attr:{class:'form-control'}}) }}
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label><br></label>
+                                                    <button type="submit" data-style="zoom-in"
+                                                            class="btn btn-success btn-md pull-right col-xs-12 ladda-button">
+                                                        <i class="fa fa-save"></i>
+                                                        {{ project.token ? 'Atualizar' : 'Iniciar' }}
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <div class="form-group hide">
@@ -533,7 +515,7 @@
                 return errors;
             },
             configureProjectForm: function(){
-                {% if true %}
+                {% if false %}
                 var form_project = $('#form_project');
                 button = form_project.find('button[type="submit"]');
                 button.ladda();
@@ -565,7 +547,7 @@
                 if(ProjectManager.project.id){
                     $('#block_components, #block_groups, #block_config, #block_results').show();
                 }else{
-                    $('#block_components, #block_groups, #block_config, #block_results').hide();
+                    $('#block_components, #block_groups, #block_config, #block_results, #block_init').hide();
                 }
             },
             loadComponents: function(){

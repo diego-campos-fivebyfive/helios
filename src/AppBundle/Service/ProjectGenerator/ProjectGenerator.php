@@ -63,62 +63,47 @@ class ProjectGenerator
     }
 
     /**
-     * @param $power
-     * @return $this
+     * @return array
      */
-    public function power($power)
+    public function loadDefaults(array $defaults = [])
     {
-        $this->project->setInfPower($power);
-
-        return $this;
-    }
-
-    public function consumption($consumption)
-    {
-        // TODO: CALL POWER ESTIMATOR HERE!
-        dump($consumption); die;
-    }
-
-    public function module(ModuleInterface $module, $position = 0)
-    {
-        /*$projectModule = new ProjectModule();
-        $projectModule
-            ->setModule($module)
-            ->setProject($this->project)
-            ->setPosition($position)
-        ;
-
-        return $this;*/
+        return array_merge([
+            'latitude' => null,
+            'longitude' => null,
+            'roof_type' => 'ROOF_ROMAN_AMERICAN',
+            'source' => 'consumption',
+            'power' => 0,
+            'consumption' => 0,
+            'module' => 32433,
+            'inverter_maker' => 60627,
+            'structure_maker' => 61211,
+            'string_box_maker' => 61209
+        ], $defaults);
     }
 
     /**
-     * @param MakerInterface $maker
-     * @return $this
-     */
-    public function maker(MakerInterface $maker)
-    {
-        $this->generateInverters($this->project);
-
-        return $this;
-    }
-
-    /**
+     * @param ProjectInterface|null $project
      * @return ProjectInterface|mixed|object
      */
-    public function generate()
+    public function generate(ProjectInterface $project = null)
     {
-        if(empty($this->project->getDefaults()))
-            $this->exception('The project defaults is empty');
+        $this->autoSave = false;
 
-        /*if(!$this->project->getInfPower()){
-            $this->exception('Undefined project power');
+        if($project) $this->project = $project;
+
+        if(!$this->project) $this->exception('The project is undefined');
+
+        if(empty($this->project->getDefaults()))  $this->exception('The project defaults is empty');
+
+        $defaults = $this->project->getDefaults();
+
+        // ESTIMATE POWER
+        if('consumption' == $defaults['source']){
+            $estimator = $this->container->get('power_estimator');
+            $power = $estimator->estimate($defaults['consumption'], $defaults['latitude'], $defaults['longitude']);
+            $defaults['power'] = $power;
+            $defaults['source'] = 'power';
         }
-
-        if(is_null($this->project->getRoofType()))
-            $this->exception('Roof Type is undefined');
-
-        if(!$this->project->getStructureType())
-            $this->exception('Structure Type is undefined');*/
 
         // MODULES
         $this->generateModules($this->project);
@@ -143,24 +128,16 @@ class ProjectGenerator
         // STRING BOXES
         $this->generateStringBoxes($this->project);
 
+        // SYNCHRONIZE DEFAULTS
+        $defaults['source'] = 'power';
+        $defaults['power'] = $this->project->getPower();
+        $this->project->setDefaults($defaults);
+
         // SAVING
+        $this->autoSave = true;
         $this->save($this->project);
 
         return $this->project;
-    }
-
-    /**
-     * @param array $defaults
-     * @return ProjectGenerator
-     */
-    public function defaults(array $defaults)
-    {
-        if(null == $project = $this->project)
-            $project = $this->manager('project')->create();
-
-        $project->setDefaults($defaults);
-
-        return $this->project($project);
     }
 
     /**
@@ -409,6 +386,14 @@ class ProjectGenerator
         $mppts = explode('.', $projectInverter->getOperation());
 
         foreach ($mppts as $item) {
+
+            $stringNumber = floor($projectInverter->getParallel() / count($mppts));
+            $moduleString = $projectInverter->getSerial();
+
+            if($stringNumber <= 0){
+                $stringNumber = 1;
+            }
+
             for ($i = 0; $i < $projectInverter->getQuantity(); $i++) {
 
                 $projectArea = $this->createArea(
@@ -416,8 +401,8 @@ class ProjectGenerator
                     $projectModule,
                     $inclination,
                     $orientation,
-                    $projectInverter->getParallel(),
-                    $projectInverter->getSerial()
+                    $stringNumber,
+                    $moduleString
                 );
 
                 $manager->save($projectArea);

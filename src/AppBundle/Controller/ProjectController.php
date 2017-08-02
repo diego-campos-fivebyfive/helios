@@ -111,9 +111,16 @@ class ProjectController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
 
-            $project->setStructureType(Project::STRUCTURE_SICES);
+            $generator = $this->getGenerator();
 
-            $this->configureProjectFromDefaults($project);
+            $defaults = $generator->loadDefaults([
+                'latitude' => $project->getLatitude(),
+                'longitude' => $project->getLongitude()
+            ]);
+
+            $project->setDefaults($defaults);
+
+            $generator->generate($project);
 
             return $this->json([
                 'project' => [
