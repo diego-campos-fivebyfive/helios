@@ -16,9 +16,16 @@ router.post('/api/v1/notifications', ((request, response) => {
 
   switch (callback) {
     case 'account_created':
-      action = user.create
-      requestCopy.body = account.create({ object: body })
-      break
+      account
+        .create({
+          object: body
+        })
+        .then(data => {
+          action = user.create
+          requestCopy.body = data
+          sendResponse(requestCopy, response, action)
+        })
+      return
 
     case 'account_approved':
       action = account.update
