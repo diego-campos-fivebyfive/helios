@@ -27,11 +27,9 @@ class OrderController extends FOSRestController
             'account' => $order->getAccount(),
         ];
 
-        $project = $order->getProjects()->map(function (ProjectInterface $project) {
+        $data['projects'] = $order->getProjects()->map(function (ProjectInterface $project) {
             return $project->getId();
         });
-
-        $data['projects'] = $project;
 
         $view = View::create($data);
 
