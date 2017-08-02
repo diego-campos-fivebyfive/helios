@@ -20,8 +20,10 @@ class ModuleController extends FOSRestController
 
         /** @var Module $module */
         $module = $moduleManager->create();
-        $module ->setCode($data['code'])
-                ->setModel($data['model']);
+        $module
+            ->setCode($data['code'])
+            ->setModel($data['model']);
+
         try {
             $moduleManager->save($module);
             $status = Response::HTTP_CREATED;

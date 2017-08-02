@@ -25,7 +25,8 @@ class MemorialController extends FOSRestController
 
             /** @var Memorial $memorial */
             $memorial = $memorialManager->create();
-            $memorial->setVersion($data['version'])
+            $memorial
+                ->setVersion($data['version'])
                 ->setStatus($data['status'])
                 ->setStartAt($startAt)
                 ->setEndAt($endAt);
@@ -39,7 +40,8 @@ class MemorialController extends FOSRestController
 
                     /** @var Range $range */
                     $range = $rangeManager->create();
-                    $range->setCode($ranges['code'])
+                    $range
+                        ->setCode($ranges['code'])
                         ->setMemorial($memorial)
                         ->setLevel($level)
                         ->setInitialPower($item['start'])

@@ -22,7 +22,8 @@ class AccountsController extends FOSRestController
         /** @var AccountInterface $accountManager */
         $accountManager = $this->get('account_manager');
         $account = $accountManager->create();
-        $account->setFirstName($data['firstname'])
+        $account
+            ->setFirstName($data['firstname'])
             ->setLastName($data['lastname'])
             ->setExtraDocument($data['extraDocument'])
             ->setDocument($data['document'])
@@ -118,19 +119,20 @@ class AccountsController extends FOSRestController
 
         /** @var AccountInterface $accountManager */
         $accountManager = $this->get('account_manager');
-        $account->setFirstName($data['firstname'])
-                ->setLastName($data['lastname'])
-                ->setExtraDocument($data['extraDocument'])
-                ->setDocument($data['document'])
-                ->setEmail($data['email'])
-                ->setState($data['state'])
-                ->setCity($data['city'])
-                ->setPhone($data['phone'])
-                ->setDistrict($data['district'])
-                ->setStreet($data['street'])
-                ->setNumber($data['number'])
-                ->setPostcode($data['postcode'])
-                ->setStatus($data['status']);
+        $account
+            ->setFirstName($data['firstname'])
+            ->setLastName($data['lastname'])
+            ->setExtraDocument($data['extraDocument'])
+            ->setDocument($data['document'])
+            ->setEmail($data['email'])
+            ->setState($data['state'])
+            ->setCity($data['city'])
+            ->setPhone($data['phone'])
+            ->setDistrict($data['district'])
+            ->setStreet($data['street'])
+            ->setNumber($data['number'])
+            ->setPostcode($data['postcode'])
+            ->setStatus($data['status']);
 
         try {
             $accountManager->save($account);

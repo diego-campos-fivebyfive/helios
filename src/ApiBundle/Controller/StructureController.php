@@ -21,8 +21,10 @@ class StructureController extends FOSRestController
 
         /** @var Structure $structure */
         $structure = $structureManager->create();
-        $structure  ->setCode($data['code'])
-                    ->getDescription($data['description']);
+        $structure
+            ->setCode($data['code'])
+            ->getDescription($data['description']);
+
         try {
             $structureManager->save($structure);
             $status = Response::HTTP_CREATED;
