@@ -23,18 +23,18 @@ class AccountsController extends FOSRestController
         $accountManager = $this->get('account_manager');
         $account = $accountManager->create();
         $account
+            ->setDocument($data['document'])
+            ->setExtraDocument($data['extraDocument'])
             ->setFirstName($data['firstname'])
             ->setLastName($data['lastname'])
-            ->setExtraDocument($data['extraDocument'])
-            ->setDocument($data['document'])
-            ->setEmail($data['email'])
+            ->setPostcode($data['postcode'])
             ->setState($data['state'])
             ->setCity($data['city'])
-            ->setPhone($data['phone'])
             ->setDistrict($data['district'])
             ->setStreet($data['street'])
             ->setNumber($data['number'])
-            ->setPostcode($data['postcode'])
+            ->setEmail($data['email'])
+            ->setPhone($data['phone'])
             ->setStatus($data['status'])
             ->setContext(Customer::CONTEXT_ACCOUNT);
         try {
@@ -54,8 +54,7 @@ class AccountsController extends FOSRestController
                 'street' => $account->getStreet(),
                 'number' => $account->getNumber(),
                 'postcode' => $account->getPostcode(),
-                'status' => $account->getStatus(),
-                'owner' => $account->getOwner()->getId()
+                'status' => $account->getStatus()
             ];
         }
         catch (\Exception $exception) {

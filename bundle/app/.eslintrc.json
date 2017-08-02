@@ -13,6 +13,7 @@
     "strict": ["error", "global"],
     "comma-dangle": ["error", "never"],
     "arrow-parens": ["error", "as-needed"],
-    "consistent-return": ["off", "always"]
+    "consistent-return": ["off", "always"],
+    "quote-props": ["error", "consistent-as-needed"]
   }
 }

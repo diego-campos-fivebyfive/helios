@@ -15,7 +15,7 @@ if [ -z ${1+x} ] || [ $1 == '--development' ]; then
   cd bundle/app
   yarn install
   echo "Bundle App starting on $CES_BUNDLE_HOST:$CES_BUNDLE_PORT"
-  node_modules/.bin/node-supervisor index.js &
+  node_modules/.bin/node-supervisor --harmony index.js &
 
   echo 'Done.'
 
@@ -40,6 +40,6 @@ elif [ $1 == '--isquikmock' ]; then
   cd bundle/test
   yarn install
   echo "Starting Bundle Test (Isquik Mock) on: $CES_ISQUIK_HOST:$CES_ISQUIK_PORT"
-  node_modules/.bin/node-supervisor index.js
+  node_modules/.bin/node-supervisor --harmony index.js
 
 fi
