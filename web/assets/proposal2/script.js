@@ -198,6 +198,47 @@ function loadDatas() {
                         }
                     }
                 }
+            } else if ($("#d" + idTag + "").data("type") === 'table') {
+                var tagTable = $("#d" + idTag + "");
+
+                var tableInEditor = document.getElementsByClassName("t" + idTag);
+
+                var rgb = [];
+                for (x = 0; x < $(tableInEditor).length; x++) {
+                    var tdOfTable = $(tableInEditor[x]).children().children().children()[4].style;
+                    var background = tdOfTable['background-color'];
+
+                    background = background.replace(/\D/g, ' ');
+                    rgb = background.split(" ");
+                    rgb = rgb.filter(function (ele) {
+                        return ele !== '';
+                    });
+                    for (x = 0; x < rgb.length; x++) {
+                        rgb[x] = parseInt(rgb[x]);
+                    }
+                }
+
+                $(tagTable).children().attr('class',"t" + idTag + "");
+
+                $(tableInEditor).children().children().children().attr('contenteditable',"false");
+                //coloca no editor
+                for (x = 0; x < $(tableInEditor).length; x++) {
+                    $(tableInEditor[x]).html($(tagTable).children().html());
+                }
+                //Coloca na tag
+                for (x = 0; x < $(contentOfTag).length; x++) {
+                    $(contentOfTag[x]).html($(tagTable).html());
+                }
+
+                if(rgb.length == 3){
+                    changeColorTableEquipServ(rgbToHex(rgb[0],rgb[1],rgb[2]));
+                    //timeout aqui
+                    $('#colorTableEquipServ').val(""+rgbToHex(rgb[0],rgb[1],rgb[2])+"");
+                }else{
+                    colorTableEquipServ = $('#colorTableEquipServ').val();
+                    changeColorTableEquipServ(colorTableEquipServ);
+                }
+
             } else {
                 var content = $("#d" + idTag + "").html();
                 /*coloca em todas as tags que encontrou na proposta*/
@@ -209,11 +250,6 @@ function loadDatas() {
     }
 }
 
-/*
-$('#saveProposal').click(function () {
-    saveProposal(this);
-});
-*/
 
 $('#pdfProposal').click(function () {
     var saveBtn = $('#saveProposal');
@@ -254,7 +290,28 @@ function saveProposal() {
 }
 
 $(document).ready(function(){
-    generateChart();
+
+
+    /*var cks = [];
+    var editors = $('.edit');
+    var cont = 0;
+    for (x = 0; x < editors.length; x++) {
+        if (!($(editors[x]).attr('id') == undefined)) {
+            cks[cont] = $(editors[x]).attr('id');
+            cont++;
+        }
+    }
+    var ins = CKEDITOR.instances;
+    console.log(Object.keys(ins).length);
+    var interval = window.setInterval(function () {
+        var ins = CKEDITOR.instances;
+        if (Object.keys(ins).length == cks.length) {*/
+            generateChart();
+           /* clearInterval(interval);
+        }
+        console.log("x");
+    }, 50);
+*/
     /*setTimeout(function () {
         saveProposal();
     },1000);*/
@@ -333,8 +390,8 @@ function rgbToHex(r, g, b) {
 }
 
 function changeColorTableEquipServ(color){
-    var tableThead = $('.tableEquipServ thead tr th' );
-    var tableTbadyTrTh = $('.tableEquipServ tbody tr th' );
+    var tableThead = $('.ttableEquipmentAndServices thead tr th' );
+    var tableTbadyTrTh = $('.ttableEquipmentAndServices tbody tr th' );
     // em % mais escuro
     var darkerPercent = 50;
     var darkcolor = darker(color,darkerPercent);

@@ -50,21 +50,21 @@ class StringBox implements StringBoxInterface
     /**
      * @var int
      *
-     * @ORM\Column(name="inputs", type="smallint")
+     * @ORM\Column(name="inputs", type="smallint", nullable=true)
      */
     private $inputs;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="outputs", type="smallint")
+     * @ORM\Column(name="outputs", type="smallint", nullable=true)
      */
     private $outputs;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="fuses", type="smallint")
+     * @ORM\Column(name="fuses", type="smallint", nullable=true)
      */
     private $fuses;
 
