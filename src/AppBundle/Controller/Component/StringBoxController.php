@@ -108,6 +108,16 @@ class StringBoxController extends AbstractController
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
+            if ($stringBox->getStatus()) {
+                $this->get('notifier')->notify([
+                    'callback' => 'product_validate',
+                    'body' => [
+                        'id' => $stringBox->getId(),
+                        'family' => 'stringbox'
+                    ]
+                ]);
+            }
+
             return $this->redirectToRoute('stringbox_edit', array('id' => $stringBox->getId()));
         }
 
