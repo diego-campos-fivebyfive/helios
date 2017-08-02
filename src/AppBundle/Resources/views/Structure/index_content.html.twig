@@ -14,6 +14,15 @@
 
 </style>
 
+{% set _route = app.request.attributes.get('_route') %}
+
+    {% set display = query.display %}
+    {% set is_grid = 'grid' == display %}
+    {% set is_strict = 1 == query.strict %}
+
+    {% set _route_params = app.request.attributes.get('_route_params')|merge(query|merge({'display':is_grid ? 'list' : 'grid' })) %}
+
+
 <div class="modal inmodal fade" id="e_modal_details" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -29,9 +38,92 @@
     </div>
 </div>
 
+{% macro structure_buttons(structure, extra) %}
+
+    {% set member = extra %}
+
+    <div class="btn-group btn-group-sm btn-group-justified">
+        <a data-url="{{ path('structure_preview', { 'id': structure.id }) }}"
+           data-toggle="modal"
+           data-target="#modal_details"
+           class="btn btn-default">
+            <i class="fa fa-eye"></i> {{ 'View'|trans }}
+        </a>
+
+        {% if member.isAdmin %}
+            <a href="{{ path('structure_update', { 'id': structure.id }) }}"
+               class="btn btn-success">
+                <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
+            </a>
+        {% endif %}
+
+    </div>
+
+{% endmacro %}
+
+    {% import _self as handler %}
+
+<div class="row">
+    {{ knp_pagination_filter(pagination, {'s.description, s.type, s.subtype, s.code':''}) }}
+
+    <div class="col-md-2">
+        <a href="{{ path(_route, _route_params) }}" class="btn btn-default btn-block">
+            <i class="fa fa-{{ is_grid ? 'list' : 'th' }}"></i> {{ is_grid ? 'Exibir Lista'|trans : 'Exibir Grade'|trans }}
+        </a>
+    </div>
+</div>
+
 <div class="row" id="real-content">
     <div class="col-md-12">
-        <div class="ibox-content">
+        {% if is_grid %}
+
+            {% for structure in structures %}
+
+                <div class="col-md-3" id="component{{ structure.id }}">
+                    <div class="ibox">
+                        <div class="ibox-content product-box">
+
+                            <div class="product-imitation" {#style="background-image: url({{ structure.image|componentFilePath }})"#}>
+                            </div>
+                            <div class="product-desc">
+
+                                <a data-url="{{ path('structure_preview', { 'id': structure.id }) }}"
+                                   data-toggle="modal"
+                                   data-target="#modal_details"
+                                   class="product-name">
+                                    {{ structure.description|slice(0,18) }} <br>
+                                    <small>
+                                        {{ structure.subtype|slice(0,25) }}
+                                    </small>
+                                </a>
+
+                                <div class="small m-t-xs">
+                                    Entradas:
+                                    {{ structure.type }}
+                                </div>
+
+                                <div class="small m-t-xs">
+                                    Saídas:
+                                    {{ structure.size }}
+                                </div>
+
+
+                                <div class="hr-line-dashed"></div>
+
+                                <div class="row">
+                                    {{ handler.structure_buttons(structure,member) }}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="ibox-content">
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
@@ -78,6 +170,9 @@
                 </table>
             </div>
         </div>
+
+        {% endif %}
+
     </div>
 </div>
 {% include view('structure.script_index') %}

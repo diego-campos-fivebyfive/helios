@@ -90,7 +90,30 @@
 
     {% set stringBoxes = pagination.items %}
 
-    {#{% import _self as handler %}#}
+    {% macro stringBox_buttons(stringBox, extra) %}
+
+        {% set member = extra %}
+
+       <div class="btn-group btn-group-sm btn-group-justified">
+           <a data-url="{{ path('stringbox_show', { 'id': stringBox.id }) }}"
+              data-toggle="modal"
+              data-target="#modal_details"
+              class="btn btn-default">
+               <i class="fa fa-eye"></i> {{ 'View'|trans }}
+           </a>
+
+            {% if member.isAdmin %}
+                <a href="{{ path('stringbox_edit', { 'id': stringBox.id }) }}"
+                   class="btn btn-success">
+                    <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
+                </a>
+            {% endif %}
+
+        </div>
+
+    {% endmacro %}
+
+    {% import _self as handler %}
 
     <div class="wrapper wrapper-content animated fadeInRight">
 
@@ -149,18 +172,8 @@
 
                                         <div class="hr-line-dashed"></div>
 
-                                         {#<div class="row">
-                                            {{ handler.component_buttons(component,{type:type, member:member, 'account':account, 'update':route_update, 'show':route_show, 'delete':route_delete}) }}
-                                        </div>#}
-                                        <div class="row">
-                                            <div class="btn-group btn-group-sm btn-group-justified">
-                                                <a data-url="{{ path('stringbox_show', { 'id': stringBox.id }) }}"
-                                                   data-toggle="modal"
-                                                   data-target="#modal_details"
-                                                   class="btn btn-default">
-                                                    <i class="fa fa-eye"></i> {{ 'View'|trans }}
-                                                </a>
-                                            </div>
+                                         <div class="row">
+                                            {{ handler.stringBox_buttons(stringBox,member) }}
                                         </div>
                                     </div>
 
