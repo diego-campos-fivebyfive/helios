@@ -5,6 +5,7 @@ const { app } = require('../config')
 const account = require('./account')
 const memorial = require('./memorial')
 const product = require('./product')
+const user = require('./user')
 
 const { router, sendResponse } = app
 
@@ -15,8 +16,8 @@ router.post('/api/v1/notifications', ((request, response) => {
 
   switch (callback) {
     case 'account_created':
-      action = account.create
-      requestCopy.body = body
+      action = user.create
+      requestCopy.body = account.create({ object: body })
       break
 
     case 'account_approved':
