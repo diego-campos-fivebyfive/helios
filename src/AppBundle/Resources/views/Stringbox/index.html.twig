@@ -48,8 +48,30 @@
 
 {% extends view('layout') %}
 
+{% block styles %}
+    <style>
+        .product-imitation {
+            background-repeat: no-repeat !important;
+            background-size: contain !important;
+            background-position: center !important;
+        }
+
+        #form_filtration > .form-group > .col-sm-2 {
+            display: none;
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
+
+    {% set _route = app.request.attributes.get('_route') %}
+
+    {% set display = query.display %}
+    {% set is_grid = 'grid' == display %}
+    {% set is_strict = 1 == query.strict %}
+
+    {% set _route_params = app.request.attributes.get('_route_params')|merge(query|merge({'display':is_grid ? 'list' : 'grid' })) %}
+
 
     <div class="modal inmodal fade" id="e_modal_details" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -68,23 +90,100 @@
 
     {% set stringBoxes = pagination.items %}
 
+    {% macro stringBox_buttons(stringBox, extra) %}
+
+        {% set member = extra %}
+
+       <div class="btn-group btn-group-sm btn-group-justified">
+           <a data-url="{{ path('stringbox_show', { 'id': stringBox.id }) }}"
+              data-toggle="modal"
+              data-target="#modal_details"
+              class="btn btn-default">
+               <i class="fa fa-eye"></i> {{ 'View'|trans }}
+           </a>
+
+            {% if member.isAdmin %}
+                <a href="{{ path('stringbox_edit', { 'id': stringBox.id }) }}"
+                   class="btn btn-success">
+                    <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
+                </a>
+            {% endif %}
+
+        </div>
+
+    {% endmacro %}
+
+    {% import _self as handler %}
+
     <div class="wrapper wrapper-content animated fadeInRight">
 
         <div class="row">
 {#
             {{ knp_pagination_filter(pagination, {'c.model, m.name':''}) }}#}
 
-            {#<div class="col-md-2">
+            <div class="col-md-2">
                 <a href="{{ path(_route, _route_params) }}" class="btn btn-default btn-block">
                     <i class="fa fa-{{ is_grid ? 'list' : 'th' }}"></i> {{ is_grid ? 'Exibir Lista'|trans : 'Exibir Grade'|trans }}
                 </a>
-            </div>#}
+            </div>
         </div>
 
         <div class="row" id="real-content">
 
             <div class="col-md-12">
 
+                {% if is_grid %}
+
+                    {% for stringBox in stringBoxes %}
+
+                        <div class="col-md-3" id="component{{ stringBox.id }}">
+                            <div class="ibox">
+                                <div class="ibox-content product-box">
+
+                                    <div class="product-imitation" {#style="background-image: url({{ stringBox.image|componentFilePath }})"#}>
+                                    </div>
+                                    <div class="product-desc">
+
+                                        <a data-url="{{ path('stringbox_show', { 'id': stringBox.id }) }}"
+                                           data-toggle="modal"
+                                           data-target="#modal_details"
+                                           class="product-name">
+                                            {{ stringBox.description|slice(0,18) }} <br>
+                                            <small>
+                                                {{ stringBox.code|slice(0,25) }}
+                                            </small>
+                                        </a>
+
+                                        <div class="small m-t-xs">
+                                            Entradas:
+                                            {{ stringBox.inputs }}
+                                        </div>
+
+                                        <div class="small m-t-xs">
+                                            Saídas:
+                                            {{ stringBox.outputs }}
+                                        </div>
+
+                                        <div class="small m-t-xs">
+                                            Fusíveis:
+                                            {{ stringBox.fuses }}
+                                        </div>
+
+
+                                        <div class="hr-line-dashed"></div>
+
+                                         <div class="row">
+                                            {{ handler.stringBox_buttons(stringBox,member) }}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
 
                     <div class="ibox-content">
 
@@ -140,8 +239,7 @@
 
                     </div>
 
-
-
+                {% endif %}
             </div>
 
         </div>
@@ -154,8 +252,6 @@
 
     </div>
 
-    {#<div class="hide" id="proto_buttons">
-    </div>#}
 
 {% endblock %}
 
@@ -164,13 +260,6 @@
     <script>
 
         $(function () {
-
-           /* var form_filtration = $('#form_filtration');
-            if (form_filtration.length) {
-                form_filtration
-                    .append('<input type="hidden" name="display" value="{#{{ display }}#}">')
-                    .append('<input type="hidden" name="strict" value="{#{{ is_strict ? '1' : '0' }}#}">');
-            }*/
 
             var detail_stringbox = $('#detail_stringbox');
             var detail_spinner = detail_stringbox.html();

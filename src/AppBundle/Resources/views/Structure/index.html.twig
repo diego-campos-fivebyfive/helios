@@ -4,9 +4,7 @@
     {% set structures = pagination.items %}
 
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        {{ knp_pagination_filter(pagination, {'s.description, s.type, s.subtype, s.code':''}) }}
-    </div>
+
         {% include view('structure.script_index') %}
         {% include view('structure.index_content') %}
 </div>
