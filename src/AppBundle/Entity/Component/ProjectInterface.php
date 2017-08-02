@@ -702,7 +702,7 @@ interface ProjectInterface
 
     /**
      * @param OrderInterface $order
-     * @return OrderInterface
+     * @return ProjectInterface
      */
     public function setOrder($order);
 
