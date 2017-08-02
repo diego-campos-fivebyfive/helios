@@ -1,3 +1,9 @@
+<style>
+    label#source_label{
+        padding-left: 205px;
+    }
+</style>
+
 <table class="table">
     <thead>
     <tr>
@@ -10,15 +16,20 @@
             <div class="row">
                 <div class="form-group">
                     <div class="col-md-4">
-                        {{ form_label(form.power, 'Potência') }}
+                        {{ form_label(form.power, 'Potência',{label_attr:{id:'source_label'}}) }}
                         <div class="input-group">
                             <label class="input-group-addon">
-                                <input type="radio" name="option"> Consumo
+                                <input type="radio" name="source_option" class="source_option" value="consumption" {{ 'consumption' == project.defaults.source ? 'checked="checked"' }}>
+                                Consumo
                             </label>
                             <label class="input-group-addon">
-                                <input type="radio" name=option> Potência
+                                <input type="radio" name=source_option class="source_option" value="power" {{ 'power' == project.defaults.source ? 'checked="checked"' }}>
+                                Potência
                             </label>
+
                             {{ form_widget(form.power,{attr:{class:'form-control'}}) }}
+                            {{ form_widget(form.consumption,{attr:{class:'form-control'}}) }}
+
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -130,6 +141,23 @@
 <script>
     var form_config = $('#form_configure');
     var button_config = form_config.find('button');
+    var source_option = $('input[name="source_option"]');
+    var source_label = $('#source_label');
+    var generator_source = $('#generator_source');
+    var generator_power = $('#generator_power');
+    var generator_consumption = $('#generator_consumption');
+
+    var sources = {
+        power: {
+            label: 'Informe a Potência',
+            current: {{ project.defaults.power }}
+        },
+        consumption: {
+            label: 'Informe o Consumo',
+            current: {{ project.defaults.consumption }}
+        }
+    };
+
     button_config.ladda();
     form_config.on('submit', function(event){
         event.preventDefault();
@@ -139,5 +167,32 @@
             ProjectManager.project = xhr.responseJSON.project;
             ProjectManager.onSaveProject();
         });
-    })
+    });
+
+    function get_source_option(){
+        return $('input.source_option:checked').val();
+    }
+
+    function check_source_option() {
+        var option = get_source_option();
+        generator_source.find('option').removeAttr('selected');
+        generator_source.find('option[value="'+option+'"]').attr('selected', 'selected');
+        source_label.html(sources[option].label);
+
+        if('power' == option){
+            generator_power.show();
+            generator_consumption.hide();
+        }else{
+            generator_consumption.show();
+            generator_power.hide();
+        }
+    }check_source_option();
+
+    source_option.on('change', function(){
+        check_source_option();
+    });
+
+    Numbers.mask(generator_power);
+    Numbers.mask(generator_consumption);
+
 </script>

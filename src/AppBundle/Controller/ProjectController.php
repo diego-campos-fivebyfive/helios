@@ -114,6 +114,7 @@ class ProjectController extends AbstractController
             $generator = $this->getGenerator();
 
             $defaults = $generator->loadDefaults([
+                'consumption' => $project->getInfConsumption(),
                 'latitude' => $project->getLatitude(),
                 'longitude' => $project->getLongitude()
             ]);

@@ -102,7 +102,7 @@ class ProjectGenerator
             $estimator = $this->container->get('power_estimator');
             $power = $estimator->estimate($defaults['consumption'], $defaults['latitude'], $defaults['longitude']);
             $defaults['power'] = $power;
-            $defaults['source'] = 'power';
+            $this->project->setDefaults($defaults);
         }
 
         // MODULES
@@ -129,7 +129,6 @@ class ProjectGenerator
         $this->generateStringBoxes($this->project);
 
         // SYNCHRONIZE DEFAULTS
-        $defaults['source'] = 'power';
         $defaults['power'] = $this->project->getPower();
         $this->project->setDefaults($defaults);
 
