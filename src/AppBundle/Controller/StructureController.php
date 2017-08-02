@@ -49,7 +49,10 @@ class StructureController extends AbstractController
 
         return $this->render('structure.index', array(
             'pagination' => $pagination,
-            'display' => $request->get('display', 'grid')
+            'query' => array_merge([
+                'display' => 'grid',
+                'strict' => 0
+            ], $request->query->all())
         ));
     }
 

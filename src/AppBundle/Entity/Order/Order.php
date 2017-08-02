@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Order;
 
+use AppBundle\Entity\Component\ProjectInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -97,6 +98,34 @@ class Order implements OrderInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function addProject(ProjectInterface $project)
+    {
+        if (!$this->projects->contains($project)) {
+            $this->projects->add($project);
+
+            if (!$project->getOrder())
+                $project->setOrder($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeProject(ProjectInterface $project)
+    {
+        if ($this->projects->contains($project)) {
+            $this->projects->removeElement($project);
+        }
+
+        return $this;
+    }
+
+
+    /**
      * @return ArrayCollection
      */
     public function getProjects()
@@ -104,12 +133,5 @@ class Order implements OrderInterface
         return $this->projects;
     }
 
-    /**
-     * @param ArrayCollection $projects
-     */
-    public function setProjects($projects)
-    {
-        $this->projects = $projects;
-    }
 }
 
