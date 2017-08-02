@@ -277,7 +277,7 @@ class ProjectGenerator
 
         $latitude = $project->getLatitude();
         $longitude = $project->getLongitude();
-        $inclination = (int) abs($latitude);
+        $inclination = abs($latitude) < 10 ? 10 : (int) abs($latitude);
         $orientation = $longitude < 0 ? 0 : 180;
         $projectModule = $project->getProjectModules()->first();
         $projectInverters = $project->getProjectInverters();

@@ -419,7 +419,7 @@ class Project implements ProjectInterface
      */
     public function setInfConsumption($infConsumption)
     {
-        $this->infConsumption = $infConsumption;
+        $this->infConsumption = (float) $infConsumption;
 
         return $this;
     }
