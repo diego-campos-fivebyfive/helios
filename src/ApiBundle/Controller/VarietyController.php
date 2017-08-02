@@ -19,7 +19,8 @@ class VarietyController extends FOSRestController
 
         /** @var StringBox $stringbox */
         $variety = $varietyManager->create();
-        $variety  ->setCode($data['code'])
+        $variety
+            ->setCode($data['code'])
             ->setDescription($data['description']);
         try {
             $varietyManager->save($variety);
@@ -29,7 +30,8 @@ class VarietyController extends FOSRestController
                 'code' => $variety->getCode(),
                 'description' => $variety->getDescription()
             ];
-        } catch (\Exception $exception) {
+        }
+        catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
             $data = 'Can not create stringbox';
         }
