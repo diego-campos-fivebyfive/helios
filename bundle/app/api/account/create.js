@@ -3,39 +3,36 @@
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
 
-const sendUser = (account, id) => Sices.sendUser({
-  email: account.email,
-  phone: account.phone,
-  contact: account.contact,
-  account_id: id
-})
-  .then(data => (
-    (data) ? 201 : 422
-  ))
+const sendAccount = ({ Dados }) =>
+  Sices
+    .sendAccount({
+      document: Dados.Cnpj,
+      extraDocument: Dados.InscricaoEstadual,
+      firstname: Dados.RazaoSocial,
+      lastname: Dados.NomeFantasia,
+      postcode: Dados.Cep,
+      state: Dados.UF,
+      city: Dados.Cidade,
+      district: Dados.Bairro,
+      street: Dados.Logradouro,
+      number: Dados.Numero,
+      email: Dados.Email,
+      phone: Dados.Telefone,
+      status: 1
+    })
+    .then(data => ({
+      id: Dados.Administrador,
+      email: Dados.Email,
+      phone: Dados.Telefone,
+      account_id: data.id
+    }))
 
-const sendAccount = account => Sices.sendAccount({
-  name: account.name,
-  firstname: account.firstname,
-  lastname: account.lastname,
-  email: account.email,
-  phone: account.phone,
-  document: account.document,
-  extraDocument: account.extraDocument,
-  state: account.state,
-  city: account.city,
-  contact: account.contact,
-  district: account.district,
-  street: account.street,
-  number: account.number,
-  postcode: account.postcode,
-  status: account.status
-})
-  .then(id => (
-    (id) ? sendUser(account, id) : 422
-  ))
+const createAccount = ({ object }) =>
+  Isquik
+    .getAccount(object.id)
+    .then(sendAccount)
 
-const create = ({ object }) => Isquik.getAccount(object.id).then(sendAccount)
 
 module.exports = {
-  create
+  create: createAccount
 }
