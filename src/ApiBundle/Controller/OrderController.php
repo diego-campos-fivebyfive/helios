@@ -1,15 +1,41 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kolinalabs
- * Date: 02/08/17
- * Time: 10:36
+/*
+ * This file is part of the SicesSolar package.
+ *
+ * (c) SicesSolar <http://sicesbrasil.com.br/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace ApiBundle\Controller;
 
+use AppBundle\Entity\Component\ProjectInterface;
+use AppBundle\Entity\Order\Order;
+use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\View\View;
 
-class OrderController
+class OrderController extends FOSRestController
 {
+    public function getOrderAction(Order $id)
+    {
+        $order = $id;
+
+        $data = [
+            'id' => $order->getId(),
+            'status' => $order->getStatus(),
+            'account' => $order->getAccount(),
+        ];
+
+        $project = $order->getProjects()->map(function (ProjectInterface $project) {
+            return $project->getId();
+        });
+
+        $data['projects'] = $project;
+
+        $view = View::create($data);
+
+        return $this->handleView($view);
+    }
 
 }
