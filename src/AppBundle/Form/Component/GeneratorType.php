@@ -32,6 +32,19 @@ class GeneratorType extends AbstractType
     {
         $builder
             ->add('power')
+            ->add('consumption')
+            ->add('latitude')
+            ->add('longitude')
+            ->add('source', ChoiceType::class, [
+                'expanded' => true,
+                'choices' => [
+                    'power' => 'Power',
+                    'consumption' => 'Consumption'
+                ]
+            ])
+            ->add('roof_type', ChoiceType::class, [
+                'choices' => Project::getRootTypes()
+            ])
             ->add('module', ChoiceType::class, [
                 'choices' => $this->loadModules()
             ])
@@ -40,9 +53,6 @@ class GeneratorType extends AbstractType
             ])
             ->add('structure_maker', ChoiceType::class, [
                 'choices' => $this->loadStructureMakers()
-            ])
-            ->add('roof_type', ChoiceType::class, [
-                'choices' => Project::getRootTypes()
             ])
             ->add('string_box_maker', ChoiceType::class, [
                 'choices' => $this->getStringBoxMakers()

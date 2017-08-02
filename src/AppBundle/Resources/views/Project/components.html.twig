@@ -46,6 +46,11 @@
                         {{ form_label(form.structure_maker, 'Fabricante da Estrutura') }}
                         {{ form_widget(form.structure_maker,{attr:{class:'form-control'}}) }}
                     </div>
+
+                    <div class="hide">
+                        {{ form_rest(form) }}
+                    </div>
+
                     <div class="col-md-3">
                         <label> &nbsp; </label>
                         <button type="submit" class="btn btn-success btn-block ladda-button" data-style="zoom-in">

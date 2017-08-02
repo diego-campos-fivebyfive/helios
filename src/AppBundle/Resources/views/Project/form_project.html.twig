@@ -235,7 +235,7 @@
                                                     Informações Climáticas
                                                 </a>
                                             </div>
-                                            <div class="col-md-9 {{ project.id ? 'hide' }}" id="block_init">
+                                            <div class="col-md-9" id="block_init">
                                                 <div class="col-md-4">
                                                     {{ form_label(form.roofType, 'Tipo de Telhado') }}
                                                     {{ form_widget(form.roofType,{attr:{class:'form-control'}}) }}
@@ -515,7 +515,7 @@
                 return errors;
             },
             configureProjectForm: function(){
-                {% if false %}
+                {% if true %}
                 var form_project = $('#form_project');
                 button = form_project.find('button[type="submit"]');
                 button.ladda();
@@ -546,8 +546,9 @@
             configureBlocks: function(){
                 if(ProjectManager.project.id){
                     $('#block_components, #block_groups, #block_config, #block_results').show();
+                    $('#block_init').hide();
                 }else{
-                    $('#block_components, #block_groups, #block_config, #block_results, #block_init').hide();
+                    $('#block_components, #block_groups, #block_config, #block_results').hide();
                 }
             },
             loadComponents: function(){

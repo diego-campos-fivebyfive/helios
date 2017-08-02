@@ -210,16 +210,11 @@ class ProjectController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
 
+            $project->setDefaults($form->getData());
+
             $generator = $this->getGenerator();
-
-            $defaults = $form->getData();
-
             $generator->reset($project);
-            $generator->project($project);
-            $generator->defaults($defaults);
-            $generator->generate();
-
-            $generator->save($project, true);
+            $generator->generate($project);
 
             return $this->json([
                 'project' => [
