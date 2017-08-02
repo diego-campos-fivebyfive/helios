@@ -36,7 +36,6 @@ class GeneratorType extends AbstractType
             ->add('latitude')
             ->add('longitude')
             ->add('source', ChoiceType::class, [
-                'expanded' => true,
                 'choices' => [
                     'power' => 'Power',
                     'consumption' => 'Consumption'
