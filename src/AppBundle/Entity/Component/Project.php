@@ -1622,6 +1622,8 @@ class Project implements ProjectInterface
     public function setOrder($order)
     {
         $this->order = $order;
+        $order->addProject($this);
+
         return $this;
     }
 
