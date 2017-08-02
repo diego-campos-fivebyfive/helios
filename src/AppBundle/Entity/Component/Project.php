@@ -123,7 +123,7 @@ class Project implements ProjectInterface
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=10)
+     * @ORM\Column(type="string", length=10, nullable=true)
      */
     private $structureType;
 

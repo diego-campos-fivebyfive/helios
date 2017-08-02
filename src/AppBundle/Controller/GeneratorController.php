@@ -63,48 +63,25 @@ class GeneratorController extends AbstractController
     }
 
     /**
-     * @Route("/inverter-combiner", name="inverter_combiner")
+     * @Route("/project-test", name="project_test_generator")
      */
     public function testInverterCombinerAction()
     {
-        // MAKER DETECTOR
-        $power = 1500;
+        /** @var ProjectInterface $project */
+        $project = $this->manager('project')->create();
 
-        // VIA GENERATOR
+        /** @var \AppBundle\Service\ProjectGenerator\ProjectGenerator $generator */
         $generator = $this->get('project_generator');
-        $makers = $generator->detectMakers($power);
 
-        /** @var \AppBundle\Manager\InverterManager $manager */
-        $manager = $this->manager('inverter');
+        $defaults = $generator->loadDefaults([
+            'latitude' => -25.384,
+            'longitude' => -51.455,
+            'consumption' => 500
+        ]);
 
-        $makerDetector = new MakerDetector($manager);
-
-        $makers = $makerDetector->fromPower($power);
-
-        /// INVERTER LOADER
-        $sungrow = 61208;
-        $canadian = 60694;
-        $fronius = 60630;
-        $abb = 60627;
-
-        $power = 0.5;
-        $maker = $canadian;
-        $min = $power * 0.75;
-
-        $manager = $this->manager('inverter');
-
-        $loader = new InverterLoader($manager);
-
-        $inverters = $loader->load($power, $maker);
-
-        // INVERTER COMBINER
-        /*$inverters = [
-            $manager->find(6435),
-            $manager->find(6434)
-        ];*/
-        //dump($inverters); die;
-
-        InverterCombiner::combine($inverters, $min);
+        $project->setDefaults($defaults);
+        $generator->autoSave(false)->project($project)->generate();
+        dump($project); die;
     }
 
     /**

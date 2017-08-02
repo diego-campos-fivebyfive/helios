@@ -99,6 +99,9 @@ class StructureCalculator
             $items[$field] = $this->findStructure($criteria);
         }
 
+        // TODO: Change this entity field to string, accepting too long data (string)
+        $project->setStructureType($profiles[0]->getMaker()->getId());
+
         /** @var \AppBundle\Entity\Component\ProjectModuleInterface $projectModule */
         $projectModule = $project->getProjectModules()->first();
         $countModules = 0;
