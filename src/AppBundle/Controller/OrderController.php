@@ -20,12 +20,12 @@ class OrderController extends AbstractController
         /** @var Customer $accounts */
         $accounts = $this->manager('customer')->find(19);
         $manager = $this->manager('order');
-
         $projects = [317,318];
 
         /** @var Order $order */
         $order = $manager->create();
-        $order->setStatus(0)
+        $order
+            ->setStatus(0)
             ->setAccount($accounts);
 
         foreach ($projects as $id) {
@@ -40,7 +40,5 @@ class OrderController extends AbstractController
             'callback' => 'order_created',
             'body' => ['id' => $order->getId()]
         ]);
-
-        //dump($order);die;
     }
 }
