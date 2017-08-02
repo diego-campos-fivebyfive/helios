@@ -102,11 +102,10 @@ class Order implements OrderInterface
      */
     public function addProject(ProjectInterface $project)
     {
-        if(!$this->projects->contains($project)){
-
+        if (!$this->projects->contains($project)) {
             $this->projects->add($project);
 
-            if(!$project->getOrder())
+            if (!$project->getOrder())
                 $project->setOrder($this);
         }
 
@@ -118,7 +117,7 @@ class Order implements OrderInterface
      */
     public function removeProject(ProjectInterface $project)
     {
-        if($this->projects->contains($project)){
+        if ($this->projects->contains($project)) {
             $this->projects->removeElement($project);
         }
 

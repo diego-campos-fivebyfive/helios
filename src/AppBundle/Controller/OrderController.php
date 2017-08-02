@@ -40,5 +40,6 @@ class OrderController extends AbstractController
             'callback' => 'order_created',
             'body' => ['id' => $order->getId()]
         ]);
+
     }
 }
