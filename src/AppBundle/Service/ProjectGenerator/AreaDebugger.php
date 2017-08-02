@@ -234,9 +234,6 @@ class AreaDebugger
         }
 
         $this->result['power'] = [
-            /*'max_dc_operation' => $max_dc_power_op,
-            'warning_tolerance' => $pmax_tolerance_op_1,
-            'danger_tolerance' => $pmax_tolerance_op_2,*/
             'max_dc_operation' => $pmax_tolerance_op_1,
             'warning_tolerance' => $pmax_tolerance_op_2,
             'danger_tolerance' => $danger_limit,
