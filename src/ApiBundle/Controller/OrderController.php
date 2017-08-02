@@ -10,13 +10,45 @@
 
 namespace ApiBundle\Controller;
 
-use AppBundle\Entity\Component\ProjectInterface;
-use AppBundle\Entity\Order\Order;
-use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
+use AppBundle\Entity\Order\Order;
+use AppBundle\Entity\Order\OrderInterface;
+use AppBundle\Entity\AccountInterface;
+use AppBundle\Entity\Component\Project;
+use AppBundle\Entity\Component\ProjectInterface;
+use FOS\RestBundle\Controller\FOSRestController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class OrderController extends FOSRestController
 {
+    public function postOrdersAction(Request $request)
+    {
+        //$data = json_decode($request->getContent(), true);
+
+        ///** @var AccountInterface $accountManager */
+        //$account = $this->get('account_manager')->find($data['account']);
+
+        ///** @var ProjectInterface $projects */
+        //$projects = $this->get('project_manager')->find($data['projects']);
+
+        //$orderManager = $this->get('order_manager');
+        ///** @var OrderInterface $orderManager */
+        //$order = $orderManager->create();
+        //$order
+            //->setStatus(1)
+            //->setAccount($account);
+
+        //foreach ($projects as $id) {
+            ///** @var Project $project */
+            //$project = $this->manager('project')->find($id);
+            //$order->addProject($project);
+        //}
+        //$orderManager->save($order);
+
+    }
+
     public function getOrderAction(Order $id)
     {
         $order = $id;
