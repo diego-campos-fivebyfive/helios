@@ -28,21 +28,23 @@ class UsersController extends FOSRestController
         /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
         $userManager = $this->get('fos_user.user_manager');
         $user = $userManager->createUser();
-        $user->setEmail($data['email'])
-             ->setUsername($data['email'])
-             ->setPlainPassword(uniqid())
-             ->addRole(UserInterface::ROLE_OWNER_MASTER);
+        $user
+            ->setEmail($data['email'])
+            ->setUsername($data['email'])
+            ->setPlainPassword(uniqid())
+            ->addRole(UserInterface::ROLE_OWNER_MASTER);
         $userManager->updateUser($user);
 
         /** @var AccountInterface $memberManager */
         $memberManager = $this->get('account_manager');
         $member = $memberManager->create();
-        $member ->setAccount($account)
-                ->setFirstname($data['contact'])
-                ->setPhone($data['phone'])
-                ->setEmail($data['email'])
-                ->setContext(Customer::CONTEXT_MEMBER)
-                ->setUser($user);
+        $member
+            ->setAccount($account)
+            ->setFirstname($data['contact'])
+            ->setPhone($data['phone'])
+            ->setEmail($data['email'])
+            ->setContext(Customer::CONTEXT_MEMBER)
+            ->setUser($user);
         try {
             $memberManager->save($member);
             $status = Response::HTTP_CREATED;
@@ -106,11 +108,11 @@ class UsersController extends FOSRestController
 
         /** @var AccountInterface $memberManager */
         $memberManager = $this->get('account_manager');
-        $member ->setAccount($account)
+        $member
+            ->setAccount($account)
             ->setFirstname($data['contact'])
             ->setPhone($data['phone'])
             ->setEmail($data['email']);
-
         try {
             $memberManager->save($member);
             $status = Response::HTTP_ACCEPTED;
@@ -130,6 +132,5 @@ class UsersController extends FOSRestController
         $view = View::create($data)->setStatusCode($status);
 
         return $this->handleView($view);
-
     }
  }

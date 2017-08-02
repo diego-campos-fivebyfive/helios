@@ -21,8 +21,10 @@ class InverterController extends FOSRestController
 
         /** @var Inverter $inverter */
         $inverter = $inverterManager->create();
-        $inverter   ->setCode($data['code'])
-                    ->setModel($data['model']);
+        $inverter
+            ->setCode($data['code'])
+            ->setModel($data['model']);
+
         try{
             $inverterManager->save($inverter);
             $status = Response::HTTP_CREATED;

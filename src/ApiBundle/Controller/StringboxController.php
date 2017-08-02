@@ -19,8 +19,10 @@ class StringboxController extends FOSRestController
 
         /** @var StringBox $stringbox */
         $stringbox = $stringboxManager->create();
-        $stringbox  ->setCode($data['code'])
-                    ->setDescription($data['description']);
+        $stringbox
+            ->setCode($data['code'])
+            ->setDescription($data['description']);
+
         try {
             $stringboxManager->save($stringbox);
             $status = Response::HTTP_CREATED;
@@ -29,7 +31,8 @@ class StringboxController extends FOSRestController
                 'code' => $stringbox->getCode(),
                 'description' => $stringbox->getDescription()
             ];
-        } catch (\Exception $exception) {
+        }
+        catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
             $data = 'Can not create stringbox';
         }
