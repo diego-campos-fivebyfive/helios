@@ -54,8 +54,7 @@ class AccountsController extends FOSRestController
                 'street' => $account->getStreet(),
                 'number' => $account->getNumber(),
                 'postcode' => $account->getPostcode(),
-                'status' => $account->getStatus(),
-                'owner' => $account->getOwner()->getId()
+                'status' => $account->getStatus()
             ];
         }
         catch (\Exception $exception) {
