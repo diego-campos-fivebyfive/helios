@@ -53,8 +53,8 @@ class MakerDetector
      */
     private function sanitize(array $inverters)
     {
-        return array_map(function(InverterInterface $inverter){
+        return array_values(array_filter(array_map(function(InverterInterface $inverter){
             return $inverter->getMaker();
-        }, $inverters);
+        }, $inverters)));
     }
 }

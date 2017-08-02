@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Category;
+use AppBundle\Entity\Component\MakerInterface;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Component\ProjectArea;
 use AppBundle\Entity\Component\ProjectInterface;
@@ -90,6 +91,35 @@ class ProjectController extends AbstractController
             'pagination' => $pagination,
             'customer' => $customer,
             'current_member' => $filterMember
+        ]);
+    }
+
+    /**
+     * @Route("/makers", name="detect_makers")
+     */
+    public function makersAction(Request $request)
+    {
+        $source = $request->request->get('source_option');
+        $data = $request->request->get('generator');
+        $power = (float) $data['power'];
+
+        if('consumption' == $source){
+
+            $consumption = (float) $data['consumption'];
+            $latitude = (float) $data['latitude'];
+            $longitude = (float) $data['longitude'];
+
+            $power = $this->get('power_estimator')->estimate($consumption, $latitude, $longitude);
+        }
+
+        $makers = $this->get('maker_detector')->fromPower($power);
+
+        $ids = array_map(function(MakerInterface $maker){
+            return $maker->getId();
+        }, $makers);
+
+        return $this->json([
+            'makers' => $ids
         ]);
     }
 

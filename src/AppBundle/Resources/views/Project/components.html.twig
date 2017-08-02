@@ -146,6 +146,7 @@
     var generator_source = $('#generator_source');
     var generator_power = $('#generator_power');
     var generator_consumption = $('#generator_consumption');
+    var generate_makers = $('#generator_inverter_maker');
 
     var sources = {
         power: {
@@ -194,5 +195,49 @@
 
     Numbers.mask(generator_power);
     Numbers.mask(generator_consumption);
+
+    var last_power = sources.power.current;
+    var last_consumption = sources.consumption.current;
+    function detect_makers(){
+        Request.send({
+            url: '{{ path('detect_makers') }}',
+            method: 'post',
+            data: form_config.serialize(),
+            callback: function(xhr) {
+                var response = xhr.responseJSON;
+                var makers = response.makers;
+                if (!makers.length) {
+                    generator_power.val(last_power);
+                    generator_consumption.val(last_consumption);
+                    swal('Ooops', 'Não há inversores compatíveis!', 'error');
+                } else {
+                    generate_makers.show();
+                    $.each(generate_makers.find('option'), function (i, option) {
+                        var id = parseInt($(option).val());
+                        if (makers.indexOf(id) >= 0) {
+                            $(option).show();
+                        } else {
+                            $(option).hide();
+                        }
+                    });
+                    if (1 == makers.length) {
+                        generate_makers.find('option[value="' + makers[0] + '"]').attr('selected', 'selected');
+                    }
+                }
+            }
+        });
+    }
+
+    generator_power.on('change', function(){
+        detect_makers();
+    }).on('focus', function(){
+        last_power = $(this).val();
+    });
+
+    generator_consumption.on('change', function(){
+        detect_makers();
+    }).on('focus', function(){
+        last_consumption = $(this).val();
+    });
 
 </script>
