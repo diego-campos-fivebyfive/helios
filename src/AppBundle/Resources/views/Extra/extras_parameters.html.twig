@@ -3,9 +3,9 @@
     <thead>
         <tr>
             <td>Descrição</td>
-            <td>Tipo do Extra</td>
-            <td>Preço por</td>
-            <td>Valor do Extra</td>
+            <td>Tipo</td>
+            <td>Preço</td>
+            <td>Valor</td>
             <td>Ações</td>
         </tr>
     </thead>
@@ -14,23 +14,31 @@
 
         <tr>
             <td> {{ extra.description }} </td>
-            <td>{% if extra.type == 0 %}
+            <td>
+                {% if extra.type == 0 %}
                     Produto
                 {% else %}
                     Serviço
                 {% endif %}</td>
-            <td> {% if extra.pricingBy == 0 %}
+            <td>
+                {% if extra.pricingBy == 0 %}
                     Fixo
                 {% else %}
                     Potência
                 {% endif %} </td>
-            <td> R$ <span class="costPrice">{{ extra.costPrice }}</span> </td>
+            <td>
+                R$ <span class="costPrice">{{ extra.costPrice }}</span>
+                {% if extra.pricingBy == 1 %}
+                    /kWp
+                {% endif %}
+            </td>
             <td class="col-md-1">
                 <div class="btn-group btn-group-justified">
                     <a data-extra='{ "id":{{ extra.id }},"description":"{{ extra.description }}","type":{{ extra.type }},"pricingBy":{{ extra.pricingBy }},
                     "costPrice":"{{ extra.costPrice }}" }'
                        data-update="{{ path('extras_update',{id:extra.id}) }}"
-                       class="btn btn-success btn-sm">
+                       class="btn btn-success btn-sm"
+                    onclick="edit({{ extra.pricingBy }})">
                         <i class="fa fa-pencil"></i>
                     </a>
                     <a data-remove="{{ path('extras_delete',{id:extra.id}) }}" class="btn btn-danger btn-sm">
