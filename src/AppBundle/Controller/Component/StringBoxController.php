@@ -6,7 +6,9 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Component\StringBox;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
@@ -53,6 +55,57 @@ class StringBoxController extends AbstractController
         ));
     }
 
+   /* /**
+     * @param StringboxInterface
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    /* private function saveStringbox($stringbox, Request $request)
+     {
+         $manager = $this->manager($type);
+
+         $manager->save($stringbox);
+
+         $uploadDir = $this->getComponentsDir();
+
+         foreach ($request->files->all() as $field => $uploadedFile) {
+
+             if ($uploadedFile instanceof UploadedFile) {
+
+                 $getter = 'get' . ucfirst($field);
+                 $setter = 'set' . ucfirst($field);
+
+                 $ext = $uploadedFile->getClientOriginalExtension();
+                 $currentFile = $stringbox->$getter();
+
+                 $format = 'pdf' == $ext ? '%s_%s.%s' : '%s_%s_thumb.%s';
+
+                 $filename = sprintf($format, $type, $stringbox->getId(), $ext);
+
+                 if ($currentFile) {
+                     $currentFilePath = $uploadDir . $currentFile;
+                     if (file_exists($currentFilePath)) {
+                         unlink($currentFilePath);
+                     }
+                 }
+
+                 $uploadedFile->move($uploadDir, $filename);
+
+                 $stringbox->$setter($filename);
+             }
+         }
+
+         $manager->save($stringbox);
+
+         $this->setNotice('Componente atualizado com sucesso!');
+
+         if (null == $url = $this->restore('referer')) {
+             $url = $this->generateUrl('components', ['type' => $type]);
+         }
+
+         return $this->redirect($url);
+     }
+     */
   /*  /**
      * Creates a new stringBox entity.
      *
