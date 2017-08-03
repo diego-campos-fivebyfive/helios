@@ -1,5 +1,14 @@
 <table id="extras_table" class="table table-condensed table-bordered">
 
+    <thead>
+        <tr>
+            <td>Descrição</td>
+            <td>Tipo do Extra</td>
+            <td>Preço por</td>
+            <td>Valor do Extra</td>
+            <td>Ações</td>
+        </tr>
+    </thead>
     <tbody>
     {% for extra in extras %}
 
@@ -15,7 +24,7 @@
                 {% else %}
                     Potência
                 {% endif %} </td>
-            <td> R${{ extra.costPrice }} </td>
+            <td> R$ <span class="costPrice">{{ extra.costPrice }}</span> </td>
             <td class="col-md-1">
                 <div class="btn-group btn-group-justified">
                     <a data-extra='{ "id":{{ extra.id }},"description":"{{ extra.description }}","type":{{ extra.type }},"pricingBy":{{ extra.pricingBy }},
@@ -39,8 +48,17 @@
     table tbody tr{
         display: table-row !important;
     }
+    table thead tr td{
+        font-weight: bold;
+    }
 </style>
 <script>
+    $('.costPrice').each(function(){
+        var val = $(this).html().replace('.',',');
+        $(this).html(val);
+    });
+
+
     $('#extras_table').footable();
     $('[data-update]').on('click', function () {
 
