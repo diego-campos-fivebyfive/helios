@@ -229,29 +229,27 @@
                                         <div class="form-group">
                                             <div class="col-md-3">
                                                 <label><br></label>
-                                                <a class="btn btn-info col-xs-12" data-toggle="modal"
-                                                   data-target="#modal_info">
+                                                <a class="btn btn-info col-xs-12" data-toggle="modal" data-target="#modal_info">
                                                     <i class="fa fa-info-circle"></i>
                                                     Informações Climáticas
                                                 </a>
                                             </div>
                                             <div class="col-md-9" id="block_init">
-                                                <div class="col-md-4">
-                                                    {{ form_label(form.roofType, 'Tipo de Telhado') }}
-                                                    {{ form_widget(form.roofType,{attr:{class:'form-control'}}) }}
-                                                </div>
-                                                <div class="col-md-4">
-                                                    {{ form_label(form.infConsumption, 'Consumo') }}
-                                                    {{ form_widget(form.infConsumption,{attr:{class:'form-control'}}) }}
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label><br></label>
-                                                    <button type="submit" data-style="zoom-in"
-                                                            class="btn btn-success btn-md pull-right col-xs-12 ladda-button">
-                                                        <i class="fa fa-save"></i>
-                                                        {{ project.token ? 'Atualizar' : 'Iniciar' }}
-                                                    </button>
-                                                </div>
+                                            <div class="col-md-4">
+                                                {{ form_label(form.roofType, 'Tipo de Telhado') }}
+                                                {{ form_widget(form.roofType,{attr:{class:'form-control'}}) }}
+                                            </div>
+                                            <div class="col-md-4">
+                                                {{ form_label(form.infConsumption, 'Consumo (kWh)') }}
+                                                {{ form_widget(form.infConsumption,{attr:{class:'form-control'}}) }}
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label><br></label>
+                                                <button type="submit" data-style="zoom-in" class="btn btn-success btn-md pull-right col-xs-12 ladda-button">
+                                                    <i class="fa fa-save"></i>
+                                                    {{ project.token ? 'Atualizar' : 'Iniciar' }}
+                                                </button>
+                                            </div>
                                             </div>
                                         </div>
 
@@ -278,8 +276,10 @@
 
                             <div class="col-md-12" id="block_components">
                                 <div class="panel panel-info">
-                                    <div class="panel-heading">
-                                        Inversores e Módulos do Kit
+                                    <div class="panel-heading" id="info_components">
+                                        {% if project.id is not null %}
+                                            Sistema de {{ project.power }} kWp
+                                        {% endif %}
                                     </div>
                                     <div class="panel-body" id="project_components" data-load="{{ project.id ? path('project_components',{id:project.id}) }}">
                                         {% if project.id %}
@@ -386,7 +386,8 @@
             infoProcess: $('#info_process'),
             processing: false,
             project: {
-                id: {{ project.id is not null ? project.id : 'null' }}
+                id: {{ project.id is not null ? project.id : 'null' }},
+                power: {{ project.id is not null ? project.power : 0 }}
             },
             request: function(config){
                 Request.send(config);
@@ -542,6 +543,7 @@
                     }
                 });
                 {% endif %}
+                Numbers.mask($('#project_infConsumption'));
             },
             configureBlocks: function(){
                 if(ProjectManager.project.id){
@@ -603,6 +605,8 @@
                 var inverters_url = '{{ path('project_inverters',{id:'_id_'}) }}'.replace(/_id_/g, ProjectManager.project.id);
                 $('#project_inverters').attr('data-load', inverters_url);
                 ProjectManager.loadInverters();
+
+                $('#info_components').html('Sistema de ' + ProjectManager.project.power + ' kWp');
 
                 ProjectManager.configureBlocks();
 

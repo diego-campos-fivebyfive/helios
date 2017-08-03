@@ -202,7 +202,6 @@ class ProjectHelper
     {
         if ($projectArea->getProjectInverter() && $projectArea->getProjectModule()) {
 
-            //$projectInverter = $projectModule->getInverter();
             $projectInverter = $projectArea->getProjectInverter();
             $project = $projectInverter->getProject();
 
@@ -233,9 +232,10 @@ class ProjectHelper
                     'stc_imp' => $module->getCurrentMaxPower(),
                     'stc_voc' => $module->getOpenCircuitVoltage(),
                     'temp_noct' => $module->getTemperatureOperation(),
-                    'coef_voc' => $module->getTempCoefficientOpenCircuitVoltage()
+                    'coef_voc' => $module->getTempCoefficientVoc()
                 ],
                 'inverter' => [
+                    'nominal_power' => $inverter->getNominalPower(),
                     'max_dc_power' => $inverter->getMaxDcPower(),
                     'max_dc_voltage' => $inverter->getMaxDcVoltage(),
                     'max_dc_current' => $inverter->getMpptMaxDcCurrent(),
@@ -347,16 +347,14 @@ class ProjectHelper
 
         # POWER
         $powerOffset = 0;
-        $powerLimit = $metadata['power']['danger_tolerance'];
+        $powerLimit = $metadata['power']['warning_tolerance'];
         $powerPercentOffset = ($metadata['power']['max_dc_operation'] * 100) / $powerLimit;
         $powerPercentCenter = ($metadata['power']['warning_tolerance'] * 100) / $powerLimit;
-        $powerPercentLimit = ($metadata['power']['danger_tolerance'] * 100) / $powerLimit;
 
         $metadata['power']['offset'] = $powerOffset;
         $metadata['power']['limit'] = $powerLimit;
         $metadata['power']['percentOffset'] = $powerPercentOffset;
         $metadata['power']['percentCenter'] = ($powerPercentCenter - $powerPercentOffset);
-        $metadata['power']['percentLimit'] = ($powerPercentLimit - $powerPercentCenter);
         $metadata['power']['step'] = $this->createSingleStep($metadata['power']['max_dc_operation'], 2);
     }
 

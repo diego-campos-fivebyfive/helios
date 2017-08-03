@@ -105,7 +105,8 @@ class AreaDebugger implements AreaDebuggerInterface
     public function debug()
     {
         //inverter data
-        $max_dc_power = $this->metadata['inverter']['max_dc_power'];        //from inverter data
+        //$max_dc_power = $this->metadata['inverter']['max_dc_power'];        //from inverter data
+        $nominal_power = $this->metadata['inverter']['nominal_power'];
         $max_dc_voltage = $this->metadata['inverter']['max_dc_voltage'];    //from inverter data
         $max_dc_current = $this->metadata['inverter']['max_dc_current'];    //from inverter data
         $mppt_min = $this->metadata['inverter']['mppt_min'];                // from inverter data
@@ -194,7 +195,7 @@ class AreaDebugger implements AreaDebuggerInterface
         $imp_op = $stc_imp * $n_string;
         if ($imp_op > $max_dc_current_op) {
             $currentOperable = false;
-            $danger++;
+            $warning++;
         } else {
             $currentOperable = true;
             $success++;
@@ -208,32 +209,28 @@ class AreaDebugger implements AreaDebuggerInterface
         ];
 
         //max dc power limits
-        $max_dc_power_op = ($max_dc_power / $mppt_number) * $mppt_factor;
+        $max_dc_power_op = ($nominal_power / $mppt_number) * $mppt_factor;
         $pmax_op = $stc_pmax * $n_string * $n_mod_string / 1000;
-        $pmax_tolerance_op_1 = $max_dc_power_op * 1.1;
-        $pmax_tolerance_op_2 = $max_dc_power_op * 1.2;
-        $danger_limit = $max_dc_power_op * 1.3;
+        $pmax_tolerance_op_1 = $max_dc_power_op / .75;
+        $pmax_tolerance_op_2 = $max_dc_power_op / .5;
+        $danger_limit = $max_dc_power_op / .25;
 
         $powerOperable = true;
         $powerLevel = 'success';
         $powerColor = 'green';
 
-        //if($pmax_op > $max_dc_power_op){
         if($pmax_op > $pmax_tolerance_op_1){
 
-            $isDanger = $pmax_op > $pmax_tolerance_op_2;
+            $isWarning = $pmax_op > $pmax_tolerance_op_1;
 
-            $powerOperable = !$isDanger;
-            $powerLevel = $isDanger ? 'danger'  : 'warning';
-            $powerColor = $isDanger ? 'red'     : 'yellow';
+            $powerOperable = !$isWarning;
+            $powerLevel = $isWarning ? 'warning'  : 'success';
+            $powerColor = $isWarning ? 'yellow'   : 'green';
 
-            $isDanger ? $danger++ : $warning++ ;
+            $isWarning ? $warning++ : $success++ ;
         }
 
         $this->result['power'] = [
-            /*'max_dc_operation' => $max_dc_power_op,
-            'warning_tolerance' => $pmax_tolerance_op_1,
-            'danger_tolerance' => $pmax_tolerance_op_2,*/
             'max_dc_operation' => $pmax_tolerance_op_1,
             'warning_tolerance' => $pmax_tolerance_op_2,
             'danger_tolerance' => $danger_limit,

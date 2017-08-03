@@ -245,6 +245,11 @@ class ProjectInverter implements ProjectInverterInterface
             'color' => 'red'
         ];
 
+        $colors = [
+            'warning' => 'yellow',
+            'success' => 'green'
+        ];
+
         if ($this->inverter) {
 
             $nominalPower = $this->inverter->getNominalPower();
@@ -255,17 +260,14 @@ class ProjectInverter implements ProjectInverterInterface
 
                 if ($stcPowerMax) {
 
-                    //$fdi = $nominalDcPower / $stcPowerMax;
-                    $fdi = $stcPowerMax / $nominalPower;
+                    $fdi = $nominalPower / $stcPowerMax;
 
-                    $level = ($fdi >= .8 && $fdi <= 1.2) ? (($fdi >= .9 && $fdi <= 1.1) ? 'success' : 'warning') : 'danger';
+                    $level = ($fdi >= .75 && $fdi <= 1.25) ? 'success' : 'warning';
 
-                    $metadata['color'] = 'danger' == $level ? 'red' : ('warning' == $level ? 'yellow' : 'green');
-
+                    $metadata['color'] = $colors[$level];
                     $metadata['level'] = $level;
                     $metadata['fdi'] = $fdi;
-                    $metadata['operable'] = 'danger' == $level ? false : true;
-
+                    $metadata['operable'] = ('success' == $level);
                     $metadata['stc_power_max'] = $stcPowerMax;
 
                     $metadata['areas'] = [];

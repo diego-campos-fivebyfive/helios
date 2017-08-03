@@ -1,6 +1,7 @@
 <style>
     label#source_label{
-        padding-left: 205px;
+        text-align: center;
+        display: block;
     }
 </style>
 
@@ -150,23 +151,44 @@
 
     var sources = {
         power: {
-            label: 'Informe a Potência',
+            label: 'Informe a Potência (kWp)',
             current: {{ project.defaults.power }}
         },
         consumption: {
-            label: 'Informe o Consumo',
+            label: 'Informe o Consumo (kWh)',
             current: {{ project.defaults.consumption }}
         }
     };
+
+    function get_available_makers(callback) {
+        Request.send({
+            url: '{{ path('detect_makers') }}',
+            method: 'post',
+            data: form_config.serialize(),
+            callback: function(xhr) {
+                var response = xhr.responseJSON;
+                var makers = response.makers;
+                callback(makers);
+            }
+        });
+    }
 
     button_config.ladda();
     form_config.on('submit', function(event){
         event.preventDefault();
         button_config.ladda('start');
-        ProjectManager.submit($(this), function(xhr){
-            button_config.ladda('stop');
-            ProjectManager.project = xhr.responseJSON.project;
-            ProjectManager.onSaveProject();
+        get_available_makers(function(makers){
+            var maker_id = parseInt(generate_makers.val());
+            if (makers.indexOf(maker_id) >= 0) {
+                ProjectManager.submit(form_config, function(xhr){
+                    ProjectManager.project = xhr.responseJSON.project;
+                    ProjectManager.onSaveProject();
+                    button_config.ladda('stop');
+                });
+            } else {
+                button_config.ladda('stop');
+                swal('Ooops', 'O inversor selecionado não é compatível com esta potência!', 'error');
+            }
         });
     });
 
@@ -198,31 +220,25 @@
 
     var last_power = sources.power.current;
     var last_consumption = sources.consumption.current;
+
     function detect_makers(){
-        Request.send({
-            url: '{{ path('detect_makers') }}',
-            method: 'post',
-            data: form_config.serialize(),
-            callback: function(xhr) {
-                var response = xhr.responseJSON;
-                var makers = response.makers;
-                if (!makers.length) {
-                    generator_power.val(last_power);
-                    generator_consumption.val(last_consumption);
-                    swal('Ooops', 'Não há inversores compatíveis!', 'error');
-                } else {
-                    generate_makers.show();
-                    $.each(generate_makers.find('option'), function (i, option) {
-                        var id = parseInt($(option).val());
-                        if (makers.indexOf(id) >= 0) {
-                            $(option).show();
-                        } else {
-                            $(option).hide();
-                        }
-                    });
-                    if (1 == makers.length) {
-                        generate_makers.find('option[value="' + makers[0] + '"]').attr('selected', 'selected');
+        get_available_makers(function (makers) {
+            if (!makers.length) {
+                generator_power.val(last_power);
+                generator_consumption.val(last_consumption);
+                swal('Ooops', 'Não há inversores compatíveis!', 'error');
+            } else {
+                generate_makers.show();
+                $.each(generate_makers.find('option'), function (i, option) {
+                    var id = parseInt($(option).val());
+                    if (makers.indexOf(id) >= 0) {
+                        $(option).removeAttr('disabled');
+                    } else {
+                        $(option).attr('disabled', 'disabled');
                     }
+                });
+                if (1 == makers.length) {
+                    generate_makers.find('option[value="' + makers[0] + '"]').attr('selected', 'selected');
                 }
             }
         });
@@ -238,6 +254,11 @@
         detect_makers();
     }).on('focus', function(){
         last_consumption = $(this).val();
+    });
+
+    $('#project_latitude').on('change', function(){
+        $('#generator_latitude').val($('#project_latitude').val());
+        $('#generator_longitude').val($('#project_longitude').val());
     });
 
 </script>
