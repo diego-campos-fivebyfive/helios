@@ -34,7 +34,7 @@ interface InverterInterface
 
     /**
      * @param $model
-     * @return ComponentInterface
+     * @return InverterInterface
      */
     public function setModel($model);
 
@@ -246,12 +246,12 @@ interface InverterInterface
     public static function getStatusOptions();
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getCreatedAt();
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getUpdatedAt();
 

@@ -39,7 +39,7 @@ interface ModuleInterface
 
     /**
      * @param $model
-     * @return ComponentInterface
+     * @return ModuleInterface
      */
     public function setModel($model);
 
