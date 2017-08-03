@@ -124,4 +124,15 @@ interface StructureInterface
      * @return mixed
      */
     public function getUpdatedAt();
+
+    /**
+     * @param MakerInterface $maker
+     * @return StructureInterface
+     */
+    public function setMaker(MakerInterface $maker);
+
+    /**
+     * @return MakerInterface
+     */
+    public function getMaker();
 }

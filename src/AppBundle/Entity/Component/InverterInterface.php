@@ -254,4 +254,15 @@ interface InverterInterface
      * @return mixed
      */
     public function getUpdatedAt();
+
+    /**
+     * @param MakerInterface $maker
+     * @return InverterInterface
+     */
+    public function setMaker(MakerInterface $maker);
+
+    /**
+     * @return MakerInterface
+     */
+    public function getMaker();
 }
