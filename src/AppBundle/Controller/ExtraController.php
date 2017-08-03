@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("extras")
@@ -19,22 +20,34 @@ class ExtraController extends AbstractController
     /**
      * @Route("/", name="extras_index")
      * @Method("GET")
-     * @Breadcrumb("Extras", route={"name"="extras_index"})
+     * @Breadcrumb("Meus Itens", route={"name"="extras_index"})
      */
     public function indexAction()
     {
         $extras = $this->manager('extra')->findAll();
-        $paginator = $this->getPaginator();
-
         return $this->render('extra.index', array(
-            'extras' => $extras,
+            'extras' => $extras
         ));
+    }
+
+    /**
+     * @Route("/all", name="extras_all")
+     */
+    public function allAction()
+    {
+        $extras = $this->manager('extra')->findAll();
+
+        $this->clearTemplateCache('extra.extras_parameters');
+
+        return $this->render('extra.extras_parameters', [
+            'extras' => $extras
+        ]);
     }
 
     /**
      * @Route("/create", name="extras_create")
      * @Method({"GET", "POST"})
-     * @Breadcrumb("Extras")
+     * @Breadcrumb("Meus Itens")
      */
     public function createAction(Request $request)
     {
@@ -49,20 +62,18 @@ class ExtraController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $manager->save($extra);
-
-            return $this->redirectToRoute('extras_index');
+            return $this->json([], Response::HTTP_CREATED);
         }
 
-        return $this->render('extra.form', array(
-            'extra' => $extra,
-            'form' => $form->createView(),
-        ));
+        return $this->render('extra.extra_form', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
      * @Route("/{id}/update", name="extras_update")
      * @Method({"GET", "POST"})
-     * @Breadcrumb("Extras")
+     * @Breadcrumb("Meus Itens")
      */
     public function updateAction(Request $request, Extra $extra)
     {
@@ -73,13 +84,10 @@ class ExtraController extends AbstractController
 
             $this->manager('extra')->save($extra);
 
-            return $this->redirectToRoute('extras_index');
+            return $this->json([], Response::HTTP_OK);
         }
 
-        return $this->render('extra.form', array(
-            'extra' => $extra,
-            'form' => $editForm->createView(),
-        ));
+        return $this->json([], Response::HTTP_IM_USED);
     }
 
     /**
@@ -90,6 +98,6 @@ class ExtraController extends AbstractController
     {
         $this->manager('extra')->delete($extra);
 
-        return $this->json([]);
+        return $this->json([], Response::HTTP_ACCEPTED);
     }
 }
