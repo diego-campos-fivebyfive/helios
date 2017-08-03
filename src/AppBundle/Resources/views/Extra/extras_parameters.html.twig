@@ -1,27 +1,44 @@
 <table id="extras_table" class="table table-condensed table-bordered">
 
+    <thead>
+        <tr>
+            <td>Descrição</td>
+            <td>Tipo</td>
+            <td>Preço</td>
+            <td>Valor</td>
+            <td>Ações</td>
+        </tr>
+    </thead>
     <tbody>
     {% for extra in extras %}
 
         <tr>
             <td> {{ extra.description }} </td>
-            <td>{% if extra.type == 0 %}
+            <td>
+                {% if extra.type == 0 %}
                     Produto
                 {% else %}
                     Serviço
                 {% endif %}</td>
-            <td> {% if extra.pricingBy == 0 %}
+            <td>
+                {% if extra.pricingBy == 0 %}
                     Fixo
                 {% else %}
                     Potência
                 {% endif %} </td>
-            <td> R${{ extra.costPrice }} </td>
+            <td>
+                R$ <span class="costPrice">{{ extra.costPrice }}</span>
+                {% if extra.pricingBy == 1 %}
+                    /kWp
+                {% endif %}
+            </td>
             <td class="col-md-1">
                 <div class="btn-group btn-group-justified">
                     <a data-extra='{ "id":{{ extra.id }},"description":"{{ extra.description }}","type":{{ extra.type }},"pricingBy":{{ extra.pricingBy }},
                     "costPrice":"{{ extra.costPrice }}" }'
                        data-update="{{ path('extras_update',{id:extra.id}) }}"
-                       class="btn btn-success btn-sm">
+                       class="btn btn-success btn-sm"
+                    onclick="edit({{ extra.pricingBy }})">
                         <i class="fa fa-pencil"></i>
                     </a>
                     <a data-remove="{{ path('extras_delete',{id:extra.id}) }}" class="btn btn-danger btn-sm">
@@ -39,8 +56,17 @@
     table tbody tr{
         display: table-row !important;
     }
+    table thead tr td{
+        font-weight: bold;
+    }
 </style>
 <script>
+    $('.costPrice').each(function(){
+        var val = $(this).html().replace('.',',');
+        $(this).html(val);
+    });
+
+
     $('#extras_table').footable();
     $('[data-update]').on('click', function () {
 
