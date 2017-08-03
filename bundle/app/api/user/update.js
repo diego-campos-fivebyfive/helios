@@ -34,7 +34,7 @@ const updateAccount = isquikAccount => Sices.updateAccount(isquikAccount.account
     (sicesAccount) ? updateUser(sicesAccount, isquikAccount) : 422
   ))
 
-const update = ({ object }) => Isquik.getAccount(object.id).then(updateAccount)
+const update = ({ notification }) => Isquik.getAccount(notification.id).then(updateAccount)
 
 module.exports = {
   update

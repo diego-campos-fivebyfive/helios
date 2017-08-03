@@ -10,11 +10,11 @@ const sendUser = ({ Dados }, sicesUser) =>
       contact: Dados.Nome
     })
 
-const createUser = ({ object }) =>
+const createUser = ({ notification }) =>
   Isquik
-    .getUser(object.id)
+    .getUser(notification.id)
     .then(isquikUser =>
-      sendUser(isquikUser, object))
+      sendUser(isquikUser, notification))
 
 
 module.exports = {

@@ -4,7 +4,7 @@ const sendResponse = (request, response, action) => {
   const params = {
     id: request.params.id,
     query: request.query,
-    object: request.body
+    notification: request.body
   }
 
   action(params)
@@ -12,7 +12,7 @@ const sendResponse = (request, response, action) => {
       response.status(statusCode).end()
     })
     .catch(error => {
-      console.log(`error: ${error.message}`)
+      console.log(`internal error: ${error.message}`)
       response.status(500).end()
     })
 }

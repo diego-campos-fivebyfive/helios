@@ -27,9 +27,9 @@ const sendAccount = ({ Dados }) =>
       account_id: data.id
     }))
 
-const createAccount = ({ object }) =>
+const createAccount = ({ notification }) =>
   Isquik
-    .getAccount(object.id)
+    .getAccount(notification.id)
     .then(sendAccount)
 
 

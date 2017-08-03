@@ -40,8 +40,8 @@ const sendProduct = product => {
   }
 }
 
-const create = ({ object }) => new Promise((resolve, reject) => {
-  object.forEach(code => Isquik.getProduct(code)
+const create = ({ notification }) => new Promise((resolve, reject) => {
+  notification.forEach(code => Isquik.getProduct(code)
     .then(sendProduct)
     .then(resolve)
     .catch(reject)
