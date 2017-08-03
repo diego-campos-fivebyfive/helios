@@ -9,7 +9,6 @@ const sendUser = ({ Dados }, sicesUser) =>
       ...sicesUser,
       contact: Dados.Nome
     })
-    .then(data => ((data) ? 201 : 422))
 
 const create = ({ object }) =>
   Isquik

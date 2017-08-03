@@ -6,12 +6,17 @@ const { config } = require('../config')
 const { sices } = config
 
 const getRequest = uri => request({
+  resolveWithFullResponse: true,
   method: 'GET',
   uri
 })
-  .then(x => JSON.parse(x))
+  .then(({ body, statusCode }) => ({
+    ...JSON.parse(body),
+    statusCode
+  }))
 
 const postRequest = (uri, data) => request({
+  resolveWithFullResponse: true,
   headers: {
     'Content-Type': 'application/json'
   },
@@ -19,8 +24,13 @@ const postRequest = (uri, data) => request({
   json: data,
   uri
 })
+  .then(({ body, statusCode }) => ({
+    ...body,
+    statusCode
+  }))
 
 const putRequest = (uri, data) => request({
+  resolveWithFullResponse: true,
   headers: {
     'Content-Type': 'application/json'
   },
@@ -28,6 +38,10 @@ const putRequest = (uri, data) => request({
   json: data,
   uri
 })
+  .then(({ body, statusCode }) => ({
+    ...body,
+    statusCode
+  }))
 
 const updateAccount = (id, account) => putRequest(`${sices.uri}/accounts/${id}`, account)
 const updateUser = (id, user) => putRequest(`${sices.uri}/users/${id}`, user)
