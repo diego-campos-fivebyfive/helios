@@ -6,6 +6,8 @@ git fetch origin
 GIT_WORK_TREE=$SICES_PATH git checkout -f
 git pull origin master -f
 
+cli/ces-server-config --homolog
+
 composer install
 php app/console doctrine:schema:update --force
 bundle/app/node_modules/.bin/pm2 restart 0
