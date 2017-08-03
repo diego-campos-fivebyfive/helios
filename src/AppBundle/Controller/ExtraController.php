@@ -62,7 +62,7 @@ class ExtraController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $manager->save($extra);
-            return $this->jsonResponse([], Response::HTTP_CREATED);
+            return $this->json([], Response::HTTP_CREATED);
         }
 
         return $this->render('extra.extra_form', [
@@ -84,10 +84,10 @@ class ExtraController extends AbstractController
 
             $this->manager('extra')->save($extra);
 
-            return $this->jsonResponse([], Response::HTTP_OK);
+            return $this->json([], Response::HTTP_OK);
         }
 
-        return $this->jsonResponse([], Response::HTTP_IM_USED);
+        return $this->json([], Response::HTTP_IM_USED);
     }
 
     /**
@@ -98,6 +98,6 @@ class ExtraController extends AbstractController
     {
         $this->manager('extra')->delete($extra);
 
-        return $this->jsonResponse([], Response::HTTP_ACCEPTED);
+        return $this->json([], Response::HTTP_ACCEPTED);
     }
 }
