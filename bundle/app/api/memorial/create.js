@@ -3,26 +3,38 @@
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
 
-const sendMemorial = ({ Dados }) => Sices.sendMemorial({
-  version: Dados.Versao,
-  status: (Dados.Status === 'Publicado') ? 1 : 0,
-  start_at: '2017-08-11',
-  end_at: '2017-08-11',
-  range: Dados.Produtos.map(x => ({
-    code: x.Codigo,
-    description: '',
-    family: '',
-    markups: x.Faixas.map(y => ({
-      code: y.Id,
-      initial: y.De,
-      final: y.Ate,
-      markup: y.Niveis.map(z => ({
-        price: z.PrecoVenda,
-        description: z.Descricao
+const level = {
+  'BLACK': 'black',
+  'PLATINUM': 'platinum',
+  'PREMIUM': 'premium',
+  'PARCEIRO OURO': 'gold',
+  'PROMOCIONAL': 'promotional'
+}
+
+const getLevel = type => level[type]
+
+const sendMemorial = ({ Dados }) => {
+
+  const memorial = Sices.sendMemorial({
+    version: Dados.Versao,
+    status: (Dados.Status === 'Publicado') ? 1 : 0,
+    start_at: '2017-08-11',
+    end_at: '2017-08-11',
+    range: Dados.Produtos.map(x => ({
+      code: x.Codigo,
+      markups: x.Faixas.map(y => ({
+        initial: y.De,
+        final: y.Ate,
+        markup: y.Niveis.map(z => ({
+          price: z.PrecoVenda,
+          level: getLevel(z.Descricao)
+        }))
       }))
     }))
-  }))
-})
+  })
+    memorial.then(console.log)
+  return memorial
+}
 
 const create = ({ object }) => Isquik.getMemorial(object.id).then(sendMemorial)
 
