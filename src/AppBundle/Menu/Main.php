@@ -77,7 +77,7 @@ class Main implements ContainerAwareInterface
          */
         if($user->isOwner()){
 
-            $menu->addChild('Extras', [
+            $menu->addChild('Meus Itens', [
                 'route' => 'extras_index',
                 'extras' => ['icon' => App::icons('extras')]
             ]);

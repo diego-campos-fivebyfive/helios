@@ -1,0 +1,47 @@
+{{ form_start(form,{attr:{enctype:'multipart/form-data', id:'extra'}}) }}
+
+<div class="form-group col-md-2">
+    <label> Nome / Descrição </label>
+    {{ form_widget(form.description,{attr:{class:'form-control', 'placeholder':'Item'}}) }}
+</div>
+
+<div class="form-group col-md-2">
+    {{ form_label(form.type, 'Tipo do Extra') }}
+    {{ form_widget(form.type,{attr:{class:'form-control'}}) }}
+</div>
+
+<div class="form-group col-md-2">
+    {{ form_label(form.pricingBy, 'Preço por') }}
+    {{ form_widget(form.pricingBy,{attr:{class:'form-control'}}) }}
+</div>
+
+<div class="form-group col-md-2">
+    {{ form_label(form.costPrice, 'Valor do Extra') }}
+    {{ form_widget(form.costPrice,{attr:{class:'form-control', 'placeholder': 'R$ 000,00'|trans}}) }}
+</div>
+
+
+<div class="form-group col-md-2">
+    <label> &nbsp; </label>
+    <button id="extra_btn" type="submit" class="btn btn-block btn-primary ladda-button" data-style="zoom-in">
+        <i class="fa fa-plus"></i> {{ 'Add'|trans }}
+    </button>
+</div>
+
+<div class="form-group col-md-2">
+    <label> &nbsp; </label>
+    <a class="btn btn-block btn-default" onclick="Extra.form.reset();">
+        <i class="fa fa-times"></i> {{ 'Cancel'|trans }}
+    </a>
+</div>
+
+{{ form_end(form) }}
+
+{% include view('helper.numbers') %}
+
+<script>
+    $(function(){
+        Numbers.mask($('#appbundle_component_extra_costPrice'));
+
+    });
+</script>

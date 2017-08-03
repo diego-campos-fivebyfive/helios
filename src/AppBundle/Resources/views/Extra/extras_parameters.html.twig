@@ -1,0 +1,58 @@
+<table id="extras_table" class="table table-condensed table-bordered">
+
+    <tbody>
+    {% for extra in extras %}
+
+        <tr>
+            <td> {{ extra.description }} </td>
+            <td>{% if extra.type == 0 %}
+                    Produto
+                {% else %}
+                    Serviço
+                {% endif %}</td>
+            <td> {% if extra.pricingBy == 0 %}
+                    Fixo
+                {% else %}
+                    Potência
+                {% endif %} </td>
+            <td> R${{ extra.costPrice }} </td>
+            <td class="col-md-1">
+                <div class="btn-group btn-group-justified">
+                    <a data-extra='{ "id":{{ extra.id }},"description":"{{ extra.description }}","type":{{ extra.type }},"pricingBy":{{ extra.pricingBy }},
+                    "costPrice":"{{ extra.costPrice }}" }'
+                       data-update="{{ path('extras_update',{id:extra.id}) }}"
+                       class="btn btn-success btn-sm">
+                        <i class="fa fa-pencil"></i>
+                    </a>
+                    <a data-remove="{{ path('extras_delete',{id:extra.id}) }}" class="btn btn-danger btn-sm">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+
+    {% endfor %}
+    </tbody>
+
+</table>
+<style>
+    table tbody tr{
+        display: table-row !important;
+    }
+</style>
+<script>
+    $('#extras_table').footable();
+    $('[data-update]').on('click', function () {
+
+        var target = $(this), data = target.data('extra');
+        Extra.form.action = $(this).data('update');
+        $('#appbundle_component_extra_description').val(data.description);
+        $('#appbundle_component_extra_type').val(data.type);
+        $('#appbundle_component_extra_pricingBy').val(data.pricingBy);
+        $('#appbundle_component_extra_costPrice').val(data.costPrice);
+        Extra.form.button.html('<i class="fa fa-check"></i> Atualizar').ladda();
+    });
+    $('[data-remove]').on('click', function () {
+        Extra.remove($(this).data('remove'));
+    });
+</script>

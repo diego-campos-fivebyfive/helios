@@ -3,56 +3,144 @@
 {% block body %}
 {#    {% set extras = pagination.items %}#}
 
+
 <div class="wrapper wrapper-content animated fadeInRight">
+
     <div class="row">
-        <div class="col-md-2 pull-right text-right">
-            <a href="{{ path('extras_create') }}" class="btn btn-md btn-primary">
-                <i class="fa fa-plus"></i> Novo Extra
-            </a>
+        <div class="col-lg-12">
+
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <div class="ibox-tools" style="width: 20%; float:right;">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+
+                        <div class="panel panel-danger">
+                            <div class="panel-heading">
+                                <i class="fa fa-cog"></i> Meus Itens
+                            </div>
+                            <div class="panel-body">
+
+                                {{ render(controller('AppBundle:Extra:create',{request: app.request})) }}
+
+                                <div class="col-md-12" id="extra_index">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <div class="row" id="real-content">
-        <div class="col-md-12">
-            <div class="ibox-content">
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>Descrição</th>
-                            <th>Tipo</th>
-                            <th>Preço por</th>
-                            <th>Preço</th>
-                            <th>Ações</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tbody>
-                        {% for extra in extras %}
-                            <tr>
-                                <td>{{ extra.description }}</td>
-                                <td>{{ extra.label }}</td>
-                                <td>{{ extra.priceLabel }}</td>
-                                <td>R{{ extra.costPrice }}</td>
-                                <td>
-                                    <a href="{{ path('extras_update', { id: extra.id }) }}" class="btn btn-primary">
-                                    {{'Edit'|trans}}
-                                    </a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-{#                        <tfoot>
-                        <tr>
-                            <td colspan="5">
-                                {{ knp_pagination_render(pagination) }}
-                            </td>
-                        </tr>
-                        </tfoot>#}
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+
+        var Extra = {
+            form: {
+                element: $('#extra'),
+                button: $('#extra_btn'),
+                action: '{{ path('extras_create') }}',
+                define: function (data) {
+                    $('#appbundle_component_extra_description').val(data.description);
+                    $('#appbundle_component_extra_type').val(data.type);
+                    $('#appbundle_component_extra_pricingBy').val(data.pricingBy);
+                    $('#appbundle_component_extra_costPrice').val(data.costPrice);
+                },
+                reset: function () {
+                    Extra.form.define({description: '', type: '0', pricingBy: '0', costPrice: ''});
+                    Extra.form.action = '{{ path('extras_create') }}';
+                    Extra.form.button.html('<i class="fa fa-plus"></i> Adicionar').ladda();
+                }
+            },
+            save: function () {
+                Extra.form.button.ladda('start');
+                $.ajax({
+                    url: Extra.form.action,
+                    method: 'post',
+                    data: Extra.form.element.serialize(),
+                    complete: function (xhr) {
+                        if (200 == xhr.status || 201 == xhr.status) {
+                            Extra.form.define({description: '', type: '0', pricingBy: '0', costPrice: ''});
+                            Extra.form.action = '{{ path('extras_create') }}';
+                            Extra.index();
+                        } else {
+
+                        }
+
+                        Extra.form.button.ladda('stop').html('<i class="fa fa-plus"></i> {{ 'Add'|trans }}').ladda();
+                    }
+                });
+            },
+            index: function () {
+                $.ajax({
+                    url: '{{ path('extras_all') }}',
+                    success: function (response) {
+                        $('#extra_index').html(response);
+                    }
+                });
+            },
+            remove: function (url) {
+                swal({
+                    title: "Confirmar exclusão?",
+                    text: null,
+                    type: "info",
+                    showCancelButton: true,
+                    cancelButtonText: "Cancelar",
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Excluir",
+                    closeOnConfirm: false
+                }, function () {
+                    $.ajax({
+                        url: url,
+                        method: 'post',
+                        data: {_method: 'delete'},
+                        complete: function (xhr) {
+                            swal("Exclusão efetuada com sucesso!", "", "success");
+                            Extra.index();
+                            window.setTimeout(function () {
+                                swal.close();
+                            }, 500);
+                            woopra.track('margens');
+                        },
+                        beforeSend: function () {
+                            swal({
+                                title: "Excluindo...",
+                                text: "Aguarde!",
+                                type: "info",
+                                showConfirmButton: false
+                            });
+                        }
+                    });
+                });
+            },
+            init: function () {
+
+                Extra.index();
+
+                Extra.form.button.ladda();
+
+                this.form.element.on('submit', function (event) {
+                    event.preventDefault();
+                    Extra.save();
+                });
+
+            }
+        };
+
+        Extra.init();
+
+    </script>
 {% endblock %}
