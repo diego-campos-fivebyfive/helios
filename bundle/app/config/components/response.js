@@ -1,20 +1,36 @@
 'use strict'
 
-const sendResponse = (request, response, action) => {
+const bundler = (request, response, action) => {
+
+  if (!action) {
+    response
+      .status(404)
+      .send('Event not found')
+      .end()
+    return
+  }
+
   const params = {
     id: request.params.id,
     query: request.query,
-    notification: request.body
+    object: request.body,
+    notification: request.notification
   }
 
   action(params)
     .then(({ statusCode, ...data }) => {
-      response.status(statusCode).end()
+      response
+        .status(statusCode)
+        .json(data)
+        .end()
     })
     .catch(error => {
-      console.log(`internal error: ${error.message}`)
-      response.status(500).end()
+      throw new Error(`Internal error: ${error.message}`)
+      response
+        .status(500)
+        .send(`Internal Error, contact us. ${new Date}`)
+        .end()
     })
 }
 
-module.exports = sendResponse
+module.exports = bundler
