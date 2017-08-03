@@ -25,7 +25,7 @@ const sendMemorial = ({ Dados }) => {
       markups: x.Faixas.map(y => ({
         initial: y.De,
         final: y.Ate,
-        markup: y.Niveis.map(z => ({
+        levels: y.Niveis.map(z => ({
           price: z.PrecoVenda,
           level: getLevel(z.Descricao)
         }))

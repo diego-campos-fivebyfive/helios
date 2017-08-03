@@ -16,7 +16,6 @@ class MemorialController extends FOSRestController
         $data = json_decode($request->getContent(), true);
         $dataRanges = $data['range'];
 
-
         $memorialManager = $this->get('memorial_manager');
         $rangeManager = $this->get('range_manager');
 
@@ -35,22 +34,21 @@ class MemorialController extends FOSRestController
 
             $markups = $ranges['markups'];
 
-            foreach ($markups as $level => $config) {
+            foreach ($markups as $item) {
 
-                foreach ($config as $item) {
+                $levels = $item['levels'];
 
                     /** @var Range $range */
                     $range = $rangeManager->create();
                     $range
                         ->setCode($ranges['code'])
                         ->setMemorial($memorial)
-                        ->setLevel($level)
-                        ->setInitialPower($item['start'])
-                        ->setFinalPower($item['end'])
+                        ->setLevel($levels['level'])
+                        ->setInitialPower($item['initial'])
+                        ->setFinalPower($item['final'])
                         ->setMarkup($item['markup'])
-                        ->setPrice($ranges['price']);
+                        ->setPrice($levels['price']);
                     $rangeManager->save($range);
-                }
             }
             $view = View::create();
             return $this->handleView($view);
