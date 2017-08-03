@@ -57,11 +57,32 @@ class OrderController extends FOSRestController
             'id' => $order->getId(),
             'status' => $order->getStatus(),
             'account' => $order->getAccount(),
+            'projects' => $order->getProjects()->map(function (ProjectInterface $project) {
+                return Array(
+                    'Id' => $project->getId(),
+                    'Metadata' => $project->getMetadata(),
+                    'Address' => $project->getAddress(),
+                    'Defaults' => $project->getStage(),
+                    'Infconsumption' => $project->getInfConsumption(),
+                    'Power' => $project->getInfPower(),
+                    'Efficiency' => $project->getEfficiencyLoss(),
+                    'Latitude' => $project->getLatitude(),
+                    'Longitude' => $project->getLongitude(),
+                    'Roof' => $project->getRoofType(),
+                    //'Structures' => $project->getProjectStructures(),
+                    'Inverters' => $project->getProjectInverters(),
+                    'Modules' => $project->getProjectModules(),
+                    'Stringboxes' => $project->getProjectStringBoxes(),
+                    'Varietys' => $project->getProjectVarieties(),
+                    'StructureType' => $project->getStructureType(),
+                    'Distribution' => $project->getDistribution(),
+                    'Lifetime' => $project->getLifetime(),
+                    'Create_at' => $project->getCreatedAt(),
+                    'Update_at' => $project->getUpdatedAt(),
+                    'Token' => $project->getToken()
+                );
+            })
         ];
-
-        $data['projects'] = $order->getProjects()->map(function (ProjectInterface $project) {
-            return $project->getId();
-        });
 
         $view = View::create($data);
 
