@@ -187,19 +187,19 @@ interface InverterInterface
     public function getPhases();
 
     /**
-     * @param $dataSheet
-     * @return ComponentInterface
+     * @param $datasheet
+     * @return InverterInterface
      */
-    public function setDataSheet($dataSheet);
+    public function setDatasheet($datasheet);
 
     /**
      * @return string
      */
-    public function getDataSheet();
+    public function getDatasheet();
 
     /**
      * @param $image
-     * @return ComponentInterface
+     * @return InverterInterface
      */
     public function setImage($image);
 

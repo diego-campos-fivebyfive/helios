@@ -71,6 +71,28 @@ interface VarietyInterface
     public function getDescription();
 
     /**
+     * @param $datasheet
+     * @return VarietyInterface
+     */
+    public function setDatasheet($datasheet);
+
+    /**
+     * @return string
+     */
+    public function getDatasheet();
+
+    /**
+     * @param $image
+     * @return VarietyInterface
+     */
+    public function setImage($image);
+
+    /**
+     * @return string
+     */
+    public function getImage();
+
+    /**
      * @param MakerInterface $maker
      * @return VarietyInterface
      */
