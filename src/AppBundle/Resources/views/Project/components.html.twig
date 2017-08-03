@@ -1,6 +1,7 @@
 <style>
     label#source_label{
-        padding-left: 205px;
+        text-align: center;
+        display: block;
     }
 </style>
 
@@ -182,11 +183,12 @@
                 ProjectManager.submit(form_config, function(xhr){
                     ProjectManager.project = xhr.responseJSON.project;
                     ProjectManager.onSaveProject();
+                    button_config.ladda('stop');
                 });
             } else {
+                button_config.ladda('stop');
                 swal('Ooops', 'O inversor selecionado não é compatível com esta potência!', 'error');
             }
-            button_config.ladda('stop');
         });
     });
 

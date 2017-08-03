@@ -364,6 +364,9 @@ class ProjectGenerator
         return $this;
     }
 
+    /**
+     * @param ProjectInverter $projectInverter
+     */
     public function generateAreasViaProjectInverter(ProjectInverter $projectInverter)
     {
         $manager = $this->manager('project_area');
@@ -384,10 +387,13 @@ class ProjectGenerator
 
         $mppts = explode('.', $projectInverter->getOperation());
 
+        $serial = $projectInverter->getSerial();
+        $parallel = $projectInverter->getParallel();
+
         foreach ($mppts as $item) {
 
-            $stringNumber = floor($projectInverter->getParallel() / count($mppts));
-            $moduleString = $projectInverter->getSerial();
+            $moduleString = 1 == $parallel ? ceil($serial / count($mppts)) : $serial ;
+            $stringNumber = floor($parallel / count($mppts));
 
             if($stringNumber <= 0){
                 $stringNumber = 1;

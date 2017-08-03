@@ -43,19 +43,13 @@
             </div>
             <div class="panel-body">
                 <div class="progress ruler-bar">
-                    <div class="progress-bar progress-bar-danger" style="width:16.66%">
+                    <div class="progress-bar progress-bar-warning" style="width:25%">
                         <span class="sr-only"></span>
                     </div>
-                    <div class="progress-bar progress-bar-warning" style="width:16.666%">
+                    <div class="progress-bar progress-bar-success" style="width:50%">
                         <span class="sr-only"></span>
                     </div>
-                    <div class="progress-bar progress-bar-success" style="width:33.333%">
-                        <span class="sr-only"></span>
-                    </div>
-                    <div class="progress-bar progress-bar-warning" style="width:16.666%">
-                        <span class="sr-only"></span>
-                    </div>
-                    <div class="progress-bar progress-bar-danger" style="width:16.666%">
+                    <div class="progress-bar progress-bar-warning" style="width:25%">
                         <span class="sr-only"></span>
                     </div>
                 </div>
@@ -64,22 +58,6 @@
         </div>
 
     </div>
-
-    {# <table class="col-md-12 table table-bordered">
-        <thead>
-            <tr>
-                <th colspan="2" class="text-center">
-                    Fator de Dimensionamento
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="col-md-6"> Potência de Entrada: {{ data.stc_power_max|round(2) }} kWp </td>
-                <td class="text-right"> Potência Nominal do Inversor: {{ data.nominal_dc_power|round(2) }} kW </td>
-            </tr>
-        </tbody>
-    </table> #}
 
     <div class="col-md-12">
 
@@ -97,8 +75,8 @@ function init_inverter_operation(){
     if(0 == inverter_operation_tip.length){
 
         inverter_slider.slider({
-            min: 70,
-            max: 130,
+            min: 50,
+            max: 150,
             values: [{{ (data.fdi * 100)|round(2) }}],
             step: 1
         }).slider("pips", {
