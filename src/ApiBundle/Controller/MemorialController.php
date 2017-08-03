@@ -16,6 +16,7 @@ class MemorialController extends FOSRestController
         $data = json_decode($request->getContent(), true);
         $dataRanges = $data['range'];
 
+
         $memorialManager = $this->get('memorial_manager');
         $rangeManager = $this->get('range_manager');
 

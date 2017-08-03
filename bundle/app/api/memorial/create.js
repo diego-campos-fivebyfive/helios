@@ -5,9 +5,9 @@ const Isquik = require('../../models/isquik')
 
 const sendMemorial = ({ Dados }) => Sices.sendMemorial({
   version: Dados.Versao,
-  status: Dados.Status,
-  start_at: new Date(),
-  end_at: new Date(),
+  status: (Dados.Status === 'Publicado') ? 1 : 0,
+  start_at: '2017-08-11',
+  end_at: '2017-08-11',
   range: Dados.Produtos.map(x => ({
     code: x.Codigo,
     description: '',
