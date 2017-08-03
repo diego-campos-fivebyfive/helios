@@ -228,7 +228,7 @@
 
                                         <div class="form-group">
                                             <div class="col-md-3">
-                                                <label><br></label>
+                                                <label>&nbsp;<br></label>
                                                 <a class="btn btn-info col-xs-12" data-toggle="modal" data-target="#modal_info">
                                                     <i class="fa fa-info-circle"></i>
                                                     Informações Climáticas
@@ -240,11 +240,11 @@
                                                 {{ form_widget(form.roofType,{attr:{class:'form-control'}}) }}
                                             </div>
                                             <div class="col-md-4">
-                                                {{ form_label(form.infConsumption, 'Consumo (kWh)') }}
+                                                {{ form_label(form.infConsumption, 'Consumo Mensal (kWh)') }}
                                                 {{ form_widget(form.infConsumption,{attr:{class:'form-control'}}) }}
                                             </div>
                                             <div class="col-md-4">
-                                                <label><br></label>
+                                                <label>&nbsp;<br></label>
                                                 <button type="submit" data-style="zoom-in" class="btn btn-success btn-md pull-right col-xs-12 ladda-button">
                                                     <i class="fa fa-save"></i>
                                                     {{ project.token ? 'Atualizar' : 'Iniciar' }}
@@ -458,9 +458,11 @@
                         fillColor: "rgba(26,179,148,0.5)",
                         strokeColor: "rgba(26,179,148,0.8)",
                         pointColor: "rgba(26,179,148,0.75)",
-                        //pointstrokeColor: "yellow",
                         data: data,
-                        element: ProjectManager.chart.element
+                        element: ProjectManager.chart.element,
+                        callback: function(chart){
+                            ProjectManager.onChartGenerate();
+                        }
                     });
                 },
                 clear: function(){
@@ -492,6 +494,9 @@
                         }
                     });
                 }
+            },
+            replaceId: function(source){
+                return source.replace(/_id_/g, ProjectManager.project.id);
             },
             getErrors: function(){
                 var errors = [];
@@ -588,6 +593,18 @@
             onProjectUpdate: function(){
                 //console.log('project_updated');
             },
+            onChartGenerate: function(){
+                var chart = ProjectManager.chart.getData();
+                if(chart && ProjectManager.project.id) {
+                    Request.send({
+                        url: ProjectManager.replaceId('{{ path('project_chart',{id:'_id_'}) }}'),
+                        data: {chart: ProjectManager.chart.getData()},
+                        method: 'post',
+                        callback: function (xhr) {
+                        }
+                    });
+                }
+            },
             onSaveProject: function(){
 
                 var project_url = '{{ path('project_update',{id:'_id_'}) }}'.replace(/_id_/g, ProjectManager.project.id);
@@ -646,339 +663,6 @@
         };
 
         ProjectManager.onLoadManager();
-
-        /*------------------------------------------------------------*/
-
-        var form_project = $('form[name="project"]');
-        var form_mode = 'save';
-
-        /*var Project = {
-            isLoaded: false,
-            chart: {
-                element: 'default_chart',
-                generate: function(data) {
-                    AppChart.projectChart({
-                        fillColor: "rgba(26,179,148,0.5)",
-                        strokeColor: "rgba(26,179,148,0.8)",
-                        pointColor: "rgba(26,179,148,0.75)",
-                        //pointstrokeColor: "yellow",
-                        data: data,
-                        element: Project.chart.element
-                    });
-                },
-                init: function(){
-                    var chart_container = $('#chart_container');
-                    $('#'+Project.chart.element).attr('width', chart_container.width());
-                    window.setTimeout(function(){
-                        Project.isLoaded = true;
-                    }, 1000);
-                }
-            },
-            clear_info: function(){
-                $('#calc_errors, #calc_info').html('');
-                var canvas = AppChart.getCanvas(Project.chart.element);
-                if(canvas) {
-                    var context = canvas.getContext('2d');
-                    context.clearRect(0, 0, canvas.width, canvas.height);
-                }
-            },
-            getChartData: function(){
-                return AppChart.getDataUrl(Project.chart.element);
-            },
-            processing: false,
-            init: function(){
-                Project.chart.init();
-                Project.clear_info();
-            }
-        };
-
-        Project.init();*/
-
-        var project_chart = null;
-        var editing_project = false;
-        function create_alert_box(type, title, message){
-            return '<div class="alert alert-'+type+'"><a class="alert-link">' + title + '</a>' + message + '</div>';
-        }
-
-        $(function(){
-
-            var project_kit = $('#project_kit');
-            var project_customer = $('#project_customer');
-            var project_saleStage = $('#project_saleStage');
-
-            function createCustomerChosen(){
-
-                /*if(!project_customer.find('optgroup').length) {
-                 var opt_person = $('optgroup[label="person"]');
-                 var opt_company = $('optgroup[label="company"]');
-                 if(!opt_company.length){
-                 project_customer.append('<optgroup label="company"></optgroup>');
-                 }
-                 if(!opt_person.length){
-                 project_customer.prepend('<optgroup label="person"></optgroup>');
-                 }
-                 }*/
-                //var opt_groups = project_customer.find('optgroup');
-                //$(opt_groups[0]).attr('label', '{{ 'Peoples'|trans }}');
-                //$(opt_groups[1]).attr('label', '{{ 'Companies'|trans }}');
-
-                var buttons = '<div class="btn-group btn-group-sm">' +
-                    '<button data-context="person" class="btn btn-xs btn-primary ladda-button" data-style="zoom-out"><i class="fa fa-plus"></i> {{ 'Pessoa'|trans }}</button>' +
-                    '<button data-context="company" class="btn btn-xs btn-primary ladda-button" data-style="zoom-out"><i class="fa fa-plus"></i> {{ 'Company'|trans }}</button>' +
-                    '</div>';
-
-                var contact_url = '{{ path('contact_fast_create',{context:'_ctx_'}) }}';
-
-                project_customer.chosen({
-                    width: '100%',
-                    no_results_text: buttons
-                }).on('chosen:no_results', function (event, params) {
-                    var add_button = $('[data-context]');
-                    add_button.ladda();
-                    add_button.on('click', function () {
-                        var _btn = $(this);
-                        var _ctx = _btn.data('context');
-                        //var _target = _ctx == 'person' ? opt_groups[0] : opt_groups[1] ;
-                        $.ajax({
-                            url: contact_url.replace(/_ctx_/g, _btn.data('context')),
-                            method: 'post',
-                            data: {name: params.chosen.search_field.val()},
-                            success: function(response){
-                                if('success' == response.status){
-                                    var data = response.data;
-                                    project_customer.append('<option selected="selected" value="' + data.id + '">' + data.name + '</option>');
-                                    project_customer.trigger('chosen:updated');
-                                    woopra.track('contato');
-                                }
-                            },
-                            error: function(response){
-                                console.log(response.status);
-                            }
-                        });
-                    });
-                });
-            }
-
-            /*form_project.on('submit', function(event){
-                if(!project_customer.val() && 'save' == form_mode){
-                    event.preventDefault();
-                    swal({
-                        title: "Contato indefinido",
-                        text: "Para prosseguir é necessário selecionar um contato!",
-                        type: "error",
-                        showConfirmButton: true
-                    });
-                    return false;
-                }
-            });*/
-
-
-            {% if project.id is null %}
-            //project_customer.find('optgroup:first-child').attr('label','{{ 'Peoples'|trans }}');
-            ///project_customer.find('optgroup:last-child').attr('label','{{ 'Companies'|trans }}');
-            ///project_customer.chosen();
-            project_kit.chosen();
-            createCustomerChosen();
-            {% endif %}
-
-            {% if project.id and ajax_process %}
-
-            var form_button = form_project.find('[type="submit"]');
-            var inverter_forms = $('#inverter_forms');
-            var inverter_spinner = inverter_forms.html();
-            var current_kit = project_kit.val();
-
-            function lock_form_project(){
-                editing_project = false;
-                form_mode = 'edit';
-                form_project.find('input, select').prop('disabled', true);
-                form_button.html('<i class="fa fa-pencil"></i> {{ 'Edit'|trans }}');
-            }
-
-            function unlock_form_project(){
-                editing_project = true;
-                form_mode = 'save';
-                form_project.find('input, select').prop('disabled', false);
-                form_button.html('<i class="fa fa-save"></i> {{ 'Save'|trans }}').ladda();
-                project_kit.chosen();
-                //project_customer.chosen();
-                createCustomerChosen();
-                project_saleStage.chosen();
-                //clear_calculation_boxes();
-                $('#project_saleStage').chosen();
-                //Project.clear_info();
-            }
-
-            function check_form_project(){
-                if(project_kit.val()){
-                    lock_form_project();
-                }else{
-                    unlock_form_project();
-                }
-            }
-
-            function after_update_kit(){
-                project_kit.chosen('destroy');
-                project_customer.chosen('destroy');
-                project_saleStage.chosen('destroy');
-                check_form_project();
-            }
-
-            project_customer.find('optgroup:first-child').attr('label','{{ 'Peoples'|trans }}');
-            project_customer.find('optgroup:last-child').attr('label','{{ 'Companies'|trans }}');
-            check_form_project();
-
-            /*var project_info = $('#project_info');
-            var project_info_loader = project_info.html();
-            function load_project_info(){
-                project_info.html(project_info_loader);
-                $.ajax({
-                    url: '{{ path('project_info',{token: project.token}) }}',
-                    success: function(response){
-                        project_info.html(response);
-                    }
-                });
-            }*/
-            //load_project_info();
-
-            form_button.ladda();
-            /*form_project.on('submit', function(event) {
-                event.preventDefault();
-                if('save' == form_mode) {
-                    var form = $(this);
-                    form_button.ladda('start');
-                    $.ajax({
-                        url: form.attr('action'),
-                        method: form.attr('method'),
-                        data: form.serialize(),
-                        success: function (response) {
-                            form_button.ladda('stop');
-                            if (current_kit != project_kit.val()) {
-                                current_kit = project_kit.val();
-                                get_inverters_forms();
-                                //load_project_info();
-                            }
-                            after_update_kit();
-                        }
-                    });
-                }else{
-                    unlock_form_project();
-                }
-            });*/
-
-            {% endif %}
-
-            var google_maps = 'https://maps.googleapis.com/maps/api/geocode/json?address=_addr_&key=AIzaSyDNgvmkQ1790PSv2CyamhtCXL0qh0bClDI';
-            var choice_state = $('#project_state');
-            var choice_city = $('#project_city');
-            var input_lat = $('#project_latitude');
-            var input_lng = $('#project_longitude');
-            var modal_info = $('#modal_info');
-
-            {#choice_state.on('change', function(){
-                var state = $(this).val();
-                choice_city.find('option').remove();
-                choice_city.append('<option>{{ 'Loading'|trans }}...</option');
-                $.ajax({
-                    url: '{{ path('brazil_cities',{state:'_state_'}) }}'.replace(/_state_/g, state),
-                    success: function (response) {
-                        if(response.hasOwnProperty('cities')){
-                            var options = '';
-                            $.each(response.cities, function(i, city){
-                                options += '<option>'+city+'</option>';
-                            });
-                            choice_city.html(options);
-
-                            {% if project.id is null %}
-                            choice_city.trigger('change');
-                            {% endif %}
-                        }
-                    }
-                });
-            }){% if project.id is null %}.trigger('change'){% endif %};
-            #}
-
-            /*function load_geocode(){
-                var state = choice_state.val();
-                var city = choice_city.val();
-
-                if(state && city){
-                    var address = $.trim(city+'-'+state).replace(/ /g,'+');
-                    var geocode_url = google_maps.replace(/_addr_/g, address);
-                    $.ajax({
-                        url: geocode_url,
-                        success: function(response){
-                            if(response.hasOwnProperty('results')){
-                                var location = response.results[0].geometry.location;
-                                input_lat.val(location.lat);
-                                input_lng.val(location.lng);
-                            }
-                        }
-                    });
-                }
-            }*///load_geocode();
-
-            /*choice_city.on('change', function(){
-                load_geocode();
-            });*/
-
-            var modal_body = modal_info.find('.modal-body'), modal_spinner = modal_body.html();
-            modal_info.on('show.bs.modal', function(){
-                if(!input_lat.val() || !input_lng.val()){
-                    modal_body.html('<h2 class="text-center"> Coordenadas indefinidas &mdash; Informe um endereço </h2>');
-                }else{
-                    modal_body.html(modal_spinner);
-                    $.ajax({
-                        url: '{{ path('coordinate_info') }}',
-                        method: 'post',
-                        data: {latitude:input_lat.val(), longitude:input_lng.val()},
-                        success: function (response) {
-                            modal_body.html(response);
-                        }
-                    });
-                }
-            });
-
-
-            $('#form-estimate-power').on('submit', function(event){
-                event.preventDefault();
-
-                var latitude = input_lat.val();
-                var longitude = input_lng.val();
-                var consumption = $('#consumption').val();
-                var error_inner = $('#form-estimate-error');
-                var button = $(this).find('button');
-                var estimate = true;
-
-                if(!latitude || !longitude){
-                    estimate = false;
-                    error_inner.html('Determine a localização!');
-                }
-
-                if(!consumption){
-                    estimate = false;
-                    error_inner.html('Informe a média de consumo');
-                }
-
-                button.ladda();
-                if(estimate){
-                    button.ladda('start');
-                    $.ajax({
-                        url: '{{ path('project_estimate_power') }}',
-                        method: 'post',
-                        data: {data:{latitude: latitude, longitude: longitude, consumption: consumption}},
-                        success: function(response){
-                            if(response.hasOwnProperty('error')){
-                                error_inner.html(response.error);
-                            }else{
-                                $('#estimate_power').val(response.power);
-                            }
-                            button.ladda('stop');
-                        }
-                    });
-                }
-            });
-        });
 
     </script>
 

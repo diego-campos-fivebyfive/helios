@@ -15,7 +15,6 @@ use AppBundle\Form\Component\ProjectAreaType;
 use AppBundle\Form\Component\ProjectType;
 use AppBundle\Form\Component\GeneratorType;
 use AppBundle\Form\Project\ProjectInverterType;
-use AppBundle\Service\ProjectHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -144,7 +143,8 @@ class ProjectController extends AbstractController
             $generator = $this->getGenerator();
 
             $defaults = $generator->loadDefaults([
-                'consumption' => (float) $project->getInfConsumption(),
+                'roof_type' => $project->getRoofType(),
+                'consumption' => $project->getInfConsumption(),
                 'latitude' => $project->getLatitude(),
                 'longitude' => $project->getLongitude()
             ]);
@@ -155,7 +155,8 @@ class ProjectController extends AbstractController
 
             return $this->json([
                 'project' => [
-                    'id' => $project->getId()
+                    'id' => $project->getId(),
+                    'power' => $project->getPower()
                 ]
             ]);
         }
@@ -228,12 +229,24 @@ class ProjectController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/chart", name="project_chart")
+     * @Method("post")
+     */
+    public function chartAction(Project $project, Request $request)
+    {
+        $project->setChart('generation', $request->get('chart'));
+
+        $this->manager('project')->save($project);
+
+        return $this->json([]);
+    }
+
+    /**
      * @Route("/{id}/components", name="project_components")
      */
     public function componentsAction(Project $project, Request $request)
     {
         $defaults = $project->getDefaults();
-        $defaults['power'] = $project->getPower();
 
         $form = $this->createForm(GeneratorType::class, $defaults);
 
@@ -241,10 +254,10 @@ class ProjectController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
 
-            $project->setDefaults($form->getData());
-
             $generator = $this->getGenerator();
             $generator->reset($project);
+
+            $project->setDefaults($form->getData());
             $generator->generate($project);
 
             return $this->json([
