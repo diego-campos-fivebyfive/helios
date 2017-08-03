@@ -75,9 +75,6 @@
             <table class="table">
                 <tr>
                     <td>
-                        <div class="hide">
-                            {#{{ form_widget(form.inverter,{'attr':{'class':'form-control inverter-choice'}}) }}#}
-                        </div>
                         {{ form_widget(form.operation,{'attr':{'class':'form-control operation-choice'}}) }}
                     </td>
                     <td class="col-md-1">
@@ -102,7 +99,7 @@
                    data-href="{{ path('project_inverter_operation',{id:projectInverter.id}) }}"
                    data-target="#modal_operation_info"
                    class="btn btn-md btn-{{ op_color }} inverter-info operation-info">
-                    <i class="fa fa-dot-circle-o"></i> FD
+                    <i class="fa fa-dot-circle-o"></i> FDI
                 </a>
             </div>
         </div>

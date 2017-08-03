@@ -447,13 +447,9 @@ class ProjectController extends AbstractController
      */
     public function operationAreaAction(ProjectArea $projectArea)
     {
-        /** @var ProjectHelper $processor */
-        $helper = $this->get('app.project_helper');
-        $helper->debugArea($projectArea);
-
         $this->clearTemplateCache('project.area_operation');
 
-        return $this->render('project.area_operation', [
+        return $this->render('project.operation_area', [
             'data' => $projectArea->getMetadata()
         ]);
     }
