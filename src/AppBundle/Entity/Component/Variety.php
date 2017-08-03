@@ -12,7 +12,6 @@
 namespace AppBundle\Entity\Component;
 
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * Variety
@@ -22,7 +21,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  */
 class Variety implements VarietyInterface
 {
-    use ORMBehaviors\Timestampable\Timestampable;
+    use ComponentTrait;
 
     /**
      * @var int
@@ -60,13 +59,6 @@ class Variety implements VarietyInterface
      * @ORM\Column(name="description", type="text")
      */
     private $description;
-
-    /**
-     * @var MakerInterface
-     *
-     * @ORM\ManyToOne(targetEntity="Maker")
-     */
-    private $maker;
 
     /**
      * @inheritDoc
@@ -146,23 +138,5 @@ class Variety implements VarietyInterface
     public function getDescription()
     {
         return $this->description;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setMaker(MakerInterface $maker)
-    {
-        $this->maker = $maker;
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getMaker()
-    {
-        return $this->maker;
     }
 }
