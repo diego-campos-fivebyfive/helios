@@ -66,6 +66,13 @@ class Project implements ProjectInterface
     private $defaults;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $charts;
+
+    /**
      * @var string
      *
      * @ORM\Column(type="string", length=25)
@@ -116,7 +123,7 @@ class Project implements ProjectInterface
     /**
      * @var float
      *
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float", nullable=true)
      */
     private $infPower;
 
@@ -347,9 +354,12 @@ class Project implements ProjectInterface
         $this->invoiceBasePrice      = 0;
         $this->deliveryBasePrice     = 0;
         $this->taxPercent            = 0;
+        $this->charts                = [];
         $this->defaults              = [];
         $this->metadata              = [];
         $this->accumulatedCash       = [];
+        //REMOVE FIELDS
+        $this->infPower = 0;
     }
 
     /**
@@ -383,6 +393,11 @@ class Project implements ProjectInterface
      */
     public function setDefaults(array $defaults = [])
     {
+        $defaults['latitude'] = (float) $defaults['latitude'];
+        $defaults['longitude'] = (float) $defaults['longitude'];
+        $defaults['power'] = (float) $defaults['power'];
+        $defaults['consumption'] = (float) $defaults['consumption'];
+
         $this->defaults = $defaults;
 
         return $this;
@@ -1034,6 +1049,24 @@ class Project implements ProjectInterface
         }
 
         return $price;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setChart($type, $chart)
+    {
+        $this->charts[$type] = $chart;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getChart($type)
+    {
+        return array_key_exists($type, $this->charts) ? $this->charts[$type] : null;
     }
 
     /**
