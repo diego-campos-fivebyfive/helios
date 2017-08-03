@@ -32,7 +32,7 @@ const sendMemorial = ({ Dados }) => {
       }))
     }))
   })
-    memorial.then(console.log)
+  memorial.then(console.log)
   return memorial
 }
 
