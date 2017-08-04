@@ -12,8 +12,6 @@
 namespace AppBundle\Entity\Component;
 
 use Doctrine\ORM\Mapping as ORM;
-use AppBundle\Entity\TokenizerTrait;
-use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * Inverter
@@ -26,8 +24,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  */
 class Inverter implements InverterInterface
 {
-    use TokenizerTrait;
-    use ORMBehaviors\Timestampable\Timestampable;
+    use ComponentTrait;
 
     /**
      * @var integer
@@ -109,14 +106,6 @@ class Inverter implements InverterInterface
     private $mpptNumber;
 
     /**
-     * `number_con_mppt` int(11) NOT NULL,
-    `con_type` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-    `mppt_parallel` tinyint(1) NOT NULL,
-    `in_protections` tinyint(1) NOT NULL,
-    `phase_number` int(11) NOT NULL,
-     */
-
-    /**
      * @var int
      *
      * @ORM\Column(type="smallint", nullable=true)
@@ -152,20 +141,6 @@ class Inverter implements InverterInterface
     private $phases;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="data_sheet", type="string", nullable=true)
-     */
-    protected $dataSheet;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="image", type="string", nullable=true)
-     */
-    protected $image;
-
-    /**
      * @var float
      *
      * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
@@ -178,14 +153,6 @@ class Inverter implements InverterInterface
      * @ORM\Column(name="status", type="boolean", nullable=true)
      */
     private $status;
-
-    /**
-     * @var MakerInterface
-     *
-     * @ORM\ManyToOne(targetEntity="Maker")
-     * @ORM\JoinColumn(name="maker")
-     */
-    protected $maker;
 
     /**
      * This property is used by management only
@@ -482,42 +449,6 @@ class Inverter implements InverterInterface
     /**
      * @inheritDoc
      */
-    public function setDatasheet($dataSheet)
-    {
-        $this->dataSheet = $dataSheet;
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getDatasheet()
-    {
-        return $this->dataSheet;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setImage($image)
-    {
-        $this->image = $image;
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getImage()
-    {
-        return $this->image;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function setCurrentPrice($currentPrice)
     {
         $this->currentPrice = $currentPrice;
@@ -539,22 +470,6 @@ class Inverter implements InverterInterface
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @param MakerInterface $maker
-     */
-    public function setMaker($maker)
-    {
-        $this->maker = $maker;
-    }
-
-    /**
-     * @return MakerInterface
-     */
-    public function getMaker()
-    {
-        return $this->maker;
     }
 
     /**

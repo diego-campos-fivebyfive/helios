@@ -89,6 +89,28 @@ interface StructureInterface
     public function isActive();
 
     /**
+     * @param $datasheet
+     * @return StructureInterface
+     */
+    public function setDatasheet($datasheet);
+
+    /**
+     * @return string
+     */
+    public function getDatasheet();
+
+    /**
+     * @param $image
+     * @return StructureInterface
+     */
+    public function setImage($image);
+
+    /**
+     * @return string
+     */
+    public function getImage();
+
+    /**
      * @return array
      */
     public static function getStatusOptions();
@@ -102,4 +124,15 @@ interface StructureInterface
      * @return mixed
      */
     public function getUpdatedAt();
+
+    /**
+     * @param MakerInterface $maker
+     * @return StructureInterface
+     */
+    public function setMaker(MakerInterface $maker);
+
+    /**
+     * @return MakerInterface
+     */
+    public function getMaker();
 }

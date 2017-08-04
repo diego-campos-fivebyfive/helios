@@ -2,11 +2,7 @@
 
 namespace AppBundle\Entity\Component;
 
-use AppBundle\Entity\AccountInterface;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use AppBundle\Entity\TokenizerTrait;
-use AppBundle\Model\Snapshot;
 
 /**
  * Structure
@@ -17,6 +13,8 @@ use AppBundle\Model\Snapshot;
  */
 class Structure implements StructureInterface
 {
+    use ComponentTrait;
+
      /**
      * @var integer
      *
@@ -67,14 +65,6 @@ class Structure implements StructureInterface
      * @ORM\Column(name="status", type="boolean", nullable=true)
      */
     private $status;
-
-    /**
-     * @var MakerInterface
-     *
-     * @ORM\ManyToOne(targetEntity="Maker")
-     * @ORM\JoinColumn(name="maker")
-     */
-    protected $maker;
 
     /**
      * Constructor
@@ -242,62 +232,5 @@ class Structure implements StructureInterface
             self::DISABLE  => 'Inativo',
             self::ACTIVE => 'Ativo'
         ];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * Get updatedAt
-     *
-     * @return \DateTime
-     */
-    public function getUpdatedAt()
-    {
-        return $this->updatedAt;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function prePersist()
-    {
-        $this->createdAt = new \DateTime;
-        $this->updatedAt = new \DateTime;
-        $this->generateToken();
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function preUpdate()
-    {
-        $this->updatedAt = new \DateTime;
-        $this->generateToken();
-
-        return $this;
-    }
-
-    /**
-     * @param $maker
-     */
-    public function setMaker($maker)
-    {
-        $this->maker = $maker;
-    }
-
-    /**
-     * @return MakerInterface
-     */
-    public function getMaker()
-    {
-        return $this->maker;
     }
 }

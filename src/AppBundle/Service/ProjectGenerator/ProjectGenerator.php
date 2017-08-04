@@ -37,6 +37,11 @@ class ProjectGenerator
     private $autoSave;
 
     /**
+     * @var bool
+     */
+    private $attempts = true;
+
+    /**
      * @var \AppBundle\Manager\ProjectManager
      */
     private $manager;
@@ -127,10 +132,6 @@ class ProjectGenerator
 
         // STRING BOXES
         $this->generateStringBoxes($this->project);
-
-        // SYNCHRONIZE DEFAULTS
-        $defaults['power'] = $this->project->getPower();
-        $this->project->setDefaults($defaults);
 
         // SAVING
         $this->autoSave = true;
@@ -234,9 +235,9 @@ class ProjectGenerator
 
         $loader = new InverterLoader($manager);
 
-        $power = (float) $defaults['power'];
+        $power = $defaults['power'];
+
         $inverters = $loader->load($power, $maker);
-        $project->setInfPower($power);
 
         foreach ($inverters as $inverter){
 
@@ -273,15 +274,15 @@ class ProjectGenerator
     {
         $this->resetAreas($project);
 
-        $manager = $this->manager('project_area');
+        $defaults = $project->getDefaults();
 
-        $latitude = $project->getLatitude();
-        $longitude = $project->getLongitude();
+        $latitude = $defaults['latitude'];
         $inclination = abs($latitude) < 10 ? 10 : (int) abs($latitude);
-        $orientation = $longitude < 0 ? 0 : 180;
+        $orientation = $latitude < 0 ? 0 : 180;
         $projectModule = $project->getProjectModules()->first();
         $projectInverters = $project->getProjectInverters();
 
+        $totalInvertersPower = 0;
         foreach ($projectInverters as $projectInverter){
 
             $projectInverter->getProjectAreas()->clear();
@@ -294,6 +295,8 @@ class ProjectGenerator
 
             foreach ($mppts as $item) {
                 for ($i = 0; $i < $projectInverter->getQuantity(); $i++) {
+
+                    $totalInvertersPower += $projectInverter->getInverter()->getNominalPower();
 
                     $this->createArea(
                         $projectInverter,
@@ -309,6 +312,18 @@ class ProjectGenerator
             $projectInverter
                 ->setLoss(10)
                 ->setOperation($mppt);
+        }
+
+        if(($project->getPower() * .75) >= $totalInvertersPower){
+
+            $this->reset($project);
+
+            $defaults = $project->getDefaults();
+            $defaults['power'] += .1;
+
+            $project->setDefaults($defaults);
+
+            $this->generate();
         }
 
         $this->generateGroups($project);
@@ -562,7 +577,8 @@ class ProjectGenerator
         $manager = $this->manager('project_inverter');
         foreach ($project->getProjectInverters() as $projectInverter){
             $project->removeProjectInverter($projectInverter);
-            $manager->delete($projectInverter, !$project->getProjectInverters()->next());
+            if($projectInverter->getId())
+                $manager->delete($projectInverter, !$project->getProjectInverters()->next());
         }
 
         return $this;
@@ -594,7 +610,8 @@ class ProjectGenerator
 
         $count = $projectAreas->count();
         foreach ($project->getAreas() as $key => $projectArea){
-            $manager->delete($projectArea, ($key == $count-1));
+            if($projectArea->getId())
+                $manager->delete($projectArea, ($key == $count-1));
         }
 
         return $this;
