@@ -45,11 +45,20 @@
     <tr>
         <td colspan="4">
             <div class="btn-group btn-group-md">
-                <button id="add-dist-line" class="btn btn-primary">
-                    <i class="fa fa-plus"></i>
+                <button id="add-dist-line" class="btn btn-success">
+                    <i class="fa fa-plus"></i> Adicionar
                 </button>
-                <button id="dist-counter" class="btn btn-success">
-                    {{ projectModule.quantity }}
+            </div>
+
+            <div class="btn-group btn-group-md">
+                <button class="btn btn-primary">
+                    Módulos : <span id="dist-counter"> {{ projectModule.quantity }} </span>
+                </button>
+            </div>
+
+            <div class="btn-group btn-group-md">
+                <button id="dist-checker" class="btn btn-danger">
+                    <strong> {{ projectModule.quantity }} </strong>
                 </button>
             </div>
         </td>
@@ -76,6 +85,7 @@
         container: $('#dist-container'),
         template: $('#template_lines').html(),
         counter: $('#dist-counter'),
+        checker: $('#dist-checker'),
         max_count: {{ projectModule.quantity }},
         submit: $('#btn-dist-submit'),
         getInt: function (e) {
@@ -96,12 +106,13 @@
         },
         check: function(){
             var count = GroupManager.count();
+            GroupManager.checker.html(count - GroupManager.max_count);
             if(GroupManager.max_count == count){
                 GroupManager.submit.removeAttr('disabled');
-                GroupManager.counter.removeClass('btn-danger').addClass('btn-success');
+                GroupManager.checker.hide();
             }else{
                 GroupManager.submit.attr('disabled', 'disabled');
-                GroupManager.counter.removeClass('btn-success').addClass('btn-danger');
+                GroupManager.checker.show();
             }
             GroupManager.counter.html(count);
         },
