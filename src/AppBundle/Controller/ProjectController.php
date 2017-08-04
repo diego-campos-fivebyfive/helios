@@ -19,10 +19,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 
 /**
  * Class ProjectController
  * @Route("project")
+ * @Breadcrumb("Projetos")
  */
 class ProjectController extends AbstractController
 {
@@ -124,6 +126,7 @@ class ProjectController extends AbstractController
 
     /**
      * @Route("/create", name="project_create")
+     * @Breadcrumb("Novo Projeto")
      */
     public function createAction(Request $request)
     {
