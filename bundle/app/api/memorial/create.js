@@ -13,31 +13,31 @@ const level = {
 
 const getLevel = type => level[type]
 
-const sendMemorial = ({ Dados }) => {
-
-  const memorial = Sices.sendMemorial({
-    version: Dados.Versao,
-    status: (Dados.Status === 'Publicado') ? 1 : 0,
-    start_at: '2017-08-11',
-    end_at: '2017-08-11',
-    range: Dados.Produtos.map(x => ({
-      code: x.Codigo,
-      markups: x.Faixas.map(y => ({
-        initial: y.De,
-        final: y.Ate,
-        levels: y.Niveis.map(z => ({
-          price: z.PrecoVenda,
-          markup: 1.0,
-          level: getLevel(z.Descricao)
+const sendMemorial = ({ Dados }) =>
+  Sices
+    .sendMemorial({
+      version: Dados.Versao,
+      status: (Dados.Status === 'Publicado') ? 1 : 0,
+      start_at: '2017-08-11',
+      end_at: '2017-08-11',
+      range: Dados.Produtos.map(Ranges => ({
+        code: Ranges.Codigo,
+        markups: Ranges.Faixas.map(Markups => ({
+          initial: Markups.De,
+          final: Markups.Ate,
+          levels: Markups.Niveis.map(Levels => ({
+            price: Levels.PrecoVenda,
+            markup: 1.0,
+            level: getLevel(Levels.Descricao)
+          }))
         }))
       }))
-    }))
-  })
-  memorial.then(console.log)
-  return memorial
-}
+    })
 
-const create = ({ object }) => Isquik.getMemorial(object.id).then(sendMemorial)
+const create = ({ object }) =>
+  Isquik
+    .getMemorial(object.id)
+    .then(sendMemorial)
 
 module.exports = {
   create
