@@ -1,8 +1,6 @@
 'use strict'
 
-const { app } = require('../config')
-
-const { router, bundler } = app
+const { router, bundler } = require('../components')
 
 const account = require('./account')
 const memorial = require('./memorial')
