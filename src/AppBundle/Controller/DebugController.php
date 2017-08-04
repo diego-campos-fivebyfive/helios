@@ -55,6 +55,21 @@ use AppBundle\Service\Notifier\Notifier;
 class DebugController extends AbstractController
 {
     /**
+     * @Route("/logger/{env}", name="debug_logger")
+     */
+    public function loggerAction($env, Request $request)
+    {
+        $file = $this->get('kernel')->getRootDir() . '/logs/' . $env . '.log';
+
+        $content = '';
+        if(is_readable($file)){
+            $content = file_get_contents($file);
+        }
+
+        echo $content; die;
+    }
+
+    /**
      * @Route("/", name="debug_index")
      */
     public function indexAction(Request $request)
