@@ -23,12 +23,12 @@ const bundler = (request, response, action) => {
         .json(data)
         .end()
     })
-    .catch(error => {
+    .catch(({ message }) => {
       response
         .status(500)
         .send(`Internal Error, contact us. ${new Date()}`)
         .end()
-      throw new Error(`Internal error: ${error.message}`)
+      throw new Error(`Internal error: ${message}`)
     })
 }
 
