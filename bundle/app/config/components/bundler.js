@@ -1,7 +1,6 @@
 'use strict'
 
 const bundler = (request, response, action) => {
-
   if (!action) {
     response
       .status(404)
@@ -25,11 +24,11 @@ const bundler = (request, response, action) => {
         .end()
     })
     .catch(error => {
-      throw new Error(`Internal error: ${error.message}`)
       response
         .status(500)
-        .send(`Internal Error, contact us. ${new Date}`)
+        .send(`Internal Error, contact us. ${new Date()}`)
         .end()
+      throw new Error(`Internal error: ${error.message}`)
     })
 }
 
