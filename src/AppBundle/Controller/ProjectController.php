@@ -11,6 +11,7 @@ use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverter;
 use AppBundle\Entity\Component\ProjectModule;
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\Project\NasaCatalog;
 use AppBundle\Form\Component\ProjectAreaType;
 use AppBundle\Form\Component\ProjectType;
 use AppBundle\Form\Component\GeneratorType;
@@ -153,7 +154,6 @@ class ProjectController extends AbstractController
             ]);
 
             $project->setDefaults($defaults);
-
             $generator->generate($project);
 
             return $this->json([
@@ -463,7 +463,7 @@ class ProjectController extends AbstractController
      */
     public function operationAreaAction(ProjectArea $projectArea)
     {
-        $this->clearTemplateCache('project.area_operation');
+        $this->clearTemplateCache('project.operation_area');
 
         return $this->render('project.operation_area', [
             'data' => $projectArea->getMetadata()
@@ -495,6 +495,34 @@ class ProjectController extends AbstractController
         }
 
         return $this->json([]);
+    }
+
+    /**
+     * @Route("/info_coordinates", name="coordinate_info")
+     */
+    public function coordinateInfoAction(Request $request)
+    {
+        $provider = $this->getNasaProvider();
+
+        $latitude = $request->get('latitude');
+        $longitude = $request->get('longitude');
+
+        $accountGlobal = $provider->findOneBy(
+            [
+                'context' => NasaCatalog::RADIATION_GLOBAL,
+                'latitude' => floor($latitude),
+                'longitude' => floor($longitude),
+                'account' => $this->account()
+            ]);
+
+        $infos = $provider->fromCoordinates($latitude, $longitude);
+
+        return $this->render('project.coordinates', [
+            'infos' => $infos,
+            'latitude' => $latitude,
+            'longitude' => $longitude,
+            'accountGlobal' => $accountGlobal
+        ]);
     }
 
     /**
