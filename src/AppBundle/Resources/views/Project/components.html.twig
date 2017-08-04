@@ -95,7 +95,11 @@
     {% for projectModule in project.projectModules %}
         <tr>
             <td> {{ projectModule.module.id }} </td>
-            <td> {{ projectModule.module.model }} </td>
+            <td>
+                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('component_show', {type:'module', id:projectModule.module.id}) }}">
+                    {{ projectModule.module.model }}
+                </a>
+            </td>
             <td> {{ projectModule.quantity }} </td>
         </tr>
     {% endfor %}
@@ -104,7 +108,11 @@
     {% for id, group in project.groupInverters %}
         <tr>
             <td> {{ id }} </td>
-            <td> {{ group.inverter.model }} </td>
+            <td>
+                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('component_show', {type:'inverter', id:group.inverter.id}) }}">
+                    {{ group.inverter.model }}
+                </a>
+            </td>
             <td> {{ group.quantity }} </td>
         </tr>
     {% endfor %}
@@ -113,7 +121,11 @@
     {% for projectStringBox in project.projectStringBoxes %}
         <tr>
             <td> {{ projectStringBox.stringBox.code }} </td>
-            <td> {{ projectStringBox.stringBox.description }} </td>
+            <td>
+                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('stringbox_show', {id:projectStringBox.stringBox.id}) }}">
+                    {{ projectStringBox.stringBox.description }}
+                </a>
+            </td>
             <td> {{ projectStringBox.quantity }} </td>
         </tr>
     {% endfor %}
@@ -122,7 +134,11 @@
     {% for projectStructure in project.projectStructures %}
         <tr>
             <td> {{ projectStructure.structure.code }} </td>
-            <td> {{ projectStructure.structure.description }} </td>
+            <td>
+                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('structure_show', {id:projectStructure.structure.id}) }}">
+                    {{ projectStructure.structure.description }}
+                </a>
+            </td>
             <td> {{ projectStructure.quantity }} </td>
         </tr>
     {% endfor %}
