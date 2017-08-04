@@ -17,7 +17,7 @@
                             <hr>
                             <div class="product-images">
                                 <div>
-                                    <img class="col-md-12" src=""/>
+                                    <img class="col-md-12" src="{{ structure.image|componentFilePath }}"/>
                                 </div>
                             </div>
 
@@ -38,7 +38,16 @@
                                             <td width="40%"> Código</td>
                                             <td>{{ structure.code }}</td>
                                         </tr>
-
+                                        {% if structure.datasheet %}
+                                            <tr>
+                                                <td>{{ 'Datasheet'|trans }} PDF</td>
+                                                <td>
+                                                    <a href="{{ structure.datasheet|componentFilePath }}" target="_blank">
+                                                        {{ 'View'|trans }}
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
                                     </tbody>
 
                                     <thead>
