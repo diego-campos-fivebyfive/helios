@@ -17,18 +17,8 @@ const event = {
     .then(sicesUser => user.create({ sicesUser }))
 }
 
-router.post('/api/v1/notifications', ((request, response) => {
-  const {
-    body: notification,
-    callback: type
-  } = request.body
-
-  const requestParams = {
-    ...request,
-    notification
-  }
-
-  bundler(requestParams, response, event[type])
+router.post('/api/v1/notifications', (({ body, ...request }, response) => {
+  bundler({ ...request, notification: body.body }, response, event[body.callback])
 }))
 
 router.get('/', ((request, response) => {
