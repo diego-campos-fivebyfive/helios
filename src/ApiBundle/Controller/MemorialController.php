@@ -34,21 +34,24 @@ class MemorialController extends FOSRestController
 
             $markups = $ranges['markups'];
 
-            foreach ($markups as $item) {
+            foreach ($markups as $level) {
 
-                $levels = $item['levels'];
+                $config = $level['levels'];
+
+                foreach ($config as $item) {
 
                     /** @var Range $range */
                     $range = $rangeManager->create();
                     $range
                         ->setCode($ranges['code'])
                         ->setMemorial($memorial)
-                        ->setLevel($levels['level'])
-                        ->setInitialPower($item['initial'])
-                        ->setFinalPower($item['final'])
+                        ->setLevel($item['level'])
+                        ->setInitialPower($level['initial'])
+                        ->setFinalPower($level['final'])
                         ->setMarkup($item['markup'])
-                        ->setPrice($levels['price']);
+                        ->setPrice($item['price']);
                     $rangeManager->save($range);
+                }
             }
             $view = View::create();
             return $this->handleView($view);
