@@ -50,10 +50,9 @@ class FileHandler
     {
         $accessor = PropertyAccess::createPropertyAccessor();
         $name = self::name($component);
-        $id = $component->getId();
 
-        if(!$id){
-            dump($component); die;
+        if(!$component->getId()){
+            throw new \InvalidArgumentException('Only persistent entities can be handled!');
         }
 
         /**
@@ -68,7 +67,7 @@ class FileHandler
 
                 $format = 'pdf' == $extension ? '%s_%s.%s' : '%s_%s_thumb.%s';
 
-                $filename = sprintf($format, $name, $id, $extension);
+                $filename = sprintf($format, $name, $component->getId(), $extension);
 
                 $file->move($this->uploadDir, $filename);
 
