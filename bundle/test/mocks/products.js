@@ -23,6 +23,16 @@ const products = [
     code: 'NOP',
     description: 'Description NOP',
     family: 'inverter'
+  },
+  {
+      code: 'HFG',
+      description: 'Description HFG',
+      family: 'stringbox'
+  },
+  {
+      code: 'SHF',
+      description: 'Description SHFJ',
+      family: 'variety'
   }
 ]
 
