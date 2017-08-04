@@ -11,7 +11,7 @@ const splitModule = product => ({
   model: product.description
 })
 
-const splitInveter = product => ({
+const splitInverter = product => ({
   code: product.code,
   model: product.description
 })
@@ -21,6 +21,16 @@ const splitStructure = product => ({
   description: product.description
 })
 
+const splitStringbox = product => ({
+    code: product.code,
+    description: product.description
+})
+
+const splitVariety = product => ({
+    code: product.code,
+    description: product.description
+})
+
 const sendProduct = product => {
   switch (product.family) {
     case 'module':
@@ -28,11 +38,19 @@ const sendProduct = product => {
       break
 
     case 'inverter':
-      return pipe(splitInveter(product), Sices.sendInveter)
+      return pipe(splitInverter(product), Sices.sendInverter)
       break
 
     case 'structure':
       return pipe(splitStructure(product), Sices.sendStructure)
+      break
+
+    case 'stringbox':
+      return pipe(splitStringbox(product), Sices.sendStringbox)
+      break
+
+    case 'variety':
+      return pipe(splitVariety(product), Sices.sendVariety)
       break
 
     default:
