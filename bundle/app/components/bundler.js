@@ -9,13 +9,11 @@ const bundler = (request, response, action) => {
     return
   }
 
-  const params = {
+  action({
     id: request.params.id,
     query: request.query,
     notification: request.notification
-  }
-
-  action(params)
+  })
     .then(({ statusCode, ...data }) => {
       response
         .status(statusCode)
