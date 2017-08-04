@@ -2,12 +2,12 @@
 
 const { app } = require('../config')
 
+const { router, bundler } = app
+
 const account = require('./account')
 const memorial = require('./memorial')
 const product = require('./product')
 const user = require('./user')
-
-const { router, bundler } = app
 
 const event = {
   2011.11: account.update,
