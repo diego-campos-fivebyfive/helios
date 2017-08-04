@@ -81,7 +81,7 @@ class ProjectGenerator
             'consumption' => 0,
             'module' => 32433,
             'inverter_maker' => 60627,
-            'structure_maker' => 61211,
+            'structure_maker' => StructureCalculator::DEFAULT_STRUCTURE_MAKER,
             'string_box_maker' => 61209
         ], $defaults);
     }
