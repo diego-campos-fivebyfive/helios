@@ -1,9 +1,9 @@
 'use strict'
 
-const sendResponse = require('./response')
+const bundler = require('./bundler')
 const helpers = require('./helpers')
 
 module.exports = {
-  sendResponse,
+  bundler,
   helpers
 }

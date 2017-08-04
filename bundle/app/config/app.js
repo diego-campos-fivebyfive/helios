@@ -2,7 +2,7 @@
 
 const express = require('express')
 const bodyParser = require('body-parser')
-const { sendResponse, preRequest } = require('./components')
+const { bundler } = require('./components')
 const { bundle } = require('./config')
 
 const app = express()
@@ -12,7 +12,6 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 module.exports = {
-  sendResponse,
   router: app,
-  preRequest
+  bundler
 }
