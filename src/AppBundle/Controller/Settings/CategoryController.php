@@ -148,34 +148,55 @@ class CategoryController extends AbstractController
     {
         $this->checkAccess($category);
 
-        $projects = $this->getProjectManager()->findBy([
-            'saleStage' => $category
-        ]);
+        $throwError = function($message, $args)
+        {
+            $error = $this->translate($message, $args);
+            return $this->json(['error' => $error], Response::HTTP_IM_USED);
+        };
 
-        $error = null;
-        if(0 != $count = count($projects)){
-            $error = $this->translate('Sales step in use', [
-                '%count%' => $count
+        $getProjects = function($category)
+        {
+            return $this->manager('project')->findOneBy(Array(
+                'stage' => $category
+            ));
+        };
+
+        $hasProjects = function($projects)
+        {
+            return count($projects);
+        };
+
+        $getAccount = function($context)
+        {
+            return $this->account()->getCategories($context);
+        };
+
+        $translate = function($context)
+        {
+            return $this->translate($context->getId());
+        };
+
+
+        $projects = $getProjects($category);
+
+        if ($hasProjects($projects)) {
+            return $throwError('Sales step in use', [
+                '%count%' => count($projects)
             ]);
         }
 
         $context = $category->getContext();
+        $account = $getAccount($context);
 
-        if (1 == $this->getCurrentAccount()->getCategories($context)->count()) {
-            $error = $this->translate('The account must have at least one', [
-                '%category%' =>  $this->translate($context->getId())
+        if (1 == $account->count()) {
+            return $throwError('The account must have one', [
+                '%category%' => $translate($context)
             ]);
         }
 
-        if($error){
-            return $this->jsonResponse([
-                'error' => $error
-            ], Response::HTTP_IM_USED);
-        }
+        $this->manager('category')->delete($category);
 
-        $this->getCategoryManager()->delete($category);
-
-        return $this->jsonResponse([], Response::HTTP_OK);
+        return $this->json([], Response::HTTP_OK);
     }
 
     /**
