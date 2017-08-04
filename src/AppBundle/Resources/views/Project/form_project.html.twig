@@ -567,6 +567,21 @@
             loadInverters: function(){
                 ProjectManager.load($('#project_inverters'));
             },
+            loadModalCoordinates: function(){
+                var modal_info = $('#modal_info');
+                var modal_body = modal_info.find('.modal-body');
+                var loader_info = modal_body.html();
+                modal_info.on('show.bs.modal', function(){
+                    modal_body.html(loader_info);
+                    Request.send({
+                        url: '{{ path('coordinate_info') }}',
+                        data: { latitude: $('#project_latitude').val(), longitude: $('#project_longitude').val()},
+                        callback: function(xhr){
+                            modal_body.html(xhr.responseText);
+                        }
+                    });
+                });
+            },
             loadModalInfo: function(){
 
                 var area_operation_inner = $('#area_operation_inner');
@@ -659,6 +674,7 @@
 
                 ProjectManager.configureBlocks();
                 ProjectManager.loadModalInfo();
+                ProjectManager.loadModalCoordinates();
             }
         };
 
