@@ -41,7 +41,7 @@ const sendProduct = product => {
 }
 
 const create = ({ notification }) => new Promise((resolve, reject) => {
-  notification.forEach(code => Isquik.getProduct(code)
+  notification.codes.forEach(code => Isquik.getProduct(code)
     .then(sendProduct)
     .then(resolve)
     .catch(reject)
