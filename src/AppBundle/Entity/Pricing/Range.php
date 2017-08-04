@@ -62,7 +62,7 @@ class Range implements RangeInterface
     /**
      * @var float
      *
-     * @ORM\Column(name="markup", type="float", nullable=true)
+     * @ORM\Column(name="markup", type="float")
      */
     private $markup;
 
