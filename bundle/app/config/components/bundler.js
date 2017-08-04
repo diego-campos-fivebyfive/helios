@@ -12,7 +12,6 @@ const bundler = (request, response, action) => {
   const params = {
     id: request.params.id,
     query: request.query,
-    object: request.body,
     notification: request.notification
   }
 
