@@ -12,8 +12,6 @@
 namespace AppBundle\Entity\Component;
 
 use Doctrine\ORM\Mapping as ORM;
-use AppBundle\Entity\TokenizerTrait;
-use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * Module
@@ -26,8 +24,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  */
 class Module implements ModuleInterface
 {
-    use TokenizerTrait;
-    use ORMBehaviors\Timestampable\Timestampable;
+    use ComponentTrait;
 
     /**
      * @var integer
@@ -165,20 +162,6 @@ class Module implements ModuleInterface
     private $connectionType;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="data_sheet", type="string", nullable=true)
-     */
-    protected $dataSheet;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="image", type="string", nullable=true)
-     */
-    protected $image;
-
-    /**
      * @var float
      *
      * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
@@ -191,14 +174,6 @@ class Module implements ModuleInterface
      * @ORM\Column(name="status", type="boolean", nullable=true)
      */
     private $status;
-
-    /**
-     * @var MakerInterface
-     *
-     * @ORM\ManyToOne(targetEntity="Maker")
-     * @ORM\JoinColumn(name="maker")
-     */
-    protected $maker;
 
     /**
      * This property is used by management only
@@ -622,42 +597,6 @@ class Module implements ModuleInterface
     /**
      * @inheritDoc
      */
-    public function setDatasheet($dataSheet)
-    {
-        $this->dataSheet = $dataSheet;
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getDatasheet()
-    {
-        return $this->dataSheet;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setImage($image)
-    {
-        $this->image = $image;
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getImage()
-    {
-        return $this->image;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function setCurrentPrice($currentPrice)
     {
         $this->currentPrice = $currentPrice;
@@ -715,23 +654,5 @@ class Module implements ModuleInterface
             self::DISABLE  => 'Inativo',
             self::ACTIVE => 'Ativo'
         ];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setMaker(MakerInterface $maker)
-    {
-        $this->maker = $maker;
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getMaker()
-    {
-        return $this->maker;
     }
 }

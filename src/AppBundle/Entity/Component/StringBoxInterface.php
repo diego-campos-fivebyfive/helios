@@ -90,6 +90,28 @@ interface StringBoxInterface
     public function getMaker();
 
     /**
+     * @param $datasheet
+     * @return StringBoxInterface
+     */
+    public function setDatasheet($datasheet);
+
+    /**
+     * @return string
+     */
+    public function getDatasheet();
+
+    /**
+     * @param $image
+     * @return StringBoxInterface
+     */
+    public function setImage($image);
+
+    /**
+     * @return string
+     */
+    public function getImage();
+
+    /**
      * @return \DateTime
      */
     public function getCreatedAt();

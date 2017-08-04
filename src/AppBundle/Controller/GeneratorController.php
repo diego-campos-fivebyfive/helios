@@ -67,8 +67,16 @@ class GeneratorController extends AbstractController
      */
     public function testInverterCombinerAction()
     {
+        //$loader = new InverterLoader($this->manager('inverter'));
+        $power = 8;
+
+        //$inverters = $loader->load($power, 60627);
+        //dump($inverters); die;
+
         /** @var ProjectInterface $project */
         $project = $this->manager('project')->create();
+
+        $project->setRoofType('ROOF_ROMAN_AMERICAN');
 
         /** @var \AppBundle\Service\ProjectGenerator\ProjectGenerator $generator */
         $generator = $this->get('project_generator');
@@ -76,11 +84,13 @@ class GeneratorController extends AbstractController
         $defaults = $generator->loadDefaults([
             'latitude' => -25.384,
             'longitude' => -51.455,
-            'consumption' => 500
+            'source' => 'power',
+            'power' => $power
         ]);
 
         $project->setDefaults($defaults);
         $generator->autoSave(false)->project($project)->generate();
+
         dump($project); die;
     }
 

@@ -590,27 +590,6 @@
             var elements = $('.section-editable');
 
             if (elements.length) {
-
-                elements.summernote({
-                    height: 150,
-                    popover: {},
-                    lang: 'pt-BR',
-                    toolbar: [
-                        ['fontsize', ['fontname', 'fontsize', 'color', 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript']],
-                        ['para', ['ol', 'ul', 'paragraph', 'height']],
-                        ['insert', ['picture']]
-                    ],
-                    callbacks: {
-                        onPaste: function(e) {
-                            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-                            e.preventDefault();
-                            setTimeout(function () {
-                                document.execCommand('insertText', false, bufferText);
-                            }, 10);
-                        }
-                    }
-                });
-
                 $('.btn-save-editable').on('click', function () {
                     var btn = $(this);
                     var form = $(btn.data('form'));

@@ -3,6 +3,10 @@
         text-align: center;
         display: block;
     }
+    .middle-block{
+        float: left;
+        width: 50%;
+    }
 </style>
 
 <table class="table">
@@ -17,20 +21,17 @@
             <div class="row">
                 <div class="form-group">
                     <div class="col-md-4">
-                        {{ form_label(form.power, 'Potência',{label_attr:{id:'source_label'}}) }}
-                        <div class="input-group">
-                            <label class="input-group-addon">
-                                <input type="radio" name="source_option" class="source_option" value="consumption" {{ 'consumption' == project.defaults.source ? 'checked="checked"' }}>
-                                Consumo
-                            </label>
-                            <label class="input-group-addon">
-                                <input type="radio" name=source_option class="source_option" value="power" {{ 'power' == project.defaults.source ? 'checked="checked"' }}>
-                                Potência
-                            </label>
-
-                            {{ form_widget(form.power,{attr:{class:'form-control'}}) }}
-                            {{ form_widget(form.consumption,{attr:{class:'form-control'}}) }}
-
+                        <div class="row">
+                            {{ form_label(form.power, 'Potência',{label_attr:{id:'source_label'}}) }}
+                        </div>
+                        <div class="row">
+                            <div class="middle-block">
+                                {{ form_widget(form.source,{attr:{class:'form-control'}}) }}
+                            </div>
+                            <div class="middle-block">
+                                {{ form_widget(form.power,{attr:{class:'form-control'}}) }}
+                                {{ form_widget(form.consumption,{attr:{class:'form-control'}}) }}
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -192,16 +193,9 @@
         });
     });
 
-    function get_source_option(){
-        return $('input.source_option:checked').val();
-    }
-
     function check_source_option() {
-        var option = get_source_option();
-        generator_source.find('option').removeAttr('selected');
-        generator_source.find('option[value="'+option+'"]').attr('selected', 'selected');
+        var option = generator_source.val();
         source_label.html(sources[option].label);
-
         if('power' == option){
             generator_power.show();
             generator_consumption.hide();
@@ -210,10 +204,6 @@
             generator_power.hide();
         }
     }check_source_option();
-
-    source_option.on('change', function(){
-        check_source_option();
-    });
 
     Numbers.mask(generator_power);
     Numbers.mask(generator_consumption);
@@ -256,9 +246,15 @@
         last_consumption = $(this).val();
     });
 
-    $('#project_latitude').on('change', function(){
-        $('#generator_latitude').val($('#project_latitude').val());
-        $('#generator_longitude').val($('#project_longitude').val());
+    generator_source.on('change', function(){
+        check_source_option();
     });
 
+    $('#project_latitude').on('change', function(){
+        $('#generator_latitude').val($(this).val());
+    });
+
+    $('#project_longitude').on('change', function() {
+        $('#generator_longitude').val($(this).val());
+    });
 </script>

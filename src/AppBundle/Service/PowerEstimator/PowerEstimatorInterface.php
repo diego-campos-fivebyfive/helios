@@ -4,7 +4,7 @@ namespace AppBundle\Service\PowerEstimator;
 
 interface PowerEstimatorInterface
 {
-    const EFFICIENCY = 0.1711;
+    const EFFICIENCY = 0.17;
 
     const TEMPERATURE_OPERATION = 45;
 

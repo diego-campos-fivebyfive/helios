@@ -218,6 +218,19 @@ interface ProjectInterface
     public function getSalePrice();
 
     /**
+     * @param $type
+     * @param $chart
+     * @return ProjectInterface
+     */
+    public function setChart($type, $chart);
+
+    /**
+     * @param $type
+     * @return mixed
+     */
+    public function getChart($type);
+
+    /**
      * @param array $metadata
      * @return ProjectInterface
      */

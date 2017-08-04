@@ -39,7 +39,7 @@ interface ModuleInterface
 
     /**
      * @param $model
-     * @return ComponentInterface
+     * @return ModuleInterface
      */
     public function setModel($model);
 
@@ -251,19 +251,19 @@ interface ModuleInterface
     public function getConnectionType();
 
     /**
-     * @param $dataSheet
-     * @return ComponentInterface
+     * @param $datasheet
+     * @return ModuleInterface
      */
-    public function setDataSheet($dataSheet);
+    public function setDatasheet($datasheet);
 
     /**
      * @return string
      */
-    public function getDataSheet();
+    public function getDatasheet();
 
     /**
      * @param $image
-     * @return ComponentInterface
+     * @return ModuleInterface
      */
     public function setImage($image);
 

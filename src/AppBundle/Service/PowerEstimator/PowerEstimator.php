@@ -41,7 +41,7 @@ class PowerEstimator implements PowerEstimatorInterface
 
         $n = [17, 47, 75, 105, 135, 162, 198, 228, 258, 288, 318, 344];
 
-        $loss = 13;
+        $loss = 10;
         $tnoct = $temperature;
         $stc_mod_efi = $efficiency;
         $coef = $coefficient;

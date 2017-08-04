@@ -15,13 +15,16 @@ class Combiner
      */
     public static function combine(ProjectInterface $project)
     {
+        $defaults = $project->getDefaults();
+        $power = $defaults['power'];
+
         /** @var \AppBundle\Entity\Component\ProjectModuleInterface $projectModule */
         $projectModule = $project->getProjectModules()->first();
         /** @var \AppBundle\Entity\Component\ModuleInterface $module */
         $module = $projectModule->getModule();
         $totalPower = 0;
         foreach ($project->getProjectInverters() as $projectInverter){
-            $totalPower += ($projectInverter->getInverter()->getNominalPower() * $projectInverter->getQuantity());
+            $totalPower += ($projectInverter->getInverter()->getNominalPower());
         }
 
         $tnoct  = 45;
@@ -39,7 +42,7 @@ class Combiner
          * @var  $key
          * @var \AppBundle\Entity\Component\ProjectInverterInterface $projectInverter
          */
-        foreach ($project->getProjectInverters() as $key => $projectInverter){
+        foreach (array_values($project->getProjectInverters()->toArray()) as $key => $projectInverter){
             /** @var \AppBundle\Entity\Component\InverterInterface $inverter */
             $inverter = $projectInverter->getInverter();
 
@@ -50,7 +53,7 @@ class Combiner
             for ($p = 1; $p <= $qte_max_mod_par; $p++) {
                 for ($s = $qte_min_mod_ser; $s <= $qte_max_mod_ser; $s++) {
                     $pot = ($p * $s) * ($module->getMaxPower() / 1000);
-                    if ($pot >= ($project->getInfPower() * $percentPower[$key])) {
+                    if ($pot >= ($power * $percentPower[$key])) {
                         $projectInverter->setSerial((int) $s);
                         $projectInverter->setParallel((int) $p);
                         break 2;
