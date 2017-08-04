@@ -27,6 +27,7 @@ const sendMemorial = ({ Dados }) => {
         final: y.Ate,
         levels: y.Niveis.map(z => ({
           price: z.PrecoVenda,
+          markup: 1.0,
           level: getLevel(z.Descricao)
         }))
       }))
