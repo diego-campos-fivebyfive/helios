@@ -36,12 +36,6 @@
                 <div class="row">
                     <div class="hr-line-dashed"></div>
                     <div class="col-md-12">
-                        <form action="{{ path('contacts_import', {context:context}) }}" class="dropzone"
-                              id="myDropzone">
-                            <div class="fallback">
-                                <input name="file" type="file"/>
-                            </div>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -176,7 +170,6 @@
 
 {% if isAjax %}
     {% include view('helper.pagination') %}
-    {#{% include view('contact.script_index') %}#}
 {% endif %}
 
 <script>
@@ -190,25 +183,5 @@
     {% if isStrict %}
     $('#form_filtration').append('<input name="strict" type="hidden" value="true"/>');
     {% endif %}
-
-    {# IMPORT CONTACTS #}
-    $(function () {
-        Dropzone.options.myDropzone = {
-            acceptedFiles: 'application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            maxFiles: 1,
-            dictDefaultMessage: 'Selecionar planilha de contatos',
-            init: function () {
-                this.on('error', function () {
-                });
-                this.on('complete', function (file) {
-                    //console.log(file.xhr);
-                    window.location.reload();
-                });
-                this.on('sending', function (file, xhr, data) {
-                    data.append('category', $('#import_category').val());
-                });
-            }
-        };
-    });
 
 </script>
