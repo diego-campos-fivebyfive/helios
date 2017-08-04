@@ -94,7 +94,10 @@ class StringBoxController extends AbstractController
 
             $this->manager('string_box')->save($stringBox);
 
+            $message = 'StringBox atualizado com sucesso. ';
+
             if ($stringBox->isPublished()) {
+
                 $this->get('notifier')->notify([
                     'callback' => 'product_validate',
                     'body' => [
@@ -102,7 +105,11 @@ class StringBoxController extends AbstractController
                         'family' => 'stringbox'
                     ]
                 ]);
+
+                $message .= 'Publicação executada.';
             }
+
+            $this->setNotice($message);
 
             return $this->redirectToRoute('stringbox_index');
         }
