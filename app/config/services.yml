@@ -156,6 +156,10 @@ services:
     notifier:
         class: AppBundle\Service\Notifier\Notifier
 
+    component_file_handler:
+        class: AppBundle\Service\Component\FileHandler
+        arguments: ['%kernel.root_dir%/../web/uploads/components/']
+
     # Form Services
     project_generator_type:
         class: AppBundle\Form\Component\GeneratorType
