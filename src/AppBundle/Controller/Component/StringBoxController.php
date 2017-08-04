@@ -10,11 +10,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 
 /**
  * Stringbox controller.
  *
  * @Route("stringbox")
+ * @Breadcrumb("String Box")
  *
  * @Security("has_role('ROLE_OWNER')")
  */
