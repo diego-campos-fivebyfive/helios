@@ -106,7 +106,6 @@
         },
         check: function(){
             var count = GroupManager.count();
-            GroupManager.checker.html(count - GroupManager.max_count);
             if(GroupManager.max_count == count){
                 GroupManager.submit.removeAttr('disabled');
                 GroupManager.checker.hide();
@@ -114,7 +113,7 @@
                 GroupManager.submit.attr('disabled', 'disabled');
                 GroupManager.checker.show();
             }
-            GroupManager.counter.html(count);
+            GroupManager.checker.html(count - GroupManager.max_count);
         },
         touchspin: {
             update: function (input) {
