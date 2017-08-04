@@ -156,14 +156,16 @@ class CategoryController extends AbstractController
 
         $getProjects = function($category)
         {
-            return $this->manager('project')->findOneBy(Array(
+            return $this->manager('project')->findBy(Array(
                 'stage' => $category
             ));
         };
 
-        $hasProjects = function($projects)
+        $getContacts = function($category)
         {
-            return count($projects);
+            return $this->manager('customer')->findBy(Array(
+                'category' => $category
+            ));
         };
 
         $getAccount = function($context)
@@ -176,16 +178,26 @@ class CategoryController extends AbstractController
             return $this->translate($context->getId());
         };
 
+        $context = $category->getContext();
 
         $projects = $getProjects($category);
+        $countProjects = count($projects);
 
-        if ($hasProjects($projects)) {
+        if (0 < $countProjects) {
             return $throwError('Sales step in use', [
-                '%count%' => count($projects)
+                '%count%' => $countProjects
             ]);
         }
 
-        $context = $category->getContext();
+        $contacts = $getContacts($category);
+        $countContacts = count($contacts);
+
+        if (0 < $countContacts) {
+            return $throwError('Contacts category in use', [
+                '%count%' => $countContacts
+            ]);
+        }
+
         $account = $getAccount($context);
 
         if (1 == $account->count()) {
