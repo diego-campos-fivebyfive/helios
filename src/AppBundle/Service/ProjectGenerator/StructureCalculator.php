@@ -19,6 +19,8 @@ class StructureCalculator
     const ROOF_SHEET_METAL      = 'ROOF_SHEET_METAL';       //3
     const ROOF_SHEET_METAL_PFM  = 'ROOF_SHEET_METAL_PFM';   //4
 
+    const DEFAULT_STRUCTURE_MAKER = 61211;
+
     const PROFILE_MIDDLE = 'PROFILE_MIDDLE';
     const TERMINAL_FINAL = 'TERMINAL_FINAL';
     const TERMINAL_INTERMEDIARY = 'TERMINAL_INTERMEDIARY';
@@ -353,7 +355,7 @@ class StructureCalculator
                 $subBaseStructure = $items[self::BASE_FRICTION_TAPE];
                 $subBaseQuantity = $total_fita;
 
-                if('SICES' != $project->getStructureType()){
+                if(self::DEFAULT_STRUCTURE_MAKER != $defaults['structure_maker']){
                     $subBaseStructure = $items[self::BASE_SPEED_CLIP];
                     $subBaseQuantity = $total_speedclip;
                 }
