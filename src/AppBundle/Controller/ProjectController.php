@@ -463,7 +463,7 @@ class ProjectController extends AbstractController
      */
     public function operationAreaAction(ProjectArea $projectArea)
     {
-        $this->clearTemplateCache('project.area_operation');
+        $this->clearTemplateCache('project.operation_area');
 
         return $this->render('project.operation_area', [
             'data' => $projectArea->getMetadata()
