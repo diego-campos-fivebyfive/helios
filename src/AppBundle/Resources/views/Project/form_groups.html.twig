@@ -113,7 +113,11 @@
                 GroupManager.submit.attr('disabled', 'disabled');
                 GroupManager.checker.show();
             }
-            GroupManager.checker.html(count - GroupManager.max_count);
+            var diff = GroupManager.max_count - count;
+
+            if(diff > 0) diff = '+'+diff;
+
+            GroupManager.checker.html(diff);
         },
         touchspin: {
             update: function (input) {
