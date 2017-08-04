@@ -1,10 +1,10 @@
 'use strict'
 
-const { helpers } = require('../../config')
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
+const { util } = require('../../components')
 
-const { pipe } = helpers
+const { pipe } = util
 
 const splitModule = product => ({
   code: product.code,
