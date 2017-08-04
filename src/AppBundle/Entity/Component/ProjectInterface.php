@@ -579,6 +579,11 @@ interface ProjectInterface
     public function getProjectInverters();
 
     /**
+     * @return array
+     */
+    public function groupInverters();
+
+    /**
      * @param ProjectExtraInterface $projectExtra
      * @return ProjectInterface
      */

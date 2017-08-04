@@ -101,11 +101,11 @@
     {% endfor %}
 
     {# INVERTERS #}
-    {% for projectInverter in project.projectInverters %}
+    {% for id, group in project.groupInverters %}
         <tr>
-            <td> {{ projectInverter.inverter.id }} </td>
-            <td> {{ projectInverter.inverter.model }} </td>
-            <td> {{ projectInverter.quantity }} </td>
+            <td> {{ id }} </td>
+            <td> {{ group.inverter.model }} </td>
+            <td> {{ group.quantity }} </td>
         </tr>
     {% endfor %}
 

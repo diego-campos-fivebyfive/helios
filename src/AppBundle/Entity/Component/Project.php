@@ -1361,6 +1361,32 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
+    public function groupInverters()
+    {
+        $collection = [];
+        foreach ($this->projectInverters as $projectInverter){
+
+            /** @var InverterInterface $inverter */
+            $inverter = $projectInverter->getInverter();
+            $id = $inverter->getId();
+
+            if(array_key_exists($id, $collection)){
+                $collection[$id]['quantity'] += $projectInverter->getQuantity();
+            }else{
+                $collection[$inverter->getId()] = [
+                    'inverter' => $inverter,
+                    'projectInverter' => $projectInverter,
+                    'quantity' => $projectInverter->getQuantity()
+                ];
+            }
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function addProjectStructure(ProjectStructureInterface $projectStructure)
     {
         if(!$this->projectStructures->contains($projectStructure)){
