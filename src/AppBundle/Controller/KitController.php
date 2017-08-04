@@ -17,7 +17,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
  *
  * #//@Security("has_role('ROLE_OWNER')")
  *
- * @Route("kit")
+ * @Route("price")
  *
  * @Breadcrumb("Dashboard", route={"name"="app_index"})
  * @Breadcrumb("Preço de Venda", route={"name"="kit_index"})
