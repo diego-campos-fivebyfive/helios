@@ -121,6 +121,14 @@ trait ComponentTrait
     }
 
     /**
+     * @return bool
+     */
+    public function isPublished()
+    {
+        return false;
+    }
+
+    /**
      * @ORM\PrePersist()
      */
     public function prePersist()
