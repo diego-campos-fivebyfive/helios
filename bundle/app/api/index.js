@@ -7,47 +7,28 @@ const memorial = require('./memorial')
 const product = require('./product')
 const user = require('./user')
 
-const { router, sendResponse } = app
+const { router, bundler } = app
+
+const event = {
+  'account_approved': account.update,
+  'memorial_created': memorial.create,
+  'product_created': product.create,
+  '2011.1': account.create
+    .then(sicesUser => user.create({ sicesUser }))
+}
 
 router.post('/api/v1/notifications', ((request, response) => {
-  const { body, callback } = request.body
-  const requestCopy = request
-  let action
+  const {
+    body: notification,
+    callback: type
+  } = request.body
 
-  switch (callback) {
-    case '2011.1':
-      account
-        .create({
-          object: body
-        })
-        .then(data => {
-          action = user.create
-          requestCopy.body = data
-          sendResponse(requestCopy, response, action)
-        })
-      return
-
-    case 'account_approved':
-      action = account.update
-      requestCopy.body = body
-      break
-
-    case 'memorial_created':
-      action = memorial.create
-      requestCopy.body = body
-      break
-
-    case 'product_created':
-      action = product.create
-      requestCopy.body = body.codes
-      break
-
-    default:
-      response.status(404).send('callback action not found').end()
-      return
+  const requestParams = {
+    ...request,
+    notification
   }
 
-  sendResponse(requestCopy, response, action)
+  bundler(requestParams, response, event[type])
 }))
 
 router.get('/', ((request, response) => {
