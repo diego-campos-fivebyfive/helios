@@ -1,9 +1,10 @@
 <?php
 
-namespace AppBundle\Controller\Component;
+namespace AppBundle\Controller;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Component\StringBox;
+use AppBundle\Service\Component\ComponentFileHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -57,83 +58,6 @@ class StringBoxController extends AbstractController
         ));
     }
 
-   /* /**
-     * @param StringboxInterface
-     * @param Request $request
-     * @return RedirectResponse
-     */
-    /* private function saveStringbox($stringbox, Request $request)
-     {
-         $manager = $this->manager($type);
-
-         $manager->save($stringbox);
-
-         $uploadDir = $this->getComponentsDir();
-
-         foreach ($request->files->all() as $field => $uploadedFile) {
-
-             if ($uploadedFile instanceof UploadedFile) {
-
-                 $getter = 'get' . ucfirst($field);
-                 $setter = 'set' . ucfirst($field);
-
-                 $ext = $uploadedFile->getClientOriginalExtension();
-                 $currentFile = $stringbox->$getter();
-
-                 $format = 'pdf' == $ext ? '%s_%s.%s' : '%s_%s_thumb.%s';
-
-                 $filename = sprintf($format, $type, $stringbox->getId(), $ext);
-
-                 if ($currentFile) {
-                     $currentFilePath = $uploadDir . $currentFile;
-                     if (file_exists($currentFilePath)) {
-                         unlink($currentFilePath);
-                     }
-                 }
-
-                 $uploadedFile->move($uploadDir, $filename);
-
-                 $stringbox->$setter($filename);
-             }
-         }
-
-         $manager->save($stringbox);
-
-         $this->setNotice('Componente atualizado com sucesso!');
-
-         if (null == $url = $this->restore('referer')) {
-             $url = $this->generateUrl('components', ['type' => $type]);
-         }
-
-         return $this->redirect($url);
-     }
-     */
-  /*  /**
-     * Creates a new stringBox entity.
-     *
-     * @Route("/new", name="stringbox_new")
-     * @Method({"GET", "POST"})
-     */
-   /* public function newAction(Request $request)
-    {
-        $stringBox = new Stringbox();
-        $form = $this->createForm('AppBundle\Form\Component\StringBoxType', $stringBox);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($stringBox);
-            $em->flush($stringBox);
-
-            return $this->redirectToRoute('stringbox_show', array('id' => $stringBox->getId()));
-        }
-
-        return $this->render('Stringbox.new', array(
-            'stringBox' => $stringBox,
-            'form' => $form->createView(),
-        ));
-    }*/
-
     /**
      * Finds and displays a stringBox entity.
      *
@@ -155,7 +79,7 @@ class StringBoxController extends AbstractController
      *
      * @Security("has_role('ROLE_ADMIN')")
      *
-     * @Route("/{id}/edit", name="stringbox_edit")
+     * @Route("/{id}/update", name="stringbox_edit")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, StringBox $stringBox)
@@ -165,9 +89,12 @@ class StringBoxController extends AbstractController
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
 
-            if ($stringBox->getStatus()) {
+            $this->get('component_file_handler')->upload($stringBox, $request->files);
+
+            $this->manager('string_box')->save($stringBox);
+
+            if ($stringBox->isPublished()) {
                 $this->get('notifier')->notify([
                     'callback' => 'product_validate',
                     'body' => [
@@ -177,7 +104,7 @@ class StringBoxController extends AbstractController
                 ]);
             }
 
-            return $this->redirectToRoute('stringbox_edit', array('id' => $stringBox->getId()));
+            return $this->redirectToRoute('stringbox_index');
         }
 
         return $this->render('Stringbox.edit', array(
