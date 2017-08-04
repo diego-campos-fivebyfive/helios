@@ -10,10 +10,10 @@ const user = require('./user')
 const { router, bundler } = app
 
 const event = {
-  'account_approved': account.update,
-  'memorial_created': memorial.create,
-  'product_created': product.create,
-  '2011.1': account.create
+  2011.11: account.update,
+  2011.12: memorial.create,
+  2011.13: product.create,
+  2011.1: account.create
     .then(sicesUser => user.create({ sicesUser }))
 }
 
