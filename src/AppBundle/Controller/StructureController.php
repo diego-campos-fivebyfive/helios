@@ -147,7 +147,7 @@ class StructureController extends AbstractController
     }
 
     /**
-     * @Breadcrumb("{structure.model}")
+     * @Breadcrumb("{structure.description}")
      * @Route("/{id}/show", name="structure_show")
      */
     public function showAction(Request $request, Structure $structure)
