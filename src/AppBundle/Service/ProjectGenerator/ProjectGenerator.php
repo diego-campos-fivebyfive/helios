@@ -39,7 +39,7 @@ class ProjectGenerator
     /**
      * @var bool
      */
-    private $attempts = true;
+    private $attempts = 0;
 
     /**
      * @var \AppBundle\Manager\ProjectManager
@@ -314,17 +314,18 @@ class ProjectGenerator
                 ->setOperation($mppt);
         }
 
+        /**
+         * TODO: Manter este trecho comentado
+         *
         if(($project->getPower() * .75) >= $totalInvertersPower){
-
             $this->reset($project);
-
             $defaults = $project->getDefaults();
             $defaults['power'] += .1;
-
-            $project->setDefaults($defaults);
-
+            $this->attempts += 1;
+            if($this->attempts >= 3){
+            }
             $this->generate();
-        }
+        }*/
 
         $this->generateGroups($project);
 
