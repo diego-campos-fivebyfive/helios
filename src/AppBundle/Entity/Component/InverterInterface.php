@@ -22,6 +22,11 @@ interface InverterInterface
     const ACTIVE = 1;
 
     /**
+     * @return int
+     */
+    public function getId();
+
+    /**
      * @param $code
      * @return InverterInterface
      */
