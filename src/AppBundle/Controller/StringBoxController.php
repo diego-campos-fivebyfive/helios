@@ -45,7 +45,7 @@ class StringBoxController extends AbstractController
         $pagination = $this->getPaginator()->paginate(
             $qb->getQuery(),
             $request->query->getInt('page', 1),
-            'grid' == $request->query->get('display', 'grid') ? 8 : 20
+            'grid' == $request->query->get('display', 'grid') ? 8 : 10
         );
 
         return $this->render('Stringbox.index', array(

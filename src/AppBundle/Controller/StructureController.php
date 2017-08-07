@@ -43,7 +43,7 @@ class StructureController extends AbstractController
         $pagination = $paginator->paginate(
             $qb->getQuery(),
             $request->query->getInt('page', 1),
-            10,
+            'grid' == $request->query->get('display', 'grid') ? 8 : 10,
             ['distinct' => false]
         );
 
