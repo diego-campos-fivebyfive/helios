@@ -26,6 +26,7 @@ if [ $FLAG == 'homolog' ] || [ $FLAG == 'production' ]; then
   cd $SICES_PATH
 
   mkdir .temp
+  mkdir .mirror
   mkdir .backup
 
 fi
