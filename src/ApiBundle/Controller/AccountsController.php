@@ -18,6 +18,25 @@ class AccountsController extends FOSRestController
     public function postAccountAction(Request $request)
     {
         $data = json_decode($request->getContent(), true);
+        $email = $data['email'];
+
+        $em = $this->getDoctrine()->getManager();
+        /** @var \Doctrine\ORM\QueryBuilder $qb */
+        $qb = $em->createQueryBuilder();
+        $qb->select('a')
+            ->from(Customer::class, 'a')
+            ->where('a.email = :email')
+            ->setParameter('email', $email);
+        $em = $qb->getQuery();
+        $emails = $em->getMaxResults(2);
+
+        if (isset($emails)) {
+            $data = "This account already exists!";
+            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+
+            $view = View::create($data)->setStatusCode($status);
+            return $this->handleView($view);
+        }
 
         /** @var AccountInterface $accountManager */
         $accountManager = $this->get('account_manager');
