@@ -4,10 +4,10 @@
         <tr>
             <th class="col-md-1"> Tipo </th>
             <th> Descrição </th>
-            <th class="col-md-1"> Quantidade </th>
-            <th class="col-md-2"> Preço Custo </th>
+            <th class="col-md-2"> Custo Unitário </th>
             <th class="col-md-2"> Preço Unitário </th>
-            <th> Subtotal </th>
+            <th class="col-md-1"> Quantidade </th>
+            <th> Total </th>
             <th class="col-md-1"> &nbsp; </th>
         </tr>
     </thead>
@@ -21,9 +21,9 @@
                     </span>
                 </td>
                 <td> {{ projectExtra.extra.description }} </td>
-                <td> {{ projectExtra.quantity }} </td>
                 <td> {{ projectExtra.unitCostPrice|currency }} </td>
                 <td> {{ projectExtra.unitSalePrice|currency }} </td>
+                <td> {{ projectExtra.quantity }} </td>
                 <td> {{ projectExtra.totalSalePrice|currency }} </td>
                 <td class="btn-group btn-group-justified">
                     <a data-update="{{ path('financial_extras_update', {id:projectExtra.id}) }}" class="btn btn-success">
@@ -37,6 +37,13 @@
 
         {% endfor %}
     </tbody>
+    <tfoot>
+        <tr>
+            <td></td>
+            <th colspan="4" class="text-right"> Total </th>
+            <th> {{ project.salePriceExtras|currency }} </th>
+        </tr>
+    </tfoot>
 </table>
 
 <script>
@@ -45,13 +52,33 @@
     });
 
     $('[data-delete]').on('click', function(){
-        $.ajax({
-            url: $(this).data('delete'),
-            method: 'post',
-            data: {_method:'delete'},
-            success: function(){
-                Financial.get_extras();
-            }
+        var url = $(this).data('delete');
+        swal({title: '{{ 'confirm.exclusion'|trans }}',
+            text: '',
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: '{{ 'Confirmar'|trans }}',
+            cancelButtonText: '{{ 'Cancelar'|trans }}',
+            closeOnConfirm: false
+        }, function() {
+            $.ajax({
+                url: url,
+                method: 'post',
+                data: {_method: 'delete'},
+                success: function () {
+                    Financial.onSaveExtra();
+                    swal.close();
+                },
+                beforeSend: function(){
+                    sweetAlert({
+                        title: "Excluindo...",
+                        text:  "Aguarde!",
+                        type: "info",
+                        showConfirmButton: false
+                    });
+                }
+            });
         });
     });
 

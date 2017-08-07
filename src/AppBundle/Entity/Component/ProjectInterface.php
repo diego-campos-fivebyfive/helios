@@ -340,6 +340,36 @@ interface ProjectInterface
     /**
      * @return float
      */
+    public function getSalePriceStringBoxes();
+
+    /**
+     * @return float
+     */
+    public function getSalePriceStructures();
+
+    /**
+     * @return float
+     */
+    public function getSalePriceVarieties();
+
+    /**
+     * @return float
+     */
+    public function getSalePriceExtraProducts();
+
+    /**
+     * @return float
+     */
+    public function getSalePriceExtras();
+
+    /**
+     * @return float
+     */
+    public function getSalePriceComponents();
+
+    /**
+     * @return float
+     */
     public function getSalePriceEquipments();
 
     /**

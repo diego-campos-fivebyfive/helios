@@ -991,9 +991,91 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
+    public function getSalePriceStringBoxes()
+    {
+        $price = 0;
+        /** @var ProjectElementInterface $projectStringBox */
+        foreach ($this->projectStringBoxes as $projectStringBox){
+            $price += $projectStringBox->getTotalSalePrice();
+        }
+
+        return $price;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSalePriceStructures()
+    {
+        $price = 0;
+        /** @var ProjectElementInterface $projectStructure */
+        foreach ($this->projectStructures as $projectStructure){
+            $price += $projectStructure->getTotalSalePrice();
+        }
+
+        return $price;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSalePriceVarieties()
+    {
+        $price = 0;
+        /** @var ProjectElementInterface $projectVariety */
+        foreach ($this->projectVarieties as $projectVariety){
+            $price += $projectVariety->getTotalSalePrice();
+        }
+
+        return $price;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSalePriceExtraProducts()
+    {
+        $price = 0;
+        /** @var ProjectElementInterface $extraProduct */
+        foreach ($this->getProjectExtraProducts() as $extraProduct){
+            $price += $extraProduct->getTotalSalePrice();
+        }
+
+        return $price;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSalePriceExtras()
+    {
+        $price = 0;
+        /** @var ProjectElementInterface $projectExtra */
+        foreach ($this->getProjectExtras() as $projectExtra){
+            $price += $projectExtra->getTotalSalePrice();
+        }
+
+        return $price;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSalePriceComponents()
+    {
+        return $this->getSalePriceInverters()
+            + $this->getSalePriceModules()
+            + $this->getSalePriceStringBoxes()
+            + $this->getSalePriceStructures()
+            + $this->getSalePriceVarieties();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getSalePriceEquipments()
     {
-        return $this->getSalePriceInverters() + $this->getSalePriceModules();
+        return $this->getSalePriceComponents() + $this->getSalePriceExtraProducts();
     }
 
     /**

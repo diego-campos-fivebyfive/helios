@@ -34,6 +34,7 @@ class ProjectExtra implements ProjectExtraInterface
     public function __construct()
     {
         $this->quantity = 1;
+        $this->unitCostPrice = 0;
     }
 
     /**
@@ -84,7 +85,6 @@ class ProjectExtra implements ProjectExtraInterface
     public function setExtra(ExtraInterface $extra)
     {
         $this->extra = $extra;
-        $this->unitCostPrice = $extra->getCostPrice();
 
         return $this;
     }

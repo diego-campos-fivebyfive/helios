@@ -205,6 +205,13 @@
                                                     {% endfor %}
 
                                                     </tbody>
+                                                    <tfoot>
+                                                    <tr>
+                                                        <th colspan="4"> </th>
+                                                        <th align="right"> Total </th>
+                                                        <th> {{ project.salePriceComponents|currency }} </th>
+                                                    </tr>
+                                                    </tfoot>
                                                 </table>
                                             </div>
                                         </div>
@@ -244,46 +251,6 @@
                             </div>
                         </div>
 
-
-                        {% if false %}
-
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="panel panel-primary">
-                                        <div class="panel-heading">
-                                            <i class="{{ icon('summary') }}"></i>
-                                            Resumo dos Serviços
-                                        </div>
-                                        <div class="panel-body">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <table id="table_services" class="table table-bordered table-hover">
-                                                        <thead>
-                                                        <tr>
-                                                            <th class="col-md-10"> Descrição</th>
-                                                            <th> Total</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-
-                                                        {% for element in project.elementServices %}
-                                                            <tr>
-                                                                <td> {{ element.name }} </td>
-                                                                <td> {{ element.totalPriceSale|currency('-') }} </td>
-                                                            </tr>
-                                                        {% endfor %}
-
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        {% endif %}
-
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="panel panel-success">
@@ -294,29 +261,7 @@
                                     <div class="panel-body">
                                         <div class="row">
 
-                                            <div class="col-md-12">
-                                                <table class="table table-bordered">
-                                                    <tbody>
-                                                    <tr>
-                                                        <td class="col-md-10"> Preço dos equipamentos</td>
-                                                        <td>
-                                                            {{ project.salePriceEquipments|currency }}
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td> Preço dos serviços</td>
-                                                        <td>
-                                                            {{ project.salePriceServices|currency }}
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th> Subtotal</th>
-                                                        <th>
-                                                            {{ (project.salePriceEquipments + project.salePriceServices)|currency }}
-                                                        </th>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
+                                            <div class="col-md-12" id="final_prices">
                                             </div>
 
                                             <div id="spinner_tax" class="col-md-8">
@@ -491,6 +436,14 @@
             analysis_chart: null,
             show_taxes: $('#show_taxes'),
             spinner_tax: $('#spinner_tax'),
+            loadFinalPrices: function(){
+                Request.send({
+                    url: '{{ path('financial_final_prices',{id:project.id}) }}',
+                    callback: function(xhr){
+                        $('#final_prices').html(xhr.responseText);
+                    }
+                });
+            },
             lock_form: function () {
                 Financial.form_editing = false;
                 Financial.form_analysis.find('input[type="text"]').prop('disabled', true);
@@ -565,11 +518,18 @@
                 Financial.get_taxes();
                 Financial.get_extras();
 
+                Financial.loadFinalPrices();
+
                 $('#financial_extra_type').on('change', function(){
                     var url = '{{ path('financial_extras_create',{id:project.id, type:'_type_'}) }}'.replace(/_type_/g, $(this).val());
                     Financial.get_extra_form(url);
                 }).trigger('change');
-            }
+            },
+            onSaveExtra: function(){
+                Financial.get_extras();
+                Financial.force_calculations();
+                Financial.loadFinalPrices();
+            },
         };
 
         Financial.init();
@@ -600,13 +560,16 @@
             var chart_container = $('#chart_container');
             $('#chart_analysis').attr('width', chart_container.width());
             function render_analysis_chart(data) {
-                Financial.analysis_chart = AppChart.financialChart({
+                AppChart.financialChart({
                     fillColor: "rgba(26,179,148,0.5)",
                     strokeColor: "rgba(26,179,148,0.8)",
                     pointColor: "rgba(26,179,148,0.8)",
                     data: data,
                     title: false,
-                    element: 'chart_analysis'
+                    element: 'chart_analysis',
+                    callback: function(chart){
+                        Financial.analysis_chart = chart;
+                    }
                 });
             }
 
@@ -630,7 +593,7 @@
                                     render_analysis_chart(response.data);
                                 } else {
                                     if (response.hasOwnProperty('error')) {
-                                        console.log(error);
+                                        //console.log(error);
                                     }
                                 }
                             }

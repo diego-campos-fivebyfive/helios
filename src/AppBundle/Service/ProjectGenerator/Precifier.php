@@ -51,7 +51,8 @@ class Precifier
         $components = $this->filterComponents($project);
         $codes = array_keys($components);
         $level = $account->getLevel();
-        $ranges = $this->findRanges($codes, $level, $project->getPower());
+        $power = $project->getPower();
+        $ranges = $this->findRanges($codes, $level, $power);
         $costPrice = 0;
 
         /**
@@ -62,12 +63,25 @@ class Precifier
             /** @var Range $range */
             $range = $ranges[$code];
 
-            //$price = $range->getPrice() * (1 + $range->getMarkup()) / (1 - $taxPercent);
             $price = $range->getPrice();
 
             $component->setUnitCostPrice($price);
 
             $costPrice += $price;
+        }
+
+        /** @var \AppBundle\Entity\Component\ProjectExtraInterface $projectExtra */
+        foreach ($project->getProjectExtras() as $projectExtra){
+
+            $unitPrice = (float) $projectExtra->getExtra()->getCostPrice();
+
+            if(1 == $projectExtra->getExtra()->getPricingby()){
+                $unitPrice = $unitPrice * $power;
+            }
+
+            $projectExtra->setUnitCostPrice($unitPrice);
+
+            $costPrice += $unitPrice;
         }
 
         $project->setCostPrice($costPrice);

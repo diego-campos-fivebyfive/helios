@@ -28,7 +28,7 @@ class ProjectFinancialController extends AbstractController
      */
     public function configAction(Project $project)
     {
-        $generator = $this->get('project_generator');
+        $generator = $this->getGenerator();
 
         $generator->pricing($project);
 
@@ -38,9 +38,18 @@ class ProjectFinancialController extends AbstractController
 
         return $this->render('project.financial', [
             'project' => $project,
-            //'financial' => $financial,
             'form' => $form->createView(),
             'form_tax' => $formTax->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/final_prices", name="financial_final_prices")
+     */
+    public function getFinalPricesAction(Project $project)
+    {
+        return $this->render('project.financial_prices', [
+            'project' => $project
         ]);
     }
 
@@ -111,6 +120,7 @@ class ProjectFinancialController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
 
+            $this->manager('project_extra')->save($projectExtra);
             $this->getGenerator()->pricing($project);
 
             return $this->json([]);
