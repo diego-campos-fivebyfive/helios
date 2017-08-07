@@ -27,7 +27,7 @@
                     Potência
                 {% endif %} </td>
             <td>
-                R$ {{ extra.costPrice|currency }}
+                {{ extra.costPrice|currency }}
                 {% if extra.pricingBy == 1 %}
                     /kWp
                 {% endif %}
