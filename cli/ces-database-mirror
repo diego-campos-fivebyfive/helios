@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+cd $SICES_PATH
+
+homologDb="sices-homolog.sql"
+compressedHomologDb="sices-homolog.tar.gz"
+
+ssh -t -i devops/aws/homolog.pem admin@54.233.150.10 "mysqldump -h $SICES_HOMOLOG_DATABASE_HOST -P $SICES_HOMOLOG_DATABASE_PORT -u $SICES_HOMOLOG_DATABASE_USER -p$SICES_HOMOLOG_DATABASE_PASS $SICES_HOMOLOG_DATABASE_NAME > /var/www/$homologDb"
+ssh -t -i devops/aws/homolog.pem admin@54.233.150.10 "cd /var/www && tar -cvzf $compressedHomologDb $homologDb"
+scp -i devops/aws/homolog.pem admin@54.233.150.10:/var/www/$compressedHomologDb $compressedHomologDb
