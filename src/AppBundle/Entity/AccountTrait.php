@@ -2,13 +2,41 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * This trait solve AccountInterface methods
- *
- * @property $attributes from BusinessInterface
  */
 trait AccountTrait
 {
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $level;
+
+    /**
+     * @param $level
+     * @return $this
+     */
+    public function setLevel($level)
+    {
+        $this->ensureContext(Customer::CONTEXT_ACCOUNT);
+
+        $this->level = $level;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLevel()
+    {
+        return $this->level;
+    }
+
     /**
      * @param $key
      * @param $value
