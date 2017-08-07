@@ -57,11 +57,48 @@ class OrderController extends FOSRestController
             'id' => $order->getId(),
             'status' => $order->getStatus(),
             'account' => $order->getAccount(),
+            'projects' => $order->getProjects()->map(function (ProjectInterface $project) {
+                return Array(
+                    'id' => $project->getId(),
+                    'address' => $project->getAddress(),
+                    'stage' => $project->getStage(),
+                    'inf_consumption' => $project->getInfConsumption(),
+                    'power' => $project->getInfPower(),
+                    'efficiency' => $project->getEfficiencyLoss(),
+                    'latitude' => $project->getLatitude(),
+                    'longitude' => $project->getLongitude(),
+                    'roof' => $project->getRoofType(),
+                    'extras' => $project->getProjectExtras(),
+                    'inverters' => $project->getProjectInverters(),
+                    'modules' => $project->getProjectModules(),
+                    'structures' => $project->getProjectStructures(),
+                    'stringboxes' => $project->getProjectStringBoxes(),
+                    'varietys' => $project->getProjectVarieties(),
+                    'structure_type' => $project->getStructureType(),
+                    'project_extra_products' => $project->getProjectExtraProducts(),
+                    'project_extra_services' => $project->getProjectExtraServices(),
+                    'project_taxes' => $project->getProjectTaxes(),
+                    'sale_price' => $project->getSalePrice(),
+                    'sale_price_equipments' => $project->getSalePriceEquipments(),
+                    'sale_price_inverters' => $project->getSalePriceInverters(),
+                    'sale_price_modules' => $project->getSalePriceModules(),
+                    'sale_price_services' => $project->getSalePriceServices(),
+                    'distribution' => $project->getDistribution(),
+                    'lifetime' => $project->getLifetime(),
+                    'cost_price_components' => $project->getCostPriceComponents(),
+                    'cost_price' => $project->getCostPrice(),
+                    'cost_price_total' => $project->getCostPriceTotal(),
+                    'cost_price_extra' => $project->getCostPriceExtra(),
+                    'annual_cost_operation' => $project->getAnnualCostOperation(),
+                    'annual_production' => $project->getAnnualProduction(),
+                    'accumulated_cash' => $project->getAccumulatedCash(),
+                    'create_at' => $project->getCreatedAt(),
+                    'cpdate_at' => $project->getUpdatedAt(),
+                    'customer' => $project->getCustomer(),
+                    'token' => $project->getToken()
+                );
+            })
         ];
-
-        $data['projects'] = $order->getProjects()->map(function (ProjectInterface $project) {
-            return $project->getId();
-        });
 
         $view = View::create($data);
 
