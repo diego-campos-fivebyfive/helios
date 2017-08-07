@@ -218,6 +218,19 @@ interface ProjectInterface
     public function getSalePrice();
 
     /**
+     * @param $type
+     * @param $chart
+     * @return ProjectInterface
+     */
+    public function setChart($type, $chart);
+
+    /**
+     * @param $type
+     * @return mixed
+     */
+    public function getChart($type);
+
+    /**
      * @param array $metadata
      * @return ProjectInterface
      */
@@ -564,6 +577,11 @@ interface ProjectInterface
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getProjectInverters();
+
+    /**
+     * @return array
+     */
+    public function groupInverters();
 
     /**
      * @param ProjectExtraInterface $projectExtra

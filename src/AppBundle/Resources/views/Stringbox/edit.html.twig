@@ -67,6 +67,26 @@
                                             {{ form_row(form.description,{attr:{class:'form-control'}}) }}
                                         </div>
 
+                                        <div class="form-group col-md-6">
+                                            <label> Datasheet (PDF) </label>
+                                            <input type="file" name="dataSheet" accept="application/pdf">
+                                            {% if stringBox.datasheet %}
+                                                <span class="label info">
+                                                    Este componente já possui datasheet
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                            <label> Imagem (JPG) </label>
+                                            <input type="file" name="image" accept="image/jpeg">
+                                            {% if stringBox.image %}
+                                                <span class="label info">
+                                                    Este componente já possui imagem
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
                                     </div>
                                 </div>
 
@@ -125,55 +145,6 @@
 {% endblock %}
 
 {% block scripts %}
- {#   <script src="{{ asset('plugins/jquery-mask/jquery.mask.js') }}"></script>
-
-    <script>
-        var sanitize = function(element){
-            function clear(v){ return v.replace(/\D+/g,''); }
-            var value = element.val();
-            var backup = value.replace(/\./g,',');
-            value = clear(value);
-            if(backup.indexOf(',') > 0){
-                var commas = backup.split(',');
-                value = clear(commas[0])+',';
-                if(commas[1].length){
-                    value += clear(commas[1]);
-                }
-            }
-            if(0 == backup.indexOf('-')){
-                if(2 == backup.split('-').length){
-                    value = '-' + value;
-                }
-            }
-            element.val(value);
-        };
-    </script>
-
-    <script>
-
-        var custom_mask = function(element){
-            element.on('keyup', function(){
-                sanitize(element);
-            });
-        };
-
-        var common_mask = {pattern: '##,##', reverse: true};
-        var targets = {
-            'inverter_nominalPower': common_mask,
-            'inverter_maxEfficiency': common_mask,
-            'inverter_maxDcPower': common_mask,
-            'inverter_maxDcVoltage': common_mask,
-            'inverter_mpptMaxDcCurrent': common_mask,
-            'inverter_mpptMin': common_mask,
-            'inverter_mpptMax': common_mask
-        };
-
-        $.each(targets, function (id, options) {
-            custom_mask($('#'+id));
-        });
-        $('#inverter_mpptNumber').mask('0#',{reverse:false});
-
-    </script>#}
 
     {% include view('helper.chosen') with({
     element: '#appbundle_component_stringbox_maker',

@@ -60,13 +60,34 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group col-md-3">
+                                        <div class="form-group col-md-6">
                                             {{ form_label(form.description, 'Descrição da Estrutura') }}
-                                            <div class="input-group m-b">
+                                            <div class="input-group m-b col-md-12">
                                                 {{ form_widget(form.description,{attr:{class:'form-control'}}) }}
                                             </div>
                                         </div>
 
+                                        <div class="col-md-12">
+                                            <div class="form-group col-md-6">
+                                                <label> Datasheet (PDF) </label>
+                                                <input type="file" name="dataSheet" accept="application/pdf">
+                                                {% if structure.datasheet %}
+                                                <span class="label info">
+                                                        Este componente já possui datasheet
+                                                    </span>
+                                                 {% endif %}
+                                            </div>
+
+                                            <div class="form-group col-md-6">
+                                                <label> Imagem (JPG) </label>
+                                                <input type="file" name="image" accept="image/jpeg">
+                                                 {% if structure.image %}
+                                                <span class="label info">
+                                                        Este componente já possui imagem
+                                                    </span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6">

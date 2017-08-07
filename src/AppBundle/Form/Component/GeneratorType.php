@@ -8,6 +8,7 @@ use AppBundle\Entity\Component\Project;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class GeneratorType extends AbstractType
@@ -31,7 +32,9 @@ class GeneratorType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('power')
+            ->add('power', MoneyType::class, [
+                'currency' => false,
+            ])
             ->add('consumption')
             ->add('latitude')
             ->add('longitude')

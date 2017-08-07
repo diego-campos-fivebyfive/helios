@@ -6,9 +6,11 @@ const sendResponse = (request, response, action) => {
     query: request.query,
     object: request.body
   }
-  action(params).then(status => {
-    response.status(status).end()
-  })
+
+  action(params)
+    .then(({ statusCode, ...data }) => {
+      response.status(statusCode).end()
+    })
     .catch(error => {
       console.log(`error: ${error.message}`)
       response.status(500).end()

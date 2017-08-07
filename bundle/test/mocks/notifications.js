@@ -2,7 +2,7 @@ const notifications = {
   productCreated: {
     callback: 'product_created',
     body: {
-      codes: ['ABC', 'DEF', 'HIJ', 'KLM', 'NOP']
+      codes: ['ABC', 'DEF', 'HIJ', 'KLM', 'NOP', 'HFG', 'SHF']
     }
   },
   memorialCreated: {

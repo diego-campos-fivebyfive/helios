@@ -11,19 +11,21 @@ use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverter;
 use AppBundle\Entity\Component\ProjectModule;
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\Project\NasaCatalog;
 use AppBundle\Form\Component\ProjectAreaType;
 use AppBundle\Form\Component\ProjectType;
 use AppBundle\Form\Component\GeneratorType;
 use AppBundle\Form\Project\ProjectInverterType;
-use AppBundle\Service\ProjectHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 
 /**
  * Class ProjectController
  * @Route("project")
+ * @Breadcrumb("Projetos")
  */
 class ProjectController extends AbstractController
 {
@@ -125,6 +127,7 @@ class ProjectController extends AbstractController
 
     /**
      * @Route("/create", name="project_create")
+     * @Breadcrumb("Novo Projeto")
      */
     public function createAction(Request $request)
     {
@@ -144,18 +147,19 @@ class ProjectController extends AbstractController
             $generator = $this->getGenerator();
 
             $defaults = $generator->loadDefaults([
-                'consumption' => (float) $project->getInfConsumption(),
+                'roof_type' => $project->getRoofType(),
+                'consumption' => $project->getInfConsumption(),
                 'latitude' => $project->getLatitude(),
                 'longitude' => $project->getLongitude()
             ]);
 
             $project->setDefaults($defaults);
-
             $generator->generate($project);
 
             return $this->json([
                 'project' => [
-                    'id' => $project->getId()
+                    'id' => $project->getId(),
+                    'power' => $project->getPower()
                 ]
             ]);
         }
@@ -228,12 +232,24 @@ class ProjectController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/chart", name="project_chart")
+     * @Method("post")
+     */
+    public function chartAction(Project $project, Request $request)
+    {
+        $project->setChart('generation', $request->get('chart'));
+
+        $this->manager('project')->save($project);
+
+        return $this->json([]);
+    }
+
+    /**
      * @Route("/{id}/components", name="project_components")
      */
     public function componentsAction(Project $project, Request $request)
     {
         $defaults = $project->getDefaults();
-        $defaults['power'] = $project->getPower();
 
         $form = $this->createForm(GeneratorType::class, $defaults);
 
@@ -241,10 +257,10 @@ class ProjectController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
 
-            $project->setDefaults($form->getData());
-
             $generator = $this->getGenerator();
             $generator->reset($project);
+
+            $project->setDefaults($form->getData());
             $generator->generate($project);
 
             return $this->json([
@@ -447,7 +463,7 @@ class ProjectController extends AbstractController
      */
     public function operationAreaAction(ProjectArea $projectArea)
     {
-        $this->clearTemplateCache('project.area_operation');
+        $this->clearTemplateCache('project.operation_area');
 
         return $this->render('project.operation_area', [
             'data' => $projectArea->getMetadata()
@@ -479,6 +495,34 @@ class ProjectController extends AbstractController
         }
 
         return $this->json([]);
+    }
+
+    /**
+     * @Route("/info_coordinates", name="coordinate_info")
+     */
+    public function coordinateInfoAction(Request $request)
+    {
+        $provider = $this->getNasaProvider();
+
+        $latitude = $request->get('latitude');
+        $longitude = $request->get('longitude');
+
+        $accountGlobal = $provider->findOneBy(
+            [
+                'context' => NasaCatalog::RADIATION_GLOBAL,
+                'latitude' => floor($latitude),
+                'longitude' => floor($longitude),
+                'account' => $this->account()
+            ]);
+
+        $infos = $provider->fromCoordinates($latitude, $longitude);
+
+        return $this->render('project.coordinates', [
+            'infos' => $infos,
+            'latitude' => $latitude,
+            'longitude' => $longitude,
+            'accountGlobal' => $accountGlobal
+        ]);
     }
 
     /**
