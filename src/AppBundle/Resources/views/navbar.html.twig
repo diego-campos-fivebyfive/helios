@@ -18,9 +18,7 @@
         <div class="navbar-header">
             <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
             <h2 class="pull-left" style="margin-left: 1rem; margin-top: 20px;">
-                {% if 'app_index' != app.request.attributes.get('_route') %}
                     {{ render(controller('AppBundle:App:getTopbar',{'route':app.request.attributes.get('_route'), 'parameters':app.request.attributes.get('_route_params')})) }}
-                {% endif %}
             </h2>
         </div>
         <ul class="nav navbar-top-links navbar-right" style="margin-top: 0;">
