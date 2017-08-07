@@ -1,0 +1,22 @@
+<table class="table table-bordered">
+    <tbody>
+    <tr>
+        <td class="col-md-10"> Preço dos equipamentos</td>
+        <td>
+            {{ project.salePriceEquipments|currency }}
+        </td>
+    </tr>
+    <tr>
+        <td> Preço dos serviços</td>
+        <td>
+            {{ project.salePriceServices|currency }}
+        </td>
+    </tr>
+    <tr>
+        <th> Subtotal</th>
+        <th>
+            {{ (project.salePriceEquipments + project.salePriceServices)|currency }}
+        </th>
+    </tr>
+    </tbody>
+</table>

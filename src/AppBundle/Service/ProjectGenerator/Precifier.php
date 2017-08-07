@@ -44,28 +44,44 @@ class Precifier
         if(!$project->getPower())
             $this->exception('Project power is null');
 
+        $member = $project->getMember();
+        $account = $member->getAccount();
+
         $memorial = $this->findMemorial();
         $components = $this->filterComponents($project);
         $codes = array_keys($components);
-        $level = 'platinum';
-        $ranges = $this->findRanges($codes, $level, $project->getPower());
-        $taxPercent = 0.1;
-
+        $level = $account->getLevel();
+        $power = $project->getPower();
+        $ranges = $this->findRanges($codes, $level, $power);
         $costPrice = 0;
 
         /**
          * @var  $code
          * @var \AppBundle\Entity\Component\ProjectElementInterface $component
          */
-        foreach ($components as $code => $component){
-           /** @var Range $range */
+        foreach ($components as $code => $component) {
+            /** @var Range $range */
             $range = $ranges[$code];
 
-           $price = $range->getPrice() * (1 + $range->getMarkup()) / (1 - $taxPercent);
+            $price = $range->getPrice();
 
-           $component->setUnitCostPrice($price);
+            $component->setUnitCostPrice($price);
 
-           $costPrice += $price;
+            $costPrice += $price;
+        }
+
+        /** @var \AppBundle\Entity\Component\ProjectExtraInterface $projectExtra */
+        foreach ($project->getProjectExtras() as $projectExtra){
+
+            $unitPrice = (float) $projectExtra->getExtra()->getCostPrice();
+
+            if(1 == $projectExtra->getExtra()->getPricingby()){
+                $unitPrice = $unitPrice * $power;
+            }
+
+            $projectExtra->setUnitCostPrice($unitPrice);
+
+            $costPrice += $unitPrice;
         }
 
         $project->setCostPrice($costPrice);
@@ -77,7 +93,6 @@ class Precifier
      */
     public function priceSale(ProjectInterface $project, $pricingManager)
     {
-        //$pricingManager = $this->get('app.kit_pricing_manager');
         $margins = $pricingManager->findAll();
         $percentEquipments = 0;
         $percentServices = 0;
@@ -124,6 +139,10 @@ class Precifier
             $components[$projectStringBox->getStringBox()->getCode()] = $projectStringBox;
         }
 
+        foreach ($project->getProjectVarieties() as $projectVariety){
+            $components[$projectVariety->getVariety()->getCode()] = $projectVariety;
+        }
+
         return $components;
     }
 
@@ -135,7 +154,6 @@ class Precifier
      */
     private function findRanges(array $codes, $level, $power)
     {
-
         $qb = $this->manager->getEntityManager()->createQueryBuilder();
         $qb->select('r')->from(Range::class, 'r');
         $qb->where(
@@ -143,7 +161,7 @@ class Precifier
         );
         $qb->andwhere('r.level = :level');
         $qb->andWhere('r.initialPower <= :power');
-        $qb->andWhere('r.finalPower >= :power');
+        $qb->andWhere('r.finalPower > :power');
 
         $qb->setParameters([
             'level' => $level,
@@ -152,15 +170,11 @@ class Precifier
 
         $query = $qb->getQuery();
 
-        /*$result = array_(function(Range $range){
-            return $range->getCode();
-        }, $query->getResult());*/
-
         $result = [];
-
         foreach ($query->getResult() as $range){
             $result[$range->getCode()] = $range;
         }
+
         return $result;
     }
 
@@ -169,17 +183,22 @@ class Precifier
      */
     private function findMemorial()
     {
-        return $this->manager
+        $range = $this->manager
             ->getEntityManager()
             ->createQueryBuilder()
-            ->select('m')
-            ->from(Memorial::class, 'm')
-            ->where('m.id = :id')
-            ->setParameters([
+            ->select('r')
+            ->from(Range::class, 'r')
+            ->setMaxResults(1)
+            //->join(Memorial::class, 'm')
+            //->where('m.id = :id')
+            /*->setParameters([
                 'id'=> 87
-            ])
+            ])*/
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getOneOrNullResult()
+        ;
+
+        return $range->getMemorial();
     }
 
     /**

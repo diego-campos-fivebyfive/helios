@@ -105,6 +105,14 @@ class GeneratorController extends AbstractController
 
         $codes = [];
 
+        $prices = [
+            'modules' => 600,
+            'inverters' => 4000,
+            'structures' => 40,
+            'string_boxes' => 700,
+            'varieties' => 10
+        ];
+
         // MODULES
         $moduleManager = $this->manager('module');
         $modules = $moduleManager->findAll();
@@ -115,7 +123,7 @@ class GeneratorController extends AbstractController
                 $module->setCode($code);
                 $moduleManager->save($module);
             }
-            $codes[] = $code;
+            $codes['modules'][] = $code;
         }
 
         // INVERTERS
@@ -128,7 +136,7 @@ class GeneratorController extends AbstractController
                 $inverter->setCode($code);
                 $inverterManager->save($inverter);
             }
-            $codes[] = $code;
+            $codes['inverters'][] = $code;
         }
 
         // STRUCTURES
@@ -140,7 +148,7 @@ class GeneratorController extends AbstractController
                 $structure->setCode($code);
                 $structureManager->save($structure);
             }
-            $codes[] = $code;
+            $codes['structures'][] = $code;
         }
 
         // STRING_BOXES
@@ -152,11 +160,11 @@ class GeneratorController extends AbstractController
                 $stringBox->setCode($code);
                 $stringBoxManager->save($stringBox);
             }
-            $codes[] = $code;
+            $codes['string_boxes'][] = $code;
         }
 
         // VARIETIES
-        $varietyManager = $this->manager('string_box');
+        $varietyManager = $this->manager('variety');
         $varieties = $varietyManager->findAll();
         foreach ($varieties as $variety) {
             if (null == $code = $variety->getCode()) {
@@ -164,7 +172,7 @@ class GeneratorController extends AbstractController
                 $variety->setCode($code);
                 $varietyManager->save($variety);
             }
-            $codes[] = $code;
+            $codes['varieties'][] = $code;
         }
 
         // MEMORIAL + RANGES
@@ -182,25 +190,32 @@ class GeneratorController extends AbstractController
             $memorialManager->save($memorial);
         }
 
+        /*dump($codes);
+        dump($prices);
+        die;*/
+
         $rangeManager = $this->manager('range');
 
-        foreach ($codes as $code) {
+        foreach ($codes as $family => $data) {
 
-            if(null == $range = $rangeManager->findOneBy(['code' => $code, 'memorial' => $memorial])){
+            foreach($data as $code) {
 
-                $range = $rangeManager->create();
-                $range
-                    ->setMemorial($memorial)
-                    ->setLevel('platinum')
-                    ->setInitialPower(20)
-                    ->setFinalPower(500)
-                    ->setMarkup(.1)
-                    ->setCode($code)
-                    ->setPrice(1000);
+                if (null == $range = $rangeManager->findOneBy(['code' => $code, 'memorial' => $memorial])) {
 
-                $memorial->addRange($range);
+                    $range = $rangeManager->create();
+                    $range
+                        ->setMemorial($memorial)
+                        ->setLevel('platinum')
+                        ->setInitialPower(0)
+                        ->setFinalPower(500)
+                        ->setMarkup(.1)
+                        ->setCode($code)
+                        ->setPrice($prices[$family]);
 
-                $rangeManager->save($range);
+                    $memorial->addRange($range);
+
+                    $rangeManager->save($range);
+                }
             }
         }
 
