@@ -7,7 +7,7 @@ const sendUser = ({ Dados }, sicesUser) =>
   Sices
     .sendUser({
       ...sicesUser,
-      contact: Dados.Nome
+      contact: 'Pedro'
     })
 
 const create = ({ object }) =>
