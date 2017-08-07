@@ -1,10 +1,10 @@
 'use strict'
 
-const { helpers } = require('../../config')
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
+const { util } = require('../../components')
 
-const { pipe } = helpers
+const { pipe } = util
 
 const splitModule = product => ({
   code: product.code,
@@ -58,8 +58,8 @@ const sendProduct = product => {
   }
 }
 
-const create = ({ object }) => new Promise((resolve, reject) => {
-  object.forEach(code => Isquik.getProduct(code)
+const create = ({ notification }) => new Promise((resolve, reject) => {
+  notification.codes.forEach(code => Isquik.getProduct(code)
     .then(sendProduct)
     .then(resolve)
     .catch(reject)

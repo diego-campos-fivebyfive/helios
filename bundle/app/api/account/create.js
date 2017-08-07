@@ -21,17 +21,16 @@ const sendAccount = ({ Dados }) =>
       status: 1
     })
     .then(data => ({
-      id: Dados.Administrador,
       email: Dados.Email,
       phone: Dados.Telefone,
+      isquik_id: Dados.Administrador,
       account_id: data.id
     }))
 
-const createAccount = ({ object }) =>
+const createAccount = ({ notification }) =>
   Isquik
-    .getAccount(object.id)
+    .getAccount(notification.id)
     .then(sendAccount)
-
 
 module.exports = {
   create: createAccount

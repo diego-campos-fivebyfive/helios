@@ -11,7 +11,7 @@ const sendMemorial = memorial => Sices.sendMemorial({
   range: memorial.products
 })
 
-const create = ({ object }) => Isquik.getMemorial(object.id).then(sendMemorial)
+const create = ({ notification }) => Isquik.getMemorial(notification.id).then(sendMemorial)
 
 module.exports = {
   create
