@@ -25,16 +25,3 @@ monolog:
             level: debug
         console:
             type:  console
-
-doctrine:
-    dbal:
-        #host:     inovadorsolar.com
-        #dbname:   inovador_sandbox
-        #user:     inovador_user
-        #user:     inovador_master
-        #password: xB}6b4BJPhd.
-        #password: it~m[6^UUaKR
-        host:      "mysql-dev-test.crtwvzhue9fu.sa-east-1.rds.amazonaws.com"
-        dbname:    sices_solar
-        user:      mysqldevtest
-        password:  zvQdYaPB79muWbnpct
