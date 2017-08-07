@@ -148,34 +148,67 @@ class CategoryController extends AbstractController
     {
         $this->checkAccess($category);
 
-        $projects = $this->getProjectManager()->findBy([
-            'saleStage' => $category
-        ]);
+        $throwError = function($message, $args)
+        {
+            $error = $this->translate($message, $args);
+            return $this->json(['error' => $error], Response::HTTP_IM_USED);
+        };
 
-        $error = null;
-        if(0 != $count = count($projects)){
-            $error = $this->translate('Sales step in use', [
-                '%count%' => $count
-            ]);
-        }
+        $getProjects = function($category)
+        {
+            return $this->manager('project')->findBy(Array(
+                'stage' => $category
+            ));
+        };
+
+        $getContacts = function($category)
+        {
+            return $this->manager('customer')->findBy(Array(
+                'category' => $category
+            ));
+        };
+
+        $getAccount = function($context)
+        {
+            return $this->account()->getCategories($context);
+        };
+
+        $translate = function($context)
+        {
+            return $this->translate($context->getId());
+        };
 
         $context = $category->getContext();
 
-        if (1 == $this->getCurrentAccount()->getCategories($context)->count()) {
-            $error = $this->translate('The account must have at least one', [
-                '%category%' =>  $this->translate($context->getId())
+        $projects = $getProjects($category);
+        $countProjects = count($projects);
+
+        if (0 < $countProjects) {
+            return $throwError('Sales step in use', [
+                '%count%' => $countProjects
             ]);
         }
 
-        if($error){
-            return $this->jsonResponse([
-                'error' => $error
-            ], Response::HTTP_IM_USED);
+        $contacts = $getContacts($category);
+        $countContacts = count($contacts);
+
+        if (0 < $countContacts) {
+            return $throwError('Contacts category in use', [
+                '%count%' => $countContacts
+            ]);
         }
 
-        $this->getCategoryManager()->delete($category);
+        $account = $getAccount($context);
 
-        return $this->jsonResponse([], Response::HTTP_OK);
+        if (1 == $account->count()) {
+            return $throwError('The account must have one', [
+                '%category%' => $translate($context)
+            ]);
+        }
+
+        $this->manager('category')->delete($category);
+
+        return $this->json([], Response::HTTP_OK);
     }
 
     /**

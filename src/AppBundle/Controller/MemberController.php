@@ -302,6 +302,7 @@ class MemberController extends AbstractController
 
     /**
      * @Route("/timezone", name="member_timezone")
+     * @Breadcrumb("Fuso Horário")
      */
     public function timezoneAction(Request $request)
     {

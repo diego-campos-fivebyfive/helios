@@ -1,18 +1,23 @@
 <?php
 
-namespace AppBundle\Controller\Component;
+namespace AppBundle\Controller;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Component\StringBox;
+use AppBundle\Service\Component\ComponentFileHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 
 /**
  * Stringbox controller.
  *
  * @Route("stringbox")
+ * @Breadcrumb("String Box")
  *
  * @Security("has_role('ROLE_OWNER')")
  */
@@ -53,32 +58,6 @@ class StringBoxController extends AbstractController
         ));
     }
 
-  /*  /**
-     * Creates a new stringBox entity.
-     *
-     * @Route("/new", name="stringbox_new")
-     * @Method({"GET", "POST"})
-     */
-   /* public function newAction(Request $request)
-    {
-        $stringBox = new Stringbox();
-        $form = $this->createForm('AppBundle\Form\Component\StringBoxType', $stringBox);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($stringBox);
-            $em->flush($stringBox);
-
-            return $this->redirectToRoute('stringbox_show', array('id' => $stringBox->getId()));
-        }
-
-        return $this->render('Stringbox.new', array(
-            'stringBox' => $stringBox,
-            'form' => $form->createView(),
-        ));
-    }*/
-
     /**
      * Finds and displays a stringBox entity.
      *
@@ -100,7 +79,7 @@ class StringBoxController extends AbstractController
      *
      * @Security("has_role('ROLE_ADMIN')")
      *
-     * @Route("/{id}/edit", name="stringbox_edit")
+     * @Route("/{id}/update", name="stringbox_edit")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, StringBox $stringBox)
@@ -110,9 +89,15 @@ class StringBoxController extends AbstractController
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
 
-            if ($stringBox->getStatus()) {
+            $this->get('component_file_handler')->upload($stringBox, $request->files);
+
+            $this->manager('string_box')->save($stringBox);
+
+            $message = 'StringBox atualizado com sucesso. ';
+
+            if ($stringBox->isPublished()) {
+
                 $this->get('notifier')->notify([
                     'callback' => 'product_validate',
                     'body' => [
@@ -120,9 +105,13 @@ class StringBoxController extends AbstractController
                         'family' => 'stringbox'
                     ]
                 ]);
+
+                $message .= 'Publicação executada.';
             }
 
-            return $this->redirectToRoute('stringbox_edit', array('id' => $stringBox->getId()));
+            $this->setNotice($message);
+
+            return $this->redirectToRoute('stringbox_index');
         }
 
         return $this->render('Stringbox.edit', array(

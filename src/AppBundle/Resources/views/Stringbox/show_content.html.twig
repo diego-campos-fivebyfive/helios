@@ -68,7 +68,7 @@
                                 <hr>
                                 <div class="product-images">
                                     <div>
-                                        {#<img class="col-md-12" src="{{ inverter.image|componentFilePath }}"/>#}
+                                        <img class="col-md-12" src="{{ stringBox.image|componentFilePath }}"/>
 
                                     </div>
                                 </div>
@@ -94,6 +94,16 @@
                                             <td>Descrição</td>
                                             <td>{{ stringBox.description }}</td>
                                         </tr>
+                                        {% if stringBox.datasheet %}
+                                            <tr>
+                                                <td>{{ 'Datasheet'|trans }} PDF</td>
+                                                <td>
+                                                    <a href="{{ stringBox.datasheet|componentFilePath }}" target="_blank">
+                                                        {{ 'View'|trans }}
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
 
                                         </tbody>
 

@@ -12,7 +12,6 @@
 namespace AppBundle\Entity\Component;
 
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * StringBox
@@ -22,7 +21,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  */
 class StringBox implements StringBoxInterface
 {
-    use ORMBehaviors\Timestampable\Timestampable;
+    use ComponentTrait;
 
     /**
      * @var int
@@ -67,13 +66,6 @@ class StringBox implements StringBoxInterface
      * @ORM\Column(name="fuses", type="smallint", nullable=true)
      */
     private $fuses;
-
-    /**
-     * @var MakerInterface
-     *
-     * @ORM\ManyToOne(targetEntity="Maker")
-     */
-    private $maker;
 
     /**
      * @inheritDoc
@@ -179,23 +171,5 @@ class StringBox implements StringBoxInterface
     public function getFuses()
     {
         return $this->fuses;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setMaker(MakerInterface $maker)
-    {
-        $this->maker = $maker;
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getMaker()
-    {
-        return $this->maker;
     }
 }

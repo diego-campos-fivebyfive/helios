@@ -34,7 +34,9 @@ class MemorialController extends FOSRestController
 
             $markups = $ranges['markups'];
 
-            foreach ($markups as $level => $config) {
+            foreach ($markups as $level) {
+
+                $config = $level['levels'];
 
                 foreach ($config as $item) {
 
@@ -43,11 +45,11 @@ class MemorialController extends FOSRestController
                     $range
                         ->setCode($ranges['code'])
                         ->setMemorial($memorial)
-                        ->setLevel($level)
-                        ->setInitialPower($item['start'])
-                        ->setFinalPower($item['end'])
+                        ->setLevel($item['level'])
+                        ->setInitialPower($level['initial'])
+                        ->setFinalPower($level['final'])
                         ->setMarkup($item['markup'])
-                        ->setPrice($ranges['price']);
+                        ->setPrice($item['price']);
                     $rangeManager->save($range);
                 }
             }

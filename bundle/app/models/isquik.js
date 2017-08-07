@@ -8,6 +8,7 @@ const { isquik } = config
 
 const getRequest = uri => Google.getAuthentication().then(auth => (
   request({
+    resolveWithFullResponse: true,
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${auth.access_token}`
@@ -15,7 +16,10 @@ const getRequest = uri => Google.getAuthentication().then(auth => (
     method: 'GET',
     uri
   })
-    .then(x => JSON.parse(x))
+    .then(({ body, statusCode }) => ({
+      ...JSON.parse(body),
+      statusCode
+    }))
 ))
 
 const getAccount = id => getRequest(

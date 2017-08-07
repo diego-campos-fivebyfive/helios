@@ -116,6 +116,7 @@ Complement: Complemento
 Contracts: Contratos
 Contacts: Contatos
 Contact: Contato
+Contacts category in use: Categoria em uso
 Content: "Conteúdo"
 Country: "País"
 Cpf: Cpf
@@ -131,6 +132,7 @@ Categories Setting: "Configuração de Categorias"
 Confirm: Confirmar
 contact_category: Categorias de Contato
 Climatic data: "Dados Climáticos"
+Consumption: Consumo
 
 Definitions: "Definições"
 Dashboard: Dashboard
@@ -168,6 +170,8 @@ Inverter: Inversor
 inverter published: Inversores publicados
 Important: Importante
 Items: Itens
+inverter: "Inversor"
+inverters: "Inversores"
 Invited At: Convidado em
 
 Kits: Kits
@@ -186,6 +190,8 @@ Members: Membros
 Mobile: Celular
 Modules: "Módulos"
 Module: "Módulo"
+module: "Módulo"
+modules: "Módulos"
 module published: "Módulos publicados"
 Model: Modelo
 

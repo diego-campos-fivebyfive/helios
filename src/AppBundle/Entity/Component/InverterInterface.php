@@ -22,6 +22,11 @@ interface InverterInterface
     const ACTIVE = 1;
 
     /**
+     * @return int
+     */
+    public function getId();
+
+    /**
      * @param $code
      * @return InverterInterface
      */
@@ -34,7 +39,7 @@ interface InverterInterface
 
     /**
      * @param $model
-     * @return ComponentInterface
+     * @return InverterInterface
      */
     public function setModel($model);
 
@@ -187,19 +192,19 @@ interface InverterInterface
     public function getPhases();
 
     /**
-     * @param $dataSheet
-     * @return ComponentInterface
+     * @param $datasheet
+     * @return InverterInterface
      */
-    public function setDataSheet($dataSheet);
+    public function setDatasheet($datasheet);
 
     /**
      * @return string
      */
-    public function getDataSheet();
+    public function getDatasheet();
 
     /**
      * @param $image
-     * @return ComponentInterface
+     * @return InverterInterface
      */
     public function setImage($image);
 
@@ -246,12 +251,23 @@ interface InverterInterface
     public static function getStatusOptions();
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getCreatedAt();
 
     /**
-     * @return mixed
+     * @return \DateTime
      */
     public function getUpdatedAt();
+
+    /**
+     * @param MakerInterface $maker
+     * @return InverterInterface
+     */
+    public function setMaker(MakerInterface $maker);
+
+    /**
+     * @return MakerInterface
+     */
+    public function getMaker();
 }

@@ -12,7 +12,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("extras")
+ * @Route("item")
  *
  */
 class ExtraController extends AbstractController

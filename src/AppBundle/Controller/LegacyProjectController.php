@@ -415,35 +415,6 @@ class LegacyProjectController extends AbstractController
     }
 
     /**
-     * @Route("/info_coordinates", name="coordinate_info")
-     * @Method("post")
-     */
-    public function coordinateInfoAction(Request $request)
-    {
-        $provider = $this->getNasaProvider();
-
-        $latitude = $request->get('latitude');
-        $longitude = $request->get('longitude');
-
-        $accountGlobal = $provider->findOneBy(
-            [
-                'context' => NasaCatalog::RADIATION_GLOBAL,
-                'latitude' => floor($latitude),
-                'longitude' => floor($longitude),
-                'account' => $this->getCurrentAccount()
-            ]);
-
-        $infos = $provider->fromCoordinates($latitude, $longitude);
-
-        return $this->render('project.coordinates', [
-            'infos' => $infos,
-            'latitude' => $latitude,
-            'longitude' => $longitude,
-            'accountGlobal' => $accountGlobal
-        ]);
-    }
-
-    /**
      * @Route("/estimate-power", name="project_estimate_power")
      * @Method("post")
      */
