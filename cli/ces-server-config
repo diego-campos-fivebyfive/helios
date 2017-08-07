@@ -25,6 +25,9 @@ if [ $FLAG == 'homolog' ] || [ $FLAG == 'production' ]; then
   node_modules/.bin/pm2 start index.js --node-args="--harmony" -n "bundle"
   cd $SICES_PATH
 
+  mkdir .temp
+  mkdir .backup
+
 fi
 
 echo 'Sices creating files...'
