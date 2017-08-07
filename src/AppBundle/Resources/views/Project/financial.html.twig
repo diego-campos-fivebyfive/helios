@@ -26,14 +26,14 @@
 
     {% include view('project.common') %}
 
-    {#{% set kit = project.kit %}#}
+    {% include view('component.viewer') %}
 
     <div class="modal inmodal" id="tax_modal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content animated bounceInRight">
                 <div class="modal-body">
 
-                    {{ form_start(form_tax,{attr:{id:'form_tax'}}) }}
+                    {{ form_start(form_tax,{attr:{id:'form_tax', action: path('financial_tax_create',{id:project.id})}}) }}
 
                     <div class="form-group">
                         <label> Descrição </label>
@@ -54,8 +54,6 @@
                         <label> Valor base - (Reais ou Percentual) </label>
                         {{ form_widget(form_tax.value,{attr:{class:'form-control'}}) }}
                     </div>
-
-                    {#<div class="hr-line-dashed"></div>#}
 
                     <div class="hide">
                         {{ form_rest(form_tax) }}
@@ -92,83 +90,129 @@
             <div class="col-lg-12">
                 <div class="ibox">
                     <div class="ibox-title">
-                        {#<h5>Bootstrap Panels
-                            <small>Custom background colors.</small>
-                        </h5>#}
                     </div>
                     <div class="ibox-content">
 
-                        {#<div class="row">
+                        <div class="row">
                             <div class="col-lg-12">
-                                <div class="panel panel-default">
+                                <div class="panel panel-success">
                                     <div class="panel-heading">
                                         <i class="{{ icon('summary') }}"></i>
-                                        Resumo dos equipamentos
+                                        Componentes
                                     </div>
                                     <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <table id="table_items" class="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="col-md-2"> Código </th>
+                                                        <th class="col-md-4"> Descrição </th>
+                                                        {% if true %}
+                                                            <th> Custo Unitário</th>
+                                                        {% endif %}
+                                                        <th> Preço Unitário</th>
+                                                        <th class="col-md-1"> Quantidade</th>
+                                                        <th> Total</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
 
-                                        {% include view('project.financial_equipments') %}
+                                                    {# MODULES #}
+                                                    {% for projectModule in project.projectModules %}
+                                                    <tr>
+                                                        <td class="col-md-2"> {{ projectModule.module.code }} </td>
+                                                        <td class="col-md-4">
+                                                            <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('component_show', {type:'module', id:projectModule.module.id}) }}">
+                                                                {{ projectModule.module.model }}
+                                                            </a>
+                                                        </td>
+                                                        {% if true %}
+                                                            <td> {{ projectModule.unitCostPrice|currency }} </td>
+                                                        {% endif %}
+                                                        <td> {{ projectModule.unitSalePrice|currency }} </td>
+                                                        <td class="col-md-1"> {{ projectModule.quantity }} </td>
+                                                        <td> {{ projectModule.totalSalePrice|currency }} </td>
+                                                    </tr>
+                                                    {% endfor %}
 
-                                        #}{#{% if kit.hasItems %}#}{#
-                                        {% if false %}
-
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <table id="table_items" class="table table-bordered table-hover">
-                                                        <thead>
+                                                    {# INVERTERS #}
+                                                    {% for id, group in project.groupInverters %}
                                                         <tr>
-                                                            <th class="col-md-6"> Descrição</th>
-
-                                                            {% if kit.priceComputable %}
-                                                                <th class="col-md-2"> Preço Unitário</th>
+                                                            <td class="col-md-2"> {{ group.inverter.code }} </td>
+                                                            <td class="col-md-4">
+                                                                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('component_show', {type:'inverter', id:group.inverter.id}) }}">
+                                                                    {{ group.inverter.model }}
+                                                                </a>
+                                                            </td>
+                                                            {% if true %}
+                                                                <td> {{ group.projectInverter.unitCostPrice|currency }} </td>
                                                             {% endif %}
-
-                                                            <th class="col-md-2"> Quantidade</th>
-
-                                                            {% if kit.priceComputable %}
-                                                                <th class="col-md-2"> Total</th>
-                                                            {% endif %}
+                                                            <td> {{ group.projectInverter.unitSalePrice|currency }} </td>
+                                                            <td class="col-md-1"> {{ group.quantity }} </td>
+                                                            <td> {{ group.projectInverter.totalSalePrice|currency }} </td>
                                                         </tr>
-                                                        </thead>
-                                                        <tbody>
+                                                    {% endfor %}
 
-                                                        {% for element in project.elementItems %}
-                                                            <tr>
-                                                                <td> {{ element.name }} </td>
+                                                    {# STRING_BOXES #}
+                                                    {% for projectStringBox in project.projectStringBoxes %}
+                                                        <tr>
+                                                            <td> {{ projectStringBox.stringBox.code }} </td>
+                                                            <td>
+                                                                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('stringbox_show', {id:projectStringBox.stringBox.id}) }}">
+                                                                    {{ projectStringBox.stringBox.description }}
+                                                                </a>
+                                                            </td>
+                                                            {% if true %}
+                                                                <td> {{ projectStringBox.unitCostPrice|currency }} </td>
+                                                            {% endif %}
+                                                            <td> {{ projectStringBox.unitSalePrice|currency }} </td>
+                                                            <td> {{ projectStringBox.quantity }} </td>
+                                                            <td> {{ projectStringBox.totalSalePrice|currency }} </td>
+                                                        </tr>
+                                                    {% endfor %}
 
-                                                                {% if kit.priceComputable %}
-                                                                <td>
-                                                                    {{ element.unitPriceSale|currency('-') }}
-                                                                    {% if element.isIncremental %}
-                                                                        &nbsp; <span class="badge badge-info"> por módulo </span>
-                                                                    {% endif %}
-                                                                </td>
-                                                                {% endif %}
+                                                    {# STRUCTURES #}
+                                                    {% for projectStructure in project.projectStructures %}
+                                                        <tr>
+                                                            <td class="col-md-2"> {{ projectStructure.structure.code }} </td>
+                                                            <td class="col-md-4">
+                                                                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('structure_show', {id:projectStructure.structure.id}) }}">
+                                                                    {{ projectStructure.structure.description }}
+                                                                </a>
+                                                            </td>
+                                                            {% if true %}
+                                                                <td> {{ projectStructure.unitCostPrice|currency }} </td>
+                                                            {% endif %}
+                                                            <td> {{ projectStructure.unitSalePrice|currency }} </td>
+                                                            <td class="col-md-1"> {{ projectStructure.quantity }} </td>
+                                                            <td> {{ projectStructure.totalSalePrice|currency }} </td>
+                                                        </tr>
+                                                    {% endfor %}
 
-                                                                <td>
-                                                                    {{ element.quantity }}
-                                                                    {% if element.isIncremental %}
-                                                                        mod
-                                                                    {% endif %}
-                                                                </td>
+                                                    {# VARIETIES #}
+                                                    {% for projectVariety in project.projectVarieties %}
+                                                        <tr>
+                                                            <td> {{ projectVariety.variety.code }} </td>
+                                                            <td> {{ projectVariety.variety.description }} </td>
+                                                            {% if true %}
+                                                                <td> {{ projectVariety.unitCostPrice|currency }} </td>
+                                                            {% endif %}
+                                                            <td> {{ projectVariety.unitSalePrice|currency }} </td>
+                                                            <td> {{ projectVariety.quantity }} </td>
+                                                            <td> {{ projectVariety.totalSalePrice|currency }} </td>
+                                                        </tr>
+                                                    {% endfor %}
 
-                                                                {% if kit.priceComputable %}
-                                                                    <td> {{ element.totalPriceSale|currency('-') }} </td>
-                                                                {% endif %}
-                                                            </tr>
-                                                        {% endfor %}
-
-                                                        </tbody>
-                                                    </table>
-                                                </div>
+                                                    </tbody>
+                                                </table>
                                             </div>
-
-                                        {% endif %}
-
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>#}
+                        </div>
+
 
                         <div class="row">
                             <div class="col-lg-12">
@@ -193,7 +237,6 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12" id="financial_extras">
-
                                             </div>
                                         </div>
                                     </div>
@@ -202,99 +245,6 @@
                         </div>
 
 
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <i class="{{ icon('summary') }}"></i>
-                                        Itens
-                                    </div>
-                                    <div class="panel-body">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <table id="table_items" class="table table-bordered table-hover">
-                                                    <thead>
-                                                    <tr>
-                                                        <th class="col-md-2"> Código </th>
-                                                        <th class="col-md-4"> Descrição </th>
-                                                        {% if true %}
-                                                            <th> Custo Unitário</th>
-                                                        {% endif %}
-                                                        <th> Preço Unitário</th>
-                                                        <th class="col-md-1"> Quantidade</th>
-                                                        <th> Total</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-
-                                                    <tr>
-                                                        <th class="text-center" colspan="6">
-                                                            Módulos
-                                                        </th>
-                                                    </tr>
-
-                                                    {% for projectModule in project.projectModules %}
-                                                    <tr>
-                                                        <td class="col-md-2"> {{ projectModule.module.code }} </td>
-                                                        <td class="col-md-4"> {{ projectModule.module.model }} </td>
-                                                        {% if true %}
-                                                            <td> {{ projectModule.unitCostPrice|currency }} </td>
-                                                        {% endif %}
-                                                        <td> {{ projectModule.unitSalePrice|currency }} </td>
-                                                        <td class="col-md-1"> {{ projectModule.quantity }} </td>
-                                                        <td> {{ projectModule.totalSalePrice|currency }} </td>
-                                                    </tr>
-                                                    {% endfor %}
-
-                                                    <tr>
-                                                        <th class="text-center" colspan="6">
-                                                            Inversores
-                                                        </th>
-                                                    </tr>
-
-                                                    {% for projectInverter in project.projectInverters %}
-                                                        <tr>
-                                                            <td class="col-md-2"> {{ projectInverter.inverter.code }} </td>
-                                                            <td class="col-md-4"> {{ projectInverter.inverter.model }} </td>
-                                                            {% if true %}
-                                                                <td> {{ projectInverter.unitCostPrice|currency }} </td>
-                                                            {% endif %}
-                                                            <td> {{ projectInverter.unitSalePrice|currency }} </td>
-                                                            <td class="col-md-1"> {{ projectInverter.quantity }} </td>
-                                                            <td> {{ projectInverter.totalSalePrice|currency }} </td>
-                                                        </tr>
-                                                    {% endfor %}
-
-                                                    <tr>
-                                                        <th class="text-center" colspan="6">
-                                                            Estruturas
-                                                        </th>
-                                                    </tr>
-
-                                                    {% for projectStructure in project.projectStructures %}
-                                                        <tr>
-                                                            <td class="col-md-2"> {{ projectStructure.structure.code }} </td>
-                                                            <td class="col-md-4"> {{ projectStructure.structure.description }} </td>
-                                                            {% if true %}
-                                                                <td> {{ projectStructure.unitCostPrice|currency }} </td>
-                                                            {% endif %}
-                                                            <td> {{ projectStructure.unitSalePrice|currency }} </td>
-                                                            <td class="col-md-1"> {{ projectStructure.quantity }} </td>
-                                                            <td> {{ projectStructure.totalSalePrice|currency }} </td>
-                                                        </tr>
-                                                    {% endfor %}
-
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        {#{% if kit.hasServices %}#}
                         {% if false %}
 
                             <div class="row">
@@ -351,33 +301,18 @@
                                                         <td class="col-md-10"> Preço dos equipamentos</td>
                                                         <td>
                                                             {{ project.salePriceEquipments|currency }}
-                                                            {#{% if kit.priceComputable %}
-                                                                {{ project.priceSaleEquipments|currency }}
-                                                            {% else %}
-                                                                {{ kit.priceSaleEquipments|currency }}
-                                                            {% endif %}#}
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td> Preço dos serviços</td>
                                                         <td>
                                                             {{ project.salePriceServices|currency }}
-                                                            {#{% if kit.priceComputable %}
-                                                                {{ project.priceSaleServices|currency('-') }}
-                                                            {% else %}
-                                                                {{ kit.priceSaleServices|currency }}
-                                                            {% endif %}#}
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <th> Subtotal</th>
                                                         <th>
                                                             {{ (project.salePriceEquipments + project.salePriceServices)|currency }}
-                                                            {#{% if kit.priceComputable %}
-                                                                {{ project.priceSale|currency }}
-                                                            {% else %}
-                                                                {{ kit.priceSale|currency }}
-                                                            {% endif %}#}
                                                         </th>
                                                     </tr>
                                                     </tbody>
@@ -399,14 +334,11 @@
                                                        data-toggle="modal" data-target="#tax_modal"
                                                        class="btn btn-danger">
                                                         <i class="fa fa-arrow-up"></i> Aplicar Acréscimo </a>
-                                                    {#<a id="refresh_taxes" class="btn btn-info"> <i
-                                                                class="fa fa-refresh"></i> Atualizar </a>#}
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div class="row" style="margin-top: 2rem;">
-                                            {#<div class="hr-line-dashed"></div>#}
                                             <div id="show_taxes" class="col-md-12">
                                                 <div class="sk-spinner sk-spinner-circle">
                                                     {% for i in 1..12 %}
@@ -758,13 +690,7 @@
                 });
             });
 
-            //tax_value.mask('##,00', {reverse: true});
-
             Numbers.mask(tax_value);
-
-
-            $('#table_services, #table_items').cardtable();
-            $('.table-components').cardtable();
 
             tax_modal.on('show.bs.modal', function (event) {
                 var target = $(event.relatedTarget);
@@ -776,49 +702,10 @@
             });
 
             $('#financial_lifetime').mask('#00');
-            //$('#financial_rate, #financial_efficiencyLoss').mask('##,0', {reverse: true});
             $('#financial_annualCostOperation, #financial_energyPrice').mask('##,00', {reverse: true});
 
             custom_mask($('#financial_rate'));
             custom_mask($('#financial_efficiencyLoss'));
-
-            {#
-            $('[data-nav]').on('click', function (event) {
-                event.preventDefault();
-                var nav = $(this).data('nav');
-                var href = $(this).data('href');
-                if ('#' != href && 'financial' != nav) {
-                    if ('project' == nav) {
-                        window.location.href = href;
-                    } else {
-                        var chart_data = Financial.get_chart_data();
-                        if (!Financial.analysis_chart || !Financial.info_analysis.html() || !chart_data) {
-                            swal('Calcular', 'Para prosseguir é necessário efetuar o cálculo!', 'error');
-                        } else {
-                            swal({
-                                title: 'Aguarde...',
-                                text: '',
-                                type: 'info',
-                                showConfirmButton: false
-                            });
-                            $.ajax({
-                                url: '{{ path('project_check_step',{id:project.id}) }}',
-                                method: 'post',
-                                data: {step: 'proposal'},
-                                complete: function (xhr) {
-                                    if (202 == xhr.status) {
-                                        window.location.href = href;
-                                    } else {
-                                        var response = xhr.responseJSON;
-                                        swal('Erro', response.error + '!', 'error');
-                                    }
-                                }
-                            });
-                        }
-                    }
-                }
-            });
-            #}
         });
 
     </script>

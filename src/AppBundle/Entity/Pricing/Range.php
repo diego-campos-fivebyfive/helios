@@ -226,7 +226,7 @@ class Range implements RangeInterface
     /**
      * Get price
      *
-     * @return string
+     * @return float
      */
     public function getPrice()
     {

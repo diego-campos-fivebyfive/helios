@@ -156,7 +156,7 @@ class GeneratorController extends AbstractController
         }
 
         // VARIETIES
-        $varietyManager = $this->manager('string_box');
+        $varietyManager = $this->manager('variety');
         $varieties = $varietyManager->findAll();
         foreach ($varieties as $variety) {
             if (null == $code = $variety->getCode()) {
@@ -192,7 +192,7 @@ class GeneratorController extends AbstractController
                 $range
                     ->setMemorial($memorial)
                     ->setLevel('platinum')
-                    ->setInitialPower(20)
+                    ->setInitialPower(0)
                     ->setFinalPower(500)
                     ->setMarkup(.1)
                     ->setCode($code)

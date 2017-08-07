@@ -1,5 +1,5 @@
 
-<table class="table table-bordered table-hover">
+<table class="table">
     <thead>
         <tr>
             <th class="col-md-1"> Tipo </th>
@@ -16,7 +16,7 @@
 
             <tr>
                 <td>
-                    <span class="label label-info" style="width: 100%;">
+                    <span class="label label-{{ projectExtra.extra.isProduct ? 'info' : 'success' }}" style="width: 100%;">
                         {{ projectExtra.extra.isProduct ? 'Produto' : 'Serviço' }}
                     </span>
                 </td>
