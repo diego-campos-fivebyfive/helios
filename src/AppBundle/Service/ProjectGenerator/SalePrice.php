@@ -60,8 +60,6 @@ class SalePrice
         /** @var \AppBundle\Entity\Component\ProjectExtraInterface $projectExtra */
         foreach ($project->getProjectExtras() as $projectExtra){
 
-            //dump($projectExtra); die;
-
             $cost = $projectExtra->isProduct() ? $costEquipments : $costServices ;
             $sale = $projectExtra->isProduct() ? $saleEquipments : $saleServices ;
 
