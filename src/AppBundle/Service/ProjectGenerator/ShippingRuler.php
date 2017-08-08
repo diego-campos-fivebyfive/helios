@@ -37,7 +37,6 @@ abstract class ShippingRuler
             self::value($rule);
             self::markup($rule);
             self::shipping($rule);
-            dump($rule); die;
         }
     }
 
@@ -139,7 +138,7 @@ abstract class ShippingRuler
                     'ctp' => [
                         self::REGION_SOUTH => 3.6,
                         self::REGION_SOUTHEAST => [
-                            'interior' => 3.5,
+                            'interior' => 3.8,
                             'sp-capital' => 2,
                             'rj-capital' => 2.7,
                             'mg-capital' => 2.7
