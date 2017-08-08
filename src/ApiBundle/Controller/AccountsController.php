@@ -26,7 +26,7 @@ class AccountsController extends FOSRestController
             'email' => $data['email']
         ]);
 
-        if ($email != null) {
+        if ($email) {
             $data = "This account already exists!";
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
 
