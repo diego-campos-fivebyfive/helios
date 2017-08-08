@@ -16,20 +16,21 @@ class MemorialController extends FOSRestController
         $data = json_decode($request->getContent(), true);
         $dataRanges = $data['range'];
 
+        /** @var Memorial $memorialManager */
         $memorialManager = $this->get('memorial_manager');
         $rangeManager = $this->get('range_manager');
 
+        $currentMemorial = $memorialManager->findOneBy(array(), array('id' => 'DESC'));
+        $currentMemorial->setEndAt(new \DateTime('now'));
+
         foreach ($dataRanges as $ranges) {
-            $startAt = new \DateTime($data['start_at']);
-            $endAt = new \DateTime($data['end_at']);
 
             /** @var Memorial $memorial */
             $memorial = $memorialManager->create();
             $memorial
                 ->setVersion($data['version'])
                 ->setStatus($data['status'])
-                ->setStartAt($startAt)
-                ->setEndAt($endAt);
+                ->setStartAt(new \DateTime('now'));
             $memorialManager->save($memorial);
 
             $markups = $ranges['markups'];
