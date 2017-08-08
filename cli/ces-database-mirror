@@ -2,6 +2,13 @@
 
 cd $SICES_PATH
 
+if [ -z ${1+x} ]; then
+  echo 'Cloning homolog database... enter your mysql password:'
+  read -s password
+else
+  password=$1
+fi
+
 homologDb="sices-homolog.sql"
 compressedHomologDb="sices-homolog.tar.gz"
 
@@ -13,7 +20,8 @@ scp -i devops/aws/homolog.pem admin@54.233.150.10:/var/www/.mirror/$compressedHo
 
 cd .mirror
 tar -xzvf $compressedHomologDb
-mysql -u root -p sices_solar < $homologDb
+
+mysql -u root -p$password sices_solar < $homologDb /f >nul 2>&1
 
 cd ../
 rm -rf .mirror
