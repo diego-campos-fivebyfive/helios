@@ -18,13 +18,12 @@ class AccountsController extends FOSRestController
     public function postAccountAction(Request $request)
     {
         $data = json_decode($request->getContent(), true);
-        $email = $data['email'];
 
         /** @var Customer $manager */
         $manager = $this->get('account_manager');
         $email = $manager->findOneBy([
             'context' => 'account',
-            'email' => $email
+            'email' => $data['email']
         ]);
 
         if ($email != null) {
