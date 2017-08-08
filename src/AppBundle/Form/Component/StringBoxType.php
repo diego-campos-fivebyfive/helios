@@ -13,7 +13,14 @@ class StringBoxType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('code')->add('description')->add('inputs')->add('outputs')->add('fuses')->add('maker')        ;
+        $builder
+            ->add('code')
+            ->add('description')
+            ->add('inputs')
+            ->add('outputs')
+            ->add('fuses')
+            ->add('maker')
+            ->add('status');
     }
     
     /**
