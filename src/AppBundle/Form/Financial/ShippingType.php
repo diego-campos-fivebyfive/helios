@@ -6,7 +6,7 @@ use AppBundle\Configuration\Brazil;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class ShippingType extends AbstractType
@@ -26,7 +26,9 @@ class ShippingType extends AbstractType
             ->add('state', ChoiceType::class, [
                 'choices' => Brazil::states()
             ])
-            ->add('percent', TextType::class)
+            ->add('percent', MoneyType::class,[
+                'currency' => false
+            ])
             ->add('kind', ChoiceType::class, [
                 'choices' => [
                     'interior' => 'Interior',
@@ -41,6 +43,16 @@ class ShippingType extends AbstractType
             },
             function($percent){
                 return $percent / 100;
+            }
+        ));
+
+        $builder->get('kind')->addModelTransformer(new CallbackTransformer(
+            function($kind){
+                $blocks = array_reverse(explode('-', $kind));
+                return $blocks[0];
+            },
+            function($kind){
+                return $kind;
             }
         ));
     }
