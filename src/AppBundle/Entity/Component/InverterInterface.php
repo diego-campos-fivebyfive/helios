@@ -192,6 +192,17 @@ interface InverterInterface
     public function getPhases();
 
     /**
+     * @param $phaseVoltage
+     * @return InverterInterface
+     */
+    public function setPhaseVoltage($phaseVoltage);
+
+    /**
+     * @return int
+     */
+    public function getPhaseVoltage();
+
+    /**
      * @param $datasheet
      * @return InverterInterface
      */

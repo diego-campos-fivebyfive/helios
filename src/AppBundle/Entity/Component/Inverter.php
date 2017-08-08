@@ -141,6 +141,13 @@ class Inverter implements InverterInterface
     private $phases;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $phaseVoltage;
+
+    /**
      * @var float
      *
      * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
@@ -444,6 +451,24 @@ class Inverter implements InverterInterface
     public function getPhases()
     {
         return $this->phases;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setPhaseVoltage($phaseVoltage)
+    {
+        $this->phaseVoltage = $phaseVoltage;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPhaseVoltage()
+    {
+        return $this->phaseVoltage;
     }
 
     /**
