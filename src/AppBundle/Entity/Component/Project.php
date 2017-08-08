@@ -70,6 +70,13 @@ class Project implements ProjectInterface
      *
      * @ORM\Column(type="json", nullable=true)
      */
+    private $shippingRules;
+
+    /**
+     * @var array
+     *
+     * @ORM\Column(type="json", nullable=true)
+     */
     private $charts;
 
     /**
@@ -342,22 +349,23 @@ class Project implements ProjectInterface
      */
     public function __construct()
     {
-        $this->invoicePriceStrategy  = self::PRICE_STRATEGY_ABSOLUTE;
+        $this->invoicePriceStrategy = self::PRICE_STRATEGY_ABSOLUTE;
         $this->deliveryPriceStrategy = self::PRICE_STRATEGY_ABSOLUTE;
-        $this->projectModules        = new ArrayCollection();
-        $this->projectInverters      = new ArrayCollection();
-        $this->projectStructures     = new ArrayCollection();
-        $this->projectVarieties      = new ArrayCollection();
-        $this->projectExtras         = new ArrayCollection();
-        $this->projectStringBoxes    = new ArrayCollection();
-        $this->projectTaxes          = new ArrayCollection();
-        $this->invoiceBasePrice      = 0;
-        $this->deliveryBasePrice     = 0;
-        $this->taxPercent            = 0;
-        $this->charts                = [];
-        $this->defaults              = [];
-        $this->metadata              = [];
-        $this->accumulatedCash       = [];
+        $this->projectModules = new ArrayCollection();
+        $this->projectInverters = new ArrayCollection();
+        $this->projectStructures = new ArrayCollection();
+        $this->projectVarieties = new ArrayCollection();
+        $this->projectExtras = new ArrayCollection();
+        $this->projectStringBoxes = new ArrayCollection();
+        $this->projectTaxes = new ArrayCollection();
+        $this->invoiceBasePrice = 0;
+        $this->deliveryBasePrice = 0;
+        $this->taxPercent = 0;
+        $this->charts = [];
+        $this->defaults = [];
+        $this->shippingRules = [];
+        $this->metadata = [];
+        $this->accumulatedCash = [];
         //REMOVE FIELDS
         $this->infPower = 0;
     }
@@ -409,6 +417,33 @@ class Project implements ProjectInterface
     public function getDefaults()
     {
         return $this->defaults;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setShippingRules(array $shippingRules)
+    {
+        $this->shippingRules = $shippingRules;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getShippingRules()
+    {
+        return $this->shippingRules;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getShipping()
+    {
+        return  array_key_exists('shipping', $this->shippingRules)
+            ? $this->shippingRules['shipping'] : 0 ;
     }
 
     /**
