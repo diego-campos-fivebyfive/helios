@@ -2,6 +2,8 @@
 
 cd $SICES_PATH
 
+echo 'Warning: This process can be a little slow...'
+
 if [ -z ${1+x} ]; then
   echo 'Cloning homolog database... enter your mysql password:'
   read -s password
@@ -18,18 +20,24 @@ ssh -t -i devops/aws/homolog.pem admin@54.233.150.10 "cd /var/www/.mirror && tar
 mkdir .mirror
 scp -i devops/aws/homolog.pem admin@54.233.150.10:/var/www/.mirror/$compressedHomologDb .mirror/$compressedHomologDb
 
+echo 'Extracting compressed file...'
 cd .mirror
 tar -xzvf $compressedHomologDb
 
+echo 'Exporting to Local Database...'
 mysql -u root -p$password sices_solar < $homologDb /f >nul 2>&1
 
 cd ../
 rm -rf .mirror
 
+echo 'Cleaning Cache...'
 rm -rf app/cache/dev/**
 rm -rf app/cache/prod/**
 
 php app/console cache:clear --env=dev
 php app/console cache:clear --env=prod
 
+echo 'Updating local Database...'
 php app/console doctrine:schema:update --force
+
+echo 'Database mirror done.'
