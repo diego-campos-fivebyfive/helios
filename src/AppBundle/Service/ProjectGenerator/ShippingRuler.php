@@ -125,7 +125,6 @@ abstract class ShippingRuler
     {
         return [
             'limit' => [
-                10000 => [],
                 60000 => [
                     'mlt' => [
                         self::REGION_NORTH => 4.22,
@@ -133,8 +132,8 @@ abstract class ShippingRuler
                         self::REGION_MIDWEST => 3.1
                     ],
                     'ctp' => [
-                        self::REGION_SOUTH => 0,
-                        self::REGION_SOUTHEAST => 0
+                        self::REGION_SOUTH => 3.6,
+                        self::REGION_SOUTHEAST => 3.5
                     ]
                 ],
                 100000 => [
