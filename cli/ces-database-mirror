@@ -2,7 +2,7 @@
 
 cd $SICES_PATH
 
-echo 'Warning: This process can be a little slow...'
+echo 'Note: This process can be a little slow!'
 
 if [ -z ${1+x} ]; then
   echo 'Cloning homolog database... enter your mysql password:'
@@ -14,18 +14,19 @@ fi
 homologDb="sices-homolog.sql"
 compressedHomologDb="sices-homolog.tar.gz"
 
-ssh -t -i devops/aws/homolog.pem admin@54.233.150.10 "mysqldump -h $SICES_HOMOLOG_DATABASE_HOST -P $SICES_HOMOLOG_DATABASE_PORT -u $SICES_HOMOLOG_DATABASE_USER -p$SICES_HOMOLOG_DATABASE_PASS $SICES_HOMOLOG_DATABASE_NAME > /var/www/.mirror/$homologDb"
-ssh -t -i devops/aws/homolog.pem admin@54.233.150.10 "cd /var/www/.mirror && tar -cvzf $compressedHomologDb $homologDb"
+echo 'Downloading compressed homolog database...'
+ssh -t -i devops/aws/homolog.pem admin@54.233.150.10 "mysqldump -h $SICES_HOMOLOG_DATABASE_HOST -P $SICES_HOMOLOG_DATABASE_PORT -u $SICES_HOMOLOG_DATABASE_USER -p$SICES_HOMOLOG_DATABASE_PASS $SICES_HOMOLOG_DATABASE_NAME > /var/www/.mirror/$homologDb" > /dev/null 2>&1
+ssh -t -i devops/aws/homolog.pem admin@54.233.150.10 "cd /var/www/.mirror && tar -cvzf $compressedHomologDb $homologDb" > /dev/null 2>&1
 
 mkdir .mirror
 scp -i devops/aws/homolog.pem admin@54.233.150.10:/var/www/.mirror/$compressedHomologDb .mirror/$compressedHomologDb
 
-echo 'Extracting compressed file...'
+echo 'Extracting compressed file to:'
 cd .mirror
 tar -xzvf $compressedHomologDb
 
-echo 'Exporting to Local Database...'
-mysql -u root -p$password sices_solar < $homologDb /f >nul 2>&1
+echo 'Local exporting Database...'
+mysql -u root -p$password sices_solar < $homologDb > /dev/null 2>&1
 
 cd ../
 rm -rf .mirror
