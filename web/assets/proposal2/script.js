@@ -353,6 +353,11 @@ $(document).ready(function(){
     /*setTimeout(function () {
         saveProposal();
     },1000);*/
+
+
+    var color = $($('#bloco').children()[0]).data('color-page');
+    if (color == undefined)color = 'FFFFFF';
+    $('#colorPage').val(color);
 });
 
 function generateChart() {
