@@ -30,10 +30,14 @@ abstract class ShippingRuler
      */
     public static function apply(&$rule)
     {
-        self::definitions($rule);
-        self::value($rule);
-        self::markup($rule);
-        self::shipping($rule);
+        if('self' == $rule['type']){
+            self::defaults($rule);
+        }else {
+            self::definitions($rule);
+            self::value($rule);
+            self::markup($rule);
+            self::shipping($rule);
+        }
     }
 
     /**
@@ -166,5 +170,19 @@ abstract class ShippingRuler
                 ]
             ]
         ];
+    }
+
+    /**
+     * @param array $rule
+     */
+    private static function defaults(array &$rule)
+    {
+        $rule['value'] = 0;
+        $rule['markup'] = 0;
+        $rule['company'] = null;
+        $rule['state'] = null;
+        $rule['kind'] = null;
+        $rule['region'] = null;
+        $rule['shipping'] = $rule['price'] * $rule['percent'];
     }
 }
