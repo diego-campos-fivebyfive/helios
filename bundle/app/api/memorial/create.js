@@ -17,9 +17,7 @@ const sendMemorial = ({ Dados }) =>
   Sices
     .sendMemorial({
       version: Dados.Versao,
-      status: (Dados.Status === 'Publicado') ? 1 : 0,
-      start_at: '2017-08-11',
-      end_at: '2017-08-11',
+      status: Dados.FlagPublicado,
       range: Dados.Produtos.map(Ranges => ({
         code: Ranges.Codigo,
         markups: Ranges.Faixas.map(Markups => ({
