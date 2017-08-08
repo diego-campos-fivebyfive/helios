@@ -24,6 +24,18 @@ class UsersController extends FOSRestController
         /** @var AccountInterface $accountManager */
         $accountManager = $this->get('account_manager');
         $account = $accountManager->find($data['account_id']);
+        $email = $accountManager->findOneBy([
+            'context' => 'member',
+            'email' => $data['email']
+        ]);
+
+        if ($email) {
+            $data = "This User already exists!";
+            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+
+            $view = View::create($data)->setStatusCode($status);
+            return $this->handleView($view);
+        }
 
         /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
         $userManager = $this->get('fos_user.user_manager');
