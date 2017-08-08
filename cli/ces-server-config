@@ -8,7 +8,7 @@ if [ -z ${1+x} ] || [ $1 == '--development' ]; then
 
   echo 'Creating database... enter your mysql password:'
   read -s password
-  mysql -u root -p$password -e 'CREATE DATABASE sices_solar;' /f >nul 2>&1
+  mysql -u root -p$password -e 'CREATE DATABASE sices_solar;' > /dev/null 2>&1;
   ces-database-mirror $password
 
   echo 'Creating params file...'
@@ -49,8 +49,5 @@ echo 'Creating config file...'
 cp app/config/config_sample.yml app/config/config.yml
 
 touch web/deploy/deploy.log
-
-echo 'Sices updating schema...'
-php app/console doctrine:schema:update --force
 
 echo 'Done.'
