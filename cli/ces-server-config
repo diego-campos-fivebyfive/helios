@@ -7,11 +7,12 @@ if [ -z ${1+x} ] || [ $1 == '--development' ]; then
   cp cli/ces-pre-push .git/hooks/pre-push
 
   echo 'Creating database... enter your mysql password:'
-  mysql -u root -p -e 'CREATE DATABASE sices_solar;'
-  ces-database-mirror
+  read -s password
+  mysql -u root -p$password -e 'CREATE DATABASE sices_solar;' /f >nul 2>&1
+  ces-database-mirror $password
 
   echo 'Creating params file...'
-  sed 's/BASH_REPLACES_THIS_PASSWORD/XYZ/g' <app/config/parameters_development.yml >app/config/parameters.yml
+  sed "s/BASH_REPLACES_THIS_PASSWORD/$password/g" <app/config/parameters_development.yml >app/config/parameters.yml
 
 elif [ $1 == '--homolog' ]; then
 
