@@ -58,5 +58,11 @@ $ sudo apt install composer
 $ sudo apt install git
 ```
 
+8. Instalando o mysql-server
+----------------------------
+
+```
+$ sudo apt install mysql-server
+```
 
 [Voltar](dependencies.md)
