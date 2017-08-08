@@ -173,9 +173,18 @@ function loadDatas() {
                         if($("#d"+idTag+"").data("chart") === 'generation'){
                             newSrc = chartGeneration();
                             $($($(contentOfTag)[x]).children()[0]).attr('src',newSrc);
+
+                            /*$($(contentOfTag)[x]).replaceWith('uiuiuyh');
+                            $($(contentOfTag)[x]).attr('data-cke-widget-data','-');
+                            console.log($(contentOfTag)[x]);
+                            console.log($($(contentOfTag)[x]).children()[0]);*/
                         }else if($("#d"+idTag+"").data("chart") === 'financial'){
                             newSrc = chartFinancial();
                             $($($(contentOfTag)[x]).children()[0]).attr('src',newSrc);
+
+                            /*$($(contentOfTag)[x]).attr('data-cke-widget-data','-');
+                            console.log($(contentOfTag)[x]);
+                            console.log($($(contentOfTag)[x]).children()[0]);*/
                         }
 
                     } else if ((src === undefined) && !($($(contentOfTag)[x]).attr('id') === undefined)) {
@@ -250,13 +259,13 @@ function loadDatas() {
     }
 }
 
-
 $('#pdfProposal').click(function () {
     var saveBtn = $('#saveProposal');
     $(saveBtn).ladda();
     saveBtn.ladda('start');
     var pdfBtn = $('#pdfProposal').ladda();
     pdfBtn.ladda('start');
+    //removeDataCke();
     $.ajax({
         url:$(saveBtn).data('url'),
         method:'post',
@@ -289,8 +298,37 @@ function saveProposal() {
     })
 }
 
+
+
+function removeDataCke() {
+
+    /*var data_saved = $('[data-cke-saved-src]');
+     for(x=0;x<$(data_saved).length;x++){
+     $($(data_saved)[x]).attr('data-cke-saved-src','-');
+     console.log($($(data_saved)[x]).data('cke-saved-src'));
+     }*/
+
+    /*var data_widget = $('[data-cke-widget-data]');
+     for(x=0;x<$(data_widget).length;x++){
+     // console.log($($(data_widget)[x]).data('typechart'));
+     if($($(data_widget)[x]).data('typechart') == 'financial' || $($(data_widget)[x]).data('typechart') == 'generation'){
+     $($(data_widget)[x]).attr('data-cke-widget-data','-');
+     console.log($($(data_widget)[x]).data('cke-widget-data'));
+     }
+
+     }*/
+
+}
+
 $(document).ready(function(){
 
+    /*setTimeout(function () {
+        var data_cke = $('[data-cke-widget-data]');
+        for(x=0;x<$(data_cke).length;x++){
+            //$($(data_cke)[x]).attr('data-cke-widget-data','');
+            console.log($($(data_cke)[x]).data('cke-widget-data'));
+        }
+    },100);*/
 
     /*var cks = [];
     var editors = $('.edit');
