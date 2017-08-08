@@ -11,8 +11,17 @@ ssh -t -i devops/aws/homolog.pem admin@54.233.150.10 "cd /var/www/.mirror && tar
 mkdir .mirror
 scp -i devops/aws/homolog.pem admin@54.233.150.10:/var/www/.mirror/$compressedHomologDb .mirror/$compressedHomologDb
 
-tar xvzf .mirror/$compressedHomologDb -C 2>&1 |
-while read line; do
-    x=$((x+1))
-    echo -en "$x extracted\r"
-done
+cd .mirror
+tar -xzvf $compressedHomologDb
+mysql -u root -p sices_solar < $homologDb
+
+cd ../
+rm -rf .mirror
+
+rm -rf app/cache/dev/**
+rm -rf app/cache/prod/**
+
+php app/console cache:clear --env=dev
+php app/console cache:clear --env=prod
+
+php app/console doctrine:schema:update --force
