@@ -4,6 +4,11 @@ cd $SICES_PATH
 
 if [ -z ${1+x} ] || [ $1 == '--development' ]; then
   cp cli/ces-pre-push .git/hooks/pre-push
+
+  echo 'Creating database... enter your mysql password:'
+  mysql -u root -p -e 'CREATE DATABASE sices_solar;'
+  ces-database-mirror
+
   FLAG=development
 elif [ $1 == '--homolog' ]; then
   FLAG=homolog
