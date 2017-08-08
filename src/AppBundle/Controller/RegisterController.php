@@ -12,6 +12,7 @@ use AppBundle\Entity\UserInterface;
 use AppBundle\Form\Extra\AccountRegisterType;
 use AppBundle\Form\Extra\PreRegisterType;
 use AppBundle\Model\Document\Account;
+use Doctrine\DBAL\Schema\View;
 use FOS\UserBundle\Event\FilterUserResponseEvent;
 use FOS\UserBundle\FOSUserEvents;
 use Symfony\Component\Form\FormError;
@@ -93,10 +94,10 @@ class RegisterController extends AbstractController
         ]);
 
         if (isset($email)) {
-
-            return $this->render('register.pre_register',[
+            $form->addError(new FormError('E-mail já Cadastrado'));
+            return $this->render('register.pre_register', [
                 'form' => $form->createView(),
-                'errors' => $this->setNotice('E-mail já Cadastrado')
+                'errors' => $form->getErrors(true)
             ]);
         }
 
