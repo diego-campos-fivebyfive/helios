@@ -427,6 +427,12 @@ function rgbToHex(r, g, b) {
     return ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 }
 
+function changeColorPage(color){
+    var page = $('#bloco');
+    $($(page).children()).attr('data-color-page', color);
+    $($(page).children()).attr('style', 'background-color: #'+color);
+}
+
 function changeColorTableEquipServ(color){
     var tableThead = $('.ttableEquipmentAndServices thead tr th' );
     var tableTbadyTrTh = $('.ttableEquipmentAndServices tbody tr th' );
