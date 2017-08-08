@@ -50,6 +50,12 @@ function newPage() {
     idPage++;
 
     $("#idConjunct").html(idPage);
+
+    var bloc = $('#bloco');
+    var color = $($(bloc).children()[0]).data('color-page');
+    if (color == undefined)color = 'FFFFFF';
+    $($(bloc).children()).attr('data-color-page', color);
+    $($(bloc).children()).attr('style', 'background-color: #'+color);
 }
 
 function addSessionModal(idPage) {
