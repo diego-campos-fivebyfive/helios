@@ -53,6 +53,8 @@
                     <button type="button" class="btn btn-success pr margRight3" title="Subir página" onclick="up(this)"><i class="fa fa-arrow-circle-up"></i></button>
                 </div>
 
+
+
                 {#botoes das sessoes q mostra na modal#}
                 <div class="col-m-12 margBottom10" id="btSessionsInsideTheModal">
                     <button type="button" class="btn btn-info " onclick="setSession(this)" data-model="12-0" data-dismiss="modal"><img src="{{ asset('assets/proposal2/images/l1.png') }}"></button>
@@ -1119,6 +1121,9 @@
                 <button id="pdfProposal" class="btn btn-primary ladda-button" data-style="zoom-in" data-url="{{ path('proposal_pdf',{id:project.id}) }}">
                     <span class="ladda-label">Gerar PDF</span>
                 </button>
+
+                <input type="hidden" id="colorPage" onchange="changeColorPage(this.value)" value="FFFFFF">
+                <button type="button" class="btn btn-default jscolor {valueElement: 'colorPage'}">Fundo</button>
             </div>
 
             {#dados da proposta e tags laterais#}

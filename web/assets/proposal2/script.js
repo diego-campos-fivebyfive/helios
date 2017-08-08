@@ -50,6 +50,12 @@ function newPage() {
     idPage++;
 
     $("#idConjunct").html(idPage);
+
+    var bloc = $('#bloco');
+    var color = $($(bloc).children()[0]).data('color-page');
+    if (color == undefined)color = 'FFFFFF';
+    $($(bloc).children()).attr('data-color-page', color);
+    $($(bloc).children()).attr('style', 'background-color: #'+color);
 }
 
 function addSessionModal(idPage) {
@@ -353,6 +359,11 @@ $(document).ready(function(){
     /*setTimeout(function () {
         saveProposal();
     },1000);*/
+
+
+    var color = $($('#bloco').children()[0]).data('color-page');
+    if (color == undefined)color = 'FFFFFF';
+    $('#colorPage').val(color);
 });
 
 function generateChart() {
@@ -425,6 +436,12 @@ function darker(hex,darkerPercent) {
 
 function rgbToHex(r, g, b) {
     return ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+}
+
+function changeColorPage(color){
+    var page = $('#bloco');
+    $($(page).children()).attr('data-color-page', color);
+    $($(page).children()).attr('style', 'background-color: #'+color);
 }
 
 function changeColorTableEquipServ(color){

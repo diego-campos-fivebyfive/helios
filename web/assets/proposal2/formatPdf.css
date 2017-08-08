@@ -8,7 +8,7 @@ body{
 #bloco, .separator{
     padding-top: 8mm;
    // border-top: solid 1px #000000;
-    background-color: #FFFFFF !important;
+    background-color: #FFFFFF;
 }
 .del{
     background-color: transparent !important;
