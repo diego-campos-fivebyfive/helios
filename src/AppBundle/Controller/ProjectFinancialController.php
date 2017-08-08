@@ -50,7 +50,8 @@ class ProjectFinancialController extends AbstractController
      */
     public function shippingAction(Request $request, Project $project)
     {
-        $form = $this->createForm(ShippingType::class);
+        $rule = $project->getShippingRules();
+        $form = $this->createForm(ShippingType::class, $rule);
 
         $form->handleRequest($request);
 
@@ -64,9 +65,18 @@ class ProjectFinancialController extends AbstractController
             $rule['power'] = $project->getPower();
 
             ShippingRuler::apply($rule);
+
+            $project->setShippingRules($rule);
+
+            $this->manager('project')->save($project);
+
+            return $this->json([
+                'shipping' => $project->getShipping()
+            ]);
         }
 
         return $this->render('project.financial_shipping', [
+            'project' => $project,
             'form' => $form->createView()
         ]);
     }
