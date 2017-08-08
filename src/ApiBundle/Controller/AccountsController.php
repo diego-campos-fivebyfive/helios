@@ -19,6 +19,21 @@ class AccountsController extends FOSRestController
     {
         $data = json_decode($request->getContent(), true);
 
+        /** @var Customer $manager */
+        $manager = $this->get('account_manager');
+        $email = $manager->findOneBy([
+            'context' => 'account',
+            'email' => $data['email']
+        ]);
+
+        if ($email) {
+            $data = "This account already exists!";
+            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+
+            $view = View::create($data)->setStatusCode($status);
+            return $this->handleView($view);
+        }
+
         /** @var AccountInterface $accountManager */
         $accountManager = $this->get('account_manager');
         $account = $accountManager->create();
