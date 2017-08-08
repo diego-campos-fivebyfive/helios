@@ -1,11 +1,115 @@
+{{ form_start(form,{attr:{id:'form_shipping', action: path('financial_shipping',{id:project.id})}}) }}
 
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group col-md-4">
+            {{ form_label(form.type, 'Opção de Frete') }}
+            {{ form_widget(form.type,{attr:{class:'form-control'}}) }}
+        </div>
 
-{{ form_start(form) }}
+        <div class="form-group group-sices col-md-4">
+            {{ form_label(form.state, 'Estado') }}
+            {{ form_widget(form.state,{attr:{class:'form-control'}}) }}
+        </div>
 
-    {{ form_widget(form) }}
+        <div class="form-group group-self col-md-4">
+            {{ form_label(form.percent, 'Percentual da NF') }}
+            {{ form_widget(form.percent,{attr:{class:'form-control'}}) }}
+        </div>
 
-    <button class="btn btn-success" type="submit">
-        Calcular
-    </button>
+        <div class="form-group group-sices group-kind col-md-4">
+            {{ form_label(form.kind, 'Localização') }}
+            {{ form_widget(form.kind,{attr:{class:'form-control'}}) }}
+        </div>
+    </div>
+
+    <div class="form-group col-md-2">
+        <label> &nbsp; </label>
+        <button class="btn btn-success btn-block ladda-button" data-style="zoom-in" type="submit">
+            <i class="fa fa-refresh"></i> Calcular
+        </button>
+    </div>
+
+    <div class="form-group col-md-4 text-center">
+        <label> Valor do Frete </label>
+        <h2 id="shipping_output"> {{ project.shipping|currency }} </h2>
+    </div>
+
+</div>
 
 {{ form_end(form) }}
+
+<script>
+
+    var ShippingManager = {
+        form: $('#form_shipping'),
+        type: $('#shipping_type'),
+        state: $('#shipping_state'),
+        percent: $('#shipping_percent'),
+        kind: $('#shipping_kind'),
+        output: $('#shipping_output'),
+        checkState: function(){
+            var state = ShippingManager.state.val();
+            var kinds = ['SP', 'RJ', 'MG'];
+            if(kinds.indexOf(state) >= 0){
+                $('.group-kind').show();
+            }else{
+                $('.group-kind').hide();
+            }
+        },
+        checkType: function(){
+            var type = ShippingManager.type.val();
+            if ('sices' == type) {
+                $('.group-sices').show();
+                $('.group-self').hide();
+            } else {
+                $('.group-self').show();
+                $('.group-sices').hide();
+            }
+        },
+        check: function () {
+            ShippingManager.checkType();
+            ShippingManager.checkState();
+        },
+        init: function () {
+
+            ShippingManager.type.on('change', function () {
+                ShippingManager.check();
+            });
+
+            ShippingManager.check();
+
+            ladda_button = false;
+            var button = ShippingManager.form.find('[type="submit"]');
+            ShippingManager.form.on('submit', function (event) {
+                event.preventDefault();
+                if (!ladda_button) {
+                    ladda_button = true;
+                    button.ladda();
+                }
+                button.ladda('start');
+                Request.send({
+                    url: $(this).attr('action'),
+                    method: 'post',
+                    data: $(this).serialize(),
+                    callback: function (xhr) {
+                        button.ladda('stop');
+                        var response = xhr.responseJSON;
+                        ShippingManager.output.html(
+                            numeral(response.shipping).format('$0,0.00')
+                        );
+                    }
+                });
+            });
+
+            Numbers.mask(ShippingManager.percent);
+
+            ShippingManager.state.on('change', function(){
+                ShippingManager.checkState();
+            });
+        }
+    };
+
+    ShippingManager.init();
+
+</script>
