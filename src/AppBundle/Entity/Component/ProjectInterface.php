@@ -70,6 +70,22 @@ interface ProjectInterface
     public function getDefaults();
 
     /**
+     * @param array $shippingRules
+     * @return ProjectInterface
+     */
+    public function setShippingRules(array $shippingRules);
+
+    /**
+     * @return array
+     */
+    public function getShippingRules();
+
+    /**
+     * @return float
+     */
+    public function getShipping();
+
+    /**
      * @param $infConsumption
      * @return ProjectInterface
      */

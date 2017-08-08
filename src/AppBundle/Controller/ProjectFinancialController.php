@@ -7,7 +7,9 @@ use AppBundle\Entity\Component\ProjectTax;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Form\Component\ProjectExtraType;
 use AppBundle\Form\Financial\FinancialType;
+use AppBundle\Form\Financial\ShippingType;
 use AppBundle\Form\Financial\TaxType;
+use AppBundle\Service\ProjectGenerator\ShippingRuler;
 use AppBundle\Service\Support\Project\FinancialAnalyzer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,6 +42,42 @@ class ProjectFinancialController extends AbstractController
             'project' => $project,
             'form' => $form->createView(),
             'form_tax' => $formTax->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/shipping", name="financial_shipping")
+     */
+    public function shippingAction(Request $request, Project $project)
+    {
+        $rule = $project->getShippingRules();
+        $form = $this->createForm(ShippingType::class, $rule);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            $rule = $form->getData();
+
+            ShippingType::normalize($rule);
+
+            $rule['price'] = $project->getSalePriceComponents();
+            $rule['power'] = $project->getPower();
+
+            ShippingRuler::apply($rule);
+
+            $project->setShippingRules($rule);
+
+            $this->manager('project')->save($project);
+
+            return $this->json([
+                'shipping' => $project->getShipping()
+            ]);
+        }
+
+        return $this->render('project.financial_shipping', [
+            'project' => $project,
+            'form' => $form->createView()
         ]);
     }
 

@@ -30,10 +30,14 @@ abstract class ShippingRuler
      */
     public static function apply(&$rule)
     {
-        self::definitions($rule);
-        self::value($rule);
-        self::markup($rule);
-        self::shipping($rule);
+        if('self' == $rule['type']){
+            self::defaults($rule);
+        }else {
+            self::definitions($rule);
+            self::value($rule);
+            self::markup($rule);
+            self::shipping($rule);
+        }
     }
 
     /**
@@ -125,7 +129,6 @@ abstract class ShippingRuler
     {
         return [
             'limit' => [
-                10000 => [],
                 60000 => [
                     'mlt' => [
                         self::REGION_NORTH => 4.22,
@@ -133,8 +136,13 @@ abstract class ShippingRuler
                         self::REGION_MIDWEST => 3.1
                     ],
                     'ctp' => [
-                        self::REGION_SOUTH => 0,
-                        self::REGION_SOUTHEAST => 0
+                        self::REGION_SOUTH => 3.6,
+                        self::REGION_SOUTHEAST => [
+                            'interior' => 3.8,
+                            'sp-capital' => 2,
+                            'rj-capital' => 2.7,
+                            'mg-capital' => 2.7
+                        ]
                     ]
                 ],
                 100000 => [
@@ -167,5 +175,19 @@ abstract class ShippingRuler
                 ]
             ]
         ];
+    }
+
+    /**
+     * @param array $rule
+     */
+    private static function defaults(array &$rule)
+    {
+        $rule['value'] = 0;
+        $rule['markup'] = 0;
+        $rule['company'] = null;
+        $rule['state'] = null;
+        $rule['kind'] = null;
+        $rule['region'] = null;
+        $rule['shipping'] = $rule['price'] * $rule['percent'];
     }
 }

@@ -4,6 +4,17 @@ namespace AppBundle\Configuration;
 
 class Brazil
 {
+    public static function regions()
+    {
+        return [
+            'north' => ['AC', 'AM', 'AP', 'PA', 'RO', 'RR', 'TO'],
+            'northeast' => ['AL', 'BA', 'CE', 'MA', 'PB', 'PE', 'PI', 'SE', 'RN'],
+            'midwest' => ['GO', 'MS', 'MT'],
+            'southeast' => ['ES', 'MG', 'RJ', 'SP'],
+            'south' => ['PR', 'RS', 'SC']
+        ];
+    }
+
     public static function states()
     {
         $states = [];
