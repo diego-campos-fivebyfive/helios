@@ -73,12 +73,16 @@ class ProjectGenerator
     public function loadDefaults(array $defaults = [])
     {
         return array_merge([
+            'address' => null,
             'latitude' => null,
             'longitude' => null,
+            'customer' => null,
+            'stage' => null,
             'roof_type' => 'ROOF_ROMAN_AMERICAN',
             'source' => 'consumption',
             'power' => 0,
             'consumption' => 0,
+            'use_transformer' => true,
             'grid_voltage' => '127/220',
             'grid_phase_number' => 'Biphasic',
             'module' => 32433,
