@@ -59,6 +59,8 @@ class OrderController extends FOSRestController
     {
         $order = $id;
 
+        //dump($products);die();
+
         $data = [
             'id' => $order->getId(),
             'status' => $order->getStatus(),
@@ -82,62 +84,71 @@ class OrderController extends FOSRestController
                 ],
             'projects' => $order->getProjects()
                 ->map(function (ProjectInterface $project) {
+                    $products=[];
+                    $cont = 0;
+                    foreach ($project->getProjectInverters() as $projectInverter){
+                        $products[$cont] = [
+                            'id' => $projectInverter->getId(),
+                            'quantity' => $projectInverter->getQuantity(),
+                            'price' => $projectInverter->getUnitCostPrice(),
+                            'code' => $projectInverter->getInverter()->getCode(),
+                            'description' => $projectInverter->getInverter()->getModel(),
+                            'family' => 'inverter'
+                        ];
+                        $cont++;
+                    }
+                    foreach ($project->getProjectModules() as $projectModule) {
+                        $products[$cont] = [
+                            'id' => $projectModule->getId(),
+                            'quantity' => $projectModule->getQuantity(),
+                            'price' => $projectModule->getUnitCostPrice(),
+                            'code' => $projectModule->getModule()->getCode(),
+                            'description' => $projectModule->getModule()->getModel(),
+                            'family' => 'module'
+                        ];
+                        $cont++;
+                    }
+                    foreach ($project->getProjectStructures() as $projectStructure) {
+                        $products[$cont] = [
+                            'id' => $projectStructure->getId(),
+                            'quantity' => $projectStructure->getQuantity(),
+                            'price' => $projectStructure->getUnitCostPrice(),
+                            'code' => $projectStructure->getStructure()->getCode(),
+                            'description' => $projectStructure->getStructure()->getDescription(),
+                            'family' => 'structur'
+                        ];
+                        $cont++;
+                    }
+                    foreach ($project->getProjectStringBoxes() as $projectStringBox) {
+                        $products[$cont] = [
+                            'id' => $projectStringBox->getId(),
+                            'quantity' => $projectStringBox->getQuantity(),
+                            'price' => $projectStringBox->getUnitCostPrice(),
+                            'code' => $projectStringBox->getStringBox()->getCode(),
+                            'description' => $projectStringBox->getStringBox()->getDescription(),
+                            'family' => 'stringbox'
+                        ];
+                        $cont++;
+                    }
+                    foreach ($project->getProjectVarieties() as $projectVariety) {
+                        $products[$cont] = [
+                            'id' => $projectVariety->getId(),
+                            'quantity' => $projectVariety->getQuantity(),
+                            'price' => $projectVariety->getUnitCostPrice(),
+                            'code' => $projectVariety->getVariety()->getCode(),
+                            'description' => $projectVariety->getVariety()->getDescription(),
+                            'family' => 'variety'
+                        ];
+                        $cont++;
+                    }
+
                     return Array(
                         'id' => $project->getId(),
-                        'inverters' => $project->getProjectInverters()
-                            ->map(function (ProjectInverterInterface $projectInverter) {
-                                return [
-                                    'id' => $projectInverter->getId(),
-                                    'quantity' => $projectInverter->getQuantity(),
-                                    'price' => $projectInverter->getUnitCostPrice(),
-                                    'code' => $projectInverter->getInverter()->getCode(),
-                                    'model' => $projectInverter->getInverter()->getModel()
-                                ];
-                            })->toArray(),
-                        'modules' => $project->getProjectModules()
-                            ->map(function (ProjectModuleInterface $projectModule) {
-                            return [
-                                'id' => $projectModule->getId(),
-                                'quantity' => $projectModule->getQuantity(),
-                                'price' => $projectModule->getUnitCostPrice(),
-                                'code' => $projectModule->getModule()->getCode(),
-                                'model' => $projectModule->getModule()->getModel()
-                            ];
-                        })->toArray(),
-                        'structures' => $project->getProjectStructures()
-                            ->map(function (ProjectStructureInterface $projectStructure) {
-                                return [
-                                    'id' => $projectStructure->getId(),
-                                    'quantity' => $projectStructure->getQuantity(),
-                                    'price' => $projectStructure->getUnitCostPrice(),
-                                    'code' => $projectStructure->getStructure()->getCode(),
-                                    'model' => $projectStructure->getStructure()->getDescription()
-                                ];
-                            })->toArray(),
-                        'stringboxes' => $project->getProjectStringBoxes()
-                            ->map(function (ProjectStringBoxInterface $projectStringBox) {
-                                return [
-                                    'id' => $projectStringBox->getId(),
-                                    'quantity' => $projectStringBox->getQuantity(),
-                                    'price' => $projectStringBox->getUnitCostPrice(),
-                                    'code' => $projectStringBox->getStringBox()->getCode(),
-                                    'model' => $projectStringBox->getStringBox()->getDescription()
-                                ];
-                            })->toArray(),
-                        'varietys' => $project->getProjectVarieties()
-                            ->map(function (ProjectVarietyInterface $projectVariety) {
-                                return [
-                                    'id' => $projectVariety->getId(),
-                                    'quantity' => $projectVariety->getQuantity(),
-                                    'price' => $projectVariety->getUnitCostPrice(),
-                                    'code' => $projectVariety->getVariety()->getCode(),
-                                    'model' => $projectVariety->getVariety()->getDescription()
-                                ];
-                            })->toArray()
+                        'products' => $products
                     );
                 })->toArray()
         ];
-        
+
         $view = View::create($data);
 
         return $this->handleView($view);
