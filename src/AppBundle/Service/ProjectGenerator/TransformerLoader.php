@@ -18,6 +18,9 @@ class TransformerLoader
      */
     private $manager;
 
+    /**
+     * @param TransformerManager $manager
+     */
     function __construct(TransformerManager $manager)
     {
         $this->manager = $manager;
