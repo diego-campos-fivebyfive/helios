@@ -10,6 +10,12 @@
 
 namespace ApiBundle\Controller;
 
+use AppBundle\Entity\Component\InverterInterface;
+use AppBundle\Entity\Component\ProjectInverterInterface;
+use AppBundle\Entity\Component\ProjectModuleInterface;
+use AppBundle\Entity\Component\ProjectStringBoxInterface;
+use AppBundle\Entity\Component\ProjectStructureInterface;
+use AppBundle\Entity\Component\ProjectVarietyInterface;
 use FOS\RestBundle\View\View;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
@@ -56,50 +62,82 @@ class OrderController extends FOSRestController
         $data = [
             'id' => $order->getId(),
             'status' => $order->getStatus(),
-            'account' => $order->getAccount(),
-            'projects' => $order->getProjects()->map(function (ProjectInterface $project) {
-                return Array(
-                    'id' => $project->getId(),
-                    'address' => $project->getAddress(),
-                    'stage' => $project->getStage(),
-                    'inf_consumption' => $project->getInfConsumption(),
-                    'power' => $project->getInfPower(),
-                    'efficiency' => $project->getEfficiencyLoss(),
-                    'latitude' => $project->getLatitude(),
-                    'longitude' => $project->getLongitude(),
-                    'roof' => $project->getRoofType(),
-                    'extras' => $project->getProjectExtras(),
-                    'inverters' => $project->getProjectInverters(),
-                    'modules' => $project->getProjectModules(),
-                    'structures' => $project->getProjectStructures(),
-                    'stringboxes' => $project->getProjectStringBoxes(),
-                    'varietys' => $project->getProjectVarieties(),
-                    'structure_type' => $project->getStructureType(),
-                    'project_extra_products' => $project->getProjectExtraProducts(),
-                    'project_extra_services' => $project->getProjectExtraServices(),
-                    'project_taxes' => $project->getProjectTaxes(),
-                    'sale_price' => $project->getSalePrice(),
-                    'sale_price_equipments' => $project->getSalePriceEquipments(),
-                    'sale_price_inverters' => $project->getSalePriceInverters(),
-                    'sale_price_modules' => $project->getSalePriceModules(),
-                    'sale_price_services' => $project->getSalePriceServices(),
-                    'distribution' => $project->getDistribution(),
-                    'lifetime' => $project->getLifetime(),
-                    'cost_price_components' => $project->getCostPriceComponents(),
-                    'cost_price' => $project->getCostPrice(),
-                    'cost_price_total' => $project->getCostPriceTotal(),
-                    'cost_price_extra' => $project->getCostPriceExtra(),
-                    'annual_cost_operation' => $project->getAnnualCostOperation(),
-                    'annual_production' => $project->getAnnualProduction(),
-                    'accumulated_cash' => $project->getAccumulatedCash(),
-                    'create_at' => $project->getCreatedAt(),
-                    'cpdate_at' => $project->getUpdatedAt(),
-                    'customer' => $project->getCustomer(),
-                    'token' => $project->getToken()
-                );
-            })
+            'account' =>
+                [
+                    'id' => $order->getAccount()->getId(),
+                    'firstname' => $order->getAccount()->getFirstName(),
+                    'lastname' => $order->getAccount()->getLastName(),
+                    'extraDocument' => $order->getAccount()->getExtraDocument(),
+                    'document' => $order->getAccount()->getDocument(),
+                    'email' => $order->getAccount()->getEmail(),
+                    'state' => $order->getAccount()->getState(),
+                    'city' => $order->getAccount()->getCity(),
+                    'phone' => $order->getAccount()->getPhone(),
+                    'district' => $order->getAccount()->getDistrict(),
+                    'street' => $order->getAccount()->getStreet(),
+                    'number' => $order->getAccount()->getNumber(),
+                    'postcode' => $order->getAccount()->getPostcode(),
+                    'status' => $order->getAccount()->getStatus(),
+                    'level' => $order->getAccount()->getLevel()
+                ],
+            'projects' => $order->getProjects()
+                ->map(function (ProjectInterface $project) {
+                    return Array(
+                        'id' => $project->getId(),
+                        'inverters' => $project->getProjectInverters()
+                            ->map(function (ProjectInverterInterface $projectInverter) {
+                                return [
+                                    'id' => $projectInverter->getId(),
+                                    'quantity' => $projectInverter->getQuantity(),
+                                    'price' => $projectInverter->getUnitCostPrice(),
+                                    'code' => $projectInverter->getInverter()->getCode(),
+                                    'model' => $projectInverter->getInverter()->getModel()
+                                ];
+                            })->toArray(),
+                        'modules' => $project->getProjectModules()
+                            ->map(function (ProjectModuleInterface $projectModule) {
+                            return [
+                                'id' => $projectModule->getId(),
+                                'quantity' => $projectModule->getQuantity(),
+                                'price' => $projectModule->getUnitCostPrice(),
+                                'code' => $projectModule->getModule()->getCode(),
+                                'model' => $projectModule->getModule()->getModel()
+                            ];
+                        })->toArray(),
+                        'structures' => $project->getProjectStructures()
+                            ->map(function (ProjectStructureInterface $projectStructure) {
+                                return [
+                                    'id' => $projectStructure->getId(),
+                                    'quantity' => $projectStructure->getQuantity(),
+                                    'price' => $projectStructure->getUnitCostPrice(),
+                                    'code' => $projectStructure->getStructure()->getCode(),
+                                    'model' => $projectStructure->getStructure()->getDescription()
+                                ];
+                            })->toArray(),
+                        'stringboxes' => $project->getProjectStringBoxes()
+                            ->map(function (ProjectStringBoxInterface $projectStringBox) {
+                                return [
+                                    'id' => $projectStringBox->getId(),
+                                    'quantity' => $projectStringBox->getQuantity(),
+                                    'price' => $projectStringBox->getUnitCostPrice(),
+                                    'code' => $projectStringBox->getStringBox()->getCode(),
+                                    'model' => $projectStringBox->getStringBox()->getDescription()
+                                ];
+                            })->toArray(),
+                        'varietys' => $project->getProjectVarieties()
+                            ->map(function (ProjectVarietyInterface $projectVariety) {
+                                return [
+                                    'id' => $projectVariety->getId(),
+                                    'quantity' => $projectVariety->getQuantity(),
+                                    'price' => $projectVariety->getUnitCostPrice(),
+                                    'code' => $projectVariety->getVariety()->getCode(),
+                                    'model' => $projectVariety->getVariety()->getDescription()
+                                ];
+                            })->toArray()
+                    );
+                })->toArray()
         ];
-
+        
         $view = View::create($data);
 
         return $this->handleView($view);
