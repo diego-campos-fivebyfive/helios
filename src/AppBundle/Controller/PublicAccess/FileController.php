@@ -20,9 +20,7 @@ class FileController extends AbstractController
      */
     public function proposalPDFAction()
     {
-        return $this->render('AppBundle:Proposal:proposalPDF.html.twig', array(
-
-        ));
+        return $this->render('AppBundle:Proposal:proposalPDF.html.twig', array());
     }
 
     /**
@@ -38,26 +36,12 @@ class FileController extends AbstractController
         $dir = $this->get('kernel')->getRootDir() . '/../storage/';
         $filename = md5(uniqid(time())) . '.pdf';
 
-        // $url = 'https://www.google.com.br/';//
-        $url2 = $this->generateUrl('files_pdf',[],0);
-        //$url2 = 'http://localhost:8000/login';
-
-        //dump($url); die;
+        $url = 'http://localhost:8000/login';
 
         try{
-            $snappy->generate($url2, $dir . $filename);
-        }catch (\Exception $e){
-
+            $snappy->generate($url, $dir . $filename);
         }
-
-
-
-
-        dump($snappy); die;
-
     }
-//
-
 
     /**
      * @Route("/{token}/proposal", name="file_proposal")
@@ -117,9 +101,7 @@ class FileController extends AbstractController
      */
     public function pdfAction()
     {
-        return $this->render('AppBundle:Proposal:pdf.html.twig', array(
-
-        ));
+        return $this->render('AppBundle:Proposal:pdf.html.twig', array());
     }
 
     /**
@@ -138,11 +120,7 @@ class FileController extends AbstractController
 
         $url = $this->generateUrl('file_proposal_pdf',[],0);
 
-        dump($snappy); die;
-
         $snappy->generate($url, $dir . $filename);
-
-        dump($snappy); die;
     }
 
     /**
