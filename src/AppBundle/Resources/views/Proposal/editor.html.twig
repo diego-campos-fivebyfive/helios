@@ -1152,20 +1152,16 @@
                     </div>
 
                     {#dados da geração#}
-                    <div id="dtableAreas">
-                        1-{#{{ project.customer.tableAreas }}#}
-                    </div>
-
                     <div id="dgenerationChart" data-type="chart" data-chart="generation"
-                         data-json="{{ projectFake.customer.generationChart|json_encode }}">
+                         data-json="{{ project.monthlyProduction|json_encode }}">
                     </div>
 
                     <div id="dannualGeneration">
-                        3-{#{{ project.customer.annualGeneration }}#}
+                        {{ project.annualProduction }} kWh
                     </div>
 
                     <div id="dmonthlyAverageGeneration">
-                        4-{#{{ project.customer.monthlyAverageGeneration }}#}
+                        {{ (project.annualProduction / 12)|round(2) }} kWh
                     </div>
 
                     {#análise financeira#}
@@ -1531,30 +1527,6 @@
                     </div>
 
                     {#dados da geração#}
-                    <div id="tableAreas">
-                            <span tabindex="-1" data-cke-widget-wrapper="1" data-cke-filter="off"
-                                  class="cke_widget_wrapper cke_widget_inline cke_widget_hcard cke_widget_wrapper_h-card"
-                                  data-cke-display-name="hcard" data-cke-widget-id="3" role="region" aria-label="hcard widget"
-                                  contenteditable="false">
-                            <span class="h-card cke_widget_element"
-                                  data-cke-widget-data="%7B%22classes%22%3A%7B%22h-card%22%3A1%7D%7D"
-                                  data-cke-widget-upcasted="1" data-cke-widget-keep-attr="0"
-                                  data-widget="hcard">
-
-                                <!--content-->
-                                <span class="dtableAreas"></span>
-                            </span>
-                            <span class="cke_reset cke_widget_drag_handler_container"
-                                  style="background: rgba(220, 220, 220, 0.5)
-                                url(&quot;http://sdk.ckeditor.com/vendor/ckeditor/plugins/widget/images/handle.png&quot;)
-                                repeat scroll 0% 0%; top: -14px; left: 0px; display: block;">
-                                <img class="cke_reset cke_widget_drag_handler" data-cke-widget-drag-handler="1"
-                                     src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw=="
-                                     title="Click e arraste para mover" role="presentation" draggable="true" width="15"
-                                     height="15">
-                            </span>
-                        </span>
-                    </div>
 
                     <div id="generationChart">
                         <span id="copyGenerationChart" class="image cke_widget_element dgenerationChart"
@@ -1948,11 +1920,6 @@
                     <div class="list-group-item active">
                         DADOS DA GERAÇÃO
                     </div>
-                    <li>
-                        <div class="list-group-item" data-info="tableAreas" draggable="true">
-                            Tabela com as áreas
-                        </div>
-                    </li>
                     <li>
                         <div id="tagGenerationChart" class="list-group-item" data-info="generationChart" draggable="true">
                             Gráfico da Geração

@@ -9,6 +9,7 @@ if [ -z ${1+x} ] || [ $1 == '--development' ]; then
   echo 'Creating database... enter your mysql password:'
   read -s password
   mysql -u root -p$password -e 'CREATE DATABASE sices_solar;' > /dev/null 2>&1;
+  chmod 600 devops/aws/homolog.pem
   ces-database-mirror $password
 
   echo 'Creating params file...'

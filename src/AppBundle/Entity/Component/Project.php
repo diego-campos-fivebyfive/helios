@@ -1227,8 +1227,9 @@ class Project implements ProjectInterface
      */
     public function getAnnualProduction()
     {
-        if (null != $kwhYear = $this->getMetadata('kwh_year'))
-            return $kwhYear;
+        $metadata = $this->getMetadata();
+        if (array_key_exists('total',$metadata))
+            return $metadata['total']['kwh_year'];
 
         return 0;
     }

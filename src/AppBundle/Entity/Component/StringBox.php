@@ -68,6 +68,13 @@ class StringBox implements StringBoxInterface
     private $fuses;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="status", type="boolean", nullable=true)
+     */
+    private $status;
+
+    /**
      * @inheritDoc
      */
     function __toString()
@@ -171,5 +178,22 @@ class StringBox implements StringBoxInterface
     public function getFuses()
     {
         return $this->fuses;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+        return $this;
     }
 }
