@@ -18,6 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="app_component_variety")
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
 class Variety implements VarietyInterface
 {
