@@ -54,6 +54,13 @@ class Variety implements VarietyInterface
     private $code;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $power;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="description", type="text")
@@ -73,6 +80,10 @@ class Variety implements VarietyInterface
      */
     public function setType($type)
     {
+        if(!in_array($type, self::getTypes())){
+            throw new \InvalidArgumentException(sprintf('Invalid type [%s]', $type));
+        }
+
         $this->type = $type;
 
         return $this;
@@ -138,5 +149,35 @@ class Variety implements VarietyInterface
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setPower($power)
+    {
+        $this->power = $power;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPower()
+    {
+        return $this->power;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function getTypes()
+    {
+        return [
+            self::TYPE_CABLE,
+            self::TYPE_CONNECTOR,
+            self::TYPE_TRANSFORMER
+        ];
     }
 }
