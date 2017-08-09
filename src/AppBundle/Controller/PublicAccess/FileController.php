@@ -38,8 +38,11 @@ class FileController extends AbstractController
 
         $url = 'http://localhost:8000/login';
 
-        try{
+        try {
             $snappy->generate($url, $dir . $filename);
+        }
+        catch(\Exception $error) {
+            //ignore
         }
     }
 
