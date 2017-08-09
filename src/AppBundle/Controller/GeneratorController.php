@@ -67,12 +67,6 @@ class GeneratorController extends AbstractController
      */
     public function testInverterCombinerAction()
     {
-        //$loader = new InverterLoader($this->manager('inverter'));
-        $power = 8;
-
-        //$inverters = $loader->load($power, 60627);
-        //dump($inverters); die;
-
         /** @var ProjectInterface $project */
         $project = $this->manager('project')->create();
 
@@ -85,7 +79,10 @@ class GeneratorController extends AbstractController
             'latitude' => -25.384,
             'longitude' => -51.455,
             'source' => 'power',
-            'power' => $power
+            'power' => 20,
+            'grid_voltage' => '127/220',
+            'grid_phase_number' => 'Triphasic',
+            'inverter_maker' => 60630
         ]);
 
         $project->setDefaults($defaults);

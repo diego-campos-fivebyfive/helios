@@ -141,6 +141,13 @@ class Inverter implements InverterInterface
     private $phases;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $phaseVoltage;
+
+    /**
      * @var float
      *
      * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
@@ -153,6 +160,13 @@ class Inverter implements InverterInterface
      * @ORM\Column(name="status", type="boolean", nullable=true)
      */
     private $status;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $compatibility;
 
     /**
      * This property is used by management only
@@ -449,6 +463,24 @@ class Inverter implements InverterInterface
     /**
      * @inheritDoc
      */
+    public function setPhaseVoltage($phaseVoltage)
+    {
+        $this->phaseVoltage = $phaseVoltage;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPhaseVoltage()
+    {
+        return $this->phaseVoltage;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setCurrentPrice($currentPrice)
     {
         $this->currentPrice = $currentPrice;
@@ -486,6 +518,24 @@ class Inverter implements InverterInterface
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setCompatibility($compatibility)
+    {
+        $this->compatibility = $compatibility;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCompatibility()
+    {
+        return $this->compatibility;
     }
 
     /**
