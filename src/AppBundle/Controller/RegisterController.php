@@ -70,35 +70,59 @@ class RegisterController extends AbstractController
      * @Route("/", name="pre_register")
      */
     public function preRegisterAction(Request $request){
-        $accountManager = $this->getCustomerManager();
+
+        $getErrorArgs = function($form)
+        {
+            return [
+                'message' => $form->getErrors(true),
+                'view'=> $form->createView()
+            ];
+        };
+
+        $throwError = function($error)
+        {
+            return $this->render('register.pre_register', [
+                'errors' => $error['message'],
+                'form' => $error['view']
+            ]);
+        };
+
+        $findEmail = function($email, $managers)
+        {
+            $existentEmail = null;
+            foreach ($managers as $manager) {
+                $existentEmail = $manager->findOneBy([
+                    'context' => key($manager),
+                    'email' => $email
+                ]);
+            }
+
+            return $existentEmail;
+        };
 
         /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
         $userManager = $this->get('fos_user.user_manager');
+        $accountManager = $this->getCustomerManager();
 
         $form = $this->createForm(PreRegisterType::class);
         $form->handleRequest($request);
 
         if (!$form->isSubmitted() || !$form->isValid()) {
-
-            return $this->render('register.pre_register', [
-                'form' => $form->createView(),
-                'errors' => $form->getErrors(true)
-            ]);
+            $error = $getErrorArgs($form);
+            return $throwError($error);
         }
 
         $data = $form->getData();
 
-        $email = $accountManager->findOneBy([
-            'context' => 'account',
-            'email' => $data['email']
-        ]);
-
-        if (isset($email)) {
-            $form->addError(new FormError('E-mail já Cadastrado'));
-            return $this->render('register.pre_register', [
-                'form' => $form->createView(),
-                'errors' => $form->getErrors(true)
-            ]);
+        if ($findEmail( $data['email'], [
+            'account' => $accountManager,
+            'member' => $accountManager,
+            'user' => $userManager
+        ])) {
+            $errorMessage = new FormError('E-mail já Cadastrado');
+            $form->addError($errorMessage);
+            $error = $getErrorArgs($form);
+            return $throwError($error);
         }
 
         /** @var AccountInterface $account */
