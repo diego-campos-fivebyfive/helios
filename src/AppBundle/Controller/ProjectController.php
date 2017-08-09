@@ -13,7 +13,6 @@ use AppBundle\Entity\Component\ProjectModule;
 use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\Project\NasaCatalog;
 use AppBundle\Form\Component\ProjectAreaType;
-use AppBundle\Form\Component\ProjectType;
 use AppBundle\Form\Component\GeneratorType;
 use AppBundle\Form\Project\ProjectInverterType;
 use Symfony\Component\HttpFoundation\Request;
@@ -131,6 +130,14 @@ class ProjectController extends AbstractController
      */
     public function createAction(Request $request)
     {
+        $generator = $this->getGenerator();
+        $defaults = $generator->loadDefaults();
+
+        $form = $this->createForm(GeneratorType::class, $defaults,[
+            'status' => GeneratorType::INIT,
+            'member' => $this->member()
+        ]);
+
         $manager = $this->manager('project');
 
         /** @var Project $project */
@@ -138,22 +145,14 @@ class ProjectController extends AbstractController
 
         $project->setMember($this->member());
 
-        $form = $this->createForm(ProjectType::class, $project);
-
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
 
             $generator = $this->getGenerator();
 
-            $defaults = $generator->loadDefaults([
-                'roof_type' => $project->getRoofType(),
-                'consumption' => $project->getInfConsumption(),
-                'latitude' => $project->getLatitude(),
-                'longitude' => $project->getLongitude()
-            ]);
+            $project->setDefaults($form->getData());
 
-            $project->setDefaults($defaults);
             $generator->generate($project);
 
             return $this->json([
@@ -175,54 +174,16 @@ class ProjectController extends AbstractController
      */
     public function updateAction(Request $request, Project $project)
     {
-        $previous = [
-            'power' => $project->getInfPower(),
-            'consumption' => $project->getInfConsumption(),
-            'latitude' => $project->getLatitude(),
-            'longitude' => $project->getLongitude(),
-            'roof' => $project->getRoofType(),
-            'structure' => $project->getStructureType()
-        ];
+        $defaults = $project->getDefaults();
 
-        $form = $this->createForm(ProjectType::class, $project);
+        $form = $this->createForm(GeneratorType::class, $defaults,[
+            'member' => $project->getMember()
+        ]);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
-
-            $manager = $this->manager('project');
-
-            $generator = $this->getGenerator();
-
-            /**
-             * REPROCESS INVERTERS IF FIELDS IS CHANGED
-             * consumption || latitude || longitude
-             */
-            if($previous['consumption'] != $project->getInfConsumption()
-                || $previous['latitude'] != $project->getLatitude()
-                || $previous['longitude'] != $project->getLongitude()){
-
-                $generator->reset($project);
-
-                $this->configureProjectFromDefaults($project);
-            }
-
-            /**
-             * REPROCESS STRUCTURES IF FIELDS IS CHANGED
-             * roof || structure
-             */
-            if($previous['roof'] != $project->getRoofType()
-                || $previous['structure'] != $project->getStructureType()){
-                $generator->generateStructures($project);
-            }
-
-            $manager->save($project);
-
-            return $this->json([
-                'project' => [
-                    'id' => $project->getId()
-                ]
-            ]);
+            // Waiting logic here...
         }
 
         return $this->render('project.form_project', [
@@ -251,7 +212,9 @@ class ProjectController extends AbstractController
     {
         $defaults = $project->getDefaults();
 
-        $form = $this->createForm(GeneratorType::class, $defaults);
+        $form = $this->createForm(GeneratorType::class, $defaults, [
+            'member' => $project->getMember()
+        ]);
 
         $form->handleRequest($request);
 
@@ -261,6 +224,7 @@ class ProjectController extends AbstractController
             $generator->reset($project);
 
             $project->setDefaults($form->getData());
+
             $generator->generate($project);
 
             return $this->json([
