@@ -18,8 +18,9 @@ namespace AppBundle\Entity\Component;
  */
 interface VarietyInterface
 {
-    const TYPE_CABLE = 'cable';
-    const TYPE_CONNECTOR = 'connector';
+    const TYPE_CABLE = 'cabo';
+    const TYPE_CONNECTOR = 'conector';
+    const TYPE_TRANSFORMER = 'transformer';
 
     /**
      * @return int
@@ -93,6 +94,17 @@ interface VarietyInterface
     public function getImage();
 
     /**
+     * @param $power
+     * @return VarietyInterface
+     */
+    public function setPower($power);
+
+    /**
+     * @return float
+     */
+    public function getPower();
+
+    /**
      * @param MakerInterface $maker
      * @return VarietyInterface
      */
@@ -112,4 +124,9 @@ interface VarietyInterface
      * @return \DateTime
      */
     public function getUpdatedAt();
+
+    /**
+     * @return array
+     */
+    public static function getTypes();
 }

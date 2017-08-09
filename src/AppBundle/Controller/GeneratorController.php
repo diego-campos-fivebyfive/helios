@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Component\InverterInterface;
 use AppBundle\Entity\Component\ModuleInterface;
 use AppBundle\Entity\Component\ProjectInterface;
+use AppBundle\Entity\Component\VarietyInterface;
 use AppBundle\Entity\Pricing\Range;
 use AppBundle\Service\ProjectGenerator\Combiner;
 use AppBundle\Service\ProjectGenerator\InverterCombiner;
@@ -89,6 +90,38 @@ class GeneratorController extends AbstractController
         $generator->autoSave(false)->project($project)->generate();
 
         dump($project); die;
+    }
+
+    /**
+     * @Route("/import-transformers", name="import_transformers")
+     */
+    public function importTransformersAction()
+    {
+        $filename = $this->get('kernel')->getRootDir() . '/../web/transformers.csv';
+
+        $data = explode("\n", file_get_contents($filename));
+        array_shift($data);
+
+        $manager = $this->manager('variety');
+
+        foreach ($data as $info){
+            $props = explode(';', $info);
+
+            if(4 == count($props)) {
+                /** @var VarietyInterface $variety */
+                $variety = $manager->create();
+                $variety
+                    ->setType(VarietyInterface::TYPE_TRANSFORMER)
+                    ->setCode($props[0])
+                    ->setDescription($props[1])
+                    ->setPower((int)$props[2])
+                ;
+
+                //$manager->save($variety);
+            }
+        }
+
+        die;
     }
 
     /**
