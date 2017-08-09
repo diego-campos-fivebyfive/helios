@@ -8,11 +8,6 @@ use Doctrine\ORM\QueryBuilder;
 class InverterLoader
 {
     /**
-     * @var QueryBuilder
-     */
-    private $qb;
-
-    /**
      * @var float
      */
     private $fdiMin = 0.76;
@@ -28,18 +23,23 @@ class InverterLoader
     public function __construct(InverterManager $manager)
     {
         $this->manager = $manager;
-
-        $this->init();
     }
 
     /**
-     * @param $power
-     * @param $maker
+     * @param array $defaults
      * @return array
      */
-    public function load(&$power, $maker)
+    public function load(array &$defaults)
     {
-        $attempts  = 1;
+        $method = self::method($defaults);
+
+        $phaseNumber = 3;
+        $phaseVoltage = 380;
+
+        $power = $defaults['power'];
+        $maker = $defaults['inverter_maker'];
+
+        $attempts = 1;
 
         do {
 
@@ -47,14 +47,14 @@ class InverterLoader
             $min = ($power * $this->fdiMin);
             $max = ($power * $this->fdiMax);
 
-            $inverters = $this->find($min, $max, $maker, 'asc');
+            $inverters = $this->$method($min, $max, $phaseNumber, $phaseVoltage, $maker, 'asc');
 
             if (!count($inverters)) {
                 for ($i = 300; $i >= 0; $i -= 15) {
 
                     $attempts++;
 
-                    $inverters = $this->find(($min * ($i / 1000)), $max, $maker, 'desc');
+                    $inverters = $this->$method(($min * ($i / 1000)), $max, $phaseNumber, $phaseVoltage, $maker, 'desc');
 
                     if (count($inverters) >= 2) {
                         $combine = true;
@@ -66,52 +66,265 @@ class InverterLoader
                 $inverters[0]->quantity = 1;
             }
 
-            if(!count($inverters)) {
+            if (!count($inverters)) {
                 $power += 0.2;
+                dump($power); die;
             }
 
-            if($combine){
+            if ($combine) {
                 InverterCombiner::combine($inverters, $min);
             }
 
-        }while(!count($inverters));
+        } while (!count($inverters));
+
+        $defaults['power'] = $power;
 
         return $inverters;
     }
 
     /**
+     * Configurations
+     * 127/220 Monophasic
+     *
      * @param $min
      * @param $max
+     * @param $phaseNumber
+     * @param $phaseVoltage
      * @param $maker
      * @param string $order
      * @return array
      */
-    private function find($min, $max, $maker, $order = 'asc')
+    private function find127220Biphasic($min, $max, $phaseNumber, $phaseVoltage, $maker, $order = 'asc')
     {
-        $this->qb->orderBy('i.nominalPower', $order);
-
-        $this->qb->setParameters([
-            'min' => $min,
-            'max' => $max,
-            'maker' => $maker
-        ]);
-
-        return $this->qb->getQuery()->getResult();
+        return $this->findSharedPhasesAndVoltagesFinder($min, $max, $phaseNumber, $phaseVoltage, $maker, $order);
     }
 
     /**
-     * Initialize QueryBuilder
+     * Configurations
+     * 127/220 Triphasic
+     *
+     * @param $min
+     * @param $max
+     * @param $phaseNumber
+     * @param $phaseVoltage
+     * @param $maker
+     * @param string $order
+     * @return array
      */
-    private function init()
+    private function find127220Triphasic($min, $max, $phaseNumber, $phaseVoltage, $maker, $order = 'asc')
     {
-        $qb = $this->manager->getEntityManager()->createQueryBuilder();
+        $class = $this->manager->getClass();
+
+        $qb = $this->createQueryBuilder();
+        $qb2 = $this->createQueryBuilder();
+        $qb3 = $this->createQueryBuilder();
+
+        $qb->select('i')
+            ->from($class, 'i')
+            ->andWhere(
+                $qb->expr()->in('i.id',
+                    $qb2
+                        ->select('i2.id')
+                        ->from($class, 'i2')
+                        ->where(
+                            $qb2->expr()->andX(
+                                $qb2->expr()->orX(
+                                    $qb2->expr()->andX(
+                                        $qb2->expr()->eq('i2.phases', ':phases'),
+                                        $qb2->expr()->eq('i2.phaseVoltage', ':phaseVoltage')
+                                    ),
+                                    $qb2->expr()->andX(
+                                        $qb2->expr()->lt('i2.phases', ':phases'),
+                                        $qb2->expr()->eq('i2.phaseVoltage', ':phaseVoltage')
+                                    )
+                                ),
+                                $qb2->expr()->andX(
+                                    $qb2->expr()->eq('i2.maker', ':maker')
+                                )
+                            )
+                        )
+                        ->getQuery()
+                        ->getDQL()
+                )
+            )
+            ->orWhere(
+                $qb->expr()->notIn('i.compatibility',
+                    $qb3
+                        ->select('i3.compatibility')
+                        ->from($class, 'i3')
+                        ->where(
+                            $qb3->expr()->andX(
+                                $qb3->expr()->eq('i3.phases', ':phases'),
+                                $qb3->expr()->eq('i3.phaseVoltage', ':phaseVoltage'),
+                                $qb3->expr()->eq('i3.maker', ':maker')
+                            )
+                        )
+                        ->getQuery()
+                        ->getDQL()
+                )
+            )
+            ->andWhere('i.maker = :maker')
+            ->andWhere($qb->expr()->between('i.nominalPower', ':min', ':max'))
+            ->orderBy('i.nominalPower', $order)
+        ;
+
+        $qb->setParameters([
+            'min' => $min,
+            'max' => $max,
+            'phases' => $phaseNumber,
+            'phaseVoltage' => $phaseVoltage,
+            'maker' => $maker
+        ]);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Configurations
+     * 220/380 Monophasic
+     *
+     * @param $min
+     * @param $max
+     * @param $phaseNumber
+     * @param $phaseVoltage
+     * @param $maker
+     * @param string $order
+     * @return array
+     */
+    private function find220380Monophasic($min, $max, $phaseNumber, $phaseVoltage, $maker, $order = 'asc')
+    {
+        return $this->findSharedPhasesAndVoltagesFinder($min, $max, $phaseNumber, $phaseVoltage, $maker, $order);
+    }
+
+    /**
+     * Configurations
+     * 220/380 Biphasic
+     *
+     * @param $min
+     * @param $max
+     * @param $phaseNumber
+     * @param $phaseVoltage
+     * @param $maker
+     * @param string $order
+     * @return array
+     */
+    private function find220380Biphasic($min, $max, $phaseNumber, $phaseVoltage, $maker, $order = 'asc')
+    {
+        return $this->findSharedPhasesAndVoltagesFinder($min, $max, $phaseNumber, $phaseVoltage, $maker, $order);
+    }
+
+    /**
+     * Configurations
+     * 220/380 Triphasic
+     *
+     * @param $min
+     * @param $max
+     * @param $phaseNumber
+     * @param $phaseVoltage
+     * @param $maker
+     * @param string $order
+     * @return array
+     */
+    private function find220380Triphasic($min, $max, $phaseNumber, $phaseVoltage, $maker, $order = 'asc')
+    {
+        $qb = $this->createQueryBuilder();
 
         $qb
             ->select('i')
             ->from($this->manager->getClass(), 'i')
             ->where($qb->expr()->between('i.nominalPower', ':min', ':max'))
-            ->andWhere('i.maker = :maker');
+            ->andWhere('i.maker = :maker')
+            ->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->andX(
+                        $qb->expr()->eq('i.phases', ':phases'),
+                        $qb->expr()->eq('i.phaseVoltage', ':phaseVoltage380')
+                    ),
+                    $qb->expr()->andX(
+                        $qb->expr()->lt('i.phases', ':phases'),
+                        $qb->expr()->eq('i.phaseVoltage', ':phaseVoltage220')
+                    )
+                )
+            )
+            ->orderBy('i.nominalPower', $order)
+        ;
 
-        $this->qb = $qb;
+        $qb->setParameters([
+            'min' => $min,
+            'max' => $max,
+            'phases' => $phaseNumber,
+            'phaseVoltage380' => 380,
+            'phaseVoltage220' => 220,
+            'maker' => $maker
+        ]);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Configurations
+     * 220/380 Monophasic
+     * 220/380 Biphasic
+     * 127/220 Biphasic
+     *
+     * @param $min
+     * @param $max
+     * @param $phaseNumber
+     * @param $phaseVoltage
+     * @param $maker
+     * @param string $order
+     * @return array
+     */
+    private function findSharedPhasesAndVoltagesFinder($min, $max, $phaseNumber, $phaseVoltage, $maker, $order = 'asc')
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb
+            ->select('i')
+            ->from($this->manager->getClass(), 'i')
+            ->where($qb->expr()->between('i.nominalPower', ':min', ':max'))
+            ->andWhere('i.maker = :maker')
+            ->andWhere('i.phases < :phaseNumber')
+            ->andWhere('i.phaseVoltage = :phaseVoltage')
+            ->orderBy('i.nominalPower', $order)
+        ;
+
+        $qb->setParameters([
+            'min' => $min,
+            'max' => $max,
+            'maker' => $maker,
+            'phaseNumber' => 3,
+            'phaseVoltage' => 220
+        ]);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param array $defaults
+     * @return string
+     */
+    private function method(array $defaults)
+    {
+        $first = str_replace('/', '', $defaults['grid_voltage']);
+        $last = ucfirst(strtolower($defaults['grid_phase_number']));
+
+        return sprintf('find%s%s', $first, $last);
+    }
+
+    /**
+     * @return \Doctrine\ORM\EntityManager
+     */
+    private function getEntityManager()
+    {
+        return $this->manager->getEntityManager();
+    }
+
+    /**
+     * @return QueryBuilder
+     */
+    private function createQueryBuilder()
+    {
+        return $this->getEntityManager()->createQueryBuilder();
     }
 }

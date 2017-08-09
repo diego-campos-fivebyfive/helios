@@ -79,6 +79,8 @@ class ProjectGenerator
             'source' => 'consumption',
             'power' => 0,
             'consumption' => 0,
+            'grid_voltage' => '127/220',
+            'grid_phase_number' => 'Biphasic',
             'module' => 32433,
             'inverter_maker' => 60627,
             'structure_maker' => StructureCalculator::DEFAULT_STRUCTURE_MAKER,
@@ -235,9 +237,7 @@ class ProjectGenerator
 
         $loader = new InverterLoader($manager);
 
-        $power = $defaults['power'];
-
-        $inverters = $loader->load($power, $maker);
+        $inverters = $loader->load($defaults);
 
         foreach ($inverters as $inverter){
 
@@ -313,19 +313,6 @@ class ProjectGenerator
                 ->setLoss(10)
                 ->setOperation($mppt);
         }
-
-        /**
-         * TODO: Manter este trecho comentado
-         *
-        if(($project->getPower() * .75) >= $totalInvertersPower){
-            $this->reset($project);
-            $defaults = $project->getDefaults();
-            $defaults['power'] += .1;
-            $this->attempts += 1;
-            if($this->attempts >= 3){
-            }
-            $this->generate();
-        }*/
 
         $this->generateGroups($project);
 
