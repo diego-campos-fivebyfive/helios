@@ -33,7 +33,7 @@
             font-size: 12px;
             width: 175px;
         }
-        #project_address{
+        #generator_address{
             margin-top: 10px;
             width: 90%;
             border-color: #1ab394 !important;
@@ -248,36 +248,51 @@
                                                 </a>
                                             </div>
                                             <div class="col-md-9" id="block_init">
-                                            <div class="col-md-4">
-                                                {{ form_label(form.roofType, 'Tipo de Telhado') }}
-                                                {{ form_widget(form.roofType,{attr:{class:'form-control'}}) }}
-                                            </div>
-                                            <div class="col-md-4">
-                                                {{ form_label(form.infConsumption, 'Consumo Mensal (kWh)') }}
-                                                {{ form_widget(form.infConsumption,{attr:{class:'form-control'}}) }}
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label>&nbsp;<br></label>
-                                                <button type="submit" data-style="zoom-in" class="btn btn-success btn-md pull-right col-xs-12 ladda-button">
-                                                    <i class="fa fa-save"></i>
-                                                    {{ project.token ? 'Atualizar' : 'Iniciar' }}
-                                                </button>
-                                            </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-4" style="font-size: 12px; margin-top: 1rem;">
+                                                        <label style="display: block;"> &nbsp; </label>
+                                                        {{ form_widget(form.use_transformer) }} &nbsp;
+                                                        {{ form_label(form.use_transformer, 'Desejo incluir transformador se necessário') }}
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        {{ form_label(form.grid_voltage, 'Tensão') }}
+                                                        {{ form_widget(form.grid_voltage,{attr:{class:'form-control'}}) }}
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        {{ form_label(form.grid_phase_number, 'Fases') }}
+                                                        {{ form_widget(form.grid_phase_number,{attr:{class:'form-control'}}) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-4">
+                                                        {{ form_label(form.roof_type, 'Tipo de Telhado') }}
+                                                        {{ form_widget(form.roof_type,{attr:{class:'form-control'}}) }}
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        {{ form_label(form.consumption, 'Consumo Mensal (kWh)') }}
+                                                        {{ form_widget(form.consumption,{attr:{class:'form-control'}}) }}
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>&nbsp;<br></label>
+                                                        <button type="submit" data-style="zoom-in"
+                                                                class="btn btn-success btn-md pull-right col-xs-12 ladda-button">
+                                                            <i class="fa fa-save"></i>
+                                                            {{ project.token ? 'Atualizar' : 'Iniciar' }}
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <div class="form-group hide">
+                                        <div class="hide">
                                             <label class="col-sm-1 control-label">Lat</label>
                                             <div class="col-sm-4">
-                                                {{ form_widget(form.latitude,{'attr':{'class':'form-control'}}) }}
+                                                {{ form_widget(form.latitude,{'attr':{'class':'form-control project-latitude'}}) }}
                                             </div>
                                             <label class="col-sm-1 control-label">Lng</label>
                                             <div class="col-sm-4">
-                                                {{ form_widget(form.longitude,{'attr':{'class':'form-control'}}) }}
+                                                {{ form_widget(form.longitude,{'attr':{'class':'form-control project-longitude'}}) }}
                                             </div>
-                                        </div>
-
-                                        <div class="hide_">
                                             {{ form_rest(form) }}
                                         </div>
 
@@ -530,13 +545,45 @@
                 });
 
             },
+            checker: {
+                gridOptions: function(choicePhase, choiceVoltage){
+
+                    var checkOption = function() {
+                        var phase = choicePhase.val();
+                        var voltage = choiceVoltage.val();
+
+                        if ('Monophasic' == phase) {
+                            choiceVoltage.find('option[value="220/380"]').attr('selected', 'selected');
+                            choiceVoltage.find('option[value="127/220"]').attr('disabled', 'disabled');
+                        } else {
+                            choiceVoltage.find('option').removeAttr('disabled');
+                        }
+
+                        if ('127/220' == voltage) {
+                            choicePhase.find('option[value="Monophasic"]').attr('disabled', 'disabled');
+                        } else {
+                            choicePhase.find('option').removeAttr('disabled');
+                        }
+                    };
+
+                    checkOption();
+
+                    choicePhase.on('change', function(){
+                        checkOption();
+                    });
+
+                    choiceVoltage.on('change', function(){
+                        checkOption();
+                    });
+                }
+            },
             getErrors: function(){
                 var errors = [];
 
-                var customer = $('#project_customer').val();
-                var latitude = $('#project_latitude').val();
-                var longitude = $('#project_longitude').val();
-                var consumption = $('#project_infConsumption').val();
+                var customer = $('#generator_customer').val();
+                var latitude = $('#generator_latitude').val();
+                var longitude = $('#generator_longitude').val();
+                var consumption = parseInt($('#generator_consumption').val());
 
                 if(!customer){
                     errors[errors.length] = 'Selecione um contato.';
@@ -546,7 +593,7 @@
                     errors[errors.length] = 'Informe o endereço do projeto.';
                 }
 
-                if(!consumption){
+                if(!consumption || consumption <= 0){
                     errors[errors.length] = 'Informe o consumo.';
                 }
 
@@ -708,6 +755,10 @@
                 ProjectManager.loadModalInfo();
                 ProjectManager.loadModalCoordinates();
                 ProjectManager.componentDetails();
+                ProjectManager.checker.gridOptions(
+                    $('#generator_grid_phase_number'),
+                    $('#generator_grid_voltage')
+                );
             }
         };
 
@@ -717,9 +768,9 @@
 
     {# GOOGLE MAPS #}
     {% include view('helper.google_maps') with({
-        latitude: 'project_latitude',
-        longitude: 'project_longitude',
-        input: 'project_address',
+        latitude: 'generator_latitude',
+        longitude: 'generator_longitude',
+        input: 'generator_address',
         zoom: project.latitude ? 17 : 3
     }) %}
 

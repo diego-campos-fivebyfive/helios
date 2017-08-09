@@ -377,3 +377,7 @@ ROOF_CEMENT: "Telhas de Fibrocimento"
 ROOF_FLAT_SLAB: "Laje Plana"
 ROOF_SHEET_METAL: "Chapa Metálica"
 ROOF_SHEET_METAL_PFM: "Chapa Metálica (Perfil 0,5m)"
+
+Monophasic: "Monofásico"
+Biphasic: "Bifásico"
+Triphasic: "Trifásico"
