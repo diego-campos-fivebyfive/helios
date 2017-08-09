@@ -162,6 +162,13 @@ class Inverter implements InverterInterface
     private $status;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $compatibility;
+
+    /**
      * This property is used by management only
      * @var bool
      */
@@ -511,6 +518,24 @@ class Inverter implements InverterInterface
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setCompatibility($compatibility)
+    {
+        $this->compatibility = $compatibility;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCompatibility()
+    {
+        return $this->compatibility;
     }
 
     /**

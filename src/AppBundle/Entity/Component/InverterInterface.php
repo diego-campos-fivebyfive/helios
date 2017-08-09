@@ -247,6 +247,17 @@ interface InverterInterface
     public function getStatus();
 
     /**
+     * @param $compatibility
+     * @return InverterInterface
+     */
+    public function setCompatibility($compatibility);
+
+    /**
+     * @return int
+     */
+    public function getCompatibility();
+
+    /**
      * @return bool
      */
     public function isDisable();
