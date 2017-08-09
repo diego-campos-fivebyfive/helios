@@ -108,17 +108,6 @@ interface ProjectInterface
     public function getInfPower();
 
     /**
-     * @param $roofType
-     * @return ProjectInterface
-     */
-    public function setRoofType($roofType);
-
-    /**
-     * @return string
-     */
-    public function getRoofType();
-
-    /**
      * @param $structureType
      * @return ProjectInterface
      */
