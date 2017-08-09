@@ -1153,15 +1153,15 @@
 
                     {#dados da geração#}
                     <div id="dgenerationChart" data-type="chart" data-chart="generation"
-                         data-json="{{ projectFake.customer.generationChart|json_encode }}">
+                         data-json="{{ project.monthlyProduction|json_encode }}">
                     </div>
 
                     <div id="dannualGeneration">
-                        3-{#{{ project.customer.annualGeneration }}#}
+                        {{ project.annualProduction }} kWh
                     </div>
 
                     <div id="dmonthlyAverageGeneration">
-                        4-{#{{ project.customer.monthlyAverageGeneration }}#}
+                        {{ (project.annualProduction / 12)|round(2) }} kWh
                     </div>
 
                     {#análise financeira#}
