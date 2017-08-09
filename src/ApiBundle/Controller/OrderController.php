@@ -55,31 +55,28 @@ class OrderController extends FOSRestController
 
     }
 
-    public function getOrderAction(Order $id)
+    public function getOrderAction(Order $order)
     {
-        $order = $id;
-
         $data = [
             'id' => $order->getId(),
             'status' => $order->getStatus(),
-            'account' =>
-                [
-                    'id' => $order->getAccount()->getId(),
-                    'firstname' => $order->getAccount()->getFirstName(),
-                    'lastname' => $order->getAccount()->getLastName(),
-                    'extraDocument' => $order->getAccount()->getExtraDocument(),
-                    'document' => $order->getAccount()->getDocument(),
-                    'email' => $order->getAccount()->getEmail(),
-                    'state' => $order->getAccount()->getState(),
-                    'city' => $order->getAccount()->getCity(),
-                    'phone' => $order->getAccount()->getPhone(),
-                    'district' => $order->getAccount()->getDistrict(),
-                    'street' => $order->getAccount()->getStreet(),
-                    'number' => $order->getAccount()->getNumber(),
-                    'postcode' => $order->getAccount()->getPostcode(),
-                    'status' => $order->getAccount()->getStatus(),
-                    'level' => $order->getAccount()->getLevel()
-                ],
+            'account' => [
+                'id' => $order->getAccount()->getId(),
+                'firstname' => $order->getAccount()->getFirstName(),
+                'lastname' => $order->getAccount()->getLastName(),
+                'extraDocument' => $order->getAccount()->getExtraDocument(),
+                'document' => $order->getAccount()->getDocument(),
+                'email' => $order->getAccount()->getEmail(),
+                'state' => $order->getAccount()->getState(),
+                'city' => $order->getAccount()->getCity(),
+                'phone' => $order->getAccount()->getPhone(),
+                'district' => $order->getAccount()->getDistrict(),
+                'street' => $order->getAccount()->getStreet(),
+                'number' => $order->getAccount()->getNumber(),
+                'postcode' => $order->getAccount()->getPostcode(),
+                'status' => $order->getAccount()->getStatus(),
+                'level' => $order->getAccount()->getLevel()
+            ],
             'projects' => $order->getProjects()
                 ->map(function (ProjectInterface $project) {
 
