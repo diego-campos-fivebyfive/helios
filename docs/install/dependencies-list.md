@@ -20,7 +20,7 @@ $ sudo apt-get install php
 3. Instalando os pacotes do PHP
 
 ```
-$ sudo apt install php-mbstring php-xml php-mysql php-intl
+$ sudo apt install php-mbstring php-xml php-mysql php-intl php-common php-curl
 ```
 
 
