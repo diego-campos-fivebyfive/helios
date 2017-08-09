@@ -87,17 +87,25 @@ class RegisterController extends AbstractController
             ]);
         };
 
-        $findEmail = function($email, $managers)
+        $findEmailAccount = function($email, $account)
         {
-            $existentEmail = null;
-            foreach ($managers as $manager) {
-                $existentEmail = $manager->findOneBy([
-                    'context' => key($manager),
-                    'email' => $email
-                ]);
-            }
+            return $account->findOneBy([
+                'context' => 'account',
+                'email' => $email
+            ]);
+        };
 
-            return $existentEmail;
+        $findEmailMember = function($email, $account)
+        {
+            return $account->findOneBy([
+                'context' => 'member',
+                'email' => $email
+            ]);
+        };
+
+        $findEmailUser = function($email, $user)
+        {
+            return $user->findUserByEmail($email);
         };
 
         /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
@@ -114,11 +122,11 @@ class RegisterController extends AbstractController
 
         $data = $form->getData();
 
-        if ($findEmail( $data['email'], [
-            'account' => $accountManager,
-            'member' => $accountManager,
-            'user' => $userManager
-        ])) {
+        if (
+            $findEmailAccount($data['email'], $accountManager) ||
+            $findEmailMember($data['email'], $accountManager) ||
+            $findEmailUser($data['email'], $userManager)
+        ) {
             $errorMessage = new FormError('E-mail já Cadastrado');
             $form->addError($errorMessage);
             $error = $getErrorArgs($form);
