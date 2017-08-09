@@ -59,8 +59,6 @@ class OrderController extends FOSRestController
     {
         $order = $id;
 
-        //dump($products);die();
-
         $data = [
             'id' => $order->getId(),
             'status' => $order->getStatus(),
