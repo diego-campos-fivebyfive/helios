@@ -28,6 +28,6 @@ export ISQUIK_MOCK_PORT=2021
 export ISQUIK_MOCK_HOST='http://localhost'
 
 export ISQUIK_SERVER_PORT=443
-export ISQUIK_SERVER_HOST=13.84.146.60
+export ISQUIK_SERVER_HOST='https://api.isquik.com'
 export ISQUIK_AUTH_KEY='12eb45ec-b98f-4942-9124-b7b6b389088e'
 export ISQUIK_AUTH_USER='isquik-dev'
