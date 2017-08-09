@@ -33,8 +33,8 @@ class InverterLoader
     {
         $method = self::method($defaults);
 
-        $phaseNumber = 3;
-        $phaseVoltage = 380;
+        $phaseNumber = $defaults['phases'];
+        $phaseVoltage = $defaults['voltage'];
 
         $power = $defaults['power'];
         $maker = $defaults['inverter_maker'];
@@ -68,7 +68,6 @@ class InverterLoader
 
             if (!count($inverters)) {
                 $power += 0.2;
-                dump($power); die;
             }
 
             if ($combine) {
@@ -94,9 +93,26 @@ class InverterLoader
      * @param string $order
      * @return array
      */
+    private function find127220Monophasic($min, $max, $phaseNumber, $phaseVoltage, $maker, $order = 'asc')
+    {
+        return $this->findSharedPhasesAndVoltagesAware($min, $max, $phaseNumber, $phaseVoltage, $maker, $order);
+    }
+
+    /**
+     * Configurations
+     * 127/220 Biphasic
+     *
+     * @param $min
+     * @param $max
+     * @param $phaseNumber
+     * @param $phaseVoltage
+     * @param $maker
+     * @param string $order
+     * @return array
+     */
     private function find127220Biphasic($min, $max, $phaseNumber, $phaseVoltage, $maker, $order = 'asc')
     {
-        return $this->findSharedPhasesAndVoltagesFinder($min, $max, $phaseNumber, $phaseVoltage, $maker, $order);
+        return $this->findSharedPhasesAndVoltagesAware($min, $max, $phaseNumber, $phaseVoltage, $maker, $order);
     }
 
     /**
@@ -121,13 +137,14 @@ class InverterLoader
 
         $qb->select('i')
             ->from($class, 'i')
-            ->andWhere(
+            ->where(
                 $qb->expr()->in('i.id',
                     $qb2
                         ->select('i2.id')
                         ->from($class, 'i2')
                         ->where(
                             $qb2->expr()->andX(
+
                                 $qb2->expr()->orX(
                                     $qb2->expr()->andX(
                                         $qb2->expr()->eq('i2.phases', ':phases'),
@@ -138,9 +155,11 @@ class InverterLoader
                                         $qb2->expr()->eq('i2.phaseVoltage', ':phaseVoltage')
                                     )
                                 ),
+
                                 $qb2->expr()->andX(
                                     $qb2->expr()->eq('i2.maker', ':maker')
                                 )
+
                             )
                         )
                         ->getQuery()
@@ -193,7 +212,7 @@ class InverterLoader
      */
     private function find220380Monophasic($min, $max, $phaseNumber, $phaseVoltage, $maker, $order = 'asc')
     {
-        return $this->findSharedPhasesAndVoltagesFinder($min, $max, $phaseNumber, $phaseVoltage, $maker, $order);
+        return $this->findSharedPhasesAndVoltagesAware($min, $max, $phaseNumber, $phaseVoltage, $maker, $order);
     }
 
     /**
@@ -210,7 +229,7 @@ class InverterLoader
      */
     private function find220380Biphasic($min, $max, $phaseNumber, $phaseVoltage, $maker, $order = 'asc')
     {
-        return $this->findSharedPhasesAndVoltagesFinder($min, $max, $phaseNumber, $phaseVoltage, $maker, $order);
+        return $this->findSharedPhasesAndVoltagesAware($min, $max, $phaseNumber, $phaseVoltage, $maker, $order);
     }
 
     /**
@@ -275,7 +294,7 @@ class InverterLoader
      * @param string $order
      * @return array
      */
-    private function findSharedPhasesAndVoltagesFinder($min, $max, $phaseNumber, $phaseVoltage, $maker, $order = 'asc')
+    private function findSharedPhasesAndVoltagesAware($min, $max, $phaseNumber, $phaseVoltage, $maker, $order = 'asc')
     {
         $qb = $this->createQueryBuilder();
 
@@ -304,10 +323,21 @@ class InverterLoader
      * @param array $defaults
      * @return string
      */
-    private function method(array $defaults)
+    private function method(array &$defaults)
     {
+        $phaseOptions = [
+            'Monophasic' => 1,
+            'Biphasic' => 2,
+            'Triphasic' => 3
+        ];
+
         $first = str_replace('/', '', $defaults['grid_voltage']);
         $last = ucfirst(strtolower($defaults['grid_phase_number']));
+
+        list($offset, $voltage) = explode('/', $defaults['grid_voltage']);
+
+        $defaults['voltage'] = $voltage;
+        $defaults['phases'] = $phaseOptions[$defaults['grid_phase_number']];
 
         return sprintf('find%s%s', $first, $last);
     }

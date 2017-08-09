@@ -239,12 +239,19 @@ class ProjectGenerator
 
         $inverters = $loader->load($defaults);
 
+        $powerTransformer = 0;
         foreach ($inverters as $inverter){
 
             $quantity = $inverter->quantity;
 
             if(!$inverter instanceof InverterInterface) {
                 $inverter = $manager->find($inverter->id);
+            }
+
+            if(3 == $inverter->getPhases()) {
+                if($defaults['voltage'] != $inverter->getPhaseVoltage()) {
+                    $powerTransformer += $inverter->getNominalPower() * $quantity;
+                }
             }
 
             for($i = 0; $i < $quantity; $i++) {
