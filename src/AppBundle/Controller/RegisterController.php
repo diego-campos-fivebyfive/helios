@@ -169,10 +169,9 @@ class RegisterController extends AbstractController
         $accountManager->save($account);
 
         $this->get('notifier')->notify([
-            'body' => [
-                'callback' => 'account_created',
-                'evento' => '206',
-                'id' => $account->getId()]
+            'Evento' => '206',
+            'Callback' => 'account_created',
+            'Id' => $account->getId()
         ]);
 
         $this->setNotice('Cadastro realizado com sucesso, verifique seu e-mail!');
