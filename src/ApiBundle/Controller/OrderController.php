@@ -149,4 +149,20 @@ class OrderController extends FOSRestController
         return $this->handleView($view);
     }
 
+    public function putOrderAction(Request $request, Order $order){
+        $data = json_decode($request->getContent(), true);
+        $teste = $data['account'];
+        /** @var AccountInterface $accountManager */
+        $accountManager = $this->get('account_manager');
+        $account = $accountManager->find($teste['id']);
+
+        /** @var Order $orderManager */
+        $orderManager = $this->get('order_manager');
+        $order
+            ->setStatus($data['status'])
+            ->setAccount($data['account']);
+
+        dump($order);die();
+    }
+
 }
