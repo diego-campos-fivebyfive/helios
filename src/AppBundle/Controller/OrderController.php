@@ -20,7 +20,7 @@ class OrderController extends AbstractController
         /** @var Customer $accounts */
         $accounts = $this->manager('customer')->find(19);
         $manager = $this->manager('order');
-        $projects = [317,318];
+        $projects = [306];
 
         /** @var Order $order */
         $order = $manager->create();
