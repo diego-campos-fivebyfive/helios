@@ -27,9 +27,9 @@ class FileController extends AbstractController
     }
 
     /**
-     * @Route("/pdfGenerator", name="files_pdfGenerator")
+     * @Route("/dentro", name="files_dentro")
      */
-    public function testePDFAction()
+    public function dentroAction()
     {
 
         $snappy = $this->get('knp_snappy.pdf');
@@ -39,7 +39,7 @@ class FileController extends AbstractController
         $dir = $this->get('kernel')->getRootDir() . '/../storage/';
         $filename = md5(uniqid(time())) . '.pdf';
 
-        $url = 'http://sicessolar.dev:8000/public/files/306/pdf';
+        $url = 'http://54.233.150.10/public/files/306/pdf';
 
         try {
             $snappy->generate($url, $dir . $filename);
@@ -51,6 +51,33 @@ class FileController extends AbstractController
             //ignore
         }
     }
+
+    /**
+     * @Route("/fora", name="files_fora")
+     */
+    public function foraAction()
+    {
+
+        $snappy = $this->get('knp_snappy.pdf');
+
+        $snappy->setOption('viewport-size', '1280x1024');
+
+        $dir = $this->get('kernel')->getRootDir() . '/../storage/';
+        $filename = md5(uniqid(time())) . '.pdf';
+
+        $url = 'http://www.statusimagens.com/whatsapp/imagens';
+
+        try {
+            $snappy->generate($url, $dir . $filename);
+            dump("Foi");die();
+        }
+        catch(\Exception $error) {
+            dump($error);die();
+            return Response::HTTP_INTERNAL_SERVER_ERROR;
+            //ignore
+        }
+    }
+
 
     /**
      * @Route("/{token}/proposal", name="file_proposal")
