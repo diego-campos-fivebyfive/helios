@@ -641,8 +641,10 @@ class ProjectGenerator
     {
         $manager = $this->manager('project_variety');
         foreach ($project->getProjectVarieties() as $projectVariety){
-            $project->removeProjectVariety($projectVariety);
-            $manager->delete($projectVariety, !$project->getProjectVarieties()->next());
+            if(VarietyInterface::TYPE_TRANSFORMER != $projectVariety->getVariety()->getType() || $projectVariety->getId()) {
+                $project->removeProjectVariety($projectVariety);
+                $manager->delete($projectVariety, !$project->getProjectVarieties()->next());
+            }
         }
 
         return $this;
@@ -686,7 +688,7 @@ class ProjectGenerator
 
         }else{
 
-            $project->setTransformer(null);
+            $project->removeTransformer();
         }
 
         $this->save($project);
