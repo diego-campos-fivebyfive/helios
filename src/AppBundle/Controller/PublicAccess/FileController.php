@@ -52,7 +52,7 @@ class FileController extends AbstractController
             die('O arquivo nao existe');
         }
         catch(\Exception $error) {
-            die($error);
+            die('Falhou');
             //return Response::HTTP_INTERNAL_SERVER_ERROR;
             //ignore
         }
@@ -87,7 +87,7 @@ class FileController extends AbstractController
             die('O arquivo nao existe');
         }
         catch(\Exception $error) {
-            die($error);
+            die('Falhou');
             //return Response::HTTP_INTERNAL_SERVER_ERROR;
             //ignore
         }
