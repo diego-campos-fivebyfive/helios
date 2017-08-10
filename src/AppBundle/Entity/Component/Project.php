@@ -1393,9 +1393,9 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
-    public function setTransformer(VarietyInterface $transformer)
+    public function setTransformer(VarietyInterface $transformer = null)
     {
-        if($transformer->getType() != VarietyInterface::TYPE_TRANSFORMER){
+        if($transformer && $transformer->getType() != VarietyInterface::TYPE_TRANSFORMER){
             throw new \InvalidArgumentException('Invalid transform type');
         }
 
