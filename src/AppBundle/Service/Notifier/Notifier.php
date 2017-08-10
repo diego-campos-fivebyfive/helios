@@ -15,7 +15,7 @@ class Notifier
             'account_created' => '/integradores/cadastrointegradores/Notificacao'
         ];
 
-        $url = "$host:$port/isquik-dev/$entrypoint[$notification['Callback']]"
+        $url = "$host:$port/isquik-dev/$entrypoint[$notification['Callback']]";
 
         $ch = curl_init();
 
