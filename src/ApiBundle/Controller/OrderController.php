@@ -55,9 +55,9 @@ class OrderController extends FOSRestController
 
     }
 
-    public function getOrderAction(Order $order)
+    public function splitOrder($order)
     {
-        $data = [
+        return [
             'id' => $order->getId(),
             'status' => $order->getStatus(),
             'account' => [
@@ -144,9 +144,87 @@ class OrderController extends FOSRestController
                     );
                 })->toArray()
         ];
-        $view = View::create($data);
+    }
 
+    public function componentInterfaces($family)
+    {
+        $interfaces = [
+            'inverter' => function (ProjectInverterInterface $component) { return $component; },
+            'module' => function (ProjectModuleInterface $component) { return $component; },
+            'structure' => function (ProjectStructureInterface $component) { return $component; },
+            'stringbox' => function (ProjectStringBoxInterface $component) { return $component; },
+            'variety' => function (ProjectVarietyInterface $component) { return $component; }
+        ];
+
+        return $interfaces[$family];
+    }
+
+    public function filterComponent($component, $id)
+    {
+        return $component->getId() == $id;
+    }
+
+    public function components($project, $family, $id)
+    {
+        $interface = $this->componentInterfaces($family);
+        $filterComponent = $this->filterComponent($interface, $id);
+
+        $components = [
+            'inverter' => $project->getProjectInverters(),
+            'module' => $project->getProjectModules(),
+            'structure' => $project->getProjectStructures(),
+            'stringbox' => $project->getProjectStringBoxes(),
+            'variety' => $project->getProjectVarieties(),
+        ];
+
+        return $components[$family]
+            ->filter($filterComponent)
+            ->first();
+    }
+
+    public function getOrderAction(Order $order)
+    {
+        $splitedOrder = $this->splitOrder($order);
+        $view = View::create($splitedOrder);
         return $this->handleView($view);
     }
+
+    public function putOrderAction(Request $request, Order $order)
+    {
+        /** @var Order $orderManager */
+        $orderManager = $this->get('order_manager');
+        /** @var Project $projectManager */
+        $projectManager = $this->get('project_manager');
+
+        $data = json_decode($request->getContent(), true);
+        $order->setStatus($data['status']);
+
+        foreach ($data['projects'] as $dataProject) {
+            $project = $projectManager->find($dataProject['id']);
+
+            foreach ($dataProject['products'] as $dataProduct) {
+                $this
+                    ->components($project, $dataProduct['family'], $dataProduct['id'])
+                    ->setQuantity($dataProduct['quantity'])
+                    ->setUnitCostPrice($dataProduct['price']);
+            }
+
+            $projectManager->save($project);
+        }
+
+        try {
+            $orderManager->save($order);
+            $status = Response::HTTP_CREATED;
+            $data = $this->splitOrder($order);
+        }
+        catch (\Exception $exception) {
+            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+            $data = 'can not update order';
+        }
+
+        $view = View::create($data)->setStatusCode($status);
+        return $this->handleView($view);
+    }
+
 
 }
