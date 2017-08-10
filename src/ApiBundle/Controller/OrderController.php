@@ -146,42 +146,6 @@ class OrderController extends FOSRestController
         ];
     }
 
-    public function componentInterfaces($family)
-    {
-        $interfaces = [
-            'inverter' => function (ProjectInverterInterface $component) { return $component; },
-            'module' => function (ProjectModuleInterface $component) { return $component; },
-            'structure' => function (ProjectStructureInterface $component) { return $component; },
-            'stringbox' => function (ProjectStringBoxInterface $component) { return $component; },
-            'variety' => function (ProjectVarietyInterface $component) { return $component; }
-        ];
-
-        return $interfaces[$family];
-    }
-
-    public function filterComponent($component, $id)
-    {
-        return $component->getId() == $id;
-    }
-
-    public function components($project, $family, $id)
-    {
-        $interface = $this->componentInterfaces($family);
-        $filterComponent = $this->filterComponent($interface, $id);
-
-        $components = [
-            'inverter' => $project->getProjectInverters(),
-            'module' => $project->getProjectModules(),
-            'structure' => $project->getProjectStructures(),
-            'stringbox' => $project->getProjectStringBoxes(),
-            'variety' => $project->getProjectVarieties(),
-        ];
-
-        return $components[$family]
-            ->filter($filterComponent)
-            ->first();
-    }
-
     public function getOrderAction(Order $order)
     {
         $splitedOrder = $this->splitOrder($order);
@@ -191,6 +155,34 @@ class OrderController extends FOSRestController
 
     public function putOrderAction(Request $request, Order $order)
     {
+        $compareComponent = function($interface, $id) {
+            return $interface->getId() == $id;
+        };
+
+        $getComponent = function($id, $family, $project) use($compareComponent) {
+            $interfaces = [
+                'inverter' => function (ProjectInverterInterface $i) { return $i; },
+                'module' => function (ProjectModuleInterface $i) { return $i; },
+                'structure' => function (ProjectStructureInterface $i) { return $i; },
+                'stringbox' => function (ProjectStringBoxInterface $i) { return $i; },
+                'variety' => function (ProjectVarietyInterface $i) { return $i; }
+            ];
+
+            $components = [
+                'inverter' => $project->getProjectInverters(),
+                'module' => $project->getProjectModules(),
+                'structure' => $project->getProjectStructures(),
+                'stringbox' => $project->getProjectStringBoxes(),
+                'variety' => $project->getProjectVarieties(),
+            ];
+
+            $interface = $interfaces[$family];
+
+            return $components[$family]
+                ->filter($compareComponent($interface, $id))
+                ->first();
+        };
+
         /** @var Order $orderManager */
         $orderManager = $this->get('order_manager');
         /** @var Project $projectManager */
@@ -203,8 +195,7 @@ class OrderController extends FOSRestController
             $project = $projectManager->find($dataProject['id']);
 
             foreach ($dataProject['products'] as $dataProduct) {
-                $this
-                    ->components($project, $dataProduct['family'], $dataProduct['id'])
+                getComponent($dataProduct['id'], $dataProduct['family'], $project)
                     ->setQuantity($dataProduct['quantity'])
                     ->setUnitCostPrice($dataProduct['price']);
             }
@@ -225,6 +216,4 @@ class OrderController extends FOSRestController
         $view = View::create($data)->setStatusCode($status);
         return $this->handleView($view);
     }
-
-
 }
