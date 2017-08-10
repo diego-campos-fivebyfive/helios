@@ -112,11 +112,23 @@ class ProjectController extends AbstractController
             $power = $this->get('power_estimator')->estimate($consumption, $latitude, $longitude);
         }
 
-        $makers = $this->get('maker_detector')->fromPower($power);
+        /** @var \AppBundle\Service\ProjectGenerator\MakerDetector $detector */
+        $detector = $this->get('maker_detector');
+
+        $makers = $detector->fromPower($power);
+
+        if(in_array($data['grid_phase_number'], ['Monophasic', 'Biphasic'])){
+            $triphasicMakers = $detector->filterNotOnlyTriphasic();
+            foreach ($makers as $key => $maker){
+                if(!in_array($maker, $triphasicMakers)){
+                    unset($makers[$key]);
+                }
+            }
+        }
 
         $ids = array_map(function(MakerInterface $maker){
             return $maker->getId();
-        }, $makers);
+        }, array_values($makers));
 
         return $this->json([
             'makers' => $ids
@@ -219,10 +231,11 @@ class ProjectController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
 
+            $defaults = $form->getData();
             $generator = $this->getGenerator();
             $generator->reset($project);
 
-            $project->setDefaults($form->getData());
+            $project->setDefaults($defaults);
 
             $generator->generate($project);
 
@@ -326,10 +339,9 @@ class ProjectController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
 
             $generator = $this->getGenerator();
+            $project = $projectInverter->getProject();
 
             if($projectInverter->operationIsChanged()) {
-
-                $project = $projectInverter->getProject();
 
                 $generator->autoSave(false);
                 $generator->generateAreasViaProjectInverter($projectInverter);
@@ -340,9 +352,11 @@ class ProjectController extends AbstractController
                     ->generateVarieties($project);
 
                 $generator->save($project, true);
-
-                $generator->process($project);
             }
+
+            $generator->handleAreas($project)->save($project, true);
+
+            //$generator->process($project);
 
             return $this->json([]);
         }
@@ -527,7 +541,7 @@ class ProjectController extends AbstractController
                 $toFinancial();
                 break;
 
-            case 'project_proposal':
+            case 'proposal_editor':
                 $toFinancial();
                 $toProposal();
                 break;
@@ -538,7 +552,7 @@ class ProjectController extends AbstractController
         return $this->json([
             'errors' => $errors,
             'url' => $url
-        ], empty($errors) ? Response::HTTP_ACCEPTED : Response::HTTP_CONFLICT);
+        ], empty($errors) ? Response::HTTP_ACCEPTED : Response::HTTP_IM_USED);
     }
 
     private function configureProjectFromDefaults(ProjectInterface $project)
