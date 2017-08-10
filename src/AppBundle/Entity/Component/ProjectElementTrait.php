@@ -70,7 +70,7 @@ trait ProjectElementTrait
      */
     public function setQuantity($quantity)
     {
-        $this->quantity = $quantity;
+        $this->quantity = (int) $quantity;
 
         return $this;
     }
@@ -106,7 +106,7 @@ trait ProjectElementTrait
      */
     public function setUnitCostPrice($unitCostPrice)
     {
-        $this->unitCostPrice = $unitCostPrice;
+        $this->unitCostPrice = round($unitCostPrice, 2);
 
         return $this;
     }
@@ -124,7 +124,7 @@ trait ProjectElementTrait
      */
     public function setUnitSalePrice($unitSalePrice)
     {
-        $this->unitSalePrice = $unitSalePrice;
+        $this->unitSalePrice = round($unitSalePrice, 2);
 
         return $this;
     }

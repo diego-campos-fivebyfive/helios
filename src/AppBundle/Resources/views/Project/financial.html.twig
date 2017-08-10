@@ -564,6 +564,9 @@
                     Financial.get_extra_form(url);
                 }).trigger('change');
             },
+            onSaveShipping: function(){
+                Financial.loadFinalPrices();
+            },
             onSaveExtra: function(){
                 Financial.get_extras();
                 Financial.get_taxes();

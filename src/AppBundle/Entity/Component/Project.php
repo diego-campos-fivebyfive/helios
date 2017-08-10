@@ -1136,7 +1136,7 @@ class Project implements ProjectInterface
      */
     public function getSalePrice()
     {
-        $price = $this->getSalePriceEquipments() + $this->getSalePriceServices();
+        $price = $this->getSalePriceEquipments() + $this->getSalePriceServices() + $this->getShipping();
 
         /** @var ProjectTaxInterface $projectTax */
         foreach ($this->projectTaxes as $projectTax){
