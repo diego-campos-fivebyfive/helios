@@ -3,11 +3,12 @@
 namespace AppBundle\Controller\PublicAccess;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity\Project\Project;
+use AppBundle\Entity\Component\Project;
 use Knp\Bundle\SnappyBundle\Snappy\LoggableGenerator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("files")
@@ -16,11 +17,13 @@ class FileController extends AbstractController
 {
 
     /**
-     * @Route("/proposalPDF", name="files_pdf")
+     * @Route("/{id}/pdf", name="files_pdf")
      */
-    public function proposalPDFAction()
+    public function pdfGeneratorAction(Project $project)
     {
-        return $this->render('AppBundle:Proposal:proposalPDF.html.twig', array());
+        return $this->render('AppBundle:Proposal:pdf.html.twig', [
+            'project' => $project
+        ]);
     }
 
     /**
@@ -36,12 +39,15 @@ class FileController extends AbstractController
         $dir = $this->get('kernel')->getRootDir() . '/../storage/';
         $filename = md5(uniqid(time())) . '.pdf';
 
-        $url = 'http://localhost:8000/login';
+        $url = 'http://sicessolar.dev:8000/public/files/306/pdf';
 
         try {
             $snappy->generate($url, $dir . $filename);
+            return Response::HTTP_OK;
         }
         catch(\Exception $error) {
+            dump($error);die();
+            return Response::HTTP_INTERNAL_SERVER_ERROR;
             //ignore
         }
     }
