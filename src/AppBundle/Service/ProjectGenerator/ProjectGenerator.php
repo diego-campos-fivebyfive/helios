@@ -4,7 +4,6 @@ namespace AppBundle\Service\ProjectGenerator;
 
 use AppBundle\Entity\Component\InverterInterface;
 use AppBundle\Entity\Component\MakerInterface;
-use AppBundle\Entity\Component\ModuleInterface;
 use AppBundle\Entity\Component\ProjectArea;
 use AppBundle\Entity\Component\ProjectExtra;
 use AppBundle\Entity\Component\ProjectInterface;
@@ -12,6 +11,7 @@ use AppBundle\Entity\Component\ProjectInverter;
 use AppBundle\Entity\Component\ProjectModule;
 use AppBundle\Entity\Component\ProjectStringBox;
 use AppBundle\Entity\Component\ProjectStructure;
+use AppBundle\Entity\Component\VarietyInterface;
 use AppBundle\Service\ProjectProcessor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -268,6 +268,8 @@ class ProjectGenerator
                 $project->addProjectInverter($projectInverter);
             }
         }
+
+        $this->resolveTransformer($project, $powerTransformer);
 
         // INVERTER COMBINATIONS
         Combiner::combine($project);
@@ -659,6 +661,35 @@ class ProjectGenerator
         }
 
         return $this;
+    }
+
+    /**
+     * @param ProjectInterface $project
+     * @param $power
+     */
+    public function resolveTransformer(ProjectInterface $project, $power)
+    {
+        $defaults = $project->getDefaults();
+
+        if($power > 0 && $defaults['use_transformer']){
+
+            /** @var \AppBundle\Manager\VarietyManager $manager */
+            $manager = $this->manager('variety');
+
+            $loader = new TransformerLoader($manager);
+
+            $transformer = $loader->load($power);
+
+            if($transformer instanceof VarietyInterface){
+                $project->setTransformer($transformer);
+            }
+
+        }else{
+
+            $project->setTransformer(null);
+        }
+
+        $this->save($project);
     }
 
     /**
