@@ -64,6 +64,10 @@ class ProjectProcessor
                 $projectArea->getModuleString()
             );
 
+            /*dump($projectInverter->getLoss());
+            dump($projectArea->getLoss());
+            die;*/
+
             $area
                 ->setInclinationDegree($projectArea->getInclination())
                 ->setOrientationDegree($projectArea->getOrientation())

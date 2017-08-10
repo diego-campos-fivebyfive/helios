@@ -4,6 +4,7 @@ namespace AppBundle\Service\ProjectGenerator;
 
 use AppBundle\Entity\Component\Inverter;
 use AppBundle\Entity\Component\InverterInterface;
+use AppBundle\Entity\Component\Maker;
 use AppBundle\Manager\InverterManager;
 
 class MakerDetector
@@ -45,6 +46,35 @@ class MakerDetector
         ;
 
         return $this->sanitize($inverters);
+    }
+
+    public function filterNotOnlyTriphasic()
+    {
+        $em = $this->manager->getEntityManager();
+        $qb = $em->createQueryBuilder();
+        $qb2 = $em->createQueryBuilder();
+
+        $qb->select('m')
+            ->from(Maker::class, 'm')
+            ->andWhere(
+                $qb->expr()->in(
+                    'm.id',
+                    $qb2
+                        ->select('m2.id')
+                        ->from(Maker::class, 'm2')
+                        ->join(Inverter::class, 'i2', 'WITH', 'm2.id = i2.maker')
+                        ->where('i2.phases < :triphasic')
+                        ->getQuery()
+                        ->getDQL()
+                )
+            )
+        ;
+
+        $qb->setParameters([
+            'triphasic' => 3
+        ]);
+
+       return $qb->getQuery()->getResult();
     }
 
     /**
