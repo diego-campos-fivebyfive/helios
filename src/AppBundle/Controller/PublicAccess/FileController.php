@@ -43,16 +43,16 @@ class FileController extends AbstractController
 
         try {
             $snappy->generate($url, $dir . $filename);
-            $file = $dir.$filename;
+            /*$file = $dir.$filename;
 
             if(file_exists($file)){
                 return new BinaryFileResponse($file);
-            }
+            }*/
 
-            die('O arquivo nao existe');
+            die('ok');
         }
         catch(\Exception $error) {
-            die($error);
+            die('Falhou');
             //return Response::HTTP_INTERNAL_SERVER_ERROR;
             //ignore
         }
@@ -78,16 +78,16 @@ class FileController extends AbstractController
         try {
             $snappy->generate($url, $dir . $filename);
 
-            $file = $dir.$filename;
+            /*$file = $dir.$filename;
 
             if(file_exists($file)){
                 return new BinaryFileResponse($file);
-            }
+            }*/
 
-            die('O arquivo nao existe');
+            die('ok');
         }
         catch(\Exception $error) {
-            die($error);
+            die('Falhou');
             //return Response::HTTP_INTERNAL_SERVER_ERROR;
             //ignore
         }
