@@ -701,6 +701,8 @@
             },
             onSaveProject: function(){
 
+                Project.id = ProjectManager.project.id;
+
                 var project_url = '{{ path('project_update',{id:'_id_'}) }}'.replace(/_id_/g, ProjectManager.project.id);
                 window.history.pushState({}, null, project_url);
                 $('#form_project').attr('action', project_url);
@@ -725,6 +727,7 @@
             },
             onUpdateInverter: function(){
                 ProjectManager.loadComponents();
+                ProjectManager.process();
             },
             beforeUpdateArea: function(){
                 ProjectManager.infoProcess.html('');
@@ -763,6 +766,51 @@
         };
 
         ProjectManager.onLoadManager();
+
+
+        ///-----
+
+        var project_customer = $('#generator_customer');
+        function createCustomerChosen(){
+
+            var buttons = '<div class="btn-group btn-group-sm">' +
+                '<button data-context="person" class="btn btn-xs btn-primary ladda-button" data-style="zoom-out"><i class="fa fa-plus"></i> {{ 'Pessoa'|trans }}</button>' +
+                '<button data-context="company" class="btn btn-xs btn-primary ladda-button" data-style="zoom-out"><i class="fa fa-plus"></i> {{ 'Company'|trans }}</button>' +
+                '</div>';
+
+            var contact_url = '{{ path('contact_fast_create',{context:'_ctx_'}) }}';
+
+            project_customer.chosen({
+                width: '100%',
+                no_results_text: buttons
+            }).on('chosen:no_results', function (event, params) {
+                var add_button = $('[data-context]');
+                add_button.ladda();
+                add_button.on('click', function () {
+                    var _btn = $(this);
+                    var _ctx = _btn.data('context');
+                    //var _target = _ctx == 'person' ? opt_groups[0] : opt_groups[1] ;
+                    $.ajax({
+                        url: contact_url.replace(/_ctx_/g, _btn.data('context')),
+                        method: 'post',
+                        data: {name: params.chosen.search_field.val()},
+                        success: function(response){
+                            if('success' == response.status){
+                                var data = response.data;
+                                project_customer.append('<option selected="selected" value="' + data.id + '">' + data.name + '</option>');
+                                project_customer.trigger('chosen:updated');
+                                woopra.track('contato');
+                            }
+                        },
+                        error: function(response){
+                            console.log(response.status);
+                        }
+                    });
+                });
+            });
+        }
+
+        createCustomerChosen();
 
     </script>
 

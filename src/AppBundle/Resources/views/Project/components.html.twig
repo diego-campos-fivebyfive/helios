@@ -97,6 +97,19 @@
 
         </td>
     </tr>
+
+    {% if attribute(project.defaults, 'power_oscillation') is defined %}
+        {% if project.defaults.power_oscillation < 0.9 %}
+            <tr>
+                <td colspan="3">
+                    <div class="alert alert-danger text-center">
+                        A Potência do sistema foi reajustada para atender ao fabricante de inversor selecionado
+                    </div>
+                </td>
+            </tr>
+        {% endif %}
+    {% endif %}
+
     <tr>
         <th> Código</th>
         <th> Descrição</th>
@@ -131,6 +144,15 @@
         </tr>
     {% endfor %}
 
+    {# TRANSFORMER #}
+    {% if project.transformer %}
+        <tr>
+            <td> {{ project.transformer.variety.code }} </td>
+            <td> {{ project.transformer.variety.description }} </td>
+            <td> {{ 1 }} </td>
+        </tr>
+    {% endif %}
+
     {# STRING_BOXES #}
     {% for projectStringBox in project.projectStringBoxes %}
         <tr>
@@ -158,7 +180,7 @@
     {% endfor %}
 
     {# VARIETIES #}
-    {% for projectVariety in project.projectVarieties %}
+    {% for projectVariety in project.projectVarieties if projectVariety.variety.type != 'transformer' %}
         <tr>
             <td> {{ projectVariety.variety.code }} </td>
             <td> {{ projectVariety.variety.description }} </td>
@@ -200,6 +222,9 @@
             callback: function(xhr) {
                 var response = xhr.responseJSON;
                 var makers = response.makers;
+                if(!makers.length){
+                    generate_makers.find('option').attr('disabled', 'disabled');
+                }
                 callback(makers);
             }
         });
@@ -211,7 +236,7 @@
         button_config.ladda('start');
         get_available_makers(function(makers){
             var maker_id = parseInt(generate_makers.val());
-            if (makers.indexOf(maker_id) >= 0) {
+            if (makers.length && makers.indexOf(maker_id) >= 0) {
                 ProjectManager.submit(form_config, function(xhr){
                     ProjectManager.project = xhr.responseJSON.project;
                     ProjectManager.onSaveProject();
@@ -247,9 +272,7 @@
             if (!makers.length) {
                 generator_power.val(last_power);
                 generator_consumption.val(last_consumption);
-                swal('Ooops', 'Não há inversores compatíveis!', 'error');
             } else {
-                generate_makers.show();
                 $.each(generate_makers.find('option'), function (i, option) {
                     var id = parseInt($(option).val());
                     if (makers.indexOf(id) >= 0) {
@@ -258,7 +281,8 @@
                         $(option).attr('disabled', 'disabled');
                     }
                 });
-                if (1 == makers.length) {
+                if (1 == makers.length || null == generate_makers.val()) {
+                    console.log(generate_makers.val());
                     generate_makers.find('option[value="' + makers[0] + '"]').attr('selected', 'selected');
                 }
             }
@@ -291,5 +315,9 @@
     });
 
     ProjectManager.checker.gridOptions(generator_g_phase, generator_g_voltage);
+
+    generator_g_phase.on('change', function(){
+        detect_makers();
+    });
 
 </script>

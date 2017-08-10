@@ -98,7 +98,7 @@
                                 <div class="panel panel-success">
                                     <div class="panel-heading">
                                         <i class="{{ icon('summary') }}"></i>
-                                        Componentes
+                                        Sistema de {{ project.power }} kWp
                                     </div>
                                     <div class="panel-body">
                                         <div class="row">
@@ -154,6 +154,21 @@
                                                         </tr>
                                                     {% endfor %}
 
+                                                    {# TRANSFORMER #}
+                                                    {% if project.transformer %}
+                                                        {% set projectTransformer = project.transformer %}
+                                                        <tr>
+                                                            <td> {{ projectTransformer.variety.code }} </td>
+                                                            <td> {{ projectTransformer.variety.description }} </td>
+                                                            {% if true %}
+                                                                <td> {{ projectTransformer.unitCostPrice|currency }} </td>
+                                                            {% endif %}
+                                                            <td> {{ projectTransformer.unitSalePrice|currency }} </td>
+                                                            <td> {{ projectTransformer.quantity }} </td>
+                                                            <td> {{ projectTransformer.totalSalePrice|currency }} </td>
+                                                        </tr>
+                                                    {% endif %}
+
                                                     {# STRING_BOXES #}
                                                     {% for projectStringBox in project.projectStringBoxes %}
                                                         <tr>
@@ -191,7 +206,7 @@
                                                     {% endfor %}
 
                                                     {# VARIETIES #}
-                                                    {% for projectVariety in project.projectVarieties %}
+                                                    {% for projectVariety in project.projectVarieties if projectVariety.variety.type != 'transformer' %}
                                                         <tr>
                                                             <td> {{ projectVariety.variety.code }} </td>
                                                             <td> {{ projectVariety.variety.description }} </td>
@@ -477,12 +492,14 @@
                 Financial.clear_calculations();
             },
             force_calculations: function () {
-                if (!Financial.form_editing) {
-                    Financial.btn_analysis.trigger('click');
+                if(parseInt($('#financial_lifetime').val()) > 0) {
+                    if (!Financial.form_editing) {
+                        Financial.btn_analysis.trigger('click');
+                    }
+                    window.setTimeout(function () {
+                        Financial.btn_analysis.trigger('click');
+                    }, 500);
                 }
-                window.setTimeout(function () {
-                    Financial.btn_analysis.trigger('click');
-                }, 500);
             },
             clear_calculations: function () {
                 Financial.info_analysis.html('');
@@ -549,6 +566,7 @@
             },
             onSaveExtra: function(){
                 Financial.get_extras();
+                Financial.get_taxes();
                 Financial.force_calculations();
                 Financial.loadFinalPrices();
             }
