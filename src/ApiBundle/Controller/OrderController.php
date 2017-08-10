@@ -146,6 +146,42 @@ class OrderController extends FOSRestController
         ];
     }
 
+    public function componentInterfaces($family)
+    {
+        $interfaces = [
+            'inverter' => function (ProjectInverterInterface $component) { return $component; },
+            'module' => function (ProjectModuleInterface $component) { return $component; },
+            'structure' => function (ProjectStructureInterface $component) { return $component; },
+            'stringbox' => function (ProjectStringBoxInterface $component) { return $component; },
+            'variety' => function (ProjectVarietyInterface $component) { return $component; }
+        ];
+
+        return $interfaces[$family];
+    }
+
+    public function filterComponent($component, $id)
+    {
+        return $component->getId() == $id;
+    }
+
+    public function components($project, $family, $id)
+    {
+        $interface = $this->componentInterfaces($family);
+        $filterComponent = $this->filterComponent($interface, $id);
+
+        $components = [
+            'inverter' => $project->getProjectInverters(),
+            'module' => $project->getProjectModules(),
+            'structure' => $project->getProjectStructures(),
+            'stringbox' => $project->getProjectStringBoxes(),
+            'variety' => $project->getProjectVarieties(),
+        ];
+
+        return $components[$family]
+            ->filter($filterComponent)
+            ->first();
+    }
+
     public function getOrderAction(Order $order)
     {
         $splitedOrder = $this->splitOrder($order);
@@ -167,47 +203,21 @@ class OrderController extends FOSRestController
             $project = $projectManager->find($dataProject['id']);
 
             foreach ($dataProject['products'] as $dataProduct) {
-                $id = $dataProduct['id'];
-
-                $projectProduct = null;
-                switch ($dataProduct['family']) {
-                    case 'inverter':
-                        $projectProduct = $project->getProjectInverters()->filter(function(ProjectInverterInterface $projectInverter) use($id){
-                            return $projectInverter->getId() == $id;
-                        })->first();
-                        break;
-                    case 'module':
-                        $projectProduct = $project->getProjectModules()->filter(function(ProjectModuleInterface $projectModule) use($id){
-                            return $projectModule->getId() == $id;
-                        })->first();
-                        break;
-                    case 'structure':
-                        $projectProduct = $project->getProjectStructures()->filter(function(ProjectStructureInterface $projectStructure) use($id){
-                            return $projectStructure->getId() == $id;
-                        })->first();
-                        break;
-                    case 'stringbox':
-                        $projectProduct = $project->getProjectStringBoxes()->filter(function(ProjectStringBoxInterface $projectStringbox) use($id){
-                            return $projectStringbox->getId() == $id;
-                        })->first();
-                        break;
-                    case 'variety':
-                        $projectProduct = $project->getProjectVarieties()->filter(function(ProjectVarietyInterface $projectVariety) use($id){
-                            return $projectVariety->getId() == $id;
-                        })->first();
-                        break;
-                }
-                $projectProduct
+                $this
+                    ->components($project, $dataProduct['family'], $dataProduct['id'])
                     ->setQuantity($dataProduct['quantity'])
                     ->setUnitCostPrice($dataProduct['price']);
             }
+
             $projectManager->save($project);
         }
+
         try {
             $orderManager->save($order);
             $status = Response::HTTP_CREATED;
-            $data = $this->dataArray($order);
-        } catch (\Exception $exception) {
+            $data = $this->splitOrder($order);
+        }
+        catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
             $data = 'can not update order';
         }
