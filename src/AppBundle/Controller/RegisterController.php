@@ -174,7 +174,7 @@ class RegisterController extends AbstractController
             'Id' => $account->getId()
         ]);
 
-        $this->setNotice('Cadastro realizado com sucesso, verifique seu e-mail!');
+        //$this->setNotice('Cadastro realizado com sucesso, verifique seu e-mail!');
 
         return $this->redirectToRoute('app_register_link');
     }
