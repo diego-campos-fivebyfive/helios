@@ -3,6 +3,14 @@
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
 
+const level = {
+    'BLACK': 'black',
+    'PLATINUM': 'platinum',
+    'PREMIUM': 'premium',
+    'PARCEIRO OURO': 'gold',
+    'PROMOCIONAL': 'promotional'
+}
+
 const sendAccount = ({ Dados }) =>
   Sices
     .sendAccount({
@@ -18,6 +26,7 @@ const sendAccount = ({ Dados }) =>
       number: Dados.Numero,
       email: Dados.Email,
       phone: Dados.Telefone,
+      level: level[Dados.NivelDesconto.Descricao],
       status: 1
     })
     .then(data => ({
