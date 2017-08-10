@@ -43,11 +43,17 @@ class FileController extends AbstractController
 
         try {
             $snappy->generate($url, $dir . $filename);
-            return Response::HTTP_OK;
+            $file = $dir.$filename;
+
+            if(file_exists($file)){
+                return new BinaryFileResponse($file);
+            }
+
+            die('O arquivo nao existe');
         }
         catch(\Exception $error) {
-            dump($error);die();
-            return Response::HTTP_INTERNAL_SERVER_ERROR;
+            die($error);
+            //return Response::HTTP_INTERNAL_SERVER_ERROR;
             //ignore
         }
     }
@@ -67,13 +73,22 @@ class FileController extends AbstractController
 
         $url = 'http://www.statusimagens.com/whatsapp/imagens';
 
+
+
         try {
             $snappy->generate($url, $dir . $filename);
-            dump("Foi");die();
+
+            $file = $dir.$filename;
+
+            if(file_exists($file)){
+                return new BinaryFileResponse($file);
+            }
+
+            die('O arquivo nao existe');
         }
         catch(\Exception $error) {
-            dump($error);die();
-            return Response::HTTP_INTERNAL_SERVER_ERROR;
+            die($error);
+            //return Response::HTTP_INTERNAL_SERVER_ERROR;
             //ignore
         }
     }
