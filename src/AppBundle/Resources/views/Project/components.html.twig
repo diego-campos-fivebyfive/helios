@@ -98,8 +98,8 @@
         </td>
     </tr>
 
-    {% if attribute(project.defaults, 'power_oscillation') is defined %}
-        {% if project.defaults.power_oscillation < 0.9 %}
+    {% if attribute(project.defaults, 'power_increments') is defined %}
+        {% if project.defaults.power_increments > 0%}
             <tr>
                 <td colspan="3">
                     <div class="alert alert-danger text-center">
