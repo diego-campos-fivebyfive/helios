@@ -331,6 +331,14 @@ class Project implements ProjectInterface
     private $stage;
 
     /**
+     * @var VarietyInterface
+     *
+     * @ORM\ManyToOne(targetEntity="Variety")
+     * @ORM\JoinColumn(name="transformer_id")
+     */
+    private $transformer;
+
+    /**
      * @var OrderInterface
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Order\Order", inversedBy="projects")
@@ -1380,6 +1388,28 @@ class Project implements ProjectInterface
     public function getStage()
     {
         return $this->stage;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setTransformer(VarietyInterface $transformer)
+    {
+        if($transformer->getType() != VarietyInterface::TYPE_TRANSFORMER){
+            throw new \InvalidArgumentException('Invalid transform type');
+        }
+
+        $this->transformer = $transformer;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTransformer()
+    {
+        return $this->transformer;
     }
 
     /**

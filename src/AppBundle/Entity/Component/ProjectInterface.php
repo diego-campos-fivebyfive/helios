@@ -580,6 +580,17 @@ interface ProjectInterface
     public function getStage();
 
     /**
+     * @param VarietyInterface $transformer
+     * @return ProjectInterface
+     */
+    public function setTransformer(VarietyInterface $transformer);
+
+    /**
+     * @return VarietyInterface
+     */
+    public function getTransformer();
+
+    /**
      * @param ProjectModuleInterface $projectModule
      * @return ProjectInterface
      */
