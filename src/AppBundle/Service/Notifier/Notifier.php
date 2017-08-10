@@ -17,7 +17,8 @@ class Notifier
 
         $callback = $notification['Callback'];
         $route = $routes[$callback];
-        $url = "$host:$port/isquik-dev/$route";
+        $url = "https://api.isquik.com:443/isquik-dev/$route";
+        //$url = "$host:$port/isquik-dev/$route";
 
         $ch = curl_init();
 
