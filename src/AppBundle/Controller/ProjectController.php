@@ -100,11 +100,10 @@ class ProjectController extends AbstractController
      */
     public function makersAction(Request $request)
     {
-        $source = $request->request->get('source_option');
         $data = $request->request->get('generator');
         $power = (float) $data['power'];
 
-        if('consumption' == $source){
+        if('consumption' == $data['source']){
 
             $consumption = (float) $data['consumption'];
             $latitude = (float) $data['latitude'];
