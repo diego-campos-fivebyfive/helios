@@ -169,48 +169,37 @@ class OrderController extends FOSRestController
                 $family = $product['family'];
                 $id = $product['id'];
 
+                $projectProduct = null;
                 switch ($family) {
                     case 'inverter':
-                        $projectInverter = $project->getProjectInverters()->filter(function(ProjectInverterInterface $projectInverter) use($id){
+                        $projectProduct = $project->getProjectInverters()->filter(function(ProjectInverterInterface $projectInverter) use($id){
                             return $projectInverter->getId() == $id;
                         })->first();
-                        $projectInverter
-                            ->setQuantity($product['quantity'])
-                            ->setUnitCostPrice($product['price']);
                         break;
                     case 'module':
-                        $projectModule = $project->getProjectModules()->filter(function(ProjectModuleInterface $projectModule) use($id){
+                        $projectProduct = $project->getProjectModules()->filter(function(ProjectModuleInterface $projectModule) use($id){
                             return $projectModule->getId() == $id;
                         })->first();
-                        $projectModule
-                            ->setQuantity($product['quantity'])
-                            ->setUnitCostPrice($product['price']);
                         break;
                     case 'structure':
-                        $projectStructure = $project->getProjectStructures()->filter(function(ProjectStructureInterface $projectStructure) use($id){
+                        $projectProduct = $project->getProjectStructures()->filter(function(ProjectStructureInterface $projectStructure) use($id){
                             return $projectStructure->getId() == $id;
                         })->first();
-                        $projectStructure
-                            ->setQuantity($product['quantity'])
-                            ->setUnitCostPrice($product['price']);
                         break;
                     case 'stringbox':
-                        $projectStringbox = $project->getProjectStringBoxes()->filter(function(ProjectStringBoxInterface $projectStringbox) use($id){
+                        $projectProduct = $project->getProjectStringBoxes()->filter(function(ProjectStringBoxInterface $projectStringbox) use($id){
                             return $projectStringbox->getId() == $id;
                         })->first();
-                        $projectStringbox
-                            ->setQuantity($product['quantity'])
-                            ->setUnitCostPrice($product['price']);
                         break;
                     case 'variety':
-                        $projectVariety = $project->getProjectVarieties()->filter(function(ProjectVarietyInterface $projectVariety) use($id){
+                        $projectProduct = $project->getProjectVarieties()->filter(function(ProjectVarietyInterface $projectVariety) use($id){
                             return $projectVariety->getId() == $id;
                         })->first();
-                        $projectVariety
-                            ->setQuantity($product['quantity'])
-                            ->setUnitCostPrice($product['price']);
                         break;
                 }
+                $projectProduct
+                    ->setQuantity($product['quantity'])
+                    ->setUnitCostPrice($product['price']);
             }
             $projectManager->save($project);
         }
