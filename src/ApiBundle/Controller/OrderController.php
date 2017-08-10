@@ -55,8 +55,9 @@ class OrderController extends FOSRestController
 
     }
 
-    public function dataArray($order){
-        return $data = [
+    public function splitOrder($order)
+    {
+        return [
             'id' => $order->getId(),
             'status' => $order->getStatus(),
             'account' => [
@@ -147,34 +148,29 @@ class OrderController extends FOSRestController
 
     public function getOrderAction(Order $order)
     {
-        $data = $this->dataArray($order);
-
-        $view = View::create($data);
+        $splitedOrder = $this->splitOrder($order);
+        $view = View::create($splitedOrder);
         return $this->handleView($view);
     }
 
-    public function putOrderAction(Request $request, Order $order){
-        $data = json_decode($request->getContent(), true);
-
+    public function putOrderAction(Request $request, Order $order)
+    {
         /** @var Order $orderManager */
         $orderManager = $this->get('order_manager');
-        $order
-            ->setStatus($data['status']);
-
+        /** @var Project $projectManager */
         $projectManager = $this->get('project_manager');
 
-        foreach ($data['projects'] as $proj) {
-            /** @var Project $project */
-            $project = $this->get('project_manager')->find($proj['id']);
+        $data = json_decode($request->getContent(), true);
+        $order->setStatus($data['status']);
 
-            $products = $proj['products'];
+        foreach ($data['projects'] as $dataProject) {
+            $project = $projectManager->find($dataProject['id']);
 
-            foreach ($products as $product){
-                $family = $product['family'];
-                $id = $product['id'];
+            foreach ($dataProject['products'] as $dataProduct) {
+                $id = $dataProduct['id'];
 
                 $projectProduct = null;
-                switch ($family) {
+                switch ($dataProduct['family']) {
                     case 'inverter':
                         $projectProduct = $project->getProjectInverters()->filter(function(ProjectInverterInterface $projectInverter) use($id){
                             return $projectInverter->getId() == $id;
@@ -202,18 +198,18 @@ class OrderController extends FOSRestController
                         break;
                 }
                 $projectProduct
-                    ->setQuantity($product['quantity'])
-                    ->setUnitCostPrice($product['price']);
+                    ->setQuantity($dataProduct['quantity'])
+                    ->setUnitCostPrice($dataProduct['price']);
             }
             $projectManager->save($project);
         }
         try {
             $orderManager->save($order);
             $status = Response::HTTP_CREATED;
-            $data = $this->dataArray($order);
+            $data = $this->splitOrder($order);
         } catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $data = 'can not order update';
+            $data = 'can not update order';
         }
 
         $view = View::create($data)->setStatusCode($status);
