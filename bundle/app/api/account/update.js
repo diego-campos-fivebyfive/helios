@@ -28,6 +28,7 @@ const updateAccount = isquikAccount => Sices.updateAccount(isquikAccount.account
   street: isquikAccount.street,
   number: isquikAccount.number,
   postcode: isquikAccount.postcode,
+  level: isquikAccount.level,
   status: isquikAccount.status
 })
   .then(sicesAccount => (
