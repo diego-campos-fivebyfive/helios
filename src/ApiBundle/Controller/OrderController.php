@@ -55,9 +55,8 @@ class OrderController extends FOSRestController
 
     }
 
-    public function getOrderAction(Order $order)
-    {
-        $data = [
+    public function getDataArray($order){
+        return $data = [
             'id' => $order->getId(),
             'status' => $order->getStatus(),
             'account' => [
@@ -144,6 +143,11 @@ class OrderController extends FOSRestController
                     );
                 })->toArray()
         ];
+    }
+
+    public function getOrderAction(Order $order)
+    {
+        $data = $this->getDataArray($order);
 
         $view = View::create($data);
         return $this->handleView($view);
@@ -206,93 +210,7 @@ class OrderController extends FOSRestController
         try {
             $orderManager->save($order);
             $status = Response::HTTP_CREATED;
-            $data = [
-                'id' => $order->getId(),
-                'status' => $order->getStatus(),
-                'account' => [
-                    'id' => $order->getAccount()->getId(),
-                    'firstname' => $order->getAccount()->getFirstName(),
-                    'lastname' => $order->getAccount()->getLastName(),
-                    'extraDocument' => $order->getAccount()->getExtraDocument(),
-                    'document' => $order->getAccount()->getDocument(),
-                    'email' => $order->getAccount()->getEmail(),
-                    'state' => $order->getAccount()->getState(),
-                    'city' => $order->getAccount()->getCity(),
-                    'phone' => $order->getAccount()->getPhone(),
-                    'district' => $order->getAccount()->getDistrict(),
-                    'street' => $order->getAccount()->getStreet(),
-                    'number' => $order->getAccount()->getNumber(),
-                    'postcode' => $order->getAccount()->getPostcode(),
-                    'status' => $order->getAccount()->getStatus(),
-                    'level' => $order->getAccount()->getLevel()
-                ],
-                'projects' => $order->getProjects()
-                    ->map(function (ProjectInterface $project) {
-
-                        $inverters = $project->getProjectInverters()
-                            ->map(function (ProjectInverterInterface $projectInverter) {
-                                return [
-                                    'id' => $projectInverter->getId(),
-                                    'quantity' => $projectInverter->getQuantity(),
-                                    'price' => $projectInverter->getUnitCostPrice(),
-                                    'code' => $projectInverter->getInverter()->getCode(),
-                                    'description' => $projectInverter->getInverter()->getModel(),
-                                    'family' => 'inverter'
-                                ];
-                            })->toArray();
-                        $modules = $project->getProjectModules()
-                            ->map(function (ProjectModuleInterface $projectModule) {
-                                return [
-                                    'id' => $projectModule->getId(),
-                                    'quantity' => $projectModule->getQuantity(),
-                                    'price' => $projectModule->getUnitCostPrice(),
-                                    'code' => $projectModule->getModule()->getCode(),
-                                    'description' => $projectModule->getModule()->getModel(),
-                                    'family' => 'module'
-                                ];
-                            })->toArray();
-                        $structures = $project->getProjectStructures()
-                            ->map(function (ProjectStructureInterface $projectStructure) {
-                                return [
-                                    'id' => $projectStructure->getId(),
-                                    'quantity' => $projectStructure->getQuantity(),
-                                    'price' => $projectStructure->getUnitCostPrice(),
-                                    'code' => $projectStructure->getStructure()->getCode(),
-                                    'description' => $projectStructure->getStructure()->getDescription(),
-                                    'family' => 'structure'
-                                ];
-                            })->toArray();
-                        $stringboxes = $project->getProjectStringBoxes()
-                            ->map(function (ProjectStringBoxInterface $projectStringBox) {
-                                return [
-                                    'id' => $projectStringBox->getId(),
-                                    'quantity' => $projectStringBox->getQuantity(),
-                                    'price' => $projectStringBox->getUnitCostPrice(),
-                                    'code' => $projectStringBox->getStringBox()->getCode(),
-                                    'description' => $projectStringBox->getStringBox()->getDescription(),
-                                    'family' => 'stringbox'
-                                ];
-                            })->toArray();
-                        $varietys = $project->getProjectVarieties()
-                            ->map(function (ProjectVarietyInterface $projectVariety) {
-                                return [
-                                    'id' => $projectVariety->getId(),
-                                    'quantity' => $projectVariety->getQuantity(),
-                                    'price' => $projectVariety->getUnitCostPrice(),
-                                    'code' => $projectVariety->getVariety()->getCode(),
-                                    'description' => $projectVariety->getVariety()->getDescription(),
-                                    'family' => 'variety'
-                                ];
-                            })->toArray();
-
-                        $products = array_merge($inverters, $modules, $structures, $stringboxes, $varietys);
-
-                        return Array(
-                            'id' => $project->getId(),
-                            'products' => $products
-                        );
-                    })->toArray()
-            ];
+            $data = $this->getDataArray($order);
         } catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
             $data = 'can not order update';
