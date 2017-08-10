@@ -43,13 +43,13 @@ class FileController extends AbstractController
 
         try {
             $snappy->generate($url, $dir . $filename);
-            $file = $dir.$filename;
+            /*$file = $dir.$filename;
 
             if(file_exists($file)){
                 return new BinaryFileResponse($file);
-            }
+            }*/
 
-            die('O arquivo nao existe');
+            die('ok');
         }
         catch(\Exception $error) {
             die('Falhou');
@@ -78,13 +78,13 @@ class FileController extends AbstractController
         try {
             $snappy->generate($url, $dir . $filename);
 
-            $file = $dir.$filename;
+            /*$file = $dir.$filename;
 
             if(file_exists($file)){
                 return new BinaryFileResponse($file);
-            }
+            }*/
 
-            die('O arquivo nao existe');
+            die('ok');
         }
         catch(\Exception $error) {
             die('Falhou');
