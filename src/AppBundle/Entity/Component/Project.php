@@ -331,14 +331,6 @@ class Project implements ProjectInterface
     private $stage;
 
     /**
-     * @var VarietyInterface
-     *
-     * @ORM\ManyToOne(targetEntity="Variety")
-     * @ORM\JoinColumn(name="transformer_id")
-     */
-    private $transformer;
-
-    /**
      * @var OrderInterface
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Order\Order", inversedBy="projects")
@@ -1393,13 +1385,19 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
-    public function setTransformer(VarietyInterface $transformer = null)
+    public function setTransformer(VarietyInterface $transformer)
     {
-        if($transformer && $transformer->getType() != VarietyInterface::TYPE_TRANSFORMER){
-            throw new \InvalidArgumentException('Invalid transform type');
-        }
+        if(VarietyInterface::TYPE_TRANSFORMER == $transformer->getType()){
 
-        $this->transformer = $transformer;
+            $this->removeTransformer();
+
+            $projectVariety = new ProjectVariety();
+            $projectVariety
+                ->setVariety($transformer)
+                ->setQuantity(1);
+
+            $this->addProjectVariety($projectVariety);
+        }
 
         return $this;
     }
@@ -1409,7 +1407,21 @@ class Project implements ProjectInterface
      */
     public function getTransformer()
     {
-        return $this->transformer;
+        return $this->projectVarieties->filter(function(ProjectVarietyInterface $projectVariety){
+            return VarietyInterface::TYPE_TRANSFORMER == $projectVariety->getVariety()->getType();
+        })->first();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeTransformer()
+    {
+        if(null != $transformer = $this->getTransformer()){
+            $this->removeProjectVariety($transformer);
+        }
+
+        return $this;
     }
 
     /**
