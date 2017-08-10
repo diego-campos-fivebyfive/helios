@@ -55,7 +55,7 @@ class OrderController extends FOSRestController
 
     }
 
-    public function getDataArray($order){
+    public function dataArray($order){
         return $data = [
             'id' => $order->getId(),
             'status' => $order->getStatus(),
@@ -147,7 +147,7 @@ class OrderController extends FOSRestController
 
     public function getOrderAction(Order $order)
     {
-        $data = $this->getDataArray($order);
+        $data = $this->dataArray($order);
 
         $view = View::create($data);
         return $this->handleView($view);
@@ -210,7 +210,7 @@ class OrderController extends FOSRestController
         try {
             $orderManager->save($order);
             $status = Response::HTTP_CREATED;
-            $data = $this->getDataArray($order);
+            $data = $this->dataArray($order);
         } catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
             $data = 'can not order update';
