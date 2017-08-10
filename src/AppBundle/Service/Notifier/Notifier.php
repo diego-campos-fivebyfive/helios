@@ -7,15 +7,17 @@ namespace AppBundle\Service\Notifier;
 
 class Notifier
 {
-    public function notify(array $notification){
+    public function notify (array $notification) {
         $host = getenv('CES_ISQUIK_HOST');
         $port = getenv('CES_ISQUIK_PORT');
 
-        $entrypoint = [
-            'account_created' => '/integradores/cadastrointegradores/Notificacao'
+        $routes = [
+            'account_created' => 'integradores/cadastrointegradores/Notificacao'
         ];
 
-        $url = "$host:$port/isquik-dev/$entrypoint[$notification['Callback']]";
+        $callback = $notification['Callback'];
+        $route = $routes[$callback];
+        $url = "$host:$port/isquik-dev/$route";
 
         $ch = curl_init();
 
