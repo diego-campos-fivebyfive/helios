@@ -6,6 +6,7 @@
     .middle-block{
         float: left;
         width: 50%;
+        padding-right: 0;
     }
 </style>
 
@@ -20,12 +21,12 @@
 
             <div class="row">
                 <div class="form-group">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="row">
                             {{ form_label(form.power, 'Potência',{label_attr:{id:'source_label'}}) }}
                         </div>
                         <div class="row">
-                            <div class="middle-block">
+                            <div class="col-md-6 middle-block">
                                 {{ form_widget(form.source,{attr:{class:'form-control'}}) }}
                             </div>
                             <div class="middle-block">
@@ -34,13 +35,21 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         {{ form_label(form.module, 'Módulo') }}
                         {{ form_widget(form.module,{attr:{class:'form-control'}}) }}
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         {{ form_label(form.inverter_maker, 'Fabricante do Inversor') }}
                         {{ form_widget(form.inverter_maker,{attr:{class:'form-control'}}) }}
+                    </div>
+                    <div class="col-md-2">
+                        {{ form_label(form.string_box_maker, 'Fabricante do String Box') }}
+                        {{ form_widget(form.string_box_maker,{attr:{class:'form-control'}}) }}
+                    </div>
+                    <div class="col-md-2">
+                        {{ form_label(form.structure_maker, 'Fabricante da Estrutura') }}
+                        {{ form_widget(form.structure_maker,{attr:{class:'form-control'}}) }}
                     </div>
                 </div>
             </div>
@@ -48,23 +57,28 @@
             <div class="row" style="margin-top: 1rem;">
                 <div class="form-group">
                     <div class="col-md-3">
-                        {{ form_label(form.string_box_maker, 'Fabricante do String Box') }}
-                        {{ form_widget(form.string_box_maker,{attr:{class:'form-control'}}) }}
-                    </div>
-                    <div class="col-md-3">
                         {{ form_label(form.roof_type, 'Tipo de Telhado') }}
                         {{ form_widget(form.roof_type,{attr:{class:'form-control'}}) }}
                     </div>
-                    <div class="col-md-3">
-                        {{ form_label(form.structure_maker, 'Fabricante da Estrutura') }}
-                        {{ form_widget(form.structure_maker,{attr:{class:'form-control'}}) }}
+                    <div class="col-md-2">
+                        {{ form_label(form.grid_voltage, 'Tensão') }}
+                        {{ form_widget(form.grid_voltage,{attr:{class:'form-control'}}) }}
+                    </div>
+                    <div class="col-md-2">
+                        {{ form_label(form.grid_phase_number, 'Fases') }}
+                        {{ form_widget(form.grid_phase_number,{attr:{class:'form-control'}}) }}
+                    </div>
+                    <div class="col-md-3" style="font-size: 12px; margin-top: 1rem;">
+                        <label style="display: block;"> &nbsp; </label>
+                        {{ form_widget(form.use_transformer) }} &nbsp;
+                        {{ form_label(form.use_transformer, 'Desejo incluir transformador se necessário') }}
                     </div>
 
                     <div class="hide">
                         {{ form_rest(form) }}
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label> &nbsp; </label>
                         <button type="submit" class="btn btn-success btn-block ladda-button" data-style="zoom-in">
                             <i class="fa fa-check"></i> Recalcular
@@ -83,6 +97,19 @@
 
         </td>
     </tr>
+
+    {% if attribute(project.defaults, 'power_oscillation') is defined %}
+        {% if project.defaults.power_oscillation < 0.9 %}
+            <tr>
+                <td colspan="3">
+                    <div class="alert alert-danger text-center">
+                        A Potência do sistema foi reajustada para atender ao fabricante de inversor selecionado
+                    </div>
+                </td>
+            </tr>
+        {% endif %}
+    {% endif %}
+
     <tr>
         <th> Código</th>
         <th> Descrição</th>
@@ -117,6 +144,15 @@
         </tr>
     {% endfor %}
 
+    {# TRANSFORMER #}
+    {% if project.transformer %}
+        <tr>
+            <td> {{ project.transformer.variety.code }} </td>
+            <td> {{ project.transformer.variety.description }} </td>
+            <td> {{ 1 }} </td>
+        </tr>
+    {% endif %}
+
     {# STRING_BOXES #}
     {% for projectStringBox in project.projectStringBoxes %}
         <tr>
@@ -144,7 +180,7 @@
     {% endfor %}
 
     {# VARIETIES #}
-    {% for projectVariety in project.projectVarieties %}
+    {% for projectVariety in project.projectVarieties if projectVariety.variety.type != 'transformer' %}
         <tr>
             <td> {{ projectVariety.variety.code }} </td>
             <td> {{ projectVariety.variety.description }} </td>
@@ -160,10 +196,12 @@
     var button_config = form_config.find('button');
     var source_option = $('input[name="source_option"]');
     var source_label = $('#source_label');
-    var generator_source = $('#generator_source');
-    var generator_power = $('#generator_power');
-    var generator_consumption = $('#generator_consumption');
-    var generate_makers = $('#generator_inverter_maker');
+    var generator_source = form_config.find('#generator_source');
+    var generator_power = form_config.find('#generator_power');
+    var generator_consumption = form_config.find('#generator_consumption');
+    var generate_makers = form_config.find('#generator_inverter_maker');
+    var generator_g_phase = form_config.find('#generator_grid_phase_number');
+    var generator_g_voltage = form_config.find('#generator_grid_voltage');
 
     var sources = {
         power: {
@@ -184,6 +222,9 @@
             callback: function(xhr) {
                 var response = xhr.responseJSON;
                 var makers = response.makers;
+                if(!makers.length){
+                    generate_makers.find('option').attr('disabled', 'disabled');
+                }
                 callback(makers);
             }
         });
@@ -195,7 +236,7 @@
         button_config.ladda('start');
         get_available_makers(function(makers){
             var maker_id = parseInt(generate_makers.val());
-            if (makers.indexOf(maker_id) >= 0) {
+            if (makers.length && makers.indexOf(maker_id) >= 0) {
                 ProjectManager.submit(form_config, function(xhr){
                     ProjectManager.project = xhr.responseJSON.project;
                     ProjectManager.onSaveProject();
@@ -207,6 +248,9 @@
             }
         });
     });
+
+    Numbers.mask(generator_power);
+    Numbers.mask(generator_consumption);
 
     function check_source_option() {
         var option = generator_source.val();
@@ -220,9 +264,6 @@
         }
     }check_source_option();
 
-    Numbers.mask(generator_power);
-    Numbers.mask(generator_consumption);
-
     var last_power = sources.power.current;
     var last_consumption = sources.consumption.current;
 
@@ -231,9 +272,7 @@
             if (!makers.length) {
                 generator_power.val(last_power);
                 generator_consumption.val(last_consumption);
-                swal('Ooops', 'Não há inversores compatíveis!', 'error');
             } else {
-                generate_makers.show();
                 $.each(generate_makers.find('option'), function (i, option) {
                     var id = parseInt($(option).val());
                     if (makers.indexOf(id) >= 0) {
@@ -242,7 +281,8 @@
                         $(option).attr('disabled', 'disabled');
                     }
                 });
-                if (1 == makers.length) {
+                if (1 == makers.length || null == generate_makers.val()) {
+                    console.log(generate_makers.val());
                     generate_makers.find('option[value="' + makers[0] + '"]').attr('selected', 'selected');
                 }
             }
@@ -265,11 +305,19 @@
         check_source_option();
     });
 
-    $('#project_latitude').on('change', function(){
-        $('#generator_latitude').val($(this).val());
+    $('.project-latitude').on('change', function(){
+        form_config.find('#generator_latitude').val($(this).val());
+        form_config.find('#generator_address').val($('#generator_address').val());
     });
 
-    $('#project_longitude').on('change', function() {
-        $('#generator_longitude').val($(this).val());
+    $('.project-longitude').on('change', function() {
+        form_config.find('#generator_longitude').val($(this).val());
     });
+
+    ProjectManager.checker.gridOptions(generator_g_phase, generator_g_voltage);
+
+    generator_g_phase.on('change', function(){
+        detect_makers();
+    });
+
 </script>

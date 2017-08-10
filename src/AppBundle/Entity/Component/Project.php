@@ -82,13 +82,6 @@ class Project implements ProjectInterface
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=25)
-     */
-    private $roofType;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="invoice_base_price", type="decimal", precision=10, scale=2, nullable=true)
      */
     private $invoiceBasePrice;
@@ -406,6 +399,9 @@ class Project implements ProjectInterface
         $defaults['power'] = (float) $defaults['power'];
         $defaults['consumption'] = (float) $defaults['consumption'];
 
+        $this->latitude = $defaults['latitude'];
+        $this->longitude = $defaults['longitude'];
+
         $this->defaults = $defaults;
 
         return $this;
@@ -498,24 +494,6 @@ class Project implements ProjectInterface
     public function getInfPower()
     {
         return $this->infPower;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setRoofType($roofType)
-    {
-        $this->roofType = $roofType;
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getRoofType()
-    {
-        return $this->roofType;
     }
 
     /**
@@ -1402,6 +1380,48 @@ class Project implements ProjectInterface
     public function getStage()
     {
         return $this->stage;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setTransformer(VarietyInterface $transformer)
+    {
+        if(VarietyInterface::TYPE_TRANSFORMER == $transformer->getType()){
+
+            $this->removeTransformer();
+
+            $projectVariety = new ProjectVariety();
+            $projectVariety
+                ->setVariety($transformer)
+                ->setQuantity(1);
+
+            $this->addProjectVariety($projectVariety);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTransformer()
+    {
+        return $this->projectVarieties->filter(function(ProjectVarietyInterface $projectVariety){
+            return VarietyInterface::TYPE_TRANSFORMER == $projectVariety->getVariety()->getType();
+        })->first();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeTransformer()
+    {
+        if(null != $transformer = $this->getTransformer()){
+            $this->removeProjectVariety($transformer);
+        }
+
+        return $this;
     }
 
     /**

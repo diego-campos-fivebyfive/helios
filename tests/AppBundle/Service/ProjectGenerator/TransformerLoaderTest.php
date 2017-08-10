@@ -2,6 +2,7 @@
 
 namespace Tests\AppBundle\Service\ProjectGenerator;
 
+use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Component\VarietyInterface;
 use AppBundle\Service\ProjectGenerator\TransformerLoader;
 use Tests\AppBundle\AppTestCase;
@@ -33,6 +34,34 @@ class TransformerLoaderTest extends AppTestCase
 
         $this->assertEquals(VarietyInterface::TYPE_TRANSFORMER, $transformer->getType());
         $this->assertEquals(400, $transformer->getPower());
+    }
+
+    public function testTransformBehaviorOnProject()
+    {
+        $power = 200;
+        $manager = $this->getManager();
+        $loader = new TransformerLoader($manager);
+
+        $project = new Project();
+
+        $this->assertFalse($project->getTransformer());
+        $this->assertEmpty($project->getProjectVarieties()->toArray());
+
+        $transformer = $loader->load($power);
+        $this->assertInstanceOf(VarietyInterface::class, $transformer);
+
+        $project->setTransformer($transformer);
+
+        $this->assertCount(1, $project->getProjectVarieties()->toArray());
+
+        $transformer2 = $loader->load(100);
+        $project->setTransformer($transformer2);
+
+        $this->assertCount(1, $project->getProjectVarieties()->toArray());
+
+        $project->setTransformer(null);
+
+        $this->assertCount(0, $project->getProjectVarieties()->toArray());
     }
 
     private function createTransformers()

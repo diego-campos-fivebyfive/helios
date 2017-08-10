@@ -56,12 +56,12 @@ class ProjectType extends AbstractType
             ->add('address')
             ->add('latitude')
             ->add('longitude')
-            ->add('infConsumption', TextType::class, [
+            /*->add('infConsumption', TextType::class, [
                 'required' => true
             ])
             ->add('roofType', ChoiceType::class, [
                 'choices' => Project::getRootTypes()
-            ])
+            ])*/
         ;
     }
 

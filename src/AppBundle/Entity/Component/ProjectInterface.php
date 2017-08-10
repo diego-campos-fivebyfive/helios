@@ -108,17 +108,6 @@ interface ProjectInterface
     public function getInfPower();
 
     /**
-     * @param $roofType
-     * @return ProjectInterface
-     */
-    public function setRoofType($roofType);
-
-    /**
-     * @return string
-     */
-    public function getRoofType();
-
-    /**
      * @param $structureType
      * @return ProjectInterface
      */
@@ -589,6 +578,22 @@ interface ProjectInterface
      * @return CategoryInterface
      */
     public function getStage();
+
+    /**
+     * @param VarietyInterface $transformer
+     * @return ProjectInterface
+     */
+    public function setTransformer(VarietyInterface $transformer);
+
+    /**
+     * @return VarietyInterface
+     */
+    public function getTransformer();
+
+    /**
+     * @return ProjectInterface
+     */
+    public function removeTransformer();
 
     /**
      * @param ProjectModuleInterface $projectModule

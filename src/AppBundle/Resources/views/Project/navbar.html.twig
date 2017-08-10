@@ -46,32 +46,34 @@
 
                     Navbar.nav('all').on('click', function(){
 
-                        swal({
-                            title: 'Aguarde...',
-                            text: '',
-                            type: 'info',
-                            showConfirmButton: false
-                        });
+                        if(Project.id) {
 
-                        Request.send({
-                            url: '{{ path('project_steps',{id:'_id_'}) }}'.replace(/_id_/g, Project.id),
-                            method: 'post',
-                            data: {step:$(this).data('step')},
-                            callback: function(xhr){
-                                var response = xhr.responseJSON;
-                                if(202 == xhr.status && response.url && 0 == response.errors.length){
-                                    window.location.href = response.url;
-                                } else {
-                                    swal({
-                                        title: 'Ooops',
-                                        text: response.errors[0],
-                                        type: 'error',
-                                        html: true
-                                    });
+                            swal({
+                                title: 'Aguarde...',
+                                text: '',
+                                type: 'info',
+                                showConfirmButton: false
+                            });
+
+                            Request.send({
+                                url: '{{ path('project_steps',{id:'_id_'}) }}'.replace(/_id_/g, Project.id),
+                                method: 'post',
+                                data: {step: $(this).data('step')},
+                                callback: function (xhr) {
+                                    var response = xhr.responseJSON;
+                                    if (202 == xhr.status && response.url && 0 == response.errors.length) {
+                                        window.location.href = response.url;
+                                    } else {
+                                        swal({
+                                            title: 'Ooops',
+                                            text: response.errors[0],
+                                            type: 'error',
+                                            html: true
+                                        });
+                                    }
                                 }
-                            }
-                        });
-
+                            });
+                        }
                     });
                 }
             };
