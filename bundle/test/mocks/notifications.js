@@ -18,7 +18,7 @@ const notifications = {
     }
   },
   userApproved: {
-    callback: 'account_approved',
+    callback: 'account_updated',
     body: {
       id: 1
     }
