@@ -28,6 +28,13 @@ class User extends AbstractUser implements UserInterface
     protected $id;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="isquik_id", type="integer", nullable=true)
+     */
+    private $isquik_id;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="last_activity", type="datetime", nullable=true)
@@ -73,6 +80,23 @@ class User extends AbstractUser implements UserInterface
     public function isOwnerMaster()
     {
         return $this->hasRole(self::ROLE_OWNER_MASTER);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setIsquikId($isquik_id)
+    {
+        $this->isquik_id = $isquik_id;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getIsquikId()
+    {
+        return $this->isquik_id;
     }
 
     /**

@@ -44,6 +44,17 @@ interface UserInterface extends BaseUserInterface
     public function getInfo();
 
     /**
+     * @param $isquik_id
+     * @return UserInterface
+     */
+    public function setIsquikId($isquik_id);
+
+    /**
+     * @return integer
+     */
+    public function getIsquikId();
+
+    /**
      * @param \DateTime $lastActivity
      * @return UserInterface
      */
