@@ -12,28 +12,30 @@ const level = {
     'PROMOCIONAL': 'promotional'
 }
 
-const sendAccount = ({ Dados }) =>
+const getLevel = type => level[type]
+
+const sendAccount = ({ Dados: account }) =>
   Sices
     .sendAccount({
-      document: Dados.Cnpj,
-      extraDocument: Dados.InscricaoEstadual,
-      firstname: Dados.RazaoSocial,
-      lastname: Dados.NomeFantasia,
-      postcode: Dados.Cep,
-      state: Dados.UF,
-      city: Dados.Cidade,
-      district: Dados.Bairro,
-      street: Dados.Logradouro,
-      number: Dados.Numero,
-      email: Dados.Email,
-      phone: Dados.Telefone,
-      level: level[Dados.NivelDesconto.Descricao],
+      document: account.Cnpj,
+      extraDocument: account.InscricaoEstadual,
+      firstname: account.RazaoSocial,
+      lastname: account.NomeFantasia,
+      postcode: account.Cep,
+      state: account.UF,
+      city: account.Cidade,
+      district: account.Bairro,
+      street: account.Logradouro,
+      number: account.Numero,
+      email: account.Email,
+      phone: account.Telefone,
+      level: getLevel(account.NivelDesconto.Descricao),
       status: 1
     })
     .then(data => createUser({
-      email: Dados.Email,
-      phone: Dados.Telefone,
-      isquik_id: Dados.Administrador,
+      email: account.Email,
+      phone: account.Telefone,
+      isquik_id: account.Administrador,
       account_id: data.id
     }))
 

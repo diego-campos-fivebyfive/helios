@@ -13,20 +13,20 @@ const level = {
 
 const getLevel = type => level[type]
 
-const sendMemorial = ({ Dados }) =>
+const sendMemorial = ({ Dados: memorial }) =>
   Sices
     .sendMemorial({
-      version: Dados.Versao,
-      status: Dados.FlagPublicado,
-      range: Dados.Produtos.map(Ranges => ({
-        code: Ranges.Codigo,
-        markups: Ranges.Faixas.map(Markups => ({
-          initial: Markups.De,
-          final: Markups.Ate,
-          levels: Markups.Niveis.map(Levels => ({
-            price: Levels.PrecoVenda,
+      version: memorial.Versao,
+      status: memorial.FlagPublicado,
+      range: memorial.Produtos.map(ranges => ({
+        code: ranges.Codigo,
+        markups: ranges.Faixas.map(markups => ({
+          initial: markups.De,
+          final: markups.Ate,
+          levels: markups.Niveis.map(levels => ({
+            price: levels.PrecoVenda,
             markup: 1.0,
-            level: getLevel(Levels.Descricao)
+            level: getLevel(levels.Descricao)
           }))
         }))
       }))
