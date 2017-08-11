@@ -15,7 +15,7 @@ router.post('/api/v1/notifications', ((request, response) => {
   let action
 
   switch (callback) {
-    case '2011.1':
+    case 'account_created':
       account
         .create({
           object: body
