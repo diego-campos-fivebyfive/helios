@@ -22,44 +22,8 @@ class FileController extends AbstractController
      */
     public function pdfGeneratorAction(Project $project)
     {
-        return $this->render('AppBundle:Proposal:pdf.html.twig', [
-            'project' => $project
-        ]);
+        return $this->render('AppBundle:Proposal:pdf.html.twig', ['project' => $project]);
     }
-
-    /**
-     * @Route("/{id}/generator", name="file_generator")
-     */
-    public function insideAction($id)
-    {
-        $snappy = $this->get('knp_snappy.pdf');
-        $snappy->setOption('viewport-size', '1280x1024');
-
-        $dir = $this->get('kernel')->getRootDir() . '/../storage/';
-        $filename = md5(uniqid(time())) . '.pdf';
-        $file = $dir.$filename;
-        //$url = $this->generateUrl('files_pdf',['id'=>$id]);
-
-        //dump($url);die;
-        $url = "http://www.statusimagens.com/whatsapp/imagens";
-
-        try {
-            $snappy->generate($url, $file);
-            if(file_exists($file)){
-                return new BinaryFileResponse($file);
-            }else{
-                return $this->json([
-                    'error' => 'File not found.'
-                ], Response::HTTP_NOT_FOUND);
-            }
-        }
-        catch(\Exception $error) {
-            return $this->json([
-                'error' => 'Could not generate PDF.'
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
 
     /**
      * @Route("/list", name="files_list")
@@ -78,10 +42,10 @@ class FileController extends AbstractController
     }
 
     /**
-     * @Route("/display/{filename}", name="file_display")
+     * @Route("/display/{filename}", name="files_display_pdf")
      */
-    public function gerarAction($filename){
-
+    public function gerarAction($filename)
+    {
         $dir = $this->get('kernel')->getRootDir() . '/../storage/';
         $file = $dir.$filename;
         if(file_exists($file)){
@@ -93,9 +57,10 @@ class FileController extends AbstractController
     }
 
     /**
-     * @Route("/delete/{filename}", name="file_delete")
+     * @Route("/delete/{filename}", name="files_delete_pdf")
      */
-    public function deleteAction($filename){
+    public function deleteAction($filename)
+    {
 
         $dir = $this->get('kernel')->getRootDir() . '/../storage/';
         $file = $dir.$filename;
