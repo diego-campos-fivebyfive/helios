@@ -31,8 +31,7 @@ class OrderTransformerTest extends AppTestCase
 
         $this->assertCount(1, $project->getProjectInverters()->toArray());
 
-        $oderManager = $this->getContainer()->get('order_manager');
-        $orderTransformer = new OrderTransformer($oderManager);
+        $orderTransformer = $this->getContainer()->get('order_transformer');
 
         $order = $orderTransformer->transformFromProject($project);
 
