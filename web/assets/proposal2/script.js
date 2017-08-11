@@ -286,9 +286,26 @@ function generatePdfProposal(pdfBtn) {
         data:{content:$('#bloco').html()},
         complete:function (xhr) {
             pdfBtn.ladda('stop');
-            console.log(xhr.status);
+            if(xhr.status == 200) redirectPdf(xhr.responseJSON['filename']);
+            if(xhr.status == 500) msgGeneratorPdf('Não foi possível gerar o arquivo PDF.');
+            if(xhr.status == 500) msgGeneratorPdf('Não foi possível gerar o arquivo PDF.');
+
         }
     })
+}
+
+function redirectPdf(filename) {
+    var dataUrl = $('#pdfProposal').data('url');
+    var url = dataUrl.replace(":filename:",filename);
+    window.location.assign(url);
+    console.log(url);
+}
+
+function msgGeneratorPdf(msg) {
+    sweetAlert("Ops!", msg, "warning");
+    window.setTimeout(function(){
+        swal.close();
+    }, 2500);
 }
 
 function saveIntervalProposal() {

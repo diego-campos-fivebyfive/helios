@@ -61,14 +61,16 @@ class ProposalController extends AbstractController
         $filename = md5(uniqid(time())) . '.pdf';
         $file = $dir.$filename;
 
-        $url = $this->generateUrl('files_pdf',['id'=>$id]);
+       // $url = $this->generateUrl('files_pdf',['id'=>$id]);
         //dump($url);die;
-        //$url = "http://www.statusimagens.com/whatsapp/imagens";
+        $url = "http://54.233.150.10/public/files/306/pdf";
 
         try {
             $snappy->generate($url, $file);
             if(file_exists($file)){
-                return new BinaryFileResponse($file);
+                return $this->json([
+                    'filename' => $filename
+                ], Response::HTTP_OK);
             }else{
                 return $this->json([
                     'error' => 'File not found.'
@@ -80,6 +82,21 @@ class ProposalController extends AbstractController
                 'error' => 'Could not generate PDF.'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    /**
+     * @Route("/display/{filename}", name="proposal_display_pdf")
+     */
+    public function displayAction($filename)
+    {
+        $dir = $this->get('kernel')->getRootDir() . '/../storage/';
+        $file = $dir.$filename;
+        if(file_exists($file)){
+            return new BinaryFileResponse($file);
+        }else{
+            die("Arquivo não encontrado");
+        }
+
     }
 
     /**
