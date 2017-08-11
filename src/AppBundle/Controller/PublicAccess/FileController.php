@@ -4,6 +4,7 @@ namespace AppBundle\Controller\PublicAccess;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Component\Project;
+use Buzz\Message\Request;
 use Knp\Bundle\SnappyBundle\Snappy\LoggableGenerator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -27,13 +28,12 @@ class FileController extends AbstractController
     }
 
     /**
-     * @Route("/dentro", name="files_dentro")
+     * @Route("/inside", name="file_inside")
      */
-    public function dentroAction()
+    public function insideAction()
     {
 
         $snappy = $this->get('knp_snappy.pdf');
-
         $snappy->setOption('viewport-size', '1280x1024');
 
         $dir = $this->get('kernel')->getRootDir() . '/../storage/';
@@ -43,56 +43,50 @@ class FileController extends AbstractController
 
         try {
             $snappy->generate($url, $dir . $filename);
-            /*$file = $dir.$filename;
-
-            if(file_exists($file)){
-                return new BinaryFileResponse($file);
-            }*/
 
             die('ok');
         }
         catch(\Exception $error) {
-            die('Falhou');
-            //return Response::HTTP_INTERNAL_SERVER_ERROR;
-            //ignore
+            die($error);
         }
     }
 
 
     /**
-     * @Route("/listar", name="files_listar")
+     * @Route("/list", name="files_list")
      */
-    public function listarAction()
+    public function listAction()
     {
-        // variável que define o diretório das imagens
         $dir = $this->get('kernel')->getRootDir() . '/../storage/';
-
-        // esse seria o "handler" do diretório
         $dh = opendir($dir);
-
-        // loop que busca todos os arquivos até que não encontre mais nada
         while (false !== ($filename = readdir($dh))) {
-
-            echo "<a href=\"$filename\">$filename</a><br>";
-
-            // verificando se o arquivo é .jpg
-            /*if (substr($filename,-4) == ".jpg") {
-        // mostra o nome do arquivo e um link para ele - pode ser mudado para mostrar diretamente a imagem :)
-                echo "<a href=\"$filename\">$filename</a><br>";
-            }*/
+            echo "<a href=\"display/"."$filename\" style='background-color: chartreuse; border: solid 1px black; padding: 1px;'>$filename</a><br/><br/>";
         }
+        die();
+    }
+
+    /**
+     * @Route("/display/{filename}", name="files_display")
+     */
+    public function gerarAction($filename){
+
+        $dir = $this->get('kernel')->getRootDir() . '/../storage/';
+        $file = $dir.$filename;
+        if(file_exists($file)){
+            return new BinaryFileResponse($file);
+        }else{
+            die("Arquivo não encontrado");
+        }
+
     }
 
 
-
     /**
-     * @Route("/fora", name="files_fora")
+     * @Route("/out", name="file_out")
      */
-    public function foraAction()
+    public function outAction()
     {
-
         $snappy = $this->get('knp_snappy.pdf');
-
         $snappy->setOption('viewport-size', '1280x1024');
 
         $dir = $this->get('kernel')->getRootDir() . '/../storage/';
@@ -100,23 +94,12 @@ class FileController extends AbstractController
 
         $url = 'http://www.statusimagens.com/whatsapp/imagens';
 
-
-
         try {
             $snappy->generate($url, $dir . $filename);
-
-            /*$file = $dir.$filename;
-
-            if(file_exists($file)){
-                return new BinaryFileResponse($file);
-            }*/
-
             die('ok');
         }
         catch(\Exception $error) {
-            die('Falhou');
-            //return Response::HTTP_INTERNAL_SERVER_ERROR;
-            //ignore
+            die($error);
         }
     }
 
