@@ -103,7 +103,9 @@ class ProposalController extends AbstractController
         if(file_exists($file)){
             return new BinaryFileResponse($file);
         }else{
-            die("Arquivo não encontrado");
+            return $this->json(
+                ['error' => 'File not found.'],
+                Response::HTTP_NOT_FOUND);
         }
 
     }
