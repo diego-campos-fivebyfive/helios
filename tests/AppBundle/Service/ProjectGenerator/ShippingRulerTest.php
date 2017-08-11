@@ -16,17 +16,18 @@ class ShippingRulerTest extends WebTestCase
     public function testDefaultRulerHandling()
     {
         $rule = [
-            'price' => 50000,
-            'region' => ShippingRuler::REGION_MIDWEST,
-            'kind' => 'interior',
-            'power' => 50
+            'type' => 'sices',
+            'price' => 61000,
+            'region' => ShippingRuler::REGION_NORTH,
+            'kind' => 'capital',
+            'power' => 12
         ];
 
         ShippingRuler::apply($rule);
 
-        $this->assertEquals('mlt', $rule['company']);
-        $this->assertEquals(.031, $rule['percent']);
-        $this->assertEquals(.1, $rule['markup']);
-        $this->assertEquals(1705, $rule['shipping']);
+        $this->assertEquals('ctp', $rule['company']);
+        $this->assertEquals(.047, $rule['percent']);
+        $this->assertEquals(.20, $rule['markup']);
+        $this->assertEquals(3440.40, $rule['shipping']);
     }
 }

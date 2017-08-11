@@ -40,15 +40,15 @@
                         {{ form_widget(form.module,{attr:{class:'form-control'}}) }}
                     </div>
                     <div class="col-md-3">
-                        {{ form_label(form.inverter_maker, 'Fabricante do Inversor') }}
+                        {{ form_label(form.inverter_maker, 'Fab. Inversor') }}
                         {{ form_widget(form.inverter_maker,{attr:{class:'form-control'}}) }}
                     </div>
                     <div class="col-md-2">
-                        {{ form_label(form.string_box_maker, 'Fabricante do String Box') }}
+                        {{ form_label(form.string_box_maker, 'Fab. String Box') }}
                         {{ form_widget(form.string_box_maker,{attr:{class:'form-control'}}) }}
                     </div>
                     <div class="col-md-2">
-                        {{ form_label(form.structure_maker, 'Fabricante da Estrutura') }}
+                        {{ form_label(form.structure_maker, 'Fab. Estrutura') }}
                         {{ form_widget(form.structure_maker,{attr:{class:'form-control'}}) }}
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                     <div class="col-md-3" style="font-size: 12px; margin-top: 1rem;">
                         <label style="display: block;"> &nbsp; </label>
                         {{ form_widget(form.use_transformer) }} &nbsp;
-                        {{ form_label(form.use_transformer, 'Desejo incluir transformador se necessário') }}
+                        {{ form_label(form.use_transformer, 'Incluir transformador se necessário') }}
                     </div>
 
                     <div class="hide">
@@ -98,8 +98,8 @@
         </td>
     </tr>
 
-    {% if attribute(project.defaults, 'power_oscillation') is defined %}
-        {% if project.defaults.power_oscillation < 0.9 %}
+    {% if attribute(project.defaults, 'power_increments') is defined %}
+        {% if project.defaults.power_increments > 0%}
             <tr>
                 <td colspan="3">
                     <div class="alert alert-danger text-center">

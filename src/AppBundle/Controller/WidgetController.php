@@ -3,7 +3,6 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\CategoryInterface;
-use AppBundle\Entity\Financial\ProjectFinancialInterface;
 use AppBundle\Entity\Notification;
 use AppBundle\Entity\Component\ProjectInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,28 +43,26 @@ class WidgetController extends AbstractController
         $month = $request->get('month', $today->format('m'));
         $day = $today->format('d');
 
-        //$filter = $this->getProposalFilter();
+        $filter = $this->getProposalFilter();
 
         $member = $this->member();
 
         $date = new \DateTime(sprintf('%s-%s-%s', $year, $month, $day));
         $lastDay = cal_days_in_month(CAL_GREGORIAN, $date->format('m'), $date->format('Y'));
 
-        /*$filter
+        $filter
             ->date($date)
-            ->at($group);*/
+            ->at($group);
 
         if (!$member->isAdmin()) {
             if ($member->isOwner()) {
-                //$filter->account($member->getAccount());
+                $filter->account($member->getAccount());
             } else {
-                //$filter->member($member);
+                $filter->member($member);
             }
         }
 
-        //$data = $filter->get();
-
-        //$this->dd($data);
+        $data = $filter->get();
 
         // Defaults
         $groups = [];
@@ -78,29 +75,15 @@ class WidgetController extends AbstractController
             ];
         }
 
-        $data = [];
-        foreach ($data as $financial) {
-            //if ($financial instanceof ProjectFinancialInterface && $financial->isIssued()) {
-                $project = $financial->getProject();
+        /** @var ProjectInterface $project */
+        foreach ($data as $project) {
+            $index = 'month' == $group
+                ? (int) $project->getUpdatedAt()->format('d')  // TODO: Change to getIssuedAt
+                : (int) $project->getUpdatedAt()->format('m'); // TODO: Change to getIssuedAt
 
-                /**
-                 * TODO - $financial->isIssued()
-                 * This method cause a performance impact considerable,
-                 * because this same check is possible via database query,
-                 * before this statement, with reduced data quantity.
-                 * TODO
-                 * Check method WidgetController::summaryAction()
-                 */
-
-                $index = 'month' == $group
-                    ? (int)$financial->getCreatedAt()->format('d')
-                    : (int)$financial->getCreatedAt()->format('m');
-
-                $groups[$index]['count'] += 1;
-                $groups[$index]['power'] += $project->getPower();
-                $groups[$index]['amount'] += $project->getPrice();
-
-            //}
+            $groups[$index]['count'] += 1;
+            $groups[$index]['power'] += $project->getPower();
+            $groups[$index]['amount'] += $project->getSalePrice();
         }
 
         return $this->json([
@@ -117,33 +100,30 @@ class WidgetController extends AbstractController
     public function summaryAction()
     {
         $member = $this->member();
-        //$filter = $this->getProposalFilter();
+        $filter = $this->getProposalFilter();
 
         if (!$member->isAdmin()) {
             if ($member->isOwner()) {
-                //$filter->account($member->getAccount());
+                $filter->account($member->getAccount());
             } else {
-                //$filter->member($member);
+                $filter->member($member);
             }
         }
 
-        //$data = $filter->get();
+        $data = $filter->get();
 
         $summary = [
             'count' => 0,
             'amount' => 0,
             'power' => 0
         ];
-        /*foreach ($data as $financial) {
-            if ($financial instanceof ProjectFinancialInterface && $financial->isIssued()) {
 
-                $project = $financial->getProject();
-
-                $summary['count'] += 1;
-                $summary['amount'] += $project->getPrice();
-                $summary['power'] += $project->getPower();
-            }
-        }*/
+        /** @var ProjectInterface $project */
+        foreach ($data as $project) {
+            $summary['count'] += 1;
+            $summary['amount'] += $project->getSalePrice();
+            $summary['power'] += $project->getPower();
+        }
 
         return $this->json([
             'data' => $summary
@@ -242,7 +222,7 @@ class WidgetController extends AbstractController
      */
     private function getProposalFilter()
     {
-        return $this->get('app.proposal_filter');
+        return $this->get('proposal_filter');
     }
 
     /**

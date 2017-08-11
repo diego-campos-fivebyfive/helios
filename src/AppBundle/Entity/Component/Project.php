@@ -15,7 +15,6 @@ use AppBundle\Entity\CategoryInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\CustomerInterface;
 use AppBundle\Entity\MemberInterface;
-use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Service\ProjectGenerator\StructureCalculator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -329,13 +328,6 @@ class Project implements ProjectInterface
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Category")
      */
     private $stage;
-
-    /**
-     * @var OrderInterface
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Order\Order", inversedBy="projects")
-     */
-    private $order;
 
     /**
      * @inheritDoc
@@ -935,12 +927,7 @@ class Project implements ProjectInterface
      */
     public function getCostPriceModules()
     {
-        $price = 0;
-        foreach ($this->projectModules as $projectModule){
-            $price += $projectModule->getTotalCostPrice();
-        }
-
-        return $price;
+        return $this->calculateCostPrices($this->getProjectModules());
     }
 
     /**
@@ -948,12 +935,31 @@ class Project implements ProjectInterface
      */
     public function getCostPriceInverters()
     {
-        $price = 0;
-        foreach ($this->projectInverters as $projectInverter){
-            $price += $projectInverter->getTotalCostPrice();
-        }
+        return $this->calculateCostPrices($this->getProjectInverters());
+    }
 
-        return $price;
+    /**
+     * @inheritDoc
+     */
+    public function getCostPriceStringBoxes()
+    {
+        return $this->calculateCostPrices($this->getProjectStringBoxes());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCostPriceStructures()
+    {
+        return $this->calculateCostPrices($this->getProjectStructures());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCostPriceVarieties()
+    {
+        return $this->calculateCostPrices($this->getProjectVarieties());
     }
 
     /**
@@ -961,7 +967,11 @@ class Project implements ProjectInterface
      */
     public function getCostPriceComponents()
     {
-        return $this->getCostPriceModules() + $this->getCostPriceInverters();
+        return $this->getCostPriceInverters()
+            + $this->getCostPriceModules()
+            + $this->getCostPriceStringBoxes()
+            + $this->getCostPriceStructures()
+            + $this->getCostPriceVarieties();
     }
 
     /**
@@ -1136,7 +1146,7 @@ class Project implements ProjectInterface
      */
     public function getSalePrice()
     {
-        $price = $this->getSalePriceEquipments() + $this->getSalePriceServices();
+        $price = $this->getSalePriceEquipments() + $this->getSalePriceServices() + $this->getShipping();
 
         /** @var ProjectTaxInterface $projectTax */
         foreach ($this->projectTaxes as $projectTax){
@@ -1814,23 +1824,17 @@ class Project implements ProjectInterface
     }
 
     /**
-     * @param OrderInterface $order
+     * @param $components
+     * @return float|int
      */
-    public function setOrder($order)
+    private function calculateCostPrices($components)
     {
-        $this->order = $order;
-        $order->addProject($this);
+        $price = 0;
+        /** @var ProjectElementInterface $component */
+        foreach ($components as $component){
+            $price += $component->getTotalCostPrice();
+        }
 
-        return $this;
+        return $price;
     }
-
-    /**
-     * @return OrderInterface
-     */
-    public function getOrder()
-    {
-        return $this->order;
-    }
-
-
 }

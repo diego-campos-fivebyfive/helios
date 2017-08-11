@@ -160,6 +160,14 @@ services:
         class: AppBundle\Service\Component\FileHandler
         arguments: ['%kernel.root_dir%/../web/uploads/components/']
 
+    proposal_filter:
+        class: AppBundle\Service\ProposalFilter
+        arguments: ['@project_manager']
+
+    order_transformer:
+        class: AppBundle\Service\Order\OrderTransformer
+        arguments: ['@order_manager']
+
     # Form Services
     project_generator_type:
         class: AppBundle\Form\Component\GeneratorType

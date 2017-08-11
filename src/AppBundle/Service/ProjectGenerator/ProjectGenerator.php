@@ -141,9 +141,6 @@ class ProjectGenerator
         $this->generateStringBoxes($this->project);
 
         // SAVING
-        $defaults['power_oscillation'] = round($defaults['inf_power'] / $project->getPower(), 2);
-
-        $project->setDefaults($defaults);
         $this->autoSave = true;
         $this->save($this->project);
 

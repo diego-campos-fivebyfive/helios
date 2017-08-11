@@ -3,11 +3,13 @@
 namespace AppBundle\Controller\PublicAccess;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity\Project\Project;
+use AppBundle\Entity\Component\Project;
 use Knp\Bundle\SnappyBundle\Snappy\LoggableGenerator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("files")
@@ -16,34 +18,62 @@ class FileController extends AbstractController
 {
 
     /**
-     * @Route("/proposalPDF", name="files_pdf")
+     * @Route("/{id}/pdf", name="files_pdf")
      */
-    public function proposalPDFAction()
+    public function pdfGeneratorAction(Project $project)
     {
-        return $this->render('AppBundle:Proposal:proposalPDF.html.twig', array());
+        return $this->render('AppBundle:Proposal:pdf.html.twig', ['project' => $project]);
     }
 
     /**
-     * @Route("/pdfGenerator", name="files_pdfGenerator")
+     * @Route("/list", name="files_list")
      */
-    public function testePDFAction()
+    public function listAction()
+    {
+        $dir = $this->get('kernel')->getRootDir() . '/../storage/';
+        $dh = opendir($dir);
+        while (false !== ($filename = readdir($dh))) {
+            if (substr($filename,-4) == ".pdf") {
+                echo "<a href=\"display/"."$filename\" style='background-color: chartreuse; border: solid 1px black; padding: 1px;'>$filename</a>
+            ------- <a href=\"delete/"."$filename\" style='background-color: #dc4735; border: solid 1px black; padding: 1px;'>Deletar</a><br/><br/>";
+            }
+        }
+        die();
+    }
+
+    /**
+     * @Route("/display/{filename}", name="files_display_pdf")
+     */
+    public function gerarAction($filename)
+    {
+        $dir = $this->get('kernel')->getRootDir() . '/../storage/';
+        $file = $dir.$filename;
+        if(file_exists($file)){
+            return new BinaryFileResponse($file);
+        }else{
+            die("Arquivo não encontrado");
+        }
+
+    }
+
+    /**
+     * @Route("/delete/{filename}", name="files_delete_pdf")
+     */
+    public function deleteAction($filename)
     {
 
-        $snappy = $this->get('knp_snappy.pdf');
-
-        $snappy->setOption('viewport-size', '1280x1024');
-
         $dir = $this->get('kernel')->getRootDir() . '/../storage/';
-        $filename = md5(uniqid(time())) . '.pdf';
-
-        $url = 'http://localhost:8000/login';
-
-        try {
-            $snappy->generate($url, $dir . $filename);
+        $file = $dir.$filename;
+        //$arquivo = "teste.txt";
+        if (!unlink($file))
+        {
+            die("Erro ao deletar $filename");
         }
-        catch(\Exception $error) {
-            //ignore
+        else
+        {
+            return $this->redirectToRoute('files_list');
         }
+
     }
 
     /**

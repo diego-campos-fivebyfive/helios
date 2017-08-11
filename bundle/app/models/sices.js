@@ -1,9 +1,7 @@
 'use strict'
 
 const request = require('request-promise')
-const { config } = require('../config')
-
-const { sices } = config
+const { sices } = require('../config')
 
 const getRequest = uri => request({
   resolveWithFullResponse: true,

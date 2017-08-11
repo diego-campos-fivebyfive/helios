@@ -320,6 +320,21 @@ interface ProjectInterface
     /**
      * @return float
      */
+    public function getCostPriceStringBoxes();
+
+    /**
+     * @return float
+     */
+    public function getCostPriceStructures();
+
+    /**
+     * @return float
+     */
+    public function getCostPriceVarieties();
+
+    /**
+     * @return float
+     */
     public function getCostPriceComponents();
 
     /**
@@ -768,15 +783,4 @@ interface ProjectInterface
      * @return array
      */
     public static function getStructureTypes();
-
-    /**
-     * @param OrderInterface $order
-     * @return ProjectInterface
-     */
-    public function setOrder($order);
-
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getOrder();
 }

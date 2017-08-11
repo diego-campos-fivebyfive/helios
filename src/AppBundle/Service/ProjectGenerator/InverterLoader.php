@@ -40,6 +40,7 @@ class InverterLoader
         $maker = $defaults['inverter_maker'];
 
         $attempts = 1;
+        $increments = 0;
 
         do {
 
@@ -68,6 +69,7 @@ class InverterLoader
 
             if (!count($inverters)) {
                 $power += 0.2;
+                $increments += 1;
             }
 
             if ($combine) {
@@ -77,6 +79,7 @@ class InverterLoader
         } while (!count($inverters));
 
         $defaults['power'] = $power;
+        $defaults['power_increments'] = $increments;
 
         return $inverters;
     }

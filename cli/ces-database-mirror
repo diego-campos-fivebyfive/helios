@@ -3,6 +3,7 @@
 cd $SICES_PATH
 
 echo 'Note: This process can be a little slow!'
+chmod 600 devops/aws/homolog.pem
 
 if [ -z ${1+x} ]; then
   echo 'Cloning homolog database... enter your mysql password:'

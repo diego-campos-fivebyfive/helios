@@ -2,36 +2,47 @@
 
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
+const { create: createUser } = require('./user')
 
-const sendAccount = ({ Dados }) =>
+const level = {
+  'BLACK': 'black',
+  'PLATINUM': 'platinum',
+  'PREMIUM': 'premium',
+  'PARCEIRO OURO': 'gold',
+  'PROMOCIONAL': 'promotional'
+}
+
+const getLevel = type => level[type]
+
+const sendAccount = ({ Dados: account }) =>
   Sices
     .sendAccount({
-      document: Dados.Cnpj,
-      extraDocument: Dados.InscricaoEstadual,
-      firstname: Dados.RazaoSocial,
-      lastname: Dados.NomeFantasia,
-      postcode: Dados.Cep,
-      state: Dados.UF,
-      city: Dados.Cidade,
-      district: Dados.Bairro,
-      street: Dados.Logradouro,
-      number: Dados.Numero,
-      email: Dados.Email,
-      phone: Dados.Telefone,
+      document: account.Cnpj,
+      extraDocument: account.InscricaoEstadual,
+      firstname: account.RazaoSocial,
+      lastname: account.NomeFantasia,
+      postcode: account.Cep,
+      state: account.UF,
+      city: account.Cidade,
+      district: account.Bairro,
+      street: account.Logradouro,
+      number: account.Numero,
+      email: account.Email,
+      phone: account.Telefone,
+      level: getLevel(account.NivelDesconto.Descricao),
       status: 1
     })
-    .then(data => ({
-      id: Dados.Administrador,
-      email: Dados.Email,
-      phone: Dados.Telefone,
+    .then(data => createUser({
+      email: account.Email,
+      phone: account.Telefone,
+      isquik_id: account.Administrador,
       account_id: data.id
     }))
 
-const createAccount = ({ object }) =>
+const createAccount = ({ notification }) =>
   Isquik
-    .getAccount(object.id)
+    .getAccount(notification.id)
     .then(sendAccount)
-
 
 module.exports = {
   create: createAccount

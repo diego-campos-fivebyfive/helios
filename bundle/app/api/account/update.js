@@ -2,40 +2,48 @@
 
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
+const { update: updateUser } = require('./user')
 
-const updateUser = (sicesAccount, isquikAccount) => Sices.updateUser(sicesAccount.owner, {
-  email: isquikAccount.email,
-  phone: isquikAccount.phone,
-  contact: isquikAccount.contact,
-  account_id: sicesAccount.id
-})
-  .then(sicesUser => (
-    (sicesUser) ? 201 : 422
-  ))
+const level = {
+  'BLACK': 'black',
+  'PLATINUM': 'platinum',
+  'PREMIUM': 'premium',
+  'PARCEIRO OURO': 'gold',
+  'PROMOCIONAL': 'promotional'
+}
 
-const updateAccount = isquikAccount => Sices.updateAccount(isquikAccount.account_id, {
-  name: isquikAccount.name,
-  firstname: isquikAccount.firstname,
-  lastname: isquikAccount.lastname,
-  email: isquikAccount.email,
-  phone: isquikAccount.phone,
-  document: isquikAccount.document,
-  extraDocument: isquikAccount.extraDocument,
-  state: isquikAccount.state,
-  city: isquikAccount.city,
-  contact: isquikAccount.contact,
-  district: isquikAccount.district,
-  street: isquikAccount.street,
-  number: isquikAccount.number,
-  postcode: isquikAccount.postcode,
-  status: isquikAccount.status
-})
-  .then(sicesAccount => (
-    (sicesAccount) ? updateUser(sicesAccount, isquikAccount) : 422
-  ))
+const getLevel = type => level[type]
 
-const update = ({ object }) => Isquik.getAccount(object.id).then(updateAccount)
+const sendAccount = ({ Dados: account }) =>
+  Sices
+    .updateAccount({
+      document: account.Cnpj,
+      extraDocument: account.InscricaoEstadual,
+      firstname: account.RazaoSocial,
+      lastname: account.NomeFantasia,
+      postcode: account.Cep,
+      state: account.UF,
+      city: account.Cidade,
+      district: account.Bairro,
+      street: account.Logradouro,
+      number: account.Numero,
+      email: account.Email,
+      phone: account.Telefone,
+      level: getLevel(account.NivelDesconto.Descricao),
+      status: ((account.DescricaoStatusIntegrador === 'Aprovado' && !account.Bloqueado) ? 1 : 0)
+    })
+    .then(data => updateUser({
+      email: account.Email,
+      phone: account.Telefone,
+      isquik_id: account.Administrador,
+      account_id: data.id
+    }))
+
+const updateAccount = ({ notification }) =>
+  Isquik
+    .getAccount(notification.id)
+    .then(sendAccount)
 
 module.exports = {
-  update
+  update: updateAccount
 }

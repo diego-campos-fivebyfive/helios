@@ -11,7 +11,6 @@
 namespace AppBundle\Entity\Order;
 
 use AppBundle\Entity\AccountInterface;
-use AppBundle\Entity\Component\ProjectInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 interface OrderInterface
@@ -44,19 +43,24 @@ interface OrderInterface
     public function getStatus();
 
     /**
-     * @param ProjectInterface $project
-     * @return OrderInterface
+     * @return float
      */
-    public function addProject(ProjectInterface $project);
+    public function getTotal();
 
     /**
-     * @param ProjectInterface $project
+     * @param ElementInterface $element
      * @return OrderInterface
      */
-    public function removeProject(ProjectInterface $project);
+    public function addElement(ElementInterface $element);
 
     /**
-     * @return ProjectInterface
+     * @param ElementInterface $element
+     * @return OrderInterface
      */
-    public function getProjects();
+    public function removeElement(ElementInterface $element);
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getElements();
 }
