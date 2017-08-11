@@ -10,6 +10,17 @@ interface MemberInterface
     public function getId();
 
     /**
+     * @param $isquik_id
+     * @return MemberInterface
+     */
+    public function setIsquikId($isquik_id);
+
+    /**
+     * @return integer
+     */
+    public function getIsquikId();
+
+    /**
      * @param AccountInterface $account
      * @return MemberInterface
      */
