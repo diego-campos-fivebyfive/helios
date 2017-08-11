@@ -30,7 +30,7 @@ class FileController extends AbstractController
     /**
      * @Route("/{id}/generator", name="file_generator")
      */
-    public function insideAction(Request $request, $id)
+    public function insideAction($id)
     {
         $snappy = $this->get('knp_snappy.pdf');
         $snappy->setOption('viewport-size', '1280x1024');
@@ -49,12 +49,14 @@ class FileController extends AbstractController
                 return new BinaryFileResponse($file);
             }else{
                 return $this->json([
-                    'error' => 'Arquivo não encontrado.'
+                    'error' => 'File not found.'
                 ], Response::HTTP_NOT_FOUND);
             }
         }
         catch(\Exception $error) {
-            die($error);
+            return $this->json([
+                'error' => 'Could not generate PDF.'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -108,30 +110,6 @@ class FileController extends AbstractController
         }
 
     }
-
-
-    /**
-     * @Route("/out", name="file_out")
-     */
-    public function outAction()
-    {
-        $snappy = $this->get('knp_snappy.pdf');
-        $snappy->setOption('viewport-size', '1280x1024');
-
-        $dir = $this->get('kernel')->getRootDir() . '/../storage/';
-        $filename = md5(uniqid(time())) . '.pdf';
-
-        $url = 'http://www.statusimagens.com/whatsapp/imagens';
-
-        try {
-            $snappy->generate($url, $dir . $filename);
-            die('ok');
-        }
-        catch(\Exception $error) {
-            die($error);
-        }
-    }
-
 
     /**
      * @Route("/{token}/proposal", name="file_proposal")
