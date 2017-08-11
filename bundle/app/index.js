@@ -6,4 +6,4 @@
  *
  */
 
-require('./components')
+require('./api')
