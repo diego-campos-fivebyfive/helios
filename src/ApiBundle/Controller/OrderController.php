@@ -155,11 +155,11 @@ class OrderController extends FOSRestController
 
     public function putOrderAction(Request $request, Order $order)
     {
-        $compareComponent = function($interface, $id) {
+        $compareComponents = function($interface, $id) {
             return $interface->getId() == $id;
         };
 
-        $getComponent = function($id, $family, $project) use($compareComponent) {
+        $getComponent = function($id, $family, $project) use($compareComponents) {
             $interfaces = [
                 'inverter' => function (ProjectInverterInterface $i) { return $i; },
                 'module' => function (ProjectModuleInterface $i) { return $i; },
@@ -173,13 +173,14 @@ class OrderController extends FOSRestController
                 'module' => $project->getProjectModules(),
                 'structure' => $project->getProjectStructures(),
                 'stringbox' => $project->getProjectStringBoxes(),
-                'variety' => $project->getProjectVarieties(),
+                'variety' => $project->getProjectVarieties()
             ];
 
             $interface = $interfaces[$family];
+            $component = $components[$family];
 
-            return $components[$family]
-                ->filter($compareComponent($interface, $id))
+            return $component
+                ->filter($compareComponents($interface, $id))
                 ->first();
         };
 
