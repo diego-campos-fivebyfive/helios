@@ -265,40 +265,61 @@ function loadDatas() {
     }
 }
 
-$('#pdfProposal').click(function () {
-    var saveBtn = $('#saveProposal');
-    $(saveBtn).ladda();
-    saveBtn.ladda('start');
-    var pdfBtn = $('#pdfProposal').ladda();
+$('#btnGeneratePdf').click(function () {
+    var pdfBtn = $('#btnGeneratePdf').ladda();
     pdfBtn.ladda('start');
     //removeDataCke();
     $.ajax({
-        url:$(saveBtn).data('url'),
+        url:$('#saveProposal').data('url'),
         method:'post',
         data:{content:$('#bloco').html()},
         complete:function (xhr) {
-            saveBtn.ladda('stop');
-            pdfBtn.ladda('stop');
-            alert('Gerar pdf');
+            generatePdfProposal(pdfBtn);
         }
     })
 });
 
-function saveProposal() {
-    var saveBtn = $('#saveProposal');
-    $(saveBtn).ladda();
-    saveBtn.ladda('start');
-    var pdfBtn = $('#pdfProposal').ladda();
-    pdfBtn.ladda('start');
+function generatePdfProposal(pdfBtn) {
     $.ajax({
-        url:$(saveBtn).data('url'),
+        url:$('#generatePdfProposal').data('url'),
         method:'post',
         data:{content:$('#bloco').html()},
         complete:function (xhr) {
-            saveBtn.ladda('stop');
+            pdfBtn.ladda('stop');
+            console.log(xhr.status);
+            if(xhr.status == 200) redirectPdf(xhr.responseJSON['filename']);
+            if(xhr.status == 404) msgGeneratorPdf('Arquivo não encontrado.');
+            if(xhr.status == 500) redirectPdf(xhr.responseJSON['filename']);//msgGeneratorPdf('Não foi possível gerar o arquivo PDF.');
+
+        }
+    })
+}
+
+function redirectPdf(filename) {
+    var dataUrl = $('#pdfProposal').data('url');
+    var url = dataUrl.replace(":filename:",filename);
+    window.location.assign(url);
+    console.log(url);
+}
+
+function msgGeneratorPdf(msg) {
+    sweetAlert("Ops!", msg, "warning");
+    window.setTimeout(function(){
+        swal.close();
+    }, 2500);
+}
+
+function saveIntervalProposal() {
+    var pdfBtn = $('#btnGeneratePdf').ladda();
+    pdfBtn.ladda('start');
+    $.ajax({
+        url:$('#saveProposal').data('url'),
+        method:'post',
+        data:{content:$('#bloco').html()},
+        complete:function (xhr) {
             pdfBtn.ladda('stop');
             setTimeout(function () {
-                saveProposal();
+                saveIntervalProposal();
             },1000);
         }
     })
@@ -357,7 +378,7 @@ $(document).ready(function(){
     }, 50);
 */
     /*setTimeout(function () {
-        saveProposal();
+        saveIntervalProposal();
     },1000);*/
 
 
