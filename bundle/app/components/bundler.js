@@ -1,6 +1,9 @@
 'use strict'
 
-const bundler = (request, response, action) => {
+const bundler = actions => (request, response) => {
+  const { callback, body } = request.body
+  const action = actions[callback]
+
   if (!action) {
     response
       .status(404)
@@ -12,7 +15,7 @@ const bundler = (request, response, action) => {
   action({
     id: request.params.id,
     query: request.query,
-    notification: request.notification
+    notification: body
   })
     .then(({ statusCode, ...data }) => {
       response

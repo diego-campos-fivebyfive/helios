@@ -14,10 +14,5 @@ const actions = {
   account_updated: account.update
 }
 
-router.post('/api/v1/notifications', (({ body, ...request }, response) => {
-  bundler({ ...request, notification: body.body }, response, actions[body.callback])
-}))
-
-router.get('/', ((request, response) => {
-  response.send('API Documentation')
-}))
+router.post('/api/v1/notifications', bundler(actions))
+router.get('/', (request, response) => response.send('API Documentation'))
