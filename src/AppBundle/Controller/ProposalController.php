@@ -61,7 +61,7 @@ class ProposalController extends AbstractController
         $snappy->setOption('margin-bottom', 0);
         $snappy->setOption('margin-left', 0);
         $snappy->setOption('margin-right', 0);
-        $snappy->setOption('zoom', 1.5);
+        $snappy->setOption('zoom', 1.25);
 
 
         $dir = $this->get('kernel')->getRootDir() . '/../storage/';
@@ -69,6 +69,7 @@ class ProposalController extends AbstractController
         $file = $dir.$filename;
 
         $url = $this->generateUrl('files_pdf',['id'=>$id], UrlGeneratorInterface::ABSOLUTE_URL);
+        //$url = "http://54.233.150.10/public/files/306/pdf";
 
         try {
             $snappy->generate($url, $file);
