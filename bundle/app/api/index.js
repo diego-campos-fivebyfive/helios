@@ -27,7 +27,7 @@ router.post('/api/v1/notifications', ((request, response) => {
         })
       return
 
-    case 'account_approved':
+    case 'account_updated':
       action = account.update
       requestCopy.body = body
       break
