@@ -1117,8 +1117,9 @@
             {#botao salvar e pdf da proposta#}
             <div class="col-md-2 sidebar-save">
                 <span id="saveProposal" data-url="{{ path('proposal_save',{id:project.id}) }}">
+                <span id="generatePdfProposal" data-url="{{ path('proposal_pdf_generator',{id:project.id}) }}">
                 </span>
-                <button id="pdfProposal" class="btn btn-primary ladda-button" data-style="zoom-in" data-url="{{ path('proposal_pdf',{id:project.id}) }}">
+                <button id="btnGeneratePdf" class="btn btn-primary ladda-button" data-style="zoom-in" data-url="{{ path('proposal_pdf',{id:project.id}) }}">
                     <span class="ladda-label">Gerar PDF</span>
                 </button>
 

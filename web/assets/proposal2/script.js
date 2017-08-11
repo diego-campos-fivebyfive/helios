@@ -265,40 +265,43 @@ function loadDatas() {
     }
 }
 
-$('#pdfProposal').click(function () {
-    var saveBtn = $('#saveProposal');
-    $(saveBtn).ladda();
-    saveBtn.ladda('start');
-    var pdfBtn = $('#pdfProposal').ladda();
+$('#btnGeneratePdf').click(function () {
+    var pdfBtn = $('#btnGeneratePdf').ladda();
     pdfBtn.ladda('start');
     //removeDataCke();
     $.ajax({
-        url:$(saveBtn).data('url'),
+        url:$('#saveProposal').data('url'),
         method:'post',
         data:{content:$('#bloco').html()},
         complete:function (xhr) {
-            saveBtn.ladda('stop');
-            pdfBtn.ladda('stop');
-            alert('Gerar pdf');
+            generatePdfProposal(pdfBtn);
         }
     })
 });
 
-function saveProposal() {
-    var saveBtn = $('#saveProposal');
-    $(saveBtn).ladda();
-    saveBtn.ladda('start');
-    var pdfBtn = $('#pdfProposal').ladda();
-    pdfBtn.ladda('start');
+function generatePdfProposal(pdfBtn) {
     $.ajax({
-        url:$(saveBtn).data('url'),
+        url:$('#generatePdfProposal').data('url'),
         method:'post',
         data:{content:$('#bloco').html()},
         complete:function (xhr) {
-            saveBtn.ladda('stop');
+            pdfBtn.ladda('stop');
+            console.log(xhr.status);
+        }
+    })
+}
+
+function saveIntervalProposal() {
+    var pdfBtn = $('#btnGeneratePdf').ladda();
+    pdfBtn.ladda('start');
+    $.ajax({
+        url:$('#saveProposal').data('url'),
+        method:'post',
+        data:{content:$('#bloco').html()},
+        complete:function (xhr) {
             pdfBtn.ladda('stop');
             setTimeout(function () {
-                saveProposal();
+                saveIntervalProposal();
             },1000);
         }
     })
@@ -357,7 +360,7 @@ $(document).ready(function(){
     }, 50);
 */
     /*setTimeout(function () {
-        saveProposal();
+        saveIntervalProposal();
     },1000);*/
 
 

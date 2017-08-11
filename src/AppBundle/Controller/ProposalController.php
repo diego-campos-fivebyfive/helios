@@ -50,7 +50,7 @@ class ProposalController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/generator", name="proposal_generator")
+     * @Route("/{id}/generator", name="proposal_pdf_generator")
      */
     public function generatorAction($id)
     {
@@ -61,9 +61,9 @@ class ProposalController extends AbstractController
         $filename = md5(uniqid(time())) . '.pdf';
         $file = $dir.$filename;
 
-        //$url = $this->generateUrl('files_pdf',['id'=>$id]);
+        $url = $this->generateUrl('files_pdf',['id'=>$id]);
         //dump($url);die;
-        $url = "http://www.statusimagens.com/whatsapp/imagens";
+        //$url = "http://www.statusimagens.com/whatsapp/imagens";
 
         try {
             $snappy->generate($url, $file);
