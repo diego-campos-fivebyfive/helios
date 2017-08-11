@@ -242,8 +242,8 @@
                                         <div class="form-group">
                                             <div class="col-md-3">
                                                 <div class="col-md-12">
-                                                    <a class="btn btn-info btn-block" data-toggle="modal"
-                                                       data-target="#modal_info" style="margin-top: 9.5rem;">
+                                                    <a id="btn-coord-info" class="btn btn-info btn-block" data-toggle="modal"
+                                                       data-target="#modal_info" style="{{ project.id is null ? 'margin-top: 9.75rem;' }}">
                                                         <i class="fa fa-info-circle"></i>
                                                         Informações Climáticas
                                                     </a>
@@ -726,6 +726,8 @@
                 ProjectManager.configureBlocks();
 
                 ProjectManager.process();
+
+                $('#btn-coord-info').css('margin-top', 0);
             },
             onUpdateInverter: function(){
                 ProjectManager.loadComponents();
