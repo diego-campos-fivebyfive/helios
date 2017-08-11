@@ -46,14 +46,14 @@ trait ProjectElementTrait
     /**
      * @var float
      *
-     * @ORM\Column(name="unit_cost_price", type="decimal", precision=10, scale=2)
+     * @ORM\Column(name="unit_cost_price", type="float")
      */
     private $unitCostPrice;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="unit_sale_price", type="decimal", precision=10, scale=2, nullable=true)
+     * @ORM\Column(name="unit_sale_price", type="float", nullable=true)
      */
     private $unitSalePrice;
 
@@ -106,7 +106,7 @@ trait ProjectElementTrait
      */
     public function setUnitCostPrice($unitCostPrice)
     {
-        $this->unitCostPrice = round($unitCostPrice, 2);
+        $this->unitCostPrice = $unitCostPrice;
 
         return $this;
     }
@@ -124,7 +124,7 @@ trait ProjectElementTrait
      */
     public function setUnitSalePrice($unitSalePrice)
     {
-        $this->unitSalePrice = round($unitSalePrice, 2);
+        $this->unitSalePrice = $unitSalePrice;
 
         return $this;
     }
