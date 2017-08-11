@@ -20,8 +20,8 @@ class VarietyData extends AbstractFixture implements OrderedFixtureInterface
         $data = [
             'code' => md5(uniqid(time())),
             'description' => 'This is a Variety ' . uniqid(),
-            'type' => 'cable',
-            'subtype' => 'connector',
+            'type' => 'cabo',
+            'subtype' => 'conector',
             'maker' => $this->getReference('maker')
         ];
 
