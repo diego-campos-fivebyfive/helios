@@ -1,9 +1,7 @@
 'use strict'
 
 const request = require('request-promise')
-const { config } = require('../config')
-
-const { isquik } = config
+const { isquik } = require('../config')
 
 const getAuthentication = () => request({
   uri: 'https://api.isquik.com/auth',
