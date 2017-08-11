@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @Route("/proposal")
@@ -56,31 +57,39 @@ class ProposalController extends AbstractController
     {
         $snappy = $this->get('knp_snappy.pdf');
         $snappy->setOption('viewport-size', '1280x1024');
+        $snappy->setOption('margin-top', 0);
+        $snappy->setOption('margin-bottom', 0);
+        $snappy->setOption('margin-left', 0);
+        $snappy->setOption('margin-right', 0);
+        $snappy->setOption('zoom', 1.5);
+
 
         $dir = $this->get('kernel')->getRootDir() . '/../storage/';
         $filename = md5(uniqid(time())) . '.pdf';
         $file = $dir.$filename;
 
-       // $url = $this->generateUrl('files_pdf',['id'=>$id]);
-        //dump($url);die;
-        $url = "http://54.233.150.10/public/files/306/pdf";
+        $url = $this->generateUrl('files_pdf',['id'=>$id], UrlGeneratorInterface::ABSOLUTE_URL);
 
         try {
             $snappy->generate($url, $file);
             if(file_exists($file)){
-                return $this->json([
-                    'filename' => $filename
-                ], Response::HTTP_OK);
+                return $this->json(
+                    ['filename' => $filename],
+                    Response::HTTP_OK
+                );
             }else{
-                return $this->json([
-                    'error' => 'File not found.'
-                ], Response::HTTP_NOT_FOUND);
+                return $this->json(
+                    ['error' => 'File not found.'],
+                    Response::HTTP_NOT_FOUND);
             }
         }
         catch(\Exception $error) {
-            return $this->json([
-                'error' => 'Could not generate PDF.'
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->json(
+                [
+                    'error' => 'Could not generate PDF.',
+                    'filename' => $filename
+                ],
+                Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
