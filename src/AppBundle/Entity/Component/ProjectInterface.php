@@ -783,15 +783,4 @@ interface ProjectInterface
      * @return array
      */
     public static function getStructureTypes();
-
-    /**
-     * @param OrderInterface $order
-     * @return ProjectInterface
-     */
-    public function setOrder($order);
-
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getOrder();
 }
