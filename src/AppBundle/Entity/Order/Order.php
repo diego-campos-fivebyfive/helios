@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity\Order;
 
-use AppBundle\Entity\Component\ProjectInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -40,16 +39,16 @@ class Order implements OrderInterface
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Component\Project", mappedBy="order", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Element", mappedBy="order", cascade={"persist"})
      */
-    private $projects;
+    private $elements;
 
     /**
      * Order constructor.
      */
     public function __construct()
     {
-        $this->projects = new ArrayCollection();
+        $this->elements = new ArrayCollection();
     }
 
 
@@ -83,6 +82,19 @@ class Order implements OrderInterface
     /**
      * @inheritDoc
      */
+    public function getTotal()
+    {
+        $total = 0;
+        foreach ($this->elements as $element){
+            $total += $element->getTotal();
+        }
+
+        return $total;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setAccount($account)
     {
         $this->account = $account;
@@ -100,13 +112,12 @@ class Order implements OrderInterface
     /**
      * @inheritDoc
      */
-    public function addProject(ProjectInterface $project)
+    public function addElement(ElementInterface $element)
     {
-        if (!$this->projects->contains($project)) {
-            $this->projects->add($project);
+        if (!$this->elements->contains($element)) {
+            $this->elements->add($element);
 
-            if (!$project->getOrder())
-                $project->setOrder($this);
+            if (!$element->getOrder()) $element->setOrder($this);
         }
 
         return $this;
@@ -115,22 +126,21 @@ class Order implements OrderInterface
     /**
      * @inheritDoc
      */
-    public function removeProject(ProjectInterface $project)
+    public function removeElement(ElementInterface $element)
     {
-        if ($this->projects->contains($project)) {
-            $this->projects->removeElement($project);
+        if ($this->elements->contains($element)) {
+            $this->elements->removeElement($element);
         }
 
         return $this;
     }
 
-
     /**
      * @return ArrayCollection
      */
-    public function getProjects()
+    public function getElements()
     {
-        return $this->projects;
+        return $this->elements;
     }
 
 }
