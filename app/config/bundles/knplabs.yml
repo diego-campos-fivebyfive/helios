@@ -27,9 +27,9 @@ knp_doctrine_behaviors:
 knp_snappy:
     pdf:
         enabled:    true
-        binary:     /home/claudinei/Downloads/wkhtmltox/bin/wkhtmltopdf #"\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\"" for Windows users
+        binary:     %kernel.root_dir%/../web/helpers/wkhtmltox/bin/wkhtmltopdf
         options:    []
     image:
         enabled:    true
-        binary:     /home/claudinei/Downloads/wkhtmltox/bin/wkhtmltoimage #"\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltoimage.exe\"" for Windows users
+        binary:     %kernel.root_dir%/../web/helpers/wkhtmltox/bin/wkhtmltoimage
         options:    []

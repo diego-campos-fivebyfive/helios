@@ -70,6 +70,22 @@ interface ProjectInterface
     public function getDefaults();
 
     /**
+     * @param array $shippingRules
+     * @return ProjectInterface
+     */
+    public function setShippingRules(array $shippingRules);
+
+    /**
+     * @return array
+     */
+    public function getShippingRules();
+
+    /**
+     * @return float
+     */
+    public function getShipping();
+
+    /**
      * @param $infConsumption
      * @return ProjectInterface
      */
@@ -90,17 +106,6 @@ interface ProjectInterface
      * @return float
      */
     public function getInfPower();
-
-    /**
-     * @param $roofType
-     * @return ProjectInterface
-     */
-    public function setRoofType($roofType);
-
-    /**
-     * @return string
-     */
-    public function getRoofType();
 
     /**
      * @param $structureType
@@ -340,6 +345,36 @@ interface ProjectInterface
     /**
      * @return float
      */
+    public function getSalePriceStringBoxes();
+
+    /**
+     * @return float
+     */
+    public function getSalePriceStructures();
+
+    /**
+     * @return float
+     */
+    public function getSalePriceVarieties();
+
+    /**
+     * @return float
+     */
+    public function getSalePriceExtraProducts();
+
+    /**
+     * @return float
+     */
+    public function getSalePriceExtras();
+
+    /**
+     * @return float
+     */
+    public function getSalePriceComponents();
+
+    /**
+     * @return float
+     */
     public function getSalePriceEquipments();
 
     /**
@@ -545,6 +580,22 @@ interface ProjectInterface
     public function getStage();
 
     /**
+     * @param VarietyInterface $transformer
+     * @return ProjectInterface
+     */
+    public function setTransformer(VarietyInterface $transformer);
+
+    /**
+     * @return VarietyInterface
+     */
+    public function getTransformer();
+
+    /**
+     * @return ProjectInterface
+     */
+    public function removeTransformer();
+
+    /**
      * @param ProjectModuleInterface $projectModule
      * @return ProjectInterface
      */
@@ -577,6 +628,11 @@ interface ProjectInterface
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getProjectInverters();
+
+    /**
+     * @return array
+     */
+    public function groupInverters();
 
     /**
      * @param ProjectExtraInterface $projectExtra

@@ -27,7 +27,7 @@
                     Potência
                 {% endif %} </td>
             <td>
-                R$ <span class="costPrice">{{ extra.costPrice }}</span>
+                {{ extra.costPrice|currency }}
                 {% if extra.pricingBy == 1 %}
                     /kWp
                 {% endif %}
@@ -61,11 +61,6 @@
     }
 </style>
 <script>
-    $('.costPrice').each(function(){
-        var val = $(this).html().replace('.',',');
-        $(this).html(val);
-    });
-
 
     $('#extras_table').footable();
     $('[data-update]').on('click', function () {

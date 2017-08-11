@@ -71,21 +71,21 @@
                                             <div class="form-group col-md-6">
                                                 <label> Datasheet (PDF) </label>
                                                 <input type="file" name="dataSheet" accept="application/pdf">
-                                                {#{% if inverter.datasheet %}#}
+                                                {% if structure.datasheet %}
                                                 <span class="label info">
                                                         Este componente já possui datasheet
                                                     </span>
-                                                {# {% endif %}#}
+                                                 {% endif %}
                                             </div>
 
                                             <div class="form-group col-md-6">
                                                 <label> Imagem (JPG) </label>
                                                 <input type="file" name="image" accept="image/jpeg">
-                                                {# {% if inverter.image %}#}
+                                                 {% if structure.image %}
                                                 <span class="label info">
                                                         Este componente já possui imagem
                                                     </span>
-                                                {#{% endif %}#}
+                                                {% endif %}
                                             </div>
                                         </div>
                                     </div>

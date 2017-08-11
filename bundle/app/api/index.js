@@ -7,16 +7,16 @@ const memorial = require('./memorial')
 const product = require('./product')
 const user = require('./user')
 
-const event = {
-  2011.11: account.update,
-  2011.12: memorial.create,
-  2011.13: product.create,
-  2011.1: account.create
+const actions = {
+  account_updated: account.update,
+  memorial_created: memorial.create,
+  product_created: product.create,
+  account_created: account.create
     .then(sicesUser => user.create({ sicesUser }))
 }
 
 router.post('/api/v1/notifications', (({ body, ...request }, response) => {
-  bundler({ ...request, notification: body.body }, response, event[body.callback])
+  bundler({ ...request, notification: body.body }, response, actions[body.callback])
 }))
 
 router.get('/', ((request, response) => {

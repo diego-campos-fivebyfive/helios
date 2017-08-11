@@ -56,6 +56,11 @@ interface MemorialInterface
     public function getStatus();
 
     /**
+     * @return float
+     */
+    public function getTax();
+
+    /**
      * @param RangeInterface $range
      * @return RangeInterface
      */

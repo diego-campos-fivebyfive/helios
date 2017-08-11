@@ -3,8 +3,6 @@
 namespace AppBundle\Entity\Component;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints\DateTime;
-
 
 /**
  * @ORM\Entity
@@ -118,6 +116,14 @@ trait ComponentTrait
     public function getMaker()
     {
         return $this->maker;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPublished()
+    {
+        return false;
     }
 
     /**

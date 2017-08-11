@@ -32,6 +32,9 @@
         .input-group.m-b{
             width: 50%;
         }
+        .btn {
+            margin: 2px;
+        }
     </style>
 
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -70,21 +73,21 @@
                                         <div class="form-group col-md-6">
                                             <label> Datasheet (PDF) </label>
                                             <input type="file" name="dataSheet" accept="application/pdf">
-                                            {#{% if inverter.datasheet %}#}
+                                            {% if stringBox.datasheet %}
                                                 <span class="label info">
                                                     Este componente já possui datasheet
                                                 </span>
-                                           {# {% endif %}#}
+                                            {% endif %}
                                         </div>
 
                                         <div class="form-group col-md-6">
                                             <label> Imagem (JPG) </label>
                                             <input type="file" name="image" accept="image/jpeg">
-                                           {# {% if inverter.image %}#}
+                                            {% if stringBox.image %}
                                                 <span class="label info">
                                                     Este componente já possui imagem
                                                 </span>
-                                            {#{% endif %}#}
+                                            {% endif %}
                                         </div>
 
                                     </div>
@@ -125,11 +128,18 @@
 
                                     </div>
                                 </div>
-
+                                <div class="form-group col-md-6">
+                                    {{ form_label(form.status, 'Ativo') }}
+                                    <br>
+                                    {{ form_widget(form.status) }}
+                                </div>
                                 <div class="form-group">
                                     <button type="submit" name="intention" value="save" class="btn btn-primary pull-right">
                                         <i class="fa fa-save"></i> {{ 'Save'|trans }}
                                     </button>
+                                    <a href="{{ path('structure_index') }}">
+                                        <button class="btn btn-success btn-xd pull-right">{{'Voltar'|trans}}</button>
+                                    </a>
                                 </div>
 
                                 {{ form_end(form) }}

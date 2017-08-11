@@ -3,11 +3,13 @@
 namespace AppBundle\Controller\PublicAccess;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity\Project\Project;
+use AppBundle\Entity\Component\Project;
+use Buzz\Message\Request;
 use Knp\Bundle\SnappyBundle\Snappy\LoggableGenerator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("files")
@@ -16,47 +18,112 @@ class FileController extends AbstractController
 {
 
     /**
-     * @Route("/proposalPDF", name="files_pdf")
+     * @Route("/{id}/pdf", name="files_pdf")
      */
-    public function proposalPDFAction()
+    public function pdfGeneratorAction(Project $project)
     {
-        return $this->render('AppBundle:Proposal:proposalPDF.html.twig', array(
-
-        ));
+        return $this->render('AppBundle:Proposal:pdf.html.twig', [
+            'project' => $project
+        ]);
     }
 
     /**
-     * @Route("/pdfGenerator", name="files_pdfGenerator")
+     * @Route("/inside", name="file_inside")
      */
-    public function testePDFAction()
+    public function insideAction()
     {
 
         $snappy = $this->get('knp_snappy.pdf');
-
         $snappy->setOption('viewport-size', '1280x1024');
 
         $dir = $this->get('kernel')->getRootDir() . '/../storage/';
         $filename = md5(uniqid(time())) . '.pdf';
 
-        // $url = 'https://www.google.com.br/';//
-        $url2 = $this->generateUrl('files_pdf',[],0);
-        //$url2 = 'http://localhost:8000/login';
+        $url = 'http://54.233.150.10/public/files/306/pdf';
 
-        //dump($url); die;
+        try {
+            $snappy->generate($url, $dir . $filename);
 
-        try{
-            $snappy->generate($url2, $dir . $filename);
-        }catch (\Exception $e){
+            die('ok');
+        }
+        catch(\Exception $error) {
+            die($error);
+        }
+    }
 
+
+    /**
+     * @Route("/list", name="files_list")
+     */
+    public function listAction()
+    {
+        $dir = $this->get('kernel')->getRootDir() . '/../storage/';
+        $dh = opendir($dir);
+        while (false !== ($filename = readdir($dh))) {
+            if (substr($filename,-4) == ".pdf") {
+                echo "<a href=\"display/"."$filename\" style='background-color: chartreuse; border: solid 1px black; padding: 1px;'>$filename</a>
+            ------- <a href=\"delete/"."$filename\" style='background-color: #dc4735; border: solid 1px black; padding: 1px;'>Deletar</a><br/><br/>";
+            }
+        }
+        die();
+    }
+
+    /**
+     * @Route("/display/{filename}", name="file_display")
+     */
+    public function gerarAction($filename){
+
+        $dir = $this->get('kernel')->getRootDir() . '/../storage/';
+        $file = $dir.$filename;
+        if(file_exists($file)){
+            return new BinaryFileResponse($file);
+        }else{
+            die("Arquivo não encontrado");
         }
 
+    }
 
+    /**
+     * @Route("/delete/{filename}", name="file_delete")
+     */
+    public function deleteAction($filename){
 
-
-        dump($snappy); die;
+        $dir = $this->get('kernel')->getRootDir() . '/../storage/';
+        $file = $dir.$filename;
+        //$arquivo = "teste.txt";
+        if (!unlink($file))
+        {
+            die("Erro ao deletar $filename");
+        }
+        else
+        {
+            return $this->redirectToRoute('files_list');
+        }
 
     }
-//
+
+
+    /**
+     * @Route("/out", name="file_out")
+     */
+    public function outAction()
+    {
+        $snappy = $this->get('knp_snappy.pdf');
+        $snappy->setOption('viewport-size', '1280x1024');
+
+        $dir = $this->get('kernel')->getRootDir() . '/../storage/';
+        $filename = md5(uniqid(time())) . '.pdf';
+
+        $url = 'http://www.statusimagens.com/whatsapp/imagens';
+
+        try {
+            $snappy->generate($url, $dir . $filename);
+            die('ok');
+        }
+        catch(\Exception $error) {
+            die($error);
+        }
+    }
 
 
     /**
@@ -117,9 +184,7 @@ class FileController extends AbstractController
      */
     public function pdfAction()
     {
-        return $this->render('AppBundle:Proposal:pdf.html.twig', array(
-
-        ));
+        return $this->render('AppBundle:Proposal:pdf.html.twig', array());
     }
 
     /**
@@ -138,11 +203,7 @@ class FileController extends AbstractController
 
         $url = $this->generateUrl('file_proposal_pdf',[],0);
 
-        dump($snappy); die;
-
         $snappy->generate($url, $dir . $filename);
-
-        dump($snappy); die;
     }
 
     /**

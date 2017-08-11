@@ -118,8 +118,7 @@
     <div class="wrapper wrapper-content animated fadeInRight">
 
         <div class="row">
-{#
-            {{ knp_pagination_filter(pagination, {'c.model, m.name':''}) }}#}
+            {{ knp_pagination_filter(pagination, {'s.description, s.code, s.inputs, s.outputs, s.fuses':''}) }}
 
             <div class="col-md-2">
                 <a href="{{ path(_route, _route_params) }}" class="btn btn-default btn-block">
@@ -130,7 +129,7 @@
 
         <div class="row" id="real-content">
 
-            <div class="col-md-12">
+            <div class="{{ not is_grid ? 'col-md-12' }}">
 
                 {% if is_grid %}
 
@@ -140,7 +139,7 @@
                             <div class="ibox">
                                 <div class="ibox-content product-box">
 
-                                    <div class="product-imitation" {#style="background-image: url({{ stringBox.image|componentFilePath }})"#}>
+                                    <div class="product-imitation" style="background-image: url({{ stringBox.image|componentFilePath }}); background-repeat: no-repeat;">
                                     </div>
                                     <div class="product-desc">
 
@@ -210,7 +209,7 @@
                                     <td> {{ stringBox.inputs }} </td>
                                     <td> {{ stringBox.outputs }} </td>
                                     <td> {{ stringBox.fuses }} </td>
-                                    <td>
+                                    <td class="col-md-3">
 
                                         <div class="btn-group btn-group-sm btn-group-justified">
                                             <a data-url="{{ path('stringbox_show', { 'id': stringBox.id }) }}"

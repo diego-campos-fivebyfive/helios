@@ -2,17 +2,24 @@
 
 namespace AppBundle\Form\Component;
 
+use AppBundle\Entity\AccountInterface;
+use AppBundle\Entity\Category;
 use AppBundle\Entity\Component\Maker;
 use AppBundle\Entity\Component\Module;
 use AppBundle\Entity\Component\Project;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class GeneratorType extends AbstractType
 {
+    const INIT = 'init';
+    const CHANGE = 'change';
+
     /**
      * @var EntityManagerInterface
      */
@@ -31,7 +38,33 @@ class GeneratorType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $member = $options['member'];
+        $customers = $member->getAllowedContacts()->toArray();
+
         $builder
+            ->add('address')
+            ->add('customer', ChoiceType::class, [
+                'choices' => $this->createChoices($customers)
+            ])
+            ->add('stage', ChoiceType::class, [
+                'choices' => $this->loadStages($member->getAccount())
+            ])
+            ->add('grid_voltage', ChoiceType::class, [
+                'choices' => [
+                    '127/220' => '127/220',
+                    '220/380' => '220/380'
+                ]
+            ])
+            ->add('grid_phase_number', ChoiceType::class, [
+                'choices' => [
+                    'Monophasic' => 'Monophasic',
+                    'Biphasic' => 'Biphasic',
+                    'Triphasic' => 'Triphasic'
+                ]
+            ])
+            ->add('use_transformer', CheckboxType::class, [
+                'required' => false
+            ])
             ->add('power', MoneyType::class, [
                 'currency' => false,
             ])
@@ -58,8 +91,28 @@ class GeneratorType extends AbstractType
             ])
             ->add('string_box_maker', ChoiceType::class, [
                 'choices' => $this->getStringBoxMakers()
-            ])
-        ;
+            ]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'status' => self::CHANGE,
+            'member' => null
+        ]);
+    }
+
+    private function loadStages(AccountInterface $account)
+    {
+        $stages = $this->em->getRepository(Category::class)->findBy(
+            ['account' => $account, 'context' => Category::CONTEXT_SALE_STAGE],
+            ['position' => 'asc']
+        );
+
+        return $this->createChoices($stages);
     }
 
     /**
@@ -110,12 +163,12 @@ class GeneratorType extends AbstractType
      */
     private function createChoices(array $data = [])
     {
-        $ids = array_map(function($entity){
+        $ids = array_map(function ($entity) {
             return $entity->getId();
         }, $data);
 
-        $labels = array_map(function($entity){
-            return (string) $entity;
+        $labels = array_map(function ($entity) {
+            return (string)$entity;
         }, $data);
 
         $choices = array_combine($ids, $labels);

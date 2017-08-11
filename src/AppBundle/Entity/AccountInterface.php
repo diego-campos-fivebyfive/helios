@@ -25,6 +25,17 @@ interface AccountInterface
     public function getId();
 
     /**
+     * @param $level
+     * @return AccountInterface
+     */
+    public function setLevel($level);
+
+    /**
+     * @return string
+     */
+    public function getLevel();
+
+    /**
      * Checks whether the account is free or has a linked subscription
      *
      * @return bool

@@ -53,6 +53,12 @@ interface ProjectExtraInterface
     public function getProject();
 
     /**
+     * @param $unitCostPrice
+     * @return float
+     */
+    public function setUnitCostPrice($unitCostPrice);
+
+    /**
      * @return float
      */
     public function getUnitCostPrice();

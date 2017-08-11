@@ -12,6 +12,7 @@ use AppBundle\Entity\UserInterface;
 use AppBundle\Form\Extra\AccountRegisterType;
 use AppBundle\Form\Extra\PreRegisterType;
 use AppBundle\Model\Document\Account;
+use Doctrine\DBAL\Schema\View;
 use FOS\UserBundle\Event\FilterUserResponseEvent;
 use FOS\UserBundle\FOSUserEvents;
 use Symfony\Component\Form\FormError;
@@ -69,40 +70,73 @@ class RegisterController extends AbstractController
      * @Route("/", name="pre_register")
      */
     public function preRegisterAction(Request $request){
+
+        $getErrorArgs = function($form)
+        {
+            return [
+                'message' => $form->getErrors(true),
+                'view'=> $form->createView()
+            ];
+        };
+
+        $throwError = function($error)
+        {
+            return $this->render('register.pre_register', [
+                'errors' => $error['message'],
+                'form' => $error['view']
+            ]);
+        };
+
+        $findEmailAccount = function($email, $account)
+        {
+            return $account->findOneBy([
+                'context' => 'account',
+                'email' => $email
+            ]);
+        };
+
+        $findEmailMember = function($email, $account)
+        {
+            return $account->findOneBy([
+                'context' => 'member',
+                'email' => $email
+            ]);
+        };
+
+        $findEmailUser = function($email, $user)
+        {
+            return $user->findUserByEmail($email);
+        };
+
+        /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+        $userManager = $this->get('fos_user.user_manager');
         $accountManager = $this->getCustomerManager();
 
         $form = $this->createForm(PreRegisterType::class);
         $form->handleRequest($request);
 
         if (!$form->isSubmitted() || !$form->isValid()) {
-
-            return $this->render('register.pre_register', [
-                'form' => $form->createView(),
-                'errors' => $form->getErrors(true)
-            ]);
+            $error = $getErrorArgs($form);
+            return $throwError($error);
         }
 
         $data = $form->getData();
+
+        if (
+            $findEmailAccount($data['email'], $accountManager) ||
+            $findEmailMember($data['email'], $accountManager) ||
+            $findEmailUser($data['email'], $userManager)
+        ) {
+            $errorMessage = new FormError('E-mail já Cadastrado');
+            $form->addError($errorMessage);
+            $error = $getErrorArgs($form);
+            return $throwError($error);
+        }
 
         /** @var AccountInterface $account */
         $account = $accountManager->create();
         /** @var MemberInterface $member */
         $member = $accountManager->create();
-
-        /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
-        $userManager = $this->get('fos_user.user_manager');
-        $user = $userManager->createUser();
-        $user->setEmail($data['email'])
-            ->setUsername($data['email'])
-            ->setPlainPassword(uniqid())
-            ->addRole(UserInterface::ROLE_OWNER_MASTER);
-
-        $member->setConfirmationToken($this->getTokenGenerator()->generateToken())
-            ->setFirstname($data['contact'])
-            ->setPhone($data['phone'])
-            ->setEmail($data['email'])
-            ->setContext(BusinessInterface::CONTEXT_MEMBER)
-            ->setUser($user);
 
         $account->setConfirmationToken($this->getTokenGenerator()->generateToken())
             ->setFirstName($data['firstname'])
@@ -118,14 +152,29 @@ class RegisterController extends AbstractController
             ->setPostcode($data['postcode'])
             ->setContext(BusinessInterface::CONTEXT_ACCOUNT);
         $member->setAccount($account);
+
+        $user = $userManager->createUser();
+        $user->setEmail($data['email'])
+            ->setUsername($data['email'])
+            ->setPlainPassword(uniqid())
+            ->addRole(UserInterface::ROLE_OWNER_MASTER);
+
+        $member->setConfirmationToken($this->getTokenGenerator()->generateToken())
+            ->setFirstname($data['contact'])
+            ->setPhone($data['phone'])
+            ->setEmail($data['email'])
+            ->setContext(BusinessInterface::CONTEXT_MEMBER)
+            ->setUser($user);
+
         $accountManager->save($account);
 
         $this->get('notifier')->notify([
-            'callback' => '206',
-            'body' => ['id' => $account->getId()]
+            'Evento' => '206',
+            'Callback' => 'account_created',
+            'Id' => $account->getId()
         ]);
 
-        $this->setNotice('Cadastro realizado com sucesso, verifique seu e-mail!');
+        //$this->setNotice('Cadastro realizado com sucesso, verifique seu e-mail!');
 
         return $this->redirectToRoute('app_register_link');
     }

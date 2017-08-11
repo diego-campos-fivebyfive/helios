@@ -4,7 +4,6 @@ namespace AppBundle\Service\ProjectGenerator;
 
 use AppBundle\Entity\Component\InverterInterface;
 use AppBundle\Entity\Component\MakerInterface;
-use AppBundle\Entity\Component\ModuleInterface;
 use AppBundle\Entity\Component\ProjectArea;
 use AppBundle\Entity\Component\ProjectExtra;
 use AppBundle\Entity\Component\ProjectInterface;
@@ -12,6 +11,7 @@ use AppBundle\Entity\Component\ProjectInverter;
 use AppBundle\Entity\Component\ProjectModule;
 use AppBundle\Entity\Component\ProjectStringBox;
 use AppBundle\Entity\Component\ProjectStructure;
+use AppBundle\Entity\Component\VarietyInterface;
 use AppBundle\Service\ProjectProcessor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -39,7 +39,7 @@ class ProjectGenerator
     /**
      * @var bool
      */
-    private $attempts = true;
+    private $attempts = 0;
 
     /**
      * @var \AppBundle\Manager\ProjectManager
@@ -73,15 +73,21 @@ class ProjectGenerator
     public function loadDefaults(array $defaults = [])
     {
         return array_merge([
+            'address' => null,
             'latitude' => null,
             'longitude' => null,
+            'customer' => null,
+            'stage' => null,
             'roof_type' => 'ROOF_ROMAN_AMERICAN',
             'source' => 'consumption',
             'power' => 0,
             'consumption' => 0,
+            'use_transformer' => true,
+            'grid_voltage' => '127/220',
+            'grid_phase_number' => 'Biphasic',
             'module' => 32433,
             'inverter_maker' => 60627,
-            'structure_maker' => 61211,
+            'structure_maker' => StructureCalculator::DEFAULT_STRUCTURE_MAKER,
             'string_box_maker' => 61209
         ], $defaults);
     }
@@ -103,6 +109,7 @@ class ProjectGenerator
         $defaults = $this->project->getDefaults();
 
         // ESTIMATE POWER
+        $defaults['inf_power'] = $defaults['power'];
         if('consumption' == $defaults['source']){
             $estimator = $this->container->get('power_estimator');
             $power = $estimator->estimate($defaults['consumption'], $defaults['latitude'], $defaults['longitude']);
@@ -134,6 +141,9 @@ class ProjectGenerator
         $this->generateStringBoxes($this->project);
 
         // SAVING
+        $defaults['power_oscillation'] = round($defaults['inf_power'] / $project->getPower(), 2);
+
+        $project->setDefaults($defaults);
         $this->autoSave = true;
         $this->save($this->project);
 
@@ -226,8 +236,6 @@ class ProjectGenerator
     {
         $defaults = $project->getDefaults();
 
-        $maker = $this->manager('maker')->find($defaults['inverter_maker']);
-
         $this->resetInverters($project);
 
         /** @var \AppBundle\Manager\InverterManager $manager */
@@ -235,16 +243,21 @@ class ProjectGenerator
 
         $loader = new InverterLoader($manager);
 
-        $power = $defaults['power'];
+        $inverters = $loader->load($defaults);
 
-        $inverters = $loader->load($power, $maker);
-
+        $powerTransformer = 0;
         foreach ($inverters as $inverter){
 
             $quantity = $inverter->quantity;
 
             if(!$inverter instanceof InverterInterface) {
                 $inverter = $manager->find($inverter->id);
+            }
+
+            if(3 == $inverter->getPhases()) {
+                if($defaults['voltage'] != $inverter->getPhaseVoltage()) {
+                    $powerTransformer += $inverter->getNominalPower() * $quantity;
+                }
             }
 
             for($i = 0; $i < $quantity; $i++) {
@@ -257,6 +270,10 @@ class ProjectGenerator
                 $project->addProjectInverter($projectInverter);
             }
         }
+
+        $project->setDefaults($defaults);
+
+        $this->resolveTransformer($project, $powerTransformer);
 
         // INVERTER COMBINATIONS
         Combiner::combine($project);
@@ -310,20 +327,8 @@ class ProjectGenerator
             }
 
             $projectInverter
-                ->setLoss(10)
+                ->setLoss(15)
                 ->setOperation($mppt);
-        }
-
-        if(($project->getPower() * .75) >= $totalInvertersPower){
-
-            $this->reset($project);
-
-            $defaults = $project->getDefaults();
-            $defaults['power'] += .1;
-
-            $project->setDefaults($defaults);
-
-            $this->generate();
         }
 
         $this->generateGroups($project);
@@ -640,8 +645,16 @@ class ProjectGenerator
     {
         $manager = $this->manager('project_variety');
         foreach ($project->getProjectVarieties() as $projectVariety){
-            $project->removeProjectVariety($projectVariety);
-            $manager->delete($projectVariety, !$project->getProjectVarieties()->next());
+            /**
+             * TODO
+             * Este processo é temporário
+             * Em breve o tratamento de transformadores e outras variedades será
+             * direcionado para outro processo
+             */
+            if(VarietyInterface::TYPE_TRANSFORMER != $projectVariety->getVariety()->getType() || $projectVariety->getId()) {
+                $project->removeProjectVariety($projectVariety);
+                $manager->delete($projectVariety, !$project->getProjectVarieties()->next());
+            }
         }
 
         return $this;
@@ -663,159 +676,32 @@ class ProjectGenerator
     }
 
     /**
-     * @param array $data
-     * @return ProjectInterface
+     * @param ProjectInterface $project
+     * @param $power
      */
-    public function fromArray(array $data)
+    public function resolveTransformer(ProjectInterface $project, $power)
     {
-        $inverters = $this->findByIds('inverter', array_keys($data['inverters']));
-        $modules = $this->findByIds('module', array_keys($data['modules']));
-        $stringBoxes = $this->findByIds('stringBox', array_keys($data['string_boxes']));
+        $defaults = $project->getDefaults();
 
-        $structures = [];
-        if($this->hasData($data, 'structures')) {
-            $structures = $this->findByIds('structure', array_keys($data['structures']));
-        }
+        if($power > 0 && $defaults['use_transformer']){
 
-        $extras = [];
-        if($this->hasData($data, 'extras')) {
-            $extras = $this->findByIds('extra', array_keys($data['extras']));
-        }
+            /** @var \AppBundle\Manager\VarietyManager $manager */
+            $manager = $this->manager('variety');
 
-        $manager = $this->manager('project');
+            $loader = new TransformerLoader($manager);
 
-        /** @var \AppBundle\Entity\Component\ProjectInterface $project */
-        $project = $this->project ? $this->project : $manager->create();
+            $transformer = $loader->load($power);
 
-        foreach($inverters as $inverter){
-            $projectInverter = new ProjectInverter();
-            $projectInverter
-                ->setQuantity($data['inverters'][$inverter->getId()])
-                ->setProject($project)
-                ->setInverter($inverter)
-            ;
-        }
-
-        foreach ($modules as $module){
-            $projectModule = new ProjectModule();
-            $projectModule
-                ->setQuantity($data['modules'][$module->getId()])
-                ->setProject($project)
-                ->setModule($module)
-            ;
-        }
-
-        foreach($stringBoxes as $stringBox){
-            $projectStringBox = new ProjectStringBox();
-            $projectStringBox
-                ->setQuantity($data['string_boxes'][$stringBox->getId()])
-                ->setProject($project)
-                ->setStringBox($stringBox)
-            ;
-        }
-
-        foreach($structures as $structure){
-
-            $projectStructure = new ProjectStructure();
-            $projectStructure
-                ->setQuantity($data['structures'][$structure->getId()])
-                ->setProject($project)
-                ->setStructure($structure)
-            ;
-
-        }
-
-        foreach ($extras as $extra) {
-
-            $projectExtra = new ProjectExtra();
-            $projectExtra
-                ->setQuantity($data['extras'][$extra->getId()])
-                ->setProject($project)
-                ->setExtra($extra)
-            ;
-        }
-
-        // TODO - CHECK PROPERTIES
-        foreach ($data as $property => $value){
-            $setter = 'set' . ucfirst($property);
-            $getter = 'get' . ucfirst($property);
-            if(method_exists($project, $getter)) {
-                if (!$project->$getter()) {
-                    $project->$setter($value);
-                }
+            if($transformer instanceof VarietyInterface){
+                $project->setTransformer($transformer);
             }
-        }
-        
-        $manager->save($project);
 
-        return $project;
-    }
+        }else{
 
-    /**
-     * @param array $data
-     * @return \AppBundle\Entity\Component\ProjectInterface
-     */
-    public function fromCombination(array $data)
-    {
-        $module = $data['module'];
-        $inverterData = [];
-        $moduleCount  = 0;
-        foreach ($data['inverters'] as $inverter){
-            $inverterData[$inverter['id']] = $inverter['quantity'];
-            $moduleCount += ($inverter['serial'] * $inverter['parallel'] * $inverter['quantity']);
+            $project->removeTransformer();
         }
 
-        $stringBoxes = [];
-        foreach ($data['string_boxes'] as $stringBox){
-            $stringBoxes[$stringBox['id']] = $stringBox['quantity'];
-        }
-
-        return $this->fromArray([
-            'inverters' => $inverterData,
-            'string_boxes' => $stringBoxes,
-            'modules' => [
-                $module->getId() => $moduleCount
-            ],
-            'structures' => [],
-            'number' => rand(35, 258),
-            //'address' => 'The Address',
-            //'latitude' => $data['latitude'],
-            //'longitude' => $data['longitude']
-        ]);
-    }
-
-    /**
-     * @param $target
-     * @param array $ids
-     * @return array
-     */
-    private function findByIds($target, array $ids)
-    {
-        $alias = substr($target, 0, 1);
-        $class = 'AppBundle\Entity\Component\\' . ucfirst($target);
-
-        $qb = $this->getQueryBuilder($target, $alias, $class);
-
-        $qb->where($qb->expr()->in(sprintf('%s.id', $alias), $ids));
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * @param $id
-     * @param $alias
-     * @param $class
-     * @return \Doctrine\ORM\QueryBuilder
-     */
-    private function getQueryBuilder($id, $alias, $class)
-    {
-        return $this
-            ->manager($id)
-            ->getEntityManager()
-            ->createQueryBuilder()
-            ->select($alias)
-            ->from($class, $alias)
-        ;
+        $this->save($project);
     }
 
     /**
@@ -859,15 +745,8 @@ class ProjectGenerator
     }
 
     /**
-     * @param array $data
-     * @param $string
-     * @return bool
+     * @param $message
      */
-    private function hasData(array $data, $string)
-    {
-        return array_key_exists($string, $data) && !empty($data[$string]);
-    }
-
     private function exception($message)
     {
         throw new \InvalidArgumentException($message);

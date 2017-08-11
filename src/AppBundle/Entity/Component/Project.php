@@ -70,14 +70,14 @@ class Project implements ProjectInterface
      *
      * @ORM\Column(type="json", nullable=true)
      */
-    private $charts;
+    private $shippingRules;
 
     /**
-     * @var string
+     * @var array
      *
-     * @ORM\Column(type="string", length=25)
+     * @ORM\Column(type="json", nullable=true)
      */
-    private $roofType;
+    private $charts;
 
     /**
      * @var string
@@ -342,22 +342,23 @@ class Project implements ProjectInterface
      */
     public function __construct()
     {
-        $this->invoicePriceStrategy  = self::PRICE_STRATEGY_ABSOLUTE;
+        $this->invoicePriceStrategy = self::PRICE_STRATEGY_ABSOLUTE;
         $this->deliveryPriceStrategy = self::PRICE_STRATEGY_ABSOLUTE;
-        $this->projectModules        = new ArrayCollection();
-        $this->projectInverters      = new ArrayCollection();
-        $this->projectStructures     = new ArrayCollection();
-        $this->projectVarieties      = new ArrayCollection();
-        $this->projectExtras         = new ArrayCollection();
-        $this->projectStringBoxes    = new ArrayCollection();
-        $this->projectTaxes          = new ArrayCollection();
-        $this->invoiceBasePrice      = 0;
-        $this->deliveryBasePrice     = 0;
-        $this->taxPercent            = 0;
-        $this->charts                = [];
-        $this->defaults              = [];
-        $this->metadata              = [];
-        $this->accumulatedCash       = [];
+        $this->projectModules = new ArrayCollection();
+        $this->projectInverters = new ArrayCollection();
+        $this->projectStructures = new ArrayCollection();
+        $this->projectVarieties = new ArrayCollection();
+        $this->projectExtras = new ArrayCollection();
+        $this->projectStringBoxes = new ArrayCollection();
+        $this->projectTaxes = new ArrayCollection();
+        $this->invoiceBasePrice = 0;
+        $this->deliveryBasePrice = 0;
+        $this->taxPercent = 0;
+        $this->charts = [];
+        $this->defaults = [];
+        $this->shippingRules = [];
+        $this->metadata = [];
+        $this->accumulatedCash = [];
         //REMOVE FIELDS
         $this->infPower = 0;
     }
@@ -398,6 +399,9 @@ class Project implements ProjectInterface
         $defaults['power'] = (float) $defaults['power'];
         $defaults['consumption'] = (float) $defaults['consumption'];
 
+        $this->latitude = $defaults['latitude'];
+        $this->longitude = $defaults['longitude'];
+
         $this->defaults = $defaults;
 
         return $this;
@@ -409,6 +413,33 @@ class Project implements ProjectInterface
     public function getDefaults()
     {
         return $this->defaults;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setShippingRules(array $shippingRules)
+    {
+        $this->shippingRules = $shippingRules;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getShippingRules()
+    {
+        return $this->shippingRules;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getShipping()
+    {
+        return  array_key_exists('shipping', $this->shippingRules)
+            ? $this->shippingRules['shipping'] : 0 ;
     }
 
     /**
@@ -463,24 +494,6 @@ class Project implements ProjectInterface
     public function getInfPower()
     {
         return $this->infPower;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setRoofType($roofType)
-    {
-        $this->roofType = $roofType;
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getRoofType()
-    {
-        return $this->roofType;
     }
 
     /**
@@ -991,9 +1004,91 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
+    public function getSalePriceStringBoxes()
+    {
+        $price = 0;
+        /** @var ProjectElementInterface $projectStringBox */
+        foreach ($this->projectStringBoxes as $projectStringBox){
+            $price += $projectStringBox->getTotalSalePrice();
+        }
+
+        return $price;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSalePriceStructures()
+    {
+        $price = 0;
+        /** @var ProjectElementInterface $projectStructure */
+        foreach ($this->projectStructures as $projectStructure){
+            $price += $projectStructure->getTotalSalePrice();
+        }
+
+        return $price;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSalePriceVarieties()
+    {
+        $price = 0;
+        /** @var ProjectElementInterface $projectVariety */
+        foreach ($this->projectVarieties as $projectVariety){
+            $price += $projectVariety->getTotalSalePrice();
+        }
+
+        return $price;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSalePriceExtraProducts()
+    {
+        $price = 0;
+        /** @var ProjectElementInterface $extraProduct */
+        foreach ($this->getProjectExtraProducts() as $extraProduct){
+            $price += $extraProduct->getTotalSalePrice();
+        }
+
+        return $price;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSalePriceExtras()
+    {
+        $price = 0;
+        /** @var ProjectElementInterface $projectExtra */
+        foreach ($this->getProjectExtras() as $projectExtra){
+            $price += $projectExtra->getTotalSalePrice();
+        }
+
+        return $price;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSalePriceComponents()
+    {
+        return $this->getSalePriceInverters()
+            + $this->getSalePriceModules()
+            + $this->getSalePriceStringBoxes()
+            + $this->getSalePriceStructures()
+            + $this->getSalePriceVarieties();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getSalePriceEquipments()
     {
-        return $this->getSalePriceInverters() + $this->getSalePriceModules();
+        return $this->getSalePriceComponents() + $this->getSalePriceExtraProducts();
     }
 
     /**
@@ -1110,8 +1205,9 @@ class Project implements ProjectInterface
      */
     public function getAnnualProduction()
     {
-        if (null != $kwhYear = $this->getMetadata('kwh_year'))
-            return $kwhYear;
+        $metadata = $this->getMetadata();
+        if (array_key_exists('total',$metadata))
+            return $metadata['total']['kwh_year'];
 
         return 0;
     }
@@ -1289,6 +1385,48 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
+    public function setTransformer(VarietyInterface $transformer)
+    {
+        if(VarietyInterface::TYPE_TRANSFORMER == $transformer->getType()){
+
+            $this->removeTransformer();
+
+            $projectVariety = new ProjectVariety();
+            $projectVariety
+                ->setVariety($transformer)
+                ->setQuantity(1);
+
+            $this->addProjectVariety($projectVariety);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTransformer()
+    {
+        return $this->projectVarieties->filter(function(ProjectVarietyInterface $projectVariety){
+            return VarietyInterface::TYPE_TRANSFORMER == $projectVariety->getVariety()->getType();
+        })->first();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeTransformer()
+    {
+        if(null != $transformer = $this->getTransformer()){
+            $this->removeProjectVariety($transformer);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function addProjectModule(ProjectModuleInterface $projectModule)
     {
         if(!$this->projectModules->contains($projectModule)){
@@ -1356,6 +1494,32 @@ class Project implements ProjectInterface
     public function getProjectInverters()
     {
         return $this->projectInverters;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function groupInverters()
+    {
+        $collection = [];
+        foreach ($this->projectInverters as $projectInverter){
+
+            /** @var InverterInterface $inverter */
+            $inverter = $projectInverter->getInverter();
+            $id = $inverter->getId();
+
+            if(array_key_exists($id, $collection)){
+                $collection[$id]['quantity'] += $projectInverter->getQuantity();
+            }else{
+                $collection[$inverter->getId()] = [
+                    'inverter' => $inverter,
+                    'projectInverter' => $projectInverter,
+                    'quantity' => $projectInverter->getQuantity()
+                ];
+            }
+        }
+
+        return $collection;
     }
 
     /**

@@ -74,7 +74,7 @@
 </div>
 
 <div class="row" id="real-content">
-    <div class="col-md-12">
+    <div class="{{ not is_grid ? 'col-md-12' }}">
         {% if is_grid %}
 
             {% for structure in structures %}
@@ -83,7 +83,7 @@
                     <div class="ibox">
                         <div class="ibox-content product-box">
 
-                            <div class="product-imitation" {#style="background-image: url({{ structure.image|componentFilePath }})"#}>
+                            <div class="product-imitation" style="background-image: url({{ structure.image|componentFilePath }}); background-repeat: no-repeat;">
                             </div>
                             <div class="product-desc">
 
@@ -129,8 +129,6 @@
                     <thead>
                     <tr>
                         <td>Código</td>
-                        <td>Tipo</td>
-                        <td>Sub Tipo</td>
                         <td>Descrição</td>
                         <td>Tamanho</td>
                         <td class="col-md-2">Ações</td>
@@ -140,39 +138,42 @@
                     {% for structure in structures %}
                         <tr>
                             <td>{{ structure.code }}</td>
-                            <td>{{ structure.type }}</td>
-                            <td>{{ structure.subtype }}</td>
                             <td>{{ structure.description }}</td>
                             <td>{{ structure.size }}</td>
-                            <td class="btn-group btn-group-md btn-group-justified">
-                                <a data-url="{{ path('structure_preview', { id: structure.id }) }}"
-                                   data-toggle="modal"
-                                   data-target="#modal_details"
-                                   class="btn btn-default">
-                                    <i class="fa fa-eye"></i> {{ 'View'|trans }}
-                                </a>
-                                {% if member.isAdmin %}
-                                <a href="{{ path('structure_update', { id: structure.id }) }}" class="btn btn-warning">
-                                    {{'Edit'|trans}}
-                                </a>
-                                {% endif %}
+                            <td  class="col-md-3">
+                                <div class="btn-group btn-group-sm btn-group-justified">
+                                    <a data-url="{{ path('structure_preview', { id: structure.id }) }}"
+                                       data-toggle="modal"
+                                       data-target="#modal_details"
+                                       class="btn btn-default">
+                                        <i class="fa fa-eye"></i> {{ 'View'|trans }}
+                                    </a>
+
+                                    {% if member.isAdmin %}
+                                        <a href="{{ path('structure_update', { id: structure.id }) }}"
+                                           class="btn btn-warning">
+                                            <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
+                                        </a>
+                                    {% endif %}
+
+                                </div>
                             </td>
                         </tr>
                     {% endfor %}
                     </tbody>
-                    <tfoot>
-                    <tr>
-                        <td colspan="5">
-                            {{ knp_pagination_render(pagination) }}
-                        </td>
-                    </tr>
-                    </tfoot>
                 </table>
             </div>
         </div>
 
         {% endif %}
-
     </div>
 </div>
+
+
+<div class="row text-center">
+    <div class="btn-group">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+</div>
+
 {% include view('structure.script_index') %}

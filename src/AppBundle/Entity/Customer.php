@@ -1532,5 +1532,31 @@ class Customer extends AbstractCustomer
             $this->unsupportedContextException();
         }
     }
+
+    protected function ensureContext($context)
+    {
+        if($this->context != $context){
+            $this->unsupportedContextException();
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLevel()
+    {
+        return $this->level;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setLevel($level)
+    {
+        $this->level = $level;
+    }
+
+
+
 }
 

@@ -12,6 +12,7 @@
 namespace AppBundle\Service\ProjectGenerator;
 
 use AppBundle\Entity\Component\ProjectElementInterface;
+use AppBundle\Entity\Component\ProjectExtraInterface;
 use AppBundle\Entity\Component\ProjectInterface;
 
 /**
@@ -44,20 +45,25 @@ class SalePrice
             self::resolveUnitPriceComponent($projectInverter, $costEquipments, $saleEquipments);
         }
 
+        foreach ($project->getProjectStringBoxes() as $projectStringBox){
+            self::resolveUnitPriceComponent($projectStringBox, $costEquipments, $saleEquipments);
+        }
+
         foreach ($project->getProjectStructures() as $projectStructure){
             self::resolveUnitPriceComponent($projectStructure, $costEquipments, $saleEquipments);
+        }
+
+        foreach ($project->getProjectVarieties() as $projectVariety){
+            self::resolveUnitPriceComponent($projectVariety, $costEquipments, $saleEquipments);
         }
 
         /** @var \AppBundle\Entity\Component\ProjectExtraInterface $projectExtra */
         foreach ($project->getProjectExtras() as $projectExtra){
 
-            $price = $projectExtra->getUnitCostPrice();
             $cost = $projectExtra->isProduct() ? $costEquipments : $costServices ;
             $sale = $projectExtra->isProduct() ? $saleEquipments : $saleServices ;
-            $percent = $price / $cost;
-            $unitSalePrice = $percent * $sale;
 
-            $projectExtra->setUnitSalePrice($unitSalePrice);
+            self::resolveUnitPriceExtra($projectExtra, $cost, $sale);
         }
 
         // TODO: Calculate delivery here!
@@ -75,5 +81,19 @@ class SalePrice
         $unitSalePrice = $percent * $saleEquipments;
 
         $component->setUnitSalePrice($unitSalePrice);
+    }
+
+    /**
+     * @param ProjectExtraInterface $extra
+     * @param $cost
+     * @param $sale
+     */
+    private static function resolveUnitPriceExtra(ProjectExtraInterface $extra, $cost, $sale)
+    {
+        $unitCostPrice = $extra->getUnitCostPrice();
+        $percent = $unitCostPrice / $cost;
+        $unitSale = $percent * $sale;
+
+        $extra->setUnitSalePrice($unitSale);
     }
 }

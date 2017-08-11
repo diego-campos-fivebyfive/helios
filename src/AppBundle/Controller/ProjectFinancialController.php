@@ -4,13 +4,12 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Component\ProjectExtra;
 use AppBundle\Entity\Component\ProjectTax;
-use AppBundle\Entity\Financial\ProjectFinancialInterface;
-use AppBundle\Entity\Financial\ProjectFinancialManager;
-use AppBundle\Entity\Financial\Tax;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Form\Component\ProjectExtraType;
 use AppBundle\Form\Financial\FinancialType;
+use AppBundle\Form\Financial\ShippingType;
 use AppBundle\Form\Financial\TaxType;
+use AppBundle\Service\ProjectGenerator\ShippingRuler;
 use AppBundle\Service\Support\Project\FinancialAnalyzer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,9 +28,9 @@ class ProjectFinancialController extends AbstractController
      * @Breadcrumb("Análise Financeira - N&deg; {project.number}")
      * @Route("/{id}", name="project_financial")
      */
-    public function configAction(Request $request, Project $project)
+    public function configAction(Project $project)
     {
-        $generator = $this->get('project_generator');
+        $generator = $this->getGenerator();
 
         $generator->pricing($project);
 
@@ -41,9 +40,54 @@ class ProjectFinancialController extends AbstractController
 
         return $this->render('project.financial', [
             'project' => $project,
-            //'financial' => $financial,
             'form' => $form->createView(),
             'form_tax' => $formTax->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/shipping", name="financial_shipping")
+     */
+    public function shippingAction(Request $request, Project $project)
+    {
+        $rule = $project->getShippingRules();
+        $form = $this->createForm(ShippingType::class, $rule);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            $rule = $form->getData();
+
+            ShippingType::normalize($rule);
+
+            $rule['price'] = $project->getSalePriceComponents();
+            $rule['power'] = $project->getPower();
+
+            ShippingRuler::apply($rule);
+
+            $project->setShippingRules($rule);
+
+            $this->manager('project')->save($project);
+
+            return $this->json([
+                'shipping' => $project->getShipping()
+            ]);
+        }
+
+        return $this->render('project.financial_shipping', [
+            'project' => $project,
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/final_prices", name="financial_final_prices")
+     */
+    public function getFinalPricesAction(Project $project)
+    {
+        return $this->render('project.financial_prices', [
+            'project' => $project
         ]);
     }
 
@@ -114,7 +158,8 @@ class ProjectFinancialController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
 
-            $this->manager('project')->save($project);
+            $this->manager('project_extra')->save($projectExtra);
+            $this->getGenerator()->pricing($project);
 
             return $this->json([]);
         }
@@ -141,7 +186,7 @@ class ProjectFinancialController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
 
-            $this->manager('project')->save($projectExtra->getProject());
+            $this->getGenerator()->pricing($projectExtra->getProject());
 
             return $this->json([]);
         }
@@ -158,7 +203,7 @@ class ProjectFinancialController extends AbstractController
      * @Route("/extras/{id}/delete", name="financial_extras_delete")
      * @Method("delete")
      */
-    public function deleteExtraAction(Request $request, ProjectExtra $projectExtra)
+    public function deleteExtraAction(ProjectExtra $projectExtra)
     {
         $this->manager('project_extra')->delete($projectExtra);
 
@@ -168,7 +213,7 @@ class ProjectFinancialController extends AbstractController
     /**
      * @Route("/{id}/taxes", name="financial_taxes")
      */
-    public function taxesAction(Request $request, Project $project)
+    public function taxesAction(Project $project)
     {
         return $this->json([
             'content' => $this->renderView('project.financial_taxes', ['project' => $project])
@@ -198,13 +243,8 @@ class ProjectFinancialController extends AbstractController
      * @Route("/tax/{id}/delete", name="financial_tax_delete")
      * @Method("delete")
      */
-    public function deleteTaxAction(Request $request, ProjectTax $tax)
+    public function deleteTaxAction(ProjectTax $tax)
     {
-        // For errors
-        /* return $this->jsonResponse([
-             'error' => 'This is a custom error'
-         ], Response::HTTP_OK);*/
-
         $manager = $this->getDoctrine()->getManager();
 
         $manager->remove($tax);
@@ -214,16 +254,15 @@ class ProjectFinancialController extends AbstractController
     }
 
     /**
+     * @param Request $request
      * @param ProjectTax $tax
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     private function handleTaxApplication(Request $request, ProjectTax $tax)
     {
-        //$financial = $tax->getFinancial();
-
         $project = $tax->getProject();
 
-        /** @var Tax $backupTax */
+        /** @var ProjectTax $backupTax */
         $backupTax = $tax->getId() ?  clone $tax : null ;
 
         $form = $this->createForm(TaxType::class, $tax);
@@ -270,20 +309,10 @@ class ProjectFinancialController extends AbstractController
     }
 
     /**
-     * @param Project $project
-     * @return ProjectFinancialInterface
-     * @throws \Exception
+     * @return object|\AppBundle\Service\ProjectGenerator\ProjectGenerator
      */
-    private function getProjectFinancial(Project $project)
+    private function getGenerator()
     {
-        return $this->getFinancialManager()->fromProject($project);
-    }
-
-    /**
-     * @return ProjectFinancialManager
-     */
-    private function getFinancialManager()
-    {
-        return $financialManager = $this->get('app.project_financial');
+        return $this->get('project_generator');
     }
 }

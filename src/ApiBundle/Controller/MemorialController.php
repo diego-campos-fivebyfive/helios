@@ -16,25 +16,28 @@ class MemorialController extends FOSRestController
         $data = json_decode($request->getContent(), true);
         $dataRanges = $data['range'];
 
+        /** @var Memorial $memorialManager */
         $memorialManager = $this->get('memorial_manager');
         $rangeManager = $this->get('range_manager');
 
+        $currentMemorial = $memorialManager->findOneBy(array(), array('id' => 'DESC'));
+        $currentMemorial->setEndAt(new \DateTime('now'));
+
         foreach ($dataRanges as $ranges) {
-            $startAt = new \DateTime($data['start_at']);
-            $endAt = new \DateTime($data['end_at']);
 
             /** @var Memorial $memorial */
             $memorial = $memorialManager->create();
             $memorial
                 ->setVersion($data['version'])
                 ->setStatus($data['status'])
-                ->setStartAt($startAt)
-                ->setEndAt($endAt);
+                ->setStartAt(new \DateTime('now'));
             $memorialManager->save($memorial);
 
             $markups = $ranges['markups'];
 
-            foreach ($markups as $level => $config) {
+            foreach ($markups as $level) {
+
+                $config = $level['levels'];
 
                 foreach ($config as $item) {
 
@@ -43,11 +46,11 @@ class MemorialController extends FOSRestController
                     $range
                         ->setCode($ranges['code'])
                         ->setMemorial($memorial)
-                        ->setLevel($level)
-                        ->setInitialPower($item['start'])
-                        ->setFinalPower($item['end'])
+                        ->setLevel($item['level'])
+                        ->setInitialPower($level['initial'])
+                        ->setFinalPower($level['final'])
                         ->setMarkup($item['markup'])
-                        ->setPrice($ranges['price']);
+                        ->setPrice($item['price']);
                     $rangeManager->save($range);
                 }
             }

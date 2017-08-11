@@ -20,7 +20,7 @@ $ sudo apt-get install php
 3. Instalando os pacotes do PHP
 
 ```
-$ sudo apt install php-mbstring php-xml php-mysql php-intl
+$ sudo apt install php-mbstring php-xml php-mysql php-intl php-common php-curl
 ```
 
 
@@ -58,5 +58,11 @@ $ sudo apt install composer
 $ sudo apt install git
 ```
 
+8. Instalando o mysql-server
+----------------------------
+
+```
+$ sudo apt install mysql-server
+```
 
 [Voltar](dependencies.md)

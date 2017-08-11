@@ -43,7 +43,7 @@ class StructureController extends AbstractController
         $pagination = $paginator->paginate(
             $qb->getQuery(),
             $request->query->getInt('page', 1),
-            10,
+            'grid' == $request->query->get('display', 'grid') ? 8 : 10,
             ['distinct' => false]
         );
 
@@ -102,9 +102,13 @@ class StructureController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $this->get('component_file_handler')->upload($structure, $request->files);
+
             $manager->save($structure);
 
-            if ($structure->getStatus()) {
+            $message = 'Estrutura atualizada com sucesso!';
+
+            if ($structure->isPublished()) {
                 $this->get('notifier')->notify([
                     'callback' => 'product_validate',
                     'body' => [
@@ -112,9 +116,11 @@ class StructureController extends AbstractController
                         'family' => 'structures'
                     ]
                 ]);
+
+                $message .= 'Publicação executada.';
             }
 
-            $this->setNotice('Estrutura atualizada com sucesso!');
+            $this->setNotice($message);
 
             return $this->redirectToRoute('structure_index');
         }
@@ -141,7 +147,7 @@ class StructureController extends AbstractController
     }
 
     /**
-     * @Breadcrumb("{structure.model}")
+     * @Breadcrumb("{structure.description}")
      * @Route("/{id}/show", name="structure_show")
      */
     public function showAction(Request $request, Structure $structure)

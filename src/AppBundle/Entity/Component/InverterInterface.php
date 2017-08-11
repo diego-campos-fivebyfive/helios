@@ -22,6 +22,11 @@ interface InverterInterface
     const ACTIVE = 1;
 
     /**
+     * @return int
+     */
+    public function getId();
+
+    /**
      * @param $code
      * @return InverterInterface
      */
@@ -187,6 +192,17 @@ interface InverterInterface
     public function getPhases();
 
     /**
+     * @param $phaseVoltage
+     * @return InverterInterface
+     */
+    public function setPhaseVoltage($phaseVoltage);
+
+    /**
+     * @return int
+     */
+    public function getPhaseVoltage();
+
+    /**
      * @param $datasheet
      * @return InverterInterface
      */
@@ -229,6 +245,17 @@ interface InverterInterface
      * @return mixed
      */
     public function getStatus();
+
+    /**
+     * @param $compatibility
+     * @return InverterInterface
+     */
+    public function setCompatibility($compatibility);
+
+    /**
+     * @return int
+     */
+    public function getCompatibility();
 
     /**
      * @return bool

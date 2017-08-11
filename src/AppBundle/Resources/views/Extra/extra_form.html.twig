@@ -1,13 +1,10 @@
 {{ form_start(form,{attr:{enctype:'multipart/form-data', id:'extra'}}) }}
 
-<div class="col-md-12">
+<div class="col-md-12 padding-0">
     <div class="form-group col-md-6">
         <label> Descrição </label>
         {{ form_widget(form.description,{attr:{class:'form-control', rows:'1', 'placeholder':'Item'}}) }}
     </div>
-
-
-
 
     <div class="form-group col-md-2">
         <label> &nbsp; </label>
@@ -23,7 +20,7 @@
         </a>
     </div>
 </div>
-<div class="col-md-12">
+<div class="col-md-12 padding-0">
     <div class="form-group col-md-3">
         {{ form_label(form.type, 'Tipo') }}
         {{ form_widget(form.type,{attr:{class:'form-control'}}) }}

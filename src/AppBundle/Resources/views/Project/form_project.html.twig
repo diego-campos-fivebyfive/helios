@@ -33,7 +33,7 @@
             font-size: 12px;
             width: 175px;
         }
-        #project_address{
+        #generator_address{
             margin-top: 10px;
             width: 90%;
             border-color: #1ab394 !important;
@@ -84,7 +84,20 @@
 
     {% include view('project.common') %}
 
-    {# MODALS AREA - START #}
+    <div class="modal inmodal fade" id="modal_component" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    {% include view('kit.spinner') %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">
+                        {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="modal inmodal fade" id="modal_estimate_power" tabindex="-1" role="dialog"  aria-hidden="true">
         <div class="modal-dialog" style="width: 35rem;">
@@ -235,36 +248,51 @@
                                                 </a>
                                             </div>
                                             <div class="col-md-9" id="block_init">
-                                            <div class="col-md-4">
-                                                {{ form_label(form.roofType, 'Tipo de Telhado') }}
-                                                {{ form_widget(form.roofType,{attr:{class:'form-control'}}) }}
-                                            </div>
-                                            <div class="col-md-4">
-                                                {{ form_label(form.infConsumption, 'Consumo Mensal (kWh)') }}
-                                                {{ form_widget(form.infConsumption,{attr:{class:'form-control'}}) }}
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label>&nbsp;<br></label>
-                                                <button type="submit" data-style="zoom-in" class="btn btn-success btn-md pull-right col-xs-12 ladda-button">
-                                                    <i class="fa fa-save"></i>
-                                                    {{ project.token ? 'Atualizar' : 'Iniciar' }}
-                                                </button>
-                                            </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-4" style="font-size: 12px; margin-top: 1rem;">
+                                                        <label style="display: block;"> &nbsp; </label>
+                                                        {{ form_widget(form.use_transformer) }} &nbsp;
+                                                        {{ form_label(form.use_transformer, 'Desejo incluir transformador se necessário') }}
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        {{ form_label(form.grid_voltage, 'Tensão') }}
+                                                        {{ form_widget(form.grid_voltage,{attr:{class:'form-control'}}) }}
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        {{ form_label(form.grid_phase_number, 'Fases') }}
+                                                        {{ form_widget(form.grid_phase_number,{attr:{class:'form-control'}}) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-4">
+                                                        {{ form_label(form.roof_type, 'Tipo de Telhado') }}
+                                                        {{ form_widget(form.roof_type,{attr:{class:'form-control'}}) }}
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        {{ form_label(form.consumption, 'Consumo Mensal (kWh)') }}
+                                                        {{ form_widget(form.consumption,{attr:{class:'form-control'}}) }}
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>&nbsp;<br></label>
+                                                        <button type="submit" data-style="zoom-in"
+                                                                class="btn btn-success btn-md pull-right col-xs-12 ladda-button">
+                                                            <i class="fa fa-save"></i>
+                                                            {{ project.token ? 'Atualizar' : 'Iniciar' }}
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <div class="form-group hide">
+                                        <div class="hide">
                                             <label class="col-sm-1 control-label">Lat</label>
                                             <div class="col-sm-4">
-                                                {{ form_widget(form.latitude,{'attr':{'class':'form-control'}}) }}
+                                                {{ form_widget(form.latitude,{'attr':{'class':'form-control project-latitude'}}) }}
                                             </div>
                                             <label class="col-sm-1 control-label">Lng</label>
                                             <div class="col-sm-4">
-                                                {{ form_widget(form.longitude,{'attr':{'class':'form-control'}}) }}
+                                                {{ form_widget(form.longitude,{'attr':{'class':'form-control project-longitude'}}) }}
                                             </div>
-                                        </div>
-
-                                        <div class="hide_">
                                             {{ form_rest(form) }}
                                         </div>
 
@@ -498,13 +526,64 @@
             replaceId: function(source){
                 return source.replace(/_id_/g, ProjectManager.project.id);
             },
+            componentDetails: function(){
+
+                var modal_component = $('#modal_component');
+                var modal_body = modal_component.find('.modal-body');
+                var loader = modal_body.html();
+
+                modal_component.on('show.bs.modal', function(event){
+                    var target = $(event.relatedTarget);
+                    var url = target.data('url');
+                    modal_body.html(loader);
+                    Request.send({
+                        url: url,
+                        callback: function(xhr){
+                            modal_body.html(xhr.responseText);
+                        }
+                    });
+                });
+
+            },
+            checker: {
+                gridOptions: function(choicePhase, choiceVoltage){
+
+                    var checkOption = function() {
+                        var phase = choicePhase.val();
+                        var voltage = choiceVoltage.val();
+
+                        if ('Monophasic' == phase) {
+                            choiceVoltage.find('option[value="220/380"]').attr('selected', 'selected');
+                            choiceVoltage.find('option[value="127/220"]').attr('disabled', 'disabled');
+                        } else {
+                            choiceVoltage.find('option').removeAttr('disabled');
+                        }
+
+                        if ('127/220' == voltage) {
+                            choicePhase.find('option[value="Monophasic"]').attr('disabled', 'disabled');
+                        } else {
+                            choicePhase.find('option').removeAttr('disabled');
+                        }
+                    };
+
+                    checkOption();
+
+                    choicePhase.on('change', function(){
+                        checkOption();
+                    });
+
+                    choiceVoltage.on('change', function(){
+                        checkOption();
+                    });
+                }
+            },
             getErrors: function(){
                 var errors = [];
 
-                var customer = $('#project_customer').val();
-                var latitude = $('#project_latitude').val();
-                var longitude = $('#project_longitude').val();
-                var consumption = $('#project_infConsumption').val();
+                var customer = $('#generator_customer').val();
+                var latitude = $('#generator_latitude').val();
+                var longitude = $('#generator_longitude').val();
+                var consumption = parseInt($('#generator_consumption').val());
 
                 if(!customer){
                     errors[errors.length] = 'Selecione um contato.';
@@ -514,7 +593,7 @@
                     errors[errors.length] = 'Informe o endereço do projeto.';
                 }
 
-                if(!consumption){
+                if(!consumption || consumption <= 0){
                     errors[errors.length] = 'Informe o consumo.';
                 }
 
@@ -567,6 +646,21 @@
             loadInverters: function(){
                 ProjectManager.load($('#project_inverters'));
             },
+            loadModalCoordinates: function(){
+                var modal_info = $('#modal_info');
+                var modal_body = modal_info.find('.modal-body');
+                var loader_info = modal_body.html();
+                modal_info.on('show.bs.modal', function(){
+                    modal_body.html(loader_info);
+                    Request.send({
+                        url: '{{ path('coordinate_info') }}',
+                        data: { latitude: $('#project_latitude').val(), longitude: $('#project_longitude').val()},
+                        callback: function(xhr){
+                            modal_body.html(xhr.responseText);
+                        }
+                    });
+                });
+            },
             loadModalInfo: function(){
 
                 var area_operation_inner = $('#area_operation_inner');
@@ -607,6 +701,8 @@
             },
             onSaveProject: function(){
 
+                Project.id = ProjectManager.project.id;
+
                 var project_url = '{{ path('project_update',{id:'_id_'}) }}'.replace(/_id_/g, ProjectManager.project.id);
                 window.history.pushState({}, null, project_url);
                 $('#form_project').attr('action', project_url);
@@ -631,6 +727,7 @@
             },
             onUpdateInverter: function(){
                 ProjectManager.loadComponents();
+                ProjectManager.process();
             },
             beforeUpdateArea: function(){
                 ProjectManager.infoProcess.html('');
@@ -659,18 +756,69 @@
 
                 ProjectManager.configureBlocks();
                 ProjectManager.loadModalInfo();
+                ProjectManager.loadModalCoordinates();
+                ProjectManager.componentDetails();
+                ProjectManager.checker.gridOptions(
+                    $('#generator_grid_phase_number'),
+                    $('#generator_grid_voltage')
+                );
             }
         };
 
         ProjectManager.onLoadManager();
 
+
+        ///-----
+
+        var project_customer = $('#generator_customer');
+        function createCustomerChosen(){
+
+            var buttons = '<div class="btn-group btn-group-sm">' +
+                '<button data-context="person" class="btn btn-xs btn-primary ladda-button" data-style="zoom-out"><i class="fa fa-plus"></i> {{ 'Pessoa'|trans }}</button>' +
+                '<button data-context="company" class="btn btn-xs btn-primary ladda-button" data-style="zoom-out"><i class="fa fa-plus"></i> {{ 'Company'|trans }}</button>' +
+                '</div>';
+
+            var contact_url = '{{ path('contact_fast_create',{context:'_ctx_'}) }}';
+
+            project_customer.chosen({
+                width: '100%',
+                no_results_text: buttons
+            }).on('chosen:no_results', function (event, params) {
+                var add_button = $('[data-context]');
+                add_button.ladda();
+                add_button.on('click', function () {
+                    var _btn = $(this);
+                    var _ctx = _btn.data('context');
+                    //var _target = _ctx == 'person' ? opt_groups[0] : opt_groups[1] ;
+                    $.ajax({
+                        url: contact_url.replace(/_ctx_/g, _btn.data('context')),
+                        method: 'post',
+                        data: {name: params.chosen.search_field.val()},
+                        success: function(response){
+                            if('success' == response.status){
+                                var data = response.data;
+                                project_customer.append('<option selected="selected" value="' + data.id + '">' + data.name + '</option>');
+                                project_customer.trigger('chosen:updated');
+                                woopra.track('contato');
+                            }
+                        },
+                        error: function(response){
+                            console.log(response.status);
+                        }
+                    });
+                });
+            });
+        }
+
+        createCustomerChosen();
+
     </script>
 
     {# GOOGLE MAPS #}
     {% include view('helper.google_maps') with({
-        latitude: 'project_latitude',
-        longitude: 'project_longitude',
-        input: 'project_address',
+        latitude: 'generator_latitude',
+        longitude: 'generator_longitude',
+        input: 'generator_address',
         zoom: project.latitude ? 17 : 3
     }) %}
 

@@ -11,8 +11,8 @@ use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverter;
 use AppBundle\Entity\Component\ProjectModule;
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\Project\NasaCatalog;
 use AppBundle\Form\Component\ProjectAreaType;
-use AppBundle\Form\Component\ProjectType;
 use AppBundle\Form\Component\GeneratorType;
 use AppBundle\Form\Project\ProjectInverterType;
 use Symfony\Component\HttpFoundation\Request;
@@ -100,11 +100,10 @@ class ProjectController extends AbstractController
      */
     public function makersAction(Request $request)
     {
-        $source = $request->request->get('source_option');
         $data = $request->request->get('generator');
         $power = (float) $data['power'];
 
-        if('consumption' == $source){
+        if('consumption' == $data['source']){
 
             $consumption = (float) $data['consumption'];
             $latitude = (float) $data['latitude'];
@@ -113,11 +112,23 @@ class ProjectController extends AbstractController
             $power = $this->get('power_estimator')->estimate($consumption, $latitude, $longitude);
         }
 
-        $makers = $this->get('maker_detector')->fromPower($power);
+        /** @var \AppBundle\Service\ProjectGenerator\MakerDetector $detector */
+        $detector = $this->get('maker_detector');
+
+        $makers = $detector->fromPower($power);
+
+        if(in_array($data['grid_phase_number'], ['Monophasic', 'Biphasic'])){
+            $triphasicMakers = $detector->filterNotOnlyTriphasic();
+            foreach ($makers as $key => $maker){
+                if(!in_array($maker, $triphasicMakers)){
+                    unset($makers[$key]);
+                }
+            }
+        }
 
         $ids = array_map(function(MakerInterface $maker){
             return $maker->getId();
-        }, $makers);
+        }, array_values($makers));
 
         return $this->json([
             'makers' => $ids
@@ -130,6 +141,14 @@ class ProjectController extends AbstractController
      */
     public function createAction(Request $request)
     {
+        $generator = $this->getGenerator();
+        $defaults = $generator->loadDefaults();
+
+        $form = $this->createForm(GeneratorType::class, $defaults,[
+            'status' => GeneratorType::INIT,
+            'member' => $this->member()
+        ]);
+
         $manager = $this->manager('project');
 
         /** @var Project $project */
@@ -137,22 +156,13 @@ class ProjectController extends AbstractController
 
         $project->setMember($this->member());
 
-        $form = $this->createForm(ProjectType::class, $project);
-
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
 
             $generator = $this->getGenerator();
 
-            $defaults = $generator->loadDefaults([
-                'roof_type' => $project->getRoofType(),
-                'consumption' => $project->getInfConsumption(),
-                'latitude' => $project->getLatitude(),
-                'longitude' => $project->getLongitude()
-            ]);
-
-            $project->setDefaults($defaults);
+            $project->setDefaults($form->getData());
 
             $generator->generate($project);
 
@@ -175,54 +185,16 @@ class ProjectController extends AbstractController
      */
     public function updateAction(Request $request, Project $project)
     {
-        $previous = [
-            'power' => $project->getInfPower(),
-            'consumption' => $project->getInfConsumption(),
-            'latitude' => $project->getLatitude(),
-            'longitude' => $project->getLongitude(),
-            'roof' => $project->getRoofType(),
-            'structure' => $project->getStructureType()
-        ];
+        $defaults = $project->getDefaults();
 
-        $form = $this->createForm(ProjectType::class, $project);
+        $form = $this->createForm(GeneratorType::class, $defaults,[
+            'member' => $project->getMember()
+        ]);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
-
-            $manager = $this->manager('project');
-
-            $generator = $this->getGenerator();
-
-            /**
-             * REPROCESS INVERTERS IF FIELDS IS CHANGED
-             * consumption || latitude || longitude
-             */
-            if($previous['consumption'] != $project->getInfConsumption()
-                || $previous['latitude'] != $project->getLatitude()
-                || $previous['longitude'] != $project->getLongitude()){
-
-                $generator->reset($project);
-
-                $this->configureProjectFromDefaults($project);
-            }
-
-            /**
-             * REPROCESS STRUCTURES IF FIELDS IS CHANGED
-             * roof || structure
-             */
-            if($previous['roof'] != $project->getRoofType()
-                || $previous['structure'] != $project->getStructureType()){
-                $generator->generateStructures($project);
-            }
-
-            $manager->save($project);
-
-            return $this->json([
-                'project' => [
-                    'id' => $project->getId()
-                ]
-            ]);
+            // Waiting logic here...
         }
 
         return $this->render('project.form_project', [
@@ -251,16 +223,20 @@ class ProjectController extends AbstractController
     {
         $defaults = $project->getDefaults();
 
-        $form = $this->createForm(GeneratorType::class, $defaults);
+        $form = $this->createForm(GeneratorType::class, $defaults, [
+            'member' => $project->getMember()
+        ]);
 
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
 
+            $defaults = $form->getData();
             $generator = $this->getGenerator();
             $generator->reset($project);
 
-            $project->setDefaults($form->getData());
+            $project->setDefaults($defaults);
+
             $generator->generate($project);
 
             return $this->json([
@@ -363,10 +339,9 @@ class ProjectController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
 
             $generator = $this->getGenerator();
+            $project = $projectInverter->getProject();
 
             if($projectInverter->operationIsChanged()) {
-
-                $project = $projectInverter->getProject();
 
                 $generator->autoSave(false);
                 $generator->generateAreasViaProjectInverter($projectInverter);
@@ -377,9 +352,11 @@ class ProjectController extends AbstractController
                     ->generateVarieties($project);
 
                 $generator->save($project, true);
-
-                $generator->process($project);
             }
+
+            $generator->handleAreas($project)->save($project, true);
+
+            //$generator->process($project);
 
             return $this->json([]);
         }
@@ -463,7 +440,7 @@ class ProjectController extends AbstractController
      */
     public function operationAreaAction(ProjectArea $projectArea)
     {
-        $this->clearTemplateCache('project.area_operation');
+        $this->clearTemplateCache('project.operation_area');
 
         return $this->render('project.operation_area', [
             'data' => $projectArea->getMetadata()
@@ -495,6 +472,34 @@ class ProjectController extends AbstractController
         }
 
         return $this->json([]);
+    }
+
+    /**
+     * @Route("/info_coordinates", name="coordinate_info")
+     */
+    public function coordinateInfoAction(Request $request)
+    {
+        $provider = $this->getNasaProvider();
+
+        $latitude = $request->get('latitude');
+        $longitude = $request->get('longitude');
+
+        $accountGlobal = $provider->findOneBy(
+            [
+                'context' => NasaCatalog::RADIATION_GLOBAL,
+                'latitude' => floor($latitude),
+                'longitude' => floor($longitude),
+                'account' => $this->account()
+            ]);
+
+        $infos = $provider->fromCoordinates($latitude, $longitude);
+
+        return $this->render('project.coordinates', [
+            'infos' => $infos,
+            'latitude' => $latitude,
+            'longitude' => $longitude,
+            'accountGlobal' => $accountGlobal
+        ]);
     }
 
     /**
@@ -536,7 +541,7 @@ class ProjectController extends AbstractController
                 $toFinancial();
                 break;
 
-            case 'project_proposal':
+            case 'proposal_editor':
                 $toFinancial();
                 $toProposal();
                 break;
@@ -547,7 +552,7 @@ class ProjectController extends AbstractController
         return $this->json([
             'errors' => $errors,
             'url' => $url
-        ], empty($errors) ? Response::HTTP_ACCEPTED : Response::HTTP_CONFLICT);
+        ], empty($errors) ? Response::HTTP_ACCEPTED : Response::HTTP_IM_USED);
     }
 
     private function configureProjectFromDefaults(ProjectInterface $project)

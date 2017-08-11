@@ -3,16 +3,40 @@
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
 
-const sendMemorial = memorial => Sices.sendMemorial({
-  version: memorial.version,
-  status: memorial.status,
-  start_at: memorial.start_at,
-  end_at: memorial.end_at,
-  range: memorial.products
-})
+const level = {
+  'BLACK': 'black',
+  'PLATINUM': 'platinum',
+  'PREMIUM': 'premium',
+  'PARCEIRO OURO': 'gold',
+  'PROMOCIONAL': 'promotional'
+}
 
-const create = ({ notification }) => Isquik.getMemorial(notification.id).then(sendMemorial)
+const getLevel = type => level[type]
+
+const sendMemorial = ({ Dados }) =>
+  Sices
+    .sendMemorial({
+      version: Dados.Versao,
+      status: Dados.FlagPublicado,
+      range: Dados.Produtos.map(Ranges => ({
+        code: Ranges.Codigo,
+        markups: Ranges.Faixas.map(Markups => ({
+          initial: Markups.De,
+          final: Markups.Ate,
+          levels: Markups.Niveis.map(Levels => ({
+            price: Levels.PrecoVenda,
+            markup: 1.0,
+            level: getLevel(Levels.Descricao)
+          }))
+        }))
+      }))
+    })
+
+const createMemorial = ({ notification }) =>
+  Isquik
+    .getMemorial(notification.id)
+    .then(sendMemorial)
 
 module.exports = {
-  create
+  create: createMemorial
 }
