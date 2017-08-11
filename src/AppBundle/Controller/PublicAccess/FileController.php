@@ -4,11 +4,11 @@ namespace AppBundle\Controller\PublicAccess;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Component\Project;
-use Buzz\Message\Request;
 use Knp\Bundle\SnappyBundle\Snappy\LoggableGenerator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -28,23 +28,30 @@ class FileController extends AbstractController
     }
 
     /**
-     * @Route("/inside", name="file_inside")
+     * @Route("/{id}/generator", name="file_generator")
      */
-    public function insideAction()
+    public function insideAction(Request $request, $id)
     {
-
         $snappy = $this->get('knp_snappy.pdf');
         $snappy->setOption('viewport-size', '1280x1024');
 
         $dir = $this->get('kernel')->getRootDir() . '/../storage/';
         $filename = md5(uniqid(time())) . '.pdf';
+        $file = $dir.$filename;
+        //$url = $this->generateUrl('files_pdf',['id'=>$id]);
 
-        $url = 'http://54.233.150.10/public/files/306/pdf';
+        //dump($url);die;
+        $url = "http://www.statusimagens.com/whatsapp/imagens";
 
         try {
-            $snappy->generate($url, $dir . $filename);
-
-            die('ok');
+            $snappy->generate($url, $file);
+            if(file_exists($file)){
+                return new BinaryFileResponse($file);
+            }else{
+                return $this->json([
+                    'error' => 'Arquivo não encontrado.'
+                ], Response::HTTP_NOT_FOUND);
+            }
         }
         catch(\Exception $error) {
             die($error);
