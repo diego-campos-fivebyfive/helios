@@ -51,7 +51,8 @@ class AccountsController extends FOSRestController
             ->setEmail($data['email'])
             ->setPhone($data['phone'])
             ->setStatus($data['status'])
-            ->setContext(Customer::CONTEXT_ACCOUNT);
+            ->setContext(Customer::CONTEXT_ACCOUNT)
+            ->setLevel($data['level']);
         try {
             $accountManager->save($account);
             $status = Response::HTTP_CREATED;
@@ -69,6 +70,7 @@ class AccountsController extends FOSRestController
                 'street' => $account->getStreet(),
                 'number' => $account->getNumber(),
                 'postcode' => $account->getPostcode(),
+                'level' => $account->getLevel(),
                 'status' => $account->getStatus()
             ];
         }
@@ -88,10 +90,8 @@ class AccountsController extends FOSRestController
      *  description="This method return a specific account"
      * )
      */
-    public function getAccountAction(Customer $id)
+    public function getAccountAction(Customer $account)
     {
-        $data = [];
-        $account = $id;
         if($account->isAccount()) {
 
             $data = [
@@ -106,6 +106,7 @@ class AccountsController extends FOSRestController
                 'city' => $account->getCity(),
                 'street' => $account->getStreet(),
                 'number' => $account->getNumber(),
+                'level' => $account->getLevel(),
                 'created_at' => $account->getCreatedAt(),
                 'owner' => $account->getOwner()->getId()
             ];
@@ -121,11 +122,9 @@ class AccountsController extends FOSRestController
         return $this->handleView($view);
     }
 
-    public function putAccountAction(Request $request, Customer $id)
+    public function putAccountAction(Request $request, Customer $account)
     {
         $data = json_decode($request->getContent(), true);
-
-        $account = $id;
 
         if (!$account->isAccount()) {
             return JsonResponse::create("Invalid Account ID",Response::HTTP_NOT_FOUND);
@@ -146,6 +145,7 @@ class AccountsController extends FOSRestController
             ->setStreet($data['street'])
             ->setNumber($data['number'])
             ->setPostcode($data['postcode'])
+            ->setLevel($data['level'])
             ->setStatus($data['status']);
 
         try {
@@ -165,6 +165,7 @@ class AccountsController extends FOSRestController
                 'street' => $account->getStreet(),
                 'number' => $account->getNumber(),
                 'postcode' => $account->getPostcode(),
+                'level' => $account->getLevel(),
                 'status' => $account->getStatus(),
                 'owner' => $account->getOwner()->getId()
             ];
