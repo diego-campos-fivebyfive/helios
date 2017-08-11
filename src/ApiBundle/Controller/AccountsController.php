@@ -38,7 +38,7 @@ class AccountsController extends FOSRestController
         $accountManager = $this->get('account_manager');
         $account = $accountManager->create();
         $account
-            ->seIsquikId($data['isquik_id'])
+            ->setIsquikId($data['isquik_id'])
             ->setDocument($data['document'])
             ->setExtraDocument($data['extraDocument'])
             ->setFirstName($data['firstname'])
@@ -59,6 +59,7 @@ class AccountsController extends FOSRestController
             $status = Response::HTTP_CREATED;
             $data = [
                 'id' => $account->getId(),
+                'isquik_id' => $account->getIsquikId(),
                 'firstname' => $account->getFirstName(),
                 'lastname' => $account->getLastName(),
                 'extraDocument' => $account->getExtraDocument(),
