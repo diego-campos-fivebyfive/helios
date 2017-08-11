@@ -10,7 +10,7 @@ const sendUser = ({ Dados }, sicesUser) =>
       contact: Dados.Nome
     })
 
-const createUser = ({ sicesUser }) =>
+const createUser = (sicesUser) =>
   Isquik
     .getUser(sicesUser.isquik_id)
     .then(isquikUser =>

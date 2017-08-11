@@ -10,8 +10,8 @@ const user = require('./user')
 const actions = {
   memorial_created: memorial.create,
   product_created: product.create,
-  account_updated: account.update.then(sicesUser => user.update({ sicesUser }),
-  account_created: account.create.then(sicesUser => user.create({ sicesUser }))
+  account_created: account.create,
+  account_updated: account.update
 }
 
 router.post('/api/v1/notifications', (({ body, ...request }, response) => {

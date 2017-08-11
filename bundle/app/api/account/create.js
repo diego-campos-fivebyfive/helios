@@ -2,6 +2,7 @@
 
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
+const { create: createUser } = require('../user')
 
 const level = {
     'BLACK': 'black',
@@ -29,7 +30,7 @@ const sendAccount = ({ Dados }) =>
       level: level[Dados.NivelDesconto.Descricao],
       status: 1
     })
-    .then(data => ({
+    .then(data => createUser({
       email: Dados.Email,
       phone: Dados.Telefone,
       isquik_id: Dados.Administrador,
