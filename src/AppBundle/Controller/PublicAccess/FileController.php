@@ -47,7 +47,7 @@ class FileController extends AbstractController
             die('ok');
         }
         catch(\Exception $error) {
-            die('Falhou');
+            die($error);
         }
     }
 
@@ -99,7 +99,7 @@ class FileController extends AbstractController
             die('ok');
         }
         catch(\Exception $error) {
-            die('Falhou');
+            die($error);
         }
     }
 
