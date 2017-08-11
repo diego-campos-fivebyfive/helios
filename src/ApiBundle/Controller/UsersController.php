@@ -52,6 +52,7 @@ class UsersController extends FOSRestController
         $member = $memberManager->create();
         $member
             ->setAccount($account)
+            ->setIsquikId($data['isquik_id'])
             ->setFirstname($data['contact'])
             ->setPhone($data['phone'])
             ->setEmail($data['email'])
@@ -62,6 +63,7 @@ class UsersController extends FOSRestController
             $status = Response::HTTP_CREATED;
             $data = [
                 'id' => $member->getId(),
+                'isquik_id' => $member->getIsquikId(),
                 'firstname' => $member->getFirstname(),
                 'email' => $member->getEmail(),
                 'phone' => $member->getPhone(),
@@ -92,6 +94,7 @@ class UsersController extends FOSRestController
 
             $data = [
                 'id' => $member->getId(),
+                'isquik_id' => $member->getIsquikId(),
                 'firstname' => $member->getFirstname(),
                 'email' => $member->getEmail(),
                 'phone' => $member->getPhone(),
@@ -121,6 +124,7 @@ class UsersController extends FOSRestController
         /** @var AccountInterface $memberManager */
         $memberManager = $this->get('account_manager');
         $member
+            ->setIsquikId($data['isquik_id'])
             ->setAccount($account)
             ->setFirstname($data['contact'])
             ->setPhone($data['phone'])
@@ -130,6 +134,7 @@ class UsersController extends FOSRestController
             $status = Response::HTTP_ACCEPTED;
             $data = [
                 'id' => $member->getId(),
+                'isquik_id' => $member->getIsquikId(),
                 'firstname' => $member->getFirstname(),
                 'email' => $member->getEmail(),
                 'phone' => $member->getPhone(),
