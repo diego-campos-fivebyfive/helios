@@ -60,13 +60,16 @@ class FileController extends AbstractController
         $dir = $this->get('kernel')->getRootDir() . '/../storage/';
         $dh = opendir($dir);
         while (false !== ($filename = readdir($dh))) {
-            echo "<a href=\"display/"."$filename\" style='background-color: chartreuse; border: solid 1px black; padding: 1px;'>$filename</a><br/><br/>";
+            if (substr($filename,-4) == ".pdf") {
+                echo "<a href=\"display/"."$filename\" style='background-color: chartreuse; border: solid 1px black; padding: 1px;'>$filename</a>
+            ------- <a href=\"delete/"."$filename\" style='background-color: #dc4735; border: solid 1px black; padding: 1px;'>Deletar</a><br/><br/>";
+            }
         }
         die();
     }
 
     /**
-     * @Route("/display/{filename}", name="files_display")
+     * @Route("/display/{filename}", name="file_display")
      */
     public function gerarAction($filename){
 
@@ -76,6 +79,25 @@ class FileController extends AbstractController
             return new BinaryFileResponse($file);
         }else{
             die("Arquivo não encontrado");
+        }
+
+    }
+
+    /**
+     * @Route("/delete/{filename}", name="file_delete")
+     */
+    public function deleteAction($filename){
+
+        $dir = $this->get('kernel')->getRootDir() . '/../storage/';
+        $file = $dir.$filename;
+        //$arquivo = "teste.txt";
+        if (!unlink($file))
+        {
+            die("Erro ao deletar $filename");
+        }
+        else
+        {
+            return $this->redirectToRoute('files_list');
         }
 
     }
