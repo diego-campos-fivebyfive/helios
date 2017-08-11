@@ -1,24 +1,34 @@
 <?php
 
+/*
+ * This file is part of the SicesSolar package.
+ *
+ * (c) SicesSolar <http://sicesbrasil.com.br/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace AppBundle\Service;
 
+use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\BusinessInterface;
-use AppBundle\Entity\Financial\ProjectFinancialManager;
-use AppBundle\Entity\Project\ProjectInterface;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use AppBundle\Entity\MemberInterface;
+use AppBundle\Manager\ProjectManager;
 use Doctrine\ORM\Query\Expr\Join;
 
+/**
+ * This class provides filtering features for issued proposals,
+ * considering monthly or annual time intervals, users and accounts
+ *
+ * @author Claudinei Machado <claudinei@kolinalabs.com>
+ */
 class ProposalFilter
 {
     /**
-     * @var ProjectFinancialManager
+     * @var ProjectManager
      */
     private $manager;
-
-    private $defaults = [
-        'at' => ['day', 'month', 'year']
-    ];
 
     /**
      * @var array
@@ -32,12 +42,11 @@ class ProposalFilter
 
     /**
      * ProposalFilter constructor.
-     * @param ProjectFinancialManager $manager
+     * @param ProjectManager $manager
      */
-    function __construct(ProjectFinancialManager $manager)
+    function __construct(ProjectManager $manager)
     {
         $this->manager = $manager;
-        //$this->filters['date'] = new \DateTime;
     }
 
     /**
@@ -67,30 +76,22 @@ class ProposalFilter
     }
 
     /**
-     * @param BusinessInterface $member
+     * @param MemberInterface $member
      * @return $this
      */
-    public function member(BusinessInterface $member)
+    public function member(MemberInterface $member)
     {
-        if(!$member->isMember()){
-            $this->unsupportedContextException();
-        }
-
         $this->filters['member'] = $member;
 
         return $this;
     }
 
     /**
-     * @param BusinessInterface $account
+     * @param AccountInterface $account
      * @return $this
      */
-    public function account(BusinessInterface $account)
+    public function account(AccountInterface $account)
     {
-        if(!$account->isAccount()){
-            $this->unsupportedContextException();
-        }
-
         $this->filters['account'] = $account;
 
         return $this;
@@ -105,9 +106,7 @@ class ProposalFilter
         $qb = $this->manager
             ->getEntityManager()
             ->createQueryBuilder()
-            ->select('f')->from($this->manager->getClass(), 'f')
-            ->join('f.proposal', 'd')
-            ->join('f.project', 'p');
+            ->select('p')->from($this->manager->getClass(), 'p');
 
         $member = $this->filters['member'];
         $account = $this->filters['account'];
@@ -139,22 +138,16 @@ class ProposalFilter
                 $end = $date->format(sprintf('Y-m-%d 23:59:59', $lastDay));
             }
 
-            $qb->where('f.createdAt >= :start')->andWhere('f.createdAt <= :end');
+            // TODO: Change this field to issuedAt
+            $qb->where('p.updatedAt >= :start')->andWhere('p.updatedAt <= :end');
 
             $qb->setParameter('start', $start);
             $qb->setParameter('end', $end);
         }
-        
+
+        // TODO: Uncomment this code for production
+        //$qb->andWhere('p.proposal is not null');
+
         return $qb->getQuery()->getResult();
-    }
-
-    public function groupBy($group)
-    {
-
-    }
-
-    private function unsupportedContextException()
-    {
-        throw new \InvalidArgumentException('Unsupported context');
     }
 }

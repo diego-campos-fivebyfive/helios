@@ -171,10 +171,6 @@
             <argument type="service" id="app.task_manager"/>
         </service>
 
-        <service id="app.proposal_filter" class="AppBundle\Service\ProposalFilter">
-            <argument type="service" id="app.project_financial"/>
-        </service>
-
         <service id="app.file_explorer" class="AppBundle\Service\FileExplorer">
             <argument type="service" id="service_container"/>
         </service>
