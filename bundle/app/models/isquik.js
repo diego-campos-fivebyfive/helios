@@ -2,9 +2,7 @@
 
 const Google = require('./google')
 const request = require('request-promise')
-const { config } = require('../config')
-
-const { isquik } = config
+const { isquik } = require('../config')
 
 const getRequest = uri => Google.getAuthentication().then(auth => (
   request({
