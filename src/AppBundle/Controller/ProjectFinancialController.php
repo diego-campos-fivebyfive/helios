@@ -61,7 +61,7 @@ class ProjectFinancialController extends AbstractController
 
             ShippingType::normalize($rule);
 
-            $rule['price'] = $project->getSalePriceComponents();
+            $rule['price'] = $project->getCostPriceComponents();
             $rule['power'] = $project->getPower();
 
             ShippingRuler::apply($rule);

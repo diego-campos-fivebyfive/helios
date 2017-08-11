@@ -11,8 +11,7 @@
 
 namespace AppBundle\Service\ProjectGenerator;
 
-use AppBundle\Entity\Component\ProjectElementInterface;
-use AppBundle\Entity\Component\ProjectExtraInterface;
+use AppBundle\Entity\Component\ProjectElementTrait;
 use AppBundle\Entity\Component\ProjectInterface;
 
 /**
@@ -29,71 +28,41 @@ class SalePrice
      */
     public static function calculate(ProjectInterface $project, $percentEquipments, $percentServices)
     {
-        $costProducts = $project->getCostPriceExtraProducts();
-        $costServices = $project->getCostPriceExtraServices();
-        $costComponents = $project->getCostPriceComponents();
-        $costEquipments = $costComponents + $costProducts;
-
-        $saleEquipments = (100 * ($costEquipments)) / (100 - $percentEquipments);
-        $saleServices = (100 * $costServices) / (100 - $percentServices);
-
         foreach ($project->getProjectModules() as $projectModule){
-            self::resolveUnitPriceComponent($projectModule, $costEquipments, $saleEquipments);
+            self::resolveUnitPriceComponent($projectModule, $percentEquipments);
         }
 
         foreach ($project->getProjectInverters() as $projectInverter){
-            self::resolveUnitPriceComponent($projectInverter, $costEquipments, $saleEquipments);
+            self::resolveUnitPriceComponent($projectInverter, $percentEquipments);
         }
 
         foreach ($project->getProjectStringBoxes() as $projectStringBox){
-            self::resolveUnitPriceComponent($projectStringBox, $costEquipments, $saleEquipments);
+            self::resolveUnitPriceComponent($projectStringBox, $percentEquipments);
         }
 
         foreach ($project->getProjectStructures() as $projectStructure){
-            self::resolveUnitPriceComponent($projectStructure, $costEquipments, $saleEquipments);
+            self::resolveUnitPriceComponent($projectStructure, $percentEquipments);
         }
 
         foreach ($project->getProjectVarieties() as $projectVariety){
-            self::resolveUnitPriceComponent($projectVariety, $costEquipments, $saleEquipments);
+            self::resolveUnitPriceComponent($projectVariety, $percentEquipments);
         }
 
-        /** @var \AppBundle\Entity\Component\ProjectExtraInterface $projectExtra */
         foreach ($project->getProjectExtras() as $projectExtra){
 
-            $cost = $projectExtra->isProduct() ? $costEquipments : $costServices ;
-            $sale = $projectExtra->isProduct() ? $saleEquipments : $saleServices ;
+            $percent = $projectExtra->isProduct() ? $percentEquipments : $percentServices ;
 
-            self::resolveUnitPriceExtra($projectExtra, $cost, $sale);
+            self::resolveUnitPriceComponent($projectExtra, $percent);
         }
-
-        // TODO: Calculate delivery here!
     }
 
     /**
-     * @param ProjectElementInterface $component
-     * @param $costEquipments
-     * @param $saleEquipments
+     * @param ProjectElementTrait $component
+     * @param $percent
      */
-    private static function resolveUnitPriceComponent(ProjectElementInterface $component, $costEquipments, $saleEquipments)
+    private static function resolveUnitPriceComponent($component, $percent)
     {
-        $unitCostPrice = $component->getUnitCostPrice();
-        $percent = $unitCostPrice / $costEquipments;
-        $unitSalePrice = $percent * $saleEquipments;
-
+        $unitSalePrice = $component->getUnitCostPrice() / (1 - $percent);
         $component->setUnitSalePrice($unitSalePrice);
-    }
-
-    /**
-     * @param ProjectExtraInterface $extra
-     * @param $cost
-     * @param $sale
-     */
-    private static function resolveUnitPriceExtra(ProjectExtraInterface $extra, $cost, $sale)
-    {
-        $unitCostPrice = $extra->getUnitCostPrice();
-        $percent = $unitCostPrice / $cost;
-        $unitSale = $percent * $sale;
-
-        $extra->setUnitSalePrice($unitSale);
     }
 }

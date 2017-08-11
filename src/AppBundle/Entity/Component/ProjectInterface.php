@@ -320,6 +320,21 @@ interface ProjectInterface
     /**
      * @return float
      */
+    public function getCostPriceStringBoxes();
+
+    /**
+     * @return float
+     */
+    public function getCostPriceStructures();
+
+    /**
+     * @return float
+     */
+    public function getCostPriceVarieties();
+
+    /**
+     * @return float
+     */
     public function getCostPriceComponents();
 
     /**

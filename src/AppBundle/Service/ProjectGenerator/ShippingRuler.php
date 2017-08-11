@@ -48,8 +48,16 @@ abstract class ShippingRuler
     private static function markup(array &$rule)
     {
         $markup = 30;
-        if($rule['power'] > 10){
-            $markup = $rule['power'] > 20 ? 10 : 20 ;
+        $power = $rule['power'];
+
+        if($power > 10){
+            $markup = 20;
+            if($power > 20){
+                $markup = 15;
+                if($power > 30){
+                    $markup = 10;
+                }
+            }
         }
 
         $rule['markup'] = $markup / 100;
@@ -188,6 +196,6 @@ abstract class ShippingRuler
         $rule['state'] = null;
         $rule['kind'] = null;
         $rule['region'] = null;
-        $rule['shipping'] = $rule['price'] * $rule['percent'];
+        $rule['shipping'] = round($rule['price'] * $rule['percent'], 2);
     }
 }

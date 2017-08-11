@@ -63,7 +63,7 @@ class Precifier
             /** @var Range $range */
             $range = $ranges[$code];
 
-            $price = $range->getPrice();
+            $price = (float) $range->getPrice();
 
             $component->setUnitCostPrice($price);
 
@@ -112,7 +112,7 @@ class Precifier
             }
         }
 
-        SalePrice::calculate($project, $percentEquipments, $percentServices);
+        SalePrice::calculate($project, ($percentEquipments / 100), ($percentServices / 100));
     }
 
     /**

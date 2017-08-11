@@ -46,14 +46,14 @@ trait ProjectElementTrait
     /**
      * @var float
      *
-     * @ORM\Column(name="unit_cost_price", type="decimal", precision=10, scale=2)
+     * @ORM\Column(name="unit_cost_price", type="float")
      */
     private $unitCostPrice;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="unit_sale_price", type="decimal", precision=10, scale=2, nullable=true)
+     * @ORM\Column(name="unit_sale_price", type="float", nullable=true)
      */
     private $unitSalePrice;
 
@@ -70,7 +70,7 @@ trait ProjectElementTrait
      */
     public function setQuantity($quantity)
     {
-        $this->quantity = $quantity;
+        $this->quantity = (int) $quantity;
 
         return $this;
     }

@@ -241,19 +241,16 @@
 
                                         <div class="form-group">
                                             <div class="col-md-3">
-                                                <label>&nbsp;<br></label>
-                                                <a class="btn btn-info col-xs-12" data-toggle="modal" data-target="#modal_info">
-                                                    <i class="fa fa-info-circle"></i>
-                                                    Informações Climáticas
-                                                </a>
+                                                <div class="col-md-12">
+                                                    <a id="btn-coord-info" class="btn btn-info btn-block" data-toggle="modal"
+                                                       data-target="#modal_info" style="{{ project.id is null ? 'margin-top: 9.75rem;' }}">
+                                                        <i class="fa fa-info-circle"></i>
+                                                        Informações Climáticas
+                                                    </a>
+                                                </div>
                                             </div>
                                             <div class="col-md-9" id="block_init">
                                                 <div class="form-group">
-                                                    <div class="col-md-4" style="font-size: 12px; margin-top: 1rem;">
-                                                        <label style="display: block;"> &nbsp; </label>
-                                                        {{ form_widget(form.use_transformer) }} &nbsp;
-                                                        {{ form_label(form.use_transformer, 'Desejo incluir transformador se necessário') }}
-                                                    </div>
                                                     <div class="col-md-4">
                                                         {{ form_label(form.grid_voltage, 'Tensão') }}
                                                         {{ form_widget(form.grid_voltage,{attr:{class:'form-control'}}) }}
@@ -261,6 +258,11 @@
                                                     <div class="col-md-4">
                                                         {{ form_label(form.grid_phase_number, 'Fases') }}
                                                         {{ form_widget(form.grid_phase_number,{attr:{class:'form-control'}}) }}
+                                                    </div>
+                                                    <div class="col-md-4" style="font-size: 12px; margin-top: 1rem;">
+                                                        <label style="display: block;"> &nbsp; </label>
+                                                        {{ form_widget(form.use_transformer) }} &nbsp;
+                                                        {{ form_label(form.use_transformer, 'Incluir transformador se necessário') }}
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -724,6 +726,8 @@
                 ProjectManager.configureBlocks();
 
                 ProjectManager.process();
+
+                $('#btn-coord-info').css('margin-top', 0);
             },
             onUpdateInverter: function(){
                 ProjectManager.loadComponents();
