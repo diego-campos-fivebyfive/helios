@@ -30,7 +30,7 @@ const sendAccount = ({ Dados: account }) =>
       email: account.Email,
       phone: account.Telefone,
       level: getLevel(account.NivelDesconto.Descricao),
-      status: account.Status
+      status: ((account.DescricaoStatusIntegrador === 'Aprovado' && !account.Bloqueado) ? 1 : 0)
     })
     .then(data => updateUser({
       email: account.Email,
