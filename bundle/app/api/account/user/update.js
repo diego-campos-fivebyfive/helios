@@ -1,7 +1,7 @@
 'use strict'
 
-const Sices = require('../../models/sices')
-const Isquik = require('../../models/isquik')
+const Sices = require('../../../models/sices')
+const Isquik = require('../../../models/isquik')
 
 const updateUser = (sicesAccount, isquikAccount) => Sices.updateUser(sicesAccount.owner, {
   email: isquikAccount.email,

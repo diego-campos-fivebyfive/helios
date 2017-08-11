@@ -2,14 +2,14 @@
 
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
-const { create: createUser } = require('../user')
+const { create: createUser } = require('./user')
 
 const level = {
-    'BLACK': 'black',
-    'PLATINUM': 'platinum',
-    'PREMIUM': 'premium',
-    'PARCEIRO OURO': 'gold',
-    'PROMOCIONAL': 'promotional'
+  'BLACK': 'black',
+  'PLATINUM': 'platinum',
+  'PREMIUM': 'premium',
+  'PARCEIRO OURO': 'gold',
+  'PROMOCIONAL': 'promotional'
 }
 
 const getLevel = type => level[type]

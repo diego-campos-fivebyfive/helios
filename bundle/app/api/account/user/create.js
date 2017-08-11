@@ -1,7 +1,7 @@
 'use strict'
 
-const Sices = require('../../models/sices')
-const Isquik = require('../../models/isquik')
+const Sices = require('../../../models/sices')
+const Isquik = require('../../../models/isquik')
 
 const sendUser = ({ Dados }, sicesUser) =>
   Sices
@@ -10,7 +10,7 @@ const sendUser = ({ Dados }, sicesUser) =>
       contact: Dados.Nome
     })
 
-const createUser = (sicesUser) =>
+const createUser = sicesUser =>
   Isquik
     .getUser(sicesUser.isquik_id)
     .then(isquikUser =>
