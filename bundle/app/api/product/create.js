@@ -50,18 +50,14 @@ const sendComponent = ({ component, product }) =>
     component.send
   )(product)
 
+const sendProduct = code =>
+  Isquik
+    .getProduct(code)
+    .then(getComponent)
+    .then(sendComponent)
 
 const create = ({ notification }) =>
-  new Promise((resolve, reject) => {
-    notification.codes.forEach(code =>
-      Isquik
-        .getProduct(code)
-        .then(getComponent)
-        .then(sendComponent)
-        .then(resolve)
-        .catch(reject)
-    )
-  })
+  notification.codes.forEach(sendProduct)
 
 module.exports = {
   create
