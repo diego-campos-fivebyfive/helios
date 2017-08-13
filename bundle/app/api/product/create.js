@@ -6,66 +6,58 @@ const { util } = require('../../components')
 
 const { pipe } = util
 
-const splitModule = product => ({
+const splitModel = product => ({
   code: product.code,
   model: product.description
 })
 
-const splitInverter = product => ({
-  code: product.code,
-  model: product.description
-})
-
-const splitStructure = product => ({
+const splitDescription = product => ({
   code: product.code,
   description: product.description
 })
 
-const splitStringbox = product => ({
-  code: product.code,
-  description: product.description
-})
-
-const splitVariety = product => ({
-  code: product.code,
-  description: product.description
-})
-
-const getComponents = () => ({
+const components = {
   inverter: {
-    split: splitInverter,
+    split: splitModel,
     send: Sices.sendInverter
   },
   module: {
-    split: splitModule,
+    split: splitModel,
     send: Sices.sendModule
   },
   structure: {
-    split: splitStructure,
+    split: splitDescription,
     send: Sices.sendStructure
   },
   stringbox: {
-    split: splitStringbox,
+    split: splitDescription,
     send: Sices.sendStringbox
   },
   variety: {
-    split: splitVariety,
+    split: splitDescription,
     send: Sices.sendVariety
   }
+}
+
+const getComponent = ({ family, ...product }) => ({
+  component: components[family],
+  product
 })
 
-const sendProduct = ({ family, ...product }) => {
-  const components = getComponents()
-  const component = components[family]
-  return pipe(component.split(product), component.send)
-}
+const sendComponent = ({ component, product }) =>
+  pipe(
+    component.split,
+    component.send
+  )(product)
+
 
 const create = ({ notification }) =>
   new Promise((resolve, reject) => {
     notification.codes.forEach(code =>
       Isquik
         .getProduct(code)
-        .then(sendProduct)
+        .then(getComponent)
+        .then(sendComponent)
         .then(resolve)
         .catch(reject)
     )
