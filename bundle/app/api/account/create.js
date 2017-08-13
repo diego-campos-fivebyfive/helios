@@ -30,7 +30,7 @@ const sendAccount = ({ Dados: account }) =>
       email: account.Email,
       phone: account.Telefone,
       level: getLevel(account.NivelDesconto.Descricao),
-      status: 1
+      status: true
     })
     .then(data => createUser({
       email: account.Email,

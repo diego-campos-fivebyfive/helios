@@ -18,15 +18,14 @@ const sendMemorial = ({ Dados: memorial }) =>
     .sendMemorial({
       version: memorial.Versao,
       status: memorial.FlagPublicado,
-      range: memorial.Produtos.map(ranges => ({
-        code: ranges.Codigo,
-        markups: ranges.Faixas.map(markups => ({
-          initial: markups.De,
-          final: markups.Ate,
-          levels: markups.Niveis.map(levels => ({
-            price: levels.PrecoVenda,
-            markup: 1.0,
-            level: getLevel(levels.Descricao)
+      range: memorial.Produtos.map(range => ({
+        code: range.Codigo,
+        markups: range.Faixas.map(markup => ({
+          initial: markup.De,
+          final: markup.Ate,
+          levels: markup.Niveis.map(level => ({
+            price: level.PrecoVenda,
+            level: getLevel(level.Descricao)
           }))
         }))
       }))
