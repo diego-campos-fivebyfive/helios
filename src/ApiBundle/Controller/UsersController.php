@@ -44,7 +44,8 @@ class UsersController extends FOSRestController
             ->setEmail($data['email'])
             ->setUsername($data['email'])
             ->setPlainPassword(uniqid())
-            ->addRole(UserInterface::ROLE_OWNER_MASTER);
+            ->addRole(UserInterface::ROLE_OWNER_MASTER)
+            ->setIsquikId($data['isquik_id']);
         $userManager->updateUser($user);
 
         /** @var AccountInterface $memberManager */

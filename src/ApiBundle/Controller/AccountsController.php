@@ -149,8 +149,8 @@ class AccountsController extends FOSRestController
             ->setStreet($data['street'])
             ->setNumber($data['number'])
             ->setPostcode($data['postcode'])
-            ->setLevel($data['level'])
-            ->setStatus($data['status']);
+            ->setStatus($data['status'])
+            ->setLevel($data['level']);
 
         try {
             $accountManager->save($account);
