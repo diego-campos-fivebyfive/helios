@@ -26,57 +26,6 @@ class FileController extends AbstractController
     }
 
     /**
-     * @Route("/list", name="files_list")
-     */
-    public function listAction()
-    {
-        $dir = $this->get('kernel')->getRootDir() . '/../storage/';
-        $dh = opendir($dir);
-        while (false !== ($filename = readdir($dh))) {
-            if (substr($filename,-4) == ".pdf") {
-                echo "<a href=\"display/"."$filename\" style='background-color: chartreuse; border: solid 1px black; padding: 1px;'>$filename</a>
-            ------- <a href=\"delete/"."$filename\" style='background-color: #dc4735; border: solid 1px black; padding: 1px;'>Deletar</a><br/><br/>";
-            }
-        }
-        die();
-    }
-
-    /**
-     * @Route("/display/{filename}", name="files_display_pdf")
-     */
-    public function gerarAction($filename)
-    {
-        $dir = $this->get('kernel')->getRootDir() . '/../storage/';
-        $file = $dir.$filename;
-        if(file_exists($file)){
-            return new BinaryFileResponse($file);
-        }else{
-            die("Arquivo não encontrado");
-        }
-
-    }
-
-    /**
-     * @Route("/delete/{filename}", name="files_delete_pdf")
-     */
-    public function deleteAction($filename)
-    {
-
-        $dir = $this->get('kernel')->getRootDir() . '/../storage/';
-        $file = $dir.$filename;
-        //$arquivo = "teste.txt";
-        if (!unlink($file))
-        {
-            die("Erro ao deletar $filename");
-        }
-        else
-        {
-            return $this->redirectToRoute('files_list');
-        }
-
-    }
-
-    /**
      * @Route("/{token}/proposal", name="file_proposal")
      */
     public function proposalAction(Project $project)
