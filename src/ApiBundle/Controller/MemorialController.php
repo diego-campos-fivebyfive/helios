@@ -51,7 +51,6 @@ class MemorialController extends FOSRestController
                         ->setLevel($item['level'])
                         ->setInitialPower($level['initial'])
                         ->setFinalPower($level['final'])
-                        ->setMarkup($item['markup'])
                         ->setPrice($item['price']);
                     $rangeManager->save($range);
                 }

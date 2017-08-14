@@ -60,13 +60,6 @@ class Range implements RangeInterface
     private $level;
 
     /**
-     * @var float
-     *
-     * @ORM\Column(name="markup", type="float")
-     */
-    private $markup;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="price", type="decimal", precision=10, scale=2)
@@ -183,30 +176,6 @@ class Range implements RangeInterface
     public function getLevel()
     {
         return $this->level;
-    }
-
-    /**
-     * Set markup
-     *
-     * @param float $markup
-     *
-     * @return Range
-     */
-    public function setMarkup($markup)
-    {
-        $this->markup = $markup;
-
-        return $this;
-    }
-
-    /**
-     * Get markup
-     *
-     * @return float
-     */
-    public function getMarkup()
-    {
-        return $this->markup;
     }
 
     /**
