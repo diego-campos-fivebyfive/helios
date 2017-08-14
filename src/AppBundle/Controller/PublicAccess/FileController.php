@@ -4,11 +4,11 @@ namespace AppBundle\Controller\PublicAccess;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Component\Project;
+use Buzz\Message\Request;
 use Knp\Bundle\SnappyBundle\Snappy\LoggableGenerator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -22,8 +22,35 @@ class FileController extends AbstractController
      */
     public function pdfGeneratorAction(Project $project)
     {
-        return $this->render('AppBundle:Proposal:pdf.html.twig', ['project' => $project]);
+        return $this->render('AppBundle:Proposal:pdf.html.twig', [
+            'project' => $project
+        ]);
     }
+
+    /**
+     * @Route("/inside", name="file_inside")
+     */
+    public function insideAction()
+    {
+
+        $snappy = $this->get('knp_snappy.pdf');
+        $snappy->setOption('viewport-size', '1280x1024');
+
+        $dir = $this->get('kernel')->getRootDir() . '/../storage/';
+        $filename = md5(uniqid(time())) . '.pdf';
+
+        $url = 'http://54.233.150.10/public/files/306/pdf';
+
+        try {
+            $snappy->generate($url, $dir . $filename);
+
+            die('ok');
+        }
+        catch(\Exception $error) {
+            die($error);
+        }
+    }
+
 
     /**
      * @Route("/list", name="files_list")
@@ -42,10 +69,10 @@ class FileController extends AbstractController
     }
 
     /**
-     * @Route("/display/{filename}", name="files_display_pdf")
+     * @Route("/display/{filename}", name="file_display")
      */
-    public function gerarAction($filename)
-    {
+    public function gerarAction($filename){
+
         $dir = $this->get('kernel')->getRootDir() . '/../storage/';
         $file = $dir.$filename;
         if(file_exists($file)){
@@ -57,10 +84,9 @@ class FileController extends AbstractController
     }
 
     /**
-     * @Route("/delete/{filename}", name="files_delete_pdf")
+     * @Route("/delete/{filename}", name="file_delete")
      */
-    public function deleteAction($filename)
-    {
+    public function deleteAction($filename){
 
         $dir = $this->get('kernel')->getRootDir() . '/../storage/';
         $file = $dir.$filename;
@@ -75,6 +101,30 @@ class FileController extends AbstractController
         }
 
     }
+
+
+    /**
+     * @Route("/out", name="file_out")
+     */
+    public function outAction()
+    {
+        $snappy = $this->get('knp_snappy.pdf');
+        $snappy->setOption('viewport-size', '1280x1024');
+
+        $dir = $this->get('kernel')->getRootDir() . '/../storage/';
+        $filename = md5(uniqid(time())) . '.pdf';
+
+        $url = 'http://www.statusimagens.com/whatsapp/imagens';
+
+        try {
+            $snappy->generate($url, $dir . $filename);
+            die('ok');
+        }
+        catch(\Exception $error) {
+            die($error);
+        }
+    }
+
 
     /**
      * @Route("/{token}/proposal", name="file_proposal")
