@@ -47,7 +47,6 @@ class ProposalController extends AbstractController
             ]);
     }
 
-
     /**
      * @Route("/{id}/pdf", name="proposal_pdf")
      */
