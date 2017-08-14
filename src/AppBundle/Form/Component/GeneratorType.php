@@ -7,6 +7,7 @@ use AppBundle\Entity\Category;
 use AppBundle\Entity\Component\Maker;
 use AppBundle\Entity\Component\Module;
 use AppBundle\Entity\Component\Project;
+use AppBundle\Entity\MemberInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -39,16 +40,23 @@ class GeneratorType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $member = $options['member'];
-        $customers = $member->getAllowedContacts()->toArray();
+
+        if($member instanceof MemberInterface) {
+
+            $customers = $member->getAllowedContacts()->toArray();
+
+            $builder
+                ->add('customer', ChoiceType::class, [
+                    'choices' => $this->createChoices($customers)
+                ])
+                ->add('stage', ChoiceType::class, [
+                    'choices' => $this->loadStages($member->getAccount())
+                ]);
+        }
 
         $builder
+            ->add('account_id')
             ->add('address')
-            ->add('customer', ChoiceType::class, [
-                'choices' => $this->createChoices($customers)
-            ])
-            ->add('stage', ChoiceType::class, [
-                'choices' => $this->loadStages($member->getAccount())
-            ])
             ->add('grid_voltage', ChoiceType::class, [
                 'choices' => [
                     '127/220' => '127/220',
@@ -78,7 +86,7 @@ class GeneratorType extends AbstractType
                 ]
             ])
             ->add('roof_type', ChoiceType::class, [
-                'choices' => Project::getRootTypes()
+                'choices' => Project::getRoofTypes()
             ])
             ->add('module', ChoiceType::class, [
                 'choices' => $this->loadModules()
@@ -101,7 +109,8 @@ class GeneratorType extends AbstractType
     {
         $resolver->setDefaults([
             'status' => self::CHANGE,
-            'member' => null
+            'member' => null,
+            'csrf_protection' => false
         ]);
     }
 

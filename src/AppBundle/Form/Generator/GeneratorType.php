@@ -37,7 +37,7 @@ class GeneratorType extends AbstractType
                 },
             ])
             ->add('roof', ChoiceType::class, [
-                'choices' => Project::getRootTypes()
+                'choices' => Project::getRoofTypes()
             ])
             ->add('structure_maker', ChoiceType::class, [
                 'choices' => Project::getStructureTypes()
