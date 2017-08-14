@@ -7,40 +7,42 @@ const { util } = require('../../components')
 const { pipe } = util
 
 const splitModel = product => ({
-  code: product.code,
-  model: product.description
+  code: product.Codigo,
+  model: product.Descricao
 })
 
 const splitDescription = product => ({
-  code: product.code,
-  description: product.description
+  code: product.Codigo,
+  description: product.Descricao
 })
 
 const components = {
-  inverter: {
+  INVERSOR: {
     split: splitModel,
     send: Sices.sendInverter
   },
-  module: {
+  MODULO: {
     split: splitModel,
     send: Sices.sendModule
   },
-  structure: {
+  ESTRUTURA: {
     split: splitDescription,
     send: Sices.sendStructure
   },
-  stringbox: {
+  STRINGBOX: {
     split: splitDescription,
     send: Sices.sendStringbox
   },
-  variety: {
+  VARIEDADE: {
     split: splitDescription,
     send: Sices.sendVariety
   }
 }
 
-const getComponent = ({ family, ...product }) => ({
-  component: components[family],
+const getFamilyComponent = family => components[family]
+
+const getComponent = ({ Dados: product }) => ({
+  component: getFamilyComponent(product.DescricaoGrupo),
   product
 })
 
@@ -50,9 +52,9 @@ const sendComponent = ({ component, product }) =>
     component.send
   )(product)
 
-const sendProduct = code =>
+const sendProduct = id =>
   Isquik
-    .getProduct(code)
+    .getProduct(id)
     .then(getComponent)
     .then(sendComponent)
 
@@ -63,7 +65,7 @@ const getStatus = (y, component) =>
   })
 
 const create = ({ notification }) =>
-  notification.codes
+  notification.ids
     .map(sendProduct)
     .reduce(getStatus)
 
