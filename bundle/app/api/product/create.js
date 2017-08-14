@@ -56,7 +56,7 @@ const sendProduct = code =>
     .then(getComponent)
     .then(sendComponent)
 
-const getLastComponent = (y, component) =>
+const getStatus = (y, component) =>
   new Promise((resolve, reject) => {
     component
       .then(x => ((x.statusCode === 201) ? resolve(x) : reject(x)))
@@ -65,7 +65,7 @@ const getLastComponent = (y, component) =>
 const create = ({ notification }) =>
   notification.codes
     .map(sendProduct)
-    .reduce(getLastComponent)
+    .reduce(getStatus)
 
 module.exports = {
   create
