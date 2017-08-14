@@ -15,7 +15,6 @@ class InverterCombiner
             $inverter->quantity = 0;
         }
 
-
         $limit = AbstractConfig::$maxInverters;
         $comb = 2;
         $cont = [];
