@@ -14,8 +14,9 @@ const level = {
 
 const getLevel = type => level[type]
 
-const sendAccount = ({ Dados: account }) =>
-  Sices
+const sendAccount = ({ Dados: account }) => {
+  console.log(account)
+  return Sices
     .sendAccount({
       document: account.Cnpj,
       extraDocument: account.InscricaoEstadual,
@@ -29,15 +30,17 @@ const sendAccount = ({ Dados: account }) =>
       number: account.Numero,
       email: account.Email,
       phone: account.Telefone,
+      owner: account.Administrador,
       level: getLevel(account.NivelDesconto.Descricao),
-      status: 1
+      status: true,
+      isquik_id: account.IdIntegrador
     })
     .then(data => createUser({
       email: account.Email,
       phone: account.Telefone,
-      isquik_id: account.Administrador,
       account_id: data.id
     }))
+}
 
 const createAccount = ({ notification }) =>
   Isquik
