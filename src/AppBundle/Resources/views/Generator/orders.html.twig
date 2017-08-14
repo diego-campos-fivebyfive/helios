@@ -1,6 +1,11 @@
 
-<table class="table table-bordered">
+<table class="table table-stripped">
     <thead>
+    <tr>
+        <th colspan="5">
+            MEUS PEDIDOS
+        </th>
+    </tr>
         <tr>
             <th> # </th>
             <th> Descrição </th>
@@ -10,28 +15,33 @@
         </tr>
     </thead>
 
+    <tbody>
+
     {% for order in orders %}
 
-    <tbody>
     <tr>
         <td width="5%"> {{ order.id }} </td>
         <td> {{ order.description }} </td>
         <td width="10%"> {{ order.elements.count }} </td>
         <td width="15%"> {{ order.total|currency }} </td>
         <td width="20%">
-            <div class="btn-group btn-group-justified">
+            <div class="btn-group btn-group-sm btn-group-justified">
             <a class="btn btn-success">
                 <i class="fa fa-pencil"></i>
             </a>
             <a class="btn btn-danger">
                 <i class="fa fa-trash"></i>
             </a>
+                <a class="btn btn-warning">
+                    <i class="fa fa-check"></i>
+                </a>
             </div>
         </td>
     </tr>
-    </tbody>
 
     {% endfor %}
+
+    </tbody>
 
     <tfoot>
         <tr>

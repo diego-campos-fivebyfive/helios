@@ -100,7 +100,7 @@ class ProjectGeneratorController extends AbstractController
         $pagination = $paginator->paginate(
             $qb->getQuery(),
             $request->query->getInt('page', 1),
-            1
+            10
         );
 
         return $this->render('generator.orders', [
