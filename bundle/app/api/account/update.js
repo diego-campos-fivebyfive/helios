@@ -16,7 +16,7 @@ const getLevel = type => level[type]
 
 const sendAccount = ({ Dados: account }) =>
   Sices
-    .updateAccount({
+    .updateAccount(555, {
       document: account.Cnpj,
       extraDocument: account.InscricaoEstadual,
       firstname: account.RazaoSocial,
@@ -30,7 +30,8 @@ const sendAccount = ({ Dados: account }) =>
       email: account.Email,
       phone: account.Telefone,
       level: getLevel(account.NivelDesconto.Descricao),
-      status: ((account.DescricaoStatusIntegrador === 'Aprovado' && !account.Bloqueado) ? 1 : 0)
+      status: true,
+      isquik_id: account.IdIntegrador
     })
     .then(data => updateUser({
       email: account.Email,

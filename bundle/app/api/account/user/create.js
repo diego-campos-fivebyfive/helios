@@ -3,14 +3,12 @@
 const Sices = require('../../../models/sices')
 const Isquik = require('../../../models/isquik')
 
-const sendUser = ({ Dados }, sicesUser) => {
-console.log(Dados)
-  return Sices
+const sendUser = ({ Dados: user }, sicesUser) =>
+  Sices
     .sendUser({
       ...sicesUser,
-      contact: Dados.Nome
+      contact: user.Nome
     })
-}
 
 const createUser = sicesUser =>
   Isquik
