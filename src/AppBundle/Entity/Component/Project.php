@@ -1527,6 +1527,9 @@ class Project implements ProjectInterface
                     'quantity' => $projectInverter->getQuantity()
                 ];
             }
+
+            // Prevent price overwriting with zero value
+            $collection[$inverter->getId()]['unitCostPrice'] = $projectInverter->getUnitCostPrice();
         }
 
         return $collection;
