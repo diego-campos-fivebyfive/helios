@@ -21,6 +21,17 @@ interface OrderInterface
     public function getId();
 
     /**
+     * @param $description
+     * @return OrderInterface
+     */
+    public function setDescription($description);
+
+    /**
+     * @return string
+     */
+    public function getDescription();
+
+    /**
      * @param $account
      * @return OrderInterface
      */

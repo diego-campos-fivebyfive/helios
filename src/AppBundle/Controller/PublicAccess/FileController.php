@@ -4,11 +4,11 @@ namespace AppBundle\Controller\PublicAccess;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Component\Project;
+use Buzz\Message\Request;
 use Knp\Bundle\SnappyBundle\Snappy\LoggableGenerator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -22,7 +22,9 @@ class FileController extends AbstractController
      */
     public function pdfGeneratorAction(Project $project)
     {
-        return $this->render('AppBundle:Proposal:pdf.html.twig', ['project' => $project]);
+        return $this->render('AppBundle:Proposal:pdf.html.twig', [
+            'project' => $project
+        ]);
     }
 
     /**

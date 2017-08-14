@@ -2,10 +2,10 @@
 
 namespace ApiBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-abstract class AbstractApiController extends Controller
+abstract class AbstractApiController extends FOSRestController
 {
     /**
      * Returns a JsonResponse that uses the serializer component if enabled, or json_encode.
@@ -30,5 +30,29 @@ abstract class AbstractApiController extends Controller
         }
 
         return new JsonResponse($data, $status, $headers);
+    }
+
+    /**
+     * @param $id
+     * @return object|\Sonata\CoreBundle\Model\ManagerInterface
+     */
+    public function manager($id)
+    {
+        return $this->get(sprintf('%s_manager', $id));
+    }
+
+    /**
+     * @param $string
+     * @param array $parameters
+     * @param null $domain
+     * @param null $locale
+     * @return string
+     */
+    protected function translate($string, array $parameters = [], $domain = null, $locale = null)
+    {
+        /** @var \Symfony\Component\Translation\DataCollectorTranslator $translator */
+        $translator = $this->get('translator');
+
+        return $translator->trans($string, $parameters, $domain, $locale);
     }
 }

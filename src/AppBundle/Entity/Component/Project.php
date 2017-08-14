@@ -1527,6 +1527,9 @@ class Project implements ProjectInterface
                     'quantity' => $projectInverter->getQuantity()
                 ];
             }
+
+            // Prevent price overwriting with zero value
+            $collection[$inverter->getId()]['unitCostPrice'] = $projectInverter->getUnitCostPrice();
         }
 
         return $collection;
@@ -1808,7 +1811,7 @@ class Project implements ProjectInterface
     /**
      * @inheritDoc
      */
-    public static function getRootTypes()
+    public static function getRoofTypes()
     {
         return array_combine(StructureCalculator::getRoofTypes(), StructureCalculator::getRoofTypes());
     }

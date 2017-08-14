@@ -155,35 +155,6 @@ class OrderController extends FOSRestController
 
     public function putOrderAction(Request $request, Order $order)
     {
-        $compareComponents = function($interface, $id) {
-            return $interface->getId() == $id;
-        };
-
-        $getComponent = function($id, $family, $project) use($compareComponents) {
-            $interfaces = [
-                'inverter' => function (ProjectInverterInterface $i) { return $i; },
-                'module' => function (ProjectModuleInterface $i) { return $i; },
-                'structure' => function (ProjectStructureInterface $i) { return $i; },
-                'stringbox' => function (ProjectStringBoxInterface $i) { return $i; },
-                'variety' => function (ProjectVarietyInterface $i) { return $i; }
-            ];
-
-            $components = [
-                'inverter' => $project->getProjectInverters(),
-                'module' => $project->getProjectModules(),
-                'structure' => $project->getProjectStructures(),
-                'stringbox' => $project->getProjectStringBoxes(),
-                'variety' => $project->getProjectVarieties()
-            ];
-
-            $interface = $interfaces[$family];
-            $component = $components[$family];
-
-            return $component
-                ->filter($compareComponents($interface, $id))
-                ->first();
-        };
-
         /** @var Order $orderManager */
         $orderManager = $this->get('order_manager');
         /** @var Project $projectManager */
@@ -196,20 +167,47 @@ class OrderController extends FOSRestController
             $project = $projectManager->find($dataProject['id']);
 
             foreach ($dataProject['products'] as $dataProduct) {
-                getComponent($dataProduct['id'], $dataProduct['family'], $project)
+                $id = $dataProduct['id'];
+
+                $projectProduct = null;
+                switch ($dataProduct['family']) {
+                    case 'inverter':
+                        $projectProduct = $project->getProjectInverters()->filter(function(ProjectInverterInterface $projectInverter) use($id){
+                            return $projectInverter->getId() == $id;
+                        })->first();
+                        break;
+                    case 'module':
+                        $projectProduct = $project->getProjectModules()->filter(function(ProjectModuleInterface $projectModule) use($id){
+                            return $projectModule->getId() == $id;
+                        })->first();
+                        break;
+                    case 'structure':
+                        $projectProduct = $project->getProjectStructures()->filter(function(ProjectStructureInterface $projectStructure) use($id){
+                            return $projectStructure->getId() == $id;
+                        })->first();
+                        break;
+                    case 'stringbox':
+                        $projectProduct = $project->getProjectStringBoxes()->filter(function(ProjectStringBoxInterface $projectStringbox) use($id){
+                            return $projectStringbox->getId() == $id;
+                        })->first();
+                        break;
+                    case 'variety':
+                        $projectProduct = $project->getProjectVarieties()->filter(function(ProjectVarietyInterface $projectVariety) use($id){
+                            return $projectVariety->getId() == $id;
+                        })->first();
+                        break;
+                }
+                $projectProduct
                     ->setQuantity($dataProduct['quantity'])
                     ->setUnitCostPrice($dataProduct['price']);
             }
-
             $projectManager->save($project);
         }
-
         try {
             $orderManager->save($order);
             $status = Response::HTTP_CREATED;
             $data = $this->splitOrder($order);
-        }
-        catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
             $data = 'can not update order';
         }
@@ -217,4 +215,6 @@ class OrderController extends FOSRestController
         $view = View::create($data)->setStatusCode($status);
         return $this->handleView($view);
     }
+
+
 }
