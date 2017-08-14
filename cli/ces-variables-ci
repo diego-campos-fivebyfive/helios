@@ -4,8 +4,6 @@ source $SICES_PATH/cli/ces-variables
 
 if [ -z ${1+x} ] || [ $1 == '--development' ]; then
 
-  export CES_ISQUIK_PORT=$ISQUIK_MOCK_PORT
-  export CES_ISQUIK_HOST=$ISQUIK_MOCK_HOST
   export CES_SICES_PORT=$SICES_DEVELOPMENT_PORT
   export CES_SICES_HOST=$SICES_DEVELOPMENT_HOST
   export CES_BUNDLE_PORT=$BUNDLE_DEVELOPMENT_PORT
@@ -13,8 +11,6 @@ if [ -z ${1+x} ] || [ $1 == '--development' ]; then
 
 elif [ $1 == '--homolog' ]; then
 
-  export CES_ISQUIK_PORT=$ISQUIK_SERVER_PORT
-  export CES_ISQUIK_HOST=$ISQUIK_SERVER_HOST
   export CES_SICES_PORT=$SICES_HOMOLOG_PORT
   export CES_SICES_HOST=$SICES_HOMOLOG_HOST
   export CES_BUNDLE_PORT=$BUNDLE_HOMOLOG_PORT
@@ -22,8 +18,6 @@ elif [ $1 == '--homolog' ]; then
 
 elif [ $1 == '--production' ]; then
 
-  export CES_ISQUIK_PORT=$ISQUIK_SERVER_PORT
-  export CES_ISQUIK_HOST=$ISQUIK_SERVER_HOST
   export CES_SICES_PORT=$SICES_PRODUCTION_PORT
   export CES_SICES_HOST=$SICES_PRODUCTION_HOST
   export CES_BUNDLE_PORT=$BUNDLE_PRODUCTION_PORT
@@ -31,6 +25,8 @@ elif [ $1 == '--production' ]; then
 
 fi
 
+export CES_ISQUIK_PORT=$ISQUIK_SERVER_PORT
+export CES_ISQUIK_HOST=$ISQUIK_SERVER_HOST
 export CES_ISQUIK_AUTH_KEY=$ISQUIK_AUTH_KEY
 export CES_ISQUIK_AUTH_USER=$ISQUIK_AUTH_USER
 export CES_ISQUIK_AUTH_PASS=$ISQUIK_AUTH_PASS
