@@ -13,6 +13,7 @@ const level = {
 }
 
 const getLevel = type => level[type]
+const getStatus = (blocked, status) => !blocked && status === 'Aprovado'
 
 const sendAccount = ({ Dados: account }) =>
   Sices
@@ -30,7 +31,7 @@ const sendAccount = ({ Dados: account }) =>
       email: account.Email,
       phone: account.Telefone,
       level: getLevel(account.NivelDesconto.Descricao),
-      status: ((account.DescricaoStatusIntegrador === 'Aprovado' && !account.Bloqueado) ? 1 : 0)
+      status: getStatus(account.Bloqueado, account.DescricaoStatusIntegrador)
     })
     .then(data => updateUser({
       email: account.Email,

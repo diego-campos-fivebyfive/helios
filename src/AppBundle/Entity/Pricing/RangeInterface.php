@@ -56,17 +56,6 @@ interface RangeInterface
     public function getLevel();
 
     /**
-     * @param $markup
-     * @return mixed
-     */
-    public function setMarkup($markup);
-
-    /**
-     * @return mixed
-     */
-    public function getMarkup();
-
-    /**
      * @param $price
      * @return mixed
      */
