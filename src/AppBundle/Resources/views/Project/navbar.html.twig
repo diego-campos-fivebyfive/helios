@@ -5,12 +5,12 @@
     <div class="col-lg-12">
         <div class="btn-group btn-group-sm btn-group-justified">
 
-            <a data-step="project_update" class="btn btn-default nav-link project_scaling">
+            <a data-step="project_update" class="btn btn-default nav-link project_scaling {% if _step=='project_create' or _step=='project_update' %}active{% endif %}">
                 <i class="fa fa-sliders"></i>
-                {{ 'project.design'|trans|upper }}
+               {{ 'project.design'|trans|upper }}
             </a>
 
-            <a data-step="project_financial" class="btn btn-default nav-link project_financial">
+            <a data-step="project_financial" class="btn btn-default nav-link project_financial {% if _step=='project_financial' %}active{% endif %}">
                 <i class="fa fa-line-chart"></i>
                 {{ 'project.financial'|trans|upper }}
             </a>
@@ -82,11 +82,11 @@
             Navbar.init();
         }
 
-        {#
-    $('[data-nav]').on('click', function(event) {
+    /*$('[data-nav]').on('click', function(event) {
         event.preventDefault();
         var nav = $(this).data('nav');
         var href = $(this).data('href');
+        alert(href);
         var source = $(this).data('source');
         if ('#' != href) {
 
@@ -118,8 +118,7 @@
                 }
             })
         }
-    });
-    #}
+    });*/
 
     </script>
 
