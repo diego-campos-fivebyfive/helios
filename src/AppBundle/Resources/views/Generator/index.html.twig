@@ -1,5 +1,9 @@
 {% extends view('layout') %}
 
+{% block before_styles %}
+    {% include view('helper.plugins_css') %}
+{% endblock %}
+
 {% block body %}
 
     <style>
@@ -18,14 +22,17 @@
                     <div class="ibox-content">
                         <div class="row">
 
-                            <div id="generator_forms" class="col-md-12">
-                                Sistemas aqui...
+                            <div id="generator_form" class="col-md-12">
                             </div>
 
-                            <div class="col-md-12">
-                                <button id="btn-get-form" class="btn btn-success">
-                                    <i class="fa fa-plus"></i> Sistema
-                                </button>
+                            <div class="hr-line-dashed col-md-12"></div>
+
+                            <div id="generator_components" class="col-md-12">
+                            </div>
+
+                            <div class="hr-line-dashed col-md-12"></div>
+
+                            <div id="generator_orders" class="col-md-12">
                             </div>
 
                         </div>
@@ -40,26 +47,102 @@
 {% block scripts %}
 
     {% include view('helper.request') %}
+    {% include view('helper.plugins_js') %}
 
     <script>
 
-        var ProjectGenerator = {
-            register: function(form){
-                console.log(form);
+        var Project = {
+            id: null,
+            power: 0
+        };
+
+        var OrderManager = {
+            getOrders: function(url){
+                Request.send({
+                    url: url,
+                    callback: function(xhr){
+                        $('#generator_orders').html(xhr.responseText);
+                    }
+                });
+            },
+            register: function(button){
+                button.on('click', function(){
+                    if(Project.id){
+
+                        swal({title: 'Confirma a geração do pedido?',
+                            text: 'Após este processo o projeto atual será removido!',
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: '{{ 'Confirmar'|trans }}',
+                            cancelButtonText: '{{ 'Cancelar'|trans }}',
+                            closeOnConfirm: false
+                        }, function() {
+
+                            sweetAlert({
+                                title: "Gerando pedido...",
+                                text:  "Aguarde!",
+                                type: "info",
+                                showConfirmButton: false
+                            });
+
+                            Request.send({
+                                url: '{{ path('generator_orders_create',{id:'_id_'}) }}'.replace(/_id_/g, Project.id),
+                                method: 'post',
+                                callback: function (xhr) {
+                                    OrderManager.onCreateOrder();
+                                    swal.close();
+                                }
+                            });
+                        });
+                    }
+                });
+            },
+            onCreateOrder: function(){
+                OrderManager.getOrders('{{ path('generator_orders') }}');
+                ProjectGenerator.getCreateForm();
             }
         };
 
-        $('#btn-get-form').on('click', function(){
+        var ProjectGenerator = {
+            lastUrl: null,
+            formProject: function(url){
+                if(url) ProjectGenerator.lastUrl = url;
+                Request.send({
+                    url: ProjectGenerator.lastUrl,
+                    callback: function(xhr){
+                        $('#generator_form').html(xhr.responseText);
+                    }
+                });
+            },
+            register: function(form) {
+                form.on('submit', function(event){
+                    event.preventDefault();
+                    Request.send({
+                        url: form.attr('action'),
+                        method: form.attr('method'),
+                        data: form.serialize(),
+                        callback: function(xhr){
+                            var response = xhr.responseJSON;
+                            if(response.hasOwnProperty('project')){
+                                Project = response.project;
+                                var url = '{{ path('order_generator_project',{id:'_id_'}) }}'.replace(/_id_/g, Project.id);
+                                ProjectGenerator.formProject(url);
+                            }
+                        }
+                    });
+                });
+            },
+            getCreateForm: function(){
+                ProjectGenerator.formProject('{{ path('order_generator_project') }}');
+            },
+            init: function(){
+                ProjectGenerator.getCreateForm();
+                OrderManager.getOrders('{{ path('generator_orders') }}');
+            }
+        };
 
-            Request.send({
-                url: '{{ path('project_generator_form') }}',
-                callback: function(xhr){
-                    $('#generator_forms').append(xhr.responseText);
-                }
-            });
-
-        });
-
+        ProjectGenerator.init();
 
     </script>
 

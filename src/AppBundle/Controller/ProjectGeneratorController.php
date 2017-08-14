@@ -3,21 +3,15 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Component\Project;
-use AppBundle\Entity\Component\ProjectInverter;
-use AppBundle\Entity\Component\ProjectModule;
-use AppBundle\Entity\Component\ProjectStringBox;
-use AppBundle\Entity\Component\ProjectStructure;
-use AppBundle\Entity\Component\ProjectVariety;
-use AppBundle\Form\Component\ProjectInverterType;
-use AppBundle\Form\Component\ProjectModuleType;
-use AppBundle\Form\Component\ProjectStringBoxType;
-use AppBundle\Form\Component\ProjectStructureType;
-use AppBundle\Form\Generator\GeneratorType;
+use AppBundle\Entity\Component\ProjectInterface;
+use AppBundle\Entity\Order\OrderInterface;
+use AppBundle\Form\Component\GeneratorType;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
- * @Route("project/generator")
+ * @Route("generator")
  */
 class ProjectGeneratorController extends AbstractController
 {
@@ -26,31 +20,6 @@ class ProjectGeneratorController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-        /*$form = $this->createForm(GeneratorType::class);
-
-        $form->handleRequest($request);
-
-        $project = $this->manager('project')->create();
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $data = $form->getData();
-
-            $generator = $this->getGenerator();
-            $generator->autoSave(false);
-
-            $project
-                ->setRoofType($data['roof'])
-                ->setStructureType($data['structure']);
-
-            $project = $generator
-                ->project($project)
-                ->power((float)$data['power'])
-                ->module($data['module'], $data['position'])
-                ->maker($data['maker'])
-                ->generate();
-        }*/
-
         $form = $this->createForm(GeneratorType::class);
 
         return $this->render('generator.index', [
@@ -59,182 +28,103 @@ class ProjectGeneratorController extends AbstractController
     }
 
     /**
-     * @Route("/inverters/{id}/update")
+     * @Route("/project", name="order_generator_project")
      */
-    public function updateInverterAction(ProjectInverter $projectInverter, Request $request)
+    public function projectAction(Request $request)
     {
-        $form = $this->createForm(ProjectInverterType::class, $projectInverter);
+        $generator = $this->getGenerator();
 
-        return $this->render('generator.form_inverter', [
-            'form' => $form->createView()
-        ]);
-    }
+        if(null != $id = $request->get('id')){
+            $project = $this->manager('project')->find($id);
+            $defaults = $project->getDefaults();
+        }else {
 
-    /**
-     * @Route("/{id}/inverters/create", name="project_inverter_create")
-     */
-    public function createInverterAction(Project $project, Request $request)
-    {
-        $manager = $this->manager('project_inverter');
-        $projectInverter = $manager->create();
+            /** @var ProjectInterface $project */
+            $project = $this->manager('project')->create();
 
-        $form = $this->createForm(ProjectInverterType::class, $projectInverter);
+            $defaults = $generator->loadDefaults([
+                'source' => 'power'
+            ]);
+
+            $project->setMember($this->member());
+        }
+
+        $form = $this->createForm(GeneratorType::class, $defaults, []);
 
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
 
-            $projectInverter->setProject($project);
-
-            $manager->save($projectInverter);
-
-            return $this->json([
-                'project_inverter' => [
-                    'id' => $projectInverter->getId()
-                ]
-            ]);
-        }
-
-        return $this->render('generator.form_inverter', [
-            'form' => $form->createView()
-        ]);
-    }
-
-    /**
-     * @Route("/modules/{id}/update")
-     */
-    public function updateModuleAction(ProjectModule $projectModule, Request $request)
-    {
-        $form = $this->createForm(ProjectModuleType::class, $projectModule);
-
-        return $this->render('generator.form_module', [
-            'form' => $form->createView()
-        ]);
-    }
-
-    /**
-     * @Route("/string-boxes/{id}/update")
-     */
-    public function updateStringBoxAction(ProjectStringBox $projectStringBox, Request $request)
-    {
-        $form = $this->createForm(ProjectStringBoxType::class, $projectStringBox);
-
-        return $this->render('generator.form_string_box', [
-            'form' => $form->createView()
-        ]);
-    }
-
-    /**
-     * @Route("/structures/{id}/update")
-     */
-    public function updateStructureAction(ProjectStructure $projectStructure, Request $request)
-    {
-        $form = $this->createForm(ProjectStructureType::class, $projectStructure);
-
-        return $this->render('generator.form_structure', [
-            'form' => $form->createView()
-        ]);
-    }
-
-    /**
-     * @Route("/varieties/{id}/update")
-     */
-    public function updateVarietyAction(ProjectVariety $projectVariety, Request $request)
-    {
-        $form = $this->createForm(ProjectStructureType::class, $projectVariety);
-
-        return $this->render('generator.form_variety', [
-            'form' => $form->createView()
-        ]);
-    }
-
-    /**
-     * @Route("/{id}/update", name="project_generator_update")
-     */
-    public function updateAction(Request $request, Project $project)
-    {
-        if($request->isMethod('post')){
-
-            return $this->json([
-                'data' => $request->request->all()
-            ]);
-        }
-
-        return $this->render('generator.update', [
-            'project' =>$project
-        ]);
-    }
-
-    /**
-     * @Route("/form", name="project_generator_form")
-     */
-    public function formsAction(Request $request)
-    {
-        $form = $this->createForm(GeneratorType::class);
-
-        return $this->render('generator.form', [
-            'form' => $form->createView()
-        ]);
-    }
-
-    /**
-     * @Route("/generate", name="project_generator_generate")
-     */
-    public function createAction(Request $request)
-    {
-        $form = $this->createForm(GeneratorType::class);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $data = $form->getData();
-
-            $power = (float)$data['power'];
-            $module = $data['module'];
-            $maker = $data['maker'];
-            $roof = $data['roof'];
-            $position = $data['position'];
-            $structure = $data['structure'];
-
-            $generator = $this->getGenerator();
             $generator->autoSave(false);
+            $generator->reset($project);
 
-            $manager = $this->manager('project');
+            $project->setDefaults($form->getData());
 
-            /** @var Project $project */
-            $project = $manager->create();
-
-            $project
-                ->setRoofType($roof)
-                ->setStructureType($structure);
-
-            $project = $generator
-                ->project($project)
-                ->power($power)
-                ->module($module, $position)
-                ->maker($maker)
-                ->generate();
-
-            $manager->save($project);
+            $generator->generate($project);
 
             return $this->json([
                 'project' => [
-                    'id' => $project->getId()
+                    'id' => $project->getId(),
+                    'power' => $project->getPower()
                 ]
             ]);
         }
 
-        return $this->json([]);
+        return $this->render('generator.generate', [
+            'form' => $form->createView(),
+            'project' => $project,
+            'errors' => $form->getErrors(true)->count()
+        ]);
     }
 
     /**
-     * @Route("/{id}/components", name="project_generator_components")
+     * @Route("/orders", name="generator_orders")
      */
-    public function componentsAction(Request $request, Project $project)
+    public function ordersAction(Request $request)
     {
-        return $this->render('generator.components', [
-            'project' => $project
+        $manager = $this->manager('order');
+
+        $qb = $manager->getEntityManager()->createQueryBuilder();
+
+        $qb->select('o')
+            ->from($manager->getClass(), 'o')
+            ->where('o.account = :account')
+            ->orderBy('o.id', 'desc')
+            ->setParameters([
+                'account' => $this->account()
+            ])
+        ;
+
+        $paginator = $this->getPaginator();
+
+        $pagination = $paginator->paginate(
+            $qb->getQuery(),
+            $request->query->getInt('page', 1),
+            1
+        );
+
+        return $this->render('generator.orders', [
+            'orders' => $pagination
+        ]);
+    }
+
+    /**
+     * @Route("/orders/{id}", name="generator_orders_create")
+     * @Method("post")
+     */
+    public function createOrderAction(Project $project)
+    {
+        $transformer = $this->get('order_transformer');
+
+        /** @var OrderInterface $order */
+        $order = $transformer->transformFromProject($project);
+
+        $this->manager('project')->delete($project);
+
+        return $this->json([
+            'order' => [
+                'id' => $order->getId()
+            ]
         ]);
     }
 

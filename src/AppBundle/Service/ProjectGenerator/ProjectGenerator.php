@@ -37,11 +37,6 @@ class ProjectGenerator
     private $autoSave;
 
     /**
-     * @var bool
-     */
-    private $attempts = 0;
-
-    /**
      * @var \AppBundle\Manager\ProjectManager
      */
     private $manager;

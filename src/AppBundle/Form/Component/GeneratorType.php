@@ -13,6 +13,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -55,8 +56,12 @@ class GeneratorType extends AbstractType
         }
 
         $builder
-            ->add('account_id')
-            ->add('address')
+            ->add('account_id', TextType::class, [
+                'required' => false
+            ])
+            ->add('address', TextType::class, [
+                'required' => false
+            ])
             ->add('grid_voltage', ChoiceType::class, [
                 'choices' => [
                     '127/220' => '127/220',
@@ -77,8 +82,12 @@ class GeneratorType extends AbstractType
                 'currency' => false,
             ])
             ->add('consumption')
-            ->add('latitude')
-            ->add('longitude')
+            ->add('latitude', TextType::class, [
+                'required' => false
+            ])
+            ->add('longitude', TextType::class, [
+                'required' => false
+            ])
             ->add('source', ChoiceType::class, [
                 'choices' => [
                     'power' => 'Power',

@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
- * @Route("generator")
+ * @Route("/debug/generator")
  */
 class GeneratorController extends AbstractController
 {

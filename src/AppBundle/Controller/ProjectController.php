@@ -187,7 +187,11 @@ class ProjectController extends AbstractController
     {
         $defaults = $project->getDefaults();
 
-        $form = $this->createForm(GeneratorType::class, $defaults,[
+        if(!$project->getMember()){
+            $project->setMember($this->member());
+        }
+
+        $form = $this->createForm(GeneratorType::class, $defaults, [
             'member' => $project->getMember()
         ]);
 
