@@ -99,11 +99,9 @@ class StringBoxController extends AbstractController
             if ($stringBox->isPublished()) {
 
                 $this->get('notifier')->notify([
-                    'callback' => 'product_validate',
-                    'body' => [
-                        'id' => $stringBox->getId(),
-                        'family' => 'stringbox'
-                    ]
+                    'Evento' => '302.3',
+                    'Callback' => 'product',
+                    'Id' => $stringBox->getId()
                 ]);
 
                 $message .= 'Publicação executada.';

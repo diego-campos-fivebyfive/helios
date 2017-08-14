@@ -110,13 +110,10 @@ class StructureController extends AbstractController
 
             if ($structure->isPublished()) {
                 $this->get('notifier')->notify([
-                    'callback' => 'product_validate',
-                    'body' => [
-                        'id' => $structure->getId(),
-                        'family' => 'structures'
-                    ]
+                    'Evento' => '302.3',
+                    'Callback' => 'product',
+                    'Id' => $structure->getId()
                 ]);
-
                 $message .= 'Publicação executada.';
             }
 
