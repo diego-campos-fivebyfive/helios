@@ -88,7 +88,8 @@ class ProjectGenerator
             'module' => 32433,
             'inverter_maker' => 60627,
             'structure_maker' => StructureCalculator::DEFAULT_STRUCTURE_MAKER,
-            'string_box_maker' => 61209
+            'string_box_maker' => 61209,
+            'errors' => []
         ], $defaults);
     }
 
@@ -125,6 +126,9 @@ class ProjectGenerator
 
         // AREAS
         $this->generateAreas($this->project);
+
+        // GROUPS
+        $this->generateGroups($this->project);
 
         // HANDLE AREAS
         if($this->project->getLatitude() && $this->project->getLongitude()) {
@@ -208,6 +212,21 @@ class ProjectGenerator
      * @param ProjectInterface $project
      * @return $this
      */
+    public function priceCost(ProjectInterface $project)
+    {
+        /** @var \AppBundle\Manager\Pricing\RangeManager $manager */
+        $manager = $this->manager('range');
+        $precifier = new Precifier($manager);
+
+        $precifier->priceCost($project);
+
+        return $this;
+    }
+
+    /**
+     * @param ProjectInterface $project
+     * @return $this
+     */
     public function generateModules(ProjectInterface $project)
     {
         $defaults = $project->getDefaults();
@@ -227,7 +246,7 @@ class ProjectGenerator
     /**
      * @param ProjectInterface $project
      * @param MakerInterface $maker
-     * @return $this
+     * @return $this|bool
      */
     public function generateInverters(ProjectInterface $project)
     {
@@ -242,40 +261,46 @@ class ProjectGenerator
 
         $inverters = $loader->load($defaults);
 
-        $powerTransformer = 0;
-        foreach ($inverters as $inverter){
+        if(!count($defaults['errors'])) {
 
-            $quantity = $inverter->quantity;
+            $powerTransformer = 0;
+            foreach ($inverters as $inverter) {
 
-            if(!$inverter instanceof InverterInterface) {
-                $inverter = $manager->find($inverter->id);
-            }
+                $quantity = $inverter->quantity;
 
-            if(3 == $inverter->getPhases()) {
-                if($defaults['voltage'] != $inverter->getPhaseVoltage()) {
-                    $powerTransformer += $inverter->getNominalPower() * $quantity;
+                if (!$inverter instanceof InverterInterface) {
+                    $inverter = $manager->find($inverter->id);
+                }
+
+                if (3 == $inverter->getPhases()) {
+                    if ($defaults['voltage'] != $inverter->getPhaseVoltage()) {
+                        $powerTransformer += $inverter->getNominalPower() * $quantity;
+                    }
+                }
+
+                for ($i = 0; $i < $quantity; $i++) {
+
+                    $projectInverter = new ProjectInverter();
+                    $projectInverter
+                        ->setInverter($inverter)
+                        ->setQuantity(1);
+
+                    $project->addProjectInverter($projectInverter);
                 }
             }
 
-            for($i = 0; $i < $quantity; $i++) {
+            $project->setDefaults($defaults);
 
-                $projectInverter = new ProjectInverter();
-                $projectInverter
-                    ->setInverter($inverter)
-                    ->setQuantity(1);
+            $this->resolveTransformer($project, $powerTransformer);
 
-                $project->addProjectInverter($projectInverter);
-            }
+            // INVERTER COMBINATIONS
+            Combiner::combine($project);
+
+            $this->save($project);
+
+        }else{
+            $project->setDefaults($defaults);
         }
-
-        $project->setDefaults($defaults);
-
-        $this->resolveTransformer($project, $powerTransformer);
-
-        // INVERTER COMBINATIONS
-        Combiner::combine($project);
-
-        $this->save($project);
 
         return $this;
     }
@@ -286,9 +311,12 @@ class ProjectGenerator
      */
     public function generateAreas(ProjectInterface $project)
     {
-        $this->resetAreas($project);
-
         $defaults = $project->getDefaults();
+
+        if(count($defaults['errors']))
+            return $this;
+
+        $this->resetAreas($project);
 
         $latitude = $defaults['latitude'];
         $inclination = abs($latitude) < 10 ? 10 : (int) abs($latitude);
@@ -327,8 +355,6 @@ class ProjectGenerator
                 ->setLoss(15)
                 ->setOperation($mppt);
         }
-
-        $this->generateGroups($project);
 
         $this->save($project);
 
@@ -521,6 +547,10 @@ class ProjectGenerator
      */
     public function generateStructures(ProjectInterface $project)
     {
+        $defaults = $project->getDefaults();
+        if(count($defaults['errors']))
+            return $this;
+
         $this->resetStructures($project);
 
         /** @var \AppBundle\Manager\StructureManager $manager */
@@ -539,6 +569,10 @@ class ProjectGenerator
      */
     public function generateVarieties(ProjectInterface $project)
     {
+        $defaults = $project->getDefaults();
+        if(count($defaults['errors']))
+            return $this;
+
         $this->resetVarieties($project);
 
         /** @var \AppBundle\Manager\VarietyManager $manager */
@@ -557,6 +591,10 @@ class ProjectGenerator
      */
     public function generateStringBoxes(ProjectInterface $project)
     {
+        $defaults = $project->getDefaults();
+        if(count($defaults['errors']))
+            return $this;
+
         $this->resetStringBoxes($project);
 
         /** @var \AppBundle\Manager\StringBoxManager $manager */
