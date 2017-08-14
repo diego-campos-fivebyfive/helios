@@ -10,7 +10,8 @@ class Notifier
     public function notify (array $notification) {
 
         $routes = [
-            'account_created' => 'integradores/cadastrointegradores/Notificacao'
+            'account_created' => 'integradores/cadastrointegradores/Notificacao',
+            'product' => 'tabelabase/tabelabase/Notificacao'
         ];
 
         $baseUrl = 'https://api.isquik.com:443';
