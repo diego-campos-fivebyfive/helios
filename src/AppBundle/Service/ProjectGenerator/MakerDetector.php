@@ -5,6 +5,7 @@ namespace AppBundle\Service\ProjectGenerator;
 use AppBundle\Entity\Component\Inverter;
 use AppBundle\Entity\Component\InverterInterface;
 use AppBundle\Entity\Component\Maker;
+use AppBundle\Entity\Component\MakerInterface;
 use AppBundle\Manager\InverterManager;
 
 class MakerDetector
@@ -21,6 +22,31 @@ class MakerDetector
     function __construct(InverterManager $manager)
     {
         $this->manager = $manager;
+    }
+
+    /**
+     * @param array $defaults
+     * @return array
+     */
+    public function fromDefaults(array $defaults)
+    {
+        $power = (float) $defaults['power'];
+        $makers = $this->fromPower($power);
+
+        if(in_array($defaults['grid_phase_number'], ['Monophasic', 'Biphasic'])){
+            $triphasicMakers = $this->filterNotOnlyTriphasic();
+            foreach ($makers as $key => $maker){
+                if(!in_array($maker, $triphasicMakers)){
+                    unset($makers[$key]);
+                }
+            }
+        }
+
+        $ids = array_map(function(MakerInterface $maker){
+            return $maker->getId();
+        }, array_values($makers));
+
+        return $ids;
     }
 
     /**
