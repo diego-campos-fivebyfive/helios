@@ -32,6 +32,10 @@
 
     $('#bloco').attr('style', 'background-color: #'+color);
     $('.separator').attr('style', 'background-color: #'+color);
+    var separator = $('.separator');
+    separator = separator[separator.length-1];
+    $(separator).removeClass("separator");
+    $(separator).attr("style",'height: 1px;background-color: #'+color);
 
     var editor = $('.edit');
     $.each(editor, function(i, e){

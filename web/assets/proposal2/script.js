@@ -289,7 +289,7 @@ function generatePdfProposal(pdfBtn) {
             console.log(xhr.status);
             if(xhr.status == 200) redirectPdf(xhr.responseJSON['filename']);
             if(xhr.status == 404) msgGeneratorPdf('Arquivo não encontrado.');
-            if(xhr.status == 500) redirectPdf(xhr.responseJSON['filename']);//msgGeneratorPdf('Não foi possível gerar o arquivo PDF.');
+            if(xhr.status == 500) msgGeneratorPdf('Não foi possível gerar o arquivo PDF.');
 
         }
     })
