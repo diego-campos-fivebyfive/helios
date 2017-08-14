@@ -5,7 +5,7 @@ const Isquik = require('../../../models/isquik')
 
 const sendUser = ({ Dados: user }, sicesUser) =>
   Sices
-    .updateUser(556, {
+    .updateUser(user.IdContatoSicesSolar, {
       ...sicesUser,
       contact: user.Nome
     })

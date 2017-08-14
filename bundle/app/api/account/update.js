@@ -16,7 +16,7 @@ const getLevel = type => level[type]
 
 const sendAccount = ({ Dados: account }) =>
   Sices
-    .updateAccount(555, {
+    .updateAccount(account.IdSicesSolar, {
       document: account.Cnpj,
       extraDocument: account.InscricaoEstadual,
       firstname: account.RazaoSocial,
