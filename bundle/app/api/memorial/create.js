@@ -3,7 +3,7 @@
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
 
-const level = {
+const levels = {
   'BLACK': 'black',
   'PLATINUM': 'platinum',
   'PREMIUM': 'premium',
@@ -11,7 +11,7 @@ const level = {
   'PROMOCIONAL': 'promotional'
 }
 
-const getLevel = type => level[type]
+const getLevel = type => levels[type]
 
 const sendMemorial = ({ Dados: memorial }) =>
   Sices
