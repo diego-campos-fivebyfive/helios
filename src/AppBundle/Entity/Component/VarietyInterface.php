@@ -72,6 +72,17 @@ interface VarietyInterface
     public function getDescription();
 
     /**
+     * @param $status
+     * @return VarietyInterface
+     */
+    public function setStatus($status);
+
+    /**
+     * @return boolean
+     */
+    public function getStatus();
+
+    /**
      * @param $datasheet
      * @return VarietyInterface
      */
