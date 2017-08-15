@@ -15,31 +15,7 @@ class ModuleController extends AbstractApiController
      */
     public function getModulesAction(Request $request)
     {
-        $qb = $this->manager('module')->createQueryBuilder();
-
-        $pagination = $this->paginator()->paginate(
-            $qb->getQuery(),
-            $request->query->getInt('page', 1),
-            20
-        );
-
-        // TODO: This method is temporary, you will soon be moved to a service
-        $currentPage = $pagination->getCurrentPageNumber();
-        $itemsPerPage = $pagination->getItemNumberPerPage();
-        $totalCount = $pagination->getTotalItemCount();
-        $modules = $pagination->getItems();
-
-        if(count($modules)) {
-            $formatter = $this->get('data_formatter');
-            $modules = $formatter->format($modules, ['maker' => 'id']);
-        }
-
-        $data = [
-            'page' => $currentPage,
-            'per_page' => $itemsPerPage,
-            'total' => $totalCount,
-            'modules' => $modules
-        ];
+        $data = $this->get('api_handler')->handleRequest($request, ['maker' => 'id']);
 
         $view = View::create($data);
 
