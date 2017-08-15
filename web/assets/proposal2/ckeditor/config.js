@@ -4,9 +4,24 @@
  */
 
 CKEDITOR.editorConfig = function( config ) {
-	// Define changes to default configuration here. For example:
-	// config.language = 'fr';
-	// config.uiColor = '#AADC6E';
-    config.extraPlugins = 'hcard,sourcedialog,justify,image2';
-   // config.removePlugins = 'image,div,flash,find,smiley,specialchar,iframe';
+	config.extraPlugins = 'hcard,sourcedialog,justify,image2';
+    config.toolbarGroups = [
+        //{ name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+        { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+        { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+        { name: 'forms', groups: [ 'forms' ] },
+        { name: 'insert', groups: [ 'insert' ] },
+        '/',
+        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+        { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+        { name: 'links', groups: [ 'links' ] },
+        '/',
+        { name: 'styles', groups: [ 'styles' ] },
+        { name: 'colors', groups: [ 'colors' ] },
+        { name: 'tools', groups: [ 'tools' ] },
+        { name: 'others', groups: [ 'others' ] },
+        { name: 'about', groups: [ 'about' ] }
+    ];
+
+    config.removeButtons = 'Source,Save,NewPage,Preview,Print,Templates,PasteText,PasteFromWord,SelectAll,Blockquote,CreateDiv,BidiLtr,BidiRtl,Language,Link,Unlink,Anchor,Image,Flash,Smiley,PageBreak,Iframe,Maximize,ShowBlocks,About,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField';
 };
