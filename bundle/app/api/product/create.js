@@ -65,7 +65,7 @@ const getStatus = (y, component) =>
   })
 
 const create = ({ notification }) =>
-  notification.ids
+  notification.id
     .map(sendProduct)
     .reduce(getStatus)
 
