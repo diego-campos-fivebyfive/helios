@@ -172,6 +172,10 @@ services:
         class: AppBundle\Service\Order\OrderTransformer
         arguments: ['@order_manager']
 
+    range_loader:
+        class: AppBundle\Service\Pricing\RangeLoader
+        arguments: ['@range_manager']
+
     # Form Services
     project_generator_type:
         class: AppBundle\Form\Component\GeneratorType
