@@ -7,6 +7,12 @@ namespace AppBundle\Entity\Order;
  */
 interface ElementInterface
 {
+    const TAG_MODULE = 'module';
+    const TAG_INVERTER = 'inverter';
+    const TAG_STRUCTURE = 'structure';
+    const TAG_STRING_BOX = 'string_box';
+    const TAG_VARIETY = 'variety';
+
     /**
      * @return int
      */
