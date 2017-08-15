@@ -39,6 +39,13 @@ class Customer extends AbstractCustomer
     protected $id;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="isquik_id", type="integer", nullable=true)
+     */
+    private $isquik_id;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=15, nullable=true)
@@ -283,6 +290,24 @@ class Customer extends AbstractCustomer
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setIsquikId($isquik_id)
+    {
+        $this->isquik_id = $isquik_id;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getIsquikId()
+    {
+        return $this->isquik_id;
     }
 
     /**

@@ -38,6 +38,7 @@ class AccountsController extends FOSRestController
         $accountManager = $this->get('account_manager');
         $account = $accountManager->create();
         $account
+            ->setIsquikId($data['isquik_id'])
             ->setDocument($data['document'])
             ->setExtraDocument($data['extraDocument'])
             ->setFirstName($data['firstname'])
@@ -58,6 +59,7 @@ class AccountsController extends FOSRestController
             $status = Response::HTTP_CREATED;
             $data = [
                 'id' => $account->getId(),
+                'isquik_id' => $account->getIsquikId(),
                 'firstname' => $account->getFirstName(),
                 'lastname' => $account->getLastName(),
                 'extraDocument' => $account->getExtraDocument(),
@@ -96,6 +98,7 @@ class AccountsController extends FOSRestController
 
             $data = [
                 'id' => $account->getId(),
+                'isquik_id' =>$account->getIsquikId(),
                 'firstname' => $account->getFirstname(),
                 'lastname' => $account->getLastname(),
                 'email' => $account->getEmail(),
@@ -133,6 +136,7 @@ class AccountsController extends FOSRestController
         /** @var AccountInterface $accountManager */
         $accountManager = $this->get('account_manager');
         $account
+            ->setIsquikId($data['isquik_id'])
             ->setFirstName($data['firstname'])
             ->setLastName($data['lastname'])
             ->setExtraDocument($data['extraDocument'])
@@ -145,14 +149,15 @@ class AccountsController extends FOSRestController
             ->setStreet($data['street'])
             ->setNumber($data['number'])
             ->setPostcode($data['postcode'])
-            ->setLevel($data['level'])
-            ->setStatus($data['status']);
+            ->setStatus($data['status'])
+            ->setLevel($data['level']);
 
         try {
             $accountManager->save($account);
             $status = Response::HTTP_ACCEPTED;
             $data = [
                 'id' => $account->getId(),
+                'isquik_id' =>$account->getIsquikId(),
                 'firstname' => $account->getFirstName(),
                 'lastname' => $account->getLastName(),
                 'extraDocument' => $account->getExtraDocument(),

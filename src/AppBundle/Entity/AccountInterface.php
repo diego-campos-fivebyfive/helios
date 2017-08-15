@@ -36,6 +36,17 @@ interface AccountInterface
     public function getLevel();
 
     /**
+     * @param $isquik_id
+     * @return AccountInterface
+     */
+    public function setIsquikId($isquik_id);
+
+    /**
+     * @return integer
+     */
+    public function getIsquikId();
+
+    /**
      * Checks whether the account is free or has a linked subscription
      *
      * @return bool

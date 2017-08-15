@@ -30,7 +30,8 @@ const sendAccount = ({ Dados: account }) =>
       email: account.Email,
       phone: account.Telefone,
       level: getLevel(account.NivelDesconto.Descricao),
-      status: true
+      status: true,
+      isquik_id: account.IdIntegrador
     })
     .then(data => createUser({
       email: account.Email,
