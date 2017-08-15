@@ -6,9 +6,12 @@ use AppBundle\Entity\Component\Project;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
+
 
 /**
  * @Route("/proposal")
+ * @Breadcrumb("Proposal")
  */
 class ProposalController extends AbstractController
 {

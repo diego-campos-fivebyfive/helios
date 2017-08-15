@@ -1074,13 +1074,12 @@
 {% endblock %}
 
 {% block scripts %}
+
     {% include view('helper.plugins_js') %}
     <script src="{{ asset('assets/app-charts.js') }}"></script>
     <script src="{{ asset('assets/proposal2/script.js') }}"></script>
-    {#<script src="http://cdn.ckeditor.com/4.7.0/standard-all/ckeditor.js"></script>#}
     <script src="{{ asset('assets/proposal2/ckeditor/ckeditor.js') }}"></script>
     <script src="{{ asset('assets/proposal2/dragable.js') }}"></script>
-
     <script src="{{ asset('assets/proposal2/jscolor.js') }}"></script>
 
     <script>
