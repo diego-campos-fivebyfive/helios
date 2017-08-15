@@ -69,6 +69,13 @@ class Variety implements VarietyInterface
     private $description;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="status", type="boolean", nullable=true)
+     */
+    private $status;
+
+    /**
      * @inheritDoc
      */
     function __toString()
@@ -158,6 +165,23 @@ class Variety implements VarietyInterface
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 
     /**
