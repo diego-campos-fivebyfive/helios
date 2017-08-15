@@ -86,7 +86,7 @@ class StringBox implements StringBoxInterface
      */
     function __toString()
     {
-        return $this->description;
+        return (string) $this->description;
     }
 
     /**
