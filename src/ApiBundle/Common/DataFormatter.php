@@ -1,9 +1,23 @@
 <?php
 
+/*
+ * This file is part of the SicesSolar package.
+ *
+ * (c) SicesSolar <http://sicesbrasil.com.br/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace ApiBundle\Common;
 
 use JMS\Serializer\SerializerInterface;
 
+/**
+ * This class is a data conversion service for API output
+ *
+ * @author Claudinei Machado <cjchamado@gmail.com>
+ */
 class DataFormatter
 {
     /**
