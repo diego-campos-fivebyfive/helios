@@ -384,7 +384,6 @@ $(document).ready(function(){
             generateChart();
            /* clearInterval(interval);
         }
-        console.log("x");
     }, 50);
 */
 
