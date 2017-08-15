@@ -32,16 +32,13 @@ class ModuleController extends AbstractApiController
         $module = $moduleManager->create();
         $module
             ->setCode($data['code'])
-            ->setModel($data['model']);
+            ->setModel($data['model'])
+            ->setAvailable($data['available']);
 
         try {
             $moduleManager->save($module);
             $status = Response::HTTP_CREATED;
-            $data = [
-                'id' => $module->getId(),
-                'code' => $module->getCode(),
-                'model' => $module->getModel()
-            ];
+            $data = $this->get('api_formatter')->format($module, ['maker' => 'id']);
         }
         catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
