@@ -13,7 +13,6 @@ const level = {
 }
 
 const getLevel = type => level[type]
-const getStatus = (blocked, status) => !blocked && status === 'Aprovado'
 
 const sendAccount = ({ Dados: account }) =>
   Sices
@@ -33,7 +32,6 @@ const sendAccount = ({ Dados: account }) =>
       level: getLevel(account.NivelDesconto.Descricao),
       status: true,
       isquik_id: account.IdIntegrador
-
     })
     .then(data => updateUser({
       email: account.Email,
