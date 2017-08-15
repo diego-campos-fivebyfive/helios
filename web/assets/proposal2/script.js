@@ -387,9 +387,6 @@ $(document).ready(function(){
         console.log("x");
     }, 50);
 */
-    /*setTimeout(function () {
-        saveIntervalProposal();
-    },1000);*/
 
 
     var color = $($('#bloco').children()[0]).data('color-page');
