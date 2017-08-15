@@ -40,6 +40,40 @@ class OrderManagerTest extends AppTestCase
         $this->assertEquals($total, $order->getTotal());
     }
 
+    public function testSelfAssociations()
+    {
+        $manager = $this->getOrderManager();
+
+        $order1 = $manager->create();
+        $order2 = $manager->create();
+
+        $this->assertFalse($order1->isBudget());
+
+        $order1->addChildren($order2);
+        $this->assertTrue($order1->isBudget());
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testSelfAssociationException()
+    {
+        $manager = $this->getOrderManager();
+
+        $order1 = $manager->create();
+        $order2 = $manager->create();
+        $order3 = $manager->create();
+
+        $order2->setParent($order1);
+        $this->assertTrue($order1->isBudget());
+
+        // TODO: Uncomment to run all tests
+        //$order3->addChildren($order1);    via addChildren(parent)
+        //$order2->addChildren($order3);    via children::addChildren
+        //$order1->setParent($order3);      via parent::setParent()
+        $order3->setParent($order3);      //via sameObject
+    }
+
     /**
      * @return \AppBundle\Manager\OrderManager|object
      */
