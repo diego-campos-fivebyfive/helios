@@ -1,3 +1,7 @@
 services:
     account_provider:
         class: ApiBundle\Provider\AccountProvider
+
+    data_formatter:
+        class: ApiBundle\Common\DataFormatter
+        arguments: ['@serializer']
