@@ -6,9 +6,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Order\Order;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Route("order")
+ * @Route("orders")
  */
 class OrderController extends AbstractController
 {
@@ -40,6 +41,24 @@ class OrderController extends AbstractController
             'callback' => 'order_created',
             'body' => ['id' => $order->getId()]
         ]);
-
     }
+
+    /**
+     * @Route("/budgets/create", name="order_budget_create")
+     */
+    public function createBudgetAction(Request $request)
+    {
+        $childrens = $request->get('childrens');
+
+        $transformer = $this->get('order_transformer');
+
+        $order = $transformer->transformFromChildrens($childrens);
+
+        return $this->json([
+            'order' => [
+                'id' => $order->getId()
+            ]
+        ]);
+    }
+
 }

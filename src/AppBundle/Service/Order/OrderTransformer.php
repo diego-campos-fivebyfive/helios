@@ -139,11 +139,12 @@ class OrderTransformer
 
         /** @var OrderInterface $order */
         $order = $this->manager->create();
-
         foreach ($childrens as $children){
-            $order->addChildren($children);
-            if(!$order->getAccount() && $children->getAccount()){
-                $order->setAccount($children->getAccount());
+            if(!$children->getParent()) {
+                $order->addChildren($children);
+                if (!$order->getAccount() && $children->getAccount()) {
+                    $order->setAccount($children->getAccount());
+                }
             }
         }
 
@@ -178,7 +179,7 @@ class OrderTransformer
     private function normalizeChildrens(array &$childrens)
     {
         foreach ($childrens as $key => $children){
-            if(is_int($children)){
+            if(is_numeric($children)){
                 $childrens[$key] = $this->manager->find($children);
             }
         }
