@@ -27,11 +27,6 @@
 
                             <div class="hr-line-dashed col-md-12"></div>
 
-                            <div id="generator_components" class="col-md-12">
-                            </div>
-
-                            <div class="hr-line-dashed col-md-12"></div>
-
                             <div id="generator_orders" class="col-md-12">
                             </div>
 
@@ -48,6 +43,7 @@
 
     {% include view('helper.request') %}
     {% include view('helper.plugins_js') %}
+    {% include view('helper.numbers') %}
 
     <script>
 
@@ -56,10 +52,26 @@
             power: 0
         };
 
+        var Order = {
+            id: null
+        };
+
         var OrderManager = {
+            currentUrl: null,
+            getElements: function(){
+                if(Order.id){
+                    Request.send({
+                        url: '{{ path('generator_orders_elements', {id:'_id_'}) }}'.replace(/_id_/g, Order.id),
+                        callback: function(xhr){
+                            $('#order_elements').html(xhr.responseText);
+                        }
+                    });
+                }
+            },
             getOrders: function(url){
+                if(url)  OrderManager.currentUrl = url;
                 Request.send({
-                    url: url,
+                    url: OrderManager.currentUrl,
                     callback: function(xhr){
                         $('#generator_orders').html(xhr.responseText);
                     }
@@ -69,7 +81,7 @@
                 button.on('click', function(){
                     if(Project.id){
 
-                        swal({title: 'Confirma a geração do pedido?',
+                        swal({title: 'Confirma a geração do orçamento?',
                             text: 'Após este processo o projeto atual será removido!',
                             type: "warning",
                             showCancelButton: true,
@@ -101,6 +113,9 @@
             onCreateOrder: function(){
                 OrderManager.getOrders('{{ path('generator_orders') }}');
                 ProjectGenerator.getCreateForm();
+            },
+            onSaveElement: function(){
+
             }
         };
 
@@ -116,22 +131,6 @@
                 });
             },
             register: function(form) {
-                form.on('submit', function(event){
-                    event.preventDefault();
-                    Request.send({
-                        url: form.attr('action'),
-                        method: form.attr('method'),
-                        data: form.serialize(),
-                        callback: function(xhr){
-                            var response = xhr.responseJSON;
-                            if(response.hasOwnProperty('project')){
-                                Project = response.project;
-                                var url = '{{ path('order_generator_project',{id:'_id_'}) }}'.replace(/_id_/g, Project.id);
-                                ProjectGenerator.formProject(url);
-                            }
-                        }
-                    });
-                });
             },
             getCreateForm: function(){
                 ProjectGenerator.formProject('{{ path('order_generator_project') }}');

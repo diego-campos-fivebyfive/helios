@@ -49,6 +49,11 @@ interface ModuleInterface
     public function getModel();
 
     /**
+     * @return string
+     */
+    public function getDescription();
+
+    /**
      * @param $cellNumber
      * @return ModuleInterface
      */

@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Order;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * Order
@@ -13,6 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Order implements OrderInterface
 {
+    use ORMBehaviors\Timestampable\Timestampable;
+
     /**
      * @var int
      *
@@ -28,6 +31,13 @@ class Order implements OrderInterface
      * @ORM\Column(type="string", nullable=true)
      */
     private $description;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $note;
 
     /**
      * @var int
@@ -46,7 +56,7 @@ class Order implements OrderInterface
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Element", mappedBy="order", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Element", mappedBy="order", cascade={"persist", "remove"})
      */
     private $elements;
 
@@ -83,6 +93,24 @@ class Order implements OrderInterface
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setNote($note)
+    {
+        $this->note = $note;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getNote()
+    {
+        return $this->note;
     }
 
     /**

@@ -32,6 +32,17 @@ interface OrderInterface
     public function getDescription();
 
     /**
+     * @param $note
+     * @return OrderInterface
+     */
+    public function setNote($note);
+
+    /**
+     * @return string
+     */
+    public function getNote();
+
+    /**
      * @param $account
      * @return OrderInterface
      */
@@ -74,4 +85,14 @@ interface OrderInterface
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getElements();
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt();
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt();
 }

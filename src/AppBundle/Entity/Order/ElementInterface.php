@@ -35,6 +35,17 @@ interface ElementInterface
     public function getDescription();
 
     /**
+     * @param $tag
+     * @return ElementInterface
+     */
+    public function setTag($tag);
+
+    /**
+     * @return string
+     */
+    public function getTag();
+
+    /**
      * @param $quantity
      * @return ElementInterface
      */

@@ -244,6 +244,14 @@ class Module implements ModuleInterface
     /**
      * @inheritDoc
      */
+    public function getDescription()
+    {
+        return $this->model;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setMaxPower($maxPower)
     {
         $this->maxPower = $maxPower;

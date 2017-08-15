@@ -64,7 +64,7 @@
                     <div class="col-md-2">
                         <label> &nbsp; </label>
                         <button type="submit" class="btn btn-success btn-block ladda-button" data-style="zoom-in">
-                            <i class="fa fa-check"></i> Recalcular
+                            <i class="fa fa-check"></i> {{ project.id is not null ? 'Recalcular' : 'Gerar' }}
                         </button>
                     </div>
                 </div>
@@ -167,8 +167,6 @@
         </tr>
     {% endfor %}
 
-
-
     {% set projectModule = project.projectModules.first %}
 
     {% if projectModule %}
@@ -240,7 +238,7 @@
                     <tr>
                         <td colspan="2">
                             <a id="add_project_to_order" class="btn btn-primary">
-                                <i class="fa fa-check"></i> Adicionar aos pedidos pendentes
+                                <i class="fa fa-check"></i> Adicionar aos orçamentos pendentes
                             </a>
                         </td>
                         <td colspan="2">
@@ -265,7 +263,13 @@
 
 <script>
 
-    ProjectGenerator.register($('#form_project'));
+    var form_project = $('#form_project');
+    var generate_makers = $('#generator_inverter_maker');
+    var generator_power = $('#generator_power');
+    var last_power = generator_power.val();
+    var generator_g_phase = form_project.find('#generator_grid_phase_number');
+    var generator_g_voltage = form_project.find('#generator_grid_voltage');
+
 
     OrderManager.register($('#add_project_to_order'));
 
@@ -455,5 +459,121 @@
     });
 
     {% endif %}
+
+    function checkGridOptions(choicePhase, choiceVoltage){
+
+        var checkOption = function() {
+            var phase = choicePhase.val();
+            var voltage = choiceVoltage.val();
+
+            if ('Monophasic' == phase) {
+                choiceVoltage.find('option[value="220/380"]').attr('selected', 'selected');
+                choiceVoltage.find('option[value="127/220"]').attr('disabled', 'disabled');
+            } else {
+                choiceVoltage.find('option').removeAttr('disabled');
+            }
+
+            if ('127/220' == voltage) {
+                choicePhase.find('option[value="Monophasic"]').attr('disabled', 'disabled');
+            } else {
+                choicePhase.find('option').removeAttr('disabled');
+            }
+        };
+
+        checkOption();
+
+        choicePhase.on('change', function(){
+            checkOption();
+        });
+
+        choiceVoltage.on('change', function(){
+            checkOption();
+        });
+    }
+
+    checkGridOptions(generator_g_phase, generator_g_voltage);
+    generator_g_phase.on('change', function(){
+        detect_makers();
+    });
+
+    function get_available_makers(callback) {
+        Request.send({
+            url: '{{ path('detect_makers') }}',
+            method: 'post',
+            data: form_project.serialize(),
+            callback: function(xhr) {
+                var response = xhr.responseJSON;
+                var makers = response.makers;
+                if(!makers.length){
+                    generate_makers.find('option').attr('disabled', 'disabled');
+                }
+                callback(makers);
+            }
+        });
+    }
+
+    function detect_makers(){
+        get_available_makers(function (makers) {
+            if (!makers.length) {
+                generator_power.val(last_power);
+            } else {
+                $.each(generate_makers.find('option'), function (i, option) {
+                    var id = parseInt($(option).val());
+                    if (makers.indexOf(id) >= 0) {
+                        $(option).removeAttr('disabled');
+                    } else {
+                        $(option).attr('disabled', 'disabled');
+                    }
+                });
+                if (1 == makers.length || null == generate_makers.val()) {
+                    generate_makers.find('option[value="' + makers[0] + '"]').attr('selected', 'selected');
+                }
+            }
+        });
+    }
+
+    generator_power.on('change', function(){
+        detect_makers();
+    }).on('focus', function(){
+        last_power = $(this).val();
+    });
+
+    var button_config = form_project.find('[type="submit"]');
+    button_config.ladda();
+    form_project.on('submit', function(event){
+        event.preventDefault();
+        button_config.ladda('start');
+        get_available_makers(function(makers){
+            var maker_id = parseInt(generate_makers.val());
+            if (makers.length && makers.indexOf(maker_id) >= 0) {
+                Request.send({
+                    url: form_project.attr('action'),
+                    method: form_project.attr('method'),
+                    data: form_project.serialize(),
+                    callback: function(xhr){
+                        if(200 == xhr.status) {
+                            var response = xhr.responseJSON;
+                            if (response.hasOwnProperty('project')) {
+                                Project = response.project;
+                                if(Project.id) {
+                                    var url = '{{ path('order_generator_project',{id:'_id_'}) }}'.replace(/_id_/g, Project.id);
+                                    ProjectGenerator.formProject(url);
+                                }
+                            }
+                            if(response.errors.length){
+                                swal('Ooops', response.errors[0], 'warning');
+                            }
+                        }else{
+                            swal('Ooops', 'Houve um erro ao enviar a solicitação!', 'warning');
+                        }
+                        button_config.ladda('stop');
+                    }
+                });
+            } else {
+                button_config.ladda('stop');
+                swal('Ooops', 'O inversor selecionado não é compatível com esta potência!', 'error');
+            }
+        });
+    });
 
 </script>

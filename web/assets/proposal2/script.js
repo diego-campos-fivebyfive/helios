@@ -279,6 +279,16 @@ $('#btnGeneratePdf').click(function () {
     })
 });
 
+$('.nav').on('click', function(){
+    $.ajax({
+        url:$('#saveProposal').data('url'),
+        method:'post',
+        data:{content:$('#bloco').html()},
+        complete:function (xhr) {
+        }
+    })
+});
+
 function generatePdfProposal(pdfBtn) {
     $.ajax({
         url:$('#generatePdfProposal').data('url'),
@@ -306,7 +316,7 @@ function msgGeneratorPdf(msg) {
     sweetAlert("Ops!", msg, "warning");
     window.setTimeout(function(){
         swal.close();
-    }, 2500);
+    }, 2300);
 }
 
 function saveIntervalProposal() {
