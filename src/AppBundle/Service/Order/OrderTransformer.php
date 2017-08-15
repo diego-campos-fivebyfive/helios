@@ -11,6 +11,7 @@
 
 namespace AppBundle\Service\Order;
 
+use AppBundle\Entity\Component\MakerInterface;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Order\Element;
 use AppBundle\Entity\Order\OrderInterface;
@@ -56,7 +57,8 @@ class OrderTransformer
                 $module->getCode(),
                 $module->getModel(),
                 $projectModule->getUnitCostPrice(),
-                $projectModule->getQuantity()
+                $projectModule->getQuantity(),
+                Element::TAG_MODULE
             );
         }
 
@@ -73,7 +75,8 @@ class OrderTransformer
                 $inverter->getCode(),
                 $inverter->getModel(),
                 $price,
-                $quantity
+                $quantity,
+                Element::TAG_INVERTER
             );
         }
 
@@ -86,7 +89,8 @@ class OrderTransformer
                 $stringBox->getCode(),
                 $stringBox->getDescription(),
                 $projectStringBox->getUnitCostPrice(),
-                $projectStringBox->getQuantity()
+                $projectStringBox->getQuantity(),
+                Element::TAG_STRING_BOX
             );
         }
 
@@ -99,7 +103,8 @@ class OrderTransformer
                 $structure->getCode(),
                 $structure->getDescription(),
                 $projectStructure->getUnitCostPrice(),
-                $projectStructure->getQuantity()
+                $projectStructure->getQuantity(),
+                Element::TAG_STRUCTURE
             );
         }
 
@@ -112,7 +117,8 @@ class OrderTransformer
                 $variety->getCode(),
                 $variety->getDescription(),
                 $projectVariety->getUnitCostPrice(),
-                $projectVariety->getQuantity()
+                $projectVariety->getQuantity(),
+                Element::TAG_VARIETY
             );
         }
 
@@ -160,7 +166,7 @@ class OrderTransformer
      * @param $unitPrice
      * @param $quantity
      */
-    private function addOrderElement(OrderInterface $order, $code, $description, $unitPrice, $quantity)
+    private function addOrderElement(OrderInterface $order, $code, $description, $unitPrice, $quantity, $tag)
     {
         $element = new Element();
         $element
@@ -168,6 +174,7 @@ class OrderTransformer
             ->setDescription($description)
             ->setQuantity($quantity)
             ->setUnitPrice($unitPrice)
+            ->setTag($tag)
         ;
 
         $order->addElement($element);
