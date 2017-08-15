@@ -4,11 +4,16 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Component\ProjectInterface;
+use AppBundle\Entity\Order\Element;
+use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Form\Component\GeneratorType;
+use AppBundle\Form\Order\ElementType;
+use AppBundle\Form\Order\OrderType;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("generator")
@@ -55,14 +60,24 @@ class ProjectGeneratorController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
 
-            $generator->autoSave(false);
-            $generator->reset($project);
+            if($project->getId()) {
+                $generator->autoSave(false);
+                $generator->reset($project);
+            }
 
             $project->setDefaults($form->getData());
-
             $generator->generate($project);
 
+            $errors = [];
+            $defaults  = $project->getDefaults();
+            if(count($defaults['errors'])){
+                if(in_array('exhausted_inverters', $defaults['errors'])) {
+                    $errors[] = 'Número máximo de inversores excedido!';
+                }
+            }
+
             return $this->json([
+                'errors' => $errors,
                 'project' => [
                     'id' => $project->getId(),
                     'power' => $project->getPower()
@@ -126,6 +141,136 @@ class ProjectGeneratorController extends AbstractController
                 'id' => $order->getId()
             ]
         ]);
+    }
+
+    /**
+     * @Route("/orders/{id}/update", name="generator_orders_update")
+     */
+    public function updateOrderAction(Request $request, Order $order)
+    {
+        $form = $this->createForm(OrderType::class, $order);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            $this->manager('order')->save($order);
+
+            return $this->json([]);
+        }
+
+        return $this->render('generator.order', [
+            'form' => $form->createView(),
+            'order' => $order
+        ]);
+    }
+
+    /**
+     * @Route("/orders/{id}/delete", name="generator_orders_delete")
+     * @Method("delete")
+     */
+    public function deleteOrderAction(Order $order)
+    {
+        $this->manager('order')->delete($order);
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/orders/{id}/elements", name="generator_orders_elements")
+     */
+    public function getOrderElementsAction(Order $order)
+    {
+        return $this->render('generator.order_elements', [
+            'order' => $order
+        ]);
+    }
+
+
+    /**
+     * @Route("/orders/{id}/elements/create/{type}", name="generator_orders_element_create")
+     */
+    public function createOrderElementAction(Order $order, $type, Request $request)
+    {
+        $componentManager = $this->manager($type);
+        $manager = $this->manager('order_element');
+
+        $element = $manager->create();
+        $element
+            ->setTag($type)
+            ->setOrder($order);
+
+        $form = $this->createForm(ElementType::class, $element, [
+            'manager' => $componentManager
+        ]);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            $component = $componentManager->findOneBy(['code' => $element->getCode()]);
+
+            $element
+                ->setDescription($component->getDescription())
+                ->setUnitPrice(0)
+            ;
+
+            // TODO: Pricing
+            $manager->save($element);
+
+            return $this->json([], Response::HTTP_CREATED);
+        }
+
+        return $this->render('generator.element', [
+            'form' => $form->createView(),
+            'element' => $element
+        ]);
+    }
+
+    /**
+     * @Route("/orders/elements/{id}/update", name="generator_orders_element_update")
+     */
+    public function updateOrderElementAction(Element $element, Request $request)
+    {
+        $componentManager = $this->manager($element->getTag());
+        $manager = $this->manager('order_element');
+
+        $form = $this->createForm(ElementType::class, $element, [
+            'manager' => $componentManager
+        ]);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            $component = $componentManager->findOneBy(['code' => $element->getCode()]);
+
+            $element
+                ->setDescription($component->getDescription())
+                ->setUnitPrice(0)
+            ;
+
+            // TODO: Pricing
+            $manager->save($element);
+
+            return $this->json([]);
+        }
+
+        return $this->render('generator.element', [
+            'form' => $form->createView(),
+            'element' => $element
+        ]);
+    }
+
+    /**
+     * @Route("/orders/element/{id}/delete", name="generator_orders_element_delete")
+     * @Method("delete")
+     */
+    public function deleteOrderElementAction(Element $element)
+    {
+        $this->manager('order_element')->delete($element);
+
+        return $this->json([]);
     }
 
     /**
