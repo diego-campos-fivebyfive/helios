@@ -2,6 +2,14 @@ services:
     account_provider:
         class: ApiBundle\Provider\AccountProvider
 
+    api_pager:
+        class: ApiBundle\Common\Pager
+        arguments: ['@data_formatter']
+
+    api_handler:
+        class: ApiBundle\Common\Handler
+        arguments: ['@service_container']
+
     data_formatter:
         class: ApiBundle\Common\DataFormatter
         arguments: ['@serializer']
