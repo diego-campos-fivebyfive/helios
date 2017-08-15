@@ -71,7 +71,7 @@ class Order implements OrderInterface
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Order", mappedBy="order", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Order", mappedBy="parent", cascade={"persist", "remove"})
      */
     private $childrens;
 

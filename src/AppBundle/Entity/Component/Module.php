@@ -193,7 +193,7 @@ class Module implements ModuleInterface
      */
     public function __toString()
     {
-        return $this->getModel();
+        return $this->model;
     }
 
     /**
