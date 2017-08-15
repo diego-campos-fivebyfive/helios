@@ -3,15 +3,25 @@
 namespace ApiBundle\Controller;
 
 use AppBundle\Entity\Component\Module;
-use AppBundle\Entity\Customer;
-use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ModuleController extends FOSRestController
+class ModuleController extends AbstractApiController
 {
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    public function getModulesAction(Request $request)
+    {
+        $data = $this->get('api_handler')->handleRequest($request, ['maker' => 'id']);
+
+        $view = View::create($data);
+
+        return $this->handleView($view);
+    }
+
     public function postModulesAction(Request $request)
     {
         $data = json_decode($request->getContent(), true);
@@ -43,26 +53,12 @@ class ModuleController extends FOSRestController
         return $this->handleView($view);
     }
 
-    public function getModulesAction(Request $request, $id)
+    public function getModuleAction(Module $module)
     {
-        $em = $this->getDoctrine()->getManager();
+        $data = $this->get('api_formatter')->format($module, ['maker' => 'id']);
 
-        /** @var \Doctrine\ORM\QueryBuilder $qb */
-        $qb = $em->createQueryBuilder();
+        $view = View::create($data);
 
-        $qb->select('m')
-            ->from(Module::class, 'm')
-            ->where('m.id = :id')
-            ->setParameters([
-                'id' => $id
-            ]);
-        $query = $qb->getQuery();
-
-        $modules = $query->getArrayResult();
-
-        $response = new Response(json_encode($modules));
-        $response->headers->set('module', 'aplication/json');
-
-        return $response;
+        return $this->handleView($view);
     }
 }

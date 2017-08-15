@@ -13,6 +13,19 @@ use Symfony\Component\HttpFoundation\Response;
 
 class InverterController extends FOSRestController
 {
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    public function getInvertersAction(Request $request)
+    {
+        $data = $this->get('api_handler')->handleRequest($request, ['maker' => 'id']);
+
+        $view = View::create($data);
+
+        return $this->handleView($view);
+    }
+
     public function postInvertersAction(Request $request)
     {
         $data = json_decode($request->getContent(), true);
@@ -44,26 +57,12 @@ class InverterController extends FOSRestController
         return $this->handleView($view);
     }
 
-    public function getInvertersAction(Request $request, $id)
+    public function getInverterAction(Inverter $inverter)
     {
-        $em = $this->getDoctrine()->getManager();
+        $data = $this->get('api_formatter')->format($inverter, ['maker' => 'id']);
 
-        /** @var \Doctrine\ORM\QueryBuilder $qb */
-        $qb = $em->createQueryBuilder();
+        $view = View::create($data);
 
-        $qb->select('i')
-            ->from(Inverter::class, 'i')
-            ->where('i.id = :id')
-            ->setParameters([
-                'id' => $id
-            ]);
-        $query = $qb->getQuery();
-
-        $inverters = $query->getArrayResult();
-
-        $response = new Response(json_encode($inverters));
-        $response->headers->set('inverter', 'aplication/json');
-
-        return $response;
+        return $this->handleView($view);
     }
 }
