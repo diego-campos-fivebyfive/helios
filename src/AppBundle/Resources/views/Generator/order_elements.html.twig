@@ -1,0 +1,86 @@
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th> Código </th>
+            <th> Descrição </th>
+            <th> Quantidade </th>
+            <th> Custo Unitário </th>
+            <th> Custo Total </th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody id="order_elements">
+
+    {% for element in order.elements %}
+
+        <tr>
+            <td> {{ element.code }} </td>
+            <td> {{ element.description }} </td>
+            <td> {{ element.quantity }} </td>
+            <td> {{ element.unitPrice|currency }} </td>
+            <td> {{ element.total|currency }} </td>
+            <td width="15%">
+                <div class="btn-group btn-group-justified btn-group-sm">
+                    <a data-update-element="{{ path('generator_orders_element_update',{id:element.id}) }}" class="btn btn-primary">
+                        <i class="fa fa-pencil"></i>
+                    </a>
+                    <a data-delete-element="{{ path('generator_orders_element_delete',{id:element.id}) }}"
+                       class="btn btn-danger">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+</table>
+
+<script>
+
+    $('[data-delete-element]').on('click', function () {
+
+        var row = $(this).closest('tr');
+        var url = $(this).data('delete-element');
+
+        swal({
+            title: 'Confirma a exclusão do item?',
+            text: 'Este processo não pode ser revertido!',
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: '{{ 'Confirmar'|trans }}',
+            cancelButtonText: '{{ 'Cancelar'|trans }}',
+            closeOnConfirm: false
+        }, function () {
+
+            sweetAlert({
+                title: "Excluindo...",
+                text: "Aguarde!",
+                type: "info",
+                showConfirmButton: false
+            });
+
+            Request.send({
+                url: url,
+                method: 'post',
+                data: {_method: 'delete'},
+                callback: function (xhr) {
+                    row.remove();
+                    swal.close();
+                }
+            });
+        });
+    });
+
+    $('[data-update-element]').on('click', function(){
+        Request.send({
+            url: $(this).data('update-element'),
+            callback: function (xhr) {
+                $('#form_element_container').html(xhr.responseText);
+            }
+        });
+    });
+
+</script>

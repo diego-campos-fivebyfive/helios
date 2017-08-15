@@ -1,0 +1,46 @@
+<div>
+
+    {{ form_start(form,{attr:{id:'form-element', action: app.request.uri}}) }}
+
+    <div class="col-md-6 form-group">
+        {{ form_widget(form.code,{attr:{class:'form-control'}}) }}
+    </div>
+
+    <div class="col-md-3 form-group">
+        {{ form_widget(form.quantity,{attr:{class:'form-control text-center'}}) }}
+    </div>
+
+    <div class="col-md-3 form-group">
+        <button id="form_element_btn" type="submit" class="btn btn-success btn-block ladda-button" data-style="zoom-in">
+            <i class="fa fa-save"></i> Salvar
+        </button>
+    </div>
+
+    {{ form_end(form) }}
+
+</div>
+
+<script>
+    var form_element_btn = $('#form_element_btn');
+    form_element_btn.ladda();
+    $('#form-element').on('submit', function (event) {
+        event.preventDefault();
+        form_element_btn.ladda('start');
+        Request.send({
+            url: $(this).attr('action'),
+            method: $(this).attr('method'),
+            data: $(this).serialize(),
+            callback: function (xhr) {
+                form_element_btn.ladda('stop');
+                OrderManager.getElements();
+            }
+        });
+    });
+
+    $('#element_code').chosen();
+
+    $('#element_quantity').TouchSpin({
+        min: 1
+    });
+
+</script>
