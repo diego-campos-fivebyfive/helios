@@ -87,6 +87,39 @@ interface OrderInterface
     public function getElements();
 
     /**
+     * @param OrderInterface $parent
+     * @return OrderInterface
+     */
+    public function setParent(OrderInterface $parent);
+
+    /**
+     * @return OrderInterface|null
+     */
+    public function getParent();
+
+    /**
+     * @param OrderInterface $children
+     * @return OrderInterface
+     */
+    public function addChildren(OrderInterface $children);
+
+    /**
+     * @param OrderInterface $children
+     * @return OrderInterface
+     */
+    public function removeChildren(OrderInterface $children);
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getChildrens();
+
+    /**
+     * @return bool
+     */
+    public function isBudget();
+
+    /**
      * @return \DateTime
      */
     public function getCreatedAt();

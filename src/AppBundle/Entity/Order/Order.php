@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Order;
 
+use AppBundle\Entity\AccountInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
@@ -47,11 +48,18 @@ class Order implements OrderInterface
     private $status;
 
     /**
-     * @var ArrayCollection
+     * @var AccountInterface
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer")
      */
     private $account;
+
+    /**
+     * @var OrderInterface
+     *
+     * @ORM\ManyToOne(targetEntity="Order")
+     */
+    private $parent;
 
     /**
      * @var ArrayCollection
@@ -61,13 +69,20 @@ class Order implements OrderInterface
     private $elements;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Order", mappedBy="order", cascade={"persist", "remove"})
+     */
+    private $childrens;
+
+    /**
      * Order constructor.
      */
     public function __construct()
     {
         $this->elements = new ArrayCollection();
+        $this->childrens = new ArrayCollection();
     }
-
 
     /**
      * @return int
@@ -165,6 +180,26 @@ class Order implements OrderInterface
     /**
      * @inheritDoc
      */
+    public function setParent(OrderInterface $parent)
+    {
+        $this->parent = $parent;
+
+        $parent->addChildren($this);
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function addElement(ElementInterface $element)
     {
         if (!$this->elements->contains($element)) {
@@ -196,5 +231,48 @@ class Order implements OrderInterface
         return $this->elements;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function addChildren(OrderInterface $children)
+    {
+        if($children->isBudget() || $this->parent)
+            throw new \InvalidArgumentException('You can not add a budget to another');
+
+        if(!$this->childrens->contains($children)){
+            $this->childrens->add($children);
+            if(!$children->getParent()) $children->setParent($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeChildren(OrderInterface $children)
+    {
+        if($this->childrens->contains($children)){
+            $this->childrens->removeElement($children);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getChildrens()
+    {
+        return $this->childrens;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isBudget()
+    {
+        return $this->childrens->count() > 0;
+    }
 }
 
