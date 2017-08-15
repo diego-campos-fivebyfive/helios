@@ -2,6 +2,7 @@
 
 namespace ApiBundle\Common;
 
+use AppBundle\Manager\AbstractManager;
 use Doctrine\Common\Inflector\Inflector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -32,6 +33,10 @@ class Handler
 
         $manager = $this->manager($target);
 
+        if(!$manager instanceof AbstractManager){
+            throw new \InvalidArgumentException(sprintf('The manager %s not found', $target));
+        }
+
         $qb = $manager->createQueryBuilder();
 
         $pagination = $this->paginator()->paginate(
@@ -59,7 +64,7 @@ class Handler
     {
         $serviceId = Inflector::singularize($target);
 
-        return $this->container->get(sprintf('%s_manager', $serviceId));
+        return $this->container->get(sprintf('%s_manager', $serviceId), ContainerInterface::NULL_ON_INVALID_REFERENCE);
     }
 
     /**

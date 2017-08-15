@@ -4,12 +4,12 @@ services:
 
     api_pager:
         class: ApiBundle\Common\Pager
-        arguments: ['@data_formatter']
+        arguments: ['@api_formatter']
 
     api_handler:
         class: ApiBundle\Common\Handler
         arguments: ['@service_container']
 
-    data_formatter:
-        class: ApiBundle\Common\DataFormatter
+    api_formatter:
+        class: ApiBundle\Common\Formatter
         arguments: ['@serializer']

@@ -22,21 +22,21 @@ use Knp\Component\Pager\Pagination\PaginationInterface;
 class Pager
 {
     /**
-     * @var DataFormatter
+     * @var Formatter
      */
     private $formatter;
 
     /**
-     * @param DataFormatter $formatter
+     * @param Formatter $formatter
      */
-    function __construct(DataFormatter $formatter)
+    function __construct(Formatter $formatter)
     {
         $this->formatter = $formatter;
     }
 
     /**
      * @param PaginationInterface|SlidingPagination $pagination
-     * @param DataFormatter $formatter
+     * @param Formatter $formatter
      * @return array
      */
     public function paginate(PaginationInterface $pagination, array $converts = [])

@@ -18,7 +18,7 @@ use JMS\Serializer\SerializerInterface;
  *
  * @author Claudinei Machado <cjchamado@gmail.com>
  */
-class DataFormatter
+class Formatter
 {
     /**
      * @var array
