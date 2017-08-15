@@ -130,6 +130,29 @@ class OrderTransformer
     }
 
     /**
+     * @param array $childrens
+     * @return OrderInterface
+     */
+    public function transformFromChildrens(array $childrens)
+    {
+        $this->normalizeChildrens($childrens);
+
+        /** @var OrderInterface $order */
+        $order = $this->manager->create();
+
+        foreach ($childrens as $children){
+            $order->addChildren($children);
+            if(!$order->getAccount() && $children->getAccount()){
+                $order->setAccount($children->getAccount());
+            }
+        }
+
+        $this->manager->save($order);
+
+        return $order;
+    }
+
+    /**
      * @param OrderInterface $order
      * @param $code
      * @param $description
@@ -147,5 +170,17 @@ class OrderTransformer
         ;
 
         $order->addElement($element);
+    }
+
+    /**
+     * @param array $childrens
+     */
+    private function normalizeChildrens(array &$childrens)
+    {
+        foreach ($childrens as $key => $children){
+            if(is_int($children)){
+                $childrens[$key] = $this->manager->find($children);
+            }
+        }
     }
 }

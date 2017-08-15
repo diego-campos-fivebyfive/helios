@@ -19,6 +19,7 @@ class AppTestCase extends WebTestCase
     {
         $this->fixtures = $this->loadFixtures([
             // Actors
+            Fixtures\AccountData::class,
             Fixtures\LoadMemberData::class,
             Fixtures\LoadCustomerData::class,
 
@@ -43,5 +44,14 @@ class AppTestCase extends WebTestCase
      */
     protected function getFixture($id){
         return $this->fixtures->getReference($id);
+    }
+
+    /**
+     * @param $id
+     * @return object|\AppBundle\Manager\AbstractManager
+     */
+    protected function manager($id)
+    {
+        return $this->getContainer()->get(sprintf('%s_manager', $id));
     }
 }

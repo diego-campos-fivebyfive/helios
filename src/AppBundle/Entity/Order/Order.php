@@ -153,7 +153,8 @@ class Order implements OrderInterface
     public function getTotal()
     {
         $total = 0;
-        foreach ($this->elements as $element){
+        $sources = $this->isBudget() ? $this->childrens : $this->elements;
+        foreach ($sources as $element){
             $total += $element->getTotal();
         }
 
