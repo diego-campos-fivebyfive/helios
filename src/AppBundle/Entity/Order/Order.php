@@ -30,6 +30,13 @@ class Order implements OrderInterface
     private $description;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $note;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="status", type="integer", nullable=true)
@@ -46,7 +53,7 @@ class Order implements OrderInterface
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Element", mappedBy="order", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Element", mappedBy="order", cascade={"persist", "remove"})
      */
     private $elements;
 
@@ -83,6 +90,24 @@ class Order implements OrderInterface
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setNote($note)
+    {
+        $this->note = $note;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getNote()
+    {
+        return $this->note;
     }
 
     /**

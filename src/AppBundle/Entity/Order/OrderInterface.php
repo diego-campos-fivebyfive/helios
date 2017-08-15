@@ -32,6 +32,17 @@ interface OrderInterface
     public function getDescription();
 
     /**
+     * @param $note
+     * @return OrderInterface
+     */
+    public function setNote($note);
+
+    /**
+     * @return string
+     */
+    public function getNote();
+
+    /**
      * @param $account
      * @return OrderInterface
      */
