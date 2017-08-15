@@ -10,8 +10,10 @@
 
 
     <div class="wrapper wrapper-content">
-        <div class="row">
 
+        {% include view('proposal.navbar') %}
+
+        <div class="row">
             <div>
                 <canvas style="display:none;" id="project_chart" width="600"
                         height="428.6"></canvas>
@@ -1066,6 +1068,7 @@
 
 
         </div>
+
     </div>
 
 {% endblock %}
@@ -1082,6 +1085,7 @@
 
     <script>
         UPLOADCARE_PUBLIC_KEY = '9490325b6fcc3e8d094d';
+        var project_id = {{ project.id is not null ? project.id : 'null' }};
     </script>
 
 {% endblock %}

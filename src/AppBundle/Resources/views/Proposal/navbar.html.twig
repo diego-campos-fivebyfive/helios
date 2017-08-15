@@ -1,0 +1,45 @@
+
+{% set _step = app.request.attributes.get('_route') %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="btn-group btn-group-sm btn-group-justified">
+
+            <a data-href-nav="{{ path('project_update',{id:project.id}) }}" class="btn btn-default nav-link">
+                <i class="fa fa-sliders"></i>
+               {{ 'project.design'|trans|upper }}
+            </a>
+
+            <a data-href-nav="{{ path('project_financial',{id:project.id}) }}" class="btn btn-default nav-link">
+                <i class="fa fa-line-chart"></i>
+                {{ 'project.financial'|trans|upper }}
+            </a>
+
+            <a class="btn btn-default nav-link active">
+                <i class="fa fa-file-text-o"></i>
+                {{ 'project.proposal'|trans|upper }}
+            </a>
+
+        </div>
+    </div>
+</div>
+<div class="hr-line-dashed"></div>
+
+{% if true %}
+
+    <script>
+        $('[data-href-nav]').on('click', function(){
+            if($(this).data('href-nav')) {
+
+                swal({
+                    title: 'Aguarde...',
+                    text: '',
+                    type: 'info',
+                    showConfirmButton: false
+                });
+                window.location.href = $(this).data('href-nav');
+            }
+        });
+    </script>
+
+{% endif %}
