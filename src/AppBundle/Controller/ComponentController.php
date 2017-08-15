@@ -108,18 +108,13 @@ class ComponentController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             if ($component->getStatus()) {
-
                 $this->get('notifier')->notify([
-                    'callback' => 'product_validate',
-                    'body' => [
-                        'id' => $component->getId(),
-                        'family' => $family
-                    ]
+                    'Evento' => '302.3',
+                    'Callback' => 'product',
+                    'Id' => $component->getId()
                 ]);
             }
-
             return $this->saveComponent($component, $type, $request);
         }
 

@@ -20,19 +20,17 @@ const getRequest = uri => Google.getAuthentication().then(auth => (
     }))
 ))
 
-const getAccount = id => getRequest(
-  `https://api.isquik.com/isquik-dev/integradores/cadastrointegradores/ExporIntegrador/?Id=${id}`
-)
+const getAccount = id =>
+  getRequest(`${isquik.uri}/isquik-dev/integradores/cadastrointegradores/ExporIntegrador/?Id=${id}`)
 
-const getUser = id => getRequest(
-  `https://api.isquik.com/isquik-dev/integradores/cadastrointegradores/ExporContato/?Id=${id}`
-)
+const getUser = id =>
+  getRequest(`${isquik.uri}/isquik-dev/integradores/cadastrointegradores/ExporContato/?Id=${id}`)
 
-const getMemorial = id => getRequest(
-  `https://api.isquik.com/isquik-dev/tabelabase/tabelabase/ExporTabelaBase?Id=${id}`
-)
+const getMemorial = id =>
+  getRequest(`${isquik.uri}/isquik-dev/tabelabase/tabelabase/ExporTabelaBase?Id=${id}`)
 
-const getProduct = code => getRequest(`${isquik.uri}/product/${code}`)
+const getProduct = id =>
+  getRequest(`${isquik.uri}/isquik-dev/tabelabase/tabelabase/ExporProduto?Id=${id}`)
 
 module.exports = {
   getMemorial,

@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
- * @Route("generator")
+ * @Route("/debug/generator")
  */
 class GeneratorController extends AbstractController
 {
@@ -71,25 +71,23 @@ class GeneratorController extends AbstractController
         /** @var ProjectInterface $project */
         $project = $this->manager('project')->create();
 
-        $project->setRoofType('ROOF_ROMAN_AMERICAN');
-
         /** @var \AppBundle\Service\ProjectGenerator\ProjectGenerator $generator */
         $generator = $this->get('project_generator');
 
         $defaults = $generator->loadDefaults([
-            'latitude' => -25.384,
-            'longitude' => -51.455,
+           //'latitude' => -25.384,
+            //'longitude' => -51.455,
             'source' => 'power',
-            'power' => 20,
+            'power' => 100,
             'grid_voltage' => '127/220',
             'grid_phase_number' => 'Triphasic',
-            'inverter_maker' => 60630
+            'inverter_maker' => 60627
         ]);
 
         $project->setDefaults($defaults);
         $generator->autoSave(false)->project($project)->generate();
 
-        dump($project); die;
+        dump($project->getProjectModules()->first()->getGroups()); die;
     }
 
     /**

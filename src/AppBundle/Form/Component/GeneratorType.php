@@ -7,11 +7,13 @@ use AppBundle\Entity\Category;
 use AppBundle\Entity\Component\Maker;
 use AppBundle\Entity\Component\Module;
 use AppBundle\Entity\Component\Project;
+use AppBundle\Entity\MemberInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -39,15 +41,26 @@ class GeneratorType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $member = $options['member'];
-        $customers = $member->getAllowedContacts()->toArray();
+
+        if($member instanceof MemberInterface) {
+
+            $customers = $member->getAllowedContacts()->toArray();
+
+            $builder
+                ->add('customer', ChoiceType::class, [
+                    'choices' => $this->createChoices($customers)
+                ])
+                ->add('stage', ChoiceType::class, [
+                    'choices' => $this->loadStages($member->getAccount())
+                ]);
+        }
 
         $builder
-            ->add('address')
-            ->add('customer', ChoiceType::class, [
-                'choices' => $this->createChoices($customers)
+            ->add('account_id', TextType::class, [
+                'required' => false
             ])
-            ->add('stage', ChoiceType::class, [
-                'choices' => $this->loadStages($member->getAccount())
+            ->add('address', TextType::class, [
+                'required' => false
             ])
             ->add('grid_voltage', ChoiceType::class, [
                 'choices' => [
@@ -69,8 +82,12 @@ class GeneratorType extends AbstractType
                 'currency' => false,
             ])
             ->add('consumption')
-            ->add('latitude')
-            ->add('longitude')
+            ->add('latitude', TextType::class, [
+                'required' => false
+            ])
+            ->add('longitude', TextType::class, [
+                'required' => false
+            ])
             ->add('source', ChoiceType::class, [
                 'choices' => [
                     'power' => 'Power',
@@ -78,7 +95,7 @@ class GeneratorType extends AbstractType
                 ]
             ])
             ->add('roof_type', ChoiceType::class, [
-                'choices' => Project::getRootTypes()
+                'choices' => Project::getRoofTypes()
             ])
             ->add('module', ChoiceType::class, [
                 'choices' => $this->loadModules()
@@ -101,7 +118,8 @@ class GeneratorType extends AbstractType
     {
         $resolver->setDefaults([
             'status' => self::CHANGE,
-            'member' => null
+            'member' => null,
+            'csrf_protection' => false
         ]);
     }
 

@@ -777,7 +777,7 @@ interface ProjectInterface
     /**
      * @return array
      */
-    public static function getRootTypes();
+    public static function getRoofTypes();
 
     /**
      * @return array

@@ -21,9 +21,7 @@ class MemorialController extends FOSRestController
         $rangeManager = $this->get('range_manager');
 
         $currentMemorial = $memorialManager->findOneBy(array(), array('id' => 'DESC'));
-        if ($currentMemorial) {
-            $currentMemorial->setEndAt(new \DateTime('now'));
-        }
+        $currentMemorial->setEndAt(new \DateTime('now'));
 
         foreach ($dataRanges as $ranges) {
 
@@ -51,7 +49,6 @@ class MemorialController extends FOSRestController
                         ->setLevel($item['level'])
                         ->setInitialPower($level['initial'])
                         ->setFinalPower($level['final'])
-                        ->setMarkup($item['markup'])
                         ->setPrice($item['price']);
                     $rangeManager->save($range);
                 }

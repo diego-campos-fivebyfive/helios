@@ -39,9 +39,10 @@ class OrderTransformer
 
     /**
      * @param ProjectInterface $project
+     * @param bool $persist
      * @return OrderInterface
      */
-    public function transformFromProject(ProjectInterface $project)
+    public function transformFromProject(ProjectInterface $project, $persist = true)
     {
         /** @var OrderInterface $order */
         $order = $this->manager->create();
@@ -59,16 +60,20 @@ class OrderTransformer
             );
         }
 
-        foreach($project->getProjectInverters() as $projectInverter){
+        foreach($project->groupInverters() as $groupInverter){
 
+            /** @var \AppBundle\Entity\Component\ProjectInverterInterface $projectInverter */
+            $projectInverter = $groupInverter['projectInverter'];
             /** @var \AppBundle\Entity\Component\InverterInterface $inverter */
-            $inverter = $projectInverter->getInverter();
+            $inverter = $groupInverter['inverter'];
+            $quantity = $groupInverter['quantity'];
+            $price = $groupInverter['unitCostPrice'];
 
             $this->addOrderElement($order,
                 $inverter->getCode(),
                 $inverter->getModel(),
-                $projectInverter->getUnitCostPrice(),
-                $projectInverter->getQuantity()
+                $price,
+                $quantity
             );
         }
 
@@ -111,9 +116,15 @@ class OrderTransformer
             );
         }
 
-        $order->setAccount($project->getMember()->getAccount());
+        if(null != $member = $project->getMember()){
+            if(null != $account = $member->getAccount()){
+                $order->setAccount($account);
+            }
+        }
 
-        $this->manager->save($order);
+        $order->setDescription(sprintf('Sistema de %skWp', $project->getPower()));
+
+        if($persist) $this->manager->save($order);
 
         return $order;
     }

@@ -73,7 +73,9 @@ class InverterLoader
             }
 
             if ($combine) {
-                InverterCombiner::combine($inverters, $min);
+                if(!InverterCombiner::combine($inverters, $min)){
+                    $defaults['errors'][] = 'exhausted_inverters';
+                }
             }
 
         } while (!count($inverters));

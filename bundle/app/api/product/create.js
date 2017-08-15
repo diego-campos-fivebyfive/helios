@@ -6,70 +6,68 @@ const { util } = require('../../components')
 
 const { pipe } = util
 
-const splitModule = product => ({
-  code: product.code,
-  model: product.description
+const splitModel = product => ({
+  code: product.Codigo,
+  model: product.Descricao
 })
 
-const splitInverter = product => ({
-  code: product.code,
-  model: product.description
+const splitDescription = product => ({
+  code: product.Codigo,
+  description: product.Descricao
 })
 
-const splitStructure = product => ({
-  code: product.code,
-  description: product.description
-})
-
-const splitStringbox = product => ({
-  code: product.code,
-  description: product.description
-})
-
-const splitVariety = product => ({
-  code: product.code,
-  description: product.description
-})
-
-const getComponents = () => ({
-  inverter: {
-    split: splitInverter,
+const components = {
+  INVERSOR: {
+    split: splitModel,
     send: Sices.sendInverter
   },
-  module: {
-    split: splitModule,
+  MODULO: {
+    split: splitModel,
     send: Sices.sendModule
   },
-  structure: {
-    split: splitStructure,
+  ESTRUTURA: {
+    split: splitDescription,
     send: Sices.sendStructure
   },
-  stringbox: {
-    split: splitStringbox,
+  STRINGBOX: {
+    split: splitDescription,
     send: Sices.sendStringbox
   },
-  variety: {
-    split: splitVariety,
+  VARIEDADE: {
+    split: splitDescription,
     send: Sices.sendVariety
   }
-})
-
-const sendProduct = ({ family, ...product }) => {
-  const components = getComponents()
-  const component = components[family]
-  return pipe(component.split(product), component.send)
 }
 
-const create = ({ notification }) =>
+const getFamilyComponent = family => components[family]
+
+const getComponent = ({ Dados: product }) => ({
+  component: getFamilyComponent(product.DescricaoGrupo),
+  product
+})
+
+const sendComponent = ({ component, product }) =>
+  pipe(
+    component.split,
+    component.send
+  )(product)
+
+const sendProduct = id =>
+  Isquik
+    .getProduct(id)
+    .then(getComponent)
+    .then(sendComponent)
+
+const getStatus = (y, component) =>
   new Promise((resolve, reject) => {
-    notification.codes.forEach(code =>
-      Isquik
-        .getProduct(code)
-        .then(sendProduct)
-        .then(resolve)
-        .catch(reject)
-    )
+    component
+      .then(x => ((x.statusCode === 201) ? resolve(x) : reject(x)))
   })
+
+const create = ({ notification }) =>
+  notification.ids
+    .map(sendProduct)
+    .reduce(getStatus)
 
 module.exports = {
   create
