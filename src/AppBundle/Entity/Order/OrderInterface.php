@@ -85,4 +85,14 @@ interface OrderInterface
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getElements();
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt();
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt();
 }

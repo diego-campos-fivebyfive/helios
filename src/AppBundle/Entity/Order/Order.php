@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Order;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * Order
@@ -13,6 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Order implements OrderInterface
 {
+    use ORMBehaviors\Timestampable\Timestampable;
+
     /**
      * @var int
      *
