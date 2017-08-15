@@ -34,7 +34,7 @@ abstract class AbstractApiController extends FOSRestController
 
     /**
      * @param $id
-     * @return object|\Sonata\CoreBundle\Model\ManagerInterface
+     * @return object|\AppBundle\Manager\AbstractManager
      */
     public function manager($id)
     {
