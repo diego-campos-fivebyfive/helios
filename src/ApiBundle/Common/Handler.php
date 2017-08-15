@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the SicesSolar package.
+ *
+ * (c) SicesSolar <http://sicesbrasil.com.br/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace ApiBundle\Common;
 
 use AppBundle\Manager\AbstractManager;
@@ -7,6 +16,11 @@ use Doctrine\Common\Inflector\Inflector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * This class handles the request and formats the output of paged data
+ *
+ * @author Claudinei Machado <cjchamado@gmail.com>
+ */
 class Handler
 {
     /**
