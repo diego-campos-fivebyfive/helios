@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: claudinei
- * Date: 06/07/17
- * Time: 08:54
- */
 
 namespace Tests\AppBundle\Entity\DataFixtures;
 
