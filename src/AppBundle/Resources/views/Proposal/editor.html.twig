@@ -168,7 +168,7 @@
                 <span id="generatePdfProposal" data-url="{{ path('proposal_pdf_generator',{id:project.id}) }}"></span>
                 <span id="pdfProposal" data-url="{{ path('proposal_display_pdf',{filename:':filename:'}) }}"></span>
 
-                <button id="pdfProposal" class="btn btn-primary ladda-button" data-style="zoom-in" data-url="{{ path('proposal_pdf',{id:project.id}) }}">
+                <button id="btnGeneratePdf" class="btn btn-primary ladda-button" data-style="zoom-in" data-url="{{ path('proposal_pdf',{id:project.id}) }}">
                     <span class="ladda-label">Gerar PDF</span>
                 </button>
 

@@ -308,6 +308,7 @@ function generatePdfProposal(pdfBtn) {
 function redirectPdf(filename) {
     var dataUrl = $('#pdfProposal').data('url');
     var url = dataUrl.replace(":filename:",filename);
+    window.open(url);
     window.location.assign(url);
     console.log(url);
 }
