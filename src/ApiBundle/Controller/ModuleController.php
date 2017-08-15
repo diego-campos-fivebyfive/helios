@@ -53,26 +53,12 @@ class ModuleController extends AbstractApiController
         return $this->handleView($view);
     }
 
-    public function getModuleAction(Request $request, $id)
+    public function getModuleAction(Module $module)
     {
-        $em = $this->getDoctrine()->getManager();
+        $data = $this->get('api_formatter')->format($module, ['maker' => 'id']);
 
-        /** @var \Doctrine\ORM\QueryBuilder $qb */
-        $qb = $em->createQueryBuilder();
+        $view = View::create($data);
 
-        $qb->select('m')
-            ->from(Module::class, 'm')
-            ->where('m.id = :id')
-            ->setParameters([
-                'id' => $id
-            ]);
-        $query = $qb->getQuery();
-
-        $modules = $query->getArrayResult();
-
-        $response = new Response(json_encode($modules));
-        $response->headers->set('module', 'aplication/json');
-
-        return $response;
+        return $this->handleView($view);
     }
 }
