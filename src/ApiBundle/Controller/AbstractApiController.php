@@ -55,4 +55,12 @@ abstract class AbstractApiController extends FOSRestController
 
         return $translator->trans($string, $parameters, $domain, $locale);
     }
+
+    /**
+     * @return object|\Knp\Component\Pager\PaginatorInterface
+     */
+    protected function paginator()
+    {
+        return $this->get('knp_paginator');
+    }
 }

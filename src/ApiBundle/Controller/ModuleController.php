@@ -3,15 +3,49 @@
 namespace ApiBundle\Controller;
 
 use AppBundle\Entity\Component\Module;
-use AppBundle\Entity\Customer;
-use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ModuleController extends FOSRestController
+class ModuleController extends AbstractApiController
 {
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    public function getModulesAction(Request $request)
+    {
+        $qb = $this->manager('module')->createQueryBuilder();
+
+        $pagination = $this->paginator()->paginate(
+            $qb->getQuery(),
+            $request->query->getInt('page', 1),
+            20
+        );
+
+        // TODO: This method is temporary, you will soon be moved to a service
+        $currentPage = $pagination->getCurrentPageNumber();
+        $itemsPerPage = $pagination->getItemNumberPerPage();
+        $totalCount = $pagination->getTotalItemCount();
+        $modules = $pagination->getItems();
+
+        if(count($modules)) {
+            $formatter = $this->get('data_formatter');
+            $modules = $formatter->format($modules, ['maker' => 'id']);
+        }
+
+        $data = [
+            'page' => $currentPage,
+            'per_page' => $itemsPerPage,
+            'total' => $totalCount,
+            'modules' => $modules
+        ];
+
+        $view = View::create($data);
+
+        return $this->handleView($view);
+    }
+
     public function postModulesAction(Request $request)
     {
         $data = json_decode($request->getContent(), true);
@@ -43,7 +77,7 @@ class ModuleController extends FOSRestController
         return $this->handleView($view);
     }
 
-    public function getModulesAction(Request $request, $id)
+    public function getModuleAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
