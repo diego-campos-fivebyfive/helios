@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form;
+namespace AppBundle\Form\Order;
 
 use AppBundle\Entity\Order\Order;
 use Symfony\Component\Form\AbstractType;
