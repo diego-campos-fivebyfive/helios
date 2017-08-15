@@ -63,11 +63,13 @@ class ElementType extends AbstractType
         /** @var \AppBundle\Entity\Component\InverterInterface $component */
         foreach ($components as $component){
             $group = 'Outros';
+            $code = $component->getCode();
+
             if(null != $maker = $component->getMaker()){
                 $group = $maker->getName();
             }
 
-            $data[$group][$component->getCode()] = (string) $component;
+            $data[$group][$code] = (string) $component;
         }
 
          return $data;
