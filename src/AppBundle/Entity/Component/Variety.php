@@ -87,7 +87,7 @@ class Variety implements VarietyInterface
      */
     function __toString()
     {
-        return $this->description;
+        return (string) $this->description;
     }
 
     /**
