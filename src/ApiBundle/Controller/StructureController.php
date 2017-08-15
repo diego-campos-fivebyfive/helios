@@ -40,7 +40,7 @@ class StructureController extends FOSRestController
         return $this->handleView($view);
     }
 
-    public function getStructuresAction(Structure $structure)
+    public function getStructureAction(Structure $structure)
     {
         $data = $this->get('api_formatter')->format($structure, ['maker' => 'id']);
 
