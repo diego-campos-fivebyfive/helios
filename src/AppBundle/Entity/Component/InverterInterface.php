@@ -46,6 +46,11 @@ interface InverterInterface
     /**
      * @return string
      */
+    public function getDescription();
+
+    /**
+     * @return string
+     */
     public function getModel();
 
     /**
