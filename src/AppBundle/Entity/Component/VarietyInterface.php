@@ -83,6 +83,17 @@ interface VarietyInterface
     public function getStatus();
 
     /**
+     * @param $available
+     * @return VarietyInterface
+     */
+    public function setAvailable($available);
+
+    /**
+     * @return boolean
+     */
+    public function getAvailable();
+
+    /**
      * @param $datasheet
      * @return VarietyInterface
      */

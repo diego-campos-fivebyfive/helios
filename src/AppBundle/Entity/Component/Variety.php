@@ -76,6 +76,13 @@ class Variety implements VarietyInterface
     private $status;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="available", type="boolean", nullable=true)
+     */
+    private $available;
+
+    /**
      * @inheritDoc
      */
     function __toString()
@@ -182,6 +189,23 @@ class Variety implements VarietyInterface
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setAvailable($available)
+    {
+        $this->available = $available;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAvailable()
+    {
+        return $this->available;
     }
 
     /**
