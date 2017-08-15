@@ -44,6 +44,7 @@ class UsersController extends FOSRestController
             ->setEmail($data['email'])
             ->setUsername($data['email'])
             ->setPlainPassword(uniqid())
+            ->setCreatedAt(new \DateTime('now'))
             ->addRole(UserInterface::ROLE_OWNER_MASTER)
             ->setIsquikId($data['isquik_id']);
         $userManager->updateUser($user);
@@ -68,7 +69,8 @@ class UsersController extends FOSRestController
                 'firstname' => $member->getFirstname(),
                 'email' => $member->getEmail(),
                 'phone' => $member->getPhone(),
-                'account' => $member->getAccount()->getId()
+                'account' => $member->getAccount()->getId(),
+                'created_at' => $member->getCreatedAt()
             ];
         }
         catch (\Exception $exception) {
@@ -99,7 +101,9 @@ class UsersController extends FOSRestController
                 'firstname' => $member->getFirstname(),
                 'email' => $member->getEmail(),
                 'phone' => $member->getPhone(),
-                'account' => $member->getAccount()->getId()
+                'account' => $member->getAccount()->getId(),
+                'created_at' => $member->getCreatedAt(),
+                'updated_at' => $member->getUpdatedAt()
             ];
         }
 
@@ -129,6 +133,7 @@ class UsersController extends FOSRestController
             ->setAccount($account)
             ->setFirstname($data['contact'])
             ->setPhone($data['phone'])
+            ->setUpdatedAt(new \DateTime('now'))
             ->setEmail($data['email']);
         try {
             $memberManager->save($member);
@@ -139,7 +144,9 @@ class UsersController extends FOSRestController
                 'firstname' => $member->getFirstname(),
                 'email' => $member->getEmail(),
                 'phone' => $member->getPhone(),
-                'account' => $member->getAccount()->getId()
+                'account' => $member->getAccount()->getId(),
+                'created_at' => $member->getCreatedAt(),
+                'updated_at' => $member->getUpdatedAt()
             ];
         }
         catch (\Exception $exception) {
