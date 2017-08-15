@@ -110,8 +110,10 @@ class ProjectGenerator
             $estimator = $this->container->get('power_estimator');
             $power = $estimator->estimate($defaults['consumption'], $defaults['latitude'], $defaults['longitude']);
             $defaults['power'] = $power;
-            $this->project->setDefaults($defaults);
         }
+
+        $defaults['errors'] = [];
+        $this->project->setDefaults($defaults);
 
         // MODULES
         $this->generateModules($this->project);
@@ -358,6 +360,10 @@ class ProjectGenerator
 
     public function generateGroups(ProjectInterface $project)
     {
+        $defaults = $project->getDefaults();
+        if(count($defaults['errors']))
+            return $this;
+
         $projectModule = $project->getProjectModules()->first();
 
         $quantity = 0;
@@ -761,6 +767,10 @@ class ProjectGenerator
         }
 
         if($this->autoSave || $force){
+
+            $defaults = $project->getDefaults();
+            if(array_key_exists('errors', $defaults) && count($defaults['errors'])) return;
+
             $this->manager->save($project);
         }
     }

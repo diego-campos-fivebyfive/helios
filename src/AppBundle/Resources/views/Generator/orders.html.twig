@@ -1,65 +1,114 @@
-
-<table class="table table-stripped">
+<table class="table table-bordered table-hover">
     <thead>
     <tr>
         <th colspan="5">
-            MEUS PEDIDOS
+            MEUS ORÇAMENTOS
         </th>
     </tr>
-        <tr>
-            <th> # </th>
-            <th> Descrição </th>
-            <th> Itens </th>
-            <th> Valor </th>
-            <th> &nbsp; </th>
-        </tr>
+    <tr>
+        <th> # </th>
+        <th> Descrição </th>
+        <th> Data </th>
+        <th> Valor </th>
+        <th> &nbsp; </th>
+    </tr>
     </thead>
 
     <tbody>
 
     {% for order in orders %}
 
-    <tr>
-        <td width="5%"> {{ order.id }} </td>
-        <td> {{ order.description }} </td>
-        <td width="10%"> {{ order.elements.count }} </td>
-        <td width="15%"> {{ order.total|currency }} </td>
-        <td width="20%">
-            <div class="btn-group btn-group-sm btn-group-justified">
-            <a class="btn btn-success">
-                <i class="fa fa-pencil"></i>
-            </a>
-            <a class="btn btn-danger">
-                <i class="fa fa-trash"></i>
-            </a>
-                <a class="btn btn-warning">
-                    <i class="fa fa-check"></i>
-                </a>
-            </div>
-        </td>
-    </tr>
+        <tr>
+            <td width="5%"> {{ order.id }} </td>
+            <td> {{ order.description }} </td>
+            <td width="10%"> {{ order.createdAt|date('d/m/Y') }} </td>
+            <td width="15%"> {{ order.total|currency }} </td>
+            <td width="20%">
+                <div class="btn-group btn-group-sm btn-group-justified">
+                    <a data-update="{{ path('generator_orders_update',{id:order.id}) }}" class="btn btn-success">
+                        <i class="fa fa-pencil"></i>
+                    </a>
+                    <a data-delete="{{ path('generator_orders_delete',{id:order.id}) }}" class="btn btn-danger">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                    <a class="btn btn-warning">
+                        <i class="fa fa-check"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
 
     {% endfor %}
 
     </tbody>
 
     <tfoot>
-        <tr>
-            <td colspan="5" class="text-center">
-                {{ knp_pagination_render(orders) }}
-            </td>
-        </tr>
+    <tr>
+        <td colspan="5" class="text-center">
+            {{ knp_pagination_render(orders) }}
+        </td>
+    </tr>
     </tfoot>
 
 </table>
 
 <script>
-    $(function(){
-        var pagination = $('ul.pagination');
-        pagination.find('a').on('click', function(event){
-            event.preventDefault();
-            var url = $(this).attr('href');
-            OrderManager.getOrders(url);
+
+    var pagination = $('ul.pagination');
+    var data_update = $('[data-update]');
+    var data_delete = $('[data-delete]');
+
+    pagination.find('a').on('click', function (event) {
+        event.preventDefault();
+        var url = $(this).attr('href');
+        OrderManager.getOrders(url);
+    });
+
+    data_update.on('click', function () {
+        Request.send({
+            url: $(this).data('update'),
+            callback: function (xhr) {
+                $('#generator_form').html(xhr.responseText);
+            }
+        })
+    });
+
+    data_delete.on('click', function () {
+
+        var url = $(this).data('delete');
+
+        swal({
+            title: 'Confirma a exclusão do pedido?',
+            text: 'Este processo não pode ser revertido!',
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: '{{ 'Confirmar'|trans }}',
+            cancelButtonText: '{{ 'Cancelar'|trans }}',
+            closeOnConfirm: false
+        }, function () {
+
+            sweetAlert({
+                title: "Excluindo...",
+                text: "Aguarde!",
+                type: "info",
+                showConfirmButton: false
+            });
+
+            Request.send({
+                url: url,
+                method: 'post',
+                data: {_method: 'delete'},
+                callback: function (xhr) {
+                    if (xhr.status != 200) {
+                        swal('Atenção', 'Falha ao executar a operação', 'error');
+                    } else {
+                        swal.close();
+                        OrderManager.getOrders();
+                    }
+                }
+            });
         });
     });
+
 </script>

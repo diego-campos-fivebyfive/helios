@@ -230,6 +230,14 @@ class Inverter implements InverterInterface
     /**
      * @inheritDoc
      */
+    public function getDescription()
+    {
+        return $this->model;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setMaxDcPower($maxDcPower)
     {
         $this->maxDcPower = $maxDcPower;

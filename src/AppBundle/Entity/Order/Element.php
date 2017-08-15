@@ -34,6 +34,13 @@ class Element implements ElementInterface
     private $description;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $tag;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="quantity", type="integer")
@@ -53,6 +60,14 @@ class Element implements ElementInterface
      * @ORM\ManyToOne(targetEntity="Order", inversedBy="elements")
      */
     private $order;
+
+    /**
+     * @inheritDoc
+     */
+    public function __construct()
+    {
+        $this->quantity = 1;
+    }
 
     /**
      * @inheritDoc
@@ -96,6 +111,24 @@ class Element implements ElementInterface
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setTag($tag)
+    {
+        $this->tag = $tag;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTag()
+    {
+        return $this->tag;
     }
 
     /**
