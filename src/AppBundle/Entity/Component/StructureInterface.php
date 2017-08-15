@@ -79,6 +79,17 @@ interface StructureInterface
     public function getStatus();
 
     /**
+     * @param $available
+     * @return StructureInterface
+     */
+    public function setAvailable($available);
+
+    /**
+     * @return boolean
+     */
+    public function getAvailable();
+
+    /**
      * @return bool
      */
     public function isDisable();

@@ -67,6 +67,13 @@ class Structure implements StructureInterface
     private $status;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="available", type="boolean", nullable=true)
+     */
+    private $available;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -206,6 +213,22 @@ class Structure implements StructureInterface
         return $this->status;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function setAvailable($available)
+    {
+        $this->available = $available;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAvailable()
+    {
+        return $this->available;
+    }
 
     /**
      * @inheritDoc

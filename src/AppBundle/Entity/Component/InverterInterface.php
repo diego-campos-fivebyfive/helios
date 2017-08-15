@@ -252,6 +252,17 @@ interface InverterInterface
     public function getStatus();
 
     /**
+     * @param $available
+     * @return InverterInterface
+     */
+    public function setAvailable($available);
+
+    /**
+     * @return boolean
+     */
+    public function getAvailable();
+
+    /**
      * @param $compatibility
      * @return InverterInterface
      */

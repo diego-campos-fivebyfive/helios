@@ -176,6 +176,13 @@ class Module implements ModuleInterface
     private $status;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="available", type="boolean", nullable=true)
+     */
+    private $available;
+
+    /**
      * This property is used by management only
      * @var bool
      */
@@ -634,6 +641,23 @@ class Module implements ModuleInterface
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setAvailable($available)
+    {
+        $this->available = $available;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAvailable()
+    {
+        return $this->available;
     }
 
 

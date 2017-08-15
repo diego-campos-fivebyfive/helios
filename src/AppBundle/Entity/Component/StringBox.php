@@ -75,6 +75,13 @@ class StringBox implements StringBoxInterface
     private $status;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="available", type="boolean", nullable=true)
+     */
+    private $available;
+
+    /**
      * @inheritDoc
      */
     function __toString()
@@ -196,4 +203,23 @@ class StringBox implements StringBoxInterface
         $this->status = $status;
         return $this;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setAvailable($available)
+    {
+        $this->available = $available;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAvailable()
+    {
+        return $this->available;
+    }
+
+
 }

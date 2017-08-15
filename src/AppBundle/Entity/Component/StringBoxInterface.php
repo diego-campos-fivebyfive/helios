@@ -90,6 +90,17 @@ interface StringBoxInterface
     public function getStatus();
 
     /**
+     * @param $available
+     * @return StringBoxInterface
+     */
+    public function setAvailable($available);
+
+    /**
+     * @return boolean
+     */
+    public function getAvailable();
+
+    /**
      * @param MakerInterface $maker
      * @return StringBoxInterface
      */

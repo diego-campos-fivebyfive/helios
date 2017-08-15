@@ -162,6 +162,13 @@ class Inverter implements InverterInterface
     private $status;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="available", type="boolean", nullable=true)
+     */
+    private $available;
+
+    /**
      * @var int
      *
      * @ORM\Column(type="smallint", nullable=true)
@@ -527,6 +534,24 @@ class Inverter implements InverterInterface
     {
         return $this->status;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setAvailable($available)
+    {
+        $this->available = $available;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAvailable()
+    {
+        return $this->available;
+    }
+
 
     /**
      * @inheritDoc
