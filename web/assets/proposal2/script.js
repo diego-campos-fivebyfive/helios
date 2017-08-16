@@ -306,7 +306,7 @@ function generatePdfProposal(pdfBtn) {
 }
 
 function redirectPdf(filename) {
-var dataUrl = $('#pdfProposal').data('url');
+    var dataUrl = $('#pdfProposal').data('url');
     var url = dataUrl.replace(":filename:",filename);
     swal({
         title: '<span style="color: #0a6aa1">Proposta gerada com sucesso</span>',
