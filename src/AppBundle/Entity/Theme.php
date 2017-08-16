@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Theme
  *
  * @ORM\Table(name="app_theme")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\ThemeRepository")
+ * @ORM\Entity
  */
 class Theme implements ThemeInterface
 {
