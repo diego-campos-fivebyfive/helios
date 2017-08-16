@@ -41,8 +41,10 @@ class StructureController extends AbstractController
 
         if(!$this->user()->isAdmin()) {
             $qb->where('s.status = :status');
+            $qb->andWhere('s.available = :available');
             $qb->setParameters([
-                'status' => 1
+                'status' => 1,
+                'available' => 1
             ]);
         }
 

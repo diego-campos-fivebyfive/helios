@@ -42,6 +42,15 @@ class StringBoxController extends AbstractController
         $qb->select('c')
             ->from(sprintf('AppBundle\Entity\Component\StringBox', ucfirst('stringbox')), 'c');
 
+        if (!$this->user()->isAdmin()) {
+            $qb->where('c.status = :status');
+            $qb->andWhere('c.available = :available');
+            $qb->setParameters([
+                'status' => 1,
+                'available' => 1
+            ]);
+        }
+
         $pagination = $this->getPaginator()->paginate(
             $qb->getQuery(),
             $request->query->getInt('page', 1),
