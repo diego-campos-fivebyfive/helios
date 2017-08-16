@@ -15,6 +15,7 @@ abstract class OrderFormatter
         }
 
         $data = [
+            'note' => (string) $order->getNote(),
             'description' => $order->getDescription(),
             'elements' => []
         ];
@@ -30,8 +31,10 @@ abstract class OrderFormatter
             ];
         }
 
+        unset($data['elements']);
+
         $data['products'] = $elements;
 
-        return array_filter($data);
+        return $data;
     }
 }
