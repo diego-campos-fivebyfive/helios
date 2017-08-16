@@ -75,6 +75,7 @@ class Element implements ElementInterface
     {
         $this->quantity = 1;
         $this->metadata = [];
+        $this->unitPrice = 0;
     }
 
     /**
