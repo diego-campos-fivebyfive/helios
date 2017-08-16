@@ -1581,7 +1581,14 @@ class Customer extends AbstractCustomer
         $this->level = $level;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function setUpdatedAt($updated_at)
+    {
+        $this->updated_at = $updated_at;
 
-
+        return $this;
+    }
 }
 
