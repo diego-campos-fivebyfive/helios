@@ -309,10 +309,10 @@ function redirectPdf(filename) {
     var dataUrl = $('#pdfProposal').data('url');
     var url = dataUrl.replace(":filename:",filename);
     swal({
-        title: '<a href='+url+' target="_blank">Abrir PDF da Proposta</a>',
-        showCancelButton: true,
+        title: '<span style="color: #0a6aa1">Proposta gerada com sucesso</span>',
+        text: '<a href='+url+' target="_blank"><button class="confirm" tabindex="2" style="display: inline-block; box-shadow: none;">Abrir PDF</button></a>' +
+        '<button class="cancel" tabindex="2" style="display: inline-block; box-shadow: none;">Fechar</button>',
         showConfirmButton: false,
-        cancelButtonText: "Fechar",
         html: true
     });
 }
