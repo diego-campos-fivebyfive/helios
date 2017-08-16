@@ -50,6 +50,15 @@ class ComponentController extends AbstractController
             ->orderBy('m.name', 'asc')
             ->addOrderBy('c.model', 'asc');
 
+        if (!$this->user()->isAdmin()) {
+            $qb->where('c.status = :status');
+            $qb->andWhere('c.available = :available');
+            $qb->setParameters([
+                'status' => 1,
+                'available' => 1
+            ]);
+        }
+
         $this->makerQueryBuilderFilter($qb, $request, $powerField);
 
         $pagination = $this->getPaginator()->paginate(
