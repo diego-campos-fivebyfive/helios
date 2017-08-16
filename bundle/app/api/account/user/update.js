@@ -7,6 +7,8 @@ const sendUser = ({ Dados: user }, sicesUser) =>
   Sices
     .updateUser(user.IdContatoSicesSolar, {
       ...sicesUser,
+      email: user.Email,
+      phone: user.Telefone,
       contact: user.Nome
     })
 

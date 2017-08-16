@@ -70,4 +70,26 @@ interface UserInterface extends BaseUserInterface
      * @return bool
      */
     public function isOnline($status = false);
+
+    /**
+     * @param \DateTime $created_at
+     * @return UserInterface
+     */
+    public function setCreatedAt($created_at);
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt();
+
+    /**
+     * @param \DateTime $updated_at
+     * @return UserInterface
+     */
+    public function setUpdatedAt($updated_at);
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt();
 }

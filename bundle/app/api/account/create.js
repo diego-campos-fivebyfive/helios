@@ -34,8 +34,6 @@ const sendAccount = ({ Dados: account }) =>
       isquik_id: account.IdIntegrador
     })
     .then(data => createUser({
-      email: account.Email,
-      phone: account.Telefone,
       isquik_id: account.Administrador,
       account_id: data.id
     }))

@@ -157,6 +157,7 @@ class RegisterController extends AbstractController
         $user->setEmail($data['email'])
             ->setUsername($data['email'])
             ->setPlainPassword(uniqid())
+            ->setCreatedAt(new \DateTime('now'))
             ->addRole(UserInterface::ROLE_OWNER_MASTER);
 
         $member->setConfirmationToken($this->getTokenGenerator()->generateToken())
