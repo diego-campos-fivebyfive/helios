@@ -55,6 +55,13 @@ class Element implements ElementInterface
     private $unitPrice;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $metadata;
+
+    /**
      * @var OrderInterface
      *
      * @ORM\ManyToOne(targetEntity="Order", inversedBy="elements")
@@ -67,6 +74,8 @@ class Element implements ElementInterface
     public function __construct()
     {
         $this->quantity = 1;
+        $this->metadata = [];
+        $this->unitPrice = 0;
     }
 
     /**
@@ -173,6 +182,28 @@ class Element implements ElementInterface
     public function getTotal()
     {
         return $this->unitPrice * $this->quantity;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setMetadata(array $metadata = [])
+    {
+        $this->metadata = $metadata;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMetadata($key = null, $default = null)
+    {
+        if($key){
+            return array_key_exists($key, $this->metadata) ? $this->metadata[$key] : $default;
+        }
+
+        return $this->metadata;
     }
 
     /**

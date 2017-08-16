@@ -2,11 +2,11 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Order\Order;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
  * @Route("orders")
@@ -44,6 +44,17 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/{id}", name="order_show")
+     * @Method("get")
+     */
+    public function showAction(Request $request, Order $order)
+    {
+        return $this->render('order.show', [
+            'order' => $order
+        ]);
+    }
+
+    /**
      * @Route("/budgets/create", name="order_budget_create")
      */
     public function createBudgetAction(Request $request)
@@ -52,6 +63,7 @@ class OrderController extends AbstractController
 
         $transformer = $this->get('order_transformer');
 
+        /** @var Order $order */
         $order = $transformer->transformFromChildrens($childrens);
 
         return $this->json([

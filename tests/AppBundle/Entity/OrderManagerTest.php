@@ -74,6 +74,21 @@ class OrderManagerTest extends AppTestCase
         $order3->setParent($order3);      //via sameObject
     }
 
+    public function testMetadata()
+    {
+        $element = new Element();
+
+        // Test value undefined
+        $this->assertNull($element->getMetadata('unset_metadata'));
+
+        // Test value exists
+        $element->setMetadata(['power' => 25]);
+        $this->assertEquals(25, $element->getMetadata('power'));
+
+        // Test with default
+        $this->assertEquals(50, $element->getMetadata('with_default', 50));
+    }
+
     /**
      * @return \AppBundle\Manager\OrderManager|object
      */

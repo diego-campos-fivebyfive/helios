@@ -70,6 +70,17 @@ interface OrderInterface
     public function getTotal();
 
     /**
+     * @param float $power
+     * @return OrderInterface
+     */
+    public function setPower($power);
+
+    /**
+     * @return float
+     */
+    public function getPower();
+
+    /**
      * @param ElementInterface $element
      * @return OrderInterface
      */

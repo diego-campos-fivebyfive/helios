@@ -48,6 +48,13 @@ class Order implements OrderInterface
     private $status;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $power;
+
+    /**
      * @var AccountInterface
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer")
@@ -145,6 +152,24 @@ class Order implements OrderInterface
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setPower($power)
+    {
+        $this->power = $power;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPower()
+    {
+        return $this->power;
     }
 
     /**

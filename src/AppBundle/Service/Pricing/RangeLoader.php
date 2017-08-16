@@ -66,6 +66,14 @@ class RangeLoader
 
         $query = $qb->getQuery();
 
-        return $single ? $query->getOneOrNullResult() : $query->getResult();
+        if($single)  return $query->getOneOrNullResult();
+
+        $result = [];
+        /** @var \AppBundle\Entity\Pricing\RangeInterface $range */
+        foreach ($query->getResult() as $range){
+            $result[$range->getCode()] = $range;
+        }
+
+        return $result;
     }
 }

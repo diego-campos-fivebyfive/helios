@@ -1,12 +1,21 @@
+
+<form method="post" action="{{ path('order_budget_create') }}" id="form_budget">
+
 <table class="table table-bordered table-hover">
     <thead>
     <tr>
         <th colspan="5">
             MEUS ORÇAMENTOS
+            <button type="submit" class="btn btn-success pull-right">
+                <i class="fa fa-arrow-right"></i>
+                Enviar pedido para sices
+            </button>
         </th>
     </tr>
     <tr>
-        <th> # </th>
+        <th  class="text-center">
+            <input type="checkbox" id="check_budget">
+        </th>
         <th> Descrição </th>
         <th> Data </th>
         <th> Valor </th>
@@ -16,10 +25,12 @@
 
     <tbody>
 
-    {% for order in orders %}
+    {% for order in orders if not order.budget %}
 
         <tr>
-            <td width="5%"> {{ order.id }} </td>
+            <td width="5%" align="center">
+                <input type="checkbox" class="budget_children" name="childrens[]" value="{{ order.id }}">
+            </td>
             <td> {{ order.description }} </td>
             <td width="10%"> {{ order.createdAt|date('d/m/Y') }} </td>
             <td width="15%"> {{ order.total|currency }} </td>
@@ -52,11 +63,15 @@
 
 </table>
 
+</form>
+
 <script>
 
     var pagination = $('ul.pagination');
     var data_update = $('[data-update]');
     var data_delete = $('[data-delete]');
+    var form_budget = $('#form_budget');
+    var check_budget = $('#check_budget');
 
     pagination.find('a').on('click', function (event) {
         event.preventDefault();
@@ -109,6 +124,65 @@
                 }
             });
         });
+    });
+
+    form_budget.on('submit', function(event){
+        event.preventDefault();
+        var url = $(this).attr('action');
+        var data = $(this).serialize();
+        if(data.length) {
+
+            swal({
+                title: 'Confirma a geração do pedido?',
+                text: 'Os dados serão enviados para verificação',
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: '{{ 'Confirmar'|trans }}',
+                cancelButtonText: '{{ 'Cancelar'|trans }}',
+                closeOnConfirm: false
+            }, function () {
+
+                swal({
+                    title: "Solicitando...",
+                    text: "Aguarde!",
+                    type: "info",
+                    showConfirmButton: false
+                });
+
+                Request.send({
+                    url: url,
+                    method: 'post',
+                    data: data,
+                    callback: function (xhr) {
+                        if (xhr.status != 200) {
+                            swal('Atenção', 'Falha ao executar a operação', 'error');
+                        } else {
+
+                            swal({
+                                title: "Pedido gerado com sucesso!",
+                                text: "Redirecionando...",
+                                type: "success",
+                                showConfirmButton: false
+                            });
+
+                            var order = xhr.responseJSON.order;
+                            window.location.href = '{{ path('order_show',{id:'_id_'}) }}'.replace(/_id_/g, order.id);
+                        }
+                    }
+                });
+            });
+        }else{
+
+            swal({
+                title: "Selecione ao menos um orçamento para envio.",
+                type: "warning"
+            });
+        }
+    });
+
+    check_budget.on('click', function(){
+       $('.budget_children').prop('checked', $(this).is(':checked'));
     });
 
 </script>

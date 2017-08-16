@@ -10,6 +10,9 @@ use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Form\Component\GeneratorType;
 use AppBundle\Form\Order\ElementType;
 use AppBundle\Form\Order\OrderType;
+use AppBundle\Service\Order\ElementResolver;
+use AppBundle\Service\Order\OrderManipulator;
+use AppBundle\Service\Order\OrderPrecifier;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -68,6 +71,8 @@ class ProjectGeneratorController extends AbstractController
             $project->setDefaults($form->getData());
             $generator->generate($project);
 
+            $generator->pricing($project);
+
             $errors = [];
             $defaults  = $project->getDefaults();
             if(count($defaults['errors'])){
@@ -104,6 +109,7 @@ class ProjectGeneratorController extends AbstractController
         $qb->select('o')
             ->from($manager->getClass(), 'o')
             ->where('o.account = :account')
+            ->andWhere('o.parent is null')
             ->orderBy('o.id', 'desc')
             ->setParameters([
                 'account' => $this->account()
@@ -133,6 +139,8 @@ class ProjectGeneratorController extends AbstractController
 
         /** @var OrderInterface $order */
         $order = $transformer->transformFromProject($project);
+
+        $this->get('order_precifier')->precify($order);
 
         $this->manager('project')->delete($project);
 
@@ -186,7 +194,6 @@ class ProjectGeneratorController extends AbstractController
         ]);
     }
 
-
     /**
      * @Route("/orders/{id}/elements/create/{type}", name="generator_orders_element_create")
      */
@@ -196,9 +203,7 @@ class ProjectGeneratorController extends AbstractController
         $manager = $this->manager('order_element');
 
         $element = $manager->create();
-        $element
-            ->setTag($type)
-            ->setOrder($order);
+        $element->setOrder($order);
 
         $form = $this->createForm(ElementType::class, $element, [
             'manager' => $componentManager
@@ -210,13 +215,9 @@ class ProjectGeneratorController extends AbstractController
 
             $component = $componentManager->findOneBy(['code' => $element->getCode()]);
 
-            $element
-                ->setDescription($component->getDescription())
-                ->setUnitPrice(0)
-            ;
+            ElementResolver::resolve($component, $element);
 
-            // TODO: Pricing
-            $manager->save($element);
+            $this->get('order_precifier')->precify($order);
 
             return $this->json([], Response::HTTP_CREATED);
         }
@@ -245,13 +246,9 @@ class ProjectGeneratorController extends AbstractController
 
             $component = $componentManager->findOneBy(['code' => $element->getCode()]);
 
-            $element
-                ->setDescription($component->getDescription())
-                ->setUnitPrice(0)
-            ;
+            ElementResolver::resolve($element, $component);
 
-            // TODO: Pricing
-            $manager->save($element);
+            $this->get('order_precifier')->precify($element->getOrder());
 
             return $this->json([]);
         }
