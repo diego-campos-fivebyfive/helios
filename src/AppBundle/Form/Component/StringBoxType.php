@@ -5,6 +5,7 @@ namespace AppBundle\Form\Component;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class StringBoxType extends AbstractType
 {
@@ -21,6 +22,10 @@ class StringBoxType extends AbstractType
             ->add('fuses')
             ->add('maker')
             ->add('status');
+        $builder->add('available', CheckboxType::class, [
+            'label' => 'Disponivel',
+            'disabled' => true
+        ]);
     }
     
     /**
