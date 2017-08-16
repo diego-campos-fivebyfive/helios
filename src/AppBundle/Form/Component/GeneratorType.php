@@ -8,6 +8,7 @@ use AppBundle\Entity\Component\Maker;
 use AppBundle\Entity\Component\Module;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Service\ProjectGenerator\ModuleProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -138,7 +139,7 @@ class GeneratorType extends AbstractType
      */
     private function loadModules()
     {
-        return $this->createChoices($this->em->getRepository(Module::class)->findBy([]));
+        return $this->createChoices($this->em->getRepository(Module::class)->findBy(ModuleProvider::$criteria));
     }
 
     /**
