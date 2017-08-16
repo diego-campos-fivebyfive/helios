@@ -36,16 +36,14 @@ class InverterController extends FOSRestController
         $inverter = $inverterManager->create();
         $inverter
             ->setCode($data['code'])
-            ->setModel($data['model']);
+            ->setModel($data['model'])
+            ->setAvailable($data['available'])
+            ->setStatus(false);
 
         try{
             $inverterManager->save($inverter);
             $status = Response::HTTP_CREATED;
-            $data = [
-               'id' => $inverter->getId(),
-               'code' => $inverter->getCode(),
-               'model' => $inverter->getModel()
-            ];
+            $data = $this->get('api_formatter')->format($inverter, ['maker' => 'id']);
         }
         catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;

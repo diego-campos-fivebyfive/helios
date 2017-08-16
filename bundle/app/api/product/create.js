@@ -8,12 +8,14 @@ const { pipe } = util
 
 const splitModel = product => ({
   code: product.Codigo,
-  model: product.Descricao
+  model: product.Descricao,
+  available: !product.Bloqueado
 })
 
 const splitDescription = product => ({
   code: product.Codigo,
-  description: product.Descricao
+  description: product.Descricao,
+  available: !product.Bloqueado
 })
 
 const components = {
