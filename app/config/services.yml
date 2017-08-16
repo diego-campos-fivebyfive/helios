@@ -172,9 +172,17 @@ services:
         class: AppBundle\Service\Order\OrderTransformer
         arguments: ['@order_manager']
 
+    memorial_loader:
+        class: AppBundle\Service\Pricing\MemorialLoader
+        arguments: ['@memorial_manager']
+
     range_loader:
         class: AppBundle\Service\Pricing\RangeLoader
         arguments: ['@range_manager']
+
+    order_precifier:
+        class: AppBundle\Service\Order\OrderPrecifier
+        arguments: ['@service_container']
 
     # Form Services
     project_generator_type:
