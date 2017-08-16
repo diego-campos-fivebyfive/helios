@@ -49,8 +49,8 @@ class ElementResolver
      */
     public static function resolve($source, $data = null)
     {
-        $selfData = null;
-        $element = self::resolveElement($source, $data, $selfData);
+        $element = self::getElement($source, $data);
+        $selfData = self::getSelfData($source, $data);
 
         if($selfData) {
             self::update($element, self::extract($selfData));
@@ -62,23 +62,28 @@ class ElementResolver
     /**
      * @param $source
      * @param null $data
-     * @param null $selfData
      * @return Element|null
      */
-    private function resolveElement($source, $data = null, &$selfData = null)
+    private static function getElement($source, $data = null)
     {
-        if($source instanceof Element) {
-            $selfData = $data;
-            return $source;
-        }else{
-            $selfData = $source;
-        }
+        if ($data instanceof Element) return $data;
 
-        if($data instanceof Element) {
-            $selfData = $source;
-            return $data;
-        }
+        if ($source instanceof Element) return $source;
 
         return new Element();
+    }
+
+    /**
+     * @param $source
+     * @param $data
+     * @return mixed
+     */
+    private static function getSelfData($source, $data)
+    {
+        if ($source instanceof Element) return $data;
+
+        if($data instanceof Element) return $source;
+
+        return null;
     }
 }
