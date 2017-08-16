@@ -6,6 +6,7 @@ use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Form\Component\GeneratorType;
 use AppBundle\Service\ProjectGenerator\AbstractConfig;
+use AppBundle\Service\ProjectGenerator\ModuleProvider;
 use FOS\RestBundle\View\View;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -104,12 +105,17 @@ class GeneratorController extends AbstractApiController
         return $this->handleView($view);
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     */
     public function getOptionsAction(Request $request)
     {
         $data = [
             'roof_type' => array_values(Project::getRoofTypes()),
             'grid_voltage' => AbstractConfig::getVoltages(),
-            'grid_phase_number' => AbstractConfig::getPhaseNumbers()
+            'grid_phase_number' => AbstractConfig::getPhaseNumbers(),
+            'module' => $this->resolveModuleOptions()
         ];
 
         if(null != $option = $request->get('option')){
@@ -156,5 +162,23 @@ class GeneratorController extends AbstractApiController
         $data['products'] = $elements;
 
         return array_filter($data);
+    }
+
+    /**
+     * @return array
+     */
+    private function resolveModuleOptions()
+    {
+        /** @var \AppBundle\Manager\ModuleManager $manager */
+        $manager = $this->manager('module');
+        $provider = new ModuleProvider($manager);
+
+        $formatter = $this->get('api_formatter');
+
+        $modules = $formatter->format($provider->getAvailable(), [
+            'maker' => 'id'
+        ]);
+
+        return $modules;
     }
 }
