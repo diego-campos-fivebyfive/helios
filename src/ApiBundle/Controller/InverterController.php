@@ -37,7 +37,8 @@ class InverterController extends FOSRestController
         $inverter
             ->setCode($data['code'])
             ->setModel($data['model'])
-            ->setAvailable($data['available']);
+            ->setAvailable($data['available'])
+            ->setStatus(false);
 
         try{
             $inverterManager->save($inverter);

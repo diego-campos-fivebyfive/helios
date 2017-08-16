@@ -22,7 +22,8 @@ class StringboxController extends FOSRestController
         $stringbox
             ->setCode($data['code'])
             ->setDescription($data['description'])
-            ->setAvailable($data['available']);
+            ->setAvailable($data['available'])
+            ->setStatus(false);
 
         try {
             $stringboxManager->save($stringbox);

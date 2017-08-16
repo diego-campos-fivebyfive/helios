@@ -24,7 +24,8 @@ class StructureController extends FOSRestController
         $structure
             ->setCode($data['code'])
             ->setDescription($data['description'])
-            ->setAvailable($data['available']);
+            ->setAvailable($data['available'])
+            ->setStatus(false);
 
         try {
             $structureManager->save($structure);

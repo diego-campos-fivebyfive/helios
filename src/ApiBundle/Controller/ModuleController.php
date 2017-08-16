@@ -33,7 +33,8 @@ class ModuleController extends AbstractApiController
         $module
             ->setCode($data['code'])
             ->setModel($data['model'])
-            ->setAvailable($data['available']);
+            ->setAvailable($data['available'])
+            ->setStatus(false);
 
         try {
             $moduleManager->save($module);
