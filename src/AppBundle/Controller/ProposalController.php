@@ -46,7 +46,7 @@ class ProposalController extends AbstractController
      */
     public function editorAction(Project $project)
     {
-
+        dump($project);die;
         return $this->render('AppBundle:Proposal:editor.html.twig',
             [
                 'project' => $project
