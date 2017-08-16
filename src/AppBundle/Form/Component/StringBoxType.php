@@ -24,7 +24,8 @@ class StringBoxType extends AbstractType
             ->add('status');
         $builder->add('available', CheckboxType::class, [
             'label' => 'Disponivel',
-            'disabled' => true
+            'required' => false,
+            //'disabled' => true
         ]);
     }
     

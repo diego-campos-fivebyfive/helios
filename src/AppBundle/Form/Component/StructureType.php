@@ -3,6 +3,7 @@
 namespace AppBundle\Form\Component;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -30,8 +31,10 @@ class StructureType extends AbstractType
                 ]);
         $builder->add('available', CheckboxType::class, [
             'label' => 'Disponivel',
-            'disabled' => true
-        ]);
+            'required' => false,
+            //'disabled' => true
+        ])
+            ->add('code', TextType::class);
     }
 
     /**
