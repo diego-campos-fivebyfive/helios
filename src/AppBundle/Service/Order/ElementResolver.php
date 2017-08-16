@@ -16,7 +16,9 @@ class ElementResolver
         $accessor = PropertyAccess::createPropertyAccessor();
 
         foreach ($data as $property => $value) {
-            $accessor->setValue($element, $property, $value);
+            if('id' != $property) {
+                $accessor->setValue($element, $property, $value);
+            }
         }
     }
 
