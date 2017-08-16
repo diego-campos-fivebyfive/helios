@@ -90,8 +90,10 @@ class ModuleType extends AbstractType
         ]);
         $builder->add('available', CheckboxType::class, [
             'label' => 'Disponivel',
-            'disabled' => true
-        ]);
+            'required' => false,
+            //'disabled' => true
+        ])
+        ->add('code', TextType::class);
     }
 
     /**
