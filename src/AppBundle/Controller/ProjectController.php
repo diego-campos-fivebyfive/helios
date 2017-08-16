@@ -53,14 +53,12 @@ class ProjectController extends AbstractController
             }
         }
 
-        $qb = $this->manager('project')->getEntityManager()->createQueryBuilder();
+        $qb = $this->manager('project')->createQueryBuilder();
 
-        $qb->select('p')
-            ->from($this->manager('project')->getClass(), 'p')
-            ->join('p.customer', 'c', 'WITH')
+        $qb->join('p.customer', 'c', 'WITH')
             ->join('p.stage', 's')
             ->where($qb->expr()->in('p.member', $ids))
-            ->orderBy('p.number', 'desc');
+            ->orderBy('p.id', 'desc');
 
         if(null != $customer = $this->getCustomerReferrer($request)){
             $qb->andWhere('p.customer = :customer')->setParameter('customer', $customer);
@@ -160,9 +158,19 @@ class ProjectController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
 
+            $defaults = $form->getData();
             $generator = $this->getGenerator();
 
-            $project->setDefaults($form->getData());
+            /** @var \AppBundle\Entity\CustomerInterface $customer */
+            $customer = $this->manager('customer')->find($defaults['customer']);
+
+            /** @var \AppBundle\Entity\CategoryInterface $stage */
+            $stage = $this->manager('category')->find($defaults['stage']);
+
+            $project
+                ->setStage($stage)
+                ->setCustomer($customer)
+                ->setDefaults($defaults);
 
             $generator->generate($project);
 
