@@ -308,7 +308,13 @@ function generatePdfProposal(pdfBtn) {
 function redirectPdf(filename) {
     var dataUrl = $('#pdfProposal').data('url');
     var url = dataUrl.replace(":filename:",filename);
-    window.open(url);
+    swal({
+        title: '<a href='+url+' target="_blank">Abrir PDF da Proposta</a>',
+        showCancelButton: true,
+        showConfirmButton: false,
+        cancelButtonText: "Fechar",
+        html: true
+    });
 }
 
 function msgGeneratorPdf(msg) {
