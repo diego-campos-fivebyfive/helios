@@ -29,6 +29,7 @@ class StructureController extends AbstractController
 {
     /**
      * @Route("/", name="structure_index")
+     *
      */
     public function indexAction(Request $request)
     {
@@ -37,6 +38,13 @@ class StructureController extends AbstractController
 
         $qb = $manager->getEntityManager()->createQueryBuilder();
         $qb->select('s')->from(Structure::class, 's');
+
+        if(!$this->user()->isAdmin()) {
+            $qb->where('s.status = :status');
+            $qb->setParameters([
+                'status' => 1
+            ]);
+        }
 
         $this->overrideGetFilters();
 
