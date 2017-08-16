@@ -21,15 +21,13 @@ class VarietyController extends FOSRestController
         $variety = $varietyManager->create();
         $variety
             ->setCode($data['code'])
-            ->setDescription($data['description']);
+            ->setDescription($data['description'])
+            ->setAvailable($data['available'])
+            ->setStatus(true);
         try {
             $varietyManager->save($variety);
             $status = Response::HTTP_CREATED;
-            $data = [
-                'id' => $variety->getId(),
-                'code' => $variety->getCode(),
-                'description' => $variety->getDescription()
-            ];
+            $data = $this->get('api_formatter')->format($variety, ['maker' => 'id']);
         }
         catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
@@ -41,18 +39,9 @@ class VarietyController extends FOSRestController
         return $this->handleView($view);
     }
 
-    public function getVarietyAction(Variety $id)
+    public function getVarietyAction(Variety $variety)
     {
-        $variety = $id;
-
-        $data = [
-            'id' => $variety->getId(),
-            'code' => $variety->getCode(),
-            'description' => $variety->getDescription(),
-            'type' => $variety->getType(),
-            'subtype' => $variety->getSubType(),
-            'maker' => $variety->getMaker()
-        ];
+        $data = $this->get('api_formatter')->format($variety, ['maker' => 'id']);
 
         $view = View::create($data);
 

@@ -79,6 +79,19 @@ interface ElementInterface
     public function getTotal();
 
     /**
+     * @param array $metadata
+     * @return ElementInterface
+     */
+    public function setMetadata(array $metadata = []);
+
+    /**
+     * @param null $key
+     * @param null $default
+     * @return mixed
+     */
+    public function getMetadata($key = null, $default = null);
+
+    /**
      * @param OrderInterface $order
      * @return ElementInterface
      */

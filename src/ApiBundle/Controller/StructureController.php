@@ -23,16 +23,14 @@ class StructureController extends FOSRestController
         $structure = $structureManager->create();
         $structure
             ->setCode($data['code'])
-            ->getDescription($data['description']);
+            ->setDescription($data['description'])
+            ->setAvailable($data['available'])
+            ->setStatus(false);
 
         try {
             $structureManager->save($structure);
             $status = Response::HTTP_CREATED;
-            $data = [
-                'id' => $structure->getId(),
-                'code' => $structure->getCode(),
-                'model' => $structure->getDescription()
-            ];
+            $data = $this->get('api_formatter')->format($structure, ['maker' => 'id']);
         }catch (\Exception $exception){
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
             $data = 'Can not create Structure';
@@ -43,26 +41,12 @@ class StructureController extends FOSRestController
         return $this->handleView($view);
     }
 
-    public function getStructuresAction(Request $request, $id)
+    public function getStructureAction(Structure $structure)
     {
-        $em = $this->getDoctrine()->getManager();
+        $data = $this->get('api_formatter')->format($structure, ['maker' => 'id']);
 
-        /** @var \Doctrine\ORM\QueryBuilder $qb */
-        $qb = $em->createQueryBuilder();
+        $view = View::create($data);
 
-        $qb->select('s')
-            ->from(Structure::class, 's')
-            ->where('s.id = :id')
-            ->setParameters([
-                'id' => $id
-            ]);
-        $query = $qb->getQuery();
-
-        $structures = $query->getArrayResult();
-
-        $response = new Response(json_encode($structures));
-        $response->headers->set('structure', 'aplication/json');
-
-        return $response;
+        return $this->handleView($view);
     }
 }

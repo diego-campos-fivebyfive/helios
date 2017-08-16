@@ -21,16 +21,14 @@ class StringboxController extends FOSRestController
         $stringbox = $stringboxManager->create();
         $stringbox
             ->setCode($data['code'])
-            ->setDescription($data['description']);
+            ->setDescription($data['description'])
+            ->setAvailable($data['available'])
+            ->setStatus(false);
 
         try {
             $stringboxManager->save($stringbox);
             $status = Response::HTTP_CREATED;
-            $data = [
-                'id' => $stringbox->getId(),
-                'code' => $stringbox->getCode(),
-                'description' => $stringbox->getDescription()
-            ];
+            $data = $this->get('api_formatter')->format($stringbox, ['maker' => 'id']);
         }
         catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
@@ -42,19 +40,9 @@ class StringboxController extends FOSRestController
         return $this->handleView($view);
     }
 
-    public function getStringboxAction(StringBox $id)
+    public function getStringboxAction(StringBox $stringbox)
     {
-        $stringbox = $id;
-
-        $data = [
-            'id' => $stringbox->getId(),
-            'code' => $stringbox->getCode(),
-            'description' => $stringbox->getDescription(),
-            'inputs' => $stringbox->getInputs(),
-            'outputs' => $stringbox->getOutputs(),
-            'fuses' => $stringbox->getFuses(),
-            'maker' => $stringbox->getMaker()
-        ];
+        $data = $this->get('api_formatter')->format($stringbox, ['maker' => 'id']);
 
         $view = View::create($data);
 
