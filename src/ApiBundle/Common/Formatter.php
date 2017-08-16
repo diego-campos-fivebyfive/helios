@@ -54,22 +54,24 @@ class Formatter
         $converts = $converts ?: $this->converts;
         $formatted = [];
 
-        if (is_array($data)) {
+        if(count($data)) {
+            if (is_array($data)) {
 
-            $keys = array_keys($data);
-            if (is_int($keys[0])) {
-                foreach ($data as $item) {
-                    $formatted[] = $this->format($item, $converts);
+                $keys = array_keys($data);
+                if (is_int($keys[0])) {
+                    foreach ($data as $item) {
+                        $formatted[] = $this->format($item, $converts);
+                    }
                 }
-            }
 
-        }else {
+            } else {
 
-            $formatted = $this->toArray($data);
-            foreach ($converts as $field => $target) {
-                if (array_key_exists($field, $formatted)) {
-                    $formatted[sprintf('%s_%s', $field, $target)] = $formatted[$field][$target];
-                    unset($formatted[$field]);
+                $formatted = $this->toArray($data);
+                foreach ($converts as $field => $target) {
+                    if (array_key_exists($field, $formatted)) {
+                        $formatted[sprintf('%s_%s', $field, $target)] = $formatted[$field][$target];
+                        unset($formatted[$field]);
+                    }
                 }
             }
         }
