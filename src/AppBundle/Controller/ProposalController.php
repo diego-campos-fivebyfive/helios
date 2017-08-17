@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Component\Project;
+use AppBundle\Entity\Theme;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -31,10 +32,37 @@ class ProposalController extends AbstractController
     /**
      * @Route("/{id}/save", name="proposal_save")
      */
-    public function saveContentAction(Request $request, Project $project){
+    public function saveContentAction(Request $request, Project $project)
+    {
+        $currentTheme = $this->manager('theme')->findOneBy([
+            'accountId' => $project->getMember()->getAccount()->getId(),
+            'theme' => 1
+        ]);
+        /** @var Theme $theme */
+        $theme;
+
+        if(!$currentTheme){
+            $theme = $currentTheme;
+            $theme->setTheme(0);
+            $this->manager('theme')->save($theme);
+        }
+
+        if ($project->getProposal()){
+            $manager = $this->manager('theme');
+            $theme = $manager->create();
+            $theme->setAccountId($project->getMember()->getAccount()->getId());
+        }else{
+            $manager = $this->manager('theme')->find($project->getProposal());
+            $theme = $manager;
+        }
+
         $content = $request->request->get('content');
 
-        $project->setProposal($content);
+        $theme->setTheme(1);
+        $theme->setContent($content);
+        $this->manager('theme')->save($theme);
+
+        $project->setProposal($theme->getId());
 
         $this->manager('project')->save($project);
 
@@ -46,10 +74,20 @@ class ProposalController extends AbstractController
      */
     public function editorAction(Project $project)
     {
-        return $this->render('AppBundle:Proposal:editor.html.twig',
-            [
-                'project' => $project
+        $manager = $this->manager('theme')->findOneBy([
+                'accountId' => 8,
+                'theme' => 1
+        ]);
+        if ($manager){
+            $manager = $this->manager('theme')->findOneBy([
+                    'themeSices' => 1,
+                    'theme' => 1
             ]);
+        }
+        /** @var Theme $theme */
+        $theme = $manager;
+
+        return $this->render('AppBundle:Proposal:editor.html.twig',['project' => $project]);
     }
 
     /**

@@ -253,9 +253,9 @@ class Project implements ProjectInterface
     private $paybackMonthsDisc;
 
     /**
-     * @var string
+     * @var int
      *
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $proposal;
 
