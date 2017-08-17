@@ -157,7 +157,7 @@
             <div class="col-md-10">
                 <div><h3>Editor de Proposta</h3><br/></div>
 
-                <div id="bloco" class="hidden">{{ project.proposal|raw }}</div>
+                <div id="bloco" class="hidden">{{ theme.proposal|raw }}</div>
 
                 <button id="idNewPage" class="btn btn-primary col-md-2 margBottom" onclick="newPage()">Nova Página</button>
             </div>
@@ -1081,15 +1081,6 @@
 
     <script>
         UPLOADCARE_PUBLIC_KEY = '9490325b6fcc3e8d094d';
-
-        if($('#bloco').html() == "") {
-            $('#bloco').html(
-                '<div class="ocultar">' +
-                '<span id="idConjunct">0</span>' +
-                '<span id="idEditor">0</span>' +
-                '</div>'
-            );
-        }
     </script>
 
 {% endblock %}

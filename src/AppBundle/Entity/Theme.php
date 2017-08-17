@@ -24,7 +24,7 @@ class Theme implements ThemeInterface
     /**
      * @var int
      *
-     * @ORM\Column(name="account_id", type="integer")
+     * @ORM\Column(name="account_id", type="integer", nullable=true)
      */
     private $accountId;
 
@@ -38,7 +38,7 @@ class Theme implements ThemeInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="content", type="text")
+     * @ORM\Column(name="content", type="text", nullable=true)
      */
     private $content;
 
