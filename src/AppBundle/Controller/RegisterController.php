@@ -169,15 +169,31 @@ class RegisterController extends AbstractController
 
         $accountManager->save($account);
 
-        $this->get('notifier')->notify([
+        /*$this->get('notifier')->notify([
             'Evento' => '206',
             'Callback' => 'account_created',
             'Id' => $account->getId()
-        ]);
+        ]);*/
 
         //$this->setNotice('Cadastro realizado com sucesso, verifique seu e-mail!');
 
-        return $this->redirectToRoute('app_register_link');
+        $request->getSession()->set('account_id', $account->getId());
+
+        return $this->redirectToRoute('register_in_progress');
+    }
+
+    /**
+     * @Route("/in-progress", name="register_in_progress")
+     */
+    public function inProgressAction(Request $request)
+    {
+        $id = $request->getSession()->get('account_id', 0);
+
+        $account = $this->manager('account')->find($id);
+
+        return $this->render('register.in_progress', [
+            'account' => $account
+        ]);
     }
 
     /**
@@ -213,6 +229,7 @@ class RegisterController extends AbstractController
      */
     public function confirmAction(Request $request, $token)
     {
+        dump($token); die;
         $register = $this->getAccountRegisterManager()->findRegisterByConfirmationToken($token);
 
         if ($register instanceof AccountRegister) {
