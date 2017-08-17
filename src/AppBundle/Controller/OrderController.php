@@ -50,7 +50,8 @@ class OrderController extends AbstractController
     public function showAction(Request $request, Order $order)
     {
         return $this->render('order.show', [
-            'order' => $order
+            'order' => $order,
+            'element' => $order->getElements()
         ]);
     }
 
