@@ -210,7 +210,7 @@ class AreaDebugger implements AreaDebuggerInterface
 
         //max dc power limits
         $max_dc_power_op = ($nominal_power / $mppt_number) * $mppt_factor;
-        $pmax_op = $stc_pmax * $n_string * $n_mod_string / 1000;
+        $pmax_op = ($stc_pmax * $n_string * $n_mod_string) / 1000;
         $pmax_tolerance_op_1 = $max_dc_power_op / .75;
         $pmax_tolerance_op_2 = $max_dc_power_op / .5;
         $danger_limit = $max_dc_power_op / .25;
