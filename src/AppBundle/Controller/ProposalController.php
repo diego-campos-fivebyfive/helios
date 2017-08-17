@@ -169,9 +169,7 @@ class ProposalController extends AbstractController
      */
     public function pdfAction(Project $project)
     {
-        $proposalManager = $this->manager('theme')->findOneBy(['id' => $project->getProposal()]);
-        /** @var Theme $proposal */
-        $proposal = $proposalManager;
+        $proposal = $this->manager('theme')->findOneBy(['id' => $project->getProposal()]);
 
         return $this->render('AppBundle:Proposal:pdf.html.twig', [
             'proposal' => $proposal
