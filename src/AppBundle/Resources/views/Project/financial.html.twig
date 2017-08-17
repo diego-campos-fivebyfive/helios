@@ -330,7 +330,7 @@
 
                         <div class="row">
                             <div class="col-lg-12">
-                                <div class="panel panel-info">
+                                <div class="panel panel-primary">
                                     <div class="panel-heading">
                                         <i class="fa fa-info-circle"></i> Resultados
                                     </div>
@@ -383,7 +383,7 @@
                                             <div class="col-md-4">
                                                 {{ form_rest(form) }}
                                                 <button id="btn_analysis" type="submit"
-                                                        class="btn btn-block btn-info ladda-button"
+                                                        class="btn btn-block btn-primary ladda-button"
                                                         data-style="zoom-in">
                                                     <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
                                                 </button>
@@ -568,7 +568,9 @@
                 }).trigger('change');
             },
             onSaveShipping: function(){
+                Financial.get_taxes();
                 Financial.loadFinalPrices();
+                Financial.force_calculations();
             },
             onSaveExtra: function(){
                 Financial.get_extras();
@@ -607,11 +609,12 @@
             $('#chart_analysis').attr('width', chart_container.width());
             function render_analysis_chart(data) {
                 AppChart.financialChart({
-                    fillColor: "rgba(26,179,148,0.5)",
-                    strokeColor: "rgba(26,179,148,0.8)",
-                    pointColor: "rgba(26,179,148,0.8)",
+                    fillColor: "rgba(242,160,25,0.5)",
+                    strokeColor: "rgba(242,160,25)",
+                    pointColor: "rgba(242,160,25)",
                     data: data,
                     title: false,
+                    opacity: .5,
                     element: 'chart_analysis',
                     callback: function(chart){
                         Financial.analysis_chart = chart;
