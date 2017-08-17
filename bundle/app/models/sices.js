@@ -4,13 +4,10 @@ const request = require('request-promise')
 const { sices } = require('../config')
 
 const getAuthentication = () => request({
-  uri: `${sices.uri}/oauth/v2/token`,
+  uri: `${sices.host}/oauth/v2/token`,
   method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  json: {
-    client_id: '2b14bvyiqfr4wksgcc0ck004w8og4wkwc4o4gksk4ks8oooo8g',
+  formData: {
+    client_id: '1_2b14bvyiqfr4wksgcc0ck004w8og4wkwc4o4gksk4ks8oooo8g',
     client_secret: '53xlex74i4kk8ckww08goc8oocw048s0wwcok84040w0kcw0ks',
     grant_type: 'client_credentials'
   }
