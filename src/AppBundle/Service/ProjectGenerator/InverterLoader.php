@@ -10,7 +10,7 @@ class InverterLoader
     /**
      * @var float
      */
-    private $fdiMin = 0.76;
+    private $fdiMin = 0.77;
 
     /**
      * @var float
@@ -47,6 +47,7 @@ class InverterLoader
             $combine = false;
             $min = ($power * $this->fdiMin);
             $max = ($power * $this->fdiMax);
+            $attemptCycle = 0;
 
             $inverters = $this->$method($min, $max, $phaseNumber, $phaseVoltage, $maker, 'asc');
 
@@ -54,6 +55,7 @@ class InverterLoader
                 for ($i = 300; $i >= 0; $i -= 15) {
 
                     $attempts++;
+                    $attemptCycle++;
 
                     $inverters = $this->$method(($min * ($i / 1000)), $max, $phaseNumber, $phaseVoltage, $maker, 'desc');
 
@@ -67,7 +69,9 @@ class InverterLoader
                 $inverters[0]->quantity = 1;
             }
 
-            if (!count($inverters)) {
+            $forceNext = (!count($inverters) || (count($inverters) <= 1 && $attemptCycle > 0));
+
+            if ($forceNext) {
                 $power += 0.2;
                 $increments += 1;
             }
@@ -78,7 +82,7 @@ class InverterLoader
                 }
             }
 
-        } while (!count($inverters));
+        } while ($forceNext);
 
         $defaults['power'] = $power;
         $defaults['power_increments'] = $increments;
