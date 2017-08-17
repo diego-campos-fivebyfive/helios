@@ -12,7 +12,8 @@ const isquikBase = `${ISQUIK_HOST}:${ISQUIK_PORT}`
 
 const config = {
   sices: {
-    uri: `${sicesBase}/api`
+    uri: `${sicesBase}/api`,
+    host: sicesBase
   },
   isquik: {
     uri: isquikBase,
