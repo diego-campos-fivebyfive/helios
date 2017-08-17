@@ -1532,6 +1532,8 @@ class Project implements ProjectInterface
             $collection[$inverter->getId()]['unitCostPrice'] = $projectInverter->getUnitCostPrice();
         }
 
+        dump($collection);
+
         return $collection;
     }
 
@@ -1604,7 +1606,9 @@ class Project implements ProjectInterface
      */
     public function getProjectVarieties()
     {
-        return $this->projectVarieties;
+        return $this->projectVarieties->filter(function (ProjectVarietyInterface $projectVariety){
+            return VarietyInterface::TYPE_TRANSFORMER != $projectVariety->getVariety()->getType();
+        });
     }
 
     /**

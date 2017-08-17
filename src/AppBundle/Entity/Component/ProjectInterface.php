@@ -601,7 +601,7 @@ interface ProjectInterface
     public function setTransformer(VarietyInterface $transformer);
 
     /**
-     * @return VarietyInterface
+     * @return ProjectVarietyInterface
      */
     public function getTransformer();
 
