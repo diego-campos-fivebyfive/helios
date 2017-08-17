@@ -3,43 +3,61 @@
 const request = require('request-promise')
 const { sices } = require('../config')
 
-const getRequest = uri => request({
-  resolveWithFullResponse: true,
-  method: 'GET',
-  uri
-})
-  .then(({ body, statusCode }) => ({
-    ...JSON.parse(body),
-    statusCode
-  }))
-
-const postRequest = (uri, data) => request({
-  resolveWithFullResponse: true,
-  headers: {
-    'Content-Type': 'application/json'
-  },
+const getAuthentication = () => request({
+  uri: `${sices.uri}/auth`,
   method: 'POST',
-  json: data,
-  uri
-})
-  .then(({ body, statusCode }) => ({
-    ...body,
-    statusCode
-  }))
-
-const putRequest = (uri, data) => request({
-  resolveWithFullResponse: true,
   headers: {
     'Content-Type': 'application/json'
   },
-  method: 'PUT',
-  json: data,
-  uri
+  json: {
+    Chave: sices.auth.key,
+    Dominio: sices.auth.user
+  }
 })
-  .then(({ body, statusCode }) => ({
-    ...body,
-    statusCode
-  }))
+
+const getRequest = uri => getAuthentication().then(auth => (
+  request({
+    resolveWithFullResponse: true,
+    method: 'GET',
+    uri
+  })
+    .then(({ body, statusCode }) => ({
+      ...JSON.parse(body),
+      statusCode
+    }))
+))
+
+const postRequest = (uri, data) => getAuthentication().then(auth => (
+  request({
+    resolveWithFullResponse: true,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    method: 'POST',
+    json: data,
+    uri
+  })
+    .then(({ body, statusCode }) => ({
+      ...body,
+      statusCode
+    }))
+))
+
+const putRequest = (uri, data) => getAuthentication().then(auth => (
+  request({
+    resolveWithFullResponse: true,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    method: 'PUT',
+    json: data,
+    uri
+  })
+    .then(({ body, statusCode }) => ({
+      ...body,
+      statusCode
+    }))
+))
 
 const updateAccount = (id, account) => putRequest(`${sices.uri}/accounts/${id}`, account)
 const updateUser = (id, user) => putRequest(`${sices.uri}/users/${id}`, user)
