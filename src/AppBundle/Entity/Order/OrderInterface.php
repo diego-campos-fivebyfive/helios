@@ -21,6 +21,17 @@ interface OrderInterface
     public function getId();
 
     /**
+     * @param $isquik_id
+     * @return OrderInterface
+     */
+    public function setIsquikId($isquik_id);
+
+    /**
+     * @return integer
+     */
+    public function getIsquikId();
+
+    /**
      * @param $description
      * @return OrderInterface
      */

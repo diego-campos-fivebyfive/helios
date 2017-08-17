@@ -27,6 +27,13 @@ class Order implements OrderInterface
     private $id;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="isquik_id", type="integer", nullable=true)
+     */
+    private $isquik_id;
+
+    /**
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
@@ -97,6 +104,23 @@ class Order implements OrderInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setIsquikId($isquik_id)
+    {
+        $this->isquik_id = $isquik_id;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getIsquikId()
+    {
+        return $this->isquik_id;
     }
 
     /**
