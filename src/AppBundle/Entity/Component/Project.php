@@ -1532,8 +1532,6 @@ class Project implements ProjectInterface
             $collection[$inverter->getId()]['unitCostPrice'] = $projectInverter->getUnitCostPrice();
         }
 
-        dump($collection);
-
         return $collection;
     }
 
