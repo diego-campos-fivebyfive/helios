@@ -4,6 +4,7 @@ namespace AppBundle\Controller\PublicAccess;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Component\Project;
+use AppBundle\Entity\Theme;
 use Buzz\Message\Request;
 use Knp\Bundle\SnappyBundle\Snappy\LoggableGenerator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -22,8 +23,12 @@ class FileController extends AbstractController
      */
     public function pdfGeneratorAction(Project $project)
     {
+        $proposalManager = $this->manager('theme')->findOneBy(['id' => $project->getProposal()]);
+        /** @var Theme $proposal */
+        $proposal = $proposalManager;
+
         return $this->render('AppBundle:Proposal:pdf.html.twig', [
-            'project' => $project
+            'proposal' => $proposal
         ]);
     }
 
