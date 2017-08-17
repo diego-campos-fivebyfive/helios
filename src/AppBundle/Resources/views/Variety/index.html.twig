@@ -1,0 +1,237 @@
+{% extends view('layout') %}
+
+{% block styles %}
+    <style>
+        .product-imitation {
+            background-repeat: no-repeat !important;
+            background-size: contain !important;
+            background-position: center !important;
+        }
+
+        #form_filtration > .form-group > .col-sm-2 {
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    {% set _route = app.request.attributes.get('_route') %}
+
+    {% set display = query.display %}
+    {% set is_grid = 'grid' == display %}
+    {% set is_strict = 1 == query.strict %}
+
+    {% set _route_params = app.request.attributes.get('_route_params')|merge(query|merge({'display':is_grid ? 'list' : 'grid' })) %}
+
+
+    <div class="modal inmodal fade" id="e_modal_details" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body" id="detail_variety">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">
+                        {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% set varieties = pagination.items %}
+
+    {% macro variety_buttons(variety, extra) %}
+
+        {% set member = extra %}
+
+        <div class="btn-group btn-group-sm btn-group-justified">
+            <a data-url="{{ path('variety_show', { 'id': variety.id }) }}"
+               data-toggle="modal"
+               data-target="#modal_details"
+               class="btn btn-default">
+                <i class="fa fa-eye"></i> {{ 'View'|trans }}
+            </a>
+
+            {% if member.isAdmin %}
+                <a href="{{ path('variety_edit', { 'id': variety.id }) }}"
+                   class="btn btn-success">
+                    <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
+                </a>
+            {% endif %}
+
+        </div>
+
+    {% endmacro %}
+
+    {% import _self as handler %}
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row">
+            {{ knp_pagination_filter(pagination, {'v.description, v.code, v.type, s.subtype, s.power':''}) }}
+
+            <div class="col-md-2">
+                <a href="{{ path(_route, _route_params) }}" class="btn btn-default btn-block">
+                    <i class="fa fa-{{ is_grid ? 'list' : 'th' }}"></i> {{ is_grid ? 'Exibir Lista'|trans : 'Exibir Grade'|trans }}
+                </a>
+            </div>
+        </div>
+
+        <div class="row" id="real-content">
+
+            <div class="{{ not is_grid ? 'col-md-12' }}">
+
+                {% if is_grid %}
+
+                    {% for variety in varieties %}
+
+                        <div class="col-md-3" id="component{{ variety.id }}">
+                            <div class="ibox">
+                                <div class="ibox-content product-box">
+
+                                    <div class="product-imitation" style="background-image: url({{ variety.image|componentFilePath }}); background-repeat: no-repeat;">
+                                    </div>
+                                    <div class="product-desc">
+
+                                        <a data-url="{{ path('variety_show', { 'id': variety.id }) }}"
+                                           data-toggle="modal"
+                                           data-target="#modal_details"
+                                           class="product-name">
+                                            {{ variety.description|slice(0,18) }} <br>
+                                            <small>
+                                                {{ variety.code|slice(0,25) }}
+                                            </small>
+                                        </a>
+
+                                        <div class="small m-t-xs">
+                                            Tipo:
+                                            {{ variety.type }}
+                                        </div>
+
+                                        <div class="small m-t-xs">
+                                            Sub-Tipo:
+                                            {{ variety.subtype }}
+                                        </div>
+
+                                        <div class="small m-t-xs">
+                                            Potência:
+                                            {{ variety.power }}
+                                        </div>
+
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="row">
+                                            {{ handler.variety_buttons(variety,member) }}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="ibox-content">
+
+                        <table class="table table-stripped">
+                            <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Descrição</th>
+                                <th>Tipo</th>
+                                <th>Sub-tipo</th>
+                                <th>Potência</th>
+                                <th class="col-md-2">&nbsp;</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for variety in varieties %}
+
+                                <tr class="gradeY">
+                                    <td> {{ variety.code }} </td>
+                                    <td> {{ variety.description }} </td>
+                                    <td> {{ variety.type }} </td>
+                                    <td> {{ variety.subtype }} </td>
+                                    <td> {{ variety.power }} </td>
+                                    <td class="col-md-3">
+
+                                        <div class="btn-group btn-group-sm btn-group-justified">
+                                            <a data-url="{{ path('variety_show', { 'id': variety.id }) }}"
+                                               data-toggle="modal"
+                                               data-target="#modal_details"
+                                               class="btn btn-default">
+                                                <i class="fa fa-eye"></i> {{ 'View'|trans }}
+                                            </a>
+
+                                            {% if member.isAdmin %}
+                                                <a href="{{ path('variety_edit', { 'id': variety.id }) }}"
+                                                   class="btn btn-success">
+                                                    <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
+                                                </a>
+                                            {% endif %}
+
+                                        </div>
+
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div class="row text-center">
+            <div class="btn-group">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+
+    </div>
+
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+
+        $(function () {
+
+            var detail_variety = $('#detail_variety');
+            var detail_spinner = detail_variety.html();
+            $('[data-target="#modal_details"]').on('click', function(){
+                var url = $(this).data('url');
+                if (url) {
+                    $('#e_modal_details').modal('show');
+                    detail_variety.html(detail_spinner);
+                    $.ajax({
+                        url: url,
+                        method: 'get',
+                        success: function (response) {
+                            detail_variety.html(response);
+                        }
+                    });
+                } else {
+                    detail_variety.html('<h1> Nenhum componente selecionado para visualização </h1>');
+                }
+            });
+
+        });
+
+
+    </script>
+
+{% endblock %}

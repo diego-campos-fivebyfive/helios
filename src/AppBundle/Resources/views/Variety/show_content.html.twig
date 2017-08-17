@@ -1,0 +1,82 @@
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox product-detail">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="m-t-md">
+                                <h2 class="product-main-price">
+                                    {{ variety.description }}
+                                </h2>
+                            </div>
+                            <hr>
+                            <div class="product-images">
+                                <div>
+                                    <img class="col-md-12" src="{{ variety.image|componentFilePath }}"/>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 pull-right">
+                            <div class="table-responsive">
+                                <table class="table table-stripped table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th colspan="2">
+                                            Dados Gerais
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td width="35%">Código</td>
+                                        <td>{{ variety.code }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Descrição</td>
+                                        <td>{{ variety.description }}</td>
+                                    </tr>
+                                    {% if variety.datasheet %}
+                                        <tr>
+                                            <td>{{ 'Datasheet'|trans }} PDF</td>
+                                            <td>
+                                                <a href="{{ variety.datasheet|componentFilePath }}" target="_blank">
+                                                    {{ 'View'|trans }}
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+
+                                    </tbody>
+
+                                    <thead>
+                                    <tr>
+                                        <th colspan="2">
+                                            Dados Técnicos
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>Tipo</td>
+                                        <td>{{ variety.type }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Sub-Tipo</td>
+                                        <td>{{ variety.subtype }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Potência</td>
+                                        <td>{{ variety.power }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
