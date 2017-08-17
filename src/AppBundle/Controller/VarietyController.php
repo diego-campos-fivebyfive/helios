@@ -144,7 +144,7 @@ class VarietyController extends AbstractController
     private function createDeleteForm(Variety $variety)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('stringbox_delete', array('id' => $variety->getId())))
+            ->setAction($this->generateUrl('variety_delete', array('id' => $variety->getId())))
             ->setMethod('DELETE')
             ->getForm()
             ;
