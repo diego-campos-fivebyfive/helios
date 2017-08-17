@@ -16,6 +16,10 @@ const getAuthentication = () => request({
 const getRequest = uri => getAuthentication().then(auth => (
   request({
     resolveWithFullResponse: true,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${auth.access_token}`
+    },
     method: 'GET',
     uri
   })
@@ -29,7 +33,8 @@ const postRequest = (uri, data) => getAuthentication().then(auth => (
   request({
     resolveWithFullResponse: true,
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${auth.access_token}`
     },
     method: 'POST',
     json: data,
@@ -45,7 +50,8 @@ const putRequest = (uri, data) => getAuthentication().then(auth => (
   request({
     resolveWithFullResponse: true,
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${auth.access_token}`
     },
     method: 'PUT',
     json: data,
