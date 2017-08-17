@@ -77,20 +77,17 @@ class ProposalController extends AbstractController
         $manager = $this->manager('theme')->findOneBy([
                 'accountId' => 8,
                 'theme' => 1
-            ]);
+        ]);
         if ($manager==null){
             $manager = $this->manager('theme')->findOneBy([
                     'themeSices' => 1,
                     'theme' => 1
-                ]);
+            ]);
         }
         /** @var Theme $theme */
         $theme = $manager;
 
-        return $this->render('AppBundle:Proposal:editor.html.twig',
-            [
-                'project' => $project
-            ]);
+        return $this->render('AppBundle:Proposal:editor.html.twig',['project' => $project]);
     }
 
     /**
