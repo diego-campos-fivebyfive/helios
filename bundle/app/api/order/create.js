@@ -3,24 +3,28 @@
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
 
+const getStatus = status => status === 'Aprovado'
+
 const splitOrder = ({ Dado: order }) => ({
-  isquik_id: order.IdIntegrador,
-  version: memorial.Versao,
-  status: memorial.FlagPublicado,
-  range: memorial.Produtos.map(range => ({
-    code: range.Codigo,
-    markups: range.Faixas.map(markup => ({
-      initial: markup.De,
-      final: markup.Ate,
-      levels: markup.Niveis.map(level => ({
-        price: level.PrecoVenda,
-        level: getLevel(level.Descricao)
-      }))
+  account_id: '',
+  isquik_id: order.Integrador.IdIntegrador,
+  note: '',
+  status: getStatus(order.Status.Descricao),
+  items: order.itens.map(item => ({
+    description: item.DescricaoSistema,
+    note: '',
+    parent_id:  item.IdSicesSolar,
+    products: item.subItens.map(product => ({
+      code: product.CodigoProduto,
+      description: product.Descricao,
+      quantity: product.Quantidade,
+      unit_price: product.ValorUnitario,
+      tag: ''
     }))
   }))
 })
 
-const joinOrders = ({ itens: children, ...master }) => ([
+const joinOrders = ({ items: children, ...master }) => ([
   ...children,
   master
 ])
