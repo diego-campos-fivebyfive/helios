@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Component\Project;
+use AppBundle\Entity\Theme;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -46,6 +47,12 @@ class ProposalController extends AbstractController
      */
     public function editorAction(Project $project)
     {
+        /** @var Theme $theme */
+        $theme = $this->manager('theme')->findOneBy('');
+        //dump($theme);
+        //$theme->setContent('new');
+        dump($project->getId());die;
+
         return $this->render('AppBundle:Proposal:editor.html.twig',
             [
                 'project' => $project

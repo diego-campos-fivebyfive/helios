@@ -128,6 +128,10 @@ services:
         class: AppBundle\Manager\VarietyManager
         arguments: ['AppBundle\Entity\Component\Variety', '@doctrine']
 
+    theme_manager:
+        class: AppBundle\Manager\ThemeManager
+        arguments: ['AppBundle\Entity\Theme', '@doctrine']
+
     # Services
     inverter_combinator:
         class: AppBundle\Service\InverterCombinator\InverterCombinator
