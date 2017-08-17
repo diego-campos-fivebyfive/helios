@@ -38,6 +38,14 @@ trait AccountTrait
     }
 
     /**
+     * @return bool
+     */
+    public function isConfirmed()
+    {
+        return $this->status == self::STATUS_ENABLED;
+    }
+
+    /**
      * @param $key
      * @param $value
      * @return $this

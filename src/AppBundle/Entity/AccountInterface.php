@@ -25,6 +25,22 @@ interface AccountInterface
     public function getId();
 
     /**
+     * @return bool
+     */
+    public function isConfirmed();
+
+    /**
+     * @return MemberInterface
+     */
+    public function getOwner();
+
+    /**
+     * @param null $confirmationToken
+     * @return AccountInterface
+     */
+    public function setConfirmationToken($confirmationToken = null);
+
+    /**
      * @param $level
      * @return AccountInterface
      */
