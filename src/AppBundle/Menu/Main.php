@@ -102,6 +102,8 @@ class Main implements ContainerAwareInterface
 
         $this->menuSettings($menu, $user);
 
+        $this->menuSuperAdmin($menu, $user);
+
         $this->resolveActiveMenu($menu);
 
         return $menu;
@@ -225,6 +227,27 @@ class Main implements ContainerAwareInterface
                 'route' => 'categories',
                 'routeParameters' => ['context' => 'sale_stage'],
                 'extras' => ['icon' => App::icons('sale_stages')]
+            ]);
+        }
+    }
+
+    /**
+     * @param ItemInterface $menu
+     * @param UserInterface $user
+     */
+    private function menuSuperAdmin($menu, $user)
+    {
+        if($user->isSuperAdmin()){
+
+            $oauth = $menu->addChild('API Auth', [
+                'uri' => '#',
+                'childrenAttributes' => ['class' => 'nav nav-second-level collapse'],
+                'extras' => ['icon' => 'fa fa-refresh']
+            ]);
+
+            $oauth->addChild('Clients', [
+                'route' => 'api_clients',
+                'extras' => ['icon' => App::icons('users')]
             ]);
         }
     }

@@ -3,24 +3,24 @@
 namespace AppBundle\Controller\Api;
 
 use ApiBundle\Entity\Client;
+use AppBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\Request;
-
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * Client controller.
- *
+ * @Security("has_role('ROLE_SUPER_ADMIN')")
  * @Route("client")
  */
-class ClientController extends Controller
+class ClientController extends AbstractController
 {
     /**
      * Lists all client entities.
      *
-     * @Route("/", name="client_index")
+     * @Route("/", name="api_clients")
      * @Method("GET")
      */
     public function indexAction()
@@ -29,7 +29,7 @@ class ClientController extends Controller
 
         $clients = $em->getRepository('ApiBundle:Client')->findAll();
 
-        return $this->render('client/index.html.twig', array(
+        return $this->render('api/clients/index.html.twig', array(
             'clients' => $clients,
         ));
     }
@@ -51,10 +51,10 @@ class ClientController extends Controller
             $em->persist($client);
             $em->flush($client);
 
-            return $this->redirectToRoute('client_show', array('id' => $client->getId()));
+            return $this->redirectToRoute('api_clients', array('id' => $client->getId()));
         }
 
-        return $this->render('client/new.html.twig', array(
+        return $this->render('api/clients/form.html.twig', array(
             'client' => $client,
             'form' => $form->createView(),
         ));
@@ -63,7 +63,7 @@ class ClientController extends Controller
     /**
      * Finds and displays a client entity.
      *
-     * @Route("/{id}", name="client_show")
+     * @Route("/{id}/show", name="client_show")
      * @Method("GET")
      */
     public function showAction(Client $client)
@@ -91,12 +91,12 @@ class ClientController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('client_edit', array('id' => $client->getId()));
+            return $this->redirectToRoute('api_clients');
         }
 
-        return $this->render('client/edit.html.twig', array(
+        return $this->render('api/clients/form.html.twig', array(
             'client' => $client,
-            'edit_form' => $editForm->createView(),
+            'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
     }
@@ -105,20 +105,14 @@ class ClientController extends Controller
      * Deletes a client entity.
      *
      * @Route("/{id}", name="client_delete")
-     * @Method("DELETE")
      */
     public function deleteAction(Request $request, Client $client)
     {
-        $form = $this->createDeleteForm($client);
-        $form->handleRequest($request);
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($client);
+        $em->flush($client);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($client);
-            $em->flush($client);
-        }
-
-        return $this->redirectToRoute('client_index');
+        return $this->redirectToRoute('api_clients');
     }
 
     /**
@@ -133,7 +127,6 @@ class ClientController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('client_delete', array('id' => $client->getId())))
             ->setMethod('DELETE')
-            ->getForm()
-        ;
+            ->getForm();
     }
 }
