@@ -41,13 +41,13 @@ class ProposalController extends AbstractController
         /** @var Theme $theme */
         $theme;
 
-        if(!$currentTheme){
+        if($currentTheme){
             $theme = $currentTheme;
             $theme->setTheme(0);
             $this->manager('theme')->save($theme);
         }
 
-        if ($project->getProposal()){
+        if (!$project->getProposal()){
             $manager = $this->manager('theme');
             $theme = $manager->create();
             $theme->setAccountId($project->getMember()->getAccount()->getId());
@@ -63,7 +63,6 @@ class ProposalController extends AbstractController
         $this->manager('theme')->save($theme);
 
         $project->setProposal($theme->getId());
-
         $this->manager('project')->save($project);
 
         return $this->json([]);
@@ -75,19 +74,34 @@ class ProposalController extends AbstractController
     public function editorAction(Project $project)
     {
         $manager = $this->manager('theme')->findOneBy([
-                'accountId' => 8,
-                'theme' => 1
+            'accountId' => $project->getMember()->getAccount()->getId(),
+            'theme' => 1
         ]);
-        if ($manager){
-            $manager = $this->manager('theme')->findOneBy([
-                    'themeSices' => 1,
-                    'theme' => 1
-            ]);
-        }
-        /** @var Theme $theme */
-        $theme = $manager;
 
-        return $this->render('AppBundle:Proposal:editor.html.twig',['project' => $project]);
+        /** @var Theme $theme */
+        $theme;
+
+        if (!$manager){
+            $manager = $this->manager('theme')->findOneBy([
+                'accountId' => null,
+                'theme' => 1
+            ]);
+            if(!$manager){
+                $manager = $this->manager('theme');
+                $theme = $manager->create();
+                $theme->setAccountId(null);
+                $theme->setTheme(1);
+                $theme->setContent(
+                    '<div class="ocultar"><span id="idConjunct">0</span><span id="idEditor">0</span></div>'
+                );
+                $this->manager('theme')->save($theme);
+            }
+        }
+        $theme = $manager;
+        return $this->render('AppBundle:Proposal:editor.html.twig',[
+            'project' => $project,
+            'theme' => $theme
+        ]);
     }
 
     /**
