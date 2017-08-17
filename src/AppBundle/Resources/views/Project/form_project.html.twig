@@ -485,9 +485,9 @@
                 element: 'default_chart',
                 generate: function(data) {
                     AppChart.projectChart({
-                        fillColor: "rgba(26,179,148,0.5)",
-                        strokeColor: "rgba(26,179,148,0.8)",
-                        pointColor: "rgba(26,179,148,0.75)",
+                        fillColor: "rgba(242,160,25,0.5)",
+                        strokeColor: "rgba(242,160,25)",
+                        pointColor: "rgba(242,160,25)",
                         data: data,
                         element: ProjectManager.chart.element,
                         callback: function(chart){
@@ -621,9 +621,11 @@
                         ProjectManager.submit(form_project, function (xhr) {
                             button.ladda('stop');
                             var response = xhr.responseJSON;
-                            if(response.hasOwnProperty('project')){
+                            if(200 == xhr.status && response.hasOwnProperty('project')){
                                 ProjectManager.project = response.project;
                                 ProjectManager.onSaveProject();
+                            }else{
+                                swal('Ooops', response.errors[0], 'warning');
                             }
                         });
                     }
@@ -656,7 +658,7 @@
                     modal_body.html(loader_info);
                     Request.send({
                         url: '{{ path('coordinate_info') }}',
-                        data: { latitude: $('#project_latitude').val(), longitude: $('#project_longitude').val()},
+                        data: { latitude: $('#generator_latitude').val(), longitude: $('#generator_longitude').val()},
                         callback: function(xhr){
                             modal_body.html(xhr.responseText);
                         }

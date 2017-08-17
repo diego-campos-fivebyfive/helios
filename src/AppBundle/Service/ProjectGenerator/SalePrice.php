@@ -48,6 +48,10 @@ class SalePrice
             self::resolveUnitPriceComponent($projectVariety, $percentEquipments);
         }
 
+        if(null != $transformer = $project->getTransformer()){
+            self::resolveUnitPriceComponent($transformer, $percentEquipments);
+        }
+
         foreach ($project->getProjectExtras() as $projectExtra){
 
             $percent = $projectExtra->isProduct() ? $percentEquipments : $percentServices ;

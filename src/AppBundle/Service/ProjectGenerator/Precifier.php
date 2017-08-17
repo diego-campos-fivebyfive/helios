@@ -11,7 +11,9 @@
 
 namespace AppBundle\Service\ProjectGenerator;
 
+use AppBundle\Entity\Component\InverterInterface;
 use AppBundle\Entity\Component\ProjectInterface;
+use AppBundle\Entity\Component\ProjectInverterInterface;
 use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Manager\Pricing\RangeManager;
 use AppBundle\Manager\ProjectManager;
@@ -60,14 +62,29 @@ class Precifier
          * @var \AppBundle\Entity\Component\ProjectElementInterface $component
          */
         foreach ($components as $code => $component) {
-            /** @var Range $range */
-            $range = $ranges[$code];
+            if(array_key_exists($code, $ranges) && !$component instanceof ProjectInverterInterface) {
 
-            $price = (float) $range->getPrice();
+                /** @var Range $range */
+                $range = $ranges[$code];
+                $price = (float)$range->getPrice();
+                $component->setUnitCostPrice($price);
 
-            $component->setUnitCostPrice($price);
+                $costPrice += $price;
+            }
+        }
 
-            $costPrice += $price;
+        foreach ($project->getProjectInverters() as $projectInverter){
+            /** @var InverterInterface $inverter */
+            $inverter = $projectInverter->getInverter();
+            $code = $inverter->getCode();
+            if(array_key_exists($code, $ranges)){
+
+                $range = $ranges[$code];
+                $price = (float) $range->getPrice();
+                $projectInverter->setUnitCostPrice($price);
+
+                $costPrice += $price;
+            }
         }
 
         /** @var \AppBundle\Entity\Component\ProjectExtraInterface $projectExtra */
@@ -141,6 +158,10 @@ class Precifier
 
         foreach ($project->getProjectVarieties() as $projectVariety){
             $components[$projectVariety->getVariety()->getCode()] = $projectVariety;
+        }
+
+        if(null != $transformer = $project->getTransformer()){
+            $components[$transformer->getVariety()->getCode()] = $transformer;
         }
 
         return $components;

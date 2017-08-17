@@ -5,12 +5,9 @@ namespace AppBundle\Service\ProjectGenerator;
 use AppBundle\Entity\Component\InverterInterface;
 use AppBundle\Entity\Component\MakerInterface;
 use AppBundle\Entity\Component\ProjectArea;
-use AppBundle\Entity\Component\ProjectExtra;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverter;
 use AppBundle\Entity\Component\ProjectModule;
-use AppBundle\Entity\Component\ProjectStringBox;
-use AppBundle\Entity\Component\ProjectStructure;
 use AppBundle\Entity\Component\VarietyInterface;
 use AppBundle\Service\ProjectProcessor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -681,16 +678,8 @@ class ProjectGenerator
     {
         $manager = $this->manager('project_variety');
         foreach ($project->getProjectVarieties() as $projectVariety){
-            /**
-             * TODO
-             * Este processo é temporário
-             * Em breve o tratamento de transformadores e outras variedades será
-             * direcionado para outro processo
-             */
-            if(VarietyInterface::TYPE_TRANSFORMER != $projectVariety->getVariety()->getType() || $projectVariety->getId()) {
-                $project->removeProjectVariety($projectVariety);
-                $manager->delete($projectVariety, !$project->getProjectVarieties()->next());
-            }
+            $project->removeProjectVariety($projectVariety);
+            $manager->delete($projectVariety, !$project->getProjectVarieties()->next());
         }
 
         return $this;
@@ -734,7 +723,12 @@ class ProjectGenerator
 
         }else{
 
-            $project->removeTransformer();
+            $transformer = $project->getTransformer();
+
+            if($transformer){
+                $project->removeTransformer();
+                $this->manager('project_variety')->delete($transformer);
+            }
         }
 
         $this->save($project);

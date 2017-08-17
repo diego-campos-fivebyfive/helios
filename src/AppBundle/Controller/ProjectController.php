@@ -174,6 +174,14 @@ class ProjectController extends AbstractController
 
             $generator->generate($project);
 
+            $errors = self::loadDefaultErrors($project);
+
+            if(count($errors)) {
+                return $this->json([
+                    'errors' => $errors
+                ], Response::HTTP_CONFLICT);
+            }
+
             return $this->json([
                 'project' => [
                     'id' => $project->getId(),
@@ -250,6 +258,14 @@ class ProjectController extends AbstractController
             $project->setDefaults($defaults);
 
             $generator->generate($project);
+
+            $errors = self::loadDefaultErrors($project);
+
+            if(count($errors)) {
+                return $this->json([
+                    'errors' => $errors
+                ], Response::HTTP_CONFLICT);
+            }
 
             return $this->json([
                 'project' => [
@@ -428,7 +444,7 @@ class ProjectController extends AbstractController
                 ->generateStructures($project)
                 ->generateStringBoxes($project)
                 ->handleAreas($project)
-                ->generateVarieties($project)
+                ->generateVarieties($project, false)
             ;
 
             $generator->save($project, true);
@@ -567,33 +583,6 @@ class ProjectController extends AbstractController
         ], empty($errors) ? Response::HTTP_ACCEPTED : Response::HTTP_IM_USED);
     }
 
-    private function configureProjectFromDefaults(ProjectInterface $project)
-    {
-        $power = $this->get('power_estimator')->estimate($project->getInfConsumption(), $project->getLatitude(), $project->getLongitude());
-
-        $defaults = $project->getDefaults();
-
-        if(empty($defaults)) {
-            $defaults['module'] = 32433;
-            $defaults['inverter_maker'] = 60627;
-            $defaults['structure_maker'] = 61211;
-            $defaults['string_box_maker'] = 61209;
-        }
-
-        $defaults['roof_type'] = $project->getRoofType();
-        $defaults['power'] = $power;
-
-        /** @var \AppBundle\Service\ProjectGenerator\ProjectGenerator $generator */
-        $generator = $this->get('project_generator');
-        $generator->autoSave(false);
-
-        $project->setDefaults($defaults);
-
-        $generator->project($project)->generate();
-
-        $generator->save($project, true);
-    }
-
     /*
      * @param Request $request
      * @return BusinessInterface|null|object
@@ -617,5 +606,22 @@ class ProjectController extends AbstractController
     private function getGenerator()
     {
         return $this->get('project_generator');
+    }
+
+    /**
+     * @param Project $project
+     * @return array
+     */
+    private static function loadDefaultErrors(Project $project)
+    {
+        $errors = [];
+        $defaults  = $project->getDefaults();
+        if(count($defaults['errors'])){
+            if(in_array('exhausted_inverters', $defaults['errors'])) {
+                $errors[] = 'Número máximo de inversores excedido para esta configuração.';
+            }
+        }
+
+        return $errors;
     }
 }
