@@ -63,7 +63,6 @@ class ProposalController extends AbstractController
         $this->manager('theme')->save($theme);
 
         $project->setProposal($theme->getId());
-
         $this->manager('project')->save($project);
 
         return $this->json([]);
@@ -96,10 +95,8 @@ class ProposalController extends AbstractController
                     '<div class="ocultar"><span id="idConjunct">0</span><span id="idEditor">0</span></div>'
                 );
                 $this->manager('theme')->save($theme);
-                dump($theme);die;
             }
         }
-
         $theme = $manager;
         return $this->render('AppBundle:Proposal:editor.html.twig',[
             'project' => $project,
