@@ -71,21 +71,20 @@ class ProposalController extends AbstractController
      */
     public function editorAction(Project $project)
     {
-        //$kits = $manager->findBy(['account' => $account]);
         $manager = $this->manager('theme')->findOneBy(
             [
                 'accountId' => 8,
                 'theme' => 1
             ]);
-
+        if ($manager==null){
+            $manager = $this->manager('theme')->findOneBy(
+                [
+                    'themeSices' => 1,
+                    'theme' => 1
+                ]);
+        }
         /** @var Theme $theme */
         $theme = $manager;
-
-        foreach ($manager as $item){
-            $theme = $item;
-            $theme->setTheme(0);
-            $this->manager('theme')->save($theme);
-        }
 
         return $this->render('AppBundle:Proposal:editor.html.twig',
             [
