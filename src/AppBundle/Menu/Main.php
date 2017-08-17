@@ -75,7 +75,7 @@ class Main implements ContainerAwareInterface
         /**
          * ROLE_OWNER
          */
-        if($user->isOwner()){
+        if($user->isOwner() || $user->isOwnerMaster()){
 
             $menu->addChild('Meus Itens', [
                 'route' => 'extras_index',
@@ -202,11 +202,6 @@ class Main implements ContainerAwareInterface
             $settings->addChild('My business', [
                 'route' => 'member_business',
                 'extras' => ['icon' => App::icons('business')]
-            ]);
-
-            $settings->addChild('My signature', [
-                'route' => 'signature',
-                'extras' => ['icon' => App::icons('signature')]
             ]);
         }
 
