@@ -1,21 +1,52 @@
 {% extends view('layout') %}
 
-{% block body %}
 
-    <div class="wrapper wrapper-content animated fadeInRight">
+{% block body %}
+    <div class="wrapper wrapper-content animated fadeIn">
         <div class="row">
             <div class="col-lg-12">
-                <div class="ibox">
-                    <div class="ibox-content">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h2> {{ order.total|currency }} </h2>
+                    {% for item in order.childrens %}
+                        <div class="panel panel-info">
+                            <div class="panel-heading" style="height: 45px">
+                                <table class="col-md-12">
+                                    <thead>
+                                        <tr>
+                                            <td class="col-md-2"><h3>COD: {{ item.id }}</h3></td>
+                                            <td class="col-md-6 text-left"><h3>{{ item.description }}</h3></td>
+                                            <td class="col-md-4 text-right"><h3>VALOR TOTAL: {{ item.total|currency }}</h3></td>
+                                        </tr>
+                                    <thead>
+                                </table>
                             </div>
+                                <div class="panel-body">
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <td><b>ITEM</b></td>
+                                            <td class="col-md-3"><b>CÓDIGO</b></td>
+                                            <td class="col-md-4"><b>PRODUTO</b></td>
+                                            <td class="col-md-1 text-center"><b>QTD</b></td>
+                                            <td class="col-md-2 text-center"><b>VALOR UNIT</b></td>
+                                            <td class="col-md-2 text-center"><b>VALOR TOTAL</b></td>
+                                        </tr>
+                                        </thead>
+                                        {% for element in item.elements %}
+                                            <tbody>
+                                            <tr>
+                                                <td class="text-center"><b>{{ loop.index }}</b></td>
+                                                <td>{{ element.code }}</td>
+                                                <td>{{ element.description }}</td>
+                                                <td class="text-center">{{ element.quantity }}</td>
+                                                <td class="text-center">{{ element.unitPrice|currency }}</td>
+                                                <td class="text-center">{{ element.total|currency }}</td>
+                                            </tr>
+                                            </tbody>
+                                        {% endfor %}
+                                    </table>
+                                </div>
                         </div>
-                    </div>
-                </div>
+                    {% endfor %}
             </div>
         </div>
     </div>
-
 {% endblock %}
