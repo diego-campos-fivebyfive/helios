@@ -142,7 +142,9 @@ class WidgetController extends AbstractController
         if ($member->isOwner()) {
             $projects = $projectManager->getObjectManager($member->getAccount());
         } else {
-            $projects = $member->getProjects()->toArray();
+            $projects = [];
+            // TODO: Apply new filter here!
+            //$projects = $member->getProjects()->toArray();
         }
 
         $stages = $this->getCategoryManager()->findBy([
