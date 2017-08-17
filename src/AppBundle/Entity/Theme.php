@@ -36,13 +36,6 @@ class Theme implements ThemeInterface
     private $theme;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(name="theme_sices", type="boolean")
-     */
-    private $themeSices;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="content", type="text")
@@ -106,24 +99,6 @@ class Theme implements ThemeInterface
     public function getTheme()
     {
         return $this->theme;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isThemeSices()
-    {
-        return $this->themeSices;
-    }
-
-    /**
-     * @param bool $themeSices
-     * @return Theme
-     */
-    public function setThemeSices($themeSices)
-    {
-        $this->themeSices = $themeSices;
-        return $this;
     }
 
     /**

@@ -34,12 +34,15 @@ class ProposalController extends AbstractController
      */
     public function saveContentAction(Request $request, Project $project)
     {
-        $manager = $this->manager('theme')->findBy(['accountId' => $project->getMember()->getAccount()->getId()]);
+        $manager = $this->manager('theme')->findoneBy([
+            'accountId' => $project->getMember()->getAccount()->getId(),
+            'theme' => 1
+            ]);
         /** @var Theme $theme */
         $theme;
 
-        foreach ($manager as $item){
-            $theme = $item;
+        if(!$manager==null){
+            $theme = $manager;
             $theme->setTheme(0);
             $this->manager('theme')->save($theme);
         }
@@ -71,14 +74,12 @@ class ProposalController extends AbstractController
      */
     public function editorAction(Project $project)
     {
-        $manager = $this->manager('theme')->findOneBy(
-            [
+        $manager = $this->manager('theme')->findOneBy([
                 'accountId' => 8,
                 'theme' => 1
             ]);
         if ($manager==null){
-            $manager = $this->manager('theme')->findOneBy(
-                [
+            $manager = $this->manager('theme')->findOneBy([
                     'themeSices' => 1,
                     'theme' => 1
                 ]);
