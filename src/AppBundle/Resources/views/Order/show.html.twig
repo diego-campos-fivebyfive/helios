@@ -1,21 +1,175 @@
 {% extends view('layout') %}
 
 {% block body %}
-
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox">
                     <div class="ibox-content">
                         <div class="row">
-                            <div class="col-md-12">
-                                <h2> {{ order.total|currency }} </h2>
-                            </div>
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <td><h3>COD: 0001</h3></td>
+                                    <td><h3>{{ order.description }}</h3></td>
+                                </tr>
+                                </thead>
+                            </table>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <td class="col-md-1">ITEM</td>
+                                        <td class="col-md-2">CÓDIGO</td>
+                                        <td class="col-md-4">PRODUTO</td>
+                                        <td class="col-md-1 text-center">QTD</td>
+                                        <td class="col-md-2 text-center">VALOR UNIT</td>
+                                        <td class="col-md-2 text-center">VALOR TOTAL</td>
+                                        <td class="col-md-1 text-center">AÇÃO</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>850CEF3485</td>
+                                        <td>MaxPower CS6U-335M</td>
+                                        <td class="text-center">40</td>
+                                        <td class="text-center">600,00</td>
+                                        <td class="text-center">24.000,00</td>
+                                        <td><button class="btn btn-danger fa fa-trash"></button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>150064820159721309A1272</td>
+                                        <td>PVI-6000-TL-OUTD</td>
+                                        <td class="text-center">1</td>
+                                        <td class="text-center">4000,00</td>
+                                        <td class="text-center">4000,00</td>
+                                        <td><button class="btn btn-danger fa fa-trash"></button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>15006482015972130980F4D</td>
+                                        <td>PVI-4.2-TL-OUTD</td>
+                                        <td class="text-center">1</td>
+                                        <td class="text-center">4000,00</td>
+                                        <td class="text-center">4000,00</td>
+                                        <td><button class="btn btn-danger fa fa-trash"></button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>1SLM300101A0790</td>
+                                        <td>STRING BOX ABB 2 CORDAS 1 SAIDA - SEM FUSÍVEIS</td>
+                                        <td class="text-center">2</td>
+                                        <td class="text-center">700,00</td>
+                                        <td class="text-center">1.400,00</td>
+                                        <td><button class="btn btn-danger fa fa-trash"></button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>E72E1086BC</td>
+                                        <td>K2 System_PERFIL ALUMINIO ULTRALIGHT 4,07MT - IMPORTADO</td>
+                                        <td class="text-center">20</td>
+                                        <td class="text-center">40,00</td>
+                                        <td class="text-center">800,00</td>
+                                        <td><button class="btn btn-danger fa fa-trash"></button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>6</td>
+                                        <td>AA139489F2</td>
+                                        <td>K2 System_JUNÇÃO PARA PERFIL EM ALKUMINIO K2 - IMPORTADO</td>
+                                        <td class="text-center">16</td>
+                                        <td class="text-center">40,00</td>
+                                        <td class="text-center">640,00</td>
+                                        <td><button class="btn btn-danger fa fa-trash"></button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>7</td>
+                                        <td>6F62F31458</td>
+                                        <td>K2 System_TERMINAL FINAL 39..41MM for CAN - IMPORTADO</td>
+                                        <td class="text-center">8</td>
+                                        <td class="text-center">40,00</td>
+                                        <td class="text-center">240,00</td>
+                                        <td><button class="btn btn-danger fa fa-trash"></button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>8</td>
+                                        <td>E8BAB19560</td>
+                                        <td>K2 System_TERMINAL INTERMEDIARIO 39..44MM for CAN/AVP - IMPORTADO</td>
+                                        <td class="text-center">76</td>
+                                        <td class="text-center">40,00</td>
+                                        <td class="text-center">3.040,00</td>
+                                        <td><button class="btn btn-danger fa fa-trash"></button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>9</td>
+                                        <td>1C117DCBE9</td>
+                                        <td>K2 System_PARAFUSO CABECA MARTELO M10 28/15</td>
+                                        <td class="text-center">52</td>
+                                        <td class="text-center">40,00</td>
+                                        <td class="text-center">2.080,00</td>
+                                        <td><button class="btn btn-danger fa fa-trash"></button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>10</td>
+                                        <td>44911F7DB0</td>
+                                        <td>K2 System_PORCA M10 INOX A2</td>
+                                        <td class="text-center">52</td>
+                                        <td class="text-center">40,00</td>
+                                        <td class="text-center">2.080,00</td>
+                                        <td><button class="btn btn-danger fa fa-trash"></button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>11</td>
+                                        <td>A46BFBC968</td>
+                                        <td>K2 System_GANCHO TELHAS REGULACAO 2 PONTOS - MPORTADO</td>
+                                        <td class="text-center">52</td>
+                                        <td class="text-center">40,00</td>
+                                        <td class="text-center">2.080,00</td>
+                                        <td><button class="btn btn-danger fa fa-trash"></button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>12</td>
+                                        <td>C1344960000</td>
+                                        <td>CONECTORES FEMEA/ MACHO WEID_CABUR_TE_MC4_ou compativel</td>
+                                        <td class="text-center">8</td>
+                                        <td class="text-center">10,00</td>
+                                        <td class="text-center">80,00</td>
+                                        <td><button class="btn btn-danger fa fa-trash"></button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>13</td>
+                                        <td>CABOGM26434</td>
+                                        <td>CABO SOLAR 6MM<1000V_PRETO_NXS_PRY_BAL</td>
+                                        <td class="text-center">120</td>
+                                        <td class="text-center">10,00</td>
+                                        <td class="text-center">1.200,00</td>
+                                        <td><button class="btn btn-danger fa fa-trash"></button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>14</td>
+                                        <td>CABOGM54203</td>
+                                        <td>CABO SOLAR 6MM<1000V_VERMELHO_NXS_PRY_BAL</td>
+                                        <td class="text-center">120</td>
+                                        <td class="text-center">10,00</td>
+                                        <td class="text-center">1.200,00</td>
+                                        <td><button class="btn btn-danger fa fa-trash"></button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <td class="col-lg-10"></td>
+                                        <td class="col-lg-2"><h3>14 ITENS</h3></td>
+                                        <td class="col-lg-2"><h3>{{ order.total|currency }}</h3></td>
+                                        <td><button class="btn btn-success">OK</button></td>
+                                    </tr>
+                                </thead>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 {% endblock %}
