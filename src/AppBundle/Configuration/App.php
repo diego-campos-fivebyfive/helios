@@ -54,7 +54,8 @@ class App
             'signature' => 'fa fa-credit-card',
             'stringbox' => 'fa fa-plug',
             'structure' => 'fa fa-sitemap',
-            'support' => 'fa fa-support'
+            'support' => 'fa fa-support',
+            'variety' => 'fa fa-wrench'
         ];
 
         if($path){

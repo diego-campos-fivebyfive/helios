@@ -1,10 +1,21 @@
 'use strict'
 
-const Google = require('./google')
 const request = require('request-promise')
 const { isquik } = require('../config')
 
-const getRequest = uri => Google.getAuthentication().then(auth => (
+const getAuthentication = () => request({
+  uri: 'https://api.isquik.com/auth',
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  json: {
+    Chave: isquik.auth.key,
+    Dominio: isquik.auth.user
+  }
+})
+
+const getRequest = uri => getAuthentication().then(auth => (
   request({
     resolveWithFullResponse: true,
     headers: {
