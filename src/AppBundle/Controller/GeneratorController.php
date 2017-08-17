@@ -134,10 +134,10 @@ class GeneratorController extends AbstractController
         $codes = [];
 
         $prices = [
-            'modules' => 600,
-            'inverters' => 4000,
-            'structures' => 40,
-            'string_boxes' => 700,
+            'modules' => 100,
+            'inverters' => 1000,
+            'structures' => 100,
+            'string_boxes' => 1000,
             'varieties' => 10
         ];
 
@@ -205,7 +205,7 @@ class GeneratorController extends AbstractController
 
         // MEMORIAL + RANGES
         $memorialManager = $this->manager('memorial');
-        $memorial = $memorialManager->findOneBy(['status' => 1]);
+        $memorial = $memorialManager->find(101);
 
         if (!$memorial) {
             $memorial = $memorialManager->create();
@@ -236,7 +236,7 @@ class GeneratorController extends AbstractController
                         ->setLevel('platinum')
                         ->setInitialPower(0)
                         ->setFinalPower(500)
-                        ->setMarkup(.1)
+                        //->setMarkup(.1)
                         ->setCode($code)
                         ->setPrice($prices[$family]);
 
@@ -248,8 +248,8 @@ class GeneratorController extends AbstractController
         }
 
         $memorialManager->save($memorial);
-        dump($memorial);
-        die;
+
+        print_r($codes); die;
     }
 
     /**
