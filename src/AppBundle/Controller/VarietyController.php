@@ -16,7 +16,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
  * Variety controller.
  *
  * @Route("variety")
- * @Breadcrumb("Variety")
+ * @Breadcrumb("Variedades")
  *
  * @Security("has_role('ROLE_OWNER')")
  */
@@ -91,7 +91,7 @@ class VarietyController extends AbstractController
 
             $this->manager('variety')->save($variety);
 
-            $message = 'StringBox atualizado com sucesso. ';
+            $message = 'Variedade atualizado com sucesso. ';
 
             if ($variety->isPublished()) {
 
@@ -110,7 +110,7 @@ class VarietyController extends AbstractController
         }
 
         return $this->render('Variety.edit', array(
-            'stringBox' => $variety,
+            'variety' => $variety,
             'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));

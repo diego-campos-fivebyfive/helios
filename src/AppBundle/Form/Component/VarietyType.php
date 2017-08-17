@@ -5,6 +5,7 @@ namespace AppBundle\Form\Component;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class VarietyType extends AbstractType
 {
@@ -19,11 +20,13 @@ class VarietyType extends AbstractType
             ->add('code')
             ->add('power')
             ->add('description')
-            ->add('status')
-            ->add('available')
-            ->add('datasheet')
-            ->add('image')
-            ->add('maker');
+            ->add('maker')
+            ->add('status');
+        $builder->add('available', CheckboxType::class, [
+        'label' => 'Disponivel',
+        'required' => false,
+        //'disabled' => true
+    ]);
     }
     
     /**

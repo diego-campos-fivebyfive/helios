@@ -164,6 +164,11 @@ class Main implements ContainerAwareInterface
             'route' => 'stringbox_index',
             'extras' => ['icon' => App::icons('stringbox')]
         ]);
+
+        $components->addChild('Variedades', [
+            'route' => 'variety_index',
+            'extras' => ['icon' => App::icons('variety')]
+        ]);
     }
 
     /**

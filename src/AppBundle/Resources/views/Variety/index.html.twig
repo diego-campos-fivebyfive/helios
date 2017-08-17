@@ -42,12 +42,12 @@
 
     {% set varieties = pagination.items %}
 
-    {% macro stringBox_buttons(stringBox, extra) %}
+    {% macro variety_buttons(variety, extra) %}
 
         {% set member = extra %}
 
         <div class="btn-group btn-group-sm btn-group-justified">
-            <a data-url="{{ path('stringbox_show', { 'id': stringBox.id }) }}"
+            <a data-url="{{ path('variety_show', { 'id': variety.id }) }}"
                data-toggle="modal"
                data-target="#modal_details"
                class="btn btn-default">
@@ -55,7 +55,7 @@
             </a>
 
             {% if member.isAdmin %}
-                <a href="{{ path('stringbox_edit', { 'id': stringBox.id }) }}"
+                <a href="{{ path('variety_edit', { 'id': variety.id }) }}"
                    class="btn btn-success">
                     <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
                 </a>
@@ -70,7 +70,7 @@
     <div class="wrapper wrapper-content animated fadeInRight">
 
         <div class="row">
-            {{ knp_pagination_filter(pagination, {'s.description, s.code, s.inputs, s.outputs, s.fuses':''}) }}
+            {{ knp_pagination_filter(pagination, {'v.description, v.code, v.type, s.subtype, s.power':''}) }}
 
             <div class="col-md-2">
                 <a href="{{ path(_route, _route_params) }}" class="btn btn-default btn-block">
@@ -85,46 +85,46 @@
 
                 {% if is_grid %}
 
-                    {% for stringBox in varieties %}
+                    {% for variety in varieties %}
 
-                        <div class="col-md-3" id="component{{ stringBox.id }}">
+                        <div class="col-md-3" id="component{{ variety.id }}">
                             <div class="ibox">
                                 <div class="ibox-content product-box">
 
-                                    <div class="product-imitation" style="background-image: url({{ stringBox.image|componentFilePath }}); background-repeat: no-repeat;">
+                                    <div class="product-imitation" style="background-image: url({{ variety.image|componentFilePath }}); background-repeat: no-repeat;">
                                     </div>
                                     <div class="product-desc">
 
-                                        <a data-url="{{ path('stringbox_show', { 'id': stringBox.id }) }}"
+                                        <a data-url="{{ path('variety_show', { 'id': variety.id }) }}"
                                            data-toggle="modal"
                                            data-target="#modal_details"
                                            class="product-name">
-                                            {{ stringBox.description|slice(0,18) }} <br>
+                                            {{ variety.description|slice(0,18) }} <br>
                                             <small>
-                                                {{ stringBox.code|slice(0,25) }}
+                                                {{ variety.code|slice(0,25) }}
                                             </small>
                                         </a>
 
                                         <div class="small m-t-xs">
-                                            Entradas:
-                                            {{ stringBox.inputs }}
+                                            Tipo:
+                                            {{ variety.type }}
                                         </div>
 
                                         <div class="small m-t-xs">
-                                            Saídas:
-                                            {{ stringBox.outputs }}
+                                            Sub-Tipo:
+                                            {{ variety.subtype }}
                                         </div>
 
                                         <div class="small m-t-xs">
-                                            Fusíveis:
-                                            {{ stringBox.fuses }}
+                                            Potência:
+                                            {{ variety.power }}
                                         </div>
 
 
                                         <div class="hr-line-dashed"></div>
 
                                         <div class="row">
-                                            {{ handler.stringBox_buttons(stringBox,member) }}
+                                            {{ handler.variety_buttons(variety,member) }}
                                         </div>
                                     </div>
 
@@ -141,30 +141,28 @@
                         <table class="table table-stripped">
                             <thead>
                             <tr>
-                                {#<th>id</th>
-                                #}<th>Código</th>
+                                <th>Código</th>
                                 <th>Descrição</th>
-                                <th>Entradas</th>
-                                <th>Saídas</th>
-                                <th>Fusíveis</th>
+                                <th>Tipo</th>
+                                <th>Sub-tipo</th>
+                                <th>Potência</th>
                                 <th class="col-md-2">&nbsp;</th>
                             </tr>
                             </thead>
                             <tbody>
 
-                            {% for stringBox in varieties %}
+                            {% for variety in varieties %}
 
                                 <tr class="gradeY">
-                                    {#<td> <a href="{{ path('stringbox_show', { 'id': stringBox.id }) }}">{{ stringBox.id }}</a> </td>
-                                    #}<td> {{ stringBox.code }} </td>
-                                    <td> {{ stringBox.description }} </td>
-                                    <td> {{ stringBox.inputs }} </td>
-                                    <td> {{ stringBox.outputs }} </td>
-                                    <td> {{ stringBox.fuses }} </td>
+                                    <td> {{ variety.code }} </td>
+                                    <td> {{ variety.description }} </td>
+                                    <td> {{ variety.type }} </td>
+                                    <td> {{ variety.subtype }} </td>
+                                    <td> {{ variety.power }} </td>
                                     <td class="col-md-3">
 
                                         <div class="btn-group btn-group-sm btn-group-justified">
-                                            <a data-url="{{ path('stringbox_show', { 'id': stringBox.id }) }}"
+                                            <a data-url="{{ path('variety_show', { 'id': variety.id }) }}"
                                                data-toggle="modal"
                                                data-target="#modal_details"
                                                class="btn btn-default">
@@ -172,7 +170,7 @@
                                             </a>
 
                                             {% if member.isAdmin %}
-                                                <a href="{{ path('stringbox_edit', { 'id': stringBox.id }) }}"
+                                                <a href="{{ path('variety_edit', { 'id': variety.id }) }}"
                                                    class="btn btn-success">
                                                     <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
                                                 </a>
