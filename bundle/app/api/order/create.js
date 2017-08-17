@@ -13,7 +13,7 @@ const level = {
 
 const getLevel = type => level[type]
 
-const sendOrder = ({ Dados: order }) =>
+const sendOrder = ({ Dado: order }) =>
   Sices
     .sendOrder({
       extraDocument: order.InscricaoEstadual,
