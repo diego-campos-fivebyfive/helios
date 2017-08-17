@@ -30,7 +30,7 @@ const joinOrders = ({ items: children, ...master }) => ([
 ])
 
 const sendOrders = orders =>
-  orders.reduce(Sices.sendOrder)
+  orders.reduce((y, x) => Sices.sendOrder(x))
 
 const createOrder = ({ notification }) =>
   Isquik
