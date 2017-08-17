@@ -364,6 +364,10 @@ function removeDataCke() {
 
 $(document).ready(function(){
 
+    setInterval(function () {
+        $(" table ").addClass('ttableEquipmentAndServices')
+    },500);
+
     /*setTimeout(function () {
         var data_cke = $('[data-cke-widget-data]');
         for(x=0;x<$(data_cke).length;x++){
