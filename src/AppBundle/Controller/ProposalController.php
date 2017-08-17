@@ -32,10 +32,34 @@ class ProposalController extends AbstractController
     /**
      * @Route("/{id}/save", name="proposal_save")
      */
-    public function saveContentAction(Request $request, Project $project){
+    public function saveContentAction(Request $request, Project $project)
+    {
+        $manager = $this->manager('theme')->findBy(['accountId' => $project->getMember()->getAccount()->getId()]);
+        /** @var Theme $theme */
+        $theme;
+
+        foreach ($manager as $item){
+            $theme = $item;
+            $theme->setTheme(0);
+            $this->manager('theme')->save($theme);
+        }
+
+        if ($project->getProposal()==null){
+            $manager = $this->manager('theme');
+            $theme = $manager->create();
+            $theme->setAccountId($project->getMember()->getAccount()->getId());
+        }else{
+            $manager = $this->manager('theme')->find($project->getProposal());
+            $theme = $manager;
+        }
+
         $content = $request->request->get('content');
 
-        $project->setProposal($content);
+        $theme->setTheme(1);
+        $theme->setContent($content);
+        $this->manager('theme')->save($theme);
+
+        $project->setProposal($theme->getId());
 
         $this->manager('project')->save($project);
 
@@ -47,11 +71,21 @@ class ProposalController extends AbstractController
      */
     public function editorAction(Project $project)
     {
+        //$kits = $manager->findBy(['account' => $account]);
+        $manager = $this->manager('theme')->findOneBy(
+            [
+                'accountId' => 8,
+                'theme' => 1
+            ]);
+
         /** @var Theme $theme */
-        $theme = $this->manager('theme')->findOneBy('');
-        //dump($theme);
-        //$theme->setContent('new');
-        dump($project->getId());die;
+        $theme = $manager;
+
+        foreach ($manager as $item){
+            $theme = $item;
+            $theme->setTheme(0);
+            $this->manager('theme')->save($theme);
+        }
 
         return $this->render('AppBundle:Proposal:editor.html.twig',
             [
