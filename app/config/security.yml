@@ -28,11 +28,11 @@ security:
                 use_referer: true
             anonymous: true
 
-        #api:
-        #    pattern:    ^/api
-        #    fos_oauth:  true
-        #    stateless:  true
-        #    anonymous:  false
+        api:
+            pattern:    ^/api
+            fos_oauth:  true
+            stateless:  true
+            anonymous:  false
 
         main:
             anonymous: ~
@@ -69,5 +69,4 @@ security:
         - { path: ^/resetting/*, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/*, role: ROLE_USER }
         # API
-        - { path: ^/api$, roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }
-        # IS_AUTHENTICATED_FULLY
+        - { path: ^/api$, roles: [ IS_AUTHENTICATED_FULLY ] }

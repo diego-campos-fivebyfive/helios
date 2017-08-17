@@ -29,6 +29,10 @@ class Resolver
      */
     public static function resolveView(&$view)
     {
+        if(strpos($view, '.twig') > 2){
+            return;
+        }
+
         if(!strripos($view, ':')){
             if(0 < $colons = substr_count($view, '.')) {
                 $view = ucfirst(strtolower($view));

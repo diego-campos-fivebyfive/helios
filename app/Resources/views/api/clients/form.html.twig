@@ -1,0 +1,48 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row" id="real-content">
+        <div class="col-md-12">
+            <div class="ibox">
+                <div class="ibox-content">
+
+                    {{ form_start(form) }}
+
+                    {{ form_widget(form) }}
+
+                        <button type="submit">
+                            Salvar
+                        </button>
+                    {{ form_end(form) }}
+
+                    <div class="col-md-12 hr-line-dashed"></div>
+
+                    <table class="table table-bordered">
+                        <tr>
+                            <th> client_id </th>
+                            <td> {{ [client.id, '_', client.secret]|join }} </td>
+                        </tr>
+                        <tr>
+                            <th> client_secret </th>
+                            <td> {{ client.secret }} </td>
+                        </tr>
+                        <tr>
+                            <th> grant_type </th>
+                            <td>
+                                {% for grantType in client.allowedGrantTypes %}
+                                    {{ grantType }} <br>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

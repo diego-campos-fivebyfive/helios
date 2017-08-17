@@ -1,0 +1,54 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row" id="real-content">
+            <div class="col-md-12">
+                <div class="ibox">
+                    <div class="ibox-content">
+
+                        <a href="{{ path('client_new') }}"> Novo </a>
+
+                        <table class="table table-stripped table-hover">
+                            <thead>
+                            <tr>
+                                <th style="width: 5px;">&nbsp;</th>
+                                <th> Random Id </th>
+                                <th> Secret </th>
+                                <th> Grand Types </th>
+                                <th> </th>
+                                <th> </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for client in clients %}
+
+                                <tr>
+                                    <td> {{ client.id }} </td>
+                                    <td> {{ client.randomId }} </td>
+                                    <td> {{ client.secret }} </td>
+                                    <td> {{ client.allowedGrantTypes|json_encode|raw }} </td>
+                                    <td>  </td>
+                                    <td>
+                                        <a href="{{ path('client_edit',{id:client.id}) }}">
+                                            {{ 'Edit'|trans }}
+                                        </a>
+                                        <a href="{{ path('client_delete',{id:client.id}) }}" onclick="return confirm('Excluir este client?');">
+                                            {{ 'Excluir'|trans }}
+                                        </a>
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
