@@ -4,6 +4,7 @@ const request = require('request-promise')
 const { sices } = require('../config')
 
 const getAuthentication = () => request({
+  resolveWithFullResponse: true,
   uri: `${sices.host}/oauth/v2/token`,
   method: 'POST',
   formData: {
@@ -12,6 +13,10 @@ const getAuthentication = () => request({
     grant_type: 'client_credentials'
   }
 })
+  .then(({ body, statusCode }) => ({
+    ...JSON.parse(body),
+    statusCode
+  }))
 
 const getRequest = uri => getAuthentication().then(auth => (
   request({
