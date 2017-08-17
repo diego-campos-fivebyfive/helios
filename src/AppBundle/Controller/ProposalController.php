@@ -34,20 +34,20 @@ class ProposalController extends AbstractController
      */
     public function saveContentAction(Request $request, Project $project)
     {
-        $manager = $this->manager('theme')->findoneBy([
+        $currentTheme = $this->manager('theme')->findoneBy([
             'accountId' => $project->getMember()->getAccount()->getId(),
             'theme' => 1
         ]);
         /** @var Theme $theme */
         $theme;
 
-        if(!$manager){
-            $theme = $manager;
+        if(!$currentTheme){
+            $theme = $currentTheme;
             $theme->setTheme(0);
             $this->manager('theme')->save($theme);
         }
 
-        if ($project->getProposal()==null){
+        if ($project->getProposal()){
             $manager = $this->manager('theme');
             $theme = $manager->create();
             $theme->setAccountId($project->getMember()->getAccount()->getId());
