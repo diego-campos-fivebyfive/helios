@@ -37,11 +37,11 @@ class ProposalController extends AbstractController
         $manager = $this->manager('theme')->findoneBy([
             'accountId' => $project->getMember()->getAccount()->getId(),
             'theme' => 1
-            ]);
+        ]);
         /** @var Theme $theme */
         $theme;
 
-        if(!$manager==null){
+        if(!$manager){
             $theme = $manager;
             $theme->setTheme(0);
             $this->manager('theme')->save($theme);
@@ -78,7 +78,7 @@ class ProposalController extends AbstractController
                 'accountId' => 8,
                 'theme' => 1
         ]);
-        if ($manager==null){
+        if ($manager){
             $manager = $this->manager('theme')->findOneBy([
                     'themeSices' => 1,
                     'theme' => 1
