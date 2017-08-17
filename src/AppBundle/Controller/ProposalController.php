@@ -34,7 +34,7 @@ class ProposalController extends AbstractController
      */
     public function saveContentAction(Request $request, Project $project)
     {
-        $currentTheme = $this->manager('theme')->findoneBy([
+        $currentTheme = $this->manager('theme')->findOneBy([
             'accountId' => $project->getMember()->getAccount()->getId(),
             'theme' => 1
         ]);
