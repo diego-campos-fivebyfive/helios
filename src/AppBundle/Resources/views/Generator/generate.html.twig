@@ -445,7 +445,7 @@
             delete group.rendered;
         });
         Request.send({
-            url: '{{ path('project_groups',{id:project.id}) }}',
+            url: '{{ path('project_groups',{id:project.id, precify:true}) }}',
             method: 'post',
             data: {groups:GroupManager.groups},
             callback: function(xhr){
