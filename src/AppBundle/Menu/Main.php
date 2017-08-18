@@ -100,12 +100,13 @@ class Main implements ContainerAwareInterface
                 'route' => 'member_index',
                 'extras' => ['icon' => App::icons('users')]
             ]);
-
-            $this->requestsMenu($menu, $user);
         }
 
         $this->menuSettings($menu, $user);
 
+        if ($user->isOwner()) {
+            $this->requestsMenu($menu, $user);
+        }
 
         $this->menuSuperAdmin($menu, $user);
 
@@ -311,7 +312,8 @@ class Main implements ContainerAwareInterface
     {
         $requests = $menu->addChild('Pedidos', [
             'uri' => '#',
-            'childrenAttributes' => ['class' => 'nav nav-second-level collapse'],
+            'childrenAttributes' => ['class' => 'nav nav-second-level collapse orders'],
+            'attributes' => ['id' => 'idPedidos'],
             'extras' => ['icon' => App::icons('requests')]
         ]);
 

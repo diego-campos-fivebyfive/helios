@@ -39,7 +39,7 @@ class OrderController extends AbstractController
         );
 
         return $this->render('Order.index', array(
-            'order' => $pagination,
+            'orders' => $pagination
         ));
     }
 

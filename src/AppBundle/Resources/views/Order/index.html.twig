@@ -12,17 +12,23 @@
                     <table id="extras_table" class="table table-condensed table-bordered col-md-12">
                         <thead>
                             <tr>
-                                <td class="col-md-1 text-center">CÓDIGO</td>
-                                <td>DESCRIÇÃO PEDIDO</td>
+                                <td class="col-md-1 text-center">PEDIDO</td>
+                                <td>DATA</td>
+                                <td>SISTEMAS</td>
                                 <td class="col-md-2 text-center">VALOR TOTAL</td>
-                                <td class="col-md-2">AÇÕES</td>
+                                <td class="col-md-2 text-center">AÇÃO</td>
                             </tr>
                         </thead>
                         <tbody>
-                        {% for item in order%}
+                        {% for item in orders %}
                             <tr>
                                 <td class="text-center">{{ item.id }}</td>
-                                <td></td>
+                                <td>{{ item.createdAt|date('d/m/Y') }}</td>
+                                <td>SISTEMA(S) DE
+                                    {% for element in item.childrens %}
+                                    <b>{{ element.power }}</b>,
+                                    {% endfor %} KWP
+                                </td>
                                 <td class="col-md-2 text-right">{{ item.total|currency }}</td>
                                 <td>
                                     <a href="{{ path('order_show', { 'id':item.id }) }}"
@@ -41,7 +47,7 @@
 </div>
 <div class="row text-center">
     <div class="btn-group">
-        {{ knp_pagination_render(order) }}
+        {{ knp_pagination_render(orders) }}
     </div>
 </div>
 <style>
