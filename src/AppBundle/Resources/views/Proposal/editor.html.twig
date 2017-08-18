@@ -183,7 +183,7 @@
                 {#dados vindos da controller#}
                 <div id="dataProposal" class="hidden">
                     {#dados do client#}
-                   {# <div id="dclient">
+                    <div id="dclient">
                         {{ project.customer.name }}
                     </div>
 
@@ -201,9 +201,17 @@
 
                     <div id="demail">
                         {{ project.customer.email }}
-                    </div>#}
+                    </div>
 
                     {#dados da geração#}
+                    <div id="dnumber">
+                        {{ project.number }}
+                    </div>
+
+                    <div id="dpower">
+                        {{ project.power }}
+                    </div>
+
                     <div id="dgenerationChart" data-type="chart" data-chart="generation"
                          data-json="{{ project.monthlyProduction|json_encode }}">
                     </div>
@@ -579,6 +587,55 @@
                     </div>
 
                     {#dados da geração#}
+                    <div id="number">
+                        <span tabindex="-1" data-cke-widget-wrapper="1" data-cke-filter="off"
+                              class="cke_widget_wrapper cke_widget_inline cke_widget_hcard cke_widget_wrapper_h-card"
+                              data-cke-display-name="hcard" data-cke-widget-id="3" role="region" aria-label="hcard widget"
+                              contenteditable="false">
+                            <span class="h-card cke_widget_element"
+                                  data-cke-widget-data="%7B%22classes%22%3A%7B%22h-card%22%3A1%7D%7D"
+                                  data-cke-widget-upcasted="1" data-cke-widget-keep-attr="0"
+                                  data-widget="hcard">
+
+                                <!--content-->
+                                <span class="dnumber"></span>
+                            </span>
+                            <span class="cke_reset cke_widget_drag_handler_container"
+                                  style="background: rgba(220, 220, 220, 0.5)
+                                url(&quot;http://sdk.ckeditor.com/vendor/ckeditor/plugins/widget/images/handle.png&quot;)
+                                repeat scroll 0% 0%; top: -14px; left: 0px; display: block;">
+                                <img class="cke_reset cke_widget_drag_handler" data-cke-widget-drag-handler="1"
+                                     src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw=="
+                                     title="Click e arraste para mover" role="presentation" draggable="true" width="15"
+                                     height="15">
+                            </span>
+                        </span>
+                    </div>
+
+                    <div id="power">
+                        <span tabindex="-1" data-cke-widget-wrapper="1" data-cke-filter="off"
+                              class="cke_widget_wrapper cke_widget_inline cke_widget_hcard cke_widget_wrapper_h-card"
+                              data-cke-display-name="hcard" data-cke-widget-id="3" role="region" aria-label="hcard widget"
+                              contenteditable="false">
+                            <span class="h-card cke_widget_element"
+                                  data-cke-widget-data="%7B%22classes%22%3A%7B%22h-card%22%3A1%7D%7D"
+                                  data-cke-widget-upcasted="1" data-cke-widget-keep-attr="0"
+                                  data-widget="hcard">
+
+                                <!--content-->
+                                <span class="dpower"></span>
+                            </span>
+                            <span class="cke_reset cke_widget_drag_handler_container"
+                                  style="background: rgba(220, 220, 220, 0.5)
+                                url(&quot;http://sdk.ckeditor.com/vendor/ckeditor/plugins/widget/images/handle.png&quot;)
+                                repeat scroll 0% 0%; top: -14px; left: 0px; display: block;">
+                                <img class="cke_reset cke_widget_drag_handler" data-cke-widget-drag-handler="1"
+                                     src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw=="
+                                     title="Click e arraste para mover" role="presentation" draggable="true" width="15"
+                                     height="15">
+                            </span>
+                        </span>
+                    </div>
 
                     <div id="generationChart">
                         <span id="copyGenerationChart" class="image cke_widget_element dgenerationChart"
@@ -973,6 +1030,16 @@
                         DADOS DA GERAÇÃO
                     </div>
                     <li>
+                        <div class="list-group-item" data-info="number" draggable="true">
+                            Número do Projeto
+                        </div>
+                    </li>
+                    <li>
+                        <div class="list-group-item" data-info="power" draggable="true">
+                            Potência do Projeto
+                        </div>
+                    </li>
+                    <li>
                         <div id="tagGenerationChart" class="list-group-item" data-info="generationChart" draggable="true">
                             Gráfico da Geração
                             <input type="hidden" id="colorChartGeneration" onchange="changeColorGeneration(this.value)" value="00A7EC">
@@ -983,7 +1050,8 @@
                         <div class="list-group-item" data-info="annualGeneration" draggable="true">
                             Geração Anual
                         </div>
-                    </li><li>
+                    </li>
+                    <li>
                         <div class="list-group-item" data-info="monthlyAverageGeneration" draggable="true">
                             Geração média mensal
                         </div>
