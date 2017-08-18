@@ -94,7 +94,7 @@ class AccountController extends AbstractController
          * Prevent excess records in the form of listing,
          * including only the first owner of the account
          */
-        $account->edition = true;
+        //$account->edition = true;
 
         $form = $this->createForm(AccountType::class, $account);
 

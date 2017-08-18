@@ -101,8 +101,7 @@ class Main implements ContainerAwareInterface
                 'extras' => ['icon' => App::icons('users')]
             ]);
 
-            $this->budgetMenu($menu, $user);
-
+            $this->requestsMenu($menu, $user);
         }
 
         $this->menuSettings($menu, $user);
@@ -308,7 +307,7 @@ class Main implements ContainerAwareInterface
         }
     }
 
-    private function budgetMenu(ItemInterface &$menu, UserInterface $user)
+    private function requestsMenu(ItemInterface &$menu, UserInterface $user)
     {
         $requests = $menu->addChild('Pedidos', [
             'uri' => '#',
@@ -322,7 +321,7 @@ class Main implements ContainerAwareInterface
         ]);
 
         $requests->addChild('Meus Pedidos', [
-            'route' => 'project_generator',
+            'route' => 'index_order',
             'extras' => ['icon' => App::icons('my-requests')]
         ]);
     }
