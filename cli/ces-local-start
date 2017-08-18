@@ -8,6 +8,8 @@ source ces-variables-ci --development
 if [ -z ${1+x} ] || [ $1 == '--development' ]; then
 
   composer install
+  cli/ces-bug-fix
+
   php app/console doctrine:schema:update --force
   echo "Sices Server starting on $CES_SICES_HOST:$CES_SICES_PORT"
   php app/console server:run &
