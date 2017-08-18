@@ -157,7 +157,7 @@ class Main implements ContainerAwareInterface
             'extras' => ['icon' => App::icons('inverters')]
         ]);
 
-        $components->addChild('Estruturas', [
+        /*$components->addChild('Estruturas', [
             'route' => 'structure_index',
             'extras' => ['icon' => App::icons('structure')]
         ]);
@@ -170,7 +170,7 @@ class Main implements ContainerAwareInterface
         $components->addChild('Variedades', [
             'route' => 'variety_index',
             'extras' => ['icon' => App::icons('variety')]
-        ]);
+        ]);*/
     }
 
     /**
