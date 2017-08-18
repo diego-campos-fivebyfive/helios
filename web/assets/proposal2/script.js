@@ -220,15 +220,19 @@ function loadDatas() {
 
                 var rgb = [];
                 for (x = 0; x < $(tableInEditor).length; x++) {
-                    var tdOfTable = $(tableInEditor[x]).children().children().children()[4].style;
-                    var background = tdOfTable['background-color'];
-                    background = background.replace(/\D/g, ' ');
-                    rgb = background.split(" ");
-                    rgb = rgb.filter(function (ele) {
-                        return ele !== '';
-                    });
-                    for (x = 0; x < rgb.length; x++) {
-                        rgb[x] = parseInt(rgb[x]);
+                    try {
+                        var tdOfTable = $(tableInEditor[x]).children().children().children()[4].style;
+                        var background = tdOfTable['background-color'];
+                        background = background.replace(/\D/g, ' ');
+                        rgb = background.split(" ");
+                        rgb = rgb.filter(function (ele) {
+                            return ele !== '';
+                        });
+                        for (x = 0; x < rgb.length; x++) {
+                            rgb[x] = parseInt(rgb[x]);
+                        }
+                    }
+                    catch(err) {
                     }
                     if(rgb.length == 3) x = $(tableInEditor).length;
                 }
