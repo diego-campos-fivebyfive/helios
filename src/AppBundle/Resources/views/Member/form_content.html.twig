@@ -74,7 +74,6 @@
     <div class="col-md-12">
         <br/>
         Somente administradores têm acesso ao gerenciamento de: <br/>
-        &raquo; Kits <br/>
         &raquo; Composição de preço de venda <br/>
         &raquo; Componentes <br/>
         &raquo; Usuários <br/>
@@ -100,18 +99,18 @@
                 method: form.attr('method'),
                 data: form.serialize(),
                 complete: function(xhr){
-                    button.ladda('stop');
                     if(201 == xhr.status || 202 == xhr.status){
                         var response = xhr.responseJSON;
+                        $('#user_modal').modal('hide');
+                        window.location.reload();
                         toastr.success(response.message, '{{ 'Success'|trans }}', {
                             positionClass: 'toast-top-center',
                             progressBar: true
                         });
-                        $('#user_modal').modal('hide');
-                        window.location.reload();
                     }else{
                         $('#user_modal_body').html(xhr.responseText);
                     }
+                    button.ladda('stop');
                 }
             });
         });

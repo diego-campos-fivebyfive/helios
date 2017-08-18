@@ -287,13 +287,11 @@ class RegisterController extends AbstractController
         if ($form->isValid()) {
 
             $manager = $this->manager('account');
-
             /** @var AccountInterface $account */
-            $account = $manager->findOneBy(['confirmationToken' => $token]);
-
-            $this->getRegisterHelper()->finishAccountRegister($account, false);
-
-            $manager->save($account);
+            if(null != $account = $manager->findOneBy(['confirmationToken' => $token])) {
+                $this->getRegisterHelper()->finishAccountRegister($account, false);
+                $manager->save($account);
+            }
 
             $event = new FormEvent($form, $request);
             $dispatcher->dispatch(FOSUserEvents::RESETTING_RESET_SUCCESS, $event);

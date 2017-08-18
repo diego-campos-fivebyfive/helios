@@ -115,14 +115,8 @@ class ContactType extends AbstractCustomerType
         $builder->add('accessors', 'entity', [
             'class' => 'AppBundle:Customer',
             'choices' => $members->filter(function(BusinessInterface $member) use($contact){
-                return $member->getId() != $contact->getMember()->getId()
-                        && !$member->isOwner()
-                        /*&& ($member->getTeam() && !$member->isLeader())*/
-                    ;
+                return $member->getId() != $contact->getMember()->getId() && !$member->isOwner();
             }),
-            'group_by' => function(BusinessInterface $member){
-                return $member->getTeam();
-            },
             'expanded' => false,
             'multiple' => true,
             'required' => false

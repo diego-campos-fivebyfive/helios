@@ -139,6 +139,14 @@ class ProjectController extends AbstractController
      */
     public function createAction(Request $request)
     {
+        $member = $this->member();
+
+        if($member->getAllowedContacts()->isEmpty()){
+            return $this->render('project.alerts', [
+                'error' => 'empty_contacts'
+            ]);
+        }
+
         $generator = $this->getGenerator();
         $defaults = $generator->loadDefaults();
 
@@ -152,7 +160,7 @@ class ProjectController extends AbstractController
         /** @var Project $project */
         $project = $manager->create();
 
-        $project->setMember($this->member());
+        $project->setMember($member);
 
         $form->handleRequest($request);
 

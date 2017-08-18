@@ -58,13 +58,13 @@ class MemberController extends AbstractController
     {
         $account = $this->getCurrentAccount();
 
-        if ($account->getMembers()->count() >= $account->getMaxMembers()) {
+        /*if ($account->getMembers()->count() >= $account->getMaxMembers()) {
             return $this->render('locked_content', [
                 'title' => 'account.max_members.title',
                 'message' => 'account.max_members.message',
                 //'include' => 'member.locked_links'
             ]);
-        }
+        }*/
 
         $manager = $this->getCustomerManager();
         //$context = $this->getContextManager()->find();
@@ -87,18 +87,34 @@ class MemberController extends AbstractController
 
             if ($helper->emailCanBeUsed($member->getEmail())) {
 
-                $member->setConfirmationToken($this->getTokenGenerator()->generateToken());
+                $userManager = $this->getUserManager();
+                $user = $userManager->createUser();
+
+                $user
+                    ->setUsername($member->getEmail())
+                    ->setEmail($member->getEmail())
+                    ->setPlainPassword(uniqid(time()))
+                    ->setConfirmationToken($this->getTokenGenerator()->generateToken())
+                ;
+
+                if($member->getAttribute('is_owner')){
+                    $user->addRole(User::ROLE_OWNER);
+                }
+
+                $userManager->updateUser($user);
+
+                $member->setUser($user);
                 $manager->save($member);
 
                 /** @var \AppBundle\Service\Mailer $mailer */
                 $mailer = $this->get('app_mailer');
                 //$mailer->enableSender = false;
-                $mailer->sendMemberConfirmationMessage($member);
+                //$mailer->sendMemberConfirmationMessage($member);
 
                 //$this->setNotice('Usuário cadastrado com sucesso! Aguardando confirmação via email.');
 
-                return $this->jsonResponse([
-                    'message' => $this->translate('Invitation sent successfully')
+                return $this->json([
+                    'message' => $this->translate('Usuário cadastrado com sucesso!')
                 ], Response::HTTP_CREATED);
                 //return $this->redirectToRoute('member_index');
             }

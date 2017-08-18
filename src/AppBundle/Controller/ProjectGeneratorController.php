@@ -11,14 +11,14 @@ use AppBundle\Form\Component\GeneratorType;
 use AppBundle\Form\Order\ElementType;
 use AppBundle\Form\Order\OrderType;
 use AppBundle\Service\Order\ElementResolver;
-use AppBundle\Service\Order\OrderManipulator;
-use AppBundle\Service\Order\OrderPrecifier;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
+ * @Security("has_role('ROLE_OWNER') or has_role('ROLE_OWNER_MASTER')")
  * @Route("generator")
  */
 class ProjectGeneratorController extends AbstractController
