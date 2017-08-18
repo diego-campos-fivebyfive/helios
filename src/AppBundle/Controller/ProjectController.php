@@ -201,6 +201,8 @@ class ProjectController extends AbstractController
      */
     public function updateAction(Request $request, Project $project)
     {
+        $this->denyAccessUnlessGranted('edit', $project);
+
         $defaults = $project->getDefaults();
 
         if(!$project->getMember()){
@@ -444,7 +446,7 @@ class ProjectController extends AbstractController
                 ->generateStructures($project)
                 ->generateStringBoxes($project)
                 ->handleAreas($project)
-                ->generateVarieties($project, false)
+                ->generateVarieties($project)
             ;
 
             $generator->save($project, true);
@@ -536,7 +538,7 @@ class ProjectController extends AbstractController
      */
     public function deleteAction(Project $project)
     {
-        //$this->checkAccess($project);
+        $this->denyAccessUnlessGranted('edit', $project);
 
         $this->manager('project')->delete($project);
 
