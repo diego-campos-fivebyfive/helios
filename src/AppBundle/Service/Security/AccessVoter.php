@@ -1,20 +1,47 @@
 <?php
 
+/*
+ * This file is part of the SicesSolar package.
+ *
+ * (c) SicesSolar <http://sicesbrasil.com.br/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+
 namespace AppBundle\Service\Security;
 
-use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Category;
 use AppBundle\Entity\CategoryInterface;
+use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Customer;
+use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\User;
 use AppBundle\Entity\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
+/**
+ * @author Claudinei Machado <claudinei@kolinalabs.com>
+ */
 class AccessVoter extends Voter
 {
     const VIEW = 'view';
     const EDIT = 'edit';
+    /**
+     * @var AccessDecisionManagerInterface
+     */
+    private $decisionManager;
+
+    /**
+     * @param AccessDecisionManagerInterface $decisionManager
+     */
+    function __construct(AccessDecisionManagerInterface $decisionManager)
+    {
+        $this->decisionManager = $decisionManager;
+    }
 
     /**
      * @inheritDoc
@@ -34,7 +61,6 @@ class AccessVoter extends Voter
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
         $user = $token->getUser();
-
         if(!$user instanceof UserInterface){
             return false;
         }
@@ -42,22 +68,51 @@ class AccessVoter extends Voter
         $method = $this->determineMethod($subject, $attribute);
 
         if(method_exists($this, $method)){
-            return $this->$method($subject, $user);
+            return $this->$method($subject, $token);
         }
 
         return false;
     }
 
     /**
-     * @param BusinessInterface $customer
-     * @param UserInterface $user
+     * @param Project $project
+     * @param TokenInterface $token
      * @return bool
      */
-    private function canEditCustomer(BusinessInterface $customer, UserInterface $user)
+    private function voteEditProject(Project $project, TokenInterface $token)
     {
+        $user = $token->getUser();
+
+        /** @var MemberInterface $member */
+        $member = $user->getInfo();
+        $projectMember = $project->getMember();
+
+        if($projectMember != $member){
+
+            $account = $member->getAccount();
+            $projectAccount = $projectMember->getAccount();
+
+            if($projectAccount == $account){
+                return $member->isOwner() || $member->isMasterOwner();
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param Customer $customer
+     * @param TokenInterface $token
+     * @return bool
+     */
+    private function voteEditCustomer(Customer $customer, TokenInterface $token)
+    {
+        $user = $token->getUser();
         $member = $user->getInfo();
 
-        if ($member instanceof BusinessInterface){
+        if ($member instanceof MemberInterface){
 
             // Via member
             if ($member->getId() === $customer->getMember()->getId())
@@ -81,9 +136,10 @@ class AccessVoter extends Voter
      * @param User $user
      * @return bool
      */
-    private function canEditCategory(CategoryInterface $category, User $user)
+    private function voteEditCategory(CategoryInterface $category, TokenInterface $token)
     {
-        /** @var BusinessInterface $member */
+        $user = $token->getUser();
+        /** @var MemberInterface $member */
         $member = $user->getInfo();
         $account = $member->getAccount();
 
@@ -100,11 +156,10 @@ class AccessVoter extends Voter
      */
     private function isBearableInstance($object)
     {
-        $target = $this->determineTarget($object);
-
-        return in_array($target, [
-            'Customer',
-            'Category'
+        return in_array(get_class($object), [
+            Customer::class,
+            Category::class,
+            Project::class
         ]);
     }
 
@@ -115,16 +170,8 @@ class AccessVoter extends Voter
      */
     private function determineMethod($subject, $attribute)
     {
-        return sprintf('can%s%s', ucfirst($attribute), $this->determineTarget($subject));
-    }
+        $blocks = array_reverse(explode('\\', get_class($subject)));
 
-    /**
-     * @return mixed
-     */
-    private function determineTarget($subject)
-    {
-        $target = array_reverse(explode('\\', get_class($subject)));
-
-        return $target[0];
+        return sprintf('vote%s%s', ucfirst($attribute), $blocks[0]);
     }
 }
