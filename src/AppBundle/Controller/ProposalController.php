@@ -73,32 +73,29 @@ class ProposalController extends AbstractController
      */
     public function editorAction(Project $project)
     {
-        $manager = $this->manager('theme')->findOneBy([
+        $manager = $this->manager('theme');
+        /** @var Theme $theme */
+        $theme = $manager->findOneBy([
             'accountId' => $project->getMember()->getAccount()->getId(),
             'theme' => 1
         ]);
 
-        /** @var Theme $theme */
-        $theme;
-
-        if (!$manager){
-            $manager = $this->manager('theme')->findOneBy([
+        if (!$theme){
+            $theme = $manager->findOneBy([
                 'accountId' => null,
                 'theme' => 1
             ]);
-            if(!$manager){
-                $manager = $this->manager('theme');
+            if(!$theme){
                 $theme = $manager->create();
                 $theme->setAccountId(null);
                 $theme->setTheme(1);
                 $theme->setContent(
                     '<div class="ocultar"><span id="idConjunct">0</span><span id="idEditor">0</span></div>'
                 );
-                $this->manager('theme')->save($theme);
+                $manager->save($theme);
             }
-        }else{
-            $theme = $manager;
         }
+
         return $this->render('AppBundle:Proposal:editor.html.twig',[
             'project' => $project,
             'theme' => $theme
