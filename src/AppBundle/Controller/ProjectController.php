@@ -313,6 +313,10 @@ class ProjectController extends AbstractController
                     $projectModule->setGroups($groups);
                     $generator->generateStructures($project);
 
+                    if(null != $request->get('precify')){
+                        $generator->pricing($project);
+                    }
+
                     break;
                 }
             }
