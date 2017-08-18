@@ -31,7 +31,7 @@ class Order implements OrderInterface
      *
      * @ORM\Column(name="isquik_id", type="integer", nullable=true)
      */
-    private $isquik_id;
+    private $isquikId;
 
     /**
      * @var string
@@ -109,9 +109,9 @@ class Order implements OrderInterface
     /**
      * @inheritDoc
      */
-    public function setIsquikId($isquik_id)
+    public function setIsquikId($isquikId)
     {
-        $this->isquik_id = $isquik_id;
+        $this->isquikId = $isquikId;
         return $this;
     }
 
@@ -120,8 +120,9 @@ class Order implements OrderInterface
      */
     public function getIsquikId()
     {
-        return $this->isquik_id;
+        return $this->isquikId;
     }
+
 
     /**
      * @inheritDoc
