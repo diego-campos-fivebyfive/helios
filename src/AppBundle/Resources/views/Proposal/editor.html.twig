@@ -441,11 +441,11 @@
                                     <th></th>
                                 </tr>
                             {% endif %}
-                            {% for projectTaxes in project.projectTaxes %}
+                            {% for projectTax in project.projectTaxes %}
                                 <tr>
-                                    <td> {{ projectTaxes.variety.code }} </td>
-                                    <td> {{ projectTaxes.variety.description }} </td>
-                                    <td> {{ projectTaxes.quantity }} </td>
+                                    <td> {{ projectTax.name }} </td>
+                                    <td></td>
+                                    <td> {{ projectTax.amount|currency }} </td>
                                 </tr>
                             {% endfor %}
 
