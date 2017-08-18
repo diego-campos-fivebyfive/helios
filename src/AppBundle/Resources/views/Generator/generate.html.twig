@@ -163,10 +163,15 @@
             <td> {{ projectVariety.variety.code }} </td>
             <td> {{ projectVariety.variety.description }} </td>
             <td> {{ projectVariety.unitCostPrice|currency }} </td>
-            <td> {{ projectVariety.quantity }} </td>
+            <td class="text-center"> {{ projectVariety.quantity }} </td>
         </tr>
     {% endfor %}
-
+    <tr>
+        <th></th>
+        <th></th>
+        <th> {{ project.costPriceComponents|currency }} </th>
+        <td></td>
+    </tr>
     {% set projectModule = project.projectModules.first %}
 
     {% if projectModule %}
