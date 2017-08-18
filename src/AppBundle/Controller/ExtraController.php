@@ -35,7 +35,9 @@ class ExtraController extends AbstractController
      */
     public function allAction()
     {
-        $extras = $this->manager('extra')->findAll();
+        $extras = $this->manager('extra')->findBy([
+            'account' => $this->account()
+        ]);
 
         $this->clearTemplateCache('extra.extras_parameters');
 
