@@ -1,0 +1,55 @@
+{% extends view('layout') %}
+
+{% block body %}
+<div class="wrapper wrapper-content animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3>Meus Pedidos</h3>
+                </div>
+                <div class="panel-body">
+                    <table id="extras_table" class="table table-condensed table-bordered col-md-12">
+                        <thead>
+                            <tr>
+                                <td class="col-md-1 text-center">CÓDIGO</td>
+                                <td>DESCRIÇÃO PEDIDO</td>
+                                <td class="col-md-2 text-center">VALOR TOTAL</td>
+                                <td class="col-md-2">AÇÕES</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in order%}
+                            <tr>
+                                <td class="text-center">{{ item.id }}</td>
+                                <td></td>
+                                <td class="col-md-2 text-right">{{ item.total|currency }}</td>
+                                <td>
+                                    <a href="{{ path('order_show', { 'id':item.id }) }}"
+                                        class="btn btn-default">
+                                        <i class="fa fa-eye"></i> {{ 'View'|trans }}
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row text-center">
+    <div class="btn-group">
+        {{ knp_pagination_render(order) }}
+    </div>
+</div>
+<style>
+    table tbody tr{
+        display: table-row !important;
+    }
+    table thead tr td{
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
