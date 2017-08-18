@@ -33,6 +33,7 @@ class ProjectExtraType extends AbstractType
                     return $er->createQueryBuilder('e')
                         ->where('e.account = :account')
                         ->andWhere('e.type = :type')
+                        ->andWhere('e.deletedAt is null')
                         ->setParameters([
                             'account' => $account,
                             'type' => $type
