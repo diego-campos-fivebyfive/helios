@@ -158,8 +158,10 @@ class ProjectFinancialController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
 
-            $this->manager('project_extra')->save($projectExtra);
-            $this->getGenerator()->pricing($project);
+            if($projectExtra->getExtra()) {
+                $this->manager('project_extra')->save($projectExtra);
+                $this->getGenerator()->pricing($project);
+            }
 
             return $this->json([]);
         }
