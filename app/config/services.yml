@@ -194,3 +194,10 @@ services:
         arguments: ['@doctrine.orm.entity_manager']
         tags:
             - { name: form.type }
+
+    access_voter:
+        class: AppBundle\Service\Security\AccessVoter
+        arguments: ['@security.access.decision_manager']
+        public: false
+        tags:
+            - { name: security.voter }
