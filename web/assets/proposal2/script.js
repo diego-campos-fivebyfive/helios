@@ -238,7 +238,7 @@ function loadDatas() {
                 }
 
                 $(tagTable).children().attr('class',"t" + idTag + "");
-                console.log($(tableInEditor));
+
                 $(tableInEditor).children().children().children().attr('contenteditable',"false");
                 //coloca no editor
                 for (x = 0; x < $(tableInEditor).length; x++) {
