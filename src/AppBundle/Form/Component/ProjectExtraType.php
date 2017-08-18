@@ -27,6 +27,7 @@ class ProjectExtraType extends AbstractType
 
         $builder
             ->add('extra', EntityType::class, [
+                'required' => true,
                 'class' => Extra::class,
                 'query_builder' => function(EntityRepository $er) use($account, $type){
                     return $er->createQueryBuilder('e')
