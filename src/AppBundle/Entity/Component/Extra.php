@@ -3,9 +3,7 @@
 namespace AppBundle\Entity\Component;
 
 use AppBundle\Entity\AccountInterface;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use AppBundle\Entity\TokenizerTrait;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
@@ -17,6 +15,8 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  */
 class Extra implements ExtraInterface
 {
+    use ORMBehaviors\SoftDeletable\SoftDeletable;
+
     /**
      * @var int
      *

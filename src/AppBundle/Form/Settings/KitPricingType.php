@@ -22,7 +22,9 @@ class KitPricingType extends AbstractType
             ->add('target', ChoiceType::class, [
                 'choices' => KitPricing::getTargets()
             ])
-            ->add('percent')
+            ->add('percent', null, [
+                'required' => true
+            ])
         ;
     }
 }
