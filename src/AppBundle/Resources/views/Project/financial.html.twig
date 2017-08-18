@@ -123,9 +123,9 @@
                                                     <tr>
                                                         <td class="col-md-2"> {{ projectModule.module.code }} </td>
                                                         <td class="col-md-4">
-                                                            <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('component_show', {type:'module', id:projectModule.module.id}) }}">
+                                                            {#<a data-toggle="modal" data-target="#modal_component" data-url="{{ path('component_show', {type:'module', id:projectModule.module.id}) }}">#}
                                                                 {{ projectModule.module.model }}
-                                                            </a>
+                                                            {#</a>#}
                                                         </td>
                                                         {% if true %}
                                                             <td> {{ projectModule.unitCostPrice|currency }} </td>
@@ -141,9 +141,9 @@
                                                         <tr>
                                                             <td class="col-md-2"> {{ group.inverter.code }} </td>
                                                             <td class="col-md-4">
-                                                                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('component_show', {type:'inverter', id:group.inverter.id}) }}">
+                                                                {#<a data-toggle="modal" data-target="#modal_component" data-url="{{ path('component_show', {type:'inverter', id:group.inverter.id}) }}">#}
                                                                     {{ group.inverter.model }}
-                                                                </a>
+                                                                {#</a>#}
                                                             </td>
                                                             {% if true %}
                                                                 <td> {{ group.projectInverter.unitCostPrice|currency }} </td>
@@ -174,9 +174,9 @@
                                                         <tr>
                                                             <td> {{ projectStringBox.stringBox.code }} </td>
                                                             <td>
-                                                                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('stringbox_show', {id:projectStringBox.stringBox.id}) }}">
+                                                                {#<a data-toggle="modal" data-target="#modal_component" data-url="{{ path('stringbox_show', {id:projectStringBox.stringBox.id}) }}">#}
                                                                     {{ projectStringBox.stringBox.description }}
-                                                                </a>
+                                                                {#</a>#}
                                                             </td>
                                                             {% if true %}
                                                                 <td> {{ projectStringBox.unitCostPrice|currency }} </td>
@@ -192,9 +192,9 @@
                                                         <tr>
                                                             <td class="col-md-2"> {{ projectStructure.structure.code }} </td>
                                                             <td class="col-md-4">
-                                                                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('structure_show', {id:projectStructure.structure.id}) }}">
+                                                                {#<a data-toggle="modal" data-target="#modal_component" data-url="{{ path('structure_show', {id:projectStructure.structure.id}) }}">#}
                                                                     {{ projectStructure.structure.description }}
-                                                                </a>
+                                                                {#</a>#}
                                                             </td>
                                                             {% if true %}
                                                                 <td> {{ projectStructure.unitCostPrice|currency }} </td>
