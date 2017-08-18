@@ -10,6 +10,7 @@ cli/ces-permission-fix
 source cli/ces-variables-ci --homolog
 
 composer install
+cli/ces-bug-fix
 php app/console doctrine:schema:update --force
 bundle/app/node_modules/.bin/pm2 restart 0
 
