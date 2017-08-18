@@ -3,7 +3,9 @@
 namespace AppBundle\Menu;
 
 use AppBundle\Configuration\App;
+use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\UserInterface;
+use AppBundle\Service\ProjectGenerator\ProjectGenerator;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -98,9 +100,13 @@ class Main implements ContainerAwareInterface
                 'route' => 'member_index',
                 'extras' => ['icon' => App::icons('users')]
             ]);
+
+            $this->budgetMenu($menu, $user);
+
         }
 
         $this->menuSettings($menu, $user);
+
 
         $this->menuSuperAdmin($menu, $user);
 
@@ -300,5 +306,24 @@ class Main implements ContainerAwareInterface
                 $this->resolveActiveMenu($child);
             }
         }
+    }
+
+    private function budgetMenu(ItemInterface &$menu, UserInterface $user)
+    {
+        $requests = $menu->addChild('Pedidos', [
+            'uri' => '#',
+            'childrenAttributes' => ['class' => 'nav nav-second-level collapse'],
+            'extras' => ['icon' => App::icons('requests')]
+        ]);
+
+        $requests->addChild('Orçamento', [
+            'route' => 'project_generator',
+            'extras' => ['icon' => App::icons('money')]
+        ]);
+
+        $requests->addChild('Meus Pedidos', [
+            'route' => 'project_generator',
+            'extras' => ['icon' => App::icons('my-requests')]
+        ]);
     }
 }
