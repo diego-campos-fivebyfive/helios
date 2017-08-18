@@ -96,8 +96,9 @@ class ProposalController extends AbstractController
                 );
                 $this->manager('theme')->save($theme);
             }
+        }else{
+            $theme = $manager;
         }
-        $theme = $manager;
         return $this->render('AppBundle:Proposal:editor.html.twig',[
             'project' => $project,
             'theme' => $theme
