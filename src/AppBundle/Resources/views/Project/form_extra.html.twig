@@ -51,4 +51,10 @@
         Financial.get_extra_form('{{ path('financial_extras_create',{id:project.id, type:0}) }}');
     });
 
+    var project_extra_extra = $('#project_extra_extra');
+    if(!project_extra_extra.find('option').length){
+        button_project_extra.attr('disabled', true);
+        project_extra_extra.append("<option> Nenhum item para adicionar </option>");
+    }
+
 </script>
