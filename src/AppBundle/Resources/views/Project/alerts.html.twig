@@ -1,0 +1,30 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+    {% set errors = {
+        empty_contacts: {
+            message: 'Você não possui contatos cadastrados para iniciar um projeto.',
+            link: path('contact_index',{context:'person'})
+        }
+    } %}
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-danger" style="margin-top: 2rem;">
+                <div class="panel-heading">
+                    <i class="fa fa-warning"></i> Atenção
+                </div>
+                <div class="panel-body">
+                    <div class="alert alert-danger text-center">
+                        <h1> {{ attribute(errors, error).message }} </h1>
+                        <a href="{{ attribute(errors, error).link }}">
+                            Clique aqui para resolver
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
