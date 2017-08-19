@@ -218,7 +218,7 @@ function loadDatas() {
 
                 var tableInEditor = document.getElementsByClassName("t" + idTag);
 
-                var rgb = [];
+                /*var rgb = [];
                 for (x = 0; x < $(tableInEditor).length; x++) {
                     try {
                         var tdOfTable = $(tableInEditor[x]).children().children().children()[4].style;
@@ -235,7 +235,7 @@ function loadDatas() {
                     catch(err) {
                     }
                     if(rgb.length == 3) x = $(tableInEditor).length;
-                }
+                }*/
 
                 $(tagTable).children().attr('class',"t" + idTag + "");
 
@@ -249,14 +249,14 @@ function loadDatas() {
                     $(contentOfTag[x]).html($(tagTable).html());
                 }
 
-                if(rgb.length == 3){
+                /*if(rgb.length == 3){
                     changeColorTableEquipServ(rgbToHex(rgb[0],rgb[1],rgb[2]));
                     //timeout aqui
                     $('#colorTableEquipServ').val(""+rgbToHex(rgb[0],rgb[1],rgb[2])+"");
                 }else{
                     colorTableEquipServ = $('#colorTableEquipServ').val();
                     changeColorTableEquipServ(colorTableEquipServ);
-                }
+                }*/
 
             } else {
                 var content = $("#d" + idTag + "").html();
