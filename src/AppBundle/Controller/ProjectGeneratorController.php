@@ -115,17 +115,10 @@ class ProjectGeneratorController extends AbstractController
                 'account' => $this->account()
             ])
         ;
-
-        $paginator = $this->getPaginator();
-
-        $pagination = $paginator->paginate(
-            $qb->getQuery(),
-            $request->query->getInt('page', 1),
-            10
-        );
+        $order = $qb->getQuery()->getResult();
 
         return $this->render('generator.orders', [
-            'orders' => $pagination
+            'orders' => $order
         ]);
     }
 
@@ -164,7 +157,7 @@ class ProjectGeneratorController extends AbstractController
 
             $this->manager('order')->save($order);
 
-            return $this->json([]);
+            return $this->redirectToRoute('project_generator');
         }
 
         return $this->render('generator.order', [
@@ -222,7 +215,7 @@ class ProjectGeneratorController extends AbstractController
             return $this->json([], Response::HTTP_CREATED);
         }
 
-        return $this->render('generator.element', [
+        return $this->render('generator.order', [
             'form' => $form->createView(),
             'element' => $element
         ]);
@@ -253,7 +246,7 @@ class ProjectGeneratorController extends AbstractController
             return $this->json([]);
         }
 
-        return $this->render('generator.element', [
+        return $this->render('generator.order', [
             'form' => $form->createView(),
             'element' => $element
         ]);

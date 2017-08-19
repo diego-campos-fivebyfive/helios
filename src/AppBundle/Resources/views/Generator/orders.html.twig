@@ -5,7 +5,7 @@
     <thead>
     <tr>
         <th colspan="5">
-            MEUS ORÇAMENTOS
+            ORÇAMENTO ATUAL
             <button type="submit" class="btn btn-warning pull-right">
                 <i class="fa fa-arrow-right"></i>
                 Enviar pedido para SICES
@@ -42,9 +42,6 @@
                     <a data-delete="{{ path('generator_orders_delete',{id:order.id}) }}" class="btn btn-danger">
                         <i class="fa fa-trash"></i>
                     </a>
-                    <a class="btn btn-warning">
-                        <i class="fa fa-check"></i>
-                    </a>
                 </div>
             </td>
         </tr>
@@ -52,15 +49,6 @@
     {% endfor %}
 
     </tbody>
-
-    <tfoot>
-    <tr>
-        <td colspan="5" class="text-center">
-            {{ knp_pagination_render(orders) }}
-        </td>
-    </tr>
-    </tfoot>
-
 </table>
 
 </form>
