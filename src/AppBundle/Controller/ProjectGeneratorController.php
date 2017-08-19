@@ -215,7 +215,7 @@ class ProjectGeneratorController extends AbstractController
             return $this->json([], Response::HTTP_CREATED);
         }
 
-        return $this->render('generator.order', [
+        return $this->render('generator.element', [
             'form' => $form->createView(),
             'element' => $element
         ]);
@@ -246,7 +246,7 @@ class ProjectGeneratorController extends AbstractController
             return $this->json([]);
         }
 
-        return $this->render('generator.order', [
+        return $this->render('generator.element', [
             'form' => $form->createView(),
             'element' => $element
         ]);
