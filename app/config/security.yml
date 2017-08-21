@@ -59,7 +59,7 @@ security:
 
     access_control:
         # API
-        - { path: ^/api/*, roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }
+        - { path: ^/api$, roles: [ IS_AUTHENTICATED_FULLY ] }
         # DEV
         - { path: ^/_wdt/*, role: IS_AUTHENTICATED_ANONYMOUSLY }
         # ALL
@@ -68,5 +68,3 @@ security:
         - { path: ^/register/*, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting/*, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/*, role: ROLE_USER }
-        # API
-        - { path: ^/api$, roles: [ IS_AUTHENTICATED_FULLY ] }
