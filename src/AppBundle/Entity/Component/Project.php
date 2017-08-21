@@ -430,7 +430,7 @@ class Project implements ProjectInterface
      */
     public function getShipping()
     {
-        return  array_key_exists('shipping', $this->shippingRules)
+        return  is_array($this->shippingRules) && array_key_exists('shipping', $this->shippingRules)
             ? $this->shippingRules['shipping'] : 0 ;
     }
 
