@@ -11,6 +11,13 @@ rsync -azvv -e "ssh -i ~/.ssh/authorized_ssh" admin@54.233.150.10:/var/www/** /v
 echo "Deploying files from Temp..."
 rsync -avzh --delete /var/www/.temp/** /var/www/
 
+echo "Configure security channels..."
+config_path=app/config
+channel_http='path: ^/*, role: ROLE_USER'
+channel_https='path: ^/*, role: ROLE_USER, requires_channel: https'
+sed "s/$channel_http/$channel_https/g" <$config_path/security.yml >$config_path/security-https.yml
+mv $config_path/security-https.yml $config_path/security.yml
+
 source cli/ces-server-config --production
 
 php app/console doctrine:schema:update --force
