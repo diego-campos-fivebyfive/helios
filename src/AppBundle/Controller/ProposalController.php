@@ -4,6 +4,8 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Theme;
+use AppBundle\Service\Editor\Formatter;
+use AppBundle\Service\Editor\Normalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -73,33 +75,85 @@ class ProposalController extends AbstractController
      */
     public function editorAction(Project $project)
     {
+        $theme = $this->resolveTheme($project);
+
+        //echo $theme->getContent(); die;
+
+        $content = $theme->getContent();
+
+        $data = Formatter::format($project);
+
+        $components = $this->renderView('proposal.components', [
+            'project' => $project
+        ]);
+
+        $data['components'] = [
+            'label' => 'Equipamentos e Serviços',
+            'value' => $components,
+            'handle' => 'static'
+        ];
+
+        Normalizer::prepare($content, $data);
+
+        return $this->render('AppBundle:Proposal:_editor.html.twig',[
+            'project' => $project,
+            'theme' => $theme,
+            'content' => $content,
+            'data' => $data
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/save", name="proposal_save")
+     */
+    public function saveAction(Project $project, Request $request)
+    {
+        $content = $request->get('content');
+
         $manager = $this->manager('theme');
+
+        $theme = $this->resolveTheme($project);
+
+        $theme
+            ->setTheme(true)
+            ->setContent($content)
+            ->setAccountId($this->account()->getId())
+        ;
+
+        $manager->save($theme);
+
+        return $this->json();
+    }
+
+    private function resolveTheme(Project $project)
+    {
+        $manager = $this->manager('theme');
+
         /** @var Theme $theme */
         $theme = $manager->findOneBy([
-            'accountId' => $project->getMember()->getAccount()->getId(),
+            'accountId' => $this->account()->getId(),
             'theme' => 1
         ]);
 
         if (!$theme){
+
             $theme = $manager->findOneBy([
                 'accountId' => null,
                 'theme' => 1
             ]);
+
             if(!$theme){
+
                 $theme = $manager->create();
                 $theme->setAccountId(null);
                 $theme->setTheme(1);
-                $theme->setContent(
-                    '<div class="ocultar"><span id="idConjunct">0</span><span id="idEditor">0</span></div>'
-                );
+                $theme->setContent('');
+
                 $manager->save($theme);
             }
         }
 
-        return $this->render('AppBundle:Proposal:editor.html.twig',[
-            'project' => $project,
-            'theme' => $theme
-        ]);
+        return $theme;
     }
 
     /**
@@ -167,10 +221,20 @@ class ProposalController extends AbstractController
      */
     public function pdfAction(Project $project)
     {
-        $proposal = $this->manager('theme')->findOneBy(['id' => $project->getProposal()]);
+        //$proposal = $this->manager('theme')->findOneBy(['id' => $project->getProposal()]);
 
-        return $this->render('AppBundle:Proposal:pdf.html.twig', [
-            'proposal' => $proposal
+        $theme = $this->resolveTheme($project);
+
+        $content = str_replace(
+            ['contenteditable="true"'],
+            [''],
+            $theme->getContent()
+        );
+
+        return $this->render('AppBundle:Proposal:_pdf.html.twig', [
+            //'proposal' => $proposal
+            'theme' => $theme,
+            'content' => $content
         ]);
     }
 
