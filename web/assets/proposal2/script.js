@@ -106,7 +106,7 @@ function setSession(btn) {
     $("#"+pg+"").append(session);
     for (n = 1;n<session.children().length;n++){
         CKEDITOR.inline( "editor_"+idEditor, {
-            extraPlugins: 'hcard,sourcedialog,justify'
+            extraPlugins: 'sourcedialog,justify'
         } );
         idEditor++;
     }
