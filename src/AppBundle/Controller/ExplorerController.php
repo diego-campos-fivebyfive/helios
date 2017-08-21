@@ -5,16 +5,42 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Customer;
 use AppBundle\Form\ExplorerType;
 use AppBundle\Service\FileExplorer;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("explorer")
  */
 class ExplorerController extends AbstractController
 {
+    /**
+     * @Route("/uploader", name="explorer_uploader")
+     */
+    public function uploaderAction(Request $request)
+    {
+        $file = null;
+
+        if($request->isMethod('post')){
+
+            $uploadedFile = $request->files->get('explorer_file');
+
+            if($uploadedFile instanceof UploadedFile){
+
+                $dir = $this->get('kernel')->getRootDir() . '/../web/uploads/user-files/';
+                $filename = md5(uniqid(time())) . '.' . $uploadedFile->getClientOriginalExtension();
+
+                $file = $uploadedFile->move($dir, $filename);
+            }
+        }
+
+        return $this->render('explorer.uploader', [
+            'file' => $file
+        ]);
+    }
+
     /**
      * @Route("/contact", name="contact_files")
      */

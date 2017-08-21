@@ -20,9 +20,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                        {% for item in orders %}
+                        {% for item in orders if item.childrens.count %}
                             <tr>
-                                <td class="text-center">{{ item.id }}</td>
+                                <td class="text-center">{{ item.id }} </td>
                                 <td>{{ item.createdAt|date('d/m/Y') }}</td>
                                 <td>SISTEMA(S) DE
                                     {% for element in item.childrens %}

@@ -1,75 +1,111 @@
-<div class="row">
-    <div class="col-md-12">
+{% extends view('layout') %}
 
-        {{ form_start(form,{attr:{id:'form-order', action:path('generator_orders_update',{id:order.id})}}) }}
+{% block body %}
 
-        <div class="form-group">
-            {{ form_label(form.description, 'Descrição') }}
-            {{ form_widget(form.description, {attr:{class:'form-control'}}) }}
-        </div>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content">
 
-        <div class="form-group">
-            {{ form_label(form.note, 'Observações') }}
-            {{ form_widget(form.note, {attr:{class:'form-control'}}) }}
-        </div>
+                        <div class="row">
+                            <div class="col-md-12">
 
-        <div class="form-group">
-            <button type="submit" class="btn btn-success pull-right ladda-button" data-style="zoom-in">
-                <i class="fa fa-save"></i> Salvar
-            </button>
-        </div>
+                            {{ form_start(form,{attr:{id:'form-order', action:path('generator_orders_update',{id:order.id})}}) }}
 
-        <div class="col-md-12">
-            <div class="hr-line-dashed"></div>
-        </div>
+                            <div class="form-group">
+                                {{ form_label(form.description, 'Descrição') }}
+                                {{ form_widget(form.description, {attr:{class:'form-control'}}) }}
+                            </div>'
 
-        {{ form_rest(form) }}
+                            <div class="form-group">
+                                {{ form_label(form.note, 'Observações') }}
+                                {{ form_widget(form.note, {attr:{class:'form-control'}}) }}
+                            </div>
 
-        {{ form_end(form) }}
+                            <div class="form-group">
+                                <a href="{{ path('project_generator') }}" class="btn btn-primary">
+                                    <i class="fa fa-arrow-left"></i> Voltar ao Gerador
+                                </a>
 
-    </div>
-</div>
+                                <button type="submit" class="btn btn-success pull-right ladda-button"
+                                        data-style="zoom-in">
+                                    <i class="fa fa-save"></i> Salvar
+                                </button>
+                            </div>
 
-<div class="row">
+                            <div class="col-md-12">
+                                <div class="hr-line-dashed"></div>
+                            </div>
 
-    <table class="table">
-        <thead>
-        <tr>
-            <td>
-                <div class="col-md-3">
-                    <select id="add_order_element" class="form-control">
-                        <option value=""> Adicionar Item</option>
-                        <option value="inverter"> Inversor</option>
-                        <option value="module"> Módulo</option>
-                        <option value="structure"> Estrutura</option>
-                        <option value="string_box"> String Box</option>
-                        <option value="variety"> Variedades</option>
-                    </select>
-                    <label for="add_order_element"></label>
+                            {{ form_rest(form) }}
+
+                            {{ form_end(form) }}
+
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <td>
+                                        <div class="col-md-3">
+                                            <select id="add_order_element" class="form-control">
+                                                <option value=""> Adicionar Item</option>
+                                                <option value="inverter"> Inversor</option>
+                                                <option value="module"> Módulo</option>
+                                                <option value="structure"> Estrutura</option>
+                                                <option value="string_box"> String Box</option>
+                                                <option value="variety"> Variedades</option>
+                                            </select>
+                                            <label for="add_order_element"></label>
+                                        </div>
+
+                                        <div id="form_element_container" class="col-md-9">
+                                        </div>
+
+                                    </td>
+                                </tr>
+                                </thead>
+                            </table>
+
+                            <div class="col-md-12" id="order_elements">
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-
-                <div id="form_element_container" class="col-md-9">
-                </div>
-
-            </td>
-        </tr>
-        </thead>
-    </table>
-
-    <div class="col-md-12" id="order_elements">
+            </div>
+        </div>
     </div>
 
-</div>
+{% endblock %}
 
-<script>
+{% block scripts %}
 
-    $(function () {
+    {% include view('helper.plugins_js') %}
+    {% include view('helper.request') %}
 
-        Order.id = {{ order.id }};
+    <script>
+
+        var OrderManager = {
+            getElements: function () {
+                Request.send({
+                    url: '{{ path('generator_orders_elements', {id:order.id}) }}',
+                    callback: function (xhr) {
+                        $('#order_elements').html(xhr.responseText);
+                    }
+                });
+            }
+        };
+
+        OrderManager.getElements();
 
         var form_order = $('#form-order');
         var form_button = form_order.find('.ladda-button');
-        var back_button = form_order.find('[type="button"]');
 
         form_button.ladda();
         form_order.on('submit', function (event) {
@@ -85,10 +121,6 @@
             });
         });
 
-        back_button.on('click', function () {
-            ProjectGenerator.formProject();
-        });
-
         $('#add_order_element').on('change', function () {
             if ($(this).val()) {
                 Request.send({
@@ -100,7 +132,6 @@
             }
         });
 
-        OrderManager.getElements();
+    </script>
 
-    });
-</script>
+{% endblock %}

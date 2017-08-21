@@ -115,10 +115,11 @@ class ProjectGeneratorController extends AbstractController
                 'account' => $this->account()
             ])
         ;
-        $order = $qb->getQuery()->getResult();
+
+        $orders = $qb->getQuery()->getResult();
 
         return $this->render('generator.orders', [
-            'orders' => $order
+            'orders' => $orders
         ]);
     }
 
@@ -241,9 +242,11 @@ class ProjectGeneratorController extends AbstractController
 
             ElementResolver::resolve($element, $component);
 
+            $manager->save($element);
+
             $this->get('order_precifier')->precify($element->getOrder());
 
-            return $this->json([]);
+            return $this->json([], Response::HTTP_ACCEPTED);
         }
 
         return $this->render('generator.element', [

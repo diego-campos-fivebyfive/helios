@@ -1,0 +1,23 @@
+
+{% if file is null %}
+
+<h2> UPLOAD DE ARQUIVO </h2>
+
+<hr>
+
+<form method="post" enctype="multipart/form-data">
+    <input type="file" name="explorer_file" accept="image/*">
+    <input type="submit" value="Enviar arquivo">
+</form>
+
+{% else %}
+
+    {% set url = asset('uploads/user-files/' ~ file.filename) %}
+    {% set function = app.request.query.get('CKEditorFuncNum') %}
+    {% set message = '' %}
+
+     <script>
+         //window.parent.CKEDITOR.tools.callFunction({{ function }}, '{{ url }}', '{{ message }}');
+     </script>
+
+{% endif %}

@@ -1,0 +1,24 @@
+.editor_page_toolbar,
+.editor_section:hover .btn-remove-section,
+.cke_widget_drag_handler_container,
+.sf-toolbar{
+    display: none !important;
+}
+.editor_block,
+.editor_block:hover{
+    border: 0;
+}
+.editor_document{
+    background: #fff;
+}
+.editor_page{
+    /*margin-top: 2cm;*/
+    box-shadow: none;
+    padding-top: 2cm;
+}
+.editor_page:not(:first-child){
+    /*padding-top: 2cm;*/
+}
+.cke_widget_hcard {
+    background: transparent !important;
+}
