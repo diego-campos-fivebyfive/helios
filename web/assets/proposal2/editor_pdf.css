@@ -8,7 +8,14 @@
 .editor_block:hover{
     border: 0;
 }
+.editor_document{
+    background: #fff;
+}
 .editor_page{
-    margin-top: 0;
+    /*margin-top: 2cm;*/
     box-shadow: none;
+    padding-top: 2cm;
+}
+.editor_page:not(:first-child){
+    /*padding-top: 2cm;*/
 }

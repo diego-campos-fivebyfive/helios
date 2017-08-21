@@ -193,7 +193,7 @@
                     var id = $(editor).attr('id');
                     CKEDITOR.inline(id, {
                         extraAllowedContent: '[data-width];[data-project];[data-chart-type]',
-                        extraPlugins: 'hcard,sourcedialog,justify'
+                        extraPlugins: 'hcard,sourcedialog,justify',
                     });
                 });
 
@@ -292,6 +292,7 @@
                     data: {content: Editor.getContent()},
                     method: 'post',
                     callback: function (xhr) {
+
                     }
                 });
             },
@@ -342,6 +343,7 @@
             checkCharts: function(){
 
                 var settings = this.settings.all();
+                var replaceCharts = ['chartGeneration', 'chartFinancial'];
 
                 if(settings.projectId != this.defaults.project.id) {
                     var charts = $('[data-chart-type]');
@@ -354,13 +356,16 @@
                                         var type = image.attr('data-chart-type');
                                         var projectId = image.attr('data-project');
 
-                                        var tempImage = new Image(image.width());
-                                        tempImage.src = Editor.initialized[type];
+                                        if(replaceCharts.indexOf(type) >= 0) {
 
-                                        if(projectId != Editor.defaults.project.id){
-                                            widget.setData('src', tempImage.src);
-                                            widget.setData('width', tempImage.width);
-                                            widget.setData('data-project', projectId);
+                                            var tempImage = new Image(image.width());
+                                            tempImage.src = Editor.initialized[type];
+
+                                            if (projectId != Editor.defaults.project.id) {
+                                                widget.setData('src', tempImage.src);
+                                                widget.setData('width', tempImage.width);
+                                                widget.setData('data-project', projectId);
+                                            }
                                         }
                                     }
                                 });
@@ -538,12 +543,6 @@
                 dataTransfer.setData('source', source);
 
                 dataTransfer.setData('text/html', target.getText());
-            });
-
-            $.each($('img[data-width]'), function (i, image) {
-                if (!$(image).attr('height')) {
-                    $(image).attr('width', $(image).data('width'));
-                }
             });
         });
 

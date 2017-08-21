@@ -75,6 +75,8 @@ class ProposalController extends AbstractController
      */
     public function editorAction(Project $project)
     {
+        $this->denyAccessUnlessGranted('edit', $project);
+
         $theme = $this->resolveTheme($project);
 
         //echo $theme->getContent(); die;
@@ -157,6 +159,27 @@ class ProposalController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/print", name="proposal_print")
+     */
+    public function printAction(Project $project)
+    {
+        $this->denyAccessUnlessGranted('edit', $project);
+
+        $theme = $this->resolveTheme($project);
+
+        $content = str_replace(
+            ['contenteditable="true"'],
+            [''],
+            $theme->getContent()
+        );
+
+        return $this->render('AppBundle:Proposal:_pdf.html.twig', [
+            'theme' => $theme,
+            'content' => $content
+        ]);
+    }
+
+    /**
      * @Route("/{id}/generator", name="proposal_pdf_generator")
      */
     public function generatorAction($id)
@@ -167,14 +190,14 @@ class ProposalController extends AbstractController
         $snappy->setOption('margin-bottom', 0);
         $snappy->setOption('margin-left', 0);
         $snappy->setOption('margin-right', 0);
-        $snappy->setOption('zoom', 1.25);
+        $snappy->setOption('zoom', 2);
 
 
         $dir = $this->get('kernel')->getRootDir() . '/../storage/';
         $filename = md5(uniqid(time())) . '.pdf';
         $file = $dir.$filename;
 
-        $url = $this->generateUrl('files_pdf',['id'=>$id], UrlGeneratorInterface::ABSOLUTE_URL);
+        $url = $this->generateUrl('proposal_pdf',['id'=>$id], UrlGeneratorInterface::ABSOLUTE_URL);
 
         try {
             $snappy->generate($url, $file);
@@ -215,27 +238,4 @@ class ProposalController extends AbstractController
         }
 
     }
-
-    /**
-     * @Route("/{id}/pdf", name="proposal_pdf")
-     */
-    public function pdfAction(Project $project)
-    {
-        //$proposal = $this->manager('theme')->findOneBy(['id' => $project->getProposal()]);
-
-        $theme = $this->resolveTheme($project);
-
-        $content = str_replace(
-            ['contenteditable="true"'],
-            [''],
-            $theme->getContent()
-        );
-
-        return $this->render('AppBundle:Proposal:_pdf.html.twig', [
-            //'proposal' => $proposal
-            'theme' => $theme,
-            'content' => $content
-        ]);
-    }
-
 }
