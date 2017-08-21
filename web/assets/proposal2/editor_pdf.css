@@ -19,3 +19,6 @@
 .editor_page:not(:first-child){
     /*padding-top: 2cm;*/
 }
+.cke_widget_hcard {
+    background: transparent !important;
+}

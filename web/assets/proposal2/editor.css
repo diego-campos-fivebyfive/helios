@@ -101,7 +101,7 @@
 }
 
 .editor_page_content {
-    height: 23.94cm;
+    height: 25.7cm;
     width: 19cm;
     float: left;
     overflow: hidden;
@@ -116,6 +116,5 @@
     display: none !important;
 }
 .cke_widget_hcard {
-    border: 1px dotted #f1f1f1;
     background: #f1f1f1 !important;
 }

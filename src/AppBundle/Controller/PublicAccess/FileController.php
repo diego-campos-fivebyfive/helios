@@ -76,9 +76,6 @@ class FileController extends AbstractController
      */
     public function pdfAction(Theme $theme)
     {
-        //$proposal = $this->manager('theme')->findOneBy(['id' => $project->getProposal()]);
-        //$theme = $this->resolveTheme($project);
-
         $content = str_replace(
             ['contenteditable="true"'],
             [''],
