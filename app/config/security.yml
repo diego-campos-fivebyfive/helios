@@ -23,8 +23,6 @@ security:
                 provider: fos_userbundle
                 check_path: /oauth/v2/auth_login_check
                 login_path: /oauth/v2/auth_login
-                #check_path: fos_user_security_check
-                #login_path: fos_user_security_login
                 use_referer: true
             anonymous: true
 
@@ -42,8 +40,6 @@ security:
                 login_path: fos_user_security_login
                 provider: fos_userbundle
                 csrf_token_generator: security.csrf.token_manager
-                success_handler: app.authentication.success_handler
-                failure_handler: app.authentication.failure_handler
             logout:
                 path:   fos_user_security_logout
                 target: /
