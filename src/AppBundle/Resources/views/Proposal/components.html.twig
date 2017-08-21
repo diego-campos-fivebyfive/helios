@@ -1,0 +1,98 @@
+<table border="1" cellspacing="0" cellpadding="3" width="100%">
+    <thead>
+    <tr>
+        <th> Descrição</th>
+        <th> Quantidade</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr>
+        <th colspan="2"> Módulos</th>
+    </tr>
+    {# MODULES #}
+    {% for projectModule in project.projectModules %}
+        <tr>
+            <td> {{ projectModule.module.model }} </td>
+            <td> {{ projectModule.quantity }} </td>
+        </tr>
+    {% endfor %}
+
+    <tr>
+        <th colspan="2"> Inversores</th>
+    </tr>
+    {# INVERTERS #}
+    {% for id, group in project.groupInverters %}
+        <tr>
+            <td> {{ group.inverter.model }} </td>
+            <td> {{ group.quantity }} </td>
+        </tr>
+    {% endfor %}
+
+    {% if project.transformer %}
+        <tr>
+            <th colspan="2"> Transformador</th>
+        </tr>
+        {# TRANSFORMER #}
+        {% if project.transformer %}
+            <tr>
+                <td> {{ project.transformer.variety.description }} </td>
+                <td> {{ 1 }} </td>
+            </tr>
+        {% endif %}
+    {% endif %}
+
+    {% if project.projectStringBoxes.count %}
+        <tr>
+            <th colspan="2"> String Box</th>
+        </tr>
+        {# STRING_BOXES #}
+        {% for projectStringBox in project.projectStringBoxes %}
+            <tr>
+                <td> {{ projectStringBox.stringBox.description }} </td>
+                <td> {{ projectStringBox.quantity }} </td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+
+    {% if project.projectStructures.count %}
+        <tr>
+            <th colspan="2"> Estruturas</th>
+        </tr>
+        {# STRUCTURES #}
+        {% for projectStructure in project.projectStructures %}
+            <tr>
+                <td> {{ projectStructure.structure.description }} </td>
+                <td> {{ projectStructure.quantity }} </td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+
+    {% if project.projectVarieties.count %}
+        <tr>
+            <th colspan="2"> Conectores e Cabos </th>
+        </tr>
+        {# VARIETIES #}
+        {% for projectVariety in project.projectVarieties %}
+            <tr>
+                <td> {{ projectVariety.variety.description }} </td>
+                <td> {{ projectVariety.quantity }} </td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+
+    {% if project.projectExtras.count %}
+        <tr>
+            <th colspan="2"> Itens e Serviços </th>
+        </tr>
+        {# EXTRAS #}
+        {% for projectExtra in project.projectExtras %}
+            <tr>
+                <td> {{ projectExtra.extra.description }} </td>
+                <td> {{ projectExtra.quantity }} </td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+
+    </tbody>
+</table>

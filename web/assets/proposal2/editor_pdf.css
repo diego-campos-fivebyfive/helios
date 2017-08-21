@@ -1,0 +1,14 @@
+.editor_page_toolbar,
+.editor_section:hover .btn-remove-section,
+.cke_widget_drag_handler_container,
+.sf-toolbar{
+    display: none !important;
+}
+.editor_block,
+.editor_block:hover{
+    border: 0;
+}
+.editor_page{
+    margin-top: 0;
+    box-shadow: none;
+}
