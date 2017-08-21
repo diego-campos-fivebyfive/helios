@@ -73,6 +73,13 @@
                                     }
                                 }
                             });
+                        } else {
+                            swal({
+                                title: 'Ooops',
+                                text: 'O projeto não foi iniciado',
+                                type: 'error',
+                                html: true
+                            });
                         }
                     });
                 }
