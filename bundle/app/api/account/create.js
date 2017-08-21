@@ -34,8 +34,14 @@ const sendAccount = ({ Dados: account }) =>
       isquik_id: account.IdIntegrador
     })
     .then(data => createUser({
-      isquik_id: account.Administrador,
-      account_id: data.id
+      account: {
+        isquik_id: account.IdIntegrador,
+        id: data.id
+      },
+      user: {
+        isquik_id: account.Administrador,
+        account_id: data.id
+      }
     }))
 
 const createAccount = ({ notification }) =>
