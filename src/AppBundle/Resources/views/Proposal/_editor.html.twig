@@ -306,13 +306,15 @@
                                 text: 'Deseja visualizar o arquivo?',
                                 type: "success",
                                 showCancelButton: true,
-                                confirmButtonColor: "#DD6B55",
+                                confirmButtonColor: "#00A7EC",
                                 confirmButtonText: '{{ 'Visualizar'|trans }}',
-                                cancelButtonText: '{{ 'Cancelar'|trans }}',
-                                closeOnConfirm: false
+                                cancelButtonText: '{{ 'Cancelar'|trans }}'
                             }, function() {
-                                window.location.href = '{{ path('proposal_display_pdf',{filename:'_file_'}) }}'.replace(/_file_/g, filename);
+
+                                var url = '{{ path('proposal_display_pdf',{filename:'_file_'}) }}'.replace(/_file_/g, filename);
+                                window.open(url, '_blank');
                             });
+
                         }else{
                             swal('Desculpe', 'Seu arquivo não pôde ser gerado. Tente novamente mais tarde.', 'error');
                         }
@@ -320,6 +322,15 @@
                 })
             },
             saveContent: function (pdf) {
+
+                if(pdf){
+                    swal({
+                        title: 'Aguarde...',
+                        text: '',
+                        showCancelButton: false,
+                        showConfirmButton: false
+                    });
+                }
 
                 Request.send({
                     url: Editor.defaults.urlSaveContent,
