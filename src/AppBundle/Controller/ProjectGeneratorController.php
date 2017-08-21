@@ -116,16 +116,10 @@ class ProjectGeneratorController extends AbstractController
             ])
         ;
 
-        $paginator = $this->getPaginator();
-
-        $pagination = $paginator->paginate(
-            $qb->getQuery(),
-            $request->query->getInt('page', 1),
-            10
-        );
+        $orders = $qb->getQuery()->getResult();
 
         return $this->render('generator.orders', [
-            'orders' => $pagination
+            'orders' => $orders
         ]);
     }
 
@@ -248,9 +242,11 @@ class ProjectGeneratorController extends AbstractController
 
             ElementResolver::resolve($element, $component);
 
+            $manager->save($element);
+
             $this->get('order_precifier')->precify($element->getOrder());
 
-            return $this->json([]);
+            return $this->json([], Response::HTTP_ACCEPTED);
         }
 
         return $this->render('generator.element', [

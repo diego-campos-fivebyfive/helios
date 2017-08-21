@@ -4,31 +4,20 @@ namespace AppBundle\Controller\PublicAccess;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Component\Project;
+use AppBundle\Entity\Theme;
 use Buzz\Message\Request;
 use Knp\Bundle\SnappyBundle\Snappy\LoggableGenerator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Process\Process;
 
 /**
  * @Route("files")
  */
 class FileController extends AbstractController
 {
-
-    /**
-     * @Route("/{id}/pdf", name="files_pdf")
-     */
-    public function pdfGeneratorAction(Project $project)
-    {
-        $proposal = $this->manager('theme')->findOneBy(['id' => $project->getProposal()]);
-
-        return $this->render('AppBundle:Proposal:pdf.html.twig', [
-            'proposal' => $proposal
-        ]);
-    }
-
     /**
      * @Route("/{token}/proposal", name="file_proposal")
      */
@@ -83,30 +72,47 @@ class FileController extends AbstractController
     }
 
     /**
-     * @Route("/pdf", name="file_proposal_pdf")
+     * @Route("/{id}/pdf", name="proposal_pdf")
      */
-    public function pdfAction()
+    public function pdfAction(Theme $theme)
     {
-        return $this->render('AppBundle:Proposal:pdf.html.twig', array());
+        //$proposal = $this->manager('theme')->findOneBy(['id' => $project->getProposal()]);
+        //$theme = $this->resolveTheme($project);
+
+        $content = str_replace(
+            ['contenteditable="true"'],
+            [''],
+            $theme->getContent()
+        );
+
+        return $this->render('AppBundle:Proposal:_pdf.html.twig', [
+            'theme' => $theme,
+            'content' => $content
+        ]);
     }
 
     /**
-     * @Route("/snappy")
+     * @Route("/process", name="file_process")
      */
-    public function snappyAction()
+    public function processAction()
     {
-        /** @var LoggableGenerator $snappy */
-        $snappy = $this->get('knp_snappy.pdf');
+        // ./wkhtmltopdf --viewport-size 1280x1024 --zoom 2 http://kolinalabs.com/dev/pdf/pdf.html exemplo.pdf
+        //ini_set('max_execution_time', );
 
-        //$snappy->setOption('zoom', 4);
-        $snappy->setOption('viewport-size', '1280x1024');
+        $binary = $this->getParameter('knp_snappy.pdf.binary');
 
         $dir = $this->get('kernel')->getRootDir() . '/../storage/';
         $filename = md5(uniqid(time())) . '.pdf';
 
-        $url = $this->generateUrl('file_proposal_pdf',[],0);
+        $output = $dir . $filename;
 
-        $snappy->generate($url, $dir . $filename);
+        $command = sprintf('%s --viewport-size 1280x1024 --zoom 2 https://kolinalabs.com/dev/pdf/pdf.html %s', $binary, $output);
+
+        $process = new Process($command);
+
+        $process->run();
+
+        dump($process->getOutput()); die;
     }
 
     /**

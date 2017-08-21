@@ -1579,6 +1579,8 @@ class Customer extends AbstractCustomer
     public function setLevel($level)
     {
         $this->level = $level;
+
+        return $this;
     }
 
     /**
