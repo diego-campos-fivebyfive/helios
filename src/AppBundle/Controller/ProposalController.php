@@ -9,6 +9,7 @@ use AppBundle\Service\Editor\Normalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Symfony\Component\HttpFoundation\Response;
@@ -182,44 +183,44 @@ class ProposalController extends AbstractController
     /**
      * @Route("/{id}/generator", name="proposal_pdf_generator")
      */
-    public function generatorAction($id)
+    public function generatorAction(Project $project)
     {
-        $snappy = $this->get('knp_snappy.pdf');
-        $snappy->setOption('viewport-size', '1280x1024');
-        $snappy->setOption('margin-top', 0);
-        $snappy->setOption('margin-bottom', 0);
-        $snappy->setOption('margin-left', 0);
-        $snappy->setOption('margin-right', 0);
-        $snappy->setOption('zoom', 2);
+        $theme = $this->resolveTheme($project);
 
+        $status = Response::HTTP_CONFLICT;
+        $filename = null;
 
-        $dir = $this->get('kernel')->getRootDir() . '/../storage/';
-        $filename = md5(uniqid(time())) . '.pdf';
-        $file = $dir.$filename;
+        if($theme) {
 
-        $url = $this->generateUrl('proposal_pdf',['id'=>$id], UrlGeneratorInterface::ABSOLUTE_URL);
+            $snappy = $this->get('knp_snappy.pdf');
+            $snappy->setOption('viewport-size', '1280x1024');
+            $snappy->setOption('margin-top', 0);
+            $snappy->setOption('margin-bottom', 0);
+            $snappy->setOption('margin-left', 0);
+            $snappy->setOption('margin-right', 0);
+            $snappy->setOption('zoom', 2);
 
-        try {
-            $snappy->generate($url, $file);
-            if(file_exists($file)){
-                return $this->json(
-                    ['filename' => $filename],
-                    Response::HTTP_OK
-                );
-            }else{
-                return $this->json(
-                    ['error' => 'File not found.'],
-                    Response::HTTP_NOT_FOUND);
+            $dir = $this->get('kernel')->getRootDir() . '/../storage/';
+            $filename = md5(uniqid(time())) . '.pdf';
+            $file = $dir . $filename;
+
+            $url = $this->generateUrl('proposal_pdf', ['id' => $theme->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
+
+            try {
+
+                $snappy->generate($url, $file);
+
+                if (file_exists($file)) {
+                    $status = Response::HTTP_OK;
+                }
+
+            } catch (\Exception $error) {
             }
         }
-        catch(\Exception $error) {
-            return $this->json(
-                [
-                    'error' => 'Could not generate PDF.',
-                    'filename' => $filename
-                ],
-                Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+
+        return $this->json([
+            'filename' => $filename
+        ], $status);
     }
 
     /**
@@ -229,8 +230,10 @@ class ProposalController extends AbstractController
     {
         $dir = $this->get('kernel')->getRootDir() . '/../storage/';
         $file = $dir.$filename;
+
         if(file_exists($file)){
-            return new BinaryFileResponse($file);
+
+            return new BinaryFileResponse(new File($file));
         }else{
             return $this->json(
                 ['error' => 'File not found.'],

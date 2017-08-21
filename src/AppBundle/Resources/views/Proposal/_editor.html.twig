@@ -9,7 +9,7 @@
     <div id="sidebar-tags">
         <div class="col-md-12">
             <div class="btn-group btn-group-sm" style="width: 95%;">
-                <button id="save-pdf" class="btn btn-default" style="width: 50%;">
+                <button id="save-content" class="btn btn-default" style="width: 50%;">
                     <i class="fa fa-file-pdf"></i> Salvar
                 </button>
                 <button class="btn btn-default jscolor {valueElement: 'backgroundColor'}" style="width: 50%;">
@@ -17,6 +17,9 @@
                 </button>
                 <input type="hidden" id="backgroundColor" onchange="Editor.changePageBackground(this.value)"
                        value="FFF">
+                <button id="save-pdf" type="button" class="btn btn-primary btn-block">
+                    Gerar PDF
+                </button>
             </div>
         </div>
         <div class="col-md-12" id="block_tags">
@@ -153,10 +156,12 @@
         {% if true %}
 
         var Editor = {
+            container: $('#proposal_editor'),
             document: $('#editor_document'),
             sectionOptions: $('#section_options'),
             button: {
                 savePdf: $('#save-pdf'),
+                saveContent: $('#save-content'),
                 addPage: $('#editor_add_page')
             },
             initialized: {
@@ -167,6 +172,7 @@
                 project:{
                     id: {{ project.id }}
                 },
+                urlSavePdf: '{{ path('proposal_pdf_generator',{id:project.id}) }}',
                 urlSaveContent: '{{ path('proposal_save',{id:project.id}) }}',
                 blockContent: '<p style="text-align:center"><strong><span style="color:#000000">Lorem Ipsum</span></strong><br></p><p style="text-align:justify"><span style="color:#000000">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras euismod luctus tortor vel iaculis. Ut interdum eleifend velit nec consequat. Nullam sagittis odio metus, vitae dictum tellus pulvinar quis. Morbi sit amet enim vel ante aliquet eleifend. Nam purus metus, varius fermentum pulvinar aliquet, fermentum vitae augue.</span><br></p>'
             },
@@ -286,15 +292,46 @@
             getContent: function () {
                 return Editor.document.html();
             },
-            saveContent: function () {
+            savePdf: function(){
+                Request.send({
+                    url: Editor.defaults.urlSavePdf,
+                    method: 'post',
+                    callback: function(xhr){
+                        if(200 == xhr.status){
+
+                            var filename = xhr.responseJSON.filename;
+
+                            swal({
+                                title: 'Arquivo gerado com sucesso',
+                                text: 'Deseja visualizar o arquivo?',
+                                type: "success",
+                                showCancelButton: true,
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: '{{ 'Visualizar'|trans }}',
+                                cancelButtonText: '{{ 'Cancelar'|trans }}',
+                                closeOnConfirm: false
+                            }, function() {
+                                window.location.href = '{{ path('proposal_display_pdf',{filename:'_file_'}) }}'.replace(/_file_/g, filename);
+                            });
+                        }else{
+                            swal('Desculpe', 'Seu arquivo não pôde ser gerado. Tente novamente mais tarde.', 'error');
+                        }
+                    }
+                })
+            },
+            saveContent: function (pdf) {
+
                 Request.send({
                     url: Editor.defaults.urlSaveContent,
                     data: {content: Editor.getContent()},
                     method: 'post',
                     callback: function (xhr) {
-
+                        if(pdf){
+                            Editor.savePdf();
+                        }
                     }
                 });
+
             },
             initializeSettings: function () {
                 var element = this.settings.element;
@@ -391,8 +428,12 @@
                     Editor.addPage();
                 });
 
-                Editor.button.savePdf.on('click', function () {
+                Editor.button.saveContent.on('click', function(){
                     Editor.saveContent();
+                });
+
+                Editor.button.savePdf.on('click', function () {
+                    Editor.saveContent(true);
                 });
             }
         };
