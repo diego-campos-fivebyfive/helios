@@ -103,13 +103,13 @@
                 </div>
 
                 <div class="row">
-                    <div id="editor_document" class="col-md-8 col-md-offset-2">
+                    <div id="editor_document" class="col-md-8 col-md-offset-1">
                         {{ content|raw }}
                     </div>
                 </div>
 
-                <div class="row" style="margin-top: 10px;">
-                    <div class="col-md-7 col-md-offset-3">
+                <div class="row" style="margin-top: 10px; margin-bottom: 5rem;">
+                    <div class="col-md-7 col-md-offset-2">
                         <div class="btn-group btn-group-sm btn-group-justified">
                             <a class="btn btn-primary" id="editor_add_page">
                                 <i class="fa fa-plus"></i> Nova Página
@@ -246,6 +246,10 @@
                             }
                             break;
                     }
+                });
+
+                $.each(page.find('.editor_section'), function(i, section){
+                    Editor.configureSection($(section));
                 });
             },
             loadSections: function () {
