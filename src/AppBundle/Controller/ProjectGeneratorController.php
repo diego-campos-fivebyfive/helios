@@ -156,9 +156,9 @@ class ProjectGeneratorController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
 
-            $this->manager('order')->save($order);
+           $this->manager('order')->save($order);
 
-            return $this->redirectToRoute('project_generator');
+           return $this->json([]);
         }
 
         return $this->render('generator.order', [
