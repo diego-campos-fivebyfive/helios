@@ -6,14 +6,15 @@ const Isquik = require('../../models/isquik')
 const getStatus = status => status === 'Aprovado'
 
 const splitOrder = ({ Dado: order }) => ({
-  account_id: '',
+  account_id: order.Integrador.IdSicesSolar,
   isquik_id: order.Integrador.IdIntegrador,
   note: '',
   status: getStatus(order.Status.Descricao),
   items: order.itens.map(item => ({
     description: item.DescricaoSistema,
     note: '',
-    parent_id:  item.IdSicesSolar,
+    parent_id:  order.IdSicesSolar,
+    code: item.CodigoProduto,
     products: item.subItens.map(product => ({
       code: product.CodigoProduto,
       description: product.Descricao,
