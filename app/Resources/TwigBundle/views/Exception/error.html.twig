@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Sices Solar </title>
+    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('assets/images/favicon.ico') }}" type="image/x-icon">
+    {% stylesheets output='public/assets/front.css' filter='cssrewrite,uglifycss'
+    'assets/app.css'
+    'assets/bootstrap.min.css'
+    'assets/font-awesome/css/font-awesome.css'
+    'assets/toastr/toastr.min.css'
+    'assets/animate.css'
+    'assets/style.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}">
+    {% endstylesheets %}
+
+</head>
+<body class="gray-bg">
+<div class="middle-box text-center loginscreen animated fadeInDown">
+    <div>
+
+        <h2>Oops.</h2>
+        <h3>Tente novamente mais tarde.</h3>
+        <hr/>
+
+        <h3><a href="javascript:window.history.go(-1)"><i class="fa fa-arrow-left"></i> Voltar</a></h3>
+        <h3><a href="{{ path('app_index') }}"><i class="fa fa-dashboard"></i> Dashboard</a></h3>
+
+        <div style="margin-top: 2rem; margin-bottom: 2rem">
+            <img src="{{ asset('assets/images/logo_front.png') }}" style="width: 17rem;">
+        </div>
+
+        <p style="margin-top: 2rem;">
+            A plataforma pensada exclusivamente em quem trabalha com
+            Energia Solar Fotovoltaica
+        </p>
+
+        <p class="m-t">
+            <small> Sices Solar &reg;{{ "now"|date('Y') }} </small>
+        </p>
+    </div>
+</div>
+
+</body>
+</html>
+
+
+
