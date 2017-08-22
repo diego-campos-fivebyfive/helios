@@ -36,6 +36,17 @@ class Mailer
     public $enableSender = true;
 
     /**
+     * @var array
+     */
+    private $config = [
+        'host' => 'smtp.mail.eu-west-1.awsapps.com',
+        'port' => 465,
+        'encryption' => 'ssl',
+        'username' => 'naoresponder@plataformasicessolar.com.br',
+        'password' => 'Ze6}Kr6bWVky@z@Qsi'
+    ];
+
+    /**
      * Mailer constructor.
      * @param \Swift_Mailer $mailer
      * @param UrlGeneratorInterface $router
@@ -97,7 +108,9 @@ class Mailer
      */
     protected function sendEmailMessage($subject, $body, $fromEmail, $toEmail)
     {
-        if($this->enableSender) {
+        return $this->sendTmpEmailMessage($subject, $body, $fromEmail, $toEmail);
+
+        /*if($this->enableSender) {
 
             $message = \Swift_Message::newInstance()
                 ->setSubject($subject)
@@ -107,6 +120,32 @@ class Mailer
                 ->setBody($body);
 
             $this->mailer->send($message);
-        }
+        }*/
+    }
+
+    /**
+     * @param $subject
+     * @param $body
+     * @param $fromEmail
+     * @param $toEmail
+     * @return int
+     */
+    private function sendTmpEmailMessage($subject, $body, $fromEmail, $toEmail)
+    {
+        $transport = (new \Swift_SmtpTransport($this->config['host'], $this->config['port'], $this->config['encryption']))
+            ->setUsername($this->config['username'])
+            ->setPassword($this->config['password'])
+        ;
+
+        $mailer = new \Swift_Mailer($transport);
+
+        $message = (new \Swift_Message($subject))
+            ->setFrom($fromEmail, 'Plataforma Sices Solar')
+            ->setTo($toEmail)
+            ->setBody($body)
+            ->setContentType('text/html')
+        ;
+
+        return $mailer->send($message);
     }
 }
