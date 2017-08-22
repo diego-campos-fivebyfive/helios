@@ -3,9 +3,8 @@
 {% block styles %}
     <link href="{{ asset('assets/proposal2/editor.css') }}" rel="stylesheet">
     <style>
-        .image-hide-loading{
-            opacity: 0 !important;
-        }
+        .image-hide-loading { opacity: 0 !important; }
+        .editor_page{ opacity: 0; }
     </style>
 {% endblock %}
 
@@ -111,18 +110,16 @@
                 </div>
 
                 <div class="row">
-                    <div id="editor_document" class="col-md-8 col-md-offset-1">
+                    <div id="editor_document" class="col-md-8">
                         {{ content|raw }}
                     </div>
                 </div>
 
                 <div class="row" style="margin-top: 10px; margin-bottom: 5rem;">
-                    <div class="col-md-7 col-md-offset-2">
-                        <div class="btn-group btn-group-sm btn-group-justified">
-                            <a class="btn btn-primary" id="editor_add_page">
-                                <i class="fa fa-plus"></i> Nova Página
-                            </a>
-                        </div>
+                    <div class="col-md-12 text-center">
+                        <a class="btn btn-primary" id="editor_add_page">
+                            <i class="fa fa-plus"></i> Nova Página
+                        </a>
                     </div>
                 </div>
 
@@ -176,7 +173,7 @@
                 chartGeneration: false
             },
             defaults: {
-                project:{
+                project: {
                     id: {{ project.id }}
                 },
                 urlSavePdf: '{{ path('proposal_pdf_generator',{id:project.id}) }}',
@@ -261,7 +258,7 @@
                     }
                 });
 
-                $.each(page.find('.editor_section'), function(i, section){
+                $.each(page.find('.editor_section'), function (i, section) {
                     Editor.configureSection($(section));
                 });
             },
@@ -299,12 +296,12 @@
             getContent: function () {
                 return Editor.document.html();
             },
-            savePdf: function(){
+            savePdf: function () {
                 Request.send({
                     url: Editor.defaults.urlSavePdf,
                     method: 'post',
-                    callback: function(xhr){
-                        if(200 == xhr.status){
+                    callback: function (xhr) {
+                        if (200 == xhr.status) {
 
                             var filename = xhr.responseJSON.filename;
 
@@ -316,13 +313,13 @@
                                 confirmButtonColor: "#00A7EC",
                                 confirmButtonText: '{{ 'Visualizar'|trans }}',
                                 cancelButtonText: '{{ 'Cancelar'|trans }}'
-                            }, function() {
+                            }, function () {
 
                                 var url = '{{ path('proposal_display_pdf',{filename:'_file_'}) }}'.replace(/_file_/g, filename);
                                 window.open(url, '_blank');
                             });
 
-                        }else{
+                        } else {
                             swal('Desculpe', 'Seu arquivo não pôde ser gerado. Tente novamente mais tarde.', 'error');
                         }
                     }
@@ -330,7 +327,7 @@
             },
             saveContent: function (pdf) {
 
-                if(pdf){
+                if (pdf) {
                     swal({
                         title: 'Aguarde...',
                         text: '',
@@ -344,7 +341,7 @@
                     data: {content: Editor.getContent()},
                     method: 'post',
                     callback: function (xhr) {
-                        if(pdf){
+                        if (pdf) {
                             Editor.savePdf();
                         }
                     }
@@ -395,45 +392,47 @@
                 $('#color_chartFinancial').val(colorChartFinancial);
 
             },
-            checkCharts: function(){
+            checkCharts: function () {
 
-                if(this.initialized.chartFinancial && this.initialized.chartGeneration) {
+                if (this.initialized.chartFinancial && this.initialized.chartGeneration) {
 
-                    var settings = this.settings.all();
                     var replaceCharts = ['chartGeneration', 'chartFinancial'];
 
-                    if (settings.projectId != this.defaults.project.id) {
+                    var charts = $('[data-chart-type]');
 
-                        var charts = $('[data-chart-type]');
+                    if (charts.length) {
 
-                        if (charts.length) {
+                        var count = 1;
+                        $.each(CKEDITOR.instances, function (i, instance) {
+                            $.each(instance.widgets.instances, function (w, widget) {
+                                if ('image' == widget.name) {
+                                    var image = $(widget.parts.image.$);
+                                    var type = image.attr('data-chart-type');
 
-                            $.each(CKEDITOR.instances, function (i, instance) {
-                                $.each(instance.widgets.instances, function (w, widget) {
-                                    if ('image' == widget.name) {
-                                        var image = $(widget.parts.image.$);
-                                        var type = image.attr('data-chart-type');
+                                    if (replaceCharts.indexOf(type) >= 0) {
 
-                                        if (replaceCharts.indexOf(type) >= 0) {
+                                        var project = Editor.defaults.project.id;
+                                        var height = image.attr('height');
+                                        var width = height ? image.attr('width') : image.attr('data-width');
 
-                                            var project = Editor.defaults.project.id;
-                                            var height = image.attr('height');
-                                            var width = height ? image.attr('width') : image.attr('data-width');
-
-                                            if (image.attr('data-project') != project) {
-                                                widget.setData('src', Editor.initialized[type]);
-                                                widget.setData('data-project', project);
-                                            }
-
-                                            widget.setData('width', width);
-                                            widget.setData('data-width', width);
-
-                                            image.removeClass('image-hide-loading');
+                                        if (image.attr('data-project') != project) {
+                                            widget.setData('src', Editor.initialized[type]);
+                                            widget.setData('data-project', project);
                                         }
+
+                                        widget.setData('width', width);
+                                        widget.setData('data-width', width);
+
+                                        image.removeClass('image-hide-loading');
                                     }
-                                });
+                                }
                             });
-                        }
+
+                            count++;
+                            if(count == $('.editor_section').length){
+                                Editor.onCheckCharts();
+                            }
+                        });
                     }
                 }
             },
@@ -443,13 +442,23 @@
             onAddPage: function (page) {
                 Editor.changePageBackground($('#backgroundColor').val());
             },
+            onCheckCharts: function(){
+                $('.editor_page').css('opacity', 1);
+            },
             setMiniNavbar: function () {
                 $(" body ").addClass("mini-navbar");
             },
+            normalizeLayout: function () {
+                var documentContainer = this.document.closest('.row');
+                if (this.document.width() < documentContainer.width()) {
+                    var offset = (documentContainer.width() - this.document.width()) / 2;
+                    this.document.css('margin-left', (offset + 50) + 'px');
+                }
+            },
             init: function () {
 
-                Editor.setMiniNavbar();
-
+                this.normalizeLayout();
+                this.setMiniNavbar();
                 this.initializeSettings();
                 this.initializeCharts();
                 this.loadSections();
@@ -459,7 +468,7 @@
                     Editor.addPage();
                 });
 
-                Editor.button.saveContent.on('click', function(){
+                Editor.button.saveContent.on('click', function () {
                     Editor.saveContent();
                 });
 
@@ -501,7 +510,7 @@
                     var dataUrl = AppChart.getDataUrl(settings.element);
                     Proposal.tags.chartGeneration.image = '<img src="' + dataUrl + '"/>';
 
-                    if(!Editor.initialized.chartGeneration) {
+                    if (!Editor.initialized.chartGeneration) {
                         Editor.initialized.chartGeneration = dataUrl;
                     }
 
@@ -542,7 +551,7 @@
                     var dataUrl = AppChart.getDataUrl(settings.element);
                     Proposal.tags.chartFinancial.image = '<img src="' + dataUrl + '"/>';
 
-                    if(!Editor.initialized.chartFinancial) {
+                    if (!Editor.initialized.chartFinancial) {
                         Editor.initialized.chartFinancial = dataUrl;
                     }
 
