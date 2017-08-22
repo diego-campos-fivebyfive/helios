@@ -13,5 +13,5 @@ echo "Sending Slack Devops web hooks notification..."
 curl -s \
   -X POST \
   -H "Content-type:application/json" \
-  -d "{\"text\": \"$message\"}" \
+  -d "{\"text\": \"@here: $message\", \"link_names\": \"1\"}" \
   $SLACK_HOOK
