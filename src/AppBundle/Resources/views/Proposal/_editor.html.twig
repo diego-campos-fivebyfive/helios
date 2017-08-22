@@ -2,6 +2,11 @@
 
 {% block styles %}
     <link href="{{ asset('assets/proposal2/editor.css') }}" rel="stylesheet">
+    <style>
+        .image-hide-loading{
+            opacity: 0 !important;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
@@ -154,6 +159,8 @@
         'use strict';
 
         {% if true %}
+
+        $('[data-chart-type]').addClass('image-hide-loading');
 
         var Editor = {
             container: $('#proposal_editor'),
@@ -390,30 +397,38 @@
             },
             checkCharts: function(){
 
-                var settings = this.settings.all();
-                var replaceCharts = ['chartGeneration', 'chartFinancial'];
+                if(this.initialized.chartFinancial && this.initialized.chartGeneration) {
 
-                if(settings.projectId != this.defaults.project.id) {
-                    var charts = $('[data-chart-type]');
-                    if(charts.length){
-                        if(this.initialized.chartFinancial && this.initialized.chartGeneration) {
-                            $.each(CKEDITOR.instances, function(i, instance){
-                                $.each(instance.widgets.instances, function(w, widget){
-                                    if('image' == widget.name){
+                    var settings = this.settings.all();
+                    var replaceCharts = ['chartGeneration', 'chartFinancial'];
+
+                    if (settings.projectId != this.defaults.project.id) {
+
+                        var charts = $('[data-chart-type]');
+
+                        if (charts.length) {
+
+                            $.each(CKEDITOR.instances, function (i, instance) {
+                                $.each(instance.widgets.instances, function (w, widget) {
+                                    if ('image' == widget.name) {
                                         var image = $(widget.parts.image.$);
                                         var type = image.attr('data-chart-type');
-                                        var projectId = image.attr('data-project');
 
-                                        if(replaceCharts.indexOf(type) >= 0) {
+                                        if (replaceCharts.indexOf(type) >= 0) {
 
-                                            var tempImage = new Image(image.width());
-                                            tempImage.src = Editor.initialized[type];
+                                            var project = Editor.defaults.project.id;
+                                            var height = image.attr('height');
+                                            var width = height ? image.attr('width') : image.attr('data-width');
 
-                                            if (projectId != Editor.defaults.project.id) {
-                                                widget.setData('src', tempImage.src);
-                                                widget.setData('width', tempImage.width);
-                                                widget.setData('data-project', projectId);
+                                            if (image.attr('data-project') != project) {
+                                                widget.setData('src', Editor.initialized[type]);
+                                                widget.setData('data-project', project);
                                             }
+
+                                            widget.setData('width', width);
+                                            widget.setData('data-width', width);
+
+                                            image.removeClass('image-hide-loading');
                                         }
                                     }
                                 });

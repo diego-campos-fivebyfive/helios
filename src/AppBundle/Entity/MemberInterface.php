@@ -42,6 +42,11 @@ interface MemberInterface
     public function getUser();
 
     /**
+     * @return string
+     */
+    public function getEmail();
+
+    /**
      * @param AccountInterface $account
      * @return MemberInterface
      */

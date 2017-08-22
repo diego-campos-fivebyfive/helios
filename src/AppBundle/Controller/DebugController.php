@@ -25,6 +25,7 @@ use AppBundle\Form\Settings\KitPricingType;
 use AppBundle\Model\KitPricing;
 use AppBundle\Service\Component\PriceCalculator;
 use AppBundle\Service\Component\ProjectPrecifier;
+use AppBundle\Service\Mailer;
 use AppBundle\Service\ProjectFilter;
 use AppBundle\Service\ProjectHelper;
 use AppBundle\Service\ProjectProcessor;
@@ -67,6 +68,17 @@ class DebugController extends AbstractController
         }
 
         echo $content; die;
+    }
+
+    /**
+     * @Route("/mailer", name="debug_mailer")
+     */
+    public function emailAction(Request $request)
+    {
+        /** @var Mailer $mailer */
+        $mailer = $this->get('app_mailer');
+
+        return new Response($mailer->sendAccountConfirmationMessage($this->account()));
     }
 
     /**

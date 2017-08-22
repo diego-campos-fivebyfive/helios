@@ -6,7 +6,7 @@ parameters:
     database_user: mysqlproducao
     database_password: avCy8ZFhhg6rMnKstw
     mailer_transport: smtp
-    mailer_host: mail.inovadorsolar.com
-    mailer_user: no-reply@inovadorsolar.com
-    mailer_password: TB^ipr$7eik8
+    mailer_host: smtp.mail.eu-west-1.awsapps.com
+    mailer_user: naoresponder@plataformasicessolar.com.br
+    mailer_password: Ze6}Kr6bWVky@z@Qsi
     secret: b7552e60db4c89c9a846954a9f2b91cb0723a267
