@@ -212,6 +212,24 @@ class ProposalController extends AbstractController
 
                 if (file_exists($file)) {
                     $status = Response::HTTP_OK;
+
+                    if (!$project->getIssuedAt()) {
+                        $manager = $this->manager('project');
+                        $project->setIssuedAt(new \DateTime('now'));
+                        $manager->save($project);
+                        $member = $project->getMember();
+
+                        $this->get('notifier')->notify([
+                            'Evento' => '509',
+                            'Callback' => 'proposal_issued',
+                            'Body' => [
+                                'Valor' => $project->getCostPrice(),
+                                'Empresa' => $member->getAccount()->getFirstname(),
+                                'Contato' => $member->getFirstname()
+                            ]
+                        ]);
+
+                    }
                 }
 
             } catch (\Exception $error) {
