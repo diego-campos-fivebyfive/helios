@@ -120,7 +120,6 @@ class OrdersController extends AbstractApiController
                 ->setDescription($data['description'])
                 ->setAccount($parent->getAccount())
                 ->setParent($parent)
-                ->setIsquikId($data['isquik_id'])
                 ->setStatus($data['status']);
 
             $manager->save($order);
