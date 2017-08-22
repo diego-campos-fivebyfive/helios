@@ -50,7 +50,6 @@ class Notifier
         curl_setopt($notifier, CURLOPT_URL, $url);
         curl_setopt($notifier, CURLOPT_HTTPHEADER, ["Authorization: $auth"]);
         curl_setopt($notifier, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($notifier, CURLOPT_TIMEOUT, 3);
         curl_setopt($notifier, CURLOPT_POST, true);
         curl_setopt($notifier, CURLOPT_POSTFIELDS, http_build_query($notification));
         curl_close($notifier);
