@@ -2,8 +2,6 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Order\OrderInterface;
-
 /**
  * Interface AccountInterface
  * This interface is exclusively account properties and methods
@@ -35,10 +33,20 @@ interface AccountInterface
     public function getOwner();
 
     /**
+     * @return string
+     */
+    public function getEmail();
+
+    /**
      * @param null $confirmationToken
      * @return AccountInterface
      */
     public function setConfirmationToken($confirmationToken = null);
+
+    /**
+     * @return string|null
+     */
+    public function getConfirmationToken();
 
     /**
      * @param $level

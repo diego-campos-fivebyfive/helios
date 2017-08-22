@@ -148,8 +148,8 @@
         .btn-primary {
             text-decoration: none;
             color: #FFF;
-            background-color: #1ab394;
-            border: solid #1ab394;
+            background-color: #00A7EC;
+            border: solid #00A7EC;
             border-width: 5px 10px;
             line-height: 2;
             font-weight: bold;
@@ -305,16 +305,16 @@
                                 </tr>
                                 <tr>
                                     <td class="content-block">
-                                        <h3>Bem vindo ao Inovador Solar</h3>
+                                        <h3>Bem vindo à Plataforma Sices Solar</h3>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="content-block">
-                                        {% if register is defined %}
+                                        {% if account is defined %}
                                             Sua conta está em processo de ativação.
                                         {% endif %}
                                         {% if member is defined %}
-                                            {{ member.account.owner.firstname }} adicionou você ao Inovador Solar.
+                                            {{ member.account.owner.firstname }} adicionou você à Plataforma Sices Solar.
                                         {% endif %}
                                         Clique no botão abaixo para concluir seu registro.
                                     </td>

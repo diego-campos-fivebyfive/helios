@@ -2,8 +2,8 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\BusinessInterface;
-use AppBundle\Entity\Extra\AccountRegister;
+use AppBundle\Entity\AccountInterface;
+use AppBundle\Entity\MemberInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class Mailer
 {
-    const FROM_EMAIL = 'no-reply@inovadorsolar.com';
+    const FROM_EMAIL = 'naoresponder@plataformasicessolar.com.br';
 
     /**
      * @var \Swift_Mailer
@@ -49,55 +49,42 @@ class Mailer
     }
 
     /**
-     * @param BusinessInterface $member
+     * @param AccountInterface $register
      * @return string
      */
-    public function sendUnprocessedPaymentRenewSignature(BusinessInterface $member)
-    {
-        $rendered = $this->templating->render('AppBundle:Signature:email_payment.html.twig', [
-            'member' => $member
-        ]);
-
-        $this->sendEmailMessage('Inovador Solar - Renovação', $rendered, self::FROM_EMAIL, $member->getEmail());
-
-        return $rendered;
-    }
-
-    /**
-     * @param AccountRegister $register
-     * @return string
-     */
-    public function sendAccountConfirmationMessage(AccountRegister $register)
+    public function sendAccountConfirmationMessage(AccountInterface $account)
     {
         $url = $this->router->generate('app_register_confirm',[
-            'token' => $register->getConfirmationToken(),
-            'reference' => base64_encode($register->getEmail())
+            'token' => $account->getConfirmationToken(),
+            'reference' => base64_encode($account->getEmail())
         ], UrlGeneratorInterface::ABSOLUTE_URL);
 
         $rendered = $this->templating->render('AppBundle:Register:email.html.twig', [
             'targetUrl' => $url,
-            'register' => $register
+            'account' => $account
         ]);
 
-        $this->sendEmailMessage('Inovador Solar - Registro', $rendered, self::FROM_EMAIL, $register->getEmail());
+        $this->sendEmailMessage('Plataforma Sices Solar - Registro', $rendered, self::FROM_EMAIL, $account->getEmail());
 
         return $rendered;
     }
 
     /**
-     * @param BusinessInterface $member
+     * @param MemberInterface $member
      * @return string
      */
-    public function sendMemberConfirmationMessage(BusinessInterface $member)
+    public function sendMemberConfirmationMessage(MemberInterface $member)
     {
-        $url = $this->router->generate('app_user_confirm', ['token' =>  $member->getConfirmationToken()], UrlGeneratorInterface::ABSOLUTE_URL);
+        $user = $member->getUser();
+
+        $url = $this->router->generate('app_user_confirm', ['token' =>  $user->getConfirmationToken()], UrlGeneratorInterface::ABSOLUTE_URL);
 
         $rendered = $this->templating->render('AppBundle:Register:email.html.twig', [
             'targetUrl' => $url,
             'member' => $member
         ]);
 
-        $this->sendEmailMessage('Inovador Solar - Convite', $rendered, self::FROM_EMAIL, $member->getEmail());
+        $this->sendEmailMessage('Plataforma Sices Solar - Convite', $rendered, self::FROM_EMAIL, $member->getEmail());
 
         return $rendered;
     }
@@ -114,7 +101,7 @@ class Mailer
 
             $message = \Swift_Message::newInstance()
                 ->setSubject($subject)
-                ->setFrom($fromEmail, 'Inovador Solar')
+                ->setFrom($fromEmail, 'Plataforma Sices Solar')
                 ->setTo($toEmail)
                 ->setContentType('text/html')
                 ->setBody($body);
