@@ -116,21 +116,11 @@ class AppListener
     {
         $exception = $event->getException();
 
-        $errors = ['error'=>'error','404'=>'error404'];
-
         if($exception)
         {
-            $error = $errors['error'];
-            switch ($exception->getStatusCode())
-            {
-                case 404:
-                    $error = $errors['404'];
-                    break;
-            }
-
             /** @var \Twig_Environment $twig */
             $twig = $this->container->get('twig');
-            $content = $twig->render('TwigBundle:Exception:'.$error.'.html.twig', [
+            $content = $twig->render('TwigBundle:Exception:error.html.twig', [
                 'exception' => $exception
             ]);
 
