@@ -305,27 +305,37 @@
                                 </tr>
                                 <tr>
                                     <td class="content-block">
-                                        <h3>Bem vindo à Plataforma Sices Solar</h3>
+                                        <h3>Obrigado, recebemos seu pré-cadastro com sucesso.</h3>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="content-block">
                                         {% if account is defined %}
-                                            Sua conta está em processo de ativação.
+                                            Seu pedido de inscrição está em análise.
                                         {% endif %}
-                                        {% if member is defined %}
+                                        {#{% if member is defined %}
                                             {{ member.account.owner.firstname }} adicionou você à Plataforma Sices Solar.
-                                        {% endif %}
-                                        Clique no botão abaixo para concluir seu registro.
+                                        {% endif %}#}
+                                        A partir de setembro iremos iniciar a liberação do acesso à plataforma SICES Solar para todos que tiveram seus cadastros aprovados.
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td class="content-block">
+                                        Muito obrigado.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="content-block">
+                                        SICES Solar
+                                    </td>
+                                </tr>
+                                {#<tr>
                                     <td class="content-block aligncenter">
                                         <a href="{{ targetUrl }}" target="_blank" class="btn-primary btn-block">
                                             Concluir registro
                                         </a>
                                     </td>
-                                </tr>
+                                </tr>#}
                             </table>
                         </td>
                     </tr>
