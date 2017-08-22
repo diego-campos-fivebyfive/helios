@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
-if [ $1 == '--production-deploy' ]; then
+if [ $1 == '--production-deploy-end' ]; then
   message='Production Deploy Done!'
-elif [ $1 == '--homolog-deploy' ]; then
+elif [ $1 == '--production-deploy-start' ]; then
+  message='Starting Production Deploy...'
+elif [ $1 == '--homolog-deploy-end' ]; then
   message='Homolog Deploy Done!'
+elif [ $1 == '--homolog-deploy-start' ]; then
+  message='Starting Homolog Deploy...'
 else
   echo "Invalid Message!"
   exit 1
