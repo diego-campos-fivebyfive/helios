@@ -121,7 +121,7 @@ class ComponentController extends AbstractController
                 $this->get('notifier')->notify([
                     'Evento' => '302.3',
                     'Callback' => 'product',
-                    'Id' => $component->getId()
+                    'Code' => $component->getCode()
                 ]);
             }
             return $this->saveComponent($component, $type, $request);

@@ -110,7 +110,7 @@ class StringBoxController extends AbstractController
                 $this->get('notifier')->notify([
                     'Evento' => '302.3',
                     'Callback' => 'product',
-                    'Id' => $stringBox->getId()
+                    'Code' => $stringBox->getCode()
                 ]);
 
                 $message .= 'Publicação executada.';

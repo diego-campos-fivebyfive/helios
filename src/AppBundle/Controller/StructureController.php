@@ -122,7 +122,7 @@ class StructureController extends AbstractController
                 $this->get('notifier')->notify([
                     'Evento' => '302.3',
                     'Callback' => 'product',
-                    'Id' => $structure->getId()
+                    'Code' => $structure->getCode()
                 ]);
                 $message .= 'Publicação executada.';
             }
