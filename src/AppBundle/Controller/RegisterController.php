@@ -148,7 +148,7 @@ class RegisterController extends AbstractController
             ->setStreet($data['street'])
             ->setNumber($data['number'])
             ->setPostcode($data['postcode'])
-            ->setLevel('default')
+            ->setLevel('platinum')
             ->setContext(BusinessInterface::CONTEXT_ACCOUNT);
         $member->setAccount($account);
 
