@@ -138,15 +138,11 @@ class ProposalFilter
                 $end = $date->format(sprintf('Y-m-%d 23:59:59', $lastDay));
             }
 
-            // TODO: Change this field to issuedAt
-            $qb->where('p.updatedAt >= :start')->andWhere('p.updatedAt <= :end');
+            $qb->where('p.issuedAt >= :start')->andWhere('p.issuedAt <= :end');
 
             $qb->setParameter('start', $start);
             $qb->setParameter('end', $end);
         }
-
-        // TODO: Uncomment this code for production
-        //$qb->andWhere('p.proposal is not null');
 
         return $qb->getQuery()->getResult();
     }
