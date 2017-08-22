@@ -15,7 +15,7 @@
                 {{ 'project.financial'|trans|upper }}
             </a>
 
-            <a data-step="proposal_editor" class="btn btn-default nav-link project_proposal">
+            <a data-step="proposal_editor" class="btn btn-default nav-link project_proposal {% if _step=='proposal_editor' %}active{% endif %}">
                 <i class="fa fa-file-text-o"></i>
                 {{ 'project.proposal'|trans|upper }}
             </a>

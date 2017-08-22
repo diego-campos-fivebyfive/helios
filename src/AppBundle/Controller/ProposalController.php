@@ -67,6 +67,13 @@ class ProposalController extends AbstractController
      */
     public function editorAction(Project $project)
     {
+        if(empty($project->getAccumulatedCash())){
+            return $this->render('proposal.alerts', [
+                'error' => 'empty_calculation_metadata',
+                'project' => $project,
+            ]);
+        }
+
         $this->denyAccessUnlessGranted('edit', $project);
 
         $theme = $this->resolveTheme($project);
