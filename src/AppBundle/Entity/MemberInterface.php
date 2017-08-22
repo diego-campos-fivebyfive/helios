@@ -21,6 +21,32 @@ interface MemberInterface
     public function getIsquikId();
 
     /**
+     * @param null $confirmationToken
+     * @return AccountInterface
+     */
+    public function setConfirmationToken($confirmationToken = null);
+
+    /**
+     * @return bool
+     */
+    public function isOwner();
+
+    /**
+     * @return bool
+     */
+    public function isMasterOwner();
+
+    /**
+     * @return UserInterface
+     */
+    public function getUser();
+
+    /**
+     * @return string
+     */
+    public function getEmail();
+
+    /**
      * @param AccountInterface $account
      * @return MemberInterface
      */

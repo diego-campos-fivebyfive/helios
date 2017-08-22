@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Order\Order;
+use AppBundle\Manager\OrderManager;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -14,33 +15,32 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 class OrderController extends AbstractController
 {
     /**
-     * @Route("/", name="post_order")
+     * @Route("/", name="index_order")
      */
-    public function orderAction()
+    public function orderAction(Request $request)
     {
-        /** @var Customer $accounts */
-        $accounts = $this->manager('customer')->find(19);
         $manager = $this->manager('order');
-        $projects = [306];
 
-        /** @var Order $order */
-        $order = $manager->create();
-        $order
-            ->setStatus(0)
-            ->setAccount($accounts);
+        $qb = $manager->createQueryBuilder();
+        $qb2 = $manager->getEntityManager()->createQueryBuilder();
+        $qb->where(
+            $qb->expr()->in('o.id',
+                $qb2->select('o2')
+                    ->from(Order::class, 'o2')
+                    ->where('o2.parent is null')
+                ->getQuery()->getDQL()
+            )
+        );
 
-        foreach ($projects as $id) {
-            /** @var Project $project */
-            $project = $this->manager('project')->find($id);
-            $order->addProject($project);
-        }
+        $pagination = $this->getPaginator()->paginate(
+            $qb->getQuery(),
+            $request->query->getInt('page', 1),
+            10
+        );
 
-        $manager->save($order);
-
-        $this->get('notifier')->notify([
-            'callback' => 'order_created',
-            'body' => ['id' => $order->getId()]
-        ]);
+        return $this->render('Order.index', array(
+            'orders' => $pagination
+        ));
     }
 
     /**

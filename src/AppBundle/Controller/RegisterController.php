@@ -14,6 +14,8 @@ use AppBundle\Form\Extra\PreRegisterType;
 use AppBundle\Model\Document\Account;
 use Doctrine\DBAL\Schema\View;
 use FOS\UserBundle\Event\FilterUserResponseEvent;
+use FOS\UserBundle\Event\FormEvent;
+use FOS\UserBundle\Event\GetResponseUserEvent;
 use FOS\UserBundle\FOSUserEvents;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
@@ -69,42 +71,38 @@ class RegisterController extends AbstractController
     /**
      * @Route("/", name="pre_register")
      */
-    public function preRegisterAction(Request $request){
+    public function preRegisterAction(Request $request)
+    {
 
-        $getErrorArgs = function($form)
-        {
+        $getErrorArgs = function ($form) {
             return [
                 'message' => $form->getErrors(true),
-                'view'=> $form->createView()
+                'view' => $form->createView()
             ];
         };
 
-        $throwError = function($error)
-        {
+        $throwError = function ($error) {
             return $this->render('register.pre_register', [
                 'errors' => $error['message'],
                 'form' => $error['view']
             ]);
         };
 
-        $findEmailAccount = function($email, $account)
-        {
+        $findEmailAccount = function ($email, $account) {
             return $account->findOneBy([
                 'context' => 'account',
                 'email' => $email
             ]);
         };
 
-        $findEmailMember = function($email, $account)
-        {
+        $findEmailMember = function ($email, $account) {
             return $account->findOneBy([
                 'context' => 'member',
                 'email' => $email
             ]);
         };
 
-        $findEmailUser = function($email, $user)
-        {
+        $findEmailUser = function ($email, $user) {
             return $user->findUserByEmail($email);
         };
 
@@ -150,6 +148,7 @@ class RegisterController extends AbstractController
             ->setStreet($data['street'])
             ->setNumber($data['number'])
             ->setPostcode($data['postcode'])
+            ->setLevel('platinum')
             ->setContext(BusinessInterface::CONTEXT_ACCOUNT);
         $member->setAccount($account);
 
@@ -169,15 +168,31 @@ class RegisterController extends AbstractController
 
         $accountManager->save($account);
 
+        $this->get('app_mailer')->sendAccountConfirmationMessage($account);
+
         $this->get('notifier')->notify([
             'Evento' => '206',
             'Callback' => 'account_created',
             'Id' => $account->getId()
         ]);
 
-        //$this->setNotice('Cadastro realizado com sucesso, verifique seu e-mail!');
+        $request->getSession()->set('account_id', $account->getId());
 
-        return $this->redirectToRoute('app_register_link');
+        return $this->redirectToRoute('register_in_progress');
+    }
+
+    /**
+     * @Route("/in-progress", name="register_in_progress")
+     */
+    public function inProgressAction(Request $request)
+    {
+        $id = $request->getSession()->get('account_id', 0);
+
+        $account = $this->manager('account')->find($id);
+
+        return $this->render('register.in_progress', [
+            'account' => $account
+        ]);
     }
 
     /**
@@ -213,63 +228,99 @@ class RegisterController extends AbstractController
      */
     public function confirmAction(Request $request, $token)
     {
-        $register = $this->getAccountRegisterManager()->findRegisterByConfirmationToken($token);
+        /** @var AccountInterface $account */
+        $account = $this->manager('account')->findOneBy(['confirmationToken' => $token]);
 
-        if ($register instanceof AccountRegister) {
+        if(!$account){
+            throw $this->createNotFoundException('Conta não encontrada');
+        }
 
-            $register->setStage(AccountRegister::STAGE_INFO);
+        $message = 'Conta não identificada!';
 
-            $errors = [];
-            $form = $this->createForm(AccountRegisterType::class, $register);
-            $cloneRegister = clone($register);
+        if ($account->isConfirmed()) {
 
-            $form->handleRequest($request);
+            $owner = $account->getOwner();
+            $user = $owner->getUser();
 
-            if ($form->isSubmitted()) {
+            if (!$user->getLastActivity()) {
 
-                if ($form->isValid()) {
+                $user->setConfirmationToken($token);
+                $this->getUserManager()->updateUser($user);
 
-                    $register->setEmail($cloneRegister->getEmail());
-
-                    $member = $this->getRegisterHelper()->finishAccountRegister($register);
-
-                    return $this->redirectToRoute('app_user_confirm', [
-                        'token' => $member->getConfirmationToken()
-                    ]);
-                }
-
-                $errors = $form->getErrors(true);
+                return $this->redirectToRoute('app_user_confirm', [
+                    'token' => $token
+                ]);
             }
 
-            return $this->render('register.register', [
-                'form' => $form->createView(),
-                'register' => $register,
-                'errors' => $errors
-            ]);
+            $message = 'Esta conta já foi ativada!';
         }
 
-        $account = $this->getCustomerManager()->findOneBy([
-            'confirmationToken' => $token,
-            'context' => BusinessInterface::CONTEXT_ACCOUNT
+        return $this->render('register.confirm_error', [
+            'message' => $message
         ]);
-
-        if ($account instanceof BusinessInterface && !$account->getOwner()) {
-
-            $member = $account->getMembers()->first();
-            return $this->redirectToRoute('app_user_confirm', [
-                'token' => $member->getConfirmationToken()
-            ]);
-        }
-
-        $message = sprintf('Account not found. Reference: %s', base64_decode($request->query->get('reference')));
-
-        throw $this->createNotFoundException($message);
     }
 
     /**
      * @Route("/confirm/{token}/user", name="app_user_confirm")
      */
     public function confirmUserAction(Request $request, $token)
+    {
+        /** @var $formFactory \FOS\UserBundle\Form\Factory\FactoryInterface */
+        $formFactory = $this->get('fos_user.resetting.form.factory');
+        /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+        $userManager = $this->get('fos_user.user_manager');
+        /** @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcherInterface */
+        $dispatcher = $this->get('event_dispatcher');
+
+        $user = $userManager->findUserByConfirmationToken($token);
+
+        if (null === $user) {
+            throw $this->createNotFoundException(sprintf('The user with "confirmation token" does not exist for value "%s"', $token));
+        }
+
+        $event = new GetResponseUserEvent($user, $request);
+        $dispatcher->dispatch(FOSUserEvents::RESETTING_RESET_INITIALIZE, $event);
+
+        $form = $formFactory->createForm();
+        $form->setData($user);
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+
+            $manager = $this->manager('account');
+            /** @var AccountInterface $account */
+            if(null != $account = $manager->findOneBy(['confirmationToken' => $token])) {
+                $this->getRegisterHelper()->finishAccountRegister($account, false);
+                $manager->save($account);
+            }
+
+            $event = new FormEvent($form, $request);
+            $dispatcher->dispatch(FOSUserEvents::RESETTING_RESET_SUCCESS, $event);
+
+            $userManager->updateUser($user);
+
+            if (null === $response = $event->getResponse()) {
+                $url = $this->generateUrl('app_index');
+                $response = new RedirectResponse($url);
+            }
+
+            $dispatcher->dispatch(FOSUserEvents::RESETTING_RESET_COMPLETED, new FilterUserResponseEvent($user, $request, $response));
+
+            return $response;
+        }
+
+        return $this->render('FOSUserBundle:Register:confirm.html.twig', array(
+            'token' => $token,
+            'form' => $form->createView(),
+            'errors' => $form->getErrors(true)
+        ));
+    }
+
+    /**
+     * @Route("/confirm/{token}/user/legacy", name="app_user_confirm_legacy")
+     */
+    public function legacyConfirmUserAction(Request $request, $token)
     {
         $errors = [];
         $manager = $this->getCustomerManager();
@@ -318,7 +369,7 @@ class RegisterController extends AbstractController
 
                     $member->setUser($user);
 
-                    $this->getRegisterHelper()->finishMemberRegistration($member);
+                    //$this->getRegisterHelper()->finishMemberRegistration($member);
 
                     $event = $this->createWoopraEvent('registrou', [
                         'email' => $member->getEmail(),
@@ -430,7 +481,7 @@ class RegisterController extends AbstractController
     }
 
     /**
-     * @return \AppBundle\Service\RegisterHelper
+     * @return \AppBundle\Service\RegisterHelper|object
      */
     private function getRegisterHelper()
     {

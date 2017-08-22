@@ -1,0 +1,649 @@
+{% extends view('layout') %}
+
+{% block styles %}
+    <link href="{{ asset('assets/proposal2/editor.css') }}" rel="stylesheet">
+    <style>
+        .image-hide-loading{
+            opacity: 0 !important;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    <div id="sidebar-tags">
+        <div class="col-md-12">
+            <div class="btn-group btn-group-sm" style="width: 95%;">
+                <button id="save-content" class="btn btn-default" style="width: 50%;">
+                    <i class="fa fa-file-pdf"></i> Salvar
+                </button>
+                <button class="btn btn-default jscolor {valueElement: 'backgroundColor'}" style="width: 50%;">
+                    <i class="fa fa-widget"></i> Cor de Fundo
+                </button>
+                <input type="hidden" id="backgroundColor" onchange="Editor.changePageBackground(this.value)"
+                       value="FFF">
+                <button id="save-pdf" type="button" class="btn btn-primary btn-block">
+                    Gerar PDF
+                </button>
+            </div>
+        </div>
+        <div class="col-md-12" id="block_tags">
+
+            <div class="label-tag-info">
+                <i class="fa fa-info"></i> <i> Clique e arraste a informação para o editor </i>
+            </div>
+
+            <ul id="tag-list">
+
+                {% for key, tag in data %}
+
+                    {% if 'label' != tag.handle %}
+
+                        <li>
+
+                            <div class="h-card" data-tag="{{ key }}" draggable="true">
+
+                                {% if 'chartGeneration' == key or 'chartFinancial' == key %}
+                                    <button type="button"
+                                            class="btn btn-sm border jscolor {valueElement: 'color_{{ key }}'}">cor
+                                    </button>
+                                    <input type="hidden" id="color_{{ key }}"
+                                           onchange="changeChartColor('{{ key }}', this.value)" value="00A7EC">
+                                {% endif %}
+
+                                {{ tag.label }}
+
+                            </div>
+
+                        </li>
+
+                    {% else %}
+
+                        <li class="title_tags">
+                            <h2 class="text-center"> {{ tag.label }} </h2>
+                        </li>
+
+                    {% endif %}
+
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="" style="padding-top: 2rem;">
+
+        {% include view('project.navbar') %}
+
+        <div class="row" id="proposal_editor" style="background: #e7e7e7">
+            <div style="background: #e7e7e7" class="col-md-9">
+
+                <div class="row">
+                    <div class="modal fade" id="section_options" role="dialog">
+                        <div class="modal-dialog ">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Modelos de Sessão</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <h2 class="text-center">Escolha uma sessão</h2>
+                                    <div class="col-m-12 text-center">
+                                        <button class="btn btn-info" data-cols="12" data-dismiss="modal"><img
+                                                    src="{{ asset('assets/proposal2/images/l1.png') }}"></button>
+                                        <button class="btn btn-info" data-cols="6-6" data-dismiss="modal"><img
+                                                    src="{{ asset('assets/proposal2/images/c2.png') }}"></button>
+                                        <button class="btn btn-info" data-cols="8-4" data-dismiss="modal"><img
+                                                    src="{{ asset('assets/proposal2/images/c1c2p.png') }}"></button>
+                                        <button class="btn btn-info" data-cols="4-8" data-dismiss="modal"><img
+                                                    src="{{ asset('assets/proposal2/images/c1pc2.png') }}"></button>
+                                        <button class="btn btn-info" data-cols="4-4-4" data-dismiss="modal"><img
+                                                    src="{{ asset('assets/proposal2/images/c3.png') }}"></button>
+                                        <button class="btn btn-info" data-cols="12-6-6" data-dismiss="modal"><img
+                                                    src="{{ asset('assets/proposal2/images/l1c2.png') }}"></button>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div id="editor_document" class="col-md-8 col-md-offset-1">
+                        {{ content|raw }}
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 10px; margin-bottom: 5rem;">
+                    <div class="col-md-7 col-md-offset-2">
+                        <div class="btn-group btn-group-sm btn-group-justified">
+                            <a class="btn btn-primary" id="editor_add_page">
+                                <i class="fa fa-plus"></i> Nova Página
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row hide">
+                    <div class="col-md-7" id="chart_generation_container">
+                    </div>
+                    <div class="col-md-7" id="chart_financial_container">
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+    {% include view('helper.plugins_js') %}
+    {% include view('helper.request') %}
+
+    <script src="{{ asset('assets/app-charts.js') }}"></script>
+    <script src="{{ asset('assets/proposal2/ckeditor/ckeditor.js') }}"></script>
+    <script src="{{ asset('assets/proposal2/jscolor.js') }}"></script>
+
+    <script>
+        UPLOADCARE_PUBLIC_KEY = '9490325b6fcc3e8d094d';
+    </script>
+
+    <script>
+
+        'use strict';
+
+        {% if true %}
+
+        $('[data-chart-type]').addClass('image-hide-loading');
+
+        var Editor = {
+            container: $('#proposal_editor'),
+            document: $('#editor_document'),
+            sectionOptions: $('#section_options'),
+            button: {
+                savePdf: $('#save-pdf'),
+                saveContent: $('#save-content'),
+                addPage: $('#editor_add_page')
+            },
+            initialized: {
+                chartFinancial: false,
+                chartGeneration: false
+            },
+            defaults: {
+                project:{
+                    id: {{ project.id }}
+                },
+                urlSavePdf: '{{ path('proposal_pdf_generator',{id:project.id}) }}',
+                urlSaveContent: '{{ path('proposal_save',{id:project.id}) }}',
+                blockContent: '<p style="text-align:center"><strong><span style="color:#000000">Lorem Ipsum</span></strong><br></p><p style="text-align:justify"><span style="color:#000000">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras euismod luctus tortor vel iaculis. Ut interdum eleifend velit nec consequat. Nullam sagittis odio metus, vitae dictum tellus pulvinar quis. Morbi sit amet enim vel ante aliquet eleifend. Nam purus metus, varius fermentum pulvinar aliquet, fermentum vitae augue.</span><br></p>'
+            },
+            settings: {
+                element: $('#editor_settings'),
+                all: function () {
+                    return Editor.settings.element.data('settings');
+                },
+                set: function (key, value) {
+                    var settings = Editor.settings.all();
+                    settings[key] = value;
+                    Editor.settings.element.attr('data-settings', JSON.stringify(settings));
+                },
+                get: function (key) {
+                    var settings = Editor.settings.all();
+                    return settings[key];
+                }
+            },
+            currentPage: null,
+            currentPageSection: null,
+            configureSection: function (section) {
+
+                $.each(section.find('.editor_block'), function (i, editor) {
+                    var id = $(editor).attr('id');
+                    CKEDITOR.inline(id, {
+                        extraAllowedContent: '[data-width];[data-project];[data-chart-type]',
+                        extraPlugins: 'hcard,sourcedialog,justify',
+                    });
+                });
+
+                section.find('.btn-remove-section').on('click', function () {
+                    swal({
+                        title: 'Confirma exclusão?',
+                        text: 'O conteúdo desta seção será perdido',
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: '{{ 'Confirmar'|trans }}',
+                        cancelButtonText: '{{ 'Cancelar'|trans }}'
+                    }, function () {
+                        section.remove();
+                    });
+                });
+            },
+            configurePage: function (page) {
+
+                page.find('[data-action]').on('click', function () {
+                    var action = $(this).data('action');
+                    Editor.currentPage = page;
+                    switch (action) {
+                        case 'add-section':
+                            Editor.currentPage = page;
+                            break;
+                        case 'delete':
+                            swal({
+                                title: 'Confirma exclusão da página?',
+                                text: 'O conteúdo será perdido',
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: '{{ 'Confirmar'|trans }}',
+                                cancelButtonText: '{{ 'Cancelar'|trans }}'
+                            }, function () {
+                                page.remove();
+                            });
+                            break;
+                        case 'move-up':
+                            var before = page.prev();
+                            if (before.length) {
+                                page.insertBefore(before);
+                            }
+                            break;
+                        case 'move-down':
+                            var after = page.next();
+                            if (after.length) {
+                                page.insertAfter(after);
+                            }
+                            break;
+                    }
+                });
+
+                $.each(page.find('.editor_section'), function(i, section){
+                    Editor.configureSection($(section));
+                });
+            },
+            loadSections: function () {
+
+                Editor.sectionOptions.find('button[data-cols]').on('click', function () {
+
+                    var randomId = 's_' + Math.random().toString(36).substring(7);
+
+                    var cols = $(this).data('cols').toString().split('-');
+                    var blocks = '';
+                    $.each(cols, function (i, col) {
+                        var editorId = randomId + '_column' + i;
+                        blocks += '<div class="editor_block col-md-' + col + '" id="' + editorId + '" contenteditable="true">' + Editor.defaults.blockContent + '</div>';
+                    });
+
+                    var id = randomId;
+                    var button = '<button class="btn btn-xs btn-danger btn-block btn-remove-section">Excluir</button>';
+                    var section = $('<div id="' + id + '" class="editor_section row"><div class="editor_vertical_toolbar">&nbsp;' + button + '</div> <div class="editor_section_blocks"> ' + blocks + ' </div></div>');
+
+                    Editor.currentPage.find('.editor_page_content').append(section);
+                    Editor.configureSection(section);
+                });
+
+            },
+            addPage: function () {
+                var page = $('<div class="editor_page"> <div class="row editor_page_toolbar"> <div class="col-md-12"> <div class="btn-group btn-group-sm"> <a class="btn btn-primary" data-action="add-section" data-toggle="modal" data-target="#section_options"><i class="fa fa-plus"></i> Nova Seção </a> <a class="btn btn-danger" data-action="delete"><i class="fa fa-trash"></i> Excluir Página </a> <a class="btn btn-success" data-action="move-up"><i class="fa fa-chevron-up"></i></a> <a class="btn btn-success" data-action="move-down"><i class="fa fa-chevron-down"></i></a> </div></div></div><div class="editor_page_content"></div></div>');
+                Editor.document.append(page);
+                Editor.configurePage(page);
+                Editor.onAddPage(page);
+            },
+            getPages: function () {
+                return Editor.document.find('.editor_page');
+            },
+            getContent: function () {
+                return Editor.document.html();
+            },
+            savePdf: function(){
+                Request.send({
+                    url: Editor.defaults.urlSavePdf,
+                    method: 'post',
+                    callback: function(xhr){
+                        if(200 == xhr.status){
+
+                            var filename = xhr.responseJSON.filename;
+
+                            swal({
+                                title: 'Arquivo gerado com sucesso',
+                                text: 'Deseja visualizar o arquivo?',
+                                type: "success",
+                                showCancelButton: true,
+                                confirmButtonColor: "#00A7EC",
+                                confirmButtonText: '{{ 'Visualizar'|trans }}',
+                                cancelButtonText: '{{ 'Cancelar'|trans }}'
+                            }, function() {
+
+                                var url = '{{ path('proposal_display_pdf',{filename:'_file_'}) }}'.replace(/_file_/g, filename);
+                                window.open(url, '_blank');
+                            });
+
+                        }else{
+                            swal('Desculpe', 'Seu arquivo não pôde ser gerado. Tente novamente mais tarde.', 'error');
+                        }
+                    }
+                })
+            },
+            saveContent: function (pdf) {
+
+                if(pdf){
+                    swal({
+                        title: 'Aguarde...',
+                        text: '',
+                        showCancelButton: false,
+                        showConfirmButton: false
+                    });
+                }
+
+                Request.send({
+                    url: Editor.defaults.urlSaveContent,
+                    data: {content: Editor.getContent()},
+                    method: 'post',
+                    callback: function (xhr) {
+                        if(pdf){
+                            Editor.savePdf();
+                        }
+                    }
+                });
+
+            },
+            initializeSettings: function () {
+                var element = this.settings.element;
+                if (!element.length) {
+
+                    element = $('<div id="editor_settings"></div>');
+
+                    element.attr('data-settings', JSON.stringify({
+                        chartGeneration: 'F2A019',
+                        chartFinancial: 'F2A019',
+                        projectId: this.defaults.project.id
+                    }));
+
+                    Editor.document.append(element);
+
+                    Editor.settings.element = element;
+                }
+            },
+            initializePages: function () {
+                $.each(Editor.getPages(), function (i, page) {
+                    Editor.configurePage($(page));
+                });
+            },
+            initializeCharts: function () {
+
+                var settings = Editor.settings.all();
+
+                var colorChartGeneration = 'F2A019';
+                var colorChartFinancial = 'F2A019';
+
+                if (settings.hasOwnProperty('chartGeneration')) {
+                    colorChartGeneration = settings.chartGeneration;
+                }
+
+                if (settings.hasOwnProperty('chartFinancial')) {
+                    colorChartFinancial = settings.chartFinancial;
+                }
+
+                chartGeneration({fillColor: '#' + colorChartGeneration});
+                chartFinancial({fillColor: '#' + colorChartFinancial});
+
+                $('#color_chartGeneration').val(colorChartGeneration);
+                $('#color_chartFinancial').val(colorChartFinancial);
+
+            },
+            checkCharts: function(){
+
+                if(this.initialized.chartFinancial && this.initialized.chartGeneration) {
+
+                    var settings = this.settings.all();
+                    var replaceCharts = ['chartGeneration', 'chartFinancial'];
+
+                    if (settings.projectId != this.defaults.project.id) {
+
+                        var charts = $('[data-chart-type]');
+
+                        if (charts.length) {
+
+                            $.each(CKEDITOR.instances, function (i, instance) {
+                                $.each(instance.widgets.instances, function (w, widget) {
+                                    if ('image' == widget.name) {
+                                        var image = $(widget.parts.image.$);
+                                        var type = image.attr('data-chart-type');
+
+                                        if (replaceCharts.indexOf(type) >= 0) {
+
+                                            var project = Editor.defaults.project.id;
+                                            var height = image.attr('height');
+                                            var width = height ? image.attr('width') : image.attr('data-width');
+
+                                            if (image.attr('data-project') != project) {
+                                                widget.setData('src', Editor.initialized[type]);
+                                                widget.setData('data-project', project);
+                                            }
+
+                                            widget.setData('width', width);
+                                            widget.setData('data-width', width);
+
+                                            image.removeClass('image-hide-loading');
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                    }
+                }
+            },
+            changePageBackground: function (color) {
+                $('.editor_page').css('background-color', '#' + color);
+            },
+            onAddPage: function (page) {
+                Editor.changePageBackground($('#backgroundColor').val());
+            },
+            setMiniNavbar: function () {
+                $(" body ").addClass("mini-navbar");
+            },
+            init: function () {
+
+                Editor.setMiniNavbar();
+
+                this.initializeSettings();
+                this.initializeCharts();
+                this.loadSections();
+                this.initializePages();
+
+                Editor.button.addPage.on('click', function () {
+                    Editor.addPage();
+                });
+
+                Editor.button.saveContent.on('click', function(){
+                    Editor.saveContent();
+                });
+
+                Editor.button.savePdf.on('click', function () {
+                    Editor.saveContent(true);
+                });
+            }
+        };
+
+        var Proposal = {
+            tags: {{ data|json_encode|raw }},
+            events: {
+                lastTag: null
+            }
+        };
+
+        function chartGeneration(config) {
+
+            var chartContainer = $('#chart_generation_container');
+            chartContainer.html('<canvas id="chart_generation" width="700" height="500"></canvas>');
+
+            var clear = function (element) {
+                var canvas = AppChart.getCanvas(element);
+                if (canvas) {
+                    var context = canvas.getContext('2d');
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            };
+
+            var data = Proposal.tags.chartGeneration.value;
+
+            var settings = $.extend({}, {
+                fillColor: 'rgba(242,160,25,0.5)',
+                strokeColor: 'rgba(242,160,25,0)',
+                pointColor: 'rgba(242,160,25)',
+                element: 'chart_generation',
+                data: data,
+                callback: function (chart) {
+                    var dataUrl = AppChart.getDataUrl(settings.element);
+                    Proposal.tags.chartGeneration.image = '<img src="' + dataUrl + '"/>';
+
+                    if(!Editor.initialized.chartGeneration) {
+                        Editor.initialized.chartGeneration = dataUrl;
+                    }
+
+                    Editor.checkCharts();
+                }
+            }, config);
+
+            clear(settings.element);
+            AppChart.projectChart(settings);
+
+        }
+
+        function chartFinancial(config) {
+
+            var chartContainer = $('#chart_financial_container');
+            chartContainer.html('<canvas id="chart_financial" width="700" height="500"></canvas>');
+
+            var clear = function (element) {
+                var canvas = AppChart.getCanvas(element);
+                if (canvas) {
+                    var context = canvas.getContext('2d');
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            };
+
+            var data = Proposal.tags.chartFinancial.value;
+
+            var settings = $.extend({}, {
+                fillColor: "rgba(242,160,25,0.5)",
+                strokeColor: "rgba(242,160,25, 0)",
+                pointColor: "rgba(242,160,25, 0)",
+                pointStrokeColor: "rgba(242,160,25, 0)",
+                data: data,
+                title: false,
+                opacity: .5,
+                element: 'chart_financial',
+                callback: function (chart) {
+                    var dataUrl = AppChart.getDataUrl(settings.element);
+                    Proposal.tags.chartFinancial.image = '<img src="' + dataUrl + '"/>';
+
+                    if(!Editor.initialized.chartFinancial) {
+                        Editor.initialized.chartFinancial = dataUrl;
+                    }
+
+                    Editor.checkCharts();
+                }
+            }, config);
+
+            clear(settings.element);
+            AppChart.financialChart(settings);
+
+        }
+
+        function changeChartColor(type, color) {
+
+            Editor.settings.set(type, color.toString());
+
+            if ('chartGeneration' == type) {
+                chartGeneration({fillColor: '#' + color});
+            } else {
+                chartFinancial({fillColor: '#' + color});
+            }
+        }
+
+        CKEDITOR.plugins.add('hcard', {
+            requires: 'widget',
+            init: function (editor) {
+
+                editor.widgets.add('hcard', {
+                    allowedContent: 'span(!h-card); a[href](!u-email,!p-name); span(!p-tel)',
+                    requiredContent: 'span(h-card)',
+                    pathName: 'hcard',
+                    upcast: function (el) {
+                        return el.name == 'span' && el.hasClass('h-card');
+                    }
+                });
+
+                editor.addFeature(editor.widgets.registered.hcard);
+
+                editor.on('paste', function (evt) {
+
+                    var source = evt.data.dataTransfer.getData('source');
+
+                    if (!source) return;
+
+                    if ('static' == source.handle) {
+                        evt.data.dataValue = '<span class="h-card"><!--' + source.tag + '-->' + source.value + '<!--' + source.tag + '--></span>';
+                    } else {
+                        evt.data.dataValue = source.image;
+                    }
+
+                    Proposal.events.lastTag = source.tag;
+                });
+            }
+        });
+
+
+        CKEDITOR.on('instanceReady', function () {
+            CKEDITOR.document.getById('tag-list').on('dragstart', function (evt) {
+
+                var target = evt.data.getTarget().getAscendant('div', true);
+
+                CKEDITOR.plugins.clipboard.initDragDataTransfer(evt);
+
+                var dataTransfer = evt.data.dataTransfer;
+
+                var tag = target.data('tag');
+                var source = Proposal.tags[tag];
+                source.tag = tag;
+
+                dataTransfer.setData('source', source);
+
+                dataTransfer.setData('text/html', target.getText());
+            });
+        });
+
+        $(document).on('dragend', function (event) {
+
+            var tag = Proposal.events.lastTag;
+            var container = $(event.currentTarget.activeElement)[0];
+            var image = $(container).find('[data-widget="image"]:not(.initialized)');
+
+            if ('chartGeneration' == tag || 'chartFinancial' == tag) {
+                var width = (container.clientWidth * .95).toFixed(0);
+                image.attr('width', width).addClass('initialized');
+                image.attr('data-width', width);
+                image.attr('data-project', Editor.defaults.project.id);
+                image.attr('data-chart-type', tag);
+            }
+        });
+
+        var Project = {
+            id: {{ project.id }}
+        };
+
+        Editor.init();
+
+        Navbar.init();
+
+        {% endif %}
+
+    </script>
+
+
+{% endblock %}

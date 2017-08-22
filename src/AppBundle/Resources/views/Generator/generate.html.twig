@@ -92,13 +92,13 @@
         <tr>
             <td> {{ projectModule.module.id }} </td>
             <td>
-                <a data-toggle="modal" data-target="#modal_component"
-                   data-url="{{ path('component_show', {type:'module', id:projectModule.module.id}) }}">
+                {#<a data-toggle="modal" data-target="#modal_component"
+                   data-url="{{ path('component_show', {type:'module', id:projectModule.module.id}) }}">#}
                     {{ projectModule.module.model }}
-                </a>
+                {#</a>#}
             </td>
             <td> {{ projectModule.unitCostPrice|currency }} </td>
-            <td> {{ projectModule.quantity }} </td>
+            <td class="text-center"> {{ projectModule.quantity }} </td>
         </tr>
     {% endfor %}
 
@@ -107,13 +107,13 @@
         <tr>
             <td> {{ id }} </td>
             <td>
-                <a data-toggle="modal" data-target="#modal_component"
-                   data-url="{{ path('component_show', {type:'inverter', id:group.inverter.id}) }}">
+                {#<a data-toggle="modal" data-target="#modal_component"
+                   data-url="{{ path('component_show', {type:'inverter', id:group.inverter.id}) }}">#}
                     {{ group.inverter.model }}
-                </a>
+                {#</a>#}
             </td>
             <td> {{ group.unitCostPrice|currency }} </td>
-            <td> {{ group.quantity }} </td>
+            <td class="text-center"> {{ group.quantity }} </td>
         </tr>
     {% endfor %}
 
@@ -132,13 +132,13 @@
         <tr>
             <td> {{ projectStringBox.stringBox.code }} </td>
             <td>
-                <a data-toggle="modal" data-target="#modal_component"
-                   data-url="{{ path('stringbox_show', {id:projectStringBox.stringBox.id}) }}">
+                {#<a data-toggle="modal" data-target="#modal_component"
+                   data-url="{{ path('stringbox_show', {id:projectStringBox.stringBox.id}) }}">#}
                     {{ projectStringBox.stringBox.description }}
-                </a>
+                {#</a>#}
             </td>
             <td> {{ projectStringBox.unitCostPrice|currency }} </td>
-            <td> {{ projectStringBox.quantity }} </td>
+            <td class="text-center"> {{ projectStringBox.quantity }} </td>
         </tr>
     {% endfor %}
 
@@ -147,13 +147,13 @@
         <tr>
             <td> {{ projectStructure.structure.code }} </td>
             <td>
-                <a data-toggle="modal" data-target="#modal_component"
-                   data-url="{{ path('structure_show', {id:projectStructure.structure.id}) }}">
+                {#<a data-toggle="modal" data-target="#modal_component"
+                   data-url="{{ path('structure_show', {id:projectStructure.structure.id}) }}">#}
                     {{ projectStructure.structure.description }}
-                </a>
+                {#</a>#}
             </td>
             <td> {{ projectStructure.unitCostPrice|currency }} </td>
-            <td> {{ projectStructure.quantity }} </td>
+            <td class="text-center"> {{ projectStructure.quantity }} </td>
         </tr>
     {% endfor %}
 
@@ -163,10 +163,15 @@
             <td> {{ projectVariety.variety.code }} </td>
             <td> {{ projectVariety.variety.description }} </td>
             <td> {{ projectVariety.unitCostPrice|currency }} </td>
-            <td> {{ projectVariety.quantity }} </td>
+            <td class="text-center"> {{ projectVariety.quantity }} </td>
         </tr>
     {% endfor %}
-
+    <tr>
+        <th></th>
+        <th></th>
+        <th> {{ project.costPriceComponents|currency }} </th>
+        <td></td>
+    </tr>
     {% set projectModule = project.projectModules.first %}
 
     {% if projectModule %}
@@ -238,7 +243,7 @@
                     <tr>
                         <td colspan="2">
                             <a id="add_project_to_order" class="btn btn-primary">
-                                <i class="fa fa-check"></i> Adicionar aos orçamentos pendentes
+                                <i class="fa fa-arrow-down"></i> Adicionar ao orçamento atual
                             </a>
                         </td>
                         <td colspan="2">
@@ -445,7 +450,7 @@
             delete group.rendered;
         });
         Request.send({
-            url: '{{ path('project_groups',{id:project.id}) }}',
+            url: '{{ path('project_groups',{id:project.id, precify:true}) }}',
             method: 'post',
             data: {groups:GroupManager.groups},
             callback: function(xhr){

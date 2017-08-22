@@ -73,6 +73,13 @@
                                     }
                                 }
                             });
+                        } else if($(this).data('step') != 'project_update'){
+                            swal({
+                                title: 'Ooops',
+                                text: 'O projeto não foi iniciado',
+                                type: 'error',
+                                html: true
+                            });
                         }
                     });
                 }

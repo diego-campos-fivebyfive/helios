@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+cd $SICES_PATH
+
+echo 'Fixing knp bugs...'
+knp_path=vendor/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Filtration/Doctrine/ORM/Query
+knp_wrong='$alias = reset($parts);'
+knp_right='$alias = trim(reset($parts));'
+sed "s/$knp_wrong/$knp_right/g" <$knp_path/WhereWalker.php >$knp_path/WhereWalkerFixed.php
+mv $knp_path/WhereWalkerFixed.php $knp_path/WhereWalker.php

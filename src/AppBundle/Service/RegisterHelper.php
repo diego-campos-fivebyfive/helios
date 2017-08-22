@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Configuration\App;
+use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\CategoryInterface;
 use AppBundle\Entity\Extra\AccountRegister;
@@ -24,20 +25,20 @@ class RegisterHelper
     }
 
     /**
-     * @param AccountRegister $register
-     * @return \AppBundle\Entity\BusinessInterface
+     * @param AccountInterface $account
      */
-    public function finishAccountRegister(AccountRegister $register)
+    public function finishAccountRegister(AccountInterface $account, $save = true)
     {
-        $member = $this->transformRegisterIntoMember($register);
+        $owner = $account->getOwner();
 
-        $register
-            ->setStage(AccountRegister::STAGE_DONE)
-            ->setConfirmationToken(null);
+        $this->createAccountDefaults($account);
 
-        $this->getAccountRegisterManager()->save($register);
+        $account->setConfirmationToken(null);
+        $owner->setConfirmationToken(null);
 
-        return $member;
+        if($save){
+            $this->container->get('account_manager')->save($account);
+        }
     }
 
     /**
@@ -118,9 +119,9 @@ class RegisterHelper
     }
 
     /**
-     * @param BusinessInterface $account
+     * @param AccountInterface $account
      */
-    public function createDefaultAccountCategories(BusinessInterface $account)
+    public function createDefaultAccountCategories(AccountInterface $account)
     {
         $classifications = [
             CategoryInterface::CONTEXT_CONTACT => ['Cliente Residencial', 'Cliente Empresarial', 'Fornecedor', 'Parceiro'],
@@ -324,15 +325,11 @@ class RegisterHelper
     }
 
     /**
-     * Create defaults
-     * @param BusinessInterface $account
+     * @param AccountInterface $account
      */
-    private function createAccountDefaults(BusinessInterface $account)
+    public function createAccountDefaults(AccountInterface $account)
     {
-        $this->createDefaultAccountTeam($account);
         $this->createDefaultAccountCategories($account);
-        $this->container->get('app.document_helper')->defaultFromAccount($account);
-        $this->createDefaultKitMargins($account);
     }
 
     /**

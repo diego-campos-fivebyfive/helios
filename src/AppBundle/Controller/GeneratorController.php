@@ -2,15 +2,19 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\AccountInterface;
+use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Component\InverterInterface;
 use AppBundle\Entity\Component\ModuleInterface;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\VarietyInterface;
 use AppBundle\Entity\Pricing\Range;
+use AppBundle\Entity\UserInterface;
 use AppBundle\Service\ProjectGenerator\Combiner;
 use AppBundle\Service\ProjectGenerator\InverterCombiner;
 use AppBundle\Service\ProjectGenerator\InverterLoader;
 use AppBundle\Service\ProjectGenerator\MakerDetector;
+use AppBundle\Service\RegisterHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
@@ -19,6 +23,96 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
  */
 class GeneratorController extends AbstractController
 {
+    /**
+     * @Route("/accounts", name="generator_accounts")
+     */
+    public function accountsAction()
+    {
+        die('LOCKED');
+
+        $manager = $this->manager('account');
+        $userManager = $this->get('fos_user.user_manager');
+        $categoryManager = $this->manager('category');
+
+        //dump($manager->getConnection()->getHost()); die;
+
+        /** @var RegisterHelper $helper */
+        $helper = $this->get('app.register_helper');
+
+        for($i = 1; $i <= 20; $i++){
+
+            /** @var AccountInterface|BusinessInterface $account */
+            $account = $manager->create();
+
+            $email = sprintf('sices%d@sices.com.br', $i);
+            $password = 'sices';
+
+            $account
+                ->setContext('account')
+                ->setEmail($email)
+                ->setFirstname(sprintf('Sices %s', $i))
+                ->setLastname('Testes')
+                ->setDocument(sprintf("%02d.%03d.%03d/0001-%02d", $i, $i, $i, $i))
+                ->setEmail(sprintf('testes%d@sices.com.br', $i))
+                ->setPhone(sprintf('(%02d) %05d-%04d', $i, $i, $i))
+                ->setCountry('Brazil')
+                ->setState('SP')
+                ->setCity('Itapevi')
+                ->setDistrict('Industrial')
+                ->setStreet('Av. Presidente Prudente')
+                ->setNumber($i * 75)
+                ->setExtraDocument(sprintf('%03d.%03d.%02d', $i, $i, $i))
+                ->setLevel('default')
+            ;
+
+            /** @var UserInterface $user */
+            $user = $userManager->createUser();
+
+            $user
+                ->setUsername($email)
+                ->setEmail($email)
+                ->setPlainPassword($password)
+                ->setEnabled(true)
+                ->addRole(UserInterface::ROLE_OWNER)
+                ->addRole(UserInterface::ROLE_OWNER_MASTER)
+            ;
+
+            $member = $manager->create();
+
+            $member->setFirstname(sprintf('Usuário %d', $i))
+                ->setEmail($email)
+                ->setContext(BusinessInterface::CONTEXT_MEMBER)
+                ->setUser($user)
+                ->setAccount($account)
+            ;
+
+            $manager->save($account);
+            $helper->finishAccountRegister($account);
+
+            $category = $categoryManager->findOneBy([
+                'context' => 'contact_category',
+                'account' => $account
+            ]);
+
+            /** @var BusinessInterface $contact */
+            $contact = $manager->create();
+
+            $contact
+                ->setContext('person')
+                ->setFirstname(sprintf('Pessoa %s', $i))
+                ->setPhone(sprintf('(%02d) %05d-%04d', $i, $i, $i))
+                ->setDocument(sprintf("%03d.%03d.%03d-%02d", $i, $i, $i, $i))
+                ->setCategory($category)
+                ->setEmail(sprintf('contato%d@sices.com.br', $i))
+                ->setMember($member)
+            ;
+
+            $manager->save($contact);
+        }
+
+        die('OK');
+    }
+
     /**
      * @Route("/", name="generator_xhr")
      */
@@ -134,10 +228,10 @@ class GeneratorController extends AbstractController
         $codes = [];
 
         $prices = [
-            'modules' => 600,
-            'inverters' => 4000,
-            'structures' => 40,
-            'string_boxes' => 700,
+            'modules' => 100,
+            'inverters' => 1000,
+            'structures' => 100,
+            'string_boxes' => 1000,
             'varieties' => 10
         ];
 
@@ -205,7 +299,7 @@ class GeneratorController extends AbstractController
 
         // MEMORIAL + RANGES
         $memorialManager = $this->manager('memorial');
-        $memorial = $memorialManager->findOneBy(['status' => 1]);
+        $memorial = $memorialManager->find(101);
 
         if (!$memorial) {
             $memorial = $memorialManager->create();
@@ -236,7 +330,7 @@ class GeneratorController extends AbstractController
                         ->setLevel('platinum')
                         ->setInitialPower(0)
                         ->setFinalPower(500)
-                        ->setMarkup(.1)
+                        //->setMarkup(.1)
                         ->setCode($code)
                         ->setPrice($prices[$family]);
 
@@ -248,8 +342,8 @@ class GeneratorController extends AbstractController
         }
 
         $memorialManager->save($memorial);
-        dump($memorial);
-        die;
+
+        print_r($codes); die;
     }
 
     /**

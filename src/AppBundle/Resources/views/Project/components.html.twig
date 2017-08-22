@@ -123,9 +123,9 @@
         <tr>
             <td> {{ projectModule.module.id }} </td>
             <td>
-                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('component_show', {type:'module', id:projectModule.module.id}) }}">
+                {#<a data-toggle="modal" data-target="/#modal_component" data-url="{{ path('component_show', {type:'module', id:projectModule.module.id}) }}">#}
                     {{ projectModule.module.model }}
-                </a>
+                {#</a>#}
             </td>
             <td> {{ projectModule.quantity }} </td>
         </tr>
@@ -136,9 +136,9 @@
         <tr>
             <td> {{ id }} </td>
             <td>
-                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('component_show', {type:'inverter', id:group.inverter.id}) }}">
+                {#<a data-toggle="modal" data-target="#modal_component" data-url="{{ path('component_show', {type:'inverter', id:group.inverter.id}) }}">#}
                     {{ group.inverter.model }}
-                </a>
+                {#</a>#}
             </td>
             <td> {{ group.quantity }} </td>
         </tr>
@@ -158,9 +158,9 @@
         <tr>
             <td> {{ projectStringBox.stringBox.code }} </td>
             <td>
-                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('stringbox_show', {id:projectStringBox.stringBox.id}) }}">
+                {#<a data-toggle="modal" data-target="#modal_component" data-url="{{ path('stringbox_show', {id:projectStringBox.stringBox.id}) }}">#}
                     {{ projectStringBox.stringBox.description }}
-                </a>
+                {#</a>#}
             </td>
             <td> {{ projectStringBox.quantity }} </td>
         </tr>
@@ -171,9 +171,9 @@
         <tr>
             <td> {{ projectStructure.structure.code }} </td>
             <td>
-                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('structure_show', {id:projectStructure.structure.id}) }}">
+                {#<a data-toggle="modal" data-target="#modal_component" data-url="{{ path('structure_show', {id:projectStructure.structure.id}) }}">#}
                     {{ projectStructure.structure.description }}
-                </a>
+                {#</a>#}
             </td>
             <td> {{ projectStructure.quantity }} </td>
         </tr>
@@ -232,13 +232,19 @@
 
     button_config.ladda();
     form_config.on('submit', function(event){
+        {% if true %}
         event.preventDefault();
         button_config.ladda('start');
         get_available_makers(function(makers){
             var maker_id = parseInt(generate_makers.val());
             if (makers.length && makers.indexOf(maker_id) >= 0) {
                 ProjectManager.submit(form_config, function(xhr){
-                    ProjectManager.project = xhr.responseJSON.project;
+                    var response = xhr.responseJSON;
+                    if(200 == xhr.status && response.hasOwnProperty('project')) {
+                        ProjectManager.project = xhr.responseJSON.project;
+                    }else{
+                        swal('Ooops', response.errors[0], 'warning');
+                    }
                     ProjectManager.onSaveProject();
                     button_config.ladda('stop');
                 });
@@ -247,6 +253,7 @@
                 swal('Ooops', 'O inversor selecionado não é compatível com esta potência!', 'error');
             }
         });
+        {% endif %}
     });
 
     Numbers.mask(generator_power);

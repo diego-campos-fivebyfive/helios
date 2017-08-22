@@ -3,7 +3,9 @@
 namespace AppBundle\Menu;
 
 use AppBundle\Configuration\App;
+use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\UserInterface;
+use AppBundle\Service\ProjectGenerator\ProjectGenerator;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -75,7 +77,7 @@ class Main implements ContainerAwareInterface
         /**
          * ROLE_OWNER
          */
-        if($user->isOwner()){
+        if($user->isOwner() || $user->isOwnerMaster()){
 
             $menu->addChild('Meus Itens', [
                 'route' => 'extras_index',
@@ -94,13 +96,18 @@ class Main implements ContainerAwareInterface
                 'extras' => ['icon' => App::icons('sun')]
             ]);
 
-            $menu->addChild('Users', [
+            // TEMPORARY
+            /*$menu->addChild('Users', [
                 'route' => 'member_index',
                 'extras' => ['icon' => App::icons('users')]
-            ]);
+            ]);*/
         }
 
         $this->menuSettings($menu, $user);
+
+        if ($user->isOwner()) {
+            $this->requestsMenu($menu, $user);
+        }
 
         $this->menuSuperAdmin($menu, $user);
 
@@ -157,7 +164,7 @@ class Main implements ContainerAwareInterface
             'extras' => ['icon' => App::icons('inverters')]
         ]);
 
-        $components->addChild('Estruturas', [
+        /*$components->addChild('Estruturas', [
             'route' => 'structure_index',
             'extras' => ['icon' => App::icons('structure')]
         ]);
@@ -170,7 +177,7 @@ class Main implements ContainerAwareInterface
         $components->addChild('Variedades', [
             'route' => 'variety_index',
             'extras' => ['icon' => App::icons('variety')]
-        ]);
+        ]);*/
     }
 
     /**
@@ -207,11 +214,6 @@ class Main implements ContainerAwareInterface
             $settings->addChild('My business', [
                 'route' => 'member_business',
                 'extras' => ['icon' => App::icons('business')]
-            ]);
-
-            $settings->addChild('My signature', [
-                'route' => 'signature',
-                'extras' => ['icon' => App::icons('signature')]
             ]);
         }
 
@@ -305,5 +307,25 @@ class Main implements ContainerAwareInterface
                 $this->resolveActiveMenu($child);
             }
         }
+    }
+
+    private function requestsMenu(ItemInterface &$menu, UserInterface $user)
+    {
+        $requests = $menu->addChild('Pedidos', [
+            'uri' => '#',
+            'childrenAttributes' => ['class' => 'nav nav-second-level collapse orders'],
+            'attributes' => ['id' => 'idPedidos'],
+            'extras' => ['icon' => App::icons('requests')]
+        ]);
+
+        $requests->addChild('Orçamento', [
+            'route' => 'project_generator',
+            'extras' => ['icon' => App::icons('money')]
+        ]);
+
+        $requests->addChild('Meus Pedidos', [
+            'route' => 'index_order',
+            'extras' => ['icon' => App::icons('my-requests')]
+        ]);
     }
 }

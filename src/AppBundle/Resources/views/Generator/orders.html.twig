@@ -5,10 +5,10 @@
     <thead>
     <tr>
         <th colspan="5">
-            MEUS ORÇAMENTOS
-            <button type="submit" class="btn btn-success pull-right">
+            ORÇAMENTO ATUAL
+            <button type="submit" class="btn btn-warning pull-right">
                 <i class="fa fa-arrow-right"></i>
-                Enviar pedido para sices
+                Enviar pedido para SICES
             </button>
         </th>
     </tr>
@@ -36,14 +36,11 @@
             <td width="15%"> {{ order.total|currency }} </td>
             <td width="20%">
                 <div class="btn-group btn-group-sm btn-group-justified">
-                    <a data-update="{{ path('generator_orders_update',{id:order.id}) }}" class="btn btn-success">
+                    <a href="{{ path('generator_orders_update',{id:order.id}) }}" class="btn btn-success">
                         <i class="fa fa-pencil"></i>
                     </a>
                     <a data-delete="{{ path('generator_orders_delete',{id:order.id}) }}" class="btn btn-danger">
                         <i class="fa fa-trash"></i>
-                    </a>
-                    <a class="btn btn-warning">
-                        <i class="fa fa-check"></i>
                     </a>
                 </div>
             </td>
@@ -52,15 +49,6 @@
     {% endfor %}
 
     </tbody>
-
-    <tfoot>
-    <tr>
-        <td colspan="5" class="text-center">
-            {{ knp_pagination_render(orders) }}
-        </td>
-    </tr>
-    </tfoot>
-
 </table>
 
 </form>
@@ -68,25 +56,19 @@
 <script>
 
     var pagination = $('ul.pagination');
-    var data_update = $('[data-update]');
+    //var data_update = $('[data-update]');
     var data_delete = $('[data-delete]');
     var form_budget = $('#form_budget');
     var check_budget = $('#check_budget');
 
-    pagination.find('a').on('click', function (event) {
-        event.preventDefault();
-        var url = $(this).attr('href');
-        OrderManager.getOrders(url);
-    });
-
-    data_update.on('click', function () {
+    /*data_update.on('click', function () {
         Request.send({
             url: $(this).data('update'),
             callback: function (xhr) {
                 $('#generator_form').html(xhr.responseText);
             }
         })
-    });
+    });*/
 
     data_delete.on('click', function () {
 

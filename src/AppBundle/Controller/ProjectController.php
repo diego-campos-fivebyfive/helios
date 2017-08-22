@@ -139,6 +139,14 @@ class ProjectController extends AbstractController
      */
     public function createAction(Request $request)
     {
+        $member = $this->member();
+
+        if($member->getAllowedContacts()->isEmpty()){
+            return $this->render('project.alerts', [
+                'error' => 'empty_contacts'
+            ]);
+        }
+
         $generator = $this->getGenerator();
         $defaults = $generator->loadDefaults();
 
@@ -152,7 +160,7 @@ class ProjectController extends AbstractController
         /** @var Project $project */
         $project = $manager->create();
 
-        $project->setMember($this->member());
+        $project->setMember($member);
 
         $form->handleRequest($request);
 
@@ -174,6 +182,14 @@ class ProjectController extends AbstractController
 
             $generator->generate($project);
 
+            $errors = self::loadDefaultErrors($project);
+
+            if(count($errors)) {
+                return $this->json([
+                    'errors' => $errors
+                ], Response::HTTP_CONFLICT);
+            }
+
             return $this->json([
                 'project' => [
                     'id' => $project->getId(),
@@ -193,6 +209,8 @@ class ProjectController extends AbstractController
      */
     public function updateAction(Request $request, Project $project)
     {
+        $this->denyAccessUnlessGranted('edit', $project);
+
         $defaults = $project->getDefaults();
 
         if(!$project->getMember()){
@@ -251,6 +269,14 @@ class ProjectController extends AbstractController
 
             $generator->generate($project);
 
+            $errors = self::loadDefaultErrors($project);
+
+            if(count($errors)) {
+                return $this->json([
+                    'errors' => $errors
+                ], Response::HTTP_CONFLICT);
+            }
+
             return $this->json([
                 'project' => [
                     'id' => $project->getId(),
@@ -286,6 +312,10 @@ class ProjectController extends AbstractController
 
                     $projectModule->setGroups($groups);
                     $generator->generateStructures($project);
+
+                    if(null != $request->get('precify')){
+                        $generator->pricing($project);
+                    }
 
                     break;
                 }
@@ -520,7 +550,7 @@ class ProjectController extends AbstractController
      */
     public function deleteAction(Project $project)
     {
-        //$this->checkAccess($project);
+        $this->denyAccessUnlessGranted('edit', $project);
 
         $this->manager('project')->delete($project);
 
@@ -567,33 +597,6 @@ class ProjectController extends AbstractController
         ], empty($errors) ? Response::HTTP_ACCEPTED : Response::HTTP_IM_USED);
     }
 
-    private function configureProjectFromDefaults(ProjectInterface $project)
-    {
-        $power = $this->get('power_estimator')->estimate($project->getInfConsumption(), $project->getLatitude(), $project->getLongitude());
-
-        $defaults = $project->getDefaults();
-
-        if(empty($defaults)) {
-            $defaults['module'] = 32433;
-            $defaults['inverter_maker'] = 60627;
-            $defaults['structure_maker'] = 61211;
-            $defaults['string_box_maker'] = 61209;
-        }
-
-        $defaults['roof_type'] = $project->getRoofType();
-        $defaults['power'] = $power;
-
-        /** @var \AppBundle\Service\ProjectGenerator\ProjectGenerator $generator */
-        $generator = $this->get('project_generator');
-        $generator->autoSave(false);
-
-        $project->setDefaults($defaults);
-
-        $generator->project($project)->generate();
-
-        $generator->save($project, true);
-    }
-
     /*
      * @param Request $request
      * @return BusinessInterface|null|object
@@ -617,5 +620,22 @@ class ProjectController extends AbstractController
     private function getGenerator()
     {
         return $this->get('project_generator');
+    }
+
+    /**
+     * @param Project $project
+     * @return array
+     */
+    private static function loadDefaultErrors(Project $project)
+    {
+        $errors = [];
+        $defaults  = $project->getDefaults();
+        if(count($defaults['errors'])){
+            if(in_array('exhausted_inverters', $defaults['errors'])) {
+                $errors[] = 'Número máximo de inversores excedido para esta configuração.';
+            }
+        }
+
+        return $errors;
     }
 }

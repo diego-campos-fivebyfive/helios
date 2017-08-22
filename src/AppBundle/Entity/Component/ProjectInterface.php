@@ -601,7 +601,7 @@ interface ProjectInterface
     public function setTransformer(VarietyInterface $transformer);
 
     /**
-     * @return VarietyInterface
+     * @return ProjectVarietyInterface
      */
     public function getTransformer();
 
@@ -743,6 +743,17 @@ interface ProjectInterface
      * @return ProjectInterface
      */
     public function removeProjectTax(ProjectTaxInterface $projectTax);
+
+    /**
+     * @param $issuedAt
+     * @return ProjectInterface
+     */
+    public function setIssuedAt($issuedAt);
+
+    /**
+     * @return \DateTime
+     */
+    public function getIssuedAt();
 
     /**
      * @return \Doctrine\Common\Collections\ArrayCollection

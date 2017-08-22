@@ -106,7 +106,7 @@ function setSession(btn) {
     $("#"+pg+"").append(session);
     for (n = 1;n<session.children().length;n++){
         CKEDITOR.inline( "editor_"+idEditor, {
-            extraPlugins: 'hcard,sourcedialog,justify'
+            extraPlugins: 'sourcedialog,justify'
         } );
         idEditor++;
     }
@@ -218,20 +218,24 @@ function loadDatas() {
 
                 var tableInEditor = document.getElementsByClassName("t" + idTag);
 
-                var rgb = [];
+                /*var rgb = [];
                 for (x = 0; x < $(tableInEditor).length; x++) {
-                    var tdOfTable = $(tableInEditor[x]).children().children().children()[4].style;
-                    var background = tdOfTable['background-color'];
-
-                    background = background.replace(/\D/g, ' ');
-                    rgb = background.split(" ");
-                    rgb = rgb.filter(function (ele) {
-                        return ele !== '';
-                    });
-                    for (x = 0; x < rgb.length; x++) {
-                        rgb[x] = parseInt(rgb[x]);
+                    try {
+                        var tdOfTable = $(tableInEditor[x]).children().children().children()[4].style;
+                        var background = tdOfTable['background-color'];
+                        background = background.replace(/\D/g, ' ');
+                        rgb = background.split(" ");
+                        rgb = rgb.filter(function (ele) {
+                            return ele !== '';
+                        });
+                        for (x = 0; x < rgb.length; x++) {
+                            rgb[x] = parseInt(rgb[x]);
+                        }
                     }
-                }
+                    catch(err) {
+                    }
+                    if(rgb.length == 3) x = $(tableInEditor).length;
+                }*/
 
                 $(tagTable).children().attr('class',"t" + idTag + "");
 
@@ -245,14 +249,14 @@ function loadDatas() {
                     $(contentOfTag[x]).html($(tagTable).html());
                 }
 
-                if(rgb.length == 3){
+                /*if(rgb.length == 3){
                     changeColorTableEquipServ(rgbToHex(rgb[0],rgb[1],rgb[2]));
                     //timeout aqui
                     $('#colorTableEquipServ').val(""+rgbToHex(rgb[0],rgb[1],rgb[2])+"");
                 }else{
                     colorTableEquipServ = $('#colorTableEquipServ').val();
                     changeColorTableEquipServ(colorTableEquipServ);
-                }
+                }*/
 
             } else {
                 var content = $("#d" + idTag + "").html();
@@ -363,6 +367,10 @@ function removeDataCke() {
 }
 
 $(document).ready(function(){
+
+    setInterval(function () {
+        $(" table ").addClass('ttableEquipmentAndServices')
+    },1200);
 
     /*setTimeout(function () {
         var data_cke = $('[data-cke-widget-data]');

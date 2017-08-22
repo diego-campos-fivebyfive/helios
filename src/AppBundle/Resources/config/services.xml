@@ -55,10 +55,6 @@
             <argument type="service" id="request_stack"/>
         </service>
 
-        <service id="app.access_voter" class="AppBundle\Service\Security\AccessVoter" public="false">
-            <tag name="security.voter"/>
-        </service>
-
         <service id="app.project_financial" class="AppBundle\Entity\Financial\ProjectFinancialManager">
             <argument>AppBundle\Entity\Financial\ProjectFinancial</argument>
             <argument type="service" id="doctrine"/>

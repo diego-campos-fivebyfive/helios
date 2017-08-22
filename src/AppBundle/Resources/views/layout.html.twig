@@ -35,15 +35,23 @@
     %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
+
     <script>
+
         {% set member = app.user.info %}
         {% set request = app.request %}
         {% set route = request.attributes.get('_route') %}
-        {% set host = 'localhost' == request.host ? 'kolinalabs.com' : request.host %}
-        {% set track_routes = {
+        {% set host = 'localhost' %}
+        {% if host != request.host %}
+            {% set host = request.host != 'app.plataformasicessolar.com.br' ?  'homolog.plataformasicessolar.com.br' : 'app.plataformasicessolar.com.br' %}
+        {% endif %}
+
+        {#{% set track_routes = {
             'member_business':true,
             'member_profile':true
-        } %}
+        } %}#}
+
+        {% if host == 'app.plataformasicessolar.com.br' or host == 'homolog.plataformasicessolar.com.br' %}
 
         (function(){
             var t,i,e,n=window,o=document,a=arguments,s="script",r=["config","track","identify","visit","push","call","trackForm","trackClick"],c=function(){var t,i=this;for(i._e=[],t=0;r.length>t;t++)(function(t){i[t]=function(){return i._e.push([t].concat(Array.prototype.slice.call(arguments,0))),i}})(r[t])};for(n._w=n._w||{},t=0;a.length>t;t++)n._w[a[t]]=n[a[t]]=n[a[t]]||new c;i=o.createElement(s),i.async=1,i.src="//static.woopra.com/js/w.js",e=o.getElementsByTagName(s)[0],e.parentNode.insertBefore(i,e)
@@ -60,8 +68,13 @@
             profile: '{{ member.isOwner ? 'Dono da conta' : 'Agente' }}'
         });
 
+        woopra.track();
+
+        {% endif %}
+
     </script>
-    {% set allow_track = false %}
+
+    {#{% set allow_track = false %}
     {% if woopraEvent is defined and woopraEvent is not null %}
         {% if attribute(track_routes, route) is defined or 'turn-online' == woopraEvent.name %}
             <script>woopra.track();</script>
@@ -72,21 +85,26 @@
     {% endif %}
     {% if not allow_track %}
         <script>woopra.track();</script>
-    {% endif %}
-
-    <style>
-        .navbar-default .support_link a{
-            background-color: #1c84c6;
-            color: white;
-        }
-        .navbar-default .support_link a:focus,
-        .navbar-default .support_link a:hover{
-            background-color: #1a7bb9 !important;
-            color: white;
-        }
-
-    </style>
+    {% endif %}#}
 </head>
+<style>
+    .navbar-default .support_link a{
+        background-color: #1c84c6;
+        color: white;
+    }
+    .navbar-default .support_link a:focus,
+    .navbar-default .support_link a:hover{
+        background-color: #1a7bb9 !important;
+        color: white;
+    }
+    #idPedidos ul li a{
+         color: white;
+    }
+    #idPedidos, #idPedidos a, #idPedidos :hover{
+        background-color: #00A7EC !important;
+        color: white !important;
+    }
+</style>
 
 <body>
 
@@ -176,7 +194,7 @@
 
 {% block scripts %}{% endblock %}
 
-{{ render(controller('AppBundle:App:intercom')) }}
+{#{{ render(controller('AppBundle:App:intercom')) }}#}
 
 <script>
     $('.support_link a').attr('target', '_blank');

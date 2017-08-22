@@ -34,6 +34,7 @@ abstract class ShippingRuler
             self::defaults($rule);
         }else {
             self::definitions($rule);
+            self::percent($rule);
             self::value($rule);
             self::markup($rule);
             self::shipping($rule);
@@ -80,7 +81,7 @@ abstract class ShippingRuler
      */
     private static function value(array &$rule)
     {
-        $value = $rule['price'] * $rule['percent'];
+        $value = $rule['price'] * ($rule['percent'] / 100);
         $rule['value'] = $value < 400 ? 400 : $value;
     }
 
@@ -91,19 +92,47 @@ abstract class ShippingRuler
      */
     private static function definitions(array &$rule)
     {
+        $rule['company'] = 'ctb';
+        if($rule['price'] <= 60000 && in_array($rule['region'], [self::REGION_NORTH, self::REGION_NORTHEAST, self::REGION_MIDWEST])){
+            $rule['company'] = 'mlt';
+        }
+    }
+
+    /**
+     * @param array $rule
+     */
+    private static function percent(array &$rule)
+    {
+        self::percentLevel($rule);
+
         $rules = self::rules();
-        $limit = null;
-        $companies = [];
-        foreach ($rules['limit'] as $key => $data){
-            if(is_null($limit) || $rule['price'] > $limit){
-                $limit = $key;
-                $companies = $data;
-            }else{
-                break;
+
+        $percent = $rules[$rule['company']][$rule['percent_level']][$rule['region']];
+
+        if(is_array($percent)){
+            $percent = $percent[$rule['kind']];
+        }
+
+        $rule['percent'] = $percent;
+    }
+
+    /**
+     * @param array $rule
+     */
+    private static function percentLevel(array &$rule)
+    {
+        $percentLevel = 50000;
+        if($rule['price'] > 50000){
+            $percentLevel = 60000;
+            if($rule['price'] > 60000){
+                $percentLevel = 100000;
+                if($rule['price'] > 100000){
+                    $percentLevel = 200000;
+                }
             }
         }
 
-        self::company($companies, $rule);
+        $rule['percent_level'] = $percentLevel;
     }
 
     /**
@@ -136,52 +165,53 @@ abstract class ShippingRuler
     private static function rules()
     {
         return [
-            'limit' => [
+            'mlt' => [
+                50000 => [
+                    self::REGION_NORTH => 4.8,
+                    self::REGION_NORTHEAST => 4.8,
+                    self::REGION_MIDWEST => 4.1
+                ],
                 60000 => [
-                    'mlt' => [
-                        self::REGION_NORTH => 4.22,
-                        self::REGION_NORTHEAST => 4.22,
-                        self::REGION_MIDWEST => 3.1
-                    ],
-                    'ctp' => [
-                        self::REGION_SOUTH => 3.6,
-                        self::REGION_SOUTHEAST => [
-                            'interior' => 3.8,
-                            'sp-capital' => 2,
-                            'rj-capital' => 2.7,
-                            'mg-capital' => 2.7
-                        ]
+                    self::REGION_NORTH => 4.22,
+                    self::REGION_NORTHEAST => 4.22,
+                    self::REGION_MIDWEST => 3.1
+                ]
+            ],
+            'ctb' => [
+                50000 => [
+                    self::REGION_SOUTH => 4.5,
+                    self::REGION_SOUTHEAST => [
+                        'interior' => 3.8,
+                        'sp-capital' => 2,
+                        'rj-capital' => 2.7,
+                        'mg-capital' => 2.7
                     ]
                 ],
                 100000 => [
-                    'ctp' => [
-                        self::REGION_NORTH => 4.7,
-                        self::REGION_NORTHEAST => 4.7,
-                        self::REGION_MIDWEST => 4.3,
-                        self::REGION_SOUTH => 3.6,
-                        self::REGION_SOUTHEAST => [
-                            'interior' => 3.5,
-                            'sp-capital' => 1.9,
-                            'rj-capital' => 2.1,
-                            'mg-capital' => 2.3
-                        ]
+                    self::REGION_NORTH => 4.7,
+                    self::REGION_NORTHEAST => 4.7,
+                    self::REGION_MIDWEST => 4.3,
+                    self::REGION_SOUTH => 3.6,
+                    self::REGION_SOUTHEAST => [
+                        'interior' => 3.5,
+                        'sp-capital' => 1.9,
+                        'rj-capital' => 2.1,
+                        'mg-capital' => 2.3
                     ]
                 ],
                 200000 => [
-                    'ctp' => [
-                        self::REGION_NORTH => 4.2,
-                        self::REGION_NORTHEAST => 4.2,
-                        self::REGION_MIDWEST => 4,
-                        self::REGION_SOUTH => 3.2,
-                        self::REGION_SOUTHEAST => [
-                            'interior' => 3,
-                            'sp-capital' => 1.55,
-                            'rj-capital' => 1.6,
-                            'mg-capital' => 2.1
-                        ]
+                    self::REGION_NORTH => 4.2,
+                    self::REGION_NORTHEAST => 4.2,
+                    self::REGION_MIDWEST => 4,
+                    self::REGION_SOUTH => 3.2,
+                    self::REGION_SOUTHEAST => [
+                        'interior' => 3,
+                        'sp-capital' => 1.55,
+                        'rj-capital' => 1.6,
+                        'mg-capital' => 2.1
                     ]
                 ]
-            ]
+            ],
         ];
     }
 

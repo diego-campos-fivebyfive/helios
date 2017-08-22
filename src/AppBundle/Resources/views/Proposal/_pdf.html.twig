@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>pdf</title>
+    <link href="{{ asset('public/assets/css/main.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/proposal2/editor.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/proposal2/editor_pdf.css') }}" rel="stylesheet"/>
+</head>
+
+<body>
+
+<div class="">
+    <div id="editor_document">
+        {{ content|raw }}
+    </div>
+</div>
+
+<script>
+    //window.print();
+</script>
+</body>
+</html>

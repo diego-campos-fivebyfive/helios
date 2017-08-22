@@ -58,7 +58,7 @@
 
         var OrderManager = {
             currentUrl: null,
-            getElements: function(){
+            /*getElements: function(){
                 if(Order.id){
                     Request.send({
                         url: '{{ path('generator_orders_elements', {id:'_id_'}) }}'.replace(/_id_/g, Order.id),
@@ -67,7 +67,7 @@
                         }
                     });
                 }
-            },
+            },*/
             getOrders: function(url){
                 if(url)  OrderManager.currentUrl = url;
                 Request.send({

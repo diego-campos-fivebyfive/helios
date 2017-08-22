@@ -11,14 +11,14 @@ use AppBundle\Form\Component\GeneratorType;
 use AppBundle\Form\Order\ElementType;
 use AppBundle\Form\Order\OrderType;
 use AppBundle\Service\Order\ElementResolver;
-use AppBundle\Service\Order\OrderManipulator;
-use AppBundle\Service\Order\OrderPrecifier;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
+ * @Security("has_role('ROLE_OWNER') or has_role('ROLE_OWNER_MASTER')")
  * @Route("generator")
  */
 class ProjectGeneratorController extends AbstractController
@@ -116,16 +116,10 @@ class ProjectGeneratorController extends AbstractController
             ])
         ;
 
-        $paginator = $this->getPaginator();
-
-        $pagination = $paginator->paginate(
-            $qb->getQuery(),
-            $request->query->getInt('page', 1),
-            10
-        );
+        $orders = $qb->getQuery()->getResult();
 
         return $this->render('generator.orders', [
-            'orders' => $pagination
+            'orders' => $orders
         ]);
     }
 
@@ -162,9 +156,9 @@ class ProjectGeneratorController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
 
-            $this->manager('order')->save($order);
+           $this->manager('order')->save($order);
 
-            return $this->json([]);
+           return $this->json([]);
         }
 
         return $this->render('generator.order', [
@@ -248,9 +242,11 @@ class ProjectGeneratorController extends AbstractController
 
             ElementResolver::resolve($element, $component);
 
+            $manager->save($element);
+
             $this->get('order_precifier')->precify($element->getOrder());
 
-            return $this->json([]);
+            return $this->json([], Response::HTTP_ACCEPTED);
         }
 
         return $this->render('generator.element', [
