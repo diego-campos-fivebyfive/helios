@@ -22,16 +22,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class ProposalController extends AbstractController
 {
-    /**
-     * @Route("/")
-     */
-    public function indexAction()
-    {
-        return $this->render('AppBundle:Proposal:index.html.twig', array(
-
-        ));
-    }
-
+    
     /**
      * @Route("/{id}/save", name="proposal_save")
      */
