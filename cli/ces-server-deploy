@@ -22,4 +22,6 @@ rm -rf app/cache/prod/**
 php app/console cache:clear --env=dev
 php app/console cache:clear --env=prod
 
+cli/ces-notify-slack --production-deploy
+
 echo 'Done.'
