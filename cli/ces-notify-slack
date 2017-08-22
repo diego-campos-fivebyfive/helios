@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+if [ $1 == '--production-deploy' ]; then
+  message='Production Deploy Done!'
+elif [ $1 == '--homolog-deploy' ]; then
+  message='Homolog Deploy Done!'
+else
+  echo "Invalid Message!"
+  exit 1
+fi
+
+echo "Sending Slack Devops web hooks notification..."
+curl -s \
+  -X POST \
+  -H "Content-type:application/json" \
+  -d "{\"text\": \"$message\"}" \
+  https://hooks.slack.com/services/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
