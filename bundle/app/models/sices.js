@@ -91,6 +91,7 @@ module.exports = {
   sendVariety,
   sendMemorial,
   sendAccount,
+  sendOrder,
   sendUser,
   getUser
 }
