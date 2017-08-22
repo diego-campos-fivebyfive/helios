@@ -443,7 +443,12 @@
             onAddPage: function (page) {
                 Editor.changePageBackground($('#backgroundColor').val());
             },
+            setMiniNavbar: function () {
+                $(" body ").addClass("mini-navbar");
+            },
             init: function () {
+
+                Editor.setMiniNavbar();
 
                 this.initializeSettings();
                 this.initializeCharts();
