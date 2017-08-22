@@ -131,7 +131,7 @@ class AppListener
             /** @var \Twig_Environment $twig */
             $twig = $this->container->get('twig');
             $content = $twig->render('TwigBundle:Exception:'.$error.'.html.twig', [
-                'exception' => $event->getException()
+                'exception' => $exception
             ]);
 
             $response = new Response($content);
