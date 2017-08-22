@@ -106,7 +106,7 @@ interface ElementInterface
      * @param \DateTime $created_at
      * @return ElementInterface
      */
-    public function setCreatedAt($created_at);
+    public function setCreatedAt($createdAt);
 
     /**
      * @return \DateTime
@@ -117,7 +117,7 @@ interface ElementInterface
      * @param \DateTime $updated_at
      * @return ElementInterface
      */
-    public function setUpdatedAt($updated_at);
+    public function setUpdatedAt($updatedAt);
 
     /**
      * @return \DateTime
