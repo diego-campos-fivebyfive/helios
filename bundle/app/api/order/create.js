@@ -33,7 +33,18 @@ const joinOrders = ({ items: children, ...master }) => ([
 ])
 
 const sendOrders = orders =>
-  orders.reduce((y, x) => Sices.sendOrder(x), {})
+  orders.reduce((y, x) => {
+    if (!y) {
+      return Sices.sendOrder(x)
+    }
+
+    return y.then(data => {
+      Sices.sendOrder({
+        parent_id: data.id,
+        ...x
+      })
+    })
+  }, null)
 
 const createOrder = ({ notification }) =>
   Isquik
