@@ -14,4 +14,4 @@ curl -s \
   -X POST \
   -H "Content-type:application/json" \
   -d "{\"text\": \"$message\"}" \
-  https://hooks.slack.com/services/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
+  $SLACK_HOOK
