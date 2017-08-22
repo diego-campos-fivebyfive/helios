@@ -69,6 +69,20 @@ class Element implements ElementInterface
     private $order;
 
     /**
+     * var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     */
+    private $created_at;
+
+    /**
+     * var \DateTime
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     */
+    private $updated_at;
+
+    /**
      * @inheritDoc
      */
     public function __construct()
@@ -225,4 +239,40 @@ class Element implements ElementInterface
     {
         return $this->order;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCreatedAt()
+    {
+        return $this->created_at;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setCreatedAt($created_at)
+    {
+        $this->created_at = $created_at;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updated_at;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setUpdatedAt($updated_at)
+    {
+        $this->updated_at = $updated_at;
+        return $this;
+    }
+
+
 }
