@@ -11,7 +11,7 @@ const SICES_HOST = process.env.CES_SICES_HOST
 const SICES_PORT = process.env.CES_SICES_PORT
 const BUNDLE_HOST = process.env.CES_BUNDLE_HOST
 const BUNDLE_PORT = process.env.CES_BUNDLE_PORT
-const ISQUIK_PORT = process.env.CES_ISQUIK_PORT
+const ISQUIK_PORT = 2021
 
 const app = express()
 app.listen(ISQUIK_PORT)
@@ -75,6 +75,11 @@ app.post('/notifications', (req, res) => {
       return
   }
 })
+
+app.post('/notification-test', (req, res) => {
+  res.status(200).json(req.body).end()
+})
+
 
 const sendNotifications = (req, res, notification) => {
   const options = {
