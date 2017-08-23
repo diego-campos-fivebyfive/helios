@@ -7,7 +7,7 @@ const getStatus = status => status === 'Aprovado'
 
 const splitOrder = ({ Dado: order }) => ({
   account_id: order.Integrador.IdSicesSolar,
-  isquik_id: order.Integrador.IdIntegrador,
+  isquik_id: order.IdOrcamentoVenda,
   description: '',
   note: '',
   status: getStatus(order.Status.Descricao),
