@@ -14,7 +14,6 @@ const splitOrder = ({ Dado: order }) => ({
   items: order.itens.map(item => ({
     description: item.DescricaoSistema,
     note: '',
-    parent_id: 40,
     code: item.CodigoProduto,
     status: getStatus(order.Status.Descricao),
     products: item.subItens.map(product => ({
@@ -28,8 +27,8 @@ const splitOrder = ({ Dado: order }) => ({
 })
 
 const joinOrders = ({ items: children, ...master }) => ([
-  ...children,
-  master
+  master,
+  ...children
 ])
 
 const sendOrders = orders =>
@@ -38,12 +37,13 @@ const sendOrders = orders =>
       return Sices.sendOrder(x)
     }
 
-    return y.then(data => {
+    y.then(data => {
       Sices.sendOrder({
         parent_id: data.id,
         ...x
       })
     })
+    return y
   }, null)
 
 const createOrder = ({ notification }) =>
