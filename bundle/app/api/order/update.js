@@ -2,49 +2,55 @@
 
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
-const { update: updateUser } = require('./user')
 
-const level = {
-  'BLACK': 'black',
-  'PLATINUM': 'platinum',
-  'PREMIUM': 'premium',
-  'PARCEIRO OURO': 'gold',
-  'PROMOCIONAL': 'promotional'
-}
-
-const getLevel = type => level[type]
-
-const sendAccount = ({ Dados: account }) =>
-  Sices
-    .updateAccount(account.IdSicesSolar, {
-      document: account.Cnpj,
-      extraDocument: account.InscricaoEstadual,
-      firstname: account.RazaoSocial,
-      lastname: account.NomeFantasia,
-      postcode: account.Cep,
-      state: account.UF,
-      city: account.Cidade,
-      district: account.Bairro,
-      street: account.Logradouro,
-      number: account.Numero,
-      email: account.Email,
-      phone: account.Telefone,
-      level: getLevel(account.NivelDesconto.Descricao),
-      status: true,
-      isquik_id: account.IdIntegrador
-    })
-    .then(data => updateUser({
-      email: account.Email,
-      phone: account.Telefone,
-      isquik_id: account.Administrador,
-      account_id: data.id
+const splitOrder = ({ Dado: order }) => ({
+  account_id: order.Integrador.IdSicesSolar,
+  isquik_id: order.IdOrcamentoVenda,
+  description: '',
+  note: '',
+  status: order.Status.IdStatusOrcamentoVenda,
+  items: order.itens.map(item => ({
+    description: item.DescricaoSistema,
+    note: '',
+    code: item.CodigoProduto,
+    status: order.Status.IdStatusOrcamentoVenda,
+    products: item.subItens.map(product => ({
+      code: product.CodigoProduto,
+      description: product.Descricao,
+      quantity: product.Quantidade,
+      unit_price: product.ValorUnitario,
+      tag: ''
     }))
+  }))
+})
 
-const updateAccount = ({ notification }) =>
+const joinOrders = ({ items, ...master }) => ([
+  master,
+  ...items
+])
+
+const sendOrders = orders =>
+  orders.reduce((master, current) => {
+    if (!master) {
+      return Sices.sendOrder(current)
+    }
+
+    master.then(data => {
+      Sices.sendOrder({
+        parent_id: data.id,
+        ...current
+      })
+    })
+    return master
+  }, null)
+
+const updateOrder = ({ notification }) =>
   Isquik
-    .getAccount(notification.id)
-    .then(sendAccount)
+    .getOrder(notification.id)
+    .then(splitOrder)
+    .then(joinOrders)
+    .then(sendOrders)
 
 module.exports = {
-  update: updateAccount
+  update: updateOrder
 }
