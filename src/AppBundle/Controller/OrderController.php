@@ -68,6 +68,12 @@ class OrderController extends AbstractController
         /** @var Order $order */
         $order = $transformer->transformFromChildrens($childrens);
 
+        $this->get('notifier')->notify([
+            'Evento' => '206',
+            'Callback' => 'order_created',
+            'Id' => $order->getId()
+        ]);
+
         return $this->json([
             'order' => [
                 'id' => $order->getId()
