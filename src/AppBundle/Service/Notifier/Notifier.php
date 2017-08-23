@@ -12,7 +12,8 @@ class Notifier
         $routes = [
             'account_created' => 'integradores/cadastrointegradores/Notificacao',
             'product' => 'tabelabase/tabelabase/Notificacao',
-            'proposal_issued' => 'orcamentovendas/orcamentovendas/Notificacao'
+            'proposal_issued' => 'orcamentovendas/orcamentovendas/Notificacao',
+            'order_created' => 'orcamentovendas/orcamentovendas/Notificacao'
         ];
 
         $baseUrl = 'https://api.isquik.com:443';
@@ -53,5 +54,6 @@ class Notifier
         curl_setopt($notifier, CURLOPT_POST, true);
         curl_setopt($notifier, CURLOPT_POSTFIELDS, http_build_query($notification));
         curl_close($notifier);
+        return;
     }
 }
