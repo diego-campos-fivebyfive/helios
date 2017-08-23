@@ -217,6 +217,43 @@ class GeneratorController extends AbstractController
     }
 
     /**
+     * @Route("/codes", name="debug_codes")
+     */
+    public function codesAction(Request $request)
+    {
+        die('RUN_ONLY_LOCAL');
+
+        $data = json_decode(file_get_contents($this->get('kernel')->getRootDir() . './../web/uploads/codes.json'), true);
+
+        foreach ($data as $id => $codes){
+
+            $manager = $this->manager($id);
+
+            //dump($manager->getConnection()->getHost()); die;
+
+            $alias = (substr($id, 0, 1));
+
+            $entities = $manager
+                ->createQueryBuilder()
+                ->where(sprintf('%s.code is not null', $alias))
+                ->getQuery()
+                ->setMaxResults(count($codes))
+                ->getResult()
+            ;
+
+            /** @var \AppBundle\Entity\Component\InverterInterface $entity */
+            foreach ($entities as $key => $entity) {
+                if($entity->getCode() != $codes[$key]) {
+                    $entity->setCode($codes[$key]);
+                    $manager->save($entity, $key == count($codes) - 1);
+                }
+            }
+        }
+
+        dump($data); die;
+    }
+
+    /**
      * @Route("/ranges")
      */
     public function rangesAction()
@@ -330,7 +367,6 @@ class GeneratorController extends AbstractController
                         ->setLevel('platinum')
                         ->setInitialPower(0)
                         ->setFinalPower(500)
-                        //->setMarkup(.1)
                         ->setCode($code)
                         ->setPrice($prices[$family]);
 
