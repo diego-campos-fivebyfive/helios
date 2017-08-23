@@ -40,7 +40,7 @@
                 url: '{{ path('app_check_online') }}',
                 complete: function (xhr) {
                     var response = xhr.responseJSON;
-                    if(!response.online){
+                    if(!response.online && 'undefined' != typeof woopra){
                         woopra.track();
                     }
                 }

@@ -101,4 +101,26 @@ interface ElementInterface
      * @return mixed
      */
     public function getOrder();
+
+    /**
+     * @param \DateTime $created_at
+     * @return ElementInterface
+     */
+    public function setCreatedAt($createdAt);
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt();
+
+    /**
+     * @param \DateTime $updated_at
+     * @return ElementInterface
+     */
+    public function setUpdatedAt($updatedAt);
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt();
 }

@@ -30,7 +30,8 @@ class OrderController extends AbstractController
                     ->where('o2.parent is null')
                 ->getQuery()->getDQL()
             )
-        );
+        )->andWhere('o.account = :account')
+        ->setParameter('account', $this->account());
 
         $pagination = $this->getPaginator()->paginate(
             $qb->getQuery(),

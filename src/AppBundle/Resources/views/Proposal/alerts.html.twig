@@ -1,0 +1,38 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+    {% set errors = {
+        empty_calculation_metadata: {
+            message: 'A análise financeira não foi calculada.'
+        }
+
+    } %}
+    <div class="" style="padding-top: 2rem;">
+
+        <script>
+            Project = {id : {{ project.id}}};
+        </script>
+        {% include view('helper.request') %}
+        {% include view('project.navbar') %}
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="panel panel-danger" style="margin-top: 2rem;">
+                    <div class="panel-heading">
+                        <i class="fa fa-warning"></i> Atenção
+                    </div>
+                    <div class="panel-body">
+                        <div class="alert alert-danger text-center">
+                            <h1> {{ attribute(errors, error).message }} </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        Navbar.init();
+    </script>
+
+{% endblock %}
