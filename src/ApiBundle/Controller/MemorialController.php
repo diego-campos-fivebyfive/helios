@@ -21,10 +21,10 @@ class MemorialController extends FOSRestController
         $memorialManager = $this->get('memorial_manager');
         $rangeManager = $this->get('range_manager');
 
-        $version = $memorialManager->findOneBy(['version' => $data['version']]);
+        $existentMemorial = $memorialManager->findOneBy(['version' => $data['version']]);
 
-        if ($version) {
-            $data = "This verion already exists!";
+        if ($existentMemorial) {
+            $data = "This Memorial Already Existing!";
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
 
             $view = View::create($data)->setStatusCode($status);
