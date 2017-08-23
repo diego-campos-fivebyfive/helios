@@ -26,24 +26,24 @@ const splitOrder = ({ Dado: order }) => ({
   }))
 })
 
-const joinOrders = ({ items: children, ...master }) => ([
+const joinOrders = ({ items, ...master }) => ([
   master,
-  ...children
+  ...items
 ])
 
 const sendOrders = orders =>
-  orders.reduce((y, x) => {
-    if (!y) {
-      return Sices.sendOrder(x)
+  orders.reduce((master, current) => {
+    if (!master) {
+      return Sices.sendOrder(current)
     }
 
-    y.then(data => {
+    master.then(data => {
       Sices.sendOrder({
         parent_id: data.id,
-        ...x
+        ...current
       })
     })
-    return y
+    return master
   }, null)
 
 const createOrder = ({ notification }) =>
