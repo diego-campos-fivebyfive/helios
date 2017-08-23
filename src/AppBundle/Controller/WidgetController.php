@@ -78,8 +78,8 @@ class WidgetController extends AbstractController
         /** @var ProjectInterface $project */
         foreach ($data as $project) {
             $index = 'month' == $group
-                ? (int) $project->getUpdatedAt()->format('d')  // TODO: Change to getIssuedAt
-                : (int) $project->getUpdatedAt()->format('m'); // TODO: Change to getIssuedAt
+                ? (int) $project->getIssuedAt()->format('d')
+                : (int) $project->getIssuedAt()->format('m');
 
             $groups[$index]['count'] += 1;
             $groups[$index]['power'] += $project->getPower();
@@ -120,9 +120,11 @@ class WidgetController extends AbstractController
 
         /** @var ProjectInterface $project */
         foreach ($data as $project) {
-            $summary['count'] += 1;
-            $summary['amount'] += $project->getSalePrice();
-            $summary['power'] += $project->getPower();
+            if ($project->getIssuedAt()) {
+                $summary['count'] += 1;
+                $summary['amount'] += $project->getSalePrice();
+                $summary['power'] += $project->getPower();
+            }
         }
 
         return $this->json([
@@ -140,11 +142,9 @@ class WidgetController extends AbstractController
         $member = $this->member();
 
         if ($member->isOwner()) {
-            $projects = $projectManager->getObjectManager($member->getAccount());
+            $projects = $projectManager->findByAccount($member->getAccount());
         } else {
-            $projects = [];
-            // TODO: Apply new filter here!
-            //$projects = $member->getProjects()->toArray();
+            $projects = $member->getProjects()->toArray();
         }
 
         $stages = $this->getCategoryManager()->findBy([
@@ -175,11 +175,13 @@ class WidgetController extends AbstractController
         foreach ($projects as $project) {
             if ($project instanceof ProjectInterface) {
 
-                $stageId = $project->getSaleStage()->getId();
+                if (null != $stage = $project->getStage()) {
+                    $stageId = $stage->getId();
 
-                $collection[$stageId]['count'] += 1;
-                $collection[$stageId]['power'] += $project->getPower();
-                $collection[$stageId]['amount'] += $project->getPrice();
+                    $collection[$stageId]['count'] += 1;
+                    $collection[$stageId]['power'] += $project->getPower();
+                    $collection[$stageId]['amount'] += $project->getSalePrice();
+                }
             }
         }
 
