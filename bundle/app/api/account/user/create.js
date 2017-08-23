@@ -5,8 +5,8 @@ const Isquik = require('../../../models/isquik')
 
 const responseIDs = (sicesAccount, sicesUser, isquikUser) => ({
   Sices: {
-   Conta: sicesAccount.id,
-   Usuario: sicesUser.id
+    Conta: sicesAccount.id,
+    Usuario: sicesUser.id
   },
   Isquik: {
     Integrador: sicesAccount.isquik_id,
@@ -26,8 +26,8 @@ const createUser = data =>
     .getUser(data.user.isquik_id)
     .then(isquikUser =>
       sendUser(isquikUser, data.user)
-      .then(sicesUser =>
-        responseIDs(data.account, sicesUser, isquikUser)))
+        .then(sicesUser =>
+          responseIDs(data.account, sicesUser, isquikUser)))
 
 module.exports = {
   create: createUser
