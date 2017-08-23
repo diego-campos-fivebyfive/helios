@@ -70,8 +70,7 @@ class OrdersController extends AbstractApiController
             'account_id' => $order->getAccount()->getId(),
             'description' => $order->getDescription(),
             'note' => $order->getNote(),
-            'isquik_id' => $order->getIsquikId(),
-            'status' => $order->getStatus(),
+            'status' => $order->getStatus()
         ];
 
         if($order->isBudget()){
@@ -120,7 +119,6 @@ class OrdersController extends AbstractApiController
                 ->setDescription($data['description'])
                 ->setAccount($parent->getAccount())
                 ->setParent($parent)
-                ->setIsquikId($data['isquik_id'])
                 ->setStatus($data['status']);
 
             $manager->save($order);

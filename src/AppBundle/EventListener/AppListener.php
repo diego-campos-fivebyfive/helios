@@ -2,18 +2,17 @@
 
 namespace AppBundle\EventListener;
 
-use AppBundle\Controller\SignatureController;
 use AppBundle\Entity\BusinessInterface;
-use AppBundle\Entity\Component\KitInterface;
-use AppBundle\Entity\Project\ProjectInterface;
 use AppBundle\Entity\UserInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AppListener
 {
@@ -32,9 +31,6 @@ class AppListener
      */
     private $disabledControllers = [
         \AppBundle\Controller\RegisterController::class => [
-            //'registerAction',
-            //'linkAction',
-            //'confirmAction'
         ]
     ];
 
@@ -52,32 +48,8 @@ class AppListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-
-        //dump($this->container->get('security.token_storage')->getToken()->getUser()); die;
-        //dump($event->getRequest()); die;
-
         if(null != $member = $this->getMember()) {
-
             date_default_timezone_set($member->getTimezone() ?: 'America/Sao_Paulo');
-
-            $request = $event->getRequest();
-
-            $isExpired = $member->getAccount()->isExpired();
-            $isLocked = $member->getAccount()->isLocked();
-            $isSignature = 0 === strpos($request->getRequestUri(), '/signature');
-            $isXmlHttpRequest = $request->isXmlHttpRequest();
-            $isFragment = '/_fragment' == $request->getPathInfo();
-            $isLockable = ($isExpired || $isLocked) && !$isSignature;
-
-            if(!$isXmlHttpRequest && !$isFragment) {
-                if ($isLockable) {
-                    /*if ($member->getAccount()->isExpired()) {
-                        $this->container->get('account_manipulator')->deactivate($member->getAccount());
-                    }
-                    $request->attributes->set('_controller', 'AppBundle\Controller\AppController::lockScreenAction');
-                    */
-                }
-            }
         }
     }
 
@@ -114,19 +86,38 @@ class AppListener
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
-        if($this->handleExceptions) {
+        $exception = $event->getException();
 
+        $format = $event->getRequest()->attributes->get('_format');
+
+        if($exception && 'json' != $format) {
             /** @var \Twig_Environment $twig */
             $twig = $this->container->get('twig');
-
-            $content = $twig->render('AppBundle:App:error.html.twig', [
-                'exception' => $event->getException()
+            $content = $twig->render('TwigBundle:Exception:error.html.twig', [
+                'exception' => $exception
             ]);
 
             $response = new Response($content);
 
-            $event->setResponse($response);
+        }else{
+
+            $code = Response::HTTP_INTERNAL_SERVER_ERROR;
+            $message = 'Falha ao executar a operação';
+
+            if($exception instanceof HttpException){
+                $code = $exception->getStatusCode();
+                if(Response::HTTP_NOT_FOUND == $code){
+                    $message = 'Recurso não encontrado';
+                }
+            }
+
+            $response = new JsonResponse([
+                'code' => $code,
+                'message' => $message
+            ], $code);
         }
+
+        $event->setResponse($response);
     }
 
     /**
@@ -134,18 +125,6 @@ class AppListener
      */
     public function postLoad(LifecycleEventArgs $args)
     {
-        $entity = $args->getEntity();
-
-        /**
-         * This statement serves to synchronize the kit pricing
-         * parameters in real time because these data are not
-         * persisted in the kit entity
-         */
-        if($entity instanceof KitInterface){
-            $pricingParameters = $this->container->get('app.kit_pricing_manager')->findAll();
-            $entity->setPricingParameters($pricingParameters);
-        }
-
         return;
     }
 

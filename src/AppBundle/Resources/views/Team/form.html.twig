@@ -1,8 +1,5 @@
 {% extends view('layout') %}
-{% block styles %}
 
-    <link href="{{ asset('assets/inspinia/css/plugins/chosen/chosen.css') }}" rel="stylesheet">
-{% endblock %}
 {% block body %}
 
     <div class="wrapper wrapper-content animated fadeIn">
@@ -84,7 +81,6 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="{{ asset('inspinia/js/plugins/chosen/chosen.jquery.js') }}"></script>
     <script>
         $('#team_members').chosen({
             'width': '100%'

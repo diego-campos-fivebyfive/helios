@@ -2,7 +2,7 @@
 
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
-const { create: createUser } = require('./user')
+const { update: updateUser } = require('./user')
 
 const level = {
   'BLACK': 'black',
@@ -16,7 +16,7 @@ const getLevel = type => level[type]
 
 const sendAccount = ({ Dados: account }) =>
   Sices
-    .sendAccount({
+    .updateAccount(account.IdSicesSolar, {
       document: account.Cnpj,
       extraDocument: account.InscricaoEstadual,
       firstname: account.RazaoSocial,
@@ -33,22 +33,18 @@ const sendAccount = ({ Dados: account }) =>
       status: true,
       isquik_id: account.IdIntegrador
     })
-    .then(data => createUser({
-      account: {
-        isquik_id: account.IdIntegrador,
-        id: data.id
-      },
-      user: {
-        isquik_id: account.Administrador,
-        account_id: data.id
-      }
+    .then(data => updateUser({
+      email: account.Email,
+      phone: account.Telefone,
+      isquik_id: account.Administrador,
+      account_id: data.id
     }))
 
-const createAccount = ({ notification }) =>
+const updateAccount = ({ notification }) =>
   Isquik
     .getAccount(notification.id)
     .then(sendAccount)
 
 module.exports = {
-  create: createAccount
+  update: updateAccount
 }
