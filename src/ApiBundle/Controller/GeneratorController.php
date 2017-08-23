@@ -2,11 +2,14 @@
 
 namespace ApiBundle\Controller;
 
+use AppBundle\Entity\Component\MakerInterface;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Form\Component\GeneratorType;
 use AppBundle\Service\ProjectGenerator\AbstractConfig;
+use AppBundle\Service\ProjectGenerator\MakerDetector;
 use AppBundle\Service\ProjectGenerator\ModuleProvider;
+use AppBundle\Service\ProjectGenerator\ProjectGenerator;
 use FOS\RestBundle\View\View;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -112,17 +115,21 @@ class GeneratorController extends AbstractApiController
     public function getOptionsAction(Request $request)
     {
         $data = [
+            'defaults' => $this->getDefaults(),
             'roof_type' => array_values(Project::getRoofTypes()),
             'grid_voltage' => AbstractConfig::getVoltages(),
             'grid_phase_number' => AbstractConfig::getPhaseNumbers(),
-            'module' => $this->resolveModuleOptions()
+            'module' => $this->resolveModuleOptions($request),
+            'inverter_maker' => $this->resolveInverterMakerOptions($request),
+            'structure_maker' => $this->resolveStructureMakerOptions($request),
+            'string_box_maker' => $this->resolveStringBoxMakerOptions($request)
         ];
 
         if(null != $option = $request->get('option')){
             if(array_key_exists($option, $data)) {
                 $data = $data[$option];
             }else{
-                $data = sprintf('The option [%s] is undefined', $option);
+                throw $this->createNotFoundException(sprintf('The option [%s] is undefined', $option));
             }
         }
 
@@ -167,18 +174,103 @@ class GeneratorController extends AbstractApiController
     /**
      * @return array
      */
-    private function resolveModuleOptions()
+    private function resolveModuleOptions(Request $request)
     {
-        /** @var \AppBundle\Manager\ModuleManager $manager */
-        $manager = $this->manager('module');
-        $provider = new ModuleProvider($manager);
+        if('module' == $request->query->get('option')) {
 
-        $formatter = $this->get('api_formatter');
+            /** @var \AppBundle\Manager\ModuleManager $manager */
+            $manager = $this->manager('module');
+            $provider = new ModuleProvider($manager);
 
-        $modules = $formatter->format($provider->getAvailable(), [
-            'maker' => 'id'
-        ]);
+            $modules = $this->getFormatter()->format($provider->getAvailable(), [
+                'maker' => 'id'
+            ]);
 
-        return $modules;
+            return $modules;
+        }
+
+        return $this->getDefaults('module');
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    private function resolveInverterMakerOptions(Request $request)
+    {
+        if('inverter_maker' == $request->query->get('option', null)) {
+
+            /** @var \AppBundle\Manager\InverterManager $manager */
+            $manager = $this->manager('inverter');
+            $provider = new MakerDetector($manager);
+
+            $query = $request->query->all();
+
+            $defaults = ProjectGenerator::getDefaults($query);
+
+            $makers = $provider->fromDefaults($defaults, 1);
+
+            return $this->getFormatter()->format($makers);
+        }
+
+        return $this->getDefaults('inverter_maker');
+    }
+
+    /**
+     * @param $request
+     * @return array
+     */
+    private function resolveStructureMakerOptions(Request $request)
+    {
+        if('structure_maker' == $request->query->get('option', null)) {
+
+            $makers = $this->manager('maker')->findBy([
+                'context' => MakerInterface::CONTEXT_STRUCTURE
+            ]);
+
+            return $this->getFormatter()->format($makers);
+        }
+
+        return $this->getDefaults('structure_maker');
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    private function resolveStringBoxMakerOptions(Request $request)
+    {
+        if('string_box_maker' == $request->query->get('option', null)) {
+
+            $makers = $this->manager('maker')->findBy([
+                'context' => MakerInterface::CONTEXT_STRING_BOX
+            ]);
+
+            return $this->getFormatter()->format($makers);
+        }
+
+        return $this->getDefaults('string_box_maker');
+    }
+
+    /**
+     * @return object|\ApiBundle\Common\Formatter
+     */
+    private function getFormatter()
+    {
+        return $this->get('api_formatter');
+    }
+
+    /**
+     * @return array
+     */
+    private function getDefaults($key = null)
+    {
+        $defaults = ProjectGenerator::getDefaults();
+
+        if($key && array_key_exists($key, $defaults)){
+            return $defaults[$key];
+        }
+
+        return $defaults;
     }
 }

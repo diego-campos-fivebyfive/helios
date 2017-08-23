@@ -64,7 +64,15 @@ class ProjectGenerator
      */
     public function loadDefaults(array $defaults = [])
     {
-        return array_merge([
+        return array_merge(self::getDefaults(), $defaults);
+    }
+
+    /**
+     * @return array
+     */
+    public static function getDefaults(array $defaults = [])
+    {
+        return  array_merge([
             'address' => null,
             'latitude' => null,
             'longitude' => null,
