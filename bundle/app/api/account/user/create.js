@@ -3,7 +3,7 @@
 const Sices = require('../../../models/sices')
 const Isquik = require('../../../models/isquik')
 
-const responseIDs = (sicesAccount, sicesUser, isquikUser) => ({
+const responseIDs = sicesAccount => ({ isquikUser, sicesUser }) => ({
   Sices: {
     Conta: sicesAccount.id,
     Usuario: sicesUser.id
@@ -11,25 +11,28 @@ const responseIDs = (sicesAccount, sicesUser, isquikUser) => ({
   Isquik: {
     Integrador: sicesAccount.isquik_id,
     Contato: isquikUser.Id
-  }
+  },
+  statusCode: sicesUser.statusCode
 })
 
-const sendUser = ({ Dados: isquikUser }, sicesUser) =>
+const sendUser = sicesUser => ({ Dados: isquikUser }) =>
   Sices
     .sendUser({
       ...sicesUser,
-      contact: isquikUser.Nome
+      contact: isquikUser.Nome,
       email: isquikUser.Email,
       phone: isquikUser.Telefone
     })
+      .then(data => ({
+        sicesUser: data,
+        isquikUser
+      }))
 
-const createUser = data =>
+const createUser = ({ user, account }) =>
   Isquik
-    .getUser(data.user.isquik_id)
-    .then(isquikUser =>
-      sendUser(isquikUser, data.user)
-        .then(sicesUser =>
-          responseIDs(data.account, sicesUser, isquikUser)))
+    .getUser(user.isquik_id)
+    .then(sendUser(user))
+    .then(responseIDs(account))
 
 module.exports = {
   create: createUser
