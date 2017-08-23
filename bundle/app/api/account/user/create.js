@@ -19,6 +19,8 @@ const sendUser = ({ Dados: isquikUser }, sicesUser) =>
     .sendUser({
       ...sicesUser,
       contact: isquikUser.Nome
+      email: isquikUser.Email,
+      phone: isquikUser.Telefone
     })
 
 const createUser = data =>
