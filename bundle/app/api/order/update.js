@@ -4,6 +4,7 @@ const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
 
 const splitOrder = ({ Dado: order }) => ({
+  id: order.IdSicesSolar,
   account_id: order.Integrador.IdSicesSolar,
   isquik_id: order.IdOrcamentoVenda,
   description: '',
@@ -30,19 +31,7 @@ const joinOrders = ({ items, ...master }) => ([
 ])
 
 const sendOrders = orders =>
-  orders.reduce((master, current) => {
-    if (!master) {
-      return Sices.sendOrder(current)
-    }
-
-    master.then(data => {
-      Sices.sendOrder({
-        parent_id: data.id,
-        ...current
-      })
-    })
-    return master
-  }, null)
+  orders.reduce((y, order) => Sices.updateOrder(order), {})
 
 const updateOrder = ({ notification }) =>
   Isquik
