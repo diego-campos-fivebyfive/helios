@@ -3,19 +3,17 @@
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
 
-const getStatus = status => status === 'Aprovado'
-
 const splitOrder = ({ Dado: order }) => ({
   account_id: order.Integrador.IdSicesSolar,
   isquik_id: order.IdOrcamentoVenda,
   description: '',
   note: '',
-  status: getStatus(order.Status.Descricao),
+  status: order.Status.IdStatusOrcamentoVenda,
   items: order.itens.map(item => ({
     description: item.DescricaoSistema,
     note: '',
     code: item.CodigoProduto,
-    status: getStatus(order.Status.Descricao),
+    status: order.Status.IdStatusOrcamentoVenda,
     products: item.subItens.map(product => ({
       code: product.CodigoProduto,
       description: product.Descricao,
