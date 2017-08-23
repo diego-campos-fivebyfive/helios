@@ -1,9 +1,5 @@
 {% extends view('layout') %}
 
-{% block styles %}
-    <link href="{{ asset('assets/inspinia/css/plugins/footable/footable.core.css') }}" rel="stylesheet">
-{% endblock %}
-
 {% block body %}
 
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -74,7 +70,6 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="{{ asset('inspinia/js/plugins/footable/footable.all.min.js') }}"></script>
     <script>
         $(function(){
             $('#footable').footable();
