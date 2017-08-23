@@ -148,7 +148,7 @@ class RegisterController extends AbstractController
             ->setStreet($data['street'])
             ->setNumber($data['number'])
             ->setPostcode($data['postcode'])
-            ->setLevel('default')
+            ->setLevel('platinum')
             ->setContext(BusinessInterface::CONTEXT_ACCOUNT);
         $member->setAccount($account);
 
@@ -167,6 +167,8 @@ class RegisterController extends AbstractController
             ->setUser($user);
 
         $accountManager->save($account);
+
+        $this->get('app_mailer')->sendAccountConfirmationMessage($account);
 
         $this->get('notifier')->notify([
             'Evento' => '206',

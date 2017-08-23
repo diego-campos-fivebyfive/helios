@@ -22,16 +22,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class ProposalController extends AbstractController
 {
-    /**
-     * @Route("/")
-     */
-    public function indexAction()
-    {
-        return $this->render('AppBundle:Proposal:index.html.twig', array(
-
-        ));
-    }
-
+    
     /**
      * @Route("/{id}/save", name="proposal_save")
      */
@@ -76,6 +67,13 @@ class ProposalController extends AbstractController
      */
     public function editorAction(Project $project)
     {
+        if(empty($project->getAccumulatedCash())){
+            return $this->render('proposal.alerts', [
+                'error' => 'empty_calculation_metadata',
+                'project' => $project,
+            ]);
+        }
+
         $this->denyAccessUnlessGranted('edit', $project);
 
         $theme = $this->resolveTheme($project);
@@ -212,6 +210,24 @@ class ProposalController extends AbstractController
 
                 if (file_exists($file)) {
                     $status = Response::HTTP_OK;
+
+                    if (!$project->getIssuedAt()) {
+                        $manager = $this->manager('project');
+                        $project->setIssuedAt(new \DateTime('now'));
+                        $manager->save($project);
+                        $member = $project->getMember();
+
+                        $this->get('notifier')->notify([
+                            'Evento' => '509',
+                            'Callback' => 'proposal_issued',
+                            'Body' => [
+                                'Valor' => $project->getCostPrice(),
+                                'Empresa' => $member->getAccount()->getFirstname(),
+                                'Contato' => $member->getFirstname()
+                            ]
+                        ]);
+
+                    }
                 }
 
             } catch (\Exception $error) {

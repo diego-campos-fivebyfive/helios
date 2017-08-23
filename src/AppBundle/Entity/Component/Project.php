@@ -260,6 +260,13 @@ class Project implements ProjectInterface
     private $proposal;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="issued_at", type="datetime", nullable=true)
+     */
+    private $issuedAt;
+
+    /**
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="ProjectModule", mappedBy="project", cascade={"persist", "remove"})
@@ -1738,6 +1745,23 @@ class Project implements ProjectInterface
     public function getProjectTaxes()
     {
         return $this->projectTaxes;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setIssuedAt($issuedAt)
+    {
+        $this->issuedAt = $issuedAt;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getIssuedAt()
+    {
+        return $this->issuedAt;
     }
 
     /**

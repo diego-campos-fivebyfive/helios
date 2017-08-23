@@ -43,9 +43,13 @@ const getMemorial = id =>
 const getProduct = id =>
   getRequest(`${isquik.uri}/isquik-dev/tabelabase/tabelabase/ExporProduto?Id=${id}`)
 
+const getOrder = id =>
+  getRequest(`${isquik.uri}/isquik-dev/orcamentovendas/orcamentovendas/ExporOrcamento/?Id=${id}`)
+
 module.exports = {
   getMemorial,
   getProduct,
   getAccount,
+  getOrder,
   getUser
 }

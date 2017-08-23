@@ -2,6 +2,8 @@
 
 cd $SICES_PATH
 
+cli/ces-notify-slack --homolog-deploy-start
+
 git fetch origin
 GIT_WORK_TREE=$SICES_PATH git checkout -f
 git pull origin master -f
@@ -16,3 +18,5 @@ bundle/app/node_modules/.bin/pm2 restart 0
 
 cli/ces-frontend-compile
 cli/ces-permission-fix
+
+cli/ces-notify-slack --homolog-deploy-end

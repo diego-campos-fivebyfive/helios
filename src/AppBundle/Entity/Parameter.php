@@ -83,7 +83,7 @@ class Parameter extends ParameterBag
     }
 
     /**
-     * @inheritDoc
+     * @ORM\PrePersist
      */
     public function prePersist()
     {
@@ -93,7 +93,7 @@ class Parameter extends ParameterBag
     }
 
     /**
-     * @inheritDoc
+     * @ORM\PreUpdate
      */
     public function preUpdate()
     {

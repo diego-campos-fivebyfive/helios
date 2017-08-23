@@ -3,6 +3,7 @@
 namespace ApiBundle\Controller;
 
 use AppBundle\Entity\AccountInterface;
+use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\User;
 use AppBundle\Model\Document\Account;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -126,8 +127,19 @@ class UsersController extends FOSRestController
         $accountManager = $this->get('account_manager');
         $account = $accountManager->find($data['account_id']);
 
-        /** @var AccountInterface $memberManager */
+        /** @var MemberInterface $memberManager */
         $memberManager = $this->get('account_manager');
+
+        /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+        $userManager = $this->get('fos_user.user_manager');
+        $user = $member->getUser();
+        $user
+            ->setEmail($data['email'])
+            ->setUsername($data['email'])
+            ->setUpdatedAt(new \DateTime('now'))
+            ->setIsquikId($data['isquik_id']);
+        $userManager->updateUser($user);
+
         $member
             ->setIsquikId($data['isquik_id'])
             ->setAccount($account)

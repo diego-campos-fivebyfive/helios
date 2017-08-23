@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+if [ $1 == '--production-deploy-end' ]; then
+  message='Production Deploy Done!'
+elif [ $1 == '--production-deploy-start' ]; then
+  message='Starting Production Deploy...'
+elif [ $1 == '--homolog-deploy-end' ]; then
+  message='Homolog Deploy Done!'
+elif [ $1 == '--homolog-deploy-start' ]; then
+  message='Starting Homolog Deploy...'
+else
+  echo "Invalid Message!"
+  exit 1
+fi
+
+echo "Sending Slack Devops web hooks notification..."
+curl -s \
+  -X POST \
+  -H "Content-type:application/json" \
+  -d "{\"text\": \"@here: $message\", \"link_names\": \"1\"}" \
+  $SLACK_HOOK

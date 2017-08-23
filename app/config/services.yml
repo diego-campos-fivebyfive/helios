@@ -1,12 +1,4 @@
 services:
-    app.authentication.success_handler:
-        class: AppBundle\Service\Security\AuthenticationSuccessHandler
-        arguments: ['@security.http_utils']
-
-    app.authentication.failure_handler:
-        class: AppBundle\Service\Security\AuthenticationFailureHandler
-        arguments: ['@http_kernel', '@security.http_utils']
-
     app.activity.listener:
         class: AppBundle\EventListener\AppListener
         arguments: ['@service_container']

@@ -77,6 +77,7 @@ const sendStringbox = stringbox => postRequest(`${sices.uri}/stringboxes`, strin
 const sendVariety = variety => postRequest(`${sices.uri}/varieties`, variety)
 const sendMemorial = memorial => postRequest(`${sices.uri}/memorials`, memorial)
 const sendAccount = account => postRequest(`${sices.uri}/accounts`, account)
+const sendOrder = order => postRequest(`${sices.uri}/orders`, order)
 const sendUser = user => postRequest(`${sices.uri}/users`, user)
 const getUser = id => getRequest(`${sices.uri}/users/${id}`)
 
@@ -90,6 +91,7 @@ module.exports = {
   sendVariety,
   sendMemorial,
   sendAccount,
+  sendOrder,
   sendUser,
   getUser
 }

@@ -114,18 +114,20 @@ class AppListener
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
-        if($this->handleExceptions) {
+        $exception = $event->getException();
 
+        if($exception)
+        {
             /** @var \Twig_Environment $twig */
             $twig = $this->container->get('twig');
-
-            $content = $twig->render('AppBundle:App:error.html.twig', [
-                'exception' => $event->getException()
+            $content = $twig->render('TwigBundle:Exception:error.html.twig', [
+                'exception' => $exception
             ]);
 
             $response = new Response($content);
 
             $event->setResponse($response);
+
         }
     }
 
