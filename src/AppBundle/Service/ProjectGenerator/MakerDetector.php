@@ -10,6 +10,9 @@ use AppBundle\Manager\InverterManager;
 
 class MakerDetector
 {
+    const RETURN_IDS = 0;
+    const RETURN_INSTANCES = 1;
+
     /**
      * @var InverterManager
      */
@@ -28,7 +31,7 @@ class MakerDetector
      * @param array $defaults
      * @return array
      */
-    public function fromDefaults(array $defaults)
+    public function fromDefaults(array $defaults, $returnType = self::RETURN_IDS)
     {
         $power = (float) $defaults['power'];
         $makers = $this->fromPower($power);
@@ -42,11 +45,15 @@ class MakerDetector
             }
         }
 
-        $ids = array_map(function(MakerInterface $maker){
-            return $maker->getId();
-        }, array_values($makers));
+        if(self::RETURN_IDS == $returnType) {
+            $ids = array_map(function (MakerInterface $maker) {
+                return $maker->getId();
+            }, array_values($makers));
 
-        return $ids;
+            return $ids;
+        }
+
+        return $makers;
     }
 
     /**
