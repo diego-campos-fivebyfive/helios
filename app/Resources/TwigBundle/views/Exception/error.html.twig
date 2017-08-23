@@ -32,7 +32,7 @@
     <div>
 
         <h2>Oops.</h2>
-        {% if  exception.statusCode == 404 %}
+        {% if attribute(exception, 'statusCode') is defined and exception.statusCode == 404 %}
             <h3>Página não encontrada.</h3>
         {% else %}
             <h3>Tente novamente mais tarde.</h3>
