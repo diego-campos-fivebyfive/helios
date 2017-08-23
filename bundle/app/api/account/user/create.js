@@ -23,10 +23,10 @@ const sendUser = sicesUser => ({ Dados: isquikUser }) =>
       email: isquikUser.Email,
       phone: isquikUser.Telefone
     })
-      .then(data => ({
-        sicesUser: data,
-        isquikUser
-      }))
+    .then(data => ({
+      sicesUser: data,
+      isquikUser
+    }))
 
 const createUser = ({ user, account }) =>
   Isquik
