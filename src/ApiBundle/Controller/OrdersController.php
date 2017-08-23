@@ -70,8 +70,7 @@ class OrdersController extends AbstractApiController
             'account_id' => $order->getAccount()->getId(),
             'description' => $order->getDescription(),
             'note' => $order->getNote(),
-            'isquik_id' => $order->getIsquikId(),
-            'status' => $order->getStatus(),
+            'status' => $order->getStatus()
         ];
 
         if($order->isBudget()){
