@@ -3,6 +3,7 @@
 message = $1
 
 echo "Sending Slack devops chat notification..."
+
 curl -s \
   -X POST \
   -H "Content-type:application/json" \
