@@ -3,6 +3,11 @@ Lista de Comandos
 
 Comandos utilizados no sistema Sices Solar.
 
+### Para limpar o cache:
+
+```
+$ ces-cache-clear
+```
 
 ### Para compilar o frontend:
 
