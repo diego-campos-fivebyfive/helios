@@ -2,7 +2,7 @@
 
 cd $SICES_PATH
 
-cli/ces-notify-slack --production-deploy-start
+cli/ces-slack-notify 'Starting Production Deploy...'
 
 echo "Creating current version Backup..."
 rsync -avzh /var/www/** /var/www/.backup
@@ -24,6 +24,6 @@ rm -rf app/cache/prod/**
 php app/console cache:clear --env=dev
 php app/console cache:clear --env=prod
 
-cli/ces-notify-slack --production-deploy-end
+cli/ces-slack-notify 'Production Deploy Done!'
 
 echo 'Done.'
