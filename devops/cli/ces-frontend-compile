@@ -2,6 +2,8 @@
 
 cd $SICES_PATH
 
+echo 'Compiling frontend...'
+
 rm -rf web/public
 
 mkdir web/public
