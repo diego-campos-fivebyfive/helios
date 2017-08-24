@@ -6,10 +6,9 @@ echo 'Extracting compressed file and importing Database...'
 
 db_sql="sices-homolog.sql"
 db_tar="sices-homolog.tar.gz"
+local_path=.mirror
 
-cd .mirror
+tar -xzvf $local_path/$db_tar $local_path
 
-tar -xzvf $db_tar
-mysql -u root -p$1 sices_solar < $db_sql > /dev/null 2>&1
-
-cd ../
+mysql -u root -p$1 sices_solar < $local_path/$db_sql 2>/dev/null &
+./$CLI_PATH/util/progress-spinner $!
