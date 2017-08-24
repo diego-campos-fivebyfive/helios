@@ -10,8 +10,6 @@ local_path=.mirror
 db_sql="sices-homolog.sql"
 db_tar="sices-homolog.tar.gz"
 
-./devops/cli/ces-permission-fix
-
 ssh -t -i devops/aws/homolog.pem admin@54.233.150.10 \
   "mysqldump \
     -h $SICES_HOMOLOG_DATABASE_HOST \

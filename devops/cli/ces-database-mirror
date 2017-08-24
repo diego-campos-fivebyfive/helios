@@ -4,6 +4,8 @@ cd $SICES_PATH
 
 echo 'Note: This process can be a little slow!'
 
+./devops/cli/ces-permission-fix
+
 if [ -z ${1+x} ]; then
   echo 'Cloning homolog database... enter your mysql password:'
   read -s password
