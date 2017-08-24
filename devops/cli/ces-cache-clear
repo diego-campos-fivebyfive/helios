@@ -2,6 +2,8 @@
 
 cd $SICES_PATH
 
+echo 'Cleaning Symfony cache...'
+
 rm -rf app/cache/dev/**
 rm -rf app/cache/prod/**
 
