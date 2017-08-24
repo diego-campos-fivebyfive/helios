@@ -14,7 +14,7 @@ if [ -z ${1+x} ] || [ $1 == '--development' ]; then
   echo "Sices Server starting on $CES_SICES_HOST:$CES_SICES_PORT"
   php app/console server:run &
 
-  cd bundle/app
+  cd bundles/isquik
   yarn install
   echo "Bundle App starting on $CES_BUNDLE_HOST:$CES_BUNDLE_PORT"
   node_modules/.bin/node-supervisor --harmony index.js &
@@ -33,15 +33,6 @@ if [ -z ${1+x} ] || [ $1 == '--development' ]; then
     bash -c "$input" &
 
     # Move the command back-into foreground
-    fg %-
-
+    fg %- > /dev/null 2>&1;
   done
-
-elif [ $1 == '--isquikmock' ]; then
-
-  cd bundle/test
-  yarn install
-  echo "Starting Bundle Test (Isquik Mock) on: $CES_ISQUIK_HOST:$CES_ISQUIK_PORT"
-  node_modules/.bin/node-supervisor --harmony index.js
-
 fi

@@ -1,8 +1,7 @@
 {
   "scripts": {
     "compile": "ces-frontend-compile",
-    "start:dev": "ces-local-start --development",
-    "start:isquik": "ces-local-start --isquikmock"
+    "start:dev": "ces-local-start --development"
   },
   "dependencies": {
     "uglify-js": "^3.0.23",

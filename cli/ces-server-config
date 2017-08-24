@@ -31,7 +31,7 @@ if [[ $FLAG == 'homolog' ]] || [[ $FLAG == 'production' ]]; then
 
   # Remote automatic start Bundle App and Server
   echo "Sices starting Bundle App on: $CES_BUNDLE_HOST:$CES_BUNDLE_PORT"
-  cd bundle/app
+  cd bundles/isquik
   npm install
   node_modules/.bin/pm2 start index.js --node-args="--harmony" -n "bundle"
   cd $SICES_PATH

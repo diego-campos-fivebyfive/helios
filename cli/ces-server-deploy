@@ -16,7 +16,7 @@ rsync -avzh --delete /var/www/.temp/** /var/www/
 source cli/ces-server-config --production
 
 php app/console doctrine:schema:update --force
-bundle/app/node_modules/.bin/pm2 restart 0
+bundles/isquik/node_modules/.bin/pm2 restart 0
 
 rm -rf app/cache/dev/**
 rm -rf app/cache/prod/**
