@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd $SICES_PATH
+cd $CLI_ROOT
 
 echo 'Fixing KNP Bugs...'
 
