@@ -1,9 +1,0 @@
-{
-  "dependencies": {
-    "body-parser": "^1.17.2",
-    "express": "4.14.0",
-    "request": "^2.81.0",
-    "request-promise": "^4.2.1",
-    "supervisor": "^0.12.0"
-  }
-}
