@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+cd $SICES_PATH
+
+echo 'Extracting compressed file and importing Database...'
+
+db_sql="sices-homolog.sql"
+db_tar="sices-homolog.tar.gz"
+
+cd .mirror
+
+tar -xzvf $db_tar
+
+mysql -u root -p$1 sices_solar < $db_sql 2>/dev/null &
+bash $CLI_PATH/util/progress-spinner $!
+
+cd ../

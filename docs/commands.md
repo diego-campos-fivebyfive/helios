@@ -3,28 +3,46 @@ Lista de Comandos
 
 Comandos utilizados no sistema Sices Solar.
 
+### Para atualizar a banco de dados local com a versão de homolog
+
+```
+$ ces-database-mirror
+```
+
+
+### Para corrigir permissões de arquivos e pastas
+
+```
+$ ces-permission-fix
+```
+
+### Para fazer o update do doctrine
+
+```
+$ ces-database-update
+```
+
+### Para limpar o cache:
+
+```
+$ ces-cache-clear
+```
 
 ### Para compilar o frontend:
 
 ```
-$ yarn compile
+$ ces-frontend-compile
 ```
 
 ### Para start do sistema em desenvolvimento:
 
 ```
-$ yarn start:dev
+$ ces-server-start
 ```
 
-### Para start do bundle de teste (Mock Isquik):
+### Para lint de bundles:
 
 ```
-$ yarn start:isquik
-```
-
-### Para lint do bundle App:
-
-```
-$ cd bundle/app
+$ cd BUNDLE_PATH
 $ yarn lint
 ```

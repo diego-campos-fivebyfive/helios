@@ -33,7 +33,6 @@ if [ -z ${1+x} ] || [ $1 == '--development' ]; then
     bash -c "$input" &
 
     # Move the command back-into foreground
-    fg %-
-
+    fg %- > /dev/null 2>&1;
   done
 fi
