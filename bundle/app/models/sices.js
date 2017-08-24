@@ -91,6 +91,7 @@ const getUser = id => get(`${sices.uri}/users/${id}`)
 const sendUser = user => post(`${sices.uri}/users`, user)
 const updateUser = (id, user) => put(`${sices.uri}/users/${id}`, user)
 
+const getOrder = id => get(`${sices.uri}/orders/${id}`)
 const sendOrder = order => post(`${sices.uri}/orders`, order)
 const updateOrder = (id, order) => put(`${sices.uri}/orders/${id}`, order)
 const deleteOrder = id => del(`${sices.uri}/orders/${id}`)
@@ -108,6 +109,7 @@ module.exports = {
   getUser,
   sendUser,
   updateUser,
+  getOrder,
   sendOrder,
   updateOrder,
   deleteOrder,
