@@ -3,6 +3,13 @@ Lista de Comandos
 
 Comandos utilizados no sistema Sices Solar.
 
+### Para atualizar a banco de dados local com a versão de homolog
+
+```
+$ ces-database-mirror
+```
+
+
 ### Para corrigir permissões de arquivos e pastas
 
 ```
