@@ -3,6 +3,12 @@ Lista de Comandos
 
 Comandos utilizados no sistema Sices Solar.
 
+### Para acessar o ambiente de homolog
+
+```
+$ ssh -i $SICES_PATH/devops/aws/homolog.pem admin@54.233.150.10
+```
+
 ### Para iniciar uma nova branch
 
 ```
@@ -15,13 +21,11 @@ $ ces-new-task issue-NUMBER
 $ ces-slack-notify 'MESSAGE'
 ```
 
-
 ### Para atualizar a banco de dados local com a versão de homolog
 
 ```
 $ ces-database-mirror
 ```
-
 
 ### Para corrigir permissões de arquivos e pastas
 
