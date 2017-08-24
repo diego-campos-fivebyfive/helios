@@ -12,7 +12,8 @@ const actions = {
   product_created: product.create,
   account_created: account.create,
   account_updated: account.update,
-  order_created: order.create
+  order_created: order.create,
+  order_updated: order.update
 }
 
 router.post('/api/v1/notifications', bundler(actions))
