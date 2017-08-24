@@ -4,7 +4,7 @@ cd $SICES_PATH
 
 echo 'Note: This process can be a little slow!'
 
-./devops/cli/ces-permission-fix
+exec $CLI_PATH/ces-permission-fix
 
 if [ -z ${1+x} ]; then
   echo 'Cloning homolog database... enter your mysql password:'
@@ -15,12 +15,12 @@ fi
 
 mkdir .mirror
 
-./devops/cli/ces-database-clone
-./devops/cli/ces-database-import $password
+exec $CLI_PATH/ces-database-clone
+exec $CLI_PATH/ces-database-import $password
 
 rm -rf .mirror
 
-./devops/cli/ces-cache-clear
-./devops/cli/ces-database-update
+exec $CLI_PATH/ces-cache-clear
+exec $CLI_PATH/ces-database-update
 
 echo 'Database mirror done.'
