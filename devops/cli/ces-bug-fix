@@ -9,5 +9,4 @@ path=vendor/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Filt
 initial='$alias = reset($parts);'
 final='$alias = trim(reset($parts));'
 
-sed "s/$initial/$final/g" <$path/WhereWalker.php >$path/TempFixed.php
-mv $path/TempFixed.php $path/WhereWalker.php
+sed -i "s/$initial/$final/g" $path/WhereWalker.php
