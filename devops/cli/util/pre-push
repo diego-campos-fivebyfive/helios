@@ -6,7 +6,9 @@ if [ $branch != 'master' ]; then
   exit 0
 fi
 
-message="Lembre-se, pushs devem ser feitos para a Branch e não para a Master, gostaria de continuar? [y|n]"
+read \
+  -p "Lembre-se, pushs devem ser feitos para a Branch e não para a Master, gostaria de continuar? [y|n]" \
+  -n 1 \
+  -r < /dev/tty
 
-read -p $message -n 1 -r < /dev/tty
 echo $REPLY | grep -E '^[Yy]$' > /dev/null
