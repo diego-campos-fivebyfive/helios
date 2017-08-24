@@ -3,6 +3,12 @@ Lista de Comandos
 
 Comandos utilizados no sistema Sices Solar.
 
+### Para fazer o update do doctrine
+
+```
+$ ces-database-update
+```
+
 ### Para limpar o cache:
 
 ```
