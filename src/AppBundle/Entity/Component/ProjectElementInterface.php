@@ -10,6 +10,7 @@
  */
 
 namespace AppBundle\Entity\Component;
+use AppBundle\Entity\Pricing\RangeInterface;
 
 /**
  * Interface ProjectElementInterface
@@ -22,6 +23,11 @@ interface ProjectElementInterface
      * @return int
      */
     public function getId();
+
+    /**
+     * @return string
+     */
+    public function getCode();
 
     /**
      * @param ProjectInterface $project
@@ -87,4 +93,10 @@ interface ProjectElementInterface
      * @return float
      */
     public function getTotalSalePrice();
+
+    /**
+     * @param RangeInterface $range
+     * @return ProjectElementInterface
+     */
+    public function applyRange(RangeInterface $range);
 }

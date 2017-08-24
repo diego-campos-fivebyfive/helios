@@ -11,6 +11,7 @@
 
 namespace AppBundle\Entity\Component;
 
+use AppBundle\Entity\Pricing\RangeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -63,6 +64,18 @@ trait ProjectElementTrait
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCode()
+    {
+        $source = array_reverse(explode('\\', get_class($this)));
+
+        $method = str_ireplace('Project', 'get', $source[0]);
+
+        return $this->$method()->getCode();
     }
 
     /**
@@ -151,5 +164,18 @@ trait ProjectElementTrait
     public function getTotalSalePrice()
     {
         return $this->unitSalePrice * $this->quantity;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function applyRange(RangeInterface $range)
+    {
+        if($range->getCode() != $this->getCode())
+            throw new \InvalidArgumentException('Incompatible codes');
+
+        $this->unitCostPrice = $range->getPrice();
+
+        return $this;
     }
 }
