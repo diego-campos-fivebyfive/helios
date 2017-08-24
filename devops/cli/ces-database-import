@@ -8,7 +8,7 @@ db_sql="sices-homolog.sql"
 db_tar="sices-homolog.tar.gz"
 local_path=.mirror
 
-tar -xzvf $local_path/$db_tar $local_path
+tar -xzvf $db_tar -C $local_path .
 
 mysql -u root -p$1 sices_solar < $local_path/$db_sql 2>/dev/null &
-./$CLI_PATH/util/progress-spinner $!
+exec $CLI_PATH/util/progress-spinner $!
