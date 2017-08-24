@@ -63,6 +63,15 @@
     .sel:focus{
         border-color: #00A7EC !important;
     }
+    .flot-chart{
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+    .flot-chart-content{
+        min-width: 700px;
+    }
+
+
 </style>
 
 <div class="ibox float-e-margins">
@@ -100,7 +109,7 @@
     <div class="ibox-content">
         <div class="row">
             <div class="col-lg-9">
-                <div class="flot-chart">
+                    <div class="flot-chart">
                     <div class="flot-chart-content" id="proposals-chart"></div>
                 </div>
             </div>
