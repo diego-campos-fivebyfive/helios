@@ -3,6 +3,12 @@ Lista de Comandos
 
 Comandos utilizados no sistema Sices Solar.
 
+### Para corrigir permissões de arquivos e pastas
+
+```
+$ ces-permission-fix
+```
+
 ### Para fazer o update do doctrine
 
 ```
