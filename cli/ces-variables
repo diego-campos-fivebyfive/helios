@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 export PROJECT_ROOT=$SICES_PATH/backend
-export CLI_ROOT=$SICES_PATH/devops/cli
 export PATH="$SICES_PATH/devops/cli:$PATH"
 
 export SICES_DEVELOPMENT_PORT=8000
