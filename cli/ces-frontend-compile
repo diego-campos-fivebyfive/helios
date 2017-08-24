@@ -10,10 +10,6 @@ mkdir web/public/assets
 cp -r web/assets/images web/public/assets/images
 cp -r web/assets/font-awesome web/public/assets/font-awesome
 
-rm -rf app/cache/dev/**
-rm -rf app/cache/prod/**
-
-php app/console cache:clear --env=dev
-php app/console cache:clear --env=prod
+ces-cache-clean
 
 php app/console assetic:dump
