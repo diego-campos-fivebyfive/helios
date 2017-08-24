@@ -88,7 +88,7 @@ class User extends AbstractUser implements UserInterface
      */
     public function isOwner()
     {
-        return $this->hasRole(self::ROLE_OWNER);
+        return $this->hasRole(self::ROLE_OWNER) || $this->hasRole(self::ROLE_OWNER_MASTER);
     }
 
     public function isOwnerMaster()
