@@ -8,6 +8,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class MemorialController extends FOSRestController
 {
@@ -19,6 +20,16 @@ class MemorialController extends FOSRestController
         /** @var Memorial $memorialManager */
         $memorialManager = $this->get('memorial_manager');
         $rangeManager = $this->get('range_manager');
+
+        $existentMemorial = $memorialManager->findOneBy(['version' => $data['version']]);
+
+        if ($existentMemorial) {
+            $data = "This Memorial Already Existing!";
+            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+
+            $view = View::create($data)->setStatusCode($status);
+            return $this->handleView($view);
+        }
 
         $currentMemorial = $memorialManager->findOneBy(array(), array('id' => 'DESC'));
         $currentMemorial->setEndAt(new \DateTime('now'));
