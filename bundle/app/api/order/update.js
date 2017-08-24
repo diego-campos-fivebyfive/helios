@@ -25,18 +25,41 @@ const splitOrder = ({ Dado: order }) => ({
   }))
 })
 
+const deleteSubOrders = order => {
+  Sices
+    .getOrder(order.id)
+    .then(({ items }) =>
+      items.map(item =>
+        Sices.deleteOrder(item.id)))
+
+  return order
+}
+
 const joinOrders = ({ items, ...master }) => ([
   master,
   ...items
 ])
 
 const sendOrders = orders =>
-  orders.reduce((y, order) => Sices.updateOrder(order), {})
+  orders.reduce((master, current) => {
+    if (!master) {
+      return Sices.updateOrder(current.id, current)
+    }
+
+    master.then(data => {
+      Sices.sendOrder({
+        parent_id: data.id,
+        ...current
+      })
+    })
+    return master
+  }, null)
 
 const updateOrder = ({ notification }) =>
   Isquik
     .getOrder(notification.id)
     .then(splitOrder)
+    .then(deleteSubOrders)
     .then(joinOrders)
     .then(sendOrders)
 
