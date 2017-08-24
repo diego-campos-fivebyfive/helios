@@ -11,4 +11,4 @@ local_path=.mirror
 tar -xzvf $db_tar -C $local_path .
 
 mysql -u root -p$1 sices_solar < $local_path/$db_sql 2>/dev/null &
-exec $CLI_PATH/util/progress-spinner $!
+bash $CLI_PATH/util/progress-spinner $!
