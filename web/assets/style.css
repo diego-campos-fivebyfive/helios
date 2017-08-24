@@ -8117,6 +8117,33 @@ body.md-skin {
   position: fixed;
   display: none;
 }
+
+.flow-h {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.flow-v {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.flow-b {
+  overflow: auto;
+}
+
+.flow-sm {
+  min-width: 480px;
+}
+
+.flow-md {
+  min-width: 600px;
+}
+
+.flow-lg {
+  min-width: 720px;
+}
+
 @media (min-width: 768px) {
   #page-wrapper {
     position: inherit;
