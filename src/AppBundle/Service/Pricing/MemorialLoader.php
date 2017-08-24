@@ -24,6 +24,18 @@ class MemorialLoader
      */
     public function load()
     {
-        return $this->manager->find(101);
+        $qb = $this->manager->createQueryBuilder();
+
+        $qb->where('m.status = :status')
+            ->andWhere('m.endAt is null')
+            ->andWhere('m.startAt <= :startAt')
+            ->orderBy('m.id','desc')
+            ->setMaxResults(1)
+            ->setParameters([
+                'status' => 1,
+                'startAt' => (new \DateTime())->format('Y-m-d')
+            ]);
+
+        return $qb->getQuery()->getOneOrNullResult();
     }
 }
