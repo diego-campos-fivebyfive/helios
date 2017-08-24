@@ -7,24 +7,18 @@ Comandos utilizados no sistema Sices Solar.
 ### Para compilar o frontend:
 
 ```
-$ yarn compile
+$ ces-frontend-compile
 ```
 
 ### Para start do sistema em desenvolvimento:
 
 ```
-$ yarn start:dev
+$ ces-server-start
 ```
 
-### Para start do bundle de teste (Mock Isquik):
+### Para lint de bundles:
 
 ```
-$ yarn start:isquik
-```
-
-### Para lint do bundle App:
-
-```
-$ cd bundle/app
+$ cd BUNDLE_PATH
 $ yarn lint
 ```
