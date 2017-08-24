@@ -8144,6 +8144,13 @@ body.md-skin {
   min-width: 720px;
 }
 
+@media (min-width: 320px) and (max-width: 767px) {
+  .bt-xs {
+    font-size: 11px;
+    margin-top: 3px;
+  }
+}
+
 @media (min-width: 768px) {
   #page-wrapper {
     position: inherit;

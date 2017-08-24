@@ -59,23 +59,23 @@
             <div class="col-md-3">
                 <div class="btn-group btn-group-justified">
                     <a href="{{ path('contact_index',{context:'person', strict:isStrict and isPerson ? 0 : 1}) }}"
-                       class="btn btn-{{ isStrict and isPerson ? 'primary active' : 'default' }}">
+                       class="btn btn-{{ isStrict and isPerson ? 'primary active' : 'default' }} bt-xs">
                         <i class="fa fa-user"></i>
                         {{ 'Peoples'|trans }}
                     </a>
                     <a href="{{ path('contact_index',{context:'company', strict:isStrict and isCompany ? 0 : 1}) }}"
-                       class="btn btn-{{ isStrict and not isPerson ? 'primary active' : 'default' }}">
+                       class="btn btn-{{ isStrict and not isPerson ? 'primary active' : 'default' }} bt-xs">
                         <i class="fa fa-building"></i>
                         {{ 'Companies'|trans }}
                     </a>
                 </div>
             </div>
 
-            <div class="col-md-5 btn-group">
-                <a href="{{ path('contact_create',{context:'person'}) }}" class="btn btn-primary">
+            <div class="col-md-5 btn-group col-xs-12">
+                <a href="{{ path('contact_create',{context:'person'}) }}" class="btn btn-primary bt-xs col-xs-6">
                     <i class="fa fa-plus"></i> Adicionar Pessoa
                 </a>
-                <a href="{{ path('contact_create',{context:'company'}) }}" class="btn btn-primary">
+                <a href="{{ path('contact_create',{context:'company'}) }}" class="btn btn-primary bt-xs col-xs-6">
                     <i class="fa fa-plus"></i> Adicionar Empresa
                 </a>
 
@@ -107,8 +107,8 @@
 
 <div class="row" id="real-content">
     <div class="col-md-12">
-        <div class="ibox">
-            <div class="ibox-content">
+        <div class="ibox flow-h">
+            <div class="ibox-content flow-lg">
 
                 <table class="table table-stripped table-hover">
                     <thead>
