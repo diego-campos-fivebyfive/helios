@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+cd $SICES_PATH
+
+echo 'Note: This process can be a little slow!'
+
+if [ -z ${1+x} ]; then
+  echo 'Cloning homolog database... enter your mysql password:'
+  read -s password
+else
+  password=$1
+fi
+
+mkdir .mirror
+
+./devops/cli/ces-database-clone
+./devops/cli/ces-database-import $password
+
+rm -rf .mirror
+
+./devops/cli/ces-cache-clear
+./devops/cli/ces-database-update
+
+echo 'Database mirror done.'

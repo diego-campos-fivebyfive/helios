@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+cd $SICES_PATH
+
+echo 'Downloading compressed homolog database...'
+
+server_path=/var/www/.mirror
+local_path=.mirror
+
+db_sql="sices-homolog.sql"
+db_tar="sices-homolog.tar.gz"
+
+./devops/cli/ces-permission-fix
+
+ssh -t -i devops/aws/homolog.pem admin@54.233.150.10 \
+  "mysqldump \
+    -h $SICES_HOMOLOG_DATABASE_HOST \
+    -P $SICES_HOMOLOG_DATABASE_PORT \
+    -u $SICES_HOMOLOG_DATABASE_USER \
+    -p$SICES_HOMOLOG_DATABASE_PASS \
+    $SICES_HOMOLOG_DATABASE_NAME > $server_path/$db_sql" > /dev/null 2>&1
+
+ssh -t -i devops/aws/homolog.pem admin@54.233.150.10 \
+  "cd $server_path && tar -cvzf $db_tar $db_sql" > /dev/null 2>&1
+
+scp -i devops/aws/homolog.pem admin@54.233.150.10:$server_path/$db_tar $local_path/$db_tar
