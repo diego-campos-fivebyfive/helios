@@ -73,7 +73,7 @@ trait ProjectElementTrait
     {
         $source = array_reverse(explode('\\', get_class($this)));
 
-        $method = str_ireplace('Project', 'get', $source[0]);
+        $method = str_replace('Project', 'get', $source[0]);
 
         return $this->$method()->getCode();
     }
