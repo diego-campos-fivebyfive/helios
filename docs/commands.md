@@ -3,6 +3,19 @@ Lista de Comandos
 
 Comandos utilizados no sistema Sices Solar.
 
+### Para iniciar uma nova branch
+
+```
+$ ces-new-task issue-NUMBER
+```
+
+### Para enviar notificação para o #sices-devops no slack
+
+```
+$ ces-slack-notify 'MESSAGE'
+```
+
+
 ### Para atualizar a banco de dados local com a versão de homolog
 
 ```
@@ -13,7 +26,7 @@ $ ces-database-mirror
 ### Para corrigir permissões de arquivos e pastas
 
 ```
-$ ces-permission-fix
+$ ces-permission-fix --AMBIENCE
 ```
 
 ### Para fazer o update do doctrine
