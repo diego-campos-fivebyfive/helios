@@ -26,15 +26,9 @@ class Notifier
 
     public function getToken ($url)
     {
-        // TODO: homolog key, should use dinamic envs
-        //$params = Array(
-        //    'Chave' => '12eb45ec-b98f-4942-9124-b7b6b389088e',
-        //    'Dominio' => 'isquik-dev'
-        //);
-
         $params = Array(
-            'Chave' => '3bbafb12-5702-41a6-a4bc-813cebfba500',
-            'Dominio' => 'sices'
+            'Chave' => getenv('CES_ISQUIK_AUTH_KEY'),
+            'Dominio' => getenv('CES_ISQUIK_AUTH_USER')
         );
 
         $ch = curl_init();
