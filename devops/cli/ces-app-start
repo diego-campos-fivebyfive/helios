@@ -37,6 +37,6 @@ fi
 if [[ $1 == '--homolog' ]] || [[ $1 == '--production' ]]; then
 
   echo "Isquik bundle starting on $CES_BUNDLE_HOST:$CES_BUNDLE_PORT"
-  $bundle_path/node_modules/.bin/pm2 start index.js --node-args="--harmony" -n "bundle"
+  $bundle_path/node_modules/.bin/pm2 start $bundle_path/index.js --node-args="--harmony" -n "bundle"
 
 fi
