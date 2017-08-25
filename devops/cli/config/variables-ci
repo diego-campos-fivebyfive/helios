@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source $SICES_PATH/cli/ces-variables
+source $SICES_PATH/devops/cli/config/variables
 
 if [ -z ${1+x} ] || [ $1 == '--development' ]; then
 

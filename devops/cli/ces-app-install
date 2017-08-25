@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+cd $SICES_PATH
+
+echo "Installing packages dependencies..."
+
+composer install
+yarn install
+bash $CLI_PATH/util/bug-fix
+
+cd bundles/isquik
+yarn install
+cd ../../

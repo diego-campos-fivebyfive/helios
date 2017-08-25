@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-cd $SICES_PATH
-
-echo 'Sices rewriting correct owner permissions...'
-sudo chown -R www-data:admin /var/www/*
-sudo chmod -R g+rwx /var/www/*
-echo 'Done.'

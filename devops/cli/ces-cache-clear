@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+cd $SICES_PATH
+
+echo 'Cleaning Symfony cache...'
+
+rm -rf app/cache/dev/**
+rm -rf app/cache/prod/**
+
+php app/console cache:clear --env=dev
+php app/console cache:clear --env=prod

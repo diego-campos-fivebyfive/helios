@@ -3,7 +3,7 @@
 cd $SICES_PATH
 
 if [[ -z $1 ]] || [[ $1 == '--help' ]] || [[ $1 == '-h' ]]; then
-  printf "Initing new Task:
+  printf "ces-new-task - help:
 
   Usage:
 
@@ -15,13 +15,11 @@ if [[ -z $1 ]] || [[ $1 == '--help' ]] || [[ $1 == '-h' ]]; then
   exit 0;
 fi
 
-issue_name=$1
-result=$(git branch | grep $issue_name)
-pull=0
-
 git checkout master
 git fetch origin
 git pull origin master
-git checkout -b $issue_name
-php app/console doctrine:schema:update --force
-echo "Done, now into Branch: $issue_name"
+git checkout -b $1
+
+bash $CLI_PATH/ces-database-update
+
+echo "Done, now on Branch: $1"

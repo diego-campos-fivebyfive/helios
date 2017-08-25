@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+
+if [ $branch != 'master' ]; then
+  exit 0
+fi
+
+read \
+  -p "Lembre-se, pushs devem ser feitos para a Branch e não para a Master, gostaria de continuar? [y|n] " \
+  -n 1 \
+  -r < /dev/tty
+
+echo
+echo $REPLY | grep -E '^[Yy]$' > /dev/null

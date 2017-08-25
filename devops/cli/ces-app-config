@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+cd $SICES_PATH
+
+echo "Starting App configurations..."
+
+if [ -z ${1+x} ] || [ $1 = '--development' ]; then
+
+  cp $CLI_PATH/util/pre-push .git/hooks/pre-push
+  bash $CLI_PATH/ces-database-config --development
+
+elif [ $1 = '--homolog' ]; then
+
+  cp app/config/parameters_homolog.yml app/config/parameters.yml
+
+  mkdir .temp
+  mkdir .mirror
+  mkdir .backup
+
+elif [ $1 = '--production' ]; then
+
+  cp app/config/parameters_production.yml app/config/parameters.yml
+
+  mkdir .temp
+  mkdir .mirror
+  mkdir .backup
+
+fi

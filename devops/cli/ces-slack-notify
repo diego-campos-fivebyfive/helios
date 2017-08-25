@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+echo "Sending Slack devops chat notification..."
+
+message=$1
+
+curl -s \
+  -X POST \
+  -H "Content-type:application/json" \
+  -d "{\"text\": \"@here: $message\", \"link_names\": \"1\"}" \
+  $SLACK_HOOK

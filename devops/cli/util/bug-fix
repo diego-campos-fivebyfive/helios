@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+cd $SICES_PATH
+
+echo 'Fixing KNP Bugs...'
+
+path=vendor/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Filtration/Doctrine/ORM/Query
+
+initial='$alias = reset($parts);'
+final='$alias = trim(reset($parts));'
+
+sed -i "s/$initial/$final/g" $path/WhereWalker.php
