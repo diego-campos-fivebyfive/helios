@@ -7,10 +7,12 @@ use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\CategoryInterface;
 use AppBundle\Entity\Extra\AccountRegister;
+use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\Package;
 use AppBundle\Entity\UserInterface;
 use AppBundle\Model\KitPricing;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class RegisterHelper
 {
@@ -26,6 +28,21 @@ class RegisterHelper
 
     /**
      * @param AccountInterface $account
+     * @param array $data
+     */
+    public function fillAccount(AccountInterface $account, array $data)
+    {
+        unset($data['contact']);
+
+        $data['country'] = 'BR';
+        $data['level'] = 'platinum';
+        $data['context'] = BusinessInterface::CONTEXT_ACCOUNT;
+
+        $this->fillObject($account, $data);
+    }
+
+    /**
+     * @param AccountInterface $account
      */
     public function finishAccountRegister(AccountInterface $account, $save = true)
     {
@@ -34,7 +51,10 @@ class RegisterHelper
         $this->createAccountDefaults($account);
 
         $account->setConfirmationToken(null);
-        $owner->setConfirmationToken(null);
+
+        $owner
+            ->setTimezone('America/Sao_Paulo')
+            ->setConfirmationToken(null);
 
         if($save){
             $this->container->get('account_manager')->save($account);
@@ -42,55 +62,21 @@ class RegisterHelper
     }
 
     /**
-     * @param BusinessInterface $member
+     * @param MemberInterface $member
+     * @param array $data
      */
-    public function finishMemberRegistration(BusinessInterface &$member)
+    public function fillMember(MemberInterface $member, array $data)
     {
-        $user = $member->getUser();
-        $account = $member->getAccount();
-        $countMembers = $account->getMembers()->count();
+        $data = array_merge($data, [
+            'firstname' => $data['contact'],
+            'context' => BusinessInterface::CONTEXT_MEMBER,
+            'confirmationToken' => $this->getTokenGenerator()->generateToken()
+        ]);
 
-        if(1 == $countMembers || $member->getAttribute('is_owner')){
-            $user->addRole(UserInterface::ROLE_OWNER);
-            if(1 == $countMembers){
-                $user->addRole(UserInterface::ROLE_OWNER_MASTER);
-            }
-        }else{
-            //$this->resolveMemberDependencies($member);
-        }
+        unset($data['document'], $data['contact']);
+        ksort($data); // Prevent context exception
 
-        $manager = $this->getCustomerManager();
-
-        $member
-            ->setTimezone('America/Sao_Paulo')
-            ->setConfirmationToken(null)
-            ->setTeam($this->getDefaultTeam($account));
-
-        $manager->save($member);
-
-        $account->setConfirmationToken(null);
-        $manager->save($account);
-    }
-
-    /**
-     * @param BusinessInterface $account
-     * @return \AppBundle\Entity\TeamInterface
-     */
-    public function createDefaultAccountTeam(BusinessInterface $account)
-    {
-        $manager = $this->getTeamManager();
-
-        /** @var \AppBundle\Entity\TeamInterface $team */
-        $team = $manager->create();
-        $team->setAccount($account)
-            ->setEnabled(1)
-            ->setName('Equipe 1')
-            ->setDescription('Equipe 1')
-        ;
-
-        $manager->save($team);
-
-        return $team;
+        $this->fillObject($member, $data);
     }
 
     /**
@@ -156,10 +142,8 @@ class RegisterHelper
     public function emailCanBeUsed($email)
     {
         if($this->emailCanBeUsedForUser($email)){
-            if($this->emailCanBeUsedForMember($email)){
-                if($this->emailCanBeUsedForAccount($email)){
-                    return $this->emailCanBeUsedForRegister($email);
-                }
+            if($this->emailCanBeUsedForMember($email)) {
+                return $this->emailCanBeUsedForAccount($email);
             }
         }
 
@@ -195,21 +179,6 @@ class RegisterHelper
 
     /**
      * @param $email
-     * @return bool
-     */
-    public function emailCanBeUsedForRegister($email)
-    {
-        $register = $this->findRegisterByEmail($email);
-
-        if($register instanceof AccountRegister){
-            return !$register->isDone();
-        }
-
-        return true;
-    }
-
-    /**
-     * @param $email
      * @return null|object
      */
     public function findRegisterByEmail($email)
@@ -233,103 +202,24 @@ class RegisterHelper
     }
 
     /**
-     * @param AccountRegister $register
-     * @return \AppBundle\Entity\BusinessInterface
-     */
-    private function transformRegisterIntoAccount(AccountRegister $register)
-    {
-        $context =  $this->getContextManager()->find(BusinessInterface::CONTEXT_ACCOUNT);
-        $manager = $this->getCustomerManager();
-
-        /** @var \AppBundle\Entity\BusinessInterface $account */
-        $account = $manager->create();
-        $account
-            ->setConfirmationToken($register->getConfirmationToken())
-            ->setContext($context)
-            ->setFirstname($register->getCompanyName())
-            ->setEmail($register->getEmail())
-            ->setPhone($register->getPhone())
-        ;
-
-        $companyAttributes = [
-            'companyName' => $register->getCompanyName(),
-            'companyStatus' => $register->getCompanyStatus(),
-            'companySector' => $register->getCompanySector(),
-            'companyMembers' => $register->getCompanyMembers()
-        ];
-
-        $account->setAttributes($companyAttributes);
-
-        if(null != $package = $this->getDefaultPackage()){
-            //$account->setPackage($package);
-        }
-
-        //$account->setExpireAt(new \DateTime(App::TRAIL_INTERVAL));
-
-        $manager->save($account);
-
-        $this->createAccountDefaults($account);
-
-        return $account;
-    }
-
-    /**
-     * @param AccountRegister $register
-     * @return \AppBundle\Entity\BusinessInterface
-     */
-    private function transformRegisterIntoMember(AccountRegister $register)
-    {
-        $context =  $this->getContextManager()->find(BusinessInterface::CONTEXT_MEMBER);
-        $account = $this->transformRegisterIntoAccount($register);
-
-        $manager = $this->getCustomerManager();
-
-        /** @var \AppBundle\Entity\BusinessInterface $member */
-        $member = $manager->create();
-        $member
-            ->setContext($context)
-            ->setFirstname($register->getName())
-            ->setEmail($register->getEmail())
-            ->setPhone($register->getPhone())
-            ->setConfirmationToken($this->getTokenGenerator()->generateToken())
-            ->setAccount($account)
-        ;
-
-        $manager->save($member);
-
-        return $member;
-    }
-
-    /**
-     * @return null|\AppBundle\Entity\Package
-     */
-    private function getDefaultPackage()
-    {
-        return $this->getPackageManager()->findOneBy([
-            'status' => Package::ENABLED,
-            'default' => true
-        ]);
-    }
-
-    /**
-     * @param BusinessInterface $account
-     * @return \AppBundle\Entity\TeamInterface|null|object
-     */
-    private function getDefaultTeam(BusinessInterface $account)
-    {
-        if(null == $team = $this->getTeamManager()->findOneBy(['account' => $account])){
-            $team = $this->createDefaultAccountTeam($account);
-        }
-
-        return $team;
-    }
-
-    /**
      * @param AccountInterface $account
      */
     public function createAccountDefaults(AccountInterface $account)
     {
         $this->createDefaultAccountCategories($account);
+    }
+
+    /**
+     * @param $object
+     * @param array $data
+     */
+    private function fillObject($object, array $data)
+    {
+        $accessor = PropertyAccess::createPropertyAccessor();
+
+        foreach ($data as $property => $value) {
+            $accessor->setValue($object, $property, $value);
+        }
     }
 
     /**
@@ -370,22 +260,6 @@ class RegisterHelper
     private function getCategoryManager()
     {
         return $this->container->get('sonata.classification.manager.category');
-    }
-
-    /**
-     * @return \AppBundle\Entity\TeamManager|object
-     */
-    private function getTeamManager()
-    {
-        return $this->container->get('app.team_manager');
-    }
-
-    /**
-     * @return \AppBundle\Entity\PackageManager|object
-     */
-    private function getPackageManager()
-    {
-        return $this->container->get('app.package_manager');
     }
 
     /**

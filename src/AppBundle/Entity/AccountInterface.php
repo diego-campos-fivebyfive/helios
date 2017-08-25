@@ -16,7 +16,7 @@ interface AccountInterface
 
     # Default quota of monthly projects for free accounts
     const PROJECTS_QUOTA = 4;
-
+    
     /**
      * @return int
      */

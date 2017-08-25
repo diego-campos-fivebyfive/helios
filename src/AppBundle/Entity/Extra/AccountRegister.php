@@ -6,11 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
- * AccountRegister
- *
- * @ORM\Table(name="x_account_register")
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
+ * @deprecated This table will be removed
  */
 class AccountRegister
 {

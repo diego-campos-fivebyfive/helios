@@ -1,4 +1,4 @@
-<table id="kit_pricing_table" class="table table-condensed table-bordered">
+<table id="kit_pricing_table" class="table table-condensed table-bordered flow-md">
 
     <tbody>
     {% for parameter in parameters %}
@@ -8,7 +8,7 @@
             <td> {{ parameter.target|trans }} </td>
             <td> {{ parameter.percent|decimal }}% </td>
             <td class="col-md-1">
-                <div class="btn-group btn-group-justified">
+                <div class="btn-group btn-group">
                     <a data-pricing="{{ parameter.toJson }}"
                        data-update="{{ path('kit_pricing_update',{id:parameter.id}) }}"
                        class="btn btn-success btn-sm"> <i class="fa fa-pencil"></i> </a>

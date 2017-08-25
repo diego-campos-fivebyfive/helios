@@ -21,8 +21,14 @@ interface MemberInterface
     public function getIsquikId();
 
     /**
+     * @param $timezone
+     * @return MemberInterface
+     */
+    public function setTimezone($timezone);
+
+    /**
      * @param null $confirmationToken
-     * @return AccountInterface
+     * @return MemberInterface
      */
     public function setConfirmationToken($confirmationToken = null);
 

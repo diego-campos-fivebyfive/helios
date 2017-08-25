@@ -73,39 +73,6 @@ class RegisterController extends AbstractController
      */
     public function preRegisterAction(Request $request)
     {
-
-        $getErrorArgs = function ($form) {
-            return [
-                'message' => $form->getErrors(true),
-                'view' => $form->createView()
-            ];
-        };
-
-        $throwError = function ($error) {
-            return $this->render('register.pre_register', [
-                'errors' => $error['message'],
-                'form' => $error['view']
-            ]);
-        };
-
-        $findEmailAccount = function ($email, $account) {
-            return $account->findOneBy([
-                'context' => 'account',
-                'email' => $email
-            ]);
-        };
-
-        $findEmailMember = function ($email, $account) {
-            return $account->findOneBy([
-                'context' => 'member',
-                'email' => $email
-            ]);
-        };
-
-        $findEmailUser = function ($email, $user) {
-            return $user->findUserByEmail($email);
-        };
-
         /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
         $userManager = $this->get('fos_user.user_manager');
         $accountManager = $this->getCustomerManager();
@@ -113,72 +80,56 @@ class RegisterController extends AbstractController
         $form = $this->createForm(PreRegisterType::class);
         $form->handleRequest($request);
 
-        if (!$form->isSubmitted() || !$form->isValid()) {
-            $error = $getErrorArgs($form);
-            return $throwError($error);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $helper = $this->getRegisterHelper();
+            $data = $form->getData();
+
+            if ($helper->emailCanBeUsed($data['email'])) {
+
+                $data['confirmationToken'] = $this->getTokenGenerator()->generateToken();
+
+                /** @var AccountInterface $account */
+                $account = $accountManager->create();
+                /** @var MemberInterface $member */
+                $member = $accountManager->create();
+
+                $helper->fillAccount($account, $data);
+
+                $user = $userManager->createUser();
+
+                $user->setEmail($data['email'])
+                    ->setUsername($data['email'])
+                    ->setPlainPassword(uniqid())
+                    ->addRole(UserInterface::ROLE_OWNER_MASTER);
+
+                $data['user'] = $user;
+                $data['account'] = $account;
+
+                $helper->fillMember($member, $data);
+
+                $accountManager->save($account);
+
+                $this->get('app_mailer')->sendAccountConfirmationMessage($account);
+
+                $this->get('notifier')->notify([
+                    'Evento' => '206',
+                    'Callback' => 'account_created',
+                    'Id' => $account->getId()
+                ]);
+
+                $request->getSession()->set('account_id', $account->getId());
+
+                return $this->redirectToRoute('register_in_progress');
+            }
+
+            $form->addError(new FormError('E-mail já Cadastrado'));
         }
 
-        $data = $form->getData();
-
-        if (
-            $findEmailAccount($data['email'], $accountManager) ||
-            $findEmailMember($data['email'], $accountManager) ||
-            $findEmailUser($data['email'], $userManager)
-        ) {
-            $errorMessage = new FormError('E-mail já Cadastrado');
-            $form->addError($errorMessage);
-            $error = $getErrorArgs($form);
-            return $throwError($error);
-        }
-
-        /** @var AccountInterface $account */
-        $account = $accountManager->create();
-        /** @var MemberInterface $member */
-        $member = $accountManager->create();
-
-        $account->setConfirmationToken($this->getTokenGenerator()->generateToken())
-            ->setFirstName($data['firstname'])
-            ->setLastName($data['lastname'])
-            ->setExtraDocument($data['extraDocument'])
-            ->setDocument($data['document'])
-            ->setEmail($data['email'])
-            ->setState($data['state'])
-            ->setCity($data['city'])
-            ->setDistrict($data['district'])
-            ->setStreet($data['street'])
-            ->setNumber($data['number'])
-            ->setPostcode($data['postcode'])
-            ->setLevel('platinum')
-            ->setContext(BusinessInterface::CONTEXT_ACCOUNT);
-        $member->setAccount($account);
-
-        $user = $userManager->createUser();
-        $user->setEmail($data['email'])
-            ->setUsername($data['email'])
-            ->setPlainPassword(uniqid())
-            ->setCreatedAt(new \DateTime('now'))
-            ->addRole(UserInterface::ROLE_OWNER_MASTER);
-
-        $member->setConfirmationToken($this->getTokenGenerator()->generateToken())
-            ->setFirstname($data['contact'])
-            ->setPhone($data['phone'])
-            ->setEmail($data['email'])
-            ->setContext(BusinessInterface::CONTEXT_MEMBER)
-            ->setUser($user);
-
-        $accountManager->save($account);
-
-        $this->get('app_mailer')->sendAccountConfirmationMessage($account);
-
-        $this->get('notifier')->notify([
-            'Evento' => '206',
-            'Callback' => 'account_created',
-            'Id' => $account->getId()
+        return $this->render('register.pre_register', [
+            'errors' => $form->getErrors(true),
+            'form' => $form->createView()
         ]);
-
-        $request->getSession()->set('account_id', $account->getId());
-
-        return $this->redirectToRoute('register_in_progress');
     }
 
     /**
@@ -368,8 +319,6 @@ class RegisterController extends AbstractController
                 if ($form->isValid()) {
 
                     $member->setUser($user);
-
-                    //$this->getRegisterHelper()->finishMemberRegistration($member);
 
                     $event = $this->createWoopraEvent('registrou', [
                         'email' => $member->getEmail(),

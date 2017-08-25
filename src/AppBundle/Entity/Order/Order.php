@@ -71,7 +71,7 @@ class Order implements OrderInterface
     /**
      * @var OrderInterface
      *
-     * @ORM\ManyToOne(targetEntity="Order")
+     * @ORM\ManyToOne(targetEntity="Order", inversedBy="childrens")
      */
     private $parent;
 
