@@ -16,12 +16,15 @@ class Notifier
             'order_created' => 'orcamentovendas/orcamentovendas/Notificacao'
         ];
 
-        $baseUrl = 'https://api.isquik.com:443';
         $callback = $notification['Callback'];
         $route = $routes[$callback];
 
-        $auth = $this->getToken("$baseUrl/auth");
-        $this->sendNotification($notification, $auth, "$baseUrl/isquik-dev/$route");
+        $host = getenv('CES_ISQUIK_HOST');
+        $port = getenv('CES_ISQUIK_PORT');
+        $baseUri = "$host:$port";
+
+        $auth = $this->getToken("$baseUri/auth");
+        $this->sendNotification($notification, $auth, "$baseUri/isquik-dev/$route");
     }
 
     public function getToken ($url)
