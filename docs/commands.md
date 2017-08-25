@@ -3,6 +3,11 @@ Lista de Comandos
 
 Comandos utilizados no sistema Sices Solar.
 
+### Para configurar a aplicação
+```
+$ ces-app-config --AMBIENCE
+```
+
 ### Para instalar/atualizar todas as dependencias do composer e do yarn
 ```
 $ ces-app-install
