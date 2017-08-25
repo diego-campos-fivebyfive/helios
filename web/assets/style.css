@@ -8144,6 +8144,10 @@ body.md-skin {
   min-width: 720px;
 }
 
+.flow-xg {
+  min-width: 768px;
+}
+
 @media (min-width: 320px) and (max-width: 767px) {
   .bt-xs {
     font-size: 10px;
