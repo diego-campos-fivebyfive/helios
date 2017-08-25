@@ -3,6 +3,22 @@ Lista de Comandos
 
 Comandos utilizados no sistema Sices Solar.
 
+### Para instalar todas as dependencias do Sices
+```
+$ ces-ambience-config
+```
+
+### Para realizar deploy
+```
+$ cd AMBIENCE
+$ ces-app-deploy --AMBIENCE
+```
+
+### Para iniciar as aplicações
+```
+$ ces-app-start --AMBIENCE
+```
+
 ### Para configurar a aplicação
 ```
 $ ces-app-config --AMBIENCE
