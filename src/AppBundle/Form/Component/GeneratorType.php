@@ -109,7 +109,11 @@ class GeneratorType extends AbstractType
             ])
             ->add('string_box_maker', ChoiceType::class, [
                 'choices' => $this->getStringBoxMakers()
-            ]);
+            ])
+            ->add('is_promotional', CheckboxType::class, [
+                'required' => false
+            ])
+        ;
     }
 
     /**

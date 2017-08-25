@@ -1,7 +1,17 @@
+{% set isPromo = project.defaults.is_promotional %}
+
 <style>
     .line-padding {
         padding-top: 4rem !important;
     }
+
+    {% if isPromo %}
+    .cost-col {
+        display: none;
+    }
+
+    {% endif %}
+
 </style>
 
 
@@ -55,6 +65,9 @@
                         <label style="display: block;"> &nbsp; </label>
                         {{ form_widget(form.use_transformer) }} &nbsp;
                         {{ form_label(form.use_transformer, 'Incluir transformador se necessário') }}
+                        <br>
+                        {{ form_widget(form.is_promotional) }} &nbsp;
+                        {{ form_label(form.is_promotional, 'Utilizar tabela promocional') }}
                     </div>
 
                     <div class="hide">
@@ -81,7 +94,7 @@
     <tr class="flow-lg">
         <th width="15%"> Código</th>
         <th> Descrição</th>
-        <th width="15%"> Custo</th>
+        <th width="15%"><span class="cost-col">Custo</span></th>
         <th width="10%" align="center"> Quantidade</th>
     </tr>
     </thead>
@@ -94,10 +107,10 @@
             <td>
                 {#<a data-toggle="modal" data-target="#modal_component"
                    data-url="{{ path('component_show', {type:'module', id:projectModule.module.id}) }}">#}
-                    {{ projectModule.module.model }}
+                {{ projectModule.module.model }}
                 {#</a>#}
             </td>
-            <td> {{ projectModule.unitCostPrice|currency }} </td>
+            <td class="promotional"> {{ projectModule.unitCostPrice|currency }} </td>
             <td class="text-center"> {{ projectModule.quantity }} </td>
         </tr>
     {% endfor %}
@@ -109,10 +122,10 @@
             <td>
                 {#<a data-toggle="modal" data-target="#modal_component"
                    data-url="{{ path('component_show', {type:'inverter', id:group.inverter.id}) }}">#}
-                    {{ group.inverter.model }}
+                {{ group.inverter.model }}
                 {#</a>#}
             </td>
-            <td> {{ group.unitCostPrice|currency }} </td>
+            <td class="promotional"> {{ group.unitCostPrice|currency }} </td>
             <td class="text-center"> {{ group.quantity }} </td>
         </tr>
     {% endfor %}
@@ -122,7 +135,7 @@
         <tr>
             <td> {{ project.transformer.variety.code }} </td>
             <td> {{ project.transformer.variety.description }} </td>
-            <td> {{ project.transformer.unitCostPrice|currency }} </td>
+            <td class="promotional"> {{ project.transformer.unitCostPrice|currency }} </td>
             <td> {{ 1 }} </td>
         </tr>
     {% endif %}
@@ -134,10 +147,10 @@
             <td>
                 {#<a data-toggle="modal" data-target="#modal_component"
                    data-url="{{ path('stringbox_show', {id:projectStringBox.stringBox.id}) }}">#}
-                    {{ projectStringBox.stringBox.description }}
+                {{ projectStringBox.stringBox.description }}
                 {#</a>#}
             </td>
-            <td> {{ projectStringBox.unitCostPrice|currency }} </td>
+            <td class="promotional"> {{ projectStringBox.unitCostPrice|currency }} </td>
             <td class="text-center"> {{ projectStringBox.quantity }} </td>
         </tr>
     {% endfor %}
@@ -149,10 +162,10 @@
             <td>
                 {#<a data-toggle="modal" data-target="#modal_component"
                    data-url="{{ path('structure_show', {id:projectStructure.structure.id}) }}">#}
-                    {{ projectStructure.structure.description }}
+                {{ projectStructure.structure.description }}
                 {#</a>#}
             </td>
-            <td> {{ projectStructure.unitCostPrice|currency }} </td>
+            <td class="promotional"> {{ projectStructure.unitCostPrice|currency }} </td>
             <td class="text-center"> {{ projectStructure.quantity }} </td>
         </tr>
     {% endfor %}
@@ -162,7 +175,7 @@
         <tr>
             <td> {{ projectVariety.variety.code }} </td>
             <td> {{ projectVariety.variety.description }} </td>
-            <td> {{ projectVariety.unitCostPrice|currency }} </td>
+            <td class="promotional"> {{ projectVariety.unitCostPrice|currency }} </td>
             <td class="text-center"> {{ projectVariety.quantity }} </td>
         </tr>
     {% endfor %}
@@ -268,6 +281,13 @@
 
 <script>
 
+    {% if isPromo %}
+    var promoLabel = '<span class="label label-primary"> Promocional </span>';
+    $.each($('.promotional'), function (i, row) {
+        $(this).html(promoLabel);
+    });
+    {% endif %}
+
     var form_project = $('#form_project');
     var generate_makers = $('#generator_inverter_maker');
     var generator_power = $('#generator_power');
@@ -294,7 +314,7 @@
         count: function () {
 
             var count = 0;
-            $.each(GroupManager.groups, function(i, group){
+            $.each(GroupManager.groups, function (i, group) {
                 count += (group.lines * group.modules);
             });
 
@@ -304,18 +324,18 @@
             var line = target.closest('.dist-line');
             line.remove();
         },
-        check: function(){
+        check: function () {
             var count = GroupManager.count();
-            if(GroupManager.max_count == count){
+            if (GroupManager.max_count == count) {
                 GroupManager.submit.removeAttr('disabled');
                 GroupManager.checker.hide();
-            }else{
+            } else {
                 GroupManager.submit.attr('disabled', 'disabled');
                 GroupManager.checker.show();
             }
             var diff = GroupManager.max_count - count;
 
-            if(diff > 0) diff = '+'+diff;
+            if (diff > 0) diff = '+' + diff;
 
             GroupManager.checker.html(diff);
         },
@@ -333,13 +353,13 @@
                     var value = parseInt($(this).val());
                     var index = $(this).closest('tr').index();
                     var current = GroupManager.groups[index].lines;
-                    if(value > current) {
+                    if (value > current) {
                         if (GroupManager.count() >= GroupManager.max_count) {
                             $(this).val(current);
                         } else {
                             GroupManager.groups[index].lines = value;
                         }
-                    }else{
+                    } else {
                         GroupManager.groups[index].lines = value;
                     }
 
@@ -357,13 +377,13 @@
                     var value = parseInt($(this).val());
                     var index = $(this).closest('tr').index();
                     var current = GroupManager.groups[index].modules;
-                    if(value > current) {
+                    if (value > current) {
                         if (GroupManager.count() >= GroupManager.max_count) {
                             $(this).val(current);
                         } else {
                             GroupManager.groups[index].modules = value;
                         }
-                    }else{
+                    } else {
                         GroupManager.groups[index].modules = value;
                     }
 
@@ -371,7 +391,7 @@
                 });
             }
         },
-        register: function(line){
+        register: function (line) {
             var lines = line.find('.dist-line-number');
             var modules = line.find('.dist-line-module');
             var position = line.find('input[name="line-position"]');
@@ -381,8 +401,8 @@
             var currentPosition = line.find('.btn-position.active').data('position');
             GroupManager.touchspin.modules(modules, 0 == currentPosition ? 20 : 12);
 
-            btnDelete.on('click', function(){
-                if(GroupManager.groups.length > 1) {
+            btnDelete.on('click', function () {
+                if (GroupManager.groups.length > 1) {
                     var line = $(this).closest('tr');
                     GroupManager.groups.splice(line.index(), 1);
                     line.remove();
@@ -390,25 +410,25 @@
                 }
             });
 
-            position.on('change', function(){
+            position.on('change', function () {
                 var line = $(this).closest('tr');
                 var value = parseInt($(this).val());
-                $.each($(this).closest('.btn-group').find('label'), function(i,e){
+                $.each($(this).closest('.btn-group').find('label'), function (i, e) {
                     var label = $(e);
-                    if(value == label.data('position')){
+                    if (value == label.data('position')) {
                         label.addClass('active');
-                    }else{
+                    } else {
                         label.removeClass('active');
                     }
                 });
                 GroupManager.groups[line.index()].position = value;
 
-                modules.trigger('touchspin.updatesettings',{
+                modules.trigger('touchspin.updatesettings', {
                     max: 0 == value ? 20 : 12
                 });
             });
         },
-        render: function(group){
+        render: function (group) {
             if (!group.hasOwnProperty('rendered')) {
 
                 var render = $(GroupManager.template
@@ -417,7 +437,7 @@
 
                 GroupManager.container.append(render);
 
-                var position = render.find('[data-position="'+group.position+'"]');
+                var position = render.find('[data-position="' + group.position + '"]');
                 position.addClass('active');
                 position.find('input').attr('checked', 'checked');
 
@@ -429,7 +449,7 @@
         refresh: function () {
             $.each(GroupManager.groups, function (i, group) {
                 GroupManager.render(group);
-                if(i == GroupManager.groups.length-1){
+                if (i == GroupManager.groups.length - 1) {
                     GroupManager.check();
                 }
             });
@@ -444,30 +464,30 @@
     });
 
     GroupManager.submit.ladda();
-    GroupManager.submit.on('click', function(){
+    GroupManager.submit.on('click', function () {
         $(this).ladda('start');
-        $.each(GroupManager.groups, function(i, group){
+        $.each(GroupManager.groups, function (i, group) {
             delete group.rendered;
         });
         Request.send({
             url: '{{ path('project_groups',{id:project.id, precify:true}) }}',
             method: 'post',
-            data: {groups:GroupManager.groups},
-            callback: function(xhr){
+            data: {groups: GroupManager.groups},
+            callback: function (xhr) {
                 GroupManager.submit.ladda('stop');
                 ProjectGenerator.formProject();
             }
         });
-        $.each(GroupManager.groups, function(i, group){
+        $.each(GroupManager.groups, function (i, group) {
             group.rendered = true;
         });
     });
 
     {% endif %}
 
-    function checkGridOptions(choicePhase, choiceVoltage){
+    function checkGridOptions(choicePhase, choiceVoltage) {
 
-        var checkOption = function() {
+        var checkOption = function () {
             var phase = choicePhase.val();
             var voltage = choiceVoltage.val();
 
@@ -487,17 +507,17 @@
 
         checkOption();
 
-        choicePhase.on('change', function(){
+        choicePhase.on('change', function () {
             checkOption();
         });
 
-        choiceVoltage.on('change', function(){
+        choiceVoltage.on('change', function () {
             checkOption();
         });
     }
 
     checkGridOptions(generator_g_phase, generator_g_voltage);
-    generator_g_phase.on('change', function(){
+    generator_g_phase.on('change', function () {
         detect_makers();
     });
 
@@ -506,10 +526,10 @@
             url: '{{ path('detect_makers') }}',
             method: 'post',
             data: form_project.serialize(),
-            callback: function(xhr) {
+            callback: function (xhr) {
                 var response = xhr.responseJSON;
                 var makers = response.makers;
-                if(!makers.length){
+                if (!makers.length) {
                     generate_makers.find('option').attr('disabled', 'disabled');
                 }
                 callback(makers);
@@ -517,7 +537,7 @@
         });
     }
 
-    function detect_makers(){
+    function detect_makers() {
         get_available_makers(function (makers) {
             if (!makers.length) {
                 generator_power.val(last_power);
@@ -537,38 +557,38 @@
         });
     }
 
-    generator_power.on('change', function(){
+    generator_power.on('change', function () {
         detect_makers();
-    }).on('focus', function(){
+    }).on('focus', function () {
         last_power = $(this).val();
     });
 
     var button_config = form_project.find('[type="submit"]');
     button_config.ladda();
-    form_project.on('submit', function(event){
+    form_project.on('submit', function (event) {
         event.preventDefault();
         button_config.ladda('start');
-        get_available_makers(function(makers){
+        get_available_makers(function (makers) {
             var maker_id = parseInt(generate_makers.val());
             if (makers.length && makers.indexOf(maker_id) >= 0) {
                 Request.send({
                     url: form_project.attr('action'),
                     method: form_project.attr('method'),
                     data: form_project.serialize(),
-                    callback: function(xhr){
-                        if(200 == xhr.status) {
+                    callback: function (xhr) {
+                        if (200 == xhr.status) {
                             var response = xhr.responseJSON;
                             if (response.hasOwnProperty('project')) {
                                 Project = response.project;
-                                if(Project.id) {
+                                if (Project.id) {
                                     var url = '{{ path('order_generator_project',{id:'_id_'}) }}'.replace(/_id_/g, Project.id);
                                     ProjectGenerator.formProject(url);
                                 }
                             }
-                            if(response.errors.length){
+                            if (response.errors.length) {
                                 swal('Ooops', response.errors[0], 'warning');
                             }
-                        }else{
+                        } else {
                             swal('Ooops', 'Houve um erro ao enviar a solicitação!', 'warning');
                         }
                         button_config.ladda('stop');

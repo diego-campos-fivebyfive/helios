@@ -71,6 +71,33 @@
             ShippingManager.checkType();
             ShippingManager.checkState();
         },
+        calculate: function(){
+
+            ladda_button = false;
+            var form = this.form;
+            var button = form.find('[type="submit"]');
+
+            if (!ladda_button) {
+                ladda_button = true;
+                button.ladda();
+            }
+
+            button.ladda('start');
+
+            Request.send({
+                url: form.attr('action'),
+                method: 'post',
+                data: form.serialize(),
+                callback: function (xhr) {
+                    button.ladda('stop');
+                    var response = xhr.responseJSON;
+                        ShippingManager.output.html(
+                        numeral(response.shipping).format('$0,0.00')
+                    );
+                    Financial.onSaveShipping();
+                }
+            });
+        },
         init: function () {
 
             ShippingManager.type.on('change', function () {
@@ -79,28 +106,9 @@
 
             ShippingManager.check();
 
-            ladda_button = false;
-            var button = ShippingManager.form.find('[type="submit"]');
             ShippingManager.form.on('submit', function (event) {
                 event.preventDefault();
-                if (!ladda_button) {
-                    ladda_button = true;
-                    button.ladda();
-                }
-                button.ladda('start');
-                Request.send({
-                    url: $(this).attr('action'),
-                    method: 'post',
-                    data: $(this).serialize(),
-                    callback: function (xhr) {
-                        button.ladda('stop');
-                        var response = xhr.responseJSON;
-                        ShippingManager.output.html(
-                            numeral(response.shipping).format('$0,0.00')
-                        );
-                        Financial.onSaveShipping();
-                    }
-                });
+                ShippingManager.calculate();
             });
 
             Numbers.mask(ShippingManager.percent);

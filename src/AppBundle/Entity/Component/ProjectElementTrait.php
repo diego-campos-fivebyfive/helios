@@ -119,7 +119,7 @@ trait ProjectElementTrait
      */
     public function setUnitCostPrice($unitCostPrice)
     {
-        $this->unitCostPrice = $unitCostPrice;
+        $this->unitCostPrice = (float) $unitCostPrice;
 
         return $this;
     }
@@ -174,8 +174,6 @@ trait ProjectElementTrait
         if($range->getCode() != $this->getCode())
             throw new \InvalidArgumentException('Incompatible codes');
 
-        $this->unitCostPrice = $range->getPrice();
-
-        return $this;
+        return $this->setUnitCostPrice($range->getPrice());
     }
 }

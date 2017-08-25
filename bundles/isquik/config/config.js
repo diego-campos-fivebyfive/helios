@@ -8,7 +8,7 @@ const ISQUIK_AUTH_KEY = process.env.CES_ISQUIK_AUTH_KEY
 const ISQUIK_AUTH_USER = process.env.CES_ISQUIK_AUTH_USER
 
 const sicesBase = `http://localhost:${SICES_PORT}`
-const isquikBase = `${ISQUIK_HOST}:${ISQUIK_PORT}`
+const isquikBase = `${ISQUIK_HOST}:${ISQUIK_PORT}/${ISQUIK_AUTH_USER}`
 
 const config = {
   sices: {
@@ -24,7 +24,6 @@ const config = {
   },
   bundle: {
     headers: (request, response, next) => {
-      response.header('Access-Control-Allow-Origin', `${sicesBase}, ${isquikBase}`)
       response.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE')
       response.header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With')
       response.header('Access-Control-Allow-Credentials', 'true')

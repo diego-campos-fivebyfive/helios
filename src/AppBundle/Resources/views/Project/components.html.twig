@@ -22,32 +22,32 @@
             <div class="row">
                 <div class="form-group">
                     <div class="col-md-3">
-                        <div class="row">
+                        <div class="row col-xs-12">
                             {{ form_label(form.power, 'Potência',{label_attr:{id:'source_label'}}) }}
                         </div>
                         <div class="row">
-                            <div class="col-md-6 middle-block">
+                            <div class="col-md-6 middle-block col-xs-6">
                                 {{ form_widget(form.source,{attr:{class:'form-control'}}) }}
                             </div>
-                            <div class="middle-block">
+                            <div class="middle-block col-xs-6">
                                 {{ form_widget(form.power,{attr:{class:'form-control'}}) }}
                                 {{ form_widget(form.consumption,{attr:{class:'form-control'}}) }}
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2 col-xs-6">
                         {{ form_label(form.module, 'Módulo') }}
                         {{ form_widget(form.module,{attr:{class:'form-control'}}) }}
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-xs-6">
                         {{ form_label(form.inverter_maker, 'Fab. Inversor') }}
                         {{ form_widget(form.inverter_maker,{attr:{class:'form-control'}}) }}
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2 col-xs-6">
                         {{ form_label(form.string_box_maker, 'Fab. String Box') }}
                         {{ form_widget(form.string_box_maker,{attr:{class:'form-control'}}) }}
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2 col-xs-6">
                         {{ form_label(form.structure_maker, 'Fab. Estrutura') }}
                         {{ form_widget(form.structure_maker,{attr:{class:'form-control'}}) }}
                     </div>
@@ -56,22 +56,24 @@
 
             <div class="row" style="margin-top: 1rem;">
                 <div class="form-group">
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-xs-6">
                         {{ form_label(form.roof_type, 'Tipo de Telhado') }}
                         {{ form_widget(form.roof_type,{attr:{class:'form-control'}}) }}
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2 col-xs-6">
                         {{ form_label(form.grid_voltage, 'Tensão') }}
                         {{ form_widget(form.grid_voltage,{attr:{class:'form-control'}}) }}
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2 col-xs-6">
                         {{ form_label(form.grid_phase_number, 'Fases') }}
                         {{ form_widget(form.grid_phase_number,{attr:{class:'form-control'}}) }}
                     </div>
-                    <div class="col-md-3" style="font-size: 12px; margin-top: 1rem;">
-                        <label style="display: block;"> &nbsp; </label>
+                    <div class="col-md-3 col-xs-6" style="font-size: 12px; margin-top: 1rem;">
                         {{ form_widget(form.use_transformer) }} &nbsp;
                         {{ form_label(form.use_transformer, 'Incluir transformador se necessário') }}
+                        <br>
+                        {{ form_widget(form.is_promotional) }} &nbsp;
+                        {{ form_label(form.is_promotional, 'Utilizar tabela promocional') }}
                     </div>
 
                     <div class="hide">
