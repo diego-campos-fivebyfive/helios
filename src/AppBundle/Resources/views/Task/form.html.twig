@@ -15,7 +15,7 @@
                     <label class="btn btn-default btn-tag {{ type.vars.checked ? 'active' }}">
                         {{ form_widget(type) }}
                         <i class="fa {{ attribute(icons, type.vars.label) }}"></i>
-                        {{ ['tag.',type.vars.label]|join|trans }}
+                        <span class="mobile-hidden"> {{ ['tag.',type.vars.label]|join|trans }}</span>
                     </label>
                 {% endfor %}
             </div>

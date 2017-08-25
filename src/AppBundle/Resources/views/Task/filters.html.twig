@@ -19,7 +19,7 @@
 
 {{ form_start(form,{attr:{id:'form_filter'}}) }}
 
-<div class="col-md-4">
+<div class="col-md-4 col-xs-4">
     <div class="btn-group btn-group-justified" data-toggle="buttons">
         {% for type in form.type %}
             <label class="btn btn-default btn-tag {{ type.vars.checked ? 'active' }}">
@@ -30,7 +30,7 @@
     </div>
 </div>
 
-<div class="col-md-4">
+<div class="col-md-4 col-xs-4">
     <div class="btn-group btn-group-justified" data-toggle="buttons">
         {% for key, status in form.status %}
             <label class="btn btn-default btn-tag {{ status.vars.checked ? 'active' }} {{ ('placeholder' == status.vars.name) ? 'hide' }}">
@@ -42,7 +42,7 @@
     </div>
 </div>
 
-<div class="col-md-4 {{ hide_dates ? 'hide' }} ">
+<div class="col-md-4 col-xs-4 {{ hide_dates ? 'hide' }} ">
     <div class="btn-group" data-toggle="buttons">
         {% for date in form.date %}
             <label class="btn btn-default btn-tag {{ date.vars.checked ? 'active' }} {{ ('placeholder' == date.vars.name) ? 'hide' }}">
