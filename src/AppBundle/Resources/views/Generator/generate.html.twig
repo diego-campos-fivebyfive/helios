@@ -1,7 +1,16 @@
+{% set isPromo = project.defaults.is_promotional %}
+
 <style>
     .line-padding {
         padding-top: 4rem !important;
     }
+
+    {% if isPromo %}
+        .cost-col{
+            display: none;
+        }
+    {% endif %}
+
 </style>
 
 
@@ -84,7 +93,7 @@
     <tr class="flow-lg">
         <th width="15%"> Código</th>
         <th> Descrição</th>
-        <th width="15%"> Custo</th>
+        <th width="15%"> <span class="cost-col">Custo</span></th>
         <th width="10%" align="center"> Quantidade</th>
     </tr>
     </thead>
@@ -100,7 +109,7 @@
                     {{ projectModule.module.model }}
                 {#</a>#}
             </td>
-            <td> {{ projectModule.unitCostPrice|currency }} </td>
+            <td class="promotional"> {{ projectModule.unitCostPrice|currency }} </td>
             <td class="text-center"> {{ projectModule.quantity }} </td>
         </tr>
     {% endfor %}
@@ -115,7 +124,7 @@
                     {{ group.inverter.model }}
                 {#</a>#}
             </td>
-            <td> {{ group.unitCostPrice|currency }} </td>
+            <td class="promotional"> {{ group.unitCostPrice|currency }} </td>
             <td class="text-center"> {{ group.quantity }} </td>
         </tr>
     {% endfor %}
@@ -125,7 +134,7 @@
         <tr>
             <td> {{ project.transformer.variety.code }} </td>
             <td> {{ project.transformer.variety.description }} </td>
-            <td> {{ project.transformer.unitCostPrice|currency }} </td>
+            <td class="promotional"> {{ project.transformer.unitCostPrice|currency }} </td>
             <td> {{ 1 }} </td>
         </tr>
     {% endif %}
@@ -140,7 +149,7 @@
                     {{ projectStringBox.stringBox.description }}
                 {#</a>#}
             </td>
-            <td> {{ projectStringBox.unitCostPrice|currency }} </td>
+            <td class="promotional"> {{ projectStringBox.unitCostPrice|currency }} </td>
             <td class="text-center"> {{ projectStringBox.quantity }} </td>
         </tr>
     {% endfor %}
@@ -155,7 +164,7 @@
                     {{ projectStructure.structure.description }}
                 {#</a>#}
             </td>
-            <td> {{ projectStructure.unitCostPrice|currency }} </td>
+            <td class="promotional"> {{ projectStructure.unitCostPrice|currency }} </td>
             <td class="text-center"> {{ projectStructure.quantity }} </td>
         </tr>
     {% endfor %}
@@ -165,7 +174,7 @@
         <tr>
             <td> {{ projectVariety.variety.code }} </td>
             <td> {{ projectVariety.variety.description }} </td>
-            <td> {{ projectVariety.unitCostPrice|currency }} </td>
+            <td class="promotional"> {{ projectVariety.unitCostPrice|currency }} </td>
             <td class="text-center"> {{ projectVariety.quantity }} </td>
         </tr>
     {% endfor %}
@@ -270,6 +279,13 @@
 
 
 <script>
+
+    {% if isPromo %}
+        var promoLabel = '<span class="label label-primary"> Promocional </span>';
+        $.each($('.promotional'), function(i, row){
+            $(this).html(promoLabel);
+        });
+    {% endif %}
 
     var form_project = $('#form_project');
     var generate_makers = $('#generator_inverter_maker');
