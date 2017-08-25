@@ -2,13 +2,23 @@
 
 cd $SICES_PATH
 
-path=/var/www/
+if [ $1 == '--homolog' ]; then
 
-echo "Creating current version Backup..."
-rsync -avzh $path/** $path/.backup
+  git fetch origin
+  GIT_WORK_TREE=$SICES_PATH git checkout -f
+  git pull origin master -f
 
-echo "Importing Temp files from homolog..."
-rsync -azvv -e "ssh -i $SICES_PATH/devops/aws/homolog.pem" admin@54.233.150.10:$path/** $path/.temp
+elif [ $1 == '--production' ]; then
 
-echo "Deploying files from Temp..."
-rsync -avzh --delete $path/.temp/** $path
+  path=/var/www/
+
+  echo "Creating current version Backup..."
+  rsync -avzh $path/** $path/.backup
+
+  echo "Importing Temp files from homolog..."
+  rsync -azvv -e "ssh -i $SICES_PATH/devops/aws/homolog.pem" admin@54.233.150.10:$path/** $path/.temp
+
+  echo "Deploying files from Temp..."
+  rsync -avzh --delete $path/.temp/** $path
+
+fi
