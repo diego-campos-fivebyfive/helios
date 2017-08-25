@@ -30,10 +30,6 @@ class ProjectFinancialController extends AbstractController
      */
     public function configAction(Project $project)
     {
-        $generator = $this->getGenerator();
-
-        $generator->pricing($project);
-
         $form = $this->createForm(FinancialType::class, $project);
 
         $formTax = $this->createForm(TaxType::class, new ProjectTax());
@@ -42,6 +38,28 @@ class ProjectFinancialController extends AbstractController
             'project' => $project,
             'form' => $form->createView(),
             'form_tax' => $formTax->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/components", name="financial_components")
+     */
+    public function componentsAction(Project $project, Request $request)
+    {
+        $defaults = $project->getDefaults();
+
+        if(null != $isPromotional = $request->query->get('is_promotional')){
+            $defaults['is_promotional'] = (bool) $isPromotional;
+            $project->setDefaults($defaults);
+        }
+
+        $generator = $this->getGenerator();
+
+        $generator->pricing($project);
+
+        return $this->render('project.financial_components', [
+            'defaults' => $defaults,
+            'project' => $project
         ]);
     }
 

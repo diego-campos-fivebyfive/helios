@@ -69,9 +69,11 @@
                         {{ form_widget(form.grid_phase_number,{attr:{class:'form-control'}}) }}
                     </div>
                     <div class="col-md-3" style="font-size: 12px; margin-top: 1rem;">
-                        <label style="display: block;"> &nbsp; </label>
                         {{ form_widget(form.use_transformer) }} &nbsp;
                         {{ form_label(form.use_transformer, 'Incluir transformador se necessário') }}
+                        <br>
+                        {{ form_widget(form.is_promotional) }} &nbsp;
+                        {{ form_label(form.is_promotional, 'Utilizar tabela promocional') }}
                     </div>
 
                     <div class="hide">
