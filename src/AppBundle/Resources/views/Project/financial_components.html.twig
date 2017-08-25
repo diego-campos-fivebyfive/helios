@@ -1,0 +1,138 @@
+{% set isPromo = project.defaults.is_promotional %}
+
+<style>
+    {% if isPromo %}
+    .price-columns{
+        display: none;
+    }
+    {% endif %}
+</style>
+
+<table id="table_items" class="table">
+    <thead>
+    <tr>
+        <th class="col-md-2"> Código</th>
+        <th> Descrição</th>
+        <th class="price-columns"> Custo Unitário</th>
+        <th class="price-columns"> Preço Unitário</th>
+        <th class="col-md-1"> Quantidade</th>
+        <th class="price-columns"> Total</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {# MODULES #}
+    {% for projectModule in project.projectModules %}
+        <tr>
+            <td class="col-md-2"> {{ projectModule.module.code }} </td>
+            <td>
+                {#<a data-toggle="modal" data-target="#modal_component" data-url="{{ path('component_show', {type:'module', id:projectModule.module.id}) }}">#}
+                {{ projectModule.module.model }}
+                {#</a>#}
+            </td>
+            <td class="price-columns"> {{ projectModule.unitCostPrice|currency }} </td>
+            <td class="price-columns"> {{ projectModule.unitSalePrice|currency }} </td>
+            <td class="col-md-1"> {{ projectModule.quantity }} </td>
+            <td> {{ projectModule.totalSalePrice|currency }} </td>
+        </tr>
+    {% endfor %}
+
+    {# INVERTERS #}
+    {% for id, group in project.groupInverters %}
+        <tr>
+            <td class="col-md-2"> {{ group.inverter.code }} </td>
+            <td>
+                {#<a data-toggle="modal" data-target="#modal_component" data-url="{{ path('component_show', {type:'inverter', id:group.inverter.id}) }}">#}
+                {{ group.inverter.model }}
+                {#</a>#}
+            </td>
+                <td class="price-columns"> {{ group.projectInverter.unitCostPrice|currency }} </td>
+            <td class="price-columns"> {{ group.projectInverter.unitSalePrice|currency }} </td>
+            <td class="col-md-1"> {{ group.quantity }} </td>
+
+            <td> {{ group.projectInverter.totalSalePrice|currency }} </td>
+        </tr>
+    {% endfor %}
+
+    {# TRANSFORMER #}
+    {% if project.transformer %}
+        {% set projectTransformer = project.transformer %}
+        <tr>
+            <td> {{ projectTransformer.variety.code }} </td>
+            <td> {{ projectTransformer.variety.description }} </td>
+            <td class="price-columns"> {{ projectTransformer.unitCostPrice|currency }} </td>
+            <td class="price-columns"> {{ projectTransformer.unitSalePrice|currency }} </td>
+            <td> {{ projectTransformer.quantity }} </td>
+            <td> {{ projectTransformer.totalSalePrice|currency }} </td>
+        </tr>
+    {% endif %}
+
+    {# STRING_BOXES #}
+    {% for projectStringBox in project.projectStringBoxes %}
+        <tr>
+            <td> {{ projectStringBox.stringBox.code }} </td>
+            <td>
+                {#<a data-toggle="modal" data-target="#modal_component" data-url="{{ path('stringbox_show', {id:projectStringBox.stringBox.id}) }}">#}
+                {{ projectStringBox.stringBox.description }}
+                {#</a>#}
+            </td>
+            <td class="price-columns"> {{ projectStringBox.unitCostPrice|currency }} </td>
+            <td class="price-columns"> {{ projectStringBox.unitSalePrice|currency }} </td>
+            <td> {{ projectStringBox.quantity }} </td>
+
+            <td> {{ projectStringBox.totalSalePrice|currency }} </td>
+        </tr>
+    {% endfor %}
+
+    {# STRUCTURES #}
+    {% for projectStructure in project.projectStructures %}
+        <tr>
+            <td class="col-md-2"> {{ projectStructure.structure.code }} </td>
+            <td>
+                {#<a data-toggle="modal" data-target="#modal_component" data-url="{{ path('structure_show', {id:projectStructure.structure.id}) }}">#}
+                {{ projectStructure.structure.description }}
+                {#</a>#}
+            </td>
+            <td class="price-columns"> {{ projectStructure.unitCostPrice|currency }} </td>
+            <td class="price-columns"> {{ projectStructure.unitSalePrice|currency }} </td>
+            <td class="col-md-1"> {{ projectStructure.quantity }} </td>
+
+            <td> {{ projectStructure.totalSalePrice|currency }} </td>
+        </tr>
+    {% endfor %}
+
+    {# VARIETIES #}
+    {% for projectVariety in project.projectVarieties if projectVariety.variety.type != 'transformer' %}
+        <tr>
+            <td> {{ projectVariety.variety.code }} </td>
+            <td> {{ projectVariety.variety.description }} </td>
+            <td class="price-columns"> {{ projectVariety.unitCostPrice|currency }} </td>
+            <td class="price-columns"> {{ projectVariety.unitSalePrice|currency }} </td>
+            <td> {{ projectVariety.quantity }} </td>
+            <td> {{ projectVariety.totalSalePrice|currency }} </td>
+        </tr>
+    {% endfor %}
+
+    </tbody>
+    <tfoot>
+    <tr>
+        <th></th>
+        <th></th>
+        <th class="price-columns"> {{ not isPromo ? project.costPriceComponents|currency }} </th>
+        <td class="price-columns"></td>
+        <th></th>
+        <th> {{ project.salePriceComponents|currency }} </th>
+    </tr>
+    </tfoot>
+</table>
+
+{% if isPromo %}
+
+    <script>
+        var promoLabel = '<span class="label label-primary"> Promocional </span>';
+        $.each($('#table_items tbody tr '), function(i, row){
+            $(row).find('td').last().html(promoLabel);
+        });
+    </script>
+
+{% endif %}
