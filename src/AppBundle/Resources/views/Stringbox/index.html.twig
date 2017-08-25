@@ -184,27 +184,25 @@
 
                 {% else %}
 
-                    <div class="ibox-content">
+                    <div class="ibox-content flow-h">
 
-                        <table class="table table-stripped">
+                        <table class="table table-stripped flow-lg">
                             <thead>
-                            <tr>
-                                {#<th>id</th>
-                                #}<th>Código</th>
-                                <th>Descrição</th>
-                                <th>Entradas</th>
-                                <th>Saídas</th>
-                                <th>Fusíveis</th>
-                                <th class="col-md-2">&nbsp;</th>
-                            </tr>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Descrição</th>
+                                    <th>Entradas</th>
+                                    <th>Saídas</th>
+                                    <th>Fusíveis</th>
+                                    <th class="col-md-2 col-xs-3">Ações</th>
+                                </tr>
                             </thead>
                             <tbody>
 
                             {% for stringBox in stringBoxes %}
 
                                 <tr class="gradeY">
-                                    {#<td> <a href="{{ path('stringbox_show', { 'id': stringBox.id }) }}">{{ stringBox.id }}</a> </td>
-                                    #}<td> {{ stringBox.code }} </td>
+                                    <td> {{ stringBox.code }} </td>
                                     <td> {{ stringBox.description }} </td>
                                     <td> {{ stringBox.inputs }} </td>
                                     <td> {{ stringBox.outputs }} </td>
@@ -244,7 +242,7 @@
         </div>
 
         <div class="row text-center">
-            <div class="btn-group">
+            <div class="btn-group bt-xs">
                 {{ knp_pagination_render(pagination) }}
             </div>
         </div>
