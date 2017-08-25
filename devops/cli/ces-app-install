@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+cd $SICES_PATH
+
+composer install
+bash $CLI_PATH/ces-bug-fix
+
+cd bundles/isquik
+yarn install
+cd ../../

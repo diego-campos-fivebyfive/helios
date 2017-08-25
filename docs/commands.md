@@ -3,6 +3,11 @@ Lista de Comandos
 
 Comandos utilizados no sistema Sices Solar.
 
+### Para instalar/atualizar todas as dependencias do composer e do yarn
+```
+$ ces-app-install
+```
+
 ### Para acessar o ambiente de homolog
 ```
 $ ssh -i $SICES_PATH/devops/aws/homolog.pem admin@54.233.150.10
