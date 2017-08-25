@@ -10,7 +10,6 @@ app/bootstrap.php.cache
 
 web/public
 web/uploads
-web/deploy/deploy.log
 
 node_modules
 vendor

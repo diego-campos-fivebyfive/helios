@@ -12,7 +12,6 @@ if [ -z ${1+x} ] || [ $1 = '--development' ]; then
 elif [ $1 = '--homolog' ]; then
 
   cp app/config/parameters_homolog.yml app/config/parameters.yml
-  touch web/deploy/deploy.log
 
   mkdir .temp
   mkdir .mirror
