@@ -8153,6 +8153,14 @@ body.md-skin {
     font-size: 10px;
     margin-top: 3px;
   }
+
+  .mobile-hidden {
+    display: none;
+  }
+
+  .mobile-editor {
+    display: block !important;
+  }
 }
 
 @media (min-width: 768px) {
