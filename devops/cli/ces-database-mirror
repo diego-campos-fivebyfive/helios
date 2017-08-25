@@ -2,12 +2,15 @@
 
 cd $SICES_PATH
 
-echo 'Note: This process can be a little slow!'
+printf "
+Cloning homolog database...
+Note: This process can be a little slow!
+"
 
 bash $CLI_PATH/ces-permission-fix
 
 if [ -z ${1+x} ]; then
-  echo 'Cloning homolog database... enter your mysql password:'
+  echo "Enter your mysql password:"
   read -s password
 else
   password=$1
