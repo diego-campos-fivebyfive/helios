@@ -65,7 +65,7 @@
             <a data-url="{{ path('component_show', {type:extra.type, id:component.id}) }}"
                data-toggle="modal"
                data-target="#modal_details"
-               class="btn btn-default">
+               class="btn btn-default bt-xs">
                 <i class="fa fa-eye"></i> {{ 'View'|trans }}
             </a>
 
@@ -156,9 +156,9 @@
 
                 {% else %}
 
-                    <div class="ibox-content">
+                    <div class="ibox-content flow-h">
 
-                        <table class="table table-stripped">
+                        <table class="table table-stripped flow-lg">
                             <thead>
                             <tr>
                                 <th>Fabricante</th>
@@ -181,7 +181,7 @@
                                     <td> {{ is_module ? component.cellType : [component.nominalPower|decimal,' kW']|join }} </td>
                                     <td> {{ is_module ? [component.maxPower|decimal,' W']|join : component.mpptNumber }} </td>
                                     <td> {{ is_module ? component.efficiency|decimal : component.maxEfficiency|decimal }}%</td>
-                                    <td>
+                                    <td class="col-xs-2">
                                         {{ handler.component_buttons(component,{type:type, member:member, 'account':account, 'update':route_update, 'show':route_show, 'delete':route_delete}) }}
                                     </td>
                                 </tr>
@@ -200,7 +200,7 @@
         </div>
 
         <div class="row text-center">
-            <div class="btn-group">
+            <div class="btn-group bt-xs">
                 {{ knp_pagination_render(pagination) }}
             </div>
         </div>
