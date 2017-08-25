@@ -4,7 +4,20 @@ cd $SICES_PATH
 
 echo "Starting Deploy..."
 
-if [ $1 == '--homolog' ]; then
+if [[ -z $1 ]] || [[ $1 == '--help' ]] || [[ $1 == '-h' ]]; then
+  printf "ces-app-clone - help:
+
+  Usage:
+
+  ces-app-clone --AMBIENCE
+
+  Exemple:
+
+  ces-app-clone --production"
+  exit 0;
+fi
+
+if [ $1 = '--homolog' ]; then
 
   bash $CLI_PATH/ces-slack-notify 'Starting Homolog Deploy...'
 
@@ -23,7 +36,7 @@ if [ $1 == '--homolog' ]; then
 
   bash $CLI_PATH/ces-slack-notify 'Homolog Deploy Done!'
 
-elif [ $1 == '--production' ]; then
+elif [ $1 = '--production' ]; then
 
   bash $CLI_PATH/ces-slack-notify 'Starting Production Deploy...'
 

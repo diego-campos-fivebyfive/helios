@@ -1,6 +1,6 @@
 <?php
 
-exec('cd $SICES_PATH && cli/ces-server-update');
+exec('cd $SICES_PATH && bash $CLI_PATH/ces-app-deploy --homolog');
 
 $date = date('m/d/Y h:i:s a');
 $log = "Date: $date | Commit: MERGED \n";

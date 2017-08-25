@@ -4,13 +4,26 @@ cd $SICES_PATH
 
 echo "Cloning $1 files..."
 
-if [ $1 == '--homolog' ]; then
+if [[ -z $1 ]] || [[ $1 == '--help' ]] || [[ $1 == '-h' ]]; then
+  printf "ces-app-clone - help:
+
+  Usage:
+
+  ces-app-clone --AMBIENCE
+
+  Exemple:
+
+  ces-app-clone --production"
+  exit 0;
+fi
+
+if [ $1 = '--homolog' ]; then
 
   git fetch origin
   GIT_WORK_TREE=$SICES_PATH git checkout -f
   git pull origin master -f
 
-elif [ $1 == '--production' ]; then
+elif [ $1 = '--production' ]; then
 
   path=/var/www/
 
