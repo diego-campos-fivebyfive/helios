@@ -142,9 +142,7 @@ class RegisterHelper
     public function emailCanBeUsed($email)
     {
         if($this->emailCanBeUsedForUser($email)){
-            if($this->emailCanBeUsedForMember($email)) {
-                return $this->emailCanBeUsedForAccount($email);
-            }
+            return $this->emailCanBeUsedForMemberOrAccount($email);
         }
 
         return false;
@@ -175,6 +173,15 @@ class RegisterHelper
     public function emailCanBeUsedForAccount($email)
     {
         return null == $this->findBusinessByEmail($email, BusinessInterface::CONTEXT_ACCOUNT);
+    }
+
+    /**
+     * @param $email
+     * @return bool
+     */
+    public function emailCanBeUsedForMemberOrAccount($email)
+    {
+        return null == $this->getCustomerManager()->findOneBy(['email' => $email]);
     }
 
     /**
@@ -231,11 +238,11 @@ class RegisterHelper
     }
 
     /**
-     * @return \AppBundle\Entity\CustomerManager|object
+     * @return \AppBundle\Manager\CustomerManager|object
      */
     private function getCustomerManager()
     {
-        return $this->container->get('app.customer_manager');
+        return $this->container->get('customer_manager');
     }
 
     /**
