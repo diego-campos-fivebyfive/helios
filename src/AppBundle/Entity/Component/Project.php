@@ -411,6 +411,10 @@ class Project implements ProjectInterface
      */
     public function getDefaults()
     {
+        // TODO: Remove this code when production is stabilized
+        if(!array_key_exists('is_promotional', $this->defaults))
+            $this->defaults['is_promotional'] = false;
+
         return $this->defaults;
     }
 
