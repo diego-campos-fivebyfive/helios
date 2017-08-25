@@ -21,11 +21,6 @@
             <argument type="service" id="doctrine"/>
         </service>
 
-        <service id="app.kit_pricing_manager" class="AppBundle\Entity\Component\PricingManager">
-            <argument type="service" id="app.parameter_manager"/>
-            <argument type="service" id="security.token_storage"/>
-        </service>
-
         <service id="app.document_helper" class="AppBundle\Service\DocumentHelper">
             <argument type="service" id="app.parameter_manager"/>
             <argument type="collection">
@@ -53,12 +48,6 @@
         <service id="app.project_authorization" class="AppBundle\Service\Security\ProjectAuthorization">
             <argument type="service" id="security.token_storage"/>
             <argument type="service" id="request_stack"/>
-        </service>
-
-        <service id="app.project_financial" class="AppBundle\Entity\Financial\ProjectFinancialManager">
-            <argument>AppBundle\Entity\Financial\ProjectFinancial</argument>
-            <argument type="service" id="doctrine"/>
-            <argument type="service" id="app.kit_pricing_manager"/>
         </service>
 
         <service id="app.mailbox" class="AppBundle\Service\MailboxHelper">

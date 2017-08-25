@@ -103,10 +103,10 @@ class KitPricingController extends AbstractController
     }
 
     /**
-     * @return \AppBundle\Entity\Component\PricingManager
+     * @return object|\AppBundle\Entity\Component\PricingManager
      */
     private function getPricingManager()
     {
-        return $this->get('app.kit_pricing_manager');
+        return $this->get('margin_manager');
     }
 }

@@ -256,7 +256,7 @@ class GeneratorController extends AbstractController
     /**
      * @Route("/ranges")
      */
-    public function rangesAction()
+    public function rangesAction(Request $request)
     {
         $getCode = function () {
             return strtoupper(substr(md5(uniqid(time())), 0, 10));
@@ -265,11 +265,18 @@ class GeneratorController extends AbstractController
         $codes = [];
 
         $prices = [
-            'modules' => 100,
-            'inverters' => 1000,
-            'structures' => 100,
-            'string_boxes' => 1000,
-            'varieties' => 10
+            'platinum' => ['modules' => 100,
+                'inverters' => 1000,
+                'structures' => 100,
+                'string_boxes' => 1000,
+                'varieties' => 10
+            ],
+            'promotional' => ['modules' => 90,
+                'inverters' => 900,
+                'structures' => 90,
+                'string_boxes' => 900,
+                'varieties' => 9
+            ],
         ];
 
         // MODULES
@@ -336,8 +343,7 @@ class GeneratorController extends AbstractController
 
         // MEMORIAL + RANGES
         $memorialManager = $this->manager('memorial');
-        $memorial = $memorialManager->find(101);
-
+        $memorial = $this->get('memorial_loader')->load();
         if (!$memorial) {
             $memorial = $memorialManager->create();
 
@@ -353,22 +359,23 @@ class GeneratorController extends AbstractController
         dump($prices);
         die;*/
 
+        $level = $request->query->get('level', 'platinum');
         $rangeManager = $this->manager('range');
 
         foreach ($codes as $family => $data) {
 
             foreach($data as $code) {
 
-                if (null == $range = $rangeManager->findOneBy(['code' => $code, 'memorial' => $memorial])) {
+                if (null == $range = $rangeManager->findOneBy(['code' => $code, 'memorial' => $memorial, 'level' => $level])) {
 
                     $range = $rangeManager->create();
                     $range
                         ->setMemorial($memorial)
-                        ->setLevel('platinum')
+                        ->setLevel($level)
                         ->setInitialPower(0)
                         ->setFinalPower(500)
                         ->setCode($code)
-                        ->setPrice($prices[$family]);
+                        ->setPrice($prices[$level][$family]);
 
                     $memorial->addRange($range);
 
