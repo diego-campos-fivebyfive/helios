@@ -8,7 +8,7 @@ const ISQUIK_AUTH_KEY = process.env.CES_ISQUIK_AUTH_KEY
 const ISQUIK_AUTH_USER = process.env.CES_ISQUIK_AUTH_USER
 
 const sicesBase = `http://localhost:${SICES_PORT}`
-const isquikBase = `${ISQUIK_HOST}:${ISQUIK_PORT}`
+const isquikBase = `${ISQUIK_HOST}:${ISQUIK_PORT}/${ISQUIK_USER}`
 
 const config = {
   sices: {
