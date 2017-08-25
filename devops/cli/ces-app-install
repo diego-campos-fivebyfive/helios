@@ -5,7 +5,7 @@ cd $SICES_PATH
 echo "Installing packages dependencies..."
 
 composer install
-bash $CLI_PATH/ces-bug-fix
+bash $CLI_PATH/util/bug-fix
 
 cd bundles/isquik
 yarn install
