@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-message = $1
-
 echo "Sending Slack devops chat notification..."
+
+message=$1
 
 curl -s \
   -X POST \
