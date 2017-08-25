@@ -2,6 +2,8 @@
 
 cd $SICES_PATH
 
+echo "Installing packages dependencies..."
+
 composer install
 bash $CLI_PATH/ces-bug-fix
 
