@@ -1,4 +1,4 @@
-<table id="extras_table" class="table table-condensed table-bordered">
+<table id="extras_table" class="table table-condensed table-bordered flow-sm">
 
     <thead>
         <tr>
@@ -33,7 +33,7 @@
                 {% endif %}
             </td>
             <td class="col-md-1">
-                <div class="btn-group btn-group-justified">
+                <div class="btn-group btn-group">
                     <a data-extra='{ "id":{{ extra.id }},"description":"{{ extra.description }}","type":{{ extra.type }},"pricingBy":{{ extra.pricingBy }},
                     "costPrice":"{{ extra.costPrice }}" }'
                        data-update="{{ path('extras_update',{id:extra.id}) }}"
