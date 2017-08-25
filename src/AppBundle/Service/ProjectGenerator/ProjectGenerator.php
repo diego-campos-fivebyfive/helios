@@ -194,17 +194,13 @@ class ProjectGenerator
      */
     public function pricing(ProjectInterface $project)
     {
-        /** @var \AppBundle\Manager\Pricing\RangeManager $manager */
-        $manager = $this->manager('range');
-        $precifier = new Precifier($manager);
+        /** @var Precifier $precifier */
+        $precifier = $this->container->get('project_precifier');
 
         $precifier->priceCost($project);
 
-        /** @var \AppBundle\Entity\Component\PricingManager $pricingManager */
-        $pricingManager = $this->container->get('app.kit_pricing_manager');
-        $precifier->priceSale($project, $pricingManager);
+        $precifier->priceSale($project);
 
-        //FinancialAnalyzer::analyze($project);
         $this->save($project);
 
         return $this;
@@ -216,13 +212,12 @@ class ProjectGenerator
      */
     public function priceCost(ProjectInterface $project)
     {
+        throw new \BadMethodCallException();
         /** @var \AppBundle\Manager\Pricing\RangeManager $manager */
-        $manager = $this->manager('range');
-        $precifier = new Precifier($manager);
-
-        $precifier->priceCost($project);
-
-        return $this;
+        //$manager = $this->manager('range');
+        //$precifier = new Precifier($manager);
+        //$precifier->priceCost($project);
+        //return $this;
     }
 
     /**
