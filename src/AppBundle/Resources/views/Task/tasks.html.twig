@@ -13,14 +13,14 @@
         <hr/>
         <div class="timeline-item">
             <div class="row">
-                <div class="col-xs-2">
+                <div class="col-md-2 col-xs-6">
                 <span style="font-size: 1rem;" class="label label-info col-md-12 text-left">
                     <i class="fa {{ task.iconType }}"></i> {{ ['tag.', task.tagType]|join|trans }}
                 </span>
                     {{ task.startAt|date('d/m/Y H:i') }}
                     <br/>
                 </div>
-                <div class="col-xs-10 content no-top-border">
+                <div class="col-md-10 col-xs-6 content no-top-border">
                     <div class="row">
 
                         <div class="col-md-12">
@@ -33,7 +33,7 @@
                             {{ task.description }}
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-3 col-xs-6">
                             {% if task.isDone %}
                                 <button class="btn btn-sm btn-warning btn-block"
                                         data-task-action="{{ path('task_open',{token:task.token}) }}"
@@ -75,7 +75,7 @@
 
     <div class="row">
         <div class="col-md-8 text-center">
-            <div class="btn-group">
+            <div class="btn-group bt-xs">
                 {{ knp_pagination_render(pagination) }}
             </div>
         </div>
