@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+cd $SICES_PATH
+
+cli/ces-slack-notify 'Starting Production Deploy...'
+
+bash $CLI_PATH/ces-app-clone
+
+source cli/ces-server-config --production
+
+bash $CLI_PATH/ces-cache-clear
+bash $CLI_PATH/ces-database-update
+
+bundles/isquik/node_modules/.bin/pm2 restart 0
+
+bash $CLI_PATH/ces-slack-notify 'Production Deploy Done!'
+
+echo 'Done.'
