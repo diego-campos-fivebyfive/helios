@@ -8144,10 +8144,22 @@ body.md-skin {
   min-width: 720px;
 }
 
+.flow-xg {
+  min-width: 768px;
+}
+
 @media (min-width: 320px) and (max-width: 767px) {
   .bt-xs {
     font-size: 10px;
     margin-top: 3px;
+  }
+
+  .mobile-hidden {
+    display: none;
+  }
+
+  .mobile-editor {
+    display: block !important;
   }
 }
 

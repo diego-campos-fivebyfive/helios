@@ -10,142 +10,165 @@
             line-height: 2px;
             background: #00a7d0;
         }
+
+        .mobile-editor {
+            display: none;
+        }
     </style>
 {% endblock %}
 
 {% block body %}
-
-    <div id="sidebar-tags">
-        <div class="col-md-12">
-            <div class="btn-group btn-group-sm" style="width: 95%;">
-                <button id="save-content" class="btn btn-default" style="width: 50%;">
-                    <i class="fa fa-file-pdf"></i> Salvar
-                </button>
-                <button class="btn btn-default jscolor {valueElement: 'backgroundColor'}" style="width: 50%;">
-                    <i class="fa fa-widget"></i> Cor de Fundo
-                </button>
-                <input type="hidden" id="backgroundColor" onchange="Editor.changePageBackground(this.value)"
-                       value="FFF">
-                <button id="save-pdf" type="button" class="btn btn-primary btn-block">
-                    Gerar PDF
-                </button>
-            </div>
-        </div>
-        <div class="col-md-12" id="block_tags">
-
-            <div class="label-tag-info">
-                <i class="fa fa-info"></i> <i> Clique e arraste a informação para o editor </i>
-            </div>
-
-            <ul id="tag-list">
-
-                {% for key, tag in data %}
-
-                    {% if 'label' != tag.handle %}
-
-                        <li>
-
-                            <div class="h-card" data-tag="{{ key }}" draggable="true">
-
-                                {% if 'chartGeneration' == key or 'chartFinancial' == key %}
-                                    <button type="button"
-                                            class="btn btn-sm border jscolor {valueElement: 'color_{{ key }}'}">cor
-                                    </button>
-                                    <input type="hidden" id="color_{{ key }}"
-                                           onchange="changeChartColor('{{ key }}', this.value)" value="00A7EC">
-                                {% endif %}
-
-                                {{ tag.label }}
-
-                            </div>
-
-                        </li>
-
-                    {% else %}
-
-                        <li class="title_tags">
-                            <h2 class="text-center"> {{ tag.label }} </h2>
-                        </li>
-
-                    {% endif %}
-
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
-
-    <div class="" style="padding-top: 2rem;">
-
-        {% include view('project.navbar') %}
-
-        <div class="row" id="proposal_editor" style="background: #e7e7e7">
+    <div class="mobile-hidden">
+        <div id="sidebar-tags">
             <div class="col-md-12">
-                <div id="percent_loader" style="width: 0" aria-valuemax="100" aria-valuemin="0" aria-valuenow="1" role="progressbar" class="progress-bar progress-bar-success">
-                    <span class="sr-only"></span>
+                <div class="btn-group btn-group-sm" style="width: 95%;">
+                    <button id="save-content" class="btn btn-default" style="width: 50%;">
+                        <i class="fa fa-file-pdf"></i> Salvar
+                    </button>
+                    <button class="btn btn-default jscolor {valueElement: 'backgroundColor'}" style="width: 50%;">
+                        <i class="fa fa-widget"></i> Cor de Fundo
+                    </button>
+                    <input type="hidden" id="backgroundColor" onchange="Editor.changePageBackground(this.value)"
+                           value="FFF">
+                    <button id="save-pdf" type="button" class="btn btn-primary btn-block">
+                        Gerar PDF
+                    </button>
                 </div>
             </div>
+            <div class="col-md-12" id="block_tags">
 
-            <div style="background: #e7e7e7" class="col-md-9">
+                <div class="label-tag-info">
+                    <i class="fa fa-info"></i> <i> Clique e arraste a informação para o editor </i>
+                </div>
 
-                <div class="row">
-                    <div class="modal fade" id="section_options" role="dialog">
-                        <div class="modal-dialog ">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Modelos de Sessão</h4>
+                <ul id="tag-list">
+
+                    {% for key, tag in data %}
+
+                        {% if 'label' != tag.handle %}
+
+                            <li>
+
+                                <div class="h-card" data-tag="{{ key }}" draggable="true">
+
+                                    {% if 'chartGeneration' == key or 'chartFinancial' == key %}
+                                        <button type="button"
+                                                class="btn btn-sm border jscolor {valueElement: 'color_{{ key }}'}">cor
+                                        </button>
+                                        <input type="hidden" id="color_{{ key }}"
+                                               onchange="changeChartColor('{{ key }}', this.value)" value="00A7EC">
+                                    {% endif %}
+
+                                    {{ tag.label }}
+
                                 </div>
-                                <div class="modal-body">
-                                    <h2 class="text-center">Escolha uma sessão</h2>
-                                    <div class="col-m-12 text-center">
-                                        <button class="btn btn-info" data-cols="12" data-dismiss="modal"><img
-                                                    src="{{ asset('assets/proposal2/images/l1.png') }}"></button>
-                                        <button class="btn btn-info" data-cols="6-6" data-dismiss="modal"><img
-                                                    src="{{ asset('assets/proposal2/images/c2.png') }}"></button>
-                                        <button class="btn btn-info" data-cols="8-4" data-dismiss="modal"><img
-                                                    src="{{ asset('assets/proposal2/images/c1c2p.png') }}"></button>
-                                        <button class="btn btn-info" data-cols="4-8" data-dismiss="modal"><img
-                                                    src="{{ asset('assets/proposal2/images/c1pc2.png') }}"></button>
-                                        <button class="btn btn-info" data-cols="4-4-4" data-dismiss="modal"><img
-                                                    src="{{ asset('assets/proposal2/images/c3.png') }}"></button>
-                                        <button class="btn btn-info" data-cols="12-6-6" data-dismiss="modal"><img
-                                                    src="{{ asset('assets/proposal2/images/l1c2.png') }}"></button>
+
+                            </li>
+
+                        {% else %}
+
+                            <li class="title_tags">
+                                <h2 class="text-center"> {{ tag.label }} </h2>
+                            </li>
+
+                        {% endif %}
+
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="" style="padding-top: 2rem;">
+
+            {% include view('project.navbar') %}
+
+            <div class="row" id="proposal_editor" style="background: #e7e7e7">
+                <div class="col-md-12">
+                    <div id="percent_loader" style="width: 0" aria-valuemax="100" aria-valuemin="0" aria-valuenow="1" role="progressbar" class="progress-bar progress-bar-success">
+                        <span class="sr-only"></span>
+                    </div>
+                </div>
+
+                <div style="background: #e7e7e7" class="col-md-9">
+
+                    <div class="row">
+                        <div class="modal fade" id="section_options" role="dialog">
+                            <div class="modal-dialog ">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">Modelos de Sessão</h4>
                                     </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                                    <div class="modal-body">
+                                        <h2 class="text-center">Escolha uma sessão</h2>
+                                        <div class="col-m-12 text-center">
+                                            <button class="btn btn-info" data-cols="12" data-dismiss="modal"><img
+                                                        src="{{ asset('assets/proposal2/images/l1.png') }}"></button>
+                                            <button class="btn btn-info" data-cols="6-6" data-dismiss="modal"><img
+                                                        src="{{ asset('assets/proposal2/images/c2.png') }}"></button>
+                                            <button class="btn btn-info" data-cols="8-4" data-dismiss="modal"><img
+                                                        src="{{ asset('assets/proposal2/images/c1c2p.png') }}"></button>
+                                            <button class="btn btn-info" data-cols="4-8" data-dismiss="modal"><img
+                                                        src="{{ asset('assets/proposal2/images/c1pc2.png') }}"></button>
+                                            <button class="btn btn-info" data-cols="4-4-4" data-dismiss="modal"><img
+                                                        src="{{ asset('assets/proposal2/images/c3.png') }}"></button>
+                                            <button class="btn btn-info" data-cols="12-6-6" data-dismiss="modal"><img
+                                                        src="{{ asset('assets/proposal2/images/l1c2.png') }}"></button>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="row">
-                    <div id="editor_document" class="col-md-8 loading">
-                        {{ content|raw }}
+                    <div class="row">
+                        <div id="editor_document" class="col-md-8 loading">
+                            {{ content|raw }}
+                        </div>
                     </div>
-                </div>
 
-                <div class="row" style="margin-top: 10px; margin-bottom: 5rem;">
-                    <div class="col-md-12 text-center">
-                        <a class="btn btn-primary" id="editor_add_page">
-                            <i class="fa fa-plus"></i> Nova Página
-                        </a>
+                    <div class="row" style="margin-top: 10px; margin-bottom: 5rem;">
+                        <div class="col-md-12 text-center">
+                            <a class="btn btn-primary" id="editor_add_page">
+                                <i class="fa fa-plus"></i> Nova Página
+                            </a>
+                        </div>
                     </div>
-                </div>
 
-                <div class="row hide">
-                    <div class="col-md-7" id="chart_generation_container">
+                    <div class="row hide">
+                        <div class="col-md-7" id="chart_generation_container">
+                        </div>
+                        <div class="col-md-7" id="chart_financial_container">
+                        </div>
                     </div>
-                    <div class="col-md-7" id="chart_financial_container">
-                    </div>
+
                 </div>
 
             </div>
-
         </div>
     </div>
-
+    <div class="mobile-editor">
+        <br>
+        {% include view('project.navbar') %}
+        <div class="wrapper wrapper-content animated fadeIn">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">
+                            <h5>Aviso!</h5>
+                        </div>
+                        <div class="panel-body">
+                            <p style="text-align: center;">O Editor de proposta não é compativel com dispositivos
+                            Mobile!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 
