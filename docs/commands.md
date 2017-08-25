@@ -69,11 +69,6 @@ $ ces-cache-clear
 $ ces-frontend-compile
 ```
 
-### Para start do sistema
-```
-$ ces-server-start --AMBIENCE
-```
-
 ### Para lint de bundles
 ```
 $ cd BUNDLE_PATH
