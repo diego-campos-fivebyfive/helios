@@ -107,6 +107,8 @@ class AccountsController extends FOSRestController
                 'extradocument' => $account->getExtraDocument(),
                 'state' => $account->getState(),
                 'city' => $account->getCity(),
+                'postcode' => $account->getPostcode(),
+                'district' => $account->getDistrict(),
                 'street' => $account->getStreet(),
                 'number' => $account->getNumber(),
                 'level' => $account->getLevel(),

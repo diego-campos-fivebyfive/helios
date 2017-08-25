@@ -16,25 +16,22 @@ class Notifier
             'order_created' => 'orcamentovendas/orcamentovendas/Notificacao'
         ];
 
-        $baseUrl = 'https://api.isquik.com:443';
         $callback = $notification['Callback'];
         $route = $routes[$callback];
 
-        $auth = $this->getToken("$baseUrl/auth");
-        $this->sendNotification($notification, $auth, "$baseUrl/isquik-dev/$route");
+        $host = getenv('CES_ISQUIK_HOST');
+        $port = getenv('CES_ISQUIK_PORT');
+        $baseUri = "$host:$port";
+
+        $auth = $this->getToken("$baseUri/auth");
+        $this->sendNotification($notification, $auth, "$baseUri/isquik-dev/$route");
     }
 
     public function getToken ($url)
     {
-        // TODO: homolog key, should use dinamic envs
-        //$params = Array(
-        //    'Chave' => '12eb45ec-b98f-4942-9124-b7b6b389088e',
-        //    'Dominio' => 'isquik-dev'
-        //);
-
         $params = Array(
-            'Chave' => '3bbafb12-5702-41a6-a4bc-813cebfba500',
-            'Dominio' => 'sices'
+            'Chave' => getenv('CES_ISQUIK_AUTH_KEY'),
+            'Dominio' => getenv('CES_ISQUIK_AUTH_USER')
         );
 
         $ch = curl_init();

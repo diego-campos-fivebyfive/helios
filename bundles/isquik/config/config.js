@@ -24,7 +24,6 @@ const config = {
   },
   bundle: {
     headers: (request, response, next) => {
-      response.header('Access-Control-Allow-Origin', `${sicesBase}, ${isquikBase}`)
       response.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE')
       response.header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With')
       response.header('Access-Control-Allow-Credentials', 'true')
