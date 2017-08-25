@@ -32,19 +32,19 @@ const getRequest = uri => getAuthentication().then(auth => (
 ))
 
 const getAccount = id =>
-  getRequest(`${isquik.uri}/isquik-dev/integradores/cadastrointegradores/ExporIntegrador/?Id=${id}`)
+  getRequest(`${isquik.uri}/integradores/cadastrointegradores/ExporIntegrador/?Id=${id}`)
 
 const getUser = id =>
-  getRequest(`${isquik.uri}/isquik-dev/integradores/cadastrointegradores/ExporContato/?Id=${id}`)
+  getRequest(`${isquik.uri}/integradores/cadastrointegradores/ExporContato/?Id=${id}`)
 
 const getMemorial = id =>
-  getRequest(`${isquik.uri}/isquik-dev/tabelabase/tabelabase/ExporTabelaBase?Id=${id}`)
+  getRequest(`${isquik.uri}/tabelabase/tabelabase/ExporTabelaBase?Id=${id}`)
 
 const getProduct = id =>
-  getRequest(`${isquik.uri}/isquik-dev/tabelabase/tabelabase/ExporProduto?Id=${id}`)
+  getRequest(`${isquik.uri}/tabelabase/tabelabase/ExporProduto?Id=${id}`)
 
 const getOrder = id =>
-  getRequest(`${isquik.uri}/isquik-dev/orcamentovendas/orcamentovendas/ExporOrcamento/?Id=${id}`)
+  getRequest(`${isquik.uri}/orcamentovendas/orcamentovendas/ExporOrcamento/?Id=${id}`)
 
 module.exports = {
   getMemorial,
