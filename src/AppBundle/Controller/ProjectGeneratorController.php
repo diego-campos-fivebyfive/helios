@@ -16,10 +16,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 
 /**
  * @Security("has_role('ROLE_OWNER') or has_role('ROLE_OWNER_MASTER')")
  * @Route("generator")
+ * @Breadcrumb("Orçamentos")
  */
 class ProjectGeneratorController extends AbstractController
 {

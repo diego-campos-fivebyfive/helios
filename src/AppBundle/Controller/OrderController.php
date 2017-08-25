@@ -2,15 +2,15 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Order\Order;
-use AppBundle\Manager\OrderManager;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 
 /**
  * @Route("orders")
+ * @Breadcrumb("Meus Pedidos")
  */
 class OrderController extends AbstractController
 {
