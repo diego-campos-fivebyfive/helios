@@ -2,9 +2,7 @@
 
 cd $SICES_PATH
 
-echo "Cloning $1 files..."
-
-if [[ -z $1 ]] || [[ $1 == '--help' ]] || [[ $1 == '-h' ]]; then
+if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
   printf "ces-app-clone - help:
 
   Usage:
@@ -13,9 +11,13 @@ if [[ -z $1 ]] || [[ $1 == '--help' ]] || [[ $1 == '-h' ]]; then
 
   Exemple:
 
-  ces-app-clone --production"
+  ces-app-clone --production
+
+  "
   exit 0;
 fi
+
+echo "Cloning $1 files..."
 
 if [ $1 = '--homolog' ]; then
 
