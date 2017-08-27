@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 
-source $SICES_PATH/devops/cli/config/variables
+ambience=${1/--/}
 
-if [ $1 == '--development' ]; then
-  source $CLI_PATH/config/development/variables-ci
-elif [ $1 == '--homolog' ]; then
-  source $CLI_PATH/config/homolog/variables-ci
-elif [ $1 == '--production' ]; then
-  source $CLI_PATH/config/production/variables-ci
-fi
+source $SICES_PATH/devops/cli/config/variables
+source $CLI_PATH/config/$ambience/variables-ci
