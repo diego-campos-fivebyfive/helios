@@ -1,12 +1,12 @@
 # This file is auto-replaced during the sices app config command execution
 parameters:
-    database_host: CES_DATABASE_HOST
-    database_port: CES_DATABASE_PORT
-    database_name: CES_DATABASE_NAME
-    database_user: CES_DATABASE_USER
-    database_password: CES_DATABASE_PASS
-    mailer_transport: CES_MAILER_TYPE
-    mailer_host: CES_MAILER_HOST
-    mailer_user: CES_MAILER_USER
-    mailer_password: CES_MAILER_PASS
-    secret: CES_MAILER_KEY
+    database_host: CES_SICES_DATABASE_HOST
+    database_port: CES_SICES_DATABASE_PORT
+    database_name: CES_SICES_DATABASE_NAME
+    database_user: CES_SICES_DATABASE_USER
+    database_password: CES_SICES_DATABASE_PASS
+    mailer_transport: SICES_MAILER_TYPE
+    mailer_host: SICES_MAILER_HOST
+    mailer_user: SICES_MAILER_USER
+    mailer_password: SICES_MAILER_PASS
+    secret: SICES_MAILER_KEY
