@@ -36,3 +36,5 @@ elif [ $1 == '--production' ]; then
   export CES_ISQUIK_AUTH_USER=$ISQUIK_PRODUCTION_AUTH_USER
 
 fi
+
+bash $SICES_PATH/devops/cli/config/variables-replace
