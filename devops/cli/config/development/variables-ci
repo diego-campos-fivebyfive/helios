@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source $CLI_PATH/config/deveĺopment/variables
+source $CLI_PATH/config/development/variables
 
 export CES_SICES_PORT=$SICES_DEVELOPMENT_PORT
 export CES_SICES_HOST=$SICES_DEVELOPMENT_HOST

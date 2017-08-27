@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+cd $SICES_PATH
+
+echo 'Replacing Symfony YML variables...'
