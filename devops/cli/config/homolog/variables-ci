@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source $SICES_PATH/devops/cli/config/homolog/variables
+source $CLI_PATH/config/homolog/variables
 
 export CES_SICES_PORT=$SICES_HOMOLOG_PORT
 export CES_SICES_HOST=$SICES_HOMOLOG_HOST
@@ -12,5 +12,3 @@ export CES_ISQUIK_PORT=$ISQUIK_HOMOLOG_SERVER_PORT
 export CES_ISQUIK_HOST=$ISQUIK_HOMOLOG_SERVER_HOST
 export CES_ISQUIK_AUTH_KEY=$ISQUIK_HOMOLOG_AUTH_KEY
 export CES_ISQUIK_AUTH_USER=$ISQUIK_HOMOLOG_AUTH_USER
-
-bash $SICES_PATH/devops/cli/config/variables-replace

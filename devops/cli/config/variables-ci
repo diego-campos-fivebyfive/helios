@@ -9,5 +9,3 @@ elif [ $1 == '--homolog' ]; then
 elif [ $1 == '--production' ]; then
   source $CLI_PATH/config/production/variables-ci
 fi
-
-bash $CLI_PATH/config/variables-replace $1
