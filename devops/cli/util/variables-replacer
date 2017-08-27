@@ -4,7 +4,8 @@ cd $SICES_PATH
 
 echo 'Replacing Symfony YML variables...'
 
-path=app/config
+parameters=app/config/parameters.yml
+sample=app/config/parameters_sample.yml
 
 # TODO: replace YML variebles name markup to their env values instead of static variables list
 # Reference: https://stackoverflow.com/questions/31292722/sed-replace-with-dynamic-variable-build-from-backreference
@@ -19,9 +20,9 @@ sed "\
   s/\${SICES_MAILER_USER}/$SICES_MAILER_USER/g; \
   s/\${SICES_MAILER_PASS}/$SICES_MAILER_PASS/g; \
   s/\${SICES_MAILER_KEY}/$SICES_MAILER_KEY/g" \
-  < $path/parameters_sample.yml \
-  > $path/parameters.yml
+  < $sample \
+  > $parameters
 
 if [ $CES_SICES_DATABASE_PASS ]; then
-  sed -i "s/\${CES_SICES_DATABASE_PASS}/$CES_SICES_DATABASE_PASS/g;" $path/parameters.yml
+  sed -i "s/\${CES_SICES_DATABASE_PASS}/$CES_SICES_DATABASE_PASS/g;" $parameters
 fi
