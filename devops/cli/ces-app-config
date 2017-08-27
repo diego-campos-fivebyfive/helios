@@ -8,6 +8,7 @@ if [ -z ${1+x} ] || [ $1 = '--development' ]; then
 
   cp $CLI_PATH/util/pre-push .git/hooks/pre-push
   bash $CLI_PATH/ces-database-config --development
+  bash $CLI_PATH/util/variables-replacer
 
 elif [ $1 = '--homolog' ]; then
 
