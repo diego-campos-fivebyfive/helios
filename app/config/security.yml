@@ -14,11 +14,11 @@ security:
 
     firewalls:
         oauth_token:
-            pattern:    ^/oauth/v2/token
-            security:   false
+            pattern: ^/oauth/v2/token
+            security: false
 
         oauth_authorize:
-            pattern:    ^/oauth/v2/auth
+            pattern: ^/oauth/v2/auth
             form_login:
                 provider: fos_userbundle
                 check_path: /oauth/v2/auth_login_check
@@ -27,10 +27,10 @@ security:
             anonymous: true
 
         api:
-            pattern:    ^/api
-            fos_oauth:  true
-            stateless:  true
-            anonymous:  false
+            pattern: ^/api
+            fos_oauth: true
+            stateless: true
+            anonymous: false
 
         main:
             anonymous: ~
@@ -41,11 +41,11 @@ security:
                 provider: fos_userbundle
                 csrf_token_generator: security.csrf.token_manager
             logout:
-                path:   fos_user_security_logout
+                path: fos_user_security_logout
                 target: /
 
         login:
-            pattern:  ^/login$
+            pattern: ^/login$
             security: false
             remember_me:
                 secret: "%secret%"
@@ -54,12 +54,9 @@ security:
                 domain: ~
 
     access_control:
-        # API
         - { path: ^/api/*, roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }
         - { path: ^/api$, roles: [ IS_AUTHENTICATED_FULLY ] }
-        # DEV
         - { path: ^/_wdt/*, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        # ALL
         - { path: ^/public/*, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register/*, role: IS_AUTHENTICATED_ANONYMOUSLY }
