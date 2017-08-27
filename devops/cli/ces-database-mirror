@@ -8,6 +8,7 @@ Note: This process can be a little slow!
 "
 
 bash $CLI_PATH/ces-permission-fix
+source $CLI_PATH/config/homolog/variables
 
 if [ -z ${1+x} ]; then
   echo "Enter your mysql password:"
