@@ -425,6 +425,7 @@ abstract class AbstractController extends Controller
     }
 
     /**
+     * @deprecated
      * @return \AppBundle\Entity\Component\ModuleManager
      */
     protected function getModuleManager()
