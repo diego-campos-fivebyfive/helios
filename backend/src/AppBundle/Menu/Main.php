@@ -95,12 +95,11 @@ class Main implements ContainerAwareInterface
                 'route' => 'nasa',
                 'extras' => ['icon' => App::icons('sun')]
             ]);
-
-            // TEMPORARY
-            /*$menu->addChild('Users', [
+            
+            $menu->addChild('Users', [
                 'route' => 'member_index',
                 'extras' => ['icon' => App::icons('users')]
-            ]);*/
+            ]);
         }
 
         $this->menuSettings($menu, $user);
