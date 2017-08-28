@@ -175,7 +175,7 @@ class WebhookController extends AbstractController
             return $this->jsonResponse(['unauthorized_token' => $request->request->all()]);
         }
 
-        $manager = $this->getCustomerManager();
+        $manager = $this->manager('customer');
 
         $accounts = $manager->findBy([
             'context' => BusinessInterface::CONTEXT_ACCOUNT
@@ -213,7 +213,7 @@ class WebhookController extends AbstractController
      */
     private function getAccount($token)
     {
-        $member = $this->getCustomerManager()->findOneBy([
+        $member = $this->manager('customer')->findOneBy([
             'token' => $token
         ]);
 

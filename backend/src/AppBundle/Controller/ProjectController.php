@@ -46,7 +46,7 @@ class ProjectController extends AbstractController
 
         $filterMember = null;
         if($member->isOwner() && null != $memberId = $request->get('member')){
-            $filterMember = $this->getCustomerManager()->find($memberId);
+            $filterMember = $this->manager('customer')->find($memberId);
             if($filterMember instanceof BusinessInterface
                 && $filterMember->getAccount()->getId() == $account->getId()){
                 $ids = [$filterMember->getId()];
@@ -604,7 +604,7 @@ class ProjectController extends AbstractController
     private function getCustomerReferrer(Request $request)
     {
         if(null != $token = $request->get('contact')) {
-            $contact = $this->getCustomerManager()->findByToken($token);
+            $contact = $this->manager('customer')->findByToken($token);
 
             $this->denyAccessUnlessGranted('edit', $contact);
 

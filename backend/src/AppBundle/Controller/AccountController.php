@@ -32,7 +32,7 @@ class AccountController extends AbstractController
      */
     public function indexAction()
     {
-        $manager = $this->getCustomerManager();
+        $manager = $this->manager('customer');
 
         $accounts = $manager->findBy([
             'context' => $this->getAccountContext()
@@ -49,7 +49,7 @@ class AccountController extends AbstractController
      */
     public function createAction(Request $request)
     {
-        $manager = $this->getCustomerManager();
+        $manager = $this->manager('customer');
 
         $accountContext = $this->getAccountContext();
         $memberContext = $this->getMemberContext();
@@ -88,7 +88,7 @@ class AccountController extends AbstractController
     public function updateAction(Request $request, Customer $account)
     {
         $member = $this->getCurrentMember();
-        $manager = $this->getCustomerManager();
+        $manager = $this->manager('customer');
 
         /**
          * Prevent excess records in the form of listing,
@@ -173,7 +173,7 @@ class AccountController extends AbstractController
             $this->processAndPersist($entity->getAccount());
         }
         
-        $this->getCustomerManager()->save($entity);
+        $this->manager('customer')->save($entity);
     }
 
     /**

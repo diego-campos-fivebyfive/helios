@@ -282,7 +282,7 @@ class SignatureController extends AbstractController
                         //$expireAt->add($interval);
                         $account->setStatus(BusinessInterface::STATUS_LOCKED);
                         //$account->setExpireAt($expireAt);
-                        $this->getCustomerManager()->save($account);
+                        $this->manager('customer')->save($account);
                     }
 
                     $this->addSignatureAttribute('subscription', $subscription->id);
@@ -504,7 +504,7 @@ class SignatureController extends AbstractController
                         ]);
 
                         $account->setMaxMember($product['quantity']+1);
-                        $this->getCustomerManager()->save($account);
+                        $this->manager('customer')->save($account);
 
                     } catch (\Vindi\Exceptions\RequestException $e) {
 
@@ -636,7 +636,7 @@ class SignatureController extends AbstractController
             ]);
 
             $account->setMaxMember($quantity+1);
-            $this->getCustomerManager()->save($account);
+            $this->manager('customer')->save($account);
 
             return $this->jsonResponse([], Response::HTTP_ACCEPTED);
         }
@@ -673,7 +673,7 @@ class SignatureController extends AbstractController
                     if('paid' == $bill->status || Subscription::CODE_INVOICE == $subscription->payment_method->code){
 
                         /*$account->setMaxMember($quantity+1);
-                        $this->getCustomerManager()->save($account);
+                        $this->manager('customer')->save($account);
                         $vindi->getProductItemService()->update($extra->id, [
                             'quantity' => $quantity
                         ]);*/
@@ -877,7 +877,7 @@ class SignatureController extends AbstractController
 
         $member->addAttribute('signature', $signature);
 
-        $this->getCustomerManager()->save($member);
+        $this->manager('customer')->save($member);
     }
 
     /**
