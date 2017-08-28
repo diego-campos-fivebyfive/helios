@@ -137,11 +137,6 @@
             <argument type="service" id="doctrine"/>
         </service>
 
-        <service id="app.task_manager" class="AppBundle\Entity\TaskManager">
-            <argument>AppBundle\Entity\Task</argument>
-            <argument type="service" id="doctrine"/>
-        </service>
-
         <service id="app.document_manager" class="AppBundle\Entity\DocumentManager">
             <argument>AppBundle\Entity\Document</argument>
             <argument type="service" id="doctrine"/>
@@ -153,7 +148,7 @@
         </service>
 
         <service id="app.task_filter" class="AppBundle\Service\TaskFilter">
-            <argument type="service" id="app.task_manager"/>
+            <argument type="service" id="task_manager"/>
         </service>
 
         <service id="app.file_explorer" class="AppBundle\Service\FileExplorer">

@@ -393,14 +393,6 @@ abstract class AbstractController extends Controller
     }
 
     /**
-     * @return \AppBundle\Entity\TaskManager|object
-     */
-    protected function getTaskManager()
-    {
-        return $this->get('app.task_manager');
-    }
-
-    /**
      * @return \AppBundle\Entity\EmailAccountManager
      */
     protected function getEmailAccountManager()

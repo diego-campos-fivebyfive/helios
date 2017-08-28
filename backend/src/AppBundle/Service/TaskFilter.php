@@ -4,7 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Task;
-use AppBundle\Entity\TaskManager;
+use AppBundle\Manager\TaskManager;
 use Doctrine\ORM\QueryBuilder;
 
 class TaskFilter

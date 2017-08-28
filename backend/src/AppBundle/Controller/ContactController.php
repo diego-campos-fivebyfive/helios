@@ -313,7 +313,7 @@ class ContactController extends AbstractController
     {
         $this->checkAccess($contact);
 
-        /*$tasks = $this->getTaskManager()->findByContact($contact);
+        /*$tasks = $this->manager('task')->findByContact($contact);
 
         if(count($tasks)){
             return $this->jsonResponse([

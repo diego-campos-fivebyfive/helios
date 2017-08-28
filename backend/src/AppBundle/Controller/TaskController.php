@@ -199,7 +199,7 @@ class TaskController extends AbstractController
      */
     public function createAction(Request $request)
     {
-        $manager = $this->getTaskManager();
+        $manager = $this->manager('task');
         $member = $this->getCurrentMember();
 
         /** @var TaskInterface $task */
@@ -264,7 +264,7 @@ class TaskController extends AbstractController
              */
             $task->addMember($this->getCurrentMember());
 
-            $this->getTaskManager()->save($task);
+            $this->manager('task')->save($task);
 
             return $this->jsonResponse([
                 'task' => [
@@ -299,7 +299,7 @@ class TaskController extends AbstractController
             ->setEndAt($endAt)
         ;
 
-        $this->getTaskManager()->save($task);
+        $this->manager('task')->save($task);
 
         return $this->jsonResponse([], Response::HTTP_OK);
     }
@@ -314,7 +314,7 @@ class TaskController extends AbstractController
 
         $task->setStatus(Task::STATUS_ENABLED);
 
-        $this->getTaskManager()->save($task);
+        $this->manager('task')->save($task);
 
         return $this->jsonResponse([], Response::HTTP_OK);
     }
@@ -329,7 +329,7 @@ class TaskController extends AbstractController
 
         $task->setStatus(Task::STATUS_DONE);
 
-        $this->getTaskManager()->save($task);
+        $this->manager('task')->save($task);
 
         return $this->jsonResponse([], Response::HTTP_OK);
     }
@@ -342,7 +342,7 @@ class TaskController extends AbstractController
     {
         $this->checkAccess($task);
 
-        $this->getTaskManager()->delete($task);
+        $this->manager('task')->delete($task);
 
         return $this->jsonResponse([], Response::HTTP_ACCEPTED);
     }
