@@ -110,8 +110,6 @@ class RegisterController extends AbstractController
 
                 $accountManager->save($account);
 
-                $this->get('app_mailer')->sendAccountConfirmationMessage($account);
-
                 $this->get('notifier')->notify([
                     'Evento' => '206',
                     'Callback' => 'account_created',
