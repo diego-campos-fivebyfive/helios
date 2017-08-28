@@ -29,12 +29,10 @@ if [ $1 = '--homolog' ]; then
   source $CLI_PATH/config/variables-ci --homolog
   ./devops/cli/ces-app-install
 
-  ./devops/cli/ces-cache-clear
-  ./devops/cli/ces-database-update
   bundles/isquik/node_modules/.bin/pm2 restart 0
-
+  ./devops/cli/ces-database-update
+  ./devops/cli/ces-cache-clear
   ./devops/cli/ces-frontend-compile
-  ./devops/cli/ces-permission-fix
 
   ./devops/cli/ces-slack-notify 'Homolog Deploy Done!'
 
