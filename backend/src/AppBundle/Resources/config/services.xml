@@ -97,14 +97,9 @@
         <service id="app.module_helper" class="AppBundle\Service\Component\Helper\ModuleHelper">
             <argument type="service" id="module_manager"/>
         </service>
-        
-        <service id="app.inverter_manager" class="AppBundle\Entity\Component\InverterManager">
-            <argument>AppBundle\Entity\Component\Inverter</argument>
-            <argument type="service" id="doctrine"/>
-        </service>
 
         <service id="app.inverter_helper" class="AppBundle\Service\Component\Helper\InverterHelper">
-            <argument type="service" id="app.inverter_manager"/>
+            <argument type="service" id="inverter_manager"/>
         </service>
 
         <service id="app.kit_manager" class="AppBundle\Entity\Component\KitManager">
