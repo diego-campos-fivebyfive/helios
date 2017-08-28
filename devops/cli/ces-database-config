@@ -9,8 +9,8 @@ if [ -z ${1+x} ] || [ $1 == '--development' ]; then
   echo "Enter your mysql password:"
   read -s password
 
-  parameters=app/config/parameters.yml
-  sample=app/config/parameters_sample.yml
+  parameters=backend/app/config/parameters.yml
+  sample=backend/app/config/parameters_sample.yml
   field='${CES_SICES_DATABASE_PASS}'
 
   sed -i "s/$field/$password/g" $parameters

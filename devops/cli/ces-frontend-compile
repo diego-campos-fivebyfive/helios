@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd $SICES_PATH
+cd $SICES_PATH/backend
 
 echo 'Compiling frontend...'
 

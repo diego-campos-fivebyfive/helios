@@ -2,21 +2,20 @@
 
 cd $SICES_PATH
 
-echo "Starting $1 Application..."
+echo "Starting Application..."
 
-source $CLI_PATH/config/variables-ci $1
-bash $CLI_PATH/ces-app-install
-
-bundle_path=bundles/isquik
+isquik=bundles/isquik
 
 if [ -z ${1+x} ] || [ $1 == '--development' ]; then
 
+  bash $CLI_PATH/ces-app-install
   bash $CLI_PATH/ces-database-update
+
   echo "Sices app starting on $CES_SICES_HOST:$CES_SICES_PORT"
-  php app/console server:run &
+  php backend/app/console server:run &
 
   echo "Isquik bundle starting on $CES_BUNDLE_HOST:$CES_BUNDLE_PORT"
-  $bundle_path/node_modules/.bin/node-supervisor --harmony $bundle_path/index.js &
+  $isquik/node_modules/.bin/node-supervisor --harmony $isquik/index.js &
 
   # Enable job control
   set -m
@@ -37,6 +36,6 @@ fi
 if [[ $1 == '--homolog' ]] || [[ $1 == '--production' ]]; then
 
   echo "Isquik bundle starting on $CES_BUNDLE_HOST:$CES_BUNDLE_PORT"
-  $bundle_path/node_modules/.bin/pm2 start $bundle_path/index.js --node-args="--harmony" -n "bundle"
+  $isquik/node_modules/.bin/pm2 start $isquik/index.js --node-args="--harmony" -n "bundle"
 
 fi
