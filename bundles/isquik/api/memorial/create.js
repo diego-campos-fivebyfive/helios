@@ -8,6 +8,7 @@ const levels = {
   'PLATINUM': 'platinum',
   'PREMIUM': 'premium',
   'PARCEIRO OURO': 'gold',
+  'PARCEIRO': 'partner',
   'PROMOCIONAL': 'promotional'
 }
 
