@@ -72,5 +72,5 @@ $ ces-frontend-compile
 ### Para lint de bundles
 ```
 $ cd BUNDLE_PATH
-$ yarn lint
+$ npm run lint
 ```

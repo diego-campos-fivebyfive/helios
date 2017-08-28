@@ -1,16 +1,13 @@
 .ssh
 .idea
-app/logs/*
-app/cache/*
-app/sessions/
-!app/logs/.gitkeep
-!app/cache/.gitkeep
-app/config/parameters.yml
-app/bootstrap.php.cache
-
-web/public
-web/uploads
-web/deploy/deploy.log
+backend/app/logs/*
+backend/app/cache/*
+backend/app/sessions/
+backend/app/config/parameters.yml
+backend/app/bootstrap.php.cache
+backend/web/public
+backend/web/uploads
+backend/web/deploy/deploy.log
 
 node_modules
 vendor

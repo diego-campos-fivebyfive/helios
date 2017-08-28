@@ -1,8 +1,25 @@
 Instalação do Sistema
 =====================
 
+## Servidores
+
+1, Adicionando o PATH do Projeto e Auto restart
+-----------------------------------------------
+
+Em ambientes remotos (Produção, Homolog e Staging) deve ser configurada uma cron para executar os comandos:
+
+Para configuração de servidores devem ser adicionadas as seguintes linhas:
+```
+export SICES_PATH=PROJECT_PATH
+source $SICES_PATH/devops/cli/config/variables-ci --[AMBIENCE_TYPE]
+source $SICES_PATH/devops/cli/ces-app-start --[AMBIENCE_TYPE]
+export PATH=$PATH:$SICES_PATH/devops/cli
+```
+
+## Maquina local
+
 1. Adicionando o PATH do Projeto
-----------------------------------
+--------------------------------
 
 Abra o Arquivo `.bashrc` com seu editor (Vim, Nano ou outro):
 ```
