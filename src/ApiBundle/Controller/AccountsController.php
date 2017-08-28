@@ -53,6 +53,7 @@ class AccountsController extends FOSRestController
             ->setPhone($data['phone'])
             ->setStatus($data['status'])
             ->setContext(Customer::CONTEXT_ACCOUNT)
+            ->setConfirmationToken($data['confirmationToken'])
             ->setLevel($data['level']);
         try {
             $accountManager->save($account);
@@ -152,6 +153,7 @@ class AccountsController extends FOSRestController
             ->setNumber($data['number'])
             ->setPostcode($data['postcode'])
             ->setStatus($data['status'])
+            ->setConfirmationToken($data['confirmationToken'])
             ->setLevel($data['level']);
 
         try {
