@@ -4,10 +4,12 @@ cd $SICES_PATH
 
 echo "Installing packages dependencies..."
 
-composer install
-npm install
-bash $CLI_PATH/util/bug-fix
+cd backend
+  composer install
+  npm install
+  bash $CLI_PATH/util/bug-fix
+cd ../
 
 cd bundles/isquik
-npm install
+  npm install
 cd ../../
