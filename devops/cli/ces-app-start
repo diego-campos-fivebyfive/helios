@@ -2,18 +2,17 @@
 
 cd $SICES_PATH
 
-echo "Starting $1 Application..."
-
-source $CLI_PATH/config/variables-ci $1
-bash $CLI_PATH/ces-app-install
+echo "Starting Application..."
 
 bundle_path=bundles/isquik
+
+bash $CLI_PATH/ces-app-install
 
 if [ -z ${1+x} ] || [ $1 == '--development' ]; then
 
   bash $CLI_PATH/ces-database-update
   echo "Sices app starting on $CES_SICES_HOST:$CES_SICES_PORT"
-  php app/console server:run &
+  php backend/app/console server:run &
 
   echo "Isquik bundle starting on $CES_BUNDLE_HOST:$CES_BUNDLE_PORT"
   $bundle_path/node_modules/.bin/node-supervisor --harmony $bundle_path/index.js &
