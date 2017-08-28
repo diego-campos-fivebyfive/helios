@@ -21,10 +21,11 @@ class Notifier
 
         $host = getenv('CES_ISQUIK_HOST');
         $port = getenv('CES_ISQUIK_PORT');
+        $ambience = getenv('CES_ISQUIK_AUTH_USER');
         $baseUri = "$host:$port";
 
         $auth = $this->getToken("$baseUri/auth");
-        $this->sendNotification($notification, $auth, "$baseUri/isquik-dev/$route");
+        $this->sendNotification($notification, $auth, "$baseUri/$ambience/$route");
     }
 
     public function getToken ($url)

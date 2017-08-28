@@ -9,6 +9,7 @@ const level = {
   'PLATINUM': 'platinum',
   'PREMIUM': 'premium',
   'PARCEIRO OURO': 'gold',
+  'PARCEIRO': 'partner',
   'PROMOCIONAL': 'promotional'
 }
 
@@ -31,6 +32,7 @@ const sendAccount = ({ Dados: account }) =>
       phone: account.Telefone,
       level: getLevel(account.NivelDesconto.Descricao),
       status: true,
+      confirmationToken: account.TokenLiberacaoAcesso,
       isquik_id: account.IdIntegrador
     })
     .then(data => updateUser({
