@@ -20,7 +20,7 @@ services:
 
     contact_manipulator:
         class: AppBundle\Service\Util\ContactManipulator
-        arguments: ['@app.customer_manager']
+        arguments: ['@customer_manager']
 
     account_manager:
         class: AppBundle\Manager\AccountManager
