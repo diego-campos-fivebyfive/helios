@@ -117,6 +117,10 @@ services:
         class: AppBundle\Manager\VarietyManager
         arguments: ['AppBundle\Entity\Component\Variety', '@doctrine']
 
+    task_manager:
+        class: AppBundle\Manager\TaskManager
+        arguments: ['AppBundle\Entity\Task', '@doctrine']
+
     theme_manager:
         class: AppBundle\Manager\ThemeManager
         arguments: ['AppBundle\Entity\Theme', '@doctrine']
