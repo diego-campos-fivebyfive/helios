@@ -425,14 +425,6 @@ abstract class AbstractController extends Controller
     }
 
     /**
-     * @return \AppBundle\Entity\Component\ModuleManager
-     */
-    protected function getModuleManager()
-    {
-        return $this->get('app.module_manager');
-    }
-
-    /**
      * @return \AppBundle\Entity\Component\InverterManager
      */
     protected function getInverterManager()
