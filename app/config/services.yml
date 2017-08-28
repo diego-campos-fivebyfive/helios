@@ -15,16 +15,13 @@ services:
         tags:
             - { name: doctrine.event_subscriber, connection: default }
 
-    # Aliased Services
     nasa_provider:
         alias: app.nasa_provider
 
-    # Manipulators
     contact_manipulator:
         class: AppBundle\Service\Util\ContactManipulator
         arguments: ['@app.customer_manager']
 
-    # Managers
     account_manager:
         class: AppBundle\Manager\AccountManager
         arguments: ['AppBundle\Entity\Customer', '@doctrine']
@@ -188,7 +185,6 @@ services:
         class: AppBundle\Service\ProjectGenerator\Precifier
         arguments: ['@memorial_loader', '@range_loader', '@margin_manager']
 
-    # Form Services
     project_generator_type:
         class: AppBundle\Form\Component\GeneratorType
         arguments: ['@doctrine.orm.entity_manager']
