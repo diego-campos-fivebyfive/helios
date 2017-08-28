@@ -2,7 +2,7 @@ Instalação do Sistema
 =====================
 
 1. Adicionando o PATH do Projeto
-----------------------------------
+--------------------------------
 
 Abra o Arquivo `.bashrc` com seu editor (Vim, Nano ou outro):
 ```
@@ -15,12 +15,28 @@ $ cd [PROJECT_FOLDER]
 $ pwd
 ```
 
+----------------------------------
+
+### Em ambiente de desenvolvimento
+
 Adicione ao final do arquivo as linhas substituindo `PROJECT_PATH` pelo caminho do projeto do passo anterior:
 ```
 export SICES_PATH=PROJECT_PATH
 source $SICES_PATH/devops/cli/config/variables-ci --development
 export PATH=$PATH:$SICES_PATH/devops/cli
 ```
+
+### Em ambientes remotos (Produção, Homolog e Staging)
+
+Para configuração de servidores devem ser adicionadas as seguintes linhas:
+```
+export SICES_PATH=PROJECT_PATH
+source $SICES_PATH/devops/cli/config/variables-ci --[AMBIENCE_TYPE]
+source $SICES_PATH/devops/cli/ces-app-start --[AMBIENCE_TYPE]
+export PATH=$PATH:$SICES_PATH/devops/cli
+```
+
+----------------------------------
 
 Carregue as alterações do arquivo bash:
 ```
