@@ -524,30 +524,6 @@ interface BusinessInterface extends BaseCustomerInterface
     public static function getStatusList();
 
     /**
-     * @return int
-     */
-    public function getMaxMembers();
-
-
-    /**
-     * @param $maxMember
-     * @return BusinessInterface
-     */
-    public function setMaxMember($maxMember);
-
-    /**
-     * Return all real modules
-     * @return ArrayCollection
-     */
-    //public function getModules();
-
-    /**
-     * Return all real inverters
-     * @return ArrayCollection
-     */
-    //public function getInverters();
-
-    /**
      * @param $timezone
      * @return BusinessInterface
      */

@@ -38,6 +38,28 @@ trait AccountTrait
     }
 
     /**
+     * @inheritDoc
+     */
+    public function setMaxMember($maxMember)
+    {
+        $this->ensureContext(Customer::CONTEXT_ACCOUNT);
+
+        $this->maxMember = (int) $maxMember;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMaxMembers()
+    {
+        $this->ensureContext(Customer::CONTEXT_ACCOUNT);
+
+        return $this->maxMember ? $this->maxMember : self::MAX_MEMBERS;
+    }
+
+    /**
      * @return bool
      */
     public function isConfirmed()

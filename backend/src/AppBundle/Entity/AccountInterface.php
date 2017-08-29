@@ -16,6 +16,8 @@ interface AccountInterface
 
     # Default quota of monthly projects for free accounts
     const PROJECTS_QUOTA = 4;
+
+    const MAX_MEMBERS = 5;
     
     /**
      * @return int
@@ -36,6 +38,18 @@ interface AccountInterface
      * @return string
      */
     public function getEmail();
+
+    /**
+     * @return int
+     */
+    public function getMaxMembers();
+
+
+    /**
+     * @param $maxMember
+     * @return BusinessInterface
+     */
+    public function setMaxMember($maxMember);
 
     /**
      * @param null $confirmationToken

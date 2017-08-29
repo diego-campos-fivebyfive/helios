@@ -1270,30 +1270,6 @@ class Customer extends AbstractCustomer
     /**
      * @inheritDoc
      */
-    public function setMaxMember($maxMember)
-    {
-        if(!$this->isAccount())
-            $this->unsupportedContextException();
-
-        $this->maxMember = $maxMember;
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getMaxMembers()
-    {
-        if(!$this->isAccount())
-            $this->unsupportedContextException();
-
-        return $this->maxMember;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function addAuthoredTask(TaskInterface $task)
     {
         if(!$this->isMember())
