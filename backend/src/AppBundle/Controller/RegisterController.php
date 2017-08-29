@@ -75,7 +75,7 @@ class RegisterController extends AbstractController
     {
         /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
         $userManager = $this->get('fos_user.user_manager');
-        $accountManager = $this->getCustomerManager();
+        $accountManager = $this->manager('customer');
 
         $form = $this->createForm(PreRegisterType::class);
         $form->handleRequest($request);
@@ -272,7 +272,7 @@ class RegisterController extends AbstractController
     public function legacyConfirmUserAction(Request $request, $token)
     {
         $errors = [];
-        $manager = $this->getCustomerManager();
+        $manager = $this->manager('customer');
 
         $member = $manager->findOneBy([
             'confirmationToken' => $token

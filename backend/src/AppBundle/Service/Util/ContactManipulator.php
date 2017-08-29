@@ -2,7 +2,7 @@
 
 namespace AppBundle\Service\Util;
 
-use AppBundle\Entity\CustomerManager as ContactManager;
+use AppBundle\Manager\CustomerManager as ContactManager;
 
 class ContactManipulator
 {

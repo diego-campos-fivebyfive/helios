@@ -232,11 +232,11 @@ class WidgetGenerator
     }
 
     /**
-     * @return \AppBundle\Entity\CustomerManager
+     * @return \AppBundle\Manager\CustomerManager
      */
     private function getCustomerManager()
     {
-        return $this->container->get('app.customer_manager');
+        return $this->container->get('customer_manager');
     }
 
     /**

@@ -149,7 +149,7 @@ class TaskController extends AbstractController
             if(!empty($data['contact'])){
                 if(null != $token = $data['contact']){
                     /** @var \AppBundle\Entity\BusinessInterface $contact */
-                    $contact = $this->getCustomerManager()->findOneBy(['token' => $token]);
+                    $contact = $this->manager('customer')->findOneBy(['token' => $token]);
                     if($contact && $contact->isAccessibleBy($member)){
                         $filter->contact($contact);
                     }
@@ -414,7 +414,7 @@ class TaskController extends AbstractController
 
         if($token){
             /** @var \AppBundle\Entity\BusinessInterface $contact */
-            $contact = $this->getCustomerManager()->findOneBy(['token' => $token]);
+            $contact = $this->manager('customer')->findOneBy(['token' => $token]);
 
             if($contact->isAccessibleBy($this->getCurrentMember())){
                 return $contact;

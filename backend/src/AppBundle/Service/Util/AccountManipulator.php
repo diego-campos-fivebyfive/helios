@@ -179,11 +179,11 @@ class AccountManipulator
     }
 
     /**
-     * @return object|\AppBundle\Entity\CustomerManager
+     * @return object|\AppBundle\Manager\CustomerManager
      */
     private function getAccountManager()
     {
-        return $this->container->get('app.customer_manager');
+        return $this->container->get('customer_manager');
     }
 
     /**

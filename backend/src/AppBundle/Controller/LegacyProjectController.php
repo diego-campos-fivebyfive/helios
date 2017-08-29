@@ -55,7 +55,7 @@ class LegacyProjectController extends AbstractController
 
         $filterMember = null;
         if($member->isOwner() && null != $memberId = $request->get('member')){
-            $filterMember = $this->getCustomerManager()->find($memberId);
+            $filterMember = $this->manager('customer')->find($memberId);
             if($filterMember instanceof BusinessInterface
                 && $filterMember->getAccount()->getId() == $account->getId()){
                 $ids = [$filterMember->getId()];
@@ -134,7 +134,7 @@ class LegacyProjectController extends AbstractController
             $account = $member->getAccount();
             if($account->isFreeAccount()){
                 $account->incrementProjectsCount();
-                $this->getCustomerManager()->save($account);
+                $this->manager('customer')->save($account);
             }
 
             return $this->redirectToRoute('project_update', [
@@ -560,7 +560,7 @@ class LegacyProjectController extends AbstractController
         // Increment projects count attribute
         if($account->isFreeAccount()){
             $account->incrementProjectsCount();
-            $this->getCustomerManager()->save($account);
+            $this->manager('customer')->save($account);
         }        
         
         return $this->jsonResponse([
@@ -790,7 +790,7 @@ class LegacyProjectController extends AbstractController
     private function getCustomerReferrer(Request $request)
     {
         if(null != $token = $request->get('contact')) {
-            $contact = $this->getCustomerManager()->findByToken($token);
+            $contact = $this->manager('customer')->findByToken($token);
 
             $this->denyAccessUnlessGranted('edit', $contact);
 
