@@ -34,7 +34,7 @@ class MemberController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-        $account = $this->getCurrentAccount();
+        $account = $this->account();
 
         $activeMembers = $account->getActiveMembers();
         $inactiveMembers = $account->getInactiveMembers();
@@ -56,18 +56,16 @@ class MemberController extends AbstractController
      */
     public function createAction(Request $request)
     {
-        $account = $this->getCurrentAccount();
+        $account = $this->account();
 
-        /*if ($account->getMembers()->count() >= $account->getMaxMembers()) {
+        if ($account->getMembers()->count() >= $account->getMaxMembers()) {
             return $this->render('locked_content', [
                 'title' => 'account.max_members.title',
                 'message' => 'account.max_members.message',
-                //'include' => 'member.locked_links'
             ]);
-        }*/
+        }
 
         $manager = $this->manager('customer');
-        //$context = $this->getContextManager()->find();
 
         $member = $manager->create();
         $member
@@ -75,7 +73,7 @@ class MemberController extends AbstractController
             ->setAccount($account);
 
         $form = $this->createForm(MemberType::class, $member, [
-            'current_member' => $this->getCurrentMember()
+            'current_member' => $this->member()
         ]);
 
         $form->handleRequest($request);
@@ -104,19 +102,16 @@ class MemberController extends AbstractController
                 $userManager->updateUser($user);
 
                 $member->setUser($user);
+
                 $manager->save($member);
 
                 /** @var \AppBundle\Service\Mailer $mailer */
                 $mailer = $this->get('app_mailer');
-                //$mailer->enableSender = false;
-                //$mailer->sendMemberConfirmationMessage($member);
-
-                //$this->setNotice('Usuário cadastrado com sucesso! Aguardando confirmação via email.');
+                $mailer->sendMemberConfirmationMessage($member);
 
                 return $this->json([
                     'message' => $this->translate('Usuário cadastrado com sucesso!')
                 ], Response::HTTP_CREATED);
-                //return $this->redirectToRoute('member_index');
             }
 
             $form->addError(new FormError('The informed email is already in use'));
