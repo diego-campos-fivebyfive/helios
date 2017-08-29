@@ -46,7 +46,7 @@ class ComponentController extends AbstractController
 
         $qb->select('c')
             ->from(sprintf('AppBundle\Entity\Component\%s', ucfirst($type)), 'c')
-            ->join('c.maker', 'm', 'WITH')
+            ->leftJoin('c.maker', 'm', 'WITH')
             ->orderBy('m.name', 'asc')
             ->addOrderBy('c.model', 'asc');
 
