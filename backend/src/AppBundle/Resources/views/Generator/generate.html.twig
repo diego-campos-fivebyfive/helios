@@ -14,6 +14,21 @@
 
 </style>
 
+<div class="modal inmodal fade" id="modal_component" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                {% include view('kit.spinner') %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">
+                    {{ 'Close'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <table class="col-md-12 table flow-lg">
     <thead>
@@ -601,6 +616,22 @@
             } else {
                 button_config.ladda('stop');
                 swal('Ooops', 'O inversor selecionado não é compatível com esta potência!', 'error');
+            }
+        });
+    });
+
+    var modal_component = $('#modal_component');
+    var modal_body = modal_component.find('.modal-body');
+    var loader = modal_body.html();
+
+    modal_component.on('show.bs.modal', function(event){
+        var target = $(event.relatedTarget);
+        var url = target.data('url');
+        modal_body.html(loader);
+        Request.send({
+            url: url,
+            callback: function(xhr){
+                modal_body.html(xhr.responseText);
             }
         });
     });
