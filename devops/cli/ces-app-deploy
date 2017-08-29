@@ -21,7 +21,7 @@ echo "Starting Deploy..."
 
 if [ $1 = '--homolog' ]; then
 
-  ./devops/cli/ces-slack-notify 'Starting Homolog Deploy...'
+  ./devops/cli/ces-slack-notify --devops '@here: Starting Homolog Deploy...'
 
   ./devops/cli/ces-app-clone --homolog
   ./devops/cli/ces-permission-fix --homolog
@@ -34,11 +34,11 @@ if [ $1 = '--homolog' ]; then
   ./devops/cli/ces-cache-clear
   ./devops/cli/ces-frontend-compile
 
-  ./devops/cli/ces-slack-notify 'Homolog Deploy Done!'
+  ./devops/cli/ces-slack-notify --devops '@here: Homolog Deploy Done!'
 
 elif [ $1 = '--production' ]; then
 
-  bash $CLI_PATH/ces-slack-notify 'Starting Production Deploy...'
+  bash $CLI_PATH/ces-slack-notify --devops '@here: Starting Production Deploy...'
 
   bash $CLI_PATH/ces-app-clone --production
   source $CLI_PATH/config/variables-ci --production
@@ -47,7 +47,7 @@ elif [ $1 = '--production' ]; then
   bash $CLI_PATH/ces-database-update
   bundles/isquik/node_modules/.bin/pm2 restart 0
 
-  bash $CLI_PATH/ces-slack-notify 'Production Deploy Done!'
+  bash $CLI_PATH/ces-slack-notify --devops '@here: Production Deploy Done!'
 
 fi
 

@@ -34,7 +34,7 @@ const bundler = actions => (request, response) => {
       if (process.env.CES_AMBIENCE === 'development') {
         throw new Error(`Internal error: ${message}`)
       } else {
-        exec(`bash $CLI_PATH/ces-slack-notify \'${message}\'`)
+        exec(`bash $CLI_PATH/ces-slack-notify --backlog-api \'${message}\'`)
       }
     })
 }
