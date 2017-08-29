@@ -51,7 +51,7 @@ trait ComponentTrait
      *
      * @ORM\Column(name="promotional", type="boolean", nullable=false)
      */
-    private $promotional;
+    protected $promotional;
 
     /***
      * @param $datasheet
