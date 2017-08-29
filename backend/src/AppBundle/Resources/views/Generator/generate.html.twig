@@ -105,10 +105,10 @@
         <tr>
             <td> {{ projectModule.module.id }} </td>
             <td>
-                {#<a data-toggle="modal" data-target="#modal_component"
-                   data-url="{{ path('component_show', {type:'module', id:projectModule.module.id}) }}">#}
+                <a data-toggle="modal" data-target="#modal_component"
+                   data-url="{{ path('component_show', {type:'module', id:projectModule.module.id}) }}">
                 {{ projectModule.module.model }}
-                {#</a>#}
+                </a>
             </td>
             <td class="promotional"> {{ projectModule.unitCostPrice|currency }} </td>
             <td class="text-center"> {{ projectModule.quantity }} </td>
@@ -120,10 +120,10 @@
         <tr>
             <td> {{ id }} </td>
             <td>
-                {#<a data-toggle="modal" data-target="#modal_component"
-                   data-url="{{ path('component_show', {type:'inverter', id:group.inverter.id}) }}">#}
+                <a data-toggle="modal" data-target="#modal_component"
+                   data-url="{{ path('component_show', {type:'inverter', id:group.inverter.id}) }}">
                 {{ group.inverter.model }}
-                {#</a>#}
+                </a>
             </td>
             <td class="promotional"> {{ group.unitCostPrice|currency }} </td>
             <td class="text-center"> {{ group.quantity }} </td>
@@ -145,10 +145,10 @@
         <tr>
             <td> {{ projectStringBox.stringBox.code }} </td>
             <td>
-                {#<a data-toggle="modal" data-target="#modal_component"
-                   data-url="{{ path('stringbox_show', {id:projectStringBox.stringBox.id}) }}">#}
+                <a data-toggle="modal" data-target="#modal_component"
+                   data-url="{{ path('stringbox_show', {id:projectStringBox.stringBox.id}) }}">
                 {{ projectStringBox.stringBox.description }}
-                {#</a>#}
+                </a>
             </td>
             <td class="promotional"> {{ projectStringBox.unitCostPrice|currency }} </td>
             <td class="text-center"> {{ projectStringBox.quantity }} </td>
@@ -160,10 +160,10 @@
         <tr>
             <td> {{ projectStructure.structure.code }} </td>
             <td>
-                {#<a data-toggle="modal" data-target="#modal_component"
-                   data-url="{{ path('structure_show', {id:projectStructure.structure.id}) }}">#}
+                <a data-toggle="modal" data-target="#modal_component"
+                   data-url="{{ path('structure_show', {id:projectStructure.structure.id}) }}">
                 {{ projectStructure.structure.description }}
-                {#</a>#}
+                </a>
             </td>
             <td class="promotional"> {{ projectStructure.unitCostPrice|currency }} </td>
             <td class="text-center"> {{ projectStructure.quantity }} </td>
@@ -174,7 +174,11 @@
     {% for projectVariety in project.projectVarieties if projectVariety.variety.type != 'transformer' %}
         <tr>
             <td> {{ projectVariety.variety.code }} </td>
-            <td> {{ projectVariety.variety.description }} </td>
+            <td>
+                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('variety_show', {id:projectVariety.variety.id}) }}">
+                    {{ projectVariety.variety.description }}
+                </a>
+            </td>
             <td class="promotional"> {{ projectVariety.unitCostPrice|currency }} </td>
             <td class="text-center"> {{ projectVariety.quantity }} </td>
         </tr>
