@@ -40,7 +40,7 @@ elif [ $1 = '--production' ]; then
 
   echo "Moving untracked files..."
   rsync -avzh $path/.backup/backend/web/uploads/** $path/backend/web/uploads
-  rsync -avzh $path/.backup/storage/** $path/storage
+  rsync -avzh $path/.backup/backend/storage/** $path/backend/storage
 
   # Remove it after deploy command optimizations
   rm $path/devops/aws/homolog.pem
