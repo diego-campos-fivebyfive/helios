@@ -155,13 +155,6 @@ class Customer extends AbstractCustomer
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Customer", mappedBy="account", cascade={"persist"})
-     */
-    private $members;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Task", mappedBy="author")
      */
     private $authoredTasks;
@@ -446,84 +439,6 @@ class Customer extends AbstractCustomer
     public function getAccount()
     {
         return $this->account;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function addMember(BusinessInterface $member)
-    {
-        if (!$this->members->contains($member)) {
-            $this->members->add($member);
-
-            if (!$member->getAccount())
-                    $member->setAcccount();
-        }
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function removeMember(BusinessInterface $member)
-    {
-        if ($this->members->contains($member))
-            $this->members->removeElement($member);
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getMembers()
-    {
-        if(!$this->isAccount())
-            $this->unsupportedContextException();
-
-        return $this->members->filter(function(BusinessInterface $member){
-            return !$member->isDeleted();
-        });
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getActiveMembers()
-    {
-        if(!$this->isAccount())
-            $this->unsupportedContextException();
-
-        return $this->members->filter(function(BusinessInterface $member){
-            return $member->getUser() instanceof UserInterface && !$member->isDeleted();
-        });
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getInactiveMembers()
-    {
-        if(!$this->isAccount())
-            $this->unsupportedContextException();
-
-        return $this->members->filter(function(BusinessInterface $member){
-            return $member->getUser() instanceof UserInterface && $member->isDeleted();
-        });
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getInvitedMembers()
-    {
-        if(!$this->isAccount())
-            $this->unsupportedContextException();
-
-        return $this->members->filter(function(BusinessInterface $member){
-            return !$member->getUser() instanceof UserInterface && !$member->isDeleted();
-        });
     }
 
     /**
