@@ -75,8 +75,7 @@ class InverterController extends FOSRestController
         $data = json_decode($request->getContent(), true);
 
         $inverterManager = $this->get('inverter_manager');
-        $code
-            ->setPromotional($data['promotional']);
+        $code->setPromotional($data['promotional']);
 
         try {
             $inverterManager->save($code);

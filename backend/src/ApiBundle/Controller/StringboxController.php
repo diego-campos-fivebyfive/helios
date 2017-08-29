@@ -60,8 +60,7 @@ class StringboxController extends FOSRestController
         $data = json_decode($request->getContent(), true);
 
         $stringboxManager = $this->get('string_box_manager');
-        $code
-            ->setPromotional($data['promotional']);
+        $code->setPromotional($data['promotional']);
 
         try {
             $stringboxManager->save($code);

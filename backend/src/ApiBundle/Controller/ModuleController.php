@@ -71,8 +71,7 @@ class ModuleController extends AbstractApiController
         $data = json_decode($request->getContent(), true);
 
         $moduleManager = $this->get('module_manager');
-        $code
-            ->setPromotional($data['promotional']);
+        $code->setPromotional($data['promotional']);
 
         try {
             $moduleManager->save($code);

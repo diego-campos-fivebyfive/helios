@@ -61,8 +61,7 @@ class StructureController extends FOSRestController
         $data = json_decode($request->getContent(), true);
 
         $structureManager = $this->get('structure_manager');
-        $code
-            ->setPromotional($data['promotional']);
+        $code->setPromotional($data['promotional']);
 
         try {
             $structureManager->save($code);

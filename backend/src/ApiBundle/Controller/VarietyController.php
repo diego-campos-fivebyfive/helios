@@ -59,8 +59,7 @@ class VarietyController extends FOSRestController
         $data = json_decode($request->getContent(), true);
 
         $varietyManager = $this->get('variety_manager');
-        $code
-            ->setPromotional($data['promotional']);
+        $code->setPromotional($data['promotional']);
 
         try {
             $varietyManager->save($code);
