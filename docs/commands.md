@@ -34,6 +34,11 @@ $ ces-app-install
 $ ssh -i $SICES_PATH/devops/aws/homolog.pem admin@54.233.150.10
 ```
 
+### Para acessar o ambiente de staging
+```
+$ ssh -i $SICES_PATH/devops/aws/staging.pem admin@18.231.15.228
+```
+
 ### Para iniciar uma nova branch
 ```
 $ ces-new-task issue-NUMBER
