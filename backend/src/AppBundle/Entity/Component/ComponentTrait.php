@@ -46,6 +46,13 @@ trait ComponentTrait
      */
     protected $maker;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="promotional", type="boolean", nullable=false)
+     */
+    private $promotional;
+
     /***
      * @param $datasheet
      * @return $this
@@ -141,5 +148,23 @@ trait ComponentTrait
     public function preUpdate()
     {
         $this->updatedAt = new \DateTime;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPromotional()
+    {
+        return $this->promotional;
+    }
+
+    /**
+     * @param bool $promotional
+     * @return $this
+     */
+    public function setPromotional($promotional)
+    {
+        $this->promotional = $promotional;
+        return $this;
     }
 }
