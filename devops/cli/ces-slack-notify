@@ -2,7 +2,7 @@
 
 echo "Sending Slack devops chat notification..."
 
-message=$1
+message=$(echo $1 | sed 's/"/\\"/g')
 
 curl -s \
   -X POST \
