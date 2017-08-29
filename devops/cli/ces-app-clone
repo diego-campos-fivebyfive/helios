@@ -27,15 +27,26 @@ if [ $1 = '--homolog' ]; then
 
 elif [ $1 = '--production' ]; then
 
-  path=/var/www/
+  path=$SICES_PATH
 
   echo "Creating current version Backup..."
   rsync -avzh $path/** $path/.backup
 
   echo "Importing Temp files from homolog..."
-  rsync -azvv -e "ssh -i $SICES_PATH/devops/aws/homolog.pem" admin@54.233.150.10:$path/** $path/.temp
+  rsync -azvv -e "ssh -i $path/devops/aws/homolog.pem" admin@54.233.150.10:$path/** $path/.temp
 
   echo "Deploying files from Temp..."
   rsync -avzh --delete $path/.temp/** $path
+
+  echo "Moving untracked files..."
+  rsync -avzh $path/.backup/backend/web/uploads/** $path/backend/web/uploads
+  rsync -avzh $path/.backup/storage/** $path/storage
+
+  # Remove it after deploy command optimizations
+  rm $path/devops/aws/homolog.pem
+  cp $path/.backup/devops/aws/homolog.pem $path/devops/aws/homolog.pem
+  rm $path/backend/app/config/parameters.yml
+  cp $path/.backup/backend/app/config/parameters.yml $path/backend/app/config/parameters.yml
+  # Finish Remove it
 
 fi
