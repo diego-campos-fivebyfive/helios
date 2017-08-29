@@ -307,7 +307,9 @@
                                     <td class="content-block">
                                         <h3>
                                             {% if member is defined %}
-                                                {{ member.account.owner.firstname }} adicionou você à Plataforma SICES Solar.
+                                                Olá,
+                                                <br/>
+                                                A empresa {{ member.account.owner.firstname }} convidou você para fazer parte de sua equipe.
                                             {% else %}
                                                 Obrigado, recebemos seu pré-cadastro com sucesso.
                                             {% endif %}
@@ -336,13 +338,18 @@
                                 {% endif %}
 
                                 {% if member is defined %}
-                                <tr>
-                                    <td class="content-block aligncenter">
-                                        <a href="{{ targetUrl }}" target="_blank" class="btn-primary btn-block">
-                                            Concluir registro
-                                        </a>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td class="content-block">
+                                            Para ter acesso à plataforma SICES Solar clique abaixo e conclua seu cadastro.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="content-block aligncenter">
+                                            <a href="{{ targetUrl }}" target="_blank" class="btn-primary btn-block">
+                                                Concluir registro
+                                            </a>
+                                        </td>
+                                    </tr>
                                 {% endif %}
                             </table>
                         </td>
