@@ -1,5 +1,7 @@
 'use strict'
 
+const { exec } = require('child_process')
+
 const bundler = actions => (request, response) => {
   const { callback, body } = request.body
   const action = actions[callback]
@@ -28,7 +30,10 @@ const bundler = actions => (request, response) => {
         .status(500)
         .send(`Internal Error, contact us. ${new Date()}`)
         .end()
-      throw new Error(`Internal error: ${message}`)
+        // \"{"test": "test"}\"
+        // \"${message.substring(6)}\"
+      exec(`./devops/cli/ces-slack-notify \'${message}\'`)
+      //throw new Error(`Internal error: ${message}`)
     })
 }
 
