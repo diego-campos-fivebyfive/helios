@@ -52,25 +52,6 @@ class CustomerManager extends AbstractManager
     }
 
     /**
-     * @param BusinessInterface $account
-     * @param $index
-     * @return BusinessInterface
-     */
-    public function incrementAccountIndex(BusinessInterface $account, $index)
-    {
-        if(!$account->isAccount()){
-            throw new \InvalidArgumentException('Invalid account context');
-        }
-
-        $nextIndex = $account->getAttribute($index, 0)+1;
-        $account->addAttribute($index, $nextIndex);
-
-        $this->save($account);
-
-        return $nextIndex;
-    }
-
-    /**
      * @param $token
      * @return null|object|\AppBundle\Entity\BusinessInterface
      */
