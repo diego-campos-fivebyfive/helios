@@ -201,3 +201,7 @@ services:
         public: false
         tags:
             - { name: security.voter }
+
+    app_mailer:
+        class: AppBundle\Service\Mailer
+        arguments: ['@mailer', '@router', '@templating']
