@@ -19,4 +19,6 @@ export ISQUIK_PRODUCTION_SERVER_HOST='https://api.isquik.com'
 export ISQUIK_PRODUCTION_AUTH_KEY='3bbafb12-5702-41a6-a4bc-813cebfba500'
 export ISQUIK_PRODUCTION_AUTH_USER='sices'
 
-export SLACK_HOOK='https://hooks.slack.com/services/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'
+slack_uri='https://hooks.slack.com/services/T637J8WTD'
+export SLACK_HOOK_DEVOPS="$slack_uri/B6GU2PZFY/q4Va8VlWX7lv7zUv3uQIgryM"
+export SLACK_HOOK_BACKLOG_API="$slack_uri/B6UGPPXFS/gCKN7pVkpvgHER7m8zSJjuZQ"
