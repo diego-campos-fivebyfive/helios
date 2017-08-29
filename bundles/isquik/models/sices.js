@@ -97,11 +97,21 @@ const updateOrder = (id, order) => put(`${sices.uri}/orders/${id}`, order)
 const deleteOrder = id => del(`${sices.uri}/orders/${id}`)
 
 const sendMemorial = memorial => post(`${sices.uri}/memorials`, memorial)
+
 const sendInverter = inverter => post(`${sices.uri}/inverters`, inverter)
+const updateInverter = (code, inverter) => put(`${sices.uri}/inverters/${code}`, inverter)
+
 const sendStructure = structure => post(`${sices.uri}/structures`, structure)
+const updateStructure = (code, structure) => put(`${sices.uri}/structures/${code}`, structure)
+
 const sendModule = module => post(`${sices.uri}/modules`, module)
+const updateModule = (code, module) => put(`${sices.uri}/modules/${code}`, module)
+
 const sendStringbox = stringbox => post(`${sices.uri}/stringboxes`, stringbox)
+const updateStringbox = (code, stringbox) => put(`${sices.uri}/stringboxes/${code}`, stringbox)
+
 const sendVariety = variety => post(`${sices.uri}/varieties`, variety)
+const updateVariety = (code, variety) => put(`${sices.uri}/varieties/${code}`, variety)
 
 module.exports = {
   sendAccount,
@@ -115,8 +125,13 @@ module.exports = {
   deleteOrder,
   sendMemorial,
   sendInverter,
+  updateInverter,
   sendStructure,
+  updateStructure,
   sendModule,
+  updateModule,
   sendStringbox,
-  sendVariety
+  updateStringbox,
+  sendVariety,
+  updateVariety
 }
