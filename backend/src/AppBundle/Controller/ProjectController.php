@@ -194,10 +194,6 @@ class ProjectController extends AbstractController
 
             $manager->save($project);
 
-            $account = $this->account();
-            $account->incrementProjectsCount();
-            $this->manager('account')->save($account);
-
             return $this->json([
                 'project' => [
                     'id' => $project->getId(),
