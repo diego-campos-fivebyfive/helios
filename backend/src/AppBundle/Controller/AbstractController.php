@@ -323,8 +323,9 @@ abstract class AbstractController extends Controller
      */
     protected function incrementAccountIndex($index)
     {
-        $account = $this->getCurrentAccount();
-        return $this->manager('customer')->incrementAccountIndex($account, $index);
+        $account = $this->account();
+
+        return $this->manager('account')->incrementIndex($account, $index);
     }
 
     /**
