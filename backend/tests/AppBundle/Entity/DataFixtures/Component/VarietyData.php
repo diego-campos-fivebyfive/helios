@@ -22,6 +22,7 @@ class VarietyData extends AbstractFixture implements OrderedFixtureInterface
             'description' => 'This is a Variety ' . uniqid(),
             'type' => 'cabo',
             'subtype' => 'conector',
+            'promotional' => false,
             'maker' => $this->getReference('maker')
         ];
 

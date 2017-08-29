@@ -33,6 +33,7 @@ class InverterData extends AbstractFixture implements OrderedFixtureInterface
             'connectionType' => self::randomString(15),
             'mpptParallel' => false,
             'inProtection' => true,
+            'promotional' => false,
             'phases' => 5,
             'dataSheet' => self::randomString(15),
             'image' => self::randomString(10),

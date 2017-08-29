@@ -33,6 +33,7 @@ class ModuleData extends AbstractFixture implements OrderedFixtureInterface
             'tempCoefficientIsc' => self::randomFloat(),
             'length' => self::randomFloat(),
             'width' => self::randomFloat(),
+            'promotional' => false,
             'cellType' => self::randomString(10),
             'connectionType' => self::randomString(5),
             'dataSheet' => self::randomString(15),

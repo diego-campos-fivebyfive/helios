@@ -23,6 +23,7 @@ class StringBoxData extends AbstractFixture implements OrderedFixtureInterface
             'inputs' => 3,
             'outputs' => 2,
             'fuses' => 1,
+            'promotional' => false,
             'maker' => $this->getReference('maker')
         ];
 
