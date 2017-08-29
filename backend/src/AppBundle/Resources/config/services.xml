@@ -10,12 +10,6 @@
 
     <services>
 
-        <service id="app_mailer" class="AppBundle\Service\Mailer">
-            <argument type="service" id="mailer"/>
-            <argument type="service" id="router"/>
-            <argument type="service" id="templating"/>
-        </service>
-
         <service id="app.parameter_manager" class="AppBundle\Entity\ParameterManager">
             <argument>AppBundle\Entity\Parameter</argument>
             <argument type="service" id="doctrine"/>

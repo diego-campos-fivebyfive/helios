@@ -305,20 +305,24 @@
                                 </tr>
                                 <tr>
                                     <td class="content-block">
-                                        <h3>Obrigado, recebemos seu pré-cadastro com sucesso.</h3>
+                                        <h3>
+                                            {% if member is defined %}
+                                                {{ member.account.owner.firstname }} adicionou você à Plataforma SICES Solar.
+                                            {% else %}
+                                                Obrigado, recebemos seu pré-cadastro com sucesso.
+                                            {% endif %}
+                                        </h3>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="content-block">
                                         {% if account is defined %}
-                                            Seu pedido de inscrição está em análise.
+                                            A partir de setembro iremos iniciar a liberação do acesso à plataforma SICES Solar para todos que tiveram seus cadastros aprovados.
                                         {% endif %}
-                                        {#{% if member is defined %}
-                                            {{ member.account.owner.firstname }} adicionou você à Plataforma Sices Solar.
-                                        {% endif %}#}
-                                        A partir de setembro iremos iniciar a liberação do acesso à plataforma SICES Solar para todos que tiveram seus cadastros aprovados.
                                     </td>
                                 </tr>
+
+                                {% if account is defined %}
                                 <tr>
                                     <td class="content-block">
                                         Muito obrigado.
@@ -329,13 +333,17 @@
                                         SICES Solar
                                     </td>
                                 </tr>
-                                {#<tr>
+                                {% endif %}
+
+                                {% if member is defined %}
+                                <tr>
                                     <td class="content-block aligncenter">
                                         <a href="{{ targetUrl }}" target="_blank" class="btn-primary btn-block">
                                             Concluir registro
                                         </a>
                                     </td>
-                                </tr>#}
+                                </tr>
+                                {% endif %}
                             </table>
                         </td>
                     </tr>

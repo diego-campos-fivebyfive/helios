@@ -16,6 +16,8 @@ interface AccountInterface
 
     # Default quota of monthly projects for free accounts
     const PROJECTS_QUOTA = 4;
+
+    const MAX_MEMBERS = 5;
     
     /**
      * @return int
@@ -36,6 +38,50 @@ interface AccountInterface
      * @return string
      */
     public function getEmail();
+
+    /**
+     * @return int
+     */
+    public function getMaxMembers();
+
+
+    /**
+     * @param $maxMember
+     * @return BusinessInterface
+     */
+    public function setMaxMember($maxMember);
+
+    /**
+     * @param BusinessInterface $member
+     * @return BusinessInterface
+     */
+    public function addMember(BusinessInterface $member);
+
+    /**
+     * @param BusinessInterface $member
+     * @return BusinessInterface
+     */
+    public function removeMember(BusinessInterface $member);
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getMembers();
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getActiveMembers();
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getInactiveMembers();
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getInvitedMembers();
 
     /**
      * @param null $confirmationToken
@@ -117,9 +163,4 @@ interface AccountInterface
      * @return BusinessInterface
      */
     public function setAttribute($key, $value);
-
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getMembers();
 }
