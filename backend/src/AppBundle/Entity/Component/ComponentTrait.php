@@ -49,7 +49,7 @@ trait ComponentTrait
     /**
      * @var boolean
      *
-     * @ORM\Column(name="promotional", type="boolean", nullable=false)
+     * @ORM\Column(name="promotional", type="boolean")
      */
     protected $promotional;
 
