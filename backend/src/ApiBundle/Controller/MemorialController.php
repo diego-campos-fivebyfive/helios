@@ -15,7 +15,6 @@ class MemorialController extends FOSRestController
     public function postMemorialsAction(Request $request)
     {
         $data = json_decode($request->getContent(), true);
-        $dataRanges = $data['range'];
 
         /** @var Memorial $memorialManager */
         $memorialManager = $this->get('memorial_manager');
@@ -34,38 +33,38 @@ class MemorialController extends FOSRestController
         $currentMemorial = $memorialManager->findOneBy(array(), array('id' => 'DESC'));
         $currentMemorial->setEndAt(new \DateTime('now'));
 
-        foreach ($dataRanges as $ranges) {
+        /** @var Memorial $memorial */
+        $memorial = $memorialManager->create();
+        $memorial
+            ->setVersion($data['version'])
+            ->setStatus($data['status'])
+            ->setStartAt(new \DateTime('now'));
 
-            /** @var Memorial $memorial */
-            $memorial = $memorialManager->create();
-            $memorial
-                ->setVersion($data['version'])
-                ->setStatus($data['status'])
-                ->setStartAt(new \DateTime('now'));
-            $memorialManager->save($memorial);
+        $memorialManager->save($memorial);
 
-            $markups = $ranges['markups'];
+        $offset = count($data['ranges']) -1;
 
-            foreach ($markups as $level) {
+        foreach ($data['ranges'] as $key => $config) {
 
-                $config = $level['levels'];
+            foreach ($config['markups'] as $markup) {
 
-                foreach ($config as $item) {
+                foreach ($markup['levels'] as $level) {
 
                     /** @var Range $range */
                     $range = $rangeManager->create();
                     $range
-                        ->setCode($ranges['code'])
                         ->setMemorial($memorial)
-                        ->setLevel($item['level'])
-                        ->setInitialPower($level['initial'])
-                        ->setFinalPower($level['final'])
-                        ->setPrice($item['price']);
-                    $rangeManager->save($range);
+                        ->setCode($config['code'])
+                        ->setInitialPower($markup['initial'])
+                        ->setFinalPower($markup['final'])
+                        ->setLevel($level['level'])
+                        ->setPrice($level['price']);
+
+                    $rangeManager->save($range, $offset == $key);
                 }
             }
-            $view = View::create();
-            return $this->handleView($view);
         }
+        $view = View::create();
+        return $this->handleView($view);
     }
 }

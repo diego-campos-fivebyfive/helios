@@ -30,10 +30,10 @@ elif [ $1 = '--production' ]; then
   path=$SICES_PATH
 
   echo "Creating current version Backup..."
-  rsync -avzh $path/** $path/.backup
+  rsync -avzh --delete $path/** $path/.backup
 
   echo "Importing Temp files from homolog..."
-  rsync -azvv -e "ssh -i $path/devops/aws/homolog.pem" admin@54.233.150.10:$path/** $path/.temp
+  rsync -azvv --delete -e "ssh -i $path/devops/aws/homolog.pem" admin@54.233.150.10:$path/** $path/.temp
 
   echo "Deploying files from Temp..."
   rsync -avzh --delete $path/.temp/** $path
