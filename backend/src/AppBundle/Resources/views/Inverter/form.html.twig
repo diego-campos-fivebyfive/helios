@@ -64,6 +64,11 @@
                                                 </span>
                                             {% endif %}
                                         </div>
+
+                                        <div class="form-group col-md-6">
+                                            {{ form_label(form.connection_type, 'Tipo de Conexão') }}
+                                            {{ form_widget(form.connection_type,{attr:{class:'form-control'}}) }}
+                                        </div>
                                     </div>
                                 </div>
 
@@ -140,6 +145,35 @@
                                             <div class="input-group m-b">
                                                 {{ form_widget(form.mpptMax,{attr:{class:'form-control'}}) }}
                                                 <span class="input-group-addon">V</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-3">
+                                            {{ form_label(form.phases, 'Fase') }}
+                                            <div class="input-group m-b">
+                                                {{ form_widget(form.phases,{attr:{class:'form-control'}}) }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-3">
+                                            {{ form_label(form.phase_voltage, 'Tensão de Fase') }}
+                                            <div class="input-group m-b">
+                                                {{ form_widget(form.phase_voltage,{attr:{class:'form-control'}}) }}
+                                                <span class="input-group-addon">V</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-3">
+                                            {{ form_label(form.mppt_parallel, 'MPPT Paralelo') }}
+                                            <div class="input-group m-b">
+                                                {{ form_widget(form.mppt_parallel,{attr:{class:'form-control'}}) }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-3">
+                                            {{ form_label(form.mppt_connections, 'Conexões MPPT') }}
+                                            <div class="input-group m-b">
+                                                {{ form_widget(form.mppt_connections,{attr:{class:'form-control'}}) }}
                                             </div>
                                         </div>
 
