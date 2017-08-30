@@ -37,7 +37,6 @@ class ProjectController extends AbstractController
         $account = $member->getAccount();
 
         $ids = [$member->getId()];
-        dump($member);die;
 
         if ($member->isOwner()) {
             $ids = $account->getMembers()->map(function (MemberInterface $m) {
