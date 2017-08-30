@@ -5,6 +5,7 @@ backend/app/cache/*
 backend/app/sessions/
 backend/app/config/parameters.yml
 backend/app/bootstrap.php.cache
+backend/storage
 backend/web/public
 backend/web/uploads
 backend/web/deploy/deploy.log
