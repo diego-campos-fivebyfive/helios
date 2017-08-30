@@ -14,6 +14,21 @@
 
 </style>
 
+<div class="modal inmodal fade" id="modal_component" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                {% include view('kit.spinner') %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">
+                    {{ 'Close'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <table class="col-md-12 table flow-lg">
     <thead>
@@ -105,10 +120,10 @@
         <tr>
             <td> {{ projectModule.module.id }} </td>
             <td>
-                {#<a data-toggle="modal" data-target="#modal_component"
-                   data-url="{{ path('component_show', {type:'module', id:projectModule.module.id}) }}">#}
+                <a data-toggle="modal" data-target="#modal_component"
+                   data-url="{{ path('component_show', {type:'module', id:projectModule.module.id}) }}">
                 {{ projectModule.module.model }}
-                {#</a>#}
+                </a>
             </td>
             <td class="promotional"> {{ projectModule.unitCostPrice|currency }} </td>
             <td class="text-center"> {{ projectModule.quantity }} </td>
@@ -120,10 +135,10 @@
         <tr>
             <td> {{ id }} </td>
             <td>
-                {#<a data-toggle="modal" data-target="#modal_component"
-                   data-url="{{ path('component_show', {type:'inverter', id:group.inverter.id}) }}">#}
+                <a data-toggle="modal" data-target="#modal_component"
+                   data-url="{{ path('component_show', {type:'inverter', id:group.inverter.id}) }}">
                 {{ group.inverter.model }}
-                {#</a>#}
+                </a>
             </td>
             <td class="promotional"> {{ group.unitCostPrice|currency }} </td>
             <td class="text-center"> {{ group.quantity }} </td>
@@ -145,10 +160,10 @@
         <tr>
             <td> {{ projectStringBox.stringBox.code }} </td>
             <td>
-                {#<a data-toggle="modal" data-target="#modal_component"
-                   data-url="{{ path('stringbox_show', {id:projectStringBox.stringBox.id}) }}">#}
+                <a data-toggle="modal" data-target="#modal_component"
+                   data-url="{{ path('stringbox_show', {id:projectStringBox.stringBox.id}) }}">
                 {{ projectStringBox.stringBox.description }}
-                {#</a>#}
+                </a>
             </td>
             <td class="promotional"> {{ projectStringBox.unitCostPrice|currency }} </td>
             <td class="text-center"> {{ projectStringBox.quantity }} </td>
@@ -160,10 +175,10 @@
         <tr>
             <td> {{ projectStructure.structure.code }} </td>
             <td>
-                {#<a data-toggle="modal" data-target="#modal_component"
-                   data-url="{{ path('structure_show', {id:projectStructure.structure.id}) }}">#}
+                <a data-toggle="modal" data-target="#modal_component"
+                   data-url="{{ path('structure_show', {id:projectStructure.structure.id}) }}">
                 {{ projectStructure.structure.description }}
-                {#</a>#}
+                </a>
             </td>
             <td class="promotional"> {{ projectStructure.unitCostPrice|currency }} </td>
             <td class="text-center"> {{ projectStructure.quantity }} </td>
@@ -174,7 +189,11 @@
     {% for projectVariety in project.projectVarieties if projectVariety.variety.type != 'transformer' %}
         <tr>
             <td> {{ projectVariety.variety.code }} </td>
-            <td> {{ projectVariety.variety.description }} </td>
+            <td>
+                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('variety_show', {id:projectVariety.variety.id}) }}">
+                    {{ projectVariety.variety.description }}
+                </a>
+            </td>
             <td class="promotional"> {{ projectVariety.unitCostPrice|currency }} </td>
             <td class="text-center"> {{ projectVariety.quantity }} </td>
         </tr>
@@ -601,9 +620,20 @@
         });
     });
 
-    var isPromotional = $('#generator_is_promotional');
-    isPromotional.on('change', function(){
+    var modal_component = $('#modal_component');
+    var modal_body = modal_component.find('.modal-body');
+    var loader = modal_body.html();
 
+    modal_component.on('show.bs.modal', function(event){
+        var target = $(event.relatedTarget);
+        var url = target.data('url');
+        modal_body.html(loader);
+        Request.send({
+            url: url,
+            callback: function(xhr){
+                modal_body.html(xhr.responseText);
+            }
+        });
     });
 
 </script>

@@ -102,7 +102,7 @@
                                     </div>
                                     <div class="panel-body">
                                         <div class="row">
-                                            <div class="col-md-12">
+                                            <div class="col-md-12 hide">
                                                 <form>
                                                     <div class="form-group">
                                                         <label>
@@ -471,15 +471,15 @@
                     Financial.get_extra_form(url);
                 }).trigger('change');
 
-                $('#is_promotional').on('change', function(){
+                /*$('#is_promotional').on('change', function(){
                     //console.log($(this).is(':checked'));
                     Financial.loadComponents();
-                });
+                });*/
             },
             onLoadComponents: function(){
                 Financial.isLoading.components = false;
                 Financial.isPromotional.removeAttr('disabled');
-                ShippingManager.calculate();
+                //ShippingManager.calculate();
             },
             onSaveShipping: function () {
                 Financial.get_taxes();

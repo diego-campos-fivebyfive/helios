@@ -13,4 +13,8 @@ elif [ $1 == '--homolog' ]; then
   sudo chown -R www-data:admin /var/www/*
   sudo chmod -R g+rwx /var/www/*
 
+  sudo chmod 775 backend/web/uploads
+  sudo chmod 775 backend/web/uploads/components
+  sudo chmod 775 backend/storage
+
 fi

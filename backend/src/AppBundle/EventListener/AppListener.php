@@ -87,6 +87,7 @@ class AppListener
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         return;
+
         $exception = $event->getException();
 
         $format = $event->getRequest()->attributes->get('_format');

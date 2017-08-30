@@ -2,7 +2,7 @@
 
 namespace AppBundle\Service;
 
-use Kolina\CustomerBundle\Entity\CustomerManagerInterface;
+use AppBundle\Manager\CustomerManager;
 
 /**
  * Manipulate, helper, filter or complex functions for
@@ -15,11 +15,11 @@ use Kolina\CustomerBundle\Entity\CustomerManagerInterface;
 class CustomerHelper
 {
     /**
-     * @var CustomerManagerInterface
+     * @var CustomerManager
      */
     private $customerManager;
 
-    function __construct(CustomerManagerInterface $customerManager)
+    function __construct(CustomerManager $customerManager)
     {
         $this->customerManager = $customerManager;
     }

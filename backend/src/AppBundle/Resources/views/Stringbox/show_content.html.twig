@@ -1,50 +1,3 @@
-
-{#
-    <h1>Stringbox</h1>
-
-    <table>
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ stringBox.id }}</td>
-            </tr>
-            <tr>
-                <th>Code</th>
-                <td>{{ stringBox.code }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ stringBox.description }}</td>
-            </tr>
-            <tr>
-                <th>Inputs</th>
-                <td>{{ stringBox.inputs }}</td>
-            </tr>
-            <tr>
-                <th>Outputs</th>
-                <td>{{ stringBox.outputs }}</td>
-            </tr>
-            <tr>
-                <th>Fuses</th>
-                <td>{{ stringBox.fuses }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('stringbox_index') }}">Back to the list</a>
-        </li>
-        <li>
-            <a href="{{ path('stringbox_edit', { 'id': stringBox.id }) }}">Edit</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>#}
-
     <div class="wrapper wrapper-content animated fadeInRight">
 
         <div class="row">
@@ -89,6 +42,10 @@
                                         <tr>
                                             <td width="35%">Código</td>
                                             <td>{{ stringBox.code }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td width="35%">Fabricante</td>
+                                            <td>{{ stringBox.maker }}</td>
                                         </tr>
                                         <tr>
                                             <td>Descrição</td>

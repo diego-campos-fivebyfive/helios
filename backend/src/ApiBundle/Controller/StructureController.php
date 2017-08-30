@@ -10,6 +10,8 @@ use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class StructureController extends FOSRestController
 {
@@ -46,6 +48,32 @@ class StructureController extends FOSRestController
         $data = $this->get('api_formatter')->format($structure, ['maker' => 'id']);
 
         $view = View::create($data);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Route("/{code}")
+     * @ParamConverter("code", class="AppBundle:Component\Structure", options={"mapping":{"code" : "code"}})
+     */
+    public function putStructureAction(Request $request, Structure $code)
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $structureManager = $this->get('structure_manager');
+        $code->setPromotional($data['promotional']);
+
+        try {
+            $structureManager->save($code);
+            $status = Response::HTTP_CREATED;
+            $data = $this->get('api_formatter')->format($code, ['maker' => 'id']);
+        }
+        catch (\Exception $exception) {
+            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+            $data = 'Can not update Structure';
+        }
+
+        $view = View::create($data)->setStatusCode($status);
 
         return $this->handleView($view);
     }
