@@ -77,8 +77,23 @@ class InverterType extends AbstractType
             'label' => 'Disponivel',
             'required' => false,
             //'disabled' => true
-        ])
-        ->add('code', TextType::class);
+        ]);
+        $builder->add('connection_type', null,[
+            'required' => false
+        ]);
+        $builder->add('phases', null,[
+            'required' => false
+        ]);
+        $builder->add('phase_voltage', null,[
+            'required' => false
+        ]);
+        $builder->add('mppt_parallel', null,[
+            'required' => false
+        ]);
+        $builder->add('mppt_connections', null,[
+            'required' => false
+        ]);
+        $builder->add('code', TextType::class);
     }
 
     /**

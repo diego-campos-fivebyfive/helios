@@ -46,6 +46,10 @@
                                         <td>{{ 'Model'|trans }}</td>
                                         <td>{{ inverter.model }}</td>
                                     </tr>
+                                    <tr>
+                                        <td>Tipo de Conexão</td>
+                                        <td>{{ inverter.connectionType }}</td>
+                                    </tr>
                                     {% if inverter.datasheet %}
                                         <tr>
                                             <td>{{ 'Datasheet'|trans }} PDF</td>
@@ -106,6 +110,22 @@
                                     <tr>
                                         <td>Tensão Máxima de MPPT</td>
                                         <td>{{ inverter.mpptMax|decimal }} V</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fase</td>
+                                        <td>{{ inverter.phases|decimal }} V</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tensão de Fase</td>
+                                        <td>{{ inverter.phaseVoltage|decimal }} V</td>
+                                    </tr>
+                                    <tr>
+                                        <td>MPPT Paralelo</td>
+                                        <td>{{ inverter.mpptParallel|decimal }} V</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Conexões MPPT</td>
+                                        <td>{{ inverter.mpptConnections|decimal }} V</td>
                                     </tr>
                                     </tbody>
                                 </table>
