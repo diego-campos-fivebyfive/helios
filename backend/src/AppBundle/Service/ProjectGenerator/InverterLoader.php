@@ -18,6 +18,11 @@ class InverterLoader
     private $fdiMax = 1;
 
     /**
+     * @var bool
+     */
+    private $promotional = false;
+
+    /**
      * @inheritDoc
      */
     public function __construct(InverterManager $manager)
@@ -32,6 +37,10 @@ class InverterLoader
     public function load(array &$defaults)
     {
         $method = self::method($defaults);
+
+        //$this->promotional = $defaults['is_promotional'];
+        //$this->promotional
+        //dump($this); die;
 
         $phaseNumber = $defaults['phases'];
         $phaseVoltage = $defaults['voltage'];

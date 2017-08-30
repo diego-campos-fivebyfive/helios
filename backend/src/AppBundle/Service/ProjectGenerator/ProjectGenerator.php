@@ -4,6 +4,7 @@ namespace AppBundle\Service\ProjectGenerator;
 
 use AppBundle\Entity\Component\InverterInterface;
 use AppBundle\Entity\Component\MakerInterface;
+use AppBundle\Entity\Component\ModuleInterface;
 use AppBundle\Entity\Component\ProjectArea;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverter;
@@ -89,6 +90,7 @@ class ProjectGenerator
             'inverter_maker' => 60627,
             'structure_maker' => StructureCalculator::DEFAULT_STRUCTURE_MAKER,
             'string_box_maker' => 61209,
+            'is_promotional' => false,
             'errors' => []
         ], $defaults);
     }
@@ -227,15 +229,22 @@ class ProjectGenerator
     public function generateModules(ProjectInterface $project)
     {
         $defaults = $project->getDefaults();
-        $module = $this->manager('module')->find($defaults['module']);
-        $position = 0;
 
-        $projectModule = new ProjectModule();
-        $projectModule
-            ->setModule($module)
-            ->setProject($this->project)
-            ->setPosition($position)
-        ;
+        $criteria = ['id' => $defaults['module']];
+        if($defaults['is_promotional']){
+            $criteria['promotional'] = true;
+        }
+
+        $module = $this->manager('module')->findOneBy($criteria);
+
+        if($module instanceof ModuleInterface) {
+
+            $projectModule = new ProjectModule();
+            $projectModule
+                ->setModule($module)
+                ->setProject($this->project);
+
+        }
 
         return $this;
     }

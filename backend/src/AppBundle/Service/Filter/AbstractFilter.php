@@ -207,6 +207,17 @@ use Doctrine\ORM\EntityManagerInterface;
     }
 
     /**
+     * @param $field
+     * @return $this
+     */
+    public function group($field)
+    {
+        $this->qb->addGroupBy(self::field($field));
+
+        return $this;
+    }
+
+    /**
      * Initialize Query Builder
      */
     private function initialize()

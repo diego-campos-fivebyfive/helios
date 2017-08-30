@@ -305,6 +305,16 @@
                             </div>
 
                             <div class="col-md-12" id="block_components">
+
+                                <div class="panel panel-warning">
+                                    <div class="panel-heading">
+                                        Form Generator
+                                    </div>
+                                    <div class="panel-body" id="form_generator_container">
+
+                                    </div>
+                                </div>
+
                                 <div class="panel panel-info">
                                     <div class="panel-heading" id="info_components">
                                         {% if project.id is not null %}
@@ -524,6 +534,15 @@
                         }
                     });
                 }
+            },
+            getFormGenerator: function(){
+
+                Request.send({
+                    url: '{{ path('form_generator',{project:project.id}) }}',
+                    callback: function(xhr){
+                        $('#form_generator_container').html(xhr.responseText);
+                    }
+                });
             },
             replaceId: function(source){
                 return source.replace(/_id_/g, ProjectManager.project.id);
@@ -768,6 +787,8 @@
                     $('#generator_grid_phase_number'),
                     $('#generator_grid_voltage')
                 );
+
+                this.getFormGenerator();
             }
         };
 

@@ -63,6 +63,13 @@ class Memorial implements MemorialInterface
         $this->ranges = new ArrayCollection();
     }
 
+    /**
+     * @inheritDoc
+     */
+    function __toString()
+    {
+        return (string) $this->version . ' - ' . $this->startAt->format('d/m/Y');
+    }
 
     /**
      * Get id

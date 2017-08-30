@@ -28,13 +28,9 @@ class ProjectGeneratorController extends AbstractController
     /**
      * @Route("/", name="project_generator")
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
-        $form = $this->createForm(GeneratorType::class);
-
-        return $this->render('generator.index', [
-            'form' => $form->createView()
-        ]);
+        return $this->render('generator.index');
     }
 
     /**

@@ -1,15 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: claudinei
- * Date: 29/08/17
- * Time: 17:07
- */
 
 namespace AppBundle\Service\ProjectGenerator\Checker;
 
+use AppBundle\Service\Filter\AbstractFilter;
 
-class ComponentFilter
+class Filter extends AbstractFilter
 {
 
 }

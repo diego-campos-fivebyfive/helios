@@ -134,6 +134,76 @@ class ProjectController extends AbstractController
     }
 
     /**
+     * @Route("/generator/form", name="form_generator")
+     */
+    public function formGeneratorAction(Request $request)
+    {
+        $createForm = function(array $data, $action){
+            return $this->createForm(GeneratorType::class, $data, [
+                'action' => $action
+            ]);
+        };
+
+        $action = $request->getUri();
+        $generator = $this->getGenerator();
+        $defaults = $generator->loadDefaults();
+
+        if(null != $id = $request->query->get('project')){
+            $project = $this->manager('project')->find($id);
+            $defaults = $project->getDefaults();
+        }
+
+        $form = $createForm($defaults, $action);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted()){
+            $form = $createForm($form->getData(), $action);
+        }
+
+        return $this->render('project.form_generator', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/generator/generate", name="generator_generate")
+     */
+    public function generateAction(Request $request)
+    {
+        $project = null;
+        $generator = $this->getGenerator();
+        $defaults = $generator->loadDefaults();
+
+        if(null != $id = $request->query->get('project')){
+            $project = $this->manager('project')->find($id);
+            $defaults = $project->getDefaults();
+        }
+
+        $form = $this->createForm(GeneratorType::class, $defaults);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            if(!$project) $project = $this->manager('project')->create();
+
+            $generator->reset($project);
+
+            $project->setDefaults($defaults);
+
+            $generator->generate($project);
+
+            return $this->json([
+                'project' => [
+                    'id' => $project->getId(),
+                    'power' => $project->getPower()
+                ]
+            ]);
+        }
+
+        return $this->json([], Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
      * @Route("/create", name="project_create")
      * @Breadcrumb("Novo Projeto")
      */

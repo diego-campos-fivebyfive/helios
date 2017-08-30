@@ -8,12 +8,15 @@ use AppBundle\Entity\Component\Maker;
 use AppBundle\Entity\Component\Module;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Service\ProjectGenerator\Checker\Checker;
 use AppBundle\Service\ProjectGenerator\ModuleProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -24,16 +27,16 @@ class GeneratorType extends AbstractType
     const CHANGE = 'change';
 
     /**
-     * @var EntityManagerInterface
+     * @var Checker
      */
-    private $em;
+    private $checker;
 
     /**
-     * @inheritDoc
+     * @param Checker $checker
      */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(Checker $checker)
     {
-        $this->em = $em;
+        $this->checker = $checker;
     }
 
     /**
@@ -41,6 +44,17 @@ class GeneratorType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $defaults = $options['data'];
+
+        $result = $this->checker->checkDefaults($defaults);
+
+        $modules = $result['modules'];
+        $inverterMakers = $result['inverter_makers'];
+        $stringBoxMakers = $result['string_box_makers'];
+        $structureMakers = $result['structure_makers'];
+        $gridVoltages = $result['grid_voltages'];
+        $gridPhaseNumbers = $result['grid_phase_numbers'];
+
         $member = $options['member'];
 
         if($member instanceof MemberInterface) {
@@ -54,6 +68,17 @@ class GeneratorType extends AbstractType
                 ->add('stage', ChoiceType::class, [
                     'choices' => $this->loadStages($member->getAccount())
                 ]);
+
+        }else{
+
+            $builder
+                ->add('customer', ChoiceType::class, [
+                    'choices' => []
+                ])
+                ->add('stage', ChoiceType::class, [
+                    'choices' => []
+                ]);
+
         }
 
         $builder
@@ -64,17 +89,10 @@ class GeneratorType extends AbstractType
                 'required' => false
             ])
             ->add('grid_voltage', ChoiceType::class, [
-                'choices' => [
-                    '127/220' => '127/220',
-                    '220/380' => '220/380'
-                ]
+                'choices' => $gridVoltages
             ])
             ->add('grid_phase_number', ChoiceType::class, [
-                'choices' => [
-                    'Monophasic' => 'Monophasic',
-                    'Biphasic' => 'Biphasic',
-                    'Triphasic' => 'Triphasic'
-                ]
+                'choices' => $gridPhaseNumbers
             ])
             ->add('use_transformer', CheckboxType::class, [
                 'required' => false
@@ -99,18 +117,30 @@ class GeneratorType extends AbstractType
                 'choices' => Project::getRoofTypes()
             ])
             ->add('module', ChoiceType::class, [
-                'choices' => $this->loadModules()
+                'choices' => self::createChoices($modules)
             ])
             ->add('inverter_maker', ChoiceType::class, [
-                'choices' => $this->loadInverterMakers()
+                'choices' => self::createChoices($inverterMakers)
             ])
             ->add('structure_maker', ChoiceType::class, [
-                'choices' => $this->loadStructureMakers()
+                'choices' => self::createChoices($structureMakers)
             ])
             ->add('string_box_maker', ChoiceType::class, [
-                'choices' => $this->getStringBoxMakers()
+                'choices' => self::createChoices($stringBoxMakers)
             ])
             ->add('is_promotional', CheckboxType::class, [
+                'required' => false
+            ])
+            ->add('inf_power', null, [
+                'required' => false
+            ])
+            ->add('voltage', null, [
+                'required' => false
+            ])
+            ->add('phases', null, [
+                'required' => false
+            ])
+            ->add('power_increments', null, [
                 'required' => false
             ])
         ;
@@ -130,55 +160,14 @@ class GeneratorType extends AbstractType
 
     private function loadStages(AccountInterface $account)
     {
-        $stages = $this->em->getRepository(Category::class)->findBy(
+        $em = $this->checker->getEntityManager();
+
+        $stages = $em->getRepository(Category::class)->findBy(
             ['account' => $account, 'context' => Category::CONTEXT_SALE_STAGE],
             ['position' => 'asc']
         );
 
         return $this->createChoices($stages);
-    }
-
-    /**
-     * @return array
-     */
-    private function loadModules()
-    {
-        return $this->createChoices($this->em->getRepository(Module::class)->findBy(ModuleProvider::$criteria));
-    }
-
-    /**
-     * @return array
-     */
-    private function loadInverterMakers()
-    {
-        return $this->createChoices($this->loadMakers(Maker::CONTEXT_INVERTER));
-    }
-
-    /**
-     * @return array
-     */
-    private function loadStructureMakers()
-    {
-        return $this->createChoices($this->loadMakers(Maker::CONTEXT_STRUCTURE));
-    }
-
-    /**
-     * @return array
-     */
-    private function getStringBoxMakers()
-    {
-        return $this->createChoices($this->loadMakers(Maker::CONTEXT_STRING_BOX));
-    }
-
-    /**
-     * @param $context
-     * @return array
-     */
-    private function loadMakers($context)
-    {
-        return $this->em->getRepository(Maker::class)->findBy([
-            'context' => $context
-        ]);
     }
 
     /**
@@ -191,7 +180,7 @@ class GeneratorType extends AbstractType
         }, $data);
 
         $labels = array_map(function ($entity) {
-            return (string)$entity;
+            return (string) $entity;
         }, $data);
 
         $choices = array_combine($ids, $labels);

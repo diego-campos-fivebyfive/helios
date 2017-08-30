@@ -189,9 +189,13 @@ services:
         class: AppBundle\Service\ProjectGenerator\Precifier
         arguments: ['@memorial_loader', '@range_loader', '@margin_manager']
 
+    generator_checker:
+        class: AppBundle\Service\ProjectGenerator\Checker\Checker
+        arguments: ['@service_container']
+
     project_generator_type:
         class: AppBundle\Form\Component\GeneratorType
-        arguments: ['@doctrine.orm.entity_manager']
+        arguments: ['@generator_checker']
         tags:
             - { name: form.type }
 
