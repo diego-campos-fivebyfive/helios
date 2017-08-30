@@ -16,7 +16,8 @@ const services = {
   MODULO: Sices.updateModule,
   ESTRUTURA: Sices.updateStructure,
   STRINGBOX: Sices.updateStringbox,
-  VARIEDADE: Sices.updateVariety
+  CABOS: Sices.updateVariety,
+  CONECTORES: Sices.updateVariety
 }
 
 const getLevel = type => levels[type]
