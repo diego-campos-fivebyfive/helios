@@ -41,15 +41,15 @@ interface ElementInterface
     public function getDescription();
 
     /**
-     * @param $tag
+     * @param $family
      * @return ElementInterface
      */
-    public function setTag($tag);
+    public function setFamily($family);
 
     /**
      * @return string
      */
-    public function getTag();
+    public function getFamily();
 
     /**
      * @param $quantity
