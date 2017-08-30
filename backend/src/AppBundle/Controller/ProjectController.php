@@ -45,8 +45,13 @@ class ProjectController extends AbstractController
         }
 
         $filterMember = null;
-        if($member->isOwner() && null != $memberId = $request->get('member')){
+        if($member->isOwner() && 'all' != $memberId = $request->get('member')){
+
+            if(null == $memberId = $request->get('member'))
+                $memberId = $member->getId();
+
             $filterMember = $this->manager('customer')->find($memberId);
+
             if($filterMember instanceof BusinessInterface
                 && $filterMember->getAccount()->getId() == $account->getId()){
                 $ids = [$filterMember->getId()];
