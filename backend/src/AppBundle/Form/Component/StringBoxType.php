@@ -15,13 +15,13 @@ class StringBoxType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('code')
-            ->add('description')
-            ->add('inputs')
-            ->add('outputs')
-            ->add('fuses')
-            ->add('maker')
-            ->add('status');
+            ->add('code', null, ['required' => false])
+            ->add('description', null, ['required' => false])
+            ->add('inputs', null, ['required' => false])
+            ->add('outputs', null, ['required' => false])
+            ->add('fuses', null, ['required' => false])
+            ->add('maker', null, ['required' => false])
+            ->add('status', null, ['required' => false]);
         $builder->add('available', CheckboxType::class, [
             'label' => 'Disponivel',
             'required' => false,
