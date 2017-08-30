@@ -410,7 +410,7 @@ class MemberController extends AbstractController
         $this->getSessionStorage()->remove($context);*/
 
         if ($entity->isOwner()) {
-            $entity->setTeam(null);
+            $entity->setType(null);
         }
 
         if(null != $user = $entity->getUser()) {

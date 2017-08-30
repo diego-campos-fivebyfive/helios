@@ -88,8 +88,11 @@ class Main implements ContainerAwareInterface
                 'route' => 'kit_index',
                 'extras' => ['icon' => App::icons('money')]
             ]);
+        }
 
-            $this->addComponents($menu, $user);
+        $this->addComponents($menu, $user);
+
+        if($user->isOwner() || $user->isOwnerMaster()){
 
             $menu->addChild('Climatic data', [
                 'route' => 'nasa',
