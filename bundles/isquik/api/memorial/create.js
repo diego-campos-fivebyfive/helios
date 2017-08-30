@@ -11,7 +11,7 @@ const levels = {
   PROMOCIONAL: 'promotional'
 }
 
-const components = {
+const services = {
   INVERSOR: Sices.updateInverter,
   MODULO: Sices.updateModule,
   ESTRUTURA: Sices.updateStructure,
@@ -20,13 +20,14 @@ const components = {
 }
 
 const getLevel = type => levels[type]
-const getFamilyComponent = family => components[family]
+const getService = family => services[family]
 
 const splitMemorial = ({ Dados: memorial }) => ({
   version: memorial.Versao,
   status: memorial.FlagPublicado,
-  range: memorial.Produtos.map(range => ({
+  ranges: memorial.Produtos.map(range => ({
     code: range.Codigo,
+    family: range.Grupo,
     promotional: range.FlagPromocional,
     markups: range.Faixas.map(markup => ({
       initial: markup.De,
@@ -40,9 +41,8 @@ const splitMemorial = ({ Dados: memorial }) => ({
 })
 
 const updatePromotional = memorial => {
-  memorial.range.forEach(({ code, family, promotional }) => {
-    const updateComponent = getFamilyComponent(family)
-    updateComponent(code, { promotional })
+  memorial.ranges.forEach(({ code, family, promotional }) => {
+    getService(family)(code, { promotional })
   })
   return memorial
 }
