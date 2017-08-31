@@ -47,6 +47,8 @@ elif [ $1 = '--production' ]; then
   cp $path/.backup/devops/aws/homolog.pem $path/devops/aws/homolog.pem
   rm $path/backend/app/config/parameters.yml
   cp $path/.backup/backend/app/config/parameters.yml $path/backend/app/config/parameters.yml
+  rm $path/backend/src/AppBundle/Service/Notifier/Notifier.php
+  cp $path/.backup/backend/src/AppBundle/Service/Notifier/Notifier.php $path/backend/src/AppBundle/Service/Notifier/Notifier.php
   # Finish Remove it
 
 fi
