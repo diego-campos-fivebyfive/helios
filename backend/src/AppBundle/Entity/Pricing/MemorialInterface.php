@@ -56,10 +56,10 @@ interface MemorialInterface
     public function getStatus();
 
     /**
-     * @param $isquik_id
+     * @param $isquikId
      * @return MemorialInterface
      */
-    public function setIsquikId($isquik_id);
+    public function setIsquikId($isquikId);
 
     /**
      * @return int
@@ -81,4 +81,9 @@ interface MemorialInterface
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getRanges();
+
+    /**
+     * @return array
+     */
+    public function toArray();
 }

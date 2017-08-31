@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Order;
 
 use AppBundle\Entity\AccountInterface;
+use AppBundle\Entity\MetadataTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
@@ -15,6 +16,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  */
 class Order implements OrderInterface
 {
+    use MetadataTrait;
     use ORMBehaviors\Timestampable\Timestampable;
 
     /**
