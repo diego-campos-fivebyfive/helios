@@ -38,6 +38,7 @@ class MemorialController extends FOSRestController
         $memorial = $memorialManager->create();
         $memorial
             ->setVersion($data['version'])
+            ->setIsquikId($data['isquik_id'])
             ->setStatus($data['status'])
             ->setStartAt(new \DateTime('now'));
 
