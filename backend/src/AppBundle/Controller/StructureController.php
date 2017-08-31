@@ -20,8 +20,6 @@ use AppBundle\Service\Notifier\Notifier;
  *
  * @Route("structure")
  *
- * @Security("has_role('ROLE_OWNER')")
- *
  * @Breadcrumb("Dashboard", route={"name"="app_index"})
  * @Breadcrumb("Estruturas", route={"name"="structure_index"})
  */

@@ -229,7 +229,7 @@ class ProjectGeneratorController extends AbstractController
      */
     public function updateOrderElementAction(Element $element, Request $request)
     {
-        $componentManager = $this->manager($element->getTag());
+        $componentManager = $this->manager($element->getFamily());
         $manager = $this->manager('order_element');
 
         $form = $this->createForm(ElementType::class, $element, [

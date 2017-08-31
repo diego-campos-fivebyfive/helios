@@ -19,7 +19,6 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 /**
  * @Route("components/{type}")
  *
- * @Security("has_role('ROLE_OWNER')")
  *
  * @Breadcrumb("Dashboard", route={"name"="app_index"})
  * @Breadcrumb("{type}s", route={"name"="components", "parameters"={"type":"{type}"}})
