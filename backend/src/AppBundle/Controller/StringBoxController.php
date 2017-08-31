@@ -19,7 +19,6 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
  * @Route("stringbox")
  * @Breadcrumb("String Box")
  *
- * @Security("has_role('ROLE_OWNER')")
  */
 class StringBoxController extends AbstractController
 {
