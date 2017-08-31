@@ -42,7 +42,7 @@ class OrdersController extends AbstractApiController
                     'description' => $element->getDescription(),
                     'quantity' => $element->getQuantity(),
                     'unit_price' => $element->getUnitPrice(),
-                    'tag' => $element->getTag()
+                    'family' => $element->getFamily()
                 ];
             }
 
@@ -111,7 +111,9 @@ class OrdersController extends AbstractApiController
             foreach ($data['products'] as $product) {
                 $element = new Element();
                 ElementResolver::update($element, $product);
-                $order->addElement($element);
+                $order
+                    ->addElement($element)
+                    ->addElement($element->setFamily($product['family']));
             }
 
             $order

@@ -38,7 +38,7 @@ class Element implements ElementInterface
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    private $tag;
+    private $family;
 
     /**
      * @var int
@@ -137,21 +137,21 @@ class Element implements ElementInterface
     }
 
     /**
-     * @inheritDoc
-     */
-    public function setTag($tag)
+     @inheritDoc
+    */
+    public function setFamily($family)
     {
-        $this->tag = $tag;
+        $this->family = $family;
 
         return $this;
     }
 
     /**
-     * @inheritDoc
-     */
-    public function getTag()
+     @inheritDoc
+    */
+    public function getFamily()
     {
-        return $this->tag;
+        return $this->family;
     }
 
     /**

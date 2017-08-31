@@ -100,7 +100,7 @@ class OrderTransformer
      * @param $unitPrice
      * @param $quantity
      */
-    private function addOrderElement(OrderInterface $order, $code, $description, $unitPrice, $quantity, $tag, array $metadata = [])
+    private function addOrderElement(OrderInterface $order, $code, $description, $unitPrice, $quantity, $family, array $metadata = [])
     {
         $element = new Element();
         $element
@@ -108,7 +108,7 @@ class OrderTransformer
             ->setDescription($description)
             ->setQuantity($quantity)
             ->setUnitPrice($unitPrice)
-            ->setTag($tag)
+            ->setFamily($family)
             ->setMetadata($metadata)
         ;
 
