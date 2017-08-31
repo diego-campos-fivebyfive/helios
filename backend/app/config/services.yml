@@ -53,6 +53,10 @@ services:
         class: AppBundle\Manager\MpptManager
         arguments: ['AppBundle\Entity\Project\MpptOperation', '@doctrine']
 
+    notification_manager:
+        class: AppBundle\Manager\NotificationManager
+        arguments: ['AppBundle\Entity\Notification', '@doctrine']
+
     inverter_manager:
         class: AppBundle\Manager\InverterManager
         arguments: ['AppBundle\Entity\Component\Inverter', '@doctrine']
