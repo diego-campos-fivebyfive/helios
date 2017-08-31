@@ -17,7 +17,6 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 class Order implements OrderInterface
 {
     use MetadataTrait;
-
     use ORMBehaviors\Timestampable\Timestampable;
 
     /**
