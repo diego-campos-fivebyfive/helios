@@ -7,6 +7,7 @@ echo 'Fixing permissions...'
 if [ -z ${1+x} ] || [ $1 == '--development' ]; then
 
   chmod 600 devops/aws/homolog.pem
+  chmod 600 devops/aws/staging.pem
 
 elif [ $1 == '--homolog' ]; then
 
