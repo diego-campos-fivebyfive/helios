@@ -27,13 +27,22 @@ if [ $1 = '--homolog' ] || [ $1 = '--staging' ]; then
 
 elif [ $1 = '--production' ]; then
 
-  if [ -z ${2+x} ]; then
-    origin='staging'
-  else
-    origin=${2/--/}
-  fi
+  if [ -z ${2+x} ] || [ $2 = '--staging' ]; then
 
-  source $CLI_PATH/config/$origin/variables
+    source $CLI_PATH/config/staging/variables
+    host=$SICES_STAGING_IP
+    origin='staging'
+
+  elif [ $2 = '--homolog' ]; then
+
+    source $CLI_PATH/config/homolog/variables
+    host=$SICES_HOMOLOG_IP
+    origin='homolog'
+
+  else
+    "Invalid origin server argument"
+    exit 1
+  fi
 
   path=$SICES_PATH
 
@@ -42,7 +51,7 @@ elif [ $1 = '--production' ]; then
 
   echo "Importing Temp files from $origin Server..."
   rsync -azvv --delete -e \
-    "ssh -i $path/devops/aws/$origin.pem" admin@54.233.150.10:$path/** $path/.temp
+    "ssh -i $path/devops/aws/$origin.pem" admin@$host:$path/** $path/.temp
 
   echo "Deploying files from Temp..."
   rsync -avzh --delete $path/.temp/** $path
