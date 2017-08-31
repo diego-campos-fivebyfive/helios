@@ -147,7 +147,7 @@ class ComponentExtractor
         return [
             'code' => $module->getCode(),
             'description' => $module->getDescription(),
-            'tag' => ElementInterface::TAG_MODULE,
+            'family' => ElementInterface::FAMILY_MODULE,
             'metadata' => self::extractMetadata($module)
         ];
     }
@@ -191,7 +191,7 @@ class ComponentExtractor
         return [
             'code' => $inverter->getCode(),
             'description' => $inverter->getDescription(),
-            'tag' => ElementInterface::TAG_INVERTER,
+            'family' => ElementInterface::FAMILY_INVERTER,
             'metadata' => self::extractMetadata($inverter)
         ];
     }
@@ -233,7 +233,7 @@ class ComponentExtractor
         return [
             'code' => $stringBox->getCode(),
             'description' => $stringBox->getDescription(),
-            'tag' => ElementInterface::TAG_STRING_BOX,
+            'family' => ElementInterface::FAMILY_STRING_BOX,
             'metadata' => self::extractMetadata($stringBox)
         ];
     }
@@ -275,7 +275,7 @@ class ComponentExtractor
         return [
             'code' => $structure->getCode(),
             'description' => $structure->getDescription(),
-            'tag' => ElementInterface::TAG_STRUCTURE,
+            'family' => ElementInterface::FAMILY_STRUCTURE,
             'metadata' => self::extractMetadata($structure)
         ];
     }
@@ -317,7 +317,7 @@ class ComponentExtractor
         return [
             'code' => $variety->getCode(),
             'description' => $variety->getDescription(),
-            'tag' => ElementInterface::TAG_VARIETY,
+            'family' => ElementInterface::FAMILY_VARIETY,
             'metadata' => self::extractMetadata($variety)
         ];
     }
