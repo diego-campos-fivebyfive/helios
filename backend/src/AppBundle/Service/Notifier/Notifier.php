@@ -27,7 +27,7 @@ class Notifier
         $baseUri = 'https://api.isquik.com:443/isquik-dev';
 
         $auth = $this->getToken("$baseUri/auth");
-        $this->sendNotification($notification, $auth, "$baseUri/$ambience/$route");
+        $this->sendNotification($notification, $auth, "$baseUri/isquik-dev/$route");
     }
 
     public function getToken ($url)
