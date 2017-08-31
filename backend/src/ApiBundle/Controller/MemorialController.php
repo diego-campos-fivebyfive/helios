@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class MemorialController extends FOSRestController
 {
-    public function postMemorialsAction(Request $request)
+    public function postMemorialAction(Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
