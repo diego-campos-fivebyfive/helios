@@ -35,7 +35,7 @@ class StructureController extends FOSRestController
             $data = $this->get('api_formatter')->format($structure, ['maker' => 'id']);
         }catch (\Exception $exception){
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $data = 'Can not create Structure';
+            $data = $exception;
         }
 
         $view = View::create($data)->setStatusCode($status);
@@ -70,7 +70,7 @@ class StructureController extends FOSRestController
         }
         catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $data = 'Can not update Structure';
+            $data = $exception;
         }
 
         $view = View::create($data)->setStatusCode($status);

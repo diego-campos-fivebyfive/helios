@@ -42,8 +42,6 @@ class MemorialController extends FOSRestController
             ->setStatus($data['status'])
             ->setStartAt(new \DateTime('now'));
 
-        $memorialManager->save($memorial);
-
         $offset = count($data['ranges']) -1;
 
         foreach ($data['ranges'] as $key => $config) {
@@ -62,11 +60,21 @@ class MemorialController extends FOSRestController
                         ->setLevel($level['level'])
                         ->setPrice($level['price']);
 
-                    $rangeManager->save($range, $offset == $key);
+                    $memorial->addRange($range, $offset == $key);
                 }
             }
         }
-        $view = View::create();
+
+        try {
+            $memorialManager->save($memorial);
+            $status = Response::HTTP_CREATED;
+            $data = $this->get('api_formatter')->format($memorial);
+        } catch (\Exception $exception) {
+            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+            $data = $exception;
+        }
+
+        $view = View::create($data)->setStatusCode($status);
         return $this->handleView($view);
     }
 }
