@@ -19,7 +19,7 @@ fi
 
 echo "Cloning $1 files..."
 
-if [ $1 = '--homolog' ]; then
+if [ $1 = '--homolog' ] || [ $1 = '--staging' ]; then
 
   git fetch origin
   GIT_WORK_TREE=$SICES_PATH git checkout -f

@@ -31,9 +31,8 @@ if [ -z ${1+x} ] || [ $1 == '--development' ]; then
     # Move the command back-into foreground
     fg %- > /dev/null 2>&1;
   done
-fi
 
-if [[ $1 == '--homolog' ]] || [[ $1 == '--production' ]]; then
+else
 
   echo "Isquik bundle starting on $CES_BUNDLE_HOST:$CES_BUNDLE_PORT"
   $isquik/node_modules/.bin/pm2 start $isquik/index.js --node-args="--harmony" -n "bundle"
