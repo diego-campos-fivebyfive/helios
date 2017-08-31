@@ -71,7 +71,7 @@ class MemorialController extends FOSRestController
             $data = $this->get('api_formatter')->format($memorial);
         } catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $data = 'Can not create Memorial';
+            $data = $exception;
         }
 
         $view = View::create($data)->setStatusCode($status);
