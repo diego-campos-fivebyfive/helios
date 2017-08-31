@@ -29,26 +29,26 @@ elif [ $1 = '--production' ]; then
 
   path=$SICES_PATH
 
-  echo "Creating current version Backup..."
-  rsync -avzh --delete $path/** $path/.backup
-
   echo "Importing Temp files from homolog..."
   rsync -azvv --delete -e "ssh -i $path/devops/aws/homolog.pem" admin@54.233.150.10:$path/** $path/.temp
 
-  echo "Deploying files from Temp..."
-  rsync -avzh --delete $path/.temp/** $path
+  echo "Creating current version Backup..."
+  rsync -avzh --delete $path/** $path/.backup
 
   echo "Moving untracked files..."
-  rsync -avzh $path/.backup/backend/web/uploads/** $path/backend/web/uploads
-  rsync -avzh $path/.backup/backend/storage/** $path/backend/storage
+  rsync -avzh $path/.backup/backend/web/uploads/** $path/.temp/backend/web/uploads
+  rsync -avzh $path/.backup/backend/storage/** $path/.temp/backend/storage
 
   # Remove it after deploy command optimizations
-  rm $path/devops/aws/homolog.pem
-  cp $path/.backup/devops/aws/homolog.pem $path/devops/aws/homolog.pem
-  rm $path/backend/app/config/parameters.yml
-  cp $path/.backup/backend/app/config/parameters.yml $path/backend/app/config/parameters.yml
-  rm $path/backend/src/AppBundle/Service/Notifier/Notifier.php
-  cp $path/.backup/backend/src/AppBundle/Service/Notifier/Notifier.php $path/backend/src/AppBundle/Service/Notifier/Notifier.php
+  rm $path/.temp/devops/aws/homolog.pem
+  cp $path/.backup/devops/aws/homolog.pem $path/.temp/devops/aws/homolog.pem
+  rm $path/.temp/backend/app/config/parameters.yml
+  cp $path/.backup/backend/app/config/parameters.yml $path/.temp/backend/app/config/parameters.yml
+  rm $path/.temp/backend/src/AppBundle/Service/Notifier/Notifier.php
+  cp $path/.backup/backend/src/AppBundle/Service/Notifier/Notifier.php $path/.temp/backend/src/AppBundle/Service/Notifier/Notifier.php
   # Finish Remove it
+
+  echo "Deploying files from Temp..."
+  rsync -avzh --delete $path/.temp/** $path
 
 fi
