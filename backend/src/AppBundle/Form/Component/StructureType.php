@@ -20,11 +20,11 @@ class StructureType extends AbstractType
     {
 
 
-        $builder->add('code')
-                ->add('type')
-                ->add('subtype')
-                ->add('description')
-                ->add('size')
+        $builder->add('code', null, ['required' => false])
+                ->add('type', null, ['required' => false])
+                ->add('subtype', null, ['required' => false])
+                ->add('description', null, ['required' => false])
+                ->add('size', null, ['required' => false])
                 ->add('status', CheckboxType::class, [
                     'label'  => 'Ativo',
                     'required' => false

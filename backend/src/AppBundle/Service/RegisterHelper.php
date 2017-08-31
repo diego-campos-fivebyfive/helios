@@ -35,7 +35,7 @@ class RegisterHelper
         unset($data['contact']);
 
         $data['country'] = 'BR';
-        $data['level'] = 'platinum';
+        $data['level'] = 'partner';
         $data['context'] = BusinessInterface::CONTEXT_ACCOUNT;
 
         $this->fillObject($account, $data);

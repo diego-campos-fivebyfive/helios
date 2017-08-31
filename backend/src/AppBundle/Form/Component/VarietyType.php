@@ -15,13 +15,13 @@ class VarietyType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('type')
-            ->add('subtype')
-            ->add('code')
-            ->add('power')
-            ->add('description')
-            ->add('maker')
-            ->add('status');
+            ->add('type', null, ['required' => false])
+            ->add('subtype', null, ['required' => false])
+            ->add('code', null, ['required' => false])
+            ->add('power', null, ['required' => false])
+            ->add('description', null, ['required' => false])
+            ->add('maker', null, ['required' => false])
+            ->add('status', null, ['required' => false]);
         $builder->add('available', CheckboxType::class, [
         'label' => 'Disponivel',
         'required' => false,
