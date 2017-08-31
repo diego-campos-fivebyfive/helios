@@ -80,7 +80,6 @@ class Memorial implements MemorialInterface
             'isquik_id' => $this->isquikId,
             'version' => $this->version,
             'start_at' => $this->startAt->format('Y-m-d H:i:s'),
-            'end_at' => $this->endAt->format('Y-m-d H:i:s'),
             'status' => $this->status
         ];
     }
