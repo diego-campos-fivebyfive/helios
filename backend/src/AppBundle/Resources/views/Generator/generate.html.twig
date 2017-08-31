@@ -118,7 +118,7 @@
     {# MODULES #}
     {% for projectModule in project.projectModules %}
         <tr>
-            <td> {{ projectModule.module.code }} </td>
+            <td> {{ projectModule.module.id }} </td>
             <td>
                 <a data-toggle="modal" data-target="#modal_component"
                    data-url="{{ path('component_show', {type:'module', id:projectModule.module.id}) }}">
@@ -133,7 +133,7 @@
     {# INVERTERS #}
     {% for id, group in project.groupInverters %}
         <tr>
-            <td> {{ group.inverter.code }} </td>
+            <td> {{ id }} </td>
             <td>
                 <a data-toggle="modal" data-target="#modal_component"
                    data-url="{{ path('component_show', {type:'inverter', id:group.inverter.id}) }}">

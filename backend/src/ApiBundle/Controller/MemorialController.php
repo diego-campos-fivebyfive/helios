@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class MemorialController extends FOSRestController
 {
-    public function postMemorialAction(Request $request)
+    public function postMemorialsAction(Request $request)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -21,6 +21,7 @@ class MemorialController extends FOSRestController
         $rangeManager = $this->get('range_manager');
 
         $existentMemorial = $memorialManager->findOneBy(['version' => $data['version']]);
+
         if ($existentMemorial) {
             $data = "This Memorial Already Existing!";
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
@@ -30,9 +31,7 @@ class MemorialController extends FOSRestController
         }
 
         $currentMemorial = $memorialManager->findOneBy(array(), array('id' => 'DESC'));
-        if ($currentMemorial) {
-            $currentMemorial->setEndAt(new \DateTime('now'));
-        }
+        $currentMemorial->setEndAt(new \DateTime('now'));
 
         /** @var Memorial $memorial */
         $memorial = $memorialManager->create();
