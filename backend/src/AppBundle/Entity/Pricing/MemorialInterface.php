@@ -56,6 +56,17 @@ interface MemorialInterface
     public function getStatus();
 
     /**
+     * @param $isquik_id
+     * @return MemorialInterface
+     */
+    public function setIsquikId($isquik_id);
+
+    /**
+     * @return int
+     */
+    public function getIsquikId();
+
+    /**
      * @return float
      */
     public function getTax();
