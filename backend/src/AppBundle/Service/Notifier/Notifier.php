@@ -64,6 +64,7 @@ class Notifier
         curl_setopt($notifier, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($notifier, CURLOPT_POST, true);
         curl_setopt($notifier, CURLOPT_POSTFIELDS, http_build_query($notification));
+        curl_exec($notifier);
         curl_close($notifier);
         return;
     }
