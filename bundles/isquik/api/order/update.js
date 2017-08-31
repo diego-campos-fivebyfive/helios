@@ -3,7 +3,7 @@
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
 
-const familys = {
+const families = {
     INVERSOR: 'inverter',
     MODULO: 'module',
     ESTRUTURA: 'structure',
@@ -12,7 +12,7 @@ const familys = {
     CONECTORES: 'variety'
 }
 
-const getFamily = family => familys[family]
+const getFamily = family => families[family]
 
 const splitOrder = ({ Dado: order }) => ({
   id: order.IdSicesSolar,
