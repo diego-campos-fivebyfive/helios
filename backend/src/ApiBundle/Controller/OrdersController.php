@@ -73,7 +73,7 @@ class OrdersController extends AbstractApiController
             'status' => $order->getStatus(),
             'memorial' => [
                 'isquik_id' => $order->getMetadata('memorial')['isquik_id'],
-                'sices_id' => $order->getMetadata('memorial')['id']
+                'id' => $order->getMetadata('memorial')['id']
             ]
         ];
 

@@ -4,7 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Parameter;
-use AppBundle\Entity\ParameterManager;
+use AppBundle\Manager\ParameterManager;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;

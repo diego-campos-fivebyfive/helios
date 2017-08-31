@@ -65,6 +65,10 @@ services:
         class: AppBundle\Manager\OrderElementManager
         arguments: ['AppBundle\Entity\Order\Element', '@doctrine']
 
+    parameter_manager:
+        class: AppBundle\Manager\ParameterManager
+        arguments: ['AppBundle\Entity\Parameter', '@doctrine']
+
     project_manager:
         class: AppBundle\Manager\ProjectManager
         arguments: ['AppBundle\Entity\Component\Project', '@doctrine']
@@ -183,7 +187,7 @@ services:
 
     margin_manager:
         class: AppBundle\Entity\Component\PricingManager
-        arguments: ['@app.parameter_manager', '@security.token_storage']
+        arguments: ['@parameter_manager', '@security.token_storage']
 
     project_precifier:
         class: AppBundle\Service\ProjectGenerator\Precifier
