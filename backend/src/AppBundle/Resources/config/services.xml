@@ -10,13 +10,8 @@
 
     <services>
 
-        <service id="app.parameter_manager" class="AppBundle\Entity\ParameterManager">
-            <argument>AppBundle\Entity\Parameter</argument>
-            <argument type="service" id="doctrine"/>
-        </service>
-
         <service id="app.document_helper" class="AppBundle\Service\DocumentHelper">
-            <argument type="service" id="app.parameter_manager"/>
+            <argument type="service" id="parameter_manager"/>
             <argument type="collection">
                 <argument type="string" key="storage">%kernel.root_dir%/../web/uploads/documents/</argument>
                 <argument type="string" key="root_dir">%kernel.root_dir%</argument>
