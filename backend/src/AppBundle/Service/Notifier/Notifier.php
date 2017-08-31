@@ -19,10 +19,12 @@ class Notifier
         $callback = $notification['Callback'];
         $route = $routes[$callback];
 
-        $host = getenv('CES_ISQUIK_HOST');
-        $port = getenv('CES_ISQUIK_PORT');
-        $ambience = getenv('CES_ISQUIK_AUTH_USER');
-        $baseUri = "$host:$port";
+        //$host = getenv('CES_ISQUIK_HOST');
+        //$port = getenv('CES_ISQUIK_PORT');
+        //$ambience = getenv('CES_ISQUIK_AUTH_USER');
+        //$baseUri = "$host:$port";
+
+        $baseUri = 'https://api.isquik.com:443/isquik-dev';
 
         $auth = $this->getToken("$baseUri/auth");
         $this->sendNotification($notification, $auth, "$baseUri/$ambience/$route");
@@ -30,9 +32,14 @@ class Notifier
 
     public function getToken ($url)
     {
-        $params = Array(
+        /*$params = Array(
             'Chave' => getenv('CES_ISQUIK_AUTH_KEY'),
             'Dominio' => getenv('CES_ISQUIK_AUTH_USER')
+        );*/
+
+        $params = Array(
+            'Chave' => '12eb45ec-b98f-4942-9124-b7b6b389088e',
+            'Dominio' => 'isquik-dev'
         );
 
         $ch = curl_init();
