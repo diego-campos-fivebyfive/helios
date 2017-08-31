@@ -24,7 +24,7 @@ class Notifier
         //$ambience = getenv('CES_ISQUIK_AUTH_USER');
         //$baseUri = "$host:$port";
 
-        $baseUri = 'https://api.isquik.com:443/isquik-dev';
+        $baseUri = 'https://api.isquik.com:443';
 
         $auth = $this->getToken("$baseUri/auth");
         $this->sendNotification($notification, $auth, "$baseUri/isquik-dev/$route");
