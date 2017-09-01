@@ -84,10 +84,12 @@ class Precifier
 
             /** @var \AppBundle\Entity\Component\ProjectElementInterface $component */
             foreach ($components as $component){
-                $range = $ranges[$component->getCode()];
-                $component->applyRange($range);
+                if(array_key_exists($component->getCode(), $ranges)) {
+                    $range = $ranges[$component->getCode()];
+                    $component->applyRange($range);
 
-                $costPrice += $component->getUnitCostPrice();
+                    $costPrice += $component->getUnitCostPrice();
+                }
             }
 
             /** @var \AppBundle\Entity\Component\ProjectExtraInterface $projectExtra */
