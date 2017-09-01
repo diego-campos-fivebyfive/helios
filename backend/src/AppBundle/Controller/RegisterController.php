@@ -85,7 +85,18 @@ class RegisterController extends AbstractController
             $helper = $this->getRegisterHelper();
             $data = $form->getData();
 
-            if ($helper->emailCanBeUsed($data['email'])) {
+            $document = $accountManager->findBy([
+                'document' => $data['document']
+            ]);
+
+            $existsDoc = false;
+
+            if($document) {
+                $form->addError(new FormError('CNPJ já Cadastrado'));
+                $existsDoc = true;
+            }
+
+            if ($helper->emailCanBeUsed($data['email']) && !$existsDoc) {
 
                 $data['confirmationToken'] = $this->getTokenGenerator()->generateToken();
 

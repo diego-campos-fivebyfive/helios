@@ -14,6 +14,11 @@ class MemorialController extends FOSRestController
 {
     public function postMemorialAction(Request $request)
     {
+        $responseHandler = function($data, $status) {
+            $view = View::create($data)->setStatusCode($status);
+            return $this->handleView($view);
+        };
+
         $data = json_decode($request->getContent(), true);
 
         /** @var Memorial $memorialManager */
@@ -24,9 +29,7 @@ class MemorialController extends FOSRestController
         if ($existentMemorial) {
             $data = "This Memorial Already Existing!";
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-
-            $view = View::create($data)->setStatusCode($status);
-            return $this->handleView($view);
+            return $responseHandler($data, $status);
         }
 
         $currentMemorial = $memorialManager->findOneBy(array(), array('id' => 'DESC'));
@@ -83,7 +86,6 @@ class MemorialController extends FOSRestController
             $data = $exception;
         }
 
-        $view = View::create($data)->setStatusCode($status);
-        return $this->handleView($view);
+        return $responseHandler($data, $status);
     }
 }
