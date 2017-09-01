@@ -65,7 +65,7 @@
         </div>
 
         <div class="hide">
-            <input type="hidden" id="generator_option" name="_option" value="config">
+            <input type="text" id="generator_option" name="_option" value="config">
             {{ form_rest(form) }}
         </div>
     </div>
@@ -78,6 +78,16 @@
 {{ form_end(form) }}
 
 <script>
+
+    var Project = {
+        id: null,
+        power: null,
+        reset: function(data){
+            $.each(data, function(property, value){
+                this[property] = value;
+            });
+        }
+    };
 
     var FormGenerator = {
         form: $('#form_generator'),
@@ -306,20 +316,20 @@
              * @param xhr
              */
             onProcess: function (xhr) {
+                FormGenerator.loader.ladda('stop');
                 var option = FormGenerator.field('option').val();
                 if ('save' != option) {
                     FormGenerator.container.html(xhr.responseText);
+                    FormGenerator.onResetProject();
                 } else {
                     var response = xhr.responseJSON;
-                    if (!response.hasOwnProperty('error')) {
-                        var project = response.project;
-                        FormGenerator.onSaveProject(project);
-                    } else {
-                        this.displayError(response.error);
+                    if (response && !response.hasOwnProperty('error')) {
+                        FormGenerator.onSaveProject(response.project);
+                        return;
                     }
+                    var error = response && response.hasOwnProperty('error') ? response.error : 'As configurações atuais não foram processadas';
+                    this.displayError(error);
                 }
-
-                FormGenerator.loader.ladda('stop');
             },
             /**
              * This method handles a saved project
@@ -328,6 +338,11 @@
              * @param project
              */
             onSaveProject: function(project){},
+            /**
+             * Fired after project reset
+             * @param project
+             */
+            onResetProject: function(project){},
             displayError: function(error){
                 swal('Ooops', error, 'warning');
             }
@@ -343,6 +358,9 @@
         },
         onSaveProject: function(project){
             this.getHandler('onSaveProject').onSaveProject(project);
+        },
+        onResetProject: function(){
+            this.getHandler('onResetProject').onResetProject();
         }
     };
 
