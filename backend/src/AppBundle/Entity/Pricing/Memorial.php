@@ -110,7 +110,7 @@ class Memorial implements MemorialInterface
     {
         return $this->isquikId;
     }
-    
+
     /**
      * Set version
      *

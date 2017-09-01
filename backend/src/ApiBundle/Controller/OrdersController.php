@@ -71,10 +71,7 @@ class OrdersController extends AbstractApiController
             'description' => $order->getDescription(),
             'note' => $order->getNote(),
             'status' => $order->getStatus(),
-            'memorial' => [
-                'isquik_id' => $order->getMetadata('memorial')['isquik_id'],
-                'id' => $order->getMetadata('memorial')['id']
-            ]
+            'memorial' => $order->getMetadata('memorial')
         ];
 
         if($order->isBudget()){
