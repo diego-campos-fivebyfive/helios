@@ -23,6 +23,7 @@ class GeneratorController extends AbstractController
      */
     public function accountsAction(Request $request)
     {
+        $action = $request->getUri();
         $option = $request->request->get('_option');
         $project = $this->resolveProject($request);
 
@@ -30,7 +31,9 @@ class GeneratorController extends AbstractController
 
         $defaults = $generator->loadDefaults($project->getDefaults());
 
-        $form = $this->createForm(GeneratorType::class, $defaults);
+        $form = $this->createForm(GeneratorType::class, $defaults, [
+            'action' => $action
+        ]);
 
         $form->handleRequest($request);
 
@@ -39,7 +42,9 @@ class GeneratorController extends AbstractController
             if('save' != $option){
 
                 $generator->reset($project);
-                $form = $this->createForm(GeneratorType::class, $form->getData());
+                $form = $this->createForm(GeneratorType::class, $form->getData(), [
+                    'action' => $action
+                ]);
 
             }else{
 
@@ -83,11 +88,11 @@ class GeneratorController extends AbstractController
 
         $project = $manager->create();
         if(0 != $id = $request->query->getInt('project', 0)){
-
             $project = $manager->find($id);
+        }
 
-            if($project instanceof Project){
-            }
+        if(!$project->getMember()){
+            $project->setMember($this->member());
         }
 
         return $project;
