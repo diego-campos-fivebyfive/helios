@@ -11,10 +11,10 @@ else
   exit 1
 fi
 
-message=$(echo $2 | sed 's/"/\\"/g')
+message=$(echo ${2:0:1500} | sed 's/"/\\"/g')
 
 curl -s \
   -X POST \
   -H "Content-type:application/json" \
-  -d "{\"text\": \"$message\", \"link_names\": \"1\"}" \
+  -d "{\"attachments\": [{\"fallback\": \"ReferenceError - UI is not defined: https://honeybadger.io/path/to/event/\",\"text\": \"<https://honeybadger.io/path/to/event/|ReferenceError> - UI is not defined\",\"fields\": [{\"title\": \"Project\",\"value\": \"Awesome Project\",\"short\": true},{\"title\": \"Environment\",\"value\": \"$CES_AMBIENCE\",\"short\": true}],\"color\": \"#F35A00\"},{\"text\": \"$message\", \"link_names\": \"1\"}]}" \
   $slack_hook
