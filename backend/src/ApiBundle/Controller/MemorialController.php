@@ -21,12 +21,6 @@ class MemorialController extends FOSRestController
 
         $data = json_decode($request->getContent(), true);
 
-        if($data['status'] != 1) {
-            $data = "This Memorial is not active!";
-            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            return $responseHandler($data, $status);
-        }
-
         /** @var Memorial $memorialManager */
         $memorialManager = $this->get('memorial_manager');
         $rangeManager = $this->get('range_manager');
