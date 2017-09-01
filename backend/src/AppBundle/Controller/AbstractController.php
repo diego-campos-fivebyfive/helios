@@ -402,14 +402,6 @@ abstract class AbstractController extends Controller
     }
 
     /**
-     * @return \AppBundle\Entity\Component\MakerManager
-     */
-    protected function getMakerManager()
-    {
-        return $this->get('app.maker_manager');
-    }
-
-    /**
      * @return \AppBundle\Entity\PackageManager
      */
     protected function getPackageManager()
