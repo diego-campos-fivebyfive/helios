@@ -87,7 +87,6 @@ class GeneratorController extends AbstractController
             ;
 
             $manager->save($account);
-            $helper->finishAccountRegister($account);
 
             $category = $categoryManager->findOneBy([
                 'context' => 'contact_category',

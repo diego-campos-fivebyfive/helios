@@ -6,10 +6,8 @@ use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Util\Validator\Document;
 use AppBundle\Entity\Customer;
-use AppBundle\Entity\Extra\AccountRegister;
 use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\UserInterface;
-use AppBundle\Form\Extra\AccountRegisterType;
 use AppBundle\Form\Extra\PreRegisterType;
 use AppBundle\Model\Document\Account;
 use Doctrine\DBAL\Schema\View;
@@ -30,44 +28,6 @@ use AppBundle\Service\Notifier\Sender;
  */
 class RegisterController extends AbstractController
 {
-    /**
-     * @Route("/pre", name="app_register")
-     */
-    public function registerAction(Request $request)
-    {
-        $registerManager = $this->getAccountRegisterManager();
-        $register = $registerManager->create();
-        $errors = [];
-
-        $form = $this->createForm(AccountRegisterType::class, $register);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted()) {
-
-            $checkResponse = $this->preValidateRegister($register, $form);
-
-            if ($checkResponse instanceof RedirectResponse)
-                return $checkResponse;
-
-            if ($form->isValid()) {
-
-                $register->setConfirmationToken($this->getTokenGenerator()->generateToken());
-
-                $registerManager->save($register);
-
-                return $this->redirectToRoute('app_register_link', ['id' => $register->getId()]);
-            }
-
-            $errors = $form->getErrors(true);
-        }
-
-        return $this->render('register.register', [
-            'form' => $form->createView(),
-            'register' => $register,
-            'errors' => $errors
-        ]);
-    }
-
     /**
      * @Route("/", name="pre_register")
      */
@@ -152,34 +112,6 @@ class RegisterController extends AbstractController
 
         return $this->render('register.in_progress', [
             'account' => $account
-        ]);
-    }
-
-    /**
-     * @Route("/", name="app_register_link")
-     */
-    public function linkAction(AccountRegister $register)
-    {
-        $maxAttempts = 3;
-        $manager = $this->getAccountRegisterManager();
-
-        $linkAttempts = $register->getParameter('link_attempts', 0);
-        $linkAttempts++;
-
-        if ($maxAttempts && $linkAttempts <= $maxAttempts) {
-
-            $register->setParameter('link_attempts', $linkAttempts);
-            $manager->save($register);
-
-            $mailer = $this->getMailer();
-            //$mailer->enableSender = false;
-            $mailer->sendAccountConfirmationMessage($register);
-        }
-
-        return $this->render('register.feedback', [
-            'register' => $register,
-            'link_attempts' => $linkAttempts,
-            'max_attempts' => $maxAttempts
         ]);
     }
 
@@ -369,65 +301,11 @@ class RegisterController extends AbstractController
     }
 
     /**
-     * @param AccountRegister $register
-     */
-    private function preValidateRegister(AccountRegister &$register, FormInterface &$form)
-    {
-        $helper = $this->getRegisterHelper();
-
-        if (!$helper->emailCanBeUsed($register->getEmail())) {
-
-            /**
-             * This section addresses the scenario where the user
-             * abandons the credentials form during account verification
-             */
-            /** @var BusinessInterface $member */
-            $member = $helper->findBusinessByEmail($register->getEmail(), BusinessInterface::CONTEXT_MEMBER);
-            if ($member instanceof BusinessInterface
-                && $member->isMember()
-                && !$member->getUser()
-                && $member->getConfirmationToken()
-            ) {
-                return $this->redirectToRoute('app_user_confirm', [
-                    'token' => $member->getConfirmationToken()
-                ]);
-            }
-
-            $form->addError(new FormError('The informed email is already in use'));
-        }
-
-        $currentRegister = $helper->findRegisterByEmail($register->getEmail());
-
-        if ($currentRegister instanceof AccountRegister
-            && !$currentRegister->isDone()
-        ) {
-
-            $currentRegister
-                ->setName($register->getName())
-                ->setCompanyStatus($register->getCompanyStatus())
-                ->setCompanySector($register->getCompanySector())
-                ->setCompanyName($register->getCompanyName());
-
-            $register = $currentRegister;
-        }
-
-        return null;
-    }
-
-    /**
      * @return \AppBundle\Service\Mailer
      */
     private function getMailer()
     {
         return $this->get('app_mailer');
-    }
-
-    /**
-     * @return \AppBundle\Entity\Extra\AccountRegisterManager
-     */
-    private function getAccountRegisterManager()
-    {
-        return $this->get('app.account_register_manager');
     }
 
     /**
