@@ -442,14 +442,6 @@ abstract class AbstractController extends Controller
     }
 
     /**
-     * @return \AppBundle\Entity\Project\ProjectManager|object
-     */
-    protected function getProjectManager()
-    {
-        return $this->get('app.project_manager');
-    }
-
-    /**
      * @return \AppBundle\Entity\Project\NasaProvider
      */
     protected function getNasaProvider()

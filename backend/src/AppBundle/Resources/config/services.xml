@@ -90,12 +90,6 @@
             <argument type="service" id="doctrine"/>
             <argument type="service" id="security.token_storage"/>
         </service>
-
-        <service id="app.project_manager" class="AppBundle\Entity\Project\ProjectManager">
-            <argument>AppBundle\Entity\Project\Project</argument>
-            <argument type="service" id="doctrine"/>
-        </service>
-
         <service id="app.package_manager" class="AppBundle\Entity\PackageManager">
             <argument>AppBundle\Entity\Package</argument>
             <argument type="service" id="doctrine"/>

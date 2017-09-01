@@ -76,7 +76,7 @@ class KitController extends AbstractController
         $kit = $manager->create();
         $kit
             ->addAttribute('index', $this->incrementAccountIndex('kit_index'))
-            ->setAccount($this->getCurrentAccount());
+            ->setAccount($this->account());
 
         // Woopra Event
         $event = $this->createWoopraEvent('novo kit', [
@@ -192,7 +192,7 @@ class KitController extends AbstractController
     {
         $this->checkAccess($kit);
 
-        $projects = $this->getProjectManager()->findBy([
+        $projects = $this->manager('project')->findBy([
             'kit' => $kit
         ]);
 
@@ -215,7 +215,7 @@ class KitController extends AbstractController
     private function checkAccess(Kit $kit)
     {
         $kitAccount = $kit->getAccount();
-        $currentAccount = $this->getCurrentAccount();
+        $currentAccount = $this->account();
 
         if ($kitAccount->getId() != $currentAccount->getId()) {
             throw $this->createAccessDeniedException();
