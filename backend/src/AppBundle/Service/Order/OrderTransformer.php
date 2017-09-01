@@ -88,6 +88,10 @@ class OrderTransformer
             }
         }
 
+        $metadata = $order->getChildrens()->first()->getMetadata();
+
+        $order->setMetadata($metadata);
+
         $this->manager->save($order);
 
         return $order;
