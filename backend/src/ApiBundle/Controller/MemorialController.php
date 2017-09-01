@@ -70,7 +70,14 @@ class MemorialController extends FOSRestController
         try {
             $memorialManager->save($memorial);
             $status = Response::HTTP_CREATED;
-            $data = $this->get('api_formatter')->format($memorial);
+            $data = [
+                'Id' => $memorial->getId(),
+                'Isquik_id' => $memorial->getIsquikId(),
+                'Version' => $memorial->getVersion(),
+                'Status' => $memorial->getStatus(),
+                'StartAt' => $memorial->getStartAt(),
+                'EndAt' => $memorial->getEndAt()
+            ];
         } catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
             $data = $exception;
