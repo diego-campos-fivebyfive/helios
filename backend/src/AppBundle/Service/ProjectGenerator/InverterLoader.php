@@ -38,9 +38,7 @@ class InverterLoader
     {
         $method = self::method($defaults);
 
-        //$this->promotional = $defaults['is_promotional'];
-        //$this->promotional
-        //dump($this); die;
+        $this->promotional = $defaults['is_promotional'];
 
         $phaseNumber = $defaults['phases'];
         $phaseVoltage = $defaults['voltage'];
@@ -205,13 +203,17 @@ class InverterLoader
             ->orderBy('i.nominalPower', $order)
         ;
 
-        $qb->setParameters([
+        $parameters = [
             'min' => $min,
             'max' => $max,
             'phases' => $phaseNumber,
             'phaseVoltage' => $phaseVoltage,
             'maker' => $maker
-        ]);
+        ];
+
+        $this->promotionalCriteria($qb, $parameters);
+
+        $qb->setParameters($parameters);
 
         return $qb->getQuery()->getResult();
     }
@@ -286,14 +288,18 @@ class InverterLoader
             ->orderBy('i.nominalPower', $order)
         ;
 
-        $qb->setParameters([
+        $parameters = [
             'min' => $min,
             'max' => $max,
             'phases' => $phaseNumber,
             'phaseVoltage380' => 380,
             'phaseVoltage220' => 220,
             'maker' => $maker
-        ]);
+        ];
+
+        $this->promotionalCriteria($qb, $parameters);
+
+        $qb->setParameters($parameters);
 
         return $qb->getQuery()->getResult();
     }
@@ -326,13 +332,17 @@ class InverterLoader
             ->orderBy('i.nominalPower', $order)
         ;
 
-        $qb->setParameters([
+        $parameters = [
             'min' => $min,
             'max' => $max,
             'maker' => $maker,
             'phaseNumber' => 3,
             'phaseVoltage' => 220
-        ]);
+        ];
+
+        $this->promotionalCriteria($qb, $parameters);
+
+        $qb->setParameters($parameters);
 
         return $qb->getQuery()->getResult();
     }
@@ -374,5 +384,14 @@ class InverterLoader
     private function createQueryBuilder()
     {
         return $this->getEntityManager()->createQueryBuilder();
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param array $criteria
+     */
+    private function promotionalCriteria(QueryBuilder $qb, array &$criteria = [])
+    {
+        CriteriaAggregator::promotional($criteria, $qb);
     }
 }

@@ -119,6 +119,9 @@ class ProjectGenerator
             $defaults['power'] = $power;
         }
 
+        // ADD CRITERIA AGGREGATOR FOR PROMOTIONAL
+        CriteriaAggregator::$promotional = $defaults['is_promotional'];
+
         $defaults['errors'] = [];
         $this->project->setDefaults($defaults);
 
@@ -231,9 +234,8 @@ class ProjectGenerator
         $defaults = $project->getDefaults();
 
         $criteria = ['id' => $defaults['module']];
-        if($defaults['is_promotional']){
-            $criteria['promotional'] = true;
-        }
+
+        CriteriaAggregator::promotional($criteria);
 
         $module = $this->manager('module')->findOneBy($criteria);
 
