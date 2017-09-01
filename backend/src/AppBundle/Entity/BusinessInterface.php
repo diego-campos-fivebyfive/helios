@@ -529,11 +529,6 @@ interface BusinessInterface extends BaseCustomerInterface
     public function getEmailAccounts();
 
     /**
-     * @return EmailAccountInterface
-     */
-    public function getCurrentEmailAccount();
-
-    /**
      * Determines whether the instance is a valid client
      * @return bool
      */
