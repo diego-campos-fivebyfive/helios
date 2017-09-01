@@ -25,7 +25,7 @@ const bundler = actions => (request, response) => {
         .json(data)
         .end()
     })
-    .catch(({ message }) => {
+    .catch(message => {
       response
         .status(500)
         .send(`Internal Error, contact us. ${new Date()}`)
