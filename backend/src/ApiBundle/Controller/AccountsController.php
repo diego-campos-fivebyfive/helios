@@ -79,7 +79,7 @@ class AccountsController extends FOSRestController
         }
         catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $data = 'Can not create Account';
+            $data = $exception;
         }
 
         $view = View::create($data)->setStatusCode($status);
@@ -181,7 +181,7 @@ class AccountsController extends FOSRestController
         }
         catch (\Exception $exception ) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $data = 'Can not update Account';
+            $data = $exception;
         }
 
         $view = View::create($data)->setStatusCode($status);

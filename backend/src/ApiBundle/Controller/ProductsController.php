@@ -61,44 +61,4 @@ class ProductsController extends AbstractController
                 }
             }
     }
-
-    public function postMemorialAction(Request $request)
-    {
-        $rangeManager = $this->manager('range');
-        $memorialManager = $this->manager('memorial');
-
-        $data = json_decode($request->getContent(), true);
-        $products = $data['products'];
-
-        foreach ($products as $product)
-        {
-            $startAt = new \DateTime($data['start_at']);
-            $endAt = new \DateTime($data['end_at']);
-
-            $memorial = $memorialManager->create();
-            $memorial->setName('Teste')
-                ->setVersion($data['version'])
-                ->setStartAt($startAt)
-                ->setEndAt($endAt)
-                ->setStatus(1);
-            $memorialManager->save($memorial);
-
-                    $markups = $product['markups'];
-
-            foreach ($markups as $level => $config) {
-
-                foreach ($config as $item) {
-                    $range = $rangeManager->create();
-                    $range->setCode($product['code'])
-                        ->setMemorial($memorial)
-                        ->setLevel($level)
-                        ->setInitialPower($item['start'])
-                        ->setFinalPower($item['end'])
-                        ->setMarkup($item['markup'])
-                        ->setPrice(35);
-                    $rangeManager->save($range);
-                }
-            }
-        }
-    }
 }

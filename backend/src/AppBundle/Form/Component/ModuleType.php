@@ -92,8 +92,20 @@ class ModuleType extends AbstractType
             'label' => 'Disponivel',
             'required' => false,
             //'disabled' => true
-        ])
-        ->add('code', TextType::class);
+        ]);
+        $builder->add('code', TextType::class);
+        $builder->add('length', null, [
+            'required' => false
+        ]);
+        $builder->add('width', null, [
+            'required' => false
+        ]);
+        $builder->add('height', null, [
+            'required' => false
+        ]);
+        $builder->add('connection_type', null, [
+            'required' => false
+        ]);
     }
 
     /**

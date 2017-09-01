@@ -45,8 +45,13 @@ class ProjectController extends AbstractController
         }
 
         $filterMember = null;
-        if($member->isOwner() && null != $memberId = $request->get('member')){
-            $filterMember = $this->getCustomerManager()->find($memberId);
+        if($member->isOwner() && 'all' != $memberId = $request->get('member')){
+
+            if(!$memberId)
+                $memberId = $member->getId();
+
+            $filterMember = $this->manager('customer')->find($memberId);
+
             if($filterMember instanceof BusinessInterface
                 && $filterMember->getAccount()->getId() == $account->getId()){
                 $ids = [$filterMember->getId()];
@@ -189,6 +194,10 @@ class ProjectController extends AbstractController
                     'errors' => $errors
                 ], Response::HTTP_CONFLICT);
             }
+
+            $project->setNumber($this->incrementAccountIndex('projects'));
+
+            $manager->save($project);
 
             return $this->json([
                 'project' => [
@@ -604,7 +613,7 @@ class ProjectController extends AbstractController
     private function getCustomerReferrer(Request $request)
     {
         if(null != $token = $request->get('contact')) {
-            $contact = $this->getCustomerManager()->findByToken($token);
+            $contact = $this->manager('customer')->findByToken($token);
 
             $this->denyAccessUnlessGranted('edit', $contact);
 

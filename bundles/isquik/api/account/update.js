@@ -5,12 +5,11 @@ const Isquik = require('../../models/isquik')
 const { update: updateUser } = require('./user')
 
 const level = {
-  'BLACK': 'black',
-  'PLATINUM': 'platinum',
-  'PREMIUM': 'premium',
-  'PARCEIRO OURO': 'gold',
-  'PARCEIRO': 'partner',
-  'PROMOCIONAL': 'promotional'
+  BLACK: 'black',
+  PLATINUM: 'platinum',
+  PREMIUM: 'premium',
+  PARCEIRO: 'partner',
+  PROMOCIONAL: 'promotional'
 }
 
 const getLevel = type => level[type]

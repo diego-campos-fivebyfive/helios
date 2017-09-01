@@ -20,7 +20,7 @@ services:
 
     contact_manipulator:
         class: AppBundle\Service\Util\ContactManipulator
-        arguments: ['@app.customer_manager']
+        arguments: ['@customer_manager']
 
     account_manager:
         class: AppBundle\Manager\AccountManager
@@ -53,6 +53,10 @@ services:
         class: AppBundle\Manager\MpptManager
         arguments: ['AppBundle\Entity\Project\MpptOperation', '@doctrine']
 
+    notification_manager:
+        class: AppBundle\Manager\NotificationManager
+        arguments: ['AppBundle\Entity\Notification', '@doctrine']
+
     inverter_manager:
         class: AppBundle\Manager\InverterManager
         arguments: ['AppBundle\Entity\Component\Inverter', '@doctrine']
@@ -64,6 +68,10 @@ services:
     order_element_manager:
         class: AppBundle\Manager\OrderElementManager
         arguments: ['AppBundle\Entity\Order\Element', '@doctrine']
+
+    parameter_manager:
+        class: AppBundle\Manager\ParameterManager
+        arguments: ['AppBundle\Entity\Parameter', '@doctrine']
 
     project_manager:
         class: AppBundle\Manager\ProjectManager
@@ -183,7 +191,7 @@ services:
 
     margin_manager:
         class: AppBundle\Entity\Component\PricingManager
-        arguments: ['@app.parameter_manager', '@security.token_storage']
+        arguments: ['@parameter_manager', '@security.token_storage']
 
     project_precifier:
         class: AppBundle\Service\ProjectGenerator\Precifier
@@ -201,3 +209,7 @@ services:
         public: false
         tags:
             - { name: security.voter }
+
+    app_mailer:
+        class: AppBundle\Service\Mailer
+        arguments: ['@mailer', '@router', '@templating']

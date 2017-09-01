@@ -35,7 +35,11 @@ const components = {
     split: splitDescription,
     send: Sices.sendStringbox
   },
-  VARIEDADE: {
+  CABOS: {
+    split: splitDescription,
+    send: Sices.sendVariety
+  },
+  CONECTORES: {
     split: splitDescription,
     send: Sices.sendVariety
   }

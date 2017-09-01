@@ -323,8 +323,9 @@ abstract class AbstractController extends Controller
      */
     protected function incrementAccountIndex($index)
     {
-        $account = $this->getCurrentAccount();
-        return $this->getCustomerManager()->incrementAccountIndex($account, $index);
+        $account = $this->account();
+
+        return $this->manager('account')->incrementIndex($account, $index);
     }
 
     /**
@@ -382,14 +383,6 @@ abstract class AbstractController extends Controller
     protected function getContextManager()
     {
         return $this->get('sonata.classification.manager.context');
-    }
-
-    /**
-     * @return \AppBundle\Entity\CustomerManager
-     */
-    protected function getCustomerManager()
-    {
-        return $this->get('app.customer_manager');
     }
 
     /**

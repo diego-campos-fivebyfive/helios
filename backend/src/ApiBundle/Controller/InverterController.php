@@ -10,6 +10,8 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\Version;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class InverterController extends FOSRestController
 {
@@ -47,7 +49,7 @@ class InverterController extends FOSRestController
         }
         catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $data = 'Can not create Inverter';
+            $data = $exception;
         }
 
         $view = View::create($data)->setStatusCode($status);
@@ -60,6 +62,32 @@ class InverterController extends FOSRestController
         $data = $this->get('api_formatter')->format($inverter, ['maker' => 'id']);
 
         $view = View::create($data);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Route("/{code}")
+     * @ParamConverter("code", class="AppBundle:Component\Inverter", options={"mapping":{"code" : "code"}})
+     */
+    public function putInverterAction(Request $request, Inverter $code)
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $inverterManager = $this->get('inverter_manager');
+        $code->setPromotional($data['promotional']);
+
+        try {
+            $inverterManager->save($code);
+            $status = Response::HTTP_CREATED;
+            $data = $this->get('api_formatter')->format($code, ['maker' => 'id']);
+        }
+        catch (\Exception $exception) {
+            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+            $data = $exception;
+        }
+
+        $view = View::create($data)->setStatusCode($status);
 
         return $this->handleView($view);
     }

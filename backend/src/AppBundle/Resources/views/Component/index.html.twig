@@ -115,9 +115,11 @@
                                            data-target="#modal_details"
                                            class="product-name">
                                             {{ component.model|slice(0,20) }} <br/>
+                                            {% if component.maker is not null %}
                                             <small title="{{ component.maker }}">
                                                 {{ component.maker.name|slice(0,25) }}
                                             </small>
+                                            {% endif %}
                                         </a>
 
                                         {% if is_module %}

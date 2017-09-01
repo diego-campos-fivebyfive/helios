@@ -35,9 +35,13 @@
                                     </div>
                                     <div class="panel-body">
 
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-3">
                                             {{ form_label(form.code, 'Código') }}
                                             {{ form_widget(form.code,{attr:{class:'form-control'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-md-3">
+                                            {{ form_row(form.maker,{attr:{class:'form-control'}}) }}
                                         </div>
 
                                         <div class="form-group col-md-6">
@@ -73,7 +77,7 @@
                                     </div>
                                     <div class="panel-body">
 
-                                        <div class="col-md-4">
+                                        <div class="form-group col-md-4">
                                             {{ form_label(form.type, 'Tipo') }}
                                             <div class="input-group m-b">
                                                 {{ form_widget(form.type,{attr:{class:'form-control'}}) }}
@@ -92,11 +96,6 @@
                                             <div class="input-group m-b">
                                                 {{ form_widget(form.power,{attr:{class:'form-control'}}) }}
                                             </div>
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.maker, 'Fabricante') }}
-                                            {{ form_widget(form.maker,{attr:{class:'form-control'}}) }}
                                         </div>
 
                                     </div>

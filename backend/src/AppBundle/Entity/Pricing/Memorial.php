@@ -24,6 +24,13 @@ class Memorial implements MemorialInterface
     private $id;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="isquik_id", type="integer", nullable=true)
+     */
+    private $isquikId;
+
+    /**
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Range", mappedBy="memorial", cascade={"persist"})
@@ -63,6 +70,19 @@ class Memorial implements MemorialInterface
         $this->ranges = new ArrayCollection();
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function toArray()
+    {
+        return [
+            'id' => $this->id,
+            'isquik_id' => $this->isquikId,
+            'version' => $this->version,
+            'start_at' => $this->startAt->format('Y-m-d H:i:s'),
+            'status' => $this->status
+        ];
+    }
 
     /**
      * Get id
@@ -72,6 +92,23 @@ class Memorial implements MemorialInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setIsquikId($isquikId)
+    {
+        $this->isquikId = $isquikId;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getIsquikId()
+    {
+        return $this->isquikId;
     }
 
     /**

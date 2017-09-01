@@ -137,7 +137,7 @@ class ExplorerController extends AbstractController
     {
         // TODO: Remove in production
         
-        $contact = $this->getCustomerManager()->find(151);
+        $contact = $this->manager('customer')->find(151);
 
         /** @var FileExplorer $explorer */
         $explorer = $this->get('app.file_explorer');

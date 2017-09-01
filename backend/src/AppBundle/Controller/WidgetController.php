@@ -144,7 +144,9 @@ class WidgetController extends AbstractController
         if ($member->isOwner()) {
             $projects = $projectManager->findByAccount($member->getAccount());
         } else {
-            $projects = $member->getProjects()->toArray();
+            $projects = $projectManager->findBy([
+                'member' => $member
+            ]);
         }
 
         $stages = $this->getCategoryManager()->findBy([
@@ -209,9 +211,9 @@ class WidgetController extends AbstractController
      */
     private function timelineWidget()
     {
-        $member = $this->getCurrentMember();
+        $member = $this->member();
 
-        $subscriptions = $this->get('app.notification_manager')->subscriptions($member, [
+        $subscriptions = $this->manager('notification')->subscriptions($member, [
             'type' => Notification::TYPE_TIMELINE,
             'limit' => 6
         ]);

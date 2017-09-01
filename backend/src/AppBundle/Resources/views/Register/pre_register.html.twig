@@ -108,7 +108,8 @@
                         Aceito os
                         <a data-toggle="modal" data-target="#terms"> Termos de uso </a>
 
-                        <button class="btn btn-md btn-primary btn-block">
+                        <button class="btn btn-md btn-primary ladda-button btn-block" data-style="zoom-in"
+                                id="btn-pre-submit">
                             <i class="fa fa-check"></i> Efetuar Pré-Cadastro
                         </button>
                     </div>
@@ -129,6 +130,7 @@
         </script>
     {% endif %}
     <script>
+
         $(function () {
             $('.middle-box').removeClass('middle-box');
         });
@@ -156,6 +158,8 @@
             if(!$('#accept_terms').is(':checked')){
                 event.preventDefault();
             }
+            $('#btn-pre-submit').ladda();
+            $('#btn-pre-submit').ladda('start');
         });
 
     </script>

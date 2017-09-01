@@ -34,7 +34,7 @@ class MemberController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-        $account = $this->getCurrentAccount();
+        $account = $this->account();
 
         $activeMembers = $account->getActiveMembers();
         $inactiveMembers = $account->getInactiveMembers();
@@ -56,18 +56,16 @@ class MemberController extends AbstractController
      */
     public function createAction(Request $request)
     {
-        $account = $this->getCurrentAccount();
+        $account = $this->account();
 
-        /*if ($account->getMembers()->count() >= $account->getMaxMembers()) {
+        if ($account->getMembers()->count() >= $account->getMaxMembers()) {
             return $this->render('locked_content', [
                 'title' => 'account.max_members.title',
                 'message' => 'account.max_members.message',
-                //'include' => 'member.locked_links'
             ]);
-        }*/
+        }
 
-        $manager = $this->getCustomerManager();
-        //$context = $this->getContextManager()->find();
+        $manager = $this->manager('customer');
 
         $member = $manager->create();
         $member
@@ -75,7 +73,7 @@ class MemberController extends AbstractController
             ->setAccount($account);
 
         $form = $this->createForm(MemberType::class, $member, [
-            'current_member' => $this->getCurrentMember()
+            'current_member' => $this->member()
         ]);
 
         $form->handleRequest($request);
@@ -104,19 +102,16 @@ class MemberController extends AbstractController
                 $userManager->updateUser($user);
 
                 $member->setUser($user);
+
                 $manager->save($member);
 
                 /** @var \AppBundle\Service\Mailer $mailer */
                 $mailer = $this->get('app_mailer');
-                //$mailer->enableSender = false;
-                //$mailer->sendMemberConfirmationMessage($member);
-
-                //$this->setNotice('Usuário cadastrado com sucesso! Aguardando confirmação via email.');
+                $mailer->sendMemberConfirmationMessage($member);
 
                 return $this->json([
                     'message' => $this->translate('Usuário cadastrado com sucesso!')
                 ], Response::HTTP_CREATED);
-                //return $this->redirectToRoute('member_index');
             }
 
             $form->addError(new FormError('The informed email is already in use'));
@@ -177,7 +172,7 @@ class MemberController extends AbstractController
     {
         $context = $this->getContextManager()->find(BusinessInterface::CONTEXT_MEMBER);
 
-        $manager = $this->getCustomerManager();
+        $manager = $this->manager('customer');
 
         /** @var BusinessInterface $member */
         $member = $manager->create();
@@ -220,7 +215,7 @@ class MemberController extends AbstractController
     {
         if($member->getId() != $this->getCurrentMember()->getId()) {
             if (!$member->isDeleted()) {
-                $this->getCustomerManager()->delete($member);
+                $this->manager('customer')->delete($member);
             }
         }
 
@@ -244,7 +239,7 @@ class MemberController extends AbstractController
 
         if($member->getId() != $this->getCurrentMember()->getId()) {
             if($member->isDeleted()){
-                $this->getCustomerManager()->restore($member);
+                $this->manager('customer')->restore($member);
             }
         }
 
@@ -292,7 +287,7 @@ class MemberController extends AbstractController
             if ($memberErrors->count()) {
                 $form->addError(new FormError($memberErrors->get(0)->getMessage(), null, [], null, 'firstname'));
             }else{
-                $this->getCustomerManager()->save($member);
+                $this->manager('customer')->save($member);
             }
         }
 
@@ -330,7 +325,7 @@ class MemberController extends AbstractController
 
             $member->setTimezone($timezone);
 
-            $this->getCustomerManager()->save($member);
+            $this->manager('customer')->save($member);
 
             return $this->jsonResponse([
                 'timezone' => $timezone
@@ -373,7 +368,7 @@ class MemberController extends AbstractController
 
             $account->setFirstname($name);
 
-            $this->getCustomerManager()->save($account);
+            $this->manager('customer')->save($account);
 
             $this->setNotice('Dados atualizados com sucesso!');
 
@@ -415,7 +410,7 @@ class MemberController extends AbstractController
         $this->getSessionStorage()->remove($context);*/
 
         if ($entity->isOwner()) {
-            $entity->setTeam(null);
+            $entity->setType(null);
         }
 
         if(null != $user = $entity->getUser()) {
@@ -426,7 +421,7 @@ class MemberController extends AbstractController
             }
         }
 
-        $this->getCustomerManager()->save($entity);
+        $this->manager('customer')->save($entity);
     }
 
     /**

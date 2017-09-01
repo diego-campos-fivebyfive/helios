@@ -471,11 +471,11 @@ class ProjectHelper
     }
 
     /**
-     * @return \AppBundle\Entity\CustomerManager|object
+     * @return \AppBundle\Manager\CustomerManager|object
      */
     private function getAccountManager()
     {
-        return $this->container->get('app.customer_manager');
+        return $this->container->get('customer_manager');
     }
 
     /**

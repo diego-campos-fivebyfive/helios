@@ -3,6 +3,17 @@
 const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
 
+const families = {
+    INVERSOR: 'inverter',
+    MODULO: 'module',
+    ESTRUTURA: 'structure',
+    STRINGBOX: 'stringbox',
+    CABOS: 'variety',
+    CONECTORES: 'variety'
+}
+
+const getFamily = family => families[family]
+
 const splitOrder = ({ Dado: order }) => ({
   id: order.IdSicesSolar,
   account_id: order.Integrador.IdSicesSolar,
@@ -20,7 +31,7 @@ const splitOrder = ({ Dado: order }) => ({
       description: product.Descricao,
       quantity: product.Quantidade,
       unit_price: product.ValorUnitario,
-      tag: ''
+      family: getFamily(product.Grupo)
     }))
   }))
 })

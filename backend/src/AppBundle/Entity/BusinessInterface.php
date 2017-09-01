@@ -205,51 +205,6 @@ interface BusinessInterface extends BaseCustomerInterface
     public function getCategory();
 
     /**
-     * Account reference in which the user is associated
-     *
-     * @param BusinessInterface $account
-     * @return BusinessInterface
-     */
-    //public function setAccount(BusinessInterface $account);
-
-    /**
-     * @return BusinessInterface
-     */
-    //public function getAccount();
-
-    /**
-     * @param BusinessInterface $member
-     * @return BusinessInterface
-     */
-    public function addMember(BusinessInterface $member);
-
-    /**
-     * @param BusinessInterface $member
-     * @return BusinessInterface
-     */
-    public function removeMember(BusinessInterface $member);
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getMembers();
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getActiveMembers();
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getInactiveMembers();
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getInvitedMembers();
-
-    /**
      * @return ArrayCollection
      */
     public function getOwners();
@@ -522,30 +477,6 @@ interface BusinessInterface extends BaseCustomerInterface
      * @return array
      */
     public static function getStatusList();
-
-    /**
-     * @return int
-     */
-    public function getMaxMembers();
-
-
-    /**
-     * @param $maxMember
-     * @return BusinessInterface
-     */
-    public function setMaxMember($maxMember);
-
-    /**
-     * Return all real modules
-     * @return ArrayCollection
-     */
-    //public function getModules();
-
-    /**
-     * Return all real inverters
-     * @return ArrayCollection
-     */
-    //public function getInverters();
 
     /**
      * @param $timezone

@@ -15,7 +15,7 @@ class OrderManipulator
         $power = 0;
         /** @var ElementInterface $element */
         foreach ($order->getElements() as $element){
-            if(ElementInterface::TAG_MODULE == $element->getTag()){
+            if(ElementInterface::FAMILY_MODULE == $element->getFamily()){
                 $maxPower = $element->getMetadata('max_power', 0);
                 if($maxPower > 0) {
                     $power += ($maxPower / 1000) * $element->getQuantity();

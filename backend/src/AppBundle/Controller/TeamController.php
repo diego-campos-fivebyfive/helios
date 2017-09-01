@@ -141,7 +141,7 @@ class TeamController extends AbstractController
     {
         if (null != $team = $member->getTeam()) {
 
-            $customerManager = $this->getCustomerManager();
+            $customerManager = $this->manager('customer');
 
             $leader = $team->getLeader();
 
@@ -199,7 +199,7 @@ class TeamController extends AbstractController
      */
     private function refreshTeamMembers(TeamInterface $team, $beforeMembers = null)
     {
-        $customerManager = $this->getCustomerManager();
+        $customerManager = $this->manager('customer');
 
         if ($beforeMembers) {
             foreach ($beforeMembers as $beforeMember) {
