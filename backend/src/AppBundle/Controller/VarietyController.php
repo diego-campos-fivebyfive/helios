@@ -18,7 +18,6 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
  * @Route("variety")
  * @Breadcrumb("Variedades")
  *
- * @Security("has_role('ROLE_OWNER')")
  */
 class VarietyController extends AbstractController
 {

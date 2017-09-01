@@ -49,7 +49,7 @@ class InverterController extends FOSRestController
         }
         catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $data = 'Can not create Inverter';
+            $data = $exception;
         }
 
         $view = View::create($data)->setStatusCode($status);
@@ -84,7 +84,7 @@ class InverterController extends FOSRestController
         }
         catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $data = 'Can not update Inverter';
+            $data = $exception;
         }
 
         $view = View::create($data)->setStatusCode($status);

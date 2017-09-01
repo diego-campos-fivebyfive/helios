@@ -37,6 +37,7 @@ class InverterData extends AbstractFixture implements OrderedFixtureInterface
             'phases' => 5,
             'dataSheet' => self::randomString(15),
             'image' => self::randomString(10),
+            'promotional' => false
         ];
 
         $inverter = new Inverter();

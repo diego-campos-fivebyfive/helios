@@ -10,13 +10,8 @@
 
     <services>
 
-        <service id="app.parameter_manager" class="AppBundle\Entity\ParameterManager">
-            <argument>AppBundle\Entity\Parameter</argument>
-            <argument type="service" id="doctrine"/>
-        </service>
-
         <service id="app.document_helper" class="AppBundle\Service\DocumentHelper">
-            <argument type="service" id="app.parameter_manager"/>
+            <argument type="service" id="parameter_manager"/>
             <argument type="collection">
                 <argument type="string" key="storage">%kernel.root_dir%/../web/uploads/documents/</argument>
                 <argument type="string" key="root_dir">%kernel.root_dir%</argument>
@@ -47,11 +42,6 @@
         <service id="app.mailbox" class="AppBundle\Service\MailboxHelper">
             <argument type="service" id="app.email_account_manager"/>
             <argument>%kernel.root_dir%/../storage/mail</argument>
-        </service>
-
-        <service id="app.notification_manager" class="AppBundle\Entity\NotificationManager">
-            <argument>AppBundle\Entity\Notification</argument>
-            <argument type="service" id="doctrine"/>
         </service>
 
         <service id="app.sale_cycle_manager" class="AppBundle\Entity\SaleCycleManager">
@@ -122,7 +112,7 @@
         </service>
 
         <service id="app.notification_generator" class="AppBundle\Service\NotificationGenerator">
-            <argument type="service" id="app.notification_manager"/>
+            <argument type="service" id="notification_manager"/>
             <argument type="service" id="twig"/>
         </service>
 

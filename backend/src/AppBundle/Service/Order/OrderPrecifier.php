@@ -49,6 +49,8 @@ class OrderPrecifier
             }
         }
 
+        $order->addMetadata('memorial', $memorial->toArray());
+
         $this->container->get('order_manager')->save($order);
     }
 
