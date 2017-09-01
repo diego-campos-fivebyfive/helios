@@ -14,7 +14,18 @@ class MemorialController extends FOSRestController
 {
     public function postMemorialAction(Request $request)
     {
+        $responseHandler = function($data, $status) {
+            $view = View::create($data)->setStatusCode($status);
+            return $this->handleView($view);
+        };
+
         $data = json_decode($request->getContent(), true);
+
+        if($data['status'] != 1) {
+            $data = "This Memorial is not active!";
+            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+            return $responseHandler($data, $status);
+        }
 
         /** @var Memorial $memorialManager */
         $memorialManager = $this->get('memorial_manager');
@@ -24,14 +35,14 @@ class MemorialController extends FOSRestController
         if ($existentMemorial) {
             $data = "This Memorial Already Existing!";
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-
-            $view = View::create($data)->setStatusCode($status);
-            return $this->handleView($view);
+            return $responseHandler($data, $status);
         }
 
         $currentMemorial = $memorialManager->findOneBy(array(), array('id' => 'DESC'));
         if ($currentMemorial) {
-            $currentMemorial->setEndAt(new \DateTime('now'));
+            $currentMemorial
+                ->setStatus(0)
+                ->setEndAt(new \DateTime('now'));
         }
 
         /** @var Memorial $memorial */
@@ -41,8 +52,6 @@ class MemorialController extends FOSRestController
             ->setIsquikId($data['isquik_id'])
             ->setStatus($data['status'])
             ->setStartAt(new \DateTime('now'));
-
-        $memorialManager->save($memorial);
 
         $offset = count($data['ranges']) -1;
 
@@ -62,11 +71,27 @@ class MemorialController extends FOSRestController
                         ->setLevel($level['level'])
                         ->setPrice($level['price']);
 
-                    $rangeManager->save($range, $offset == $key);
+                    $memorial->addRange($range, $offset == $key);
                 }
             }
         }
-        $view = View::create();
-        return $this->handleView($view);
+
+        try {
+            $memorialManager->save($memorial);
+            $status = Response::HTTP_CREATED;
+            $data = [
+                'Id' => $memorial->getId(),
+                'Isquik_id' => $memorial->getIsquikId(),
+                'Version' => $memorial->getVersion(),
+                'Status' => $memorial->getStatus(),
+                'StartAt' => $memorial->getStartAt(),
+                'EndAt' => $memorial->getEndAt()
+            ];
+        } catch (\Exception $exception) {
+            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+            $data = $exception;
+        }
+
+        return $responseHandler($data, $status);
     }
 }

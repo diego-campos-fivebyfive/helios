@@ -36,8 +36,19 @@ class OrderManagerTest extends AppTestCase
             $total += $element->getTotal();
         }
 
+        $order->setMetadata(['memorial' => [
+            'version' => 10,
+            'isquik_id' => 200
+        ]]);
+
+        $metadata = $order->getMetadata('memorial');
+
+        $this->assertArrayHasKey('version',$metadata);
+
         $this->assertEquals(5, $order->getElements()->count());
         $this->assertEquals($total, $order->getTotal());
+
+        $manager->save($order);
     }
 
     public function testSelfAssociations()

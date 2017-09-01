@@ -211,9 +211,9 @@ class WidgetController extends AbstractController
      */
     private function timelineWidget()
     {
-        $member = $this->getCurrentMember();
+        $member = $this->member();
 
-        $subscriptions = $this->get('app.notification_manager')->subscriptions($member, [
+        $subscriptions = $this->manager('notification')->subscriptions($member, [
             'type' => Notification::TYPE_TIMELINE,
             'limit' => 6
         ]);

@@ -45,7 +45,7 @@ class ModuleController extends AbstractApiController
         }
         catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $data = 'Can not create Module';
+            $data = $exception;
         }
 
         $view = View::create($data)->setStatusCode($status);
@@ -79,7 +79,7 @@ class ModuleController extends AbstractApiController
             $data = $this->get('api_formatter')->format($code, ['maker' => 'id']);
         }catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $data = 'Can not update Module';
+            $data = $exception;
         }
 
         $view = View::create($data)->setStatusCode($status);
