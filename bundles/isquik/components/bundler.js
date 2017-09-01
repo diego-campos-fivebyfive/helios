@@ -1,5 +1,7 @@
 'use strict'
 
+const { exec } = require('child_process')
+
 const bundler = actions => (request, response) => {
   const { callback, body } = request.body
   const action = actions[callback]
@@ -23,12 +25,17 @@ const bundler = actions => (request, response) => {
         .json(data)
         .end()
     })
-    .catch(({ message }) => {
+    .catch(message => {
       response
         .status(500)
         .send(`Internal Error, contact us. ${new Date()}`)
         .end()
-      throw new Error(`Internal error: ${message}`)
+
+      if (process.env.CES_AMBIENCE === 'development') {
+        throw new Error(`Internal error: ${message}`)
+      } else {
+        exec(`bash $CLI_PATH/ces-slack-notify --backlog-api \'${message}\'`)
+      }
     })
 }
 
