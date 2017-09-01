@@ -31,7 +31,9 @@ class MemorialController extends FOSRestController
 
         $currentMemorial = $memorialManager->findOneBy(array(), array('id' => 'DESC'));
         if ($currentMemorial) {
-            $currentMemorial->setEndAt(new \DateTime('now'));
+            $currentMemorial
+                ->setStatus(0)
+                ->setEndAt(new \DateTime('now'));
         }
 
         /** @var Memorial $memorial */
