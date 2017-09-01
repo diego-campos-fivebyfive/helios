@@ -20,7 +20,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 
 /**
  * @Security("has_role('ROLE_OWNER') or has_role('ROLE_OWNER_MASTER')")
- * @Route("generator")
+ * @Route("project/generator")
  * @Breadcrumb("Orçamentos")
  */
 class ProjectGeneratorController extends AbstractController
@@ -31,6 +31,18 @@ class ProjectGeneratorController extends AbstractController
     public function indexAction()
     {
         return $this->render('generator.index');
+    }
+
+    /**
+     * @Route("/{id}/components", name="generator_components")
+     */
+    public function componentsAction(Project $project)
+    {
+        $this->getGenerator()->pricing($project);
+
+        return $this->render('generator.components', [
+            'project' => $project
+        ]);
     }
 
     /**
