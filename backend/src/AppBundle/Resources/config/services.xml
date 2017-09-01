@@ -44,11 +44,6 @@
             <argument>%kernel.root_dir%/../storage/mail</argument>
         </service>
 
-        <service id="app.sale_cycle_manager" class="AppBundle\Entity\SaleCycleManager">
-            <argument>AppBundle\Entity\SaleCycle</argument>
-            <argument type="service" id="doctrine"/>
-        </service>
-
         <service id="app.account_register_manager" class="AppBundle\Entity\Extra\AccountRegisterManager">
             <argument>AppBundle\Entity\Extra\AccountRegister</argument>
             <argument type="service" id="doctrine"/>
