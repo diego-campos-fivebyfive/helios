@@ -82,8 +82,6 @@
 
 {% block body %}
 
-    {% include view('project.common') %}
-
     <div class="modal inmodal fade" id="modal_component" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -305,26 +303,20 @@
                             </div>
 
                             <div class="col-md-12" id="block_components">
-
-                                <div class="panel panel-warning">
-                                    <div class="panel-heading">
-                                        Form Generator
-                                    </div>
-                                    <div class="panel-body" id="form_generator_container">
-
-                                    </div>
-                                </div>
-
                                 <div class="panel panel-info">
                                     <div class="panel-heading" id="info_components">
                                         {% if project.id is not null %}
                                             Sistema de {{ project.power }} kWp
                                         {% endif %}
                                     </div>
-                                    <div class="panel-body" id="project_components" data-load="{{ project.id ? path('project_components',{id:project.id}) }}">
-                                        {% if project.id %}
-                                            {% include view('helper.spinner') %}
-                                        {% endif %}
+                                    <div class="panel-body">
+                                        <div id="generator_form">
+                                        </div>
+                                        <div id="project_components" data-load="{{ project.id ? path('project_components',{id:project.id}) }}">
+                                            {% if project.id %}
+                                                {% include view('helper.spinner') %}
+                                            {% endif %}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -420,6 +412,36 @@
     {% set ajax_process = true %}
 
     <script>
+
+        var GeneratorHandler = {
+            project: {id:0,power:0},
+            getProject: function(){
+                return this.project;
+            },
+            resetProject: function(){
+                this.project = {id:0,power:0};
+                this.onResetProject();
+            },
+            getForm: function(){
+                var id = this.getProject().id;
+                Request.send({
+                    url: '{{ path('generator',{project:'_id_'}) }}'.replace(/_id_/g, id),
+                    callback: function(xhr){
+                        $('#generator_form').html(xhr.responseText);
+                    }
+                });
+            },
+            onSaveProject: function(project){
+                ProjectManager.onSaveProject();
+            },
+            onResetProject: function(){
+                {#
+                    BRANCH PARADA
+                    AGUARDANDO FINALIZAÇÃO DO PROCESSO A PARTIR DAQUI...
+                #}
+                //$('#generator_components').html('');
+            }
+        };
 
         var ProjectManager = {
             btnProcess: $('#process_button'),
@@ -521,9 +543,10 @@
                 }
             },
             process: function(){
-                if(ProjectManager.project.id){
+                var id = GeneratorHandler.getProject().id;
+                if(id){
                     ProjectManager.request({
-                        url: '{{ path('project_process',{id:'_id_'}) }}'.replace(/_id_/g, ProjectManager.project.id),
+                        url: '{{ path('project_process',{id:'_id_'}) }}'.replace(/_id_/g, id),
                         method: 'post',
                         callback: function(xhr){
                             var response = xhr.responseJSON;
@@ -641,7 +664,8 @@
                             button.ladda('stop');
                             var response = xhr.responseJSON;
                             if(200 == xhr.status && response.hasOwnProperty('project')){
-                                ProjectManager.project = response.project;
+                                //ProjectManager.project = response.project;
+                                GeneratorHandler.project = response.project;
                                 ProjectManager.onSaveProject();
                             }else{
                                 swal('Ooops', response.errors[0], 'warning');
@@ -653,7 +677,7 @@
                 Numbers.mask($('#project_infConsumption'));
             },
             configureBlocks: function(){
-                if(ProjectManager.project.id){
+                if(GeneratorHandler.getProject().id){
                     $('#block_components, #block_groups, #block_config, #block_results').show();
                     $('#block_init').hide();
                 }else{
@@ -724,29 +748,31 @@
             },
             onSaveProject: function(){
 
-                Project.id = ProjectManager.project.id;
+                var project = GeneratorHandler.getProject();
 
-                var project_url = '{{ path('project_update',{id:'_id_'}) }}'.replace(/_id_/g, ProjectManager.project.id);
+                var project_url = '{{ path('project_update',{id:'_id_'}) }}'.replace(/_id_/g, project.id);
                 window.history.pushState({}, null, project_url);
                 $('#form_project').attr('action', project_url);
 
-                var components_url = '{{ path('project_components',{id:'_id_'}) }}'.replace(/_id_/g, ProjectManager.project.id);
+                var components_url = '{{ path('project_components',{id:'_id_'}) }}'.replace(/_id_/g, project.id);
                 $('#project_components').attr('data-load', components_url);
                 ProjectManager.loadComponents();
 
-                var groups_url = '{{ path('project_groups',{id:'_id_'}) }}'.replace(/_id_/g, ProjectManager.project.id);
+                var groups_url = '{{ path('project_groups',{id:'_id_'}) }}'.replace(/_id_/g, project.id);
                 $('#project_groups').attr('data-load', groups_url);
                 ProjectManager.loadGroups();
 
-                var inverters_url = '{{ path('project_inverters',{id:'_id_'}) }}'.replace(/_id_/g, ProjectManager.project.id);
+                var inverters_url = '{{ path('project_inverters',{id:'_id_'}) }}'.replace(/_id_/g, project.id);
                 $('#project_inverters').attr('data-load', inverters_url);
                 ProjectManager.loadInverters();
 
-                $('#info_components').html('Sistema de ' + ProjectManager.project.power + ' kWp');
+                $('#info_components').html('Sistema de ' + project.power + ' kWp');
 
                 ProjectManager.configureBlocks();
 
                 ProjectManager.process();
+
+                GeneratorHandler.getForm();
 
                 $('#btn-coord-info').css('margin-top', 0);
             },
@@ -788,7 +814,7 @@
                     $('#generator_grid_voltage')
                 );
 
-                this.getFormGenerator();
+                //this.getFormGenerator();
             }
         };
 
