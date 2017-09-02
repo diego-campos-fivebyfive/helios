@@ -4,12 +4,12 @@ const Sices = require('../../models/sices')
 const Isquik = require('../../models/isquik')
 
 const families = {
-    INVERSOR: 'inverter',
-    MODULO: 'module',
-    ESTRUTURA: 'structure',
-    STRINGBOX: 'stringbox',
-    CABOS: 'variety',
-    CONECTORES: 'variety'
+  INVERSOR: 'inverter',
+  MODULO: 'module',
+  ESTRUTURA: 'structure',
+  STRINGBOX: 'stringbox',
+  CABOS: 'variety',
+  CONECTORES: 'variety'
 }
 
 const getFamily = family => families[family]
