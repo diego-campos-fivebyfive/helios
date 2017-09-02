@@ -25,29 +25,6 @@
         </property>
     </class>
 
-    <class name="AppBundle\Entity\Extra\AccountRegister">
-        <property name="name">
-            <constraint name="NotBlank">
-                <option name="groups">
-                    <value>info</value>
-                </option>
-            </constraint>
-            <constraint name="Length">
-                <option name="min">4</option>
-                <option name="minMessage">The name entered is too short</option>
-                <option name="max">254</option>
-                <option name="maxMessage">The name entered is too long</option>
-            </constraint>
-        </property>
-        <property name="email">
-            <constraint name="Email">
-                <option name="checkMX">true</option>
-                <option name="checkHost">true</option>
-                <option name="message">The email entered is not valid</option>
-            </constraint>
-        </property>
-    </class>
-
     <class name="AppBundle\Entity\User">
         <property name="plainPassword">
             <constraint name="NotBlank">

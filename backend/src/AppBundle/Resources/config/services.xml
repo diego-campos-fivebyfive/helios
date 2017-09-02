@@ -39,11 +39,6 @@
             <argument type="service" id="request_stack"/>
         </service>
 
-        <service id="app.account_register_manager" class="AppBundle\Entity\Extra\AccountRegisterManager">
-            <argument>AppBundle\Entity\Extra\AccountRegister</argument>
-            <argument type="service" id="doctrine"/>
-        </service>
-
         <service id="app.customer_helper" class="AppBundle\Service\CustomerHelper">
             <argument type="service" id="customer_manager"/>
         </service>
