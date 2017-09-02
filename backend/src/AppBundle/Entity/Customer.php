@@ -1296,16 +1296,6 @@ class Customer extends AbstractCustomer
     }
 
     /**
-     * @inheritDoc
-     */
-    public function getCurrentEmailAccount()
-    {
-        return $this->emailAccounts->filter(function(EmailAccountInterface $account){
-            return $account->isCurrent();
-        })->first();
-    }
-
-    /**
      * TODO: Necessary to implement conversion mechanism
      * @inheritDoc
      */

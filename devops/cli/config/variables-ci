@@ -4,3 +4,5 @@ ambience=${1/--/}
 
 source $SICES_PATH/devops/cli/config/variables
 source $CLI_PATH/config/$ambience/variables-ci
+
+export CES_AMBIENCE=$ambience

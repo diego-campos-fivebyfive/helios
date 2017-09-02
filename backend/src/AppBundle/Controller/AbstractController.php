@@ -386,14 +386,6 @@ abstract class AbstractController extends Controller
     }
 
     /**
-     * @return \AppBundle\Entity\EmailAccountManager
-     */
-    protected function getEmailAccountManager()
-    {
-        return $this->get('app.email_account_manager');
-    }
-
-    /**
      * @return \AppBundle\Entity\Component\KitManager
      */
     protected function getKitManager()
