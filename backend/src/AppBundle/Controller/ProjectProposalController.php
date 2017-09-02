@@ -114,7 +114,7 @@ class ProjectProposalController extends AbstractController
         $financialDefaultChartData = $data['financial_default_chart_data'];
         $financialChartData = $data['financial_chart_data'];
 
-        $projectManager = $this->getProjectManager();
+        $projectManager = $this->manager('project');
 
         $project
             ->setDefaultChartData($projectDefaultChartData)
@@ -194,7 +194,7 @@ class ProjectProposalController extends AbstractController
 
                 $project->setMetadata('filename', $filename);
 
-                $projectManager = $this->getProjectManager();
+                $projectManager = $this->manager('project');
                 // TODO: Fix error update parameters
                 $projectManager->getEntityManager()->detach($parameters);
 
@@ -205,7 +205,7 @@ class ProjectProposalController extends AbstractController
                 $explorer->moveTmpFile($filename);
 
                 $this->generateProjectSnapshot($project);
-                $this->getProjectManager()->save($project);
+                $this->manager('project')->save($project);
 
                 $this->getNotificationGenerator()->proposalIssued($project);
 
