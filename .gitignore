@@ -8,7 +8,6 @@ backend/app/bootstrap.php.cache
 backend/storage
 backend/web/public
 backend/web/uploads
-backend/web/deploy/deploy.log
 
 node_modules
 vendor
