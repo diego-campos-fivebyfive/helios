@@ -39,16 +39,6 @@
             <argument type="service" id="request_stack"/>
         </service>
 
-        <service id="app.mailbox" class="AppBundle\Service\MailboxHelper">
-            <argument type="service" id="app.email_account_manager"/>
-            <argument>%kernel.root_dir%/../storage/mail</argument>
-        </service>
-
-        <service id="app.sale_cycle_manager" class="AppBundle\Entity\SaleCycleManager">
-            <argument>AppBundle\Entity\SaleCycle</argument>
-            <argument type="service" id="doctrine"/>
-        </service>
-
         <service id="app.account_register_manager" class="AppBundle\Entity\Extra\AccountRegisterManager">
             <argument>AppBundle\Entity\Extra\AccountRegister</argument>
             <argument type="service" id="doctrine"/>
@@ -56,11 +46,6 @@
 
         <service id="app.customer_helper" class="AppBundle\Service\CustomerHelper">
             <argument type="service" id="customer_manager"/>
-        </service>
-
-        <service id="app.email_account_manager" class="AppBundle\Entity\EmailAccountManager">
-            <argument>AppBundle\Entity\EmailAccount</argument>
-            <argument type="service" id="doctrine"/>
         </service>
 
         <service id="app.form_type_contact" class="AppBundle\Form\ContactType">
