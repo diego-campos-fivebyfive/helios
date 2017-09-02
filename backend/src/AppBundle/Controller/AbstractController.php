@@ -394,14 +394,6 @@ abstract class AbstractController extends Controller
     }
 
     /**
-     * @return \AppBundle\Entity\Component\MakerManager
-     */
-    protected function getMakerManager()
-    {
-        return $this->get('app.maker_manager');
-    }
-
-    /**
      * @return \AppBundle\Entity\PackageManager
      */
     protected function getPackageManager()
@@ -431,14 +423,6 @@ abstract class AbstractController extends Controller
     protected function getMediaManager()
     {
         return $this->get('sonata.media.manager.media');
-    }
-
-    /**
-     * @return \AppBundle\Entity\Project\ProjectManager|object
-     */
-    protected function getProjectManager()
-    {
-        return $this->get('app.project_manager');
     }
 
     /**

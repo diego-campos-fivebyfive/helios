@@ -7,7 +7,7 @@ echo "Installing packages dependencies..."
 cd backend
   composer install
   npm install
-  bash $CLI_PATH/util/bug-fix
+  $CLI_PATH/util/bug-fix
 cd ../
 
 cd bundles/isquik
