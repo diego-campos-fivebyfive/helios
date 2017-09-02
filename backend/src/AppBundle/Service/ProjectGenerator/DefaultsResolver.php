@@ -167,6 +167,11 @@ class DefaultsResolver
         return $this->strategy;
     }
 
+    /**
+     * Resolve default value and apply strategy
+     * @param $default
+     * @param $value
+     */
     private function resolveDefault($default, $value)
     {
         if(is_null($value)){
