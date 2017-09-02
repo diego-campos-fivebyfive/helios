@@ -6,7 +6,7 @@ echo "Starting Application..."
 
 isquik=bundles/isquik
 
-if [ -z ${1+x} ] || [ $1 == '--development' ]; then
+if [ -z ${1+x} ] || [ $1 = '--development' ]; then
 
   bash $CLI_PATH/ces-app-install
   bash $CLI_PATH/ces-database-update
