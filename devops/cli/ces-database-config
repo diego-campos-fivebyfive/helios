@@ -16,6 +16,6 @@ if [ -z ${1+x} ] || [ $1 == '--development' ]; then
   sed -i "s/$field/$password/g" $parameters
 
   mysql -u root -p$password -e 'CREATE DATABASE sices_solar;' > /dev/null 2>&1
-  bash $CLI_PATH/ces-database-mirror $password
+  $CLI_PATH/ces-database-mirror $password
 
 fi

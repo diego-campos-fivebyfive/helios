@@ -6,10 +6,10 @@ echo "Starting Application..."
 
 isquik=bundles/isquik
 
-if [ -z ${1+x} ] || [ $1 == '--development' ]; then
+if [ -z ${1+x} ] || [ $1 = '--development' ]; then
 
-  bash $CLI_PATH/ces-app-install
-  bash $CLI_PATH/ces-database-update
+  $CLI_PATH/ces-app-install
+  $CLI_PATH/ces-database-update
 
   echo "Sices app starting on $CES_SICES_HOST:$CES_SICES_PORT"
   php backend/app/console server:run &
