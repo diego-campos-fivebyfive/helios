@@ -4,12 +4,12 @@ cd $SICES_PATH
 
 echo "Starting App configurations..."
 
-bash $CLI_PATH/util/variables-replacer
+$CLI_PATH/util/variables-replacer
 
 if [ -z ${1+x} ] || [ $1 = '--development' ]; then
 
   cp $CLI_PATH/util/pre-push .git/hooks/pre-push
-  bash $CLI_PATH/ces-database-config --development
+  $CLI_PATH/ces-database-config --development
 
 else
 
