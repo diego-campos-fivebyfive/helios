@@ -100,8 +100,7 @@ class ProjectGenerator
             $defaults['power'] = $power;
         }
 
-        // TODO THIS OPTION IS TEMPORARY DISABLED
-        // CriteriaAggregator::promotional($defaults['is_promotional']);
+        CriteriaAggregator::promotional($defaults['is_promotional']);
 
         $defaults['errors'] = [];
         $this->project->setDefaults($defaults);

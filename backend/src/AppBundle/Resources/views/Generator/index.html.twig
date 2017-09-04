@@ -25,6 +25,9 @@
                             <div id="generator_form" class="col-md-12 flow-h">
                             </div>
 
+                            <div id="generator_components" class="col-md-12 flow-h">
+                            </div>
+
                             <div class="hr-line-dashed col-md-12"></div>
 
                             <div id="generator_orders" class="col-md-12 flow-h">
@@ -47,101 +50,68 @@
 
     <script>
 
-        var Project = {
-            id: null,
-            power: 0
-        };
-
-        var Order = {
-            id: null
-        };
-
-        var OrderManager = {
-            currentUrl: null,
-            /*getElements: function(){
-                if(Order.id){
+        GeneratorHandler = {
+            project: {id:0,power:0},
+            getProject: function(){
+                return this.project;
+            },
+            resetProject: function(){
+                this.project = {id:0,power:0};
+                this.onResetProject();
+            },
+            getForm: function(){
+                var id = this.getProject().id;
+                Request.send({
+                    url: '{{ path('generator',{project:'_id_'}) }}'.replace(/_id_/g, id),
+                    callback: function(xhr){
+                        $('#generator_form').html(xhr.responseText);
+                        FormGenerator.field('source').find('option[value="power"]').attr('selected', 'selected').trigger('change');
+                        var blocks = FormGenerator.form.find('.middle-block');
+                        $(blocks[0]).hide();
+                        $(blocks[1]).addClass('col-md-12');
+                    }
+                });
+            },
+            getComponents: function(){
+                var id = this.getProject().id;
+                if(id){
                     Request.send({
-                        url: '{{ path('generator_orders_elements', {id:'_id_'}) }}'.replace(/_id_/g, Order.id),
+                        url: '{{ path('generator_components',{id:'_id_'}) }}'.replace(/_id_/g, id),
                         callback: function(xhr){
-                            $('#order_elements').html(xhr.responseText);
+                            $('#generator_components').html(xhr.responseText);
                         }
                     });
                 }
-            },*/
-            getOrders: function(url){
-                if(url)  OrderManager.currentUrl = url;
+            },
+            getOrders: function(){
                 Request.send({
-                    url: OrderManager.currentUrl,
+                    url: '{{ path('generator_orders') }}',
                     callback: function(xhr){
                         $('#generator_orders').html(xhr.responseText);
                     }
                 });
             },
-            register: function(button){
-                button.on('click', function(){
-                    if(Project.id){
-
-                        swal({title: 'Confirma a geração do orçamento?',
-                            text: 'Após este processo o projeto atual será removido!',
-                            type: "warning",
-                            showCancelButton: true,
-                            confirmButtonColor: "#DD6B55",
-                            confirmButtonText: '{{ 'Confirmar'|trans }}',
-                            cancelButtonText: '{{ 'Cancelar'|trans }}',
-                            closeOnConfirm: false
-                        }, function() {
-
-                            sweetAlert({
-                                title: "Gerando orçamento...",
-                                text:  "Aguarde!",
-                                type: "info",
-                                showConfirmButton: false
-                            });
-
-                            Request.send({
-                                url: '{{ path('generator_orders_create',{id:'_id_'}) }}'.replace(/_id_/g, Project.id),
-                                method: 'post',
-                                callback: function (xhr) {
-                                    OrderManager.onCreateOrder();
-                                    swal.close();
-                                }
-                            });
-                        });
-                    }
-                });
+            onSaveProject: function(project){
+                this.project = project;
+                this.getComponents();
+                this.getForm();
             },
-            onCreateOrder: function(){
-                OrderManager.getOrders('{{ path('generator_orders') }}');
-                ProjectGenerator.getCreateForm();
+            onResetProject: function(){
+                $('#generator_components').html('');
             },
-            onSaveElement: function(){
-
-            }
-        };
-
-        var ProjectGenerator = {
-            lastUrl: null,
-            formProject: function(url){
-                if(url) ProjectGenerator.lastUrl = url;
-                Request.send({
-                    url: ProjectGenerator.lastUrl,
-                    callback: function(xhr){
-                        $('#generator_form').html(xhr.responseText);
-                    }
-                });
-            },
-            register: function(form) {
-            },
-            getCreateForm: function(){
-                ProjectGenerator.formProject('{{ path('order_generator_project') }}');
+            onSaveOrder: function(){
+                this.getOrders();
+                this.resetProject();
+                this.getForm();
             },
             init: function(){
-                ProjectGenerator.getCreateForm();
-                OrderManager.getOrders('{{ path('generator_orders') }}');
+                this.getForm();
+                this.getComponents();
+                this.getOrders();
             }
         };
 
-        ProjectGenerator.init();
+        GeneratorHandler.init();
 
     </script>
 

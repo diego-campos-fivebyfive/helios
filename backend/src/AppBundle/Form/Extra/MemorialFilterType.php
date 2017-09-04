@@ -91,8 +91,12 @@ class MemorialFilterType extends AbstractType
         }, $ranges);
 
         $form->add('level', ChoiceType::class, [
+<<<<<<< HEAD
+            'choices' => array_combine($levels, $levels)
+=======
             'choices' => array_combine($levels, $levels),
             'placeholder' => 'Selecionar'
+>>>>>>> 18c5c8667d6ad16d87ddf9146b7ad4cc54b5a861
         ]);
     }
 }
