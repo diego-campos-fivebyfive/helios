@@ -35,7 +35,7 @@ const bundler = actions => (request, response) => {
         throw new Error(`Internal error: ${message}`)
       } else {
         /*eslint-disable */
-        exec(`$CLI_PATH/ces-slack-notify --backlog-api \'${message}\'`)
+        exec(`$CLI_PATH/ces-slack-notify --backlog-api \'${JSON.stringify(message)}\'`)
         /*eslint-enable */
       }
     })
