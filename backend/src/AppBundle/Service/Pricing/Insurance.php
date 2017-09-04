@@ -25,12 +25,33 @@ class Insurance
 
     /**
      * @param InsurableInterface $insurable
+     * @param $isInsure
+     */
+    public static function apply(InsurableInterface $insurable, $isInsure)
+    {
+        if($isInsure){
+            self::insure($insurable);
+        }else{
+            self::remove($insurable);
+        }
+    }
+
+    /**
+     * @param InsurableInterface $insurable
      */
     public static function insure(InsurableInterface $insurable)
     {
         $quota = $insurable->getInsuranceQuota();
 
         $insurable->setInsurance(self::calculate($quota));
+    }
+
+    /**
+     * @param InsurableInterface $insurable
+     */
+    public static function remove(InsurableInterface $insurable)
+    {
+        $insurable->setInsurance(0);
     }
 
     /**
