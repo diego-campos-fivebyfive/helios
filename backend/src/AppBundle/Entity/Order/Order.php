@@ -1,9 +1,20 @@
 <?php
 
+/*
+ * This file is part of the SicesSolar package.
+ *
+ * (c) SicesSolar <http://sicesbrasil.com.br/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace AppBundle\Entity\Order;
 
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\MetadataTrait;
+use AppBundle\Entity\Pricing\InsurableTrait;
+use AppBundle\Service\Pricing\InsurableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
@@ -14,9 +25,10 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  * @ORM\Table(name="app_order")
  * @ORM\Entity
  */
-class Order implements OrderInterface
+class Order implements OrderInterface, InsurableInterface
 {
     use MetadataTrait;
+    use InsurableTrait;
     use ORMBehaviors\Timestampable\Timestampable;
 
     /**
@@ -211,6 +223,14 @@ class Order implements OrderInterface
         }
 
         return $total;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getInsuranceQuota()
+    {
+        return $this->getTotal();
     }
 
     /**
