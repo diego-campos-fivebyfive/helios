@@ -138,7 +138,6 @@ class ProjectProposalController extends AbstractController
     }
 
     /**
-     *
      * @Route("/generate/{display}", name="project_proposal_generate")
      */
     public function generateAction(Request $request, Project $project, $display)
