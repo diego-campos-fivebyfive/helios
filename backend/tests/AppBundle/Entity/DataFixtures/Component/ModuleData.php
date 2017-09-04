@@ -17,7 +17,25 @@ class ModuleData extends AbstractFixture implements OrderedFixtureInterface
      */
     public function load(ObjectManager $manager)
     {
-        $data = [
+        $module = new Module();
+
+        $this->fillAndSave($module, self::getData(), $manager, 'module');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getOrder()
+    {
+        return 1;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getData()
+    {
+        return [
             'model' => self::randomString(4),
             'code' => self::randomString(8),
             'cellNumber' => self::randomInt(),
@@ -33,23 +51,12 @@ class ModuleData extends AbstractFixture implements OrderedFixtureInterface
             'tempCoefficientIsc' => self::randomFloat(),
             'length' => self::randomFloat(),
             'width' => self::randomFloat(),
+            'promotional' => false,
             'cellType' => self::randomString(10),
             'connectionType' => self::randomString(5),
             'dataSheet' => self::randomString(15),
             'image' => self::randomString(10),
             'promotional' => false
         ];
-
-        $module = new Module();
-
-        $this->fillAndSave($module, $data, $manager, 'module');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getOrder()
-    {
-        return 1;
     }
 }

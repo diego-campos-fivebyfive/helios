@@ -1,0 +1,265 @@
+{{ form_start(form,{attr:{id:'form_generator'}}) }}
+
+<div class="row">
+    <div class="form-group">
+        <div class="col-md-3">
+            <div class="row col-xs-12">
+                {{ form_label(form.power, 'Potência',{label_attr:{id:'source_label'}}) }}
+            </div>
+            <div class="row">
+                <div class="col-md-6 middle-block col-xs-6">
+                    {{ form_widget(form.source,{attr:{class:'form-control'}}) }}
+                </div>
+                <div class="middle-block col-xs-6">
+                    {{ form_widget(form.power,{attr:{class:'form-control'}}) }}
+                    {{ form_widget(form.consumption,{attr:{class:'form-control'}}) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 col-xs-6">
+            {{ form_label(form.module, 'Módulo') }}
+            {{ form_widget(form.module,{attr:{class:'form-control'}}) }}
+        </div>
+        <div class="col-md-3 col-xs-6">
+            {{ form_label(form.inverter_maker, 'Fab. Inversor') }}
+            {{ form_widget(form.inverter_maker,{attr:{class:'form-control'}}) }}
+        </div>
+        <div class="col-md-2 col-xs-6">
+            {{ form_label(form.string_box_maker, 'Fab. String Box') }}
+            {{ form_widget(form.string_box_maker,{attr:{class:'form-control'}}) }}
+        </div>
+        <div class="col-md-2 col-xs-6">
+            {{ form_label(form.structure_maker, 'Fab. Estrutura') }}
+            {{ form_widget(form.structure_maker,{attr:{class:'form-control'}}) }}
+        </div>
+    </div>
+</div>
+
+<div class="row" style="margin-top: 1rem;">
+    <div class="form-group">
+        <div class="col-md-3 col-xs-6">
+            {{ form_label(form.roof_type, 'Tipo de Telhado') }}
+            {{ form_widget(form.roof_type,{attr:{class:'form-control'}}) }}
+        </div>
+        <div class="col-md-2 col-xs-6">
+            {{ form_label(form.grid_voltage, 'Tensão') }}
+            {{ form_widget(form.grid_voltage,{attr:{class:'form-control'}}) }}
+        </div>
+        <div class="col-md-2 col-xs-6">
+            {{ form_label(form.grid_phase_number, 'Fases') }}
+            {{ form_widget(form.grid_phase_number,{attr:{class:'form-control'}}) }}
+        </div>
+        <div class="col-md-3 col-xs-6" style="font-size: 12px; margin-top: 1rem;">
+            {{ form_widget(form.use_transformer) }} &nbsp;
+            {{ form_label(form.use_transformer, 'Incluir transformador se necessário') }}
+            <br>
+            {{ form_widget(form.is_promotional) }} &nbsp;
+            {{ form_label(form.is_promotional, 'Utilizar tabela promocional') }}
+        </div>
+
+        <div class="col-md-2">
+            <label> &nbsp; </label>
+           {# <button type="submit" class="btn btn-success btn-block ladda-button" data-style="zoom-in">
+                <i class="fa fa-check"></i> Recalcular
+            </button>#}
+
+            {{ form_widget(form.save) }}
+
+        </div>
+
+        <div class="hide">
+            {{ form_rest(form) }}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="hr-line-dashed"></div>
+</div>
+
+{{ form_end(form) }}
+
+<script>
+
+    var FormGenerator = {
+        form: $('#form_generator'),
+        container: null,
+        sourceOption: null,
+        field: function(id){
+            return this.form.find('#generator_' + id);
+        },
+        value: function(id){
+            return this.field(id).val();
+        },
+        post: function(url, data){
+
+        },
+        getMakers: function(callback){
+            var form = this.form;
+            $.post('{{ path('detect_makers') }}', form.serialize(), function(response){
+                var makers = response.makers;
+                if(!makers.length){
+                    FormGenerator.field('inverter_maker').find('option').attr('disabled', 'disabled');
+                }
+                callback(makers);
+            });
+        },
+        handleMakers: function(){
+            FormGenerator.getMakers(function(makers){
+                var options = FormGenerator.field('inverter_maker').find('option');
+                $.each(options, function (i, option) {
+                    var id = parseInt($(option).val());
+                    if (makers.indexOf(id) >= 0) {
+                        $(option).removeAttr('disabled');
+                    } else {
+                        $(option).attr('disabled', 'disabled');
+                    }
+                });
+            });
+        },
+        checkSource: function(){
+            var option = this.value('source');
+            if('power' == option){
+                this.field('power').show();
+                this.field('consumption').hide();
+            }else{
+                this.field('consumption').show();
+                this.field('power').hide();
+            }
+        },
+        checkGrid: function(choicePhase, choiceVoltage){
+
+            if(!choicePhase){
+                choicePhase = FormGenerator.field('grid_phase_number');
+            }
+
+            if(!choiceVoltage){
+                choiceVoltage = FormGenerator.field('grid_voltage');
+            }
+
+            var checkOption = function() {
+                var phase = choicePhase.val();
+                var voltage = choiceVoltage.val();
+
+                if ('Monophasic' == phase) {
+                    choiceVoltage.find('option[value="220/380"]').attr('selected', 'selected');
+                    choiceVoltage.find('option[value="127/220"]').attr('disabled', 'disabled');
+                } else {
+                    choiceVoltage.find('option').removeAttr('disabled');
+                }
+
+                if ('127/220' == voltage) {
+                    choicePhase.find('option[value="Monophasic"]').attr('disabled', 'disabled');
+                } else {
+                    choicePhase.find('option').removeAttr('disabled');
+                }
+            };
+
+            checkOption();
+
+            choicePhase.on('change', function(){
+                checkOption();
+                FormGenerator.handleMakers();
+            });
+
+            choiceVoltage.on('change', function(){
+                checkOption();
+            });
+        },
+        listen: function(){
+
+            this.field('is_promotional').on('change', function(){
+                FormGenerator.refresh();
+            });
+
+            this.field('source').on('change', function(){
+                FormGenerator.checkSource();
+            });
+
+            this.field('power').on('change', function(){
+                FormGenerator.handleMakers();
+            });
+
+            this.field('consumption').on('change', function(){
+                FormGenerator.handleMakers();
+            });
+
+            this.form.on('submit', function(event){
+                event.preventDefault();
+                FormGenerator.process();
+            });
+
+            this.checkSource();
+            this.checkGrid();
+
+        },
+        refresh: function(){
+
+            var data = this.form.serialize();
+            var container = this.container;
+            Request.send({
+                url: FormGenerator.form.attr('action'),
+                method: 'post',
+                data: data,
+                callback: function(xhr){
+                    container.html(xhr.responseText);
+                }
+            });
+        },
+        process: function(){
+            var data = this.form.serialize();
+            var container = this.container;
+            Request.send({
+                url: FormGenerator.form.attr('action'),
+                method: 'post',
+                data: data,
+                callback: function(xhr){
+                    container.html(xhr.responseText);
+                    //console.log(xhr.responseJSON);
+                }
+            });
+        },
+        configure: function(){
+
+            this.container = this.form.closest('div');
+
+            this.helper.mask(this.field('power'));
+            this.helper.mask(this.field('consumption'));
+        },
+        helper: {
+            decimal: function(element) {
+                function clear(v) {
+                    return v.replace(/\D+/g, '');
+                }
+                var value = element.val();
+                var backup = value.replace(/\./g, ',');
+                value = clear(value);
+                if (backup.indexOf(',') > 0) {
+                    var commas = backup.split(',');
+                    value = clear(commas[0]) + ',';
+                    if (commas[1].length) {
+                        value += clear(commas[1]);
+                    }
+                }
+                if (0 == backup.indexOf('-')) {
+                    if (2 == backup.split('-').length) {
+                        value = '-' + value;
+                    }
+                }
+                element.val(value);
+            },
+            mask: function(element){
+                element.on('keyup', function () {
+                    FormGenerator.helper.decimal(element);
+                }).trigger('keyup');
+            }
+        },
+        init: function(){
+            this.configure();
+            this.listen();
+        }
+    };
+
+    FormGenerator.init();
+
+</script>
