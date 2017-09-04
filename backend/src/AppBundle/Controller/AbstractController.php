@@ -394,14 +394,6 @@ abstract class AbstractController extends Controller
     }
 
     /**
-     * @return \AppBundle\Entity\PackageManager
-     */
-    protected function getPackageManager()
-    {
-        return $this->get('app.package_manager');
-    }
-
-    /**
      * @return \AppBundle\Entity\TeamManager
      */
     protected function getTeamManager()
