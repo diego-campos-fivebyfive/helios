@@ -112,11 +112,6 @@
             <argument type="service" id="service_container"/>
         </service>
 
-        <service id="app.signature_manager" class="AppBundle\Entity\SignatureManager">
-            <argument>AppBundle\Entity\Signature</argument>
-            <argument type="service" id="doctrine"/>
-        </service>
-
         <!-- manipulators -->
         <service id="account_manipulator" class="AppBundle\Service\Util\AccountManipulator">
             <argument type="service" id="service_container"/>
