@@ -204,9 +204,9 @@ class OrdersController extends AbstractApiController
                     $component = $collector->fromCode($product['code']);
 
                     if ($component) {
-                        $metadata = ComponentExtractor::extract($component);
+                        $extract = ComponentExtractor::extract($component);
 
-                        $product['metadata'] = $metadata['metadata'];
+                        $product['metadata'] = $extract['metadata'];
                     }
 
                     ElementResolver::update($element, $product);
