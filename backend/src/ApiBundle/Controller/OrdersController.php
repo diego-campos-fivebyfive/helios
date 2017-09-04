@@ -13,7 +13,10 @@ namespace ApiBundle\Controller;
 
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\Order\Element;
+use AppBundle\Service\Order\ComponentCollector;
+use AppBundle\Service\Order\ComponentExtractor;
 use AppBundle\Service\Order\ElementResolver;
+use AppBundle\Service\Order\OrderManipulator;
 use FOS\RestBundle\View\View;
 use AppBundle\Entity\Order\Order;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,7 +74,8 @@ class OrdersController extends AbstractApiController
             'description' => $order->getDescription(),
             'note' => $order->getNote(),
             'status' => $order->getStatus(),
-            'memorial' => $order->getMetadata('memorial')
+            'memorial' => $order->getMetadata('memorial'),
+            'isquik_id' => $order->getIsquikId()
         ];
 
         if($order->isBudget()){
@@ -109,7 +113,17 @@ class OrdersController extends AbstractApiController
                 );
             }
 
+            /** @var ComponentCollector $collector */
+            $collector = $this->get('component_collector');
             foreach ($data['products'] as $product) {
+
+                $component = $collector->fromCode($product['code']);
+                if ($component) {
+                    $extract = ComponentExtractor::extract($component);
+
+                    $product['metadata'] = $extract['metadata'];
+                }
+
                 $element = new Element();
                 ElementResolver::update($element, $product);
                 $order
@@ -123,6 +137,8 @@ class OrdersController extends AbstractApiController
                 ->setAccount($parent->getAccount())
                 ->setParent($parent)
                 ->setStatus($data['status']);
+
+            OrderManipulator::checkPower($order);
 
             $manager->save($order);
 
@@ -177,11 +193,22 @@ class OrdersController extends AbstractApiController
                 })->first();
             };
 
+            /** @var ComponentCollector $collector */
+            $collector = $this->get('component_collector');
             foreach ($products as $product) {
 
                 $element = $filterElement($order, $product['code']);
 
                 if ($element instanceof Element) {
+
+                    $component = $collector->fromCode($product['code']);
+
+                    if ($component) {
+                        $metadata = ComponentExtractor::extract($component);
+
+                        $product['metadata'] = $metadata['metadata'];
+                    }
+
                     ElementResolver::update($element, $product);
                 }
             }
