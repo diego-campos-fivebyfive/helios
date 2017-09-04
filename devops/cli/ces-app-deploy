@@ -21,7 +21,7 @@ echo "Starting Deploy..."
 
 if [ $1 = '--homolog' ]; then
 
-  $CLI_PATH/ces-slack-notify --devops '@here: Starting Homolog Deploy...'
+  $CLI_PATH/ces-slack-notify --devops 'Starting Homolog Deploy...'
   $CLI_PATH/ces-app-clone --homolog
   $CLI_PATH/ces-permission-fix --homolog
   source $CLI_PATH/config/variables-ci --homolog
@@ -29,7 +29,7 @@ if [ $1 = '--homolog' ]; then
   $CLI_PATH/ces-database-update
   $CLI_PATH/ces-cache-clear
   $CLI_PATH/ces-frontend-compile
-  $CLI_PATH/ces-slack-notify --devops '@here: Homolog Deploy Done!'
+  $CLI_PATH/ces-slack-notify --devops 'Homolog Deploy Done!'
 
 elif [ $1 = '--production' ]; then
 
