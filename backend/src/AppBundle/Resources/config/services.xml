@@ -65,11 +65,6 @@
             <argument type="service" id="doctrine"/>
             <argument type="service" id="security.token_storage"/>
         </service>
-
-        <service id="app.team_manager" class="AppBundle\Entity\TeamManager">
-            <argument>AppBundle\Entity\Team</argument>
-            <argument type="service" id="doctrine"/>
-        </service>
         
         <service id="app.notification_generator" class="AppBundle\Service\NotificationGenerator">
             <argument type="service" id="notification_manager"/>
