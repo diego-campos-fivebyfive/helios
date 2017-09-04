@@ -26,10 +26,51 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 class DebugController extends AbstractController
 {
     /**
-     * @Route("/component-export")
+     * @Route("/components-import")
      */
-    public function exportAction()
+    public function importComponentsAction()
     {
+        die;
+        $dir = $this->get('kernel')->getRootDir() . '/../web/public/';
+        $products = ['inverter', 'module'];
+
+        foreach ($products as $product) {
+
+            $manager = $this->manager($product);
+
+            $data = explode("\n", file_get_contents($dir . $product . '.csv'));
+
+            unset($data[0]);
+
+            foreach($data as $key => $info){
+
+                if(strlen($info)) {
+
+                    list($code, $description) = explode(';', $info);
+
+                    $entity = $manager->findOneBy(['code' => $code]);
+
+                    if ($entity) {
+                        $entity->setDescription($description);
+                        //dump($entity->getCode() . ' >> ' . $entity->getDescription());
+                    } else {
+                        //dump($info);
+                    }
+
+                    if($entity)
+                        $manager->save($entity, $key == count($data));
+                }
+            }
+        }
+        die;
+    }
+
+    /**
+     * @Route("/components-export")
+     */
+    public function exportComponentsAction()
+    {
+        die;
         $products = ['inverter', 'module', 'string_box', 'structure', 'variety'];
 
         foreach ($products as $product) {
@@ -44,7 +85,6 @@ class DebugController extends AbstractController
 
             Handler::create($iterator, $writer)->export();
         }
-
         die;
     }
 
