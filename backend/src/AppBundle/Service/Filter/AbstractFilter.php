@@ -128,9 +128,6 @@ use Doctrine\ORM\EntityManagerInterface;
      */
     public function get()
     {
-<<<<<<< HEAD
-        return $this->qb->getQuery()->getResult();
-=======
         return $this->query()->getResult();
     }
 
@@ -139,7 +136,6 @@ use Doctrine\ORM\EntityManagerInterface;
         $this->qb->setMaxResults(1);
 
         return $this->query()->getOneOrNullResult();
->>>>>>> 18c5c8667d6ad16d87ddf9146b7ad4cc54b5a861
     }
 
     /**

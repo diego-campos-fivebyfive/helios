@@ -380,11 +380,7 @@ class StructureCalculator
     {
         $method = $single ? 'findOneBy' : 'findBy';
 
-<<<<<<< HEAD
-        CriteriaAggregator::promotional($criteria);
-=======
         CriteriaAggregator::finish($criteria);
->>>>>>> 18c5c8667d6ad16d87ddf9146b7ad4cc54b5a861
 
         return $this->manager->$method($criteria);
     }

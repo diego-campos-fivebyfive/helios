@@ -69,39 +69,11 @@ class ProjectGenerator
         /** @var DefaultsResolver $resolver */
         $resolver = $this->container->get('generator_defaults');
 
-<<<<<<< HEAD
-    /**
-     * @return array
-     */
-    public static function getDefaults(array $defaults = [])
-    {
-        return  array_merge([
-            'address' => null,
-            'latitude' => null,
-            'longitude' => null,
-            'customer' => null,
-            'stage' => null,
-            'roof_type' => 'ROOF_ROMAN_AMERICAN',
-            'source' => 'consumption',
-            'power' => 0,
-            'consumption' => 0,
-            'use_transformer' => true,
-            'grid_voltage' => '127/220',
-            'grid_phase_number' => 'Biphasic',
-            'module' => 32433,
-            'inverter_maker' => 60627,
-            'structure_maker' => StructureCalculator::DEFAULT_STRUCTURE_MAKER,
-            'string_box_maker' => 61209,
-            'is_promotional' => false,
-            'errors' => []
-        ], $defaults);
-=======
         $resolver->setStrategy(DefaultsResolver::STRATEGY_EXCEPTION);
 
         $defaults = $resolver->setDefaults($defaults)->resolve();
 
         return $defaults;
->>>>>>> 18c5c8667d6ad16d87ddf9146b7ad4cc54b5a861
     }
 
     /**
@@ -128,13 +100,8 @@ class ProjectGenerator
             $defaults['power'] = $power;
         }
 
-<<<<<<< HEAD
-        // ADD CRITERIA AGGREGATOR FOR PROMOTIONAL
-        CriteriaAggregator::$promotional = $defaults['is_promotional'];
-=======
         // TODO THIS OPTION IS TEMPORARY DISABLED
         // CriteriaAggregator::promotional($defaults['is_promotional']);
->>>>>>> 18c5c8667d6ad16d87ddf9146b7ad4cc54b5a861
 
         $defaults['errors'] = [];
         $this->project->setDefaults($defaults);
@@ -249,11 +216,7 @@ class ProjectGenerator
 
         $criteria = ['id' => $defaults['module']];
 
-<<<<<<< HEAD
-        CriteriaAggregator::promotional($criteria);
-=======
         CriteriaAggregator::finish($criteria);
->>>>>>> 18c5c8667d6ad16d87ddf9146b7ad4cc54b5a861
 
         $module = $this->manager('module')->findOneBy($criteria);
 

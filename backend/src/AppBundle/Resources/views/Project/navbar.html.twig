@@ -45,7 +45,7 @@
 
                     Navbar.nav('all').on('click', function(){
 
-                        if(Project.id) {
+                        if({{ project.id is not null ? 'true' : 'false' }}) {
 
                             swal({
                                 title: 'Aguarde...',
