@@ -73,6 +73,14 @@ class Memorial implements MemorialInterface
     /**
      * @inheritDoc
      */
+    function __toString()
+    {
+        return (string) sprintf('V%s - %s', $this->version, $this->startAt->format('Y-m-d'));
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function toArray()
     {
         return [
