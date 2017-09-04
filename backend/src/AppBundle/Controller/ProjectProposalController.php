@@ -99,11 +99,11 @@ class ProjectProposalController extends AbstractController
         return $this->jsonResponse([], Response::HTTP_CONFLICT);
     }
 
-    /*
+    /**
      * @Route("/update", name="project_proposal_update")
      * @Method("post")
      */
-    /*public function updateAndGenerate(Request $request, Project $project)
+    public function updateAndGenerate(Request $request, Project $project)
     {
         $this->checkAccess($project);
 
@@ -135,14 +135,13 @@ class ProjectProposalController extends AbstractController
             'token' => $project->getToken(),
             'display' => $data['display']
         ]);
-    }*/
+    }
 
-    /*
-     * @deprecated
+    /**
      *
      * @Route("/generate/{display}", name="project_proposal_generate")
      */
-    /*public function generateAction(Request $request, Project $project, $display)
+    public function generateAction(Request $request, Project $project, $display)
     {
         $this->checkAccess($project);
 
@@ -228,7 +227,7 @@ class ProjectProposalController extends AbstractController
                 throw $this->createNotFoundException('Display option not allowed');
                 break;
         }
-    }*/
+    }
 
     /**
      * @Route("/download/{force}", name="project_proposal_download", defaults={"force":false})
@@ -269,6 +268,8 @@ class ProjectProposalController extends AbstractController
 
 
     /**
+     * @deprecated
+     *
      * Handle pdf fixed sections
      *
      * @Route("/handle-section", name="proposal_handle_section")
@@ -302,6 +303,8 @@ class ProjectProposalController extends AbstractController
     }
 
     /**
+     * @deprecated
+     *
      * @param Project $project
      */
     private function generateProjectSnapshot(Project &$project)
