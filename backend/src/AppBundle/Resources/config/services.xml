@@ -117,12 +117,7 @@
             <argument type="service" id="app.email_handler_manager"/>
         </service>
 
-        <service id="app.webhook_manager" class="AppBundle\Entity\WebhookManager">
-            <argument>AppBundle\Entity\Webhook</argument>
-            <argument type="service" id="doctrine"/>
-        </service>
-
-        <service id="app.vindi_helper" class="AppBundle\Service\VindiHelper">
+       <service id="app.vindi_helper" class="AppBundle\Service\VindiHelper">
             <argument type="service" id="service_container"/>
         </service>
 
