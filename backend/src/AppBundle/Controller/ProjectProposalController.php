@@ -7,8 +7,7 @@ use AppBundle\Service\Support\Project\FinancialAnalyzer;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use AppBundle\Entity\Financial\ProjectFinancial;
-use AppBundle\Entity\Project\Project;
+use AppBundle\Entity\Component\Project;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
@@ -100,11 +99,11 @@ class ProjectProposalController extends AbstractController
         return $this->jsonResponse([], Response::HTTP_CONFLICT);
     }
 
-    /**
+    /*
      * @Route("/update", name="project_proposal_update")
      * @Method("post")
      */
-    public function updateAndGenerate(Request $request, Project $project)
+    /*public function updateAndGenerate(Request $request, Project $project)
     {
         $this->checkAccess($project);
 
@@ -136,12 +135,14 @@ class ProjectProposalController extends AbstractController
             'token' => $project->getToken(),
             'display' => $data['display']
         ]);
-    }
+    }*/
 
-    /**
+    /*
+     * @deprecated
+     *
      * @Route("/generate/{display}", name="project_proposal_generate")
      */
-    public function generateAction(Request $request, Project $project, $display)
+    /*public function generateAction(Request $request, Project $project, $display)
     {
         $this->checkAccess($project);
 
@@ -227,7 +228,7 @@ class ProjectProposalController extends AbstractController
                 throw $this->createNotFoundException('Display option not allowed');
                 break;
         }
-    }
+    }*/
 
     /**
      * @Route("/download/{force}", name="project_proposal_download", defaults={"force":false})
@@ -301,25 +302,6 @@ class ProjectProposalController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     * @param ProjectFinancial $financial
-     */
-    private function handleHttpReferer(Request $request, ProjectFinancial &$financial)
-    {
-        $project = $financial->getProject();
-
-        $updateUrl = $this->generateUrl('project_update',['token' => $project->getToken()], 0);
-        $refererUrl = $request->server->get('HTTP_REFERER');
-
-        if($updateUrl == $refererUrl){
-
-            FinancialAnalyzer::analyze($financial);
-
-            $this->getFinancialManager()->save($financial);
-        }
-    }
-
-    /**
      * @param Project $project
      */
     private function generateProjectSnapshot(Project &$project)
@@ -335,6 +317,8 @@ class ProjectProposalController extends AbstractController
     }
 
     /**
+     * @deprecated
+     *
      * @param ProjectFinancial $financial
      */
     private function checkProposal(ProjectFinancial &$financial)
@@ -343,24 +327,8 @@ class ProjectProposalController extends AbstractController
     }
 
     /**
-     * @param Project $project
-     * @return \AppBundle\Entity\Financial\ProjectFinancialInterface
-     * @throws \Exception
-     */
-    private function getProjectFinancial(Project $project)
-    {
-        return $this->getFinancialManager()->fromProject($project);
-    }
-
-    /**
-     * @return \AppBundle\Entity\Financial\ProjectFinancialManager
-     */
-    private function getFinancialManager()
-    {
-        return $financialManager = $this->get('app.project_financial');
-    }
-
-    /**
+     * @deprecated
+     *
      * @return \AppBundle\Service\ProposalHelper $proposalHelper
      */
     private function getProposalHelper()

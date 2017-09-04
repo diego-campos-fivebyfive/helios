@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 
 /**
+ * @deprecated
  *
  * #//@Security("has_role('ROLE_OWNER')")
  *
@@ -48,11 +49,6 @@ class KitController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-        /*$manager = $this->getKitManager();
-        $account = $this->getCurrentAccount();
-
-        $kits = $manager->findBy(['account' => $account]);*/
-
         $template = $request->isXmlHttpRequest() ? 'kit.kits' : 'kit.index';
 
         $this->clearTemplateCache($template);

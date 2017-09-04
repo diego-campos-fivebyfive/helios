@@ -56,10 +56,6 @@
             <argument type="service" id="inverter_manager"/>
         </service>
 
-        <service id="app.kit_manager" class="AppBundle\Entity\Component\KitManager">
-            <argument>AppBundle\Entity\Component\Kit</argument>
-            <argument type="service" id="doctrine"/>
-        </service>
         <service id="app.nasa_provider" class="AppBundle\Entity\Project\NasaProvider">
             <argument>AppBundle\Entity\Project\NasaCatalog</argument>
             <argument type="service" id="doctrine"/>
