@@ -13,9 +13,11 @@ use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Entity\Pricing\Range;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @Route("debug")
+ * @Security("has_role('ROLE_SUPER_ADMIN')")
  */
 class DebugController extends AbstractController
 {
@@ -32,6 +34,47 @@ class DebugController extends AbstractController
         }
 
         echo $content; die;
+    }
+
+    /**
+     * @Route("/head/logger/{date}")
+     */
+    public function headCheckerAction($date)
+    {
+        $kernel = $this->get('kernel');
+        $env = $kernel->getEnvironment();
+
+        $file = $kernel->getRootDir() . sprintf('/cache/%s/fetch_head_%s.json', $env, $date);
+
+        if(file_exists($file)) {
+            $data = explode("\n", file_get_contents($file));
+
+            if (is_array($data)) {
+                foreach ($data as $content) {
+                    if(strlen($content)) {
+                        $extract = json_decode(substr($content, 0, -1), true);
+
+                        foreach ($extract as $info => $server) {
+                            echo $info . "<br>";
+                            foreach ($server as $key => $extra) {
+                                echo $key . " => ";
+                                if (is_string($extra)) {
+                                    echo $extra;
+                                }
+                                if (is_array($extra)) {
+                                    echo json_encode($extra);
+                                }
+                                echo "<br>";
+                            }
+
+                            echo "<hr>";
+                        }
+                    }
+                }
+            }
+        }
+
+        die;
     }
 
     /**
