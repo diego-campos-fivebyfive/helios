@@ -70,12 +70,7 @@
             <argument>AppBundle\Entity\Team</argument>
             <argument type="service" id="doctrine"/>
         </service>
-
-        <service id="app.document_manager" class="AppBundle\Entity\DocumentManager">
-            <argument>AppBundle\Entity\Document</argument>
-            <argument type="service" id="doctrine"/>
-        </service>
-
+        
         <service id="app.notification_generator" class="AppBundle\Service\NotificationGenerator">
             <argument type="service" id="notification_manager"/>
             <argument type="service" id="twig"/>
