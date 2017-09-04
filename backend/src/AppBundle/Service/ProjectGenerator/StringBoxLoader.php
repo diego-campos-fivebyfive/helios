@@ -34,7 +34,14 @@ class StringBoxLoader
             ->from($this->manager->getClass(), 's')
         ;
 
+        $parameters = [
+            'outputs' => $outputs,
+            'maker' => $maker
+        ];
+
         if($inputs && $outputs) {
+
+            $parameters['inputs'] = $inputs;
 
             $qb
                 ->where('s.inputs >= :inputs')
@@ -42,10 +49,7 @@ class StringBoxLoader
                 ->andWhere('s.maker = :maker')
                 ->orderBy('s.inputs', 'asc')
                 ->addOrderBy('s.outputs', 'asc')
-                ->setParameters([
-                    'inputs' => $inputs,
-                    'outputs' => $outputs
-                ]);
+            ;
 
         }else{
 
@@ -54,12 +58,12 @@ class StringBoxLoader
                 ->andWhere('s.maker = :maker')
                 ->orderBy('s.inputs', 'desc')
                 ->addOrderBy('s.outputs', 'asc')
-                ->setParameters([
-                    'outputs' => $outputs
-                ]);
+            ;
         }
 
-        $qb->setParameter('maker', $maker);
+        CriteriaAggregator::finish($parameters, $qb);
+
+        $qb->setParameters($parameters);
 
         $stringBoxes = $qb->getQuery()->getResult();
 

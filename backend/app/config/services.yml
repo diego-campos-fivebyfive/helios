@@ -203,6 +203,14 @@ services:
         tags:
             - { name: form.type }
 
+    entity_filter:
+        class: AppBundle\Service\Filter\EntityFilter
+        arguments: ['@doctrine.orm.entity_manager']
+
+    generator_defaults:
+        class: AppBundle\Service\ProjectGenerator\DefaultsResolver
+        arguments: ['@entity_filter']
+
     access_voter:
         class: AppBundle\Service\Security\AccessVoter
         arguments: ['@security.access.decision_manager']
