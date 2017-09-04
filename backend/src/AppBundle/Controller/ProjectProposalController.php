@@ -157,8 +157,6 @@ class ProjectProposalController extends AbstractController
         $mpdf->SetTopMargin(15);
         $mpdf->SetTitle($title);
 
-        //dump($project->getKit()); die;
-
         $response = $this->render('financial.document', [
             'project' => $project,
             'proposal' => $proposal,
@@ -257,9 +255,6 @@ class ProjectProposalController extends AbstractController
 
                 return $force ? $explorer->download($file) : $explorer->show($file) ;
             }
-
-            //$response = $force ? $explorer->download($project) : $explorer->show($project) ;
-            ///return $response;
         }
 
         throw $this->createNotFoundException('File not found');
@@ -302,8 +297,6 @@ class ProjectProposalController extends AbstractController
     }
 
     /**
-     * @deprecated
-     *
      * @param Project $project
      */
     private function generateProjectSnapshot(Project &$project)
@@ -319,8 +312,6 @@ class ProjectProposalController extends AbstractController
     }
 
     /**
-     * @deprecated
-     *
      * @param ProjectFinancial $financial
      */
     private function checkProposal(ProjectFinancial &$financial)
@@ -329,8 +320,6 @@ class ProjectProposalController extends AbstractController
     }
 
     /**
-     * @deprecated
-     *
      * @return \AppBundle\Service\ProposalHelper $proposalHelper
      */
     private function getProposalHelper()
