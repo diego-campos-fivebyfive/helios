@@ -819,16 +819,6 @@ class Customer extends AbstractCustomer
             }
         }
 
-        if ($this->isLeader()) {
-            foreach ($this->getTeam()->getMembers() as $member) {
-                foreach ($member->getContacts() as $memberContact) {
-                    if (!$allowedContacts->contains($memberContact) && !$memberContact->isDeleted()) {
-                        $allowedContacts->add($memberContact);
-                    }
-                }
-            }
-        }
-
         return $allowedContacts;
     }
 

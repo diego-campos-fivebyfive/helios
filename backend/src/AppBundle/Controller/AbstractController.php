@@ -394,14 +394,6 @@ abstract class AbstractController extends Controller
     }
 
     /**
-     * @return \AppBundle\Entity\TeamManager
-     */
-    protected function getTeamManager()
-    {
-        return $this->get('app.team_manager');
-    }
-
-    /**
      * @return \FOS\UserBundle\Model\UserManager
      */
     protected function getUserManager()
