@@ -57,7 +57,7 @@ class GeneratorController extends AbstractController
 
                 if(count($errors)) {
                     return $this->json([
-                        'errors' => $errors
+                        'error' => $errors[0]
                     ], Response::HTTP_CONFLICT);
                 }
 

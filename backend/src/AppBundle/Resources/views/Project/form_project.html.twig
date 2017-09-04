@@ -414,7 +414,10 @@
     <script>
 
         var GeneratorHandler = {
-            project: {id:0,power:0},
+            project: {id:{{ project.id ?: 0 }}, power: {{ project.power ?: 0 }} },
+            elements: {
+                components: $('#project_components')
+            },
             getProject: function(){
                 return this.project;
             },
@@ -422,16 +425,9 @@
                 this.project = {id:0,power:0};
                 this.onResetProject();
             },
-            getForm: function(){
-                var id = this.getProject().id;
-                Request.send({
-                    url: '{{ path('generator',{project:'_id_'}) }}'.replace(/_id_/g, id),
-                    callback: function(xhr){
-                        $('#generator_form').html(xhr.responseText);
-                    }
-                });
-            },
             onSaveProject: function(project){
+                this.project = project;
+                Navbar.project = project;
                 ProjectManager.onSaveProject();
             },
             onResetProject: function(){
@@ -440,8 +436,54 @@
                     AGUARDANDO FINALIZAÇÃO DO PROCESSO A PARTIR DAQUI...
                 #}
                 //$('#generator_components').html('');
+            },
+            getForm: function(){
+                if(this.project.id){
+                    var url = this.createUrl('{{ path('generator',{project:'_id_'}) }}', {id: this.project.id});
+                    this.requestContent(url, '#generator_form');
+                }
+            },
+            getComponents: function(){
+                if(this.project.id) {
+                    var url = this.createUrl('{{ path('project_components',{id:'_id_'}) }}', {id:this.project.id});
+                    this.requestContent(url, '#project_components');
+                }
+            },
+            requestContent: function(url, element){
+                this.request(url, 'get', null, function(xhr){
+                   GeneratorHandler.render(element, xhr.responseText);
+                });
+            },
+            request: function(url, method, data, callback){
+                Request.send({
+                    url: url,
+                    method: method,
+                    data: data,
+                    callback: function(xhr){
+                        callback(xhr);
+                    }
+                });
+            },
+            render: function(element, content){
+                if('string' == typeof element) element = $(element);
+                element.html(content);
+            },
+            createUrl: function(path, params){
+                return  path.replace(/_id_/g, params.id);
+            },
+            init: function(){
+                this.getForm();
+                this.getComponents();
+
+                {% if project.id is not null %}
+                    Navbar.project = {
+                        id: {{ project.id }}
+                    };
+                {% endif %}
             }
         };
+
+        GeneratorHandler.init();
 
         var ProjectManager = {
             btnProcess: $('#process_button'),
@@ -665,8 +707,10 @@
                             var response = xhr.responseJSON;
                             if(200 == xhr.status && response.hasOwnProperty('project')){
                                 //ProjectManager.project = response.project;
-                                GeneratorHandler.project = response.project;
-                                ProjectManager.onSaveProject();
+                                //GeneratorHandler.project = response.project;
+                                //ProjectManager.onSaveProject();
+                                console.log(response.project);
+                                GeneratorHandler.onSaveProject(response.project);
                             }else{
                                 swal('Ooops', response.errors[0], 'warning');
                             }
@@ -799,7 +843,7 @@
                 ProjectManager.chart.init();
 
                 if(ProjectManager.project.id) {
-                    ProjectManager.loadComponents();
+                    //ProjectManager.loadComponents();
                     ProjectManager.loadGroups();
                     ProjectManager.loadInverters();
                     ProjectManager.process();

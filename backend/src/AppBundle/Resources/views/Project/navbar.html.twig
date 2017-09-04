@@ -31,6 +31,7 @@
         if('undefined' == typeof Navbar){
 
             Navbar = {
+                project:{id:null},
                 path: function(){
                     return window.location.pathname;
                 },
@@ -45,7 +46,9 @@
 
                     Navbar.nav('all').on('click', function(){
 
-                        if({{ project.id is not null ? 'true' : 'false' }}) {
+                        var project = Navbar.project;
+
+                        if(project.id) {
 
                             swal({
                                 title: 'Aguarde...',
@@ -55,7 +58,7 @@
                             });
 
                             Request.send({
-                                url: '{{ path('project_steps',{id:'_id_'}) }}'.replace(/_id_/g, Project.id),
+                                url: '{{ path('project_steps',{id:'_id_'}) }}'.replace(/_id_/g, project.id),
                                 method: 'post',
                                 data: {step: $(this).data('step')},
                                 callback: function (xhr) {

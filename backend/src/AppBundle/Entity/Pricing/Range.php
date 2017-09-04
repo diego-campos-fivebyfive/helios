@@ -71,12 +71,9 @@ class Range implements RangeInterface
         //$this->memorial = new ArrayCollection();
     }
 
-<<<<<<< HEAD
-=======
     /**
      * @return array
      */
->>>>>>> 18c5c8667d6ad16d87ddf9146b7ad4cc54b5a861
     public function toArray()
     {
         $data = get_object_vars($this);

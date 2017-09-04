@@ -32,6 +32,11 @@ class GeneratorType extends AbstractType
     private $checker;
 
     /**
+     * @var bool
+     */
+    private $enablePromotional = false;
+
+    /**
      * @param Checker $checker
      */
     public function __construct(Checker $checker)
@@ -128,9 +133,6 @@ class GeneratorType extends AbstractType
             ->add('string_box_maker', ChoiceType::class, [
                 'choices' => self::createChoices($stringBoxMakers)
             ])
-            ->add('is_promotional', CheckboxType::class, [
-                'required' => false
-            ])
             ->add('inf_power', null, [
                 'required' => false
             ])
@@ -144,6 +146,12 @@ class GeneratorType extends AbstractType
                 'required' => false
             ])
         ;
+
+        if($this->enablePromotional){
+            $builder->add('is_promotional', CheckboxType::class, [
+                'required' => false
+            ]);
+        }
     }
 
     /**
