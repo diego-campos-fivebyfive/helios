@@ -1,0 +1,58 @@
+<div class="row">
+
+    <div class="col-md-12">
+
+        {{ form_start(form,{attr:{action: path('platform_products'), id:'form_filter'}}) }}
+
+        <div class="form-group">
+            <div class="col-md-4">
+                {{ form_label(form.memorial) }}
+                {{ form_widget(form.memorial,{attr:{class:'form-control'}}) }}
+            </div>
+            <div class="col-md-4">
+                {% if attribute(form, 'level') is defined %}
+                    {{ form_label(form.level, 'Nível de Desconto') }}
+                    {{ form_widget(form.level, {attr:{class:'form-control'}}) }}
+                {% endif %}
+            </div>
+        </div>
+
+        {{ form_end(form) }}
+
+    </div>
+
+    <div class="col-md-12" id="memorial_products" style="margin-top: 2rem;">
+        {{ products|raw }}
+    </div>
+
+</div>
+
+<script>
+
+    var form = $('#form_filter');
+    var level = $('#memorial_filter_level');
+    var products = $('#memorial_products');
+
+    form.on('submit', function (event) {
+        event.preventDefault();
+        PlatformMemorial.request({
+            url: form.attr('action'),
+            method: form.attr('method'),
+            data: form.serialize(),
+            callback: function (xhr) {
+                $('#products').html(xhr.responseText);
+            }
+        });
+    });
+
+    if(!level.length){
+        form.trigger('submit');
+    }else{
+        level.on('change', function(){
+            if($(this).val()) {
+                form.trigger('submit');
+            }
+        });
+    }
+
+</script>
