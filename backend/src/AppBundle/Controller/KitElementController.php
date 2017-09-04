@@ -11,8 +11,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
- * @deprecated
- *
  * @Security("has_role('ROLE_OWNER')")
  *
  * @Route("kit-element/{token}")
