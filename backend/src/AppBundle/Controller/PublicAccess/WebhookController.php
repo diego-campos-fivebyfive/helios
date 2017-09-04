@@ -14,6 +14,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
+ * @deprecated
+ *
  * @Route("/webhooks")
  */
 class WebhookController extends AbstractController

@@ -108,11 +108,6 @@
             <argument type="service" id="app.session_storage"/>
         </service>
 
-        <service id="app.webhook_manager" class="AppBundle\Entity\WebhookManager">
-            <argument>AppBundle\Entity\Webhook</argument>
-            <argument type="service" id="doctrine"/>
-        </service>
-
         <service id="app.vindi_helper" class="AppBundle\Service\VindiHelper">
             <argument type="service" id="service_container"/>
         </service>
