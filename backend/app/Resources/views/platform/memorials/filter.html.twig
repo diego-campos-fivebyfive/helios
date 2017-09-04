@@ -6,17 +6,14 @@
 
         <div class="form-group">
             <div class="col-md-4">
+                {{ form_label(form.memorial) }}
                 {{ form_widget(form.memorial,{attr:{class:'form-control'}}) }}
             </div>
             <div class="col-md-4">
                 {% if attribute(form, 'level') is defined %}
+                    {{ form_label(form.level, 'Nível de Desconto') }}
                     {{ form_widget(form.level, {attr:{class:'form-control'}}) }}
                 {% endif %}
-            </div>
-            <div class="col-md-4">
-                <button class="btn btn-success">
-                    Carregar
-                </button>
             </div>
         </div>
 
@@ -24,7 +21,7 @@
 
     </div>
 
-    <div class="col-md-12" style="margin-top: 2rem;">
+    <div class="col-md-12" id="memorial_products" style="margin-top: 2rem;">
         {{ products|raw }}
     </div>
 
@@ -33,6 +30,8 @@
 <script>
 
     var form = $('#form_filter');
+    var level = $('#memorial_filter_level');
+    var products = $('#memorial_products');
 
     form.on('submit', function (event) {
         event.preventDefault();
@@ -45,5 +44,15 @@
             }
         });
     });
+
+    if(!level.length){
+        form.trigger('submit');
+    }else{
+        level.on('change', function(){
+            if($(this).val()) {
+                form.trigger('submit');
+            }
+        });
+    }
 
 </script>
