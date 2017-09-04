@@ -14,8 +14,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 
 /**
- * @deprecated
- *
  * #//@Security("has_role('ROLE_OWNER')")
  *
  * @Route("price")
