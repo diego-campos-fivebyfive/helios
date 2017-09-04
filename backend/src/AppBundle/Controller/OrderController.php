@@ -90,6 +90,8 @@ class OrderController extends AbstractController
     {
         Insurance::apply($order, (bool) $request->get('insure'));
 
+        $this->manager('order')->save($order);
+
         return $this->json([
             'project' => [
                 'id' => $order->getId(),
