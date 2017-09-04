@@ -7,8 +7,7 @@ use AppBundle\Service\Support\Project\FinancialAnalyzer;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use AppBundle\Entity\Financial\ProjectFinancial;
-use AppBundle\Entity\Project\Project;
+use AppBundle\Entity\Component\Project;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
@@ -158,8 +157,6 @@ class ProjectProposalController extends AbstractController
         $mpdf->SetTopMargin(15);
         $mpdf->SetTitle($title);
 
-        //dump($project->getKit()); die;
-
         $response = $this->render('financial.document', [
             'project' => $project,
             'proposal' => $proposal,
@@ -258,9 +255,6 @@ class ProjectProposalController extends AbstractController
 
                 return $force ? $explorer->download($file) : $explorer->show($file) ;
             }
-
-            //$response = $force ? $explorer->download($project) : $explorer->show($project) ;
-            ///return $response;
         }
 
         throw $this->createNotFoundException('File not found');
@@ -268,6 +262,8 @@ class ProjectProposalController extends AbstractController
 
 
     /**
+     * @deprecated
+     *
      * Handle pdf fixed sections
      *
      * @Route("/handle-section", name="proposal_handle_section")
@@ -301,25 +297,6 @@ class ProjectProposalController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     * @param ProjectFinancial $financial
-     */
-    private function handleHttpReferer(Request $request, ProjectFinancial &$financial)
-    {
-        $project = $financial->getProject();
-
-        $updateUrl = $this->generateUrl('project_update',['token' => $project->getToken()], 0);
-        $refererUrl = $request->server->get('HTTP_REFERER');
-
-        if($updateUrl == $refererUrl){
-
-            FinancialAnalyzer::analyze($financial);
-
-            $this->getFinancialManager()->save($financial);
-        }
-    }
-
-    /**
      * @param Project $project
      */
     private function generateProjectSnapshot(Project &$project)
@@ -340,24 +317,6 @@ class ProjectProposalController extends AbstractController
     private function checkProposal(ProjectFinancial &$financial)
     {
         $this->getProposalHelper()->load($financial);
-    }
-
-    /**
-     * @param Project $project
-     * @return \AppBundle\Entity\Financial\ProjectFinancialInterface
-     * @throws \Exception
-     */
-    private function getProjectFinancial(Project $project)
-    {
-        return $this->getFinancialManager()->fromProject($project);
-    }
-
-    /**
-     * @return \AppBundle\Entity\Financial\ProjectFinancialManager
-     */
-    private function getFinancialManager()
-    {
-        return $financialManager = $this->get('app.project_financial');
     }
 
     /**
