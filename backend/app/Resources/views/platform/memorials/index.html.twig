@@ -1,0 +1,52 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+    <div class="row">
+
+        <div class="col-md-12" id="products">
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+    {% include view('helper.request') %}
+
+    <script>
+
+        var PlatformMemorial = {
+            request: function(config){
+
+                var options = $.extend({},{
+                    url: null,
+                    method: 'get',
+                    data: {}
+                }, config);
+
+                Request.send(options);
+            },
+            getRanges: function(){
+            },
+            getMemorials: function() {
+                this.request({
+                    url: '{{ path('platform_products') }}',
+                    callback: function(xhr){
+                        $('#products').html(xhr.responseText);
+                    }
+                });
+            },
+            init: function(){
+                this.getMemorials();
+            }
+        };
+
+        PlatformMemorial.init();
+
+    </script>
+
+{% endblock %}
