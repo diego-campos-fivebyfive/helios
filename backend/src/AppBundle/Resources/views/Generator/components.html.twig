@@ -98,12 +98,18 @@
 
     {# STRUCTURES #}
     {% for projectStructure in project.projectStructures %}
+        {% set structure = projectStructure.structure  %}
         <tr>
-            <td> {{ projectStructure.structure.code }} </td>
+            <td> {{ structure.code }} </td>
             <td>
                 <a data-toggle="modal" data-target="#modal_component"
-                   data-url="{{ path('structure_show', {id:projectStructure.structure.id}) }}">
-                    {{ projectStructure.structure.description }}
+                   data-url="{{ path('structure_show', {id:structure.id}) }}">
+                    {{ structure.description }}
+                    {% if not structure.available %}
+                        <span class="label label-danger">
+                            Produto Indisponível
+                        </span>
+                    {% endif %}
                 </a>
             </td>
             <td class="promotional"> {{ projectStructure.unitCostPrice|currency }} </td>

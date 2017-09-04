@@ -87,7 +87,7 @@ interface StructureInterface
     /**
      * @return boolean
      */
-    public function getAvailable();
+    public function isAvailable($checkStatus = true);
 
     /**
      * @return bool

@@ -8,6 +8,10 @@ use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Model\KitPricing;
 use AppBundle\Service\Mailer;
+use Exporter\Exporter;
+use Exporter\Handler;
+use Exporter\Source\DoctrineORMQuerySourceIterator;
+use Exporter\Writer\CsvWriter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\Pricing\Memorial;
@@ -17,10 +21,33 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @Route("debug")
- * @Security("has_role('ROLE_SUPER_ADMIN')")
+ * //@Security("has_role('ROLE_SUPER_ADMIN')")
  */
 class DebugController extends AbstractController
 {
+    /**
+     * @Route("/component-export")
+     */
+    public function exportAction()
+    {
+        $products = ['inverter', 'module', 'string_box', 'structure', 'variety'];
+
+        foreach ($products as $product) {
+
+            $filename = $this->get('kernel')->getRootDir() . sprintf('/../web/public/%s.csv', $product);
+
+            $writer = new CsvWriter($filename);
+
+            $query = $this->manager($product)->createQueryBuilder()->getQuery();
+
+            $iterator = new DoctrineORMQuerySourceIterator($query, ['code', 'description']);
+
+            Handler::create($iterator, $writer)->export();
+        }
+
+        die;
+    }
+
     /**
      * @Route("/logger/{env}", name="debug_logger")
      */

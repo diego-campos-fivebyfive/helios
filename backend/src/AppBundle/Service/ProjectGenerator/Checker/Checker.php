@@ -26,6 +26,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class Checker
 {
+    const PROMOTIONAL = false;
+
     /**
      * @var ContainerInterface
      */
@@ -95,6 +97,9 @@ class Checker
             $filter->equals('promotional', true);
         }
 
+        $filter->equals('available', true);
+        $filter->equals('status', true);
+
         $modules = $filter->get();
 
         $this->result['modules'] = $modules;
@@ -112,6 +117,9 @@ class Checker
         if($this->promotional){
             $filter->equals('promotional', true);
         }
+
+        $filter->equals('available', true);
+        $filter->equals('status', true);
 
         $filter->group('maker');
 
@@ -133,6 +141,9 @@ class Checker
             $filter->equals('promotional', true);
         }
 
+        $filter->equals('available', true);
+        $filter->equals('status', true);
+
         $filter->group('maker');
 
         $makers = $this->filterMakers($filter->get());
@@ -152,6 +163,9 @@ class Checker
         if($this->promotional){
             $filter->equals('promotional', true);
         }
+
+        $filter->equals('available', true);
+        $filter->equals('status', true);
 
         $filter->group('maker');
 

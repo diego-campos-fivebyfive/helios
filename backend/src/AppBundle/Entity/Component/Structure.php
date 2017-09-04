@@ -225,9 +225,9 @@ class Structure implements StructureInterface
     /**
      * @inheritDoc
      */
-    public function getAvailable()
+    public function isAvailable($checkStatus = true)
     {
-        return $this->available;
+        return $this->available && (($checkStatus) ? $this->isActive() : true );
     }
 
     /**
@@ -243,7 +243,7 @@ class Structure implements StructureInterface
      */
     public function isActive()
     {
-        return self::ACTIVE == $this->status;
+        return $this->status;
     }
 
     /**

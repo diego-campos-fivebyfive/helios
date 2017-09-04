@@ -144,6 +144,9 @@ class StructureCalculator
         $total_triangulo = 0;
         $total_fita = 0;
 
+        $totalTriangleVertical = 0;
+        $totalTriangleHorizontal = 0;
+
         $terminalIntermediarySize = $term_inter_bd->getSize();
         $terminalFinalSize = $term_final_bd->getSize();
         $countProfiles = count($profiles);
@@ -273,7 +276,15 @@ class StructureCalculator
             }
 
             $speedClip = $screwAuto / 2;
+
             $triangle = (ceil(($lineSize - (2 * 0.35)) / 1.65) + 1) * $linesOfModules;
+
+            if(0 == $position){
+                $totalTriangleVertical += $triangle;
+            }else{
+                $totalTriangleHorizontal += $triangle;
+            }
+
             $plate = ($screwAuto / 2) * 0.1;
 
             $total_term_final += $terminalFinal;
@@ -324,14 +335,22 @@ class StructureCalculator
 
             case self::ROOF_FLAT_SLAB:
 
-                $baseStructure = 0 == $position ? $items[self::BASE_TRIANGLE_VERTICAL] : $items[self::BASE_TRIANGLE_HORIZONTAL];
+                $triangleVertical = $items[self::BASE_TRIANGLE_VERTICAL];
+                $triangleHorizontal = $items[self::BASE_TRIANGLE_HORIZONTAL];
+
+                //$baseStructure = 0 == $position ? $items[self::BASE_TRIANGLE_VERTICAL] : $items[self::BASE_TRIANGLE_HORIZONTAL];
 
                 $structures[] = ['quantity' => (int) $total_juncao, 'structure' => $items[self::JUNCTION]];
                 $structures[] = ['quantity' => (int) $total_term_final, 'structure' => $items[self::TERMINAL_FINAL]];
                 $structures[] = ['quantity' => (int) $total_term_inter, 'structure' => $items[self::TERMINAL_INTERMEDIARY]];
                 $structures[] = ['quantity' => (int) $total_parafuso_martelo, 'structure' => $items[self::FIXER_BOLT]];
                 $structures[] = ['quantity' => (int) $total_porca_m10, 'structure' => $items[self::FIXER_NUT]];
-                $structures[] = ['quantity' => (int) $total_triangulo, 'structure' => $baseStructure];
+
+                if($totalTriangleVertical)
+                    $structures[] = ['quantity' => (int) $totalTriangleVertical, 'structure' => $triangleVertical];
+
+                if($totalTriangleHorizontal)
+                    $structures[] = ['quantity' => (int) $totalTriangleHorizontal, 'structure' => $triangleHorizontal];
 
                 break;
 
@@ -380,7 +399,7 @@ class StructureCalculator
     {
         $method = $single ? 'findOneBy' : 'findBy';
 
-        CriteriaAggregator::finish($criteria);
+        //CriteriaAggregator::finish($criteria);
 
         return $this->manager->$method($criteria);
     }
