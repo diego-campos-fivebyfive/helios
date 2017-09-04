@@ -108,16 +108,7 @@
             <argument type="service" id="app.session_storage"/>
         </service>
 
-        <service id="app.email_handler_manager" class="AppBundle\Entity\Extra\EmailHandlerManager">
-            <argument>AppBundle\Entity\Extra\EmailHandler</argument>
-            <argument type="service" id="doctrine"/>
-        </service>
-
-        <service id="app.email_handler" class="AppBundle\Service\EmailHandler">
-            <argument type="service" id="app.email_handler_manager"/>
-        </service>
-
-       <service id="app.vindi_helper" class="AppBundle\Service\VindiHelper">
+        <service id="app.vindi_helper" class="AppBundle\Service\VindiHelper">
             <argument type="service" id="service_container"/>
         </service>
 
