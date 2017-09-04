@@ -21,7 +21,7 @@ class GeneratorController extends AbstractController
     /**
      * @Route("/", name="generator")
      */
-    public function accountsAction(Request $request)
+    public function indexAction(Request $request)
     {
         $action = $request->getUri();
         $option = $request->request->get('_option');

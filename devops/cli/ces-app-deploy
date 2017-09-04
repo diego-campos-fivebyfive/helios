@@ -21,34 +21,27 @@ echo "Starting Deploy..."
 
 if [ $1 = '--homolog' ]; then
 
-  ./devops/cli/ces-slack-notify 'Starting Homolog Deploy...'
-
-  ./devops/cli/ces-app-clone --homolog
-  ./devops/cli/ces-permission-fix --homolog
-
+  $CLI_PATH/ces-slack-notify --devops '@here: Starting Homolog Deploy...'
+  $CLI_PATH/ces-app-clone --homolog
+  $CLI_PATH/ces-permission-fix --homolog
   source $CLI_PATH/config/variables-ci --homolog
-  ./devops/cli/ces-app-install
-
-  bundles/isquik/node_modules/.bin/pm2 restart 0
-  ./devops/cli/ces-database-update
-  ./devops/cli/ces-cache-clear
-  ./devops/cli/ces-frontend-compile
-
-  ./devops/cli/ces-slack-notify 'Homolog Deploy Done!'
+  $CLI_PATH/ces-app-install
+  $CLI_PATH/ces-database-update
+  $CLI_PATH/ces-cache-clear
+  $CLI_PATH/ces-frontend-compile
+  $CLI_PATH/ces-slack-notify --devops '@here: Homolog Deploy Done!'
 
 elif [ $1 = '--production' ]; then
 
-  bash $CLI_PATH/ces-slack-notify 'Starting Production Deploy...'
-
-  bash $CLI_PATH/ces-app-clone --production
+  $CLI_PATH/ces-slack-notify --devops '@here: Starting Production Deploy...'
+  $CLI_PATH/ces-app-clone --production
   source $CLI_PATH/config/variables-ci --production
-
-  bash $CLI_PATH/ces-cache-clear
-  bash $CLI_PATH/ces-database-update
-  bundles/isquik/node_modules/.bin/pm2 restart 0
-
-  bash $CLI_PATH/ces-slack-notify 'Production Deploy Done!'
+  $CLI_PATH/ces-cache-clear
+  $CLI_PATH/ces-database-update
+  $CLI_PATH/ces-slack-notify --devops '@here: Production Deploy Done!'
 
 fi
+
+bundles/isquik/node_modules/.bin/pm2 restart 0
 
 echo 'Done.'

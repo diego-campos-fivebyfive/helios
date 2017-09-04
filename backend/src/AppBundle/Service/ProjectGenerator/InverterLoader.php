@@ -211,7 +211,11 @@ class InverterLoader
             'maker' => $maker
         ];
 
+<<<<<<< HEAD
         $this->promotionalCriteria($qb, $parameters);
+=======
+        $this->finishCriteria($qb, $parameters);
+>>>>>>> 18c5c8667d6ad16d87ddf9146b7ad4cc54b5a861
 
         $qb->setParameters($parameters);
 
@@ -297,7 +301,11 @@ class InverterLoader
             'maker' => $maker
         ];
 
+<<<<<<< HEAD
         $this->promotionalCriteria($qb, $parameters);
+=======
+        $this->finishCriteria($qb, $parameters);
+>>>>>>> 18c5c8667d6ad16d87ddf9146b7ad4cc54b5a861
 
         $qb->setParameters($parameters);
 
@@ -340,7 +348,11 @@ class InverterLoader
             'phaseVoltage' => 220
         ];
 
+<<<<<<< HEAD
         $this->promotionalCriteria($qb, $parameters);
+=======
+        $this->finishCriteria($qb, $parameters);
+>>>>>>> 18c5c8667d6ad16d87ddf9146b7ad4cc54b5a861
 
         $qb->setParameters($parameters);
 
@@ -390,8 +402,14 @@ class InverterLoader
      * @param QueryBuilder $qb
      * @param array $criteria
      */
+<<<<<<< HEAD
     private function promotionalCriteria(QueryBuilder $qb, array &$criteria = [])
     {
         CriteriaAggregator::promotional($criteria, $qb);
+=======
+    private function finishCriteria(QueryBuilder $qb, array &$criteria = [])
+    {
+        CriteriaAggregator::finish($criteria, $qb);
+>>>>>>> 18c5c8667d6ad16d87ddf9146b7ad4cc54b5a861
     }
 }

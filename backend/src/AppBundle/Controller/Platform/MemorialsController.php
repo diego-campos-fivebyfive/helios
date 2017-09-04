@@ -8,6 +8,7 @@ use AppBundle\Entity\Component\ModuleInterface;
 use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Entity\Pricing\Range;
 use AppBundle\Form\Extra\MemorialFilterType;
+<<<<<<< HEAD
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormEvent;
@@ -19,6 +20,16 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
+=======
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+
+/**
+ * @Security("has_role('ROLE_ADMIN')")
+>>>>>>> 18c5c8667d6ad16d87ddf9146b7ad4cc54b5a861
  * @Route("/memorials")
  */
 class MemorialsController extends AbstractController

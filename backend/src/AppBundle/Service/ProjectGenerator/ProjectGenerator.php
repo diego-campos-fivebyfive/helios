@@ -10,6 +10,7 @@ use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverter;
 use AppBundle\Entity\Component\ProjectModule;
 use AppBundle\Entity\Component\VarietyInterface;
+use AppBundle\Service\ProjectGenerator\Checker\Checker;
 use AppBundle\Service\ProjectProcessor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -65,9 +66,10 @@ class ProjectGenerator
      */
     public function loadDefaults(array $defaults = [])
     {
-        return array_merge(self::getDefaults(), $defaults);
-    }
+        /** @var DefaultsResolver $resolver */
+        $resolver = $this->container->get('generator_defaults');
 
+<<<<<<< HEAD
     /**
      * @return array
      */
@@ -93,6 +95,13 @@ class ProjectGenerator
             'is_promotional' => false,
             'errors' => []
         ], $defaults);
+=======
+        $resolver->setStrategy(DefaultsResolver::STRATEGY_EXCEPTION);
+
+        $defaults = $resolver->setDefaults($defaults)->resolve();
+
+        return $defaults;
+>>>>>>> 18c5c8667d6ad16d87ddf9146b7ad4cc54b5a861
     }
 
     /**
@@ -119,8 +128,13 @@ class ProjectGenerator
             $defaults['power'] = $power;
         }
 
+<<<<<<< HEAD
         // ADD CRITERIA AGGREGATOR FOR PROMOTIONAL
         CriteriaAggregator::$promotional = $defaults['is_promotional'];
+=======
+        // TODO THIS OPTION IS TEMPORARY DISABLED
+        // CriteriaAggregator::promotional($defaults['is_promotional']);
+>>>>>>> 18c5c8667d6ad16d87ddf9146b7ad4cc54b5a861
 
         $defaults['errors'] = [];
         $this->project->setDefaults($defaults);
@@ -235,7 +249,11 @@ class ProjectGenerator
 
         $criteria = ['id' => $defaults['module']];
 
+<<<<<<< HEAD
         CriteriaAggregator::promotional($criteria);
+=======
+        CriteriaAggregator::finish($criteria);
+>>>>>>> 18c5c8667d6ad16d87ddf9146b7ad4cc54b5a861
 
         $module = $this->manager('module')->findOneBy($criteria);
 

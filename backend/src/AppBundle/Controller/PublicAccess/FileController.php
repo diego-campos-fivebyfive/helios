@@ -44,7 +44,7 @@ class FileController extends AbstractController
         $tag = sprintf('Proposta - %s', $project->getNumber());
 
         $project->setMetadata('email', ($project->getMetadata('email', 0) + 1));
-        $this->getProjectManager()->save($project);
+        $this->manager('project')->save($project);
 
         return $this->redirectToRoute('files_download', [
             'token' => $token,

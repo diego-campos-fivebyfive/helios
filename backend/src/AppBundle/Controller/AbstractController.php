@@ -386,27 +386,11 @@ abstract class AbstractController extends Controller
     }
 
     /**
-     * @return \AppBundle\Entity\EmailAccountManager
-     */
-    protected function getEmailAccountManager()
-    {
-        return $this->get('app.email_account_manager');
-    }
-
-    /**
      * @return \AppBundle\Entity\Component\KitManager
      */
     protected function getKitManager()
     {
         return $this->get('app.kit_manager');
-    }
-
-    /**
-     * @return \AppBundle\Entity\Component\MakerManager
-     */
-    protected function getMakerManager()
-    {
-        return $this->get('app.maker_manager');
     }
 
     /**
@@ -439,14 +423,6 @@ abstract class AbstractController extends Controller
     protected function getMediaManager()
     {
         return $this->get('sonata.media.manager.media');
-    }
-
-    /**
-     * @return \AppBundle\Entity\Project\ProjectManager|object
-     */
-    protected function getProjectManager()
-    {
-        return $this->get('app.project_manager');
     }
 
     /**

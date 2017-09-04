@@ -37,7 +37,7 @@ class MakerController extends AbstractController
         //
         //$this->dd($request->attributes);
 
-        $manager = $this->getMakerManager();
+        $manager = $this->manager('maker');
         $paginator = $this->getPaginator();
 
         $query = $manager->getEntityManager()->createQueryBuilder();
@@ -58,7 +58,7 @@ class MakerController extends AbstractController
      */
     public function createAction(Request $request)
     {
-        $manager = $this->getMakerManager();
+        $manager = $this->manager('maker');
         $maker = $manager->create();
 
         $form = $this->createForm(MakerType::class, $maker);
@@ -83,7 +83,7 @@ class MakerController extends AbstractController
      */
     public function updateAction(Request $request, Maker $maker)
     {
-        $manager = $this->getMakerManager();
+        $manager = $this->manager('maker');
         $form = $this->createForm(MakerType::class, $maker);
         $form->handleRequest($request);
 
@@ -105,7 +105,7 @@ class MakerController extends AbstractController
      */
     public function deleteAction(Request $request, Maker $maker)
     {
-        $manager = $this->getMakerManager();
+        $manager = $this->manager('maker');
         if (count($maker->getInverters()) > 0 || count($maker->getModules()) > 0) {
             $this->setNotice("-Este fabricante possui um ou mais produtos<br>-Remova os produtos antes de efetuar a remoção do fabricante", "error");
             return $this->redirectToRoute("maker_index");
@@ -120,14 +120,14 @@ class MakerController extends AbstractController
      */
     public function fastCreateAction(Request $request)
     {
-        $account = $this->getCurrentAccount();
+        $account = $this->account();
         $name = $request->get('name');
 
         $context = 'module_maker' == $request->get('source', 'inverter_maker')
             ? MakerInterface::CONTEXT_MODULE
             : MakerInterface::CONTEXT_INVERTER;
 
-        $manager = $this->getMakerManager();
+        $manager = $this->manager('maker');
 
         // Find global or account referenced
         $maker = $manager->findByUse($name, $context, $account);

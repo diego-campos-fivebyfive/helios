@@ -61,7 +61,11 @@ class StringBoxLoader
             ;
         }
 
+<<<<<<< HEAD
         CriteriaAggregator::promotional($parameters, $qb);
+=======
+        CriteriaAggregator::finish($parameters, $qb);
+>>>>>>> 18c5c8667d6ad16d87ddf9146b7ad4cc54b5a861
 
         $qb->setParameters($parameters);
 
