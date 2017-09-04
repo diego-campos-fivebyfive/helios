@@ -61,36 +61,6 @@ class ProposalHelper
     }
 
     /**
-     * @return \AppBundle\Entity\DocumentInterface
-     */
-    private function create()
-    {
-        $documentManager = $this->getDocumentManager();
-
-        /** @var \AppBundle\Entity\DocumentInterface $document */
-        $document = $documentManager->create();
-        $documentManager->save($document);
-
-        return $document;
-    }
-
-    /**
-     * @param Document $document
-     */
-    public function save(Document $document)
-    {
-        $this->getDocumentManager()->save($document);
-    }
-
-    /**
-     * @return \AppBundle\Entity\DocumentManager
-     */
-    private function getDocumentManager()
-    {
-        return $this->container->get('app.document_manager');
-    }
-
-    /**
      * @param ProjectFinancialInterface $financial
      */
     private function synchronizeAccount(ProjectFinancialInterface &$financial)

@@ -487,14 +487,6 @@ class ProjectHelper
     }
 
     /**
-     * @return \AppBundle\Entity\DocumentManager|object
-     */
-    private function getDocumentManager()
-    {
-        return $this->container->get('app.document_manager');
-    }
-
-    /**
      * @return \Doctrine\ORM\EntityManagerInterface
      */
     private function getManager()
