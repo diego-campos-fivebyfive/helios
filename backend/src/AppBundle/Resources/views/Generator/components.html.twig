@@ -203,6 +203,7 @@
                     </thead>
                     <tbody id="dist-container">
                     </tbody>
+
                     <tfoot>
                     <tr>
                         <td colspan="2">
@@ -220,7 +221,25 @@
                     </tr>
                     </tfoot>
                 </table>
+                <div class="panel panel-warning">
+                    <div class="panel-heading">
+                        <i class="fa fa-list"></i>
+                        Seguro
+                    </div>
+                    <div class="panel-body" id="financial_safe">
+                        {% include view('generator.safe') %}
+                    </div>
+                </div>
 
+                <div class="panel panel-warning">
+                    <div class="panel-heading">
+                        <i class="fa fa-list"></i>
+                        Frete
+                    </div>
+                    <div class="panel-body" id="financial_safe">
+                        {% include view('generator.financial_shipping') %}
+                    </div>
+                </div>
             </td>
         </tr>
 
