@@ -35,7 +35,7 @@ const getRequest = uri => getAuthentication().then(auth => (
 
       if (!body.error) {
         resolve({
-          body,
+          ...body,
           statusCode
         })
         return
