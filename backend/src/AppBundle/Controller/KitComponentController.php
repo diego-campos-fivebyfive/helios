@@ -16,8 +16,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @deprecated
- *
  * @Security("has_role('ROLE_OWNER')")
  *
  * @Route("kit/component/{kit}")
