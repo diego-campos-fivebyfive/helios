@@ -101,15 +101,9 @@ class StructureCalculator
             $items[$field] = $this->findStructure($criteria);
         }
 
-        // TODO: Change this entity field to string, accepting too long data (string)
-        $project->setStructureType($profiles[0]->getMaker()->getId());
-
         /** @var \AppBundle\Entity\Component\ProjectModuleInterface $projectModule */
         $projectModule = $project->getProjectModules()->first();
         $countModules = 0;
-        /*foreach ($projectModule->getGroups() as $group) {
-            $countModules += $group['lines'] * $group['modules'];
-        }*/
         /** @var \AppBundle\Entity\Component\ProjectAreaInterface $projectArea */
         foreach ($project->getAreas() as $projectArea){
             $countModules += $projectArea->getStringNumber() * $projectArea->getModuleString();
@@ -134,6 +128,8 @@ class StructureCalculator
         $term_inter_bd = $items[self::TERMINAL_INTERMEDIARY];
         $term_final_bd = $items[self::TERMINAL_FINAL];
         $total_perfil_usado = array_fill(0, count($profiles), 0);
+
+        if(!$term_inter_bd) return;
 
         $total_juncao = 0;
         $total_term_final = 0;
@@ -383,6 +379,8 @@ class StructureCalculator
     public function findStructure(array $criteria, $single = true)
     {
         $method = $single ? 'findOneBy' : 'findBy';
+
+        CriteriaAggregator::finish($criteria);
 
         return $this->manager->$method($criteria);
     }

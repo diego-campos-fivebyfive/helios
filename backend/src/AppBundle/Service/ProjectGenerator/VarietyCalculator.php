@@ -73,8 +73,12 @@ class VarietyCalculator
         $blackCable = $this->findVariety('cabo', 'preto');
         $redCable = $this->findVariety('cabo', 'vermelho');
 
-        $this->addVariety($project, $blackCable, $cables);
-        $this->addVariety($project, $redCable, $cables);
+
+        if($blackCable instanceof VarietyInterface)
+            $this->addVariety($project, $blackCable, $cables);
+
+        if($redCable instanceof VarietyInterface)
+            $this->addVariety($project, $redCable, $cables);
     }
 
     /**
@@ -99,6 +103,10 @@ class VarietyCalculator
      */
     private function findVariety($type, $subtype)
     {
-        return $this->manager->findOneBy(['type' => $type, 'subtype' => $subtype]);
+        $criteria = ['type' => $type, 'subtype' => $subtype];
+
+        CriteriaAggregator::finish($criteria);
+
+        return $this->manager->findOneBy($criteria);
     }
 }
