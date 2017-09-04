@@ -14,6 +14,9 @@ use Tests\AppBundle\AppTestCase;
  */
 class InsuranceTest extends AppTestCase
 {
+    /**
+     * Test default scenarios
+     */
     public function testCalculationFromProject()
     {
         $project = new Project();
@@ -22,8 +25,8 @@ class InsuranceTest extends AppTestCase
         $order = new Order();
         $element = new Element();
         $element
-            ->setUnitPrice(1000)
-            ->setQuantity(20)
+            ->setUnitPrice(42280)
+            ->setQuantity(1)
             ->setOrder($order)
         ;
 
@@ -32,7 +35,10 @@ class InsuranceTest extends AppTestCase
 
         $this->assertEquals(65, $project->getInsurance());
 
-        $this->assertEquals(20000, $order->getTotal());
-        $this->assertEquals(130, $order->getInsurance());
+        $this->assertEquals(42280, $order->getTotal());
+        $this->assertEquals(274.82, $order->getInsurance());
+
+        Insurance::remove($order);
+        $this->assertEquals(0, $order->getInsurance());
     }
 }
