@@ -81,6 +81,8 @@
                 callback: function (xhr) {
                     swal.close();
                     OrderManager.getElements();
+
+                    $('#add_order_element').trigger('change');
                 }
             });
         });
