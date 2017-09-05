@@ -94,9 +94,11 @@
                         <tr>
                             <td class="text-center">
                                 <h4> {{ project.number }} </h4>
-                                <small>
-                                    {{ project.createdAt|format_date }}
-                                </small>
+                                {% if project.issuedAt %}
+                                    <small>
+                                        {{ project.issuedAt|format_date }}
+                                    </small>
+                                {% endif %}
                             </td>
 
                             {% if not hasCustomer %}
