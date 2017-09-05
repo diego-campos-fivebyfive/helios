@@ -237,16 +237,16 @@ class ProjectFinancialController extends AbstractController
      */
     public function insureAction(Project $project, Request $request)
     {
-       Insurance::apply($project, (bool) $request->get('insure'));
+        Insurance::apply($project, (bool) $request->get('insure'));
 
-       $this->manager('project')->save($project);
+        $this->manager('project')->save($project);
 
-       return $this->json([
-           'project' => [
-               'id' => $project->getId(),
-               'insurance' => $project->getInsurance()
-           ]
-       ]);
+        return $this->json([
+            'project' => [
+                'id' => $project->getId(),
+                'insurance' => $project->getInsurance()
+            ]
+        ]);
     }
 
     /**
@@ -277,7 +277,7 @@ class ProjectFinancialController extends AbstractController
     {
         return $this->handleTaxApplication($request, $tax);
     }
-    
+
     /**
      * @Route("/tax/{id}/delete", name="financial_tax_delete")
      * @Method("delete")

@@ -76,6 +76,13 @@ class Order implements OrderInterface, InsurableInterface
     private $power;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $shippingRules;
+
+    /**
      * @var AccountInterface
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer")
@@ -110,6 +117,7 @@ class Order implements OrderInterface, InsurableInterface
     {
         $this->elements = new ArrayCollection();
         $this->childrens = new ArrayCollection();
+        $this->shippingRules = [];
     }
 
     /**
@@ -209,6 +217,33 @@ class Order implements OrderInterface, InsurableInterface
     public function getPower()
     {
         return $this->power;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setShippingRules(array $shippingRules)
+    {
+        $this->shippingRules = $shippingRules;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getShippingRules()
+    {
+        return $this->shippingRules;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getShipping()
+    {
+        return  is_array($this->shippingRules) && array_key_exists('shipping', $this->shippingRules)
+            ? $this->shippingRules['shipping'] : 0 ;
     }
 
     /**

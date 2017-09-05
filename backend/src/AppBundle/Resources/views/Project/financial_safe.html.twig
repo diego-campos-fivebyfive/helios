@@ -1,0 +1,29 @@
+{#{{ form_start(form,{attr:{id:'form_shipping', action: path('financial_shipping',{id:project.id})}}) }}#}
+
+<div class="row">
+    <div class="form-group col-md-8">
+        <label style="font-size: small; text-align: justify; font-weight: lighter;">
+            COBERTURA SICES SOLAR ALL RISK DO SISTEMA SOLAR FV INSTALADO POR 1 ANO APOS 60 DIAS NFE SICES APOLICE EMITIDA
+            AO CLIENTE FINAL CPF OU CNPJ O PREMIO ABAIXO COBRE O VALOR DOS EQUIPAMENTOS SICES 50% CONTRA DANOS DE CAUSA
+            EXTERNA DANOS ELETRICOS ROUBO OU FURTO VENDAVAL, GRANIZO, RAIO, INCENDIO OU EXPLOSÕES E DEMAIS PREVISTAS EM APOLICE
+        </label>
+    </div>
+
+    <div class="col-md-2">
+        <div class="form-group col-md-12">
+            {#{{ form_label(form.type, 'Opção de Frete') }}
+            {{ form_widget(form.type,{attr:{class:'form-control'}}) }}#}
+            <input type="checkbox"/>
+            <br>
+            <label>Seguro All Risk</label>
+        </div>
+    </div>
+
+    <div class="form-group col-md-2 text-center">
+        <label> Valor do Seguro </label>
+        <h2 id="safe_output" placeholder="R$ 000,00"> R$ 000,00 {#{{ project.shipping|currency }}#} </h2>
+    </div>
+
+</div>
+
+{#{{ form_end(form) }}#}

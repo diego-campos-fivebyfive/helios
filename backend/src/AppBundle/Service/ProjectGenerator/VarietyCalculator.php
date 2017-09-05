@@ -86,7 +86,7 @@ class VarietyCalculator
      * @param VarietyInterface $variety
      * @param $quantity
      */
-    private function addVariety(ProjectInterface $project, VarietyInterface $variety, $quantity)
+    public function addVariety(ProjectInterface $project, VarietyInterface $variety, $quantity)
     {
         $projectVariety = new ProjectVariety();
         $projectVariety
@@ -101,10 +101,19 @@ class VarietyCalculator
      * @param $subtype
      * @return null|object|VarietyInterface
      */
-    private function findVariety($type, $subtype)
+    public function findVariety($type, $subtype)
     {
         $criteria = ['type' => $type, 'subtype' => $subtype];
 
+        return $this->findByCriteria($criteria);
+    }
+
+    /**
+     * @param array $criteria
+     * @return null|object|VarietyInterface
+     */
+    public function findByCriteria(array $criteria)
+    {
         CriteriaAggregator::finish($criteria);
 
         return $this->manager->findOneBy($criteria);
