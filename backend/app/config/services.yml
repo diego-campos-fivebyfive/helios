@@ -134,6 +134,10 @@ services:
         arguments: ['AppBundle\Entity\Theme', '@doctrine']
 
     # Services
+    component_collector:
+        class: AppBundle\Service\Order\ComponentCollector
+        arguments: ['@service_container']
+
     inverter_combinator:
         class: AppBundle\Service\InverterCombinator\InverterCombinator
         arguments: ['@inverter_manager']
