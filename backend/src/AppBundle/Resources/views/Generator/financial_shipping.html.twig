@@ -1,25 +1,25 @@
-{#{{ form_start(form,{attr:{id:'form_shipping', action: path('financial_shipping',{id:project.id})}}) }}#}
+{{ form_start(form, {attr:{id:'form_shipping', action: app.request.uri}}) }}
 
 <div class="row">
     <div class="col-md-6">
         <div class="form-group col-md-4">
-            {#{{ form_label(form.type, 'Opção de Frete') }}
-            {{ form_widget(form.type,{attr:{class:'form-control'}}) }}#}
+            {{ form_label(form.type, 'Opção de Frete') }}
+            {{ form_widget(form.type,{attr:{class:'form-control'}}) }}
         </div>
 
         <div class="form-group group-sices col-md-4">
-            {#{{ form_label(form.state, 'Estado') }}
-            {{ form_widget(form.state,{attr:{class:'form-control'}}) }}#}
+            {{ form_label(form.state, 'Estado') }}
+            {{ form_widget(form.state,{attr:{class:'form-control'}}) }}
         </div>
 
         <div class="form-group group-self col-md-4">
-            {#{{ form_label(form.percent, 'Percentual da NF') }}
-            {{ form_widget(form.percent,{attr:{class:'form-control'}}) }}#}
+            {{ form_label(form.percent, 'Percentual da NF') }}
+            {{ form_widget(form.percent,{attr:{class:'form-control'}}) }}
         </div>
 
         <div class="form-group group-sices group-kind col-md-4">
-            {#{{ form_label(form.kind, 'Localização') }}
-            {{ form_widget(form.kind,{attr:{class:'form-control'}}) }}#}
+            {{ form_label(form.kind, 'Localização') }}
+            {{ form_widget(form.kind,{attr:{class:'form-control'}}) }}
         </div>
     </div>
 
@@ -32,12 +32,12 @@
 
     <div class="form-group col-md-4 text-center">
         <label> Valor do Frete </label>
-        <h2 id="shipping_output"> {#{{ project.shipping|currency }}#} </h2>
+        <h2 id="shipping_output"> {{ project.shipping|currency }} </h2>
     </div>
 
 </div>
-
-{#{{ form_end(form) }}#}
+</div>
+{{ form_end(form) }}
 
 <script>
 
