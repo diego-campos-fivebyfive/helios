@@ -32,7 +32,7 @@ const bundler = actions => (request, response) => {
         .end()
 
       if (process.env.CES_AMBIENCE === 'development') {
-        throw new Error(`Internal error: ${message}`)
+        throw new Error(`Internal error: ${JSON.stringify(message)}`)
       } else {
         /*eslint-disable */
         exec(`$CLI_PATH/ces-slack-notify --backlog-api \'${JSON.stringify(message)}\'`)
