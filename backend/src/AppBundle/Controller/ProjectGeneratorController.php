@@ -10,6 +10,8 @@ use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Form\Component\GeneratorType;
 use AppBundle\Form\Order\ElementType;
 use AppBundle\Form\Order\OrderType;
+use AppBundle\Service\ProjectGenerator\ShippingRuler;
+use AppBundle\Form\Financial\ShippingType;
 use AppBundle\Service\Order\ElementResolver;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -104,6 +106,42 @@ class ProjectGeneratorController extends AbstractController
             'form' => $form->createView(),
             'project' => $project,
             'errors' => $form->getErrors(true)->count()
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/shipping", name="generator_financial_shipping")
+     */
+    public function shippingAction(Request $request, Project $project)
+    {
+        $rule = $project->getShippingRules();
+        $form = $this->createForm(ShippingType::class, $rule);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            $rule = $form->getData();
+
+            ShippingType::normalize($rule);
+
+            $rule['price'] = $project->getCostPriceComponents();
+            $rule['power'] = $project->getPower();
+
+            ShippingRuler::apply($rule);
+
+            $project->setShippingRules($rule);
+
+            $this->manager('project')->save($project);
+
+            return $this->json([
+                'shipping' => $project->getShipping()
+            ]);
+        }
+
+        return $this->render('generator.financial_shipping', [
+            'project' => $project,
+            'form' => $form->createView()
         ]);
     }
 
