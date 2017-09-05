@@ -4,6 +4,7 @@ namespace AppBundle\Form\Component;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -78,10 +79,14 @@ class ModuleType extends AbstractType
         $builder->add('tempCoefficientMaxPower', null, [
             'required' => true
         ]);
-        $builder->add('tempCoefficientOpenCircuitVoltage', null, [
+        $builder->add('tempCoefficientOpenCircuitVoltage', MoneyType::class, [
+            'currency' => '',
+            'scale' => 3,
             'required' => true
         ]);
-        $builder->add('tempCoefficientShortCircuitCurrent', null, [
+        $builder->add('tempCoefficientShortCircuitCurrent', MoneyType::class, [
+            'currency' => '',
+            'scale' => 3,
             'required' => true
         ]);
         $builder->add('status', CheckboxType::class, [
