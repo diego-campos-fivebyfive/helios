@@ -30,9 +30,39 @@ class ProjectGeneratorController extends AbstractController
     /**
      * @Route("/", name="project_generator")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        return $this->render('generator.index');
+        $id = $request->query->getInt('order', 0);
+        $manager = $this->manager('order');
+        $account = $this->account();
+        $order = $manager->find($id);
+
+        if (!$order) {
+            $order = $manager->findOneBy([
+                'account' => $account,
+                'isquikId' => null,
+                'parent' => null
+            ]);
+        }
+
+        if ($order->getIsquikId()) {
+
+            /** @var Order $order */
+            $order = $manager->create();
+            $order->setAccount($account);
+
+            $manager->save($order);
+        }
+
+        if (!$id) {
+            return $this->redirectToRoute('project_generator', [
+                'order' => $order->getId()
+            ]);
+        }
+
+        return $this->render('generator.index', [
+            'order' => $order
+        ]);
     }
 
     /**
@@ -112,9 +142,9 @@ class ProjectGeneratorController extends AbstractController
     /**
      * @Route("/{id}/shipping", name="generator_financial_shipping")
      */
-    public function shippingAction(Request $request, Project $project)
+    public function shippingAction(Request $request, Order $order)
     {
-        $rule = $project->getShippingRules();
+        $rule = $order->getShippingRules();
         $form = $this->createForm(ShippingType::class, $rule);
 
         $form->handleRequest($request);
@@ -125,22 +155,22 @@ class ProjectGeneratorController extends AbstractController
 
             ShippingType::normalize($rule);
 
-            $rule['price'] = $project->getCostPriceComponents();
-            $rule['power'] = $project->getPower();
+            $rule['price'] = $order->getCostPriceComponents();
+            $rule['power'] = $order->getPower();
 
             ShippingRuler::apply($rule);
 
-            $project->setShippingRules($rule);
+            $order->setShippingRules($rule);
 
-            $this->manager('project')->save($project);
+            $this->manager('project')->save($order);
 
             return $this->json([
-                'shipping' => $project->getShipping()
+                'shipping' => $order->getShipping()
             ]);
         }
 
         return $this->render('generator.financial_shipping', [
-            'project' => $project,
+            'project' => $order,
             'form' => $form->createView()
         ]);
     }
@@ -175,13 +205,13 @@ class ProjectGeneratorController extends AbstractController
      * @Route("/orders/{id}", name="generator_orders_create")
      * @Method("post")
      */
-    public function createOrderAction(Project $project)
+    public function createOrderAction(Project $project, Order $order)
     {
         $transformer = $this->get('order_transformer');
 
         /** @var OrderInterface $order */
         $order = $transformer->transformFromProject($project);
-
+        $order->setParent($order);
         $this->get('order_precifier')->precify($order);
 
         $this->manager('project')->delete($project);
