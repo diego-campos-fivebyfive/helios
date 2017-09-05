@@ -7,7 +7,10 @@ use AppBundle\Entity\Component\ProjectTax;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Form\Component\ProjectExtraType;
 use AppBundle\Form\Financial\FinancialType;
+use AppBundle\Form\Financial\ShippingType;
 use AppBundle\Form\Financial\TaxType;
+use AppBundle\Service\Pricing\Insurance;
+use AppBundle\Service\ProjectGenerator\ShippingRuler;
 use AppBundle\Service\Support\Project\FinancialAnalyzer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,6 +61,42 @@ class ProjectFinancialController extends AbstractController
         return $this->render('project.financial_components', [
             'defaults' => $defaults,
             'project' => $project
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/shipping", name="financial_shipping")
+     */
+    public function shippingAction(Request $request, Project $project)
+    {
+        $rule = $project->getShippingRules();
+        $form = $this->createForm(ShippingType::class, $rule);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            $rule = $form->getData();
+
+            ShippingType::normalize($rule);
+
+            $rule['price'] = $project->getCostPriceComponents();
+            $rule['power'] = $project->getPower();
+
+            ShippingRuler::apply($rule);
+
+            $project->setShippingRules($rule);
+
+            $this->manager('project')->save($project);
+
+            return $this->json([
+                'shipping' => $project->getShipping()
+            ]);
+        }
+
+        return $this->render('project.financial_shipping', [
+            'project' => $project,
+            'form' => $form->createView()
         ]);
     }
 
@@ -193,6 +232,24 @@ class ProjectFinancialController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/insure", name="financial_insure")
+     * @Method("post")
+     */
+    public function insureAction(Project $project, Request $request)
+    {
+        Insurance::apply($project, (bool) $request->get('insure'));
+
+        $this->manager('project')->save($project);
+
+        return $this->json([
+            'project' => [
+                'id' => $project->getId(),
+                'insurance' => $project->getInsurance()
+            ]
+        ]);
+    }
+
+    /**
      * @Route("/{id}/taxes", name="financial_taxes")
      */
     public function taxesAction(Project $project)
@@ -220,7 +277,7 @@ class ProjectFinancialController extends AbstractController
     {
         return $this->handleTaxApplication($request, $tax);
     }
-    
+
     /**
      * @Route("/tax/{id}/delete", name="financial_tax_delete")
      * @Method("delete")

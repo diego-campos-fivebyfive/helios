@@ -44,7 +44,10 @@ class GeneratorController extends AbstractApiController
 
         $settings = json_decode($request->getContent(), true);
 
-        $form = $this->createForm(GeneratorType::class);
+        $defaults = $generator->loadDefaults($settings);
+
+        $form = $this->createForm(GeneratorType::class, $defaults);
+
         $request->request->set('generator', $settings);
         $form->handleRequest($request);
 
