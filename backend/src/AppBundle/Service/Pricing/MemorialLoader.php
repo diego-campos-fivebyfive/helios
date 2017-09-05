@@ -28,13 +28,7 @@ class MemorialLoader
 
         $qb->where('m.status = :status')
             ->andWhere('m.endAt is null')
-            ->andWhere('m.startAt <= :startAt')
-            ->orderBy('m.id','desc')
-            ->setMaxResults(1)
-            ->setParameters([
-                'status' => 1,
-                'startAt' => (new \DateTime())->format('Y-m-d')
-            ]);
+            ->setParameters(['status' => 1]);
 
         return $qb->getQuery()->getOneOrNullResult();
     }

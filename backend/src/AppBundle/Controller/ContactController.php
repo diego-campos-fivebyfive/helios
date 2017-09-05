@@ -480,25 +480,6 @@ class ContactController extends AbstractController
                 $qb->expr()->eq('c.member', ':member'), $qb->expr()->in('c.id', $allowedIds)
             ));
 
-            /**
-             * Leaders have access to registered contacts by members
-             */
-            if ($member->isLeader()) {
-
-                $teamMemberIds = [];
-                foreach ($member->getTeam()->getMembers() as $teamMember) {
-                    if (!in_array($teamMember->getId(), $allowedIds)) {
-                        $teamMemberIds[] = $teamMember->getId();
-                    }
-                }
-
-                if (!empty($teamMemberIds)) {
-                    $qb->orWhere($qb->expr()->andX(
-                        $qb->expr()->eq('c.context', ':context'), $qb->expr()->in('c.member', $teamMemberIds)
-                    ));
-                }
-            }
-
             $qb->setParameter('member', $member);
         }
 

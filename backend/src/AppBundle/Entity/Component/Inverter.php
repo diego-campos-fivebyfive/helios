@@ -237,6 +237,16 @@ class Inverter implements InverterInterface
     /**
      * @inheritDoc
      */
+    public function setDescription($description)
+    {
+        $this->model = $description;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getDescription()
     {
         return $this->model;

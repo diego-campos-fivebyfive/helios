@@ -2,8 +2,6 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\Component\KitComponentInterface;
-use AppBundle\Entity\Component\KitInterface;
 use AppBundle\Entity\Component\ProjectAreaInterface;
 use AppBundle\Entity\Financial\ProjectFinancialInterface;
 use AppBundle\Entity\Financial\Tax;
@@ -26,141 +24,6 @@ class ProjectHelper
     function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-    }
-
-    /**
-     * @param ProjectInterface $project
-     * @return ProjectInterface
-     */
-    public function copyProject(ProjectInterface $project)
-    {
-        $accountManager = $this->getAccountManager();
-        $projectManager = $this->getProjectManager();
-        $financialManager = $this->getFinancialManager();
-
-        $snapshot = $project->getSnapshot();
-
-        $projectCopy = clone ($project);
-
-        $assertKit = false;
-
-        if (array_key_exists('kit', $snapshot)) {
-
-            $kit = $this->container->get('app.kit_manager')->find($snapshot['kit']['id']);
-
-            if ($kit instanceof KitInterface) {
-
-                if (true == $assertKit = $this->assertKitForProjectCopy($project, $kit)) {
-
-                    foreach ($project->getInverters() as $projectInverter) {
-                        if ($projectInverter instanceof ProjectInverterInterface) {
-
-                            $invSnapshot = $projectInverter->getSnapshot();
-                            $invId = $invSnapshot['inverter']['id'];
-
-                            $kitInverter = $kit->getInverters()->filter(function (KitComponentInterface $kitComponent) use ($invId) {
-                                return $kitComponent->getInverter()->getId() == $invId;
-                            })->current();
-
-                            $projectInverterCopy = clone ($projectInverter);
-                            $projectInverterCopy
-                                ->setInverter($kitInverter)
-                                ->setProject($projectCopy)
-                                ->setOperation($projectInverter->getOperation());
-
-                            foreach ($projectInverter->getModules() as $projectModule) {
-                                if ($projectModule instanceof ProjectModuleInterface) {
-
-                                    $modSnapshot = $projectModule->getSnapshot();
-                                    $modId = $modSnapshot['module']['id'];
-
-                                    $kitModule = $kit->getModules()->filter(function (KitComponentInterface $kitComponent) use ($modId) {
-                                        return $kitComponent->getModule()->getId() == $modId;
-                                    })->current();
-
-
-                                    $projectModuleCopy = clone ($projectModule);
-
-                                    $projectModuleCopy
-                                        ->setInverter($projectInverterCopy)
-                                        ->setModule($kitModule);
-
-                                    $projectInverterCopy->addModule($projectModuleCopy);
-                                }
-                            }
-
-                            $projectCopy->addInverter($projectInverterCopy);
-                        }
-                    }
-                } else {
-
-                    $projectCopy->setMetadata('kwh_year', 0);
-                }
-
-                $projectCopy->setKit($kit);
-            }
-        }
-
-        $nextIndex = 1 + $projectCopy->getMember()->getAccount()->getAttribute('project_index');
-
-        $projectCopy
-            ->setMetadata('filename', null)
-            ->setMetadata('number', $nextIndex);
-
-        $projectManager->save($projectCopy);
-
-        $financial = $project->getFinancial();
-
-        if ($financial instanceof ProjectFinancialInterface) {
-
-            $financialCopy = clone($financial);
-            $financialCopy->setProject($projectCopy);
-
-            if (!$assertKit) {
-                $financialCopy
-                    ->setNetPresentValue(0)
-                    ->setInternalRateOfReturn(0)
-                    ->setPaybackYears(0)
-                    ->setPaybackMonths(0)
-                    ->setPaybackYearsDiscounted(0)
-                    ->setPaybackMonthsDiscounted(0)
-                    ->setAccumulatedCash([]);
-            }
-
-            foreach ($financialCopy->getTaxes() as $tax) {
-                if ($tax instanceof TaxInterface) {
-                    $taxCopy = new Tax($financialCopy);
-                    $taxCopy
-                        ->setName($tax->getName())
-                        ->setType($tax->getType())
-                        ->setTarget($tax->getTarget())
-                        ->setOperation($tax->getOperation())
-                        ->setValue($tax->getValue());
-                }
-            }
-
-            $proposal = $financial->getProposal();
-            if ($assertKit && $proposal) {
-
-                $proposalCopy = clone ($proposal);
-                foreach ($proposalCopy->getSections() as $proposalSection) {
-                    $proposalCopy->removeSection($proposalSection);
-                    $proposalSectionCopy = clone ($proposalSection);
-                    $proposalCopy->addSection($proposalSectionCopy);
-                }
-
-                $this->getDocumentManager()->save($proposalCopy);
-                $financialCopy->setProposal($proposalCopy);
-            }
-
-            $financialManager->save($financialCopy);
-        }
-
-        $this->getProjectManager()->getEntityManager()->refresh($projectCopy);
-
-        $accountManager->incrementAccountIndex($projectCopy->getMember()->getAccount(), 'project_index');
-
-        return $projectCopy;
     }
 
     /**
@@ -395,74 +258,6 @@ class ProjectHelper
     }
 
     /**
-     * @param ProjectInterface $project
-     * @param KitInterface $kit
-     * @return bool
-     */
-    private function assertKitForProjectCopy(ProjectInterface $project, KitInterface $kit)
-    {
-        $projectInverters = $project->getInverters();
-
-        if ($projectInverters->count() != $kit->countInverters()) {
-            return false;
-        }
-
-        $kitInverterIds = [];
-        foreach ($kit->getInverters() as $kitInverter) {
-            if ($kitInverter instanceof KitComponentInterface) {
-                $kitInverterIds[$kitInverter->getInverter()->getId()] = 1;
-            }
-        }
-
-        $projectInvertersIds = [];
-        $projectModulesIds = [];
-        foreach ($project->getInverters() as $projectInverter) {
-            $invSnapshot = $projectInverter->getSnapshot();
-            $projectInvertersIds[$invSnapshot['inverter']['id']] = 1;
-            foreach ($projectInverter->getModules() as $projectModule) {
-                if ($projectModule instanceof ProjectModuleInterface) {
-                    $modSnapshot = $projectModule->getSnapshot();
-                    $modId = $modSnapshot['module']['id'];
-                    if (!array_key_exists($modId, $projectModulesIds)) {
-                        $projectModulesIds[$modId] = 0;
-                    }
-                    $projectModulesIds[$modId] += $projectModule->countModules();
-                }
-            }
-        }
-
-        if (!empty(array_diff(array_keys($kitInverterIds), array_keys($projectInvertersIds)))) {
-            return false;
-        }
-
-        if (array_sum($projectModulesIds) != $kit->countModules()) {
-            return false;
-        }
-
-        $kitModulesIds = [];
-        foreach ($kit->getModules() as $kitModule) {
-            $modId = $kitModule->getModule()->getId();
-            if (!array_key_exists($modId, $kitModulesIds)) {
-                $kitModulesIds[$modId] = 0;
-            }
-            $kitModulesIds[$modId] += $kitModule->getQuantity();
-        }
-
-        foreach ($projectModulesIds as $projectModulesId => $projectModulesQtde) {
-            if (!array_key_exists($projectModulesId, $kitModulesIds)) {
-                return false;
-                break;
-            }
-            if ($projectModulesQtde != $kitModulesIds[$projectModulesId]) {
-                return false;
-                break;
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * @return \AppBundle\Manager\ProjectManager|object
      */
     private function getProjectManager()
@@ -476,22 +271,6 @@ class ProjectHelper
     private function getAccountManager()
     {
         return $this->container->get('customer_manager');
-    }
-
-    /**
-     * @return \AppBundle\Entity\Financial\ProjectFinancialManager|object
-     */
-    private function getFinancialManager()
-    {
-        return $this->container->get('app.project_financial');
-    }
-
-    /**
-     * @return \AppBundle\Entity\DocumentManager|object
-     */
-    private function getDocumentManager()
-    {
-        return $this->container->get('app.document_manager');
     }
 
     /**

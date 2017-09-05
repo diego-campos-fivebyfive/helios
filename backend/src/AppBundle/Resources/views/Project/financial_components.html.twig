@@ -86,17 +86,24 @@
 
     {# STRUCTURES #}
     {% for projectStructure in project.projectStructures %}
+
+        {% set structure = projectStructure.structure %}
+
         <tr>
-            <td class="col-md-2"> {{ projectStructure.structure.code }} </td>
+            <td class="col-md-2"> {{ structure.code }} </td>
             <td>
-                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('structure_show', {id:projectStructure.structure.id}) }}">
-                {{ projectStructure.structure.description }}
+                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('structure_show', {id:structure.id}) }}">
+                    {{ structure.description }} &nbsp;
+                    {% if not structure.available %}
+                        <span class="label label-danger">
+                            Produto Indisponível
+                        </span>
+                    {% endif %}
                 </a>
             </td>
             {% if member.isOwner %}<td class="price-columns"> {{ projectStructure.unitCostPrice|currency }} </td>{% endif %}
             <td class="price-columns"> {{ projectStructure.unitSalePrice|currency }} </td>
             <td class="col-md-1"> {{ projectStructure.quantity }} </td>
-
             <td> {{ projectStructure.totalSalePrice|currency }} </td>
         </tr>
     {% endfor %}

@@ -819,16 +819,6 @@ class Customer extends AbstractCustomer
             }
         }
 
-        if ($this->isLeader()) {
-            foreach ($this->getTeam()->getMembers() as $member) {
-                foreach ($member->getContacts() as $memberContact) {
-                    if (!$allowedContacts->contains($memberContact) && !$memberContact->isDeleted()) {
-                        $allowedContacts->add($memberContact);
-                    }
-                }
-            }
-        }
-
         return $allowedContacts;
     }
 
@@ -1293,16 +1283,6 @@ class Customer extends AbstractCustomer
     public function getEmailAccounts()
     {
         return $this->emailAccounts;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getCurrentEmailAccount()
-    {
-        return $this->emailAccounts->filter(function(EmailAccountInterface $account){
-            return $account->isCurrent();
-        })->first();
     }
 
     /**

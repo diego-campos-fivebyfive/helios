@@ -3,6 +3,11 @@
 const request = require('request-promise')
 const { isquik } = require('../config')
 
+const parserResponse = ({ body, statusCode }) => ({
+  body: { ...JSON.parse(body) },
+  statusCode
+})
+
 const getAuthentication = () => request({
   uri: 'https://api.isquik.com/auth',
   method: 'POST',
@@ -25,9 +30,24 @@ const getRequest = uri => getAuthentication().then(auth => (
     method: 'GET',
     uri
   })
-    .then(({ body, statusCode }) => ({
-      ...JSON.parse(body),
-      statusCode
+    .then(data => new Promise((resolve, reject) => {
+      const { body, statusCode } = parserResponse(data)
+
+      if (!body.error) {
+        resolve({
+          ...body,
+          statusCode
+        })
+        return
+      }
+
+      reject({
+        title: 'Isquik API exception',
+        message: body,
+        method: 'GET',
+        statusCode,
+        uri
+      })
     }))
 ))
 

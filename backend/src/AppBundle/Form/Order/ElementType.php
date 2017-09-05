@@ -23,7 +23,7 @@ class ElementType extends AbstractType
 
         $builder
             ->add('code', ChoiceType::class, [
-                'choices' => $this->findElements($manager, $order),
+                'choices' => $this->findElements($manager, $order, $element->getCode()),
             ])
             ->add('quantity', TextType::class)
         ;
@@ -45,11 +45,16 @@ class ElementType extends AbstractType
      * @param \AppBundle\Manager\AbstractManager $manager
      * @param Order $order
      */
-    private function findElements($manager, Order $order)
+    private function findElements($manager, Order $order, $code = null)
     {
         $codes = $order->getElements()->map(function (Element $element){
             return $element->getCode();
         })->toArray();
+
+        if ($code) {
+            $index = array_search($code, $codes);
+            unset($codes[$index]);
+        }
 
         $qb = $manager->createQueryBuilder();
 

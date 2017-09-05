@@ -20,7 +20,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 
 /**
  * @Security("has_role('ROLE_OWNER') or has_role('ROLE_OWNER_MASTER')")
- * @Route("generator")
+ * @Route("project/generator")
  * @Breadcrumb("Orçamentos")
  */
 class ProjectGeneratorController extends AbstractController
@@ -28,12 +28,20 @@ class ProjectGeneratorController extends AbstractController
     /**
      * @Route("/", name="project_generator")
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
-        $form = $this->createForm(GeneratorType::class);
+        return $this->render('generator.index');
+    }
 
-        return $this->render('generator.index', [
-            'form' => $form->createView()
+    /**
+     * @Route("/{id}/components", name="generator_components")
+     */
+    public function componentsAction(Project $project)
+    {
+        $this->getGenerator()->pricing($project);
+
+        return $this->render('generator.components', [
+            'project' => $project
         ]);
     }
 
@@ -229,7 +237,7 @@ class ProjectGeneratorController extends AbstractController
      */
     public function updateOrderElementAction(Element $element, Request $request)
     {
-        $componentManager = $this->manager($element->getTag());
+        $componentManager = $this->manager($element->getFamily());
         $manager = $this->manager('order_element');
 
         $form = $this->createForm(ElementType::class, $element, [

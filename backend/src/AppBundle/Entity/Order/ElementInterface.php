@@ -7,11 +7,11 @@ namespace AppBundle\Entity\Order;
  */
 interface ElementInterface
 {
-    const TAG_MODULE = 'module';
-    const TAG_INVERTER = 'inverter';
-    const TAG_STRUCTURE = 'structure';
-    const TAG_STRING_BOX = 'string_box';
-    const TAG_VARIETY = 'variety';
+    const FAMILY_MODULE = 'module';
+    const FAMILY_INVERTER = 'inverter';
+    const FAMILY_STRUCTURE = 'structure';
+    const FAMILY_STRING_BOX = 'string_box';
+    const FAMILY_VARIETY = 'variety';
 
     /**
      * @return int

@@ -49,6 +49,12 @@ interface ModuleInterface
     public function getModel();
 
     /**
+     * @param $description
+     * @return ModuleInterface
+     */
+    public function setDescription($description);
+
+    /**
      * @return string
      */
     public function getDescription();

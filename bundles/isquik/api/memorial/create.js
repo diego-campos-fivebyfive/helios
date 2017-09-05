@@ -26,7 +26,7 @@ const getService = family => services[family]
 const splitMemorial = ({ Dados: memorial }) => ({
   version: memorial.Versao,
   isquik_id: memorial.IdTabelaBase,
-  status: memorial.FlagPublicado,
+  status: true,
   ranges: memorial.Produtos.map(range => ({
     code: range.Codigo,
     family: range.Grupo,

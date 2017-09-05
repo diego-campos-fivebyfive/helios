@@ -17,6 +17,11 @@ class AccountsController extends FOSRestController
 {
     public function postAccountAction(Request $request)
     {
+        $responseHandler = function($data, $status) {
+            $view = View::create($data)->setStatusCode($status);
+            return $this->handleView($view);
+        };
+
         $data = json_decode($request->getContent(), true);
 
         /** @var Customer $manager */
@@ -27,11 +32,22 @@ class AccountsController extends FOSRestController
         ]);
 
         if ($email) {
-            $data = "This account already exists!";
+            $data = "This email already exists!";
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
 
-            $view = View::create($data)->setStatusCode($status);
-            return $this->handleView($view);
+            return $responseHandler($data, $status);
+        }
+
+        $document = $manager->findOneBy([
+            'context' => 'account',
+            'document' => $data['document']
+        ]);
+
+        if ($document) {
+            $data = "This CNPJ already exists!";
+            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+
+            return $responseHandler($data, $status);
         }
 
         /** @var AccountInterface $accountManager */
@@ -79,7 +95,7 @@ class AccountsController extends FOSRestController
         }
         catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $data = 'Can not create Account';
+            $data = $exception;
         }
 
         $view = View::create($data)->setStatusCode($status);
@@ -181,7 +197,7 @@ class AccountsController extends FOSRestController
         }
         catch (\Exception $exception ) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $data = 'Can not update Account';
+            $data = $exception;
         }
 
         $view = View::create($data)->setStatusCode($status);

@@ -1,6 +1,7 @@
 'use strict'
 
 const { router, bundler } = require('../components')
+const { exec } = require('child_process')
 
 const account = require('./account')
 const memorial = require('./memorial')
@@ -17,4 +18,11 @@ const actions = {
 }
 
 router.post('/api/v1/notifications', bundler(actions))
+router.post('/hooks/bitbucket', ((request, response) => {
+  response
+    .status(200)
+    .json({ message: 'Hook Recieved' })
+    .end()
+  exec('$CLI_PATH/ces-app-deploy --homolog')
+}))
 router.get('/', (request, response) => response.send('API Documentation'))

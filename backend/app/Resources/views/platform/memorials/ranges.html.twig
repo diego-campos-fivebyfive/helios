@@ -1,0 +1,111 @@
+<style>
+    input.warning{
+        border-color: #ff7701;
+    }
+    input.success{
+        border-color: #0a6aa1;
+    }
+</style>
+
+
+<div class="col-md-12 flow-h">
+    <div>
+<table class="table table-striped">
+    <tr>
+        <td> Código </td>
+        <td> Descrição </td>
+        {% for range in data.columns %}
+        <td align="center"> {{ range.initialPower }} - {{ range.finalPower }} </td>
+        {% endfor %}
+    </tr>
+
+    {% for product in data.products %}
+    <tr>
+        <td> {{ product.code }} </td>
+        <td> {{ product.description }} </td>
+
+        {% if attribute(data.ranges, product.code) is defined %}
+        {% set ranges = attribute(data.ranges, product.code) %}
+
+        {% for key, range in data.columns %}
+
+            <td align="center">
+                {% set price = (attribute(ranges, key) is defined) ? attribute(ranges, key).price : 0 %}
+                {% set id = (attribute(ranges, key) is defined) ? attribute(ranges, key).id : 0 %}
+                <input data-range="{{
+                    {
+                        id:id,
+                        memorial:range.memorial.id,
+                        code:product.code,
+                        initialPower:range.initialPower,
+                        finalPower:range.finalPower,
+                        level: range.level
+                    }|json_encode
+                }}"
+                       type="text" value="{{ price }}" class="form-control" placeholder="Preço" style="width: 100px;">
+            </td>
+
+        {% endfor %}
+
+        {% else %}
+
+        {% for key, range in data.columns %}
+
+            <td align="center">
+                <input data-range="{{
+                {
+                    id:0,
+                    memorial:range.memorial.id,
+                    code:product.code,
+                    initialPower:range.initialPower,
+                    finalPower:range.finalPower,
+                    level:range.level
+                }|json_encode
+                }}" type="text" value="0" class="form-control" placeholder="Preço" style="width: 100px;">
+            </td>
+
+        {% endfor %}
+
+        {% endif %}
+
+    </tr>
+    {% endfor %}
+</table>
+    </div>
+</div>
+
+<script>
+    $('[data-range]').on('change', function(){
+
+        var source = $(this);
+        var data = source.data('range');
+
+        if('string' == typeof data){
+            data = JSON.parse(data);
+        }
+
+        data.price = source.val();
+
+        source.removeClass('success error').addClass('warning');
+
+        PlatformMemorial.request({
+            url: '{{ path('platform_range_save') }}',
+            method: 'post',
+            data: data,
+            callback:function(xhr){
+                var response = xhr.responseJSON;
+                if(200 == xhr.status && response.hasOwnProperty('range')){
+                    source.removeClass('warning error').addClass('success');
+                    source.data('range', JSON.stringify(response.range));
+                }else{
+                    source.removeClass('warning success').addClass('error');
+                    swal('Ooops', 'Falha ao executar a operação', 'error');
+                }
+
+                window.setTimeout(function(){
+                    source.removeClass('success error warning');
+                }, 1500);
+            }
+        })
+    });
+</script>

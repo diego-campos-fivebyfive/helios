@@ -8,7 +8,7 @@
             ORÇAMENTO ATUAL
             <button type="submit" class="btn btn-warning pull-right">
                 <i class="fa fa-arrow-right"></i>
-                Enviar pedido para SICES
+                Enviar solicitação para SICES
             </button>
         </th>
     </tr>
@@ -101,7 +101,7 @@
                         swal('Atenção', 'Falha ao executar a operação', 'error');
                     } else {
                         swal.close();
-                        OrderManager.getOrders();
+                        GeneratorHandler.getOrders();
                     }
                 }
             });
@@ -115,7 +115,7 @@
         if(data.length) {
 
             swal({
-                title: 'Confirma a geração do pedido?',
+                title: 'Confirma a Solicitação?',
                 text: 'Os dados serão enviados para verificação',
                 type: "warning",
                 showCancelButton: true,
@@ -142,14 +142,14 @@
                         } else {
 
                             swal({
-                                title: "Pedido gerado com sucesso!",
-                                text: "Redirecionando...",
+                                title: "Solicitação recebida com sucesso!",
+                                text: "Você receberá a confirmação em seu e-mail.",
                                 type: "success",
-                                showConfirmButton: false
+                                showConfirmButton: true
+                            }, function () {
+                                var order = xhr.responseJSON.order;
+                                window.location.href = '{{ path('order_show',{id:'_id_'}) }}'.replace(/_id_/g, order.id);
                             });
-
-                            var order = xhr.responseJSON.order;
-                            window.location.href = '{{ path('order_show',{id:'_id_'}) }}'.replace(/_id_/g, order.id);
                         }
                     }
                 });

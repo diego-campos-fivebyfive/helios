@@ -6,7 +6,6 @@ use AppBundle\Configuration\App;
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\CategoryInterface;
-use AppBundle\Entity\Extra\AccountRegister;
 use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\Package;
 use AppBundle\Entity\UserInterface;
@@ -186,17 +185,6 @@ class RegisterHelper
 
     /**
      * @param $email
-     * @return null|object
-     */
-    public function findRegisterByEmail($email)
-    {
-        return $this->getAccountRegisterManager()->findOneBy([
-            'email' => $email
-        ]);
-    }
-
-    /**
-     * @param $email
      * @param $context
      * @return null|object
      */
@@ -243,14 +231,6 @@ class RegisterHelper
     private function getCustomerManager()
     {
         return $this->container->get('customer_manager');
-    }
-
-    /**
-     * @return \AppBundle\Entity\Extra\AccountRegisterManager|object
-     */
-    private function getAccountRegisterManager()
-    {
-        return $this->container->get('app.account_register_manager');
     }
 
     /**

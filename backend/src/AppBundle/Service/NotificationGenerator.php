@@ -5,7 +5,7 @@ namespace AppBundle\Service;
 use AppBundle\Configuration\App;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Notification;
-use AppBundle\Entity\NotificationManager;
+use AppBundle\Manager\NotificationManager;
 use AppBundle\Entity\Project\ProjectInterface;
 use AppBundle\Entity\TaskInterface;
 

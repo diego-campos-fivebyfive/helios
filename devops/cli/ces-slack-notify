@@ -2,10 +2,27 @@
 
 echo "Sending Slack devops chat notification..."
 
-message=$1
+message=$(echo ${2:0:1500} | sed 's/"/\\"/g')
+
+if [ $1 = '--backlog-api' ]; then
+
+  slack_hook=$SLACK_HOOK_BACKLOG_API
+  json="{\"attachments\": [{\"text\": \"Isquik API - Exception:\",\"fields\": [{\"title\": \"Service\",\"value\": \"Server\",\"short\": true},{\"title\": \"Environment\",\"value\": \"$CES_AMBIENCE\",\"short\": true}],\"color\": \"#F35A00\"},{\"text\": \"$message\"}]}"
+
+elif [ $1 = '--devops' ]; then
+
+  slack_hook=$SLACK_HOOK_DEVOPS
+  json="{\"text\": \"$message\", \"link_names\": \"1\"}"
+
+else
+
+  echo "Invalid chat argument"
+  exit 1
+
+fi
 
 curl -s \
   -X POST \
   -H "Content-type:application/json" \
-  -d "{\"text\": \"@here: $message\", \"link_names\": \"1\"}" \
-  $SLACK_HOOK
+  -d "$json" \
+  $slack_hook

@@ -8,17 +8,86 @@ use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Model\KitPricing;
 use AppBundle\Service\Mailer;
+use Exporter\Exporter;
+use Exporter\Handler;
+use Exporter\Source\DoctrineORMQuerySourceIterator;
+use Exporter\Writer\CsvWriter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Entity\Pricing\Range;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @Route("debug")
+ * //@Security("has_role('ROLE_SUPER_ADMIN')")
  */
 class DebugController extends AbstractController
 {
+    /**
+     * @Route("/components-import")
+     */
+    public function importComponentsAction()
+    {
+        die;
+        $dir = $this->get('kernel')->getRootDir() . '/../web/public/';
+        $products = ['inverter', 'module'];
+
+        foreach ($products as $product) {
+
+            $manager = $this->manager($product);
+
+            $data = explode("\n", file_get_contents($dir . $product . '.csv'));
+
+            unset($data[0]);
+
+            foreach($data as $key => $info){
+
+                if(strlen($info)) {
+
+                    list($code, $description) = explode(';', $info);
+
+                    $entity = $manager->findOneBy(['code' => $code]);
+
+                    if ($entity) {
+                        $entity->setDescription($description);
+                        //dump($entity->getCode() . ' >> ' . $entity->getDescription());
+                    } else {
+                        //dump($info);
+                    }
+
+                    if($entity)
+                        $manager->save($entity, $key == count($data));
+                }
+            }
+        }
+        die;
+    }
+
+    /**
+     * @Route("/components-export")
+     */
+    public function exportComponentsAction()
+    {
+        die;
+        $products = ['inverter', 'module', 'string_box', 'structure', 'variety'];
+
+        foreach ($products as $product) {
+
+            $filename = $this->get('kernel')->getRootDir() . sprintf('/../web/public/%s.csv', $product);
+
+            $writer = new CsvWriter($filename);
+
+            $query = $this->manager($product)->createQueryBuilder()->getQuery();
+
+            $iterator = new DoctrineORMQuerySourceIterator($query, ['code', 'description']);
+
+            Handler::create($iterator, $writer)->export();
+        }
+        die;
+    }
+
     /**
      * @Route("/logger/{env}", name="debug_logger")
      */
@@ -32,6 +101,47 @@ class DebugController extends AbstractController
         }
 
         echo $content; die;
+    }
+
+    /**
+     * @Route("/head/logger/{date}")
+     */
+    public function headCheckerAction($date)
+    {
+        $kernel = $this->get('kernel');
+        $env = $kernel->getEnvironment();
+
+        $file = $kernel->getRootDir() . sprintf('/cache/%s/fetch_head_%s.json', $env, $date);
+
+        if(file_exists($file)) {
+            $data = explode("\n", file_get_contents($file));
+
+            if (is_array($data)) {
+                foreach ($data as $content) {
+                    if(strlen($content)) {
+                        $extract = json_decode(substr($content, 0, -1), true);
+
+                        foreach ($extract as $info => $server) {
+                            echo $info . "<br>";
+                            foreach ($server as $key => $extra) {
+                                echo $key . " => ";
+                                if (is_string($extra)) {
+                                    echo $extra;
+                                }
+                                if (is_array($extra)) {
+                                    echo json_encode($extra);
+                                }
+                                echo "<br>";
+                            }
+
+                            echo "<hr>";
+                        }
+                    }
+                }
+            }
+        }
+
+        die;
     }
 
     /**

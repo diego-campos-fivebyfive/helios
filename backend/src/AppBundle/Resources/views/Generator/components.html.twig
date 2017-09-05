@@ -1,0 +1,480 @@
+{% set isPromo = project.defaults.is_promotional %}
+
+<style>
+    .line-padding {
+        padding-top: 4rem !important;
+    }
+
+    {% if isPromo %}
+    .cost-col {
+        display: none;
+    }
+
+    {% endif %}
+
+</style>
+
+<div class="modal inmodal fade" id="modal_component" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                {% include view('kit.spinner') %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">
+                    {{ 'Close'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<table class="col-md-12 table flow-lg">
+    <thead>
+    <tr class="flow-lg">
+        <th width="15%"> Código</th>
+        <th> Descrição</th>
+        <th width="15%"><span class="cost-col">Custo</span></th>
+        <th width="10%" align="center"> Quantidade</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {# MODULES #}
+    {% for projectModule in project.projectModules %}
+        <tr>
+            <td> {{ projectModule.module.code }} </td>
+            <td>
+                <a data-toggle="modal" data-target="#modal_component"
+                   data-url="{{ path('component_show', {type:'module', id:projectModule.module.id}) }}">
+                    {{ projectModule.module.model }}
+                </a>
+            </td>
+            <td class="promotional"> {{ projectModule.unitCostPrice|currency }} </td>
+            <td class="text-center"> {{ projectModule.quantity }} </td>
+        </tr>
+    {% endfor %}
+
+    {# INVERTERS #}
+    {% for id, group in project.groupInverters %}
+        <tr>
+            <td> {{ group.inverter.code }} </td>
+            <td>
+                <a data-toggle="modal" data-target="#modal_component"
+                   data-url="{{ path('component_show', {type:'inverter', id:group.inverter.id}) }}">
+                    {{ group.inverter.model }}
+                </a>
+            </td>
+            <td class="promotional"> {{ group.unitCostPrice|currency }} </td>
+            <td class="text-center"> {{ group.quantity }} </td>
+        </tr>
+    {% endfor %}
+
+    {# TRANSFORMER #}
+    {% if project.transformer %}
+        <tr>
+            <td> {{ project.transformer.variety.code }} </td>
+            <td> {{ project.transformer.variety.description }} </td>
+            <td class="promotional"> {{ project.transformer.unitCostPrice|currency }} </td>
+            <td> {{ 1 }} </td>
+        </tr>
+    {% endif %}
+
+    {# STRING_BOXES #}
+    {% for projectStringBox in project.projectStringBoxes %}
+        <tr>
+            <td> {{ projectStringBox.stringBox.code }} </td>
+            <td>
+                <a data-toggle="modal" data-target="#modal_component"
+                   data-url="{{ path('stringbox_show', {id:projectStringBox.stringBox.id}) }}">
+                    {{ projectStringBox.stringBox.description }}
+                </a>
+            </td>
+            <td class="promotional"> {{ projectStringBox.unitCostPrice|currency }} </td>
+            <td class="text-center"> {{ projectStringBox.quantity }} </td>
+        </tr>
+    {% endfor %}
+
+    {# STRUCTURES #}
+    {% for projectStructure in project.projectStructures %}
+        {% set structure = projectStructure.structure  %}
+        <tr>
+            <td> {{ structure.code }} </td>
+            <td>
+                <a data-toggle="modal" data-target="#modal_component"
+                   data-url="{{ path('structure_show', {id:structure.id}) }}">
+                    {{ structure.description }}
+                    {% if not structure.available %}
+                        <span class="label label-danger">
+                            Produto Indisponível
+                        </span>
+                    {% endif %}
+                </a>
+            </td>
+            <td class="promotional"> {{ projectStructure.unitCostPrice|currency }} </td>
+            <td class="text-center"> {{ projectStructure.quantity }} </td>
+        </tr>
+    {% endfor %}
+
+    {# VARIETIES #}
+    {% for projectVariety in project.projectVarieties if projectVariety.variety.type != 'transformer' %}
+        <tr>
+            <td> {{ projectVariety.variety.code }} </td>
+            <td>
+                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('variety_show', {id:projectVariety.variety.id}) }}">
+                    {{ projectVariety.variety.description }}
+                </a>
+            </td>
+            <td class="promotional"> {{ projectVariety.unitCostPrice|currency }} </td>
+            <td class="text-center"> {{ projectVariety.quantity }} </td>
+        </tr>
+    {% endfor %}
+    <tr>
+        <th></th>
+        <th></th>
+        <th> {{ project.costPriceComponents|currency }} </th>
+        <td></td>
+    </tr>
+    {% set projectModule = project.projectModules.first %}
+
+    {% if projectModule %}
+
+        <tr>
+            <td colspan="4">
+
+                <table class="hide">
+                    <tbody id="template_lines">
+                    <tr class="dist-line">
+                        <td class="col-md-4 line-padding">
+                            <input placeholder="Número de Linhas" type="text" value="__lines__"
+                                   class="form-control dist-line-number">
+                        </td>
+                        <td class="col-md-4 line-padding">
+                            <input placeholder="Módulos por Linha" type="text" value="__modules__"
+                                   class="form-control dist-line-module">
+                        </td>
+                        <td class="col-md-3">
+                            <div class="btn-group btn-group-justified" data-toggle="buttons">
+                                <label class="btn btn-default btn-position" data-position="0">
+                                    Vertical <br>
+                                    <img src="{{ asset('public/assets/images/opt_vertical.png') }}"/>
+                                    <input name="line-position" type="radio" value="0">
+                                </label>
+                                <label class="btn btn-default btn-position" data-position="1">
+                                    Horizontal <br>
+                                    <img src="{{ asset('public/assets/images/opt_horizontal.png') }}"/>
+                                    <input name="line-position" type="radio" value="1">
+                                </label>
+                            </div>
+                        </td>
+                        <td class="col-md-1 line-padding">
+                            <button class="remove-dist-line btn btn-danger btn-block">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <td colspan="4">
+                            <div class="btn-group btn-group-md">
+                                <button id="add-dist-line" class="btn btn-success">
+                                    <i class="fa fa-plus"></i> Adicionar
+                                </button>
+                            </div>
+
+                            <div class="btn-group btn-group-md">
+                                <button class="btn btn-primary">
+                                    Módulos : <span id="dist-counter"> {{ projectModule.quantity }} </span>
+                                </button>
+                            </div>
+
+                            <div class="btn-group btn-group-md">
+                                <button id="dist-checker" class="btn btn-danger">
+                                    <strong> {{ projectModule.quantity }} </strong>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </thead>
+                    <tbody id="dist-container">
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="2">
+                            <a id="add_project_to_order" class="btn btn-primary">
+                                <i class="fa fa-arrow-down"></i> Adicionar ao orçamento atual
+                            </a>
+                        </td>
+                        <td colspan="2">
+                            <button data-style="zoom-in" class="btn btn-success pull-right ladda-button"
+                                    id="btn-dist-submit">
+                                <i class="fa fa-refresh"></i>
+                                <span> Recalcular </span>
+                            </button>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+
+            </td>
+        </tr>
+
+    {% endif %}
+
+    </tbody>
+</table>
+
+
+<script>
+
+    {% if isPromo %}
+    var promoLabel = '<span class="label label-primary"> Promocional </span>';
+    $.each($('.promotional'), function (i, row) {
+        $(this).html(promoLabel);
+    });
+    {% endif %}
+
+    var form_project = $('#form_project');
+    var generator_power = $('#generator_power');
+
+    {% if projectModule %}
+
+    GroupManager = {
+        groups: {{ projectModule.groups|json_encode|raw }},
+        container: $('#dist-container'),
+        template: $('#template_lines').html(),
+        counter: $('#dist-counter'),
+        checker: $('#dist-checker'),
+        max_count: {{ projectModule.quantity }},
+        submit: $('#btn-dist-submit'),
+        getInt: function (e) {
+            return parseInt(e.val());
+        },
+        count: function () {
+
+            var count = 0;
+            $.each(GroupManager.groups, function (i, group) {
+                count += (group.lines * group.modules);
+            });
+
+            return count;
+        },
+        remove: function (target) {
+            var line = target.closest('.dist-line');
+            line.remove();
+        },
+        check: function () {
+            var count = GroupManager.count();
+            if (GroupManager.max_count == count) {
+                GroupManager.submit.removeAttr('disabled');
+                GroupManager.checker.hide();
+            } else {
+                GroupManager.submit.attr('disabled', 'disabled');
+                GroupManager.checker.show();
+            }
+            var diff = GroupManager.max_count - count;
+
+            if (diff > 0) diff = '+' + diff;
+
+            GroupManager.checker.html(diff);
+        },
+        touchspin: {
+            update: function (input) {
+                input.trigger('touchspin.updatesettings');
+            },
+            lines: function (input) {
+                input.TouchSpin({
+                    min: 1,
+                    step: 1,
+                    verticalbuttons: true,
+                    prefix: 'Número de Linhas'
+                }).on('change', function () {
+                    var value = parseInt($(this).val());
+                    var index = $(this).closest('tr').index();
+                    var current = GroupManager.groups[index].lines;
+                    if (value > current) {
+                        if (GroupManager.count() >= GroupManager.max_count) {
+                            $(this).val(current);
+                        } else {
+                            GroupManager.groups[index].lines = value;
+                        }
+                    } else {
+                        GroupManager.groups[index].lines = value;
+                    }
+
+                    GroupManager.check();
+                });
+            },
+            modules: function (input, max) {
+                input.TouchSpin({
+                    min: 1,
+                    step: 1,
+                    max: max,
+                    verticalbuttons: true,
+                    prefix: 'Módulos por Linha'
+                }).on('change', function () {
+                    var value = parseInt($(this).val());
+                    var index = $(this).closest('tr').index();
+                    var current = GroupManager.groups[index].modules;
+                    if (value > current) {
+                        if (GroupManager.count() >= GroupManager.max_count) {
+                            $(this).val(current);
+                        } else {
+                            GroupManager.groups[index].modules = value;
+                        }
+                    } else {
+                        GroupManager.groups[index].modules = value;
+                    }
+
+                    GroupManager.check();
+                });
+            }
+        },
+        register: function (line) {
+            var lines = line.find('.dist-line-number');
+            var modules = line.find('.dist-line-module');
+            var position = line.find('input[name="line-position"]');
+            var btnDelete = line.find('.remove-dist-line');
+            GroupManager.touchspin.lines(lines);
+
+            var currentPosition = line.find('.btn-position.active').data('position');
+            GroupManager.touchspin.modules(modules, 0 == currentPosition ? 20 : 12);
+
+            btnDelete.on('click', function () {
+                if (GroupManager.groups.length > 1) {
+                    var line = $(this).closest('tr');
+                    GroupManager.groups.splice(line.index(), 1);
+                    line.remove();
+                    GroupManager.check();
+                }
+            });
+
+            position.on('change', function () {
+                var line = $(this).closest('tr');
+                var value = parseInt($(this).val());
+                $.each($(this).closest('.btn-group').find('label'), function (i, e) {
+                    var label = $(e);
+                    if (value == label.data('position')) {
+                        label.addClass('active');
+                    } else {
+                        label.removeClass('active');
+                    }
+                });
+                GroupManager.groups[line.index()].position = value;
+
+                modules.trigger('touchspin.updatesettings', {
+                    max: 0 == value ? 20 : 12
+                });
+            });
+        },
+        render: function (group) {
+            if (!group.hasOwnProperty('rendered')) {
+
+                var render = $(GroupManager.template
+                    .replace(/__lines__/g, group.lines)
+                    .replace(/__modules__/g, group.modules));
+
+                GroupManager.container.append(render);
+
+                var position = render.find('[data-position="' + group.position + '"]');
+                position.addClass('active');
+                position.find('input').attr('checked', 'checked');
+
+                group.rendered = true;
+
+                GroupManager.register(render);
+            }
+        },
+        refresh: function () {
+            $.each(GroupManager.groups, function (i, group) {
+                GroupManager.render(group);
+                if (i == GroupManager.groups.length - 1) {
+                    GroupManager.check();
+                }
+            });
+        }
+    };
+
+    GroupManager.refresh();
+
+    $('#add-dist-line').on('click', function () {
+        GroupManager.groups[GroupManager.groups.length] = {lines: 1, modules: 1, position: 0};
+        GroupManager.refresh();
+    });
+
+    GroupManager.submit.ladda();
+    GroupManager.submit.on('click', function () {
+        $(this).ladda('start');
+        $.each(GroupManager.groups, function (i, group) {
+            delete group.rendered;
+        });
+        Request.send({
+            url: '{{ path('project_groups',{id:project.id, precify:true}) }}',
+            method: 'post',
+            data: {groups: GroupManager.groups},
+            callback: function (xhr) {
+                GroupManager.submit.ladda('stop');
+                GeneratorHandler.getComponents();
+            }
+        });
+        $.each(GroupManager.groups, function (i, group) {
+            group.rendered = true;
+        });
+    });
+
+    {% endif %}
+
+    var modal_component = $('#modal_component');
+    var modal_body = modal_component.find('.modal-body');
+    var loader = modal_body.html();
+
+    modal_component.on('show.bs.modal', function(event){
+        var target = $(event.relatedTarget);
+        var url = target.data('url');
+        modal_body.html(loader);
+        Request.send({
+            url: url,
+            callback: function(xhr){
+                modal_body.html(xhr.responseText);
+            }
+        });
+    });
+
+    $('#add_project_to_order').on('click', function(){
+        var id = GeneratorHandler.getProject().id;
+        if(id){
+            swal({title: 'Confirma a geração do orçamento?',
+                text: 'Após este processo o projeto atual será removido!',
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: '{{ 'Confirmar'|trans }}',
+                cancelButtonText: '{{ 'Cancelar'|trans }}',
+                closeOnConfirm: false
+            }, function() {
+
+                sweetAlert({
+                    title: "Gerando orçamento...",
+                    text:  "Aguarde!",
+                    type: "info",
+                    showConfirmButton: false
+                });
+
+                Request.send({
+                    url: '{{ path('generator_orders_create',{id:'_id_'}) }}'.replace(/_id_/g, id),
+                    method: 'post',
+                    callback: function (xhr) {
+                        GeneratorHandler.onSaveOrder();
+                        swal.close();
+                    }
+                });
+            });
+        }
+    });
+
+</script>

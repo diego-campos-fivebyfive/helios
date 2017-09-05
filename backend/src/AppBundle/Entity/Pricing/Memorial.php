@@ -28,7 +28,7 @@ class Memorial implements MemorialInterface
      *
      * @ORM\Column(name="isquik_id", type="integer", nullable=true)
      */
-    private $isquik_id;
+    private $isquikId;
 
     /**
      * @var ArrayCollection
@@ -70,6 +70,27 @@ class Memorial implements MemorialInterface
         $this->ranges = new ArrayCollection();
     }
 
+    /**
+     * @inheritDoc
+     */
+    function __toString()
+    {
+        return (string) sprintf('V%s - %s', $this->version, $this->startAt->format('Y-m-d'));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function toArray()
+    {
+        return [
+            'id' => $this->id,
+            'isquik_id' => $this->isquikId,
+            'version' => $this->version,
+            'start_at' => $this->startAt->format('Y-m-d H:i:s'),
+            'status' => $this->status
+        ];
+    }
 
     /**
      * Get id
@@ -84,9 +105,9 @@ class Memorial implements MemorialInterface
     /**
      * @inheritDoc
      */
-    public function setIsquikId($isquik_id)
+    public function setIsquikId($isquikId)
     {
-        $this->isquik_id = $isquik_id;
+        $this->isquikId = $isquikId;
         return $this;
     }
 
@@ -95,9 +116,9 @@ class Memorial implements MemorialInterface
      */
     public function getIsquikId()
     {
-        return $this->isquik_id;
+        return $this->isquikId;
     }
-    
+
     /**
      * Set version
      *

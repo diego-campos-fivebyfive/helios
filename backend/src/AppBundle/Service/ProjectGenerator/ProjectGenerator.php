@@ -4,11 +4,13 @@ namespace AppBundle\Service\ProjectGenerator;
 
 use AppBundle\Entity\Component\InverterInterface;
 use AppBundle\Entity\Component\MakerInterface;
+use AppBundle\Entity\Component\ModuleInterface;
 use AppBundle\Entity\Component\ProjectArea;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverter;
 use AppBundle\Entity\Component\ProjectModule;
 use AppBundle\Entity\Component\VarietyInterface;
+use AppBundle\Service\ProjectGenerator\Checker\Checker;
 use AppBundle\Service\ProjectProcessor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -64,33 +66,14 @@ class ProjectGenerator
      */
     public function loadDefaults(array $defaults = [])
     {
-        return array_merge(self::getDefaults(), $defaults);
-    }
+        /** @var DefaultsResolver $resolver */
+        $resolver = $this->container->get('generator_defaults');
 
-    /**
-     * @return array
-     */
-    public static function getDefaults(array $defaults = [])
-    {
-        return  array_merge([
-            'address' => null,
-            'latitude' => null,
-            'longitude' => null,
-            'customer' => null,
-            'stage' => null,
-            'roof_type' => 'ROOF_ROMAN_AMERICAN',
-            'source' => 'consumption',
-            'power' => 0,
-            'consumption' => 0,
-            'use_transformer' => true,
-            'grid_voltage' => '127/220',
-            'grid_phase_number' => 'Biphasic',
-            'module' => 32433,
-            'inverter_maker' => 60627,
-            'structure_maker' => StructureCalculator::DEFAULT_STRUCTURE_MAKER,
-            'string_box_maker' => 61209,
-            'errors' => []
-        ], $defaults);
+        $resolver->setStrategy(DefaultsResolver::STRATEGY_EXCEPTION);
+
+        $defaults = $resolver->setDefaults($defaults)->resolve();
+
+        return $defaults;
     }
 
     /**
@@ -116,6 +99,8 @@ class ProjectGenerator
             $power = $estimator->estimate($defaults['consumption'], $defaults['latitude'], $defaults['longitude']);
             $defaults['power'] = $power;
         }
+
+        CriteriaAggregator::promotional($defaults['is_promotional']);
 
         $defaults['errors'] = [];
         $this->project->setDefaults($defaults);
@@ -227,15 +212,21 @@ class ProjectGenerator
     public function generateModules(ProjectInterface $project)
     {
         $defaults = $project->getDefaults();
-        $module = $this->manager('module')->find($defaults['module']);
-        $position = 0;
 
-        $projectModule = new ProjectModule();
-        $projectModule
-            ->setModule($module)
-            ->setProject($this->project)
-            ->setPosition($position)
-        ;
+        $criteria = ['id' => $defaults['module']];
+
+        CriteriaAggregator::finish($criteria);
+
+        $module = $this->manager('module')->findOneBy($criteria);
+
+        if($module instanceof ModuleInterface) {
+
+            $projectModule = new ProjectModule();
+            $projectModule
+                ->setModule($module)
+                ->setProject($this->project);
+
+        }
 
         return $this;
     }

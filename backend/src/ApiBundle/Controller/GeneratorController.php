@@ -23,6 +23,11 @@ use FOS\RestBundle\Controller\Annotations\Prefix;
 class GeneratorController extends AbstractApiController
 {
     /**
+     * @var \AppBundle\Service\ProjectGenerator\ProjectGenerator
+     */
+    private $generator;
+
+    /**
      * @Post("/generate")
      */
     public function postGenerateAction(Request $request)
@@ -39,7 +44,10 @@ class GeneratorController extends AbstractApiController
 
         $settings = json_decode($request->getContent(), true);
 
-        $form = $this->createForm(GeneratorType::class);
+        $defaults = $generator->loadDefaults($settings);
+
+        $form = $this->createForm(GeneratorType::class, $defaults);
+
         $request->request->set('generator', $settings);
         $form->handleRequest($request);
 
@@ -206,7 +214,7 @@ class GeneratorController extends AbstractApiController
 
             $query = $request->query->all();
 
-            $defaults = ProjectGenerator::getDefaults($query);
+            $defaults = $this->getGenerator()->loadDefaults($query);
 
             $makers = $provider->fromDefaults($defaults, 1);
 
@@ -265,12 +273,23 @@ class GeneratorController extends AbstractApiController
      */
     private function getDefaults($key = null)
     {
-        $defaults = ProjectGenerator::getDefaults();
+        $defaults =  $this->getGenerator()->loadDefaults();
 
         if($key && array_key_exists($key, $defaults)){
             return $defaults[$key];
         }
 
         return $defaults;
+    }
+
+    /**
+     * @return object|\AppBundle\Service\ProjectGenerator\ProjectGenerator
+     */
+    private function getGenerator()
+    {
+        if(!$this->generator)
+            $this->generator = $this->get('project_generator');
+
+        return $this->generator;
     }
 }

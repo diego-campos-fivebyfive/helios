@@ -33,7 +33,7 @@ class VarietyController extends FOSRestController
         }
         catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $data = 'Can not create stringbox';
+            $data = $exception;
         }
 
         $view = View::create($data)->setStatusCode($status);
@@ -68,7 +68,7 @@ class VarietyController extends FOSRestController
         }
         catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $data = 'Can not update Variety';
+            $data = $exception;
         }
 
         $view = View::create($data)->setStatusCode($status);

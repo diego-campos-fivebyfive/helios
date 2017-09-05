@@ -24,8 +24,6 @@
 
 {% block body %}
 
-    {% include view('project.common') %}
-
     {% include view('component.viewer') %}
 
     <div class="modal inmodal" id="tax_modal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -105,12 +103,12 @@
                                             <div class="col-md-12 hide">
                                                 <form>
                                                     <div class="form-group">
-                                                        <label>
+                                                        {#<label>
                                                             <input type="checkbox"
                                                                    id="is_promotional" {{ project.defaults.is_promotional ? 'checked="checked"' }}>
                                                             &nbsp;
                                                             Utilizar tabela promocional
-                                                        </label>
+                                                        </label>#}
                                                     </div>
                                                 </form>
                                             </div>
@@ -343,6 +341,10 @@
     </script>
 
     <script>
+
+        Navbar.project = {
+            id: {{ project.id }}
+        };
 
         var Financial = {
             form_analysis: $('#form_analysis'),
