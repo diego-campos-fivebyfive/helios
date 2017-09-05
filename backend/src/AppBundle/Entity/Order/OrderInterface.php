@@ -150,4 +150,20 @@ interface OrderInterface
      * @return \DateTime
      */
     public function getUpdatedAt();
+
+    /**
+     * @param array $shippingRules
+     * @return ProjectInterface
+     */
+    public function setShippingRules(array $shippingRules);
+
+    /**
+     * @return array
+     */
+    public function getShippingRules();
+
+    /**
+     * @return float
+     */
+    public function getShipping();
 }
