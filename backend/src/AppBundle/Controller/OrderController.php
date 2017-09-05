@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Order\Order;
+use AppBundle\Service\Pricing\Insurance;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -81,4 +82,21 @@ class OrderController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/{id}/insure", name="order_insure")
+     * @Method("post")
+     */
+    public function insureAction(Order $order, Request $request)
+    {
+        Insurance::apply($order, (bool) $request->get('insure'));
+
+        $this->manager('order')->save($order);
+
+        return $this->json([
+            'project' => [
+                'id' => $order->getId(),
+                'insurance' => $order->getInsurance()
+            ]
+        ]);
+    }
 }

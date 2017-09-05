@@ -44,6 +44,12 @@ interface InverterInterface
     public function setModel($model);
 
     /**
+     * @param $description
+     * @return ModuleInterface
+     */
+    public function setDescription($description);
+
+    /**
      * @return string
      */
     public function getDescription();

@@ -12,9 +12,11 @@
 namespace AppBundle\Entity\Component;
 
 use AppBundle\Entity\CategoryInterface;
+use AppBundle\Entity\Pricing\InsurableTrait;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\CustomerInterface;
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Service\Pricing\InsurableInterface;
 use AppBundle\Service\ProjectGenerator\StructureCalculator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -29,9 +31,10 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks
  */
-class Project implements ProjectInterface
+class Project implements ProjectInterface, InsurableInterface
 {
     use TokenizerTrait;
+    use InsurableTrait;
     use ORMBehaviors\Timestampable\Timestampable;
 
     /**
@@ -1816,6 +1819,14 @@ class Project implements ProjectInterface
         }
 
         return $areas;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getInsuranceQuota()
+    {
+        return $this->getCostPrice();
     }
 
     /**
