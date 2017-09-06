@@ -28,21 +28,10 @@ class ComponentController extends AbstractController
     /**
      * @Route("/", name="components")
      */
-    public function indexAction($type)
+    public function indexAction(Request $request, $type)
     {
-        $account = $this->account();
-        $request = $this->getCurrentRequest();
-        $route = $request->attributes->get('_route');
-        $path = str_replace('_index', '', $route);
-        $entity = ucfirst(strtolower($path));
-        $isModule = 'module' == $path;
-
-        $powerField = $isModule ? 'c.maxPower' : 'c.nominalPower';
-
         $manager = $this->manager($type);
-
         $qb = $manager->getEntityManager()->createQueryBuilder();
-
         $qb->select('c')
             ->from(sprintf('AppBundle\Entity\Component\%s', ucfirst($type)), 'c')
             ->leftJoin('c.maker', 'm', 'WITH')
@@ -58,6 +47,7 @@ class ComponentController extends AbstractController
             ]);
         }
 
+        $powerField = 'module' == $type ? 'c.maxPower' : 'c.nominalPower';
         $this->makerQueryBuilderFilter($qb, $request, $powerField);
 
         $pagination = $this->getPaginator()->paginate(
@@ -65,6 +55,8 @@ class ComponentController extends AbstractController
             $request->query->getInt('page', 1),
             'grid' == $request->query->get('display', 'grid') ? 8 : 10
         );
+
+        $account = $this->account();
 
         return $this->render('component.index', [
             'type' => $type,
