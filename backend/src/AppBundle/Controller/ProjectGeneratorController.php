@@ -155,14 +155,14 @@ class ProjectGeneratorController extends AbstractController
 
             ShippingType::normalize($rule);
 
-            $rule['price'] = $order->getCostPriceComponents();
+            $rule['price'] = $order->getTotal();
             $rule['power'] = $order->getPower();
 
             ShippingRuler::apply($rule);
 
             $order->setShippingRules($rule);
 
-            $this->manager('project')->save($order);
+            $this->manager('order')->save($order);
 
             return $this->json([
                 'shipping' => $order->getShipping()
@@ -170,7 +170,7 @@ class ProjectGeneratorController extends AbstractController
         }
 
         return $this->render('generator.financial_shipping', [
-            'project' => $order,
+            'order' => $order,
             'form' => $form->createView()
         ]);
     }
@@ -182,17 +182,24 @@ class ProjectGeneratorController extends AbstractController
     {
         $manager = $this->manager('order');
 
+        $account = $this->account();
+        $order = $manager->findOneBy([
+            'account' => $account,
+            'isquikId' => null,
+            'parent' => null
+        ]);
+
         $qb = $manager->getEntityManager()->createQueryBuilder();
 
         $qb->select('o')
             ->from($manager->getClass(), 'o')
             ->where('o.account = :account')
-            ->andWhere('o.parent is null')
+            ->andWhere('o.parent = :order')
             ->orderBy('o.id', 'desc')
             ->setParameters([
-                'account' => $this->account()
-            ])
-        ;
+                'account' => $account,
+                'order' => $order
+            ]);
 
         $orders = $qb->getQuery()->getResult();
 
@@ -205,14 +212,23 @@ class ProjectGeneratorController extends AbstractController
      * @Route("/orders/{id}", name="generator_orders_create")
      * @Method("post")
      */
-    public function createOrderAction(Project $project, Order $order)
+    public function createOrderAction(Project $project)
     {
         $transformer = $this->get('order_transformer');
+        $manager = $this->manager('order');
+
+        $account = $this->account();
+        $order = $manager->findOneBy([
+            'account' => $account,
+            'isquikId' => null,
+            'parent' => null
+        ]);
 
         /** @var OrderInterface $order */
-        $order = $transformer->transformFromProject($project);
-        $order->setParent($order);
-        $this->get('order_precifier')->precify($order);
+        $orderChildren = $transformer->transformFromProject($project);
+        $order->addChildren($orderChildren);
+
+        $manager->save($order);
 
         $this->manager('project')->delete($project);
 
