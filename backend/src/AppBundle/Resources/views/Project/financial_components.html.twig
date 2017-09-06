@@ -15,7 +15,7 @@
         <th class="col-md-5 col-xs-3"> Descrição</th>
         {% if member.isOwner %}<th class="price-columns"> Custo Unitário</th>{% endif %}
         <th class="price-columns"> Preço Unitário</th>
-        <th class="col-md-1"> Qtde</th>
+        <th class="col-md-1 text-center"> Qtde</th>
         <th class="price-columns"> Total</th>
     </tr>
     </thead>
@@ -32,7 +32,7 @@
             </td>
             {% if member.isOwner %}<td class="price-columns"> {{ projectModule.unitCostPrice|currency }} </td>{% endif %}
             <td class="price-columns"> {{ projectModule.unitSalePrice|currency }} </td>
-            <td class="col-md-1"> {{ projectModule.quantity }} </td>
+            <td class="col-md-1 text-center"> {{ projectModule.quantity }} </td>
             <td> {{ projectModule.totalSalePrice|currency }} </td>
         </tr>
     {% endfor %}
@@ -48,7 +48,7 @@
             </td>
             {% if member.isOwner %}<td class="price-columns"> {{ group.projectInverter.unitCostPrice|currency }} </td>{% endif %}
             <td class="price-columns"> {{ group.projectInverter.unitSalePrice|currency }} </td>
-            <td class="col-md-1"> {{ group.quantity }} </td>
+            <td class="col-md-1 text-center"> {{ group.quantity }} </td>
 
             <td> {{ group.projectInverter.totalSalePrice|currency }} </td>
         </tr>
@@ -62,7 +62,7 @@
             <td> {{ projectTransformer.variety.description }} </td>
             {% if member.isOwner %}<td class="price-columns"> {{ projectTransformer.unitCostPrice|currency }} </td>{% endif %}
             <td class="price-columns"> {{ projectTransformer.unitSalePrice|currency }} </td>
-            <td> {{ projectTransformer.quantity }} </td>
+            <td class="text-center"> {{ projectTransformer.quantity }} </td>
             <td> {{ projectTransformer.totalSalePrice|currency }} </td>
         </tr>
     {% endif %}
@@ -78,7 +78,7 @@
             </td>
             {% if member.isOwner %}<td class="price-columns"> {{ projectStringBox.unitCostPrice|currency }} </td>{% endif %}
             <td class="price-columns"> {{ projectStringBox.unitSalePrice|currency }} </td>
-            <td> {{ projectStringBox.quantity }} </td>
+            <td class="text-center"> {{ projectStringBox.quantity }} </td>
 
             <td> {{ projectStringBox.totalSalePrice|currency }} </td>
         </tr>
@@ -103,7 +103,7 @@
             </td>
             {% if member.isOwner %}<td class="price-columns"> {{ projectStructure.unitCostPrice|currency }} </td>{% endif %}
             <td class="price-columns"> {{ projectStructure.unitSalePrice|currency }} </td>
-            <td class="col-md-1"> {{ projectStructure.quantity }} </td>
+            <td class="col-md-1 text-center"> {{ projectStructure.quantity }} </td>
             <td> {{ projectStructure.totalSalePrice|currency }} </td>
         </tr>
     {% endfor %}
@@ -119,7 +119,7 @@
             </td>
             {% if member.isOwner %}<td class="price-columns"> {{ projectVariety.unitCostPrice|currency }} </td>{% endif %}
             <td class="price-columns"> {{ projectVariety.unitSalePrice|currency }} </td>
-            <td> {{ projectVariety.quantity }} </td>
+            <td class="text-center"> {{ projectVariety.quantity }} </td>
             <td> {{ projectVariety.totalSalePrice|currency }} </td>
         </tr>
     {% endfor %}
