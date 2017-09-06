@@ -152,6 +152,17 @@ interface OrderInterface
     public function getUpdatedAt();
 
     /**
+     * @param $sendAt
+     * @return OrderInterface
+     */
+    public function setSendAt($sendAt);
+
+    /**
+     * @return \DateTime
+     */
+    public function getSendAt();
+
+    /**
      * @param array $shippingRules
      * @return ProjectInterface
      */
