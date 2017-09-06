@@ -18,6 +18,7 @@ git fetch origin
 git pull origin master
 git checkout -b issue-$1
 
+$CLI_PATH/ces-app-install
 $CLI_PATH/ces-database-update
 
 echo "Done, now on Branch: $1"
