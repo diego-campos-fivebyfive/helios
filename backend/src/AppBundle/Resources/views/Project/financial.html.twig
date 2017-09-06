@@ -123,6 +123,20 @@
 
                         <div class="row flow-xg">
                             <div class="col-lg-12">
+                                <div class="panel panel-info">
+                                    <div class="panel-heading">
+                                        <i class="fa fa-shield"></i>
+                                        Seguro
+                                    </div>
+                                    <div class="panel-body" id="financial_safe">
+                                        {% include view('project.financial_safe') %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row flow-xg">
+                            <div class="col-lg-12">
                                 <div class="panel panel-warning">
                                     <div class="panel-heading">
                                         <i class="fa fa-list"></i>
@@ -472,16 +486,10 @@
                     var url = '{{ path('financial_extras_create',{id:project.id, type:'_type_'}) }}'.replace(/_type_/g, $(this).val());
                     Financial.get_extra_form(url);
                 }).trigger('change');
-
-                /*$('#is_promotional').on('change', function(){
-                    //console.log($(this).is(':checked'));
-                    Financial.loadComponents();
-                });*/
             },
             onLoadComponents: function(){
                 Financial.isLoading.components = false;
                 Financial.isPromotional.removeAttr('disabled');
-                //ShippingManager.calculate();
             },
             onSaveShipping: function () {
                 Financial.get_taxes();
@@ -493,6 +501,11 @@
                 Financial.get_taxes();
                 Financial.force_calculations();
                 Financial.loadFinalPrices();
+            },
+            onSaveInsurance: function(){
+                Financial.get_taxes();
+                Financial.loadFinalPrices();
+                Financial.force_calculations();
             }
         };
 

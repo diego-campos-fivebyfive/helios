@@ -58,6 +58,9 @@ elif [ $1 = '--production' ]; then
   rsync -avzh $SICES_PATH/.backup/backend/storage/** $SICES_PATH/.temp/backend/storage
 
   # Remove it after deploy command optimizations
+  rm $SICES_PATH/.temp/devops/aws/homolog.pem
+  rm $SICES_PATH/.temp/backend/app/config/parameters.yml
+  rm $SICES_PATH/.temp/backend/src/AppBundle/Service/Notifier/Notifier.php
   cp \
     $SICES_PATH/.backup/devops/aws/homolog.pem \
     $SICES_PATH/.temp/devops/aws/homolog.pem

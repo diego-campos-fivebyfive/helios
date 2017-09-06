@@ -1,0 +1,26 @@
+<tr>
+    {% if 'proposal' != insureOrigin %}
+        <td> SSS_2017_2018 </td>
+    {% endif %}
+
+    <td> SEGURO SOLAR RICO ENGENHARIA PROJETO E INSTALAÇÃO </td>
+
+    {% if 'generator' == insureOrigin or 'order' == insureOrigin %}
+        <td> {{ 0|currency }} </td>
+    {% endif %}
+
+    {% if 'financial' == insureOrigin %}
+    <td> {{ 0|currency }} </td>
+    <td> {{ 0|currency }} </td>
+    <td class="text-center"> 1 </td>
+    <td> {{ 0|currency }} </td>
+    {% else %}
+        <td class="text-center"> 1 </td>
+    {% endif %}
+
+    {% if 'order' == insureOrigin %}
+        <td> {{ 0|currency }} </td>
+        <td></td>
+    {% endif %}
+
+</tr>

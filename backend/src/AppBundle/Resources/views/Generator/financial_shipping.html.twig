@@ -1,7 +1,7 @@
-{{ form_start(form,{attr:{id:'form_shipping', action: path('financial_shipping',{id:project.id})}}) }}
+{{ form_start(form, {attr:{id:'form_shipping', action: app.request.uri}}) }}
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-6">
         <div class="form-group col-md-4">
             {{ form_label(form.type, 'Opção de Frete') }}
             {{ form_widget(form.type,{attr:{class:'form-control'}}) }}
@@ -30,13 +30,13 @@
         </button>
     </div>
 
-    <div class="form-group col-md-2 text-center">
+    <div class="form-group col-md-4 text-center">
         <label> Valor do Frete </label>
         <h2 id="shipping_output"> {{ project.shipping|currency }} </h2>
     </div>
 
 </div>
-
+</div>
 {{ form_end(form) }}
 
 <script>

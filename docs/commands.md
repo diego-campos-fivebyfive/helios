@@ -49,7 +49,7 @@ $ ssh -i $SICES_PATH/devops/aws/staging.pem admin@18.231.15.228
 
 ### Para iniciar uma nova branch
 ```
-$ ces-new-task issue-NUMBER
+$ ces-new-task ISSUE_NUMBER
 ```
 
 ### Para enviar notificação para o #sices-devops no slack

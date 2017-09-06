@@ -9,8 +9,8 @@ use AppBundle\Entity\Component\ProjectArea;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverter;
 use AppBundle\Entity\Component\ProjectModule;
+use AppBundle\Entity\Component\Variety;
 use AppBundle\Entity\Component\VarietyInterface;
-use AppBundle\Service\ProjectGenerator\Checker\Checker;
 use AppBundle\Service\ProjectProcessor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -39,6 +39,14 @@ class ProjectGenerator
      * @var \AppBundle\Manager\ProjectManager
      */
     private $manager;
+
+    /**
+     * Cache local services
+     * @var array
+     */
+    private $services = [
+        'variety_calculator' => null
+    ];
 
     /**
      * @inheritDoc
@@ -131,6 +139,9 @@ class ProjectGenerator
         // STRING BOXES
         $this->generateStringBoxes($this->project);
 
+        // RESOLVE ABB-EXTRA REFERENCE
+        $this->handleABBInverters($project);
+
         // SAVING
         $this->autoSave = true;
         $this->save($this->project);
@@ -197,12 +208,7 @@ class ProjectGenerator
      */
     public function priceCost(ProjectInterface $project)
     {
-        throw new \BadMethodCallException();
-        /** @var \AppBundle\Manager\Pricing\RangeManager $manager */
-        //$manager = $this->manager('range');
-        //$precifier = new Precifier($manager);
-        //$precifier->priceCost($project);
-        //return $this;
+        throw new \BadMethodCallException('This method must be removed');
     }
 
     /**
@@ -567,9 +573,7 @@ class ProjectGenerator
 
         $this->resetVarieties($project);
 
-        /** @var \AppBundle\Manager\VarietyManager $manager */
-        $manager = $this->manager('variety');
-        $calculator = new VarietyCalculator($manager);
+        $calculator =  $this->service('variety_calculator');
         $calculator->calculate($project);
 
         $this->save($project);
@@ -761,6 +765,76 @@ class ProjectGenerator
 
             $this->manager->save($project);
         }
+    }
+
+    /**
+     * Handle after inverters distribution
+     * Exclusive handling for ABB inverters with code:22SMA0200380
+     * @param ProjectInterface $project
+     */
+    private function handleABBInverters(ProjectInterface $project)
+    {
+        $abbInverters = $project->getProjectInverters()->filter(function(ProjectInverter $projectInverter){
+            return '22SMA0200380' === $projectInverter->getInverter()->getCode();
+        });
+
+        if(!$abbInverters->isEmpty()){
+
+            /** @var VarietyCalculator $calculator */
+            $calculator = $this->service('variety_calculator');
+            $count = $abbInverters->count();
+
+            $codes = [
+                '22ABB0050380' => $count,
+                '22ABB0005380' => $count,
+                '22ABB5000380' => $count,
+                '25MC4I005' => 1
+            ];
+
+            foreach ($codes as $code => $quantity){
+
+                $variety = $calculator->findByCriteria([
+                    'type' => 'abb-extra',
+                    'code' => $code
+                ]);
+
+                if($variety){
+                    $calculator->addVariety($project, $variety, $quantity);
+                }
+            }
+
+            $this->save($project);
+        }
+    }
+
+    /**
+     * @param $id
+     * @return object
+     */
+    private function service($id)
+    {
+        if(!$this->services[$id]){
+            $this->services[$id] = $this->createService($id);
+        }
+
+        return $this->services[$id];
+    }
+
+    /**
+     * @param $id
+     * @return object
+     */
+    private function createService($id)
+    {
+        switch($id){
+            case 'variety_calculator':
+                /** @var \AppBundle\Manager\VarietyManager $manager */
+                $manager = $this->manager('variety');
+                return new VarietyCalculator($manager);
+                break;
+        }
+
+        return null;
     }
 
     /**
