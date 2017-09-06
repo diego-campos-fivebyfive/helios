@@ -21,4 +21,5 @@ git checkout -b issue-$1
 $CLI_PATH/ces-app-install
 $CLI_PATH/ces-database-update
 
-echo "Done, now on Branch: $1"
+$CLI_PATH/util/user-notify "branch created:  issue-$1"
+echo "Done, now on Branch: issue-$1"
