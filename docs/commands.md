@@ -36,7 +36,7 @@ $ ssh -i $SICES_PATH/devops/aws/homolog.pem admin@54.233.150.10
 
 ### Para iniciar uma nova branch
 ```
-$ ces-new-task issue-NUMBER
+$ ces-new-task ISSUE_NUMBER
 ```
 
 ### Para enviar notificação para o #sices-devops no slack
