@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+notify-send -i $SICES_PATH/devops/ui/images/sices-logo.png "Bash Bot - $1"
