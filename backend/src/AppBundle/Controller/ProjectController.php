@@ -10,6 +10,7 @@ use AppBundle\Entity\Component\ProjectArea;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverter;
 use AppBundle\Entity\Component\ProjectModule;
+use AppBundle\Entity\ContactInterface;
 use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\Project\NasaCatalog;
 use AppBundle\Form\Component\ProjectAreaType;
@@ -65,7 +66,7 @@ class ProjectController extends AbstractController
             ->where($qb->expr()->in('p.member', $ids))
             ->orderBy('p.id', 'desc');
 
-        if(null != $customer = $this->getCustomerReferrer($request)){
+        if(null != $customer = $this->getCustomerReference($request)){
             $qb->andWhere('p.customer = :customer')->setParameter('customer', $customer);
         }
 
@@ -224,6 +225,8 @@ class ProjectController extends AbstractController
 
         $generator = $this->getGenerator();
         $defaults = $generator->loadDefaults();
+
+        $this->checkCustomerReference($defaults, $request);
 
         $form = $this->createForm(GeneratorType::class, $defaults,[
             'status' => GeneratorType::INIT,
@@ -676,18 +679,35 @@ class ProjectController extends AbstractController
         ], empty($errors) ? Response::HTTP_ACCEPTED : Response::HTTP_IM_USED);
     }
 
+    /**
+     * @param array $defaults
+     * @param Request $request
+     *
+     */
+    private function checkCustomerReference(array &$defaults, Request $request)
+    {
+        /** @var BusinessInterface $customer */
+        if(null != $customer = $this->getCustomerReference($request)){
+            $defaults['customer'] = $customer->getId();
+        }
+    }
+
     /*
      * @param Request $request
-     * @return BusinessInterface|null|object
+     * @return BusinessInterface|null
      */
-    private function getCustomerReferrer(Request $request)
+    private function getCustomerReference(Request $request)
     {
         if(null != $token = $request->get('contact')) {
-            $contact = $this->manager('customer')->findByToken($token);
 
-            $this->denyAccessUnlessGranted('edit', $contact);
+            $customer = $this->manager('customer')->findByToken($token);
 
-            return $contact;
+            if($customer instanceof ContactInterface) {
+
+                $this->denyAccessUnlessGranted('edit', $customer);
+
+                return $customer;
+            }
         }
 
         return null;
