@@ -70,7 +70,7 @@
     <div class="wrapper wrapper-content animated fadeInRight">
 
         <div class="row">
-            {{ knp_pagination_filter(pagination, {'v.description, v.code, v.type, s.subtype, s.power':''}) }}
+            {{ knp_pagination_filter(pagination, {'v.description, v.code, v.type, v.subtype, v.power, m.name':''}) }}
 
             <div class="col-md-2">
                 <a href="{{ path(_route, _route_params) }}" class="btn btn-default btn-block">

@@ -28,7 +28,7 @@
     <tr>
         <th> Código</th>
         <th> Descrição</th>
-        <th> Quantidade</th>
+        <th class="text-center"> Quantidade</th>
     </tr>
     </thead>
     <tbody>
@@ -42,7 +42,7 @@
                     {{ projectModule.module.model }}
                 </a>
             </td>
-            <td> {{ projectModule.quantity }} </td>
+            <td class="text-center"> {{ projectModule.quantity }} </td>
         </tr>
     {% endfor %}
 
@@ -55,7 +55,7 @@
                     {{ group.inverter.model }}
                 </a>
             </td>
-            <td> {{ group.quantity }} </td>
+            <td class="text-center"> {{ group.quantity }} </td>
         </tr>
     {% endfor %}
 
@@ -77,7 +77,7 @@
                     {{ projectStringBox.stringBox.description }}
                 </a>
             </td>
-            <td> {{ projectStringBox.quantity }} </td>
+            <td class="text-center"> {{ projectStringBox.quantity }} </td>
         </tr>
     {% endfor %}
 
@@ -96,7 +96,7 @@
                     {% endif %}
                 </a>
             </td>
-            <td> {{ projectStructure.quantity }} </td>
+            <td class="text-center"> {{ projectStructure.quantity }} </td>
         </tr>
     {% endfor %}
 
@@ -109,9 +109,13 @@
                 {{ projectVariety.variety.description }}
                 </a>
             </td>
-            <td> {{ projectVariety.quantity }} </td>
+            <td class="text-center"> {{ projectVariety.quantity }} </td>
         </tr>
     {% endfor %}
+
+    {# INSURE LINE #}
+    {% set insureOrigin = 'project' %}
+    {% include view('helper.insure_line') %}
 
     </tbody>
 </table>

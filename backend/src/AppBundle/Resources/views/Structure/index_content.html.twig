@@ -64,7 +64,7 @@
     {% import _self as handler %}
 
 <div class="row">
-    {{ knp_pagination_filter(pagination, {'s.description, s.type, s.subtype, s.code':''}) }}
+    {{ knp_pagination_filter(pagination, {'s.description, s.type, s.subtype, s.code, m.name':''}) }}
 
     <div class="col-md-2">
         <a href="{{ path(_route, _route_params) }}" class="btn btn-default btn-block">
