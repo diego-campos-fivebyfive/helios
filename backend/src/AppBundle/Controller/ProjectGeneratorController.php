@@ -311,6 +311,8 @@ class ProjectGeneratorController extends AbstractController
     {
         $this->manager('order_element')->delete($element);
 
+        $this->get('order_precifier')->precify($element->getOrder());
+
         return $this->json([]);
     }
 
