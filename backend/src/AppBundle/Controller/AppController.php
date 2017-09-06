@@ -3,7 +3,6 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Configuration\App;
-use AppBundle\Entity\Financial\ProjectFinancialInterface;
 use AppBundle\Service\WidgetGenerator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
@@ -85,6 +84,7 @@ class AppController extends AbstractController
     }
 
     /**
+     * @deprecated
      * @Route("/woopra", name="app_woopra")
      */
     public function woopraAction($id)

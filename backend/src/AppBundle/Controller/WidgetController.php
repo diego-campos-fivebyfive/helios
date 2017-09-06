@@ -177,7 +177,8 @@ class WidgetController extends AbstractController
         foreach ($projects as $project) {
             if ($project instanceof ProjectInterface) {
 
-                if (null != $stage = $project->getStage()) {
+                $stage = $project->getStage();
+                if ($project->getIssuedAt() && null != $stage) {
                     $stageId = $stage->getId();
 
                     $collection[$stageId]['count'] += 1;
