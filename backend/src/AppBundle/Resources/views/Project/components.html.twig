@@ -113,5 +113,9 @@
         </tr>
     {% endfor %}
 
+    {# INSURE LINE #}
+    {% set insureOrigin = 'project' %}
+    {% include view('helper.insure_line') %}
+
     </tbody>
 </table>
