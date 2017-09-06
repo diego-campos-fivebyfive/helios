@@ -134,11 +134,11 @@
 
                             <td class="text-center">
                                 <h4> {{ project.power|decimal }} kWp </h4>
-                                {#<small>
-                                    {% if project.hasProposal %}
-                                        {{ project.financial.finalPrice|currency }}
+                                <small>
+                                    {% if project.salePrice and project.issuedAt %}
+                                        {{ project.salePrice|currency }}
                                     {% endif %}
-                                </small> #}
+                                </small>
                             </td>
 
                             <td class="col-md-3">
