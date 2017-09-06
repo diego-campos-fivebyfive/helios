@@ -35,7 +35,11 @@ class StructureController extends AbstractController
         $paginator = $this->getPaginator();
 
         $qb = $manager->getEntityManager()->createQueryBuilder();
-        $qb->select('s')->from(Structure::class, 's');
+        $qb->select('s')
+            ->from(Structure::class, 's')
+            ->leftJoin('s.maker', 'm', 'WITH')
+            ->orderBy('m.name', 'asc')
+            ->addOrderBy('s.description', 'asc');
 
         if(!$this->user()->isAdmin()) {
             $qb->where('s.status = :status');

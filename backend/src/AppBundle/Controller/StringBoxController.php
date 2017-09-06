@@ -30,25 +30,26 @@ class StringBoxController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-       /* $em = $this->getDoctrine()->getManager();
-
-        $stringBoxes = $em->getRepository('AppBundle:Component\StringBox')->findAll();*/
-
         $manager = $this->manager('stringbox');
 
         $qb = $manager->getEntityManager()->createQueryBuilder();
 
-        $qb->select('c')
-            ->from(sprintf('AppBundle\Entity\Component\StringBox', ucfirst('stringbox')), 'c');
+        $qb->select('s')
+            ->from(StringBox::class, 's')
+            ->leftJoin('s.maker', 'm', 'WITH')
+            ->orderBy('m.name', 'asc')
+            ->addOrderBy('s.description', 'asc');
 
         if (!$this->user()->isAdmin()) {
-            $qb->where('c.status = :status');
-            $qb->andWhere('c.available = :available');
+            $qb->where('s.status = :status');
+            $qb->andWhere('s.available = :available');
             $qb->setParameters([
                 'status' => 1,
                 'available' => 1
             ]);
         }
+
+        $this->overrideGetFilters();
 
         $pagination = $this->getPaginator()->paginate(
             $qb->getQuery(),
@@ -57,7 +58,6 @@ class StringBoxController extends AbstractController
         );
 
         return $this->render('Stringbox.index', array(
-            //'stringBoxes' => $stringBoxes,
             'pagination' => $pagination,
             'query' => array_merge([
                 'display' => 'grid',
