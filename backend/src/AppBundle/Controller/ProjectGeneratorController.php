@@ -34,19 +34,45 @@ class ProjectGeneratorController extends AbstractController
     {
         $id = $request->query->getInt('order', 0);
         $manager = $this->manager('order');
-        $account = $this->account();
         $order = $manager->find($id);
+        $orders = $manager->findAll();
+
 
         if (!$order) {
-            $order = $manager->findOneBy([
-                'account' => $account,
-                'isquikId' => null,
-                'parent' => null
-            ]);
+            $order = $this->getOrderValid($manager);
+
+            return $this->redirectOrder($order);
         }
 
-        if ($order->getIsquikId()) {
+        if ($order->getSendAt() || $order->getParent()) {
+            $order = $this->getOrderValid($manager);
 
+            return $this->redirectOrder($order);
+        }
+
+        return $this->render('generator.index', [
+            'order' => $order
+        ]);
+    }
+
+    public function redirectOrder($order)
+    {
+        return $this->redirectToRoute('project_generator', [
+            'order' => $order->getId()
+        ]);
+    }
+
+    public function getOrderValid($manager)
+    {
+        $account = $this->account();
+
+        $order = $manager->findOneBy([
+            'account' => $account,
+            'sendAt' => null,
+            'parent' => null
+        ]);
+
+        if (!$order) {
             /** @var Order $order */
             $order = $manager->create();
             $order->setAccount($account);
@@ -54,15 +80,7 @@ class ProjectGeneratorController extends AbstractController
             $manager->save($order);
         }
 
-        if (!$id) {
-            return $this->redirectToRoute('project_generator', [
-                'order' => $order->getId()
-            ]);
-        }
-
-        return $this->render('generator.index', [
-            'order' => $order
-        ]);
+        return $order;
     }
 
     /**
@@ -204,7 +222,8 @@ class ProjectGeneratorController extends AbstractController
         $orders = $qb->getQuery()->getResult();
 
         return $this->render('generator.orders', [
-            'orders' => $orders
+            'orders' => $orders,
+            'order' => $order
         ]);
     }
 
@@ -228,7 +247,7 @@ class ProjectGeneratorController extends AbstractController
         $orderChildren = $transformer->transformFromProject($project);
         $order->addChildren($orderChildren);
 
-        $manager->save($order);
+        /*$this->get('order_precifier')->precify($order);*/
 
         $this->manager('project')->delete($project);
 
