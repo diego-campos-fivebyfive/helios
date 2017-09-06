@@ -32,7 +32,7 @@
 
                         <div id="generator_orders" class="col-md-12 flow-h">
                         </div>
-                        {{ order.id }}
+
                     </div>
                     <div class="panel panel-warning">
                         <div class="panel-heading">
@@ -42,6 +42,11 @@
                         <div class="panel-body" id="generator_financial_shipping">
                         </div>
                     </div>
+
+                    <button type="submit" class="btn btn-warning pull-right">
+                        <i class="fa fa-arrow-right"></i>
+                        Enviar solicitação para SICES
+                    </button>
 
                 </div>
             </div>
@@ -124,7 +129,7 @@
         var ShippingManager = {
         getElements: function () {
             Request.send({
-                url: '{{ path('generator_financial_shipping', {id:'_id_'}) }}',
+                url: '{{ path('generator_financial_shipping', {id:order.id}) }}',
                 callback: function (xhr) {
                     $('#generator_financial_shipping').html(xhr.responseText);
                     }
