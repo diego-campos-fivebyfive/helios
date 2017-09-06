@@ -1,51 +1,3 @@
-{#{% extends 'base.html.twig' %}
-
-{% block body %}
-    <h1>Stringboxes list</h1>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Code</th>
-                <th>Description</th>
-                <th>Inputs</th>
-                <th>Outputs</th>
-                <th>Fuses</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for stringBox in stringBoxes %}
-            <tr>
-                <td><a href="{{ path('stringbox_show', { 'id': stringBox.id }) }}">{{ stringBox.id }}</a></td>
-                <td>{{ stringBox.code }}</td>
-                <td>{{ stringBox.description }}</td>
-                <td>{{ stringBox.inputs }}</td>
-                <td>{{ stringBox.outputs }}</td>
-                <td>{{ stringBox.fuses }}</td>
-                <td>
-                    <ul>
-                        <li>
-                            <a href="{{ path('stringbox_show', { 'id': stringBox.id }) }}">show</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('stringbox_edit', { 'id': stringBox.id }) }}">edit</a>
-                        </li>
-                    </ul>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('stringbox_new') }}">Create a new stringBox</a>
-        </li>
-    </ul>
-{% endblock %}#}
-
 {% extends view('layout') %}
 
 {% block styles %}
@@ -72,13 +24,10 @@
 
     {% set _route_params = app.request.attributes.get('_route_params')|merge(query|merge({'display':is_grid ? 'list' : 'grid' })) %}
 
-
     <div class="modal inmodal fade" id="e_modal_details" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-body" id="detail_stringbox">
-
-                </div>
+                <div class="modal-body" id="detail_stringbox"></div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-white" data-dismiss="modal">
                         {{ 'Close'|trans }}
@@ -118,7 +67,7 @@
     <div class="wrapper wrapper-content animated fadeInRight">
 
         <div class="row">
-            {{ knp_pagination_filter(pagination, {'s.description, s.code, s.inputs, s.outputs, s.fuses':''}) }}
+            {{ knp_pagination_filter(pagination, {'s.description, s.code, s.inputs, s.outputs, s.fuses, m.name, v.maker':''}) }}
 
             <div class="col-md-2">
                 <a href="{{ path(_route, _route_params) }}" class="btn btn-default btn-block">

@@ -32,7 +32,10 @@ class VarietyController extends AbstractController
         $qb = $manager->getEntityManager()->createQueryBuilder();
 
         $qb->select('v')
-            ->from(sprintf('AppBundle\Entity\Component\Variety', ucfirst('variety')), 'v');
+            ->from(Variety::class, 'v')
+            ->leftJoin('v.maker', 'm', 'WITH')
+            ->orderBy('m.name', 'asc')
+            ->addOrderBy('v.description', 'asc');
 
         if (!$this->user()->isAdmin()) {
             $qb->where('v.status = :status');
@@ -42,6 +45,8 @@ class VarietyController extends AbstractController
                 'available' => 1
             ]);
         }
+
+        $this->overrideGetFilters();
 
         $pagination = $this->getPaginator()->paginate(
             $qb->getQuery(),
