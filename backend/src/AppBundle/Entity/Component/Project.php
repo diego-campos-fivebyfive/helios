@@ -1160,7 +1160,11 @@ class Project implements ProjectInterface, InsurableInterface
      */
     public function getSalePrice()
     {
-        $price = $this->getSalePriceEquipments() + $this->getSalePriceServices() + $this->getShipping();
+        $price = $this->getSalePriceEquipments()
+            + $this->getSalePriceServices()
+            + $this->getShipping()
+            + $this->getInsurance()
+        ;
 
         /** @var ProjectTaxInterface $projectTax */
         foreach ($this->projectTaxes as $projectTax){
@@ -1826,7 +1830,7 @@ class Project implements ProjectInterface, InsurableInterface
      */
     public function getInsuranceQuota()
     {
-        return $this->getCostPrice();
+        return $this->getCostPriceComponents();
     }
 
     /**

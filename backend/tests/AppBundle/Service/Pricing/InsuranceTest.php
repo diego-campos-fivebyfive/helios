@@ -20,7 +20,7 @@ class InsuranceTest extends AppTestCase
     public function testCalculationFromProject()
     {
         $project = new Project();
-        $project->setCostPrice(10000);
+        $project->setCostPrice(470800);
 
         $order = new Order();
         $element = new Element();
@@ -33,7 +33,7 @@ class InsuranceTest extends AppTestCase
         Insurance::insure($project);
         Insurance::insure($order);
 
-        $this->assertEquals(65, $project->getInsurance());
+        $this->assertEquals(3060.2, $project->getInsurance());
 
         $this->assertEquals(42280, $order->getTotal());
         $this->assertEquals(274.82, $order->getInsurance());

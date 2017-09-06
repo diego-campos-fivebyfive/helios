@@ -17,7 +17,7 @@
             <td> {{ element.code }} </td>
             <td> {{ element.description }} </td>
             <td> {{ element.unitPrice|currency }} </td>
-            <td> {{ element.quantity }} </td>
+            <td class="text-center"> {{ element.quantity }} </td>
             <td> {{ element.total|currency }} </td>
             <td width="15%">
                 <div class="btn-group btn-group-justified btn-group-sm">
@@ -33,6 +33,10 @@
         </tr>
 
     {% endfor %}
+
+    {# INSURE LINE #}
+    {% set insureOrigin = 'order' %}
+    {% include view('helper.insure_line') %}
 
     </tbody>
     <thead>

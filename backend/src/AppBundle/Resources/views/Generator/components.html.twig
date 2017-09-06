@@ -130,6 +130,11 @@
             <td class="text-center"> {{ projectVariety.quantity }} </td>
         </tr>
     {% endfor %}
+
+    {# INSURE LINE #}
+    {% set insureOrigin = 'generator' %}
+    {% include view('helper.insure_line') %}
+
     <tr>
         <th></th>
         <th></th>
@@ -206,9 +211,9 @@
 
                     <tr>
                         <td colspan="12">
-                            <div class="panel panel-warning">
+                            <div class="panel panel-info">
                                 <div class="panel-heading">
-                                    <i class="fa fa-list"></i>
+                                    <i class="fa fa-shield"></i>
                                     Seguro
                                 </div>
                                 <div class="panel-body" id="financial_safe">
