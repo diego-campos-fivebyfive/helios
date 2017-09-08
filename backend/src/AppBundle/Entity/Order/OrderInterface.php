@@ -78,7 +78,17 @@ interface OrderInterface
     /**
      * @return float
      */
+    public function getSubTotal();
+
+    /**
+     * @return float
+     */
     public function getTotal();
+
+    /**
+     * @return float
+     */
+    public function getTotalInsurance();
 
     /**
      * @param float $power
@@ -150,6 +160,17 @@ interface OrderInterface
      * @return \DateTime
      */
     public function getUpdatedAt();
+
+    /**
+     * @param $sendAt
+     * @return OrderInterface
+     */
+    public function setSendAt($sendAt);
+
+    /**
+     * @return \DateTime
+     */
+    public function getSendAt();
 
     /**
      * @param array $shippingRules
