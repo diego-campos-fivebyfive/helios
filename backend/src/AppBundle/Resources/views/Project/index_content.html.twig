@@ -76,13 +76,12 @@
                 <table class="table table-stripped">
                     <thead>
                     <tr>
-                        <th class="text-center"> Número</th>
+                        <th class="text-center col-md-2"> Número</th>
                         {% if not hasCustomer %}
                             <th> Contato </th>
                         {% endif %}
-                        <th class="text-center"> Email </th>
-                        <th class="text-center"> Potência</th>
-                        <th class="text-center"> Etapa de venda</th>
+                        <th class="text-center col-md-2 "> Potência</th>
+                        <th class="text-center col-md-4 "> Etapa de venda</th>
                         <th> &nbsp; </th>
                         <th class="col-xs-2"> &nbsp; </th>
                     </tr>
@@ -118,21 +117,6 @@
                             {% endif %}
 
                             <td class="text-center">
-                                {% set email = project.metadata('email') %}
-                                {% if email is not null %}
-                                    {% set tag = email > 1 ? 'vezes' : 'vez' %}
-                                    <h4>
-                                    <i style="color: #444;"
-                                       title="{{ email > 0 ? ['Proposta visualizada ', email, ' ', tag]|join : 'Email enviado' }}"
-                                       class="fa {{ 0 == project.metadata('email') ? 'fa-send' : 'fa-eye' }}"></i>
-                                    </h4>
-                                    <small>
-                                        {{ email > 0 ? [email, ' ', tag]|join  : 'Enviado' }}
-                                    </small>
-                                {% endif %}
-                            </td>
-
-                            <td class="text-center">
                                 <h4> {{ project.power|decimal }} kWp </h4>
                                 <small>
                                     {% if project.salePrice and project.issuedAt %}
@@ -141,11 +125,11 @@
                                 </small>
                             </td>
 
-                            <td class="col-md-3">
+                            <td>
                                 {{ helper.choiceStages(stages, project) }}
                             </td>
 
-                            <td class="col-md-2">
+                            <td>
 
                                 {#% if project.isDone %#}
                                 {% if 1 == 2 %}
@@ -196,7 +180,7 @@
 
                             </td>
 
-                            <td class="col-md-2">
+                            <td>
                                 <div class="btn-group btn-group-sm col-md-12 btn-group-justified">
                                     {% if not project.isClosed %}
                                         <a title="{{ 'Manage'|trans }}"
