@@ -20,8 +20,8 @@ fi
 echo "Starting Deploy..."
 
 if [ $1 = '--homolog' ] || [ $1 = '--staging' ]; then
-
-  $CLI_PATH/ces-slack-notify --devops 'Starting Homolog Deploy...'
+  ambience=${CES_AMBIENCE^}
+  $CLI_PATH/ces-slack-notify --devops "Starting $ambience Deploy..."
   $CLI_PATH/ces-app-clone $1
   $CLI_PATH/ces-permission-fix $1
   source $CLI_PATH/config/variables-ci $1
@@ -29,7 +29,7 @@ if [ $1 = '--homolog' ] || [ $1 = '--staging' ]; then
   $CLI_PATH/ces-database-update
   $CLI_PATH/ces-cache-clear
   $CLI_PATH/ces-frontend-compile
-  $CLI_PATH/ces-slack-notify --devops 'Homolog Deploy Done!'
+  $CLI_PATH/ces-slack-notify --devops "$ambience Deploy Done!"
 
 elif [ $1 = '--production' ]; then
 
