@@ -35,8 +35,6 @@ class ProjectGeneratorController extends AbstractController
         $id = $request->query->getInt('order', 0);
         $manager = $this->manager('order');
         $order = $manager->find($id);
-        $orders = $manager->findAll();
-
 
         if (!$order) {
             $order = $this->getOrderValid($manager);
@@ -196,33 +194,18 @@ class ProjectGeneratorController extends AbstractController
     /**
      * @Route("/orders", name="generator_orders")
      */
-    public function ordersAction(Request $request)
+    public function ordersAction()
     {
         $manager = $this->manager('order');
 
         $account = $this->account();
         $order = $manager->findOneBy([
             'account' => $account,
-            'isquikId' => null,
+            'sendAt' => null,
             'parent' => null
         ]);
 
-        $qb = $manager->getEntityManager()->createQueryBuilder();
-
-        $qb->select('o')
-            ->from($manager->getClass(), 'o')
-            ->where('o.account = :account')
-            ->andWhere('o.parent = :order')
-            ->orderBy('o.id', 'desc')
-            ->setParameters([
-                'account' => $account,
-                'order' => $order
-            ]);
-
-        $orders = $qb->getQuery()->getResult();
-
         return $this->render('generator.orders', [
-            'orders' => $orders,
             'order' => $order
         ]);
     }
@@ -239,7 +222,7 @@ class ProjectGeneratorController extends AbstractController
         $account = $this->account();
         $order = $manager->findOneBy([
             'account' => $account,
-            'isquikId' => null,
+            'sendAt' => null,
             'parent' => null
         ]);
 
@@ -247,7 +230,7 @@ class ProjectGeneratorController extends AbstractController
         $orderChildren = $transformer->transformFromProject($project);
         $order->addChildren($orderChildren);
 
-        /*$this->get('order_precifier')->precify($order);*/
+        $this->get('order_precifier')->precify($orderChildren);
 
         $this->manager('project')->delete($project);
 
