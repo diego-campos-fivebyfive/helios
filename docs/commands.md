@@ -9,17 +9,25 @@ $ ces-ambience-config
 ```
 
 ### Para realizar deploy
+(no default value)
 ```
 $ cd AMBIENCE
 $ ces-app-deploy --AMBIENCE
 ```
+O deploy para produção aceita também o parametro de servidor de origem:
+(default: staging)
+```
+$ ces-app-deploy --production --ORIGIN
+```
 
 ### Para iniciar as aplicações
+(default: development)
 ```
 $ ces-app-start --AMBIENCE
 ```
 
 ### Para configurar a aplicação
+(default: development)
 ```
 $ ces-app-config --AMBIENCE
 ```
@@ -32,6 +40,11 @@ $ ces-app-install
 ### Para acessar o ambiente de homolog
 ```
 $ ssh -i $SICES_PATH/devops/aws/homolog.pem admin@54.233.150.10
+```
+
+### Para acessar o ambiente de staging
+```
+$ ssh -i $SICES_PATH/devops/aws/staging.pem admin@18.231.15.228
 ```
 
 ### Para iniciar uma nova branch
@@ -50,6 +63,7 @@ $ ces-database-mirror
 ```
 
 ### Para corrigir permissões de arquivos e pastas
+(default: development)
 ```
 $ ces-permission-fix --AMBIENCE
 ```

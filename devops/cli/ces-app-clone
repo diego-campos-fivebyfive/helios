@@ -19,7 +19,7 @@ fi
 
 echo "Cloning $1 files..."
 
-if [ $1 = '--homolog' ]; then
+if [ $1 = '--homolog' ] || [ $1 = '--staging' ]; then
 
   git fetch origin
   GIT_WORK_TREE=$SICES_PATH git checkout -f
@@ -27,9 +27,28 @@ if [ $1 = '--homolog' ]; then
 
 elif [ $1 = '--production' ]; then
 
-  echo "Importing Temp files from homolog..."
+  if [ -z ${2+x} ] || [ $2 = '--staging' ]; then
+
+    source $CLI_PATH/config/staging/variables
+    host=$SICES_STAGING_IP
+    origin='staging'
+
+  elif [ $2 = '--homolog' ]; then
+
+    source $CLI_PATH/config/homolog/variables
+    host=$SICES_HOMOLOG_IP
+    origin='homolog'
+
+  else
+    "Invalid origin server argument"
+    exit 1
+  fi
+
+  $SICES_PATH
+
+  echo "Importing Temp files from $origin Server..."
   rsync -azvv --delete -e \
-    "ssh -i $SICES_PATH/devops/aws/homolog.pem" admin@54.233.150.10:$SICES_PATH/** $SICES_PATH/.temp
+    "ssh -i $SICES_PATH/devops/aws/$origin.pem" admin@$host:$SICES_PATH/** $SICES_PATH/.temp
 
   echo "Creating current version Backup..."
   rsync -avzh --delete $SICES_PATH/** $SICES_PATH/.backup
