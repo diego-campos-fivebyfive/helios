@@ -14,4 +14,6 @@ cp -r web/assets/font-awesome web/public/assets/font-awesome
 
 php app/console assetic:dump
 
-$CLI_PATH/util/user-notify 'Frontend compile done.'
+if [ $CES_AMBIENCE = 'development' ]; then
+  $CLI_PATH/util/user-notify 'Frontend compile done.'
+fi

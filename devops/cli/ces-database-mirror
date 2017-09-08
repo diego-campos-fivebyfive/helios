@@ -27,5 +27,7 @@ rm -rf .mirror
 $CLI_PATH/ces-cache-clear
 $CLI_PATH/ces-database-update
 
-$CLI_PATH/util/user-notify 'Database mirror done.'
+if [ $CES_AMBIENCE = 'development' ]; then
+  $CLI_PATH/util/user-notify 'Database mirror done.'
+fi
 echo 'Database mirror done.'
