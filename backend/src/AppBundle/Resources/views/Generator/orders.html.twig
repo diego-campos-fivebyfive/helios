@@ -22,7 +22,7 @@
         <tr>
             <td> {{ order.description }} </td>
             <td width="10%"> {{ order.createdAt|date('d/m/Y') }} </td>
-            <td width="15%"> {{ order.total|currency }} </td>
+            <td width="15%"> {{ order.subTotal|currency }} </td>
             <td width="20%">
                 <div class="btn-group btn-group-sm btn-group-justified">
                     <a href="{{ path('generator_orders_update',{id:order.id}) }}" class="btn btn-success">
@@ -41,7 +41,7 @@
             <td></td>
             <td>Sub Total</td>
             <td>
-               {{ order.total|currency }}
+               {{ order.subTotal|currency }}
             </td>
             <td></td>
         </tr>
@@ -62,8 +62,8 @@
         Total
     </div>
     <div class="panel-body">
-        <div class="col-md-8"><h2>Valor total:</h2></div>
-        <div class="col-md-4 text-center"><h2>{{ order.total|currency }}</h2></div>
+        <div class="col-md-10"><h2>Valor total:</h2></div>
+        <h2 id="order-total">{{ order.total|currency }}</h2>
     </div>
 </div>
 
@@ -196,5 +196,6 @@
     };
 
     ShippingManager.getElements();
+
 
 </script>
