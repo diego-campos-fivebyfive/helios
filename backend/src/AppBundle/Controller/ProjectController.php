@@ -689,6 +689,9 @@ class ProjectController extends AbstractController
         /** @var BusinessInterface $customer */
         if(null != $customer = $this->getCustomerReference($request)){
             $defaults['customer'] = $customer->getId();
+            $defaults['latitude'] = $customer->getLatitude();
+            $defaults['longitude'] = $customer->getLongitude();
+            $defaults['address'] = $customer->getAddress();
         }
     }
 
