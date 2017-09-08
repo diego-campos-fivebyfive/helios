@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 export SICES_HOMOLOG_PORT=80
-export SICES_HOMOLOG_HOST='http://54.233.150.10'
+export SICES_HOMOLOG_IP=54.233.150.10
+export SICES_HOMOLOG_HOST="http://$SICES_HOMOLOG_IP"
 export SICES_HOMOLOG_DATABASE_NAME=sices_solar
 export SICES_HOMOLOG_DATABASE_USER=mysqldevtest
 export SICES_HOMOLOG_DATABASE_HOST='mysql-dev-test.crtwvzhue9fu.sa-east-1.rds.amazonaws.com'

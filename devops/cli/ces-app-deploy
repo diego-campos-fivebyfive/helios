@@ -19,12 +19,12 @@ fi
 
 echo "Starting Deploy..."
 
-if [ $1 = '--homolog' ]; then
+if [ $1 = '--homolog' ] || [ $1 = '--staging' ]; then
 
   $CLI_PATH/ces-slack-notify --devops 'Starting Homolog Deploy...'
-  $CLI_PATH/ces-app-clone --homolog
-  $CLI_PATH/ces-permission-fix --homolog
-  source $CLI_PATH/config/variables-ci --homolog
+  $CLI_PATH/ces-app-clone $1
+  $CLI_PATH/ces-permission-fix $1
+  source $CLI_PATH/config/variables-ci $1
   $CLI_PATH/ces-app-install
   $CLI_PATH/ces-database-update
   $CLI_PATH/ces-cache-clear
