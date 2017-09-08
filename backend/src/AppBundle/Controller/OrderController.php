@@ -29,6 +29,7 @@ class OrderController extends AbstractController
                 $qb2->select('o2')
                     ->from(Order::class, 'o2')
                     ->where('o2.parent is null')
+                    ->andWhere('o2.sendAt is not null')
                 ->getQuery()->getDQL()
             )
         )->andWhere('o.account = :account')
