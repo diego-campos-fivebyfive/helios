@@ -29,6 +29,7 @@ class OrderController extends AbstractController
                 $qb2->select('o2')
                     ->from(Order::class, 'o2')
                     ->where('o2.parent is null')
+                    ->andWhere('o2.sendAt is not null')
                 ->getQuery()->getDQL()
             )
         )->andWhere('o.account = :account')
@@ -62,12 +63,14 @@ class OrderController extends AbstractController
      */
     public function createBudgetAction(Request $request)
     {
-        $childrens = $request->get('childrens');
-
-        $transformer = $this->get('order_transformer');
+        $manager = $this->manager('order');
 
         /** @var Order $order */
-        $order = $transformer->transformFromChildrens($childrens);
+        $order = $manager->find($request->get('orderId'));
+
+        $order->setSendAt(new \DateTime('now'));
+        $order->setMetadata($order->getChildrens()->first()->getMetadata());
+        $manager->save($order);
 
         $this->get('notifier')->notify([
             'Evento' => '5021',
