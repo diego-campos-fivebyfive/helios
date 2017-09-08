@@ -39,8 +39,8 @@
                 }else{
                     value = response.order.insurance;
                 }
-
                 InsuranceHandler.output.html(numeral(value).format('$0,0.00'));
+                Total(insure);
             });
         },
         init: function(){

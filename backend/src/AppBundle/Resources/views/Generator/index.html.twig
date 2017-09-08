@@ -15,25 +15,24 @@
         }
     </style>
 
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox">
-                    <div class="ibox-content">
-                        <div class="row">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="row">
 
-                            <div id="generator_form" class="col-md-12 flow-h">
-                            </div>
-
-                            <div id="generator_components" class="col-md-12 flow-h">
-                            </div>
-
-                            <div class="hr-line-dashed col-md-12"></div>
-
-                            <div id="generator_orders" class="col-md-12 flow-h">
-                            </div>
-
+                        <div id="generator_form" class="col-md-12 flow-h">
                         </div>
+
+                        <div id="generator_components" class="col-md-12 flow-h">
+                        </div>
+
+                        <div class="hr-line-dashed col-md-12"></div>
+
+                        <div id="generator_orders" class="col-md-12 flow-h">
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -49,6 +48,8 @@
     {% include view('helper.numbers') %}
 
     <script>
+
+        var orderId = {{ order.id }};
 
         GeneratorHandler = {
             project: {id:0,power:0},

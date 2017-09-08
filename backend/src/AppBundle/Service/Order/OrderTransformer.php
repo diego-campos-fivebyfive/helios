@@ -63,6 +63,7 @@ class OrderTransformer
         }
 
         $order->setDescription(sprintf('Sistema de %skWp', $project->getPower()));
+        $order->setShippingRules($project->getShippingRules());
 
         if($persist) $this->manager->save($order);
 
