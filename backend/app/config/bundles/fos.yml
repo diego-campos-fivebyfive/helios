@@ -64,3 +64,6 @@ fos_rest:
         default_format: json
     serializer:
         serialize_null: true
+    exception:
+        enabled: true
+        exception_controller: ApiBundle\Controller\ExceptionController::showAction
