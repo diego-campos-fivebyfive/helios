@@ -5,17 +5,33 @@
         {{ form_start(form,{attr:{action: path('platform_products'), id:'form_filter'}}) }}
 
         <div class="form-group">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 {{ form_label(form.memorial) }}
                 {{ form_widget(form.memorial,{attr:{class:'form-control'}}) }}
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 {% if attribute(form, 'level') is defined %}
                     {{ form_label(form.level, 'Nível de Desconto') }}
                     {{ form_widget(form.level, {attr:{class:'form-control'}}) }}
                 {% endif %}
             </div>
+            <div class="col-md-6" id="change_components">
+                <div style="width: 100%;">
+                    <label> Exibir </label>
+                    <br>
+                </div>
+                {% if attribute(form, 'components') is defined %}
+                    {% for children in form.components %}
+                        <div style="width: 20%; float:left;">
+                            {{ form_widget(children) }}
+                            {{ form_label(children) }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
         </div>
+
+        <input class="hide" type="submit">
 
         {{ form_end(form) }}
 
@@ -25,6 +41,12 @@
         {{ products|raw }}
     </div>
 
+
+    <div class="hide" id="spinner">
+        {% include view('helper.spinner') %}
+        <h2 class="text-center"> Aguarde, este processo pode demorar. </h2>
+    </div>
+
 </div>
 
 <script>
@@ -32,6 +54,7 @@
     var form = $('#form_filter');
     var level = $('#memorial_filter_level');
     var products = $('#memorial_products');
+    var spinner = $('#spinner').html();
 
     form.on('submit', function (event) {
         event.preventDefault();
@@ -45,14 +68,23 @@
         });
     });
 
+    $('#memorial_filter_memorial').on('change', function(){
+        form.trigger('submit');
+    });
+
     if(!level.length){
         form.trigger('submit');
     }else{
         level.on('change', function(){
             if($(this).val()) {
+                products.html(spinner);
                 form.trigger('submit');
             }
         });
     }
+
+    $('#change_components').find('input').on('change', function(){
+        level.trigger('change');
+    });
 
 </script>

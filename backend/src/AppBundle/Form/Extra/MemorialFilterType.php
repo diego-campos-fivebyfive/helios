@@ -39,6 +39,7 @@ class MemorialFilterType extends AbstractType
 
             if (array_key_exists('memorial', $data)) {
                 $this->addLevelField($form, $data['memorial']);
+                $this->addComponentsField($form);
             }
         });
     }
@@ -92,7 +93,27 @@ class MemorialFilterType extends AbstractType
 
         $form->add('level', ChoiceType::class, [
             'choices' => array_combine($levels, $levels),
-            'placeholder' => 'Selecionar'
+            'placeholder' => 'Selecionar',
+            'required' => (bool) count($levels)
+        ]);
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
+     */
+    private function addComponentsField(FormInterface $form)
+    {
+        $form->add('components', ChoiceType::class, [
+            'choices' => [
+                'module' => 'Módulos',
+                'inverter' => 'Inversores',
+                'string_box' => 'String Box',
+                'structure' => 'Estrutura',
+                'variety' => 'Variedades'
+            ],
+            'expanded' => true,
+            'multiple' => true,
+            'required' => false
         ]);
     }
 }

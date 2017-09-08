@@ -1,21 +1,13 @@
-
-<form method="post" action="{{ path('order_budget_create') }}" id="form_budget">
+{% set orders = order.childrens %}
 
 <table class="table table-bordered table-hover flow-md">
     <thead>
     <tr>
         <th colspan="5">
             ORÇAMENTO ATUAL
-            <button type="submit" class="btn btn-warning pull-right">
-                <i class="fa fa-arrow-right"></i>
-                Enviar solicitação para SICES
-            </button>
         </th>
     </tr>
     <tr>
-        <th  class="text-center">
-            <input type="checkbox" id="check_budget">
-        </th>
         <th> Descrição </th>
         <th> Data </th>
         <th> Valor </th>
@@ -28,12 +20,9 @@
     {% for order in orders if not order.budget %}
 
         <tr>
-            <td width="5%" align="center">
-                <input type="checkbox" class="budget_children" name="childrens[]" value="{{ order.id }}">
-            </td>
             <td> {{ order.description }} </td>
             <td width="10%"> {{ order.createdAt|date('d/m/Y') }} </td>
-            <td width="15%"> {{ order.total|currency }} </td>
+            <td width="15%"> {{ order.subTotal|currency }} </td>
             <td width="20%">
                 <div class="btn-group btn-group-sm btn-group-justified">
                     <a href="{{ path('generator_orders_update',{id:order.id}) }}" class="btn btn-success">
@@ -45,21 +34,52 @@
                 </div>
             </td>
         </tr>
-
     {% endfor %}
-
     </tbody>
+    <tfoot>
+        <tr>
+            <td></td>
+            <td>Sub Total</td>
+            <td>
+               {{ order.subTotal|currency }}
+            </td>
+            <td></td>
+        </tr>
+    </tfoot>
 </table>
 
-</form>
+<div class="panel panel-warning">
+    <div class="panel-heading">
+        <i class="fa fa-list"></i>
+        Frete
+    </div>
+    <div class="panel-body" id="generator_financial_shipping">
+    </div>
+</div>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        Total
+    </div>
+    <div class="panel-body">
+        <div class="col-md-10"><h2>Valor total:</h2></div>
+        <h2 id="order-total">{{ order.total|currency }}</h2>
+    </div>
+</div>
+
+    <button type="button" id="btn_budget" data-url="{{ path('order_budget_create') }}" class="btn btn-warning pull-right">
+        <i class="fa fa-arrow-right"></i>
+        Enviar solicitação para SICES
+    </button>
+
+{#</form>#}
 
 <script>
 
     var pagination = $('ul.pagination');
     //var data_update = $('[data-update]');
     var data_delete = $('[data-delete]');
-    var form_budget = $('#form_budget');
-    var check_budget = $('#check_budget');
+    var btn_budget = $('#btn_budget');
 
     /*data_update.on('click', function () {
         Request.send({
@@ -108,11 +128,11 @@
         });
     });
 
-    form_budget.on('submit', function(event){
+    btn_budget.on('click', function(event){
         event.preventDefault();
-        var url = $(this).attr('action');
-        var data = $(this).serialize();
-        if(data.length) {
+        var url = $(this).data('url');
+        var data = {orderId: orderId};
+        if({{ orders|length }}) {
 
             swal({
                 title: 'Confirma a Solicitação?',
@@ -157,14 +177,24 @@
         }else{
 
             swal({
-                title: "Selecione ao menos um orçamento para envio.",
+                title: "Nenhum orçamento para envio.",
                 type: "warning"
             });
         }
     });
 
-    check_budget.on('click', function(){
-       $('.budget_children').prop('checked', $(this).is(':checked'));
-    });
+    var ShippingManager = {
+        getElements: function () {
+            Request.send({
+                url: '{{ path('generator_financial_shipping', {id:order.id}) }}',
+                callback: function (xhr) {
+                    $('#generator_financial_shipping').html(xhr.responseText);
+                }
+            });
+        }
+    };
+
+    ShippingManager.getElements();
+
 
 </script>

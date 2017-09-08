@@ -3,11 +3,9 @@
 {% block body %}
 
     <div class="row">
-
         <div class="col-md-12" id="products">
-
+            {% include view('helper.spinner') %}
         </div>
-
     </div>
 
 {% endblock %}
@@ -18,6 +16,8 @@
     {% include view('helper.request') %}
 
     <script>
+
+        var spinner = $('#products').html();
 
         var PlatformMemorial = {
             request: function(config){
@@ -33,6 +33,9 @@
             getRanges: function(){
             },
             getMemorials: function() {
+
+                $('#products').html(spinner);
+
                 this.request({
                     url: '{{ path('platform_products') }}',
                     callback: function(xhr){
