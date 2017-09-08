@@ -171,7 +171,7 @@ class ProjectGeneratorController extends AbstractController
 
             ShippingType::normalize($rule);
 
-            $rule['price'] = $order->getTotal();
+            $rule['price'] = $order->getSubTotal();
             $rule['power'] = $order->getPower();
 
             ShippingRuler::apply($rule);
@@ -181,7 +181,8 @@ class ProjectGeneratorController extends AbstractController
             $this->manager('order')->save($order);
 
             return $this->json([
-                'shipping' => $order->getShipping()
+                'shipping' => $order->getShipping(),
+                'total' => $order->getTotal()
             ]);
         }
 
