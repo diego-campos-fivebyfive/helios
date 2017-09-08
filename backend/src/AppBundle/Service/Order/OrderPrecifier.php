@@ -40,12 +40,17 @@ class OrderPrecifier
         $ranges = $loader->load($memorial, $power, $level, $codes);
 
         foreach($order->getElements() as $element){
-            $code = $element->getCode();
-            $range = $ranges[$code];
 
-            if($range instanceof RangeInterface){
-                $price = (float) $range->getPrice();
-                $element->setUnitPrice($price);
+            $code = $element->getCode();
+
+            if(array_key_exists($code, $ranges)) {
+
+                $range = $ranges[$code];
+
+                if ($range instanceof RangeInterface) {
+                    $price = (float)$range->getPrice();
+                    $element->setUnitPrice($price);
+                }
             }
         }
 
