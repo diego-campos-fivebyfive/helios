@@ -78,7 +78,17 @@ interface OrderInterface
     /**
      * @return float
      */
+    public function getSubTotal();
+
+    /**
+     * @return float
+     */
     public function getTotal();
+
+    /**
+     * @return float
+     */
+    public function getTotalInsurance();
 
     /**
      * @param float $power

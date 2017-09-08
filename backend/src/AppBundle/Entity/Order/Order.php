@@ -277,12 +277,41 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @inheritDoc
      */
-    public function getTotal()
+    public function getSubTotal()
     {
         $total = 0;
         $sources = $this->isBudget() ? $this->childrens : $this->elements;
         foreach ($sources as $element){
-            $total += $element->getTotal();
+            $total += $element instanceof Element ? $element->getTotal() : $element->getSubTotal();
+        }
+
+        return $total;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTotal()
+    {
+        $total = $this->getSubTotal() + $this->getShipping();
+
+        if ($this->isBudget()) {
+            $total += $this->getTotalInsurance();
+        } else {
+            $total += $this->getInsurance();
+        }
+
+        return $total;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTotalInsurance()
+    {
+        $total = 0;
+        foreach ($this->childrens as $children) {
+            $total += $children->getInsurance();
         }
 
         return $total;
