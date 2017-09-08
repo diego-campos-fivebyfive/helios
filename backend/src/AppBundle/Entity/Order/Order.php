@@ -293,15 +293,9 @@ class Order implements OrderInterface, InsurableInterface
      */
     public function getTotal()
     {
-        $total = $this->getSubTotal() + $this->getShipping();
+        $insurance = $this->isBudget() ? $this->getTotalInsurance() : $this->getInsurance();
 
-/*        if ($this->isBudget()) {
-            $total += $this->getTotalInsurance();
-        } else {
-            $total += $this->getInsurance();
-        }*/
-
-        ($this->isBudget()) ? $total += $this->getTotalInsurance() : $total += $this->getInsurance();
+        $total = $this->getSubTotal() + $this->getShipping() + $insurance;
 
         return $total;
     }
