@@ -5,10 +5,10 @@ namespace AppBundle\Service\ProjectGenerator;
 use AppBundle\Entity\Component\ProjectInterface;
 
 /**
- * Class Combiner
+ * Class ModuleCombiner
  * @author Claudinei Machado <cjchamado@gmail.com>
  */
-class Combiner
+class ModuleCombiner
 {
     /**
      * @param ProjectInterface $project

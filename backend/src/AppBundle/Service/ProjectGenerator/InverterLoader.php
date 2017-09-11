@@ -10,7 +10,7 @@ class InverterLoader
     /**
      * @var float
      */
-    private $fdiMin = 0.77;
+    private $fdiMin = 0.75;
 
     /**
      * @var float
@@ -43,7 +43,7 @@ class InverterLoader
         $phaseNumber = $defaults['phases'];
         $phaseVoltage = $defaults['voltage'];
 
-        $power = $defaults['power'];
+        $power = (float) $defaults['power'];
         $maker = $defaults['inverter_maker'];
 
         $attempts = 1;
