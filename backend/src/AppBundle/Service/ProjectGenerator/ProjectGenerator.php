@@ -9,7 +9,6 @@ use AppBundle\Entity\Component\ProjectArea;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverter;
 use AppBundle\Entity\Component\ProjectModule;
-use AppBundle\Entity\Component\Variety;
 use AppBundle\Entity\Component\VarietyInterface;
 use AppBundle\Service\ProjectProcessor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -102,19 +101,27 @@ class ProjectGenerator
 
         // ESTIMATE POWER
         $defaults['inf_power'] = $defaults['power'];
+
         if('consumption' == $defaults['source']){
             $estimator = $this->container->get('power_estimator');
             $power = $estimator->estimate($defaults['consumption'], $defaults['latitude'], $defaults['longitude']);
             $defaults['power'] = $power;
         }
 
+        // MODULES
+        $this->generateModules($this->project);
+
+        /** @var ModuleInterface $module */
+        $module = $project->getProjectModules()->first()->getModule();
+        $powerModule = $module->getMaxPower() / 1000;
+        $roundPower = round($defaults['power'] / $powerModule);
+        $multiPower = $roundPower * $powerModule;
+        $defaults['power'] = $multiPower;
+
         CriteriaAggregator::promotional($defaults['is_promotional']);
 
         $defaults['errors'] = [];
         $this->project->setDefaults($defaults);
-
-        // MODULES
-        $this->generateModules($this->project);
 
         // INVERTERS
         $this->generateInverters($this->project);
@@ -287,8 +294,7 @@ class ProjectGenerator
 
             $this->resolveTransformer($project, $powerTransformer);
 
-            // INVERTER COMBINATIONS
-            Combiner::combine($project);
+            ModuleCombiner::combine($project);
 
             $this->save($project);
 
