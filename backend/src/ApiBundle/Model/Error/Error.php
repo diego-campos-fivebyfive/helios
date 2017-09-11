@@ -1,15 +1,46 @@
 <?php
 
+/*
+ * This file is part of the SicesSolar package.
+ *
+ * (c) SicesSolar <http://sicesbrasil.com.br/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace ApiBundle\Model\Error;
 
+/**
+ * This class is a default template for errors in api response.
+ *
+ * @author Claudinei Machado <cjchamado@gmail.com>
+ */
 class Error implements ErrorInterface
 {
+    /**
+     * @var string
+     */
+    private $code;
+
+    /**
+     * @var string
+     */
+    private $type;
+
+    /**
+     * @var string
+     */
+    private $message;
+
     /**
      * @inheritDoc
      */
     public function setCode($code)
     {
-        // TODO: Implement setCode() method.
+        $this->code = $code;
+
+        return $this;
     }
 
     /**
@@ -17,7 +48,7 @@ class Error implements ErrorInterface
      */
     public function getCode()
     {
-        // TODO: Implement getCode() method.
+        return $this->code;
     }
 
     /**
@@ -25,7 +56,9 @@ class Error implements ErrorInterface
      */
     public function setType($type)
     {
-        // TODO: Implement setType() method.
+        $this->type = $type;
+
+        return $this;
     }
 
     /**
@@ -33,7 +66,7 @@ class Error implements ErrorInterface
      */
     public function getType()
     {
-        // TODO: Implement getType() method.
+        return $this->type;
     }
 
     /**
@@ -41,7 +74,9 @@ class Error implements ErrorInterface
      */
     public function setMessage($message)
     {
-        // TODO: Implement setMessage() method.
+        $this->message = $message;
+
+        return $this;
     }
 
     /**
@@ -49,6 +84,14 @@ class Error implements ErrorInterface
      */
     public function getMessage()
     {
-        // TODO: Implement getMessage() method.
+        return $this->message;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function toArray()
+    {
+        return get_object_vars($this);
     }
 }

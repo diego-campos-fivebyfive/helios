@@ -36,4 +36,9 @@ interface ErrorInterface
      * @return mixed
      */
     public function getMessage();
+
+    /**
+     * @return array
+     */
+    public function toArray();
 }
