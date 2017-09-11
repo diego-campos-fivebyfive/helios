@@ -260,6 +260,7 @@ class ProjectController extends AbstractController
 
             $generator->generate($project);
 
+            $range = null;
             $memorial = $this->container->get('memorial_loader')->load();
             if($memorial) {
                 $rangeManager = $this->manager('range');
@@ -267,12 +268,9 @@ class ProjectController extends AbstractController
                     'memorial' => $memorial->getId(),
                     'level' => $member->getAccount()->getLevel()
                 ]);
-                if (!$range) {
-                    $defaults['errors'] = ['not_has_memorial_or_range'=>'not_has_memorial_or_range'];
-                    $project->setDefaults($defaults);
-                }
-            } else {
-                $defaults['errors'] = ['not_has_memorial_or_range'=>'not_has_memorial_or_range'];
+            }
+            if(!$memorial || !$range) {
+                $defaults['errors'] = ['has_no_memorial_or_range'=>'has_no_memorial_or_range'];
                 $project->setDefaults($defaults);
             }
 
@@ -752,7 +750,7 @@ class ProjectController extends AbstractController
             if(in_array('exhausted_inverters', $defaults['errors'])) {
                 $errors[] = 'Número máximo de inversores excedido para esta configuração.';
             }
-            if(in_array('not_has_memorial_or_range', $defaults['errors'])) {
+            if(in_array('has_no_memorial_or_range', $defaults['errors'])) {
                 $errors[] = 'As configurações atuais não permitem a geração de projetos.';
             }
         }
