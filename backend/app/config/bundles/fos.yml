@@ -7,8 +7,8 @@ fos_user:
     use_username_form_type: true
     model_manager_name: null
     from_email:
-        address: no-reply@inovadorsolar.com
-        sender_name: Inovador Solar
+        address: naoresponser@plataformasicessolar.com.br
+        sender_name: Sices Solar
     profile:
         form:
             type: FOS\UserBundle\Form\Type\ProfileFormType
@@ -34,8 +34,8 @@ fos_user:
         token_ttl: 86400
         email:
             from_email:
-                address: no-reply@inovadorsolar.com
-                sender_name: Inovador Solar
+                address: naoresponser@plataformasicessolar.com.br
+                sender_name: Sices Solar
             template:  FOSUserBundle:Resetting:email.html.twig
         form:
             type: FOS\UserBundle\Form\Type\ResettingFormType
@@ -58,9 +58,17 @@ fos_oauth_server:
         user_provider: fos_user.user_provider.username
 
 fos_rest:
+    disable_csrf_role: form
+    body_converter:
+        enabled: true
+        validate: true
     body_listener:
         array_normalizer: fos_rest.normalizer.camel_keys
     routing_loader:
         default_format: json
     serializer:
+        groups: [api]
         serialize_null: true
+    exception:
+        enabled: true
+        exception_controller: ApiBundle\Controller\ExceptionController::showAction

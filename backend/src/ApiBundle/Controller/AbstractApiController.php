@@ -4,6 +4,7 @@ namespace ApiBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 abstract class AbstractApiController extends FOSRestController
 {
@@ -62,5 +63,26 @@ abstract class AbstractApiController extends FOSRestController
     protected function paginator()
     {
         return $this->get('knp_paginator');
+    }
+
+    /**
+     * @param $type
+     * @param null $data
+     * @param array $options
+     * @return \Symfony\Component\Form\Form
+     */
+    protected function form($type, $data = null, array $options = [])
+    {
+        /** @var RequestStack $requestStack */
+        $requestStack = $this->get('request_stack');
+        $request = $requestStack->getMasterRequest();
+
+        $apiOptions = array_merge([
+            'csrf_protection' => false,
+            'validation_groups' => ['api'],
+            'method' => $request->getMethod()
+        ], $options);
+
+        return $this->createForm($type, $data, $apiOptions);
     }
 }

@@ -3,10 +3,15 @@
 namespace AppBundle\Entity\Component;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
+ * class ComponentTrait
+ *
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks()
+ *
+ * @Serializer\ExclusionPolicy("all")
  */
 trait ComponentTrait
 {
@@ -52,6 +57,15 @@ trait ComponentTrait
      * @ORM\Column(name="promotional", type="boolean", nullable=true)
      */
     protected $promotional;
+
+    /**
+     * @var int
+     *
+     * @Serializer\Expose()
+     * @Serializer\Accessor(getter="getMakerId")
+     * @Serializer\Groups({"api"})
+     */
+    protected $makerId;
 
     /***
      * @param $datasheet
@@ -123,6 +137,14 @@ trait ComponentTrait
     public function getMaker()
     {
         return $this->maker;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getMakerId()
+    {
+        return $this->maker ? $this->maker->getId() : null;
     }
 
     /**
