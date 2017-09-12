@@ -96,9 +96,10 @@ class OrderController extends AbstractController
         $this->manager('order')->save($order);
 
         return $this->json([
-            'project' => [
+            'order' => [
                 'id' => $order->getId(),
-                'insurance' => $order->getInsurance()
+                'insurance' => $order->getInsurance(),
+                'total' => $order->getTotal()
             ]
         ]);
     }

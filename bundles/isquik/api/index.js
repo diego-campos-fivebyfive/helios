@@ -18,11 +18,14 @@ const actions = {
 }
 
 router.post('/api/v1/notifications', bundler(actions))
-router.post('/hooks/bitbucket', ((request, response) => {
+router.post('/hooks/github', ((request, response) => {
   response
     .status(200)
     .json({ message: 'Hook Recieved' })
     .end()
-  exec('$CLI_PATH/ces-app-deploy --homolog')
+
+  if (request.body.ref.includes('master')) {
+    exec('$CLI_PATH/ces-app-deploy --homolog')
+  }
 }))
 router.get('/', (request, response) => response.send('API Documentation'))
