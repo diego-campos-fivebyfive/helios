@@ -269,7 +269,7 @@ class StructureCalculator
             $screwHammer = $base;
             $nutM10 = $base;
             $screwStr = $base;
-            $screwAuto = 4 * (ceil(($lineSize) / 0.4) + 1);
+            $screwAuto = 4 * (ceil(($lineSize) / 0.4) + 1) * $linesOfModules;
 
             if (self::ROOF_SHEET_METAL_PFM == $roofType) {
                 $screwAuto = $profileMiddlePlate * 4;
@@ -285,7 +285,7 @@ class StructureCalculator
                 $totalTriangleHorizontal += $triangle;
             }
 
-            $plate = ($screwAuto / 2) * 0.1;
+            $plate = (($screwAuto / 2) * 0.1);
 
             $total_term_final += $terminalFinal;
             $total_term_inter += $terminalIntermediary;

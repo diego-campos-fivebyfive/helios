@@ -781,7 +781,7 @@ class ProjectGenerator
     private function handleABBInverters(ProjectInterface $project)
     {
         $abbInverters = $project->getProjectInverters()->filter(function(ProjectInverter $projectInverter){
-            return '22SMA0200380' === $projectInverter->getInverter()->getCode();
+            return '22ABB0500380' === $projectInverter->getInverter()->getCode();
         });
 
         if(!$abbInverters->isEmpty()){
