@@ -10,7 +10,8 @@
     <tr>
         <th> Descrição </th>
         <th> Data </th>
-        <th> Valor </th>
+        <th> Valor Equipamentos </th>
+        <th> Valor Seguro </th>
         <th> &nbsp; </th>
     </tr>
     </thead>
@@ -22,7 +23,8 @@
         <tr>
             <td> {{ order.description }} </td>
             <td width="10%"> {{ order.createdAt|date('d/m/Y') }} </td>
-            <td width="15%"> {{ order.subTotal|currency }} </td>
+            <td width="17%" class="text-right"> {{ order.subTotal|currency }} </td>
+            <td width="13%" class="text-right"> {{ order.insurance|currency }} </td>
             <td width="20%">
                 <div class="btn-group btn-group-sm btn-group-justified">
                     <a href="{{ path('generator_orders_update',{id:order.id}) }}" class="btn btn-success">
@@ -36,16 +38,16 @@
         </tr>
     {% endfor %}
     </tbody>
-    <tfoot>
+    <thead>
         <tr>
-            <td></td>
-            <td>Sub Total</td>
-            <td>
+            <th></th>
+            <th>Sub Total</th>
+            <th class="text-right">
                {{ order.subTotal|currency }}
-            </td>
-            <td></td>
+            </th>
+            <th></th>
         </tr>
-    </tfoot>
+    </thead>
 </table>
 
 <div class="panel panel-warning">
@@ -59,20 +61,19 @@
 
 <div class="panel panel-primary">
     <div class="panel-heading">
+        <i class="fa fa-money"></i>
         Total
     </div>
     <div class="panel-body">
-        <div class="col-md-10"><h2>Valor total:</h2></div>
+        <div class="col-md-9"><h2>Valor total:</h2></div>
         <h2 id="order-total">{{ order.total|currency }}</h2>
     </div>
 </div>
 
-    <button type="button" id="btn_budget" data-url="{{ path('order_budget_create') }}" class="btn btn-warning pull-right">
-        <i class="fa fa-arrow-right"></i>
-        Enviar solicitação para SICES
-    </button>
-
-{#</form>#}
+<button type="button" id="btn_budget" data-url="{{ path('order_budget_create') }}" class="btn btn-warning pull-right">
+    <i class="fa fa-arrow-right"></i>
+    Enviar solicitação para SICES
+</button>
 
 <script>
 
