@@ -4,7 +4,7 @@ namespace AppBundle\Service\ProjectGenerator;
 
 abstract class AbstractConfig
 {
-    public static $maxInverters = 10;
+    public static $maxInverters = 15;
 
     const PHASE_NUMBER_MONOPHASIC = 'Monophasic';
     const PHASE_NUMBER_BIPHASIC = 'Biphasic';

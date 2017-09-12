@@ -360,7 +360,7 @@ class MemberController extends AbstractController
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
-            
+
             $name = null;
             if('has_company' == $account->getAttribute('companyStatus')){
                 $name = $account->getAttribute('companyName');

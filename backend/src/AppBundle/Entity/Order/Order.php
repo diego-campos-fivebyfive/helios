@@ -18,6 +18,8 @@ use AppBundle\Service\Pricing\InsurableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Order
@@ -74,6 +76,13 @@ class Order implements OrderInterface, InsurableInterface
      * @ORM\Column(type="float", nullable=true)
      */
     private $power;
+
+    /**
+     * @var DateTime
+     *
+     * @ORM\Column(name="send_at", type="datetime", nullable=true)
+     */
+    private $sendAt;
 
     /**
      * @var array
@@ -222,6 +231,25 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @inheritDoc
      */
+    public function setSendAt($sendAt)
+    {
+        $this->sendAt = $sendAt;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSendAt()
+    {
+        return $this->sendAt;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
     public function setShippingRules(array $shippingRules)
     {
         $this->shippingRules = $shippingRules;
@@ -249,12 +277,37 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @inheritDoc
      */
-    public function getTotal()
+    public function getSubTotal()
     {
         $total = 0;
         $sources = $this->isBudget() ? $this->childrens : $this->elements;
         foreach ($sources as $element){
-            $total += $element->getTotal();
+            $total += $element instanceof Element ? $element->getTotal() : $element->getSubTotal();
+        }
+
+        return $total;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTotal()
+    {
+        $insurance = $this->isBudget() ? $this->getTotalInsurance() : $this->getInsurance();
+
+        $total = $this->getSubTotal() + $this->getShipping() + $insurance;
+
+        return $total;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTotalInsurance()
+    {
+        $total = 0;
+        foreach ($this->childrens as $children) {
+            $total += $children->getInsurance();
         }
 
         return $total;

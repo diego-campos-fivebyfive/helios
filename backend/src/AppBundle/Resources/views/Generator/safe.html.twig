@@ -32,14 +32,15 @@
         apply: function(){
             var insure = this.checker.is(':checked')?1:0;
             $.post('{{ path( project is defined ? 'financial_insure' : 'order_insure' ,{id:target.id}) }}',{insure:insure}, function(response){
-
                 var value = 0;
+                var total = 0;
                 if(response.hasOwnProperty('project')) {
                     value = response.project.insurance;
                 }else{
                     value = response.order.insurance;
+                    total = response.order.total;
+                    OrderManager.renderTotal(total);
                 }
-
                 InsuranceHandler.output.html(numeral(value).format('$0,0.00'));
             });
         },

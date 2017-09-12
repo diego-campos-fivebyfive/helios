@@ -187,11 +187,59 @@
 
     <script>
 
+        var total = 100;
+        var portion = 37;
+        var partial = 0;
+        var chunk = 1;
+        var timeout = 20;
+        var stopped = false;
+        var standby = false;
+
         'use strict';
 
         {% if true %}
 
         var Editor = {
+            progressbar:{
+                triggerOnProgress: function () {
+                    Editor.progressbar.onProgress({
+                        lengthComputable: true,
+                        total: total,
+                        loaded: partial
+                    });
+                    partial += chunk;
+                    if (partial <= portion){
+                        setTimeout(Editor.progressbar.triggerOnProgress, timeout);
+                    } else if (standby) {
+                        stopped = true;
+                        Editor.progressbar.parameters(95,200,false);
+                    } else {
+                        stopped = true;
+                    }
+                },
+                onProgress: function (e) {
+                    if (e.lengthComputable) {
+                        var value = Math.floor((e.loaded / e.total) * 100);
+                        $('#progressBar').css('width', value+"%");
+                        $('#progressBar').html(value+"%");
+                    }
+                },
+                parameters: function (part, time, waiting) {
+                    portion = part;
+                    timeout = time;
+                    standby = waiting;
+                    if (stopped) {
+                        stopped = false;
+                        Editor.progressbar.triggerOnProgress();
+                    }
+                },
+                reset: function () {
+                    portion = 37;
+                    partial = 0;
+                    timeout = 20;
+                    stopped = false;
+                }
+            },
             container: $('#proposal_editor'),
             document: $('#editor_document'),
             sectionOptions: $('#section_options'),
@@ -351,24 +399,33 @@
                     callback: function (xhr) {
                         if (200 == xhr.status) {
 
+                            $('#progressBar').css('width', "100%");
+                            $('#progressBar').html("100%");
+
                             var filename = xhr.responseJSON.filename;
 
-                            swal({
-                                title: 'Arquivo gerado com sucesso',
-                                text: 'Deseja visualizar o arquivo?',
-                                type: "success",
-                                showCancelButton: true,
-                                confirmButtonColor: "#00A7EC",
-                                confirmButtonText: '{{ 'Visualizar'|trans }}',
-                                cancelButtonText: '{{ 'Cancelar'|trans }}'
-                            }, function () {
+                            setTimeout(function () {
+                                Editor.progressbar.reset();
 
-                                var url = '{{ path('proposal_display_pdf',{filename:'_file_'}) }}'.replace(/_file_/g, filename);
-                                window.open(url, '_blank');
-                            });
+                                swal({
+                                    title: 'Arquivo gerado com sucesso',
+                                    text: 'Deseja visualizar o arquivo?',
+                                    type: "success",
+                                    showCancelButton: true,
+                                    confirmButtonColor: "#00A7EC",
+                                    confirmButtonText: '{{ 'Visualizar'|trans }}',
+                                    cancelButtonText: '{{ 'Cancelar'|trans }}'
+                                }, function () {
+
+                                    var url = '{{ path('proposal_display_pdf',{filename:'_file_'}) }}'.replace(/_file_/g, filename);
+                                    window.open(url, '_blank');
+                                });
+                            },500);
 
                         } else {
                             swal('Desculpe', 'Seu arquivo não pôde ser gerado. Tente novamente mais tarde.', 'error');
+
+                            Editor.progressbar.reset();
                         }
                     }
                 })
@@ -378,10 +435,15 @@
                 if (pdf) {
                     swal({
                         title: 'Aguarde...',
-                        text: '',
+                        text: '<div class="progress"> ' +
+                        '<div id="progressBar" class="progress-bar" role="progressbar" ' +
+                        'aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">' +
+                        ' 0% </div></div>',
+                        html: true,
                         showCancelButton: false,
                         showConfirmButton: false
                     });
+                    Editor.progressbar.triggerOnProgress();
                 }
 
                 Request.send({
@@ -390,6 +452,7 @@
                     method: 'post',
                     callback: function (xhr) {
                         if (pdf) {
+                            Editor.progressbar.parameters(75,20,true);
                             Editor.savePdf();
                         }
                     }

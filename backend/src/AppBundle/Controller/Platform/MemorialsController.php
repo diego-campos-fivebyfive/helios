@@ -47,9 +47,13 @@ class MemorialsController extends AbstractController
 
         $products = null;
         $data = $form->getData();
-        if($form->isSubmitted() && $form->isValid() && $data['level']){
+        if ($form->isSubmitted() && $form->isValid() && $data['level']) {
 
-            $products = $this->renderRanges($data['memorial'], $data['level'])->getContent();
+            $products = $this->renderRanges(
+                $data['memorial'],
+                $data['level'],
+                $data['components']
+            )->getContent();
         }
 
         return $this->render('platform/memorials/filter.html.twig', [
@@ -63,19 +67,19 @@ class MemorialsController extends AbstractController
      */
     public function saveRangeAction(Request $request)
     {
-        $data = $request->isMethod('post') ? $request->request->all() : $request->query->all() ;
+        $data = $request->isMethod('post') ? $request->request->all() : $request->query->all();
 
-        $id = (int) $data['id'];
+        $id = (int)$data['id'];
         $manager = $this->manager('range');
 
         /** @var Range $range */
-        $range = $id ? $manager->find($id) : $manager->create() ;
+        $range = $id ? $manager->find($id) : $manager->create();
         unset($data['id']);
 
         $data['memorial'] = $this->manager('memorial')->find($data['memorial']);
 
         $accessor = PropertyAccess::createPropertyAccessor();
-        foreach ($data as $property => $value){
+        foreach ($data as $property => $value) {
             $accessor->setValue($range, $property, $value);
         }
 
@@ -103,39 +107,120 @@ class MemorialsController extends AbstractController
      * @param $level
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    private function renderRanges(Memorial $memorial, $level)
+    private function renderRanges(Memorial $memorial, $level, array $components)
     {
-        $products = $this->manager('module')->findAll();
         $rangeManager = $this->manager('range');
 
-        $data = [];
-        /** @var ComponentTrait|ModuleInterface $product */
-        foreach ($products as $product){
+        $collection = [
+            'ranges' => [],
+            'components' => [
+                'module' => [
+                    'enabled' => in_array('module', $components),
+                    'label' => 'Módulos',
+                    'products' => []
+                ],
+                'inverter' => [
+                    'enabled' => in_array('inverter', $components),
+                    'label' => 'Inversores',
+                    'products' => []
+                ],
+                'string_box' => [
+                    'enabled' => in_array('string_box', $components),
+                    'label' => 'String Box',
+                    'products' => []
+                ],
+                'structure' => [
+                    'enabled' => in_array('structure', $components),
+                    'label' => 'Estruturas',
+                    'products' => []
+                ],
+                'variety' => [
+                    'enabled' => in_array('variety', $components),
+                    'label' => 'Variedades',
+                    'products' => []
+                ]
+            ]
+        ];
 
-            $ranges = $rangeManager->findBy([
-                'code' => $product->getCode(),
-                'memorial' => $memorial,
-                'level' => $level
-            ]);
+        $createRange = function($code, $start, $end) use($memorial, $level, $rangeManager){
 
-            /** @var Range $range */
-            foreach($ranges as $range){
+            $range = new Range();
 
-                $key = sprintf('%s-%s', (int)$range->getInitialPower(), (int)$range->getFinalPower());
+            $range
+                ->setMemorial($memorial)
+                ->setLevel($level)
+                ->setInitialPower($start)
+                ->setFinalPower($end)
+                ->setCode($code)
+                ->setPrice(0)
+            ;
 
-                if (!array_key_exists($key, $data)) {
-                    $data['columns'][$key] = $range;
+            $rangeManager->save($range, false);
+
+            return $range;
+        };
+
+        $createOffset = function(Range $range){
+            return sprintf('%s-%s', (int)$range->getInitialPower(), (int)$range->getFinalPower());
+        };
+
+        $lastRange = null;
+        foreach ($collection['components'] as $type => $config) {
+
+            if($config['enabled']) {
+
+                $products = $this->manager($type)->findBy([
+                    'available' => true,
+                    'status' => true
+                ]);
+
+                /** @var ComponentTrait|ModuleInterface $product */
+                foreach ($products as $product) {
+
+                    $code = $product->getCode();
+
+                    $ranges = $rangeManager->findBy([
+                        'code' => $code,
+                        'memorial' => $memorial,
+                        'level' => $level
+                    ]);
+
+                    $offsets = array_map(function (Range $range) use ($createOffset) {
+                        return $createOffset($range);
+                    }, $ranges);
+
+                    $ranges = array_combine($offsets, $ranges);
+
+                    /** @var Range $range */
+                    foreach ($ranges as $range) {
+                        $offset = $createOffset($range);
+                        if (!array_key_exists($offset, $collection['ranges'])) {
+                            $collection['ranges'][$offset] = $range;
+                        }
+                    }
+
+                    if (count($ranges) != count($collection['ranges'])) {
+                        foreach ($collection['ranges'] as $offset => $range) {
+                            if (!array_key_exists($offset, $ranges)) {
+                                $lastRange = $createRange($code, $range->getInitialPower(), $range->getFinalPower());
+                                $ranges[$offset] = $lastRange;
+                            }
+                        }
+                    }
+
+                    $collection['components'][$type]['products'][$code]['product'] = $product;
+                    $collection['components'][$type]['products'][$code]['ranges'] = $ranges;
                 }
-
-                $data['ranges'][$product->getCode()][$key] = $range;
             }
+        }
 
-            $data['products'][$product->getCode()] = $product;
+        if($lastRange instanceof Range){
+            $rangeManager->save($lastRange);
         }
 
         return $this->render('platform/memorials/ranges.html.twig', [
             'memorial' => $memorial,
-            'data' => $data,
+            'collection' => $collection,
         ]);
     }
 }

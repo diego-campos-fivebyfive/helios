@@ -14,8 +14,6 @@ if [ -z ${1+x} ] || [ $1 = '--development' ]; then
   echo "Bundle isquik starting on $CES_BUNDLE_HOST:$CES_BUNDLE_PORT"
   $isquik/node_modules/.bin/node-supervisor --harmony $isquik/index.js &
 
-  $CLI_PATH/util/user-notify 'Sices App and Bundle Isquik have been started.'
-
   # Enable job control
   set -m
 
@@ -31,7 +29,7 @@ if [ -z ${1+x} ] || [ $1 = '--development' ]; then
     fg %- > /dev/null 2>&1;
   done
 
-elif [[ $1 == '--homolog' ]] || [[ $1 == '--production' ]]; then
+else
 
   echo "Bundle isquik starting on $CES_BUNDLE_HOST:$CES_BUNDLE_PORT"
   $isquik/node_modules/.bin/pm2 start $isquik/index.js --node-args="--harmony" -n "bundle"

@@ -46,8 +46,8 @@
                     <i class="fa fa-arrow-left"></i> Voltar ao Gerador
                 </a>
             </th>
-            <th class="text-right"> Total </th>
-            <th> {{ order.total|currency }} </th>
+            <th class="text-right" id="subtotal"> SubTotal </th>
+            <th> {{ order.subTotal|currency }} </th>
             <th></th>
         </tr>
     </thead>
@@ -103,5 +103,4 @@
 
     $('#order_description').val('Sistema de ' + {{ order.power }}+'kWp');
     form_button.trigger('click');
-
 </script>
