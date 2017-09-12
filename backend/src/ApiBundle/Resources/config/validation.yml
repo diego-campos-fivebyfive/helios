@@ -1,0 +1,12 @@
+AppBundle\Entity\Component\Module:
+    properties:
+        code:
+            - NotBlank:
+                message: the field [model] cannot be null
+                groups: api
+                payload: 1600
+        model:
+            - NotBlank:
+                message: The field [model] cannot null
+                groups: api
+                payload: 1610
