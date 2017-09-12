@@ -23,8 +23,8 @@
         <tr>
             <td> {{ order.description }} </td>
             <td width="10%"> {{ order.createdAt|date('d/m/Y') }} </td>
-            <td width="17%" class="text-right"> {{ order.subTotal|currency }} </td>
-            <td width="13%" class="text-right"> {{ order.insurance|currency }} </td>
+            <td width="15%"> {{ order.subTotal|currency }} </td>
+            <td> {{ order.insurance|currency }} </td>
             <td width="20%">
                 <div class="btn-group btn-group-sm btn-group-justified">
                     <a href="{{ path('generator_orders_update',{id:order.id}) }}" class="btn btn-success">
@@ -42,10 +42,10 @@
         <tr>
             <th></th>
             <th>Sub Total</th>
-            <th class="text-right">
+            <th>
                {{ order.subTotal|currency }}
             </th>
-            <th class="text-right">
+            <th>
                 {{ order.TotalInsurance|currency }}
             </th>
             <th></th>
@@ -64,19 +64,20 @@
 
 <div class="panel panel-primary">
     <div class="panel-heading">
-        <i class="fa fa-money"></i>
         Total
     </div>
     <div class="panel-body">
-        <div class="col-md-9"><h2>Valor total:</h2></div>
+        <div class="col-md-10"><h2>Valor total:</h2></div>
         <h2 id="order-total">{{ order.total|currency }}</h2>
     </div>
 </div>
 
-<button type="button" id="btn_budget" data-url="{{ path('order_budget_create') }}" class="btn btn-warning pull-right">
-    <i class="fa fa-arrow-right"></i>
-    Enviar solicitação para SICES
-</button>
+    <button type="button" id="btn_budget" data-url="{{ path('order_budget_create') }}" class="btn btn-warning pull-right">
+        <i class="fa fa-arrow-right"></i>
+        Enviar solicitação para SICES
+    </button>
+
+{#</form>#}
 
 <script>
 
@@ -124,8 +125,9 @@
                     if (xhr.status != 200) {
                         swal('Atenção', 'Falha ao executar a operação', 'error');
                     } else {
-                        swal.close();
+                        ShippingManager.calculate();
                         GeneratorHandler.getOrders();
+                        swal.close();
                     }
                 }
             });

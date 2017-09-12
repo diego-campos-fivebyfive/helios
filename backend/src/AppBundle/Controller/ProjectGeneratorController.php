@@ -343,7 +343,9 @@ class ProjectGeneratorController extends AbstractController
 
             $this->get('order_precifier')->precify($element->getOrder());
 
-            return $this->json([], Response::HTTP_ACCEPTED);
+            return $this->json([
+                'total' => $element->getOrder()->getTotal()
+            ], Response::HTTP_ACCEPTED);
         }
 
         return $this->render('generator.element', [
@@ -362,7 +364,9 @@ class ProjectGeneratorController extends AbstractController
 
         $this->get('order_precifier')->precify($element->getOrder());
 
-        return $this->json([]);
+        return $this->json([
+            'total' => $element->getOrder()->getTotal()
+        ]);
     }
 
     /**
