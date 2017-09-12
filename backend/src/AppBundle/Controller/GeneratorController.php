@@ -63,9 +63,6 @@ class GeneratorController extends AbstractController
                     ], Response::HTTP_CONFLICT);
                 }
 
-                //$project->setNumber($this->incrementAccountIndex('projects'));
-                //$manager->save($project);
-
                 return $this->json([
                     'project' => [
                         'id' => $project->getId(),
