@@ -18,9 +18,6 @@ abstract class ComponentType extends AbstractType
             ->add('code', TextType::class, [
                 'required' => true
             ])
-            ->add('model', TextType::class, [
-                'required' => true
-            ])
             ->add('available', BooleanType::class, [
                 'required' => true
             ])

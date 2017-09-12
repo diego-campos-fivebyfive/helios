@@ -3,22 +3,22 @@
 namespace ApiBundle\Form;
 
 use AppBundle\Entity\Component\Module;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class ModuleType extends AbstractType
+class ModuleType extends ComponentType
 {
     /**
      * @inheritDoc
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('code', TextType::class, [
-                'required' => true
-            ]);
+        parent::buildForm($builder, $options);
+
+        $builder->add('model', TextType::class, [
+            'required' => true
+        ]);
     }
 
     /**
