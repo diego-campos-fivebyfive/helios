@@ -399,13 +399,14 @@
                     callback: function (xhr) {
                         if (200 == xhr.status) {
 
-                            Editor.progressbar.reset();
                             $('#progressBar').css('width', "100%");
                             $('#progressBar').html("100%");
 
                             var filename = xhr.responseJSON.filename;
 
                             setTimeout(function () {
+                                Editor.progressbar.reset();
+
                                 swal({
                                     title: 'Arquivo gerado com sucesso',
                                     text: 'Deseja visualizar o arquivo?',
