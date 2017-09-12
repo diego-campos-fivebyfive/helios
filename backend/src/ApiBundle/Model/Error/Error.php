@@ -34,6 +34,19 @@ class Error implements ErrorInterface
     private $message;
 
     /**
+     * @var string
+     */
+    private $info;
+
+    function __construct($code = null, $type = null, $message = null, $info = null)
+    {
+        $this->code = $code;
+        $this->type = $type;
+        $this->message = $message;
+        $this->info = $info;
+    }
+
+    /**
      * @inheritDoc
      */
     public function setCode($code)
@@ -85,6 +98,24 @@ class Error implements ErrorInterface
     public function getMessage()
     {
         return $this->message;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setInfo($info)
+    {
+        $this->info = $info;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getInfo()
+    {
+        return $this->info;
     }
 
     /**

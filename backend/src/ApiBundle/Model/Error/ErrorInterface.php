@@ -38,6 +38,17 @@ interface ErrorInterface
     public function getMessage();
 
     /**
+     * @param $info
+     * @return ErrorInterface
+     */
+    public function setInfo($info);
+
+    /**
+     * @return string
+     */
+    public function getInfo();
+
+    /**
      * @return array
      */
     public function toArray();
