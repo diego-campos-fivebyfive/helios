@@ -30,7 +30,7 @@ abstract class ShippingRuler
      */
     public static function apply(&$rule)
     {
-        if('self' == $rule['type']){
+        if('self' == $rule['type'] || 0 == $rule['price']){
             self::defaults($rule);
         }else {
             self::definitions($rule);
