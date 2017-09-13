@@ -4,12 +4,18 @@ cd $SICES_PATH
 
 echo "Installing packages dependencies..."
 
+if [ $CES_AMBIENCE = 'development' ]; then
+  node_install='yarn install'
+else
+  node_install='npm install'
+fi
+
 cd backend
   composer install
-  npm install
+  $node_install
   $CLI_PATH/util/bug-fix
 cd ../
 
 cd bundles/isquik
-  npm install
+  $node_install
 cd ../../

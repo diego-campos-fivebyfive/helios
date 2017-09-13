@@ -611,6 +611,11 @@ interface ProjectInterface
     public function removeTransformer();
 
     /**
+     * @return string
+     */
+    public function getTransformerStatus();
+
+    /**
      * @param ProjectModuleInterface $projectModule
      * @return ProjectInterface
      */

@@ -415,8 +415,10 @@ class Project implements ProjectInterface, InsurableInterface
     public function getDefaults()
     {
         // TODO: Remove this code when production is stabilized
-        if(!array_key_exists('is_promotional', $this->defaults))
-            $this->defaults['is_promotional'] = false;
+        if(!array_key_exists('power_transformer', $this->defaults)) {
+            $transformer = $this->getTransformer();
+            $this->defaults['power_transformer'] = $transformer ? $transformer->getPower() : 0;
+        }
 
         return $this->defaults;
     }
@@ -1450,6 +1452,22 @@ class Project implements ProjectInterface, InsurableInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTransformerStatus()
+    {
+        $status = 'ignored';
+        if($this->defaults['use_transformer'] && $this->defaults['power_transformer']){
+            $status = 'required';
+            if($this->getTransformer()) {
+                $status = 'resolved';
+            }
+        }
+
+        return $status;
     }
 
     /**
