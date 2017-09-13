@@ -8,6 +8,8 @@ if [[ $path != *'tech'* ]] && [[ $path != *'sices'* ]]; then
 fi
 
 echo 'Synchronizing local repository...'
+git fetch origin
+git pull origin master
 git fetch upstream
 git merge upstream/master
 
