@@ -20,6 +20,7 @@ fi
 echo "Starting Deploy..."
 
 if [ $1 = '--homolog' ] || [ $1 = '--staging' ]; then
+
   ambience=${CES_AMBIENCE^}
   $CLI_PATH/ces-slack-notify --devops "Starting $ambience Deploy..."
   $CLI_PATH/ces-app-clone $1
