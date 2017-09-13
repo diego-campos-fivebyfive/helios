@@ -34,16 +34,21 @@ class TransformerLoader
     {
         $qb = $this->manager->getEntityManager()->createQueryBuilder();
 
+        $parameters = [
+            'type' => TransformerInterface::TYPE_TRANSFORMER,
+            'power' => $power
+        ];
+
         $qb
             ->select('t')
             ->from($this->manager->getClass(), 't')
             ->where('t.type = :type')
             ->andWhere('t.power >= :power')
-            ->setMaxResults(1)
-            ->setParameters([
-                'type' => TransformerInterface::TYPE_TRANSFORMER,
-                'power' => $power
-            ]);
+            ->setMaxResults(1);
+
+        CriteriaAggregator::finish($parameters, $qb);
+
+        $qb->setParameters($parameters);
 
         return $qb->getQuery()->getOneOrNullResult();
     }

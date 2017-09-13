@@ -1,6 +1,12 @@
 <div class="row">
 
     <div class="col-md-12">
+        <a class="btn btn-primary" href="{{ path('platform_memorials_import') }}">
+            Importar Memorial
+        </a>
+    </div>
+
+    <div class="col-md-12">
 
         {{ form_start(form,{attr:{action: path('platform_products'), id:'form_filter'}}) }}
 

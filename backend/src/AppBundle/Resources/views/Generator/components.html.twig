@@ -75,14 +75,24 @@
     {% endfor %}
 
     {# TRANSFORMER #}
-    {% if project.transformer %}
-        <tr>
-            <td> {{ project.transformer.variety.code }} </td>
-            <td> {{ project.transformer.variety.description }} </td>
-            <td class="promotional"> {{ project.transformer.unitCostPrice|currency }} </td>
-            <td class="text-center"> {{ 1 }} </td>
-            <td> {{ project.transformer.unitCostPrice|currency }} </td>
-        </tr>
+    {% if project.defaults.use_transformer %}
+        {% if project.transformer %}
+            <tr>
+                <td> {{ project.transformer.variety.code }} </td>
+                <td> {{ project.transformer.variety.description }} </td>
+                <td class="promotional"> {{ project.transformer.unitCostPrice|currency }} </td>
+                <td class="text-center"> {{ 1 }} </td>
+                <td> {{ project.transformer.unitCostPrice|currency }} </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td class="text-center">&nbsp;</td>
+                <td>  <i class="fa fa-info-circle"></i> Verificar cotação de transformadores separadamente</td>
+                <td class="text-center"> &nbsp; </td>
+                <td class="text-center"> &nbsp; </td>
+                <td class="text-center"> &nbsp; </td>
+            </tr>
+        {% endif %}
     {% endif %}
 
     {# STRING_BOXES #}
@@ -103,7 +113,7 @@
 
     {# STRUCTURES #}
     {% for projectStructure in project.projectStructures %}
-        {% set structure = projectStructure.structure  %}
+        {% set structure = projectStructure.structure %}
         <tr>
             <td> {{ structure.code }} </td>
             <td>
@@ -128,7 +138,8 @@
         <tr>
             <td> {{ projectVariety.variety.code }} </td>
             <td>
-                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('variety_show', {id:projectVariety.variety.id}) }}">
+                <a data-toggle="modal" data-target="#modal_component"
+                   data-url="{{ path('variety_show', {id:projectVariety.variety.id}) }}">
                     {{ projectVariety.variety.description }}
                 </a>
             </td>

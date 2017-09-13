@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+path=$(pwd)
+
+if [[ $path != *'tech'* ]] && [[ $path != *'sices'* ]]; then
+  echo 'fatal: Not a git repository (or any of the parent directories): .git'
+  exit 0;
+fi
+
+echo 'Synchronizing local repository...'
+git fetch origin
+git pull origin master
+git fetch upstream
+git merge upstream/master
+
+echo 'Synchronizing remote repository...'
+git push origin master --no-verify

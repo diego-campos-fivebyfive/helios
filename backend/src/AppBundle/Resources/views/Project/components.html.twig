@@ -60,12 +60,20 @@
     {% endfor %}
 
     {# TRANSFORMER #}
-    {% if project.transformer %}
-        <tr>
-            <td> {{ project.transformer.variety.code }} </td>
-            <td> {{ project.transformer.variety.description }} </td>
-            <td class="text-center"> {{ 1 }} </td>
-        </tr>
+    {% if project.defaults.use_transformer %}
+        {% if project.transformer %}
+            <tr>
+                <td> {{ project.transformer.variety.code }} </td>
+                <td> {{ project.transformer.variety.description }} </td>
+                <td class="text-center"> {{ 1 }} </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td class="text-center">&nbsp;</td>
+                <td>  <i class="fa fa-info-circle"></i> Verificar cotação de transformadores separadamente</td>
+                <td class="text-center"> &nbsp; </td>
+            </tr>
+        {% endif %}
     {% endif %}
 
     {# STRING_BOXES #}

@@ -216,9 +216,11 @@ class Range implements RangeInterface
     /**
      * @inheritDoc
      */
-    public function setMemorial($memorial)
+    public function setMemorial(MemorialInterface $memorial)
     {
         $this->memorial = $memorial;
+
+        $memorial->addRange($this);
 
         return $this;
     }

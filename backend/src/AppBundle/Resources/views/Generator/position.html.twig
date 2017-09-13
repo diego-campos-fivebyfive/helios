@@ -311,22 +311,23 @@
     var modal_body = modal_component.find('.modal-body');
     var loader = modal_body.html();
 
-    modal_component.on('show.bs.modal', function(event){
+    modal_component.on('show.bs.modal', function (event) {
         var target = $(event.relatedTarget);
         var url = target.data('url');
         modal_body.html(loader);
         Request.send({
             url: url,
-            callback: function(xhr){
+            callback: function (xhr) {
                 modal_body.html(xhr.responseText);
             }
         });
     });
 
-    $('#add_project_to_order').on('click', function(){
+    $('#add_project_to_order').on('click', function () {
         var id = GeneratorHandler.getProject().id;
-        if(id){
-            swal({title: 'Confirma a geração do orçamento?',
+        if (id) {
+            swal({
+                title: 'Confirma a geração do orçamento?',
                 text: 'Após este processo o projeto atual será removido!',
                 type: "warning",
                 showCancelButton: true,
@@ -334,11 +335,11 @@
                 confirmButtonText: '{{ 'Confirmar'|trans }}',
                 cancelButtonText: '{{ 'Cancelar'|trans }}',
                 closeOnConfirm: false
-            }, function() {
+            }, function () {
 
                 sweetAlert({
                     title: "Gerando orçamento...",
-                    text:  "Aguarde!",
+                    text: "Aguarde!",
                     type: "info",
                     showConfirmButton: false
                 });
@@ -347,6 +348,7 @@
                     url: '{{ path('generator_orders_create',{id:'_id_'}) }}'.replace(/_id_/g, id),
                     method: 'post',
                     callback: function (xhr) {
+                        ShippingManager.calculate();
                         GeneratorHandler.onSaveOrder();
                         swal.close();
                     }
