@@ -12,6 +12,7 @@
 namespace AppBundle\Entity\Component;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Module
@@ -21,6 +22,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="app_component_module")
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ *
+ * @Serializer\ExclusionPolicy("all")
  */
 class Module implements ModuleInterface
 {
@@ -32,6 +35,9 @@ class Module implements ModuleInterface
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     protected $id;
 
@@ -39,6 +45,9 @@ class Module implements ModuleInterface
      * @var string
      *
      * @ORM\Column(name="code", type="string", nullable=true)
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     private $code;
 
@@ -46,6 +55,9 @@ class Module implements ModuleInterface
      * @var string
      *
      * @ORM\Column(name="model", type="string", nullable=true)
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     private $model;
 
@@ -172,6 +184,9 @@ class Module implements ModuleInterface
      * @var boolean
      *
      * @ORM\Column(name="status", type="boolean", nullable=true)
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     private $status;
 
@@ -179,6 +194,9 @@ class Module implements ModuleInterface
      * @var boolean
      *
      * @ORM\Column(name="available", type="boolean", nullable=true)
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     private $available;
 

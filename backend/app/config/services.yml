@@ -15,6 +15,12 @@ services:
         tags:
             - { name: doctrine.event_subscriber, connection: default }
 
+    component_converter:
+        class: ApiBundle\Request\ParamConverter\ComponentConverter
+        arguments: ['@service_container']
+        tags:
+            - { name: request.param_converter, priority: -2, converter: component_converter }
+
     nasa_provider:
         alias: app.nasa_provider
 
