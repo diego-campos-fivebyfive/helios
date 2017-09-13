@@ -73,22 +73,22 @@ class Precifier
 
             if(!array_key_exists('is_promotional', $defaults)) $defaults['is_promotional'] = false;
 
-            $level = $defaults['is_promotional'] ? 'promotional' : $member->getAccount()->getLevel();
+            $level = $defaults['is_promotional'] ? 'promotional' : $account->getLevel();
 
             $power = $project->getPower();
             $components = self::extractComponents($project);
             $codes = array_keys($components);
             $ranges = $this->rangeLoader->load($memorial, $power, $level, $codes);
-
             $costPrice = 0;
 
             /** @var \AppBundle\Entity\Component\ProjectElementInterface $component */
-            foreach ($components as $component){
-                if(array_key_exists($component->getCode(), $ranges)) {
-                    $range = $ranges[$component->getCode()];
-                    $component->applyRange($range);
-
-                    $costPrice += $component->getUnitCostPrice();
+            foreach ($components as $code => $items){
+                foreach ($items as $component) {
+                    if(array_key_exists($component->getCode(), $ranges)) {
+                        $range = $ranges[$component->getCode()];
+                        $component->applyRange($range);
+                        $costPrice += $component->getUnitCostPrice();
+                    }
                 }
             }
 
@@ -107,57 +107,6 @@ class Precifier
 
             $project->setCostPrice($costPrice);
         }
-
-        return;
-
-        //$ranges = $this->findRanges($codes, $level, $power);
-        $costPrice = 0;
-
-        /**
-         * @var  $code
-         * @var \AppBundle\Entity\Component\ProjectElementInterface $component
-         */
-        foreach ($components as $code => $component) {
-            if(array_key_exists($code, $ranges) && !$component instanceof ProjectInverterInterface) {
-
-                /** @var Range $range */
-                $range = $ranges[$code];
-                $price = (float)$range->getPrice();
-                $component->setUnitCostPrice($price);
-
-                $costPrice += $price;
-            }
-        }
-
-        foreach ($project->getProjectInverters() as $projectInverter){
-            /** @var InverterInterface $inverter */
-            $inverter = $projectInverter->getInverter();
-            $code = $inverter->getCode();
-            if(array_key_exists($code, $ranges)){
-
-                $range = $ranges[$code];
-                $price = (float) $range->getPrice();
-                $projectInverter->setUnitCostPrice($price);
-
-                $costPrice += $price;
-            }
-        }
-
-        /** @var \AppBundle\Entity\Component\ProjectExtraInterface $projectExtra */
-        foreach ($project->getProjectExtras() as $projectExtra){
-
-            $unitPrice = (float) $projectExtra->getExtra()->getCostPrice();
-
-            if(1 == $projectExtra->getExtra()->getPricingby()){
-                $unitPrice = $unitPrice * $power;
-            }
-
-            $projectExtra->setUnitCostPrice($unitPrice);
-
-            $costPrice += $unitPrice;
-        }
-
-        $project->setCostPrice($costPrice);
     }
 
     /**
@@ -189,30 +138,30 @@ class Precifier
 
     public static function extractComponents(ProjectInterface $project)
     {
-        $components=[];
+        $components = [];
 
         foreach ($project->getProjectInverters() as $projectInverter){
-            $components[$projectInverter->getInverter()->getCode()] = $projectInverter;
+            $components[$projectInverter->getInverter()->getCode()][] = $projectInverter;
         }
 
         foreach ($project->getProjectModules() as $projectModule){
-            $components[$projectModule->getModule()->getCode()] = $projectModule;
+            $components[$projectModule->getModule()->getCode()][] = $projectModule;
         }
 
         foreach ($project->getProjectStructures() as $projectStructure){
-            $components[$projectStructure->getStructure()->getCode()] = $projectStructure;
+            $components[$projectStructure->getStructure()->getCode()][] = $projectStructure;
         }
 
         foreach ($project->getProjectStringBoxes() as $projectStringBox){
-            $components[$projectStringBox->getStringBox()->getCode()] = $projectStringBox;
+            $components[$projectStringBox->getStringBox()->getCode()][] = $projectStringBox;
         }
 
         foreach ($project->getProjectVarieties() as $projectVariety){
-            $components[$projectVariety->getVariety()->getCode()] = $projectVariety;
+            $components[$projectVariety->getVariety()->getCode()][] = $projectVariety;
         }
 
         if(null != $transformer = $project->getTransformer()){
-            $components[$transformer->getVariety()->getCode()] = $transformer;
+            $components[$transformer->getVariety()->getCode()][] = $transformer;
         }
 
         return $components;

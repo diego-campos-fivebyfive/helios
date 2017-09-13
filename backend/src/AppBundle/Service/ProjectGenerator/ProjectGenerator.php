@@ -712,27 +712,19 @@ class ProjectGenerator
     {
         $defaults = $project->getDefaults();
 
-        if($power > 0 && $defaults['use_transformer']){
+        if(null != $currentTransformer = $project->getTransformer()){
+            $project->removeTransformer();
+            $this->manager('project_variety')->delete($currentTransformer);
+        }
 
-            /** @var \AppBundle\Manager\VarietyManager $manager */
-            $manager = $this->manager('variety');
+        /** @var \AppBundle\Manager\VarietyManager $manager */
+        $manager = $this->manager('variety');
+        $loader = new TransformerLoader($manager);
 
-            $loader = new TransformerLoader($manager);
+        $transformer = $loader->load($power);
 
-            $transformer = $loader->load($power);
-
-            if($transformer instanceof VarietyInterface){
-                $project->setTransformer($transformer);
-            }
-
-        }else{
-
-            $transformer = $project->getTransformer();
-
-            if($transformer){
-                $project->removeTransformer();
-                $this->manager('project_variety')->delete($transformer);
-            }
+        if($power > 0 && $defaults['use_transformer'] && $transformer instanceof VarietyInterface){
+            $project->setTransformer($transformer);
         }
 
         $this->save($project);
@@ -781,7 +773,7 @@ class ProjectGenerator
     private function handleABBInverters(ProjectInterface $project)
     {
         $abbInverters = $project->getProjectInverters()->filter(function(ProjectInverter $projectInverter){
-            return '22SMA0200380' === $projectInverter->getInverter()->getCode();
+            return '22ABB0500380' === $projectInverter->getInverter()->getCode();
         });
 
         if(!$abbInverters->isEmpty()){

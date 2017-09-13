@@ -2,10 +2,11 @@
 
 namespace ApiBundle\Controller;
 
+use ApiBundle\Form\ModuleType;
+use ApiBundle\Handler\RequestHandler;
 use AppBundle\Entity\Component\Module;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
@@ -13,7 +14,7 @@ class ModuleController extends AbstractApiController
 {
     /**
      * @param Request $request
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getModulesAction(Request $request)
     {
@@ -24,65 +25,55 @@ class ModuleController extends AbstractApiController
         return $this->handleView($view);
     }
 
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function postModulesAction(Request $request)
     {
-        $data = json_decode($request->getContent(), true);
+        $manager = $this->manager('module');
 
-        $moduleManager = $this->get('module_manager');
+        $module = $manager->create();
 
-        /** @var Module $module */
-        $module = $moduleManager->create();
-        $module
-            ->setCode($data['code'])
-            ->setModel($data['model'])
-            ->setAvailable($data['available'])
-            ->setStatus(false);
-
-        try {
-            $moduleManager->save($module);
-            $status = Response::HTTP_CREATED;
-            $data = $this->get('api_formatter')->format($module, ['maker' => 'id']);
-        }
-        catch (\Exception $exception) {
-            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $data = $exception;
-        }
-
-        $view = View::create($data)->setStatusCode($status);
-
-        return $this->handleView($view);
+        return $this->applyRequest($request, $module);
     }
 
+    /**
+     * @ParamConverter(converter="component_converter", options={"type"="module"})
+     */
     public function getModuleAction(Module $module)
     {
-        $data = $this->get('api_formatter')->format($module, ['maker' => 'id']);
-
-        $view = View::create($data);
+        $view = View::create($module);
 
         return $this->handleView($view);
     }
 
     /**
-     * @Route("/{code}")
-     * @ParamConverter("code", class="AppBundle:Component\Module", options={"mapping":{"code" : "code"}})
+     * @ParamConverter(converter="component_converter", options={"type"="module"})
      */
-    public function putModuleAction(Request $request, Module $code)
+    public function putModuleAction(Request $request, Module $module)
     {
-        $data = json_decode($request->getContent(), true);
+        return $this->applyRequest($request, $module);
+    }
 
-        $moduleManager = $this->get('module_manager');
-        $code->setPromotional($data['promotional']);
+    /**
+     * @param Request $request
+     * @param Module $module
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    private function applyRequest(Request $request, Module $module)
+    {
+        $manager = $this->manager('module');
 
-        try {
-            $moduleManager->save($code);
-            $status = Response::HTTP_CREATED;
-            $data = $this->get('api_formatter')->format($code, ['maker' => 'id']);
-        }catch (\Exception $exception) {
-            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $data = $exception;
+        $form = $this->form(ModuleType::class, $module);
+
+        $handler = RequestHandler::create($request, $form);
+
+        if($handler->handle()){
+            $manager->save($module);
         }
 
-        $view = View::create($data)->setStatusCode($status);
+        $view = $handler->view();
 
         return $this->handleView($view);
     }
