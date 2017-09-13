@@ -290,9 +290,11 @@ class ProjectGenerator
                 }
             }
 
+            $defaults['power_transformer'] = $powerTransformer;
+
             $project->setDefaults($defaults);
 
-            $this->resolveTransformer($project, $powerTransformer);
+            $this->resolveTransformer($project);
 
             ModuleCombiner::combine($project);
 
@@ -706,11 +708,11 @@ class ProjectGenerator
 
     /**
      * @param ProjectInterface $project
-     * @param $power
      */
-    public function resolveTransformer(ProjectInterface $project, $power)
+    public function resolveTransformer(ProjectInterface $project)
     {
         $defaults = $project->getDefaults();
+        $power = $defaults['power_transformer'];
 
         if(null != $currentTransformer = $project->getTransformer()){
             $project->removeTransformer();

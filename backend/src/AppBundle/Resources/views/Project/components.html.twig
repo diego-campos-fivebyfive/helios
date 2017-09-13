@@ -1,9 +1,10 @@
 <style>
-    label#source_label{
+    label#source_label {
         text-align: center;
         display: block;
     }
-    .middle-block{
+
+    .middle-block {
         float: left;
         width: 50%;
         padding-right: 0;
@@ -14,7 +15,7 @@
     <thead>
 
     {% if attribute(project.defaults, 'power_increments') is defined %}
-        {% if project.defaults.power_increments > 0%}
+        {% if project.defaults.power_increments > 0 %}
             <tr>
                 <td colspan="3">
                     <div class="alert alert-danger text-center">
@@ -38,7 +39,8 @@
         <tr>
             <td> {{ projectModule.module.code }} </td>
             <td>
-                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('component_show', {type:'module', id:projectModule.module.id}) }}">
+                <a data-toggle="modal" data-target="#modal_component"
+                   data-url="{{ path('component_show', {type:'module', id:projectModule.module.id}) }}">
                     {{ projectModule.module.model }}
                 </a>
             </td>
@@ -51,7 +53,8 @@
         <tr>
             <td> {{ group.inverter.code }} </td>
             <td>
-                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('component_show', {type:'inverter', id:group.inverter.id}) }}">
+                <a data-toggle="modal" data-target="#modal_component"
+                   data-url="{{ path('component_show', {type:'inverter', id:group.inverter.id}) }}">
                     {{ group.inverter.model }}
                 </a>
             </td>
@@ -60,20 +63,18 @@
     {% endfor %}
 
     {# TRANSFORMER #}
-    {% if project.defaults.use_transformer %}
-        {% if project.transformer %}
-            <tr>
-                <td> {{ project.transformer.variety.code }} </td>
-                <td> {{ project.transformer.variety.description }} </td>
-                <td class="text-center"> {{ 1 }} </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td class="text-center">&nbsp;</td>
-                <td>  <i class="fa fa-info-circle"></i> Verificar cotação de transformadores separadamente</td>
-                <td class="text-center"> &nbsp; </td>
-            </tr>
-        {% endif %}
+    {% if 'resolved' == project.transformerStatus %}
+        <tr>
+            <td> {{ project.transformer.variety.code }} </td>
+            <td> {{ project.transformer.variety.description }} </td>
+            <td class="text-center"> {{ 1 }} </td>
+        </tr>
+    {% elseif 'required' == project.transformerStatus %}
+        <tr>
+            <td class="text-center">&nbsp;</td>
+            <td><i class="fa fa-info-circle"></i> Verificar cotação de transformadores separadamente</td>
+            <td class="text-center"> &nbsp; </td>
+        </tr>
     {% endif %}
 
     {# STRING_BOXES #}
@@ -81,7 +82,8 @@
         <tr>
             <td> {{ projectStringBox.stringBox.code }} </td>
             <td>
-                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('stringbox_show', {id:projectStringBox.stringBox.id}) }}">
+                <a data-toggle="modal" data-target="#modal_component"
+                   data-url="{{ path('stringbox_show', {id:projectStringBox.stringBox.id}) }}">
                     {{ projectStringBox.stringBox.description }}
                 </a>
             </td>
@@ -91,11 +93,12 @@
 
     {# STRUCTURES #}
     {% for projectStructure in project.projectStructures %}
-    {% set structure = projectStructure.structure %}
+        {% set structure = projectStructure.structure %}
         <tr>
             <td> {{ structure.code }} </td>
             <td>
-                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('structure_show', {id:projectStructure.structure.id}) }}">
+                <a data-toggle="modal" data-target="#modal_component"
+                   data-url="{{ path('structure_show', {id:projectStructure.structure.id}) }}">
                     {{ structure.description }}
                     {% if not structure.available %}
                         <span class="label label-danger">
@@ -113,8 +116,9 @@
         <tr>
             <td> {{ projectVariety.variety.code }} </td>
             <td>
-                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('variety_show', {id:projectVariety.variety.id}) }}">
-                {{ projectVariety.variety.description }}
+                <a data-toggle="modal" data-target="#modal_component"
+                   data-url="{{ path('variety_show', {id:projectVariety.variety.id}) }}">
+                    {{ projectVariety.variety.description }}
                 </a>
             </td>
             <td class="text-center"> {{ projectVariety.quantity }} </td>

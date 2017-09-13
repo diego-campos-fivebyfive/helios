@@ -205,6 +205,7 @@ class DefaultsResolver
             'power' => 0,
             'consumption' => 0,
             'use_transformer' => true,
+            'power_transformer' => 0,
             'grid_voltage' => '127/220',
             'grid_phase_number' => 'Biphasic',
             'module' => 32433,
