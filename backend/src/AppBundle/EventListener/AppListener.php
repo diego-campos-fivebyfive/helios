@@ -102,7 +102,7 @@ class AppListener
 
         $response = new Response($content);
 
-        $event->setResponse($response);
+        //$event->setResponse($response);
     }
 
     /**
