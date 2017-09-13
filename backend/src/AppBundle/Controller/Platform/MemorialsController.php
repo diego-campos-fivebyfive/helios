@@ -8,6 +8,7 @@ use AppBundle\Entity\Component\ModuleInterface;
 use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Entity\Pricing\Range;
 use AppBundle\Form\Extra\MemorialFilterType;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -23,14 +24,111 @@ class MemorialsController extends AbstractController
     /**
      * @Route("/", name="platform_memorials_index")
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
-        $memorials = $this->manager('memorial')->findBy([
-            'status' => true
-        ]);
+        return $this->render('platform/memorials/index.html.twig');
+    }
 
-        return $this->render('platform/memorials/index.html.twig', [
-            'memorials' => $memorials,
+    /**
+     * @Route("/import", name="platform_memorials_import")
+     */
+    public function importAction(Request $request)
+    {
+        $memorial = null;
+
+        if($request->isMethod('post')) {
+
+            $file = $request->files->get('memorial');
+
+            if ($file instanceof UploadedFile) {
+
+                $name = 'memorial_' . uniqid(md5(time())) . '.json';
+
+                $kernel = $this->get('kernel');
+                $dir = $this->get('kernel')->getRootDir() . '/cache/' . $kernel->getEnvironment() . '/';
+
+                try {
+                    $file = $file->move($dir, $name);
+                }catch (\Exception $e){
+                    die($e->getMessage());
+                }
+
+                $data = json_decode(file_get_contents($file->getRealPath()), true);
+
+                $memorialManager = $this->manager('memorial');
+                $rangeManager = $this->manager('range');
+                $accessor = PropertyAccess::createPropertyAccessor();
+
+                $mapping = [
+                    'BLACK' => 'black',
+                    'PLATINUM'  => 'platinum',
+                    'PREMIUM' => 'premium',
+                    'PARCEIRO'  => 'partner',
+                    'PROMOCIONAL' => 'promotional'
+                ];
+
+                $memorialInfo = $data['Dados'];
+                $version = $memorialInfo['Versao'];
+                $memorial = $memorialManager->findOneBy(['version' => $version]);
+
+                if($memorial instanceof Memorial && null != $request->request->get('remove')){
+                    $memorialManager->delete($memorial);
+                    $memorial = null;
+                }
+
+                if(!$memorial){
+
+                    /** @var Memorial $memorial */
+                    $memorial = $memorialManager->create();
+
+                    $memorial
+                        ->setIsquikId($memorialInfo['IdTabelaBase'])
+                        ->setStartAt(new \DateTime())
+                        ->setStatus(true)
+                        ->setVersion($version)
+                    ;
+
+                    foreach ($memorialInfo['Produtos'] as $data) {
+
+                        $code = $data['Codigo'];
+
+                        foreach ($data['Faixas'] as $zoneInfo) {
+
+                            $initialPower = $zoneInfo['De'];
+                            $finalPower = $zoneInfo['Ate'];
+
+                            foreach ($zoneInfo['Niveis'] as $levelInfo) {
+
+                                $properties = [
+                                    'memorial' => $memorial,
+                                    'code' => $code,
+                                    'initialPower' => $initialPower,
+                                    'finalPower' => $finalPower,
+                                    'level' => $mapping[$levelInfo['Descricao']],
+                                    'price' => $levelInfo['PrecoVenda']
+                                ];
+
+                                /** @var Range $range */
+                                $range = $rangeManager->create();
+
+                                foreach ($properties as $property => $value) {
+                                    $accessor->setValue($range, $property, $value);
+                                }
+                            }
+                        }
+                    }
+
+                    $memorialManager->save($memorial);
+
+                    return $this->redirectToRoute('platform_memorials_index', [
+                        'memorial' => $memorial->getId()
+                    ]);
+                }
+            }
+        }
+
+        return $this->render('platform/memorials/import.html.twig', [
+            'memorial' => $memorial
         ]);
     }
 
@@ -39,7 +137,15 @@ class MemorialsController extends AbstractController
      */
     public function getProductsAction(Request $request)
     {
-        $form = $this->createForm(MemorialFilterType::class, null, [
+        $data = [];
+
+        if(0 != $id = $request->query->getInt('memorial')){
+            if(null != $memorial = $this->manager('memorial')->find($id)){
+                $data['memorial'] = $memorial;
+            }
+        }
+
+        $form = $this->createForm(MemorialFilterType::class, $data, [
             'manager' => $this->manager('memorial')
         ]);
 
@@ -164,10 +270,9 @@ class MemorialsController extends AbstractController
             return sprintf('%s-%s', (int)$range->getInitialPower(), (int)$range->getFinalPower());
         };
 
-        $lastRange = null;
-        foreach ($collection['components'] as $type => $config) {
+        $fetchComponent = function($config) use($rangeManager, $memorial, $level, $createOffset, $createRange, &$collection){
 
-            if($config['enabled']) {
+            $type = $config['type'];
 
                 $products = $this->manager($type)->findBy([
                     'available' => true,
@@ -211,8 +316,25 @@ class MemorialsController extends AbstractController
                     $collection['components'][$type]['products'][$code]['product'] = $product;
                     $collection['components'][$type]['products'][$code]['ranges'] = $ranges;
                 }
+        };
+
+        $firstComponent = null;
+        $lastRange = null;
+        foreach ($collection['components'] as $type => $config) {
+            if($config['enabled']){
+
+                $config['type'] = $type;
+
+                if(!$firstComponent){
+                    $firstComponent = $config;
+                }
+
+                $fetchComponent($config);
             }
         }
+
+        if($firstComponent)
+            $fetchComponent($firstComponent);
 
         if($lastRange instanceof Range){
             $rangeManager->save($lastRange);

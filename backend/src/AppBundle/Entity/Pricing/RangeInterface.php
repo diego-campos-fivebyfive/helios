@@ -70,7 +70,7 @@ interface RangeInterface
      * @param $memorial
      * @return mixed
      */
-    public function setMemorial($memorial);
+    public function setMemorial(MemorialInterface $memorial);
 
     /**
      * @return mixed

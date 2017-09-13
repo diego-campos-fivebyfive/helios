@@ -33,7 +33,7 @@ class Memorial implements MemorialInterface
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Range", mappedBy="memorial", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Range", mappedBy="memorial", cascade={"persist", "remove"})
      */
     private $ranges;
 
