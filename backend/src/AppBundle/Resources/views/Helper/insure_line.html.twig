@@ -18,6 +18,10 @@
         <td class="text-center"> 1 </td>
     {% endif %}
 
+    {% if 'generator' == insureOrigin %}
+        <td> {{ 0|currency }} </td>
+    {% endif %}
+
     {% if 'order' == insureOrigin %}
         <td> {{ 0|currency }} </td>
         <td></td>
