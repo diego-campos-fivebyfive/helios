@@ -225,7 +225,24 @@ class Order implements OrderInterface, InsurableInterface
      */
     public function getPower()
     {
-        return $this->power;
+        if ($this->isBudget()) {
+            $power = $this->power;
+        } else {
+            $power = $this->power + $this->getSubPower();
+        }
+
+        return $power;
+    }
+
+    public function getSubPower()
+    {
+        $power = 0;
+        foreach ($this->childrens as $children)
+        {
+            $power += $children['power'];
+        }
+
+        return $power;
     }
 
     /**

@@ -92,7 +92,6 @@
                         numeral(response.shipping).format('$0,0.00')
                     );
                     $('#order-total').html(numeral(response.total).format('$0,0.00'));
-                    Financial.onSaveShipping();
                 }
             });
         },

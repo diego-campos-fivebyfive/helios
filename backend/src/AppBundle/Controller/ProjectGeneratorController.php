@@ -10,6 +10,7 @@ use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Form\Component\GeneratorType;
 use AppBundle\Form\Order\ElementType;
 use AppBundle\Form\Order\OrderType;
+use AppBundle\Service\Pricing\Insurance;
 use AppBundle\Service\ProjectGenerator\ShippingRuler;
 use AppBundle\Form\Financial\ShippingType;
 use AppBundle\Service\Order\ElementResolver;
@@ -161,6 +162,7 @@ class ProjectGeneratorController extends AbstractController
     public function shippingAction(Request $request, Order $order)
     {
         $rule = $order->getShippingRules();
+
         $form = $this->createForm(ShippingType::class, $rule);
 
         $form->handleRequest($request);
@@ -174,11 +176,7 @@ class ProjectGeneratorController extends AbstractController
             $rule['price'] = $order->getSubTotal();
             $rule['power'] = $order->getPower();
 
-            ShippingRuler::apply($rule);
-
-            $order->setShippingRules($rule);
-
-            $this->manager('order')->save($order);
+            $this->calculateShipping($order, $rule);
 
             return $this->json([
                 'shipping' => $order->getShipping(),
@@ -255,6 +253,10 @@ class ProjectGeneratorController extends AbstractController
 
            $this->manager('order')->save($order);
 
+            $this->get('order_precifier')->precify($order);
+
+            Insurance::apply($order,$order->getInsurance() > 0);
+
            return $this->json([]);
         }
 
@@ -270,7 +272,15 @@ class ProjectGeneratorController extends AbstractController
      */
     public function deleteOrderAction(Order $order)
     {
-        $this->manager('order')->delete($order);
+        $manager = $this->manager('order');
+        $parent = $order->getParent();
+
+        $manager->delete($order);
+
+        /*if ($parent->getChildrens()->isEmpty()) {
+            $parent->setShippingRules(['saosokaos' => 'ijaijdijasd']);
+            $manager->save($parent);
+        }*/
 
         return $this->json([]);
     }
@@ -308,7 +318,7 @@ class ProjectGeneratorController extends AbstractController
 
             ElementResolver::resolve($component, $element);
 
-            $this->get('order_precifier')->precify($order);
+            $this->finishElement($element);
 
             return $this->json([], Response::HTTP_CREATED);
         }
@@ -341,9 +351,11 @@ class ProjectGeneratorController extends AbstractController
 
             $manager->save($element);
 
-            $this->get('order_precifier')->precify($element->getOrder());
+            $this->finishElement($element);
 
-            return $this->json([], Response::HTTP_ACCEPTED);
+            return $this->json([
+                'total' => $element->getOrder()->getTotal()
+            ], Response::HTTP_ACCEPTED);
         }
 
         return $this->render('generator.element', [
@@ -360,9 +372,40 @@ class ProjectGeneratorController extends AbstractController
     {
         $this->manager('order_element')->delete($element);
 
-        $this->get('order_precifier')->precify($element->getOrder());
+        $this->finishElement($element);
 
-        return $this->json([]);
+        return $this->json([
+            'total' => $element->getOrder()->getTotal()
+        ]);
+    }
+
+    private function finishElement(Element $element)
+    {
+        $order = $element->getOrder();
+
+        $this->get('order_precifier')->precify($order);
+
+        $parent = $order->getParent();
+
+        $this->calculateShipping($parent);
+    }
+
+    /**
+     * @param Order $order
+     * @param array $rule
+     */
+    private function calculateShipping(Order $order, array $rule = [])
+    {
+        if (empty($rule)) {
+            $rule = $order->getShippingRules();
+            $rule['price'] = $order->getSubTotal();
+        }
+
+        ShippingRuler::apply($rule);
+
+        $order->setShippingRules($rule);
+
+        $this->manager('order')->save($order);
     }
 
     /**
