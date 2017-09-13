@@ -65,6 +65,10 @@
 
         GeneratorHandler = {
             project: {id:0,power:0},
+            resetGenerator: function () {
+                $('#generator_config').html('');
+                $('#info_power').html('Gerador');
+            },
             getProject: function(){
                 return this.project;
             },
@@ -86,7 +90,7 @@
                 });
             },
             setPower: function(power) {
-                $('#info_power').html('Sistema de '+power+' kWp')
+                $('#info_power').html('Sistema de '+power+' kWp');
             },
             getComponents: function(){
                 var id = this.getProject().id;
