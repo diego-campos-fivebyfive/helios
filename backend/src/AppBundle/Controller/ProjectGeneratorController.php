@@ -162,6 +162,7 @@ class ProjectGeneratorController extends AbstractController
     public function shippingAction(Request $request, Order $order)
     {
         $rule = $order->getShippingRules();
+
         $form = $this->createForm(ShippingType::class, $rule);
 
         $form->handleRequest($request);
@@ -271,7 +272,15 @@ class ProjectGeneratorController extends AbstractController
      */
     public function deleteOrderAction(Order $order)
     {
-        $this->manager('order')->delete($order);
+        $manager = $this->manager('order');
+        $parent = $order->getParent();
+
+        $manager->delete($order);
+
+        /*if ($parent->getChildrens()->isEmpty()) {
+            $parent->setShippingRules(['saosokaos' => 'ijaijdijasd']);
+            $manager->save($parent);
+        }*/
 
         return $this->json([]);
     }
