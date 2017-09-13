@@ -48,7 +48,7 @@ class AppListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        if(null != $member = $this->getMember()) {
+        if (null != $member = $this->getMember()) {
             date_default_timezone_set($member->getTimezone() ?: 'America/Sao_Paulo');
         }
     }
@@ -62,11 +62,11 @@ class AppListener
         $controller = get_class($eventController[0]);
         $action = $eventController[1];
 
-        if(in_array($controller, array_keys($this->disabledControllers))){
+        if (in_array($controller, array_keys($this->disabledControllers))) {
 
             $actions = $this->disabledControllers[$controller];
 
-            if(in_array($action, $actions)) {
+            if (in_array($action, $actions)) {
 
                 $eventController[1] = 'forceNotFoundException';
                 $event->setController($eventController);
@@ -86,38 +86,21 @@ class AppListener
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
-        return;
+        $request = $event->getRequest();
+        $pathInfo = $request->getPathInfo();
 
-        $exception = $event->getException();
+        /**
+         * Strict check for path info api
+         */
+        if (0 === strpos($pathInfo, '/api')) return;
 
-        $format = $event->getRequest()->attributes->get('_format');
+        /** @var \Twig_Environment $twig */
+        $twig = $this->container->get('twig');
+        $content = $twig->render('TwigBundle:Exception:error.html.twig', [
+            'exception' => $event->getException()
+        ]);
 
-        if($exception && 'json' != $format) {
-            /** @var \Twig_Environment $twig */
-            $twig = $this->container->get('twig');
-            $content = $twig->render('TwigBundle:Exception:error.html.twig', [
-                'exception' => $exception
-            ]);
-
-            $response = new Response($content);
-
-        }else{
-
-            $code = Response::HTTP_INTERNAL_SERVER_ERROR;
-            $message = 'Falha ao executar a operação';
-
-            if($exception instanceof HttpException){
-                $code = $exception->getStatusCode();
-                if(Response::HTTP_NOT_FOUND == $code){
-                    $message = 'Recurso não encontrado';
-                }
-            }
-
-            $response = new JsonResponse([
-                'code' => $code,
-                'message' => $message
-            ], $code);
-        }
+        $response = new Response($content);
 
         $event->setResponse($response);
     }
@@ -147,7 +130,7 @@ class AppListener
     {
         $user = $this->getUser();
 
-        return $user instanceof UserInterface ? $user->getInfo() : null ;
+        return $user instanceof UserInterface ? $user->getInfo() : null;
     }
 
     /**
@@ -155,7 +138,7 @@ class AppListener
      */
     private function getUser()
     {
-        if(null != $token = $this->getTokenStorage()->getToken()){
+        if (null != $token = $this->getTokenStorage()->getToken()) {
             return $token->getUser();
         }
 
