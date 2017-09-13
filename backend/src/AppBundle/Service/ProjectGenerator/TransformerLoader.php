@@ -39,10 +39,14 @@ class TransformerLoader
             ->from($this->manager->getClass(), 't')
             ->where('t.type = :type')
             ->andWhere('t.power >= :power')
+            ->andWhere('t.status = :status')
+            ->andWhere('t.available = :available')
             ->setMaxResults(1)
             ->setParameters([
                 'type' => TransformerInterface::TYPE_TRANSFORMER,
-                'power' => $power
+                'power' => $power,
+                'status' => true,
+                'available' => true
             ]);
 
         return $qb->getQuery()->getOneOrNullResult();
