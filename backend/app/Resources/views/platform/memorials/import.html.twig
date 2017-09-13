@@ -1,0 +1,41 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+
+
+            <form method="post" enctype="multipart/form-data">
+
+                <label> Selecionar Arquivo (.json) </label>
+                <input type="file" name="memorial" required="required">
+
+                <br>
+
+                <label>
+                    <input type="checkbox" name="remove"> &nbsp;
+                    Excluir memorial existente (Exclui o memorial da versão atual, caso exista)
+                </label>
+
+                <br>
+
+                <button type="submit" class="btn btn-success">
+                    Importar
+                </button>
+
+            </form>
+
+
+            <div>
+                {% if memorial is not null %}
+                    <h1> Já existe um memorial com a versão {{ memorial.version }} </h1>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

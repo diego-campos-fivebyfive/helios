@@ -37,7 +37,7 @@
                 $('#products').html(spinner);
 
                 this.request({
-                    url: '{{ path('platform_products') }}',
+                    url: '{{ path('platform_products',{memorial: app.request.query.get('memorial')}) }}',
                     callback: function(xhr){
                         $('#products').html(xhr.responseText);
                     }
