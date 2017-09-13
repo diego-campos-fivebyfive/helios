@@ -95,6 +95,16 @@ class ProjectGeneratorController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/position", name="generator_position")
+     */
+    public function positionAction(Project $project)
+    {
+        return $this->render('generator.position', [
+            'project' => $project
+        ]);
+    }
+
+    /**
      * @Route("/project", name="order_generator_project")
      */
     public function projectAction(Request $request)

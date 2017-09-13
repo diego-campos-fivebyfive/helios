@@ -22,10 +22,22 @@
                 <div class="ibox-content">
                     <div class="row">
 
-                        <div id="generator_form" class="col-md-12 flow-h">
+                        <div class="panel panel-info">
+                            <div class="panel-heading" id="info_power">
+                                Gerador
+                            </div>
+                            <div class="panel-body">
+
+                                <div id="generator_form" class="col-md-12 flow-h">
+                                </div>
+
+                                <div id="generator_components" class="col-md-12 flow-h">
+                                </div>
+
+                            </div>
                         </div>
 
-                        <div id="generator_components" class="col-md-12 flow-h">
+                        <div id="generator_config">
                         </div>
 
                         <div class="hr-line-dashed col-md-12"></div>
@@ -73,13 +85,25 @@
                     }
                 });
             },
+            setPower: function(power) {
+                $('#info_power').html('Sistema de '+power+' kWp')
+            },
             getComponents: function(){
                 var id = this.getProject().id;
                 if(id){
                     Request.send({
                         url: '{{ path('generator_components',{id:'_id_'}) }}'.replace(/_id_/g, id),
                         callback: function(xhr){
+
                             $('#generator_components').html(xhr.responseText);
+
+                            Request.send({
+                                url: '{{ path('generator_position',{id:'_id_'}) }}'.replace(/_id_/g, id),
+                                callback: function(xhr){
+                                    $('#generator_config').html(xhr.responseText);
+                                }
+                            });
+
                         }
                     });
                 }
