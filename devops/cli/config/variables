@@ -9,6 +9,8 @@ export SICES_MAILER_HOST='smtp.mail.eu-west-1.awsapps.com'
 export SICES_MAILER_KEY='b7552e60db4c89c9a846954a9f2b91cb0723a267'
 export SICES_MAILER_USER='naoresponder@plataformasicessolar.com.br'
 export SICES_MAILER_PASS='Ze6}Kr6bWVky@z@Qsi'
+export SICES_AUTH_USER='1_2b14bvyiqfr4wksgcc0ck004w8og4wkwc4o4gksk4ks8oooo8g'
+export SICES_AUTH_KEY='53xlex74i4kk8ckww08goc8oocw048s0wwcok84040w0kcw0ks'
 
 export ISQUIK_HOMOLOG_SERVER_PORT=443
 export ISQUIK_HOMOLOG_SERVER_HOST='https://api.isquik.com'
