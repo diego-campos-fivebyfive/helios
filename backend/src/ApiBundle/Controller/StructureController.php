@@ -13,15 +13,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class StructureController extends AbstractApiController
 {
-    public function getStructureAction(Structure $structure)
-    {
-        $data = $this->get('api_formatter')->format($structure, ['maker' => 'id']);
-
-        $view = View::create($data);
-
-        return $this->handleView($view);
-    }
-
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -45,6 +36,24 @@ class StructureController extends AbstractApiController
 
         $structure = $manager->create();
 
+        return $this->applyRequest($request, $structure);
+    }
+
+    /**
+     * @ParamConverter(converter="component_converter", options={"type"="structure"})
+     */
+    public function getStructureAction(Structure $structure)
+    {
+        $view = View::create($structure);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @ParamConverter(converter="component_converter", options={"type"="structure"})
+     */
+    public function putStructureAction(Request $request, Structure $structure)
+    {
         return $this->applyRequest($request, $structure);
     }
 
