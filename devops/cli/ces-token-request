@@ -15,11 +15,11 @@ _getHelp()
     --production | --homolog ] \n
   [--sices
     --production | --homolog | --development] \n"
-  exit 0;
 }
 
 if [[ -z $1 ]] || [[ -z $2 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
   _getHelp
+  exit 0;
 fi
 
 source $CLI_PATH/config/$ambience/variables

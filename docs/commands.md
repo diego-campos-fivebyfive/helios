@@ -4,6 +4,7 @@ Lista de Comandos
 Comandos utilizados no sistema Sices Solar.
 
 ### Para requisitar token Sices e Isquik
+(no default value)
 ```
 $ ces-token-request --APPLICATION --AMBIENCE
 ```
