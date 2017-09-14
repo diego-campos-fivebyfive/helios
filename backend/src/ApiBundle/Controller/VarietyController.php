@@ -5,7 +5,6 @@ namespace ApiBundle\Controller;
 use ApiBundle\Form\VarietyType;
 use ApiBundle\Handler\RequestHandler;
 use AppBundle\Entity\Component\Variety;
-use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
