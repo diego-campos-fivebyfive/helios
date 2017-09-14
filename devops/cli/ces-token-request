@@ -5,17 +5,40 @@ ambience=${2/--/}
 
 source $CLI_PATH/config/$ambience/variables
 
+_getSicesHost()
+{
+  if [ $ambience = 'development' ]; then
+    echo $SICES_DEVELOPMENT_HOST:$SICES_DEVELOPMENT_PORT
+  elif [ $ambience = 'homolog' ]; then
+    echo $SICES_HOMOLOG_HOST:$SICES_HOMOLOG_PORT
+  elif [ $ambience = 'production' ]; then
+    echo $SICES_PRODUCTION_HOST:$SICES_PRODUCTION_PORT
+  fi
+}
+
 if [ $application = 'sices' ]; then
+
   user=$SICES_AUTH_USER
   key=$SICES_AUTH_KEY
-
-  if [ $ambience = 'development' ]; then
-    host=$SICES_DEVELOPMENT_HOST:$SICES_DEVELOPMENT_PORT
-  elif [ $ambience = 'homolog' ]; then
-    host=$SICES_HOMOLOG_HOST:$SICES_HOMOLOG_PORT
-  elif [ $ambience = 'production' ]; then
-    host=$SICES_PRODUCTION_HOST:$SICES_PRODUCTION_PORT
-  fi
+  host=$(_getSicesHost)
 
   curl "$host/oauth/v2/token?client_id=$user&client_secret=$key&grant_type=client_credentials"; echo
+
+elif [ $application = 'isquik' ]; then
+
+  if [ $ambience = 'homolog' ]; then
+    key=$ISQUIK_HOMOLOG_AUTH_KEY
+    user=$ISQUIK_HOMOLOG_AUTH_USER
+    host=$ISQUIK_HOMOLOG_SERVER_HOST:$ISQUIK_HOMOLOG_SERVER_PORT
+  elif [ $ambience = 'production' ]; then
+    key=$ISQUIK_PRODUCTION_AUTH_KEY
+    user=$ISQUIK_PRODUCTION_AUTH_USER
+    host=$ISQUIK_PRODUCTION_SERVER_HOST:$ISQUIK_PRODUCTION_SERVER_PORT
+  fi
+
+  curl \
+    -X POST \
+    -H "Content-Type: application/json" \
+    -d "{\"Dominio\": \"$user\", \"Chave\": \"$key\"}" \
+    https://api.isquik.com/auth; echo
 fi
