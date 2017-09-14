@@ -2,7 +2,7 @@ AppBundle\Entity\Component\Module:
     properties:
         code:
             - NotBlank:
-                message: the field [model] cannot be null
+                message: The field [code] cannot be null
                 groups: api
                 payload: 1600
         model:
@@ -11,11 +11,24 @@ AppBundle\Entity\Component\Module:
                 groups: api
                 payload: 1610
 
+AppBundle\Entity\Component\Inverter:
+    properties:
+        code:
+            - NotBlank:
+                message: The field [code] cannot be null
+                groups: api
+                payload: 1500
+        model:
+            - NotBlank:
+                message: The field [model] cannot null
+                groups: api
+                payload: 1510
+
 AppBundle\Entity\Component\StringBox:
     properties:
         code:
             - NotBlank:
-                message: the field [code] cannot be null
+                message: The field [code] cannot be null
                 groups: api
                 payload: 1400
         description:
