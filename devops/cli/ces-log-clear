@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+cd $SICES_PATH/backend
+
+echo 'Cleaning Symfony logs...'
+
+> app/logs/prod.log
+> app/logs/dev.log
