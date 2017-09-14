@@ -12,6 +12,7 @@
 namespace AppBundle\Entity\Component;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Variety
@@ -19,6 +20,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="app_component_variety")
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ *
+ * @Serializer\ExclusionPolicy("all")
  */
 class Variety implements VarietyInterface
 {
@@ -30,6 +33,9 @@ class Variety implements VarietyInterface
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     private $id;
 
@@ -51,6 +57,9 @@ class Variety implements VarietyInterface
      * @var string
      *
      * @ORM\Column(name="code", type="string", length=255)
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     private $code;
 
@@ -65,6 +74,9 @@ class Variety implements VarietyInterface
      * @var string
      *
      * @ORM\Column(name="description", type="text")
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     private $description;
 
@@ -72,6 +84,9 @@ class Variety implements VarietyInterface
      * @var boolean
      *
      * @ORM\Column(name="status", type="boolean", nullable=true)
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     private $status;
 
@@ -79,6 +94,9 @@ class Variety implements VarietyInterface
      * @var boolean
      *
      * @ORM\Column(name="available", type="boolean", nullable=true)
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     private $available;
 

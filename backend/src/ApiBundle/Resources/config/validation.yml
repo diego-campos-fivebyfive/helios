@@ -36,3 +36,16 @@ AppBundle\Entity\Component\StringBox:
                 message: The field [description] cannot null
                 groups: api
                 payload: 1410
+
+AppBundle\Entity\Component\Variety:
+    properties:
+        code:
+            - NotBlank:
+                message: The field [code] cannot be null
+                groups: api
+                payload: 1800
+        description:
+            - NotBlank:
+                message: The field [description] cannot null
+                groups: api
+                payload: 1810

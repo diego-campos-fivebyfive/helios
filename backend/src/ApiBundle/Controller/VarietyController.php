@@ -2,6 +2,8 @@
 
 namespace ApiBundle\Controller;
 
+use ApiBundle\Form\VarietyType;
+use ApiBundle\Handler\RequestHandler;
 use AppBundle\Entity\Component\Variety;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
@@ -11,67 +13,57 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
-class VarietyController extends FOSRestController
+class VarietyController extends AbstractApiController
 {
+    /**
+     * @param Request $request
+     * @return Response
+     */
     public function postVarietyAction(Request $request)
     {
-        $data = json_decode($request->getContent(), true);
+        $manager = $this->manager('variety');
 
-        $varietyManager = $this->get('variety_manager');
+        $variety = $manager->create();
 
-        /** @var StringBox $stringbox */
-        $variety = $varietyManager->create();
-        $variety
-            ->setCode($data['code'])
-            ->setDescription($data['description'])
-            ->setAvailable($data['available'])
-            ->setStatus(true);
-        try {
-            $varietyManager->save($variety);
-            $status = Response::HTTP_CREATED;
-            $data = $this->get('api_formatter')->format($variety, ['maker' => 'id']);
-        }
-        catch (\Exception $exception) {
-            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $data = $exception;
-        }
-
-        $view = View::create($data)->setStatusCode($status);
-
-        return $this->handleView($view);
+        return $this->applyRequest($request, $variety);
     }
 
+    /**
+     * @ParamConverter(converter="component_converter", options={"type"="variety"})
+     */
     public function getVarietyAction(Variety $variety)
     {
-        $data = $this->get('api_formatter')->format($variety, ['maker' => 'id']);
-
-        $view = View::create($data);
+        $view = View::create($variety);
 
         return $this->handleView($view);
     }
 
     /**
-     * @Route("/{code}")
-     * @ParamConverter("code", class="AppBundle:Component\Variety", options={"mapping":{"code" : "code"}})
+     * @ParamConverter(converter="component_converter", options={"type"="variety"})
      */
-    public function putVarietyAction(Request $request, Variety $code)
+    public function putVarietyAction(Request $request, Variety $variety)
     {
-        $data = json_decode($request->getContent(), true);
+        return $this->applyRequest($request, $variety);
+    }
 
-        $varietyManager = $this->get('variety_manager');
-        $code->setPromotional($data['promotional']);
+    /**
+     * @param Request $request
+     * @param Variety $variety
+     * @return Response
+     */
+    private function applyRequest(Request $request, Variety $variety)
+    {
+        $manager = $this->manager('variety');
 
-        try {
-            $varietyManager->save($code);
-            $status = Response::HTTP_CREATED;
-            $data = $this->get('api_formatter')->format($code, ['maker' => 'id']);
+        $form = $this->form(VarietyType::class, $variety);
+
+        $handler = RequestHandler::create($request, $form);
+
+        if ($handler->handle()) {
+            $manager->save($variety);
         }
-        catch (\Exception $exception) {
-            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $data = $exception;
-        }
 
-        $view = View::create($data)->setStatusCode($status);
+        $view = $handler->view();
 
         return $this->handleView($view);
     }
