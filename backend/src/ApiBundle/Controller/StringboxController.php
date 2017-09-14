@@ -2,49 +2,25 @@
 
 namespace ApiBundle\Controller;
 
+use ApiBundle\Form\StringBoxType;
+use ApiBundle\Handler\RequestHandler;
 use AppBundle\Entity\Component\StringBox;
-use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
-class StringboxController extends FOSRestController
+class StringboxController extends AbstractApiController
 {
-    public function postStringboxAction(Request $request)
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getStringboxesAction(Request $request)
     {
-        $data = json_decode($request->getContent(), true);
-
-        $stringboxManager = $this->get('string_box_manager');
-
-        /** @var StringBox $stringbox */
-        $stringbox = $stringboxManager->create();
-        $stringbox
-            ->setCode($data['code'])
-            ->setDescription($data['description'])
-            ->setAvailable($data['available'])
-            ->setStatus(false);
-
-        try {
-            $stringboxManager->save($stringbox);
-            $status = Response::HTTP_CREATED;
-            $data = $this->get('api_formatter')->format($stringbox, ['maker' => 'id']);
-        }
-        catch (\Exception $exception) {
-            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $data = $exception;
-        }
-
-        $view = View::create($data)->setStatusCode($status);
-
-        return $this->handleView($view);
-    }
-
-    public function getStringboxAction(StringBox $stringbox)
-    {
-        $data = $this->get('api_formatter')->format($stringbox, ['maker' => 'id']);
+        $data = $this->get('api_handler')->handleRequest($request, ['maker' => 'id']);
 
         $view = View::create($data);
 
@@ -52,27 +28,54 @@ class StringboxController extends FOSRestController
     }
 
     /**
-     * @Route("/{code}")
-     * @ParamConverter("code", class="AppBundle:Component\StringBox", options={"mapping":{"code" : "code"}})
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function putStringboxAction(Request $request, StringBox $code)
+    public function postStringboxAction(Request $request)
     {
-        $data = json_decode($request->getContent(), true);
+        $manager = $this->manager('stringbox');
 
-        $stringboxManager = $this->get('string_box_manager');
-        $code->setPromotional($data['promotional']);
+        $stringbox = $manager->create();
 
-        try {
-            $stringboxManager->save($code);
-            $status = Response::HTTP_CREATED;
-            $data = $this->get('api_formatter')->format($code, ['maker' => 'id']);
+        return $this->applyRequest($request, $stringbox);
+    }
+
+    /**
+     * @ParamConverter(converter="component_converter", options={"type"="stringBox"})
+     */
+    public function getStringboxAction(StringBox $stringBox)
+    {
+        $view = View::create($stringBox);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @ParamConverter(converter="component_converter", options={"type"="stringBox"})
+     */
+    public function putStringboxAction(Request $request, StringBox $stringBox)
+    {
+        return $this->applyRequest($request, $stringBox);
+    }
+
+    /**
+     * @param Request $request
+     * @param StringBox $stringBox
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    private function applyRequest(Request $request, StringBox $stringBox)
+    {
+        $manager = $this->manager('stringbox');
+
+        $form = $this->form(StringBoxType::class, $stringBox);
+
+        $handler = RequestHandler::create($request, $form);
+
+        if ($handler->handle()) {
+            $manager->save($stringBox);
         }
-        catch (\Exception $exception) {
-            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $data = $exception;
-        }
 
-        $view = View::create($data)->setStatusCode($status);
+        $view = $handler->view();
 
         return $this->handleView($view);
     }
