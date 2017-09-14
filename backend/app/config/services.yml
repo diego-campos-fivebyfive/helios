@@ -235,3 +235,7 @@ services:
     app_mailer:
         class: AppBundle\Service\Mailer
         arguments: ['@mailer', '@router', '@templating']
+
+    range_normalizer:
+        class: AppBundle\Service\Pricing\RangeNormalizer
+        arguments: ['@range_manager']
