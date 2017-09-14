@@ -3,7 +3,14 @@ Lista de Comandos
 
 Comandos utilizados no sistema Sices Solar.
 
+### Para pequisar rotas
+(default: no arg, show all)
+```
+$ ces-app-start --'STRING'
+```
+
 ### Para requisitar token Sices e Isquik
+(no default value)
 ```
 $ ces-token-request --APPLICATION --AMBIENCE
 ```
@@ -76,6 +83,11 @@ $ ces-permission-fix --AMBIENCE
 ### Para fazer o update do doctrine
 ```
 $ ces-database-update
+```
+
+### Para limpar os arquivos de logs da aplicação
+```
+$ ces-log-clear
 ```
 
 ### Para limpar o cache do Symfony

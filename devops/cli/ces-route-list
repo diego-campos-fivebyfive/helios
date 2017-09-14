@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+cd $SICES_PATH/backend
+
+echo 'Searching routes...'
+
+if [[ -z $1 ]]; then
+  php app/console debug:router
+else
+  php app/console debug:router | grep $1
+fi
