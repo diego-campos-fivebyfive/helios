@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-application=${1/--/}
-ambience=${2/--/}
-
 _getHelp()
 {
   printf "ces-token-request - help:
@@ -15,12 +12,15 @@ _getHelp()
     --production | --homolog ] \n
   [--sices
     --production | --homolog | --development] \n"
-  exit 0;
 }
 
 if [[ -z $1 ]] || [[ -z $2 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
   _getHelp
+  exit 0;
 fi
+
+application=${1/--/}
+ambience=${2/--/}
 
 source $CLI_PATH/config/$ambience/variables
 
