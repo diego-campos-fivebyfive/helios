@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Component;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Structure
@@ -10,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="app_component_structure")
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ *
+ * @Serializer\ExclusionPolicy("all")
  */
 class Structure implements StructureInterface
 {
@@ -21,13 +24,19 @@ class Structure implements StructureInterface
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     protected $id;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="code", type="string", nullable=true)
+     * @ORM\Column(name="code", type="string")
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     private $code;
 
@@ -48,7 +57,10 @@ class Structure implements StructureInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="string", nullable=true)
+     * @ORM\Column(name="description", type="string")
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     private $description;
 
@@ -62,14 +74,20 @@ class Structure implements StructureInterface
     /**
      * @var boolean
      *
-     * @ORM\Column(name="status", type="boolean", nullable=true)
+     * @ORM\Column(name="status", type="boolean")
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     private $status;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="available", type="boolean", nullable=true)
+     * @ORM\Column(name="available", type="boolean")
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     private $available;
 
