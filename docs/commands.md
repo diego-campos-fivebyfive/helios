@@ -79,6 +79,11 @@ $ ces-permission-fix --AMBIENCE
 $ ces-database-update
 ```
 
+### Para limpar os arquivos de logs da aplicação
+```
+$ ces-log-clear
+```
+
 ### Para limpar o cache do Symfony
 ```
 $ ces-cache-clear
