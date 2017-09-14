@@ -1,36 +1,63 @@
 <?php
 
+/*
+ * This file is part of the SicesSolar package.
+ *
+ * (c) SicesSolar <http://sicesbrasil.com.br/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace AppBundle\Service\Pricing;
 
 use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Entity\Pricing\MemorialInterface;
 use AppBundle\Entity\Pricing\Range;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use AppBundle\Manager\Pricing\RangeManager;
 
-class MemorialNormalizer
+/**
+ * Class RangeNormalizer
+ * This class resolves and normalizes ranges from memorial based on codes and levels
+ *
+ * @author Claudinei Machado <claudinei@kolinalabs.com>
+ */
+class RangeNormalizer
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-
     /**
      * @var MemorialInterface
      */
     private $memorial;
 
     /**
-     * @var array
+     * @var RangeManager
      */
-    private $managers = [];
+    private $manager;
 
     /**
-     * MemorialNormalizer constructor.
-     * @param ContainerInterface $container
+     * This property control the flush database persistence,
+     * allowing grouped transactions
+     *
+     * @var bool
      */
-    function __construct(ContainerInterface $container)
+    private $flush = true;
+
+    /**
+     * @var array
+     */
+    private $powers = [
+        [0, 10], [10, 20], [20, 30], [30, 40], [40, 50], [50, 60], [60, 70], [70, 80], [80, 90], [90, 100],
+        [100, 200], [200, 300], [300, 400], [400, 500], [500, 600], [600, 700], [700, 800], [800, 900], [900, 1000],
+        [1000, 999000]
+    ];
+
+    /**
+     * RangeNormalizer constructor.
+     * @param RangeManager $manager
+     */
+    function __construct(RangeManager $manager)
     {
-        $this->container = $container;
+        $this->manager = $manager;
     }
 
     /**
@@ -52,59 +79,135 @@ class MemorialNormalizer
     }
 
     /**
+     * @return array
+     */
+    public function getPowers()
+    {
+        return $this->powers;
+    }
+
+    /**
+     * @param $code
+     * @param $level
+     */
+    public function normalize($code, $level)
+    {
+        $this->checkMemorial();
+
+        if (is_array($code)) {
+            $this->fromCodes($code, $level);
+            return;
+        }
+
+        if (is_array($level)) {
+            $this->fromLevels($code, $level);
+            return;
+        }
+
+        foreach ($this->powers as $config) {
+
+            list($initialPower, $finalPower) = $config;
+
+            $range = $this->filter($code, $level, $initialPower, $finalPower);
+
+            if (!$range instanceof Range) {
+                $this->create($code, $level, $initialPower, $finalPower);
+            }
+        }
+
+        $this->finish();
+    }
+
+    /**
      * @param $code
      * @param $level
      * @param $initialPower
      * @param $finalPower
-     * @return Range|mixed
+     * @param $price
      */
-    public function normalize($code, $level, $initialPower, $finalPower)
+    public function create($code, $level, $initialPower, $finalPower, $price = 0)
     {
-        $range = $this->memorial->getRanges()->filter(function (Range $range) use($code, $level, $initialPower, $finalPower){
-            return $range->hasConfig($code, $level, $initialPower, $finalPower);
-        })->last();
+        $this->checkMemorial();
 
-        if($range instanceof Range) return $range;
-
-        $manager = $this->manager('range');
-
-        /** @var Range $range */
-        $range = $manager->create();
+        $range = $this->manager->create();
 
         $range
+            ->setMemorial($this->memorial)
             ->setCode($code)
             ->setLevel($level)
             ->setInitialPower($initialPower)
             ->setFinalPower($finalPower)
-            ->setPrice(0)
+            ->setPrice($price)
         ;
 
-        $manager->save($range);
+        $this->manager->save($range, false);
 
         return $range;
     }
 
     /**
-     * @param Memorial $memorial
-     * @return array
+     * @param $code
+     * @param $level
+     * @param $initialPower
+     * @param $finalPower
+     * @return null|Range
      */
-    public function extractCodes(Memorial $memorial)
+    public function filter($code, $level, $initialPower, $finalPower)
     {
-        return $memorial->getRanges()->map(function (Range $range){
-            return $range->getCode();
-        })->toArray();
+        return $this->memorial->getRanges()->filter(function (Range $range) use ($code, $level, $initialPower, $finalPower) {
+            return $range->hasConfig($code, $level, $initialPower, $finalPower);
+        })->last();
     }
 
     /**
-     * @param $id
-     * @return object|\AppBundle\Manager\AbstractManager
+     * @param array $codes
+     * @param $level
      */
-    private function manager($id)
+    private function fromCodes(array $codes, $level)
     {
-        if(!array_key_exists($id, $this->managers)){
-            $this->managers[$id] = $this->container->get(sprintf('%s_manager', $id));
+        $this->flush = false;
+
+        foreach($codes as $code){
+            $this->normalize($code, $level);
         }
 
-        return $this->managers[$id];
+        $this->flush = true;
+
+        $this->finish();
+    }
+
+    /**
+     * @param $code
+     * @param array $levels
+     */
+    private function fromLevels($code, array $levels)
+    {
+        $this->flush = false;
+
+        foreach($levels as $level){
+            $this->normalize($code, $level);
+        }
+
+        $this->flush = true;
+
+        $this->finish();
+    }
+
+    /**
+     * Check if memorial is defined
+     */
+    private function checkMemorial()
+    {
+        if(!$this->memorial instanceof Memorial)
+            throw new \InvalidArgumentException('The Memorial instance is not defined');
+    }
+
+    /**
+     * Flush entities
+     */
+    private function finish()
+    {
+        if($this->flush)
+            $this->manager->getEntityManager()->flush();
     }
 }
