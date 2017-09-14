@@ -3,6 +3,12 @@ Lista de Comandos
 
 Comandos utilizados no sistema Sices Solar.
 
+### Para pequisar rotas
+(default: no arg, show all)
+```
+$ ces-app-start --'STRING'
+```
+
 ### Para requisitar token Sices e Isquik
 (no default value)
 ```
