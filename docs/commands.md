@@ -3,6 +3,11 @@ Lista de Comandos
 
 Comandos utilizados no sistema Sices Solar.
 
+### Para requisitar token Sices e Isquik
+```
+$ ces-token-request --APPLICATION --AMBIENCE
+```
+
 ### Para instalar todas as dependencias do Sices
 ```
 $ ces-ambience-config
