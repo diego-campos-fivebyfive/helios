@@ -12,6 +12,7 @@
 namespace AppBundle\Entity\Component;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Inverter
@@ -21,6 +22,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="app_component_inverter")
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ *
+ * @Serializer\ExclusionPolicy("all")
  */
 class Inverter implements InverterInterface
 {
@@ -32,13 +35,19 @@ class Inverter implements InverterInterface
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     protected $id;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="code", type="string", nullable=true)
+     * @ORM\Column(name="code", type="string")
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     private $code;
 
@@ -46,6 +55,9 @@ class Inverter implements InverterInterface
      * @var string
      *
      * @ORM\Column(name="model", type="string", nullable=true)
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     private $model;
 
@@ -158,6 +170,9 @@ class Inverter implements InverterInterface
      * @var boolean
      *
      * @ORM\Column(name="status", type="boolean", nullable=true)
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     private $status;
 
@@ -165,6 +180,9 @@ class Inverter implements InverterInterface
      * @var boolean
      *
      * @ORM\Column(name="available", type="boolean", nullable=true)
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     private $available;
 

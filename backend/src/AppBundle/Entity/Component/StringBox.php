@@ -12,12 +12,16 @@
 namespace AppBundle\Entity\Component;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * StringBox
  *
  * @ORM\Table(name="app_component_string_box")
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
+ *
+ * @Serializer\ExclusionPolicy("all")
  */
 class StringBox implements StringBoxInterface
 {
@@ -28,7 +32,10 @@ class StringBox implements StringBoxInterface
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     private $id;
 
@@ -36,6 +43,9 @@ class StringBox implements StringBoxInterface
      * @var string
      *
      * @ORM\Column(name="code", type="string", length=255)
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     private $code;
 
@@ -43,6 +53,9 @@ class StringBox implements StringBoxInterface
      * @var string
      *
      * @ORM\Column(name="description", type="text")
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     private $description;
 
@@ -71,6 +84,9 @@ class StringBox implements StringBoxInterface
      * @var boolean
      *
      * @ORM\Column(name="status", type="boolean", nullable=true)
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     private $status;
 
@@ -78,6 +94,9 @@ class StringBox implements StringBoxInterface
      * @var boolean
      *
      * @ORM\Column(name="available", type="boolean", nullable=true)
+     *
+     * @Serializer\Expose()
+     * @Serializer\Groups({"api"})
      */
     private $available;
 

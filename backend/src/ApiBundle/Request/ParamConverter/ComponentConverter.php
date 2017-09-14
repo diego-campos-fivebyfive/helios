@@ -27,7 +27,7 @@ class ComponentConverter implements ParamConverterInterface
     private $types = [
         'module' => Component\Module::class,
         'inverter' => Component\Inverter::class,
-        'string_box' => Component\StringBox::class,
+        'stringBox' => Component\StringBox::class,
         'structure' => Component\Structure::class,
         'variety' => Component\Variety::class
     ];
