@@ -2,18 +2,19 @@
 
 namespace ApiBundle\Controller;
 
+use ApiBundle\Form\InverterType;
+use ApiBundle\Handler\RequestHandler;
 use AppBundle\Entity\Component\Inverter;
 use AppBundle\Manager\InverterManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\View\View;
-use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\Version;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
-class InverterController extends FOSRestController
+class InverterController extends AbstractApiController
 {
     /**
      * @param Request $request
@@ -28,66 +29,55 @@ class InverterController extends FOSRestController
         return $this->handleView($view);
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     */
     public function postInvertersAction(Request $request)
     {
-        $data = json_decode($request->getContent(), true);
+        $manager = $this->manager('inverter');
 
-        $inverterManager = $this->get('inverter_manager');
+        $inverter = $manager->create();
 
-        /** @var Inverter $inverter */
-        $inverter = $inverterManager->create();
-        $inverter
-            ->setCode($data['code'])
-            ->setModel($data['model'])
-            ->setAvailable($data['available'])
-            ->setStatus(false);
-
-        try{
-            $inverterManager->save($inverter);
-            $status = Response::HTTP_CREATED;
-            $data = $this->get('api_formatter')->format($inverter, ['maker' => 'id']);
-        }
-        catch (\Exception $exception) {
-            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $data = $exception;
-        }
-
-        $view = View::create($data)->setStatusCode($status);
-
-        return $this->handleView($view);
+        return $this->applyRequest($request, $inverter);
     }
 
+    /**
+     * @ParamConverter(converter="component_converter", options={"type"="inverter"})
+     */
     public function getInverterAction(Inverter $inverter)
     {
-        $data = $this->get('api_formatter')->format($inverter, ['maker' => 'id']);
-
-        $view = View::create($data);
+        $view = View::create($inverter);
 
         return $this->handleView($view);
     }
 
     /**
-     * @Route("/{code}")
-     * @ParamConverter("code", class="AppBundle:Component\Inverter", options={"mapping":{"code" : "code"}})
+     * @ParamConverter(converter="component_converter", options={"type"="inverter"})
      */
-    public function putInverterAction(Request $request, Inverter $code)
+    public function putInverterAction(Request $request, Inverter $inverter)
     {
-        $data = json_decode($request->getContent(), true);
+        return $this->applyRequest($request, $inverter);
+    }
 
-        $inverterManager = $this->get('inverter_manager');
-        $code->setPromotional($data['promotional']);
+    /**
+     * @param Request $request
+     * @param Inverter $inverter
+     * @return Response
+     */
+    private function applyRequest(Request $request, Inverter $inverter)
+    {
+        $manager = $this->manager('inverter');
 
-        try {
-            $inverterManager->save($code);
-            $status = Response::HTTP_CREATED;
-            $data = $this->get('api_formatter')->format($code, ['maker' => 'id']);
+        $form = $this->form(InverterType::class, $inverter);
+
+        $handler = RequestHandler::create($request, $form);
+
+        if ($handler->handle()) {
+            $manager->save($inverter);
         }
-        catch (\Exception $exception) {
-            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $data = $exception;
-        }
 
-        $view = View::create($data)->setStatusCode($status);
+        $view = $handler->view();
 
         return $this->handleView($view);
     }
