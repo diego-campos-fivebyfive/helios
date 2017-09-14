@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+application=${1/--/}
+ambience=${2/--/}
+
+source $CLI_PATH/config/$ambience/variables
+
+if [ $application = 'sices' ]; then
+  user=$SICES_AUTH_USER
+  key=$SICES_AUTH_KEY
+
+  if [ $ambience = 'development' ]; then
+    host=$SICES_DEVELOPMENT_HOST:$SICES_DEVELOPMENT_PORT
+  elif [ $ambience = 'homolog' ]; then
+    host=$SICES_HOMOLOG_HOST:$SICES_HOMOLOG_PORT
+  elif [ $ambience = 'production' ]; then
+    host=$SICES_PRODUCTION_HOST:$SICES_PRODUCTION_PORT
+  fi
+
+  curl "$host/oauth/v2/token?client_id=$user&client_secret=$key&grant_type=client_credentials"; echo
+fi
