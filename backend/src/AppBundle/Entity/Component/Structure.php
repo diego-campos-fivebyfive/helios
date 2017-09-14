@@ -33,7 +33,7 @@ class Structure implements StructureInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="code", type="string", nullable=true)
+     * @ORM\Column(name="code", type="string")
      *
      * @Serializer\Expose()
      * @Serializer\Groups({"api"})
@@ -57,7 +57,7 @@ class Structure implements StructureInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="string", nullable=true)
+     * @ORM\Column(name="description", type="string")
      *
      * @Serializer\Expose()
      * @Serializer\Groups({"api"})
@@ -74,7 +74,7 @@ class Structure implements StructureInterface
     /**
      * @var boolean
      *
-     * @ORM\Column(name="status", type="boolean", nullable=true)
+     * @ORM\Column(name="status", type="boolean")
      *
      * @Serializer\Expose()
      * @Serializer\Groups({"api"})
@@ -84,7 +84,7 @@ class Structure implements StructureInterface
     /**
      * @var boolean
      *
-     * @ORM\Column(name="available", type="boolean", nullable=true)
+     * @ORM\Column(name="available", type="boolean")
      *
      * @Serializer\Expose()
      * @Serializer\Groups({"api"})
