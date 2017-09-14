@@ -232,5 +232,21 @@ class Range implements RangeInterface
     {
         return $this->memorial;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasConfig($code, $level, $initialPower, $finalPower)
+    {
+        foreach (get_object_vars($this) as $property => $value){
+            if(isset($$property)){
+                if($value != $$property){
+                    return false; break;
+                }
+            }
+        }
+
+        return true;
+    }
 }
 

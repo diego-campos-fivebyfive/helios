@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: joao
- * Date: 10/07/17
- * Time: 12:15
- */
 
 namespace AppBundle\Entity\Pricing;
 
@@ -76,4 +70,13 @@ interface RangeInterface
      * @return mixed
      */
     public function getMemorial();
+
+    /**
+     * @param $code
+     * @param $level
+     * @param $initialPower
+     * @param $finalPower
+     * @return bool
+     */
+    public function hasConfig($code, $level, $initialPower, $finalPower);
 }
