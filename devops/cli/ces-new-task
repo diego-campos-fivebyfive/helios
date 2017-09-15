@@ -14,7 +14,8 @@ if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
 fi
 
 git checkout master
-$CLI_PATH/ces-repository-sync
+git fetch origin
+git pull origin master
 git checkout -b issue-$1
 
 $CLI_PATH/ces-app-install

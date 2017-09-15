@@ -1,16 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: joao
- * Date: 10/07/17
- * Time: 12:15
- */
 
 namespace AppBundle\Entity\Pricing;
 
 
 interface RangeInterface
 {
+    const DEFAULT_TAX = 0.0925;
+
     /**
      * @param $code
      * @return mixed
@@ -67,6 +63,28 @@ interface RangeInterface
     public function getPrice();
 
     /**
+     * @param float $tax
+     * @return RangeInterface
+     */
+    public function setTax($tax);
+
+    /**
+     * @return float
+     */
+    public function getTax();
+
+    /**
+     * @param float $markup
+     * @return RangeInterface
+     */
+    public function setMarkup($markup);
+
+    /**
+     * @return float
+     */
+    public function getMarkup();
+
+    /**
      * @param $memorial
      * @return mixed
      */
@@ -76,4 +94,13 @@ interface RangeInterface
      * @return mixed
      */
     public function getMemorial();
+
+    /**
+     * @param $code
+     * @param $level
+     * @param $initialPower
+     * @param $finalPower
+     * @return bool
+     */
+    public function hasConfig($code, $level, $initialPower, $finalPower);
 }
