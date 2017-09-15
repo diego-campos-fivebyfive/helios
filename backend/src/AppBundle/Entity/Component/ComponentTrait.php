@@ -59,6 +59,27 @@ trait ComponentTrait
     protected $promotional;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="nmc", type="string", nullable=true)
+     */
+    protected $ncm;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cmv_protheus", type="string", nullable=true)
+     */
+    protected $cmvProtheus;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cmv_applied", type="string", nullable=true)
+     */
+    protected $cmvApplied;
+
+    /**
      * @var int
      *
      * @Serializer\Expose()
@@ -188,5 +209,59 @@ trait ComponentTrait
     {
         $this->promotional = $promotional;
         return $this;
+    }
+
+    /***
+     * @param string $ncm
+     * @return $this
+     */
+    public function setNcm($ncm)
+    {
+        $this->ncm = $ncm;
+        return $this;
+    }
+
+    /***
+     * @return string
+     */
+    public function getNcm()
+    {
+        return $this->ncm;
+    }
+
+    /***
+     * @param string $cmvProtheus
+     * @return $this
+     */
+    public function setCmvProtheus($cmvProtheus)
+    {
+        $this->cmvProtheus = $cmvProtheus;
+        return $this;
+    }
+
+    /***
+     * @return string
+     */
+    public function getCmvProtheus()
+    {
+        return $this->cmvProtheus;
+    }
+
+    /***
+     * @param $cmvApplied
+     * @return $this
+     */
+    public function setCmvApplied($cmvApplied)
+    {
+        $this->cmvApplied = $cmvApplied;
+        return $this;
+    }
+
+    /***
+     * @return string
+     */
+    public function getCmvApplied()
+    {
+        return $this->cmvApplied;
     }
 }
