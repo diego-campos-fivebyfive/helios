@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @Breadcrumb("Accounts", route={"name"="account_index"})
  *
  * @Route("account")
- * //@Security("has_role('ROLE_ADMIN')")
+ * @Security("has_role('ROLE_ADMIN')")
  */
 class AccountController extends AbstractController
 {

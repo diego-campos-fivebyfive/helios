@@ -37,26 +37,26 @@ class Main implements ContainerAwareInterface
         /**
          * ROLE_ADMIN
          */
-        /*if($user->isAdmin()) {
+        if($user->isAdmin()) {
 
             $menu->addChild('Accounts', [
                 'route' => 'account_index',
                 'extras' => ['icon' => App::icons('accounts')]
             ]);
 
-            $menu->addChild('Packages', [
+          /*  $menu->addChild('Packages', [
                 'route' => 'package_index',
                 'extras' => ['icon' => App::icons('packages')]
             ]);
 
-            $this->menuAdminComponents($menu, $user);
+          $this->menuAdminComponents($menu, $user);
 
             $this->menuSettings($menu, $user);
 
-            $this->resolveActiveMenu($menu);
+            $this->resolveActiveMenu($menu);*/
 
-            return $menu;
-        }*/
+           // return $menu;
+        }
 
         $menu->addChild('Contacts', [
             'route' => 'contact_index',
