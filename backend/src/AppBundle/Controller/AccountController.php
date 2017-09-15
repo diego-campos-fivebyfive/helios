@@ -23,23 +23,37 @@ use Symfony\Component\HttpFoundation\Request;
  * @Breadcrumb("Accounts", route={"name"="account_index"})
  *
  * @Route("account")
- * @Security("has_role('ROLE_ADMIN')")
+ * //@Security("has_role('ROLE_ADMIN')")
  */
 class AccountController extends AbstractController
 {
     /**
      * @Route("/", name="account_index")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
+        $paginator = $this->getPaginator();
+
         $manager = $this->manager('customer');
 
-        $accounts = $manager->findBy([
-            'context' => $this->getAccountContext()
-        ]);
+        $qb = $manager->getEntityManager()->createQueryBuilder();
+        $qb->select('a')
+            ->from(Customer::class, 'a')
+            ->where('a.context = :context')
+            ->setParameters([
+                'context' => $this->getAccountContext()
+            ]);
+
+        $this->overrideGetFilters();
+
+        $pagination = $paginator->paginate(
+            $qb->getQuery(),
+            $request->query->getInt('page', 1), 10
+        );
 
         return $this->render('AppBundle:Account:index.html.twig', array(
-            'accounts' => $accounts
+            'pagination' => $pagination,
+            'accounts' => $qb
         ));
     }
 
