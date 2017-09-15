@@ -67,9 +67,15 @@ interface MemorialInterface
     public function getIsquikId();
 
     /**
-     * @return float
+     * @param $description
+     * @return MemorialInterface
      */
-    public function getTax();
+    public function setDescription($description);
+
+    /**
+     * @return string
+     */
+    public function getDescription();
 
     /**
      * @param RangeInterface $range

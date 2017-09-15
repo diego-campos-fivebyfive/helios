@@ -38,9 +38,9 @@ class Memorial implements MemorialInterface
     private $ranges;
 
     /**
-     * @var float
+     * @var string
      *
-     * @ORM\Column(name="version", type="float", nullable=true)
+     * @ORM\Column(name="version", type="string", nullable=true)
      */
     private $version;
 
@@ -65,6 +65,13 @@ class Memorial implements MemorialInterface
      */
     private $status;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="string", nullable=true)
+     */
+    private $description;
+
     function __construct()
     {
         $this->ranges = new ArrayCollection();
@@ -88,7 +95,8 @@ class Memorial implements MemorialInterface
             'isquik_id' => $this->isquikId,
             'version' => $this->version,
             'start_at' => $this->startAt->format('Y-m-d H:i:s'),
-            'status' => $this->status
+            'status' => $this->status,
+            'description' => $this->description
         ];
     }
 
@@ -122,7 +130,7 @@ class Memorial implements MemorialInterface
     /**
      * Set version
      *
-     * @param float $version
+     * @param string $version
      *
      * @return Memorial
      */
@@ -136,7 +144,7 @@ class Memorial implements MemorialInterface
     /**
      * Get version
      *
-     * @return float
+     * @return string
      */
     public function getVersion()
     {
@@ -192,14 +200,6 @@ class Memorial implements MemorialInterface
     }
 
     /**
-     * @inheritDoc
-     */
-    public function getTax()
-    {
-        return 0.0925;
-    }
-
-    /**
      * Set status
      *
      * @param integer $status
@@ -221,6 +221,23 @@ class Memorial implements MemorialInterface
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     /**

@@ -66,9 +66,23 @@ class Range implements RangeInterface
      */
     private $price;
 
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="tax", type="float")
+     */
+    private $tax;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="markup", type="float")
+     */
+    private $markup;
+
     public function __construct()
     {
-        //$this->memorial = new ArrayCollection();
+        $this->tax = self::DEFAULT_TAX;
     }
 
     /**
@@ -211,6 +225,40 @@ class Range implements RangeInterface
     public function getPrice()
     {
         return $this->price;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setTax($tax)
+    {
+        $this->tax = $tax;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTax()
+    {
+        return $this->tax;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setMarkup($markup)
+    {
+        $this->markup = $markup;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMarkup()
+    {
+        return $this->markup;
     }
 
     /**

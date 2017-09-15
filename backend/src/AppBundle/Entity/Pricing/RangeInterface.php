@@ -5,6 +5,8 @@ namespace AppBundle\Entity\Pricing;
 
 interface RangeInterface
 {
+    const DEFAULT_TAX = 0.0925;
+
     /**
      * @param $code
      * @return mixed
@@ -59,6 +61,28 @@ interface RangeInterface
      * @return mixed
      */
     public function getPrice();
+
+    /**
+     * @param float $tax
+     * @return RangeInterface
+     */
+    public function setTax($tax);
+
+    /**
+     * @return float
+     */
+    public function getTax();
+
+    /**
+     * @param float $markup
+     * @return RangeInterface
+     */
+    public function setMarkup($markup);
+
+    /**
+     * @return float
+     */
+    public function getMarkup();
 
     /**
      * @param $memorial
