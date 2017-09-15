@@ -27,22 +27,12 @@ $ git config --global user.name "Full Name"
 ```
 
 
-2. A - Clonando e configurando o repositório SICES
---------------------------------------------------
+2. Clonando o repositório
+-------------------------
 
 ```
 $ git clone git@github.com:sices/sices.git
-$ git remote add upstream git@github.com:sices/tech.git
 ```
-
-2. B - Clonando e configurando repositório TECH
------------------------------------------------
-
-```
-$ git clone git@github.com:sices/tech.git
-$ git remote add upstream git@github.com:sices/sices.git
-```
-
 
 3. Instalação de Dependências
 -----------------------------
