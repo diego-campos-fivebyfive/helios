@@ -78,11 +78,6 @@ interface MemorialInterface
     public function getDescription();
 
     /**
-     * @return float
-     */
-    public function getTax();
-
-    /**
      * @param RangeInterface $range
      * @return RangeInterface
      */

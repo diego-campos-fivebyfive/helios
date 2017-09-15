@@ -200,14 +200,6 @@ class Memorial implements MemorialInterface
     }
 
     /**
-     * @inheritDoc
-     */
-    public function getTax()
-    {
-        return 0.0925;
-    }
-
-    /**
      * Set status
      *
      * @param integer $status
