@@ -272,7 +272,7 @@ class Customer extends AbstractCustomer
 
         $this->coordinates = [];
         $this->attributes = [];
-        $this->status = self::STATUS_ENABLED;
+        $this->status = self::PENDING;
     }
 
     function __toString()
@@ -651,14 +651,6 @@ class Customer extends AbstractCustomer
     public function getAttributes()
     {
         return $this->attributes;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function isLocked()
-    {
-        return self::STATUS_LOCKED == $this->status;
     }
 
     /**
@@ -1054,8 +1046,11 @@ class Customer extends AbstractCustomer
     public static function getStatusList()
     {
         return [
-            self::STATUS_ENABLED => 'status.enabled',
-            self::STATUS_LOCKED => 'status.locked'
+            self::PENDING => 'pending',
+            self::VERIFIED => 'verified',
+            self::CONFIRMED => 'confirmed',
+            self::ACTIVATED => 'actived',
+            self::LOCKED => 'locked',
         ];
     }
 

@@ -39,12 +39,13 @@ interface BusinessInterface extends BaseCustomerInterface
     const CATEGORY_CONTACT = 'contact_category';
 
     /**
-     * Status values
+     * Account status
      */
-    const STATUS_CHECKED = 0;
-    const STATUS_ENABLED = 1;
-    const STATUS_LOCKED  = 2;
-    const STATUS_SUSPEND = 4;
+    const PENDING = 0;
+    const VERIFIED = 1;
+    const CONFIRMED = 2;
+    const ACTIVATED = 3;
+    const LOCKED = 4;
 
     /**
      * Token support
@@ -176,6 +177,21 @@ interface BusinessInterface extends BaseCustomerInterface
      * @return string | null
      */
     public function getConfirmationToken();
+
+    /**
+     * @return bool
+     */
+    public function isVerified();
+
+    /**
+     * @return bool
+     */
+    public function isConfirmed();
+
+    /**
+     * @return bool
+     */
+    public function isActivated();
 
     /**
      * @return bool

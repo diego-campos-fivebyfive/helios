@@ -143,9 +143,33 @@ trait AccountTrait
     /**
      * @return bool
      */
+    public function isVerified()
+    {
+        return self::VERIFIED == $this->status;
+    }
+
+    /**
+     * @return bool
+     */
     public function isConfirmed()
     {
-        return $this->status == self::STATUS_ENABLED;
+        return $this->status == self::CONFIRMED;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActivated()
+    {
+        return self::ACTIVATED == $this->status;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLocked()
+    {
+        return self::LOCKED == $this->status;
     }
 
     /**
@@ -170,7 +194,7 @@ trait AccountTrait
     {
         $signature = $this->getSignature();
 
-        return null == $signature['subscription'] || $this->getStatus() == self::STATUS_LOCKED;
+        return null == $signature['subscription'] || $this->getStatus() == self::LOCKED;
     }
 
     /**
