@@ -137,8 +137,11 @@ class AccountController extends AbstractController
      */
     public function showAction(Request $request, Customer $account)
     {
+        $member = $account->getMembers();
+        
         return $this->render('account.show', [
-            'account' => $account
+            'account' => $account,
+            'members' => $member
         ]);
     }
 
