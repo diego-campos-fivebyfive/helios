@@ -81,7 +81,7 @@ class RegisterController extends AbstractController
 
                 $accountManager->save($account);
 
-                $this->getMailer()->sendAccountConfirmationMessage($account);
+                $this->getMailer()->sendAccountVerifyMessage($account);
 
                 $request->getSession()->set('account_id', $account->getId());
 
@@ -141,6 +141,45 @@ class RegisterController extends AbstractController
             }
 
             $message = 'Esta conta já foi ativada!';
+        }
+
+        return $this->render('register.confirm_error', [
+            'message' => $message
+        ]);
+    }
+
+    /**
+     * @Route("/verify/{token}", name="app_register_verify")
+     */
+    public function verifyAction(Request $request, $token)
+    {
+        /** @var AccountInterface $account */
+        $account = $this->manager('account')->findOneBy(['confirmationToken' => $token]);
+
+        $message = 'Operação inválida';
+
+        if($account) {
+            if($account->isPending()) {
+                $member = $account->getOwner();
+
+                $member->setStatus(BusinessInterface::VERIFIED);
+                $account->setStatus(BusinessInterface::VERIFIED);
+
+                $newToken = self::getTokenGenerator()->generateToken();
+                $account->setConfirmationToken($newToken);
+
+                $this->manager('account')->save($account);
+
+                return $this->redirectToRoute('app_register_verify', [
+                    "token" => $account->getConfirmationToken()
+                ]);
+            }
+
+            if ($account->isVerified()) {
+                return $this->render('FOSUserBundle:Register:verify.html.twig', []);
+            }
+        } else {
+            $message = 'Conta não identificada';
         }
 
         return $this->render('register.confirm_error', [
