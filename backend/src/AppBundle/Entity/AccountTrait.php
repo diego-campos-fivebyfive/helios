@@ -145,7 +145,7 @@ trait AccountTrait
      */
     public function isConfirmed()
     {
-        return $this->status == self::STATUS_ENABLED;
+        return $this->status == self::CONFIRMED;
     }
 
     /**
@@ -170,7 +170,7 @@ trait AccountTrait
     {
         $signature = $this->getSignature();
 
-        return null == $signature['subscription'] || $this->getStatus() == self::STATUS_LOCKED;
+        return null == $signature['subscription'] || $this->getStatus() == self::LOCKED;
     }
 
     /**

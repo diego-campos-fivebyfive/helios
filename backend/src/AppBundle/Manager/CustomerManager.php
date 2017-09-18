@@ -15,7 +15,7 @@ class CustomerManager extends AbstractManager
         if($entity instanceof BusinessInterface){
 
             if($entity->isMember() && $entity->getUser()){
-                $entity->setStatus(BusinessInterface::STATUS_LOCKED);
+                $entity->setStatus(BusinessInterface::LOCKED);
                 $entity->getUser()->setEnabled(false);
             }
 
@@ -27,7 +27,7 @@ class CustomerManager extends AbstractManager
                     ->isLeader(false)
                     ->setAttributes([])
                     ->setConfirmationToken(null)
-                    ->setStatus(BusinessInterface::STATUS_LOCKED)
+                    ->setStatus(BusinessInterface::LOCKED)
                     ->setEmail(null);
             }
 
