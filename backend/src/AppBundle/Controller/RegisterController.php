@@ -169,14 +169,10 @@ class RegisterController extends AbstractController
                 $account->setConfirmationToken($newToken);
 
                 $this->manager('account')->save($account);
-
-                return $this->redirectToRoute('app_register_verify', [
-                    "token" => $account->getConfirmationToken()
-                ]);
             }
 
             if ($account->isVerified()) {
-                return $this->render('FOSUserBundle:Register:verify.html.twig', []);
+                return $this->redirectToRoute('app_account_verify', []);
             }
         } else {
             $message = 'Conta não identificada';
@@ -185,6 +181,14 @@ class RegisterController extends AbstractController
         return $this->render('register.confirm_error', [
             'message' => $message
         ]);
+    }
+
+    /**
+     * @Route("/verify", name="app_account_verify")
+     */
+    public function accountVerifyAction()
+    {
+        return $this->render('FOSUserBundle:Register:verify.html.twig', []);
     }
 
     /**
