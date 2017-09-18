@@ -81,11 +81,7 @@ class RegisterController extends AbstractController
 
                 $accountManager->save($account);
 
-                $this->get('notifier')->notify([
-                    'Evento' => '206',
-                    'Callback' => 'account_created',
-                    'Id' => $account->getId()
-                ]);
+                $this->getMailer()->sendAccountConfirmationMessage($account);
 
                 $request->getSession()->set('account_id', $account->getId());
 
