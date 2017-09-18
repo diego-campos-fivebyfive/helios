@@ -656,39 +656,6 @@ class Customer extends AbstractCustomer
     /**
      * @inheritDoc
      */
-    public function isLocked()
-    {
-        return self::LOCKED == $this->status;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function isVerified()
-    {
-        return self::VERIFIED == $this->status;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function isActivated()
-    {
-        return self::ACTIVATED == $this->status;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function isConfirmed()
-    {
-        return self::CONFIRMED == $this->status;
-    }
-
-
-    /**
-     * @inheritDoc
-     */
     public function setMember(BusinessInterface $member)
     {
         /*if (!$this->isContact() || !$member->isMember())

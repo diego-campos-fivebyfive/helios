@@ -143,9 +143,33 @@ trait AccountTrait
     /**
      * @return bool
      */
+    public function isVerified()
+    {
+        return self::VERIFIED == $this->status;
+    }
+
+    /**
+     * @return bool
+     */
     public function isConfirmed()
     {
         return $this->status == self::CONFIRMED;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActivated()
+    {
+        return self::ACTIVATED == $this->status;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLocked()
+    {
+        return self::LOCKED == $this->status;
     }
 
     /**
