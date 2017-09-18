@@ -141,7 +141,7 @@ class AccountController extends AbstractController
         
         return $this->render('account.show', [
             'account' => $account,
-            'member' => $member
+            'members' => $member
         ]);
     }
 
