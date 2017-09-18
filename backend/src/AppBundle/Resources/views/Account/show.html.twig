@@ -31,13 +31,13 @@
                                     &nbsp; Informações da Empresa
                                 </div>
                                 <div class="panel-body">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="col-md-12">
-                                            <label> Nome Fantasia:</label>
+                                            <label> Nome Fantasia: </label>
                                             {{ account.firstname }}
                                         </div>
                                         <div class="col-md-12">
-                                            <label> Razão Social</label>
+                                            <label> Razão Social: </label>
                                             {{ account.lastname }}
                                         </div>
                                         <div class="col-md-12">
@@ -52,19 +52,19 @@
                                             <label> {{ 'Email'|trans }}: </label>
                                             {{ account.email }}
                                         </div>
+                                    </div>
+
+                                    <div class="col-md-4">
                                         <div class="col-md-12">
                                             <label> {{ 'Phone'|trans }}: </label>
                                             {{ account.phone }}
                                         </div>
-                                    </div>
-
-                                    <div class="col-md-6">
                                         <div class="col-md-12">
-                                            <label> {{ 'Postcode'|trans }} </label>
+                                            <label> {{ 'Postcode'|trans }}: </label>
                                             {{ account.postcode }}
                                         </div>
                                         <div class="col-md-12">
-                                            <label> {{ 'State'|trans }} :</label>
+                                            <label> {{ 'State'|trans }}: </label>
                                             {{ account.state }}
                                         </div>
                                         <div class="col-md-12">
@@ -75,14 +75,21 @@
                                             <label> {{ 'District'|trans }}: </label>
                                             {{ account.district }}
                                         </div>
+                                    </div>
+                                    <div class="col-md-4">
                                         <div class="col-md-12">
                                             <label> {{ 'Street'|trans }}:  </label>
-                                            <i class="fa fa-map-marker"></i>  {{ account.street }}
+                                            {{ account.street }}
                                         </div>
                                         <div class="col-md-12">
-                                            <label> {{ 'Number'|trans }} </label>
+                                            <label> {{ 'Number'|trans }}: </label>
                                             {{ account.number }}
                                         </div>
+                                        <div class="col-md-12">
+                                            <label> Nível de desconto: </label>
+                                            {{ account.level }}
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
