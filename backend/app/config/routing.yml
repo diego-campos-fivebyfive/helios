@@ -26,6 +26,11 @@ platform:
     type: annotation
     prefix: /platform
 
+admin:
+    resource: "@AdminBundle/Controller/"
+    type:     annotation
+    prefix:   /admin
+
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
 

@@ -4,6 +4,7 @@ namespace Tests\AppBundle\Service\Pricing;
 
 use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Entity\Pricing\Range;
+use AppBundle\Service\Pricing\RangeNormalizer;
 use Tests\AppBundle\AppTestCase;
 use Tests\AppBundle\Helpers\ObjectHelperTest;
 
@@ -27,8 +28,7 @@ class RangeNormalizerTest extends AppTestCase
         $level = 'single';
         $powers = $normalizer->getPowers();
 
-        $normalizer->setMemorial($memorial);
-        $normalizer->normalize($code, $level);
+        $normalizer->normalize($memorial, [$code], [$level]);
 
         $this->assertEquals(count($powers), $memorial->getRanges()->count());
     }
@@ -42,11 +42,10 @@ class RangeNormalizerTest extends AppTestCase
         $memorial = $this->createMemorial();
 
         $codes = ['ABCDE', 'FGHIJ'];
-        $level = 'multi_code';
+        $levels = ['multi_code'];
         $powers = $normalizer->getPowers();
 
-        $normalizer->setMemorial($memorial);
-        $normalizer->normalize($codes, $level);
+        $normalizer->normalize($memorial, $codes, $levels);
 
         $this->assertEquals(count($powers) * count($codes), $memorial->getRanges()->count());
     }
@@ -59,12 +58,11 @@ class RangeNormalizerTest extends AppTestCase
         $normalizer = $this->getNormalizer();
         $memorial = $this->createMemorial();
 
-        $codes = 'ABCDE';
+        $codes = ['ABCDE'];
         $levels = ['level_one', 'level_two', 'level_three'];
         $powers = $normalizer->getPowers();
 
-        $normalizer->setMemorial($memorial);
-        $normalizer->normalize($codes, $levels);
+        $normalizer->normalize($memorial, $codes, $levels);
 
         $this->assertEquals(count($powers) * count($levels), $memorial->getRanges()->count());
     }
@@ -77,12 +75,11 @@ class RangeNormalizerTest extends AppTestCase
         $normalizer = $this->getNormalizer();
         $memorial = $this->createMemorial();
 
-        $codes = ['ABCDE', 'FGHIJ'];
+        $codes = ['ABCDE', 'FGHIJ', 'KHUNG'];
         $levels = ['level_one', 'level_two', 'level_three'];
         $powers = $normalizer->getPowers();
 
-        $normalizer->setMemorial($memorial);
-        $normalizer->normalize($codes, $levels);
+        $normalizer->normalize($memorial, $codes, $levels);
 
         $this->assertEquals(count($powers) * count($levels) * count($codes), $memorial->getRanges()->count());
     }
@@ -94,15 +91,19 @@ class RangeNormalizerTest extends AppTestCase
     public function testNormalizationMultiCodesAndMultiLevelsBenchmark()
     {
         /**
-         * TODO: This value represent the multiplier ranges from (count powers) * (count levels) * (count codes)
-         * Sample
+         * This value represent the multiplier ranges from (count powers) * (count levels) * (count codes)
+         *
+         * SAMPLE
          * powers: 10
          * max: 30
          * requests: 10 * 30 * 30 = 9000
          * ------------
-         * TESTED: 40 ->
+         * TESTED: 30
+         * INSERTIONS: 18.0000
+         * TIME: 7.14 SECONDS
+         * MEMORY: 156MB
          */
-        $max = 5;
+        $max = 30;
 
         // Creating a random codes
         $codes = [];
@@ -119,9 +120,7 @@ class RangeNormalizerTest extends AppTestCase
         $memorial = $this->createMemorial();
         $normalizer = $this->getNormalizer();
 
-        $normalizer->setMemorial($memorial);
-
-        $normalizer->normalize($codes, $levels);
+        $normalizer->normalize($memorial, $codes, $levels);
 
         $count = count($normalizer->getPowers()) * $max * $max;
 

@@ -66,16 +66,16 @@ trait ComponentTrait
     protected $ncm;
 
     /**
-     * @var string
+     * @var float
      *
-     * @ORM\Column(name="cmv_protheus", type="string", nullable=true)
+     * @ORM\Column(name="cmv_protheus", type="float", nullable=true)
      */
     protected $cmvProtheus;
 
     /**
-     * @var string
+     * @var float
      *
-     * @ORM\Column(name="cmv_applied", type="string", nullable=true)
+     * @ORM\Column(name="cmv_applied", type="float", nullable=true)
      */
     protected $cmvApplied;
 

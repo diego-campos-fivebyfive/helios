@@ -24,10 +24,9 @@ use AppBundle\Manager\Pricing\RangeManager;
  */
 class RangeNormalizer
 {
-    /**
-     * @var MemorialInterface
-     */
-    private $memorial;
+    const FILTER_CACHE = 0;
+    const FILTER_DATABASE = 1;
+    const FILTER_COLLECTION = 2;
 
     /**
      * @var RangeManager
@@ -35,12 +34,14 @@ class RangeNormalizer
     private $manager;
 
     /**
-     * This property control the flush database persistence,
-     * allowing grouped transactions
-     *
-     * @var bool
+     * @var int
      */
-    private $flush = true;
+    private $strategy;
+
+    /**
+     * @var array
+     */
+    private $cache = [];
 
     /**
      * @var array
@@ -58,24 +59,18 @@ class RangeNormalizer
     function __construct(RangeManager $manager)
     {
         $this->manager = $manager;
+        $this->strategy = self::FILTER_CACHE;
     }
 
     /**
-     * @param MemorialInterface $memorial
+     * @param int $strategy
+     * @return RangeNormalizer
      */
-    public function setMemorial(MemorialInterface $memorial)
+    public function setStrategy($strategy)
     {
-        $this->memorial = $memorial;
+        $this->strategy = $strategy;
 
         return $this;
-    }
-
-    /**
-     * @return MemorialInterface
-     */
-    public function getMemorial()
-    {
-        return $this->memorial;
     }
 
     /**
@@ -87,52 +82,54 @@ class RangeNormalizer
     }
 
     /**
-     * @param $code
-     * @param $level
+     * @return array
      */
-    public function normalize($code, $level)
+    public function getCache()
     {
-        $this->checkMemorial();
-
-        if (is_array($code)) {
-            $this->fromCodes($code, $level);
-            return;
-        }
-
-        if (is_array($level)) {
-            $this->fromLevels($code, $level);
-            return;
-        }
-
-        foreach ($this->powers as $config) {
-
-            list($initialPower, $finalPower) = $config;
-
-            $range = $this->filter($code, $level, $initialPower, $finalPower);
-
-            if (!$range instanceof Range) {
-                $this->create($code, $level, $initialPower, $finalPower);
-            }
-        }
-
-        $this->finish();
+        return $this->cache;
     }
 
     /**
      * @param $code
      * @param $level
+     */
+    public function normalize(Memorial $memorial, array $codes, array $levels)
+    {
+        $this->cache($memorial, $codes, $levels);
+
+        foreach ($this->powers as $config) {
+
+            list($initialPower, $finalPower) = $config;
+
+            foreach($levels as $level) {
+
+                foreach ($codes as $code){
+
+                    if (!$this->filter($code, $level, $initialPower, $finalPower)) {
+                        $this->create($memorial, $code, $level, $initialPower, $finalPower);
+                    }
+                }
+            }
+        }
+
+        $this->manager->getEntityManager()->flush();
+    }
+
+    /**
+     * @param Memorial $memorial
+     * @param $code
+     * @param $level
      * @param $initialPower
      * @param $finalPower
-     * @param $price
+     * @param int $price
+     * @return mixed|object|Range
      */
-    public function create($code, $level, $initialPower, $finalPower, $price = 0)
+    public function create(Memorial $memorial, $code, $level, $initialPower, $finalPower, $price = 0)
     {
-        $this->checkMemorial();
-
         $range = $this->manager->create();
 
         $range
-            ->setMemorial($this->memorial)
+            ->setMemorial($memorial)
             ->setCode($code)
             ->setLevel($level)
             ->setInitialPower($initialPower)
@@ -150,64 +147,106 @@ class RangeNormalizer
      * @param $level
      * @param $initialPower
      * @param $finalPower
-     * @return null|Range
+     * @param Memorial|null $memorial
+     * @return bool|mixed|null|object|Range
      */
-    public function filter($code, $level, $initialPower, $finalPower)
+    public function filter($code, $level, $initialPower, $finalPower, Memorial $memorial = null)
     {
-        return $this->memorial->getRanges()->filter(function (Range $range) use ($code, $level, $initialPower, $finalPower) {
-            return $range->hasConfig($code, $level, $initialPower, $finalPower);
-        })->last();
+        switch ($this->strategy){
+            case self::FILTER_CACHE:
+
+                $cacheKey = $this->createCacheKey($initialPower ,$finalPower);
+
+                return array_key_exists($code, $this->cache[$cacheKey][$level]);
+
+                break;
+
+            case self::FILTER_DATABASE:
+
+                return $this->manager->findOneBy([
+                    'memorial' => $memorial,
+                    'code' => $code,
+                    'level' => $level,
+                    'initialPower' => $initialPower,
+                    'finalPower' => $finalPower
+                ]);
+
+                break;
+
+            case self::FILTER_COLLECTION:
+
+                return $memorial->getRanges()->filter(function (Range $range) use ($code, $level, $initialPower, $finalPower) {
+                    return $range->hasConfig($code, $level, $initialPower, $finalPower);
+                })->last();
+
+                break;
+        }
+
+        return null;
     }
 
     /**
+     * @param $initialPower
+     * @param $finalPower
+     * @return string
+     */
+    public function createCacheKey($initialPower, $finalPower)
+    {
+        return sprintf('%s_%s', $initialPower, $finalPower);
+    }
+
+    /**
+     * @param Memorial $memorial
      * @param array $codes
-     * @param $level
-     */
-    private function fromCodes(array $codes, $level)
-    {
-        $this->flush = false;
-
-        foreach($codes as $code){
-            $this->normalize($code, $level);
-        }
-
-        $this->flush = true;
-
-        $this->finish();
-    }
-
-    /**
-     * @param $code
      * @param array $levels
+     * @return $this
      */
-    private function fromLevels($code, array $levels)
+    private function cache(Memorial $memorial, array $codes, array $levels)
     {
-        $this->flush = false;
+        $cache = [];
 
-        foreach($levels as $level){
-            $this->normalize($code, $level);
+        $qb = $this->manager->createQueryBuilder();
+
+        foreach ($this->powers as $config) {
+
+            list($initialPower, $finalPower) = $config;
+
+            $cacheKey = $this->createCacheKey($initialPower, $finalPower);
+
+            foreach ($levels as $level){
+
+                $qb->select('r')
+                    ->where(
+                        $qb->expr()->in('r.code', ':codes')
+                    )
+                    ->andWhere('r.level = :level')
+                    ->andWhere('r.memorial = :memorial')
+                    ->andWhere('r.initialPower = :initialPower')
+                    ->andWhere('r.finalPower = :finalPower')
+                ;
+
+                $ranges = $qb
+                    ->setParameters([
+                        'codes' => $codes,
+                        'level' => $level,
+                        'memorial' => $memorial,
+                        'initialPower' => $initialPower,
+                        'finalPower' => $finalPower
+                    ])
+                    ->getQuery()
+                    ->getResult()
+                ;
+
+                $keys = array_map(function(Range $range){
+                    return $range->getCode();
+                }, $ranges);
+
+                $cache[$cacheKey][$level] = array_combine($keys, $ranges);
+            }
         }
 
-        $this->flush = true;
+        $this->cache = $cache;
 
-        $this->finish();
-    }
-
-    /**
-     * Check if memorial is defined
-     */
-    private function checkMemorial()
-    {
-        if(!$this->memorial instanceof Memorial)
-            throw new \InvalidArgumentException('The Memorial instance is not defined');
-    }
-
-    /**
-     * Flush entities
-     */
-    private function finish()
-    {
-        if($this->flush)
-            $this->manager->getEntityManager()->flush();
+        return $this;
     }
 }

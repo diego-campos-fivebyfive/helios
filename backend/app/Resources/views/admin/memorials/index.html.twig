@@ -1,0 +1,47 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+
+        <div class="row" id="real-content">
+            <div class="col-md-12">
+                <div class="ibox flow-h">
+                    <div class="ibox-content flow-lg">
+
+                        <table class="table table-stripped">
+                            <thead>
+                            <tr>
+                                <th class="text-center col-md-2 "> Versão </th>
+                                <th class="text-center col-md-4 "> &nbsp; </th>
+                                <th> &nbsp; </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                                {% for memorial in memorials %}
+
+                                    <tr>
+                                        <td> {{ memorial.version }} </td>
+                                        <td> {{ memorial.startAt|date('d/m/Y') }} </td>
+                                        <td>
+                                            <a href="{{ path('memorials_config', {id: memorial.id}) }}">
+                                                Gerenciar
+                                            </a>
+                                        </td>
+                                    </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

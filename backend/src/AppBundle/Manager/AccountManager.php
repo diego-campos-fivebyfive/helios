@@ -3,9 +3,8 @@
 namespace AppBundle\Manager;
 
 use AppBundle\Entity\BusinessInterface;
-use Sonata\CoreBundle\Model\BaseEntityManager;
 
-class AccountManager extends BaseEntityManager
+class AccountManager extends AbstractManager
 {
     /**
      * @param BusinessInterface $account

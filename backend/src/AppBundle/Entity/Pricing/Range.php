@@ -60,11 +60,18 @@ class Range implements RangeInterface
     private $level;
 
     /**
-     * @var string
+     * @var float
      *
-     * @ORM\Column(name="price", type="decimal", precision=10, scale=2)
+     * @ORM\Column(name="price", type="float")
      */
     private $price;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cost_price", type="float")
+     */
+    private $costPrice;
 
     /**
      * @var float
@@ -83,6 +90,8 @@ class Range implements RangeInterface
     public function __construct()
     {
         $this->tax = self::DEFAULT_TAX;
+        $this->markup = 0;
+        $this->costPrice = 0;
     }
 
     /**
@@ -204,6 +213,26 @@ class Range implements RangeInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function setCostPrice($costPrice)
+    {
+        $this->costPrice =  (float) $costPrice;
+
+        $this->refreshPrice();
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCostPrice()
+    {
+        return (float) $this->costPrice;
+    }
+
+    /**
      * Set price
      *
      * @param string $price
@@ -212,7 +241,7 @@ class Range implements RangeInterface
      */
     public function setPrice($price)
     {
-        $this->price = $price;
+        $this->price = (float) $price;
 
         return $this;
     }
@@ -224,7 +253,7 @@ class Range implements RangeInterface
      */
     public function getPrice()
     {
-        return $this->price;
+        return (float) $this->price;
     }
 
     /**
@@ -233,6 +262,9 @@ class Range implements RangeInterface
     public function setTax($tax)
     {
         $this->tax = $tax;
+
+        $this->refreshPrice();
+
         return $this;
     }
 
@@ -250,6 +282,9 @@ class Range implements RangeInterface
     public function setMarkup($markup)
     {
         $this->markup = $markup;
+
+        $this->refreshPrice();
+
         return $this;
     }
 
@@ -295,6 +330,14 @@ class Range implements RangeInterface
         }
 
         return true;
+    }
+
+    /**
+     * Calculate range price
+     */
+    private function refreshPrice()
+    {
+        $this->price = $this->costPrice * (1 + ($this->markup / 100)) / (1 - $this->tax);
     }
 }
 

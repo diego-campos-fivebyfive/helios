@@ -52,6 +52,17 @@ interface RangeInterface
     public function getLevel();
 
     /**
+     * @param $costPrice
+     * @return mixed
+     */
+    public function setCostPrice($costPrice);
+
+    /**
+     * @return mixed
+     */
+    public function getCostPrice();
+
+    /**
      * @param $price
      * @return mixed
      */
