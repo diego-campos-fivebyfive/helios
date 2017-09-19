@@ -54,7 +54,7 @@ class AccountManipulator
 
         $account
             ->setExpireAt(null)
-            ->setStatus(BusinessInterface::STATUS_ENABLED);
+            ->setStatus(BusinessInterface::CONFIRMED);
 
         $this->getAccountManager()->save($account);
     }
@@ -76,7 +76,7 @@ class AccountManipulator
 
         $account
             //->setExpireAt(null)
-            ->setStatus(BusinessInterface::STATUS_LOCKED);
+            ->setStatus(BusinessInterface::LOCKED);
 
         $manager->delete($account);
 
@@ -145,7 +145,7 @@ class AccountManipulator
 
         $account
             ->setExpireAt(null)
-            ->setStatus(BusinessInterface::STATUS_ENABLED)
+            ->setStatus(BusinessInterface::CONFIRMED)
             ->setMaxMember($countUsers);
 
         $this->getAccountManager()->save($account);

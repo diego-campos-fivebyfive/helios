@@ -1,0 +1,14 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% block title %} Verificação de Email {% endblock %}
+
+{% block fos_user_content %}
+
+    {% trans_default_domain 'FOSUserBundle' %}
+
+    <h3 class="block-title">
+        Seu Email foi confirmado,
+        Aguarde a ativação da sua conta.
+    </h3>
+
+{% endblock fos_user_content %}

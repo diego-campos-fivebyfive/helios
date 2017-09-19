@@ -300,56 +300,68 @@
                             <table cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td>
-                                        <img alt="Inovador Solar" class="img-responsive" src="{{ app.request.schemeAndHttpHost }}{{ asset('assets/images/register_email_header.jpg') }}"/>
+                                        <img alt="Sices Solar" class="img-responsive" src="{{ app.request.schemeAndHttpHost }}{{ asset('assets/images/register_email_header.jpg') }}"/>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="content-block">
-                                        <h3>
+
                                             {% if member is defined %}
                                                 Olá,
                                                 <br/>
                                                 A empresa {{ member.account.owner.firstname }} convidou você para fazer parte de sua equipe.
                                             {% else %}
-                                                Obrigado, recebemos seu pré-cadastro com sucesso.
+                                                <br/>
+                                                Olá, {{ account.owner.firstname }}
+                                                <br/>
+                                                <h3>
+                                                    Obrigado por sua solicitação de pré-cadastro na Plataforma SICES Solar.
+                                                </h3>
                                             {% endif %}
-                                        </h3>
+
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="content-block">
                                         {% if account is defined %}
-                                            A partir de setembro iremos iniciar a liberação do acesso à plataforma SICES Solar para todos que tiveram seus cadastros aprovados.
+                                            Estamos apresentando um projeto inovador no mundo, um novo conceito criado, que busca, dentro do
+                                            cenário do mercado de Geração Distribuída de Energia Fotovoltaica, desenvolver projetos voltados
+                                            ao crescimento do Integrador, de modo a sempre beneficiar nosso cliente/parceiro.
                                         {% endif %}
                                     </td>
                                 </tr>
 
                                 {% if account is defined %}
                                 <tr>
-                                    <td class="content-block">
-                                        Muito obrigado.
+                                    <td class="content-block" style="text-align: center;">
+                                        Para confirmar seu email clique no link abaixo.
+                                        <br/>
+                                        <br/>
+                                        <a href="{{ targetUrl }}" target="_blank" class="btn-primary btn-block btn-sm">
+                                            Confirmar E-mail
+                                        </a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="content-block">
-                                        SICES Solar
+                                        Equipe SICES Solar.
                                     </td>
                                 </tr>
                                 {% endif %}
 
                                 {% if member is defined %}
-                                    <tr>
-                                        <td class="content-block">
-                                            Para ter acesso à plataforma SICES Solar clique abaixo e conclua seu cadastro.
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="content-block aligncenter">
-                                            <a href="{{ targetUrl }}" target="_blank" class="btn-primary btn-block">
-                                                Concluir registro
-                                            </a>
-                                        </td>
-                                    </tr>
+                                <tr>
+                                    <td class="content-block">
+                                        Para ter acesso à plataforma SICES Solar clique abaixo e conclua seu cadastro.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="content-block aligncenter">
+                                        <a href="{{ targetUrl }}" target="_blank" class="btn-primary btn-block">
+                                            Concluir registro
+                                        </a>
+                                    </td>
+                                </tr>
                                 {% endif %}
                             </table>
                         </td>
