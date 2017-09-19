@@ -120,6 +120,7 @@ class MemorialAnalyzer
     private function finishCollection()
     {
         $cache = $this->normalizer->getCache();
+
         $powers = $this->normalizer->getPowers();
 
         foreach ($this->collection['components'] as $componentType => $componentConfig) {
@@ -143,9 +144,12 @@ class MemorialAnalyzer
 
                     $cacheKey = $this->normalizer->createCacheKey($initialPower, $finalPower);
 
-                    $range = $cache[$cacheKey][$this->level][$product->getCode()];
+                    if(array_key_exists($product->getCode(), $cache[$cacheKey][$this->level])) {
 
-                    $this->collection['components'][$componentType]['items'][$product->getId()]['ranges'][] = $range;
+                        $range = $cache[$cacheKey][$this->level][$product->getCode()];
+
+                        $this->collection['components'][$componentType]['items'][$product->getId()]['ranges'][] = $range;
+                    }
                 }
             }
         }
