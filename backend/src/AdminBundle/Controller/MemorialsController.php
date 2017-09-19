@@ -2,14 +2,15 @@
 
 namespace AdminBundle\Controller;
 
-use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Entity\Pricing\Range;
+use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Form\Admin\MemorialFilterType;
+use AppBundle\Service\Pricing\MemorialAnalyzer;
 use AppBundle\Service\Pricing\RangeNormalizer;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * @Security("has_role('ROLE_ADMIN')")
@@ -39,8 +40,6 @@ class MemorialsController extends AdminController
 
         $levels = array_unique(array_merge($rangeLevels, $accountLevels));
 
-        //dump($levels); die;
-
         $form = $this->createForm(MemorialFilterType::class, null, [
             'memorial' => $memorial,
             'levels' => $levels
@@ -50,103 +49,17 @@ class MemorialsController extends AdminController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $criteria = [
-                'status' => true,
-                'available' => true
-            ];
+            $analyzer = new MemorialAnalyzer($this->container);
 
-            $collection = [
-                'components' => [
-                    'module' => [
-                        'enabled' => true,
-                        'label' => 'Modules',
-                        'items' => []
-                    ],
-                    'inverter' => [
-                        'enabled' => true,
-                        'label' => 'Inverters',
-                        'items' => []
-                    ]
-                ]
-            ];
+            $config = $form->getData();
 
-            $modules = $this->manager('module')->findBy($criteria);
-            $inverters = $this->manager('inverter')->findBy($criteria);
-            $stringBoxes = $this->manager('string_box')->findBy($criteria);
-            $structures = $this->manager('structure')->findBy($criteria);
-            $varieties = $this->manager('variety')->findBy($criteria);
+            $config['memorial'] = $memorial;
 
-            foreach ($inverters as $inverter) {
-                $collection['components']['inverter']['items'][$inverter->getId()] = [
-                    'product' => $inverter
-                ];
-            }
-
-            foreach ($modules as $module) {
-                $collection['components']['module']['items'][$module->getId()] = [
-                    'product' => $module
-                ];
-            }
-
-            //dump($collection); die;
-
-            $moduleCodes = $this->filterCodes($modules);
-            $inverterCodes = $this->filterCodes($inverters);
-            $stringBoxCodes = $this->filterCodes($stringBoxes);
-            $structureCodes = $this->filterCodes($structures);
-            $varietyCodes = $this->filterCodes($varieties);
-
-            /** @var RangeNormalizer $normalizer */
-            $normalizer = $this->get('range_normalizer');
-
-            $data = $form->getData();
-            //$codes = array_merge($moduleCodes, $inverterCodes, $stringBoxCodes, $structureCodes, $varietyCodes);
-            $codes = array_merge($inverterCodes, $moduleCodes);
-            $level = $data['level'];
-            $levels = [$level];
-
-            $start = microtime(true);
-
-            $normalizer->normalize($memorial, $codes, $levels);
-
-            $stop = microtime(true);
-
-            $cache = $normalizer->getCache();
-            $powers = $normalizer->getPowers();
-
-            foreach ($collection['components'] as $componentType => $componentConfig) {
-
-                $items = $componentConfig['items'];
-
-                foreach ($items as $itemConfig) {
-
-                    $product = $itemConfig['product'];
-
-                    foreach ($powers as $power) {
-
-                        list($initialPower, $finalPower) = $power;
-
-                        $cacheKey = $normalizer->createCacheKey($initialPower, $finalPower);
-
-                        $range = $cache[$cacheKey][$level][$product->getCode()];
-
-                        $collection['components'][$componentType]['items'][$product->getId()]['ranges'][] = $range;
-                    }
-                }
-            }
-
-            //dump($collection); die;
-
-            return $this->render('admin/memorials/debug.html.twig', [
-                'collection' => $collection,
-                'memorial' => $memorial,
-                'powers' => $powers
-            ]);
+            $collection = $analyzer->analyze($config);
 
             return $this->render('admin/memorials/ranges.html.twig', [
                 'collection' => $collection,
-                'memorial' => $memorial,
-                'powers' => $powers
+                'memorial' => $memorial
             ]);
         }
 
