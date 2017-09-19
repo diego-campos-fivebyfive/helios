@@ -12,15 +12,7 @@ export SICES_MAILER_PASS='Ze6}Kr6bWVky@z@Qsi'
 export SICES_AUTH_USER='1_2b14bvyiqfr4wksgcc0ck004w8og4wkwc4o4gksk4ks8oooo8g'
 export SICES_AUTH_KEY='53xlex74i4kk8ckww08goc8oocw048s0wwcok84040w0kcw0ks'
 
-export ISQUIK_HOMOLOG_SERVER_PORT=443
-export ISQUIK_HOMOLOG_SERVER_HOST='https://api.isquik.com'
-export ISQUIK_HOMOLOG_AUTH_KEY='12eb45ec-b98f-4942-9124-b7b6b389088e'
-export ISQUIK_HOMOLOG_AUTH_USER='isquik-dev'
-export ISQUIK_PRODUCTION_SERVER_PORT=443
-export ISQUIK_PRODUCTION_SERVER_HOST='https://api.isquik.com'
-export ISQUIK_PRODUCTION_AUTH_KEY='3bbafb12-5702-41a6-a4bc-813cebfba500'
-export ISQUIK_PRODUCTION_AUTH_USER='sices'
+export SICES_HOOK_PORT=3000
 
 slack_uri='https://hooks.slack.com/services/T637J8WTD'
 export SLACK_HOOK_DEVOPS="$slack_uri/B6GU2PZFY/q4Va8VlWX7lv7zUv3uQIgryM"
-export SLACK_HOOK_BACKLOG_API="$slack_uri/B6UGPPXFS/gCKN7pVkpvgHER7m8zSJjuZQ"
