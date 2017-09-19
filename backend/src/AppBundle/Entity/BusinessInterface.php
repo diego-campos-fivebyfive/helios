@@ -181,6 +181,11 @@ interface BusinessInterface extends BaseCustomerInterface
     /**
      * @return bool
      */
+    public function isPending();
+
+    /**
+     * @return bool
+     */
     public function isVerified();
 
     /**

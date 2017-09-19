@@ -81,6 +81,27 @@ class Mailer
     }
 
     /**
+     * @param AccountInterface $register
+     * @return string
+     */
+    public function sendAccountVerifyMessage(AccountInterface $account)
+    {
+        $url = $this->router->generate('app_register_verify',[
+            'token' => $account->getConfirmationToken(),
+            'reference' => base64_encode($account->getEmail())
+        ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $rendered = $this->templating->render('AppBundle:Register:email.html.twig', [
+            'targetUrl' => $url,
+            'account' => $account
+        ]);
+
+        $this->sendEmailMessage('Plataforma Sices Solar - Registro', $rendered, self::FROM_EMAIL, $account->getEmail());
+
+        return $rendered;
+    }
+
+    /**
      * @param MemberInterface $member
      * @return string
      */
