@@ -8,6 +8,3 @@ export SICES_HOMOLOG_DATABASE_USER=mysqldevtest
 export SICES_HOMOLOG_DATABASE_HOST='mysql-dev-test.crtwvzhue9fu.sa-east-1.rds.amazonaws.com'
 export SICES_HOMOLOG_DATABASE_PORT=3306
 export SICES_HOMOLOG_DATABASE_PASS='zvQdYaPB79muWbnpct'
-
-export BUNDLE_HOMOLOG_PORT=3000
-export BUNDLE_HOMOLOG_HOST='http://localhost'

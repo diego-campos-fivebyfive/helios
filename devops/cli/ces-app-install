@@ -16,6 +16,6 @@ cd backend
   $CLI_PATH/util/bug-fix
 cd ../
 
-cd bundles/isquik
+cd devops/hook
   $node_install
 cd ../../
