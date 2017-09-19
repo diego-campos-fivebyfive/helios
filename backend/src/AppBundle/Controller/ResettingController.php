@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use FOS\UserBundle\Controller\ResettingController as BaseResettingController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use AppBundle\Service\Mailer;
 
 /**
  * @Route("/resetting")
@@ -53,7 +54,7 @@ class ResettingController extends BaseResettingController
             $user->setConfirmationToken($tokenGenerator->generateToken());
         }
 
-        $this->get('fos_user.mailer')->sendResettingEmailMessage($user);
+        $this->getMailer()->sendEmailResettingMessage($user);
         $user->setPasswordRequestedAt(new \DateTime());
         $this->get('fos_user.user_manager')->updateUser($user);
 
@@ -143,5 +144,13 @@ class ResettingController extends BaseResettingController
 
         if (is_file($cache))
             unlink($cache);
+    }
+
+    /**
+     * @return \AppBundle\Service\Mailer
+     */
+    private function getMailer()
+    {
+        return $this->get('app_mailer');
     }
 }
