@@ -7,6 +7,3 @@ export SICES_PRODUCTION_DATABASE_USER=mysqlproducao
 export SICES_PRODUCTION_DATABASE_HOST='mysql-db-producao.crtwvzhue9fu.sa-east-1.rds.amazonaws.com'
 export SICES_PRODUCTION_DATABASE_PORT=3306
 export SICES_PRODUCTION_DATABASE_PASS='avCy8ZFhhg6rMnKstw'
-
-export BUNDLE_PRODUCTION_PORT=3000
-export BUNDLE_PRODUCTION_HOST='https://app.plataformasicessolar.com.br'
