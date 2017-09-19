@@ -106,7 +106,11 @@ class RangeNormalizer
                 foreach ($codes as $code){
 
                     if (!$this->filter($code, $level, $initialPower, $finalPower)) {
-                        $this->create($memorial, $code, $level, $initialPower, $finalPower);
+                        $range = $this->create($memorial, $code, $level, $initialPower, $finalPower);
+
+                        $cacheKey = $this->createCacheKey($initialPower, $finalPower);
+
+                        $this->cache[$cacheKey][$level][$code] = $range;
                     }
                 }
             }
