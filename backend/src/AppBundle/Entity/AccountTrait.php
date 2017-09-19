@@ -143,6 +143,14 @@ trait AccountTrait
     /**
      * @return bool
      */
+    public function isPending()
+    {
+        return self::PENDING == $this->status;
+    }
+
+    /**
+     * @return bool
+     */
     public function isVerified()
     {
         return self::VERIFIED == $this->status;

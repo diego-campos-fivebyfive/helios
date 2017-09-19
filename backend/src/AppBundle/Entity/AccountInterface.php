@@ -27,7 +27,27 @@ interface AccountInterface
     /**
      * @return bool
      */
+    public function isPending();
+
+    /**
+     * @return bool
+     */
+    public function isVerified();
+
+    /**
+     * @return bool
+     */
     public function isConfirmed();
+
+    /**
+     * @return bool
+     */
+    public function isActivated();
+
+    /**
+     * @return bool
+     */
+    public function isLocked();
 
     /**
      * @return MemberInterface
