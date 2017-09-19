@@ -6,10 +6,8 @@ _getHelp()
   Usage:
   ces-token-request --[APPLICATION] --[AMBIENCE] \n
   Exemple:
-  ces-token-request --isquik --homolog \n
+  ces-token-request --sices --homolog \n
   Avaliable Args:
-  [--isquik
-    --production | --homolog ] \n
   [--sices
     --production | --homolog | --development] \n"
 }
@@ -43,21 +41,4 @@ if [ $application = 'sices' ]; then
 
   curl "$host/oauth/v2/token?client_id=$user&client_secret=$key&grant_type=client_credentials"; echo
 
-elif [ $application = 'isquik' ]; then
-
-  if [ $ambience = 'homolog' ]; then
-    key=$ISQUIK_HOMOLOG_AUTH_KEY
-    user=$ISQUIK_HOMOLOG_AUTH_USER
-    host=$ISQUIK_HOMOLOG_SERVER_HOST:$ISQUIK_HOMOLOG_SERVER_PORT
-  elif [ $ambience = 'production' ]; then
-    key=$ISQUIK_PRODUCTION_AUTH_KEY
-    user=$ISQUIK_PRODUCTION_AUTH_USER
-    host=$ISQUIK_PRODUCTION_SERVER_HOST:$ISQUIK_PRODUCTION_SERVER_PORT
-  fi
-
-  curl \
-    -X POST \
-    -H "Content-Type: application/json" \
-    -d "{\"Dominio\": \"$user\", \"Chave\": \"$key\"}" \
-    $host/auth; echo
 fi
