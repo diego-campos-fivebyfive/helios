@@ -1,6 +1,6 @@
 'use strict'
 
-const BUNDLE_PORT = process.env.CES_BUNDLE_PORT
+const HOOK_PORT = process.env.SICES_HOOK_PORT
 
 const config = {
   bundle: {
@@ -10,7 +10,7 @@ const config = {
       response.header('Access-Control-Allow-Credentials', 'true')
       next()
     },
-    port: BUNDLE_PORT
+    port: HOOK_PORT
   }
 }
 

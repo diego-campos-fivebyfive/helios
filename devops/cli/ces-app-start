@@ -12,7 +12,7 @@ if [ -z ${1+x} ] || [ $1 = '--development' ]; then
   php backend/app/console server:run &
 
   if [[ $2 = '--hook' ]]; then
-    echo "Hook application starting on $CES_BUNDLE_HOST:$CES_BUNDLE_PORT"
+    echo "Hook application starting on $CES_SICES_HOST:$SICES_HOOK_PORT"
     $hook_app/node_modules/.bin/node-supervisor --harmony $hook_app/index.js &
   fi
 
@@ -33,7 +33,7 @@ if [ -z ${1+x} ] || [ $1 = '--development' ]; then
 
 elif [[ $1 = '--homolog' ]] || [[ $1 = '--staging' ]] || [[ $1 = '--production' ]]; then
 
-  echo "Hook application starting on $CES_BUNDLE_HOST:$CES_BUNDLE_PORT"
+  echo "Hook application starting on $CES_SICES_HOST:$SICES_HOOK_PORT"
   $hook_app/node_modules/.bin/pm2 start $hook_app/index.js --node-args="--harmony" -n "hook"
 
 else
