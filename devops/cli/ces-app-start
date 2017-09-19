@@ -11,8 +11,10 @@ if [ -z ${1+x} ] || [ $1 = '--development' ]; then
   echo "Sices app starting on $CES_SICES_HOST:$CES_SICES_PORT"
   php backend/app/console server:run &
 
-  echo "Hook application starting on $CES_BUNDLE_HOST:$CES_BUNDLE_PORT"
-  $hook_app/node_modules/.bin/node-supervisor --harmony $hook_app/index.js &
+  if [[ $2 = '--hook' ]]; then
+    echo "Hook application starting on $CES_BUNDLE_HOST:$CES_BUNDLE_PORT"
+    $hook_app/node_modules/.bin/node-supervisor --harmony $hook_app/index.js &
+  fi
 
   # Enable job control
   set -m
@@ -29,9 +31,13 @@ if [ -z ${1+x} ] || [ $1 = '--development' ]; then
     fg %- > /dev/null 2>&1;
   done
 
-else
+elif [[ $1 = '--homolog' ]] || [[ $1 = '--staging' ]] || [[ $1 = '--production' ]]; then
 
   echo "Hook application starting on $CES_BUNDLE_HOST:$CES_BUNDLE_PORT"
   $hook_app/node_modules/.bin/pm2 start $hook_app/index.js --node-args="--harmony" -n "hook"
+
+else
+
+  echo 'Invalid args!'
 
 fi
