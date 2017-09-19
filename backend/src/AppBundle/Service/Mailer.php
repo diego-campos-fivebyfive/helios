@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\MemberInterface;
+use Fos\UserBundle\Model\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -97,6 +98,24 @@ class Mailer
         ]);
 
         $this->sendEmailMessage('Plataforma Sices Solar - Registro', $rendered, self::FROM_EMAIL, $account->getEmail());
+
+        return $rendered;
+    }
+
+    /**
+     * @param UserInterface $user
+     * @return string
+     */
+    public function sendEmailResettingMessage(UserInterface $user)
+    {
+        $url = $this->router->generate('fos_user_resetting_reset',['token' => $user->getConfirmationToken()], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $rendered = $this->templating->render('FOSUserBundle:Resetting:email.html.twig', [
+            'targetUrl' => $url,
+            'user' => $user
+        ]);
+
+        $this->sendEmailMessage('Plataforma Sices Solar - Reset', $rendered, self::FROM_EMAIL, $user->getEmail());
 
         return $rendered;
     }
