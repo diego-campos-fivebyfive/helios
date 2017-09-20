@@ -24,16 +24,20 @@ Sistema de suporte para empresas do setor de energia solar fotovoltaíca.
     - [Slack](https://kolinalabs-si.slack.com/messages): Chat e bots
     - [Hangout](https://hangouts.google.com/?hl=pt-BR): Calls
 
-  ## Flags
-  Padrão de flags utilizadas para notificações no Slack:
+  <a name="workflow--flags"></a><a name="1.1"></a>
+  - [1.2](#workflow--flags) **Slack - Solicitações**: utilizamos por padrão flags de classificações no inicio de cada solicitação.
 
-  #### Com @here
-    - HELP: para pedir ajuda
-    - REVIEW: para solicitar review
-    - TEST: para solicitar test
+    - HELP: para solicitar ajuda/pair (chat [developers](https://kolinalabs-si.slack.com/messages/C6AS6KEK1))
+    - REVIEW: para solicitar review (chat [developers](https://kolinalabs-si.slack.com/messages/C6AS6KEK1))
+    - TEST: para solicitar test (chat [tester](https://kolinalabs-si.slack.com/messages/C63Q7FKBN))
 
-  #### Com @[USER_NAME]
-    Para responder a Flag, pode-se utilizar o `:+1:` para curta resposta.
+    `Ex.: @here, REVIEW: https://github.com/sices/sices/pull/01`
+
+    Para responder uma solicitação utilizamos por padrão o nome de usuário junto a resposta.
+
+    `Ex.: @mauroandre [MESSAGE]`
+
+    > **Nota**: Para respostas curtas de confirmação pode ser utilizado apenas `:+1:`.
 
 ## Sobre
 
