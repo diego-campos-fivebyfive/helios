@@ -47,13 +47,21 @@
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
-
             <div class="row" id="real-content">
                 <div class="col-md-12">
                     <div class="ibox flow-h">
                         <div class="ibox-content flow-lg">
-
                             <div class="row">
+
+                                <div class="col-md-12">
+                                    <div class="btn-group">
+                                        <a href="{{ path('memorials') }}" class="btn btn-sm btn-primary">
+                                            <i class="fa fa-arrow-left"></i>
+                                            Voltar para Memoriais
+                                        </a>
+                                    </div>
+                                </div>
+
                                 <div class="col-md-12">
 
                                 {{ form_start(form,{attr:{id:'form_filter'}}) }}

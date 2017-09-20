@@ -2,46 +2,73 @@
 
 {% block body %}
 
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
 
-        <div class="row" id="real-content">
-            <div class="col-md-12">
-                <div class="ibox flow-h">
-                    <div class="ibox-content flow-lg">
+            <div class="row" id="real-content">
+                <div class="col-md-12">
+                    <div class="ibox flow-h">
+                        <div class="ibox-content flow-lg">
+                            <div class="row">
 
-                        <table class="table table-stripped">
-                            <thead>
-                            <tr>
-                                <th class="text-center col-md-2 "> Versão </th>
-                                <th class="text-center col-md-4 "> &nbsp; </th>
-                                <th> &nbsp; </th>
-                            </tr>
-                            </thead>
-                            <tbody>
+                                <div class="col-md-12" style="margin-bottom: 1rem;">
+                                    <a href="{{ path('memorials_create') }}" class="btn btn-sm btn-success pull-right">
+                                        <i class="fa fa-plus"></i> Memorial
+                                    </a>
+                                </div>
 
-                                {% for memorial in memorials %}
+                                <div class="col-md-12">
+                                    <table class="table table-bordered table-stripped">
+                                        <thead>
+                                        <tr>
+                                            <th class="text-center col-md-2"> Nome</th>
+                                            <th class="text-center col-md-"> Status</th>
+                                            <th class="text-center col-md-"> Níveis de Desconto</th>
+                                            <th class="col-md-4"> &nbsp; </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
 
-                                    <tr>
-                                        <td> {{ memorial.version }} </td>
-                                        <td> {{ memorial.startAt|date('d/m/Y') }} </td>
-                                        <td>
-                                            <a href="{{ path('memorials_config', {id: memorial.id}) }}">
-                                                Gerenciar
-                                            </a>
-                                        </td>
-                                    </tr>
+                                        {% for memorial in memorials %}
 
-                                {% endfor %}
+                                            <tr>
+                                                <td> {{ memorial.name }} </td>
+                                                <td>
+                                                    {{ memorial.status(true)|trans }}
+                                                </td>
+                                                <td> {{ memorial.levels|join(', ') }} </td>
+                                                <td>
+                                                    <div class="btn-group btn-group-sm btn-group-justified">
+                                                        <a class="btn btn-primary" href="{{ path('memorials_update', {id: memorial.id}) }}">
+                                                            <i class="fa fa-pencil"></i> Editar
+                                                        </a>
+                                                        <a class="btn btn-success" href="{{ path('memorials_config', {id: memorial.id}) }}">
+                                                            <i class="fa fa-cog"></i> Gerenciar
+                                                        </a>
+                                                        <a class="btn btn-warning" data-reverse="{{ path('memorials_reverse_engineering', {id: memorial.id}) }}">
+                                                            <i class="fa fa-exchange"></i> Eng. Reversa
+                                                        </a>
+                                                        <a class="btn btn-danger" data-delete="{{ path('memorials_delete', {id: memorial.id}) }}">
+                                                            <i class="fa fa-trash"></i> Excluir
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
 
-                            </tbody>
-                        </table>
+                                        {% endfor %}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
+
                 </div>
             </div>
-        </div>
 
+        </div>
     </div>
-</div>
 
 {% endblock %}
