@@ -160,6 +160,30 @@ Esclarecimentos gerais relacionados a documentação:
     $ devops/cli/ces-ambience-install --full
     ```
 
+  <a name="aplicacao--sices"></a><a name="1.1"></a>
+  - [1.1](#aplicacao--sices) **Configuração da plataforma**:
+
+    - ##### 1.1.1. *Instalando as dependências do Sices*
+    ```
+    $ ces-app-install
+    ```
+
+    - ##### 1.1.2. *Configurando a aplicação*
+    ```
+    $ ces-app-config --development
+    ```
+
+    - ##### 1.1.3. *Compilando o frontend*
+    ```
+    $ ces-frontend-compile
+    ```
+
+    - ##### 1.1.4. *Iniciando a aplicação*
+    ```
+    $ ces-app-start
+    ```
+    > Após os passos acima a aplicação estará disponível em: `http://localhost:8000`
+
 
 **[⬆ Voltar ao Topo](#sumário)**
 
