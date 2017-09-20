@@ -7,12 +7,30 @@ Sistema de suporte para empresas do setor de energia solar fotovoltaíca.
 
 ## Sumário
 
-  1. [Execução de Tarefas](#tarefas)
+  1. [Guia Geral](#guia-geral)
   1. [Workflow](#workflow)
   1. [Instalação do Sistema](#instalacao)
   1. [Comandos do Sices](#comandos)
   1. [Padrões de Desenvolvimento](#padrões-de-desenvolvimento)
+  1. [Execução de Tarefas](#execução-de-tarefas)
   1. [Sobre](#sobre)
+
+## Guia Geral
+
+Para utilização dessa documentação alguns pontos devem ser tomados:
+
+  - #### Nomenclaturas
+    - Cards de Roadmap: fragmentos de escopos do produto
+    - Issues: tarefas
+
+  - #### Siglas
+    - PR: Pull Request
+
+  - #### Notas Gerais
+    - Em comandos, os colchetes `[]` delimitam que alguns conteúdos devem ser colocados em seu lugar;
+
+
+**[⬆ Voltar ao Topo](#sumário)**
 
 ## Workflow
 
