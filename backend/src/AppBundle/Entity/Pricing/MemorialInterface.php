@@ -1,26 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: joao
- * Date: 10/07/17
- * Time: 12:05
- */
 
 namespace AppBundle\Entity\Pricing;
 
-
 interface MemorialInterface
 {
-    /**
-     * @param $version
-     * @return mixed
-     */
-    public function setVersion($version);
-
-    /**
-     * @return mixed
-     */
-    public function getVersion();
+    const STATUS_PENDING = 0;
+    const STATUS_ENABLED = 1;
+    const STATUS_EXPIRED = 2;
 
     /**
      * @param $startAt
@@ -34,15 +20,26 @@ interface MemorialInterface
     public function getStartAt();
 
     /**
-     * @param $endAt
-     * @return mixed
+     * @param $expiredAt
+     * @return MemorialInterface
      */
-    public function setEndAt($endAt);
+    public function setExpiredAt(\DateTime $expiredAt);
 
     /**
      * @return mixed
      */
-    public function getEndAt();
+    public function getExpiredAt();
+
+    /**
+     * @param \DateTime $publishedAt
+     * @return MemorialInterface
+     */
+    public function setPublishedAt(\DateTime $publishedAt);
+
+    /**
+     * @return \DateTime
+     */
+    public function getPublishedAt();
 
     /**
      * @param $status
@@ -56,26 +53,30 @@ interface MemorialInterface
     public function getStatus();
 
     /**
-     * @param $isquikId
-     * @return MemorialInterface
+     * @return bool
      */
-    public function setIsquikId($isquikId);
+    public function isExpired();
 
     /**
-     * @return int
+     * @return bool
      */
-    public function getIsquikId();
+    public function isPending();
 
     /**
-     * @param $description
+     * @return bool
+     */
+    public function isEnabled();
+
+    /**
+     * @param $name
      * @return MemorialInterface
      */
-    public function setDescription($description);
+    public function setName($name);
 
     /**
      * @return string
      */
-    public function getDescription();
+    public function getName();
 
     /**
      * @param RangeInterface $range
@@ -89,7 +90,28 @@ interface MemorialInterface
     public function getRanges();
 
     /**
+     * @param array $levels
+     * @return MemorialInterface
+     */
+    public function setLevels(array $levels);
+
+    /**
+     * @return array
+     */
+    public function getLevels();
+
+    /**
      * @return array
      */
     public function toArray();
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt();
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt();
 }
