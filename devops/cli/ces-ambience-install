@@ -2,32 +2,56 @@
 
 if [[ $1 = '--installation-list' ]]; then
   printf 'Dependencies - installation commands
-  Apache:
-  $ sudo apt-get install apache2
 
-  PHP:
-  $ sudo apt-get install php
+  Required:
 
-  pacotes do PHP:
-  $ sudo apt install php-mbstring php-xml php-mysql php-intl php-common php-curl
+    * Apache2
+    * PHP
+      * php-mbstring
+      * php-xml
+      * php-mysql
+      * php-intl
+    * Node
+    * Yarn
+    * Composer
+    * Git
 
-  Nodejs:
-  $ sudo apt-get install nodejs
+  How to:
 
-  Yarn (apenas ambiente desenvolvimento):
-  $ curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-  $ echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-  $ sudo apt-get update
-  $ sudo apt-get install yarn
+    Apache:
 
-  Composer:
-  $ sudo apt install composer
+      $ sudo apt-get install apache2
 
-  Git:
-  $ sudo apt install git
+    PHP:
 
-  Mysql Server:
-  $ sudo apt install mysql-server \n'
+      $ sudo apt-get install php
+
+    pacotes do PHP:
+
+      $ sudo apt install php-mbstring php-xml php-mysql php-intl php-common php-curl
+
+    Nodejs:
+
+      $ sudo apt-get install nodejs
+
+    Yarn (apenas ambiente desenvolvimento):
+
+      $ curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+      $ echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+      $ sudo apt-get update
+      $ sudo apt-get install yarn
+
+    Composer:
+
+      $ sudo apt install composer
+
+    Git:
+
+      $ sudo apt install git
+
+    Mysql Server:
+
+      $ sudo apt install mysql-server \n\n'
   exit 0
 
 elif [[ $1 = '--full' ]]; then
