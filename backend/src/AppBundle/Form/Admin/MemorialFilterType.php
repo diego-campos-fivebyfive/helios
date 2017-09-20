@@ -3,6 +3,7 @@
 namespace AppBundle\Form\Admin;
 
 use AppBundle\Entity\Pricing\Memorial;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,10 +17,13 @@ class MemorialFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         /** @var Memorial $memorial */
-        //$memorial = $options['memorial'];
         $levels = $options['levels'];
 
         $builder
+            ->add('memorial', EntityType::class, [
+                'placeholder' => 'Selecionar Memorial',
+                'class' => Memorial::class
+            ])
             ->add('level', ChoiceType::class, [
                 'choices' => array_combine($levels, $levels)
             ])
@@ -46,7 +50,8 @@ class MemorialFilterType extends AbstractType
         $resolver
             ->setRequired('memorial')
             ->setDefaults([
-                'levels' => []
+                'levels' => [],
+                'memorials' => []
             ])
         ;
     }

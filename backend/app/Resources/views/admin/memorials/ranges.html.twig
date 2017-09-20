@@ -1,278 +1,404 @@
-
-<script src="{{ asset('public/assets/jquery.js') }}"></script>
-<link rel="stylesheet" href="{{ asset('public/assets/css/main.css') }}">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.2.2/css/tabulator.min.css" rel="stylesheet">
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/3.2.2/js/tabulator.min.js"></script>
-
-{#
-
-<script language="javascript" src="{{ asset('public/assets/table-scroller/js/tablescroller.js') }}"></script>
-<script language="javascript" src="{{ asset('public/assets/table-scroller/js/tablescroller.jquery.js') }}"></script>
-<link type="text/css" href="{{ asset('public/assets/table-scroller/css/tablescroller.css') }}" rel="stylesheet" />
-#}
-
 <style>
-    body {
-        background: #fff;
+    .m-container {
+        width: 100%;
+        padding: 10px;
+        float: left;
     }
 
-    .memorial-selectors {
-        background: #666;
+    .m-header {
+        width: 100%;
+        float: left;
     }
 
-    .memorial-headers {
-        background: #888;
+    .m-header-left {
+        width: 50%;
+        float: left;
     }
 
-    .memorial-container {
-        background: #478;
-        height: 300px;
+    .m-header-right {
+        width: 50%;
+        float: left;
+        overflow-x: hidden;
     }
 
-    .memorial-blocks {
-        background: #eee;
+    .m-cell-100 {
+        width: 100px;
+    }
+
+    .m-cell-200 {
+        width: 200px;
+    }
+
+    .m-content {
+        width: 100%;
+        float: left;
+    }
+
+    .m-content-left {
+        width: 50%;
+        float: left;
+        height: 400px;
+        overflow-y: auto;
+        direction: rtl;
+    }
+
+    .m-content-right {
+        width: 50%;
+        float: left;
+        height: 420px;
+        overflow: auto;
     }
 </style>
 
 
-<div class="row">
-    <div class="col-md-12" id="example-table">
-    </div>
-</div>
+{% set powers = collection.powers %}
 
+<div class="m-container">
+    <div class="m-header">
+        <div class="m-header-left">
+            <table class="table table-bordered">
 
-<div class="row">
-
-
-    {#<div class="col-md-12">
-
-        <table id="memorial-table" class="table table-hovered table-bordered">
-            <thead>
+                <thead>
                 <tr>
-                    <th> Código </th>
-                    <th> Descrição </th>
-                    <th> NCM </th>
-                    <th colspan="2"> CMV </th>
+                    <th rowspan="2">
+                        &nbsp;
+                    </th>
+                    <th>
+                        <div class="m-cell-100">
+                            Código
+                        </div>
+                    </th>
+                    <th>
+                        <div class="m-cell-200">
+                            Descrição
+                        </div>
+                    </th>
+                    <th>
+                        <div class="m-cell-100">
+                            NCM
+                        </div>
+                    </th>
+                    <th colspan="2"> CMV</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>
+                        <div class="m-cell-100">
+                            Protheus
+                        </div>
+                    </th>
+                    <th>
+                        <div class="m-cell-100">
+                            Aplicado
+                        </div>
+                    </th>
+                </tr>
 
+                </thead>
+            </table>
+        </div>
+        <div class="m-header-right">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
                     {% for power in powers %}
-                        <td>
-                            {{ attribute(power, 0) }} - {{ attribute(power, 1) }}
+                        <th colspan="2">
+                            <div class="m-cell-200">
+                                {{ attribute(power, 0) ~ ' - ' ~ attribute(power, 1) }} kWp
+                            </div>
+                        </th>
+                    {% endfor %}
+                    <td rowspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                    {% for power in powers %}
+                        <th>
+                            <div class="m-cell-100">
+                                Markup (%)
+                            </div>
+                        </th>
+                        <th>
+                            <div class="m-cell-100">
+                                Preço
+                            </div>
+                        </th>
+                    {% endfor %}
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+    <div class="m-content">
+
+        <div class="m-content-left">
+            <div style="direction: ltr;">
+            <table class="table table-bordered table-striped" style="border-right: none;">
+                <tbody id="content-left-body">
+                {% for type, config in collection.components %}
+
+                    <tr>
+                        <td colspan="5" style="border-right: none; text-align: left">
+                            <h1> {{ config.label|trans }} </h1>
                         </td>
+                    </tr>
+
+                    {% for item in config.items %}
+                        {% set product = item.product %}
+                        {% set token = type ~ '-' ~ product.id %}
+
+                        <tr data-product-info="{{ token }}"
+                            data-toggle="popover"
+                            data-title="{{ product.code }}"
+                            data-content="{{ product.description }}"
+                            data-trigger="focus"
+                            data-placement="bottom"
+                            data-container="#content-left-body">
+                            <td>
+                                {{ product.code }}
+                            </td>
+                            <td>
+                                <div class="m-cell-200">
+                                    <input readonly="readonly" placeholder="Descrição" type="text" class="form-control product-description" value="{{ product.description }}">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="m-cell-100">
+                                    <input placeholder="NCM" type="text" class="form-control" data-field="ncm" value="{{ product.ncm }}">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="m-cell-100">
+                                    <input placeholder="CMV Protheus" type="text" class="form-control" data-field="cmvProtheus" value="{{ product.cmvProtheus }}">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="m-cell-100">
+                                    <input id="{{ token ~ '-cmv-applied' }}" placeholder="CMV Aplicado" type="text" class="form-control" data-field="cmvApplied" value="{{ product.cmvApplied }}">
+                                </div>
+                            </td>
+                        </tr>
+
                     {% endfor %}
-
-                </tr>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th> Protheus </th>
-                    <th> Aplicado </th>
-                    <th colspan="{{ powers|length }}"></th>
-                </tr>
-            </thead>
-            <tbody style="overflow-x: auto;">
-
-            {% for type, config in collection.components %}
-
-                {% for item in config.items %}
-
-                    {% set product = item.product %}
+                {% endfor %}
 
                 <tr>
-                    <td> {{ product.code }} </td>
-                    <td> {{ product.description }} </td>
-                    <td> {{ product.ncm }} </td>
-                    <td> {{ product.cmvProtheus }} </td>
-                    <td> {{ product.cmvApplied }} </td>
+                    <td colspan="5">
+                        &nbsp;
+                    </td>
+                </tr>
 
-                    {% for range in item.ranges %}
-                        <td> {{ range.price }} </td>
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+        <div class="m-content-right">
+
+            <table class="table table-bordered table-striped" style="border-left: none;">
+                {% for type, config in collection.components %}
+
+                    <tr>
+                        <td colspan="{{ powers|length }}" style="border-left: none;">
+                            <h1> &nbsp; </h1>
+                        </td>
+                    </tr>
+
+                    {% for item in config.items %}
+                        {% set product = item.product %}
+                        {% set token = type ~ '-' ~ product.id %}
+
+                        <tr data-range-product="{{ token }}">
+
+                            {% for range in item.ranges %}
+                                <td>
+                                    <div class="m-cell-100">
+                                        <input data-field="markup" data-range="{{ range.id }}" placeholder="Markup" value="{{ range.markup }}" class="form-control input-markup" data-pricing="markup">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="m-cell-100">
+                                        <input data-field="price" id="range_price_{{ range.id }}" readonly="readonly" placeholder="Valor" value="{{ range.price|round(2) }}" class="form-control input-price">
+                                    </div>
+                                </td>
+                            {% endfor %}
+
+                        </tr>
+
                     {% endfor %}
-
-                </tr>
 
                 {% endfor %}
 
-            {% endfor %}
+                <tr>
+                    <td colspan="{{ powers|length }}">
+                        &nbsp;
+                    </td>
+                </tr>
 
-            </tbody>
-        </table>
+            </table>
 
-
-    </div>#}
-
-    <div class="col-md-12 memorial-headers">
-
-        <div class="row">
-            <div class="col-md-5">
-
-                <table class="table table-bordered">
-
-                    <tr>
-                        <td> CÓDIGO</td>
-                        <td> DESCRIÇÃO</td>
-                        <td> NCM</td>
-                        <td> PROTHEUS</td>
-                        <td> APLICADO</td>
-                    </tr>
-
-                </table>
-
-            </div>
-
-            <div class="col-md-7" style="overflow-x: auto;">
-
-                <table class="table table-bordered">
-
-                    <tr>
-                        {% for power in powers %}
-                            <td style="width: 100px;">
-                                {{ attribute(power, 0) }} - {{ attribute(power, 1) }}
-                            </td>
-                        {% endfor %}
-                    </tr>
-
-                </table>
-
-            </div>
-        </div>
-
-        <div class="col-md-12 memorial-container">
-            <div class="row">
-                <div class="col-md-5 memorial-blocks">
-
-                    <table class="table table-bordered">
-
-                        {% for i in 1..100 %}
-
-                            <tr>
-                                <td> {{ random() }} </td>
-                                <td> DESCRIÇÃO</td>
-                                <td> NCM</td>
-                                <td> PROTHEUS</td>
-                                <td> APLICADO</td>
-                            </tr>
-
-                        {% endfor %}
-
-                    </table>
-
-                </div>
-                <div class="col-md-7 memorial-blocks" style="overflow-x: auto;">
-
-                    <table class="table table-bordered">
-
-                        {% for i in 1..100 %}
-
-                            <tr>
-                                <td> 24578.00</td>
-                                <td> 24578.00</td>
-                                <td> 24578.00</td>
-                                <td> 24578.00</td>
-                                <td> 24578.00</td>
-                                <td> 24578.00</td>
-                                <td> 24578.00</td>
-                                <td> 24578.00</td>
-                                <td> 24578.00</td>
-                                <td> 24578.00</td>
-                                <td> 24578.00</td>
-                                <td> 24578.00</td>
-                                <td> 24578.00</td>
-                                <td> 24578.00</td>
-                                <td> 24578.00</td>
-                                <td> 24578.00</td>
-                                <td> 24578.00</td>
-                                <td> 24578.00</td>
-                                <td> 24578.00</td>
-                                <td> 24578.00</td>
-                            </tr>
-
-                        {% endfor %}
-
-                    </table>
-
-                </div>
-            </div>
         </div>
 
     </div>
 
 </div>
 
-
 <script>
 
-    /*var tabledata = [
-        {id:1, name:"Oli Bob", age:"12", col:"red", dob:""},
-        {id:2, name:"Mary May", age:"1", col:"blue", dob:"14/05/1982"},
-        {id:3, name:"Christine Lobowski", age:"42", col:"green", dob:"22/05/1982"},
-        {id:4, name:"Brendon Philips", age:"125", col:"orange", dob:"01/08/1980"},
-        {id:5, name:"Margret Marmajuke", age:"16", col:"yellow", dob:"31/01/1999"},
-        {id:6, name:"Margret Marmajuke", age:"16", col:"yellow", dob:"31/01/1999"},
-        {id:7, name:"Margret Marmajuke", age:"16", col:"yellow", dob:"31/01/1999"},
-        {id:8, name:"Margret Marmajuke", age:"16", col:"yellow", dob:"31/01/1999"}
-    ];
+    var contentLeft = $('.m-content-left');
+    var contentRight = $('.m-content-right');
+    var headerRight = $('.m-header-right');
+    var contentLeftScrollTop = contentLeft.scrollTop();
+    var contentRightScrollLeft = contentRight.scrollLeft();
+    var contentRightScrollTop = contentRight.scrollTop();
+    var activeMouseFocus = null;
 
-    $("#example-table").tabulator({
-        height:400, // set height of table
-        fitColumns:true, //fit columns to width of table (optional)
-        columns:[ //Define Table Columns
-            {title:"Código", field:"name", width: 150, frozen:true},
-            {title:"Descrição", field:"age", width: 200, frozen:true},
-            {title:"CMV Protheus", field:"col", width: 100, frozen:true},
-            {title:"CMV Aplicado", field:"col", width: 100, frozen:true},
-            {title:"Extra Column", field:"col", width: 100},
-            {title:"Extra Column", field:"col", width: 100},
-            {title:"Extra Column", field:"col", width: 100},
-            {title:"Extra Column", field:"col", width: 100},
-            {title:"Extra Column", field:"col", width: 100},
-            {title:"Extra Column", field:"col", width: 100},
-            {title:"Extra Column", field:"col", width: 100},
-            {title:"Extra Column", field:"col", width: 100},
-            {title:"Extra Column", field:"col", width: 100},
-            {title:"Extra Column", field:"col", width: 100},
-            {title:"Extra Column", field:"col", width: 100},
-            {title:"Extra Column", field:"col", width: 100},
-        ],
-        rowClick:function(e, row){ //trigger an alert message when the row is clicked
-            alert("Row " + row.getData().id + " Clicked!!!!");
+    contentRight.on('scroll', function () {
+
+        var currentContentRightScrollLeft = $(this).scrollLeft();
+        var currentContentRightScrollTop = $(this).scrollTop();
+
+        if (currentContentRightScrollLeft != contentRightScrollLeft) {
+            contentRightScrollLeft = currentContentRightScrollLeft;
+            headerRight.scrollLeft(contentRightScrollLeft);
         }
+
+        if (currentContentRightScrollTop != contentRightScrollTop && 'contentLeft' != activeMouseFocus) {
+            contentRightScrollTop = currentContentRightScrollTop;
+            contentLeft.scrollTop(contentRightScrollTop);
+        }
+    }).on('mouseover', function () {
+        activeMouseFocus = 'contentRight';
     });
 
-    $("#example-table").tabulator('setData', tabledata);*/
+    contentLeft.on('scroll', function () {
 
+        var currentContentLeftScrollTop = $(this).scrollTop();
 
-    /*$('#memorial-table').tabulator({
-        height: 500,
-        columns: [
-            {title:"Código", field:"code", width: 150, frozen:true},
-            {title:"Descrição", field:"description", width: 200, frozen:true},
-            {title:"CMV Protheus", field:"cmvProtheus", width: 100, frozen:true},
-            {title:"CMV Aplicado", field:"cmvApplied", width: 100, frozen:true}
-        ]
+        if (currentContentLeftScrollTop != contentLeftScrollTop && 'contentRight' != activeMouseFocus) {
+            contentLeftScrollTop = currentContentLeftScrollTop;
+            contentRight.scrollTop(contentLeftScrollTop);
+        }
+    }).on('mouseover', function () {
+        activeMouseFocus = 'contentLeft';
     });
 
-    $('#memorial-table').tabulator('setData', [
-        {id: 210, description: 'This is a description', cmvProtheus: 100.25, cmvApplied: 251.00 },
-        {id: 210, description: 'This is a description', cmvProtheus: 100.25, cmvApplied: 251.00 },
-        {id: 210, description: 'This is a description', cmvProtheus: 100.25, cmvApplied: 251.00 },
-        {id: 210, description: 'This is a description', cmvProtheus: 100.25, cmvApplied: 251.00 },
-        {id: 210, description: 'This is a description', cmvProtheus: 100.25, cmvApplied: 251.00 },
-        {id: 210, description: 'This is a description', cmvProtheus: 100.25, cmvApplied: 251.00 }
-    ]);
-*/
 </script>
 
 
 <script>
-/*    $('#memorial-table').tablescroller({
-        width: 400,
-        height: 300,
-        pinnedRows: 1,
-        pinnedCols: 2,
-        container: "#memorial-container",
-        removeOriginal: true
-    });*/
+
+    var RangeManager = {
+        getFloat: function (field) {
+            return this.toFloat(field.val());
+        },
+        toFloat: function(source){
+            var value = parseFloat(source);
+            if (isNaN(value)) value = 0;
+            return value;
+        },
+        request: function (url, method, data, callback) {
+            $.ajax({
+                url: url,
+                method: method,
+                data: data,
+                complete: function (xhr) {
+                    callback(xhr);
+                }
+            });
+        },
+        sendRanges: function(data){
+            if (data.length) {
+                $.ajax({
+                    url: '{{ path('memorials_range_update') }}',
+                    method: 'post',
+                    data: {ranges: data},
+                    complete: function (xhr) {
+                        var response = xhr.responseJSON;
+                        var ranges = response.ranges;
+                        $.each(ranges, function (i, range) {
+                            $('#range_price_' + range.id).val(range.price.toFixed(2));
+                        });
+                    }
+                });
+            }
+        },
+        updateRange: function (source) {
+
+            var row = source.closest('tr');
+            var info = row.data('range-product');
+
+            var cost = this.getFloat($('#'+info+'-cmv-applied'));
+
+            var data = [{
+                id: source.data('range'),
+                markup: this.getFloat(source),
+                cost: cost
+            }];
+
+            this.sendRanges(data);
+        },
+        updateRanges: function(group, cost){
+
+            var data = [];
+            markups = group.find('[data-field="markup"]');
+            $.each(markups, function (i, input) {
+                var range = $(input).data('range');
+                var markup = RangeManager.getFloat($(input));
+                data[data.length] = {
+                    id: range,
+                    markup: markup,
+                    cost: cost
+                };
+            });
+
+            this.sendRanges(data);
+        },
+        onChangeProduct: function (source) {
+
+            var field = source.data('field');
+            var value = source.val();
+            var row = source.closest('tr');
+
+            var info = row.data('product-info');
+            var tokens = info.split('-');
+            var type = tokens[0];
+            var id = tokens[1];
+
+            var url = '{{ path('memorials_product_update') }}';
+
+            this.request(url, 'post', {type: type, id: id, field: field, value: value}, function (xhr) {
+                if (200 != xhr.status) {
+                    swal('Ooops', 'Falha ao executar a operação', 'error');
+                } else {
+                    if ('cmvApplied' == field) {
+                        RangeManager.updateRanges($('[data-range-product="'+info+'"]'), RangeManager.toFloat(value));
+                    }
+                }
+            });
+        },
+        init: function () {
+
+            $('[data-field]').on('change', function () {
+                var field = $(this).data('field');
+                switch (field) {
+                    case 'ncm':
+                    case 'cmvProtheus':
+                    case 'cmvApplied':
+                        RangeManager.onChangeProduct($(this));
+                        break;
+                    case 'markup':
+                        RangeManager.updateRange($(this));
+                        break;
+                }
+            });
+
+            $('[data-toggle="popover"]').popover();
+        }
+    };
+
+    RangeManager.init();
+
 </script>

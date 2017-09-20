@@ -1,0 +1,171 @@
+{% extends view('layout') %}
+
+{% block styles %}
+
+    <style>
+        table th, table td, table input:not(:disabled) {
+            text-align: center;
+        }
+
+        .input-markup, .input-price {
+            width: 100px;
+        }
+
+        .table th span {
+            /*background: #068;*/
+            width: 75%;
+            margin: 0;
+            float: left;
+        }
+
+        .table th a {
+            text-align: right;
+            width: 25%;
+            margin: 0;
+            float: left;
+        }
+        .product-config td input:disabled{
+            font-size: 13px;
+        }
+        .input-description:not(.collapsed){
+            width: 350px;
+        }
+        .input-description.collapsed{
+            width: 85px;
+        }
+        .input-code:not(.collapsed){
+            width: 120px;
+        }
+        .input-code.collapsed{
+            width: 75px;
+        }
+    </style>
+
+{% endblock %}
+
+{% block body %}
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+
+            <div class="row" id="real-content">
+                <div class="col-md-12">
+                    <div class="ibox flow-h">
+                        <div class="ibox-content flow-lg">
+
+                            <div class="row">
+                                <div class="col-md-12">
+
+                                {{ form_start(form,{attr:{id:'form_filter'}}) }}
+
+                                    <div class="form-group col-md-2">
+                                        {{ form_label(form.memorial) }}
+                                        {{ form_widget(form.memorial, {attr:{class:'form-control'}}) }}
+                                    </div>
+
+                                    <div class="form-group col-md-2">
+                                        {{ form_label(form.level,'Nível de Desconto') }}
+                                        {{ form_widget(form.level, {attr:{class:'form-control'}}) }}
+                                    </div>
+
+                                    <div class="col-md-8" id="memorial_filter_components">
+
+                                        <div class="form-group col-md-12">
+                                            <label> Componentes </label>
+                                        </div>
+
+                                        {% for component in form.components %}
+
+                                            <div class="form-group col-md-2">
+                                                {{ form_widget(component) }}
+                                                {{ form_label(component) }}
+                                            </div>
+
+                                        {% endfor %}
+
+                                    </div>
+                                {{ form_end(form) }}
+
+                                </div>
+                            </div>
+
+                            <div class="row" id="render_memorial">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+
+        var MemorialManager = {
+            listeners: $('[id^="memorial_filter_"]'),
+            form: $('#form_filter'),
+            method: 'post',
+            uri: '{{ app.request.uri }}',
+            render: function(content){
+                $('#render_memorial').html(content);
+            },
+            get: function (id) {
+                return this.field(id).val();
+            },
+            field: function (suffix) {
+                return $('#memorial_filter_' + suffix);
+            },
+            updateUri: function (memorial) {
+                this.uri = '{{ path('memorials_config', {id: '_id_'}) }}'.replace(/_id_/g, memorial);
+                window.history.pushState({}, null, this.uri);
+            },
+            analyze: function () {
+                var memorial = this.get('memorial');
+                var level = this.get('level');
+                var components = $('#memorial_filter_components').find('input:checked');
+
+                if (memorial && level && components.length) {
+
+                    this.updateUri(memorial);
+
+                    $.ajax({
+                        url: this.uri,
+                        method: this.method,
+                        data: this.form.serialize(),
+                        complete: function (xhr) {
+                            MemorialManager.render(xhr.responseText);
+                        }
+                    });
+                }else{
+                    MemorialManager.render('');
+                }
+            },
+            init: function () {
+
+                this.listeners.on('change', function (event) {
+                    event.stopPropagation();
+                    MemorialManager.analyze();
+                });
+
+                this.form.on('submit', function (event) {
+                    event.preventDefault();
+                    MemorialManager.analyze();
+                });
+
+                $("body").toggleClass("mini-navbar");
+                SmoothlyMenu();
+
+                MemorialManager.analyze();
+            }
+        };
+
+        MemorialManager.init();
+
+    </script>
+
+{% endblock %}
