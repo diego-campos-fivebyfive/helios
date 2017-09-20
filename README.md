@@ -26,7 +26,7 @@ Sistema de suporte para empresas do setor de energia solar fotovoltaíca.
     - [Hangout](https://hangouts.google.com/?hl=pt-BR): Calls
 
   <a name="workflow--tarefas"></a><a name="1.2"></a>
-  - [1.2](#workflow--tarefas) **Execução de Tarefas**:
+  - [1.2](#workflow--tarefas) **Ciclo de vida de Tarefas**:
 
     - Para cada tarefa há um prazo máximo de execução de 2 dias;
     - Caso a execução da tarefa fique travada em mais de 20min deve ser solicitada ajuda utilizando a flag `HELP`;
@@ -113,6 +113,31 @@ Sistema de suporte para empresas do setor de energia solar fotovoltaíca.
       ```
 
     > **Nota**: As variaveis usadas pelo Symfony são inseridas automaticamente no arquivo `parameters.yml` ao rodar o comando ces-app-config. Variaveis utilizadas pelo Symfony devem ter seu sample definido nos arquivos `backend/app/config/parameters_sample.yml` e `devops/cli/util/variables-replace`.
+
+
+**[⬆ Voltar ao Topo](#sumário)**
+
+## Execução de Tarefas
+
+  <a name="execução-tarefas--comandos"></a><a name="1.1"></a>
+  - [1.1](#execução-tarefas--comandos) **Comandos de execução**: Comandos para execução de tarefas em ambiente local.
+
+    Preparar ambiente para a execução da tarefa:
+    ```
+    $ ces-new-task issue-[ISSUE_NUMBER]
+    ```
+
+    Adicionar arquivos modificados, realizar commit e envio ao repositório:
+    ```
+    $ git add [FILE_OR_PATH]
+    $ git commit -m "[WHAT_WERE_MADE]"
+    $ git push origin issue-[ISSUE_NUMBER]
+    ```
+
+    Deletar branch local após merge de Pull Request:
+    ```
+    $ git branch -D issue-[ISSUE_NUMBER]
+    ```
 
 
 **[⬆ Voltar ao Topo](#sumário)**
