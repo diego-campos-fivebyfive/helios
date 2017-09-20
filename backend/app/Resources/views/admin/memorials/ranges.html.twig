@@ -1,311 +1,404 @@
-{% extends view('layout') %}
+<style>
+    .m-container {
+        width: 100%;
+        padding: 10px;
+        float: left;
+    }
 
-{% block body %}
+    .m-header {
+        width: 100%;
+        float: left;
+    }
 
-    <style>
-        table th, table td, table input:not(:disabled) {
-            text-align: center;
-        }
+    .m-header-left {
+        width: 50%;
+        float: left;
+    }
 
-        .input-markup, .input-price {
-            width: 100px;
-        }
+    .m-header-right {
+        width: 50%;
+        float: left;
+        overflow-x: hidden;
+    }
 
-        .table th span {
-            /*background: #068;*/
-            width: 75%;
-            margin: 0;
-            float: left;
-        }
+    .m-cell-100 {
+        width: 100px;
+    }
 
-        .table th a {
-            text-align: right;
-            width: 25%;
-            margin: 0;
-            float: left;
-        }
-        .product-config td input:disabled{
-            font-size: 13px;
-        }
-        .input-description:not(.collapsed){
-            width: 350px;
-        }
-        .input-description.collapsed{
-            width: 85px;
-        }
-        .input-code:not(.collapsed){
-            width: 120px;
-        }
-        .input-code.collapsed{
-            width: 75px;
-         }
-    </style>
+    .m-cell-200 {
+        width: 200px;
+    }
 
-    {% set powers = collection.powers %}
+    .m-content {
+        width: 100%;
+        float: left;
+    }
 
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
+    .m-content-left {
+        width: 50%;
+        float: left;
+        height: 400px;
+        overflow-y: auto;
+        direction: rtl;
+    }
 
-        <div class="col-md-12">
-            SELECTORS
+    .m-content-right {
+        width: 50%;
+        float: left;
+        height: 420px;
+        overflow: auto;
+    }
+</style>
+
+
+{% set powers = collection.powers %}
+
+<div class="m-container">
+    <div class="m-header">
+        <div class="m-header-left">
+            <table class="table table-bordered">
+
+                <thead>
+                <tr>
+                    <th rowspan="2">
+                        &nbsp;
+                    </th>
+                    <th>
+                        <div class="m-cell-100">
+                            Código
+                        </div>
+                    </th>
+                    <th>
+                        <div class="m-cell-200">
+                            Descrição
+                        </div>
+                    </th>
+                    <th>
+                        <div class="m-cell-100">
+                            NCM
+                        </div>
+                    </th>
+                    <th colspan="2"> CMV</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>
+                        <div class="m-cell-100">
+                            Protheus
+                        </div>
+                    </th>
+                    <th>
+                        <div class="m-cell-100">
+                            Aplicado
+                        </div>
+                    </th>
+                </tr>
+
+                </thead>
+            </table>
+        </div>
+        <div class="m-header-right">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    {% for power in powers %}
+                        <th colspan="2">
+                            <div class="m-cell-200">
+                                {{ attribute(power, 0) ~ ' - ' ~ attribute(power, 1) }} kWp
+                            </div>
+                        </th>
+                    {% endfor %}
+                    <td rowspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                    {% for power in powers %}
+                        <th>
+                            <div class="m-cell-100">
+                                Markup (%)
+                            </div>
+                        </th>
+                        <th>
+                            <div class="m-cell-100">
+                                Preço
+                            </div>
+                        </th>
+                    {% endfor %}
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+    <div class="m-content">
+
+        <div class="m-content-left">
+            <div style="direction: ltr;">
+            <table class="table table-bordered table-striped" style="border-right: none;">
+                <tbody id="content-left-body">
+                {% for type, config in collection.components %}
+
+                    <tr>
+                        <td colspan="5" style="border-right: none; text-align: left">
+                            <h1> {{ config.label|trans }} </h1>
+                        </td>
+                    </tr>
+
+                    {% for item in config.items %}
+                        {% set product = item.product %}
+                        {% set token = type ~ '-' ~ product.id %}
+
+                        <tr data-product-info="{{ token }}"
+                            data-toggle="popover"
+                            data-title="{{ product.code }}"
+                            data-content="{{ product.description }}"
+                            data-trigger="focus"
+                            data-placement="bottom"
+                            data-container="#content-left-body">
+                            <td>
+                                {{ product.code }}
+                            </td>
+                            <td>
+                                <div class="m-cell-200">
+                                    <input readonly="readonly" placeholder="Descrição" type="text" class="form-control product-description" value="{{ product.description }}">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="m-cell-100">
+                                    <input placeholder="NCM" type="text" class="form-control" data-field="ncm" value="{{ product.ncm }}">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="m-cell-100">
+                                    <input placeholder="CMV Protheus" type="text" class="form-control" data-field="cmvProtheus" value="{{ product.cmvProtheus }}">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="m-cell-100">
+                                    <input id="{{ token ~ '-cmv-applied' }}" placeholder="CMV Aplicado" type="text" class="form-control" data-field="cmvApplied" value="{{ product.cmvApplied }}">
+                                </div>
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+                {% endfor %}
+
+                <tr>
+                    <td colspan="5">
+                        &nbsp;
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+            </div>
         </div>
 
-        <div class="col-md-12">
-            HEADER
-        </div>
+        <div class="m-content-right">
 
-        {% for type, config in collection.components %}
+            <table class="table table-bordered table-striped" style="border-left: none;">
+                {% for type, config in collection.components %}
 
-            <div class="col-md-12" data-type="{{ type }}">
+                    <tr>
+                        <td colspan="{{ powers|length }}" style="border-left: none;">
+                            <h1> &nbsp; </h1>
+                        </td>
+                    </tr>
 
-                <h1> {{ config.label|trans }} </h1>
+                    {% for item in config.items %}
+                        {% set product = item.product %}
+                        {% set token = type ~ '-' ~ product.id %}
 
-                <div class="row">
-                    <div class="col-md-6">
+                        <tr data-range-product="{{ token }}">
 
-                        <table class="table table-bordered table-striped">
-
-                            <tr>
-                                <th>
-                                    <span> Código </span>
-                                    <a class="resize" data-input=".input-code">
-                                        <i class="fa fa-arrow-left"></i>
-                                    </a>
-                                </th>
-                                <th>
-                                    <span> Descrição </span>
-                                    <a class="resize" data-input=".input-description">
-                                        <i class="fa fa-arrow-left"></i>
-                                    </a>
-                                </th>
-                                <th> NCM</th>
-                                <th colspan="2"> CMV</th>
-                            </tr>
-
-                            <tr>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th> Protheus </th>
-                                <th> Aplicado </th>
-                            </tr>
-
-                            <tbody class="product-config">
-
-                            {% for item in config.items %}
-                                {% set product = item.product %}
-
-                                <tr>
-                                    <td title="{{ product.code }}">
-                                        <input disabled="disabled" placeholder="Valor"
-                                               value="{{ product.code }}" class="form-control input-code">
-                                    </td>
-                                    <td title="{{ product.description }}">
-                                        <input disabled="disabled" placeholder="Valor"
-                                               value="{{ product.description }}" class="form-control input-description">
-                                    </td>
-                                    <td title="{{ product.ncm }}">
-                                        <input data-product="{{ {id: product.id, type: type}|json_encode }}" data-field="ncm" placeholder="NCM" value="{{ product.ncm }}" class="form-control input-ncm">
-                                    </td>
-                                    <td title="{{ product.cmvProtheus }}">
-                                        <input data-product="{{ {id: product.id, type: type}|json_encode }}" data-field="cmvProtheus" placeholder="CMV Protheus" value="{{ product.cmvProtheus }}" class="form-control input-cmvProtheus">
-                                    </td>
-                                    <td title="{{ product.cmvApplied }}">
-                                        <input data-product="{{ {id: product.id, type: type}|json_encode }}" data-field="cmvApplied" placeholder="CMV Aplicado" value="{{ product.cmvApplied }}" class="form-control input-cmvApplied" data-pricing="applied">
-                                    </td>
-                                </tr>
-
+                            {% for range in item.ranges %}
+                                <td>
+                                    <div class="m-cell-100">
+                                        <input data-field="markup" data-range="{{ range.id }}" placeholder="Markup" value="{{ range.markup }}" class="form-control input-markup" data-pricing="markup">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="m-cell-100">
+                                        <input data-field="price" id="range_price_{{ range.id }}" readonly="readonly" placeholder="Valor" value="{{ range.price|round(2) }}" class="form-control input-price">
+                                    </div>
+                                </td>
                             {% endfor %}
 
-                            </tbody>
+                        </tr>
 
-                        </table>
+                    {% endfor %}
 
-                    </div>
-                    <div class="col-md-6">
+                {% endfor %}
 
-                        <form id="form-{{ type }}">
+                <tr>
+                    <td colspan="{{ powers|length }}">
+                        &nbsp;
+                    </td>
+                </tr>
 
-                            <div style="width: 100%; overflow-y: auto;">
-                                <table class="table table-bordered table-striped">
+            </table>
 
-                                    <tr>
-                                        {% for power in powers %}
-                                            <th colspan="2"> {{ attribute(power, 0) ~ ' - ' ~ attribute(power, 1) }}
-                                                kWp
-                                            </th>
-                                        {% endfor %}
-                                    </tr>
-                                    <tr>
-                                        {% for power in powers %}
-                                            <th> Markup (%) </th>
-                                            <th> Preço </th>
-                                        {% endfor %}
-                                    </tr>
-
-                                    <tbody class="pricing-config">
-
-                                    {% for item in config.items %}
-
-                                        <tr>
-
-                                            {% for range in item.ranges %}
-                                                <td>
-                                                    <input data-product="{{ item.product.id }}" data-field="markup" data-range="{{ range.id }}" placeholder="Markup" value="{{ range.markup }}"
-                                                           class="form-control input-markup" data-pricing="markup">
-                                                </td>
-                                                <td>
-                                                    <input data-product="{{ item.product.id }}" readonly="readonly" id="range_price_{{ range.id }}" data-price="{{ range.id }}" placeholder="Valor" value="{{ range.price }}"
-                                                           class="form-control input-price" data-pricing="price">
-                                                </td>
-                                            {% endfor %}
-
-                                        </tr>
-
-                                    {% endfor %}
-
-                                    </tbody>
-
-                                </table>
-                            </div>
-
-                        </form>
-
-                    </div>
-                </div>
-            </div>
-
-        {% endfor %}
+        </div>
 
     </div>
+
 </div>
 
+<script>
 
-{% endblock %}
+    var contentLeft = $('.m-content-left');
+    var contentRight = $('.m-content-right');
+    var headerRight = $('.m-header-right');
+    var contentLeftScrollTop = contentLeft.scrollTop();
+    var contentRightScrollLeft = contentRight.scrollLeft();
+    var contentRightScrollTop = contentRight.scrollTop();
+    var activeMouseFocus = null;
 
-{% block scripts %}
+    contentRight.on('scroll', function () {
 
-    <script>
+        var currentContentRightScrollLeft = $(this).scrollLeft();
+        var currentContentRightScrollTop = $(this).scrollTop();
 
-        var RangeManager = {
-            getFloat: function(field){
-                var price = parseFloat(field.val());
-                if(isNaN(price)) price = 0;
-                return price;
-            },
-            request: function(url, method, data, callback){
+        if (currentContentRightScrollLeft != contentRightScrollLeft) {
+            contentRightScrollLeft = currentContentRightScrollLeft;
+            headerRight.scrollLeft(contentRightScrollLeft);
+        }
+
+        if (currentContentRightScrollTop != contentRightScrollTop && 'contentLeft' != activeMouseFocus) {
+            contentRightScrollTop = currentContentRightScrollTop;
+            contentLeft.scrollTop(contentRightScrollTop);
+        }
+    }).on('mouseover', function () {
+        activeMouseFocus = 'contentRight';
+    });
+
+    contentLeft.on('scroll', function () {
+
+        var currentContentLeftScrollTop = $(this).scrollTop();
+
+        if (currentContentLeftScrollTop != contentLeftScrollTop && 'contentRight' != activeMouseFocus) {
+            contentLeftScrollTop = currentContentLeftScrollTop;
+            contentRight.scrollTop(contentLeftScrollTop);
+        }
+    }).on('mouseover', function () {
+        activeMouseFocus = 'contentLeft';
+    });
+
+</script>
+
+
+<script>
+
+    var RangeManager = {
+        getFloat: function (field) {
+            return this.toFloat(field.val());
+        },
+        toFloat: function(source){
+            var value = parseFloat(source);
+            if (isNaN(value)) value = 0;
+            return value;
+        },
+        request: function (url, method, data, callback) {
+            $.ajax({
+                url: url,
+                method: method,
+                data: data,
+                complete: function (xhr) {
+                    callback(xhr);
+                }
+            });
+        },
+        sendRanges: function(data){
+            if (data.length) {
                 $.ajax({
-                    url: url,
-                    method: method,
-                    data: data,
-                    complete: function(xhr){
-                        callback(xhr);
+                    url: '{{ path('memorials_range_update') }}',
+                    method: 'post',
+                    data: {ranges: data},
+                    complete: function (xhr) {
+                        var response = xhr.responseJSON;
+                        var ranges = response.ranges;
+                        $.each(ranges, function (i, range) {
+                            $('#range_price_' + range.id).val(range.price.toFixed(2));
+                        });
                     }
                 });
-            },
-            refresh: function (source) {
+            }
+        },
+        updateRange: function (source) {
 
-                var field = source.data('field');
-                var index = source.closest('tr').index();
-                var container = source.closest('[data-type]');
-                var config = container.find('markup' == field ? '.product-config' : '.pricing-config');
-                var line = $(config.find('tr')[index]);
-                var data = [];
+            var row = source.closest('tr');
+            var info = row.data('range-product');
 
-                if('markup' == field){
+            var cost = this.getFloat($('#'+info+'-cmv-applied'));
 
-                    data[data.length] = {
-                        id: source.data('range'),
-                        markup: this.getFloat(source),
-                        cost: this.getFloat(line.find('[data-field="cmvApplied"]'))
-                    };
+            var data = [{
+                id: source.data('range'),
+                markup: this.getFloat(source),
+                cost: cost
+            }];
 
-                }else{
+            this.sendRanges(data);
+        },
+        updateRanges: function(group, cost){
 
-                    var cost = RangeManager.getFloat(source);
-                    var inputMarkups = line.find('.input-markup');
+            var data = [];
+            markups = group.find('[data-field="markup"]');
+            $.each(markups, function (i, input) {
+                var range = $(input).data('range');
+                var markup = RangeManager.getFloat($(input));
+                data[data.length] = {
+                    id: range,
+                    markup: markup,
+                    cost: cost
+                };
+            });
 
-                    $.each(inputMarkups, function (i, input) {
-                        var range = $(input).data('range');
-                        var markup = RangeManager.getFloat($(input));
+            this.sendRanges(data);
+        },
+        onChangeProduct: function (source) {
 
-                        data[data.length] = {
-                            id: range,
-                            markup: markup,
-                            cost: cost
-                        };
-                    });
-                }
+            var field = source.data('field');
+            var value = source.val();
+            var row = source.closest('tr');
 
-                if(data.length) {
-                    $.ajax({
-                        url: '{{ path('memorials_range_update') }}',
-                        method: 'post',
-                        data: {ranges: data},
-                        complete: function (xhr) {
-                            var response = xhr.responseJSON;
-                            var ranges = response.ranges;
-                            $.each(ranges, function (i, range) {
-                                $('#range_price_' + range.id).val(range.price.toFixed(2));
-                            });
-                        }
-                    });
-                }
-            },
-            onChangeProduct: function(source){
+            var info = row.data('product-info');
+            var tokens = info.split('-');
+            var type = tokens[0];
+            var id = tokens[1];
 
-                var field = source.data('field');
-                var value = source.val();
-                var product = source.data('product');
+            var url = '{{ path('memorials_product_update') }}';
 
-                var url = '{{ path('memorials_product_update') }}';
-
-                this.request(url, 'post', {type: product.type, id: product.id, field: field, value: value}, function(xhr){
-                    if(200 != xhr.status){
-                        swal('Ooops', 'Falha ao executar a operação', 'error');
-                    }else{
-                        if('cmvApplied' == field){
-                            RangeManager.refresh(source);
-                        }
+            this.request(url, 'post', {type: type, id: id, field: field, value: value}, function (xhr) {
+                if (200 != xhr.status) {
+                    swal('Ooops', 'Falha ao executar a operação', 'error');
+                } else {
+                    if ('cmvApplied' == field) {
+                        RangeManager.updateRanges($('[data-range-product="'+info+'"]'), RangeManager.toFloat(value));
                     }
-                });
-            },
-            init: function () {
-            }
-        };
+                }
+            });
+        },
+        init: function () {
 
-        $('[data-field]').on('change', function(){
-            var field = $(this).data('field');
-            switch(field){
-                case 'ncm':
-                case 'cmvProtheus':
-                case 'cmvApplied':
-                    RangeManager.onChangeProduct($(this));
-                    break;
-                case 'markup':
-                    RangeManager.refresh($(this));
-                    break;
-            }
-        });
+            $('[data-field]').on('change', function () {
+                var field = $(this).data('field');
+                switch (field) {
+                    case 'ncm':
+                    case 'cmvProtheus':
+                    case 'cmvApplied':
+                        RangeManager.onChangeProduct($(this));
+                        break;
+                    case 'markup':
+                        RangeManager.updateRange($(this));
+                        break;
+                }
+            });
 
-        $('a.resize').on('click', function(){
-            var inputClass = $(this).data('input');
-            var container = $(this).closest('table');
-            var input = container.find(inputClass);
-            var icon = $(this).find('i');
-            var iconType = 'arrow';
-            if(input.hasClass('collapsed')){
-                input.removeClass('collapsed');
-                icon.removeClass('fa-'+iconType+'-right').addClass('fa-'+iconType+'-left');
-            }else{
-                input.addClass('collapsed');
-                icon.removeClass('fa-'+iconType+'-left').addClass('fa-'+iconType+'-right');
-            }
-        });
+            $('[data-toggle="popover"]').popover();
+        }
+    };
 
-        $("body").toggleClass("mini-navbar");
-        SmoothlyMenu();
+    RangeManager.init();
 
-    </script>
-
-{% endblock %}
+</script>
