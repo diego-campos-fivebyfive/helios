@@ -147,16 +147,16 @@ Esclarecimentos gerais relacionados a documentação:
     $ source ~/.bashrc
     ```
 
-    - ##### 3.2.4. *Na variavel `PATH` agora devem aparecer alguns caminhos relacionados a pasta do projeto*
+    - ##### 3.2.4. *Na variável `PATH` agora devem aparecer alguns caminhos relacionados a pasta do projeto*
     ```
     $ echo $PATH | grep sices
     ```
     > **Nota**: caso o comando acima não possua retorno revise os passos de instalação e reinicie o sistema operacional.
 
   <a name="aplicacao--ambiente"></a><a name="3.3"></a>
-  - [3.3](#aplicacao--ambiente) **Dependencias de ambiente**:
+  - [3.3](#aplicacao--ambiente) **Dependências de ambiente**:
 
-    - ##### Para visualizar as dependencias a serem instaladas execute:
+    - ##### Para visualizar as dependências a serem instaladas execute:
     ```
     $ devops/cli/ces-ambience-install --installation-list
     ```
@@ -196,13 +196,13 @@ Esclarecimentos gerais relacionados a documentação:
 ## Padrões de Desenvolvimento
 
   <a name="padroes-desenvolvimento--variaveis-ambiente"></a><a name="4.1"></a>
-  - [4.1](#padroes-desenvolvimento--variaveis-ambiente) **Definição de Variaveis de Ambiente**:
+  - [4.1](#padroes-desenvolvimento--variaveis-ambiente) **Definição de Variáveis de Ambiente**:
 
     > devops/cli/config/
 
     #### Regras Gerais:
 
-    - Variaveis usadas por vários ambientes devem ser definidas no arquivo `variables` usando como padrão o nome da aplicação, variante, e nome da variavel.
+    - Variáveis usadas por vários ambientes devem ser definidas no arquivo `variables` usando como padrão o nome da aplicação, variante, e nome da variável.
       ```
       Ex.:
 
@@ -210,10 +210,10 @@ Esclarecimentos gerais relacionados a documentação:
 
       Aplicação: Sices
       Variantes: Mailer
-      Variavel: Host
+      Variável: Host
       ```
 
-    - Variaveis usadas exclusivamente em um ambiente devem ser definidas no arquivo `variables` dentro da pasta de seu respectivo ambiente, usando como padrão o nome da aplicação, ambiente, variante, e nome da variavel.
+    - Variáveis usadas exclusivamente em um ambiente devem ser definidas no arquivo `variables` dentro da pasta de seu respectivo ambiente, usando como padrão o nome da aplicação, ambiente, variante, e nome da variável.
       ```
       Ex.:
 
@@ -222,10 +222,10 @@ Esclarecimentos gerais relacionados a documentação:
       Aplicação: Sices
       Ambiente: Homolog
       Variantes: Database
-      Variavel: Host
+      Variável: Host
       ```
 
-    - Variaveis definidas exclusivamente para um ambiente devem ser exportadas no arquivo variables-ci com nome generico, de maneira a tornar-sem dinamicas conforme mudança de ambiente. Utilizamos como padrão o prefixo CES no inicio, o nome da aplicação, variante, e nome da variavel.
+    - Variáveis definidas exclusivamente para um ambiente devem ser exportadas no arquivo variables-ci com nome genérico, de maneira a tornar-sem dinâmicas conforme mudança de ambiente. Utilizamos como padrão o prefixo CES no início, o nome da aplicação, variante, e nome da variável.
       ```
       Ex.:
 
@@ -233,10 +233,10 @@ Esclarecimentos gerais relacionados a documentação:
 
       Aplicação: Sices
       Variantes: Database
-      Variavel: Host
+      Variável: Host
       ```
 
-    > **Nota**: As variaveis usadas pelo Symfony são inseridas automaticamente no arquivo `parameters.yml` ao rodar o comando ces-app-config. Variaveis utilizadas pelo Symfony devem ter seu sample definido nos arquivos `backend/app/config/parameters_sample.yml` e `devops/cli/util/variables-replace`.
+    > **Nota**: As variáveis usadas pelo Symfony são inseridas automaticamente no arquivo `parameters.yml` ao rodar o comando ces-app-config. Variáveis utilizadas pelo Symfony devem ter seu sample definido nos arquivos `backend/app/config/parameters_sample.yml` e `devops/cli/util/variables-replace`.
 
 
 **[⬆ Voltar ao Topo](#sumário)**
@@ -271,17 +271,17 @@ Esclarecimentos gerais relacionados a documentação:
   <a name="comandos--ambientes"></a><a name="6.1"></a>
   - [6.1](#comandos--ambientes) **Configuração**:
 
-    - ##### Instalação de dependencias de ambientes
+    - ##### Instalação de dependências de ambientes
       ```
       $ ces-ambience-install --full
       ```
 
-    - ##### Listagem de dependencias de ambientes
+    - ##### Listagem de dependências de ambientes
       ```
       $ ces-ambience-install --installation-list
       ```
 
-    - ##### Instalação de dependencias das aplicações
+    - ##### Instalação de dependências das aplicações
       ```
       $ ces-app-install
       ```
