@@ -30,7 +30,7 @@ if [[ $1 = '--installation-list' ]]; then
   $ sudo apt install mysql-server \n'
   exit 0
 
-elif [[ $1 = '--install' ]]; then
+elif [[ $1 = '--full' ]]; then
   echo "Installing Sices dependencies..."
 
   sudo apt install curl
