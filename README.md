@@ -9,8 +9,8 @@ Sistema de suporte para empresas do setor de energia solar fotovoltaíca.
 
   1. [Guia Geral](#guia-geral)
   1. [Workflow](#workflow)
-  1. [Padrões de Desenvolvimento](#padrões-de-desenvolvimento)
   1. [Instalações da Aplicação](#instalações-da-aplicação)
+  1. [Padrões de Desenvolvimento](#padrões-de-desenvolvimento)
   1. [Execução de Tarefas](#execução-de-tarefas)
   1. [Lista de Comandos](#comandos)
   1. [Sobre](#sobre)
@@ -19,14 +19,20 @@ Sistema de suporte para empresas do setor de energia solar fotovoltaíca.
 
 Esclarecimentos gerais relacionados a documentação:
 
-  - #### Nomenclaturas
+  <a name="guia--nomenclaturas"></a><a name="1.1"></a>
+  - [1.1](#guia--nomenclaturas) **Nomenclaturas**:
+
     - Cards de Roadmap: fragmentos de escopos do produto
     - Issues: tarefas
 
-  - #### Siglas
+  <a name="guia--siglas"></a><a name="1.2"></a>
+  - [1.2](#guia--siglas) **Siglas**:
+
     - PR: Pull Request
 
-  - #### Notas Gerais
+  <a name="guia--notas"></a><a name="1.3"></a>
+  - [1.3](#guia--notas) **Notas Gerais**:
+
     - Em comandos, os colchetes `[]` delimitam que alguns conteúdos devem ser preenchidos em seu lugar;
     - A distro Ubuntu 16.04 foi utilizada como base de referência para a elaboração desta documentação, em outras distribuições podem ocorrer pequenas variações.
 
@@ -35,8 +41,8 @@ Esclarecimentos gerais relacionados a documentação:
 
 ## Workflow
 
-  <a name="workflow--ferramentas"></a><a name="1.1"></a>
-  - [1.1](#workflow--ferramentas) **Ferramentas**:
+  <a name="workflow--ferramentas"></a><a name="2.1"></a>
+  - [2.1](#workflow--ferramentas) **Ferramentas**:
 
     - [Waffle](https://waffle.io/sices/sices/join): Gerenciamento de tarefas (issues)
     - [Trello](https://trello.com/b/jA3wpbqG/sices-roadmap): Acompanhamento de roadmap (cards)
@@ -44,8 +50,8 @@ Esclarecimentos gerais relacionados a documentação:
     - [Slack](https://kolinalabs-si.slack.com/messages): Chat e bots
     - [Hangout](https://hangouts.google.com/?hl=pt-BR): Calls
 
-  <a name="workflow--tarefas"></a><a name="1.2"></a>
-  - [1.2](#workflow--tarefas) **Ciclo de vida de Tarefas**:
+  <a name="workflow--tarefas"></a><a name="2.2"></a>
+  - [2.2](#workflow--tarefas) **Ciclo de vida de Tarefas**:
 
     - Para cada tarefa há um prazo máximo de execução de 2 dias;
     - Caso a execução da tarefa fique travada em mais de 20min deve ser solicitada ajuda utilizando a flag `HELP`;
@@ -63,19 +69,19 @@ Esclarecimentos gerais relacionados a documentação:
         6. Marcada como concluida (done)
         ```
 
-  <a name="workflow--review"></a><a name="1.3"></a>
-  - [1.3](#workflow--review) **Revisão de Pull Request**:
+  <a name="workflow--review"></a><a name="2.3"></a>
+  - [2.3](#workflow--review) **Revisão de Pull Request**:
 
     - As revisões de Pull Request devem ser feitas exclusivamente através do Github;
     - Comentários devem ser feitos na Pull Request e avisados via Slack;
     - É proibido realizar merge de Pull Request sem responder aos comentários;
 
-  <a name="workflow--flags"></a><a name="1.4"></a>
-  - [1.4](#workflow--flags) **Solicitações no Slack**: utilizamos por padrão flags de classificações no inicio de cada solicitação.
+  <a name="workflow--flags"></a><a name="2.4"></a>
+  - [2.4](#workflow--flags) **Solicitações no Slack**: utilizamos por padrão flags de classificações no inicio de cada solicitação.
 
-    - HELP: para solicitar ajuda/pair (chat [developers](https://kolinalabs-si.slack.com/messages/C6AS6KEK1))
-    - REVIEW: para solicitar review (chat [developers](https://kolinalabs-si.slack.com/messages/C6AS6KEK1))
-    - TEST: para solicitar test (chat [tester](https://kolinalabs-si.slack.com/messages/C63Q7FKBN))
+    - **HELP**: para solicitar ajuda/pair (chat [developers](https://kolinalabs-si.slack.com/messages/C6AS6KEK1))
+    - **REVIEW**: para solicitar review (chat [developers](https://kolinalabs-si.slack.com/messages/C6AS6KEK1))
+    - **TEST**: para solicitar test (chat [tester](https://kolinalabs-si.slack.com/messages/C63Q7FKBN))
 
     `Ex.: @here, REVIEW: https://github.com/sices/sices/pull/0000`
 
@@ -90,45 +96,45 @@ Esclarecimentos gerais relacionados a documentação:
 
 ## Instalações da Aplicação
 
-  <a name="aplicacao--git"></a><a name="1.1"></a>
-  - [1.1](#aplicacao--git) **Git e Github**:
+  <a name="aplicacao--git"></a><a name="3.1"></a>
+  - [3.1](#aplicacao--git) **Git e Github**:
 
-    - ##### 1.1.1. *Instalando o Git*
+    - ##### 3.1.1. *Instalando o Git*
     ```
     $ sudo apt install git
     ```
 
-    - ##### 1.1.2. *Configurando informações do Git*
+    - ##### 3.1.2. *Configurando informações do Git*
     ```
     $ git config --global user.email "mail@mail.com"
     $ git config --global user.name "Full Name"
     ```
 
-    - ##### 1.1.3. *Criando chave para acesso SSH*
+    - ##### 3.1.3. *Criando chave para acesso SSH*
     ```
     $ ssh-keygen -t rsa -b 4096 -C "mail@mail.com"
     $ cat ~/.ssh/id_rsa.pub
     ```
 
-    - ##### 1.1.4. *Inserindo chave SSH no Github*
+    - ##### 3.1.4. *Inserindo chave SSH no Github*
     ```
     https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/
     ```
 
-    - ##### 1.1.5. *Clonando o repositório do Github*
+    - ##### 3.1.5. *Clonando o repositório do Github*
     ```
     $ git clone git@github.com:sices/sices.git
     ```
 
-  <a name="aplicacao--bash"></a><a name="1.1"></a>
-  - [1.1](#aplicacao--bash) **Bashrc**:
+  <a name="aplicacao--bash"></a><a name="3.2"></a>
+  - [3.2](#aplicacao--bash) **Bashrc**:
 
-    - ##### 1.1.1. *Abra o Arquivo `.bashrc` com seu editor (Vim, Nano ou outro)*
+    - ##### 3.2.1. *Abra o Arquivo `.bashrc` com seu editor (Vim, Nano ou outro)*
     ```
     $ sudo vim ~/.bashrc
     ```
 
-    - ##### 1.1.2. *Adicione ao final do arquivo as linhas*
+    - ##### 3.2.2. *Adicione ao final do arquivo as linhas*
     ```
     export SICES_PATH=[PROJECT_PATH]
     source $SICES_PATH/devops/cli/config/variables-ci --development
@@ -136,19 +142,19 @@ Esclarecimentos gerais relacionados a documentação:
     ```
     > **Nota**: lembre-se de substitir `[PROJECT_PATH]` pelo caminho do projeto.
 
-    - ##### 1.1.3. *Carregue as alterações do arquivo bash*
+    - ##### 3.2.3. *Carregue as alterações do arquivo bash*
     ```
     $ source ~/.bashrc
     ```
 
-    - ##### 1.1.4. *Na variavel `PATH` agora devem aparecer alguns caminhos relacionados a pasta do projeto*
+    - ##### 3.2.4. *Na variavel `PATH` agora devem aparecer alguns caminhos relacionados a pasta do projeto*
     ```
     $ echo $PATH | grep sices
     ```
     > **Nota**: caso o comando acima não possua retorno revise os passos de instalação e reinicie o sistema operacional.
 
-  <a name="aplicacao--ambiente"></a><a name="1.1"></a>
-  - [1.1](#aplicacao--ambiente) **Dependencias de ambiente**:
+  <a name="aplicacao--ambiente"></a><a name="3.3"></a>
+  - [3.3](#aplicacao--ambiente) **Dependencias de ambiente**:
 
     - ##### Para visualizar as dependencias a serem instaladas execute:
     ```
@@ -160,25 +166,25 @@ Esclarecimentos gerais relacionados a documentação:
     $ devops/cli/ces-ambience-install --full
     ```
 
-  <a name="aplicacao--sices"></a><a name="1.1"></a>
-  - [1.1](#aplicacao--sices) **Configuração da plataforma**:
+  <a name="aplicacao--sices"></a><a name="3.4"></a>
+  - [3.4](#aplicacao--sices) **Configuração da plataforma**:
 
-    - ##### 1.1.1. *Instalando as dependências do Sices*
+    - ##### 3.4.1. *Instalando as dependências do Sices*
     ```
     $ ces-app-install
     ```
 
-    - ##### 1.1.2. *Configurando a aplicação*
+    - ##### 3.4.2. *Configurando a aplicação*
     ```
     $ ces-app-config --development
     ```
 
-    - ##### 1.1.3. *Compilando o frontend*
+    - ##### 3.4.3. *Compilando o frontend*
     ```
     $ ces-frontend-compile
     ```
 
-    - ##### 1.1.4. *Iniciando a aplicação*
+    - ##### 3.4.4. *Iniciando a aplicação*
     ```
     $ ces-app-start
     ```
@@ -189,8 +195,8 @@ Esclarecimentos gerais relacionados a documentação:
 
 ## Padrões de Desenvolvimento
 
-  <a name="padroes-desenvolvimento--variaveis-ambiente"></a><a name="1.1"></a>
-  - [1.1](#padroes-desenvolvimento--variaveis-ambiente) **Definição de Variaveis de Ambiente**:
+  <a name="padroes-desenvolvimento--variaveis-ambiente"></a><a name="4.1"></a>
+  - [4.1](#padroes-desenvolvimento--variaveis-ambiente) **Definição de Variaveis de Ambiente**:
 
     > devops/cli/config/
 
@@ -237,8 +243,8 @@ Esclarecimentos gerais relacionados a documentação:
 
 ## Execução de Tarefas
 
-  <a name="execução-tarefas--comandos"></a><a name="1.1"></a>
-  - [1.1](#execução-tarefas--comandos) **Comandos de execução**: Comandos para execução de tarefas em ambiente local.
+  <a name="execução-tarefas--comandos"></a><a name="5.1"></a>
+  - [5.1](#execução-tarefas--comandos) **Comandos de execução**: Comandos para execução de tarefas em ambiente local.
 
     Preparar ambiente para a execução da tarefa:
     ```
@@ -262,8 +268,8 @@ Esclarecimentos gerais relacionados a documentação:
 
 ## Comandos
 
-  <a name="comandos--ambientes"></a><a name="1.1"></a>
-  - [1.1](#comandos--ambientes) **Configuração**:
+  <a name="comandos--ambientes"></a><a name="6.1"></a>
+  - [6.1](#comandos--ambientes) **Configuração**:
 
     - ##### Instalação de dependencias de ambientes
       ```
@@ -286,8 +292,8 @@ Esclarecimentos gerais relacionados a documentação:
       $ ces-app-config --[AMBIENCE]
       ```
 
-  <a name="comandos--acesso"></a><a name="1.2"></a>
-  - [1.2](#comandos--acesso) **Acesso**:
+  <a name="comandos--acesso"></a><a name="6.2"></a>
+  - [6.2](#comandos--acesso) **Acesso**:
 
     - ##### Acesso ao ambiente de homolog
       ```
@@ -299,8 +305,8 @@ Esclarecimentos gerais relacionados a documentação:
       $ ssh -i $SICES_PATH/devops/aws/staging.pem admin@18.231.15.228
       ```
 
-  <a name="comandos--ambientes"></a><a name="1.3"></a>
-  - [1.3](#comandos--ambientes) **Deploy e Start**:
+  <a name="comandos--ambientes"></a><a name="6.3"></a>
+  - [6.3](#comandos--ambientes) **Deploy e Start**:
 
     - ##### Deploy
       (default ambience: no default value, default origin: staging, obs: origin only for production)
@@ -315,8 +321,8 @@ Esclarecimentos gerais relacionados a documentação:
       $ ces-app-start --[AMBIENCE] --[APPICATION]
       ```
 
-  <a name="comandos--backend"></a><a name="1.4"></a>
-  - [1.4](#comandos--backend) **Backend**:
+  <a name="comandos--backend"></a><a name="6.4"></a>
+  - [6.4](#comandos--backend) **Backend**:
 
     - ##### Pequisa de rotas
       (default: no arg, show all)
@@ -330,8 +336,8 @@ Esclarecimentos gerais relacionados a documentação:
       $ ces-token-request --[APPLICATION] --[AMBIENCE]
       ```
 
-  <a name="comandos--banco"></a><a name="1.5"></a>
-  - [1.5](#comandos--banco) **Banco de dados**:
+  <a name="comandos--banco"></a><a name="6.5"></a>
+  - [6.5](#comandos--banco) **Banco de dados**:
 
     - ##### Atualizar o banco de dados local com a versão de homolog
       ```
@@ -343,8 +349,8 @@ Esclarecimentos gerais relacionados a documentação:
       $ ces-database-update
       ```
 
-  <a name="comandos--processos"></a><a name="1.6"></a>
-  - [1.6](#comandos--processos) **Processos**:
+  <a name="comandos--processos"></a><a name="6.6"></a>
+  - [6.6](#comandos--processos) **Processos**:
 
     - ##### Limpeza de arquivos de logs da aplicação
       ```
@@ -361,8 +367,8 @@ Esclarecimentos gerais relacionados a documentação:
       $ ces-frontend-compile
       ```
 
-  <a name="comandos--outros"></a><a name="1.7"></a>
-  - [1.7](#comandos--outros) **Outros**:
+  <a name="comandos--outros"></a><a name="6.7"></a>
+  - [6.7](#comandos--outros) **Outros**:
 
     - ##### Notificar chat #sices-devops
       ```
@@ -386,8 +392,8 @@ Esclarecimentos gerais relacionados a documentação:
 
 ## Sobre
 
-  <a name="sobre--equipe"></a><a name="1.1"></a>
-  - [1.1](#sobre--equipe) **A equipe**:
+  <a name="sobre--equipe"></a><a name="7.1"></a>
+  - [7.1](#sobre--equipe) **A equipe**:
 
     - #### Alisson Alves
     ```
@@ -431,7 +437,7 @@ Esclarecimentos gerais relacionados a documentação:
 
     - #### Mauro André
     ```
-    Product enginner
+    Product manager
     Slack: @mauroandre
     Github: @mauroandre
     E-mail: eng.mauroandre@gmail.com
