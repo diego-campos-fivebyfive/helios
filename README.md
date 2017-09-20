@@ -93,29 +93,29 @@ Esclarecimentos gerais relacionados a documentação:
   <a name="aplicacao--git"></a><a name="1.1"></a>
   - [1.1](#aplicacao--git) **Git e Github**:
 
-    ##### 1.1.1. *Instalando o Git*
-      ```
-      $ sudo apt install git
-      ```
+    - ##### 1.1.1. *Instalando o Git*
+    ```
+    $ sudo apt install git
+    ```
 
-    ##### 1.1.2. *Configurando informações do Git*
+    - ##### 1.1.2. *Configurando informações do Git*
     ```
     $ git config --global user.email "mail@mail.com"
     $ git config --global user.name "Full Name"
     ```
 
-    ##### 1.1.3. *Criando chave para acesso SSH*
+    - ##### 1.1.3. *Criando chave para acesso SSH*
     ```
     $ ssh-keygen -t rsa -b 4096 -C "mail@mail.com"
     $ cat ~/.ssh/id_rsa.pub
     ```
 
-    ##### 1.1.4. *Inserindo chave SSH no Github*
+    - ##### 1.1.4. *Inserindo chave SSH no Github*
     ```
     https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/
     ```
 
-    ##### 1.1.5. *Clonando o repositório do Github*
+    - ##### 1.1.5. *Clonando o repositório do Github*
     ```
     $ git clone git@github.com:sices/sices.git
     ```
@@ -123,30 +123,42 @@ Esclarecimentos gerais relacionados a documentação:
   <a name="aplicacao--bash"></a><a name="1.1"></a>
   - [1.1](#aplicacao--bash) **Bashrc**:
 
-    ##### 1.1.1. *Abra o Arquivo `.bashrc` com seu editor (Vim, Nano ou outro)*
-      ```
-      $ sudo vim ~/.bashrc
-      ```
+    - ##### 1.1.1. *Abra o Arquivo `.bashrc` com seu editor (Vim, Nano ou outro)*
+    ```
+    $ sudo vim ~/.bashrc
+    ```
 
-    ##### 1.1.2. *Adicione ao final do arquivo as linhas*
-      ```
-      export SICES_PATH=[PROJECT_PATH]
-      source $SICES_PATH/devops/cli/config/variables-ci --development
-      export PATH=$PATH:$SICES_PATH/devops/cli
-      ```
-      > **Nota**: lembre-se de substitir `[PROJECT_PATH]` pelo caminho do projeto.
+    - ##### 1.1.2. *Adicione ao final do arquivo as linhas*
+    ```
+    export SICES_PATH=[PROJECT_PATH]
+    source $SICES_PATH/devops/cli/config/variables-ci --development
+    export PATH=$PATH:$SICES_PATH/devops/cli
+    ```
+    > **Nota**: lembre-se de substitir `[PROJECT_PATH]` pelo caminho do projeto.
 
-    ##### 1.1.3. *Carregue as alterações do arquivo bash*
-      ```
-      $ source ~/.bashrc
-      ```
+    - ##### 1.1.3. *Carregue as alterações do arquivo bash*
+    ```
+    $ source ~/.bashrc
+    ```
 
-    ##### 1.1.4. *Na variavel `PATH` agora devem aparecer alguns caminhos relacionados a pasta do projeto*
-      ```
-      $ echo $PATH | grep sices
-      ```
-      > **Nota**: caso o comando acima não possua retorno revise os passos de instalação e reinicie o sistema operacional.
+    - ##### 1.1.4. *Na variavel `PATH` agora devem aparecer alguns caminhos relacionados a pasta do projeto*
+    ```
+    $ echo $PATH | grep sices
+    ```
+    > **Nota**: caso o comando acima não possua retorno revise os passos de instalação e reinicie o sistema operacional.
 
+  <a name="aplicacao--ambiente"></a><a name="1.1"></a>
+  - [1.1](#aplicacao--ambiente) **Dependencias de ambiente**:
+
+    - ##### Para visualizar as dependencias a serem instaladas execute:
+    ```
+    $ devops/cli/ces-ambience-install --installation-list
+    ```
+
+    - ##### Você pode instala-las manualmente (recomendado), ou executar o comando abaixo para instalação automatica:
+    ```
+    $ devops/cli/ces-ambience-install --full
+    ```
 
 
 **[⬆ Voltar ao Topo](#sumário)**
