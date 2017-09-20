@@ -9,10 +9,10 @@ Sistema de suporte para empresas do setor de energia solar fotovoltaíca.
 
   1. [Guia Geral](#guia-geral)
   1. [Workflow](#workflow)
-  1. [Instalação do Sistema](#instalacao)
-  1. [Lista de Comandos](#comandos)
   1. [Padrões de Desenvolvimento](#padrões-de-desenvolvimento)
   1. [Execução de Tarefas](#execução-de-tarefas)
+  1. [Lista de Comandos](#comandos)
+  1. [Instalação do Sistema](#instalacao)
   1. [Sobre](#sobre)
 
 ## Guia Geral
@@ -27,7 +27,7 @@ Esclarecimentos gerais relacionados a documentação:
     - PR: Pull Request
 
   - #### Notas Gerais
-    - Em comandos, os colchetes `[]` delimitam que alguns conteúdos devem ser colocados em seu lugar;
+    - Em comandos, os colchetes `[]` delimitam que alguns conteúdos devem ser preenchidos em seu lugar;
 
 
 **[⬆ Voltar ao Topo](#sumário)**
@@ -186,8 +186,8 @@ Esclarecimentos gerais relacionados a documentação:
       $ ces-app-config --[AMBIENCE]
       ```
 
-  <a name="comandos--acesso"></a><a name="1.1"></a>
-  - [1.1](#comandos--acesso) **Acesso**:
+  <a name="comandos--acesso"></a><a name="1.2"></a>
+  - [1.2](#comandos--acesso) **Acesso**:
 
     - ##### Acesso ao ambiente de homolog
       ```
@@ -199,8 +199,8 @@ Esclarecimentos gerais relacionados a documentação:
       $ ssh -i $SICES_PATH/devops/aws/staging.pem admin@18.231.15.228
       ```
 
-  <a name="comandos--ambientes"></a><a name="1.1"></a>
-  - [1.1](#comandos--ambientes) **Deploy e Start**:
+  <a name="comandos--ambientes"></a><a name="1.3"></a>
+  - [1.3](#comandos--ambientes) **Deploy e Start**:
 
     - ##### Deploy
       (default ambience: no default value, default origin: staging, obs: origin only for production)
@@ -215,8 +215,8 @@ Esclarecimentos gerais relacionados a documentação:
       $ ces-app-start --[AMBIENCE] --[APPICATION]
       ```
 
-  <a name="comandos--backend"></a><a name="1.1"></a>
-  - [1.1](#comandos--backend) **Backend**:
+  <a name="comandos--backend"></a><a name="1.4"></a>
+  - [1.4](#comandos--backend) **Backend**:
 
     - ##### Pequisa de rotas
       (default: no arg, show all)
@@ -230,8 +230,8 @@ Esclarecimentos gerais relacionados a documentação:
       $ ces-token-request --[APPLICATION] --[AMBIENCE]
       ```
 
-  <a name="comandos--banco"></a><a name="1.1"></a>
-  - [1.1](#comandos--banco) **Banco de dados**:
+  <a name="comandos--banco"></a><a name="1.5"></a>
+  - [1.5](#comandos--banco) **Banco de dados**:
 
     - ##### Atualizar o banco de dados local com a versão de homolog
       ```
@@ -243,15 +243,15 @@ Esclarecimentos gerais relacionados a documentação:
       $ ces-database-update
       ```
 
-  <a name="comandos--processos"></a><a name="1.1"></a>
-  - [1.1](#comandos--processos) **Processos**:
+  <a name="comandos--processos"></a><a name="1.6"></a>
+  - [1.6](#comandos--processos) **Processos**:
 
-    - ##### Limpar arquivos de logs da aplicação
+    - ##### Limpeza de arquivos de logs da aplicação
       ```
       $ ces-log-clear
       ```
 
-    - ##### Limpar cache do Symfony
+    - ##### Limpeza de cache do Symfony
       ```
       $ ces-cache-clear
       ```
@@ -261,8 +261,8 @@ Esclarecimentos gerais relacionados a documentação:
       $ ces-frontend-compile
       ```
 
-  <a name="comandos--outros"></a><a name="1.1"></a>
-  - [1.1](#comandos--outros) **Outros**:
+  <a name="comandos--outros"></a><a name="1.7"></a>
+  - [1.7](#comandos--outros) **Outros**:
 
     - ##### Notificar chat #sices-devops
       ```
