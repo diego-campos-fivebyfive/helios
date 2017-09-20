@@ -10,14 +10,14 @@ Sistema de suporte para empresas do setor de energia solar fotovoltaíca.
   1. [Guia Geral](#guia-geral)
   1. [Workflow](#workflow)
   1. [Instalação do Sistema](#instalacao)
-  1. [Comandos do Sices](#comandos)
+  1. [Lista de Comandos](#comandos)
   1. [Padrões de Desenvolvimento](#padrões-de-desenvolvimento)
   1. [Execução de Tarefas](#execução-de-tarefas)
   1. [Sobre](#sobre)
 
 ## Guia Geral
 
-Para utilização dessa documentação alguns pontos devem ser tomados:
+Esclarecimentos gerais relacionados a documentação:
 
   - #### Nomenclaturas
     - Cards de Roadmap: fragmentos de escopos do produto
@@ -156,6 +156,130 @@ Para utilização dessa documentação alguns pontos devem ser tomados:
     ```
     $ git branch -D issue-[ISSUE_NUMBER]
     ```
+
+
+**[⬆ Voltar ao Topo](#sumário)**
+
+## Comandos
+
+  <a name="comandos--ambientes"></a><a name="1.1"></a>
+  - [1.1](#comandos--ambientes) **Configuração**:
+
+    - ##### Instalação de dependencias de ambientes
+      ```
+      $ ces-ambience-install --full
+      ```
+
+    - ##### Listagem de dependencias de ambientes
+      ```
+      $ ces-ambience-install --installation-list
+      ```
+
+    - ##### Instalação de dependencias das aplicações
+      ```
+      $ ces-app-install
+      ```
+
+    - ##### Configuração de aplicações
+      (default: development)
+      ```
+      $ ces-app-config --[AMBIENCE]
+      ```
+
+  <a name="comandos--acesso"></a><a name="1.1"></a>
+  - [1.1](#comandos--acesso) **Acesso**:
+
+    - ##### Acesso ao ambiente de homolog
+      ```
+      $ ssh -i $SICES_PATH/devops/aws/homolog.pem admin@54.233.150.10
+      ```
+
+    - ##### Acesso ao ambiente de staging
+      ```
+      $ ssh -i $SICES_PATH/devops/aws/staging.pem admin@18.231.15.228
+      ```
+
+  <a name="comandos--ambientes"></a><a name="1.1"></a>
+  - [1.1](#comandos--ambientes) **Deploy e Start**:
+
+    - ##### Deploy
+      (default ambience: no default value, default origin: staging, obs: origin only for production)
+      ```
+      $ cd AMBIENCE
+      $ ces-app-deploy --[AMBIENCE] --[ORIGIN]
+      ```
+
+    - ##### Start de aplicações
+      (default ambience: development, default application: only sices)
+      ```
+      $ ces-app-start --[AMBIENCE] --[APPICATION]
+      ```
+
+  <a name="comandos--backend"></a><a name="1.1"></a>
+  - [1.1](#comandos--backend) **Backend**:
+
+    - ##### Pequisa de rotas
+      (default: no arg, show all)
+      ```
+      $ ces-route-list --'[STRING]'
+      ```
+
+    - ##### Requisição de token
+      (no default value)
+      ```
+      $ ces-token-request --[APPLICATION] --[AMBIENCE]
+      ```
+
+  <a name="comandos--banco"></a><a name="1.1"></a>
+  - [1.1](#comandos--banco) **Banco de dados**:
+
+    - ##### Atualizar o banco de dados local com a versão de homolog
+      ```
+      $ ces-database-mirror
+      ```
+
+    - ##### Atualizar schema do banco de dados
+      ```
+      $ ces-database-update
+      ```
+
+  <a name="comandos--processos"></a><a name="1.1"></a>
+  - [1.1](#comandos--processos) **Processos**:
+
+    - ##### Limpar arquivos de logs da aplicação
+      ```
+      $ ces-log-clear
+      ```
+
+    - ##### Limpar cache do Symfony
+      ```
+      $ ces-cache-clear
+      ```
+
+    - ##### Compilar frontend
+      ```
+      $ ces-frontend-compile
+      ```
+
+  <a name="comandos--outros"></a><a name="1.1"></a>
+  - [1.1](#comandos--outros) **Outros**:
+
+    - ##### Notificar chat #sices-devops
+      ```
+      $ ces-slack-notify '[MESSAGE]'
+      ```
+
+    - ##### Corrigir permissões de arquivos e pastas
+      (default: development)
+      ```
+      $ ces-permission-fix --[AMBIENCE]
+      ```
+
+    - ##### Para lint de aplicações
+      ```
+      $ cd [APP_PATH]
+      $ yarn lint
+      ```
 
 
 **[⬆ Voltar ao Topo](#sumário)**
