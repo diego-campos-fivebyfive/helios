@@ -4,7 +4,6 @@ namespace AppBundle\Entity\Pricing;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use AppBundle\Entity\TokenizerTrait;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
@@ -14,6 +13,8 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  */
 class Memorial implements MemorialInterface
 {
+    use ORMBehaviors\Timestampable\Timestampable;
+
     /**
      * @var int
      *
@@ -24,11 +25,11 @@ class Memorial implements MemorialInterface
     private $id;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="isquik_id", type="integer", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    private $isquikId;
+    private $name;
 
     /**
      * @var ArrayCollection
@@ -38,25 +39,25 @@ class Memorial implements MemorialInterface
     private $ranges;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="version", type="string", nullable=true)
-     */
-    private $version;
-
-    /**
      * @var \DateTime
      *
-     * @ORM\Column(name="startAt", type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $startAt;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="endAt", type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    private $endAt;
+    private $expiredAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $publishedAt;
 
     /**
      * @var int
@@ -66,15 +67,20 @@ class Memorial implements MemorialInterface
     private $status;
 
     /**
-     * @var string
+     * @var array
      *
-     * @ORM\Column(name="description", type="string", nullable=true)
+     * @ORM\Column(type="json", nullable=true)
      */
-    private $description;
+    protected $levels;
 
+    /**
+     * Memorial constructor.
+     */
     function __construct()
     {
         $this->ranges = new ArrayCollection();
+        $this->status = self::STATUS_PENDING;
+        $this->levels = [];
     }
 
     /**
@@ -82,7 +88,7 @@ class Memorial implements MemorialInterface
      */
     function __toString()
     {
-        return (string) sprintf('V%s - %s', $this->version, $this->startAt->format('Y-m-d'));
+        return (string) $this->name;
     }
 
     /**
@@ -92,18 +98,14 @@ class Memorial implements MemorialInterface
     {
         return [
             'id' => $this->id,
-            'isquik_id' => $this->isquikId,
-            'version' => $this->version,
+            'name' => $this->name,
             'start_at' => $this->startAt->format('Y-m-d H:i:s'),
-            'status' => $this->status,
-            'description' => $this->description
+            'status' => $this->status
         ];
     }
 
     /**
-     * Get id
-     *
-     * @return int
+     * @inheritDoc
      */
     public function getId()
     {
@@ -113,50 +115,23 @@ class Memorial implements MemorialInterface
     /**
      * @inheritDoc
      */
-    public function setIsquikId($isquikId)
+    public function setName($name)
     {
-        $this->isquikId = $isquikId;
+        $this->name = $name;
+
         return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function getIsquikId()
+    public function getName()
     {
-        return $this->isquikId;
+        return $this->name;
     }
 
     /**
-     * Set version
-     *
-     * @param string $version
-     *
-     * @return Memorial
-     */
-    public function setVersion($version)
-    {
-        $this->version = $version;
-
-        return $this;
-    }
-
-    /**
-     * Get version
-     *
-     * @return string
-     */
-    public function getVersion()
-    {
-        return $this->version;
-    }
-
-    /**
-     * Set startAt
-     *
-     * @param \DateTime $startAt
-     *
-     * @return Memorial
+     * @inheritDoc
      */
     public function setStartAt($startAt)
     {
@@ -166,9 +141,7 @@ class Memorial implements MemorialInterface
     }
 
     /**
-     * Get startAt
-     *
-     * @return \DateTime
+     * @inheritDoc
      */
     public function getStartAt()
     {
@@ -176,47 +149,70 @@ class Memorial implements MemorialInterface
     }
 
     /**
-     * Set endAt
-     *
-     * @param \DateTime $endAt
-     *
-     * @return Memorial
+     * @inheritDoc
      */
-    public function setEndAt($endAt)
+    public function setExpiredAt(\DateTime $expiredAt)
     {
-        $this->endAt = $endAt;
+        $this->expiredAt = $expiredAt;
 
         return $this;
     }
 
     /**
-     * Get endAt
-     *
-     * @return \DateTime
+     * @inheritDoc
      */
-    public function getEndAt()
+    public function getExpiredAt()
     {
-        return $this->endAt;
+        return $this->expiredAt;
     }
 
     /**
-     * Set status
-     *
-     * @param integer $status
-     *
-     * @return Memorial
+     * @inheritDoc
+     */
+    public function setPublishedAt(\DateTime $publishedAt)
+    {
+        $this->publishedAt = $publishedAt;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPublishedAt()
+    {
+        return $this->publishedAt;
+    }
+
+    /**
+     * @inheritDoc
      */
     public function setStatus($status)
     {
+        switch ($status){
+            case self::STATUS_PENDING:
+
+                $this->publishedAt = null;
+                $this->expiredAt = null;
+
+                break;
+
+            case self::STATUS_ENABLED:
+                $this->publishedAt = new \DateTime();
+                break;
+
+            case self::STATUS_EXPIRED:
+                $this->expiredAt = new \DateTime();
+                break;
+        }
+
         $this->status = $status;
 
         return $this;
     }
 
     /**
-     * Get status
-     *
-     * @return int
+     * @inheritDoc
      */
     public function getStatus()
     {
@@ -226,18 +222,25 @@ class Memorial implements MemorialInterface
     /**
      * @inheritDoc
      */
-    public function setDescription($description)
+    public function isExpired()
     {
-        $this->description = $description;
-        return $this;
+        return self::STATUS_EXPIRED === $this->status;
     }
 
     /**
      * @inheritDoc
      */
-    public function getDescription()
+    public function isPending()
     {
-        return $this->description;
+        return self::STATUS_PENDING === $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isEnabled()
+    {
+        return self::STATUS_ENABLED === $this->status;
     }
 
     /**
@@ -261,5 +264,23 @@ class Memorial implements MemorialInterface
     public function getRanges()
     {
         return $this->ranges;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setLevels(array $levels)
+    {
+        $this->levels = $levels;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLevels()
+    {
+        return $this->levels;
     }
 }
