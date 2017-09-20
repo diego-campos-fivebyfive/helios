@@ -117,9 +117,8 @@ Esclarecimentos gerais relacionados a documentação:
     ```
 
     - ##### 3.1.4. *Inserindo chave SSH no Github*
-    ```
-    https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/
-    ```
+
+      → [Tutorial Github](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account)
 
     - ##### 3.1.5. *Clonando o repositório do Github*
     ```
