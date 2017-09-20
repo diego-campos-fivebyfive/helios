@@ -57,15 +57,15 @@ Caso você já possua os requisitos abaixo intalados, pule para a proxima etapa:
 
 Você pode instalar as dependências utilizando o comando:
 ```
-$ ./cli/ces-install-dependencies
+$ devops/cli/ces-ambience-config --install
 ```
 
 ou
 
 Instala-las individualmente:
-
-  - [Instalando dependências individualmente](install/dependencies-list.md)
-
+```
+$ devops/cli/ces-ambience-config --installation-list
+```
 
 4. Configuração do Apache (Opicional)
 -------------------------------------
