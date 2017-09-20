@@ -3,7 +3,7 @@ SICES SOLAR
 
 Sistema de suporte para empresas do setor de energia solar fotovoltaíca.
 
-> **A Plataforma**: [https://app.plataformasicessolar.com.br](https://app.plataformasicessolar.com.br)
+##### [https://app.plataformasicessolar.com.br](https://app.plataformasicessolar.com.br)
 
 ## Sumário
 
@@ -119,6 +119,34 @@ Esclarecimentos gerais relacionados a documentação:
     ```
     $ git clone git@github.com:sices/sices.git
     ```
+
+  <a name="aplicacao--bash"></a><a name="1.1"></a>
+  - [1.1](#aplicacao--bash) **Bashrc**:
+
+    ##### 1.1.1. *Abra o Arquivo `.bashrc` com seu editor (Vim, Nano ou outro)*
+      ```
+      $ sudo vim ~/.bashrc
+      ```
+
+    ##### 1.1.2. *Adicione ao final do arquivo as linhas*
+      ```
+      export SICES_PATH=[PROJECT_PATH]
+      source $SICES_PATH/devops/cli/config/variables-ci --development
+      export PATH=$PATH:$SICES_PATH/devops/cli
+      ```
+      > **Nota**: lembre-se de substitir `[PROJECT_PATH]` pelo caminho do projeto.
+
+    ##### 1.1.3. *Carregue as alterações do arquivo bash*
+      ```
+      $ source ~/.bashrc
+      ```
+
+    ##### 1.1.4. *Na variavel `PATH` agora devem aparecer alguns caminhos relacionados a pasta do projeto*
+      ```
+      $ echo $PATH | grep sices
+      ```
+      > **Nota**: caso o comando acima não possua retorno revise os passos de instalação e reinicie o sistema operacional.
+
 
 
 **[⬆ Voltar ao Topo](#sumário)**
