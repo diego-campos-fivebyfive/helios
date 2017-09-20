@@ -33,6 +33,17 @@ Sistema de suporte para empresas do setor de energia solar fotovoltaíca.
     - Caso a execução de uma tarefa ultrapasse 2 dias a mesma deve ser reavaliada pela a equipe;
     - Tarefas devem ser quebradas em caso de: tarefas muito grandes, tarefas que modifiquem diversas partes diferentes do projeto ou caso a execução da tarefa ultrapasse os 2 dias;
 
+      ##### A execução de tarefas segue o seguinte fluxo:
+        ```
+        1. Iniciada em Backlogs (general, devops)
+        2. Incluida em Sprint Semanal (to do)
+        3. Executada pelo Desenvolvedor (in progress) ou
+           Apontada como execução impossibilitada (blocked)
+        4. Enviada para Revisão de código (review)
+        5. Enviada para Teste em Homolog (testing)
+        6. Marcada como concluida (done)
+        ```
+
   <a name="workflow--review"></a><a name="1.3"></a>
   - [1.3](#workflow--review) **Revisão de Pull Request**:
 
