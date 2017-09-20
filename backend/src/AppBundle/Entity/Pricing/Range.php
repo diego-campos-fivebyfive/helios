@@ -219,8 +219,6 @@ class Range implements RangeInterface
     {
         $this->costPrice =  (float) $costPrice;
 
-        $this->refreshPrice();
-
         return $this;
     }
 
@@ -263,8 +261,6 @@ class Range implements RangeInterface
     {
         $this->tax = $tax;
 
-        $this->refreshPrice();
-
         return $this;
     }
 
@@ -283,17 +279,15 @@ class Range implements RangeInterface
     {
         $this->markup = $markup;
 
-        $this->refreshPrice();
-
         return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function getMarkup()
+    public function getMarkup($percent = false)
     {
-        return $this->markup;
+        return !$percent ? $this->markup : $this->markup * 100;
     }
 
     /**
@@ -333,11 +327,15 @@ class Range implements RangeInterface
     }
 
     /**
-     * Calculate range price
+     * @inheritDoc
      */
-    private function refreshPrice()
+    public function updatePrice()
     {
-        $this->price = $this->costPrice * (1 + ($this->markup / 100)) / (1 - $this->tax);
+        if(0 == $this->tax) $this->tax = self::DEFAULT_TAX;
+
+        $this->price = $this->costPrice * (1 + $this->markup) / (1 - $this->tax);
+
+        return $this;
     }
 }
 
