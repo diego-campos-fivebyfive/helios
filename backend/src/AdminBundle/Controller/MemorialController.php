@@ -2,11 +2,13 @@
 
 namespace AdminBundle\Controller;
 
+use AdminBundle\Form\Pricing\MemorialType;
 use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Pricing\Range;
 use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Form\Admin\MemorialFilterType;
 use AppBundle\Service\Pricing\MemorialAnalyzer;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -16,7 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
  * @Security("has_role('ROLE_ADMIN')")
  * @Route("memorials")
  */
-class MemorialsController extends AdminController
+class MemorialController extends AdminController
 {
     /**
      * @Route("/", name="memorials")
@@ -28,6 +30,77 @@ class MemorialsController extends AdminController
         return $this->render('admin/memorials/index.html.twig', [
             'memorials' => $memorials
         ]);
+    }
+
+    /**
+     * @Route("/create", name="memorials_create")
+     */
+    public function createAction(Request $request)
+    {
+        $manager = $this->manager('memorial');
+
+        /** @var Memorial $memorial */
+        $memorial = $manager->create();
+
+        $form = $this->createForm(MemorialType::class, $memorial);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            $manager->save($memorial);
+
+            return $this->redirectToRoute('memorials_config', [
+                'id' => $memorial->getId()
+            ]);
+        }
+
+        return $this->render('admin/memorials/form.html.twig', [
+            'form' => $form->createView(),
+            'memorial' => $memorial
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/update", name="memorials_update")
+     */
+    public function updateAction(Request $request, Memorial $memorial)
+    {
+        $manager = $this->manager('memorial');
+
+        $form = $this->createForm(MemorialType::class, $memorial);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            $manager->save($memorial);
+
+            $this->setNotice('Memorial atualizado com sucesso.');
+
+            return $this->redirectToRoute('memorials');
+        }
+
+        return $this->render('admin/memorials/form.html.twig', [
+            'form' => $form->createView(),
+            'memorial' => $memorial
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/delete", name="memorials_delete")
+     */
+    public function deleteAction(Request $request, Memorial $memorial)
+    {
+        if($memorial->isPublished()){
+            return $this->json([
+                'error' => 'This memorial is published'
+            ], Response::HTTP_CONFLICT);
+        }
+
+        $this->manager('memorial')->delete($memorial);
+
+        return $this->json([]);
     }
 
     /**
@@ -45,28 +118,24 @@ class MemorialsController extends AdminController
 
                 $component = $collector->fromCode($range->getCode());
                 $price = $range->getPrice();
-                $markup = $range->getMarkup();
 
-                if ($component instanceof ComponentInterface && $component->getCmvApplied() /* && ($price && !$markup)*/) {
-
-                    $range->setTax(Range::DEFAULT_TAX);
+                if ($component instanceof ComponentInterface && $component->getCmvApplied() && $price) {
 
                     $cmvApplied = $component->getCmvApplied();
 
-                    $markup = ($price * (1 - $range->getTax()) / $cmvApplied) - 1;
+                    $range
+                        ->setTax(Range::DEFAULT_TAX)
+                        ->setCostPrice($cmvApplied)
+                    ;
 
-                    dump($cmvApplied);
-                    dump($price);
-                    dump($markup);
+                    $markup = ($price * (1 - $range->getTax()) / $range->getCostPrice()) - 1;
 
-                    dump($range);
-                    die;
-
-                    $range->setTax(Range::DEFAULT_TAX);
+                    if($markup < 0) $markup = 0;
 
                     $range
-                        ->setCostPrice($cmvApplied)
-                        ->setMarkup($markup);
+                        ->setMarkup($markup)
+                        ->updatePrice()
+                    ;
 
                     $manager->save($range, false);
 
@@ -154,7 +223,7 @@ class MemorialsController extends AdminController
     }
 
     /**
-     * @Route("/ranges/update", name="memorials_range_update")
+     * @Route("/ranges/change", name="memorials_range_update")
      */
     public function updateRangesAction(Request $request)
     {
@@ -169,7 +238,8 @@ class MemorialsController extends AdminController
 
                 $range
                     ->setCostPrice($config['cost'])
-                    ->setMarkup($config['markup'])
+                    ->setMarkup($config['markup'] / 100)
+                    ->updatePrice()
                 ;
 
                 $manager->save($range, false);
