@@ -25,8 +25,23 @@ Sistema de suporte para empresas do setor de energia solar fotovoltaíca.
     - [Slack](https://kolinalabs-si.slack.com/messages): Chat e bots
     - [Hangout](https://hangouts.google.com/?hl=pt-BR): Calls
 
-  <a name="workflow--flags"></a><a name="1.2"></a>
-  - [1.2](#workflow--flags) **Slack - Solicitações**: utilizamos por padrão flags de classificações no inicio de cada solicitação.
+  <a name="workflow--tarefas"></a><a name="1.2"></a>
+  - [1.2](#workflow--tarefas) **Execução de Tarefas**:
+
+    - Para cada tarefa há um prazo máximo de execução de 2 dias;
+    - Caso a execução da tarefa fique travada em mais de 20min deve ser solicitada ajuda utilizando a flag `HELP`;
+    - Caso a execução de uma tarefa ultrapasse 2 dias a mesma deve ser reavaliada pela a equipe;
+    - Tarefas devem ser quebradas em caso de: tarefas muito grandes, tarefas que modifiquem diversas partes diferentes do projeto ou caso a execução da tarefa ultrapasse os 2 dias;
+
+  <a name="workflow--review"></a><a name="1.3"></a>
+  - [1.3](#workflow--review) **Revisão de Pull Request**:
+
+    - As revisões de Pull Request devem ser feitas exclusivamente através do Github;
+    - Comentários devem ser feitos na Pull Request e avisados via Slack;
+    - É proibido realizar merge de Pull Request sem responder aos comentários;
+
+  <a name="workflow--flags"></a><a name="1.4"></a>
+  - [1.4](#workflow--flags) **Solicitações no Slack**: utilizamos por padrão flags de classificações no inicio de cada solicitação.
 
     - HELP: para solicitar ajuda/pair (chat [developers](https://kolinalabs-si.slack.com/messages/C6AS6KEK1))
     - REVIEW: para solicitar review (chat [developers](https://kolinalabs-si.slack.com/messages/C6AS6KEK1))
