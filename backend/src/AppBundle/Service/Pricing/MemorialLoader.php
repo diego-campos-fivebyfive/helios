@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service\Pricing;
 
+use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Manager\Pricing\MemorialManager;
 
 class MemorialLoader
@@ -27,9 +28,15 @@ class MemorialLoader
         $qb = $this->manager->createQueryBuilder();
 
         $qb->where('m.status = :status')
-            ->andWhere('m.endAt is null')
-            ->setParameters(['status' => 1]);
+            ->andWhere('m.publishedAt is not null')
+            ->andWhere('m.expiredAt is null')
+            ->setMaxResults(1)
+            ->setParameters([
+                'status' => Memorial::STATUS_ENABLED
+            ]);
 
-        return $qb->getQuery()->getOneOrNullResult();
+        $memorial =$qb->getQuery()->getOneOrNullResult();
+
+        return $memorial;
     }
 }
