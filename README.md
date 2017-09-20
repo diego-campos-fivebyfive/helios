@@ -10,9 +10,9 @@ Sistema de suporte para empresas do setor de energia solar fotovoltaíca.
   1. [Guia Geral](#guia-geral)
   1. [Workflow](#workflow)
   1. [Padrões de Desenvolvimento](#padrões-de-desenvolvimento)
+  1. [Instalações da Aplicação](#instalações-da-aplicação)
   1. [Execução de Tarefas](#execução-de-tarefas)
   1. [Lista de Comandos](#comandos)
-  1. [Instalação do Sistema](#instalacao)
   1. [Sobre](#sobre)
 
 ## Guia Geral
@@ -28,6 +28,7 @@ Esclarecimentos gerais relacionados a documentação:
 
   - #### Notas Gerais
     - Em comandos, os colchetes `[]` delimitam que alguns conteúdos devem ser preenchidos em seu lugar;
+    - A distro Ubuntu 16.04 foi utilizada como base de referência para a elaboração desta documentação, em outras distribuições podem ocorrer pequenas variações.
 
 
 **[⬆ Voltar ao Topo](#sumário)**
@@ -83,6 +84,41 @@ Esclarecimentos gerais relacionados a documentação:
     `Ex.: @mauroandre [MESSAGE]`
 
     > **Nota**: Para respostas curtas de confirmação pode ser utilizado apenas `:+1:`
+
+
+**[⬆ Voltar ao Topo](#sumário)**
+
+## Instalações da Aplicação
+
+  <a name="aplicacao--git"></a><a name="1.1"></a>
+  - [1.1](#aplicacao--git) **Git e Github**:
+
+    ##### 1.1.1. *Instalando o Git*
+      ```
+      $ sudo apt install git
+      ```
+
+    ##### 1.1.2. *Configurando informações do Git*
+    ```
+    $ git config --global user.email "mail@mail.com"
+    $ git config --global user.name "Full Name"
+    ```
+
+    ##### 1.1.3. *Criando chave para acesso SSH*
+    ```
+    $ ssh-keygen -t rsa -b 4096 -C "mail@mail.com"
+    $ cat ~/.ssh/id_rsa.pub
+    ```
+
+    ##### 1.1.4. *Inserindo chave SSH no Github*
+    ```
+    https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/
+    ```
+
+    ##### 1.1.5. *Clonando o repositório do Github*
+    ```
+    $ git clone git@github.com:sices/sices.git
+    ```
 
 
 **[⬆ Voltar ao Topo](#sumário)**
