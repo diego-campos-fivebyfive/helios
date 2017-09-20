@@ -305,8 +305,8 @@ Esclarecimentos gerais relacionados a documentação:
       $ ssh -i $SICES_PATH/devops/aws/staging.pem admin@18.231.15.228
       ```
 
-  <a name="comandos--ambientes"></a><a name="6.3"></a>
-  - [6.3](#comandos--ambientes) **Deploy e Start**:
+  <a name="comandos--operacionais"></a><a name="6.3"></a>
+  - [6.3](#comandos--operacionais) **Deploy e Start**:
 
     - ##### Deploy
       (default ambience: no default value, default origin: staging, obs: origin only for production)
