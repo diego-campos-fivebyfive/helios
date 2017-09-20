@@ -25,7 +25,7 @@ use JMS\Serializer\Annotation as Serializer;
  *
  * @Serializer\ExclusionPolicy("all")
  */
-class Module implements ModuleInterface
+class Module implements ModuleInterface, ComponentInterface
 {
     use ComponentTrait;
 

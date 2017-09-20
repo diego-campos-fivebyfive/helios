@@ -23,7 +23,7 @@ use JMS\Serializer\Annotation as Serializer;
  *
  * @Serializer\ExclusionPolicy("all")
  */
-class Variety implements VarietyInterface
+class Variety implements VarietyInterface, ComponentInterface
 {
     use ComponentTrait;
 

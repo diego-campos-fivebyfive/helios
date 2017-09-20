@@ -2,6 +2,7 @@
 
 namespace AdminBundle\Controller;
 
+use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Pricing\Range;
 use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Form\Admin\MemorialFilterType;
@@ -26,6 +27,60 @@ class MemorialsController extends AdminController
 
         return $this->render('admin/memorials/index.html.twig', [
             'memorials' => $memorials
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/reverse-engineering", name="memorials_reverse_engineering")
+     */
+    public function reverseEngineeringAction(Memorial $memorial, Request $request)
+    {
+        $updated = [];
+        if(null == $status = $request->query->get('status')) {
+
+            $manager = $this->manager('range');
+            $collector = $this->get('component_collector');
+
+            foreach ($memorial->getRanges() as $range) {
+
+                $component = $collector->fromCode($range->getCode());
+                $price = $range->getPrice();
+                $markup = $range->getMarkup();
+
+                if ($component instanceof ComponentInterface && $component->getCmvApplied() /* && ($price && !$markup)*/) {
+
+                    $range->setTax(Range::DEFAULT_TAX);
+
+                    $cmvApplied = $component->getCmvApplied();
+
+                    $markup = ($price * (1 - $range->getTax()) / $cmvApplied) - 1;
+
+                    dump($cmvApplied);
+                    dump($price);
+                    dump($markup);
+
+                    dump($range);
+                    die;
+
+                    $range->setTax(Range::DEFAULT_TAX);
+
+                    $range
+                        ->setCostPrice($cmvApplied)
+                        ->setMarkup($markup);
+
+                    $manager->save($range, false);
+
+                    $updated[] = $range;
+                }
+            }
+
+            $manager->flush();
+        }
+
+        return $this->render('admin/memorials/rev_eng.html.twig', [
+            'memorial' => $memorial,
+            'updated' => $updated,
+            'status' => $status
         ]);
     }
 

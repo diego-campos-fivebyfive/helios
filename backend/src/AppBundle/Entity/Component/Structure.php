@@ -14,7 +14,7 @@ use JMS\Serializer\Annotation as Serializer;
  *
  * @Serializer\ExclusionPolicy("all")
  */
-class Structure implements StructureInterface
+class Structure implements StructureInterface, ComponentInterface
 {
     use ComponentTrait;
 

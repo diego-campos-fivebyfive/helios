@@ -25,7 +25,7 @@ use JMS\Serializer\Annotation as Serializer;
  *
  * @Serializer\ExclusionPolicy("all")
  */
-class Inverter implements InverterInterface
+class Inverter implements InverterInterface, ComponentInterface
 {
     use ComponentTrait;
 
