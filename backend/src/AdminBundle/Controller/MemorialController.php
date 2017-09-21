@@ -264,7 +264,6 @@ class MemorialController extends AdminController
             if($range instanceof Range){
 
                 $range
-                    //->setCostPrice($config['cost'])
                     ->setMarkup($config['markup'] / 100)
                     ->updatePrice()
                 ;
