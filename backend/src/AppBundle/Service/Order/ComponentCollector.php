@@ -62,6 +62,27 @@ class ComponentCollector
 
     /**
      * @param $type
+     * @return \AppBundle\Manager\AbstractManager|null
+     */
+    public function getManager($type)
+    {
+        return $this->resolveManager($type);
+    }
+
+    /**
+     * @return array
+     */
+    public function getManagers()
+    {
+        foreach ($this->managers as $type => $manager){
+            $this->resolveManager($type);
+        }
+
+        return $this->managers;
+    }
+
+    /**
+     * @param $type
      * @return \AppBundle\Manager\AbstractManager
      */
     private function resolveManager($type)

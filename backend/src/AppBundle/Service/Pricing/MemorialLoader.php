@@ -32,10 +32,10 @@ class MemorialLoader
             ->andWhere('m.expiredAt is null')
             ->setMaxResults(1)
             ->setParameters([
-                'status' => Memorial::STATUS_ENABLED
+                'status' => Memorial::STATUS_PUBLISHED
             ]);
 
-        $memorial =$qb->getQuery()->getOneOrNullResult();
+        $memorial = $qb->getQuery()->getOneOrNullResult();
 
         return $memorial;
     }

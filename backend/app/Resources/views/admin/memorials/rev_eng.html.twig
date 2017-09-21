@@ -1,0 +1,53 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row" id="real-content">
+            <div class="col-md-12">
+                <div class="ibox flow-h">
+                    <div class="ibox-content flow-lg">
+                        <div class="row ">
+                            <div class="col-md-12">
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ path('memorials') }}" class="btn btn-primary">
+                                        <i class="fa fa-arrow-left"></i>
+                                        Voltar para Memoriais
+                                    </a>
+                                    <a href="{{ path('memorials_config', {id: memorial.id}) }}" class="btn btn-success">
+                                        <i class="fa fa-pencil"></i>
+                                        Gerenciar &mdash; {{ memorial.name }}
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+
+                            {% if status %}
+
+                                <h1> Este memorial já passou pelo processo de engenharia reversa! </h1>
+
+                            {% else %}
+
+                                <h1> Engenharia reversa executada com sucesso - {{ updated|length }} registros atualizados. </h1>
+
+                            {% endif %}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+    <script>
+        window.history.pushState({}, null, '{{ app.request.uri }}' + '?status=updated');
+    </script>
+
+{% endblock %}

@@ -23,7 +23,7 @@ use JMS\Serializer\Annotation as Serializer;
  *
  * @Serializer\ExclusionPolicy("all")
  */
-class StringBox implements StringBoxInterface
+class StringBox implements StringBoxInterface, ComponentInterface
 {
     use ComponentTrait;
 

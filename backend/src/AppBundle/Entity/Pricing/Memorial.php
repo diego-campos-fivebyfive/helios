@@ -197,7 +197,8 @@ class Memorial implements MemorialInterface
 
                 break;
 
-            case self::STATUS_ENABLED:
+            case self::STATUS_PUBLISHED:
+                $this->expiredAt = null;
                 $this->publishedAt = new \DateTime();
                 break;
 
@@ -214,9 +215,9 @@ class Memorial implements MemorialInterface
     /**
      * @inheritDoc
      */
-    public function getStatus()
+    public function getStatus($label = false)
     {
-        return $this->status;
+        return  !$label ? $this->status : self::getStatuses()[$this->status] ;
     }
 
     /**
@@ -238,9 +239,9 @@ class Memorial implements MemorialInterface
     /**
      * @inheritDoc
      */
-    public function isEnabled()
+    public function isPublished()
     {
-        return self::STATUS_ENABLED === $this->status;
+        return self::STATUS_PUBLISHED === $this->status;
     }
 
     /**
@@ -282,5 +283,32 @@ class Memorial implements MemorialInterface
     public function getLevels()
     {
         return $this->levels;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function getStatuses()
+    {
+        return [
+            self::STATUS_PENDING => 'Pending',
+            self::STATUS_PUBLISHED => 'Published',
+            self::STATUS_EXPIRED => 'Expired'
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function getDefaultLevels()
+    {
+        return [
+            self::LEVEL_BLACK => 'Black',
+            self::LEVEL_GOLD => 'Gold',
+            self::LEVEL_PARTNER => 'Partner',
+            self::LEVEL_PLATINUM => 'Platinum',
+            self::LEVEL_PREMIUM => 'Premium',
+            self::LEVEL_PROMOTIONAL => 'Promo'
+        ];
     }
 }

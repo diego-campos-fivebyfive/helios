@@ -91,9 +91,10 @@ interface RangeInterface
     public function setMarkup($markup);
 
     /**
+     * @param bool $percent
      * @return float
      */
-    public function getMarkup();
+    public function getMarkup($percent = false);
 
     /**
      * @param $memorial
@@ -114,4 +115,9 @@ interface RangeInterface
      * @return bool
      */
     public function hasConfig($code, $level, $initialPower, $finalPower);
+
+    /**
+     * @return RangeInterface
+     */
+    public function updatePrice();
 }

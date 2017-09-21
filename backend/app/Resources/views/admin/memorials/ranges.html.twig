@@ -215,7 +215,7 @@
                             {% for range in item.ranges %}
                                 <td>
                                     <div class="m-cell-100">
-                                        <input data-field="markup" data-range="{{ range.id }}" placeholder="Markup" value="{{ range.markup }}" class="form-control input-markup" data-pricing="markup">
+                                        <input data-field="markup" data-range="{{ range.id }}" placeholder="Markup" value="{{ range.markup(true)|round(2) }}" class="form-control input-markup" data-pricing="markup">
                                     </div>
                                 </td>
                                 <td>

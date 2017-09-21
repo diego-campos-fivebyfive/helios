@@ -5,8 +5,15 @@ namespace AppBundle\Entity\Pricing;
 interface MemorialInterface
 {
     const STATUS_PENDING = 0;
-    const STATUS_ENABLED = 1;
+    const STATUS_PUBLISHED = 1;
     const STATUS_EXPIRED = 2;
+
+    const LEVEL_BLACK = 'black';
+    const LEVEL_GOLD = 'gold';
+    const LEVEL_PARTNER = 'partner';
+    const LEVEL_PLATINUM = 'platinum';
+    const LEVEL_PREMIUM = 'premium';
+    const LEVEL_PROMOTIONAL = 'promotional';
 
     /**
      * @param $startAt
@@ -50,7 +57,7 @@ interface MemorialInterface
     /**
      * @return mixed
      */
-    public function getStatus();
+    public function getStatus($label = false);
 
     /**
      * @return bool
@@ -65,7 +72,7 @@ interface MemorialInterface
     /**
      * @return bool
      */
-    public function isEnabled();
+    public function isPublished();
 
     /**
      * @param $name
@@ -114,4 +121,14 @@ interface MemorialInterface
      * @return \DateTime
      */
     public function getUpdatedAt();
+
+    /**
+     * @return array
+     */
+    public static function getStatuses();
+
+    /**
+     * @return array
+     */
+    public static function getDefaultLevels();
 }
