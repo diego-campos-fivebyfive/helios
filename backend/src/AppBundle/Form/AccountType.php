@@ -4,8 +4,10 @@ namespace AppBundle\Form;
 
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\Pricing\Memorial;
+use AppBundle\Form\MemberType;
 use AppBundle\Util\Validator\Constraints\ContainsCnpj;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,8 +19,6 @@ class AccountType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
-
-        $builder->remove('user');
 
         $builder
             ->add('document',TextType::class, array(
@@ -43,29 +43,14 @@ class AccountType extends AbstractType
             ->add('status', ChoiceType::class, [
                 'choices' => Customer::getStatusList()
             ])
-            ->add('contact',TextType::class)
+            /*->add('members', CollectionType::class, array(
+                'entry_type' => MemberType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+            ))*/
             ->add('email',EmailType::class)
             ->add('phone',TextType::class);
-        /*$builder
-            ->add('package', 'entity', array(
-                    'multiple' => false,
-                    'property' => 'name',
-                    'class' => 'AppBundle\Entity\Package',
-                    'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
-                        $qb = $er->createQueryBuilder('p');
-                        return $qb->orderBy('p.name', 'ASC');
-                    }
-                )
-            )
-            ->add('status', ChoiceType::class, [
-                'choices' => Customer::getStatusList()
-            ])
-            ->add('members', CollectionType::class, [
-                'entry_type' => CustomerType::class,
-                'allow_add' => true,
-                'prototype_name' => 0
-            ])
-            ->add('maxMember');*/
     }
 
     /**

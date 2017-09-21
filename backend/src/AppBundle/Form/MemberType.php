@@ -19,11 +19,12 @@ class MemberType extends AbstractUserType
     {
         parent::buildForm($builder, $options);
 
+        //dump($options);die;
         /** @var BusinessInterface $member */
         $member = $options['data'];
         /** @var BusinessInterface $currentMember */
         $currentMember = $options['current_member'];
-        
+
         $isSameMember = $currentMember->getId() == $member->getId();
         $isActive = $member->getId() && $member->getUser();
         $isNameEditable = $isActive && $isSameMember;
