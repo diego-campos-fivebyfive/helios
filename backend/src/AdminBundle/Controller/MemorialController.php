@@ -30,7 +30,6 @@ class MemorialController extends AdminController
 
         $paginator = $this->getPaginator();
 
-        //$memorials = $this->manager('memorial')->findAll();
         $memorials = $paginator->paginate(
             $qb->getQuery(),
             $request->query->getInt('page', 1)
