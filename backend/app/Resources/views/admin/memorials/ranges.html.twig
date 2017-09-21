@@ -78,10 +78,14 @@
                             NCM
                         </div>
                     </th>
-                    <th colspan="2"> CMV</th>
+                    <th>
+                        <div class="m-cell-100">
+                            CMV Aplicado
+                        </div>
+                    </th>
                 </tr>
                 <tr>
-                    <th></th>
+                    {#<th></th>
                     <th></th>
                     <th></th>
                     <th>
@@ -93,6 +97,9 @@
                         <div class="m-cell-100">
                             Aplicado
                         </div>
+                    </th>#}
+                    <th colspan="6">
+                        &nbsp;
                     </th>
                 </tr>
 
@@ -169,14 +176,14 @@
                                     <input placeholder="NCM" type="text" class="form-control" data-field="ncm" value="{{ product.ncm }}">
                                 </div>
                             </td>
-                            <td>
+                            {#<td>
                                 <div class="m-cell-100">
                                     <input placeholder="CMV Protheus" type="text" class="form-control" data-field="cmvProtheus" value="{{ product.cmvProtheus }}">
                                 </div>
-                            </td>
+                            </td>#}
                             <td>
                                 <div class="m-cell-100">
-                                    <input id="{{ token ~ '-cmv-applied' }}" placeholder="CMV Aplicado" type="text" class="form-control" data-field="cmvApplied" value="{{ product.cmvApplied }}">
+                                    <input id="{{ token ~ '-cmv-applied' }}" placeholder="CMV Aplicado" type="text" class="form-control" data-field="cmvApplied" value="{{ item.defaults.cmv }}">
                                 </div>
                             </td>
                         </tr>
@@ -367,7 +374,7 @@
             var type = tokens[0];
             var id = tokens[1];
 
-            var url = '{{ path('memorials_product_update') }}';
+            var url = '{{ path('memorials_product_update',{id:memorial.id}) }}';
 
             this.request(url, 'post', {type: type, id: id, field: field, value: value}, function (xhr) {
                 if (200 != xhr.status) {

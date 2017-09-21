@@ -169,10 +169,7 @@ class MemorialController extends AdminController
      */
     public function configAction(Memorial $memorial, Request $request)
     {
-        $rangeLevels = $this->manager('range')->distinct('level', ['memorial' => $memorial]);
-        $accountLevels = $this->manager('account')->distinct('level');
-
-        $levels = array_unique(array_merge($rangeLevels, $accountLevels));
+        $levels = Memorial::getDefaultLevels(true);
 
         $form = $this->createForm(MemorialFilterType::class, ['memorial' => $memorial], [
             'memorial' => $memorial,
@@ -202,9 +199,10 @@ class MemorialController extends AdminController
     }
 
     /**
-     * @Route("/product/update", name="memorials_product_update")
+     * @Route("/{id}/product/update", name="memorials_product_update")
+     * Method("post")
      */
-    public function updateProductAction(Request $request)
+    public function updateProductAction(Request $request, Memorial $memorial)
     {
         $id = $request->request->get('id');
         $field = $request->request->get('field');
@@ -212,15 +210,33 @@ class MemorialController extends AdminController
         $type = $request->request->get('type');
 
         $manager = $this->manager($type);
+
         $component = $manager->find($id);
 
-        if($component){
+        if($component instanceof ComponentInterface){
 
             $accessor = PropertyAccess::createPropertyAccessor();
 
             $accessor->setValue($component, $field, $value);
 
             $manager->save($component);
+
+            if('cmvApplied' == $field){
+
+                /** @var \AppBundle\Service\Pricing\RangeNormalizer $normalizer */
+                $normalizer = $this->get('range_normalizer');
+
+                $codes = [$component->getCode()];
+                $levels = Memorial::getDefaultLevels(true);
+
+                $definitions = [
+                    $component->getCode() => [
+                        'costPrice' => $component->getCmvApplied()
+                    ]
+                ];
+
+                $normalizer->normalize($memorial, $codes, $levels, $definitions);
+            }
         }
 
         return $this->json([
@@ -248,7 +264,6 @@ class MemorialController extends AdminController
             if($range instanceof Range){
 
                 $range
-                    ->setCostPrice($config['cost'])
                     ->setMarkup($config['markup'] / 100)
                     ->updatePrice()
                 ;

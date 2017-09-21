@@ -120,4 +120,14 @@ interface RangeInterface
      * @return RangeInterface
      */
     public function updatePrice();
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt();
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt();
 }

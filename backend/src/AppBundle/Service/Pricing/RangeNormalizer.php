@@ -15,6 +15,7 @@ use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Entity\Pricing\MemorialInterface;
 use AppBundle\Entity\Pricing\Range;
 use AppBundle\Manager\Pricing\RangeManager;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * Class RangeNormalizer
@@ -51,6 +52,16 @@ class RangeNormalizer
         [100, 200], [200, 300], [300, 400], [400, 500], [500, 600], [600, 700], [700, 800], [800, 900], [900, 1000],
         [1000, 999000]
     ];
+
+    /**
+     * @var array
+     */
+    private $definitions = [];
+
+    /**
+     * @var PropertyAccess
+     */
+    private $accessor;
 
     /**
      * RangeNormalizer constructor.
@@ -93,8 +104,10 @@ class RangeNormalizer
      * @param $code
      * @param $level
      */
-    public function normalize(Memorial $memorial, array $codes, array $levels)
+    public function normalize(Memorial $memorial, array $codes, array $levels, array $definitions = [])
     {
+        $this->definitions = $definitions;
+
         $this->cache($memorial, $codes, $levels);
 
         foreach ($this->powers as $config) {
@@ -105,18 +118,23 @@ class RangeNormalizer
 
                 foreach ($codes as $code){
 
-                    if (!$this->filter($code, $level, $initialPower, $finalPower)) {
+                    $range = $this->filter($code, $level, $initialPower, $finalPower);
+
+                    if (!$range instanceof Range) {
+
                         $range = $this->create($memorial, $code, $level, $initialPower, $finalPower);
 
                         $cacheKey = $this->createCacheKey($initialPower, $finalPower);
 
                         $this->cache[$cacheKey][$level][$code] = $range;
                     }
+
+                    $this->checkDefinitions($range);
                 }
             }
         }
 
-        $this->manager->getEntityManager()->flush();
+        $this->manager->flush();
     }
 
     /**
@@ -161,7 +179,7 @@ class RangeNormalizer
 
                 $cacheKey = $this->createCacheKey($initialPower ,$finalPower);
 
-                return array_key_exists($code, $this->cache[$cacheKey][$level]);
+                return array_key_exists($code, $this->cache[$cacheKey][$level]) ? $this->cache[$cacheKey][$level][$code] : false ;
 
                 break;
 
@@ -197,6 +215,33 @@ class RangeNormalizer
     public function createCacheKey($initialPower, $finalPower)
     {
         return sprintf('%s_%s', $initialPower, $finalPower);
+    }
+
+    /**
+     * @param Range $range
+     */
+    private function checkDefinitions(Range $range)
+    {
+        if(array_key_exists($range->getCode(), $this->definitions)){
+
+            $updatePrice = false;
+            $accessor = $this->getAccessor();
+
+            foreach ($this->definitions[$range->getCode()] as $property => $value){
+
+                if($accessor->getValue($range, $property) != $value){
+                    $accessor->setValue($range, $property, $value);
+
+                    if('costPrice' == $property){
+                        $updatePrice = true;
+                    }
+                }
+            }
+
+            if($updatePrice) {
+                $range->updatePrice();
+            }
+        }
     }
 
     /**
@@ -252,5 +297,14 @@ class RangeNormalizer
         $this->cache = $cache;
 
         return $this;
+    }
+
+    private function getAccessor()
+    {
+        if(!$this->accessor){
+            $this->accessor = PropertyAccess::createPropertyAccessor();
+        }
+
+        return $this->accessor;
     }
 }
