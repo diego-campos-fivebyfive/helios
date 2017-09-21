@@ -50,7 +50,7 @@ class NumberExtension extends \Twig_Extension
         $format = $this->numberExtension->formatCurrency($number, $currency);
 
         if(0 == strpos($format, '(')){
-            $format = str_replace(['(R$',')'], ['-R$',''], $format);
+            $format = str_replace(['(R$',')', 'R$'], ['-R$','','R$ '], $format);
         }
 
         return $format;
