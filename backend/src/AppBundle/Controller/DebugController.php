@@ -2,12 +2,14 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Component\PricingManager;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Model\KitPricing;
 use AppBundle\Service\Mailer;
+use Doctrine\Common\Inflector\Inflector;
 use Exporter\Exporter;
 use Exporter\Handler;
 use Exporter\Source\DoctrineORMQuerySourceIterator;
@@ -25,6 +27,57 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
  */
 class DebugController extends AbstractController
 {
+    /**
+     * @Route("/cmv-import")
+     */
+    public function importCmvAction()
+    {
+        $kernel = $this->get('kernel');
+        $file = $kernel->getCacheDir() . '/memorial.csv';
+
+        $content = file_get_contents($file);
+        $data = explode("\n", $content);
+        array_shift($data);
+
+        /** @var \AppBundle\Service\Order\ComponentCollector $collector */
+        $collector = $this->get('component_collector');
+
+        //dump($collector->getManager('inverter')->getConnection()->getHost()); die;
+
+        $managers = $collector->getManagers();
+
+        //dump($managers); die;
+
+        foreach ($data as $info){
+            if(!empty($info)){
+
+                list($code, $name, $cmvProtheus, $cmvApplied) = explode(';', $info);
+
+                $component = $collector->fromCode($code);
+
+                if($component instanceof ComponentInterface){
+
+                    $class = array_reverse(explode('\\', get_class($component)));
+
+                    $type = Inflector::tableize($class[0]);
+
+                    $component
+                        ->setCmvProtheus($cmvProtheus)
+                        ->setCmvApplied($cmvApplied)
+                    ;
+
+                    $managers[$type]->save($component);
+                }
+            }
+        }
+
+        foreach ($managers as $manager){
+            $manager->flush();
+        }
+
+        die;
+    }
+
     /**
      * @Route("/components-import")
      */

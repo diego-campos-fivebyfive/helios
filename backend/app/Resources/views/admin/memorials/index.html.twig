@@ -2,46 +2,154 @@
 
 {% block body %}
 
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
 
-        <div class="row" id="real-content">
-            <div class="col-md-12">
-                <div class="ibox flow-h">
-                    <div class="ibox-content flow-lg">
+            <div class="row" id="real-content">
+                <div class="col-md-12">
+                    <div class="ibox flow-h">
+                        <div class="ibox-content flow-lg">
+                            <div class="row">
 
-                        <table class="table table-stripped">
-                            <thead>
-                            <tr>
-                                <th class="text-center col-md-2 "> Versão </th>
-                                <th class="text-center col-md-4 "> &nbsp; </th>
-                                <th> &nbsp; </th>
-                            </tr>
-                            </thead>
-                            <tbody>
+                                <div class="col-md-12" style="margin-bottom: 1rem;">
+                                    <a href="{{ path('memorials_create') }}" class="btn btn-sm btn-success pull-right">
+                                        <i class="fa fa-plus"></i> Memorial
+                                    </a>
+                                </div>
 
-                                {% for memorial in memorials %}
+                                <div class="col-md-12">
+                                    <table class="table table-bordered table-stripped">
+                                        <thead>
+                                        <tr>
+                                            <th class="text-center col-md-2"> Nome</th>
+                                            <th class="text-center col-md-"> Status</th>
+                                            <th class="text-center col-md-"> Níveis de Desconto</th>
+                                            <th class="col-md-4"> &nbsp; </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
 
-                                    <tr>
-                                        <td> {{ memorial.version }} </td>
-                                        <td> {{ memorial.startAt|date('d/m/Y') }} </td>
-                                        <td>
-                                            <a href="{{ path('memorials_config', {id: memorial.id}) }}">
-                                                Gerenciar
-                                            </a>
-                                        </td>
-                                    </tr>
+                                        {% for memorial in memorials %}
 
-                                {% endfor %}
+                                            <tr>
+                                                <td> {{ memorial.name }} </td>
+                                                <td>
+                                                    {{ memorial.status(true)|trans }}
+                                                </td>
+                                                <td> {{ memorial.levels|join(' - ') }} </td>
+                                                <td>
+                                                    <div class="btn-group btn-group-sm btn-group-justified">
 
-                            </tbody>
-                        </table>
+                                                        <a class="btn btn-primary" href="{{ path('memorials_update', {id: memorial.id}) }}">
+                                                            <i class="fa fa-pencil"></i> Editar
+                                                        </a>
+
+                                                        <a class="btn btn-success" href="{{ path('memorials_config', {id: memorial.id}) }}">
+                                                            <i class="fa fa-cog"></i> Gerenciar
+                                                        </a>
+
+                                                        {% if memorial.isPending %}
+
+                                                            <a class="btn btn-warning" data-reverse="{{ path('memorials_reverse_engineering', {id: memorial.id}) }}">
+                                                                <i class="fa fa-exchange"></i> Eng. Reversa
+                                                            </a>
+
+                                                            <a class="btn btn-danger" data-delete="{{ path('memorials_delete', {id: memorial.id}) }}">
+                                                                <i class="fa fa-trash"></i> Excluir
+                                                            </a>
+
+                                                        {% endif %}
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                        {% endfor %}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="col-md-12 text-center">
+                                    <div class="btn-group bt-xs">
+                                        {{ knp_pagination_render(memorials) }}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
+
                 </div>
             </div>
-        </div>
 
+        </div>
     </div>
-</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+
+        $('[data-delete]').on('click', function () {
+            var row = $(this).closest('tr');
+            var url = $(this).data('delete');
+            swal({
+                title: "Confirmar exclusão?",
+                text: null,
+                type: "warning",
+                showCancelButton: true,
+                cancelButtonText: "{{ 'Cancel'|trans }}",
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "{{ 'Delete'|trans }}!",
+                closeOnConfirm: false
+            }, function () {
+                $.ajax({
+                    url: url,
+                    method: 'post',
+                    data: {_method:'delete'},
+                    complete: function(xhr){
+                        var response = xhr.responseJSON;
+                        if(200 == xhr.status){
+                            swal("{{ 'Success'|trans }}!", "{{ 'Was successful exclusion'|trans }}!", "success");
+                            window.setTimeout(function(){
+                                swal.close();
+                            },500);
+                            row.remove();
+                        }else{
+                            swal("{{ 'Error'|trans }}!", response.error, "error");
+                        }
+                    },
+                    beforeSend: function(){
+                        swal({
+                            title: "Excluindo...",
+                            text:  "Aguarde!",
+                            type: "info",
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            });
+        });
+
+        $('[data-reverse]').on('click', function () {
+            var url = $(this).data('reverse');
+            swal({
+                title: 'Confirmar operação?',
+                text: 'Os dados de markup relacionados com este memorial serão sobrescritos',
+                type: 'warning',
+                showCancelButton: true,
+                cancelButtonText: "{{ 'Cancel'|trans }}",
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Executar',
+                closeOnConfirm: false
+            }, function () {
+                window.location.href = url;
+            });
+        });
+
+
+
+    </script>
 
 {% endblock %}

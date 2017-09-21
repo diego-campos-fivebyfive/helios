@@ -38,24 +38,7 @@ class Main implements ContainerAwareInterface
          * ROLE_ADMIN
          */
         if($user->isAdmin()) {
-
-            $menu->addChild('Accounts', [
-                'route' => 'account_index',
-                'extras' => ['icon' => App::icons('accounts')]
-            ]);
-
-          /*  $menu->addChild('Packages', [
-                'route' => 'package_index',
-                'extras' => ['icon' => App::icons('packages')]
-            ]);
-
-          $this->menuAdminComponents($menu, $user);
-
-            $this->menuSettings($menu, $user);
-
-            $this->resolveActiveMenu($menu);*/
-
-           // return $menu;
+            $this->menuPlatform($menu, $user);
         }
 
         $menu->addChild('Contacts', [
@@ -122,23 +105,22 @@ class Main implements ContainerAwareInterface
      * @param ItemInterface $menu
      * @param $user
      */
-    private function menuAdminComponents(ItemInterface &$menu, $user)
+    private function menuPlatform(ItemInterface &$menu, $user)
     {
-        $admin = $menu->addChild('Admin Components', [
+        $platform = $menu->addChild('Administração', [
             'uri' => '#',
             'childrenAttributes' => ['class' => 'nav nav-second-level collapse'],
-            'extras' => ['icon' => App::icons('admin_components')]
+            'extras' => ['icon' => 'fa fa-th-large']
         ]);
 
-        $admin->addChild('Published', [
-            'route' => 'components_published',
-            'routeParameters' => ['context' => 'inverter'],
-            'extras' => ['icon' => App::icons('published')]
+        $platform->addChild('Accounts', [
+            'route' => 'account_index',
+            'extras' => ['icon' => App::icons('accounts')]
         ]);
 
-        $admin->addChild('Not published', [
-            'route' => 'components',
-            'extras' => ['icon' => App::icons('unpublished')]
+        $platform->addChild('Memoriais', [
+            'route' => 'memorials',
+            'extras' => ['icon' => 'fa fa-bars']
         ]);
     }
 

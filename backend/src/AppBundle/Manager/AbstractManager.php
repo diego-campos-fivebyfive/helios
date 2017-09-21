@@ -47,4 +47,12 @@ abstract class AbstractManager extends BaseEntityManager
     {
         return strtolower(substr(array_reverse(explode('\\', $this->class))[0], 0, 1));
     }
+
+    /**
+     * @param null|array|object $entity
+     */
+    public function flush($entity = null)
+    {
+        $this->getEntityManager()->flush($entity);
+    }
 }
