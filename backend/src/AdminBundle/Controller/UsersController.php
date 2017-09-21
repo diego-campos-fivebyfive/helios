@@ -71,7 +71,9 @@ class UsersController extends AbstractController
 
         /** @var AccountInterface $accountManager */
         $accountManager = $this->get('account_manager');
-        $account = $accountManager->find(634);
+        $account = $accountManager->findOneBy([
+            'email' => 'servidor@sicesbrasil.com.br'
+        ]);
 
         $user = $userManager->createUser();
         $user->setCreatedAt(new \DateTime('now'));
