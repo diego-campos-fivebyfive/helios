@@ -3,13 +3,16 @@
 namespace AppBundle\Form;
 
 use AppBundle\Entity\Customer;
-use Kolina\CustomerBundle\Form\CustomerType as AbstractCustomerType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use AppBundle\Entity\Pricing\Memorial;
+use AppBundle\Util\Validator\Constraints\ContainsCnpj;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class AccountType extends AbstractCustomerType
+class AccountType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -18,6 +21,32 @@ class AccountType extends AbstractCustomerType
         $builder->remove('user');
 
         $builder
+            ->add('document',TextType::class, array(
+                'constraints' => new ContainsCnpj()
+            ))
+            ->add('extraDocument',TextType::class, [
+                'required' => false
+            ])
+            ->add('lastname',TextType::class)
+            ->add('firstname',TextType::class)
+            ->add('postcode',TextType::class)
+            ->add('state',TextType::class)
+            ->add('city',TextType::class)
+            ->add('district',TextType::class)
+            ->add('street',TextType::class)
+            ->add('number',TextType::class, [
+                'required' => false
+            ])
+            ->add('level', ChoiceType::class, [
+                'choices' => Memorial::getDefaultLevels()
+            ])
+            ->add('status', ChoiceType::class, [
+                'choices' => Customer::getStatusList()
+            ])
+            ->add('contact',TextType::class)
+            ->add('email',EmailType::class)
+            ->add('phone',TextType::class);
+        /*$builder
             ->add('package', 'entity', array(
                     'multiple' => false,
                     'property' => 'name',
@@ -36,7 +65,7 @@ class AccountType extends AbstractCustomerType
                 'allow_add' => true,
                 'prototype_name' => 0
             ])
-            ->add('maxMember');
+            ->add('maxMember');*/
     }
 
     /**

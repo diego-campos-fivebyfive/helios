@@ -97,23 +97,18 @@ class AccountController extends AbstractController
 
     /**
      * @Breadcrumb("update.account")
-     * @Route("/{token}/update", name="account_update")
+     * @Route("/{id}/update", name="account_update")
      */
     public function updateAction(Request $request, Customer $account)
     {
-        $member = $this->getCurrentMember();
         $manager = $this->manager('customer');
-
-        /**
-         * Prevent excess records in the form of listing,
-         * including only the first owner of the account
-         */
-        //$account->edition = true;
 
         $form = $this->createForm(AccountType::class, $account);
 
-        if($member->getAccount()->getId() == $account->getId())
-            $form->remove('status');
+        $data = $form->getData();
+
+        //$account->addContact($data['contacts']);
+        dump($account);die;
 
         $form->handleRequest($request);
 
@@ -121,19 +116,19 @@ class AccountController extends AbstractController
 
             $manager->save($account);
 
-            $this->processAndPersist($account->getMembers()->first());
             $this->setNotice("Conta atualizada com sucesso !");
-            return $this->redirectToRoute('account_index');
+            return $this->redirectToRoute('account_show');
         }
 
         return $this->render('AppBundle:Account:form.html.twig', array(
             'form' => $form->createView(),
-            'account' => $account
+            'account' => $account,
+            'errors' => $form->getErrors()
         ));
     }
 
     /**
-     * @Route("/{token}", name="account_show")
+     * @Route("/{id}", name="account_show")
      */
     public function showAction(Request $request, Customer $account)
     {
