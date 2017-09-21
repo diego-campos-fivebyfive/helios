@@ -198,6 +198,7 @@ class Memorial implements MemorialInterface
                 break;
 
             case self::STATUS_PUBLISHED:
+                $this->expiredAt = null;
                 $this->publishedAt = new \DateTime();
                 break;
 
