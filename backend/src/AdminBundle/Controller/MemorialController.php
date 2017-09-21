@@ -8,6 +8,7 @@ use AppBundle\Entity\Pricing\Range;
 use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Form\Admin\MemorialFilterType;
 use AppBundle\Service\Pricing\MemorialAnalyzer;
+use AppBundle\Service\Pricing\MemorialCloner;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,6 +28,8 @@ class MemorialController extends AdminController
     public function indexAction(Request $request)
     {
         $qb = $this->manager('memorial')->createQueryBuilder();
+
+        $qb->orderBy('m.createdAt', 'desc');
 
         $paginator = $this->getPaginator();
 
@@ -94,6 +97,23 @@ class MemorialController extends AdminController
         return $this->render('admin/memorials/form.html.twig', [
             'form' => $form->createView(),
             'memorial' => $memorial
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/clone", name="memorials_clone")
+     * @Method("post")
+     */
+    public function cloneAction(Memorial $memorial)
+    {
+        $cloner = new MemorialCloner();
+
+        $cloned = $cloner->execute($memorial);
+
+        $this->manager('memorial')->save($cloned);
+
+        return $this->json([
+            'memorial' => $cloned->toArray()
         ]);
     }
 
