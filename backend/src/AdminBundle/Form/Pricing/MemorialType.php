@@ -15,10 +15,19 @@ class MemorialType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        /** @var Memorial $memorial */
+        $memorial = $options['data'];
+
+        $statuses = Memorial::getStatuses();
+
+        if(!$memorial->getId()){
+            unset($statuses[Memorial::STATUS_PUBLISHED], $statuses[Memorial::STATUS_EXPIRED]);
+        }
+
         $builder
             ->add('name')
             ->add('status', ChoiceType::class, [
-                'choices' => Memorial::getStatuses()
+                'choices' => $statuses
             ])
             ->add('levels', ChoiceType::class, [
                 'choices' => Memorial::getDefaultLevels(),

@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
@@ -25,7 +26,15 @@ class MemorialController extends AdminController
      */
     public function indexAction(Request $request)
     {
-        $memorials = $this->manager('memorial')->findAll();
+        $qb = $this->manager('memorial')->createQueryBuilder();
+
+        $paginator = $this->getPaginator();
+
+        //$memorials = $this->manager('memorial')->findAll();
+        $memorials = $paginator->paginate(
+            $qb->getQuery(),
+            $request->query->getInt('page', 1)
+        );
 
         return $this->render('admin/memorials/index.html.twig', [
             'memorials' => $memorials
@@ -76,6 +85,8 @@ class MemorialController extends AdminController
 
             $manager->save($memorial);
 
+            $this->syncPublishMemorial($memorial);
+
             $this->setNotice('Memorial atualizado com sucesso.');
 
             return $this->redirectToRoute('memorials');
@@ -89,12 +100,13 @@ class MemorialController extends AdminController
 
     /**
      * @Route("/{id}/delete", name="memorials_delete")
+     * @Method("delete")
      */
     public function deleteAction(Request $request, Memorial $memorial)
     {
-        if($memorial->isPublished()){
+        if(!$memorial->isPending()){
             return $this->json([
-                'error' => 'This memorial is published'
+                'error' => 'Somente memoriais pendentes podem ser excluídos'
             ], Response::HTTP_CONFLICT);
         }
 
@@ -253,5 +265,38 @@ class MemorialController extends AdminController
         return $this->json([
             'ranges' => $data
         ]);
+    }
+
+    /**
+     * @param Memorial $memorial
+     */
+    private function syncPublishMemorial(Memorial $memorial)
+    {
+        if($memorial->isPublished()){
+
+            $manager = $this->manager('memorial');
+
+            $qb = $manager->createQueryBuilder();
+
+            $qb
+                ->where('m.status = :status')
+                ->andWhere(
+                    $qb->expr()->notIn('m.id', ':id')
+                )
+                ->setParameters([
+                    'status' => Memorial::STATUS_PUBLISHED,
+                    'id' => $memorial->getId()
+                ]);
+
+            $memorials = $qb->getQuery()->getResult();
+
+            /** @var Memorial $currentMemorial */
+            foreach ($memorials as $currentMemorial){
+                $currentMemorial->setStatus(Memorial::STATUS_EXPIRED);
+                $manager->save($currentMemorial, false);
+            }
+
+            $manager->flush();
+        }
     }
 }
