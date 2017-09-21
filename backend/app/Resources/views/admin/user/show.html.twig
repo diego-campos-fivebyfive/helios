@@ -1,0 +1,55 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+    <div class="wrapper wrapper-content  animated fadeInRight">
+        <div class="row">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h2> Detalhes</h2>
+                </div>
+                <div class="ibox-content no-padding border-left-right">
+                </div>
+                <div class="ibox-content">
+                    <div class="tab-content">
+                        <div class="tab-pane active">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    &nbsp; Informações da conta
+                                </div>
+                                <div class="panel-body">
+
+                                    <div class="form-group col-md-4">
+                                        <label>Nome </label>
+                                        <br/>
+                                        {{ member.firstname }}
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label>Email </label>
+                                        <br/>
+                                        {{ member.email }}
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        <label>Nível de usuário</label>
+                                        <br/>
+
+                                        {% if is_admin %}
+                                            Administrador
+                                        {% else %}
+                                            Comercial
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

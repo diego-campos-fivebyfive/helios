@@ -1,0 +1,94 @@
+{% extends view('layout') %}
+
+{% block body %}
+    <style>
+        .top{
+            margin-top: 20px;
+        }
+        input[type=checkbox]{
+            margin-left: 5px;
+        }
+    </style>
+    <div class="wrapper wrapper-content  animated fadeInRight">
+        <div class="row">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h2> Usuário Sices</h2>
+                </div>
+                <div class="ibox-content no-padding border-left-right">
+                </div>
+                <div class="ibox-content">
+                    <div class="tab-content">
+                        <div class="tab-pane active">
+                            <div class="form-group row">
+                                {{ form_start(form) }}
+
+                                <div class="col-md-12">
+                                    <div class="col-lg-6">
+                                        {{ form_label(form.firstname, 'Nome') }}
+                                        {{ form_widget(form.firstname, {'attr':{'class':'form-control', 'data-placeholder':'Nome de usuário'}}) }}
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        {{ form_label(form.email, 'Email') }}
+                                        {{ form_widget(form.email, {'attr':{'class':'form-control', 'data-placeholder':'Email'}})}}
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 top">
+                                    <div class="hidden">
+                                        {{ form_widget(form.user.email) }}
+                                    </div>
+
+                                    <div class="hidden">
+                                        {{ form_widget(form.user.username)}}
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        {{ form_label(form.user.roles, 'Nível de usuário') }}
+                                        {{ form_widget(form.user.roles) }}
+                                    </div>
+
+                                    {% if attribute(form.user, 'plainPassword') is defined %}
+                                        <div class="col-lg-6">
+                                            {{ form_label(form.user.plainPassword, 'Senha') }}
+                                            {{ form_widget(form.user.plainPassword, {'attr':{'class':'form-control', 'data-placeholder':'Senha de acesso'}}) }}
+                                        </div>
+                                    {% endif %}
+
+                                    <div class="col-lg-6">
+                                        {{ form_label(form.user.enabled, 'Status') }}<br/>
+                                        {{ form_widget(form.user.enabled) }}
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <input type="submit" class="btn btn-primary pull-right" value="Salvar" />
+                                </div>
+                                {{ form_end(form) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('#member_email').change(function () {
+            $('#member_user_username').val($(this).val());
+            $('#member_user_email').val($(this).val());
+        });
+        $('#member_user_roles').chosen({
+        });
+
+
+        //var checkboxes = $(' input [type="checkbox"] ');//.checkbox [type="checkbox"]
+        //console.log(checkboxes);
+        /*checkboxes.on('change', function() {
+            var el = this;
+            checkboxes.each(function() {
+                if (this != el) this.checked = false;;
+            });
+        });*/
+    </script>
+{% endblock %}
