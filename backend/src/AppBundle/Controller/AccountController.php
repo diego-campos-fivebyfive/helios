@@ -6,7 +6,7 @@ use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\UserInterface;
 use AppBundle\Form\AccountType;
-use AppBundle\Form\CustomerType;
+use Symfony\Component\Form\FormError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
@@ -83,8 +83,8 @@ class AccountController extends AbstractController
 
             $this->processAndPersist($member);
             $this->setNotice("Conta criada com sucesso !");
-            return $this->redirectToRoute('account_show', [
-                'token' => $account->getToken()
+            return $this->redirectToRoute('account_index', [
+                'id' => $account->getId()
             ]);
         }
 
@@ -103,12 +103,6 @@ class AccountController extends AbstractController
         $manager = $this->manager('customer');
 
         $form = $this->createForm(AccountType::class, $account);
-
-        $data = $form->getData();
-
-        //$account->addContact($data['contacts']);
-        dump($account);die;
-
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
@@ -116,14 +110,15 @@ class AccountController extends AbstractController
             $manager->save($account);
 
             $this->setNotice("Conta atualizada com sucesso !");
-            return $this->redirectToRoute('account_show');
+            return $this->redirectToRoute('account_index');
+
         }
 
-        return $this->render('AppBundle:Account:form.html.twig', array(
+        return $this->render('account.form', [
+            'errors' => $form->getErrors(true),
             'form' => $form->createView(),
-            'account' => $account,
-            'errors' => $form->getErrors()
-        ));
+            'account' => $account
+        ]);
     }
 
     /**
