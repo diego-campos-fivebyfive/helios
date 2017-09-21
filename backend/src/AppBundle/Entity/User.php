@@ -78,6 +78,30 @@ class User extends AbstractUser implements UserInterface
     /**
      * @inheritDoc
      */
+    public function isPlatformMaster()
+    {
+        return $this->hasRole(self::ROLE_PLATFORM_MASTER);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isPlatformAdmin()
+    {
+        return $this->hasRole(self::ROLE_PLATFORM_ADMIN);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isPlatformCommercial()
+    {
+        return $this->hasRole(self::ROLE_PLATFORM_COMMERCIAL);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function isAdmin()
     {
         return $this->hasRole(self::ROLE_ADMIN);
@@ -185,4 +209,16 @@ class User extends AbstractUser implements UserInterface
     {
         return $this->updated_at;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public static function getRolesOptions() {
+
+        return [
+            self::ROLE_PLATFORM_ADMIN => 'Administrador',
+            self::ROLE_PLATFORM_COMMERCIAL => 'Comercial'
+        ];
+    }
+
 }

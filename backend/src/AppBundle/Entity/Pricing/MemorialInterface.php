@@ -130,5 +130,5 @@ interface MemorialInterface
     /**
      * @return array
      */
-    public static function getDefaultLevels();
+    public static function getDefaultLevels($keys = false);
 }

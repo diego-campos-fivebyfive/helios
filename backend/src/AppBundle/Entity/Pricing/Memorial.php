@@ -300,15 +300,17 @@ class Memorial implements MemorialInterface
     /**
      * @inheritDoc
      */
-    public static function getDefaultLevels()
+    public static function getDefaultLevels($keys = false)
     {
-        return [
+        $levels = [
             self::LEVEL_BLACK => 'Black',
             self::LEVEL_GOLD => 'Gold',
             self::LEVEL_PARTNER => 'Partner',
             self::LEVEL_PLATINUM => 'Platinum',
             self::LEVEL_PREMIUM => 'Premium',
-            self::LEVEL_PROMOTIONAL => 'Promo'
+            self::LEVEL_PROMOTIONAL => 'Promotional'
         ];
+
+        return $keys ? array_keys($levels) : $levels ;
     }
 }

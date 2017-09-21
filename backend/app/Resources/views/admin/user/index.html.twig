@@ -1,0 +1,125 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+    <div class="wrapper wrapper-content  animated fadeInRight">
+        <div class="row">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <span class="pull-right small text-muted">
+                        <a class="btn btn-primary" href="{{ path('create_user') }}">Novo usúario Sices</a>
+                    </span>
+                    <h2> Usuários Sices</h2>
+                </div>
+                <div class="ibox-content no-padding border-left-right">
+                </div>
+                <div class="ibox-content">
+                    <div class="tab-content">
+                        <div class="tab-pane active">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                <tr>
+                                    <th class="col-md-4"> Nome</th>
+                                    <th class="col-md-4"> Email </th>
+                                    <th class="col-md-1 text-center"> Nível </th>
+                                    <th class="col-md-1 text-center"> Ativo </th>
+                                    <th class="col-md-2"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for member in members %}
+                                    {% set is_admin = member.isPlatformAdmin %}
+
+                                    <tr>
+                                        <td> {{ member.firstname }} </td>
+                                        <td><i class="fa fa-envelope"></i>&nbsp;  {{ member.email }} </td>
+                                        <td class="text-center" data-value="{{ member.isOwner ? 'a' : 'z' }}">
+                                            {% if is_admin %}
+                                                <div class="label label-info" style="width: 100%;">
+                                                    Administrator
+                                                </div>
+                                            {% else %}
+                                                <div class="label label-default" style="width: 100%;">
+                                                    Comercial
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="label label-{% if member.user.enabled %}info{% else %}danger{% endif %}" style="width: 100%;">
+                                                {% if member.user.enabled %}Ativo{% else %}Inativo{% endif %}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-justified">
+                                                <a class="btn btn-sm btn-default"
+                                                   href="{{ path('user_show', { 'id': member.id }) }}"><i class="fa fa-eye"></i></a>
+                                                <a class="btn btn-sm btn-primary"
+                                                   href="{{ path('user_update', { 'id': member.id }) }}"><i class="fa fa-pencil"></i></a>
+                                                <a data-delete="{{ path('user_delete',{ 'id': member.id }) }}"
+                                                   class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        var dataDelete = $('[data-delete]');
+        if(dataDelete.length){
+            dataDelete.on('click', function () {
+                var url = $(this).data('delete');
+                var row = $(this).closest('tr');
+                swal({
+                    title: "Confirma exclusão deste usuário?",
+                    text: null,
+                    type: "info",
+                    showCancelButton: true,
+                    cancelButtonText: "{{ 'Cancel'|trans }}",
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "{{ 'Confirm'|trans }}",
+                    closeOnConfirm: false
+                }, function () {
+                    $.ajax({
+                        url: url,
+                        method: 'post',
+                        data: {_method:'delete'},
+                        complete: function (xhr) {
+                            //var response = xhr.responseJSON;
+                            if (200 == xhr.status) {
+                                swal("{{ 'Success'|trans }}", "Exclusão efetuada com sucesso!", "success");
+                                row.remove();
+                                window.setTimeout(function(){
+                                    swal.close();
+                                }, 1000);
+                            } else {
+                                swal("{{ 'Error'|trans }}!", 'Falha ao excluir', "error");
+                                console.log(xhr.statusText);
+                            }
+                        },
+                        beforeSend: function () {
+                            swal({
+                                title: "Excluindo...",
+                                text: "Aguarde",
+                                type: "info",
+                                showConfirmButton: false
+                            });
+                        }
+                    });
+                });
+            });
+        }
+
+    </script>
+
+{% endblock %}

@@ -113,6 +113,11 @@ class Main implements ContainerAwareInterface
             'extras' => ['icon' => 'fa fa-th-large']
         ]);
 
+        $platform->addChild('Usuários Sices', [
+            'route' => 'user_index',
+            'extras' => ['icon' => App::icons('users')]
+        ]);
+
         $platform->addChild('Accounts', [
             'route' => 'account_index',
             'extras' => ['icon' => App::icons('accounts')]

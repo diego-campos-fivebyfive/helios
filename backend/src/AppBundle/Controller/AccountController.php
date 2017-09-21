@@ -7,7 +7,6 @@ use AppBundle\Entity\Customer;
 use AppBundle\Entity\UserInterface;
 use AppBundle\Form\AccountType;
 use AppBundle\Form\CustomerType;
-use AppBundle\Form\UserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
