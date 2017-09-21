@@ -36,21 +36,29 @@
                                                 <td>
                                                     {{ memorial.status(true)|trans }}
                                                 </td>
-                                                <td> {{ memorial.levels|join(', ') }} </td>
+                                                <td> {{ memorial.levels|join(' - ') }} </td>
                                                 <td>
                                                     <div class="btn-group btn-group-sm btn-group-justified">
+
                                                         <a class="btn btn-primary" href="{{ path('memorials_update', {id: memorial.id}) }}">
                                                             <i class="fa fa-pencil"></i> Editar
                                                         </a>
+
                                                         <a class="btn btn-success" href="{{ path('memorials_config', {id: memorial.id}) }}">
                                                             <i class="fa fa-cog"></i> Gerenciar
                                                         </a>
-                                                        <a class="btn btn-warning" data-reverse="{{ path('memorials_reverse_engineering', {id: memorial.id}) }}">
-                                                            <i class="fa fa-exchange"></i> Eng. Reversa
-                                                        </a>
-                                                        <a class="btn btn-danger" data-delete="{{ path('memorials_delete', {id: memorial.id}) }}">
-                                                            <i class="fa fa-trash"></i> Excluir
-                                                        </a>
+
+                                                        {% if memorial.isPending %}
+
+                                                            <a class="btn btn-warning" data-reverse="{{ path('memorials_reverse_engineering', {id: memorial.id}) }}">
+                                                                <i class="fa fa-exchange"></i> Eng. Reversa
+                                                            </a>
+
+                                                            <a class="btn btn-danger" data-delete="{{ path('memorials_delete', {id: memorial.id}) }}">
+                                                                <i class="fa fa-trash"></i> Excluir
+                                                            </a>
+
+                                                        {% endif %}
                                                     </div>
                                                 </td>
                                             </tr>
@@ -59,6 +67,12 @@
 
                                         </tbody>
                                     </table>
+                                </div>
+
+                                <div class="col-md-12 text-center">
+                                    <div class="btn-group bt-xs">
+                                        {{ knp_pagination_render(memorials) }}
+                                    </div>
                                 </div>
 
                             </div>
@@ -70,5 +84,72 @@
 
         </div>
     </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+
+        $('[data-delete]').on('click', function () {
+            var row = $(this).closest('tr');
+            var url = $(this).data('delete');
+            swal({
+                title: "Confirmar exclusão?",
+                text: null,
+                type: "warning",
+                showCancelButton: true,
+                cancelButtonText: "{{ 'Cancel'|trans }}",
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "{{ 'Delete'|trans }}!",
+                closeOnConfirm: false
+            }, function () {
+                $.ajax({
+                    url: url,
+                    method: 'post',
+                    data: {_method:'delete'},
+                    complete: function(xhr){
+                        var response = xhr.responseJSON;
+                        if(200 == xhr.status){
+                            swal("{{ 'Success'|trans }}!", "{{ 'Was successful exclusion'|trans }}!", "success");
+                            window.setTimeout(function(){
+                                swal.close();
+                            },500);
+                            row.remove();
+                        }else{
+                            swal("{{ 'Error'|trans }}!", response.error, "error");
+                        }
+                    },
+                    beforeSend: function(){
+                        swal({
+                            title: "Excluindo...",
+                            text:  "Aguarde!",
+                            type: "info",
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            });
+        });
+
+        $('[data-reverse]').on('click', function () {
+            var url = $(this).data('reverse');
+            swal({
+                title: 'Confirmar operação?',
+                text: 'Os dados de markup relacionados com este memorial serão sobrescritos',
+                type: 'warning',
+                showCancelButton: true,
+                cancelButtonText: "{{ 'Cancel'|trans }}",
+                confirmButtonColor: '#DD6B55',
+                confirmButtonText: 'Executar',
+                closeOnConfirm: false
+            }, function () {
+                window.location.href = url;
+            });
+        });
+
+
+
+    </script>
 
 {% endblock %}
