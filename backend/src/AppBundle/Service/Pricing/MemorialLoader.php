@@ -35,7 +35,7 @@ class MemorialLoader
                 'status' => Memorial::STATUS_PUBLISHED
             ]);
 
-        $memorial =$qb->getQuery()->getOneOrNullResult();
+        $memorial = $qb->getQuery()->getOneOrNullResult();
 
         return $memorial;
     }
