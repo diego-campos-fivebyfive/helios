@@ -12,6 +12,10 @@ interface UserInterface extends BaseUserInterface
     const ROLE_AGENT = 'ROLE_AGENT';
     const ACTIVITY_DELAY = '5 minutes ago';
 
+    const ROLE_PLATFORM_MASTER = 'ROLE_PLATFORM_MASTER';
+    const ROLE_PLATFORM_ADMIN  = 'ROLE_PLATFORM_ADMIN';
+    const ROLE_PLATFORM_COMMERCIAL = 'ROLE_PLATFORM_COMMERCIAL';
+
     /**
      * @return int
      */
@@ -33,6 +37,21 @@ interface UserInterface extends BaseUserInterface
      * @return bool
      */
     public function isSame(UserInterface $user);
+
+    /**
+     * @return bool
+     */
+    public function isPlatformMaster();
+
+    /**
+     * @return bool
+     */
+    public function isPlatformAdmin();
+
+    /**
+     * @return bool
+     */
+    public function isPlatformCommercial();
 
     /**
      * @return bool
@@ -92,4 +111,9 @@ interface UserInterface extends BaseUserInterface
      * @return \DateTime
      */
     public function getUpdatedAt();
+
+    /**
+     * @return array
+     */
+    public static function getRolesOptions();
 }

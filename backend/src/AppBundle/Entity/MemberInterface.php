@@ -35,6 +35,21 @@ interface MemberInterface
     /**
      * @return bool
      */
+    public function isPlatformMaster();
+
+    /**
+     * @return bool
+     */
+    public function isPlatformAdmin();
+
+    /**
+     * @return bool
+     */
+    public function isPlatformCommercial();
+
+    /**
+     * @return bool
+     */
     public function isOwner();
 
     /**
