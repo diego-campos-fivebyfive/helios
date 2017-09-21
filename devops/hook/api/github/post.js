@@ -2,12 +2,8 @@
 
 const { exec } = require('child_process')
 
-const allowOrigin = (request, agent) =>
-  request.headers['user-agent'].includes(agent)
-
 const postHook = (request, response) => {
-  const githubAgent = 'GitHub-Hookshot/ab46a57'
-  if (!allowOrigin(request, githubAgent)) {
+  if (!request.headers['user-agent'].includes('GitHub-Hookshot')) {
     return
   }
 
