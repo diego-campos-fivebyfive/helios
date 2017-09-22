@@ -23,8 +23,9 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * User controller.
  *
- * @Route("user")
  * @Security("has_role('ROLE_ADMIN')")
+ *
+ * @Route("users")
  *
  * @Breadcrumb("Sices")
  */
@@ -38,21 +39,16 @@ class UsersController extends AbstractController
      */
     public function indexAction()
     {
-        /** @var Customer $manager */
         $manager = $this->manager('customer');
 
         /** @var MemberInterface $member */
         $members = $manager->findBy([
-            'context' => 'member'
+            'context' => MemberInterface::CONTEXT,
+            'account' => $this->account()
         ]);
-        $data = [];
-        foreach ($members as $member) {
-            if (($member->isPlatformAdmin() || $member->isPlatformCommercial()) && !$member->isDeleted())
-                $data[] = $member;
-        }
 
         return $this->render('admin/user/index.html.twig', array(
-            'members' => $data,
+            'members' => $members
         ));
     }
 
