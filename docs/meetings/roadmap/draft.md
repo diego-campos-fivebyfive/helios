@@ -1,5 +1,5 @@
 
-18/09/2017 - DEFINIÇÕES DE REGRA PARA ORÇAMENTOS / PEDIDOS
+18/09/2017 - REGRAS PARA ORÇAMENTOS / PEDIDOS
 ==========================================================
 
 PEDIDO/ORÇAMENTO
