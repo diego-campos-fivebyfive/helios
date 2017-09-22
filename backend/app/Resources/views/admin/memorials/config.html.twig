@@ -3,14 +3,6 @@
 {% block styles %}
 
     <style>
-        table th, table td, table input:not(:disabled) {
-            text-align: center;
-        }
-
-        .input-markup, .input-price {
-            width: 100px;
-        }
-
         .table th span {
             /*background: #068;*/
             width: 75%;
@@ -24,19 +16,24 @@
             margin: 0;
             float: left;
         }
-        .product-config td input:disabled{
+
+        .product-config td input:disabled {
             font-size: 13px;
         }
-        .input-description:not(.collapsed){
+
+        .input-description:not(.collapsed) {
             width: 350px;
         }
-        .input-description.collapsed{
+
+        .input-description.collapsed {
             width: 85px;
         }
-        .input-code:not(.collapsed){
+
+        .input-code:not(.collapsed) {
             width: 120px;
         }
-        .input-code.collapsed{
+
+        .input-code.collapsed {
             width: 75px;
         }
     </style>
@@ -54,17 +51,15 @@
                             <div class="row">
 
                                 <div class="col-md-12">
-                                    <div class="btn-group">
-                                        <a href="{{ path('memorials') }}" class="btn btn-sm btn-primary">
+
+                                    <div class="btn-group col-md-12" style="margin-bottom: 1rem;">
+                                        <a href="{{ path('memorials') }}" class="btn btn-sm btn-default">
                                             <i class="fa fa-arrow-left"></i>
-                                            Voltar para Memoriais
+                                            Voltar
                                         </a>
                                     </div>
-                                </div>
 
-                                <div class="col-md-12">
-
-                                {{ form_start(form,{attr:{id:'form_filter'}}) }}
+                                    {{ form_start(form,{attr:{id:'form_filter'}}) }}
 
                                     <div class="form-group col-md-2">
                                         {{ form_label(form.memorial) }}
@@ -92,7 +87,7 @@
                                         {% endfor %}
 
                                     </div>
-                                {{ form_end(form) }}
+                                    {{ form_end(form) }}
 
                                 </div>
                             </div>
@@ -112,6 +107,9 @@
 
 {% block scripts %}
 
+    {% include view('helper.plugins_js') %}
+    {% include view('helper.numbers') %}
+
     <script>
 
         var MemorialManager = {
@@ -119,7 +117,7 @@
             form: $('#form_filter'),
             method: 'post',
             uri: '{{ app.request.uri }}',
-            render: function(content){
+            render: function (content) {
                 $('#render_memorial').html(content);
             },
             get: function (id) {
@@ -149,7 +147,7 @@
                             MemorialManager.render(xhr.responseText);
                         }
                     });
-                }else{
+                } else {
                     MemorialManager.render('');
                 }
             },

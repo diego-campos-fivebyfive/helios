@@ -71,7 +71,7 @@ class Mailer
             'reference' => base64_encode($account->getEmail())
         ], UrlGeneratorInterface::ABSOLUTE_URL);
 
-        $rendered = $this->templating->render('AppBundle:Register:email.html.twig', [
+        $rendered = $this->templating->render('AppBundle:Register:email_confirmation.html.twig', [
             'targetUrl' => $url,
             'account' => $account
         ]);
