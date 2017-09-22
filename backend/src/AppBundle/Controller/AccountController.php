@@ -7,12 +7,15 @@ use AppBundle\Entity\Customer;
 use AppBundle\Entity\UserInterface;
 use AppBundle\Form\AccountType;
 use AppBundle\Form\CustomerType;
+use AppBundle\Service\Util\AccountManipulator;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Sonata\MediaBundle\Model\MediaInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * AccountController
@@ -132,12 +135,72 @@ class AccountController extends AbstractController
     }
 
     /**
+     * @return \AppBundle\Service\Mailer
+     */
+    private function getMailer()
+    {
+        return $this->get('app_mailer');
+    }
+
+    /**
+     * @Route("/{token}/change", name="account_change_status")
+     * //@Method("post")
+     */
+    public function changeAction(Customer $account)
+    {
+        try {
+            if($account->isVerified() || $account->isConfirmed()) {
+                $account = $this->changeStatus($account, BusinessInterface::CONFIRMED);
+
+                $this->getMailer()->sendAccountConfirmationMessage($account);
+            } elseif ($account->isActivated()) {
+                foreach ($account->getMembers() as $member){
+                    $member->getUser()->setEnabled(0);
+                }
+
+                $this->changeStatus($account, BusinessInterface::LOCKED);
+            } elseif ($account->isLocked()) {
+                foreach ($account->getMembers() as $member){
+                    $member->getUser()->setEnabled(1);
+                }
+
+                $this->changeStatus($account, BusinessInterface::ACTIVATED);
+            }
+
+            $status = Response::HTTP_OK;
+        } catch (\Exception $exception) {
+            $status = Response::HTTP_NOT_FOUND;
+        }
+
+        return $this->json([
+            'info_status' => $this->renderView('account.info_status', ['account' => $account])
+        ], $status);
+    }
+
+    /**
+     * @param Customer $account
+     * @param $status
+     * @return Customer
+     */
+    public function changeStatus(Customer $account, $status)
+    {
+        $member = $account->getOwner();
+
+        $member->setStatus($status);
+        $account->setStatus($status);
+
+        $this->manager('account')->save($account);
+
+        return $account;
+    }
+
+    /**
      * @Route("/{token}", name="account_show")
      */
     public function showAction(Request $request, Customer $account)
     {
         $member = $account->getMembers();
-        
+
         return $this->render('account.show', [
             'account' => $account,
             'members' => $member

@@ -1,0 +1,73 @@
+<div id="info-status" class="pull-right">
+    {% if account.status == 0 %}
+        <h3>Aguardando confirmação de Email</h3>
+    {% elseif account.status == 1 %}
+        <a class="btn btn-danger"
+           data-status="{{ path('account_change_status',{'token':account.token}) }}">
+            Enviar Email de confirmação
+        </a>
+    {% elseif account.status == 2 %}
+        <a class="btn btn-danger"
+           data-status="{{ path('account_change_status',{'token':account.token}) }}">
+            Reenviar Email de confirmação
+        </a>
+    {% elseif account.status == 3 %}
+        <a class="btn btn-danger"
+           data-status="{{ path('account_change_status',{'token':account.token}) }}">
+            Bloquear conta
+        </a>
+    {% elseif account.status == 4 %}
+        <a class="btn btn-danger"
+           data-status="{{ path('account_change_status',{'token':account.token}) }}">
+            Ativar conta
+        </a>
+    {% endif %}
+</div>
+
+<script>
+
+    var infoStatus = $('#info-status');
+    var dataStatus = $('[data-status]');
+    if(dataStatus.length){
+        dataStatus.on('click', function () {
+            var url = $(this).data('status');
+            swal({
+                title: "Confirma esta ação?",
+                text: null,
+                type: "info",
+                showCancelButton: true,
+                cancelButtonText: "{{ 'Cancel'|trans }}",
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "{{ 'Confirm'|trans }}",
+                closeOnConfirm: false
+            }, function () {
+                $.ajax({
+                    url: url,
+                    method: 'post',
+                    data: {_method:'post'},
+                    complete: function (xhr) {
+                        console.log(xhr.responseJSON['info_status']);
+                        if (200 == xhr.status) {
+                            swal("{{ 'Success'|trans }}", "Processo efetuado com sucesso!", "success");
+                            infoStatus.html(xhr.responseJSON['info_status']);
+                            window.setTimeout(function(){
+                                swal.close();
+                            }, 1000);
+                        } else {
+                            swal("{{ 'Error'|trans }}!", 'Falha ao processar', "error");
+                        }
+                    },
+                    beforeSend: function () {
+                        swal({
+                            title: "Concluindo...",
+                            text: "Aguarde",
+                            type: "info",
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            });
+        });
+    }
+
+</script>

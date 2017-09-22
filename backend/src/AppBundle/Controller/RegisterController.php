@@ -223,6 +223,12 @@ class RegisterController extends AbstractController
             /** @var AccountInterface $account */
             if(null != $account = $manager->findOneBy(['confirmationToken' => $token])) {
                 $this->getRegisterHelper()->finishAccountRegister($account, false);
+
+                $member = $account->getOwner();
+
+                $member->setStatus(BusinessInterface::ACTIVATED);
+                $account->setStatus(BusinessInterface::ACTIVATED);
+
                 $manager->save($account);
             }
 

@@ -20,6 +20,9 @@
                             <i class="fa fa-edit"></i> {{ 'Edit'|trans }}
                         </a>
                     </div>
+
+                    {% include view('account.info_status') %}
+
                 </div>
                 <div class="ibox-content no-padding border-left-right">
                 </div>
@@ -139,5 +142,4 @@
             </div>
         </div>
     </div>
-
 {% endblock %}
