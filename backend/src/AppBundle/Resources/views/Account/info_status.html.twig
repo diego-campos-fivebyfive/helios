@@ -7,7 +7,10 @@
             Enviar Email de confirmação
         </a>
     {% elseif account.status == 2 %}
-        <h3>Aguardando configuração de senha</h3>
+        <a class="btn btn-danger"
+           data-status="{{ path('account_change_status',{'token':account.token}) }}">
+            Reenviar Email de confirmação
+        </a>
     {% elseif account.status == 3 %}
         <a class="btn btn-danger"
            data-status="{{ path('account_change_status',{'token':account.token}) }}">
