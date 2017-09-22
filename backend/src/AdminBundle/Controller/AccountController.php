@@ -54,7 +54,7 @@ class AccountController extends AdminController
             $request->query->getInt('page', 1), 10
         );
 
-        return $this->render('admin/account/index.html.twig', array(
+        return $this->render('admin/accounts/index.html.twig', array(
             'pagination' => $pagination,
             'accounts' => $qb
         ));
@@ -92,7 +92,7 @@ class AccountController extends AdminController
             ]);
         }
 
-        return $this->render('admin/account/form.html.twig', array(
+        return $this->render('admin/accounts/form.html.twig', array(
             'form' => $form->createView(),
             'account' => $account
         ));
@@ -118,7 +118,7 @@ class AccountController extends AdminController
 
         }
 
-        return $this->render('admin/account/form.html.twig', [
+        return $this->render('admin/accounts/form.html.twig', [
             'errors' => $form->getErrors(true),
             'form' => $form->createView(),
             'account' => $account
@@ -158,7 +158,7 @@ class AccountController extends AdminController
         }
 
         return $this->json([
-            'info_status' => $this->renderView('admin/account/info_status.html.twig', ['account' => $account])
+            'info_status' => $this->renderView('admin/accounts/info_status.html.twig', ['account' => $account])
         ], $status);
     }
 
@@ -186,7 +186,7 @@ class AccountController extends AdminController
     {
         $member = $account->getMembers();
         
-        return $this->render('admin/account/show.html.twig', [
+        return $this->render('admin/accounts/show.html.twig', [
             'account' => $account,
             'members' => $member
         ]);
