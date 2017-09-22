@@ -42,8 +42,8 @@ interface BusinessInterface extends BaseCustomerInterface
      * Account status
      */
     const PENDING = 0;
-    const VERIFIED = 1;
-    const CONFIRMED = 2;
+    const STANDING = 1;
+    const APROVED = 2;
     const ACTIVATED = 3;
     const LOCKED = 4;
 
@@ -186,12 +186,12 @@ interface BusinessInterface extends BaseCustomerInterface
     /**
      * @return bool
      */
-    public function isVerified();
+    public function isStanding();
 
     /**
      * @return bool
      */
-    public function isConfirmed();
+    public function isAproved();
 
     /**
      * @return bool
