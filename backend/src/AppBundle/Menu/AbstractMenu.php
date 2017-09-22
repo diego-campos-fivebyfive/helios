@@ -67,7 +67,9 @@ abstract class AbstractMenu implements ContainerAwareInterface
                 $menu->getParent()->setAttribute('class', 'active');
             }
             $menu->setAttribute('class', 'active');
-        }elseif($menu->hasChildren()){
+        }
+
+        if($menu->hasChildren()){
             foreach($menu->getChildren() as $child){
                 $this->resolveActiveMenu($child);
             }
