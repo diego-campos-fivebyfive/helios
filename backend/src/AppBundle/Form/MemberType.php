@@ -19,7 +19,6 @@ class MemberType extends AbstractUserType
     {
         parent::buildForm($builder, $options);
 
-        //dump($options);die;
         /** @var BusinessInterface $member */
         $member = $options['data'];
         /** @var BusinessInterface $currentMember */
