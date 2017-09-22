@@ -2,33 +2,61 @@
 
 namespace AppBundle\Menu;
 
-use AppBundle\Configuration\App;
-use Knp\Menu\FactoryInterface;
+use Knp\Menu\ItemInterface;
 
-class Admin extends AbstractMenu
+trait MenuAdmin
 {
-    public function sidebar(FactoryInterface $factory, array $options)
+    public function admin(ItemInterface $menu)
     {
         $user = $this->getUser();
 
-        $menu = $factory->createItem('root', [
-            'childrenAttributes' => ['id' => 'side-menu', 'class' => 'nav metismenu']
-        ]);
+        /**
+         * Remover os ifs que utilizam esta variável e excluí-la após
+         * a estabilização das roles
+         */
+        $isAdmin = $user->isAdmin();
 
         $menu->addChild('Accounts', [
             'route' => 'account_index',
-            'extras' => ['icon' => App::icons('accounts')]
+            'extras' => ['icon' => self::icon('accounts')]
         ]);
 
         $menu->addChild('Memoriais', [
             'route' => 'memorials',
-            'extras' => ['icon' => 'fa fa-bars']
+            'extras' => ['icon' => self::icon('bars')]
         ]);
 
-        $menu->addChild('Users', [
-            'route' => 'user_index',
-            'extras' => ['icon' => App::icons('users')]
+        $menu->addChild('Orçamentos', [
+            'uri' => '#',
+            'extras' => ['icon' => self::icon('bars')]
         ]);
+
+        $menu->addChild('Lista de Sistemas', [
+            'uri' => '#',
+            'extras' => ['icon' => self::icon('th')]
+        ]);
+
+        $menu->addChild('Usuários Sices', [
+            'route' => 'user_index',
+            'extras' => ['icon' => self::icon('users')]
+        ]);
+
+        if(!$isAdmin)
+        $this->addComponents($menu);
+
+        if(!$isAdmin) {
+
+            $settings = $menu->addChild('Settings', [
+                'uri' => '#',
+                'childrenAttributes' => ['class' => 'nav nav-second-level collapse'],
+                'extras' => ['icon' => self::icon('settings')]
+            ]);
+
+            $settings->addChild('My data', [
+                'route' => 'member_profile',
+                'extras' => ['icon' => self::icon('profile')]
+            ]);
+        }
 
         return $menu;
     }
