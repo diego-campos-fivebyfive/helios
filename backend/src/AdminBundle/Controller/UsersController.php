@@ -13,12 +13,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Form\FormError;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 
-
-/**
- * @TODO Remove Security::has_role('ROLE_ADMIN') after production is established
- */
 
 /**
  * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_PLATFORM_MASTER') or has_role('ROLE_PLATFORM_ADMIN')")
@@ -83,15 +80,24 @@ class UsersController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $user->addRole(UserInterface::ROLE_PLATFORM_COMMERCIAL);
+            $data = $form->getData();
 
-            $memberManager->save($member);
+            $helper = $this->getRegisterHelper();
 
-            return $this->redirectToRoute('user_index');
+            if($helper->emailCanBeUsed($data->getEmail())) {
+                $user->addRole(UserInterface::ROLE_PLATFORM_COMMERCIAL);
+
+                $memberManager->save($member);
+
+                return $this->redirectToRoute('user_index');
+            }
+
+            $form->addError(new FormError('Este email não pode ser usado'));
         }
 
         return $this->render('admin/user/form.html.twig', array(
-           'form' => $form->createView(),
+            'errors' => $form->getErrors(true),
+            'form' => $form->createView()
         ));
     }
 
@@ -119,20 +125,31 @@ class UsersController extends AbstractController
     {
         $memberManager = $this->manager('customer');
 
+        $email = $member->getEmail();
+
         $form = $this->createForm(MemberType::class, $member);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $member->getUser()->addRole(UserInterface::ROLE_PLATFORM_COMMERCIAL);
+            $data = $form->getData();
 
-            $memberManager->save($member);
+            $helper = $this->getRegisterHelper();
 
-            return $this->redirectToRoute('user_index');
+            if($email != $data->getEmail() && !$helper->emailCanBeUsed($data->getEmail())) {
+                $form->addError(new FormError('Este email não pode ser usado'));
+            } else {
+                $member->getUser()->addRole(UserInterface::ROLE_PLATFORM_COMMERCIAL);
+
+                $memberManager->save($member);
+
+                return $this->redirectToRoute('user_index');
+            }
         }
 
         return $this->render('admin/user/form.html.twig', array(
-            'form' => $form->createView(),
+            'errors' => $form->getErrors(true),
+            'form' => $form->createView()
         ));
     }
 
@@ -156,5 +173,13 @@ class UsersController extends AbstractController
 
         return $this->json([], $status);
 
+    }
+
+    /**
+     * @return \AppBundle\Service\RegisterHelper|object
+     */
+    private function getRegisterHelper()
+    {
+        return $this->get('app.register_helper');
     }
 }
