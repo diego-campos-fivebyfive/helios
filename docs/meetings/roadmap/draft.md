@@ -14,10 +14,12 @@ REJECTED:  4  Ação do user account (Envia email para o integrador - Cancelado)
 Loggable : Salvar as datas em que os status são modificados - KnpBehavios
 Qualquer alteração efetuada em orders com status VALIDATED ou APROVED - volta para BUILDING e continua exibindo para o user account
 
+```
 EDIÇÃO DE UM ORÇAMENTO
 	B	P	V	A	R
 I    	X		X	X	X
 S		X
+```
 
 EMAILS - Destinados ao integrador (Dono da conta) 
 Todos os email devem ser configurados com reply-to: conta agent (Sices) vinculado ao integrador
