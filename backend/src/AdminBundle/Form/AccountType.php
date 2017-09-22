@@ -17,37 +17,51 @@ class AccountType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $account  = $options['data'];
 
-        $owner = $options['data']->getOwner();
+        $accountId = $account->getId();
+        $levels = Memorial::getDefaultLevels();
+        $status = Customer::getStatusList();
 
-        $builder
-            ->add('document',TextType::class, array(
-                'constraints' => new ContainsCnpj()
-            ))
-            ->add('extraDocument',TextType::class, [
-                'required' => false
-            ])
-            ->add('lastname',TextType::class)
-            ->add('firstname',TextType::class)
-            ->add('postcode',TextType::class)
-            ->add('state',TextType::class)
-            ->add('city',TextType::class)
-            ->add('district',TextType::class)
-            ->add('street',TextType::class)
-            ->add('number',TextType::class, [
-                'required' => false
-            ])
-            ->add('level', ChoiceType::class, [
-                'choices' => Memorial::getDefaultLevels()
-            ])
-            /*->add('status', ChoiceType::class, [
-                'choices' => Customer::getStatusList()
-            ])*/
-            ->add('owner', OwnerType::class, [
-                'data' => $owner
-            ])
-            ->add('email',EmailType::class)
-            ->add('phone',TextType::class);
+        unset($status[Customer::PENDING], $status[Customer::ACTIVATED], $status[Customer::LOCKED]);
+        unset($levels[Memorial::LEVEL_PROMOTIONAL]);
+
+        $builder->add('document',TextType::class, array(
+                'constraints' => new ContainsCnpj() ));
+        $builder->add('extraDocument',TextType::class, [
+                'required' => false ]);
+        $builder->add('lastname',TextType::class);
+        $builder->add('firstname',TextType::class);
+        $builder->add('postcode',TextType::class);
+        $builder->add('state',TextType::class);
+        $builder->add('city',TextType::class);
+        $builder->add('district',TextType::class);
+        $builder->add('street',TextType::class);
+        $builder->add('number',TextType::class, [
+                'required' => false ]);
+        $builder->add('level', ChoiceType::class, [
+                'choices' => $levels
+            ]);
+
+        if (!$accountId) {
+
+            $builder->add('members', CollectionType::class, [
+                'entry_type' => OwnerType::class
+            ]);
+
+            $builder->add('status', ChoiceType::class, [
+            'choices' => $status
+            ]);
+
+        } else {
+            $builder->add('owner', OwnerType::class, [
+                'data' => $account->getOwner(),
+                'label' => false
+            ]);
+        }
+
+        $builder->add('email',EmailType::class);
+        $builder->add('phone',TextType::class);
 
     }
 
