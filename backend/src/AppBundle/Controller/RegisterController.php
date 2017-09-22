@@ -72,7 +72,10 @@ class RegisterController extends AbstractController
                 $user->setEmail($data['email'])
                     ->setUsername($data['email'])
                     ->setPlainPassword(uniqid())
-                    ->addRole(UserInterface::ROLE_OWNER_MASTER);
+                    ->setRoles([
+                        UserInterface::ROLE_OWNER,
+                        UserInterface::ROLE_OWNER_MASTER
+                    ]);
 
                 $data['user'] = $user;
                 $data['account'] = $account;
@@ -125,7 +128,7 @@ class RegisterController extends AbstractController
 
         $message = 'Conta não identificada!';
 
-        if ($account->isConfirmed()) {
+        if ($account->isAproved()) {
 
             $owner = $account->getOwner();
             $user = $owner->getUser();
@@ -162,8 +165,8 @@ class RegisterController extends AbstractController
             if($account->isPending()) {
                 $member = $account->getOwner();
 
-                $member->setStatus(BusinessInterface::VERIFIED);
-                $account->setStatus(BusinessInterface::VERIFIED);
+                $member->setStatus(BusinessInterface::STANDING);
+                $account->setStatus(BusinessInterface::STANDING);
 
                 $newToken = self::getTokenGenerator()->generateToken();
                 $account->setConfirmationToken($newToken);
@@ -171,7 +174,7 @@ class RegisterController extends AbstractController
                 $this->manager('account')->save($account);
             }
 
-            if ($account->isVerified()) {
+            if ($account->isStanding()) {
                 return $this->redirectToRoute('app_account_verify', []);
             }
         } else {
