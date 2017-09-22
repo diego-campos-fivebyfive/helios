@@ -23,7 +23,7 @@ class MemberType extends AbstractUserType
         $member = $options['data'];
         /** @var BusinessInterface $currentMember */
         $currentMember = $options['current_member'];
-        
+
         $isSameMember = $currentMember->getId() == $member->getId();
         $isActive = $member->getId() && $member->getUser();
         $isNameEditable = $isActive && $isSameMember;
