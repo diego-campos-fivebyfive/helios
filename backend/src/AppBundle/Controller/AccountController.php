@@ -7,6 +7,7 @@ use AppBundle\Entity\Customer;
 use AppBundle\Entity\UserInterface;
 use AppBundle\Form\AccountType;
 use AppBundle\Form\CustomerType;
+use AppBundle\Service\Util\AccountManipulator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -143,18 +144,26 @@ class AccountController extends AbstractController
 
     /**
      * @Route("/{token}/change", name="account_change_status")
-     * @Method("post")
+     * //@Method("post")
      */
     public function changeAction(Customer $account)
     {
         try {
-            if($account->isVerified()) {
+            if($account->isVerified() || $account->isConfirmed()) {
                 $account = $this->changeStatus($account, BusinessInterface::CONFIRMED);
 
                 $this->getMailer()->sendAccountConfirmationMessage($account);
             } elseif ($account->isActivated()) {
+                foreach ($account->getMembers() as $member){
+                    $member->getUser()->setEnabled(0);
+                }
+
                 $this->changeStatus($account, BusinessInterface::LOCKED);
             } elseif ($account->isLocked()) {
+                foreach ($account->getMembers() as $member){
+                    $member->getUser()->setEnabled(1);
+                }
+
                 $this->changeStatus($account, BusinessInterface::ACTIVATED);
             }
 
