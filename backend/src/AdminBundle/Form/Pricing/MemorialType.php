@@ -20,20 +20,13 @@ class MemorialType extends AbstractType
 
         $statuses = Memorial::getStatuses();
 
-        if(!$memorial->getId()){
-            unset($statuses[Memorial::STATUS_PUBLISHED], $statuses[Memorial::STATUS_EXPIRED]);
-        }
+        $builder->add('name');
 
-        $builder
-            ->add('name')
-            ->add('status', ChoiceType::class, [
+        if($memorial->getId() && !$memorial->getRanges()->isEmpty() && !$memorial->isPublished()){
+            $builder->add('status', ChoiceType::class, [
                 'choices' => $statuses
-            ])
-            ->add('levels', ChoiceType::class, [
-                'choices' => Memorial::getDefaultLevels(),
-                'multiple' => true
-            ])
-        ;
+            ]);
+        }
     }
 
     /**

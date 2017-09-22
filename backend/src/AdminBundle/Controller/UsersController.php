@@ -2,30 +2,25 @@
 
 namespace AdminBundle\Controller;
 
-use AdminBundle\Form\MemberType;
-use AdminBundle\Form\UserType;
-use AppBundle\Controller\AbstractController;
-use AppBundle\Entity\AccountInterface;
-use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
-use AppBundle\Entity\MemberInterface;
+use AdminBundle\Form\MemberType;
 use AppBundle\Entity\UserInterface;
-use AppBundle\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\AccountInterface;
+use AppBundle\Controller\AbstractController;;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\HttpFoundation\Request;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
-use Symfony\Component\HttpFoundation\Response;
 
 
 /**
- * User controller.
+ * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_PLATFORM_MASTER') or has_role('ROLE_PLATFORM_ADMIN')")
  *
- * @Route("user")
- * @Security("has_role('ROLE_ADMIN')")
+ * @Route("users")
  *
  * @Breadcrumb("Sices")
  */
@@ -39,21 +34,16 @@ class UsersController extends AbstractController
      */
     public function indexAction()
     {
-        /** @var Customer $manager */
         $manager = $this->manager('customer');
 
         /** @var MemberInterface $member */
         $members = $manager->findBy([
-            'context' => 'member'
+            'context' => MemberInterface::CONTEXT,
+            'account' => $this->account()
         ]);
-        $data = [];
-        foreach ($members as $member) {
-            if (($member->isPlatformAdmin() || $member->isPlatformCommercial()) && !$member->isDeleted())
-                $data[] = $member;
-        }
 
         return $this->render('admin/user/index.html.twig', array(
-            'members' => $data,
+            'members' => $members
         ));
     }
 

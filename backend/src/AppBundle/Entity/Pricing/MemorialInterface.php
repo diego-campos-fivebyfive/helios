@@ -16,6 +16,11 @@ interface MemorialInterface
     const LEVEL_PROMOTIONAL = 'promotional';
 
     /**
+     * @return int
+     */
+    public function getId();
+
+    /**
      * @param $startAt
      * @return mixed
      */
@@ -130,5 +135,5 @@ interface MemorialInterface
     /**
      * @return array
      */
-    public static function getDefaultLevels();
+    public static function getDefaultLevels($keys = false);
 }

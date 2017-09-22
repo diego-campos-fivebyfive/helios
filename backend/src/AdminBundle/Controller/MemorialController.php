@@ -8,6 +8,7 @@ use AppBundle\Entity\Pricing\Range;
 use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Form\Admin\MemorialFilterType;
 use AppBundle\Service\Pricing\MemorialAnalyzer;
+use AppBundle\Service\Pricing\MemorialCloner;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +17,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
- * @Security("has_role('ROLE_ADMIN')")
+ * @TODO Remove Security::has_role('ROLE_ADMIN') after production is established
+ */
+
+/**
+ * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_PLATFORM_MASTER') or has_role('ROLE_PLATFORM_ADMIN')")
  * @Route("memorials")
  */
 class MemorialController extends AdminController
@@ -27,6 +32,8 @@ class MemorialController extends AdminController
     public function indexAction(Request $request)
     {
         $qb = $this->manager('memorial')->createQueryBuilder();
+
+        $qb->orderBy('m.createdAt', 'desc');
 
         $paginator = $this->getPaginator();
 
@@ -94,6 +101,23 @@ class MemorialController extends AdminController
         return $this->render('admin/memorials/form.html.twig', [
             'form' => $form->createView(),
             'memorial' => $memorial
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/clone", name="memorials_clone")
+     * @Method("post")
+     */
+    public function cloneAction(Memorial $memorial)
+    {
+        $cloner = new MemorialCloner();
+
+        $cloned = $cloner->execute($memorial);
+
+        $this->manager('memorial')->save($cloned);
+
+        return $this->json([
+            'memorial' => $cloned->toArray()
         ]);
     }
 
@@ -169,10 +193,7 @@ class MemorialController extends AdminController
      */
     public function configAction(Memorial $memorial, Request $request)
     {
-        $rangeLevels = $this->manager('range')->distinct('level', ['memorial' => $memorial]);
-        $accountLevels = $this->manager('account')->distinct('level');
-
-        $levels = array_unique(array_merge($rangeLevels, $accountLevels));
+        $levels = Memorial::getDefaultLevels(true);
 
         $form = $this->createForm(MemorialFilterType::class, ['memorial' => $memorial], [
             'memorial' => $memorial,
@@ -202,9 +223,10 @@ class MemorialController extends AdminController
     }
 
     /**
-     * @Route("/product/update", name="memorials_product_update")
+     * @Route("/{id}/product/update", name="memorials_product_update")
+     * Method("post")
      */
-    public function updateProductAction(Request $request)
+    public function updateProductAction(Request $request, Memorial $memorial)
     {
         $id = $request->request->get('id');
         $field = $request->request->get('field');
@@ -212,15 +234,33 @@ class MemorialController extends AdminController
         $type = $request->request->get('type');
 
         $manager = $this->manager($type);
+
         $component = $manager->find($id);
 
-        if($component){
+        if($component instanceof ComponentInterface){
 
             $accessor = PropertyAccess::createPropertyAccessor();
 
             $accessor->setValue($component, $field, $value);
 
             $manager->save($component);
+
+            if('cmvApplied' == $field){
+
+                /** @var \AppBundle\Service\Pricing\RangeNormalizer $normalizer */
+                $normalizer = $this->get('range_normalizer');
+
+                $codes = [$component->getCode()];
+                $levels = Memorial::getDefaultLevels(true);
+
+                $definitions = [
+                    $component->getCode() => [
+                        'costPrice' => $component->getCmvApplied()
+                    ]
+                ];
+
+                $normalizer->normalize($memorial, $codes, $levels, $definitions);
+            }
         }
 
         return $this->json([
@@ -248,7 +288,6 @@ class MemorialController extends AdminController
             if($range instanceof Range){
 
                 $range
-                    ->setCostPrice($config['cost'])
                     ->setMarkup($config['markup'] / 100)
                     ->updatePrice()
                 ;

@@ -3,6 +3,7 @@
 namespace AppBundle\Service\Pricing;
 
 use AppBundle\Entity\Pricing\Memorial;
+use AppBundle\Entity\Pricing\Range;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class MemorialAnalyzer
@@ -96,6 +97,10 @@ class MemorialAnalyzer
         $types = $config['components'];
         $codes = [];
 
+        if(Memorial::LEVEL_PROMOTIONAL == $this->level){
+            $this->criteria['promotional'] = true;
+        }
+
         foreach ($types as $type){
 
             $this->collection['components'][$type]['enabled'] = true;
@@ -146,9 +151,13 @@ class MemorialAnalyzer
 
                     if(array_key_exists($product->getCode(), $cache[$cacheKey][$this->level])) {
 
+                        /** @var Range $range */
                         $range = $cache[$cacheKey][$this->level][$product->getCode()];
 
                         $this->collection['components'][$componentType]['items'][$product->getId()]['ranges'][] = $range;
+                        $this->collection['components'][$componentType]['items'][$product->getId()]['defaults'] = [
+                            'cmv' => $range->getCostPrice()
+                        ];
                     }
                 }
             }

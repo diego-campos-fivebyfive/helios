@@ -80,7 +80,7 @@ class Memorial implements MemorialInterface
     {
         $this->ranges = new ArrayCollection();
         $this->status = self::STATUS_PENDING;
-        $this->levels = [];
+        $this->levels = self::getDefaultLevels(true);
     }
 
     /**
@@ -99,7 +99,6 @@ class Memorial implements MemorialInterface
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'start_at' => $this->startAt->format('Y-m-d H:i:s'),
             'status' => $this->status
         ];
     }
@@ -300,15 +299,17 @@ class Memorial implements MemorialInterface
     /**
      * @inheritDoc
      */
-    public static function getDefaultLevels()
+    public static function getDefaultLevels($keys = false)
     {
-        return [
+        $levels = [
             self::LEVEL_BLACK => 'Black',
             self::LEVEL_GOLD => 'Gold',
             self::LEVEL_PARTNER => 'Partner',
             self::LEVEL_PLATINUM => 'Platinum',
             self::LEVEL_PREMIUM => 'Premium',
-            self::LEVEL_PROMOTIONAL => 'Promo'
+            self::LEVEL_PROMOTIONAL => 'Promotional'
         ];
+
+        return $keys ? array_keys($levels) : $levels ;
     }
 }
