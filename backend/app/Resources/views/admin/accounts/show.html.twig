@@ -12,16 +12,16 @@
                     </h3>
                     <div class="btn-group">
                         <a class="btn btn-default"
-                           href="{{ path('account_index',{'token':account.token}) }}">
+                           href="{{ path('account_index',{'id':account.id}) }}">
                             <i class="fa fa-arrow-left"></i> Voltar
                         </a>
                         <a class="btn btn-info"
-                           href="{{ path('account_update',{'token':account.token}) }}">
+                           href="{{ path('account_update',{'id':account.id}) }}">
                             <i class="fa fa-edit"></i> {{ 'Edit'|trans }}
                         </a>
                     </div>
 
-                    {% include view('account.info_status') %}
+                    {% include view('admin/accounts/info_status.html.twig') %}
 
                 </div>
                 <div class="ibox-content no-padding border-left-right">

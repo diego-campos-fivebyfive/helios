@@ -1,58 +1,43 @@
-:: SICES - ADMINISTRAÇÃO
-ROLES
-Platform:
-ROLE_PLATFORM_MASTER - (Mauro)
-ROLE_PLATFORM_ADMIN  - (Jackson)
-ROLE_PLATFORM_AGENT  - (Comercial)
-Regras de Cadastro
 
-Somente MASTER E ADMIN podem cadastrar, a opção de roles é só ADMIN e AGENT.
-Cadastro de MASTER somente via equipe de desenvolvimento.
-:: INTEGRADORES - CONTAS
-Account
-ROLE_OWNER_MASTER - Dono da conta (principal), Administrador
-ROLE_OWNER    - Administrador (Cadastrado pelo dono da conta)
-ROLE_USER     - Usuário (Cadastrado por um dos anteriores)
+18/09/2017 - REGRAS PARA ORÇAMENTOS / PEDIDOS
+==========================================================
 
-ACCOUNT_STATUS
-PENDING     - Pendente (Cadastro iniciado mas email não verificado)   LV
-VERIFIED    - Verificado (Email verificado)
-CONFIRMED   - Confirmado (Conta confirmada por um dos users ROLE_PLATFORM) LA
-ACTIVATED   - Ativado (Conta ativada, senha de acesso configurada)
-LOCKED      - Bloqueado (Conta bloqueada, todos os acessos bloqueado)
+PEDIDO/ORÇAMENTO
 
-Links
-- (LV) Link de verificação: Apenas para validar a existência do email do integrador
-- (LA) Link de ativação: Link de acesso à configuração de senha e acesso à plataforma.
+STATUS
+BUILDING:  0  Enquanto não envia para Sices
+PENDING:   1  Após o envio para Sices (Já aparece para o user platform para validação)
+VALIDATED: 2  Ação do user platform
+APROVED:   3  Ação do user account (Ação: Enviar proforma para email do integrador)
+REJECTED:  4  Ação do user account (Envia email para o integrador - Cancelado)
 
-----------------------------------------------------------------------------------------------------------------------------
+Loggable : Salvar as datas em que os status são modificados - KnpBehavios
+Qualquer alteração efetuada em orders com status VALIDATED ou APROVED - volta para BUILDING e continua exibindo para o user account
 
-- quando ocorrer o cadastro pela plataforma (registrar-se), deve ser enviado o (LV).
--- contas criadas por este recurso devem aparecer para todos os ROLE_PLATFORM_*
--- um intregrador pode ser vinculado a qualquer ROLE_PLATFORM_*
--- ao aprovar:
---- caso o aprovador seja MASTER ou ADMIN, pode ser selecionado outro user ROLE_PLATFORM_ ou mantido o mesmo.
---- caso o aprovador seja AGENT, deve vincular a ele mesmo.
-- user/sices e master/sices podem cadastrar um novo integrador.
--- podem cadastrar e não aprovar (não envia email).
--- podem cadastrar e aprovar (neste caso, envia link de config de senha de acesso ao dono da conta - LA (status=CONFIRMED)).
-- MASTER e ADMIN podem vincular/trocar um vínculo entre outros ROLE_PLATFORM_* e integrador.
+```
+EDIÇÃO DE UM ORÇAMENTO
+	B	P	V	A	R
+I    	X		X	X	X
+S		X
+```
 
-Na lista de integradores
-- Filtros de status
-- Filtro de vínculo
-- Campo de busca (cnpj, email, nome, etc)
-Devem aparecer (tabela):
-Nome Fantasia, Cnpj, Email (dono), Status, [Actions]
+EMAILS - Destinados ao integrador (Dono da conta) 
+Todos os email devem ser configurados com reply-to: conta agent (Sices) vinculado ao integrador
+PENDING: Recebemos sua solicitação
+VALIDATED: Validamos o seu orçamento - Aguardando aprovação
+APROVED: Seu orçamento foi aprovado - Anexo proforma (pdf) - cc >> email do agent (Sices) vinculado à conta e admin (Sices)
+REJECTED: Você cancelou seu orçamento
 
-No mais detalhes:
-- Todos os dados preenchidos no cadastro
-- Lista de usuários vinculados à conta com status(role)
---- Nome, Email, Role
+Usuário (Integrador)
+Gera o orçamento e envia a solicitação para Sices
 
-ACCOUNT_STATUS
-PENDING - 0
-VERIFIED - 1
-CONFIRMED - 2
-ACTIVATED - 3
-LOCKED - 4
+Usuário (Platform)
+- Seção Orçamentos (visível para todos os users)
+-- master e admin: Visualizam todos
+-- agent: Visualizam orçamentos gerados por integradores vinculados a ele
+- Para estes usuários, devem ser listados os pedidos (orçamentos) com a possibilidade de edição dos dados do mesmo 
+(!Observar aqui as referências de vínculo platform-account nesta funcionalidade)
+
+PENDÊNCIAS
+- Textos dos emails
+- Layout da proforma

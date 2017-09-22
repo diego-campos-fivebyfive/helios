@@ -1,13 +1,13 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AdminBundle\Controller;
 
+use AdminBundle\Form\AccountType;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\UserInterface;
-use AppBundle\Form\AccountType;
-use AppBundle\Form\CustomerType;
-use AppBundle\Service\Util\AccountManipulator;
+use AdminBundle\Controller\AdminController;
+use Symfony\Component\Form\FormError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @Route("account")
  */
-class AccountController extends AbstractController
+class AccountController extends AdminController
 {
     /**
      * @Route("/", name="account_index")
@@ -38,6 +38,7 @@ class AccountController extends AbstractController
     {
         $paginator = $this->getPaginator();
 
+        /** @var Customer $manager */
         $manager = $this->manager('customer');
 
         $qb = $manager->getEntityManager()->createQueryBuilder();
@@ -55,7 +56,7 @@ class AccountController extends AbstractController
             $request->query->getInt('page', 1), 10
         );
 
-        return $this->render('AppBundle:Account:index.html.twig', array(
+        return $this->render('admin/accounts/index.html.twig', array(
             'pagination' => $pagination,
             'accounts' => $qb
         ));
@@ -88,12 +89,12 @@ class AccountController extends AbstractController
 
             $this->processAndPersist($member);
             $this->setNotice("Conta criada com sucesso !");
-            return $this->redirectToRoute('account_show', [
-                'token' => $account->getToken()
+            return $this->redirectToRoute('account_index', [
+                'id' => $account->getId()
             ]);
         }
 
-        return $this->render('AppBundle:Account:form.html.twig', array(
+        return $this->render('admin/accounts/form.html.twig', array(
             'form' => $form->createView(),
             'account' => $account
         ));
@@ -101,48 +102,32 @@ class AccountController extends AbstractController
 
     /**
      * @Breadcrumb("update.account")
-     * @Route("/{token}/update", name="account_update")
+     * @Route("/{id}/update", name="account_update")
      */
     public function updateAction(Request $request, Customer $account)
     {
-        $member = $this->getCurrentMember();
         $manager = $this->manager('customer');
 
-        /**
-         * Prevent excess records in the form of listing,
-         * including only the first owner of the account
-         */
-        //$account->edition = true;
-
         $form = $this->createForm(AccountType::class, $account);
-
-        if($member->getAccount()->getId() == $account->getId())
-            $form->remove('status');
-
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
 
             $manager->save($account);
 
-            $this->processAndPersist($account->getMembers()->first());
             $this->setNotice("Conta atualizada com sucesso !");
             return $this->redirectToRoute('account_index');
+
         }
 
-        return $this->render('AppBundle:Account:form.html.twig', array(
+        return $this->render('admin/accounts/form.html.twig', [
+            'errors' => $form->getErrors(true),
             'form' => $form->createView(),
             'account' => $account
-        ));
+        ]);
     }
 
-    /**
-     * @return \AppBundle\Service\Mailer
-     */
-    private function getMailer()
-    {
-        return $this->get('app_mailer');
-    }
+
 
     /**
      * @Route("/{token}/change", name="account_change_status")
@@ -175,7 +160,7 @@ class AccountController extends AbstractController
         }
 
         return $this->json([
-            'info_status' => $this->renderView('account.info_status', ['account' => $account])
+            'info_status' => $this->renderView('admin/accounts/info_status.html.twig', ['account' => $account])
         ], $status);
     }
 
@@ -197,16 +182,24 @@ class AccountController extends AbstractController
     }
 
     /**
-     * @Route("/{token}", name="account_show")
+     * @Route("/{id}", name="account_show")
      */
     public function showAction(Request $request, Customer $account)
     {
         $member = $account->getMembers();
-
-        return $this->render('account.show', [
+        
+        return $this->render('admin/accounts/show.html.twig', [
             'account' => $account,
             'members' => $member
         ]);
+    }
+
+    /**
+     * @return \AppBundle\Service\Mailer
+     */
+    private function getMailer()
+    {
+        return $this->get('app_mailer');
     }
 
     /**
