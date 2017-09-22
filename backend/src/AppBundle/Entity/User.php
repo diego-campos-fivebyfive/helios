@@ -78,6 +78,14 @@ class User extends AbstractUser implements UserInterface
     /**
      * @inheritDoc
      */
+    public function isPlatform()
+    {
+        return self::TYPE_PLATFORM == $this->getType();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function isPlatformMaster()
     {
         return $this->hasRole(self::ROLE_PLATFORM_MASTER);
@@ -118,6 +126,20 @@ class User extends AbstractUser implements UserInterface
     public function isOwnerMaster()
     {
         return $this->hasRole(self::ROLE_OWNER_MASTER);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getType()
+    {
+        foreach (self::getPlatformRoles() as $platformRole){
+            if(in_array($platformRole, $this->roles)){
+                return self::TYPE_PLATFORM;
+            }
+        }
+
+        return self::TYPE_ACCOUNT;
     }
 
     /**
@@ -221,4 +243,15 @@ class User extends AbstractUser implements UserInterface
         ];
     }
 
+    /**
+     * @inheritDoc
+     */
+    public static function getPlatformRoles()
+    {
+        return [
+            self::ROLE_PLATFORM_MASTER,
+            self::ROLE_PLATFORM_ADMIN,
+            self::ROLE_PLATFORM_COMMERCIAL
+        ];
+    }
 }
