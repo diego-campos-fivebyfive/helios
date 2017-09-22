@@ -181,6 +181,7 @@ class Mailer
 
         $message = (new \Swift_Message($subject))
             ->setFrom($fromEmail, 'Plataforma Sices Solar')
+            ->setSubject('Cadastro')
             ->setTo($toEmail)
             ->setBody($body)
             ->setContentType('text/html')
