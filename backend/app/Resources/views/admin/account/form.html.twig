@@ -15,6 +15,9 @@
                 <i class="fa fa-arrow-left"></i> Voltar
             </a>
         </div>
+
+        {% include view('admin/account/info_status.html.twig') %}
+
         <div class="panel panel-success">
             <div class="panel-heading">
                 Edição da Conta: <label> {{ account.firstname }} </label>
@@ -96,15 +99,17 @@
                             {{ form_label(form.number, 'Número *', {label_attr:{class:'pull-left'}}) }}
                             {{ form_widget(form.number,{attr:{class:'form-control', 'placeholder':'Número'}}) }}
                         </div>
-                        <div class="col-md-4">
+                        {#<div class="col-md-4">
                             {{ form_label(form.status, 'Status da Conta *') }}
                             {{ form_widget(form.status,{attr:{class:'form-control', 'placeholder':'Status'}}) }}
-                        </div>
+                        </div>#}
                         <div class="col-md-4">
                             {{ form_label(form.level, 'Nivel de Conta *') }}
                             {{ form_widget(form.level,{attr:{class:'form-control', 'placeholder':'Status'}}) }}
                         </div>
 
+                    </div>
+                    <div class="col-md-12">
                         <div class="form-group col-md-2 pull-right" style="margin-top: 20px;">
                             <button class="btn btn-md btn-primary ladda-button btn-block" data-style="zoom-in"
                                     id="btn-pre-submit">
