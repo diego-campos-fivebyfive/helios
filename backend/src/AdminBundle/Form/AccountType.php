@@ -20,7 +20,6 @@ class AccountType extends AbstractType
 
         $owner = $options['data']->getOwner();
 
-        //dump($members);die;
         $builder
             ->add('document',TextType::class, array(
                 'constraints' => new ContainsCnpj()
