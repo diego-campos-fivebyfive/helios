@@ -41,9 +41,9 @@ class AccountType extends AbstractType
             ->add('level', ChoiceType::class, [
                 'choices' => Memorial::getDefaultLevels()
             ])
-            ->add('status', ChoiceType::class, [
+            /*->add('status', ChoiceType::class, [
                 'choices' => Customer::getStatusList()
-            ])
+            ])*/
             ->add('owner', OwnerType::class, [
                 'data' => $owner
             ])
