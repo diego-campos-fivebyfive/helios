@@ -144,7 +144,7 @@ class AccountController extends AbstractController
 
     /**
      * @Route("/{token}/change", name="account_change_status")
-     * //@Method("post")
+     * @Method("post")
      */
     public function changeAction(Customer $account)
     {
