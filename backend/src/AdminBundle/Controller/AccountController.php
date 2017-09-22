@@ -1,11 +1,12 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AdminBundle\Controller;
 
+use AdminBundle\Form\AccountType;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\UserInterface;
-use AppBundle\Form\AccountType;
+use AdminBundle\Controller\AdminController;
 use Symfony\Component\Form\FormError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -24,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @Route("account")
  * @Security("has_role('ROLE_ADMIN')")
  */
-class AccountController extends AbstractController
+class AccountController extends AdminController
 {
     /**
      * @Route("/", name="account_index")
@@ -33,6 +34,7 @@ class AccountController extends AbstractController
     {
         $paginator = $this->getPaginator();
 
+        /** @var Customer $manager */
         $manager = $this->manager('customer');
 
         $qb = $manager->getEntityManager()->createQueryBuilder();
@@ -50,7 +52,7 @@ class AccountController extends AbstractController
             $request->query->getInt('page', 1), 10
         );
 
-        return $this->render('AppBundle:Account:index.html.twig', array(
+        return $this->render('admin/account/index.html.twig', array(
             'pagination' => $pagination,
             'accounts' => $qb
         ));
@@ -88,7 +90,7 @@ class AccountController extends AbstractController
             ]);
         }
 
-        return $this->render('AppBundle:Account:form.html.twig', array(
+        return $this->render('admin/account/form.html.twig', array(
             'form' => $form->createView(),
             'account' => $account
         ));
@@ -114,7 +116,7 @@ class AccountController extends AbstractController
 
         }
 
-        return $this->render('account.form', [
+        return $this->render('admin/account/form.html.twig', [
             'errors' => $form->getErrors(true),
             'form' => $form->createView(),
             'account' => $account
@@ -128,7 +130,7 @@ class AccountController extends AbstractController
     {
         $member = $account->getMembers();
         
-        return $this->render('account.show', [
+        return $this->render('admin/account/show.html.twig', [
             'account' => $account,
             'members' => $member
         ]);

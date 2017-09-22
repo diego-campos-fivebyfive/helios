@@ -1,10 +1,9 @@
 <?php
 
-namespace AppBundle\Form;
+namespace AdminBundle\Form;
 
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\Pricing\Memorial;
-use AppBundle\Form\MemberType;
 use AppBundle\Util\Validator\Constraints\ContainsCnpj;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -18,8 +17,10 @@ class AccountType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        parent::buildForm($builder, $options);
 
+        $owner = $options['data']->getOwner();
+
+        //dump($members);die;
         $builder
             ->add('document',TextType::class, array(
                 'constraints' => new ContainsCnpj()
@@ -43,14 +44,12 @@ class AccountType extends AbstractType
             ->add('status', ChoiceType::class, [
                 'choices' => Customer::getStatusList()
             ])
-            /*->add('members', CollectionType::class, array(
-                'entry_type' => MemberType::class,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-            ))*/
+            ->add('owner', OwnerType::class, [
+                'data' => $owner
+            ])
             ->add('email',EmailType::class)
             ->add('phone',TextType::class);
+
     }
 
     /**
@@ -59,7 +58,7 @@ class AccountType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Customer'
+            'data_class' => Customer::class
         ));
     }
 
