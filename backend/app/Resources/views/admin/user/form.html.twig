@@ -9,33 +9,57 @@
             margin-left: 5px;
         }
     </style>
-    <div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="wrapper wrapper-content animated fadeInRight">
+
         <div class="row">
-            <div class="ibox">
-                <div class="ibox-title">
-                    <h2> Usuário Sices</h2>
-                </div>
-                <div class="ibox-content no-padding border-left-right">
-                </div>
-                <div class="ibox-content">
-                    <div class="tab-content">
-                        <div class="tab-pane active">
-                            <div class="form-group row">
-                                {{ form_start(form) }}
+            <div class="col-lg-12">
 
-                                <div class="col-md-12">
-                                    <div class="col-lg-6">
-                                        {{ form_label(form.firstname, 'Nome') }}
-                                        {{ form_widget(form.firstname, {'attr':{'class':'form-control', 'data-placeholder':'Nome de usuário'}}) }}
-                                    </div>
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>
+                            &nbsp; <i class="fa fa-plus-square"></i> Usuário Sices
+                        </h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
 
-                                    <div class="col-lg-6">
-                                        {{ form_label(form.email, 'Email') }}
-                                        {{ form_widget(form.email, {'attr':{'class':'form-control', 'data-placeholder':'Email'}})}}
-                                    </div>
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <i class="fa fa-cog"></i> Cadastro
                                 </div>
+                                <div class="panel-body">
 
-                                <div class="col-md-12 top">
+                                    {{ form_start(form) }}
+
+                                    <div class="form-group col-lg-12">
+                                        <div class="form-group col-md-4">
+                                            {{ form_label(form.firstname, 'Nome') }}
+                                            {{ form_widget(form.firstname, {'attr':{'class':'form-control', 'data-placeholder':'Nome de usuário'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-lg-4">
+                                            {{ form_label(form.email, 'Email') }}
+                                            {{ form_widget(form.email, {'attr':{'class':'form-control', 'data-placeholder':'Email'}})}}
+                                        </div>
+
+                                        <div class="form-group col-lg-4">
+                                            {{ form_label(form.user.roles, 'Nível de usuário') }}
+                                            {{ form_widget(form.user.roles) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12">
+                                        {% if attribute(form.user, 'plainPassword') is defined %}
+                                            <div class="form-group col-lg-4">
+                                                {{ form_label(form.user.plainPassword, 'Senha') }}
+                                                {{ form_widget(form.user.plainPassword, {'attr':{'class':'form-control', 'data-placeholder':'Senha de acesso'}}) }}
+                                            </div>
+                                        {% endif %}
+
+                                        <div class="form-group col-lg-4">
+                                            {{ form_label(form.user.enabled, 'Ativo') }}<br/>
+                                            {{ form_widget(form.user.enabled) }}
+                                        </div>
+                                    </div>
                                     <div class="hidden">
                                         {{ form_widget(form.user.email) }}
                                     </div>
@@ -44,51 +68,54 @@
                                         {{ form_widget(form.user.username)}}
                                     </div>
 
-                                    <div class="col-lg-6">
-                                        {{ form_label(form.user.roles, 'Nível de usuário') }}
-                                        {{ form_widget(form.user.roles) }}
+                                    <div class="col-md-12">
+                                        <input type="submit" class="btn btn-primary pull-right" value="Salvar" />
                                     </div>
+                                    {{ form_end(form) }}
 
-                                    {% if attribute(form.user, 'plainPassword') is defined %}
-                                        <div class="col-lg-6">
-                                            {{ form_label(form.user.plainPassword, 'Senha') }}
-                                            {{ form_widget(form.user.plainPassword, {'attr':{'class':'form-control', 'data-placeholder':'Senha de acesso'}}) }}
-                                        </div>
-                                    {% endif %}
-
-                                    <div class="col-lg-6">
-                                        {{ form_label(form.user.enabled, 'Status') }}<br/>
-                                        {{ form_widget(form.user.enabled) }}
-                                    </div>
                                 </div>
-
-                                <div class="col-md-12">
-                                    <input type="submit" class="btn btn-primary pull-right" value="Salvar" />
-                                </div>
-                                {{ form_end(form) }}
                             </div>
                         </div>
+
                     </div>
                 </div>
+
             </div>
         </div>
+
     </div>
+
+    <script src="{{ asset('assets/toastr/toastr.min.js') }}"></script>
+
     <script>
+
+        function display_error(message){
+            toastr.error(message, '', {
+                positionClass: 'toast-top-center',
+                progressBar: true,
+                preventDuplicates: true
+            });
+        }
+
         $('#member_email').change(function () {
             $('#member_user_username').val($(this).val());
             $('#member_user_email').val($(this).val());
         });
-        $('#member_user_roles').chosen({
-        });
 
-
-        //var checkboxes = $(' input [type="checkbox"] ');//.checkbox [type="checkbox"]
-        //console.log(checkboxes);
-        /*checkboxes.on('change', function() {
+        var checkboxes = $(' #member_user_roles input[type="checkbox"] ');
+        console.log(checkboxes);
+        checkboxes.on('change', function() {
             var el = this;
             checkboxes.each(function() {
-                if (this != el) this.checked = false;;
+                if (this != el) this.checked = false;
             });
-        });*/
+        });
     </script>
+    {% if errors|length %}
+        <script>
+            {% for key, error in errors if 0 == key %}
+            display_error('{{ error.message|trans([],'messages') }}');
+            {% endfor %}
+        </script>
+    {% endif %}
 {% endblock %}
