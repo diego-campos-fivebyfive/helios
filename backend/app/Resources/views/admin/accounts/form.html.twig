@@ -9,31 +9,42 @@
     </style>
 
     <div class="wrapper wrapper-content animated fadeInRight">
+        {% if account.id is null %}
+            <div class="btn-group" style="margin-bottom: 5px">
+                <a class="btn btn-default"
+                   href="{{ path('account_index') }}">
+                    <i class="fa fa-arrow-left"></i> Voltar
+                </a>
+            </div>
+        {% else %}
         <div class="btn-group" style="margin-bottom: 5px">
             <a class="btn btn-default"
                href="{{ path('account_show',{'id':account.id}) }}">
                 <i class="fa fa-arrow-left"></i> Voltar
             </a>
         </div>
+        {% endif %}
 
+        {% if account.id is not null %}
         {% include view('admin/accounts/info_status.html.twig') %}
+        {% endif %}
 
         <div class="panel panel-success">
             <div class="panel-heading">
-                Edição da Conta: <label> {{ account.firstname }} </label>
+                Conta <label> {{ account.firstname }} </label>
             </div>
             <div class="panel-body">
                 <div class="row">
                     {{ form_start(form,{attr:{id:'form-pre-register'}}) }}
 
 
-                    {% if errors|length %}
+                    {#{% if errors|length %}
                         <div class="alert alert-danger col-md-4 col-md-offset-4">
                             {% for error in errors %}
                                 {{ error.message|trans }}
                             {% endfor %}
                         </div>
-                    {% endif %}
+                    {% endif %}#}
 
                     <div class="col-md-12">
                         <div class="col-md-4">
@@ -59,10 +70,20 @@
                             {{ form_label(form.email, 'E-mail *', {label_attr:{class:'pull-left'}}) }}
                             {{ form_widget(form.email,{attr:{class:'form-control', 'placeholder':'E-mail'}}) }}
                         </div>
+
+                        {% if account.id is null %}
+                            {# new account #}
+                            {% set form_owner = attribute(form.members, 0) %}
+                        {% else %}
+                            {# update account #}
+                            {% set form_owner = form.owner %}
+                        {% endif %}
+
                         <div class="col-md-4">
-                            {{ form_label(form.owner.firstname, 'Pessoa para Contato *') }}
-                            {{ form_widget(form.owner.firstname,{attr:{class:'form-control', 'placeholder':'Pessoa para Contato'}}) }}
+                            {{ form_label(form_owner.firstname, 'Pessoa para Contato *') }}
+                            {{ form_widget(form_owner.firstname,{attr:{class:'form-control', 'placeholder':'Pessoa para Contato'}}) }}
                         </div>
+
                     </div>
                     <div class="col-md-12">
                         <div class="col-md-4">
@@ -99,10 +120,12 @@
                             {{ form_label(form.number, 'Número *', {label_attr:{class:'pull-left'}}) }}
                             {{ form_widget(form.number,{attr:{class:'form-control', 'placeholder':'Número'}}) }}
                         </div>
-                        {#<div class="col-md-4">
-                            {{ form_label(form.status, 'Status da Conta *') }}
-                            {{ form_widget(form.status,{attr:{class:'form-control', 'placeholder':'Status'}}) }}
-                        </div>#}
+                        {% if form.status is defined %}
+                            <div class="col-md-4">
+                                {{ form_label(form.status, 'Status da Conta *') }}
+                                {{ form_widget(form.status,{attr:{class:'form-control', 'placeholder':'Status'}}) }}
+                            </div>
+                        {% endif %}
                         <div class="col-md-4">
                             {{ form_label(form.level, 'Nivel de Conta *') }}
                             {{ form_widget(form.level,{attr:{class:'form-control', 'placeholder':'Status'}}) }}
@@ -128,21 +151,49 @@
 {% block scripts %}
 
     <script>
+        function display_error(message){
+            toastr.error(message, '', {
+                positionClass: 'toast-top-center',
+                progressBar: true,
+                preventDuplicates: true
+            });
+        }
+    </script>
+
+    {% if errors|length %}
+        <script>
+            {% for key, error in errors if 0 == key %}
+            display_error('{{ error.message|trans([],'messages') }}');
+            {% endfor %}
+        </script>
+    {% endif %}
+
+
+    <script>
+        $('#account_email').change(function () {
+            $('#account_member_email').val($(this).val());
+            $('#account_member_users_email').val($(this).val());
+            $('#account_member_users_username').val($(this).val());
+        });
+
+        $('#account_phone').change(function () {
+            $('#account_member_phone').val($(this).val());
+        });
 
         $(function () {
             $('.middle-box').removeClass('middle-box');
         });
-        $('#pre_register_postcode').change(function () {
+        $('#account_postcode').change(function () {
             $.ajax({
                 url: '{{ path('utils_postcode') }}',
                 method: 'post',
-                data: {postcode: $('#pre_register_postcode').val()},
+                data: {postcode: $('#account_postcode').val()},
                 complete: function (xhr) {
                     if (200 == xhr.status) {
-                        $('#pre_register_state').val(xhr.responseJSON.uf);
-                        $('#pre_register_city').val(xhr.responseJSON.cidade);
-                        $('#pre_register_district').val(xhr.responseJSON.bairro);
-                        $('#pre_register_street').val(xhr.responseJSON.logradouro);
+                        $('#account_state').val(xhr.responseJSON.uf);
+                        $('#account_city').val(xhr.responseJSON.cidade);
+                        $('#account_district').val(xhr.responseJSON.bairro);
+                        $('#account_street').val(xhr.responseJSON.logradouro);
                     }
                 }
             });
