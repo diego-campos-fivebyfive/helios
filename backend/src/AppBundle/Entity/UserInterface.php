@@ -6,6 +6,9 @@ use FOS\UserBundle\Model\UserInterface as BaseUserInterface;
 
 interface UserInterface extends BaseUserInterface
 {
+    const TYPE_PLATFORM = 'platform';
+    const TYPE_ACCOUNT = 'account';
+
     const ROLE_OWNER = 'ROLE_OWNER';
     const ROLE_OWNER_MASTER = 'ROLE_OWNER_MASTER';
     const ROLE_ADMIN = 'ROLE_ADMIN';
@@ -41,6 +44,11 @@ interface UserInterface extends BaseUserInterface
     /**
      * @return bool
      */
+    public function isPlatform();
+
+    /**
+     * @return bool
+     */
     public function isPlatformMaster();
 
     /**
@@ -67,6 +75,11 @@ interface UserInterface extends BaseUserInterface
      * @return bool
      */
     public function isOwnerMaster();
+
+    /**
+     * @return string
+     */
+    public function getType();
 
     /**
      * @return BusinessInterface | null
@@ -116,4 +129,9 @@ interface UserInterface extends BaseUserInterface
      * @return array
      */
     public static function getRolesOptions();
+
+    /**
+     * @return array
+     */
+    public static function getPlatformRoles();
 }

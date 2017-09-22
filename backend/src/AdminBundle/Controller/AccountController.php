@@ -19,14 +19,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * AccountController
- * @author Claudinei Machado <claudinei@kolinalabs.com>
+ * @TODO Remove Security::has_role('ROLE_ADMIN') after production is established
+ */
+
+/**
+ * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_PLATFORM_MASTER') or has_role('ROLE_PLATFORM_ADMIN')")
  *
  * @Breadcrumb("Dashboard", route={"name"="app_index"})
  * @Breadcrumb("Accounts", route={"name"="account_index"})
  *
  * @Route("account")
- * @Security("has_role('ROLE_ADMIN')")
  */
 class AccountController extends AdminController
 {
@@ -184,7 +186,7 @@ class AccountController extends AdminController
 
     /**
      * @Route("/{token}/change", name="account_change_status")
-     * //@Method("post")
+     * @Method("post")
      */
     public function changeAction(Customer $account)
     {

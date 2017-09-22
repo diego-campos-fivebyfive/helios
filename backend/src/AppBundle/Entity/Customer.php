@@ -27,6 +27,7 @@ class Customer extends AbstractCustomer
     use TokenizerTrait;
     use ORMBehaviors\SoftDeletable\SoftDeletable;
     use AccountTrait;
+    use MemberTrait;
     use CompanyTrait;
 
     /**
