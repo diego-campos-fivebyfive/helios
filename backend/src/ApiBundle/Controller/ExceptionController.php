@@ -15,7 +15,6 @@ class ExceptionController extends AbstractApiController
      */
     public function showAction($exception)
     {
-        dump($exception); die;
         /** @var \Symfony\Component\HttpFoundation\Request $request */
         $request = $this->get('request_stack')->getCurrentRequest();
 
