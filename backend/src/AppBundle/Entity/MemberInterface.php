@@ -4,6 +4,8 @@ namespace AppBundle\Entity;
 
 interface MemberInterface
 {
+    const CONTEXT = 'member';
+
     /**
      * @return int
      */
@@ -46,6 +48,11 @@ interface MemberInterface
      * @return bool
      */
     public function isPlatformCommercial();
+
+    /**
+     * @return bool
+     */
+    public function isPlatformUser();
 
     /**
      * @return bool
