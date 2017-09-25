@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\UserInterface;
 use FOS\UserBundle\Event\FilterUserResponseEvent;
 use FOS\UserBundle\Event\FormEvent;
 use FOS\UserBundle\Event\GetResponseUserEvent;
@@ -35,8 +37,10 @@ class ResettingController extends BaseResettingController
     {
         $username = $request->request->get('username');
 
-        /** @var $user \FOS\UserBundle\Model\UserInterface */
+        /** @var UserInterface $user */
         $user = $this->get('fos_user.user_manager')->findUserByUsernameOrEmail($username);
+
+        $this->ensureOnlyActivatedAccountCanAccess($user);
 
         if (null === $user) {
             return $this->render('FOSUserBundle:Resetting:request.html.twig', array(
@@ -94,11 +98,14 @@ class ResettingController extends BaseResettingController
         /** @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcherInterface */
         $dispatcher = $this->get('event_dispatcher');
 
+        /** @var UserInterface $user */
         $user = $userManager->findUserByConfirmationToken($token);
 
         if (null === $user) {
             throw $this->createNotFoundException(sprintf('The user with "confirmation token" does not exist for value "%s"', $token));
         }
+
+        $this->ensureOnlyActivatedAccountCanAccess($user);
 
         $event = new GetResponseUserEvent($user, $request);
         $dispatcher->dispatch(FOSUserEvents::RESETTING_RESET_INITIALIZE, $event);
@@ -147,10 +154,24 @@ class ResettingController extends BaseResettingController
     }
 
     /**
-     * @return \AppBundle\Service\Mailer
+     * @return \AppBundle\Service\Mailer|object
      */
     private function getMailer()
     {
         return $this->get('app_mailer');
+    }
+
+    /**
+     * @param UserInterface $user
+     */
+    private function ensureOnlyActivatedAccountCanAccess(UserInterface $user)
+    {
+        /** @var MemberInterface $member */
+        $member = $user->getInfo();
+        $account = $member->getAccount();
+
+        if(!$account->isActivated()){
+            throw new \InvalidArgumentException('The account is disabled');
+        }
     }
 }
