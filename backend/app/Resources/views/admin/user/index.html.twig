@@ -30,15 +30,15 @@
 
                                 {% for member in members %}
 
-                                    {% set label = member.isPlatformMaster ? 'danger' : (member.isAdmin ? 'info' : 'default') %}
+                                    {% set label = member.isPlatformMaster ? 'success' : (member.isPlatformAdmin ? 'info' : 'default') %}
 
                                     <tr>
                                         <td> {{ member.firstname }} </td>
                                         <td><i class="fa fa-envelope"></i>&nbsp;  {{ member.email }} </td>
-                                        <td class="text-center" data-value="{{ member.isOwner ? 'a' : 'z' }}">
-                                            <div class="label label-{{ label }}" style="width: 100%;">
+                                        <td class="text-center">
+                                            <span class="label label-{{ label }}" style="width: 100% !important; display: inline-block;">
                                                 {{ member.userType }}
-                                            </div>
+                                            </span>
                                         </td>
                                         <td class="text-center">
                                             <div class="label label-{% if member.user.enabled %}info{% else %}danger{% endif %}">
