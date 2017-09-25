@@ -64,22 +64,16 @@ class AccountController extends AdminController
 
         /** @var MemberInterface $member */
         $members = $manager->findBy([
-            'context' => MemberInterface::CONTEXT
+            'context' => MemberInterface::CONTEXT,
+            'account' => $this->account()
         ]);
-        $usersSices = [];
-        foreach ($members as $i => $member) {
-            if($member->getUser()->isPlatformCommercial()) {
-                $usersSices[$i] = $member;
-            }
-        }
 
         return $this->render('admin/accounts/index.html.twig', array(
             'current_status' => $status,
             'allStatus' =>Customer::getStatusList(),
             'current_bond' => $bond,
-            'usersSices' => $usersSices,
-            'pagination' => $pagination,
-            'accounts' => $qb
+            'members' => $members,
+            'pagination' => $pagination
         ));
     }
 
