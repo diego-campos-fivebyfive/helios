@@ -95,8 +95,7 @@ class AccountController extends AdminController
         $account = $accountManager->create();
         $account->setContext(Customer::CONTEXT_ACCOUNT);
 
-        if ($this->member()->isPlatformCommercial())
-        {
+        if ($this->member()->isPlatformCommercial()) {
             $account->setAgent($this->member());
         }
 
@@ -182,8 +181,7 @@ class AccountController extends AdminController
 
         $email = $account->getEmail();
 
-        if ($this->member()->isPlatformCommercial())
-        {
+        if ($this->member()->isPlatformCommercial()) {
             $account->setAgent($this->member());
         }
 
