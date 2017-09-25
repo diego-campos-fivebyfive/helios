@@ -85,7 +85,7 @@ class AppListener
      * @param GetResponseForExceptionEvent $event
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
-    {return
+    {
         $request = $event->getRequest();
         $pathInfo = $request->getPathInfo();
 
