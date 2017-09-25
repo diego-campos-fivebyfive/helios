@@ -3,6 +3,9 @@
 namespace AdminBundle\Controller;
 
 use AdminBundle\Form\AccountType;
+use AdminBundle\Form\EmailMemberType;
+use AdminBundle\Form\MemberType;
+use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\MemberInterface;
@@ -43,6 +46,16 @@ class AccountController extends AdminController
                 'context' => $this->getAccountContext()
             ]);
 
+        if(-1 != $bond = $request->get('bond', -1)){
+            $qb->andWhere('a.agent = :bond');
+            $qb->setParameter('bond', $bond);
+        }
+
+        if(-1 != $status = $request->get('status', -1)){
+            $qb->andWhere('a.status = :status');
+            $qb->setParameter('status', $status);
+        }
+
         $this->overrideGetFilters();
 
         $pagination = $paginator->paginate(
@@ -50,9 +63,18 @@ class AccountController extends AdminController
             $request->query->getInt('page', 1), 10
         );
 
+        /** @var MemberInterface $member */
+        $members = $manager->findBy([
+            'context' => MemberInterface::CONTEXT,
+            'account' => $this->account()
+        ]);
+
         return $this->render('admin/accounts/index.html.twig', array(
-            'pagination' => $pagination,
-            'accounts' => $qb
+            'current_status' => $status,
+            'allStatus' =>Customer::getStatusList(),
+            'current_bond' => $bond,
+            'members' => $members,
+            'pagination' => $pagination
         ));
     }
 
@@ -195,8 +217,6 @@ class AccountController extends AdminController
         ]);
     }
 
-
-
     /**
      * @Route("/{token}/change", name="account_change_status")
      * @Method("post")
@@ -255,12 +275,54 @@ class AccountController extends AdminController
     public function showAction(Request $request, Customer $account)
     {
         $member = $account->getMembers();
-        
+
         return $this->render('admin/accounts/show.html.twig', [
             'account' => $account,
-            'members' => $member
+            'members' => $member,
+            'errors' => ''
         ]);
     }
+
+    /**
+     * @Route("/{id}/email", name="email_user_update")
+     *
+     */
+    public function emailUpdateAction(Request $request, Customer $member)
+    {
+        $manager = $this->manager('customer');
+
+        $email = $member->getEmail();
+
+        $form = $this->createForm(EmailMemberType::class, $member);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+
+            $helper = $this->getRegisterHelper();
+
+            if($email != $member->getEmail() && !$helper->emailCanBeUsed($member->getEmail())) {
+                $form->addError(new FormError('Este email não pode ser usado'));
+                $member->setEmail($email);
+            } else {
+                $manager->save($member);
+                return $this->json([
+                    'id_email' => $member->getId(),
+                    'email' => $member->getEmail()
+                ],Response::HTTP_OK);
+            }
+            return $this->json([],Response::HTTP_CONFLICT);
+        }
+
+        return $this->json([
+            'form_email' => $this->renderView('admin/accounts/email_form.html.twig', [
+                'member' => $member,
+                'errors' => $form->getErrors(true),
+                'form' => $form->createView()
+            ])
+        ]);
+
+    }
+
 
     /**
      * @return \AppBundle\Service\Mailer
@@ -342,12 +404,11 @@ class AccountController extends AdminController
         return $this->get('fos_user.util.token_generator');
     }
 
-        /**
-         * @return \AppBundle\Service\RegisterHelper|object
-         */
-        private function getRegisterHelper()
+    /**
+     * @return \AppBundle\Service\RegisterHelper|object
+     */
+    private function getRegisterHelper()
     {
         return $this->get('app.register_helper');
     }
-
 }
