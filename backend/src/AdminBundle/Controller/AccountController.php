@@ -7,23 +7,16 @@ use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\UserInterface;
-use AdminBundle\Controller\AdminController;
-use Symfony\Component\Form\FormError;
+use Sonata\MediaBundle\Model\MediaInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
-use Sonata\MediaBundle\Model\MediaInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @TODO Remove Security::has_role('ROLE_ADMIN') after production is established
- */
-
-/**
- * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_PLATFORM_MASTER') or has_role('ROLE_PLATFORM_ADMIN')")
+ * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
  *
  * @Breadcrumb("Dashboard", route={"name"="app_index"})
  * @Breadcrumb("Accounts", route={"name"="account_index"})
@@ -39,7 +32,6 @@ class AccountController extends AdminController
     {
         $paginator = $this->getPaginator();
 
-        /** @var Customer $manager */
         $manager = $this->manager('customer');
 
         $qb = $manager->getEntityManager()->createQueryBuilder();

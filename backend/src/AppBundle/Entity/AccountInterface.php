@@ -183,4 +183,17 @@ interface AccountInterface
      * @return BusinessInterface
      */
     public function setAttribute($key, $value);
+
+    /**
+     * Agents are references between platform users and integrating users (of accounts)
+     *
+     * @param MemberInterface $agent
+     * @return AccountInterface
+     */
+    public function setAgent(MemberInterface $agent);
+
+    /**
+     * @return MemberInterface|null
+     */
+    public function getAgent();
 }

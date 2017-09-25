@@ -15,7 +15,7 @@ abstract class AbstractMenu implements ContainerAwareInterface
     use MenuAdmin;
 
     /**
-     * @var \AppBundle\Entity\UserInterface $user
+     * @var UserInterface $user
      */
     protected $user;
 
@@ -25,11 +25,11 @@ abstract class AbstractMenu implements ContainerAwareInterface
     protected $request;
 
     /**
-     * @return \AppBundle\Entity\UserInterface
+     * @return UserInterface
      */
     protected function getUser()
     {
-        if(!$this->user instanceof \AppBundle\Entity\UserInterface) {
+        if(!$this->user instanceof UserInterface) {
             /** var \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage */
             $tokenStorage = $this->container->get('security.token_storage');
 

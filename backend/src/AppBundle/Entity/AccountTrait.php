@@ -17,6 +17,12 @@ trait AccountTrait
     protected $level;
 
     /**
+     * @var MemberInterface|null
+     * @ORM\ManyToOne(targetEntity="Customer")
+     */
+    protected $agent;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\OneToMany(targetEntity="Customer", mappedBy="account", cascade={"persist", "remove"})
@@ -242,6 +248,31 @@ trait AccountTrait
 
         return $this;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setAgent(MemberInterface $agent)
+    {
+        $this->ensureAccount();
+
+        if(!$agent->isPlatformUser()){
+            $this->unsupportedContextException();
+        }
+
+        $this->agent = $agent;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAgent()
+    {
+        return $this->agent;
+    }
+
 
     /**
      * Ensure called context is account instance
