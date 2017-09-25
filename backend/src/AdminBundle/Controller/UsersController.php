@@ -37,12 +37,17 @@ class UsersController extends AbstractController
 
         /** @var MemberInterface $member */
         $members = $manager->findBy([
-            'context' => MemberInterface::CONTEXT,
-            'account' => $this->account()
+            'context' => MemberInterface::CONTEXT
         ]);
 
+        $membersSices = [];
+        foreach ($members as $i => $member) {
+            if (($member->isPlatformAdmin() || $member->isPlatformCommercial()) && !$member->isDeleted())
+                $membersSices[$i] = $member;
+        }
+
         return $this->render('admin/user/index.html.twig', array(
-            'members' => $members
+            'members' => $membersSices
         ));
     }
 
