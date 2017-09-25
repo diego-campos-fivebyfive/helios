@@ -18,7 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
- * //@Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
+ * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
  *
  * @Breadcrumb("Dashboard", route={"name"="app_index"})
  * @Breadcrumb("Accounts", route={"name"="account_index"})
@@ -32,7 +32,6 @@ class AccountController extends AdminController
      */
     public function indexAction(Request $request)
     {
-        //dump($request);die;
         $paginator = $this->getPaginator();
 
         $manager = $this->manager('customer');

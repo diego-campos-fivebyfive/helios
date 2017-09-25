@@ -59,19 +59,15 @@
                         </select>
                     </div>
 
-                    {#{% if member.isOwner %}#}
-
-                        <div class="col-md-2">
-                            <select id="filter-status" class="form-control selected" title="Usuário"
-                                    style="width: 98%;">
-                                <option value="-1"> Status &raquo; Todos </option>
-                                {% for key, status in allStatus %}
-                                    <option {{ current_status == key ? 'selected="selected"' }} value="{{ key }}"> {{ status }} </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-
-                   {# {% endif %}#}
+                    <div class="col-md-2">
+                        <select id="filter-status" class="form-control selected" title="Usuário"
+                                style="width: 98%;">
+                            <option value="-1"> Status &raquo; Todos </option>
+                            {% for key, status in allStatus %}
+                                <option {{ current_status == key ? 'selected="selected"' }} value="{{ key }}"> {{ status }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
                     <div class="btn-group pull-right">
                         <a class="btn btn-primary"
