@@ -904,7 +904,7 @@ class Customer extends AbstractCustomer
         $this->context = $context;
 
         if($this->isAccount()){
-            $this->maxMember = 1;
+            $this->maxMember = self::MAX_MEMBERS;
         }
 
         return $this;

@@ -21,6 +21,9 @@ class UserType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        /** @var User $user */
+        $user = $options['data'];
+
         $builder
             ->add('email', HiddenType::class, [
                 'required' => true
@@ -30,12 +33,16 @@ class UserType extends AbstractType
             ])
             ->add('enabled', CheckboxType::class, [
                 'required' => false
-            ])
-            ->add('roles', ChoiceType::class, [
+            ]);
+
+        if(!$user->isPlatformMaster()){
+
+            $builder->add('roles', ChoiceType::class, [
                 'choices' => User::getRolesOptions(),
-                'expanded' => true,
+                'expanded' => false,
                 'multiple' => true
             ]);
+        }
 
         if(!$options['data']->getPassword()) {
             $builder->add('plainPassword', 'Symfony\Component\Form\Extension\Core\Type\PasswordType');
