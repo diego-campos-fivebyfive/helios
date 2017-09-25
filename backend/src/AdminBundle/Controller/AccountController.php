@@ -190,6 +190,10 @@ class AccountController extends AdminController
 
         if($form->isSubmitted() && $form->isValid()){
 
+            if ($this->member()->isPlatformCommercial() && !$account->getAgent()) {
+                $account->setAgent($this->member());
+            }
+
             $helper = $this->getRegisterHelper();
 
             if($email != $account->getEmail() && !$helper->emailCanBeUsed($account->getEmail())) {
