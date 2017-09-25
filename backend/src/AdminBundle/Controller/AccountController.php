@@ -181,14 +181,11 @@ class AccountController extends AdminController
 
         $email = $account->getEmail();
 
-        if ($this->member()->isPlatformCommercial()) {
-            $account->setAgent($this->member());
-        }
-
         $form = $this->createForm(AccountType::class, $account, array(
             'method' => 'post',
             'agents' => $agents
         ));
+
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
@@ -204,6 +201,7 @@ class AccountController extends AdminController
                 $manager->save($account);
 
                 $this->setNotice("Conta atualizada com sucesso !");
+
                 return $this->redirectToRoute('account_index');
             }
         }
