@@ -27,6 +27,7 @@ class Customer extends AbstractCustomer
     use TokenizerTrait;
     use ORMBehaviors\SoftDeletable\SoftDeletable;
     use AccountTrait;
+    use MemberTrait;
     use CompanyTrait;
 
     /**
@@ -1094,11 +1095,11 @@ class Customer extends AbstractCustomer
     public static function getStatusList()
     {
         return [
-            self::PENDING => 'pending',
-            self::VERIFIED => 'verified',
-            self::CONFIRMED => 'confirmed',
-            self::ACTIVATED => 'actived',
-            self::LOCKED => 'locked',
+            self::PENDING => 'Pending',
+            self::STANDING => 'Standing',
+            self::APROVED => 'Aproved',
+            self::ACTIVATED => 'Actived',
+            self::LOCKED => 'Locked',
         ];
     }
 

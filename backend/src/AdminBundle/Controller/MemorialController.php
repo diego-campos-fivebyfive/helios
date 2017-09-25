@@ -17,7 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
- * @Security("has_role('ROLE_ADMIN')")
+ * @Security("has_role('ROLE_PLATFORM_ADMIN')")
  * @Route("memorials")
  */
 class MemorialController extends AdminController

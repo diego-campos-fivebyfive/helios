@@ -24,6 +24,7 @@ class App
         $icons = [
             'accounts' => 'fa fa-bookmark',
             'admin_components' => 'fa fa-toggle-on',
+            'bars' => 'fa fa-bars',
             'business' => 'fa fa-building',
             'categories' => 'fa fa-list-ul',
             'company' => 'fa fa-building',
@@ -61,7 +62,7 @@ class App
         ];
 
         if($path){
-            return array_key_exists($path, $icons) ? $icons[$path] : $icons['default'];
+            return array_key_exists($path, $icons) ? $icons[$path] : 'fa fa-' . $path;
         }
 
         return $icons;
