@@ -78,7 +78,7 @@ class VarietyController extends AbstractController
     }
 
     /**
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
      *
      * @Route("/{id}/update", name="variety_edit")
      * @Method({"GET", "POST"})
@@ -121,7 +121,7 @@ class VarietyController extends AbstractController
     }
 
     /**
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
      *
      * @Route("/{id}", name="variety_delete")
      * @Method("DELETE")

@@ -4,9 +4,9 @@ namespace AppBundle\Controller;
 
 use AppBundle\Configuration\App;
 use AppBundle\Service\WidgetGenerator;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Symfony\Component\HttpFoundation\Request;
+use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class AppController extends AbstractController
 {
@@ -16,7 +16,9 @@ class AppController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-        //($this->getCurrentAccount()->getProjects()->count());
+        if(!$this->account()->isActivated()){
+            return $this->redirectToRoute('fos_user_security_logout');
+        }
 
         $this->getTopbarAction('app_index');
         

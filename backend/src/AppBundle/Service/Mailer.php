@@ -76,7 +76,7 @@ class Mailer
             'account' => $account
         ]);
 
-        $this->sendEmailMessage('Plataforma Sices Solar - Registro', $rendered, self::FROM_EMAIL, $account->getEmail());
+        $this->sendEmailMessage('Plataforma Sices Solar - Cadastro', $rendered, self::FROM_EMAIL, $account->getEmail());
 
         return $rendered;
     }
@@ -97,7 +97,7 @@ class Mailer
             'account' => $account
         ]);
 
-        $this->sendEmailMessage('Plataforma Sices Solar - Registro', $rendered, self::FROM_EMAIL, $account->getEmail());
+        $this->sendEmailMessage('Plataforma Sices Solar - Verificação', $rendered, self::FROM_EMAIL, $account->getEmail());
 
         return $rendered;
     }
@@ -115,7 +115,7 @@ class Mailer
             'user' => $user
         ]);
 
-        $this->sendEmailMessage('Plataforma Sices Solar - Reset', $rendered, self::FROM_EMAIL, $user->getEmail());
+        $this->sendEmailMessage('Plataforma Sices Solar - Redefinir Senha', $rendered, self::FROM_EMAIL, $user->getEmail());
 
         return $rendered;
     }
@@ -181,6 +181,7 @@ class Mailer
 
         $message = (new \Swift_Message($subject))
             ->setFrom($fromEmail, 'Plataforma Sices Solar')
+            ->setSubject($subject)
             ->setTo($toEmail)
             ->setBody($body)
             ->setContentType('text/html')

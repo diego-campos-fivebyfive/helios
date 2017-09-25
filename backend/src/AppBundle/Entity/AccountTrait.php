@@ -17,6 +17,12 @@ trait AccountTrait
     protected $level;
 
     /**
+     * @var MemberInterface|null
+     * @ORM\ManyToOne(targetEntity="Customer")
+     */
+    protected $agent;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\OneToMany(targetEntity="Customer", mappedBy="account", cascade={"persist", "remove"})
@@ -69,13 +75,13 @@ trait AccountTrait
     /**
      * @inheritDoc
      */
-    public function addMember(BusinessInterface $member)
+    public function addMember(MemberInterface $member)
     {
         if (!$this->members->contains($member)) {
             $this->members->add($member);
 
             if (!$member->getAccount())
-                $member->setAcccount();
+                $member->setAccount($this);
         }
 
         return $this;
@@ -84,7 +90,7 @@ trait AccountTrait
     /**
      * @inheritDoc
      */
-    public function removeMember(BusinessInterface $member)
+    public function removeMember(MemberInterface $member)
     {
         if ($this->members->contains($member))
             $this->members->removeElement($member);
@@ -151,17 +157,17 @@ trait AccountTrait
     /**
      * @return bool
      */
-    public function isVerified()
+    public function isStanding()
     {
-        return self::VERIFIED == $this->status;
+        return self::STANDING == $this->status;
     }
 
     /**
      * @return bool
      */
-    public function isConfirmed()
+    public function isAproved()
     {
-        return $this->status == self::CONFIRMED;
+        return $this->status == self::APROVED;
     }
 
     /**
@@ -242,6 +248,31 @@ trait AccountTrait
 
         return $this;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setAgent(MemberInterface $agent)
+    {
+        $this->ensureAccount();
+
+        if(!$agent->isPlatformUser()){
+            $this->unsupportedContextException();
+        }
+
+        $this->agent = $agent;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAgent()
+    {
+        return $this->agent;
+    }
+
 
     /**
      * Ensure called context is account instance
