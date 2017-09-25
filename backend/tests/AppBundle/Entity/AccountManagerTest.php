@@ -25,7 +25,7 @@ class AccountManagerTest extends AppTestCase
 
         $member = $this->createMember();
 
-        $member->setContext(Customer::CONTEXT_MEMBER);
+        $member->setContext(Customer::CONTEXT_MEMBER); // invalid user role
 
         $account->setAgent($member);
     }
