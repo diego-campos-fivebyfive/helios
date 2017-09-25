@@ -67,12 +67,18 @@ class AccountController extends AdminController
             'context' => MemberInterface::CONTEXT,
             'account' => $this->account()
         ]);
+        $membersSices = [];
+        foreach ($members as $i => $member) {
+            if($member->getUser()->isEnabled()) {
+                $membersSices[$i] = $member;
+            }
+        }
 
         return $this->render('admin/accounts/index.html.twig', array(
             'current_status' => $status,
             'allStatus' =>Customer::getStatusList(),
             'current_bond' => $bond,
-            'members' => $members,
+            'members' => $membersSices,
             'pagination' => $pagination
         ));
     }
