@@ -53,8 +53,8 @@
                         <select id="filter-bond" class="form-control selected" title="Vínculo"
                                 style=";width: 98%;">
                             <option value="-1"> Vínculo &raquo; Todos </option>
-                            {% for sices in usersSices %}
-                                <option {{ current_bond == sices.id ? 'selected="selected"' }}  value="{{ sices.id }}"> {{ sices.firstName }} </option>
+                            {% for member in members %}
+                                <option {{ current_bond == member.id ? 'selected="selected"' }}  value="{{ member.id }}"> {{ member.firstName }} </option>
                             {% endfor %}
                         </select>
                     </div>
