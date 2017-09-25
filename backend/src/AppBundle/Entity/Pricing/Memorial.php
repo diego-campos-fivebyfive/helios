@@ -304,9 +304,9 @@ class Memorial implements MemorialInterface
         $levels = [
             self::LEVEL_BLACK => 'Black',
             self::LEVEL_GOLD => 'Gold',
-            self::LEVEL_PARTNER => 'Partner',
             self::LEVEL_PLATINUM => 'Platinum',
             self::LEVEL_PREMIUM => 'Premium',
+            self::LEVEL_PARTNER => 'Partner',
             self::LEVEL_PROMOTIONAL => 'Promotional'
         ];
 

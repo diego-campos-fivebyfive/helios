@@ -69,13 +69,13 @@ trait AccountTrait
     /**
      * @inheritDoc
      */
-    public function addMember(BusinessInterface $member)
+    public function addMember(MemberInterface $member)
     {
         if (!$this->members->contains($member)) {
             $this->members->add($member);
 
             if (!$member->getAccount())
-                $member->setAcccount();
+                $member->setAccount($this);
         }
 
         return $this;
@@ -84,7 +84,7 @@ trait AccountTrait
     /**
      * @inheritDoc
      */
-    public function removeMember(BusinessInterface $member)
+    public function removeMember(MemberInterface $member)
     {
         if ($this->members->contains($member))
             $this->members->removeElement($member);
@@ -151,17 +151,17 @@ trait AccountTrait
     /**
      * @return bool
      */
-    public function isVerified()
+    public function isStanding()
     {
-        return self::VERIFIED == $this->status;
+        return self::STANDING == $this->status;
     }
 
     /**
      * @return bool
      */
-    public function isConfirmed()
+    public function isAproved()
     {
-        return $this->status == self::CONFIRMED;
+        return $this->status == self::APROVED;
     }
 
     /**
