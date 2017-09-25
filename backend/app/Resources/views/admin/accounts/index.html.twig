@@ -2,6 +2,33 @@
 
 {% block body %}
 
+    <style>
+        .btn-primary,
+        .btn-primary:hover,
+        .btn-primary:focus,
+        .btn-primary:active,
+        .btn-primary:active:focus,
+        .btn-primary:active:hover,
+        .btn-primary.active,
+        .btn-primary.active:hover,
+        .btn-primary.active:focus,
+        .open .dropdown-toggle.btn-primary {
+            background-color: #00A7EC !important;
+            border-color: #00A7EC !important;
+            color: #fff;
+        }
+        .row {
+            border-color: #00A7EC;
+        }
+        .selected {
+            border-color: #00A7EC;
+            border-radius: 4px;
+        }
+        .selected:focus {
+            border-color: #00A7EC !important;
+        }
+    </style>
+
     <div class="wrapper wrapper-content  animated fadeInRight">
         <div class="row">
             <div class="ibox">
@@ -15,6 +42,32 @@
                 </div>
                 <div class="ibox-content">
                     {{ knp_pagination_filter(pagination, {'a.lastname, a.document, a.email':''}) }}
+
+                    <div style="padding-right:0;padding-top:7px;" class="col-md-1 text-right">
+                        <label style="width: 100%;">
+                            <i class="fa fa-filter"></i> Filtro
+                        </label>
+                    </div>
+
+                    <div class="col-md-3">
+                        <select id="filter-bond" class="form-control selected" title="Vínculo"
+                                style=";width: 98%;">
+                            <option value="-1"> Vínculo &raquo; Todos </option>
+                            {% for sices in usersSices %}
+                                <option {{ current_bond == sices.id ? 'selected="selected"' }}  value="{{ sices.id }}"> {{ sices.firstName }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <select id="filter-status" class="form-control selected" title="Usuário"
+                                style="width: 98%;">
+                            <option value="-1"> Status &raquo; Todos </option>
+                            {% for key, status in allStatus %}
+                                <option {{ current_status == key ? 'selected="selected"' }} value="{{ key }}"> {{ status }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
                     <div class="btn-group pull-right">
                         <a class="btn btn-primary"
@@ -87,4 +140,37 @@
         </div>
     </div>
 
+    <script>
+
+        var form_filtration = $('#form_filtration');
+        var current_status = '{{ current_status }}';
+        var current_bond = '{{ current_bond }}';
+        var filter_status = $('#filter-status');
+        var filter_bond = $('#filter-bond');
+        if(form_filtration.length){
+            form_filtration.append($('<input type="hidden" name="status"/>').val(current_status));
+            form_filtration.append($('<input type="hidden" name="bond"/>').val(current_bond));
+            filter_status.on('change', function(){
+                $('input[name="status"]').val($(this).val());
+                form_filtration.trigger('submit');
+            });
+            filter_bond.on('change', function(){
+                $('input[name="bond"]').val($(this).val());
+                form_filtration.trigger('submit');
+            });
+        }
+
+        $('#email_modal').on('show.bs.modal', function(event){
+            var modal = $(this), body = modal.find('.modal-body'), target = $(event.relatedTarget);
+            var url = target.data('url');
+            if(url){
+                $.ajax({
+                    url: url,
+                    complete: function(xhr){
+                        body.html(xhr.responseText);
+                    }
+                })
+            }
+        });
+    </script>
 {% endblock %}

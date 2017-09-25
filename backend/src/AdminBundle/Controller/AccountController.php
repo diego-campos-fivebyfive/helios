@@ -5,6 +5,7 @@ namespace AdminBundle\Controller;
 use AdminBundle\Form\AccountType;
 use AdminBundle\Form\EmailMemberType;
 use AdminBundle\Form\MemberType;
+use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\MemberInterface;
@@ -44,6 +45,16 @@ class AccountController extends AdminController
                 'context' => $this->getAccountContext()
             ]);
 
+        if(-1 != $bond = $request->get('bond', -1)){
+            $qb->andWhere('a.agent = :bond');
+            $qb->setParameter('bond', $bond);
+        }
+
+        if(-1 != $status = $request->get('status', -1)){
+            $qb->andWhere('a.status = :status');
+            $qb->setParameter('status', $status);
+        }
+
         $this->overrideGetFilters();
 
         $pagination = $paginator->paginate(
@@ -51,7 +62,22 @@ class AccountController extends AdminController
             $request->query->getInt('page', 1), 10
         );
 
+        /** @var MemberInterface $member */
+        $members = $manager->findBy([
+            'context' => MemberInterface::CONTEXT
+        ]);
+        $usersSices = [];
+        foreach ($members as $i => $member) {
+            if($member->getUser()->isPlatformCommercial()) {
+                $usersSices[$i] = $member;
+            }
+        }
+
         return $this->render('admin/accounts/index.html.twig', array(
+            'current_status' => $status,
+            'allStatus' =>Customer::getStatusList(),
+            'current_bond' => $bond,
+            'usersSices' => $usersSices,
             'pagination' => $pagination,
             'accounts' => $qb
         ));
