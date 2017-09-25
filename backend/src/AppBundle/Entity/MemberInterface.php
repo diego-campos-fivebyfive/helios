@@ -55,6 +55,11 @@ interface MemberInterface
     public function isPlatformUser();
 
     /**
+     * @return string
+     */
+    public function getUserType();
+
+    /**
      * @return bool
      */
     public function isOwner();

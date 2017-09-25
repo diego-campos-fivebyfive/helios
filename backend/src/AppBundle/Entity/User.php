@@ -134,7 +134,7 @@ class User extends AbstractUser implements UserInterface
     public function getType()
     {
         foreach (self::getPlatformRoles() as $platformRole){
-            if(in_array($platformRole, $this->roles)){
+            if(in_array($platformRole, $this->getRoles())){
                 return self::TYPE_PLATFORM;
             }
         }
@@ -230,6 +230,24 @@ class User extends AbstractUser implements UserInterface
     public function getUpdatedAt()
     {
         return $this->updated_at;
+    }
+
+    /**
+     * This method override default behavior FOSUser
+     * Prevent multiple PLATFORM_* roles
+     *
+     * @param string $role
+     * @return $this
+     */
+    public function addRole($role)
+    {
+        parent::addRole($role);
+
+        if(count($this->roles) > 1 && $this->isPlatform()) {
+            parent::removeRole($this->roles[1]);
+        }
+
+        return $this;
     }
 
     /**
