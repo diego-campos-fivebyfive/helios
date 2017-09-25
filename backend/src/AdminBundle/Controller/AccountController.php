@@ -10,6 +10,7 @@ use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\UserInterface;
+use Symfony\Component\Form\FormError;
 use Sonata\MediaBundle\Model\MediaInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -83,6 +84,8 @@ class AccountController extends AdminController
      */
     public function createAction(Request $request)
     {
+        $agents = $this->account()->getMembers();
+
         /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
         $userManager = $this->get('fos_user.user_manager');
         $accountManager = $this->manager('customer');
@@ -92,13 +95,20 @@ class AccountController extends AdminController
         $account = $accountManager->create();
         $account->setContext(Customer::CONTEXT_ACCOUNT);
 
+        if ($this->member()->isPlatformCommercial()) {
+            $account->setAgent($this->member());
+        }
+
         /** @var MemberInterface $member */
         $member = $memberManager->create();
         $member->setContext(Customer::CONTEXT_MEMBER);
 
         $account->addMember($member);
 
-        $form = $this->createForm(AccountType::class, $account);
+        $form = $this->createForm(AccountType::class, $account, array(
+            'method' => 'post',
+            'agents' => $agents
+        ));
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()) {
@@ -165,11 +175,20 @@ class AccountController extends AdminController
      */
     public function updateAction(Request $request, Customer $account)
     {
+        $agents = $this->account()->getMembers();
+
         $manager = $this->manager('customer');
 
         $email = $account->getEmail();
 
-        $form = $this->createForm(AccountType::class, $account);
+        if ($this->member()->isPlatformCommercial()) {
+            $account->setAgent($this->member());
+        }
+
+        $form = $this->createForm(AccountType::class, $account, array(
+            'method' => 'post',
+            'agents' => $agents
+        ));
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
