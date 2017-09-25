@@ -126,7 +126,7 @@
                                                     <td>
                                                         <a class="label label-primary" data-user-email="{{ path('email_user_update', { 'id': member.id }) }}">
                                                             <i class="fa fa-pencil"></i></a>
-                                                        {{ member.email }}
+                                                        <span id="{{ member.id }}">{{ member.email }}</span>
                                                     </td>
                                                     <td data-value="{{ member.isOwner ? 'a' : 'z' }}">
                                                         {% if is_owner %}
@@ -174,7 +174,7 @@
                     data: {_method:'post'},
                     complete: function (xhr) {
                         if (200 == xhr.status) {
-                            $('#email_form').html(xhr.responseJSON['form_email'])
+                            $('#email_form').html(xhr.responseJSON['form_email']);
                         } else {
                             swal("{{ 'Error'|trans }}!", 'Falha ao editar', "error");
                         }

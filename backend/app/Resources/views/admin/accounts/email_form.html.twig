@@ -1,12 +1,32 @@
-{{ form_start(form, {attr:{action: path('email_user_update', { 'id': member.id })}}) }}
+{{ form_start(form, {attr:{id: 'email_member', 'data-action': path('email_user_update', { 'id': member.id })}}) }}
 
-<div class="form-group col-lg-5 col-md-offset-1">
+<div class="form-group col-lg-5">
     {{ form_widget(form.email, {'attr':{'class':'form-control', 'data-placeholder':'Email'}})}}
 </div>
 
 <div class="form-group col-lg-1">
-    <input type="submit" class="btn btn-primary" value="Salvar" />
+    <input type="button" id="submit-btn" class="btn btn-primary" value="Salvar" />
 </div>
 
 {{ form_end(form) }}
+<script>
+    var submitBtn = $('#submit-btn');
+    var form = $('#email_member');
+        submitBtn.on('click', function () {
+            var url = $(form).data('action');
 
+            $.ajax({
+                url: url,
+                method: 'post',
+                data: $(form).serialize(),
+                complete: function (xhr) {
+                    if (200 == xhr.status) {
+                        $('#email_form').html('');
+                        $('#'+xhr.responseJSON['id_email']).html(xhr.responseJSON['email'])
+                    } else {
+                        display_error('Este email não pode ser usado.');
+                    }
+                }
+            });
+        });
+</script>

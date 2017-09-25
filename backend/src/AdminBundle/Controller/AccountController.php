@@ -217,15 +217,12 @@ class AccountController extends AdminController
                 $member->setEmail($email);
             } else {
                 $manager->save($member);
-
-                return $this->redirectToRoute('account_show',['id' => $member->getAccount()->getId()]);
+                return $this->json([
+                    'id_email' => $member->getId(),
+                    'email' => $member->getEmail()
+                ],Response::HTTP_OK);
             }
-
-            return $this->render('admin/accounts/show.html.twig', [
-                'account' => $member->getAccount(),
-                'members' => $member->getAccount()->getMembers(),
-                'errors' => $form->getErrors(true)
-            ]);
+            return $this->json([],Response::HTTP_CONFLICT);
         }
 
         return $this->json([
