@@ -28,6 +28,6 @@ $CLI_PATH/ces-cache-clear
 $CLI_PATH/ces-database-update
 
 if [ $CES_AMBIENCE = 'development' ]; then
-  $CLI_PATH/util/user-notify 'Database mirror done.'
+  $CLI_PATH/util/user-notify 'Database mirror' 'done, homolog database locally available'
 fi
 echo 'Database mirror done.'
