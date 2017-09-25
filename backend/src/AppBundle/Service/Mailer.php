@@ -115,7 +115,7 @@ class Mailer
             'user' => $user
         ]);
 
-        $this->sendEmailMessage('Plataforma Sices Solar - Reset', $rendered, self::FROM_EMAIL, $user->getEmail());
+        $this->sendEmailMessage('Plataforma Sices Solar - Redefinir Senha', $rendered, self::FROM_EMAIL, $user->getEmail());
 
         return $rendered;
     }
@@ -181,7 +181,7 @@ class Mailer
 
         $message = (new \Swift_Message($subject))
             ->setFrom($fromEmail, 'Plataforma Sices Solar')
-            ->setSubject('Cadastro')
+            ->setSubject($subject)
             ->setTo($toEmail)
             ->setBody($body)
             ->setContentType('text/html')

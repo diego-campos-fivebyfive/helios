@@ -1,16 +1,10 @@
 {% trans_default_domain 'FOSUserBundle' %}
-{% block subject %}
-    {% autoescape false %}
-        {{ 'resetting.email.subject'|trans({'%username%': user.username}) }}
-    {% endautoescape %}
-{% endblock %}
 {% block body_html %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta name="viewport" content="width=device-width" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Redefinir senha</title>
     <style type="text/css">
         /* -------------------------------------
     GLOBAL
@@ -304,7 +298,7 @@
                 <table class="main" width="100%" cellpadding="0" cellspacing="0">
                     <tr>
                         <td class="content-wrap">
-                            <table cellpadding="0" cellspacing="0" style="margin-left: 110px;">
+                            <table cellpadding="0" cellspacing="0" width="70%" style="margin-left: 15%; margin-right: 15%;">
                                 <tr>
                                     <td style="text-align: center;">
                                         <img class="img-responsive" src="{{ app.request.schemeAndHttpHost }}{{ asset('assets/images/register_email_header.jpg') }}"/>
