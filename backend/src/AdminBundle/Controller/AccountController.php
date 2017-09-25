@@ -5,6 +5,7 @@ namespace AdminBundle\Controller;
 use AdminBundle\Form\AccountType;
 use AdminBundle\Form\EmailMemberType;
 use AdminBundle\Form\MemberType;
+use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\MemberInterface;
@@ -61,7 +62,6 @@ class AccountController extends AdminController
             $request->query->getInt('page', 1), 10
         );
 
-
         /** @var MemberInterface $member */
         $members = $manager->findBy([
             'context' => MemberInterface::CONTEXT
@@ -72,7 +72,6 @@ class AccountController extends AdminController
                 $usersSices[$i] = $member;
             }
         }
-
 
         return $this->render('admin/accounts/index.html.twig', array(
             'current_status' => $status,
