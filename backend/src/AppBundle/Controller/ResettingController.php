@@ -40,13 +40,13 @@ class ResettingController extends BaseResettingController
         /** @var UserInterface $user */
         $user = $this->get('fos_user.user_manager')->findUserByUsernameOrEmail($username);
 
-        $this->ensureOnlyActivatedAccountCanAccess($user);
-
         if (null === $user) {
             return $this->render('FOSUserBundle:Resetting:request.html.twig', array(
                 'invalid_username' => $username
             ));
         }
+
+        $this->ensureOnlyActivatedAccountCanAccess($user);
 
         if ($user->isPasswordRequestNonExpired($this->container->getParameter('fos_user.resetting.token_ttl'))) {
             return $this->render('FOSUserBundle:Resetting:passwordAlreadyRequested.html.twig');
