@@ -20,6 +20,8 @@ trait MemberTrait
      */
     public function getUserType()
     {
+        $type = 'None';
+
         if ($this->user instanceof UserInterface){
 
             $roles = $this->user->getRoles();
@@ -43,10 +45,8 @@ trait MemberTrait
                     $type = 'User';
                     break;
             }
-
-            return $type;
         }
 
-        return 'None';
+        return $type;
     }
 }
