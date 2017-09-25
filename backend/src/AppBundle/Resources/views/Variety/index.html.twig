@@ -54,7 +54,7 @@
                 <i class="fa fa-eye"></i> {{ 'View'|trans }}
             </a>
 
-            {% if member.isAdmin %}
+            {% if member.isPlatformUser %}
                 <a href="{{ path('variety_edit', { 'id': variety.id }) }}"
                    class="btn btn-success">
                     <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}

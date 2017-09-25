@@ -1,9 +1,13 @@
 security:
     role_hierarchy:
+        # ACCOUNT ROLES
         ROLE_AGENT: ROLE_USER
         ROLE_OWNER: ROLE_AGENT
         ROLE_ADMIN: ROLE_OWNER
         ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+        # PLATFORM ROLES
+        ROLE_PLATFORM_ADMIN: ROLE_PLATFORM_COMMERCIAL
+        ROLE_PLATFORM_MASTER: ROLE_PLATFORM_ADMIN
 
     encoders:
         FOS\UserBundle\Model\UserInterface: bcrypt

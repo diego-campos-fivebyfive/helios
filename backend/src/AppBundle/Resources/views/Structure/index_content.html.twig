@@ -50,7 +50,7 @@
             <i class="fa fa-eye"></i> {{ 'View'|trans }}
         </a>
 
-        {% if member.isAdmin %}
+        {% if member.isPlatformUser %}
             <a href="{{ path('structure_update', { 'id': structure.id }) }}"
                class="btn btn-success">
                 <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}

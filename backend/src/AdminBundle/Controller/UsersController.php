@@ -10,15 +10,14 @@ use AppBundle\Entity\AccountInterface;
 use AppBundle\Controller\AbstractController;;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\FormError;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
- * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_PLATFORM_MASTER') or has_role('ROLE_PLATFORM_ADMIN')")
+ * @Security("has_role('ROLE_PLATFORM_ADMIN')")
  *
  * @Route("users")
  *
