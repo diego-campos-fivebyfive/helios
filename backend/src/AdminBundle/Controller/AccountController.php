@@ -78,8 +78,7 @@ class AccountController extends AdminController
             'allStatus' =>Customer::getStatusList(),
             'current_bond' => $bond,
             'usersSices' => $usersSices,
-            'pagination' => $pagination,
-            'accounts' => $qb
+            'pagination' => $pagination
         ));
     }
 

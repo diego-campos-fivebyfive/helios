@@ -34,7 +34,7 @@
             <div class="ibox">
                 <div class="ibox-title">
                     <span class="pull-right small text-muted">
-                        <h3>{{ accounts|length }} Contas cadastradas</h3>
+                        <h3>{{ pagination.totalItemCount }} Conta(s) encontrada(s)</h3>
                     </span>
                     <h2> {{ 'Accounts'|trans }}</h2>
                 </div>
@@ -64,7 +64,7 @@
                                 style="width: 98%;">
                             <option value="-1"> Status &raquo; Todos </option>
                             {% for key, status in allStatus %}
-                                <option {{ current_status == key ? 'selected="selected"' }} value="{{ key }}"> {{ status }} </option>
+                                <option {{ current_status == key ? 'selected="selected"' }} value="{{ key }}"> {{ status|trans }} </option>
                             {% endfor %}
                         </select>
                     </div>
