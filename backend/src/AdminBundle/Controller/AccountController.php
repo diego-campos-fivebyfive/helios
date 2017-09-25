@@ -7,24 +7,18 @@ use AdminBundle\Form\EmailMemberType;
 use AdminBundle\Form\MemberType;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
+use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\UserInterface;
-use AdminBundle\Controller\AdminController;
-use Symfony\Component\Form\FormError;
+use Sonata\MediaBundle\Model\MediaInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
-use Sonata\MediaBundle\Model\MediaInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @TODO Remove Security::has_role('ROLE_ADMIN') after production is established
- */
-
-/**
- * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_PLATFORM_MASTER') or has_role('ROLE_PLATFORM_ADMIN')")
+ * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
  *
  * @Breadcrumb("Dashboard", route={"name"="app_index"})
  * @Breadcrumb("Accounts", route={"name"="account_index"})
@@ -40,7 +34,6 @@ class AccountController extends AdminController
     {
         $paginator = $this->getPaginator();
 
-        /** @var Customer $manager */
         $manager = $this->manager('customer');
 
         $qb = $manager->getEntityManager()->createQueryBuilder();
@@ -70,33 +63,77 @@ class AccountController extends AdminController
      */
     public function createAction(Request $request)
     {
-        $manager = $this->manager('customer');
+        /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+        $userManager = $this->get('fos_user.user_manager');
+        $accountManager = $this->manager('customer');
+        $memberManager = $this->manager('customer');
 
-        $accountContext = $this->getAccountContext();
-        $memberContext = $this->getMemberContext();
+        /** @var AccountInterface $account */
+        $account = $accountManager->create();
+        $account->setContext(Customer::CONTEXT_ACCOUNT);
 
-        $account = $manager->create();
-        $account->setContext($accountContext);
-
-        $member = $manager->create();
-        $member->setContext($memberContext);
+        /** @var MemberInterface $member */
+        $member = $memberManager->create();
+        $member->setContext(Customer::CONTEXT_MEMBER);
 
         $account->addMember($member);
 
         $form = $this->createForm(AccountType::class, $account);
-
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
+        if($form->isSubmitted() && $form->isValid()) {
 
-            $this->processAndPersist($member);
-            $this->setNotice("Conta criada com sucesso !");
-            return $this->redirectToRoute('account_index', [
-                'id' => $account->getId()
+            $helper = $this->getRegisterHelper();
+
+            $account->setConfirmationToken($this->getTokenGenerator()->generateToken());
+
+            $member->setEmail($account->getEmail());
+
+            $document = $accountManager->findBy([
+                'document' => $account->getDocument()
             ]);
+
+            $existsDoc = false;
+
+            if($document) {
+                $form->addError(new FormError('CNPJ já Cadastrado'));
+                $existsDoc = true;
+            }
+
+            if ($helper->emailCanBeUsed($account->getEmail()) && !$existsDoc) {
+                $user = $userManager->createUser();
+
+                $user
+                    ->setEmail($member->getEmail())
+                    ->setUsername($member->getEmail())
+                    ->setPlainPassword(uniqid())
+                    ->setRoles([
+                        UserInterface::ROLE_OWNER,
+                        UserInterface::ROLE_OWNER_MASTER
+                    ]);
+
+                $member->setUser($user);
+
+                $accountManager->save($account);
+
+                $this->setNotice("Conta criada com sucesso !");
+
+                // ENVIAR EMAIL OU NÃO
+                if ($account->isAproved()) {
+                    $this->getMailer()->sendAccountConfirmationMessage($account);
+                }
+
+                return $this->redirectToRoute('account_show', [
+                    'id' => $account->getId()
+                ]);
+            }
+
+            $form->addError(new FormError('E-mail já Cadastrado'));
+
         }
 
         return $this->render('admin/accounts/form.html.twig', array(
+            'errors' => $form->getErrors(true),
             'form' => $form->createView(),
             'account' => $account
         ));
@@ -110,16 +147,26 @@ class AccountController extends AdminController
     {
         $manager = $this->manager('customer');
 
+        $email = $account->getEmail();
+
         $form = $this->createForm(AccountType::class, $account);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
 
-            $manager->save($account);
+            $helper = $this->getRegisterHelper();
 
-            $this->setNotice("Conta atualizada com sucesso !");
-            return $this->redirectToRoute('account_index');
+            if($email != $account->getEmail() && !$helper->emailCanBeUsed($account->getEmail())) {
 
+                $form->addError(new FormError('Este email não pode ser usado'));
+
+            } else {
+
+                $manager->save($account);
+
+                $this->setNotice("Conta atualizada com sucesso !");
+                return $this->redirectToRoute('account_index');
+            }
         }
 
         return $this->render('admin/accounts/form.html.twig', [
@@ -136,8 +183,8 @@ class AccountController extends AdminController
     public function changeAction(Customer $account)
     {
         try {
-            if($account->isVerified() || $account->isConfirmed()) {
-                $account = $this->changeStatus($account, BusinessInterface::CONFIRMED);
+            if($account->isStanding() || $account->isAproved()) {
+                $account = $this->changeStatus($account, BusinessInterface::APROVED);
 
                 $this->getMailer()->sendAccountConfirmationMessage($account);
             } elseif ($account->isActivated()) {
@@ -306,6 +353,14 @@ class AccountController extends AdminController
     private function getMemberContext()
     {
         return $this->getContextManager()->find(BusinessInterface::CONTEXT_MEMBER);
+    }
+
+    /**
+     * @return \FOS\UserBundle\Util\TokenGenerator
+     */
+    private function getTokenGenerator()
+    {
+        return $this->get('fos_user.util.token_generator');
     }
 
     /**

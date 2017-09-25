@@ -85,7 +85,7 @@ class ComponentController extends AbstractController
     }
 
     /**
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
      *
      * @Route("/{id}/update", name="component_update")
      * @Method({"get","post"})
@@ -108,13 +108,6 @@ class ComponentController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($component->getStatus()) {
-                $this->get('notifier')->notify([
-                    'Evento' => '302.3',
-                    'Callback' => 'product',
-                    'Code' => $component->getCode()
-                ]);
-            }
             return $this->saveComponent($component, $type, $request);
         }
 
@@ -126,7 +119,7 @@ class ComponentController extends AbstractController
     }
 
     /**
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
      *
      * @Route("/{id}/delete", name="component_delete")
      * @Method({"delete"})

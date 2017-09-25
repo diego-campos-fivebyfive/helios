@@ -286,7 +286,7 @@ Esclarecimentos gerais relacionados a documentação:
       ```
 
     - ##### Configuração de aplicações
-      (default: development)
+      ###### default: development
       ```
       $ ces-app-config --[AMBIENCE]
       ```
@@ -308,14 +308,15 @@ Esclarecimentos gerais relacionados a documentação:
   - [6.3](#comandos--operacionais) **Deploy e Start**:
 
     - ##### Deploy
-      (default ambience: no default value, default origin: staging, obs: origin only for production)
+      ###### default ambience: no default value | default origin: staging
       ```
       $ cd AMBIENCE
       $ ces-app-deploy --[AMBIENCE] --[ORIGIN]
       ```
+      > **Nota**: Argumento ORIGIN apenas disponivel para AMBIENCE production
 
     - ##### Start de aplicações
-      (default ambience: development, default application: only sices)
+      ###### default ambience: development | default application: only sices
       ```
       $ ces-app-start --[AMBIENCE] --[APPICATION]
       ```
@@ -324,13 +325,13 @@ Esclarecimentos gerais relacionados a documentação:
   - [6.4](#comandos--backend) **Backend**:
 
     - ##### Pequisa de rotas
-      (default: no arg, show all)
+      ###### default: no arg, show all
       ```
       $ ces-route-list --'[STRING]'
       ```
 
     - ##### Requisição de token
-      (no default value)
+      ###### default: no default value
       ```
       $ ces-token-request --[APPLICATION] --[AMBIENCE]
       ```
@@ -375,7 +376,7 @@ Esclarecimentos gerais relacionados a documentação:
       ```
 
     - ##### Corrigir permissões de arquivos e pastas
-      (default: development)
+      ###### default: development
       ```
       $ ces-permission-fix --[AMBIENCE]
       ```

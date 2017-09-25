@@ -3,11 +3,13 @@
 namespace AppBundle\Menu;
 
 use Knp\Menu\ItemInterface;
+use AppBundle\Entity\UserInterface;
 
 trait MenuAdmin
 {
     public function admin(ItemInterface $menu)
     {
+        /** @var UserInterface $user */
         $user = $this->getUser();
 
         /**
@@ -21,10 +23,13 @@ trait MenuAdmin
             'extras' => ['icon' => self::icon('accounts')]
         ]);
 
-        $menu->addChild('Memoriais', [
-            'route' => 'memorials',
-            'extras' => ['icon' => self::icon('bars')]
-        ]);
+        if($user->isPlatformAdmin() || $user->isPlatformMaster()) {
+
+            $menu->addChild('Memoriais', [
+                'route' => 'memorials',
+                'extras' => ['icon' => self::icon('bars')]
+            ]);
+        }
 
         $menu->addChild('Orçamentos', [
             'uri' => '#',
@@ -36,10 +41,13 @@ trait MenuAdmin
             'extras' => ['icon' => self::icon('th')]
         ]);
 
-        $menu->addChild('Usuários Sices', [
-            'route' => 'user_index',
-            'extras' => ['icon' => self::icon('users')]
-        ]);
+        if($user->isPlatformAdmin() || $user->isPlatformMaster()) {
+
+            $menu->addChild('Usuários Sices', [
+                'route' => 'user_index',
+                'extras' => ['icon' => self::icon('users')]
+            ]);
+        }
 
         if(!$isAdmin)
         $this->addComponents($menu);

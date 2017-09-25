@@ -32,12 +32,12 @@ interface AccountInterface
     /**
      * @return bool
      */
-    public function isVerified();
+    public function isStanding();
 
     /**
      * @return bool
      */
-    public function isConfirmed();
+    public function isAproved();
 
     /**
      * @return bool
@@ -72,16 +72,16 @@ interface AccountInterface
     public function setMaxMember($maxMember);
 
     /**
-     * @param BusinessInterface $member
-     * @return BusinessInterface
+     * @param MemberInterface $member
+     * @return AccountInterface
      */
-    public function addMember(BusinessInterface $member);
+    public function addMember(MemberInterface $member);
 
     /**
-     * @param BusinessInterface $member
-     * @return BusinessInterface
+     * @param MemberInterface $member
+     * @return AccountInterface
      */
-    public function removeMember(BusinessInterface $member);
+    public function removeMember(MemberInterface $member);
 
     /**
      * @return \Doctrine\Common\Collections\ArrayCollection
@@ -183,4 +183,17 @@ interface AccountInterface
      * @return BusinessInterface
      */
     public function setAttribute($key, $value);
+
+    /**
+     * Agents are references between platform users and integrating users (of accounts)
+     *
+     * @param MemberInterface $agent
+     * @return AccountInterface
+     */
+    public function setAgent(MemberInterface $agent);
+
+    /**
+     * @return MemberInterface|null
+     */
+    public function getAgent();
 }
