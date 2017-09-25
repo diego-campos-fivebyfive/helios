@@ -31,7 +31,14 @@
 
                                     {{ form_start(form) }}
 
-                                    <div class="form-group col-lg-12">
+                                    <div class="col-lg-4">
+                                        <div class="form-group col-md-12">
+                                            {{ form_widget(form.user.enabled) }} &nbsp;
+                                            {{ form_label(form.user.enabled, 'Ativo') }}<br/>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
                                         <div class="form-group col-md-4">
                                             {{ form_label(form.firstname, 'Nome') }}
                                             {{ form_widget(form.firstname, {'attr':{'class':'form-control', 'data-placeholder':'Nome de usuário'}}) }}
@@ -42,10 +49,13 @@
                                             {{ form_widget(form.email, {'attr':{'class':'form-control', 'data-placeholder':'Email'}})}}
                                         </div>
 
+                                        {% if attribute(form.user, 'roles') is defined %}
                                         <div class="form-group col-lg-4">
-                                            {{ form_label(form.user.roles, 'Nível de usuário') }}
-                                            {{ form_widget(form.user.roles) }}
+                                            {{ form_label(form.user.roles, 'Nível de Usuário') }}
+                                                {{ form_widget(form.user.roles, {attr:{class:'form-control'}}) }}
                                         </div>
+                                        {% endif %}
+
                                     </div>
                                     <div class="form-group col-lg-12">
                                         {% if attribute(form.user, 'plainPassword') is defined %}
@@ -54,11 +64,6 @@
                                                 {{ form_widget(form.user.plainPassword, {'attr':{'class':'form-control', 'data-placeholder':'Senha de acesso'}}) }}
                                             </div>
                                         {% endif %}
-
-                                        <div class="form-group col-lg-4">
-                                            {{ form_label(form.user.enabled, 'Ativo') }}<br/>
-                                            {{ form_widget(form.user.enabled) }}
-                                        </div>
                                     </div>
                                     <div class="hidden">
                                         {{ form_widget(form.user.email) }}
@@ -102,13 +107,8 @@
             $('#member_user_email').val($(this).val());
         });
 
-        var checkboxes = $(' #member_user_roles input[type="checkbox"] ');
-        checkboxes.on('change', function() {
-            var el = this;
-            checkboxes.each(function() {
-                if (this != el) this.checked = false;
-            });
-        });
+        $('#member_user_roles').removeAttr('multiple');
+
     </script>
     {% if errors|length %}
         <script>
