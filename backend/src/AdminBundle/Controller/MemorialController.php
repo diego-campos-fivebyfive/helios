@@ -106,11 +106,10 @@ class MemorialController extends AdminController
      */
     public function cloneAction(Memorial $memorial)
     {
-        $cloner = new MemorialCloner();
+        /** @var MemorialCloner $cloner */
+        $cloner = $this->get('memorial_cloner');
 
         $cloned = $cloner->execute($memorial);
-
-        $this->manager('memorial')->save($cloned);
 
         return $this->json([
             'memorial' => $cloned->toArray()
