@@ -13,6 +13,30 @@
             padding: 0;
             list-style: none;
         }
+
+        .nav > li {
+            position: relative;
+            display: block;
+            border-radius: 10px;
+        }
+
+        .nav > li.active {
+            border-left: none;
+            background: #293846;
+        }
+
+        .tab-content > ul.pager {
+            width: 400px;
+        }
+
+        .tab-content > ul.pager li > a, .tab-content > ul.pager li > span {
+            display: inline-block;
+            padding: 5px 14px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 2px;
+        }
+
     </style>
 
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -23,44 +47,53 @@
                     <h5>Orçamentos</h5>
                 </div>
                 <div class="ibox-content">
-                    <div id="wizard">
-                        <h1>Gerador</h1>
-                        <div class="step-content">
-                            <div class="panel panel-info">
-                                <div class="panel-heading" id="info_power">
-                                    Gerador
-                                </div>
-                                <div class="panel-body">
-
-                                    <div id="generator_form" class="col-md-12 flow-h">
-                                    </div>
-
-                                    <div id="generator_components" class="col-md-12 flow-h">
-                                    </div>
-
+                    <div id="rootwizard">
+                        <div class="navbar">
+                            <div class="navbar-inner">
+                                <div class="container">
+                                    <ul>
+                                        <li><a href="#tab1" data-toggle="tab">Gerador</a></li>
+                                        <li><a href="#tab2" data-toggle="tab">Orçamento Atual</a></li>
+                                        <li><a href="#tab3" data-toggle="tab">Lista de Sistemas</a></li>
+                                    </ul>
                                 </div>
                             </div>
-
-                            <div id="generator_config">
-                            </div>
                         </div>
+                        <div class="tab-content">
+                            <div class="tab-pane" id="tab1">
+                                <div class="panel panel-info">
+                                    <div class="panel-heading" id="info_power">
+                                        Gerador
+                                    </div>
+                                    <div class="panel-body">
 
-                        <h1>Orçamento Atual</h1>
-                        <div class="step-content">
+                                        <div id="generator_form" class="col-md-12 flow-h">
+                                        </div>
 
-                            <div id="generator_orders" class="col-md-12 flow-h">
+                                        <div id="generator_components" class="col-md-12 flow-h">
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div id="generator_config">
+                                </div>
                             </div>
-
-                        </div>
-
-                        <h1>Sistemas</h1>
-                        <div class="step-content">
-                            <div class="text-center m-t-md">
-                                <h2>This is step 3</h2>
-                                <p>
-                                    This is last content.
-                                </p>
+                            <div class="tab-pane" id="tab2">
+                                <div id="generator_orders" class="col-md-12 flow-h">
+                                </div>
                             </div>
+                            <div class="tab-pane" id="tab3">
+                                <div class="col-md 12">
+
+                                </div>
+                            </div>
+                            <ul class="pager wizard">
+                                <li class="previous"><a href="javascript:;">voltar</a></li>
+                                <li class="next"><a href="javascript:;" id="add_project_to_order" class="btn btn-primary pull-right previous">
+                                        Adicionar ao orçamento atual <i class="fa fa-arrow-right"></i>
+                                    </a></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -84,6 +117,7 @@
     {% include view('helper.request') %}
     {% include view('helper.plugins_js') %}
     {% include view('helper.numbers') %}
+    {% include view('helper.wizard') %}
 
     <script>
 
@@ -168,35 +202,53 @@
 
         GeneratorHandler.init();
 
-        $(document).ready(function(){
-            $("#wizard").steps({
+        $('#add_project_to_order').on('click', function () {
+            var id = GeneratorHandler.getProject().id;
+            if (id) {
+                swal({
+                    title: 'Confirma a geração do orçamento?',
+                    text: 'Após este processo o projeto atual será removido!',
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: '{{ 'Confirmar'|trans }}',
+                    cancelButtonText: '{{ 'Cancelar'|trans }}',
+                    closeOnConfirm: false
+                }, function () {
 
-                autoFocus: false,
-                enableAllSteps: false,
-                enableKeyNavigation: true,
-                enablePagination: true,
-                suppressPaginationOnFocus: true,
-                enableContentCache: true,
-                enableCancelButton: false,
-                enableFinishButton: false,
-                preloadContent: true,
-                showFinishButtonAlways: false,
-                forceMoveForward: false,
-                saveState: false,
-                startIndex: 0,
+                    sweetAlert({
+                        title: "Gerando orçamento...",
+                        text: "Aguarde!",
+                        type: "info",
+                        showConfirmButton: false
+                    });
 
-                labels: {
-                    cancel: "Cancel",
-                    current: "current step:",
-                    pagination: "Pagination",
-                    finish: "Finish",
-                    next: "Avançar",
-                    previous: "Anterior",
-                    loading: "Loading ..."
-                }
-            });
+                    Request.send({
+                        url: '{{ path('generator_orders_create',{id:'_id_'}) }}'.replace(/_id_/g, id),
+                        method: 'post',
+                        callback: function (xhr) {
+                            ShippingManager.calculate();
+                            GeneratorHandler.onSaveOrder();
+                            GeneratorHandler.resetGenerator();
+                            swal.close();
+                        }
+                    });
+                });
+            }
         });
 
+        $(document).ready(function() {
+            $('#rootwizard').bootstrapWizard({onTabShow: function(tab, navigation, index) {
+                var $total = navigation.find('li').length;
+                var $current = index+1;
+                var $percent = ($current/$total) * 100;
+                $('#rootwizard').find('.bar').css({width:$percent+'%'});
+            }});
+            $('#rootwizard .finish').click(function() {
+                alert('Finished!, Starting over!');
+                $('#rootwizard').find("a[href*='tab1']").trigger('click');
+            });
+        });
 
 </script>
 
