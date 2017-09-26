@@ -22,10 +22,12 @@ class AccountType extends AbstractType
     {
         /** @var AccountInterface $account */
         $account  = $options['data'];
+        $member = $options['member'];
 
-        $members = $options['agents'];
+        $members = $options['agents']->toArray();
 
-        $agent = $account->getAgent()->isPlatformAdmin();
+        $isAdmin =  $member->isPlatformAdmin();
+
         $accountId = $account->getId();
         $levels = Memorial::getDefaultLevels();
         $status = Customer::getStatusList();
@@ -51,7 +53,7 @@ class AccountType extends AbstractType
             ]);
 
 
-        if ($agent) {
+        if ($isAdmin) {
             $builder->add('agent', EntityType::class,[
                 'choices' => $members,
                 'class' => 'AppBundle:Customer'
@@ -59,6 +61,7 @@ class AccountType extends AbstractType
         } else {
             $builder->remove('agent');
         }
+
 
         if (!$accountId) {
 
@@ -89,7 +92,8 @@ class AccountType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => Customer::class,
-            'agents' => null
+            'agents' => null,
+            'member' => null
         ));
     }
 

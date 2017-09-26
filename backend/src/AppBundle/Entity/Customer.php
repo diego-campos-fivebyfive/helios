@@ -777,9 +777,16 @@ class Customer extends AbstractCustomer
      */
     public function getOwner()
     {
-        return $this->members->filter(function (BusinessInterface $member) {
+        $owner = $this->members->filter(function (BusinessInterface $member) {
             return $member->isMasterOwner();
         })->first();
+
+        if (!$owner) {
+            $owners = $this->getOwners();
+            $owner = $owners[0];
+        }
+
+        return $owner;
     }
 
     /**

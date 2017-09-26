@@ -138,9 +138,18 @@ class UsersController extends AbstractController
             if($email != $data->getEmail() && !$helper->emailCanBeUsed($data->getEmail())) {
                 $form->addError(new FormError('Este email não pode ser usado'));
             } else {
-                $member->getUser()->addRole(UserInterface::ROLE_PLATFORM_COMMERCIAL);
 
-                $memberManager->save($member);
+                if($member->getUser()->isEnabled()){
+                    $member->restore();
+
+                    $member->getUser()->addRole(UserInterface::ROLE_PLATFORM_COMMERCIAL);
+
+                    $memberManager->save($member);
+
+                }else{
+
+                    $memberManager->delete($member);
+                }
 
                 return $this->redirectToRoute('user_index');
             }

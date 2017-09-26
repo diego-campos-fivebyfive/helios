@@ -113,7 +113,8 @@ class AccountController extends AdminController
 
         $form = $this->createForm(AccountType::class, $account, array(
             'method' => 'post',
-            'agents' => $agents
+            'agents' => $agents,
+            'member' => $this->member()
         ));
         $form->handleRequest($request);
 
@@ -187,17 +188,19 @@ class AccountController extends AdminController
 
         $email = $account->getEmail();
 
-        if ($this->member()->isPlatformCommercial()) {
-            $account->setAgent($this->member());
-        }
-
         $form = $this->createForm(AccountType::class, $account, array(
             'method' => 'post',
-            'agents' => $agents
+            'agents' => $agents,
+            'member' => $this->member()
         ));
+
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
+
+            if ($this->member()->isPlatformCommercial() && !$account->getAgent()) {
+                $account->setAgent($this->member());
+            }
 
             $helper = $this->getRegisterHelper();
 
@@ -210,6 +213,7 @@ class AccountController extends AdminController
                 $manager->save($account);
 
                 $this->setNotice("Conta atualizada com sucesso !");
+
                 return $this->redirectToRoute('account_index');
             }
         }
