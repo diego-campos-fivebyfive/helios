@@ -777,9 +777,16 @@ class Customer extends AbstractCustomer
      */
     public function getOwner()
     {
-        return $this->members->filter(function (BusinessInterface $member) {
+        $owner = $this->members->filter(function (BusinessInterface $member) {
             return $member->isMasterOwner();
         })->first();
+
+        if (!$owner) {
+            $owners = $this->getOwners();
+            $owner = $owners[0];
+        }
+
+        return $owner;
     }
 
     /**
@@ -904,7 +911,7 @@ class Customer extends AbstractCustomer
         $this->context = $context;
 
         if($this->isAccount()){
-            $this->maxMember = 1;
+            $this->maxMember = self::MAX_MEMBERS;
         }
 
         return $this;

@@ -29,24 +29,19 @@
                                 <tbody>
 
                                 {% for member in members %}
-                                    {% set is_admin = member.isPlatformAdmin %}
+
+                                    {% set label = member.isPlatformMaster ? 'success' : (member.isPlatformAdmin ? 'info' : 'default') %}
 
                                     <tr>
                                         <td> {{ member.firstname }} </td>
                                         <td><i class="fa fa-envelope"></i>&nbsp;  {{ member.email }} </td>
-                                        <td class="text-center" data-value="{{ member.isOwner ? 'a' : 'z' }}">
-                                            {% if is_admin %}
-                                                <div class="label label-info" style="width: 100%;">
-                                                    Administrator
-                                                </div>
-                                            {% else %}
-                                                <div class="label label-default" style="width: 100%;">
-                                                    Comercial
-                                                </div>
-                                            {% endif %}
+                                        <td class="text-center">
+                                            <span class="label label-{{ label }}" style="width: 100% !important; display: inline-block;">
+                                                {{ member.userType }}
+                                            </span>
                                         </td>
                                         <td class="text-center">
-                                            <div class="label label-{% if member.user.enabled %}info{% else %}danger{% endif %}" style="width: 100%;">
+                                            <div class="label label-{% if member.user.enabled %}info{% else %}danger{% endif %}">
                                                 {% if member.user.enabled %}Ativo{% else %}Inativo{% endif %}
                                             </div>
                                         </td>

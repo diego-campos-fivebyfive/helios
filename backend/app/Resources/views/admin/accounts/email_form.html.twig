@@ -1,4 +1,4 @@
-{{ form_start(form, {attr:{id: 'email_member', 'data-action': path('email_user_update', { 'id': member.id })}}) }}
+{{ form_start(form, {attr:{id: 'email_member', 'data-action': path('email_user_update', { 'id': member.id }), class: 'animated fadeInRight'}}) }}
 
 <div class="form-group col-lg-5">
     {{ form_widget(form.email, {'attr':{'class':'form-control', 'data-placeholder':'Email'}})}}

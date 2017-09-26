@@ -2,9 +2,12 @@
 
 namespace AdminBundle\Form;
 
+use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\Customer;
+use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Util\Validator\Constraints\ContainsCnpj;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -17,7 +20,13 @@ class AccountType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        /** @var AccountInterface $account */
         $account  = $options['data'];
+        $member = $options['member'];
+
+        $members = $options['agents']->toArray();
+
+        $isAdmin =  $member->isPlatformAdmin() || $member->isPlatformMaster();
 
         $accountId = $account->getId();
         $levels = Memorial::getDefaultLevels();
@@ -42,6 +51,17 @@ class AccountType extends AbstractType
         $builder->add('level', ChoiceType::class, [
                 'choices' => $levels
             ]);
+
+
+        if ($isAdmin) {
+            $builder->add('agent', EntityType::class,[
+                'choices' => $members,
+                'class' => 'AppBundle:Customer'
+            ]);
+        } else {
+            $builder->remove('agent');
+        }
+
 
         if (!$accountId) {
 
@@ -71,7 +91,9 @@ class AccountType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => Customer::class
+            'data_class' => Customer::class,
+            'agents' => null,
+            'member' => null
         ));
     }
 
