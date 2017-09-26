@@ -239,3 +239,7 @@ services:
     range_normalizer:
         class: AppBundle\Service\Pricing\RangeNormalizer
         arguments: ['@range_manager']
+
+    memorial_cloner:
+        class: AppBundle\Service\Pricing\MemorialCloner
+        arguments: ['@memorial_manager']
