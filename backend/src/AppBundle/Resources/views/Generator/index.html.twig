@@ -48,6 +48,9 @@
                         <h1>Orçamento Atual</h1>
                         <div class="step-content">
 
+                            <div id="generator_orders" class="col-md-12 flow-h">
+                            </div>
+
                         </div>
 
                         <h1>Sistemas</h1>
@@ -166,8 +169,35 @@
         GeneratorHandler.init();
 
         $(document).ready(function(){
-            $("#wizard").steps();
+            $("#wizard").steps({
+
+                autoFocus: false,
+                enableAllSteps: false,
+                enableKeyNavigation: true,
+                enablePagination: true,
+                suppressPaginationOnFocus: true,
+                enableContentCache: true,
+                enableCancelButton: false,
+                enableFinishButton: false,
+                preloadContent: true,
+                showFinishButtonAlways: false,
+                forceMoveForward: false,
+                saveState: false,
+                startIndex: 0,
+
+                labels: {
+                    cancel: "Cancel",
+                    current: "current step:",
+                    pagination: "Pagination",
+                    finish: "Finish",
+                    next: "Avançar",
+                    previous: "Anterior",
+                    loading: "Loading ..."
+                }
+            });
         });
+
+
 </script>
 
 {% endblock %}
