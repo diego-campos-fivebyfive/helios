@@ -107,7 +107,8 @@ class AccountController extends AdminController
 
         $form = $this->createForm(AccountType::class, $account, array(
             'method' => 'post',
-            'agents' => $agents
+            'agents' => $agents,
+            'member' => $this->member()
         ));
         $form->handleRequest($request);
 
@@ -183,7 +184,8 @@ class AccountController extends AdminController
 
         $form = $this->createForm(AccountType::class, $account, array(
             'method' => 'post',
-            'agents' => $agents
+            'agents' => $agents,
+            'member' => $this->member()
         ));
 
         $form->handleRequest($request);

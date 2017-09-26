@@ -22,14 +22,11 @@ class AccountType extends AbstractType
     {
         /** @var AccountInterface $account */
         $account  = $options['data'];
+        $member = $options['member'];
 
         $members = $options['agents']->toArray();
 
-        $isAdmin = false;
-
-        if (null != $agent = $account->getAgent()) {
-            $isAdmin = $agent->isPlatformAdmin();
-        }
+        $isAdmin =  $member->isPlatformAdmin();
 
         $accountId = $account->getId();
         $levels = Memorial::getDefaultLevels();
@@ -95,7 +92,8 @@ class AccountType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => Customer::class,
-            'agents' => null
+            'agents' => null,
+            'member' => null
         ));
     }
 
