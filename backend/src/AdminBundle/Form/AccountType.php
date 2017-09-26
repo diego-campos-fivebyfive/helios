@@ -26,7 +26,7 @@ class AccountType extends AbstractType
 
         $members = $options['agents']->toArray();
 
-        $isAdmin =  $member->isPlatformAdmin();
+        $isAdmin =  $member->isPlatformAdmin() || $member->isPlatformMaster();
 
         $accountId = $account->getId();
         $levels = Memorial::getDefaultLevels();
