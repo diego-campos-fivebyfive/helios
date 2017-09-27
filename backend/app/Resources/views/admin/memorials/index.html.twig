@@ -22,9 +22,9 @@
                                         <thead>
                                         <tr>
                                             <th class="text-center"> Nome</th>
-                                            <th class="text-center col-md-1"> <i class="fa fa-calendar"></i> Criação </th>
-                                            <th class="text-center col-md-1"> <i class="fa fa-calendar"></i> Publicação </th>
-                                            <th class="text-center col-md-1"> <i class="fa fa-calendar"></i> Expiração </th>
+                                            <th class="text-center col-md-2"> <i class="fa fa-calendar"></i> Criação </th>
+                                            <th class="text-center col-md-2"> <i class="fa fa-calendar"></i> Publicação </th>
+                                            <th class="text-center col-md-2"> <i class="fa fa-calendar"></i> Expiração </th>
                                             <th class="text-center col-md-1"> Status</th>
                                             <th class="col-md-2"> &nbsp; </th>
                                         </tr>
@@ -37,7 +37,7 @@
 
                                             <tr>
                                                 <td> {{ memorial.name }} </td>
-                                                <td>
+                                                <td class="text-center">
                                                     {% if memorial.createdAt %}
                                                         {{ memorial.createdAt|date('d/m/Y') }}
                                                     {% endif %}
@@ -217,7 +217,8 @@
                             swal("{{ 'Success'|trans }}!", "Processo executado com sucesso!", "success");
                             window.location.reload();
                         }else{
-                            swal("{{ 'Error'|trans }}!", response.error, "error");
+                            var message = response.hasOwnProperty('error') ? response.error : 'Falha ao executar a operação';
+                            swal("{{ 'Error'|trans }}!", message, "error");
                         }
                     },
                     beforeSend: function(){

@@ -22,7 +22,7 @@ class MemorialType extends AbstractType
 
         $builder->add('name');
 
-        if($memorial->getId() && !$memorial->getRanges()->isEmpty() && !$memorial->isPublished()){
+        if($memorial->getId() && !$memorial->getRanges()->isEmpty() && $memorial->isPending()){
             $builder->add('status', ChoiceType::class, [
                 'choices' => $statuses
             ]);

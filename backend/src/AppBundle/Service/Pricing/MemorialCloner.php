@@ -5,10 +5,21 @@ namespace AppBundle\Service\Pricing;
 use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Entity\Pricing\MemorialInterface;
 use AppBundle\Entity\Pricing\Range;
+use AppBundle\Manager\Pricing\MemorialManager;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class MemorialCloner
 {
+    /**
+     * @var MemorialManager
+     */
+    private $manager;
+
+    /**
+     * @var \Symfony\Component\PropertyAccess\PropertyAccessor
+     */
+    private $accessor;
+
     /**
      * @var array
      */
@@ -24,16 +35,18 @@ class MemorialCloner
     ];
 
     /**
-     * @var \Symfony\Component\PropertyAccess\PropertyAccessor
+     * Adjust memory limit
+     * @var string
      */
-    private $accessor;
+    private $memory = '512M';
 
     /**
      * MemorialCloner constructor.
      */
-    function __construct()
+    function __construct(MemorialManager $manager)
     {
         $this->accessor = PropertyAccess::createPropertyAccessor();
+        $this->manager = $manager;
     }
 
     /**
@@ -42,6 +55,8 @@ class MemorialCloner
      */
     public function execute(MemorialInterface $source)
     {
+        ini_set('memory_limit', $this->memory);
+
         $memorial = new Memorial();
 
         $memorial
@@ -61,8 +76,10 @@ class MemorialCloner
                 $this->accessor->setValue($range, $property, $value);
             }
 
-            $memorial->addRange($range);
+            $range->setMemorial($memorial);
         }
+
+        $this->manager->save($memorial);
 
         return $memorial;
     }

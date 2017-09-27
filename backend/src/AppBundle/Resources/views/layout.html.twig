@@ -16,6 +16,7 @@
         'public/assets/font-awesome/css/font-awesome.css'
         'assets/jquery-ui/jquery-ui.min.css'
         'assets/toastr/toastr.min.css'
+        'assets/steps/jquery.steps.css'
         'assets/ladda/ladda-themeless.min.css'
         'assets/sweetalert/sweetalert.css'
         'assets/footable/footable.core.css'
@@ -111,7 +112,7 @@
 <div id="wrapper">
 
     {% set user = app.user %}
-    {% set companyName = app.user.info.account.name ?: null %}
+    {% set companyName = app.user.info.account.firstname ?: null %}
 
     <nav class="navbar-default navbar-static-side" role="navigation">
         <div class="sidebar-collapse">
@@ -126,7 +127,7 @@
                         <span class="clear">
 
                             <span class="block m-t-xs">
-                                <strong class="font-bold"  style="color: #ffffff !important;"> {{ user.name }} </strong>
+                                <strong class="font-bold"  style="color: #ffffff !important;"> {{ user.info.firstname }} </strong>
                             </span>
 
                             {% if companyName %}
@@ -169,6 +170,7 @@
     'assets/bootstrap.min.js'
     'assets/metisMenu/jquery.metisMenu.js'
     'assets/slimscroll/jquery.slimscroll.min.js'
+    'assets/steps/jquery.steps.min.js'
     'assets/inspinia.js'
     'assets/pace/pace.min.js'
     'assets/jquery-ui/jquery-ui.min.js'

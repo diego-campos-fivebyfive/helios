@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Component\PricingManager;
 use AppBundle\Entity\Customer;
+use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Model\KitPricing;
@@ -195,17 +196,6 @@ class DebugController extends AbstractController
         }
 
         die;
-    }
-
-    /**
-     * @Route("/mailer", name="debug_mailer")
-     */
-    public function emailAction(Request $request)
-    {
-        /** @var Mailer $mailer */
-        $mailer = $this->get('app_mailer');
-
-        return new Response($mailer->sendAccountConfirmationMessage($this->account()));
     }
 
     /**

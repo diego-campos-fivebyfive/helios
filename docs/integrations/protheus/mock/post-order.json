@@ -1,0 +1,50 @@
+{
+	"cliente":{
+		"IdIntegrador": 35,
+		"RazaoSocial": "",
+		"NomeFantasia": "nometeste ",
+		"Cnpj": "06825672000112",
+		"InscricaoEstadual": "ISENTO",
+		"Bairro": "BAUREIRI",
+		"Cep": "07700000",
+		"Cidade": "SP",
+		"UF": "SP",
+		"Telefone": "98167-1427",
+		"Email": "mauro@inovadorsolar.com",
+		"Complemento": "ASDASD",
+		"Estado": "SP",
+		"Logradouro": "AV TESTE, 175",
+		"Numero": "241",
+		"CodigoMunicipio": "27408",
+		"CodigoPais":"105",
+		"TipoDePessoa": "J",
+		"ddd":""
+	},
+	"Dado": {
+		"IdOrcamentoVenda": 12,
+		"CodigoVendedor": "01",
+		"CodigoCondicao": "051",
+		"CalculaFrete": true,
+		"CalculaSeguro": true,
+		"Deletado": false,
+		"itens": [
+			{
+				"CodigoProduto": "0",
+				"Deletado": false,
+				"DescricaoSistema": "S0001001170KCFMSICESOLAR",
+				"Quantidade": 1,
+				"ValorUnitario": 1420,
+				"FlagSistema": false,
+				"subItens": [
+					{
+						"CodigoProduto": "CS7J-280M-MONO-PI",
+						"Deletado": true,
+						"Descricao": "CANADIAN SOLAR 60CELS 270W POLY-SI",
+						"Quantidade": 1,
+						"ValorUnitario": 1420
+					}
+				]
+			}
+		]
+	}
+}

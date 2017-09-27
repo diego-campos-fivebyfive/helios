@@ -294,6 +294,7 @@ class MemberController extends AbstractController
         $errors = $form->getErrors(true);
 
         if(!$errors->count() && $request->isMethod('post')){
+
             $this->setNotice('Dados atualizados com sucesso!');
 
             $event = $this->createWoopraEvent('property update');

@@ -5,10 +5,12 @@ namespace AdminBundle\Controller;
 use AdminBundle\Form\AccountType;
 use AdminBundle\Form\EmailMemberType;
 use AdminBundle\Form\MemberType;
+use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\UserInterface;
+use Symfony\Component\Form\FormError;
 use Sonata\MediaBundle\Model\MediaInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,6 +46,16 @@ class AccountController extends AdminController
                 'context' => $this->getAccountContext()
             ]);
 
+        if(-1 != $bond = $request->get('bond', -1)){
+            $qb->andWhere('a.agent = :bond');
+            $qb->setParameter('bond', $bond);
+        }
+
+        if(-1 != $status = $request->get('status', -1)){
+            $qb->andWhere('a.status = :status');
+            $qb->setParameter('status', $status);
+        }
+
         $this->overrideGetFilters();
 
         $pagination = $paginator->paginate(
@@ -51,9 +63,24 @@ class AccountController extends AdminController
             $request->query->getInt('page', 1), 10
         );
 
+        /** @var MemberInterface $member */
+        $members = $manager->findBy([
+            'context' => MemberInterface::CONTEXT,
+            'account' => $this->account()
+        ]);
+        $membersSices = [];
+        foreach ($members as $i => $member) {
+            if($member->getUser()->isEnabled()) {
+                $membersSices[$i] = $member;
+            }
+        }
+
         return $this->render('admin/accounts/index.html.twig', array(
-            'pagination' => $pagination,
-            'accounts' => $qb
+            'current_status' => $status,
+            'allStatus' =>Customer::getStatusList(),
+            'current_bond' => $bond,
+            'members' => $membersSices,
+            'pagination' => $pagination
         ));
     }
 
@@ -63,6 +90,8 @@ class AccountController extends AdminController
      */
     public function createAction(Request $request)
     {
+        $agents = $this->account()->getMembers();
+
         /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
         $userManager = $this->get('fos_user.user_manager');
         $accountManager = $this->manager('customer');
@@ -72,13 +101,21 @@ class AccountController extends AdminController
         $account = $accountManager->create();
         $account->setContext(Customer::CONTEXT_ACCOUNT);
 
+        if ($this->member()->isPlatformCommercial()) {
+            $account->setAgent($this->member());
+        }
+
         /** @var MemberInterface $member */
         $member = $memberManager->create();
         $member->setContext(Customer::CONTEXT_MEMBER);
 
         $account->addMember($member);
 
-        $form = $this->createForm(AccountType::class, $account);
+        $form = $this->createForm(AccountType::class, $account, array(
+            'method' => 'post',
+            'agents' => $agents,
+            'member' => $this->member()
+        ));
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()) {
@@ -145,14 +182,25 @@ class AccountController extends AdminController
      */
     public function updateAction(Request $request, Customer $account)
     {
+        $agents = $this->account()->getMembers();
+
         $manager = $this->manager('customer');
 
         $email = $account->getEmail();
 
-        $form = $this->createForm(AccountType::class, $account);
+        $form = $this->createForm(AccountType::class, $account, array(
+            'method' => 'post',
+            'agents' => $agents,
+            'member' => $this->member()
+        ));
+
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
+
+            if ($this->member()->isPlatformCommercial() && !$account->getAgent()) {
+                $account->setAgent($this->member());
+            }
 
             $helper = $this->getRegisterHelper();
 
@@ -165,6 +213,7 @@ class AccountController extends AdminController
                 $manager->save($account);
 
                 $this->setNotice("Conta atualizada com sucesso !");
+
                 return $this->redirectToRoute('account_index');
             }
         }

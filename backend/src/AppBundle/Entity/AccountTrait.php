@@ -167,7 +167,7 @@ trait AccountTrait
      */
     public function isAproved()
     {
-        return $this->status == self::APROVED;
+        return self::APROVED == $this->status;
     }
 
     /**
