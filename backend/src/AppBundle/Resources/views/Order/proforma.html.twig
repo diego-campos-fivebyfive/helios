@@ -6,8 +6,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
 
     <title>Proforma</title>
 
@@ -111,21 +109,16 @@
         width: 35mm;
     }
 
-
-
 </style>
 
 </head>
 
 <body>
 
-
-
 <div class="container">
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-            {#for dos sistemas#}
             {% set page = order.childrens|length %}
             {% for item in order.childrens %}
                 <div class="p-leaf leaf-style">
@@ -281,7 +274,6 @@
                 <div style="width: 100%; height: 5mm;"></div>
             {% endfor %}
 
-            {#DADOS BANCARIOS#}
             <div class="p-leaf leaf-style">
                 <div class="p-header">
                     <img width="250"  alt="image" src="{{ asset('assets/images/proformaHeader.png') }}">
@@ -353,7 +345,6 @@
 
             <div style="width: 100%; height: 5mm;"></div>
 
-            {#TERMO DE ACEITAÇÂO#}
             <div class="p-leaf leaf-style">
                 <div class="p-header">
                     <img width="250"  alt="image" src="{{ asset('assets/images/proformaHeader.png') }}">
@@ -543,7 +534,6 @@
 
             <div style="width: 100%; height: 5mm;"></div>
 
-            {#SEGURO#}
             <div class="p-leaf leaf-style">
                 <div class="p-header">
                     <img width="250"  alt="image" src="{{ asset('assets/images/proformaHeader.png') }}">
