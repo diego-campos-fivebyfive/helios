@@ -49,7 +49,7 @@ class OrderController extends AbstractController
     /**
      * @Route("/proforma/{id}", name="index_proforma")
      */
-    public function proformaAction(Request $request, Order $order)
+    public function proformaAction(Order $order)
     {
         return $this->render('Order.proforma', array(
             'order' => $order
