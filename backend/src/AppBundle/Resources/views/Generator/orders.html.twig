@@ -37,7 +37,7 @@
             <td> {{ order.description }} </td>
             <td width="10%"> {{ order.createdAt|date('d/m/Y') }} </td>
             <td width="15%"> {{ order.subTotal|currency }} </td>
-            <td> {{ order.insurance|currency }} </td>
+            <td id="order_insurance"> {{ order.insurance|currency }} </td>
             <td width="20%">
                 <div class="btn-group btn-group-sm btn-group-justified">
                     <a data-url="{{ path('generator_orders_update',{id:order.id}) }}"
@@ -87,6 +87,12 @@
             }
         })
     });*/
+
+    var InsuranceManager = {
+        renderInsurance: function (value) {
+            $('#order_insurance').html(numeral(value).format('$0,0.00'));
+        }
+    };
 
     data_delete.on('click', function () {
 
