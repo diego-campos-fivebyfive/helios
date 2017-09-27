@@ -12,8 +12,9 @@
                     <table id="extras_table" class="table table-condensed table-bordered col-md-12">
                         <thead>
                             <tr>
-                                <th class="col-md-4 text-center">Integrador</th>
+                                <th class="text-center">Integrador</th>
                                 <th class="text-center">Sistemas</th>
+                                <th class="col-md-1 text-center">Status</th>
                                 <th class="col-md-2 text-center">Valor total</th>
                                 <th class="col-md-2 text-center">Ação</th>
                             </tr>
@@ -27,7 +28,20 @@
                                     <b>{{ element.power }}</b>,
                                     {% endfor %} kWp
                                 </td>
-                                <td class="col-md-2 text-right">{{ item.total|currency }}</td>
+                                <td class="text-center">
+                                    {% if item.status == 0 %}
+                                        <span class="label label-defaut">Construção</span>
+                                    {% elseif item.status == 1 %}
+                                        <span class="label label-warning">Pendente</span>
+                                    {% elseif item.status == 2 %}
+                                        <span class="label label-primary">Validado</span>
+                                    {% elseif item.status == 3 %}
+                                        <span class="label label-success">Aprovado</span>
+                                    {% elseif item.status == 4 %}
+                                        <span class="label label-danger">Rejeitado</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-right">{{ item.total|currency }}</td>
                                 <td>
 
                                 </td>
