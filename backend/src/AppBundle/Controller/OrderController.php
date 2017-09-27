@@ -47,6 +47,18 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/proforma/{id}", name="index_proforma")
+     */
+    public function proformaAction(Request $request, Order $order)
+    {
+        //dump($order->getElements());die;
+        return $this->render('Order.proforma', array(
+            'order' => $order,
+            //'element' => $order->getElements()
+        ));
+    }
+
+    /**
      * @Route("/{id}", name="order_show")
      * @Method("get")
      */
