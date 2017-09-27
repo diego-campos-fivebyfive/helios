@@ -13,6 +13,7 @@ PROTHEUS INTEGRATION
     - **Method**: GET
 
     - **Headers**:
+
       - NRANGEINI: Inicial Recno
       - NRANGEFIN: Final Recno
       - NPAGESEEK: Page number (pagination)
@@ -43,7 +44,7 @@ PROTHEUS INTEGRATION
         curl -X GET -H 'Content-Type:application/json' -H 'NRANGEINI:100' -H 'NRANGEFIN:100' -H 'NPAGESEEK:1' http://restprod.sices.eu:1904/rest/tlistprod
         ```
 
-  - 1.3 **Order - POST**: `jsorcisquik`
+  - 1.3 **Order**: `jsorcisquik`
 
     - **Method**: POST
 
@@ -61,4 +62,44 @@ PROTHEUS INTEGRATION
         # not tested yet
         ```
 
+  - 1.4 **Payment**: `tlistcpgt`
 
+    - **Method**: GET
+
+    - **Headers**:
+
+      - NRANGEINI: Inicial Recno
+      - NRANGEFIN: Final Recno
+      - NPAGESEEK: Page number (pagination)
+
+    - **Requests**:
+
+      - Homolog: Error, `The server can't find the requested resource.`
+        ```bash
+        curl -X GET -H 'Content-Type:application/json' -H 'NRANGEINI: 1' -H 'NRANGEFIN:1' -H 'NPAGESEEK: 1' http://rest.sices.eu:1902/rest/tlistcpgt
+        ```
+      - Production: Timeout
+        ```bash
+        curl -X GET -H 'Content-Type:application/json' -H 'NRANGEINI: 1' -H 'NRANGEFIN:1' -H 'NPAGESEEK: 1' http://restprod.sices.eu:1904/rest/tlistcpgt
+        ```
+
+  - 1.5 **Sellers**: `tlistvnd`
+
+    - **Method**: GET
+
+    - **Headers**:
+
+      - NRANGEINI: Inicial Recno
+      - NRANGEFIN: Final Recno
+      - NPAGESEEK: Page number (pagination)
+
+    - **Requests**:
+
+      - Homolog: Error, `The server can't find the requested resource.`
+        ```bash
+        curl -X GET -H 'Content-Type:application/json' -H 'NRANGEINI: 1' -H 'NRANGEFIN:1' -H 'NPAGESEEK: 1' http://rest.sices.eu:1902/rest/tlistvnd
+        ```
+      - Production: Timeout
+        ```bash
+        curl -X GET -H 'Content-Type:application/json' -H 'NRANGEINI: 1' -H 'NRANGEFIN:1' -H 'NPAGESEEK: 1' http://restprod.sices.eu:1904/rest/tlistvnd
+        ```
