@@ -97,7 +97,7 @@ class OrderMailer extends AbstractMailer
      */
     private function createOrderAttachment(OrderInterface $order)
     {
-        // TODO: Change 'proforma.pdf' to $order->getProforma();
+        // TODO: Change 'proforma.pdf' to $order->getFile();
         $filename = 'proforma.pdf';
         $storage = $this->options['storage'];
 
