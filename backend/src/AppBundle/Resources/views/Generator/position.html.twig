@@ -97,10 +97,6 @@
             </div>
         </div>
 
-        {#<a href="javascript:;" id="add_project_to_order" class="btn btn-primary pull-right previous">#}
-            {#Adicionar ao orçamento atual <i class="fa fa-arrow-right"></i>#}
-        {#</a>#}
-
     {% endif %}
 
 <script>
@@ -319,40 +315,5 @@
             }
         });
     });
-
-    {#$('#add_project_to_order').on('click', function () {#}
-        {#var id = GeneratorHandler.getProject().id;#}
-        {#if (id) {#}
-            {#swal({#}
-                {#title: 'Confirma a geração do orçamento?',#}
-                {#text: 'Após este processo o projeto atual será removido!',#}
-                {#type: "warning",#}
-                {#showCancelButton: true,#}
-                {#confirmButtonColor: "#DD6B55",#}
-                {#confirmButtonText: '{{ 'Confirmar'|trans }}',#}
-                {#cancelButtonText: '{{ 'Cancelar'|trans }}',#}
-                {#closeOnConfirm: false#}
-            {#}, function () {#}
-
-                {#sweetAlert({#}
-                    {#title: "Gerando orçamento...",#}
-                    {#text: "Aguarde!",#}
-                    {#type: "info",#}
-                    {#showConfirmButton: false#}
-                {#});#}
-
-                {#Request.send({#}
-                    {#url: '{{ path('generator_orders_create',{id:'_id_'}) }}'.replace(/_id_/g, id),#}
-                    {#method: 'post',#}
-                    {#callback: function (xhr) {#}
-                        {#ShippingManager.calculate();#}
-                        {#GeneratorHandler.onSaveOrder();#}
-                        {#GeneratorHandler.resetGenerator();#}
-                        {#swal.close();#}
-                    {#}#}
-                {#});#}
-            {#});#}
-        {#}#}
-    {#});#}
 
 </script>
