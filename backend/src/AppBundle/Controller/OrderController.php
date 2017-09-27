@@ -51,10 +51,8 @@ class OrderController extends AbstractController
      */
     public function proformaAction(Request $request, Order $order)
     {
-        //dump($order->getElements());die;
         return $this->render('Order.proforma', array(
-            'order' => $order,
-            //'element' => $order->getElements()
+            'order' => $order
         ));
     }
 
