@@ -15,6 +15,12 @@ use Doctrine\ORM\Mapping as ORM;
 
 interface OrderInterface
 {
+    const STATUS_BUILDING = 0;
+    const STATUS_PENDING = 1;
+    const STATUS_VALIDATED = 2;
+    const STATUS_APPROVED = 3;
+    const STATUS_REJECTED = 4;
+
     /**
      * @return int
      */

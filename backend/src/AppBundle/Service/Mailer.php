@@ -1,64 +1,31 @@
 <?php
 
+/*
+ * This file is part of the SicesSolar package.
+ *
+ * (c) SicesSolar <http://sicesbrasil.com.br/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace AppBundle\Service;
 
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\MemberInterface;
 use Fos\UserBundle\Model\UserInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Class Mailer
  * @package AppBundle\Service\Mailing
  */
-class Mailer
+class Mailer extends AbstractMailer
 {
-    const FROM_EMAIL = 'naoresponder@plataformasicessolar.com.br';
-
-    /**
-     * @var \Swift_Mailer
-     */
-    private $mailer;
-
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $router;
-
-    /**
-     * @var EngineInterface
-     */
-    private $templating;
-
     /**
      * @var bool
      */
     public $enableSender = true;
-
-    /**
-     * @var array
-     */
-    private $config = [
-        'host' => 'smtp.mail.eu-west-1.awsapps.com',
-        'port' => 465,
-        'encryption' => 'ssl',
-        'username' => 'naoresponder@plataformasicessolar.com.br',
-        'password' => 'Ze6}Kr6bWVky@z@Qsi'
-    ];
-
-    /**
-     * Mailer constructor.
-     * @param \Swift_Mailer $mailer
-     * @param UrlGeneratorInterface $router
-     * @param EngineInterface $templating
-     */
-    public function __construct(\Swift_Mailer $mailer, UrlGeneratorInterface  $router, EngineInterface $templating)
-    {
-        $this->mailer = $mailer;
-        $this->router = $router;
-        $this->templating = $templating;
-    }
 
     /**
      * @param AccountInterface $register
@@ -145,40 +112,10 @@ class Mailer
      * @param $body
      * @param $fromEmail
      * @param $toEmail
-     */
-    protected function sendEmailMessage($subject, $body, $fromEmail, $toEmail)
-    {
-        return $this->sendTmpEmailMessage($subject, $body, $fromEmail, $toEmail);
-
-        /*if($this->enableSender) {
-
-            $message = \Swift_Message::newInstance()
-                ->setSubject($subject)
-                ->setFrom($fromEmail, 'Plataforma Sices Solar')
-                ->setTo($toEmail)
-                ->setContentType('text/html')
-                ->setBody($body);
-
-            $this->mailer->send($message);
-        }*/
-    }
-
-    /**
-     * @param $subject
-     * @param $body
-     * @param $fromEmail
-     * @param $toEmail
      * @return int
      */
-    private function sendTmpEmailMessage($subject, $body, $fromEmail, $toEmail)
+    private function sendEmailMessage($subject, $body, $fromEmail, $toEmail)
     {
-        $transport = (new \Swift_SmtpTransport($this->config['host'], $this->config['port'], $this->config['encryption']))
-            ->setUsername($this->config['username'])
-            ->setPassword($this->config['password'])
-        ;
-
-        $mailer = new \Swift_Mailer($transport);
-
         $message = (new \Swift_Message($subject))
             ->setFrom($fromEmail, 'Plataforma Sices Solar')
             ->setSubject($subject)
@@ -187,6 +124,6 @@ class Mailer
             ->setContentType('text/html')
         ;
 
-        return $mailer->send($message);
+        return $this->sendMessage($message);
     }
 }
