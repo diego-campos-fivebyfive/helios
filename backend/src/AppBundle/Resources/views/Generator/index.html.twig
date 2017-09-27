@@ -18,13 +18,13 @@
         .navbar-inner .container > ul > li > a {
             position: relative;
             display: block;
-            border-radius: 10px;
+            border-radius: 5px;
         }
 
         .navbar-inner .container > ul > li.active,
         .navbar-inner .container > ul > li.active > a {
             border-left: none;
-            background-color: #1AB394 !important;
+            background-color: #23c6c8 !important;
         }
 
         .tab-content > ul.pager {
@@ -94,8 +94,10 @@
                                 </div>
 
                                 <nav class="pager wizard">
-                                    <a href="javascript:;" class="previous">voltar</a>
-                                    <a href="javascript:;" class="next">próximo</a>
+                                    <li class="previous"><a href="javascript:;" class="btn btn-default">
+                                            <i class="fa fa-arrow-left"></i> voltar</a></li>
+                                    <li class="next"><a href="javascript:;" class="btn btn-primary">
+                                            próximo  <i class="fa fa-arrow-right"></i></a></li>
                                 </nav>
                             </div>
 
@@ -119,28 +121,15 @@
                                     </div>
                                 </div>
 
-                                <nav class="pager wizard">
-                                    <a href="javascript:;" class="previous">voltar</a>
+                                <div class="pager wizard">
+                                    <li class="previous"><a href="javascript:;" class="btn btn-default">
+                                            <i class="fa fa-arrow-left"></i> voltar</a></li>
                                     <button type="button" id="btn_budget" data-url="{{ path('order_budget_create') }}" class="btn btn-warning pull-right">
                                         <i class="fa fa-arrow-right"></i>
                                         Enviar solicitação para SICES
                                     </button>
                                 </nav>
                             </div>
-
-                            {#<div class="pager wizard">
-                                <li class="previous"><a href="javascript:;">voltar</a></li>
-                                {% set generator = attribute(id, 'generator') is defined %}
-
-                                {% if generator is defined %}
-                                    #}{#<a id="add_project_to_order" class="btn btn-primary pull-right">
-                                        Adicionar ao orçamento atual <i class="fa fa-arrow-right"></i>
-                                    </a>#}{#
-                                    <li class="next hide"><a href="javascript:;" id="next">Next</a></li>
-                                {% else %}
-                                    <li class="next"><a href="javascript:;">Next</a></li>
-                                {% endif %}
-                            </div>#}
 
                         </div>
                     </div>
