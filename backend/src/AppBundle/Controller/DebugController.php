@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Component\PricingManager;
 use AppBundle\Entity\Customer;
+use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Model\KitPricing;
@@ -202,8 +203,24 @@ class DebugController extends AbstractController
      */
     public function emailAction(Request $request)
     {
-        /** @var Mailer $mailer */
-        $mailer = $this->get('app_mailer');
+        /** @var \AppBundle\Service\Order\OrderMailer $mailer */
+        $mailer = $this->get('order_mailer');
+
+        $manager = $this->manager('order');
+
+        $children  = $manager->create();
+
+        $order = $manager->create();
+        $order->setStatus(Order::STATUS_VALIDATED);
+
+        $order
+            ->setAccount($this->account())
+            ->addChildren($children)
+        ;
+
+        $mailer->sendOrderMessage($order);
+
+        dump($mailer->getErrors()); die;
 
         return new Response($mailer->sendAccountConfirmationMessage($this->account()));
     }
