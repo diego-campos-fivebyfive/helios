@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @Route("orders")
  * @Breadcrumb("Orçamentos")
  */
-class OrdersController extends AbstractController
+class OrderController extends AbstractController
 {
 
     /**
@@ -42,6 +42,16 @@ class OrdersController extends AbstractController
 
         return $this->render('admin/orders/index.html.twig', array(
             'orders' => $pagination
+        ));
+    }
+
+    /**
+     * @Route("/proforma/{id}", name="index_proforma")
+     */
+    public function proformaAction(Order $order)
+    {
+        return $this->render('admin/orders/proforma.html.twig', array(
+            'order' => $order
         ));
     }
 }
