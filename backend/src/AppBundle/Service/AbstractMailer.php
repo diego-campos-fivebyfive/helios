@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * Class AbstractMailer
  * This class provide a default mechanism for send e-mails
  *
- * @package AppBundle\Service
+ * @author Claudinei Machado <claudinei@kolinalabs.com>
  */
 abstract class AbstractMailer
 {
