@@ -6,44 +6,11 @@
 
 {% block body %}
 
-    <style>
-        #generator_container,
-        #generator_container li{
-            margin: 0;
-            padding: 0;
-            list-style: none;
-        }
-
-        .navbar-inner .container > ul > li,
-        .navbar-inner .container > ul > li > a {
-            position: relative;
-            display: block;
-            border-radius: 5px;
-        }
-
-        .navbar-inner .container > ul > li.active,
-        .navbar-inner .container > ul > li.active > a {
-            border-left: none;
-            background-color: #23c6c8 !important;
-        }
-
-        .tab-content > ul.pager {
-            width: 400px;
-        }
-
-        .tab-content .pager li > a, .tab-content .pager li > span {
-            display: inline-block;
-            padding: 5px 14px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 2px;
-        }
-
-    </style>
+{% include view('helper.style-wizard') %}
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-md-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <h5>Orçamentos</h5>
@@ -52,37 +19,39 @@
                     <div id="rootwizard">
                         <div class="navbar">
                             <div class="navbar-inner">
-                                <div class="container">
+                                <div class="container col-md-12">
                                     <ul>
-                                        <li><a href="#tab1" data-toggle="tab" id="generator">1. Gerador</a></li>
-                                        <li><a href="#tab2" data-toggle="tab" id="order">2. Orçamento Atual</a></li>
-                                        <li><a href="#tab3" data-toggle="tab" id="lists">3. Lista de Sistemas</a></li>
+                                        <li><a href="#tab1" data-toggle="tab">1. Gerador</a></li>
+                                        <li><a href="#tab2" data-toggle="tab">2. Orçamento Atual</a></li>
+                                        <li><a href="#tab3" data-toggle="tab">3. Lista de Sistemas</a></li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                         <div class="tab-content">
                             <div class="tab-pane" id="tab1">
-                                <div class="panel panel-info">
-                                    <div class="panel-heading" id="info_power">
-                                        Gerador
-                                    </div>
-                                    <div class="panel-body">
-
-                                        <div id="generator_form" class="col-md-12 flow-h">
+                                <div class="col-md-12">
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading" id="info_power">
+                                            Gerador
                                         </div>
+                                        <div class="panel-body">
 
-                                        <div id="generator_components" class="col-md-12 flow-h">
+                                            <div id="generator_form" class="col-md-12 flow-h">
+                                            </div>
+
+                                            <div id="generator_components" class="col-md-12 flow-h">
+                                            </div>
+
                                         </div>
-
                                     </div>
-                                </div>
 
-                                <div id="generator_config">
+                                    <div id="generator_config">
+                                    </div>
                                 </div>
 
                                 <nav class="pager wizard">
-                                    <a id="add_project_to_order" class="btn btn-primary pull-right">
+                                    <a id="add_project_to_order" class="btn btn-order pull-right">
                                         Adicionar ao orçamento atual <i class="fa fa-arrow-right"></i>
                                         <li class="next hide" href="javascript:;" id="next">Next</li>
                                     </a>
