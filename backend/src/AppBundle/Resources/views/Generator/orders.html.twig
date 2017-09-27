@@ -1,5 +1,18 @@
 {% set orders = order.childrens %}
 
+<div class="modal inmodal fade" id="e_modal_details" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body" id="edit_order"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">
+                    {{ 'Close'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <table class="table table-bordered table-hover flow-md">
     <thead>
     <tr>
@@ -27,9 +40,13 @@
             <td> {{ order.insurance|currency }} </td>
             <td width="20%">
                 <div class="btn-group btn-group-sm btn-group-justified">
-                    <a href="{{ path('generator_orders_update',{id:order.id}) }}" class="btn btn-success">
+                    <a data-url="{{ path('generator_orders_update',{id:order.id}) }}"
+                       data-toggle="modal"
+                       data-target="#modal_details"
+                       class="btn btn-success">
                         <i class="fa fa-pencil"></i>
                     </a>
+
                     <a data-delete="{{ path('generator_orders_delete',{id:order.id}) }}" class="btn btn-danger">
                         <i class="fa fa-trash"></i>
                     </a>
@@ -52,30 +69,6 @@
         </tr>
     </thead>
 </table>
-
-<div class="panel panel-warning">
-    <div class="panel-heading">
-        <i class="fa fa-list"></i>
-        Frete
-    </div>
-    <div class="panel-body" id="generator_financial_shipping">
-    </div>
-</div>
-
-<div class="panel panel-primary">
-    <div class="panel-heading">
-        Total
-    </div>
-    <div class="panel-body">
-        <div class="col-md-10"><h2>Valor total:</h2></div>
-        <h2 id="order-total">{{ order.total|currency }}</h2>
-    </div>
-</div>
-
-    <button type="button" id="btn_budget" data-url="{{ path('order_budget_create') }}" class="btn btn-warning pull-right">
-        <i class="fa fa-arrow-right"></i>
-        Enviar solicitação para SICES
-    </button>
 
 {#</form>#}
 
@@ -201,6 +194,25 @@
     };
 
     ShippingManager.getElements();
+
+    var edit_order = $('#edit_order');
+    var detail_spinner = edit_order.html();
+    $('[data-target="#modal_details"]').on('click', function(){
+        var url = $(this).data('url');
+        if (url) {
+            $('#e_modal_details').modal('show');
+            edit_order.html(detail_spinner);
+            $.ajax({
+                url: url,
+                method: 'get',
+                success: function (response) {
+                    edit_order.html(response);
+                }
+            });
+        } else {
+            edit_order.html('<h1> Nenhum componente selecionado para visualização </h1>');
+        }
+    });
 
 
 </script>

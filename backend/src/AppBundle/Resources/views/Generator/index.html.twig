@@ -14,22 +14,24 @@
             list-style: none;
         }
 
-        .nav > li {
+        .navbar-inner .container > ul > li,
+        .navbar-inner .container > ul > li > a {
             position: relative;
             display: block;
             border-radius: 10px;
         }
 
-        .nav > li.active {
+        .navbar-inner .container > ul > li.active,
+        .navbar-inner .container > ul > li.active > a {
             border-left: none;
-            background: #293846;
+            background-color: #1AB394 !important;
         }
 
         .tab-content > ul.pager {
             width: 400px;
         }
 
-        .tab-content > ul.pager li > a, .tab-content > ul.pager li > span {
+        .tab-content .pager li > a, .tab-content .pager li > span {
             display: inline-block;
             padding: 5px 14px;
             background-color: #fff;
@@ -52,9 +54,9 @@
                             <div class="navbar-inner">
                                 <div class="container">
                                     <ul>
-                                        <li><a href="#tab1" data-toggle="tab">Gerador</a></li>
-                                        <li><a href="#tab2" data-toggle="tab">Orçamento Atual</a></li>
-                                        <li><a href="#tab3" data-toggle="tab">Lista de Sistemas</a></li>
+                                        <li><a href="#tab1" data-toggle="tab" id="generator">1. Gerador</a></li>
+                                        <li><a href="#tab2" data-toggle="tab" id="order">2. Orçamento Atual</a></li>
+                                        <li><a href="#tab3" data-toggle="tab" id="lists">3. Lista de Sistemas</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -78,34 +80,72 @@
 
                                 <div id="generator_config">
                                 </div>
+
+                                <nav class="pager wizard">
+                                    <a id="add_project_to_order" class="btn btn-primary pull-right">
+                                        Adicionar ao orçamento atual <i class="fa fa-arrow-right"></i>
+                                        <li class="next hide" href="javascript:;" id="next">Next</li>
+                                    </a>
+                                </nav>
                             </div>
+
                             <div class="tab-pane" id="tab2">
                                 <div id="generator_orders" class="col-md-12 flow-h">
                                 </div>
-                            </div>
-                            <div class="tab-pane" id="tab3">
-                                <div class="col-md 12">
 
-                                </div>
+                                <nav class="pager wizard">
+                                    <a href="javascript:;" class="previous">voltar</a>
+                                    <a href="javascript:;" class="next">próximo</a>
+                                </nav>
                             </div>
-                            <ul class="pager wizard">
+
+                            <div class="tab-pane" id="tab3">
+                                <div class="panel panel-warning">
+                                    <div class="panel-heading">
+                                        <i class="fa fa-list"></i>
+                                        Frete
+                                    </div>
+                                    <div class="panel-body" id="generator_financial_shipping">
+                                    </div>
+                                </div>
+
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        Total
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="col-md-10"><h2>Valor total:</h2></div>
+                                        <h2 id="order-total">{{ order.total|currency }}</h2>
+                                    </div>
+                                </div>
+
+                                <nav class="pager wizard">
+                                    <a href="javascript:;" class="previous">voltar</a>
+                                    <button type="button" id="btn_budget" data-url="{{ path('order_budget_create') }}" class="btn btn-warning pull-right">
+                                        <i class="fa fa-arrow-right"></i>
+                                        Enviar solicitação para SICES
+                                    </button>
+                                </nav>
+                            </div>
+
+                            {#<div class="pager wizard">
                                 <li class="previous"><a href="javascript:;">voltar</a></li>
-                                <li class="next"><a href="javascript:;" id="add_project_to_order" class="btn btn-primary pull-right previous">
+                                {% set generator = attribute(id, 'generator') is defined %}
+
+                                {% if generator is defined %}
+                                    #}{#<a id="add_project_to_order" class="btn btn-primary pull-right">
                                         Adicionar ao orçamento atual <i class="fa fa-arrow-right"></i>
-                                    </a></li>
-                            </ul>
+                                    </a>#}{#
+                                    <li class="next hide"><a href="javascript:;" id="next">Next</a></li>
+                                {% else %}
+                                    <li class="next"><a href="javascript:;">Next</a></li>
+                                {% endif %}
+                            </div>#}
+
                         </div>
                     </div>
                 </div>
             </div>
-
-            {#<div id="generator_config">
-            </div>
-
-            <div class="hr-line-dashed col-md-12"></div>
-
-            <div id="generator_orders" class="col-md-12 flow-h">
-            </div>#}
         </div>
     </div>
 </div>
@@ -230,6 +270,7 @@
                             ShippingManager.calculate();
                             GeneratorHandler.onSaveOrder();
                             GeneratorHandler.resetGenerator();
+                            $('#next').trigger('click');
                             swal.close();
                         }
                     });
