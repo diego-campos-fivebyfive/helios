@@ -27,13 +27,7 @@ if [ $1 = '--homolog' ] || [ $1 = '--staging' ]; then
 
 elif [ $1 = '--production' ]; then
 
-  if [ -z ${2+x} ] || [ $2 = '--staging' ]; then
-
-    source $CLI_PATH/config/staging/variables
-    host=$SICES_STAGING_IP
-    origin='staging'
-
-  elif [ $2 = '--homolog' ]; then
+  if [ -z ${2+x} ] || [ $2 = '--homolog' ]; then
 
     source $CLI_PATH/config/homolog/variables
     host=$SICES_HOMOLOG_IP
