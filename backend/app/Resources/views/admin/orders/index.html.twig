@@ -6,35 +6,30 @@
         <div class="col-lg-12 flow-h">
             <div class="panel panel-info flow-lg">
                 <div class="panel-heading">
-                    <h3>Meus Pedidos</h3>
+                    <h3>Pedidos</h3>
                 </div>
                 <div class="panel-body">
                     <table id="extras_table" class="table table-condensed table-bordered col-md-12">
                         <thead>
                             <tr>
-                                <td class="col-md-1 text-center">PEDIDO</td>
-                                <td>DATA</td>
-                                <td>SISTEMAS</td>
-                                <td class="col-md-2 text-center">VALOR TOTAL</td>
-                                <td class="col-md-2 text-center">AÇÃO</td>
+                                <th class="col-md-4 text-center">Integrador</th>
+                                <th class="text-center">Sistemas</th>
+                                <th class="col-md-2 text-center">Valor total</th>
+                                <th class="col-md-2 text-center">Ação</th>
                             </tr>
                         </thead>
                         <tbody>
                         {% for item in orders if item.childrens.count %}
                             <tr>
-                                <td class="text-center">{{ item.id }} </td>
-                                <td>{{ item.createdAt|date('d/m/Y') }}</td>
-                                <td>SISTEMA(S) DE
+                                <td>{{ item.account.firstName }}</td>
+                                <td>Sistemas(s) de
                                     {% for element in item.childrens %}
                                     <b>{{ element.power }}</b>,
-                                    {% endfor %} KWP
+                                    {% endfor %} kWp
                                 </td>
                                 <td class="col-md-2 text-right">{{ item.total|currency }}</td>
                                 <td>
-                                    <a href="{{ path('order_show', { 'id':item.id }) }}"
-                                        class="btn btn-default">
-                                        <i class="fa fa-eye"></i> {{ 'View'|trans }}
-                                    </a>
+
                                 </td>
                             </tr>
                         {% endfor %}
@@ -53,9 +48,6 @@
 <style>
     table tbody tr{
         display: table-row !important;
-    }
-    table thead tr td{
-        font-weight: bold;
     }
 </style>
 {% endblock %}

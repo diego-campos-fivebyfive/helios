@@ -4,18 +4,19 @@ namespace AdminBundle\Controller;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Order\Order;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Route("ord")
+ * @Route("orders")
  * @Breadcrumb("Orçamentos")
  */
-class OrderController extends AbstractController
+class OrdersController extends AbstractController
 {
 
     /**
-     * @Route("/", name="index_order")
+     * @Route("/", name="index_orders")
      */
     public function orderAction(Request $request)
     {
@@ -31,8 +32,7 @@ class OrderController extends AbstractController
                     ->andWhere('o2.sendAt is not null')
                     ->getQuery()->getDQL()
             )
-        )->andWhere('o.account = :account')
-            ->setParameter('account', $this->account());
+        );
 
         $pagination = $this->getPaginator()->paginate(
             $qb->getQuery(),
@@ -40,7 +40,7 @@ class OrderController extends AbstractController
             10
         );
 
-        return $this->render('Order.index', array(
+        return $this->render('admin/orders/index.html.twig', array(
             'orders' => $pagination
         ));
     }
