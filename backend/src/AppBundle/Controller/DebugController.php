@@ -199,33 +199,6 @@ class DebugController extends AbstractController
     }
 
     /**
-     * @Route("/mailer", name="debug_mailer")
-     */
-    public function emailAction(Request $request)
-    {
-        /** @var \AppBundle\Service\Order\OrderMailer $mailer */
-        $mailer = $this->get('order_mailer');
-
-        $manager = $this->manager('order');
-
-        $children  = $manager->create();
-
-        $order = $manager->create();
-        $order->setStatus(Order::STATUS_VALIDATED);
-
-        $order
-            ->setAccount($this->account())
-            ->addChildren($children)
-        ;
-
-        $mailer->sendOrderMessage($order);
-
-        dump($mailer->getErrors()); die;
-
-        return new Response($mailer->sendAccountConfirmationMessage($this->account()));
-    }
-
-    /**
      * @Route("/", name="debug_index")
      */
     public function indexAction(Request $request)
