@@ -87,6 +87,42 @@ class ComponentController extends AbstractController
     /**
      * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
      *
+     * @Route("/create", name="component_create")
+     * @Method({"get","post"})
+     */
+    public function createAction(Request $request, $type)
+    {
+        $manager = $this->manager($type);
+
+        $component = $manager->create();
+
+        if ('module' == $type) {
+            $formClass = ModuleType::class;
+            $family = 'modules';
+        }
+        else {
+            $formClass = InverterType::class;
+            $family = 'inverters';
+        }
+
+        $form = $this->createForm($formClass, $component);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            return $this->saveComponent($component, $type, $request);
+        }
+
+
+        return $this->render($type.'.form', [
+            'form' => $form->createView(),
+            $type => $component
+        ]);
+    }
+
+    /**
+     * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
+     *
      * @Route("/{id}/update", name="component_update")
      * @Method({"get","post"})
      */
