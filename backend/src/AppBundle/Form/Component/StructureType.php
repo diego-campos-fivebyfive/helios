@@ -26,6 +26,7 @@ class StructureType extends AbstractType
             ->add('ncm', null, ['required' => true])
             ->add('cmvProtheus', null, ['required' => true])
             ->add('cmvApplied', null, ['required' => true])
+            ->add('promotional', null, ['required' => false])
             ->add('status', CheckboxType::class, [
                 'label'  => 'Ativo',
                 'required' => false

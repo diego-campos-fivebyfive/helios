@@ -80,10 +80,11 @@
                     <i class="fa fa-{{ is_grid ? 'list' : 'th' }}"></i> {{ is_grid ? 'Exibir Lista'|trans : 'Exibir Grade'|trans }}
                 </a>
             </div>
-
-            <span class="pull-right col-md-2">
-                <a class="pull-right btn btn-primary" href="{{ path('create_variety') }}"><i class="fa fa-plus-square" aria-hidden="true"></i> Cadastrar variedade</a>
-            </span>
+            {% if member.isPlatformAdmin or member.isPlatformMaster %}
+                <span class="pull-right col-md-2">
+                    <a class="pull-right btn btn-primary" href="{{ path('create_variety') }}"><i class="fa fa-plus-square" aria-hidden="true"></i> Cadastrar variedade</a>
+                </span>
+            {% endif %}
         </div>
 
         <div class="row" id="real-content">

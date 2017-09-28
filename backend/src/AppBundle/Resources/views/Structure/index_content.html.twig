@@ -75,10 +75,11 @@
             <i class="fa fa-{{ is_grid ? 'list' : 'th' }}"></i> {{ is_grid ? 'Exibir Lista'|trans : 'Exibir Grade'|trans }}
         </a>
     </div>
-
-    <span class="pull-right col-md-2">
-        <a class="pull-right btn btn-primary" href="{{ path('structure_create') }}"><i class="fa fa-plus-square" aria-hidden="true"></i> Cadastrar estrutura</a>
-    </span>
+    {% if member.isPlatformAdmin or member.isPlatformMaster %}
+        <span class="pull-right col-md-2">
+            <a class="pull-right btn btn-primary" href="{{ path('structure_create') }}"><i class="fa fa-plus-square" aria-hidden="true"></i> Cadastrar estrutura</a>
+        </span>
+    {% endif %}
 </div>
 
 <div class="row" id="real-content">
