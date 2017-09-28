@@ -11,14 +11,13 @@
 
 namespace AppBundle\Entity\Order;
 
+use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\MetadataTrait;
 use AppBundle\Entity\Pricing\InsurableTrait;
 use AppBundle\Service\Pricing\InsurableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
-use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
@@ -43,11 +42,11 @@ class Order implements OrderInterface, InsurableInterface
     private $id;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="isquik_id", type="integer", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    private $isquikId;
+    private $reference;
 
     /**
      * @var string
@@ -83,6 +82,83 @@ class Order implements OrderInterface, InsurableInterface
      * @ORM\Column(name="send_at", type="datetime", nullable=true)
      */
     private $sendAt;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $filename;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $contact;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $email;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $phone;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $customer;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $postcode;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $address;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $city;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $state;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $cnpj;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $ie;
 
     /**
      * @var array
@@ -140,20 +216,20 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @inheritDoc
      */
-    public function setIsquikId($isquikId)
+    public function setReference($reference)
     {
-        $this->isquikId = $isquikId;
+        $this->reference = $reference;
+
         return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function getIsquikId()
+    public function getReference()
     {
-        return $this->isquikId;
+        return $this->reference;
     }
-
 
     /**
      * @inheritDoc
@@ -263,6 +339,203 @@ class Order implements OrderInterface, InsurableInterface
         return $this->sendAt;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function setFilename($filename)
+    {
+        $this->filename = $filename;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getFilename()
+    {
+        return $this->filename;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setContact($contact)
+    {
+        $this->contact = $contact;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getContact()
+    {
+        return $this->contact;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setCustomer($customer)
+    {
+        $this->customer = $customer;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCustomer()
+    {
+        return $this->customer;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setPostcode($postcode)
+    {
+        $this->postcode = $postcode;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPostcode()
+    {
+        return $this->postcode;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setAddress($address)
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setCity($city)
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCity()
+    {
+        return $this->city;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setCnpj($cnpj)
+    {
+        $this->cnpj = $cnpj;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCnpj()
+    {
+        return $this->cnpj;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setIe($ie)
+    {
+        $this->ie = $ie;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getIe()
+    {
+        return $this->ie;
+    }
 
     /**
      * @inheritDoc
