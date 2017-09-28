@@ -176,7 +176,7 @@
                             {% for component in components %}
 
                                 <tr class="gradeY">
-                                    <td> {{ component.maker.name }} </td>
+                                    <td> {% if component.maker %}{{ component.maker.name }}{% endif %} </td>
                                     <td>
                                         {{ component.model }}
                                     </td>
