@@ -31,7 +31,7 @@ class StringBoxController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-        $manager = $this->manager('stringbox');
+        $manager = $this->manager('string_box');
 
         $qb = $manager->getEntityManager()->createQueryBuilder();
 
@@ -76,9 +76,9 @@ class StringBoxController extends AbstractController
      */
     public function createAction(Request $request)
     {
-        $manager = $this->manager('stringbox');
+        $manager = $this->manager('string_box');
 
-        /** @var Structure $structure */
+        /** @var StringBox $stringBox */
         $stringBox = $manager->create();
 
         $editForm = $this->createForm('AppBundle\Form\Component\StringBoxType', $stringBox);
@@ -92,9 +92,7 @@ class StringBoxController extends AbstractController
 
             $manager->save($stringBox);
 
-            $message = 'StringBox atualizado com sucesso. ';
-
-            $this->setNotice($message);
+            $this->setNotice('StringBox criado com sucesso.');
 
             return $this->redirectToRoute('stringbox_index');
         }
@@ -137,7 +135,7 @@ class StringBoxController extends AbstractController
 
             $this->manager('string_box')->save($stringBox);
 
-            $message = 'StringBox atualizado com sucesso. ';
+            $message = 'StringBox atualizado com sucesso.';
 
             $this->setNotice($message);
 
@@ -159,18 +157,18 @@ class StringBoxController extends AbstractController
      */
     public function deleteAction(StringBox $stringBox)
     {
-        $usageManager = $this->manager('projectStringBox');
+        $usageManager = $this->manager('project_string_box');
 
         if ($usageManager->findOneBy(['stringBox' => $stringBox->getId()])) {
             $message = 'Este Stringbox não pode ser excluído';
             $status = Response::HTTP_LOCKED;
         } else {
             try {
-                $this->manager('stringbox')->delete($stringBox);
-                $message = 'Variedade excluída com sucesso';
+                $this->manager('string_box')->delete($stringBox);
+                $message = 'Stringbox excluída com sucesso';
                 $status = Response::HTTP_OK;
             } catch (\Exception $exception) {
-                $message = 'Falha ao excluir variedade';
+                $message = 'Falha ao excluir Stringbox';
                 $status = Response::HTTP_CONFLICT;
             }
         }
