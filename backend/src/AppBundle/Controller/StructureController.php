@@ -86,6 +86,10 @@ class StructureController extends AbstractController
 
             $manager->save($structure);
 
+            $this->get('component_file_handler')->upload($structure, $request->files);
+
+            $manager->save($structure);
+
             $this->setNotice('Estrutura cadastrada com sucesso!');
 
             return $this->redirectToRoute('structure_index');
@@ -118,18 +122,7 @@ class StructureController extends AbstractController
 
             $manager->save($structure);
 
-            $message = 'Estrutura atualizada com sucesso!';
-
-            if ($structure->isPublished()) {
-                $this->get('notifier')->notify([
-                    'Evento' => '302.3',
-                    'Callback' => 'product',
-                    'Code' => $structure->getCode()
-                ]);
-                $message .= 'Publicação executada.';
-            }
-
-            $this->setNotice($message);
+            $this->setNotice('Estrutura atualizada com sucesso!');
 
             return $this->redirectToRoute('structure_index');
         }
@@ -145,14 +138,27 @@ class StructureController extends AbstractController
      * @Method("delete")
      * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
      */
-    public function deleteAction(Request $request, Structure $structure)
+    public function deleteAction(Structure $structure)
     {
-        // TODO - Check project reference
+        $usageManager = $this->manager('Project_Structure');
 
-        //$this->manager('structure')->delete($structure);
+        if ($usageManager->findOneBy(['structure' => $structure->getId()])) {
+            $message = 'Esta estrutura não pode ser excluída';
+            $status = Response::HTTP_LOCKED;
+        } else {
+            try {
+                $message = 'Estrutura excluída com sucesso';
+                $status = Response::HTTP_OK;
+                $this->manager('structure')->delete($structure);
+            } catch (\Exception $exception) {
+                $message = 'Falha ao excluir estrutura';
+                $status = Response::HTTP_CONFLICT;
+            }
+        }
 
-        return $this->json([], Response::HTTP_OK);
-
+        return $this->json([
+            'message' => $message
+        ], $status);
     }
 
     /**

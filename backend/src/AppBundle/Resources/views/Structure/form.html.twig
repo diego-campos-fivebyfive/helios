@@ -6,6 +6,10 @@
         .btn {
             margin: 2px;
         }
+        .check-label {
+            vertical-align: middle;
+            padding-right: 5px;
+        }
     </style>
 
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -88,18 +92,52 @@
                                                 {% endif %}
                                             </div>
                                         </div>
+                                        <div>
+                                            <div class="form-group col-md-4">
+                                                {{ form_widget(form.status) }}
+                                                {{ form_label(form.status, 'Ativo', {label_attr:{class:'check-label'}}) }}
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                {{ form_widget(form.available)}}
+                                                {{ form_label(form.available, 'Disponível para venda', {label_attr:{class:'check-label'}}) }}
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                {{ form_widget(form.promotional)}}
+                                                {{ form_label(form.promotional, 'Promocional', {label_attr:{class:'check-label'}}) }}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-md-1">
-                                    {{ form_label(form.status, 'Ativo') }}
-                                    <br>
-                                    {{ form_widget(form.status) }}
+
+                                <div class="panel panel-success technical_data">
+                                    <div class="panel-heading">
+                                        &nbsp; Taxas
+                                    </div>
+                                    <div class="panel-body">
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_label(form.ncm, 'NCM') }}
+                                            <div class="input-group m-b">
+                                                {{ form_widget(form.ncm,{attr:{class:'form-control'}}) }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_label(form.cmvProtheus, 'CMV Protheus') }}
+                                            <div class="input-group m-b">
+                                                {{ form_widget(form.cmvProtheus,{attr:{class:'form-control'}}) }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_label(form.cmvApplied, 'CMV Aplicado') }}
+                                            <div class="input-group m-b">
+                                                {{ form_widget(form.cmvApplied,{attr:{class:'form-control'}}) }}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-4">
-                                    {{ form_label(form.available, 'Disponível para venda') }}
-                                    <br>
-                                    {{ form_widget(form.available)}}
-                                </div>
+
                                 <div class="form-group">
                                         <button type="submit" name="intention" value="save" class="btn btn-primary pull-right">
                                             <i class="fa fa-save"></i> {{ 'Save'|trans }}
@@ -154,11 +192,9 @@
 
         var common_mask = {pattern: '##,##', reverse: true};
         var targets = {
-            //'structure_code': common_mask,
-            //'structure_type': common_mask,
-            //'structure_subtype': common_mask,
-            //'structure_description': common_mask,
             'structure_size': common_mask,
+            'structure_cmvApplied': common_mask,
+            'structure_cmvProtheus': common_mask
         };
 
         $.each(targets, function (id, options) {

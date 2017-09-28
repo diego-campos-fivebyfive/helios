@@ -84,10 +84,7 @@ class VarietyController extends AbstractController
 
             $manager->save($variety);
 
-
-            $message = 'Variedade cadastrada com sucesso. ';
-
-            $this->setNotice($message);
+            $this->setNotice('Variedade cadastrada com sucesso. ');
 
             return $this->redirectToRoute('variety_index');
         }
@@ -152,7 +149,7 @@ class VarietyController extends AbstractController
      */
     public function deleteAction(Variety $variety)
     {
-        $usageManager = $this->manager('Projectvariety');
+        $usageManager = $this->manager('Project_Variety');
 
         if ($usageManager->findOneBy(['variety' => $variety->getId()])) {
             $message = 'Esta variedade não pode ser excluída';
