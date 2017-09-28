@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Component\Variety;
+use AppBundle\Form\Component\VarietyType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -10,6 +11,7 @@ use AppBundle\Service\Component\ComponentFileHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
+use Symfony\Component\HttpFoundation\Response;
 
 
 /**
@@ -64,6 +66,39 @@ class VarietyController extends AbstractController
     }
 
     /**
+     * @Route("/create", name="create_variety")
+     * @Method({"GET", "POST"})
+     */
+    public function createAction(Request $request)
+    {
+        $manager = $this->manager('variety');
+        $variety = $manager->create();
+        $form = $this->createForm(VarietyType::class, $variety);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $manager->save($variety);
+
+            $this->get('component_file_handler')->upload($variety, $request->files);
+
+            $manager->save($variety);
+
+
+            $message = 'Variedade cadastrada com sucesso. ';
+
+            $this->setNotice($message);
+
+            return $this->redirectToRoute('variety_index');
+        }
+
+        return $this->render('Variety.form', array(
+            'variety' => $variety,
+            'form' => $form->createView(),
+        ));
+    }
+
+    /**
      * @Route("/{id}", name="variety_show")
      * @Method("GET")
      */
@@ -95,25 +130,14 @@ class VarietyController extends AbstractController
 
             $this->manager('variety')->save($variety);
 
-            $message = 'Variedade atualizado com sucesso. ';
-
-            if ($variety->isPublished()) {
-
-                $this->get('notifier')->notify([
-                    'Evento' => '302.3',
-                    'Callback' => 'product',
-                    'Id' => $variety->getId()
-                ]);
-
-                $message .= 'Publicação executada.';
-            }
+            $message = 'Variedade atualizada com sucesso. ';
 
             $this->setNotice($message);
 
             return $this->redirectToRoute('variety_index');
         }
 
-        return $this->render('Variety.edit', array(
+        return $this->render('Variety.form', array(
             'variety' => $variety,
             'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -123,21 +147,30 @@ class VarietyController extends AbstractController
     /**
      * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
      *
-     * @Route("/{id}", name="variety_delete")
+     * @Route("/{id}/delete/", name="variety_delete")
      * @Method("DELETE")
      */
-    public function deleteAction(Request $request, Variety $variety)
+    public function deleteAction(Variety $variety)
     {
-        $form = $this->createDeleteForm($variety);
-        $form->handleRequest($request);
+        $usageManager = $this->manager('Projectvariety');
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($variety);
-            $em->flush($variety);
+        if ($usageManager->findOneBy(['variety' => $variety->getId()])) {
+            $message = 'Esta variedade não pode ser excluída';
+            $status = Response::HTTP_LOCKED;
+        } else {
+            try {
+                $message = 'Variedade excluída com sucesso';
+                $status = Response::HTTP_OK;
+                $this->manager('variety')->delete($variety);
+            } catch (\Exception $exception) {
+                $message = 'Falha ao excluir variedade';
+                $status = Response::HTTP_CONFLICT;
+            }
         }
 
-        return $this->redirectToRoute('variety_index');
+        return $this->json([
+            'message' => $message
+        ], $status);
     }
 
     /**
