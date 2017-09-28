@@ -11,10 +11,11 @@ if [[ $1 = '--installation-list' ]]; then
       * php-xml
       * php-mysql
       * php-intl
-    * Node
+    * Nodejs
     * Curl
     * Yarn
     * Composer
+    * Mysql-server
 
   How to:
 
@@ -63,4 +64,3 @@ elif [[ $1 = '--full' ]]; then
   sudo apt-get update
   sudo apt-get install apache2 php php-mbstring php-xml php-mysql php-intl php-common php-curl mysql-server nodejs nodejs-legacy yarn composer git -y
 fi
-
