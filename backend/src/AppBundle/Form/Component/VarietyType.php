@@ -17,11 +17,15 @@ class VarietyType extends AbstractType
         $builder
             ->add('type', null, ['required' => false])
             ->add('subtype', null, ['required' => false])
-            ->add('code', null, ['required' => false])
+            ->add('code', null, ['required' => true])
             ->add('power', null, ['required' => false])
-            ->add('description', null, ['required' => false])
+            ->add('description', null, ['required' => true])
             ->add('maker', null, ['required' => false])
-            ->add('status', null, ['required' => false]);
+            ->add('status', null, ['required' => false])
+            ->add('ncm', null, ['required' => true])
+            ->add('cmvProtheus', null, ['required' => true])
+            ->add('cmvApplied', null, ['required' => true]);
+
         $builder->add('available', CheckboxType::class, [
         'label' => 'Disponivel',
         'required' => false,

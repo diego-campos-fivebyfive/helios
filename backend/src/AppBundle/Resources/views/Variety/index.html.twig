@@ -24,7 +24,6 @@
 
     {% set _route_params = app.request.attributes.get('_route_params')|merge(query|merge({'display':is_grid ? 'list' : 'grid' })) %}
 
-
     <div class="modal inmodal fade" id="e_modal_details" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -59,6 +58,10 @@
                    class="btn btn-success">
                     <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
                 </a>
+                <a data-delete="{{ path('variety_delete', { 'id': variety.id}) }}"
+                   class="btn btn-danger">
+                    <i class="fa fa-trash"></i> {{ 'Delete'|trans }}
+                </a>
             {% endif %}
 
         </div>
@@ -77,6 +80,10 @@
                     <i class="fa fa-{{ is_grid ? 'list' : 'th' }}"></i> {{ is_grid ? 'Exibir Lista'|trans : 'Exibir Grade'|trans }}
                 </a>
             </div>
+
+            <span class="pull-right col-md-2">
+                <a class="pull-right btn btn-primary" href="{{ path('create_variety') }}"><i class="fa fa-plus-square" aria-hidden="true"></i> Cadastrar variedade</a>
+            </span>
         </div>
 
         <div class="row" id="real-content">
@@ -146,7 +153,7 @@
                                 <th>Tipo</th>
                                 <th>Sub-tipo</th>
                                 <th>Potência</th>
-                                <th class="col-md-2 col-xs-3">Ações</th>
+                                <th class="col-md-2 col-xs-3 text-center">Ações</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -173,6 +180,11 @@
                                                 <a href="{{ path('variety_edit', { 'id': variety.id }) }}"
                                                    class="btn btn-success">
                                                     <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
+                                                </a>
+
+                                                <a data-delete="{{ path('variety_delete', { 'id': variety.id}) }}"
+                                                     class="btn btn-danger">
+                                                    <i class="fa fa-trash"></i> {{ 'Delete'|trans }}
                                                 </a>
                                             {% endif %}
 
@@ -231,6 +243,48 @@
 
         });
 
+        var dataDelete = $('[data-delete]');
+        if(dataDelete.length){
+            dataDelete.on('click', function () {
+                var url = $(this).data('delete');
+                swal({
+                    title: "Confirma exclusão desta variedade?",
+                    text: null,
+                    type: "info",
+                    showCancelButton: true,
+                    cancelButtonText: "{{ 'Cancel'|trans }}",
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "{{ 'Confirm'|trans }}",
+                    closeOnConfirm: false
+                }, function () {
+                    swal.close();
+                    $.ajax({
+                        url: url,
+                        method: 'post',
+                        data: {_method:'delete'},
+                        complete: function (xhr) {
+                            if (200 == xhr.status) {
+                                swal("", xhr.responseJSON['message'], "success");
+                                window.setTimeout(function(){
+                                    location.reload();
+                                    swal.close();
+                                }, 1000);
+                            } else {
+                                swal("Oops!", xhr.responseJSON['message'], "error");
+                            }
+                        },
+                        beforeSend: function () {
+                            swal({
+                                title: "Excluindo...",
+                                text: "Aguarde",
+                                type: "info",
+                                showConfirmButton: false
+                            });
+                        }
+                    });
+                });
+            });
+        }
 
     </script>
 
