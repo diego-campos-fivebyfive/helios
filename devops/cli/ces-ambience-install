@@ -11,10 +11,11 @@ if [[ $1 = '--installation-list' ]]; then
       * php-xml
       * php-mysql
       * php-intl
-    * Node
+    * Nodejs
+    * Curl
     * Yarn
     * Composer
-    * Git
+    * Mysql-server
 
   How to:
 
@@ -33,6 +34,9 @@ if [[ $1 = '--installation-list' ]]; then
     Nodejs:
 
       $ sudo apt-get install nodejs
+
+    Curl:
+      $ sudo apt install curl
 
     Yarn (apenas ambiente desenvolvimento):
 
@@ -60,4 +64,3 @@ elif [[ $1 = '--full' ]]; then
   sudo apt-get update
   sudo apt-get install apache2 php php-mbstring php-xml php-mysql php-intl php-common php-curl mysql-server nodejs nodejs-legacy yarn composer git -y
 fi
-

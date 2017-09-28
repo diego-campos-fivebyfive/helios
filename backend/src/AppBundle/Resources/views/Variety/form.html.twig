@@ -92,7 +92,7 @@
                                         </div>
 
                                         <div class="form-group col-md-4">
-                                            {{ form_label(form.power, 'Potẽncia') }}
+                                            {{ form_label(form.power, 'Potência') }}
                                             <div class="input-group m-b">
                                                 {{ form_widget(form.power,{attr:{class:'form-control'}}) }}
                                             </div>
@@ -100,6 +100,36 @@
 
                                     </div>
                                 </div>
+
+                                <div class="panel panel-success technical_data">
+                                    <div class="panel-heading">
+                                        &nbsp; Taxas
+                                    </div>
+                                    <div class="panel-body">
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_label(form.ncm, 'NCM') }}
+                                            <div class="input-group m-b">
+                                                {{ form_widget(form.ncm,{attr:{class:'form-control'}}) }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_label(form.cmvProtheus, 'CMV Protheus') }}
+                                            <div class="input-group m-b">
+                                                {{ form_widget(form.cmvProtheus,{attr:{class:'form-control'}}) }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_label(form.cmvApplied, 'CMV Aplicado') }}
+                                            <div class="input-group m-b">
+                                                {{ form_widget(form.cmvApplied,{attr:{class:'form-control'}}) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="form-group col-md-1">
                                     {{ form_label(form.status, 'Ativo') }}
                                     <br>
@@ -132,6 +162,48 @@
 {% endblock %}
 
 {% block scripts %}
+
+    <script>
+        var sanitize = function (element) {
+            function clear(v) {
+                return v.replace(/\D+/g, '');
+            }
+
+            var value = element.val();
+            var backup = value.replace(/\./g, ',');
+            value = clear(value);
+            if (backup.indexOf(',') > 0) {
+                var commas = backup.split(',');
+                value = clear(commas[0]) + ',';
+                if (commas[1].length) {
+                    value += clear(commas[1]);
+                }
+            }
+            if (0 == backup.indexOf('-')) {
+                if (2 == backup.split('-').length) {
+                    value = '-' + value;
+                }
+            }
+            element.val(value);
+        };
+
+        var custom_mask = function (element) {
+            element.on('keyup', function () {
+                sanitize(element);
+            });
+        };
+
+        var common_mask = {pattern: '##,##', reverse: true};
+        var targets = {
+            'appbundle_component_variety_cmvProtheus': common_mask,
+            'appbundle_component_variety_cmvApplied': common_mask
+        };
+
+        $.each(targets, function (id, options) {
+            custom_mask($('#' + id));
+        });
+
+    </script>
 
     {% include view('helper.chosen') with({
     element: '#appbundle_component_variety_maker',

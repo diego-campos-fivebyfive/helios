@@ -72,12 +72,6 @@ class OrderController extends AbstractController
         $order->setMetadata($order->getChildrens()->first()->getMetadata());
         $manager->save($order);
 
-        $this->get('notifier')->notify([
-            'Evento' => '5021',
-            'Callback' => 'order_created',
-            'Id' => $order->getId()
-        ]);
-
         return $this->json([
             'order' => [
                 'id' => $order->getId()

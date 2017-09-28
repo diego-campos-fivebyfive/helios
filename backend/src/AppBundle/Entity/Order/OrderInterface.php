@@ -13,6 +13,10 @@ namespace AppBundle\Entity\Order;
 use AppBundle\Entity\AccountInterface;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * Interface OrderInterface
+ * @package AppBundle\Entity\Order
+ */
 interface OrderInterface
 {
     const STATUS_BUILDING = 0;
@@ -27,15 +31,15 @@ interface OrderInterface
     public function getId();
 
     /**
-     * @param $isquikId
+     * @param string $reference
      * @return OrderInterface
      */
-    public function setIsquikId($isquikId);
+    public function setReference($reference);
 
     /**
-     * @return integer
+     * @return string
      */
-    public function getIsquikId();
+    public function getReference();
 
     /**
      * @param $description
@@ -179,8 +183,129 @@ interface OrderInterface
     public function getSendAt();
 
     /**
+     * @param string $filename
+     * @return OrderInterface
+     */
+    public function setFilename($filename);
+
+    /**
+     * @return string
+     */
+    public function getFilename();
+
+    /**
+     * @param string $contact
+     * @return OrderInterface
+     */
+    public function setContact($contact);
+
+    /**
+     * @return string
+     */
+    public function getContact();
+
+    /**
+     * @param string $email
+     * @return OrderInterface
+     */
+    public function setEmail($email);
+
+    /**
+     * @return string
+     */
+    public function getEmail();
+
+    /**
+     * @param string $phone
+     * @return OrderInterface
+     */
+    public function setPhone($phone);
+
+    /**
+     * @return string
+     */
+    public function getPhone();
+
+    /**
+     * @param string $customer
+     * @return OrderInterface
+     */
+    public function setCustomer($customer);
+
+    /**
+     * @return string
+     */
+    public function getCustomer();
+
+    /**
+     * @param string $postcode
+     * @return OrderInterface
+     */
+    public function setPostcode($postcode);
+
+    /**
+     * @return string
+     */
+    public function getPostcode();
+
+    /**
+     * @param string $address
+     * @return OrderInterface
+     */
+    public function setAddress($address);
+
+    /**
+     * @return string
+     */
+    public function getAddress();
+
+    /**
+     * @param string $city
+     * @return OrderInterface
+     */
+    public function setCity($city);
+
+    /**
+     * @return string
+     */
+    public function getCity();
+
+    /**
+     * @param string $state
+     * @return OrderInterface
+     */
+    public function setState($state);
+
+    /**
+     * @return string
+     */
+    public function getState();
+
+    /**
+     * @param string $cnpj
+     * @return OrderInterface
+     */
+    public function setCnpj($cnpj);
+
+    /**
+     * @return string
+     */
+    public function getCnpj();
+
+    /**
+     * @param string $ie
+     * @return OrderInterface
+     */
+    public function setIe($ie);
+
+    /**
+     * @return string
+     */
+    public function getIe();
+
+    /**
      * @param array $shippingRules
-     * @return ProjectInterface
+     * @return OrderInterface
      */
     public function setShippingRules(array $shippingRules);
 
