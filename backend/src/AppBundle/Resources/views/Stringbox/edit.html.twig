@@ -1,25 +1,3 @@
-{#
-{% block body %}
-    <h1>Stringbox edit</h1>
-
-    {{ form_start(edit_form) }}
-        {{ form_widget(edit_form) }}
-        <input type="submit" value="Edit" />
-    {{ form_end(edit_form) }}
-
-    <ul>
-        <li>
-            <a href="{{ path('stringbox_index') }}">Back to the list</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
-{% endblock %}
-#}
-
 {% extends view('layout') %}
 
 {% block body %}
@@ -128,6 +106,37 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="panel panel-success technical_data">
+                                    <div class="panel-heading">
+                                        &nbsp; Taxas
+                                    </div>
+                                    <div class="panel-body">
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_label(form.ncm, 'Ncm') }}
+                                            <div class="input-group m-b">
+                                                {{ form_widget(form.ncm,{attr:{class:'form-control'}}) }}
+                                                {#<span class="input-group-addon">kW</span>#}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_label(form.cmvProtheus, 'Cmv Protheus') }}
+                                            <div class="input-group m-b">
+                                                {{ form_widget(form.cmvProtheus,{attr:{class:'form-control'}}) }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_label(form.cmvApplied, 'Cmv Applied') }}
+                                            <div class="input-group m-b">
+                                                {{ form_widget(form.cmvApplied,{attr:{class:'form-control'}}) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="form-group col-md-1">
                                     {{ form_label(form.status, 'Ativo') }}
                                     <br>
@@ -142,7 +151,7 @@
                                     <button type="submit" name="intention" value="save" class="btn btn-primary pull-right">
                                         <i class="fa fa-save"></i> {{ 'Save'|trans }}
                                     </button>
-                                    <a href="{{ path('structure_index') }}">
+                                    <a href="{{ path('stringbox_index') }}">
                                         <button class="btn btn-success btn-xd pull-right">{{'Voltar'|trans}}</button>
                                     </a>
                                 </div>

@@ -24,6 +24,7 @@
 
     {% set _route_params = app.request.attributes.get('_route_params')|merge(query|merge({'display':is_grid ? 'list' : 'grid' })) %}
 
+    {#{{ is_grid }}#}
     <div class="modal inmodal fade" id="e_modal_details" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -56,6 +57,10 @@
                    class="btn btn-success">
                     <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
                 </a>
+                <a data-delete="{{ path('stringbox_delete', { 'id': stringBox.id}) }}"
+                   class="btn btn-danger">
+                    <i class="fa fa-trash"></i> {{ 'Delete'|trans }}
+                </a>
             {% endif %}
 
         </div>
@@ -74,6 +79,11 @@
                     <i class="fa fa-{{ is_grid ? 'list' : 'th' }}"></i> {{ is_grid ? 'Exibir Lista'|trans : 'Exibir Grade'|trans }}
                 </a>
             </div>
+
+            <span class="pull-right col-md-2">
+               <a class="pull-right btn btn-primary" href="{{ path('stringbox_create') }}">
+                   <i class="fa fa-plus-square" aria-hidden="true"></i> Cadastrar Stringbox</a>
+            </span>
         </div>
 
         <div class="row" id="real-content">
@@ -171,6 +181,10 @@
                                                class="btn btn-success">
                                                 <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
                                             </a>
+                                            <a data-delete="{{ path('stringbox_delete', { 'id': stringBox.id}) }}"
+                                               class="btn btn-danger">
+                                                <i class="fa fa-trash"></i> {{ 'Delete'|trans }}
+                                            </a>
                                             {% endif %}
 
                                         </div>
@@ -224,6 +238,88 @@
                 } else {
                     detail_stringbox.html('<h1> Nenhum componente selecionado para visualização </h1>');
                 }
+            });
+
+            var dataDelete = $('[data-delete]');
+            if(dataDelete.length){
+                dataDelete.on('click', function () {
+                    var url = $(this).data('delete');
+                    swal({
+                        title: "Confirma exclusão deste Stringbox?",
+                        text: null,
+                        type: "info",
+                        showCancelButton: true,
+                        cancelButtonText: "{{ 'Cancel'|trans }}",
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "{{ 'Confirm'|trans }}",
+                        closeOnConfirm: false
+                    }, function () {
+                        swal.close();
+                        $.ajax({
+                            url: url,
+                            method: 'post',
+                            data: {_method:'delete'},
+                            complete: function (xhr) {
+                                if (200 == xhr.status) {
+                                    swal("", xhr.responseJSON['message'], "success");
+                                    window.setTimeout(function(){
+                                        location.reload();
+                                        swal.close();
+                                    }, 1000);
+                                } else {
+                                    swal("Oops!", xhr.responseJSON['message'], "error");
+                                }
+                            },
+                            beforeSend: function () {
+                                swal({
+                                    title: "Excluindo...",
+                                    text: "Aguarde",
+                                    type: "info",
+                                    showConfirmButton: false
+                                });
+                            }
+                        });
+                    });
+                });
+            }
+
+            var sanitize = function (element) {
+                function clear(v) {
+                    return v.replace(/\D+/g, '');
+                }
+
+                var value = element.val();
+                var backup = value.replace(/\./g, ',');
+                value = clear(value);
+                if (backup.indexOf(',') > 0) {
+                    var commas = backup.split(',');
+                    value = clear(commas[0]) + ',';
+                    if (commas[1].length) {
+                        value += clear(commas[1]);
+                    }
+                }
+                if (0 == backup.indexOf('-')) {
+                    if (2 == backup.split('-').length) {
+                        value = '-' + value;
+                    }
+                }
+                element.val(value);
+            };
+
+            var custom_mask = function (element) {
+                element.on('keyup', function () {
+                    sanitize(element);
+                });
+            };
+
+            var common_mask = {pattern: '##,##', reverse: true};
+            var targets = {
+                'appbundle_component_stringbox_cmvProtheus': common_mask,
+                'appbundle_component_stringbox_cmvApplied': common_mask
+            };
+
+            $.each(targets, function (id, options) {
+                custom_mask($('#' + id));
             });
 
         });
