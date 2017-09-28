@@ -93,6 +93,13 @@
                     <i class="fa fa-{{ is_grid ? 'list' : 'th' }}"></i> {{ is_grid ? 'Exibir Lista'|trans : 'Exibir Grade'|trans }}
                 </a>
             </div>
+
+            {% if member.isAdmin or member.isPlatformAdmin or member.isPlatformMaster %}
+                <span class="pull-right col-md-2">
+               <a class="pull-right btn btn-primary" href="{{ path('component_create', {type:type}) }}">
+                   <i class="fa fa-plus-square" aria-hidden="true"></i> Cadastrar</a>
+            </span>
+            {% endif %}
         </div>
 
         <div class="row" id="real-content">
@@ -115,11 +122,9 @@
                                            data-target="#modal_details"
                                            class="product-name">
                                             {{ component.model|slice(0,20) }} <br/>
-                                            {% if component.maker is not null %}
-                                            <small title="{{ component.maker }}">
-                                                {{ component.maker.name|slice(0,25) }}
+                                            <small title="{% if component.maker is not null %}{{ component.maker }}{% endif %}">
+                                                {% if component.maker is not null %}{{ component.maker.name|slice(0,25) }}{% endif %}&nbsp;
                                             </small>
-                                            {% endif %}
                                         </a>
 
                                         {% if is_module %}
