@@ -1,0 +1,57 @@
+<table class="table table-bordered table-hover flow-md">
+    <thead>
+    <tr>
+        <th colspan="5">
+            ORÇAMENTO ATUAL
+        </th>
+    </tr>
+    <tr>
+        <th> Descrição </th>
+        <th> Data </th>
+        <th> Valor Equipamentos </th>
+        <th width="13%"> Valor Seguro </th>
+        <th> &nbsp; </th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+    {% for order in orders if not order.budget %}
+
+        <tr>
+            <td> {{ order.description }} </td>
+            <td width="10%"> {{ order.createdAt|date('d/m/Y') }} </td>
+            <td width="15%" id="sub_total"> {{ order.subTotal|currency }} </td>
+            <td id="order_insurance"> {{ order.insurance|currency }} </td>
+            <td width="20%">
+                <div class="btn-group btn-group-sm btn-group-justified">
+                    <a data-url="{{ path('generator_orders_update',{id:order.id}) }}"
+                       data-toggle="modal"
+                       data-target="#modal_details"
+                       class="btn btn-success">
+                        <i class="fa fa-pencil"></i>
+                    </a>
+
+                    <a data-delete="{{ path('generator_orders_delete',{id:order.id}) }}" class="btn btn-danger">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    <thead>
+    <tr>
+        <th></th>
+        <th>Sub Total</th>
+        <th id="sub_Total">
+            {{ order.subTotal|currency }}
+        </th>
+        <th>
+            {{ order.TotalInsurance|currency }}
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+</table>
+
