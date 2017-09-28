@@ -54,6 +54,11 @@ trait MenuAdmin
 
         if(!$isAdmin) {
 
+            $menu->addChild('Cond. Pagamento', [
+                'route' => 'payment_methods',
+                'extras' => ['icon' => self::icon('signature')]
+            ]);
+
             $settings = $menu->addChild('Settings', [
                 'uri' => '#',
                 'childrenAttributes' => ['class' => 'nav nav-second-level collapse'],

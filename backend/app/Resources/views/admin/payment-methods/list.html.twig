@@ -1,0 +1,68 @@
+{% for paymentMethod in paymentMethods %}
+
+    {% set id = loop.index0 %}
+
+    <tr>
+        <td> {{ paymentMethod.name }} </td>
+        <td class="text-center">
+            <span class="label label-{{ paymentMethod.enabled ? 'success' }}">
+                {{ paymentMethod.enabled ? 'Ativo' : 'Inativo' }}
+            </span>
+        </td>
+        <td class="text-center"> {{ paymentMethod.quotas|length }} </td>
+        <td>
+            <div class="btn-group btn-group-md btn-group-justified">
+                <a data-toggle="modal" data-target="#modal_payment_method"
+                   data-href="{{ path('payment_methods_update',{id:id}) }}"
+                   class="btn btn-primary">
+                    <i class="fa fa-pencil"></i>
+                    Editar
+                </a>
+                <a data-delete="{{ path('payment_methods_delete',{id:id}) }}" class="btn btn-danger">
+                    <i class="fa fa-trash"></i>
+                    Excluir
+                </a>
+            </div>
+        </td>
+    </tr>
+
+{% endfor %}
+
+<script>
+    $('[data-delete]').on('click', function(){
+        var url = $(this).data('delete');
+        swal({
+            title: 'Confirma exclusão?',
+            type: 'warning',
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Confirmar',
+            closeOnConfirm: false
+        }, function(){
+            $.ajax({
+                url: url,
+                method: 'post',
+                data: {_method: 'delete'},
+                complete: function(xhr){
+                    if (200 == xhr.status) {
+                        swal("{{ 'Success'|trans }}!", "{{ 'Was successful exclusion'|trans }}!", "success");
+                        getPaymentMethods();
+                        window.setTimeout(function(){
+                            swal.close();
+                        },500);
+                    } else {
+                        swal('Ooops', 'Falha ao executar a operação.', 'error');
+                    }
+                },
+                beforeSend: function(){
+                    swal({
+                        title: "Excluindo...",
+                        text:  "Aguarde",
+                        type: "info",
+                        showConfirmButton: false
+                    });
+                }
+            })
+        });
+    });
+</script>
