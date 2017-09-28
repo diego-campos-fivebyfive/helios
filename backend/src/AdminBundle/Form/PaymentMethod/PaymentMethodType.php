@@ -1,12 +1,11 @@
 <?php
 
-namespace AdminBundle\Form\Pricing;
+namespace AdminBundle\Form\PaymentMethod;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PaymentMethodType extends AbstractType
 {
@@ -21,7 +20,11 @@ class PaymentMethodType extends AbstractType
                 'required' => false
             ])
             ->add('quotas', CollectionType::class, [
-                'entry_type' => PaymentQuotaType::class
+                'entry_type' => PaymentQuotaType::class,
+                'allow_add' => true,
+                'entry_options' => [
+                    'label' => false
+                ]
             ])
         ;
     }

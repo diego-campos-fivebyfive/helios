@@ -1,6 +1,6 @@
 <?php
 
-namespace AdminBundle\Form\Pricing;
+namespace AdminBundle\Form\PaymentMethod;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
