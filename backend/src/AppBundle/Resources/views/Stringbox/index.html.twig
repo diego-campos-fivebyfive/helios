@@ -80,10 +80,12 @@
                 </a>
             </div>
 
+            {% if member.isAdmin or member.isPlatformAdmin or member.isPlatformMaster %}
             <span class="pull-right col-md-2">
                <a class="pull-right btn btn-primary" href="{{ path('stringbox_create') }}">
                    <i class="fa fa-plus-square" aria-hidden="true"></i> Cadastrar Stringbox</a>
             </span>
+            {% endif %}
         </div>
 
         <div class="row" id="real-content">
