@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Proforma</title>
+
+    <link href="{{ asset('public/assets/css/main.css') }}" rel="stylesheet">
+
+<style>
+
+    body {
+        background-color: #1a2d41;
+    }
+
+    .p-leaf {
+        width: 210mm;
+        height: 297mm;
+        background-color: white;
+        padding-top: 10mm;
+        padding-bottom: 0;
+        padding-left: 15mm;
+        padding-right: 15mm;
+    }
+    .leaf-style {
+        color: #000000;
+        font-family:Arial, Helvetica, sans-serif;
+        font-size: 12px;
+    }
+    .p-header {
+        width: 100%;
+        height: 25mm;
+    }
+    .p-body {
+        width: 100%;
+        height: 232mm;
+    }
+    .p-footer {
+        width: 100%;
+        height: 30mm;
+    }
+    p {
+        margin-top: 5mm;
+    }
+    table {
+        border: solid #AAA 1px;
+    }
+    thead tr th {
+        text-align: center;
+    }
+    td, th {
+        border: solid #AAA 1px;
+        padding: 0;
+        padding-left: 1mm;
+        padding-right: 1mm;
+    }
+    .initial-data td {
+        border: transparent;
+    }
+    .width-float-total {
+        float: left;
+        width: 100%;
+    }
+    .width-total {
+        width: 100%;
+    }
+    .page-number {
+        float: right;
+        color: #808080;
+    }
+    .color-blue {
+        color: #0a6aa1;
+    }
+    .color-white {
+        color: #FFF;
+    }
+    .blue-sices {
+        color: #00A7EC;
+    }
+    .text-underline {
+        text-decoration: underline;
+    }
+    .back-black {
+        background-color: #000;
+    }
+    .back-l-gray {
+        background-color: #d3d3d3;
+    }
+    .border-black {
+        border: solid 1px black;
+    }
+    .bold {
+        font-weight: bold;
+    }
+    .spacing {
+        margin-top: 5mm;
+    }
+    .indentation {
+        margin-left: 5mm;
+    }
+    .name-line {
+        width: 60mm;
+        border-bottom: solid 1px #000
+    }
+    .name-line-left {
+        float:left;
+        margin-left: 10mm;
+    }
+    .name-line-right {
+        float: right;
+        margin-right: 10mm;
+    }
+    .field-width {
+        width: 35mm;
+    }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+            {% set page = order.childrens|length %}
+            {% for item in order.childrens %}
+                <div class="p-leaf leaf-style">
+                    <div class="p-header">
+                        <img width="250"  alt="image" src="{{ asset('assets/images/proformaHeader.png') }}">
+                        <span class="page-number">Página - {{ loop.index }}/{{ page + 3 }}</span>
+                    </div>
+
+                    <div class="p-body">
+                        <table class="initial-data width-total" style="border: transparent;">
+                            <thead>
+                            <tr>
+                                <td colspan="2">
+                                    <label class="no-margins">Proposta: </label> {{ order.id }}
+                                </td>
+                                <td colspan="2">
+                                    <label  class="no-margins">Data: </label> 30/ 08 / 2017 (hoje)
+                                </td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><label class="no-margins">Cliente: </label></td>
+                                <td>cliente_ENSOLAR ENERGIA SOLAR LTDA-ME</td>
+
+                                <td><label class="no-margins">CNPJ: </label></td>
+                                <td>08.824.904/0001-43</td>
+                            </tr>
+                            <tr>
+                                <td><label class="no-margins">Endereço: </label></td>
+                                <td>cliente_ENSOLAR ENERGIA SOLAR LTDA-ME</td>
+
+                                <td><label class="no-margins">IE: </label></td>
+                                <td>456/0002702</td>
+                            </tr>
+                            <tr>
+                                <td><label class="no-margins">Cidade: </label></td>
+                                <td>cliente_ENSOLAR ENERGIA SOLAR LTDA-ME</td>
+
+                                <td><label class="no-margins">Estado: </label></td>
+                                <td>SP</td>
+                            </tr>
+                            <tr>
+                                <td><label class="no-margins">Contato: </label></td>
+                                <td>ANDRE</td>
+
+                                <td><label class="no-margins">Tel: </label></td>
+                                <td>19 99288-4556</td>
+                            </tr>
+                            <tr>
+                                <td><label class="no-margins">Email: </label></td>
+                                <td class="color-blue">andrerodriguesx@hotmail.com </td>
+
+                                <td><label class="no-margins">CEP: </label></td>
+                                <td>13.023-101</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <p class="width-float-total">
+                            Prezados Senhores, Atendendo à solicitação de V.Sas., é com prazer que submetemos a sua apreciação nossa proposta
+                            comercial para o fornecimento de equipamentos conforme descriminado.
+                        </p>
+
+                        <label class="width-float-total text-center">
+                            <h2  class="no-margins bold">{{ item.description }}</h2>
+                        </label>
+
+                        <table class="width-total">
+                            <thead>
+                            <tr>
+                                <th>
+                                    Código
+                                </th>
+                                <th style="width: 60%;">
+                                    Produto
+                                </th>
+                                <th>
+                                    Custo Un.
+                                </th>
+                                <th>
+                                    QTD
+                                </th>
+                                <th>
+                                    Custo T.
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for element in item.elements %}
+                            <tr>
+                                <td>{{ element.code }}</td>
+                                <td class="text-left">{{ element.description }}</td>
+                                <td>{{ element.unitPrice|currency }}</td>
+                                <td class="text-center">{{ element.quantity }}</td>
+                                <td>{{ element.total|currency }}</td>
+                            </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+
+
+                        <table class="spacing width-total">
+                            <thead>
+                            <tr>
+                                <th>
+                                    SEGURO ALL RISK
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    COBERTURA SICES SOLAR ALL RISK DO SISTEMA SOLAR FV INSTALADO POR 1 ANO APOS
+                                    60 DIAS NFE SICES APOLICE EMITIDA AO CLIENTE FINAL CPF O PROPRIETARIO ABAIXO
+                                    COBRE O VALOR DOS EQUIPAMENTOS SICES + 50% CONTRA DANOS DE CAUSA EXTERNA DANOS
+                                    ELETRICOS ROUBO OU FURTO VENDAVAL, GRANISO, RAIO, INCENDIO OU EXPLOSÓES E DEMAIS
+                                    PREVISTAS EM APOLICE
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="pull-right">Valor do seguro: R$ 67,04</label>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <label class="pull-right spacing"><h3>Valor do Sistema: {{ item.total|currency }}</h3></label>
+
+                    </div>
+
+                    <div class="p-footer">
+                        <label class="blue-sices">SICES BRASIL LTDA</label>
+                        <span class="width-float-total">
+                        Avenida Portugal, 1174 – Condomínio Empresarial ONIX, galpão 1,2,3,4 e 5
+                        Itaqui, ITAPEVI – SP – 06696-060 – Brasil
+                    </span>
+                        <span class="width-float-total">
+                        T 0055 (11) 4193-2008
+                    </span>
+                        <span class="color-blue width-float-total">
+                        www.sicesbrasil.com.br - contato@sicesbrasil.com.br
+                    </span>
+                        <span class="width-float-total">
+                        CNPJ 17.774.501/0001-28
+                    </span>
+                    </div>
+                </div>
+
+                <div style="width: 100%; height: 5mm;"></div>
+            {% endfor %}
+
+            <div class="p-leaf leaf-style">
+                <div class="p-header">
+                    <img width="250"  alt="image" src="{{ asset('assets/images/proformaHeader.png') }}">
+                    <span class="page-number">Página - {{ page + 1 }}/{{ page + 3 }}</span>
+                </div>
+
+                <div class="p-body">
+
+                    <label class="width-float-total no-margins">Proposta economica:</label>
+
+                    <span class="indentation"> 1) Equipamentos conforme descriminado</span>
+                    <span class="pull-right field-width">{{ order.subTotal|currency }}</span>
+                    <br/>
+                    <span class="indentation"> 2) Frete</span>
+                    <span class="pull-right field-width"> {% if order.shippingRules is defined %}INCLUSO{% else %}NÃO INCLUSO{% endif %}</span>
+                    <br/>
+                    <label class="no-margins">TOTAL FORNECIMENTO</label>
+                    <label class="pull-right no-margins field-width">{{ order.total|currency }}</label>
+
+                    <p>
+                        *O preço poderá sofrer alterações decorrente de variações cambias, e o cliente arcará com as
+                        mesmas, caso no ato do pagamento final/integral a cotação EUR/BRL (EURBRL=X PTAX) for superior a XX,XX
+                    </p>
+
+                    <label class="width-float-total no-margins">Condições de pagamentos:</label>
+                    <span class="indentation"> a) TED 50% antecipado 31/08/2017 (amanhã)</span>
+                    <span class="pull-right field-width"> R$ 10.384,57</span>
+                    <br/>
+
+                    <label class="spacing">DADOS BANCÁRIOS PARA PAGAMENTO EM CASO DE TRASFERÊNCIA BANCÁRIA</label>
+
+                    <div class="width-total border-black">
+                        Banco Itaù Unibanco S/A nº341<br/>
+                        AG 4807<br/>
+                        C/C: 30.334 DIG: 4<br/>
+                        CNPJ 17.774.501/0001-28<br/>
+                        SICES BRASIL LTDA
+                    </div>
+
+                    <div class="indentation spacing">
+                        <label class="no-margins">- Disponibilidade para coleta:</label> 11/09/2017<br/>
+                        <label class="no-margins">- Prazo de entrega:</label> 10 DIAS UTEIS<br/>
+                        <label class="no-margins">- Validade da proposta:</label> 3 (três) dias<br/>
+                        <label class="no-margins">- Embalagem unitário:</label> Padrão<br/>
+                        <label class="no-margins">- Transporte e seguro:</label> INCLUSO<br/>
+                        <label class="no-margins">- Serviço de Start-up:</label> NÃO INCLUSO<br/>
+                        <label class="no-margins">- Endereço de entrega:  :</label> Rua Américo Pieri, nº 6, Limoeiro, Pedreira/SP.
+                    </div>
+
+                </div>
+
+                <div class="p-footer">
+                    <label class="blue-sices">SICES BRASIL LTDA</label>
+                    <span class="width-float-total">
+                        Avenida Portugal, 1174 – Condomínio Empresarial ONIX, galpão 1,2,3,4 e 5
+                        Itaqui, ITAPEVI – SP – 06696-060 – Brasil
+                    </span>
+                    <span class="width-float-total">
+                        T 0055 (11) 4193-2008
+                    </span>
+                    <span class="width-float-total color-blue">
+                        www.sicesbrasil.com.br - contato@sicesbrasil.com.br
+                    </span>
+                    <span class="width-float-total">
+                        CNPJ 17.774.501/0001-28
+                    </span>
+                </div>
+            </div>
+
+            <div style="width: 100%; height: 5mm;"></div>
+
+            <div class="p-leaf leaf-style">
+                <div class="p-header">
+                    <img width="250"  alt="image" src="{{ asset('assets/images/proformaHeader.png') }}">
+                    <span class="page-number">Página - {{ page + 2 }}/{{ page + 3 }}</span>
+                </div>
+
+                <div class="p-body">
+
+                    <p class="width-float-total">
+                        Produtos e equipamentos industrializados, gerador fotovoltaico de potência não superior a
+                        750W sob NCM 8501.31.20, potência superior a 750W mas não superior a 75kW sob NCM 8501.32.20,
+                        superior a 75kW mas não superior a 375kW sob NCM 8501.33.20, de potência superior a 375Kw sob
+                        NCM 8501.34.20 conforme convenio CONFAZ 101/97
+                    </p>
+
+                    <label class="width-float-total text-center text-underline">
+                        De um ponto de vista geral, tudo que não é claramente especificado fica excluído do fornecimento
+                        e o “comprador” tem pleno conhecimento de todos os aspectos técnicos dos equipamentos e componentes ofertados
+                    </label>
+
+                    <div class="indentation">
+                        - Emissão de NF-e como único item “GERADOR FOTOVOLTAICO” conforme Convênio CONFAZ 101/97, que
+                        concede isenção do ICMS nas operações com equipamentos e componentes para o aproveitamento
+                        das energias solar e eólica.
+                    </div>
+                    <div class="indentation bold">
+                        - Impostos:
+                    </div>
+
+                    <table class="width-total">
+                        <thead>
+                        <tr class="back-l-gray">
+                            <th>
+                                PIS
+                            </th>
+                            <th>
+                                CONFINS
+                            </th>
+                            <th>
+                                IPI
+                            </th>
+                            <th>
+                                ICMS
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="text-center">
+                            <td>1,65%</td>
+                            <td>7,6%</td>
+                            <td>0%</td>
+                            <td>0%</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <label class="width-float-total spacing">Sobre as Garantias dos Equipamentos: </label>
+
+                    <table class="indentation">
+                        <tbody>
+                        <tr class="back-l-gray">
+                            <th class="text-center">
+                                Inversores ABB
+                            </th>
+                            <th class="text-center">
+                                Inversores FRONIUS
+                            </th>
+                            <th class="text-center">
+                                Inversores SMA
+                            </th>
+                            <th class="text-center">
+                                Inversores Canadian Solar
+                            </th>
+                        </tr>
+
+                        <tr class="text-center">
+                            <td>5 anos (Primeiros 24 meses direto Sices Brasil)</td>
+                            <td>5 anos (Primeiros 24 meses direto Sices Brasil)</td>
+                            <td>5 anos (Primeiros 36 meses direto Sices Brasil)</td>
+                            <td>5 anos (Primeiros 36 meses direto Sices Brasil)</td>
+                        </tr>
+
+                        <tr class="back-l-gray">
+                            <th class="text-center">
+                                Inversores SUNGROW
+                            </th>
+                            <th class="text-center">
+                                Inversores NEP
+                            </th>
+                            <th class="text-center">
+                                Módulo FV JA Solar
+                            </th>
+                            <th class="text-center">
+                                Módulo FV CANADIAN
+                            </th>
+                        </tr>
+                        <tr class="text-center">
+                            <td>5 anos (Primeiros 36 meses direto com a Sices Brasil), após com a Fabricante.</td>
+                            <td>5 anos (Primeiros 12 meses direto com a Sices Brasil), após com a Fabricante.</td>
+                            <td>10 anos (Primeiros 12 meses direto com a Sices Brasil), após com a Fabricante.</td>
+                            <td>10 anos (Primeiros 24 meses direto com a Sices Brasil), após com a Fabricante.</td>
+                        </tr>
+
+                        <tr class="back-l-gray">
+                            <th class="text-center">
+                                String Box
+                            </th>
+                            <th class="text-center">
+                                Quadro AC
+                            </th>
+                            <th class="text-center">
+                                Estrutura Alumínio
+                            </th>
+                            <th class="text-center">
+                                Componentes
+                            </th>
+                        </tr>
+                        <tr class="text-center">
+                            <td>12 meses</td>
+                            <td>12 meses</td>
+                            <td>12 meses</td>
+                            <td>12 meses</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <label class="spacing">
+                        Observação: Nos primeiros 12/24/36 meses a garantia será atendida diretamente pela SICES BRASIL,
+                        após este prazo o processo para efeito de garantia deverá ser direto com o Fabricante.
+                    </label>
+
+                    <p>
+                        Esperamos que o presente orçamento corresponda as necessidades, e, colocamo-nos ao inteiro dispor
+                        de V.Sas., para quaisquer informações ou esclarecimentos adicionais.
+                    </p>
+
+                    <label class="text-center">TERMO DE ACEITAÇÃO</label>
+
+                    <p>
+                        <label class="no-margins">ENSOLAR ENERGIA SOLAR LTDA-ME</label>, Aceita todas as condições de fornecimento ofertadas nesta
+                        proposta e condições de vendas e garantias da Sices Brasil:
+                        <span class="color-blue text-underline">Condições gerais</span>.
+                    </p>
+
+
+                    <div class="spacing">
+                        <span class="spacing name-line name-line-left"></span>
+                        <span class="spacing name-line name-line-right"></span>
+                    </div>
+                    <br/>
+
+                    <p>
+                        Itapevi-SP, 30 de AGOSTO de 2017
+                    </p>
+
+                    <p>
+                        Cordialmente<br/>
+                        Jackson De Souza Chirollo<br/>
+                        <span class="color-blue">E-mail: jackson.chirollo@sices.eu</span>
+                    </p>
+
+                    <p>
+                        Por Pamela Camila Lodi<br/>
+                        Assistente comercial<br/>
+                        <span class="color-blue">E-mail: comercial9@sicesbrasil.com.br</span>
+                    </p>
+
+                </div>
+
+                <div class="p-footer">
+                    <label class="blue-sices">SICES BRASIL LTDA</label>
+                    <span class="width-float-total">
+                        Avenida Portugal, 1174 – Condomínio Empresarial ONIX, galpão 1,2,3,4 e 5
+                        Itaqui, ITAPEVI – SP – 06696-060 – Brasil
+                    </span>
+                    <span class="width-float-total">
+                        T 0055 (11) 4193-2008
+                    </span>
+                    <span class="width-float-total color-blue">
+                        www.sicesbrasil.com.br - contato@sicesbrasil.com.br
+                    </span>
+                    <span class="width-float-total">
+                        CNPJ 17.774.501/0001-28
+                    </span>
+                </div>
+            </div>
+
+            <div style="width: 100%; height: 5mm;"></div>
+
+            <div class="p-leaf leaf-style">
+                <div class="p-header">
+                    <img width="250"  alt="image" src="{{ asset('assets/images/proformaHeader.png') }}">
+                    <span class="page-number">Página - {{ page + 3 }}/{{ page + 3 }}</span>
+                </div>
+
+                <div class="p-body" style="font-size: 14px;">
+
+                    <label class="width-float-total text-underline text-center"><h2>Certificado de Seguro</h2></label>
+
+                    <p>
+                        Os bens fornecidos, conforme constam na nota fiscal referente a proforma de <label class="no-margins">nº6312</label>
+                        encontram-se segurados do Seguro Contra Riscos de Engenharia Processo SUSEP 15414.000736/201235
+                        – Instalação e Montagem da <label class="no-margins">ARGO SEGUROS S.A</label>, garantindo os equipamentos que venham a sofrer danos,
+                        conforme condições gerais e particulares da apólice. Confira as coberturas previstas em apólice:
+                    </p>
+
+                    <p>
+                        O prazo de cobertura do seguro é definido pelo porte do Sistema Fotovoltaico adquirido, confira
+                        o prazo de montagem e instalação previsto por cada faixa de potência, na tabela abaixo.
+                    </p>
+
+                    <div class="text-center">
+                        Confira as coberturas previstas em apólice:
+                        <a href="#" class="color-blue text-underline">Clique Aqui</a>
+                    </div>
+
+                    <table class="width-total spacing">
+                        <thead>
+                        <tr class="back-black">
+                            <th class="color-white">
+                                Faixa de Potência dos Sistemas FV Sices Brasil
+                            </th>
+                            <th class="color-white">
+                                Prazo de instalação a partir NF-e Sices Brasil
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="text-center">
+                            <td>
+                                Sistemas FV de 1kWp até 20kWp
+                            </td>
+                            <td>
+                                45 dias a partir da emissão da Nota Fiscal
+                            </td>
+                        </tr>
+
+                        <tr class="text-center">
+                            <td>
+                                Sistemas FV de 20,1kWp até 60kWp
+                            </td>
+                            <td>
+                                75 dias a partir da emissão da Nota Fiscal
+                            </td>
+                        </tr>
+                        <tr class="text-center">
+                            <td>
+                                Sistemas FV de 60,1kWp até 100kWp
+                            </td>
+                            <td>
+                                105 dias a partir da emissão da Nota Fiscal
+                            </td>
+                        </tr>
+                        <tr class="text-center">
+                            <td>
+                                Sistemas FV de 101kWp até 500kWp
+                            </td>
+                            <td>
+                                135 dias a partir da emissão da Nota Fiscal
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <p>
+                        O Seguro indenizará as perdas correspondentes aos valores constantes da Nota Fiscal e efetuará
+                        a dedução do valor da <label class="no-margins">Franquia</label> que corresponde a <label class="no-margins">R$1.200,00</label>
+                        ou <label class="no-margins">15%</label> do valor do equipamento por evento o que for maior.
+                    </p>
+
+                    <p class="text-underline bold">
+                        Em caso de acidentes que ocorram durante a instalação o Instalador deverá comunicar
+                        imediatamente a Seguradora através do telefone da Central de Atendimento:
+                    </p>
+
+                    <label class="indentation">- Grande São Paulo - (11) 5646-6000 </label>
+
+                    <p>
+                        <label>Na sequência enviando e e-mail com título</label>: Sinistro Riscos de Engenharia SICES-ARGO Nota Fiscal numero XXX?
+                    </p>
+
+                    <label class="width-float-total indentation">Descrevendo a data da ocorrência e fatos relacionados ao acidente. </label>
+                    <label class="indentation">E-mail:</label> <span class="color-blue">atendimento@umbriaprivate.com.br</span>
+
+                </div>
+
+                <div class="p-footer">
+                    <label class="blue-sices">SICES BRASIL LTDA</label>
+                    <span class="width-float-total">
+                        Avenida Portugal, 1174 – Condomínio Empresarial ONIX, galpão 1,2,3,4 e 5
+                        Itaqui, ITAPEVI – SP – 06696-060 – Brasil
+                    </span>
+                    <span class="width-float-total">
+                        T 0055 (11) 4193-2008
+                    </span>
+                    <span class="width-float-total color-blue">
+                        www.sicesbrasil.com.br - contato@sicesbrasil.com.br
+                    </span>
+                    <span class="width-float-total">
+                        CNPJ 17.774.501/0001-28
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

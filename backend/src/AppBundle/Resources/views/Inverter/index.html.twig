@@ -21,7 +21,7 @@
                                 {% for inverter in inverters %}
                                     <tr>
                                         <td>{{ inverter.id }}</td>
-                                        <td>{{ inverter.maker.name }}</td>
+                                        <td>{% if inverter.maker %}{{ inverter.maker.name }}{% endif %}</td>
                                         <td>
 
                                         </td>
