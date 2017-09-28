@@ -12,9 +12,9 @@ if [[ $1 = '--installation-list' ]]; then
       * php-mysql
       * php-intl
     * Node
+    * Curl
     * Yarn
     * Composer
-    * Git
 
   How to:
 
@@ -33,6 +33,9 @@ if [[ $1 = '--installation-list' ]]; then
     Nodejs:
 
       $ sudo apt-get install nodejs
+
+    Curl:
+      $ sudo apt install curl
 
     Yarn (apenas ambiente desenvolvimento):
 
