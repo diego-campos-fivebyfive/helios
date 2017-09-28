@@ -219,7 +219,6 @@ class Module implements ModuleInterface, ComponentInterface
      */
     public function __construct()
     {
-        $this->status = self::DISABLE;
     }
 
     /**
