@@ -276,6 +276,7 @@ class ProjectGeneratorController extends AbstractController
         ]);
     }
 
+
     /**
      * @Route("/orders/{id}/delete", name="generator_orders_delete")
      * @Method("delete")
