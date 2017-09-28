@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Stringbox controller.
@@ -67,6 +68,44 @@ class StringBoxController extends AbstractController
     }
 
     /**
+     * Displays a form to edit an existing stringBox entity.
+     *
+     * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
+     *
+     * @Route("/create", name="stringbox_create")
+     */
+    public function createAction(Request $request)
+    {
+        $manager = $this->manager('stringbox');
+
+        /** @var Structure $structure */
+        $stringBox = $manager->create();
+
+        $editForm = $this->createForm('AppBundle\Form\Component\StringBoxType', $stringBox);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+            $manager->save($stringBox);
+
+            $this->get('component_file_handler')->upload($stringBox, $request->files);
+
+            $manager->save($stringBox);
+
+            $message = 'StringBox atualizado com sucesso. ';
+
+            $this->setNotice($message);
+
+            return $this->redirectToRoute('stringbox_index');
+        }
+
+        return $this->render('Stringbox.edit', array(
+            'stringBox' => $stringBox,
+            'form' => $editForm->createView()
+        ));
+    }
+
+    /**
      * Finds and displays a stringBox entity.
      *
      * @Route("/{id}", name="stringbox_show")
@@ -74,11 +113,8 @@ class StringBoxController extends AbstractController
      */
     public function showAction(StringBox $stringBox)
     {
-        $deleteForm = $this->createDeleteForm($stringBox);
-
         return $this->render('Stringbox.show_content', array(
             'stringBox' => $stringBox,
-            'delete_form' => $deleteForm->createView(),
         ));
     }
 
@@ -92,7 +128,6 @@ class StringBoxController extends AbstractController
      */
     public function editAction(Request $request, StringBox $stringBox)
     {
-        $deleteForm = $this->createDeleteForm($stringBox);
         $editForm = $this->createForm('AppBundle\Form\Component\StringBoxType', $stringBox);
         $editForm->handleRequest($request);
 
@@ -104,17 +139,6 @@ class StringBoxController extends AbstractController
 
             $message = 'StringBox atualizado com sucesso. ';
 
-            if ($stringBox->isPublished()) {
-
-                $this->get('notifier')->notify([
-                    'Evento' => '302.3',
-                    'Callback' => 'product',
-                    'Code' => $stringBox->getCode()
-                ]);
-
-                $message .= 'Publicação executada.';
-            }
-
             $this->setNotice($message);
 
             return $this->redirectToRoute('stringbox_index');
@@ -123,45 +147,34 @@ class StringBoxController extends AbstractController
         return $this->render('Stringbox.edit', array(
             'stringBox' => $stringBox,
             'form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
         ));
     }
 
     /**
-     * Deletes a stringBox entity.
      *
      * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
      *
-     * @Route("/{id}", name="stringbox_delete")
-     * @Method("DELETE")
+     * @Route("/{id}/delete/", name="stringbox_delete")
+     * @Method("delete")
      */
-    public function deleteAction(Request $request, StringBox $stringBox)
+    public function deleteAction(StringBox $stringBox)
     {
-        $form = $this->createDeleteForm($stringBox);
-        $form->handleRequest($request);
+        $usageManager = $this->manager('projectStringBox');
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($stringBox);
-            $em->flush($stringBox);
+        if ($usageManager->findOneBy(['stringBox' => $stringBox->getId()])) {
+            $message = 'Este Stringbox não pode ser excluído';
+            $status = Response::HTTP_LOCKED;
+        } else {
+            try {
+                $this->manager('stringbox')->delete($stringBox);
+                $message = 'Variedade excluída com sucesso';
+                $status = Response::HTTP_OK;
+            } catch (\Exception $exception) {
+                $message = 'Falha ao excluir variedade';
+                $status = Response::HTTP_CONFLICT;
+            }
         }
 
-        return $this->redirectToRoute('stringbox_index');
-    }
-
-    /**
-     * Creates a form to delete a stringBox entity.
-     *
-     * @param StringBox $stringBox The stringBox entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(StringBox $stringBox)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('stringbox_delete', array('id' => $stringBox->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
+        return $this->json(['message' => $message], $status);
     }
 }
