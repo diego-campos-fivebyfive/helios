@@ -74,6 +74,22 @@
                                             {% endif %}
                                         </div>
 
+                                        <div class="form-group col-md-4">
+                                            {{ form_label(form.status, 'Ativo') }}
+                                            <br>
+                                            {{ form_widget(form.status) }}
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            {{ form_label(form.available, 'Disponível para venda') }}
+                                            <br>
+                                            {{ form_widget(form.available)}}
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            {{ form_label(form.promotional, 'Produto promocional') }}
+                                            <br>
+                                            {{ form_widget(form.promotional)}}
+                                        </div>
+
                                     </div>
                                 </div>
 
@@ -137,16 +153,6 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group col-md-1">
-                                    {{ form_label(form.status, 'Ativo') }}
-                                    <br>
-                                    {{ form_widget(form.status) }}
-                                </div>
-                                <div class="form-group col-md-4">
-                                    {{ form_label(form.available, 'Disponível para venda') }}
-                                    <br>
-                                    {{ form_widget(form.available)}}
-                                </div>
                                 <div class="form-group">
                                     <button type="submit" name="intention" value="save" class="btn btn-primary pull-right">
                                         <i class="fa fa-save"></i> {{ 'Save'|trans }}
