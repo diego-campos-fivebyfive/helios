@@ -1,0 +1,181 @@
+<style>
+    #container_quotas {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-12">
+
+        {{ form_start(form,{attr:{id:'form_payment_method'}}) }}
+
+        <table class="table table-bordered">
+            <tr>
+                <td class="col-md-1 text-right"><label> Nome </label></td>
+                <td> {{ form_widget(form.name, {attr:{class:'form-control'}}) }} </td>
+            </tr>
+            <tr>
+                <td class="col-md-1 text-right"><label> Ativo </label></td>
+                <td> {{ form_widget(form.enabled) }} </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+
+                    <table id="container_quotas" class="table table-bordered"
+                           data-prototype="{{ form_widget(form.quotas.vars.prototype)|e }}">
+                        <tr class="configured">
+                            <th class="col-md-4"> Descrição </th>
+                            <th class="text-center col-md-3"> Percentual (%) </th>
+                            <th class="text-center col-md-3"> Dias</th>
+                            <th class="col-md-2">
+                                <a class="btn btn-success btn-sm btn-block" id="add_quota">
+                                    <i class="fa fa-plus"></i> Parcela
+                                </a>
+                            </th>
+                        </tr>
+                        {% for quota in form.quotas %}
+                            <tr>
+                                <td class="col-md-4">
+                                    {{ form_widget(quota.description, {attr:{class:'form-control'}}) }}
+                                </td>
+                                <td class="col-md-3">
+                                    {{ form_widget(quota.percent, {attr:{class:'form-control input-percent'}}) }}
+                                </td>
+                                <td class="col-md-3">
+                                    {{ form_widget(quota.days, {attr:{class:'form-control input-days'}}) }}
+                                </td>
+                                <td class="col-md-2">
+                                    <a class="btn btn-danger btn-sm btn-block">
+                                       <i class="fa fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+
+                </td>
+            </tr>
+        </table>
+
+        <div class="form-group col-md-12 hide">
+            <button id="payment_method_save" class="btn btn-primary pull-right">
+                <i class="fa fa-save"></i> Salvar
+            </button>
+            {{ form_rest(form) }}
+        </div>
+
+        {{ form_end(form) }}
+
+    </div>
+</div>
+
+<script>
+
+    var PMM = {
+        container: $('#container_quotas'),
+        prototype: null,
+        addQuota: $('#add_quota'),
+        form: $('#form_payment_method'),
+        getTemplateLine: function () {
+            return $('<tr>' +
+                '<td class="col-md-4">' +
+                '</td>' +
+                '<td class="col-md-3">' +
+                '</td>' +
+                '<td class="col-md-3">' +
+                '</td>' +
+                '<td class="col-md-2">' +
+                '<a class="btn btn-danger btn-sm btn-block"> ' +
+                '<i class="fa fa-trash"></i> </a> ' +
+                '</td>' +
+                '</tr>');
+        },
+        configureDelete: function (button) {
+            button.on('click', function () {
+                var row = $(this).closest('tr');
+                swal({
+                    title: 'Confirma Exclusão?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonText: 'Confirmar'
+                }, function () {
+                    row.remove();
+                });
+            });
+        },
+        configureQuotas: function () {
+
+            $.each(PMM.container.find('tr:not(.configured)'), function (i, tr) {
+                var button = $(tr).find('.btn-danger');
+                var inputs = $(tr).find('input');
+                PMM.configureFields(inputs);
+                PMM.configureDelete(button);
+                $(tr).addClass('configured');
+            });
+        },
+        addLineQuota: function () {
+
+            var index = PMM.container.find('tr').length;
+            var content = $(PMM.prototype.replace(/__name__/g, index));
+            var inputs = content.find('input');
+            var line = PMM.getTemplateLine();
+            var columns = line.find('td');
+
+            $.each(inputs, function (i, input) {
+                $(input).addClass('form-control');
+                $(columns[i]).html(input);
+            });
+
+            PMM.container.append(line);
+            PMM.configureQuotas();
+        },
+        configureAdd: function () {
+            this.addQuota.on('click', function () {
+                PMM.addLineQuota();
+            });
+        },
+        configureFields: function (inputs) {
+            $(inputs[1]).TouchSpin({
+                min: 0,
+                max: 100,
+                postfix: '%'
+            });
+            $(inputs[2]).TouchSpin({
+                min: 0
+            });
+        },
+        configureForm: function(){
+            PMM.form.on('submit', function (event) {
+                event.stopPropagation();
+                event.preventDefault();
+                var form = $(this);
+                $.ajax({
+                    url: form.attr('action'),
+                    data: form.serialize(),
+                    method: form.attr('method'),
+                    complete: function (xhr) {
+                        if (200 == xhr.status) {
+                            payModal.modal('hide');
+                            getPaymentMethods();
+                        } else {
+                            swal('Ooops', 'Falha ao executar a operação.', 'error');
+                        }
+                    }
+                });
+            });
+        },
+        init: function () {
+            this.prototype = this.container.data('prototype');
+            this.configureAdd();
+            this.configureQuotas();
+            this.configureForm();
+        }
+    };
+
+    PMM.init();
+
+</script>
