@@ -39,7 +39,6 @@
                         method: 'post',
                         data: {_method:'delete'},
                         complete: function (xhr) {
-                            console.log(xhr.responseJSON);
                             if (200 == xhr.status) {
                                 swal("", xhr.responseJSON['message'], "success");
                                 window.setTimeout(function(){
