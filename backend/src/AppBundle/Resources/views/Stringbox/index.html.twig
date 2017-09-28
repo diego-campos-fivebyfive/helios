@@ -283,45 +283,6 @@
                 });
             }
 
-            var sanitize = function (element) {
-                function clear(v) {
-                    return v.replace(/\D+/g, '');
-                }
-
-                var value = element.val();
-                var backup = value.replace(/\./g, ',');
-                value = clear(value);
-                if (backup.indexOf(',') > 0) {
-                    var commas = backup.split(',');
-                    value = clear(commas[0]) + ',';
-                    if (commas[1].length) {
-                        value += clear(commas[1]);
-                    }
-                }
-                if (0 == backup.indexOf('-')) {
-                    if (2 == backup.split('-').length) {
-                        value = '-' + value;
-                    }
-                }
-                element.val(value);
-            };
-
-            var custom_mask = function (element) {
-                element.on('keyup', function () {
-                    sanitize(element);
-                });
-            };
-
-            var common_mask = {pattern: '##,##', reverse: true};
-            var targets = {
-                'appbundle_component_stringbox_cmvProtheus': common_mask,
-                'appbundle_component_stringbox_cmvApplied': common_mask
-            };
-
-            $.each(targets, function (id, options) {
-                custom_mask($('#' + id));
-            });
-
         });
 
 
