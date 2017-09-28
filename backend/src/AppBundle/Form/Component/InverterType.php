@@ -78,6 +78,18 @@ class InverterType extends AbstractType
             'required' => false,
             //'disabled' => true
         ]);
+        $builder->add('ncm', null, [
+            'required' => false
+        ]);
+        $builder->add('cmvProtheus', null, [
+            'required' => false
+        ]);
+        $builder->add('cmvApplied', null, [
+            'required' => false
+        ]);
+        $builder->add('promotional', null, [
+            'required' => false
+        ]);
         $builder->add('connection_type', null,[
             'required' => false
         ]);
@@ -93,7 +105,9 @@ class InverterType extends AbstractType
         $builder->add('mppt_connections', null,[
             'required' => false
         ]);
-        $builder->add('code', TextType::class);
+        $builder->add('code', TextType::class, [
+            'label' => false
+        ]);
     }
 
     /**
