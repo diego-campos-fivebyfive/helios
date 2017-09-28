@@ -56,7 +56,10 @@ Esclarecimentos gerais relacionados a documentação:
     - Para cada tarefa há um prazo máximo de execução de 2 dias;
     - Caso a execução da tarefa fique travada em mais de 20min deve ser solicitada ajuda utilizando a flag `HELP`;
     - Caso a execução de uma tarefa ultrapasse 2 dias a mesma deve ser reavaliada pela a equipe;
-    - Tarefas devem ser quebradas em caso de: tarefas muito grandes, tarefas que modifiquem diversas partes diferentes do projeto ou caso a execução da tarefa ultrapasse os 2 dias;
+    - Tarefas devem ser quebradas em caso de:
+      - Tarefas muito grandes,
+      - Tarefas que modifiquem diversas partes diferentes do projeto,
+      - Tarefas em que a execução ultrapasse os 2 dias;
 
       ##### A execução de tarefas segue o seguinte fluxo:
         ```
@@ -126,11 +129,11 @@ Esclarecimentos gerais relacionados a documentação:
     ```
 
   <a name="aplicacao--bash"></a><a name="3.2"></a>
-  - [3.2](#aplicacao--bash) **Bashrc**:
+  - [3.2](#aplicacao--bash) **Bash Profile**:
 
-    - ##### 3.2.1. *Abra o Arquivo `.bashrc` com seu editor (Vim, Nano ou outro)*
+    - ##### 3.2.1. *Abra o Arquivo `.profile` com seu editor (Vim, Nano ou outro)*
     ```
-    $ sudo vim ~/.bashrc
+    $ sudo vim ~/.profile
     ```
 
     - ##### 3.2.2. *Adicione ao final do arquivo as linhas*
@@ -143,7 +146,7 @@ Esclarecimentos gerais relacionados a documentação:
 
     - ##### 3.2.3. *Carregue as alterações do arquivo bash*
     ```
-    $ source ~/.bashrc
+    $ source ~/.profile
     ```
 
     - ##### 3.2.4. *Na variável `PATH` agora devem aparecer alguns caminhos relacionados a pasta do projeto*
@@ -327,7 +330,7 @@ Esclarecimentos gerais relacionados a documentação:
     - ##### Pequisa de rotas
       ###### default: no arg, show all
       ```
-      $ ces-route-list --'[STRING]'
+      $ ces-route-list '[STRING]'
       ```
 
     - ##### Requisição de token
