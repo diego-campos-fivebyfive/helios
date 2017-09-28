@@ -3,7 +3,9 @@
 namespace Tests\AppBundle\Entity;
 
 use AppBundle\Entity\Order\Element;
+use AppBundle\Entity\Order\Order;
 use Tests\AppBundle\AppTestCase;
+use Tests\AppBundle\Helpers\ObjectHelperTest;
 
 /**
  * Class OrderManagerTest
@@ -11,6 +13,40 @@ use Tests\AppBundle\AppTestCase;
  */
 class OrderManagerTest extends AppTestCase
 {
+    use ObjectHelperTest;
+
+    public function testFluentSetterProperties()
+    {
+        $data = [
+            'reference' => uniqid('REF'),
+            'status' => Order::STATUS_BUILDING,
+            'description' => 'This is a test order description',
+            'note' => 'This is a test order note',
+            'power' => 175.25,
+            'shippingRules' => ['foo' => 'bar'],
+            'sendAt' => new \DateTime('-10 days'),
+            'filename' => 'order_file.pdf',
+            'contact' => 'Name of contact',
+            'email' => 'emailofcontact@gmail.com',
+            'phone' => '(11) 99987-5874',
+            'customer' => 'Full Customer Name',
+            'postcode' => '85472-251',
+            'address' => 'The Customer Address, 1578',
+            'city' => 'The City',
+            'state' => 'KL',
+            'cnpj' => '11.111.111./0001-11',
+            'ie' => '254.785-58',
+            'createdAt' => new \DateTime('-1 week'),
+            'updatedAt' => new \DateTime('-10 days')
+        ];
+
+        $manager = $this->manager('order');
+
+        $order = $manager->create();
+
+        self::fluentSettersTest($order, $data);
+    }
+
     public function testElementsManagement()
     {
         $manager = $this->getOrderManager();
