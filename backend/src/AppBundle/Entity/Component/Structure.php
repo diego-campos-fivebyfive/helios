@@ -96,7 +96,7 @@ class Structure implements StructureInterface, ComponentInterface
      */
     public function __construct()
     {
-        $this->status = self::DISABLE;
+
     }
 
     /**
