@@ -21,10 +21,11 @@ class StringBoxType extends AbstractType
             ->add('outputs', null, ['required' => true])
             ->add('fuses', null, ['required' => true])
             ->add('maker', null, ['required' => true])
-            ->add('status', null, ['required' => true])
+            ->add('status', null, ['required' => false])
             ->add('ncm', null, ['required' => true])
             ->add('cmvProtheus', null, ['required' => true])
-            ->add('cmvApplied', null, ['required' => true]);
+            ->add('cmvApplied', null, ['required' => true])
+            ->add('promotional', null, ['required' => false]);
         $builder->add('available', CheckboxType::class, [
             'label' => 'Disponivel',
             'required' => false,
