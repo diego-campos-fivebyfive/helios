@@ -22,6 +22,7 @@ class VarietyType extends AbstractType
             ->add('description', null, ['required' => true])
             ->add('maker', null, ['required' => false])
             ->add('status', null, ['required' => false])
+            ->add('promotional', null, ['required' => false])
             ->add('ncm', null, ['required' => true])
             ->add('cmvProtheus', null, ['required' => true])
             ->add('cmvApplied', null, ['required' => true]);

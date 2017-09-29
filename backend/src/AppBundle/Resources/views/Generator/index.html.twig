@@ -71,6 +71,19 @@
                             </div>
 
                             <div class="tab-pane" id="tab3">
+
+                                {% if app.user.isPlatform %}
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">
+                                            <i class="fa fa-user"></i>
+                                            Informações do Cliente
+                                        </div>
+                                        <div class="panel-body">
+                                            {{ render(controller('AdminBundle:Order:info', {id:order.id})) }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+
                                 <div class="panel panel-warning">
                                     <div class="panel-heading">
                                         <i class="fa fa-list"></i>
@@ -172,7 +185,7 @@
             },
             getOrders: function(){
                 Request.send({
-                    url: '{{ path('generator_orders') }}',
+                    url: '{{ path('generator_orders',{id: order.id}) }}',
                     callback: function(xhr){
                         $('#generator_orders').html(xhr.responseText);
                     }
@@ -222,7 +235,7 @@
                     });
 
                     Request.send({
-                        url: '{{ path('generator_orders_create',{id:'_id_'}) }}'.replace(/_id_/g, id),
+                        url: '{{ path('generator_orders_create',{id:'_id_',master:order.id}) }}'.replace(/_id_/g, id),
                         method: 'post',
                         callback: function (xhr) {
                             ShippingManager.calculate();

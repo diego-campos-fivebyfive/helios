@@ -18,21 +18,22 @@ class StructureType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
-
         $builder->add('code', null, ['required' => false])
-                ->add('type', null, ['required' => false])
-                ->add('subtype', null, ['required' => false])
-                ->add('description', null, ['required' => false])
-                ->add('size', null, ['required' => false])
-                ->add('status', CheckboxType::class, [
-                    'label'  => 'Ativo',
-                    'required' => false
-                ]);
+            ->add('type', null, ['required' => false])
+            ->add('subtype', null, ['required' => false])
+            ->add('description', null, ['required' => false])
+            ->add('size', null, ['required' => false])
+            ->add('ncm', null, ['required' => true])
+            ->add('cmvProtheus', null, ['required' => true])
+            ->add('cmvApplied', null, ['required' => true])
+            ->add('promotional', null, ['required' => false])
+            ->add('status', CheckboxType::class, [
+                'label'  => 'Ativo',
+                'required' => false
+            ]);
         $builder->add('available', CheckboxType::class, [
-            'label' => 'Disponivel',
-            'required' => false,
-            //'disabled' => true
+            'label' => 'Disponível',
+            'required' => false
         ])
             ->add('code', TextType::class);
     }

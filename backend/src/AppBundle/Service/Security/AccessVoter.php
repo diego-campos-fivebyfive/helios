@@ -12,11 +12,13 @@
 
 namespace AppBundle\Service\Security;
 
+use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\Category;
 use AppBundle\Entity\CategoryInterface;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\User;
 use AppBundle\Entity\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -151,6 +153,28 @@ class AccessVoter extends Voter
     }
 
     /**
+     * @param Order $order
+     * @param TokenInterface $token
+     * @return bool
+     */
+    private function voteEditOrder(Order $order, TokenInterface $token)
+    {
+        $user = $token->getUser();
+
+        if($user->isPlatform())
+            return true;
+
+        $account = $order->getAccount();
+        if(!$account instanceof AccountInterface)
+            return false;
+
+        /** @var MemberInterface $member */
+        $member = $user->getInfo();
+
+        return ($account === $member->getAccount());
+    }
+
+    /**
      * @param $object
      * @return bool
      */
@@ -159,7 +183,8 @@ class AccessVoter extends Voter
         return in_array(get_class($object), [
             Customer::class,
             Category::class,
-            Project::class
+            Project::class,
+            Order::class
         ]);
     }
 
