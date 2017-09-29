@@ -74,6 +74,10 @@
                class="btn btn-success">
                 <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
             </a>
+            <a data-delete="{{ path('component_delete',{type:extra.type,id:component.id}) }}"
+               class="btn btn-danger">
+                <i class="fa fa-trash"></i> {{ 'Delete'|trans }}
+            </a>
             {% endif %}
 
         </div>
@@ -93,6 +97,13 @@
                     <i class="fa fa-{{ is_grid ? 'list' : 'th' }}"></i> {{ is_grid ? 'Exibir Lista'|trans : 'Exibir Grade'|trans }}
                 </a>
             </div>
+
+            {% if member.isAdmin or member.isPlatformAdmin or member.isPlatformMaster %}
+                <span class="pull-right col-md-2">
+                    <a class="pull-right btn btn-primary" href="{{ path('component_create', {type:type}) }}">
+                    <i class="fa fa-plus-square" aria-hidden="true"></i> Cadastrar {{ is_module ? 'module'|trans : 'inverter'|trans }}</a>
+                </span>
+            {% endif %}
         </div>
 
         <div class="row" id="real-content">
@@ -114,12 +125,10 @@
                                            data-toggle="modal"
                                            data-target="#modal_details"
                                            class="product-name">
-                                            {{ component.model|slice(0,20) }} <br/>
-                                            {% if component.maker is not null %}
-                                            <small title="{{ component.maker }}">
-                                                {{ component.maker.name|slice(0,25) }}
+                                            {{ component.model|slice(0,16) }} <br/>
+                                            <small title="{% if component.maker is not null %}{{ component.maker }}{% endif %}">
+                                                {% if component.maker is not null %}{{ component.maker.name|slice(0,25) }}{% endif %}&nbsp;
                                             </small>
-                                            {% endif %}
                                         </a>
 
                                         {% if is_module %}
@@ -245,6 +254,50 @@
                     detail_component.html('<h1> Nenhum componente selecionado para visualização </h1>');
                 }
             });
+
+            var dataDelete = $('[data-delete]');
+            if(dataDelete.length){
+                dataDelete.on('click', function () {
+                    var url = $(this).data('delete');
+                    swal({
+                        title: "Confirma exclusão deste Componente?",
+                        text: null,
+                        type: "info",
+                        showCancelButton: true,
+                        cancelButtonText: "{{ 'Cancel'|trans }}",
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "{{ 'Confirm'|trans }}",
+                        closeOnConfirm: false
+                    }, function () {
+                        swal.close();
+                        $.ajax({
+                            url: url,
+                            method: 'post',
+                            data: {_method:'delete'},
+                            complete: function (xhr) {
+                                if (200 == xhr.status) {
+                                    swal("", xhr.responseJSON, "success");
+                                    window.setTimeout(function(){
+                                        location.reload();
+                                        swal.close();
+                                    }, 1000);
+                                } else {
+                                    swal("Oops!", xhr.responseJSON['error'], "error");
+                                }
+                            },
+                            beforeSend: function () {
+                                swal({
+                                    title: "Excluindo...",
+                                    text: "Aguarde",
+                                    type: "info",
+                                    showConfirmButton: false
+                                });
+                            }
+                        });
+                    });
+                });
+            }
+
 
         });
 

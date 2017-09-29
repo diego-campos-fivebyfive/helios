@@ -204,7 +204,6 @@ class Inverter implements InverterInterface, ComponentInterface
      */
     public function __construct()
     {
-        $this->status = self::DISABLE;
     }
 
     /**

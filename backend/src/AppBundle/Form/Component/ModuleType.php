@@ -98,7 +98,21 @@ class ModuleType extends AbstractType
             'required' => false,
             //'disabled' => true
         ]);
-        $builder->add('code', TextType::class);
+        $builder->add('ncm', null, [
+            'required' => false
+        ]);
+        $builder->add('cmvProtheus', null, [
+            'required' => false
+        ]);
+        $builder->add('cmvApplied', null, [
+            'required' => false
+        ]);
+        $builder->add('promotional', null, [
+            'required' => false
+        ]);
+        $builder->add('code', TextType::class, [
+            'label' => false
+        ]);
         $builder->add('length', null, [
             'required' => false
         ]);
