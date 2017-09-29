@@ -96,12 +96,7 @@ class ComponentController extends AbstractController
 
         $component = $manager->create();
 
-        if ('module' == $type) {
-            $formClass = ModuleType::class;
-        }
-        else {
-            $formClass = InverterType::class;
-        }
+        $formClass = 'module' == $type ? ModuleType::class : InverterType::class;
 
         $form = $this->createForm($formClass, $component);
 
