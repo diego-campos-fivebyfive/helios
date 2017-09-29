@@ -157,10 +157,10 @@ class ComponentController extends AbstractController
     /**
      * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
      *
-     * @Route("/{id}/delete", name="component_delete")
-     * @Method({"delete"})
+     * @Route("/{id}/delete/", name="component_delete")
+     * //@Method({"delete"})
      */
-    public function deleteAction(Request $request, $type, $id)
+    public function deleteAction($type, $id)
     {
         $component = $this->findComponent($type, $id);
 
@@ -175,8 +175,8 @@ class ComponentController extends AbstractController
         $dataSheet = $this->getComponentsDir() . $component->getDataSheet();
         $image = $this->getComponentsDir() . $component->getImage();
 
-        if(file_exists($image)) unlink($image);
-        if(file_exists($dataSheet)) unlink($dataSheet);
+        if(is_file($image)) unlink($image);
+        if(is_file($dataSheet)) unlink($dataSheet);
 
         $this->manager($type)->delete($component);
 
