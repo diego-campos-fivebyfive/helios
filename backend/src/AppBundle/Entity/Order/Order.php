@@ -65,7 +65,7 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @var int
      *
-     * @ORM\Column(name="status", type="integer", nullable=true)
+     * @ORM\Column(name="status", type="smallint", nullable=true)
      */
     private $status;
 
@@ -168,6 +168,13 @@ class Order implements OrderInterface, InsurableInterface
     private $shippingRules;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="smallint")
+     */
+    private $source;
+
+    /**
      * @var AccountInterface
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer")
@@ -204,6 +211,7 @@ class Order implements OrderInterface, InsurableInterface
         $this->childrens = new ArrayCollection();
         $this->shippingRules = [];
         $this->status = self::STATUS_BUILDING;
+        $this->source = self::SOURCE_ACCOUNT;
     }
 
     /**
@@ -747,6 +755,24 @@ class Order implements OrderInterface, InsurableInterface
     public function isBudget()
     {
         return $this->childrens->count() > 0;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setSource($source)
+    {
+        $this->source = $source;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSource()
+    {
+        return $this->source;
     }
 }
 

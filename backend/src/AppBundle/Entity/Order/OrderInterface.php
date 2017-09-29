@@ -25,6 +25,9 @@ interface OrderInterface
     const STATUS_APPROVED = 3;
     const STATUS_REJECTED = 4;
 
+    const SOURCE_ACCOUNT = 0;
+    const SOURCE_PLATFORM = 1;
+
     /**
      * @return int
      */
@@ -330,4 +333,15 @@ interface OrderInterface
      * @return null|array|string
      */
     public function getPaymentMethod($format = 'json');
+
+    /**
+     * @param $source
+     * @return OrderInterface
+     */
+    public function setSource($source);
+
+    /**
+     * @return int
+     */
+    public function getSource();
 }
