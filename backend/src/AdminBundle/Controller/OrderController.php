@@ -9,8 +9,11 @@ use AppBundle\Form\Order\OrderType;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
+ * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
+ *
  * @Route("orders")
  * @Breadcrumb("Orçamentos")
  */
@@ -25,7 +28,15 @@ class OrderController extends AbstractController
 
         $qb = $manager->createQueryBuilder();
 
-        $qb->where('o.parent is null')
+        $qb2 = $manager->getEntityManager()->createQueryBuilder();
+        $qb->where(
+            $qb->expr()->in('o.id',
+                $qb2->select('o2')
+                    ->from(Order::class, 'o2')
+                    ->where('o2.parent is null')
+                    ->getQuery()->getDQL()
+            )
+        )
             ->andWhere('o.status <> :status')
             ->setParameters([
                 'status' => Order::STATUS_BUILDING
@@ -45,9 +56,13 @@ class OrderController extends AbstractController
                     'agent' => $member->getId()
                 ]);
 
+            $accounts = array_map('current',$qbc->getQuery()->getResult());
+            if (count($accounts) == 0)
+                $accounts = 0;
+
             $qb->andWhere(
                 $qb->expr()->in('o.account',
-                    array_map('current',$qbc->getQuery()->getResult())
+                    $accounts
                 )
             );
         }
