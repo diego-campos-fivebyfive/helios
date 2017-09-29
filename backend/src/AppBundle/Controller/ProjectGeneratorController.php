@@ -179,6 +179,16 @@ class ProjectGeneratorController extends AbstractController
     }
 
     /**
+     * @Route("/orders/list/{id}", name="generator_orders_list")
+     */
+    public function ordersListAction(Order $order)
+    {
+        return $this->render('generator.review_orders', [
+            'order' => $order
+        ]);
+    }
+
+    /**
      * @Route("/orders/{id}/create", name="generator_orders_create")
      * @Method("post")
      */
@@ -211,7 +221,9 @@ class ProjectGeneratorController extends AbstractController
      */
     public function updateOrderAction(Request $request, Order $order)
     {
-        $form = $this->createForm(OrderType::class, $order);
+        $form = $this->createForm(OrderType::class, $order, array(
+            'member' => $this->member()
+        ));
 
         $form->handleRequest($request);
 
