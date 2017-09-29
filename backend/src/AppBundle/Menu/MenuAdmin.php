@@ -52,12 +52,14 @@ trait MenuAdmin
         if(!$isAdmin)
         $this->addComponents($menu);
 
-        if(!$isAdmin) {
-
+        if($user->isPlatformAdmin() || $user->isPlatformMaster()) {
             $menu->addChild('Cond. Pagamento', [
                 'route' => 'payment_methods',
                 'extras' => ['icon' => self::icon('signature')]
             ]);
+        }
+
+        if(!$isAdmin) {
 
             $settings = $menu->addChild('Settings', [
                 'uri' => '#',

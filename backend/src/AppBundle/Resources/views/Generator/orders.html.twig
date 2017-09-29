@@ -148,13 +148,13 @@
     });
 
     $('#bt_save').click(function () {
-        $.ajax({
+        {#$.ajax({
             url: '{{ path('generator_orders') }}',
             success: function () {
                 ShippingManager.calculate();
                 GeneratorHandler.onSaveOrder();
             }
-        });
+        });#}
 
         $('#button_save').trigger('click');
         $('#e_modal_details').modal('hide');

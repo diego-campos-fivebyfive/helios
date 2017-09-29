@@ -65,7 +65,7 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @var int
      *
-     * @ORM\Column(name="status", type="integer", nullable=true)
+     * @ORM\Column(name="status", type="smallint", nullable=true)
      */
     private $status;
 
@@ -168,6 +168,13 @@ class Order implements OrderInterface, InsurableInterface
     private $shippingRules;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="smallint")
+     */
+    private $source;
+
+    /**
      * @var AccountInterface
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer")
@@ -203,6 +210,8 @@ class Order implements OrderInterface, InsurableInterface
         $this->elements = new ArrayCollection();
         $this->childrens = new ArrayCollection();
         $this->shippingRules = [];
+        $this->status = self::STATUS_BUILDING;
+        $this->source = self::SOURCE_ACCOUNT;
     }
 
     /**
@@ -614,6 +623,28 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @inheritDoc
      */
+    public function setPaymentMethod($paymentMethod)
+    {
+        $data = json_decode($paymentMethod, true);
+
+        $this->addMetadata('payment_method', $data);
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPaymentMethod($format =  'json')
+    {
+        $data = $this->metadata['payment_method'];
+
+        return  'json' == $format ? json_encode($data) : $data ;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setAccount($account)
     {
         $this->account = $account;
@@ -724,6 +755,24 @@ class Order implements OrderInterface, InsurableInterface
     public function isBudget()
     {
         return $this->childrens->count() > 0;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setSource($source)
+    {
+        $this->source = $source;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSource()
+    {
+        return $this->source;
     }
 }
 
