@@ -28,7 +28,6 @@
         margin-bottom: .5rem;
         font-family: inherit;
         font-weight: 700;
-        line-height: 1.1;
     }
 
     .collapse {
@@ -39,8 +38,9 @@
         color: #676a6c;
     }
 
-    #tfoot {
+    #tfoot, #tfoot > h4 {
         margin: 0rem;
+        font-weight: 700;
     }
 
     #thead {
@@ -115,10 +115,10 @@
             <th class="col-md-2"></th>
             <th class="col-md-2">Sub Total</th>
             <th class="col-md-2" style="text-align: center; padding-left: 30px;">
-                {{ order.subTotal|currency }}
+                <h4> {{ order.subTotal|currency }} </h4>
             </th>
             <th class="col-md-2" style="text-align: center; padding-left: 40px">
-                {{ order.TotalInsurance|currency }}
+                <h4> {{ order.TotalInsurance|currency }} </h4>
             </th>
         </tr>
     </tfoot>
