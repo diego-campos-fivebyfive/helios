@@ -203,6 +203,7 @@ class Order implements OrderInterface, InsurableInterface
         $this->elements = new ArrayCollection();
         $this->childrens = new ArrayCollection();
         $this->shippingRules = [];
+        $this->status = self::STATUS_BUILDING;
     }
 
     /**
@@ -609,6 +610,28 @@ class Order implements OrderInterface, InsurableInterface
     public function getInsuranceQuota()
     {
         return $this->getTotal();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setPaymentMethod($paymentMethod)
+    {
+        $data = json_decode($paymentMethod, true);
+
+        $this->addMetadata('payment_method', $data);
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPaymentMethod($format =  'json')
+    {
+        $data = $this->metadata['payment_method'];
+
+        return  'json' == $format ? json_encode($data) : $data ;
     }
 
     /**

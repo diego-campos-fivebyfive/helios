@@ -318,4 +318,16 @@ interface OrderInterface
      * @return float
      */
     public function getShipping();
+
+    /**
+     * @param $paymentMethod
+     * @return OrderInterface
+     */
+    public function setPaymentMethod($paymentMethod);
+
+    /**
+     * @param string $format
+     * @return null|array|string
+     */
+    public function getPaymentMethod($format = 'json');
 }
