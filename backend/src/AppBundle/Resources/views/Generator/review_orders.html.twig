@@ -1,0 +1,125 @@
+{% set orders = order.childrens %}
+<style>
+    .card{
+        position: relative;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        background-color: #fff;
+        border: 1px solid rgba(0,0,0,.125);
+        border-radius: .25rem;
+        margin-bottom: .35rem;
+    }
+    .card-header {
+        padding: .75rem 1.25rem;
+        margin-bottom: 0;
+        background-color: #f7f7f9;
+        border-bottom: 1px solid rgba(0,0,0,.125);
+    }
+
+    .card-header h4 {
+        margin-top: 0;
+        margin-bottom: .5rem;
+        font-family: inherit;
+        font-weight: 700;
+    }
+
+    .collapse {
+        display: none;
+    }
+
+    .order {
+        color: #676a6c;
+    }
+
+    #tfoot, #tfoot > h4 {
+        margin: 0rem;
+        font-weight: 700;
+    }
+
+    #thead {
+        margin-bottom: 5px;
+    }
+
+</style>
+
+<table class="table table-striped" id="thead">
+    <thead>
+        <tr>
+            <th class="col-md-4"> Descrição </th>
+            <th class="col-md-2" style="text-align: center"> Data </th>
+            <th class="col-md-2" > Qtde Itens </th>
+            <th class="col-md-2" style="text-align: center"> Vr. Equipamentos </th>
+            <th class="col-md-2" style="text-align: center"> Vr. Seguro </th>
+
+        </tr>
+    </thead>
+</table>
+<div id="accordion" role="tablist" aria-multiselectable="true">
+
+    {% for order in orders if not order.budget %}
+    <div class="card">
+        <div class="card-header" role="tab" id="{{ loop.index }}">
+                <h4>
+                    <a data-toggle="collapse" data-parent="#accordion" href="#{{ order.id }}" aria-expanded="false" aria-controls="collapseOne">
+                        <span class="col-md-4 order"> {{ order.description }} </span>
+                        <span class="col-md-2 order"> {{ order.createdAt|date('d/m/Y') }} </span>
+                        <span class="col-md-2 order"> {{ order.elements.count }} Itens</span>
+                        <span class="col-md-2 order" style="text-align: right"> {{ order.subTotal|currency }} </span>
+                        <span class="col-md-2 order" style="text-align: right"> {{ order.insurance|currency }} </span>
+                    </a>
+                </h4>
+        </div>
+
+        <div id="{{ order.id }}" class="collapse" role="tabpanel" aria-labelledby="headingOne">
+            <div class="card-block">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <td><b>ITEM</b></td>
+                        <td class="col-md-2"><b>CÓDIGO</b></td>
+                        <td class="col-md-5"><b>PRODUTO</b></td>
+                        <td class="col-md-1 text-center"><b>QTD</b></td>
+                        <td class="col-md-2 text-center"><b>VALOR UNIT</b></td>
+                        <td class="col-md-2 text-center"><b>VALOR TOTAL</b></td>
+                    </tr>
+                    </thead>
+                    {% for element in order.elements %}
+                        <tbody>
+                        <tr>
+                            <td class="text-center"><b>{{ loop.index }}</b></td>
+                            <td>{{ element.code }}</td>
+                            <td>{{ element.description }}</td>
+                            <td class="text-center">{{ element.quantity }}</td>
+                            <td class="text-center">{{ element.unitPrice|currency }}</td>
+                            <td class="text-center">{{ element.total|currency }}</td>
+                        </tr>
+                        </tbody>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<table class="table table-striped" id="tfoot">
+    <tfoot>
+        <tr>
+            <th class="col-md-4"></th>
+            <th class="col-md-2"></th>
+            <th class="col-md-2">Sub Total</th>
+            <th class="col-md-2" style="text-align: center; padding-left: 30px;">
+                <h4> {{ order.subTotal|currency }} </h4>
+            </th>
+            <th class="col-md-2" style="text-align: center; padding-left: 40px">
+                <h4> {{ order.TotalInsurance|currency }} </h4>
+            </th>
+        </tr>
+    </tfoot>
+</table>
