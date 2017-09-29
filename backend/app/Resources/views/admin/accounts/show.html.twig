@@ -93,6 +93,10 @@
                                             {{ account.level }}
                                         </div>
                                         <div class="col-md-12">
+                                            <label> Data de Registro: </label>
+                                            {{ account.createdAt|date('d/m/Y') }}
+                                        </div>
+                                        <div class="col-md-12">
                                             <label> Usuário Sices Vinculado: </label>
                                             {{ account.agent }}
                                         </div>
