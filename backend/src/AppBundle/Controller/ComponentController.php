@@ -158,7 +158,7 @@ class ComponentController extends AbstractController
      * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
      *
      * @Route("/{id}/delete/", name="component_delete")
-     * //@Method({"delete"})
+     * @Method({"delete"})
      */
     public function deleteAction($type, $id)
     {
