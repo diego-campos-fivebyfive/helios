@@ -31,7 +31,7 @@ Estamos a disposição para tirar qualquer dúvida sobre requisitos e até auxil
 
 Boa sorte!
 
-@ Sices Solar
+@ KolinaLabs
 
 [EMPLOYEE_NAME]
 [EMPLOYEE_GRADUATION]
