@@ -28,15 +28,7 @@ class OrderController extends AbstractController
 
         $qb = $manager->createQueryBuilder();
 
-        $qb2 = $manager->getEntityManager()->createQueryBuilder();
-        $qb->where(
-            $qb->expr()->in('o.id',
-                $qb2->select('o2')
-                    ->from(Order::class, 'o2')
-                    ->where('o2.parent is null')
-                    ->getQuery()->getDQL()
-            )
-        )
+        $qb->where('o.parent is null')
             ->andWhere('o.status <> :status')
             ->setParameters([
                 'status' => Order::STATUS_BUILDING
