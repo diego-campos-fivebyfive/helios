@@ -88,7 +88,7 @@
                                         <div class="panel-heading">
                                             Lista de Sistemas
                                         </div>
-                                        <div class="panel-body">
+                                        <div class="panel-body" id="orders_list">
                                             {% include view('Generator.review_orders') %}
                                         </div>
                                     </div>
@@ -200,6 +200,14 @@
                     }
                 });
             },
+            getOrdersList: function () {
+              Request.send({
+                  url: '{{ path('generator_orders_list',{id: order.id}) }}',
+                  callback: function (xhr) {
+                      $('#orders_list').html(xhr.responseText);
+                  }
+              });
+            },
             onSaveProject: function(project){
                 this.project = project;
                 this.getComponents();
@@ -212,6 +220,7 @@
                 this.getOrders();
                 this.resetProject();
                 this.getForm();
+                this.getOrdersList();
             },
             init: function(){
                 this.getForm();
