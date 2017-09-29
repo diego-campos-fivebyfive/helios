@@ -3,6 +3,7 @@
 namespace AdminBundle\Controller;
 
 use AppBundle\Controller\AbstractController;
+use AppBundle\Entity\Customer;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Form\Order\OrderType;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,16 +24,33 @@ class OrderController extends AbstractController
         $manager = $this->manager('order');
 
         $qb = $manager->createQueryBuilder();
-        $qb2 = $manager->getEntityManager()->createQueryBuilder();
-        $qb->where(
-            $qb->expr()->in('o.id',
-                $qb2->select('o2')
-                    ->from(Order::class, 'o2')
-                    ->where('o2.parent is null')
-                    ->andWhere('o2.sendAt is not null')
-                    ->getQuery()->getDQL()
-            )
-        );
+
+        $qb->where('o.parent is null')
+            ->andWhere('o.status <> :status')
+            ->setParameters([
+                'status' => Order::STATUS_BUILDING
+            ]);
+
+        $user = $this->getUser();
+        if(!$user->isPlatformAdmin() && !$user->isPlatformMaster()) {
+            $member = $user->getInfo();
+
+            $qbc = $this->manager('customer')->createQueryBuilder();
+
+            $qbc->select('c.id')
+                ->where("c.context = :context")
+                ->andWhere('c.agent = :agent')
+                ->setParameters([
+                    'context' => Customer::CONTEXT_ACCOUNT,
+                    'agent' => $member->getId()
+                ]);
+
+            $qb->andWhere(
+                $qb->expr()->in('o.account',
+                    array_map('current',$qbc->getQuery()->getResult())
+                )
+            );
+        }
 
         $pagination = $this->getPaginator()->paginate(
             $qb->getQuery(),
