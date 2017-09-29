@@ -98,11 +98,9 @@ class ComponentController extends AbstractController
 
         if ('module' == $type) {
             $formClass = ModuleType::class;
-            $family = 'modules';
         }
         else {
             $formClass = InverterType::class;
-            $family = 'inverters';
         }
 
         $form = $this->createForm($formClass, $component);
@@ -132,11 +130,9 @@ class ComponentController extends AbstractController
 
         if ('module' == $type) {
             $formClass = ModuleType::class;
-            $family = 'modules';
         }
         else {
             $formClass = InverterType::class;
-            $family = 'inverters';
         }
 
         $form = $this->createForm($formClass, $component);
