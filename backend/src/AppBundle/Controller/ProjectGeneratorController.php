@@ -22,7 +22,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 
 /**
- * @Security("has_role('ROLE_OWNER') or has_role('ROLE_OWNER_MASTER')")
+ * @Security("has_role('ROLE_OWNER') or has_role('ROLE_PLATFORM_COMMERCIAL')")
  * @Route("project/generator")
  * @Breadcrumb("Orçamentos")
  */
@@ -33,53 +33,21 @@ class ProjectGeneratorController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-        $id = $request->query->getInt('order', 0);
-        $manager = $this->manager('order');
-        $order = $manager->find($id);
-
-        if (!$order) {
-            $order = $this->getOrderValid($manager);
-
-            return $this->redirectOrder($order);
+        if (0 == $id = $request->query->getInt('order')) {
+            return $this->resolveOrderReference();
         }
 
-        if ($order->getSendAt() || $order->getParent()) {
-            $order = $this->getOrderValid($manager);
+        $order = $this->manager('order')->find($id);
 
-            return $this->redirectOrder($order);
+        $this->denyAccessUnlessGranted('edit', $order);
+
+        if (in_array($order->getStatus(), [Order::STATUS_APPROVED])) {
+            throw $this->createAccessDeniedException();
         }
 
         return $this->render('generator.index', [
             'order' => $order
         ]);
-    }
-
-    public function redirectOrder($order)
-    {
-        return $this->redirectToRoute('project_generator', [
-            'order' => $order->getId()
-        ]);
-    }
-
-    public function getOrderValid($manager)
-    {
-        $account = $this->account();
-
-        $order = $manager->findOneBy([
-            'account' => $account,
-            'sendAt' => null,
-            'parent' => null
-        ]);
-
-        if (!$order) {
-            /** @var Order $order */
-            $order = $manager->create();
-            $order->setAccount($account);
-
-            $manager->save($order);
-        }
-
-        return $order;
     }
 
     /**
@@ -201,45 +169,33 @@ class ProjectGeneratorController extends AbstractController
     }
 
     /**
-     * @Route("/orders", name="generator_orders")
+     * @Route("/orders/{id}", name="generator_orders")
      */
-    public function ordersAction()
+    public function ordersAction(Order $order)
     {
-        $manager = $this->manager('order');
-
-        $account = $this->account();
-        $order = $manager->findOneBy([
-            'account' => $account,
-            'sendAt' => null,
-            'parent' => null
-        ]);
-
         return $this->render('generator.orders', [
             'order' => $order
         ]);
     }
 
     /**
-     * @Route("/orders/{id}", name="generator_orders_create")
+     * @Route("/orders/{id}/create", name="generator_orders_create")
      * @Method("post")
      */
-    public function createOrderAction(Project $project)
+    public function createOrderAction(Request $request, Project $project)
     {
-        $transformer = $this->get('order_transformer');
         $manager = $this->manager('order');
 
-        $account = $this->account();
-        $order = $manager->findOneBy([
-            'account' => $account,
-            'sendAt' => null,
-            'parent' => null
-        ]);
+        /** @var Order $master */
+        $master = $manager->find($request->get('master'));
+
+        $transformer = $this->get('order_transformer');
 
         /** @var OrderInterface $order */
-        $orderChildren = $transformer->transformFromProject($project);
-        $order->addChildren($orderChildren);
+        $order = $transformer->transformFromProject($project);
+        $order->setParent($master);
 
-        $this->get('order_precifier')->precify($orderChildren);
+        $this->get('order_precifier')->precify($order);
 
         $this->manager('project')->delete($project);
 
@@ -287,11 +243,6 @@ class ProjectGeneratorController extends AbstractController
         $parent = $order->getParent();
 
         $manager->delete($order);
-
-        /*if ($parent->getChildrens()->isEmpty()) {
-            $parent->setShippingRules(['saosokaos' => 'ijaijdijasd']);
-            $manager->save($parent);
-        }*/
 
         return $this->json([]);
     }
@@ -417,6 +368,38 @@ class ProjectGeneratorController extends AbstractController
         $order->setShippingRules($rule);
 
         $this->manager('order')->save($order);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    private function resolveOrderReference()
+    {
+        $user = $this->user();
+        $account = $this->account();
+        $manager = $this->manager('order');
+
+        $criteria = ['status' => Order::STATUS_BUILDING];
+
+        if(!$user->isPlatform()){
+            $criteria['account'] = $account;
+        }
+
+        /** @var OrderInterface $order */
+        if(null == $order = $manager->findOneBy($criteria)){
+
+            $order = $manager->create();
+
+            if (!$user->isPlatform()) {
+                $order->setAccount($account);
+            }
+
+            $manager->save($order);
+        }
+
+        return $this->redirectToRoute('project_generator', [
+            'order' => $order->getId()
+        ]);
     }
 
     /**
