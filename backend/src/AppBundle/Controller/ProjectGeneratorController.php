@@ -190,9 +190,7 @@ class ProjectGeneratorController extends AbstractController
 
             $this->manager('order')->save($order);
 
-            return $this->json([
-                'shipping' => $order->getShippingRules()
-            ]);
+            return $this->json([]);
         }
 
         return $this->render('generator.company_shipping', [
