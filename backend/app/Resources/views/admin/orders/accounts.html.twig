@@ -38,7 +38,7 @@
                                     <tbody>
 
                                     {% for account in pagination.items %}
-                                        <tr data-account="{{ account.id }}" data-dismiss="modal" class="pointer">
+                                        <tr data-account="{{ account.id }}" data-lastname="{{ account.lastname|slice(0,30) }}" data-dismiss="modal" class="pointer">
                                             <td> {{ account.lastname }} </td>
                                             <td class="text-center"> {{ account.document }} </td>
                                             <td><i class="fa fa-envelope"></i>&nbsp;  {{ account.email }} </td>
@@ -66,6 +66,7 @@
 
         $(' [data-account] ').on('click', function () {
             $('#order_account').val($(this).data('account'));
+            $('#lastname').html($(this).data('lastname'));
         });
 
         form = $('#form_filtration');
