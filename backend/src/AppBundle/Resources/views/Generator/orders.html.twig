@@ -52,7 +52,7 @@
                         swal('Atenção', 'Falha ao executar a operação', 'error');
                     } else {
                         ShippingManager.calculate();
-                        GeneratorHandler.getOrders();
+                        GeneratorHandler.onSaveOrder();
                         swal.close();
                     }
                 }
@@ -148,13 +148,13 @@
     });
 
     $('#bt_save').click(function () {
-        {#$.ajax({
-            url: '{{ path('generator_orders') }}',
+        $.ajax({
+            url: '{{ path('generator_orders', {id:order.id}) }}',
             success: function () {
                 ShippingManager.calculate();
                 GeneratorHandler.onSaveOrder();
             }
-        });#}
+        });
 
         $('#button_save').trigger('click');
         $('#e_modal_details').modal('hide');

@@ -8,6 +8,7 @@ use AppBundle\Entity\Order\Element;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Form\Component\GeneratorType;
+use AppBundle\Form\Financial\CompanyType;
 use AppBundle\Form\Order\ElementType;
 use AppBundle\Form\Order\OrderType;
 use AppBundle\Service\Order\OrderFinder;
@@ -171,11 +172,50 @@ class ProjectGeneratorController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/company", name="generator_company_shipping")
+     */
+    public function companyShippingAction(Request $request, Order $order)
+    {
+        $rule = $order->getShippingRules();
+
+        $form = $this->createForm(CompanyType::class, $rule);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $data = $form->getData();
+
+            $rule['company'] = $order->setShippingRules($data);
+
+            $this->manager('order')->save($order);
+
+            return $this->json([
+                'shipping' => $order->getShippingRules()
+            ]);
+        }
+
+        return $this->render('generator.company_shipping', [
+            'order' => $order,
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
      * @Route("/orders/{id}", name="generator_orders")
      */
     public function ordersAction(Order $order)
     {
         return $this->render('generator.orders', [
+            'order' => $order
+        ]);
+    }
+
+    /**
+     * @Route("/orders/list/{id}", name="generator_orders_list")
+     */
+    public function ordersListAction(Order $order)
+    {
+        return $this->render('generator.review_orders', [
             'order' => $order
         ]);
     }
@@ -213,7 +253,9 @@ class ProjectGeneratorController extends AbstractController
      */
     public function updateOrderAction(Request $request, Order $order)
     {
-        $form = $this->createForm(OrderType::class, $order);
+        $form = $this->createForm(OrderType::class, $order, array(
+            'member' => $this->member()
+        ));
 
         $form->handleRequest($request);
 

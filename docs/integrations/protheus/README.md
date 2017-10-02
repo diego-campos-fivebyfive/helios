@@ -14,20 +14,21 @@ PROTHEUS INTEGRATION
 
     - **Headers**:
 
-      - NRANGEINI: Inicial Recno
-      - NRANGEFIN: Final Recno
-      - NPAGESEEK: Page number (pagination)
+      - NRANGEINI: Inicial Recno (initial register - ID)
+      - NRANGEFIN: Final Recno (final register - ID)
 
     - **Requests**:
 
-      - Homolog: Error `invalid class TJSONCLI`
+      - Homolog: OK
         ```bash
-        curl -X GET -H 'Content-Type:application/json' -H 'NRANGEINI:100' -H 'NRANGEFIN:100' -H 'NPAGESEEK:1' http://rest.sices.eu:1902/rest/tlistcli
+        curl -X GET -H 'Content-Type:application/json' -H 'NRANGEINI:1' -H 'NRANGEFIN:1' http://rest.sices.eu:1902/rest/tlistcli
         ```
-      - Production: Timeout
+      - Production: OK
         ```bash
-        curl -X GET -H 'Content-Type:application/json' -H 'NRANGEINI:100' -H 'NRANGEFIN:100' -H 'NPAGESEEK:1' http://restprod.sices.eu:1904/rest/tlistcli
+        curl -X GET -H 'Content-Type:application/json' -H 'NRANGEINI:1' -H 'NRANGEFIN:1' http://restprod.sices.eu:1904/rest/tlistcli
         ```
+
+    - **Create**: `jsorcisquik`
 
   - 1.2 **Product**: `tlistprod`
 
@@ -35,11 +36,11 @@ PROTHEUS INTEGRATION
 
     - **Requests**:
 
-      - Homolog: OK
+      - Homolog: OK (NRANGEINI, NRANGEFIN not working)
         ```bash
-        curl -X GET -H 'Content-Type:application/json' -H 'NPAGESEEK: 2' http://rest.sices.eu:1902/rest/tlistprod
+        curl -X GET -H 'Content-Type:application/json' -H 'NRANGEINI:100' -H 'NRANGEFIN:100' -H 'NPAGESEEK: 1' http://rest.sices.eu:1902/rest/tlistprod
         ```
-      - Production: Timeout
+      - Production: Empty response
         ```bash
         curl -X GET -H 'Content-Type:application/json' -H 'NRANGEINI:100' -H 'NRANGEFIN:100' -H 'NPAGESEEK:1' http://restprod.sices.eu:1904/rest/tlistprod
         ```
@@ -62,6 +63,8 @@ PROTHEUS INTEGRATION
         # not tested yet
         ```
 
+        > **Note**: We should open a proccess notification router, to recieve protheus notification
+
   - 1.4 **Payment**: `tlistcpgt`
 
     - **Method**: GET
@@ -74,11 +77,11 @@ PROTHEUS INTEGRATION
 
     - **Requests**:
 
-      - Homolog: Error, `The server can't find the requested resource.`
+      - Homolog: OK
         ```bash
         curl -X GET -H 'Content-Type:application/json' -H 'NRANGEINI: 1' -H 'NRANGEFIN:1' -H 'NPAGESEEK: 1' http://rest.sices.eu:1902/rest/tlistcpgt
         ```
-      - Production: Timeout
+      - Production: OK
         ```bash
         curl -X GET -H 'Content-Type:application/json' -H 'NRANGEINI: 1' -H 'NRANGEFIN:1' -H 'NPAGESEEK: 1' http://restprod.sices.eu:1904/rest/tlistcpgt
         ```
@@ -91,15 +94,14 @@ PROTHEUS INTEGRATION
 
       - NRANGEINI: Inicial Recno
       - NRANGEFIN: Final Recno
-      - NPAGESEEK: Page number (pagination)
 
     - **Requests**:
 
-      - Homolog: Error, `The server can't find the requested resource.`
+      - Homolog: OK
         ```bash
-        curl -X GET -H 'Content-Type:application/json' -H 'NRANGEINI: 1' -H 'NRANGEFIN:1' -H 'NPAGESEEK: 1' http://rest.sices.eu:1902/rest/tlistvnd
+        curl -X GET -H 'Content-Type:application/json' -H 'NRANGEINI: 1' -H 'NRANGEFIN:1' http://rest.sices.eu:1902/rest/tlistvnd
         ```
-      - Production: Timeout
+      - Production: OK
         ```bash
-        curl -X GET -H 'Content-Type:application/json' -H 'NRANGEINI: 1' -H 'NRANGEFIN:1' -H 'NPAGESEEK: 1' http://restprod.sices.eu:1904/rest/tlistvnd
+        curl -X GET -H 'Content-Type:application/json' -H 'NRANGEINI: 1' -H 'NRANGEFIN:1' http://restprod.sices.eu:1904/rest/tlistvnd
         ```

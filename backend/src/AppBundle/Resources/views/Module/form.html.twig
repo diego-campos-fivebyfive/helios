@@ -14,6 +14,11 @@
         .width_adjust {
             width: 40%;
         }
+
+        .check-label {
+            vertical-align: middle;
+            padding-right: 5px;
+        }
     </style>
 
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -41,11 +46,37 @@
                                     <div class="panel-body">
 
                                         <div class="form-group col-md-4">
+                                            {{ form_label(form.code, 'Código do Produto') }}
+                                            {{ form_row(form.code,{attr:{class:'form-control'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-md-4">
                                             {{ form_row(form.maker,{attr:{class:'form-control'}}) }}
                                         </div>
 
                                         <div class="form-group col-md-4">
                                             {{ form_row(form.model,{attr:{class:'form-control'}}) }}
+                                        </div>
+
+
+                                        <div class="form-group col-md-6">
+                                            <label> Datasheet (PDF) </label>
+                                            <input type="file" name="dataSheet" accept="application/pdf">
+                                            {% if module.datasheet %}
+                                                <span class="label info">
+                                                    Este componente já possui datasheet
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                            <label> Imagem (JPG) </label>
+                                            <input type="file" name="image" accept="image/jpeg">
+                                            {% if module.image %}
+                                                <span class="label info">
+                                                    Este componente já possui imagem
+                                                </span>
+                                            {% endif %}
                                         </div>
 
                                         <div class="form-group col-md-4">
@@ -59,43 +90,38 @@
                                         </div>
 
                                         <div class="form-group col-md-4">
-                                            <label> Datasheet (PDF) </label>
-                                            <input type="file" name="dataSheet" accept="application/pdf">
-                                            {% if module.datasheet %}
-                                                <span class="label info">
-                                                    Este componente já possui datasheet
-                                                </span>
-                                            {% endif %}
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            <label> Imagem (JPG) </label>
-                                            <input type="file" name="image" accept="image/jpeg">
-                                            {% if module.image %}
-                                                <span class="label info">
-                                                    Este componente já possui imagem
-                                                </span>
-                                            {% endif %}
-                                        </div>
-
-                                        <div class="form-group col-md-3">
                                             {{ form_label(form.connection_type, 'Tipo de Conexão') }}
                                             {{ form_widget(form.connection_type,{attr:{class:'form-control'}}) }}
                                         </div>
 
-                                        <div class="form-group col-md-3">
+                                        <div class="form-group col-md-4">
                                             {{ form_label(form.length, 'Comprimento') }}
                                             {{ form_widget(form.length,{attr:{class:'form-control'}}) }}
                                         </div>
 
-                                        <div class="form-group col-md-3">
+                                        <div class="form-group col-md-4">
                                             {{ form_label(form.width, 'Largura') }}
                                             {{ form_widget(form.width,{attr:{class:'form-control'}}) }}
                                         </div>
 
-                                        <div class="form-group col-md-3">
+                                        <div class="form-group col-md-4">
                                             {{ form_label(form.height, 'Altura') }}
                                             {{ form_widget(form.height,{attr:{class:'form-control'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_widget(form.status) }}
+                                            {{ form_label(form.status, 'Ativo', {label_attr:{class:'check-label'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_widget(form.available)}}
+                                            {{ form_label(form.available, 'Disponível para venda', {label_attr:{class:'check-label'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_widget(form.promotional)}}
+                                            {{ form_label(form.promotional, 'Produto Promocional', {label_attr:{class:'check-label'}}) }}
                                         </div>
                                     </div>
                                 </div>
@@ -197,16 +223,30 @@
 
                                     </div>
                                 </div>
-                                <div class="form-group col-md-1">
-                                    {{ form_label(form.status, 'Ativo') }}
-                                    <br>
-                                    {{ form_widget(form.status) }}
+
+                                <div class="panel panel-success technical_data">
+                                    <div class="panel-heading">
+                                        &nbsp; Taxas
+                                    </div>
+                                    <div class="panel-body">
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_label(form.ncm, 'NCM') }}
+                                            {{ form_widget(form.ncm,{attr:{class:'form-control'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_label(form.cmvProtheus, 'CMV Protheus') }}
+                                            {{ form_widget(form.cmvProtheus,{attr:{class:'form-control'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_label(form.cmvApplied, 'CMV Aplicado') }}
+                                            {{ form_widget(form.cmvApplied,{attr:{class:'form-control'}}) }}
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-4">
-                                    {{ form_label(form.available, 'Disponível para venda') }}
-                                    <br>
-                                    {{ form_widget(form.available)}}
-                                </div>
+
                                 <div class="form-group">
                                     <button type="submit" name="intention" value="save" class="btn btn-primary pull-right">
                                         <i class="fa fa-save"></i> {{ 'Save'|trans }}

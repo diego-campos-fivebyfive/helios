@@ -11,6 +11,11 @@
         #inverter_mpptNumber{
             width: 50%;
         }
+
+        .check-label {
+            vertical-align: middle;
+            padding-right: 5px;
+        }
     </style>
 
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -37,11 +42,16 @@
                                     </div>
                                     <div class="panel-body">
 
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
+                                            {{ form_label(form.code, 'Código do Produto') }}
+                                            {{ form_row(form.code, {attr:{class:'form-control'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-md-4">
                                             {{ form_row(form.maker,{attr:{class:'form-control'}}) }}
                                         </div>
 
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
                                             {{ form_row(form.model,{attr:{class:'form-control'}}) }}
                                         </div>
 
@@ -65,7 +75,22 @@
                                             {% endif %}
                                         </div>
 
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
+                                            {{ form_widget(form.status) }}
+                                            {{ form_label(form.status, 'Ativo', {label_attr:{class:'check-label'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_widget(form.available)}}
+                                            {{ form_label(form.available, 'Disponível para venda', {label_attr:{class:'check-label'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_widget(form.promotional)}}
+                                            {{ form_label(form.promotional, 'Produto Promocional', {label_attr:{class:'check-label'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-md-4">
                                             {{ form_label(form.connection_type, 'Tipo de Conexão') }}
                                             {{ form_widget(form.connection_type,{attr:{class:'form-control'}}) }}
                                         </div>
@@ -88,7 +113,7 @@
 
                                         <div class="form-group col-md-4">
                                             {{ form_label(form.mpptNumber, 'Número de MPPTs') }}
-                                            {{ form_widget(form.mpptNumber,{attr:{class:'form-control'}}) }}
+                                            {{ form_widget(form.mpptNumber,{attr:{class:'form-control', min:'0'}}) }}
                                         </div>
 
                                         <div class="form-group col-md-4">
@@ -102,13 +127,13 @@
                                     </div>
                                 </div>
 
-                                <div class="panel panel-warning input_data">
+                                <div class="panel panel-success input_data">
                                     <div class="panel-heading">
                                         &nbsp; Dados de Entrada
                                     </div>
                                     <div class="panel-body">
 
-                                        <div class="form-group col-md-3">
+                                        <div class="form-group col-md-4">
                                             {{ form_label(form.maxDcPower, 'Potência Máxima') }}
                                             <div class="input-group m-b">
                                                 {{ form_widget(form.maxDcPower,{attr:{class:'form-control'}}) }}
@@ -116,7 +141,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group col-md-3">
+                                        <div class="form-group col-md-4">
                                             {{ form_label(form.maxDcVoltage, 'Tensão Máxima') }}
                                             <div class="input-group m-b">
                                                 {{ form_widget(form.maxDcVoltage,{attr:{class:'form-control'}}) }}
@@ -124,7 +149,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group col-md-3">
+                                        <div class="form-group col-md-4">
                                             {{ form_label(form.mpptMaxDcCurrent, 'Corrente Máxima por MPPT') }}
                                             <div class="input-group m-b">
                                                 {{ form_widget(form.mpptMaxDcCurrent,{attr:{class:'form-control'}}) }}
@@ -132,7 +157,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group col-md-3">
+                                        <div class="form-group col-md-4">
                                             {{ form_label(form.mpptMin, 'Tensão Mínima de MPPT') }}
                                             <div class="input-group m-b">
                                                 {{ form_widget(form.mpptMin,{attr:{class:'form-control'}}) }}
@@ -140,7 +165,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group col-md-3">
+                                        <div class="form-group col-md-4">
                                             {{ form_label(form.mpptMax, 'Tensão Máxima de MPPT') }}
                                             <div class="input-group m-b">
                                                 {{ form_widget(form.mpptMax,{attr:{class:'form-control'}}) }}
@@ -148,14 +173,14 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group col-md-3">
+                                        <div class="form-group col-md-4">
                                             {{ form_label(form.phases, 'Fase') }}
                                             <div class="input-group m-b">
-                                                {{ form_widget(form.phases,{attr:{class:'form-control'}}) }}
+                                                {{ form_widget(form.phases,{attr:{class:'form-control', min:'0'}}) }}
                                             </div>
                                         </div>
 
-                                        <div class="form-group col-md-3">
+                                        <div class="form-group col-md-4">
                                             {{ form_label(form.phase_voltage, 'Tensão de Fase') }}
                                             <div class="input-group m-b">
                                                 {{ form_widget(form.phase_voltage,{attr:{class:'form-control'}}) }}
@@ -163,14 +188,14 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group col-md-3">
+                                        <div class="form-group col-md-4">
                                             {{ form_label(form.mppt_parallel, 'MPPT Paralelo') }}
                                             <div class="input-group m-b">
                                                 {{ form_widget(form.mppt_parallel,{attr:{class:'form-control'}}) }}
                                             </div>
                                         </div>
 
-                                        <div class="form-group col-md-3">
+                                        <div class="form-group col-md-4">
                                             {{ form_label(form.mppt_connections, 'Conexões MPPT') }}
                                             <div class="input-group m-b">
                                                 {{ form_widget(form.mppt_connections,{attr:{class:'form-control'}}) }}
@@ -179,16 +204,30 @@
 
                                     </div>
                                 </div>
-                                <div class="form-group col-md-1">
-                                    {{ form_label(form.status, 'Ativo') }}
-                                    <br>
-                                    {{ form_widget(form.status) }}
+
+                                <div class="panel panel-success technical_data">
+                                    <div class="panel-heading">
+                                        &nbsp; Taxas
+                                    </div>
+                                    <div class="panel-body">
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_label(form.ncm, 'NCM') }}
+                                            {{ form_widget(form.ncm,{attr:{class:'form-control'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_label(form.cmvProtheus, 'CMV Protheus') }}
+                                            {{ form_widget(form.cmvProtheus,{attr:{class:'form-control'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_label(form.cmvApplied, 'CMV Aplicado') }}
+                                            {{ form_widget(form.cmvApplied,{attr:{class:'form-control'}}) }}
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-4">
-                                    {{ form_label(form.available, 'Disponível para venda') }}
-                                    <br>
-                                    {{ form_widget(form.available)}}
-                                </div>
+
                                 <div class="form-group">
                                     <button type="submit" name="intention" value="save" class="btn btn-primary pull-right">
                                         <i class="fa fa-save"></i> {{ 'Save'|trans }}
