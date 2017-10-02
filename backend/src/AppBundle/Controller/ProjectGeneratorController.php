@@ -175,15 +175,18 @@ class ProjectGeneratorController extends AbstractController
     public function companyShippingAction(Request $request, Order $order)
     {
         $rule = $order->getShippingRules();
+        if (!is_array($rule['company'])) {
+            $rule['company'] = [];
+        }
 
-        $form = $this->createForm(CompanyType::class, $rule);
+        $form = $this->createForm(CompanyType::class, $rule['company']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $data = $form->getData();
+            $rule['company'] = $form->getData();
 
-            $rule['company'] = $order->setShippingRules($data);
+            $order->setShippingRules($rule);
 
             $this->manager('order')->save($order);
 
