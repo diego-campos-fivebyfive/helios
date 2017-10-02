@@ -247,3 +247,6 @@ services:
     memorial_cloner:
         class: AppBundle\Service\Pricing\MemorialCloner
         arguments: ['@memorial_manager']
+
+    order_manipulator:
+        class: AppBundle\Service\Order\OrderManipulator
