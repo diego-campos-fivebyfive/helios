@@ -1,10 +1,92 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{{ form_start(form, {attr:{id:'form_company', action: app.request.uri}}) }}
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group col-md-3">
+            {{ form_label(form.name, 'Nome da transportadora') }}
+            {{ form_widget(form.name,{attr:{class:'form-control', 'placeholder':'Nome da transportadora'}}) }}
+        </div>
+
+        <div class="form-group col-md-3">
+            {{ form_label(form.contact, 'Pessoa para contato') }}
+            {{ form_widget(form.contact,{attr:{class:'form-control', 'placeholder':'Pessoa para contato'}}) }}
+        </div>
+
+        <div class="form-group group-self col-md-3">
+            {{ form_label(form.phone, 'Telefone') }}
+            {{ form_widget(form.phone,{attr:{class:'form-control', 'placeholder':'Telefone'}}) }}
+        </div>
+
+        <div class="form-group  col-md-3">
+            {{ form_label(form.email, 'E-mail') }}
+            {{ form_widget(form.email,{attr:{class:'form-control', 'placeholder':'E-mail'}}) }}
+        </div>
+
+        <div class="form-group col-md-3">
+            {{ form_label(form.postcode, 'CEP') }}
+            {{ form_widget(form.postcode,{attr:{class:'form-control', 'data-mask':'00000-000', 'placeholder':'CEP'}}) }}
+        </div>
+
+        <div class="form-group col-md-3">
+            {{ form_label(form.state, 'Estado') }}
+            {{ form_widget(form.state,{attr:{class:'form-control', 'placeholder':'Estado'}}) }}
+        </div>
+
+        <div class="form-group col-md-3">
+            {{ form_label(form.city, 'Cidade') }}
+            {{ form_widget(form.city,{attr:{class:'form-control', 'placeholder':'Cidade'}}) }}
+        </div>
+
+        <div class="form-group col-md-3">
+            {{ form_label(form.address, 'Endereço') }}
+            {{ form_widget(form.address,{attr:{class:'form-control', 'placeholder':'Endereço'}}) }}
+        </div>
+
+        <div class="form-group col-md-2 pull-right">
+            <label> &nbsp; </label>
+            <button class="btn btn-success btn-block ladda-button" data-style="zoom-in" type="submit" id="company-save">
+                <i class="fa fa-save"></i> {{ 'Save'|trans }}
+            </button>
+        </div>
+    </div>
+</div>
+{{ form_end(form) }}
+
+{% block scripts %}
+<script>
+    var form = $('#form_company');
+    var button = $('#company-save');
+    button.ladda();
+
+    $('#form_company').on('submit', function (event) {
+        event.preventDefault();
+        button.ladda('start')
+        Request.send({
+            url: $(this).attr('action'),
+            method: 'post',
+            data: form.serialize(),
+            callback: function (xhr) {
+                button.ladda('stop');
+            }
+        });
+    })
+
+    $('#company_postcode').change(function () {
+        $.ajax({
+            url: '{{ path('utils_postcode') }}',
+            method: 'post',
+            data: {postcode: $('#company_postcode').val()},
+            complete: function (xhr) {
+                if (200 == xhr.status) {
+                    $('#company_state').val(xhr.responseJSON.uf);
+                    $('#company_city').val(xhr.responseJSON.cidade);
+                    $('#company_address').val(xhr.responseJSON.logradouro);
+                }
+            }
+        });
+    });
+
+    $('#company_phone').mask(function (val) {
+        return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+    });
+</script>
+{% endblock %}
