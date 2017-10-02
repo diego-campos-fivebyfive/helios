@@ -23,7 +23,7 @@
                                     <ul>
                                         <li><a href="#tab1" data-toggle="tab">1. Gerador</a></li>
                                         <li><a href="#tab2" data-toggle="tab">2. Orçamento Atual</a></li>
-                                        <li><a href="#tab3" data-toggle="tab">3. Lista de Sistemas</a></li>
+                                        <li><a href="#tab3" data-toggle="tab">3. Revisão</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -51,7 +51,7 @@
                                 </div>
 
                                 <nav class="pager wizard">
-                                    <a id="add_project_to_order" class="btn btn-order pull-right">
+                                    <a id="add_project_to_order" class="btn btn-primary pull-right" style="margin-right: 15px;">
                                         Adicionar ao orçamento atual <i class="fa fa-arrow-right"></i>
                                         <li class="next hide" href="javascript:;" id="next">Next</li>
                                     </a>
@@ -63,56 +63,65 @@
                                 </div>
 
                                 <nav class="pager wizard">
-                                    <li class="previous"><a href="javascript:;" class="btn btn-default">
+                                    <li class="previous"><a href="javascript:;" class="btn btn-default" style="margin-left: 15px;">
                                             <i class="fa fa-arrow-left"></i> voltar</a></li>
-                                    <li class="next"><a href="javascript:;" class="btn btn-primary">
+                                    <li class="next"><a href="javascript:;" class="btn btn-primary" style="margin-right: 15px;">
                                             próximo  <i class="fa fa-arrow-right"></i></a></li>
                                 </nav>
                             </div>
 
                             <div class="tab-pane" id="tab3">
+                                <div class="col-md-12">
+                                    {% if app.user.isPlatform %}
+                                        <div class="panel panel-info">
+                                            <div class="panel-heading">
+                                                <i class="fa fa-user"></i>
+                                                Informações do Cliente
+                                            </div>
+                                            <div class="panel-body">
+                                                {{ render(controller('AdminBundle:Order:info', {id:order.id})) }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
 
-                                {% if app.user.isPlatform %}
-                                    <div class="panel panel-info">
+                                    <div class="panel panel-primary">
                                         <div class="panel-heading">
-                                            <i class="fa fa-user"></i>
-                                            Informações do Cliente
+                                            Lista de Sistemas
+                                        </div>
+                                        <div class="panel-body" id="orders_list">
+                                            {% include view('Generator.review_orders') %}
+                                        </div>
+                                    </div>
+
+                                    <div class="panel panel-warning">
+                                        <div class="panel-heading">
+                                            <i class="fa fa-list"></i>
+                                            Frete
+                                        </div>
+                                        <div class="panel-body" id="generator_financial_shipping">
+                                        </div>
+                                    </div>
+
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            Total
                                         </div>
                                         <div class="panel-body">
-                                            {{ render(controller('AdminBundle:Order:info', {id:order.id})) }}
+                                            <div class="col-md-10"><h2>Valor total:</h2></div>
+                                            <h2 id="order-total">{{ order.total|currency }}</h2>
                                         </div>
                                     </div>
-                                {% endif %}
-
-                                <div class="panel panel-warning">
-                                    <div class="panel-heading">
-                                        <i class="fa fa-list"></i>
-                                        Frete
-                                    </div>
-                                    <div class="panel-body" id="generator_financial_shipping">
-                                    </div>
                                 </div>
 
-                                <div class="panel panel-primary">
-                                    <div class="panel-heading">
-                                        Total
-                                    </div>
-                                    <div class="panel-body">
-                                        <div class="col-md-10"><h2>Valor total:</h2></div>
-                                        <h2 id="order-total">{{ order.total|currency }}</h2>
-                                    </div>
-                                </div>
-
-                                <div class="pager wizard">
-                                    <li class="previous"><a href="javascript:;" class="btn btn-default">
+                                <nav class="pager wizard">
+                                    <li class="previous"><a href="javascript:;" class="btn btn-default" style="margin-left: 15px;">
                                             <i class="fa fa-arrow-left"></i> voltar</a></li>
-                                    <button type="button" id="btn_budget" data-url="{{ path('order_budget_create') }}" class="btn btn-warning pull-right">
-                                        <i class="fa fa-arrow-right"></i>
-                                        Enviar solicitação para SICES
+                                    <button type="button" id="btn_budget" data-url="{{ path('order_budget_create') }}"
+                                            class="btn btn-warning pull-right" style="margin-right: 15px;">
+                                        <i class="fa fa-arrow-right"></i> Enviar solicitação para SICES
                                     </button>
                                 </nav>
-                            </div>
-
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -191,6 +200,14 @@
                     }
                 });
             },
+            getOrdersList: function () {
+              Request.send({
+                  url: '{{ path('generator_orders_list',{id: order.id}) }}',
+                  callback: function (xhr) {
+                      $('#orders_list').html(xhr.responseText);
+                  }
+              });
+            },
             onSaveProject: function(project){
                 this.project = project;
                 this.getComponents();
@@ -203,6 +220,7 @@
                 this.getOrders();
                 this.resetProject();
                 this.getForm();
+                this.getOrdersList();
             },
             init: function(){
                 this.getForm();

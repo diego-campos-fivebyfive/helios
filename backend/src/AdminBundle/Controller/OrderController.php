@@ -3,13 +3,17 @@
 namespace AdminBundle\Controller;
 
 use AppBundle\Controller\AbstractController;
+use AppBundle\Entity\Customer;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Form\Order\OrderType;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
+ * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
+ *
  * @Route("orders")
  * @Breadcrumb("Orçamentos")
  */
@@ -20,19 +24,50 @@ class OrderController extends AbstractController
      */
     public function orderAction(Request $request)
     {
+        $user = $this->user();
         $manager = $this->manager('order');
 
+        $parameters = [
+            'platform' => Order::SOURCE_PLATFORM,
+            'account' => Order::SOURCE_ACCOUNT
+        ];
+
         $qb = $manager->createQueryBuilder();
-        $qb2 = $manager->getEntityManager()->createQueryBuilder();
+
         $qb->where(
-            $qb->expr()->in('o.id',
-                $qb2->select('o2')
-                    ->from(Order::class, 'o2')
-                    ->where('o2.parent is null')
-                    ->andWhere('o2.sendAt is not null')
-                    ->getQuery()->getDQL()
+            $qb->expr()->orX(
+                $qb->expr()->eq('o.source', ':platform'),
+                $qb->expr()->andX(
+                    $qb->expr()->eq('o.source', ':account'),
+                    $qb->expr()->notIn('o.status', [Order::STATUS_BUILDING])
+                )
             )
         );
+
+        if(!$user->isPlatformAdmin() && !$user->isPlatformMaster()) {
+
+            $member = $this->member();
+
+            $qbc = $this->manager('customer')->createQueryBuilder();
+
+            $qbc->select('c.id')
+                ->where("c.context = :context")
+                ->andWhere('c.agent = :agent')
+                ->setParameters([
+                    'context' => Customer::CONTEXT_ACCOUNT,
+                    'agent' => $member->getId()
+                ]);
+
+            $accounts = array_map('current',$qbc->getQuery()->getResult());
+            if (count($accounts) == 0)
+                $accounts = 0;
+
+            $qb->andWhere(
+                $qb->expr()->in('o.account', $accounts)
+            );
+        }
+
+        $qb->setParameters($parameters);
 
         $pagination = $this->getPaginator()->paginate(
             $qb->getQuery(),
