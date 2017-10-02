@@ -137,6 +137,9 @@ services:
         class: AppBundle\Manager\ThemeManager
         arguments: ['AppBundle\Entity\Theme', '@doctrine']
 
+    member_manager:
+        alias: customer_manager
+
     # Services
     component_collector:
         class: AppBundle\Service\Order\ComponentCollector
@@ -248,3 +251,7 @@ services:
 
     order_manipulator:
         class: AppBundle\Service\Order\OrderManipulator
+
+    order_finder:
+        class: AppBundle\Service\Order\OrderFinder
+        arguments: ['@order_manager']
