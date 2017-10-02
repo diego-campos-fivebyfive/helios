@@ -66,3 +66,10 @@ assetic:
             bin: node_modules/.bin/uglifycss
         uglifyjs2:
             bin: node_modules/.bin/uglifyjs
+
+aws:
+    version: latest
+    region: sa-east-1
+    credentials:
+        key: 'AKIAJ6BSXIPLVFQKGMTA'
+        secret: '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'
