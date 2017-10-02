@@ -378,12 +378,13 @@ class ProjectGeneratorController extends AbstractController
         $user = $this->user();
         $account = $this->account();
         $manager = $this->manager('order');
+        $isPlatform = $user->isPlatform();
 
-        $criteria = ['status' => Order::STATUS_BUILDING];
-
-        if(!$user->isPlatform()){
-            $criteria['account'] = $account;
-        }
+        $criteria = [
+            'status' => Order::STATUS_BUILDING,
+            'source' => $isPlatform ? Order::SOURCE_PLATFORM : Order::SOURCE_ACCOUNT,
+            'account' => $isPlatform ? null : $account
+        ];
 
         /** @var OrderInterface $order */
         if(null == $order = $manager->findOneBy($criteria)){
@@ -393,6 +394,8 @@ class ProjectGeneratorController extends AbstractController
             if (!$user->isPlatform()) {
                 $order->setAccount($account);
             }
+
+            $order->setSource($criteria['source']);
 
             $manager->save($order);
         }
