@@ -1,0 +1,105 @@
+{% block body %}
+    <style>
+        .pointer {
+            cursor: pointer;
+        }
+        input[name="filter_value"] {
+            width: 250px !important;
+        }
+    </style>
+
+    <div class="wrapper wrapper-content  animated fadeInRight">
+        <div class="row">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <span class="pull-right small text-muted">
+                        <h3>{{ pagination.totalItemCount }} Conta(s) encontrada(s)</h3>
+                    </span>
+                    <h2> {{ 'Accounts'|trans }}</h2>
+                </div>
+                <div class="ibox-content no-padding border-left-right">
+                </div>
+                <div class="ibox-content">
+
+                    {{ knp_pagination_filter(pagination, {'a.lastname, a.document, a.email':''}) }}
+
+                    <div class="clients-list">
+                        <div class="tab-content">
+                            <div class="tab-pane active">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th class="col-md-4"> Nome Fantasia </th>
+                                        <th class="col-md-2 text-center"> Cnpj </th>
+                                        <th class="col-md-4"> Email </th>
+                                        <th class="col-md-2"> Registro </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    {% for account in pagination.items %}
+                                        <tr data-account="{{ account.id }}" data-lastname="{{ account.lastname|slice(0,30) }}" data-dismiss="modal" class="pointer">
+                                            <td> {{ account.lastname }} </td>
+                                            <td class="text-center"> {{ account.document }} </td>
+                                            <td><i class="fa fa-envelope"></i>&nbsp;  {{ account.email }} </td>
+                                            <td> {{ account.createdAt|date('d/m/Y') }}</td>
+                                        </tr>
+                                    {% endfor %}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="row text-center">
+                                <div class="btn-group bt-xs">
+                                    {{ knp_pagination_render(pagination) }}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        $(' [data-account] ').on('click', function () {
+            $('#order_account').val($(this).data('account'));
+            $('#lastname').html($(this).data('lastname'));
+        });
+
+        form = $('#form_filtration');
+
+        form.on('submit', function (event) {
+            event.preventDefault();
+
+            Request.send({
+                url: form.attr('action'),
+                method: 'get',
+                data: form.serialize(),
+                callback: function (xhr) {
+                    content_accounts.html(xhr.responseText);
+                }
+            });
+        });
+
+        $(' ul[class="pagination"] li a ').toArray().forEach(function (el) {
+            rout = $(el).attr('href');
+            $(el).removeAttr('href');
+            $(el).attr('data-page', rout);
+        });
+
+        $(' [data-page] ').on( 'click', function () {
+            var url = $(this).data('page');
+            Request.send({
+                url: url,
+                method: 'get',
+                callback: function (xhr) {
+                    content_accounts.html(xhr.responseText);
+                }
+            });
+        })
+
+    </script>
+{% endblock %}
