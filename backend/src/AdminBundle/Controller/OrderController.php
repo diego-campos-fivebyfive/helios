@@ -20,22 +20,15 @@ class OrderController extends AbstractController
      */
     public function orderAction(Request $request)
     {
-        $manager = $this->manager('order');
+        $agent = $this->member();
 
-        $qb = $manager->createQueryBuilder();
-        $qb2 = $manager->getEntityManager()->createQueryBuilder();
-        $qb->where(
-            $qb->expr()->in('o.id',
-                $qb2->select('o2')
-                    ->from(Order::class, 'o2')
-                    ->where('o2.parent is null')
-                    ->andWhere('o2.sendAt is not null')
-                    ->getQuery()->getDQL()
-            )
-        );
+        /** @var \AppBundle\Service\Order\OrderFinder $finder */
+        $finder = $this->get('order_finder');
+
+        $finder->set('agent', $agent);
 
         $pagination = $this->getPaginator()->paginate(
-            $qb->getQuery(),
+            $finder->query(),
             $request->query->getInt('page', 1),
             10
         );
@@ -98,10 +91,5 @@ class OrderController extends AbstractController
         }
 
         return $paymentMethods;
-    }
-
-    private function findPaymentMethod()
-    {
-
     }
 }
