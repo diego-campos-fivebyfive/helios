@@ -16,7 +16,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 class OrderController extends AbstractController
 {
     /**
-     * @Route("/", name="index_orders")
+     * @Route("/", name="orders")
      */
     public function orderAction(Request $request)
     {
