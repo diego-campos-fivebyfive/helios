@@ -9,8 +9,10 @@
                 {{ form_widget(form.paymentMethod, {attr:{class:'form-control'}}) }}
             </div>
             <div class="col-md-8">
-                {{ form_label(form.account, 'Integrador') }}
-                {{ form_widget(form.account, {attr:{class:'form-control'}}) }}
+                {% if attribute(form, 'account') is defined %}
+                    {{ form_label(form.account, 'Integrador') }}
+                    {{ form_widget(form.account, {attr:{class:'form-control'}}) }}
+                {% endif %}
             </div>
         </div>
     </div>
