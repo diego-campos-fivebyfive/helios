@@ -24,19 +24,29 @@ class OrderController extends AbstractController
      */
     public function orderAction(Request $request)
     {
+        $user = $this->user();
         $manager = $this->manager('order');
+
+        $parameters = [
+            'platform' => Order::SOURCE_PLATFORM,
+            'account' => Order::SOURCE_ACCOUNT
+        ];
 
         $qb = $manager->createQueryBuilder();
 
-        $qb->where('o.parent is null')
-            ->andWhere('o.status <> :status')
-            ->setParameters([
-                'status' => Order::STATUS_BUILDING
-            ]);
+        $qb->where(
+            $qb->expr()->orX(
+                $qb->expr()->eq('o.source', ':platform'),
+                $qb->expr()->andX(
+                    $qb->expr()->eq('o.source', ':account'),
+                    $qb->expr()->notIn('o.status', [Order::STATUS_BUILDING])
+                )
+            )
+        );
 
-        $user = $this->getUser();
         if(!$user->isPlatformAdmin() && !$user->isPlatformMaster()) {
-            $member = $user->getInfo();
+
+            $member = $this->member();
 
             $qbc = $this->manager('customer')->createQueryBuilder();
 
@@ -53,11 +63,11 @@ class OrderController extends AbstractController
                 $accounts = 0;
 
             $qb->andWhere(
-                $qb->expr()->in('o.account',
-                    $accounts
-                )
+                $qb->expr()->in('o.account', $accounts)
             );
         }
+
+        $qb->setParameters($parameters);
 
         $pagination = $this->getPaginator()->paginate(
             $qb->getQuery(),
