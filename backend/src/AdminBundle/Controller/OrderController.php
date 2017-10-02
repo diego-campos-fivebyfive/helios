@@ -3,7 +3,9 @@
 namespace AdminBundle\Controller;
 
 use AppBundle\Controller\AbstractController;
+use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
+use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Form\Order\OrderType;
 use Symfony\Component\HttpFoundation\Request;
@@ -77,6 +79,49 @@ class OrderController extends AbstractController
 
         return $this->render('admin/orders/index.html.twig', array(
             'orders' => $pagination
+        ));
+    }
+
+    /**
+     * @Route("/accounts", name="accounts_list")
+     */
+    public function accountsAction(Request $request)
+    {
+        $paginator = $this->getPaginator();
+
+        $parameters = [
+            'context' => BusinessInterface::CONTEXT_ACCOUNT,
+            'status' => BusinessInterface::ACTIVATED
+        ];
+
+        $manager = $this->manager('customer');
+
+        $qb = $manager->getEntityManager()->createQueryBuilder();
+        $qb->select('a')
+            ->from(Customer::class, 'a')
+            ->where('a.context = :context')
+            ->andWhere('a.status = :status');
+
+        $user = $this->user();
+        if(!$user->isPlatformAdmin() && !$user->isPlatformMaster()) {
+            $member = $this->member();
+
+            $qb->andWhere('a.agent = :agent');
+
+            $parameters['agent'] = $member->getId();
+        }
+
+        $qb->setParameters($parameters);
+
+        $this->overrideGetFilters();
+
+        $pagination = $paginator->paginate(
+            $qb->getQuery(),
+            $request->query->getInt('page', 1), 10
+        );
+
+        return $this->render('admin/orders/accounts.html.twig', array(
+            'pagination' => $pagination
         ));
     }
 
