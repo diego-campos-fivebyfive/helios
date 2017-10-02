@@ -8,6 +8,7 @@ use AppBundle\Entity\Order\Element;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Form\Component\GeneratorType;
+use AppBundle\Form\Financial\CompanyType;
 use AppBundle\Form\Order\ElementType;
 use AppBundle\Form\Order\OrderType;
 use AppBundle\Service\Pricing\Insurance;
@@ -163,6 +164,35 @@ class ProjectGeneratorController extends AbstractController
         }
 
         return $this->render('generator.financial_shipping', [
+            'order' => $order,
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/company", name="generator_company_shipping")
+     */
+    public function companyShippingAction(Request $request, Order $order)
+    {
+        $rule = $order->getShippingRules();
+
+        $form = $this->createForm(CompanyType::class, $rule);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $data = $form->getData();
+
+            $rule['company'] = $order->setShippingRules($data);
+
+            $this->manager('order')->save($order);
+
+            return $this->json([
+                'shipping' => $order->getShippingRules()
+            ]);
+        }
+
+        return $this->render('generator.company_shipping', [
             'order' => $order,
             'form' => $form->createView()
         ]);
