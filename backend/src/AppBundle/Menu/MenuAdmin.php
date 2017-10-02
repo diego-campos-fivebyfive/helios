@@ -32,7 +32,7 @@ trait MenuAdmin
         }
 
         $menu->addChild('Orçamentos', [
-            'uri' => '#',
+            'route' => 'orders',
             'extras' => ['icon' => self::icon('bars')]
         ]);
 
