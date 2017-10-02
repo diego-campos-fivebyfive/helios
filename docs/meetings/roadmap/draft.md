@@ -83,10 +83,29 @@ PROTHEUS
 - CONVERSÃO PARA PADRÃO PLATAFORMA
 
 
+02/10/2017 - ORÇAMENTO / PEDIDOS / S3 / PROTHEUS
+==========================================================
 
+:: SOLICITAÇÕES
+- URGENTE: Habilitar edição de markups na edição do orçamento (MASTER e ADMIN)
+--- Coluna extra (markup)
+--- Tabela posterior com
+Expressão
+CMVs = SOMA(CMV_un * qte)
+Imposto = Preço de venda TOTAL * 0.0925
+Margem bruta da operação = Preço de venda TOTAL - CMVs - Imposto
 
+--- Utilizar a faixa de potência como base para decisão sobre recarregar os ranges ou não.
 
+- Alargar modal de edição de um orçamento
+- Na lista de "Usuários Sices", ocultar o usuário "MASTER"
+- Calcular na order os valores correspondentes aos percentuais da forma de pagamento
+- Promocionais (após Orçamento)
 
+:: PREVISÕES
+- Nova Dashboard
+- Tarefas
+- Contas no formato do contato (integrador) atual
 
 
 
