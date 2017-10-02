@@ -5,7 +5,6 @@ namespace AdminBundle\Controller;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
-use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Form\Order\OrderType;
 use Symfony\Component\HttpFoundation\Request;
