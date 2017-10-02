@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Service\Pricing\Insurance;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
@@ -59,6 +60,32 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/status", name="order_status")
+     * @Method("post")
+     */
+    public function statusAction(Request $request, Order $order)
+    {
+        $this->denyAccessUnlessGranted('edit', $order);
+
+        $status = (int) $request->get('status');
+
+        $manipulator = $this->get('order_manipulator');
+
+        if($manipulator->acceptStatus($order, $status, $this->user())){
+
+            $order->setStatus($status);
+
+            $this->manager('order')->save($order);
+
+            return $this->json();
+        }
+
+        return $this->json([
+            'error' => 'O status solicitado não pode ser definido.'
+        ], Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
      * @Route("/budgets/create", name="order_budget_create")
      */
     public function createBudgetAction(Request $request)
@@ -70,6 +97,7 @@ class OrderController extends AbstractController
 
         $order->setSendAt(new \DateTime('now'));
         $order->setMetadata($order->getChildrens()->first()->getMetadata());
+        $order->setStatus(Order::STATUS_PENDING);
         $manager->save($order);
 
         return $this->json([

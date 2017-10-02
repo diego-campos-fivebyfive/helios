@@ -10,6 +10,7 @@ use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Form\Component\GeneratorType;
 use AppBundle\Form\Order\ElementType;
 use AppBundle\Form\Order\OrderType;
+use AppBundle\Service\Order\OrderFinder;
 use AppBundle\Service\Pricing\Insurance;
 use AppBundle\Service\ProjectGenerator\ShippingRuler;
 use AppBundle\Form\Financial\ShippingType;
@@ -37,6 +38,7 @@ class ProjectGeneratorController extends AbstractController
             return $this->resolveOrderReference();
         }
 
+        /** @var Order $order */
         $order = $this->manager('order')->find($id);
 
         $this->denyAccessUnlessGranted('edit', $order);
@@ -375,24 +377,36 @@ class ProjectGeneratorController extends AbstractController
      */
     private function resolveOrderReference()
     {
-        $user = $this->user();
+        $member = $this->member();
         $account = $this->account();
         $manager = $this->manager('order');
-        $isPlatform = $user->isPlatform();
+        $isPlatform = $member->isPlatformUser();
 
         $criteria = [
             'status' => Order::STATUS_BUILDING,
             'source' => $isPlatform ? Order::SOURCE_PLATFORM : Order::SOURCE_ACCOUNT,
-            'account' => $isPlatform ? null : $account
+            'account' => $isPlatform ? null : $account,
         ];
 
+        if($member->isPlatformCommercial())
+            $criteria['agent'] = $member;
+
+        /** @var \AppBundle\Service\Order\OrderFinder $finder */
+        $finder = $this->get('order_finder');
+
+        foreach ($criteria as $property => $value){
+            $finder->set($property, $value);
+        }
+
         /** @var OrderInterface $order */
-        if(null == $order = $manager->findOneBy($criteria)){
+        if(null == $order = $finder->last()){
 
             $order = $manager->create();
 
-            if (!$user->isPlatform()) {
+            if (!$isPlatform) {
                 $order->setAccount($account);
+            }else{
+                $order->setAgent($this->member());
             }
 
             $order->setSource($criteria['source']);
