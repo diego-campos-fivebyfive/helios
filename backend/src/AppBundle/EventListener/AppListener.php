@@ -41,6 +41,10 @@ class AppListener
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+
+        if('dev' === $container->get('kernel')->getEnvironment()){
+            $this->handleExceptions = false;
+        }
     }
 
     /**
