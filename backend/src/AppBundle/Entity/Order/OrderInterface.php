@@ -24,6 +24,7 @@ interface OrderInterface
     const STATUS_VALIDATED = 2;
     const STATUS_APPROVED = 3;
     const STATUS_REJECTED = 4;
+    const STATUS_DONE = 5;
 
     const SOURCE_ACCOUNT = 0;
     const SOURCE_PLATFORM = 1;
@@ -344,4 +345,34 @@ interface OrderInterface
      * @return int
      */
     public function getSource();
+
+    /**
+     * @return bool
+     */
+    public function isBuilding();
+
+    /**
+     * @return bool
+     */
+    public function isPending();
+
+    /**
+     * @return bool
+     */
+    public function isValidated();
+
+    /**
+     * @return bool
+     */
+    public function isApproved();
+
+    /**
+     * @return bool
+     */
+    public function isRejected();
+
+    /**
+     * @return bool
+     */
+    public function isDone();
 }

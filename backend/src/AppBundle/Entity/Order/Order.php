@@ -637,7 +637,7 @@ class Order implements OrderInterface, InsurableInterface
      */
     public function getPaymentMethod($format =  'json')
     {
-        $data = $this->metadata['payment_method'];
+        $data = $this->getMetadata('payment_method');
 
         return  'json' == $format ? json_encode($data) : $data ;
     }
@@ -773,6 +773,54 @@ class Order implements OrderInterface, InsurableInterface
     public function getSource()
     {
         return $this->source;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isBuilding()
+    {
+        return self::STATUS_BUILDING == $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isPending()
+    {
+        return self::STATUS_PENDING == $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isValidated()
+    {
+        return self::STATUS_VALIDATED == $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isApproved()
+    {
+        return self::STATUS_APPROVED == $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isRejected()
+    {
+        return self::STATUS_REJECTED == $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isDone()
+    {
+        return self::STATUS_DONE == $this->status;
     }
 }
 
