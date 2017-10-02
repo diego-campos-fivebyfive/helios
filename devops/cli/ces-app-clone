@@ -38,8 +38,6 @@ elif [ $1 = '--production' ]; then
     exit 1
   fi
 
-  $SICES_PATH
-
   echo "Importing Temp files from $origin Server..."
   rsync -azvv --delete -e \
     "ssh -i $SICES_PATH/devops/aws/$origin.pem" admin@$host:$SICES_PATH/** $SICES_PATH/.temp
