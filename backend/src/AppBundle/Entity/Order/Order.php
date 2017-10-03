@@ -895,13 +895,16 @@ class Order implements OrderInterface, InsurableInterface
             $this->customer = $this->account->getFirstname();
             $this->cnpj = $this->account->getDocument();
             $this->ie = $this->account->getExtraDocument();
-            $this->contact = $this->account->getOwner()->getName();
-            $this->email = $this->account->getOwner()->getEmail();
-            $this->phone = $this->account->getOwner()->getPhone();
             $this->postcode = $this->account->getPostcode();
             $this->state = $this->account->getState();
             $this->city = $this->account->getCity();
             $this->address = $this->account->getStreet();
+
+            if(null != $owner = $this->account->getOwner()) {
+                $this->contact = $owner->getName();
+                $this->email = $owner->getEmail();
+                $this->phone = $owner->getPhone();
+            }
         }
     }
 }
