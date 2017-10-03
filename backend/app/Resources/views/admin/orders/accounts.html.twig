@@ -21,6 +21,7 @@
                         <table class="table table-striped table-hover">
                             <thead>
                             <tr>
+                                <th> </th>
                                 <th class="col-md-4"> Nome Fantasia </th>
                                 <th class="col-md-2 text-center"> Cnpj </th>
                                 <th class="col-md-4"> Email </th>
@@ -29,13 +30,14 @@
                             </thead>
                             <tbody>
 
-                            {% for account in pagination.items if account.owner%}
+                            {% for account in pagination.items %}
                                 <tr data-account="{{ account.id }}"
                                     data-info="{{ {'email':account.email, 'firstname':account.firstname,
                                     'cnpj':account.document, 'ie':account.extraDocument, 'phone':account.phone,
                                     'postcode':account.postcode, 'state':account.state, 'city':account.city,
                                     'street':account.street, 'contact':account.owner.firstname}|json_encode() }}"
                                     data-dismiss="modal" class="pointer">
+                                    <td>{{ loop.index }}</td>
                                     <td> {{ account.lastname }} </td>
                                     <td class="text-center"> {{ account.document }} </td>
                                     <td><i class="fa fa-envelope"></i>&nbsp;  {{ account.email }} </td>
