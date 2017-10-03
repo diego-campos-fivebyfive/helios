@@ -1,2 +1,71 @@
-<h1> [PENDING TEMPLATE] </h1>
-<h3> Develop content here </h3>
+{% extends ('orders/emails/layout.html.twig') %}
+{% block body %}
+<tr>
+    <td class="content-block">
+
+        <p>
+            Prezado {{ order.account.owner.firstname }},
+        </p>
+        <p>
+            Você solicitou o orçamento preliminar nº {{ order.reference }}.
+        </p>
+    </td>
+</tr>
+<tr>
+    <td class="content-block">
+        {% for item in order.childrens %}
+            <p>
+            <h4 class="text-center">{{ item.description }}</h4>
+
+            <table class="width-total orders">
+                <thead>
+                <tr class="th">
+                    <th>
+                        Código
+                    </th>
+                    <th style="width: 45%;">
+                        Produto
+                    </th>
+                    <th>
+                        Custo Un.
+                    </th>
+                    <th>
+                        QTD
+                    </th>
+                    <th>
+                        Custo T.
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for element in item.elements %}
+                    <tr class="td">
+                        <td>{{ element.code }}</td>
+                        <td class="text-left">{{ element.description }}</td>
+                        <td>{{ element.unitPrice|currency }}</td>
+                        <td class="text-center">{{ element.quantity }}</td>
+                        <td>{{ element.total|currency }}</td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+
+            <h4>Valor total do Sistema: {{ item.total|currency }}</h4>
+            </p>
+        {% endfor %}
+
+    </td>
+</tr>
+
+<tr>
+    <td class="content-block">
+        Pedimos, que aguarde a VALIDAÇÂO de seu orçamento para prosseguirmos com a negociação.
+        <p>
+            Obrigado.
+        </p>
+    </td>
+</tr>
+
+{% endblock %}
