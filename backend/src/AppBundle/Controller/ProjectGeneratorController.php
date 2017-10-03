@@ -24,7 +24,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 
 /**
- * @Security("has_role('ROLE_OWNER') or has_role('ROLE_PLATFORM_COMMERCIAL')")
+ * @Security("has_role('ROLE_OWNER') or has_role('ROLE_PLATFORM_AFTER_SALES')")
  * @Route("project/generator")
  * @Breadcrumb("Orçamentos")
  */
