@@ -30,7 +30,6 @@ class OrderController extends AbstractController
                 $qb2->select('o2')
                     ->from(Order::class, 'o2')
                     ->where('o2.parent is null')
-                    ->andWhere('o2.sendAt is not null')
                 ->getQuery()->getDQL()
             )
         )->andWhere('o.account = :account')
@@ -75,8 +74,8 @@ class OrderController extends AbstractController
 
             $order->setStatus($status);
 
-            // TODO: Manter comentado até aprovação de layouts
             $this->manager('order')->save($order);
+            // TODO (Email): Manter comentado até aprovação de layouts
             //$this->get('order_mailer')->sendOrderMessage($order);
 
             return $this->json();
@@ -101,6 +100,9 @@ class OrderController extends AbstractController
         $order->setMetadata($order->getChildrens()->first()->getMetadata());
         $order->setStatus(Order::STATUS_PENDING);
         $manager->save($order);
+
+        // TODO (Email): Manter comentado até aprovação de layouts
+        //$this->get('order_mailer')->sendOrderMessage($order);
 
         return $this->json([
             'order' => [
