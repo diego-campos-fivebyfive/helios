@@ -106,6 +106,10 @@ class StatusChecker
             OrderInterface::STATUS_PENDING => [
                 OrderInterface::STATUS_VALIDATED => [
                     UserInterface::TYPE_PLATFORM
+                ],
+                OrderInterface::STATUS_BUILDING => [
+                    UserInterface::TYPE_ACCOUNT,
+                    UserInterface::TYPE_PLATFORM
                 ]
             ],
             OrderInterface::STATUS_VALIDATED => [
