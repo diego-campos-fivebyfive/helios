@@ -6,6 +6,9 @@ use AppBundle\Entity\Order\Order;
 use AppBundle\Service\Pricing\Insurance;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
@@ -41,7 +44,7 @@ class OrderController extends AbstractController
             10
         );
 
-        return $this->render('Order.index', array(
+        return $this->render('order.index', array(
             'orders' => $pagination
         ));
     }
@@ -128,5 +131,68 @@ class OrderController extends AbstractController
                 'total' => $order->getTotal()
             ]
         ]);
+    }
+
+    /**
+     * @Route("/{id}/upload", name="order_upload")
+     */
+    public function uploadAction(Order $order, Request $request)
+    {
+        if($request->isMethod('post')){
+
+            $file = $request->files->get('file');
+
+            if($file instanceof UploadedFile) {
+
+                $dir = $this->getUploadDir();
+
+                $current = $dir . $order->getFilePayment();
+
+                if(is_file($current)) unlink($current);
+
+                $name = sprintf(
+                    'payment_file_%s_%s.%s', $order->getId(),
+                    (new \DateTime())->format('Ymd-His'),
+                    $file->getClientOriginalExtension()
+                );
+
+                $file->move($dir, $name);
+
+                $order->setFilePayment($name);
+
+                $this->manager('order')->save($order);
+
+                return $this->json([
+                    'name' => $name
+                ]);
+            }
+        }
+
+        return $this->render('order.upload', [
+            'order' => $order
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/file", name="order_file")
+     */
+    public function fileAction(Order $order)
+    {
+        if(null != $filePayment = $order->getFilePayment()) {
+
+            $file = $this->getUploadDir() . $filePayment;
+
+            return new BinaryFileResponse($file, Response::HTTP_OK, [], true, ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+        }
+
+        throw $this->createNotFoundException('File not found');
+    }
+
+    /**
+     * @return string
+     */
+    private function getUploadDir()
+    {
+        return $this->get('kernel')->getRootDir() . '/../storage/orders/';
     }
 }

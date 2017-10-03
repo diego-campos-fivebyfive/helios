@@ -1,0 +1,92 @@
+<style>
+    #uploader {
+        cursor: pointer;
+        height: 100px;
+        border: 3px dotted #787890;
+    }
+    #uploader .dz-preview {
+        display: none;
+    }
+    #uploader .dz-message {
+        text-align: center;
+    }
+    #uploader_spinner {
+        margin-top: 10px;
+        min-height: 30px;
+        display: none;
+    }
+    #has_info{
+        color: #333;
+        margin-top: 10px;
+    }
+</style>
+
+<div class="row">
+    <div id="uploader" class="col-md-12">
+        <div class="dz-message needsclick">
+            Arraste o arquivo aqui ou clique para selecionar <br>
+            <span class="note needsclick">
+            (Apenas arquivos com extensão png ou jpeg)
+        </span>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+
+    <div id="uploader_spinner" class="col-md-12 text-center">
+        <div id="loader">
+        {% include view('helper.spinner') %} Enviando arquivo (<span id="percent"></span>%)
+        </div>
+        <div id="upload_info">
+            <i class="fa fa-info-circle"></i> Arquivo enviado com sucesso! <br>
+            <a id="file_link" target="_blank" href="{{ path('order_file',{id: order.id, type:'payment_file'}) }}"> clique aqui </a>
+            para visualizar
+        </div>
+    </div>
+
+    <div id="has_info" class="col-md-12 text-center">
+        <i class="fa fa-info-circle"></i> Já existe um arquivo vinculado a esta solicitação. <br>
+        <a id="file_link" target="_blank" href="{{ path('order_file',{id: order.id, type:'payment_file'}) }}"> clique aqui </a>
+        para visualizar
+    </div>
+
+</div>
+
+<script>
+    var spinner = $('#uploader_spinner');
+    var loader = spinner.find('#loader');
+    var percent = spinner.find('#percent');
+    var info = spinner.find('#upload_info');
+
+    var appUploader = new Dropzone('div#uploader', {
+        url: '{{ app.request.uri }}',
+        createImageThumbnails: false,
+        uploadMultiple: false,
+        acceptedMimeTypes: 'image/png,image/jpg,image/jpeg',
+        init: function () {
+            this.on('addedfile', function (file) {
+                info.hide();
+                $('#has_info').hide();
+                loader.show();
+                spinner.show();
+            });
+            this.on('uploadprogress', function (file, progress, sent) {
+                percent.html(progress);
+            });
+            this.on('complete', function (file) {
+                percent.hide();
+                loader.hide();
+                info.show();
+            });
+        }
+    });
+
+    $('#file_link').on('click', function(){
+        $('#modal_upload').modal('close');
+    });
+
+    {% if not order.hasFilePayment %}
+        $('#has_info').hide();
+    {% endif %}
+</script>

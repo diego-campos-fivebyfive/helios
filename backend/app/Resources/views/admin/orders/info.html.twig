@@ -1,9 +1,9 @@
 <div class="modal inmodal" id="e_modal_accounts" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content animated bounceInRight">
-        <div class="modal-header">
-            <h2><i class="fa fa-bookmark"></i> {{ 'Accounts'|trans }}</h2>
-        </div>
+            <div class="modal-header">
+                <h2><i class="fa fa-bookmark"></i> {{ 'Accounts'|trans }}</h2>
+            </div>
             <div class="modal-body" id="content_accounts">
                 {% include view('Helper.spinner') %}
             </div>
@@ -22,15 +22,17 @@
         </div>
 
         <div class="col-md-6">
-            {{ form_label(form.account, 'Integrador') }}
-            <br>
-            <a data-url="{{ path('accounts_list') }}"
-               data-toggle="modal"
-               data-target="#modal_accounts"
-               class="btn btn-success">
-                <i class="fa fa-user"></i>  Selecionar Integrador
-            </a>
-            {{ form_widget(form.account, {attr:{class:'hidden'}}) }}
+            {% if attribute(form, 'account') is defined %}
+                {{ form_label(form.account, 'Integrador') }}
+                <br>
+                <a data-url="{{ path('accounts_list') }}"
+                   data-toggle="modal"
+                   data-target="#modal_accounts"
+                   class="btn btn-success">
+                    <i class="fa fa-user"></i>  Selecionar Integrador
+                </a>
+                {{ form_widget(form.account, {attr:{class:'hidden'}}) }}
+            {% endif %}
         </div>
     </div>
 
@@ -160,7 +162,4 @@
             content_accounts.html('<h2> Erro ao selecionar Integrador</h2>');
         }
     });
-
-    $('#content_accounts').on('change')
-
 </script>

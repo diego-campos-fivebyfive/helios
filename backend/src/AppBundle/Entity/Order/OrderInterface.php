@@ -220,6 +220,22 @@ interface OrderInterface
     public function getFilename();
 
     /**
+     * @param $filePayment
+     * @return OrderInterface
+     */
+    public function setFilePayment($filePayment);
+
+    /**
+     * @return string
+     */
+    public function getFilePayment();
+
+    /**
+     * @return bool
+     */
+    public function hasFilePayment();
+
+    /**
      * @param string $contact
      * @return OrderInterface
      */
