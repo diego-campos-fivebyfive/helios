@@ -85,6 +85,12 @@ trait MemberTrait
                 case User::ROLE_PLATFORM_COMMERCIAL:
                     $type = 'Commercial';
                     break;
+                case User::ROLE_PLATFORM_FINANCIAL:
+                    $type = 'Financial';
+                    break;
+                case User::ROLE_PLATFORM_AFTER_SALES:
+                    $type = 'Pós-Venda';
+                    break;
                 default:
                     $type = 'User';
                     break;
