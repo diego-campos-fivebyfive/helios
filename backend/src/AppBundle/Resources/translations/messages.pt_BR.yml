@@ -96,11 +96,12 @@ kit:
         project_has_component: "Este %component% esta associado a %count% projeto(s) aberto(s)"
 
 Actived: Ativo
-Aproved: Aprovado
+Approved: Aprovado
 
 Both: Ambos
 Budget: "Orçamento"
 Budget Setting: "Configuração de Orçamento"
+Building: Editando
 
 Cancel: Cancelar
 Canceled: Cancelada
@@ -146,6 +147,7 @@ Define Image: Definir Imagem
 Draft: Rascunho
 Drafts: Rascunhos
 discount: Desconto
+Done: Concluído
 
 Edit: Editar
 Edit Profile: Editar Perfil
@@ -239,6 +241,7 @@ Remove from Catalog: "Remover do Catálogo"
 Really delete: "Confirma exclusão"
 Region: "Região"
 Rate: Percentual
+Rejected: Rejeitado
 
 Sale Step: Etapa de Venda
 Sale Steps: Etapas de Venda
@@ -293,6 +296,7 @@ Update: Atualizar
 Unit Price: "Preço Unit."
 
 Value: Valor
+Validated: Validado
 
 Operation: Operação
 
