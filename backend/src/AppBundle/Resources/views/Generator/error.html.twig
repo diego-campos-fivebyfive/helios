@@ -19,7 +19,7 @@
                     <div class="alert alert-info text-center">
                         <h2>
                             <i class="fa fa-info-circle"></i>
-                            Status: <strong> {{ order.statusName|capitalize|trans }} </strong>
+                            Status: <strong style="text-transform: uppercase"> {{ order.statusName|capitalize|trans }} </strong>
                             <br>
                             {{ messages[order.statusName] }}
                         </h2>
