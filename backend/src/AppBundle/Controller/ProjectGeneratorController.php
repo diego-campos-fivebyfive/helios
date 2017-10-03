@@ -44,12 +44,15 @@ class ProjectGeneratorController extends AbstractController
 
         $this->denyAccessUnlessGranted('edit', $order);
 
-        if (in_array($order->getStatus(), [Order::STATUS_APPROVED])) {
-            throw $this->createAccessDeniedException();
+        if(!$this->checkOrderStatus($order)){
+            return $this->render('generator.error', [
+                'order' => $order
+            ]);
         }
 
         return $this->render('generator.index', [
-            'order' => $order
+            'order' => $order,
+            'member' => $this->member()
         ]);
     }
 
@@ -459,6 +462,28 @@ class ProjectGeneratorController extends AbstractController
         return $this->redirectToRoute('project_generator', [
             'order' => $order->getId()
         ]);
+    }
+
+    /**
+     * @param Order $order
+     */
+    private function checkOrderStatus(Order $order)
+    {
+        $isPlatform = $this->user()->isPlatform();
+
+        if (in_array($order->getStatus(), [Order::STATUS_APPROVED, Order::STATUS_REJECTED, Order::STATUS_DONE])) {
+            return false;
+        }
+
+        if(!$isPlatform && $order->isPending()){
+            return false;
+        }
+
+        if($isPlatform && $order->isValidated()){
+            return false;
+        }
+
+        return true;
     }
 
     /**
