@@ -20,7 +20,11 @@
                                 <th class="text-center">Integrador</th>
                                 <th class="text-center">Sistemas</th>
                                 <th class="col-md-1 text-center">Status</th>
-                                <th class="col-md-2 text-center">Valor total</th>
+                                {% if member.isPlatformFinancial %}
+                                    <th>Proforma</th>
+                                    <th>Comprovante</th>
+                                {% endif %}
+                                <th class="col-md-2 text-center">Valor</th>
                                 <th class="col-md-2 text-center">Ação</th>
                             </tr>
                         </thead>
@@ -43,6 +47,22 @@
                                         {{ order.statusName|capitalize|trans }}
                                     </span>
                                 </td>
+
+                                {% if member.isPlatformFinancial %}
+                                    <td>
+                                        <a href="#">
+                                            Proforma
+                                        </a>
+                                    </td>
+                                    <td>
+                                        {% if order.hasFilePayment %}
+                                            <a href="{{ path('order_file',{id:order.id, type:'file_payment'}) }}" target="_blank"> Visualizar </a>
+                                        {% else %}
+                                            Indisponível
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+
                                 <td class="text-right">{{ order.total|currency }}</td>
                                 <td>
 

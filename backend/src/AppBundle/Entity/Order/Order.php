@@ -94,6 +94,13 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @var string
      *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $filePayment;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(type="string", nullable=true)
      */
     private $contact;
@@ -398,6 +405,32 @@ class Order implements OrderInterface, InsurableInterface
     public function getFilename()
     {
         return $this->filename;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setFilePayment($filePayment)
+    {
+        $this->filePayment = $filePayment;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getFilePayment()
+    {
+        return $this->filePayment;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasFilePayment()
+    {
+        return strlen($this->filePayment);
     }
 
     /**

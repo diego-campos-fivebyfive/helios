@@ -25,12 +25,12 @@ class OrderController extends AbstractController
      */
     public function orderAction(Request $request)
     {
-        $agent = $this->member();
+        $member = $this->member();
 
         /** @var \AppBundle\Service\Order\OrderFinder $finder */
         $finder = $this->get('order_finder');
 
-        $finder->set('agent', $agent);
+        $finder->set('agent', $member);
 
         $pagination = $this->getPaginator()->paginate(
             $finder->query(),
@@ -39,7 +39,8 @@ class OrderController extends AbstractController
         );
 
         return $this->render('admin/orders/index.html.twig', array(
-            'orders' => $pagination
+            'orders' => $pagination,
+            'member' => $member
         ));
     }
 

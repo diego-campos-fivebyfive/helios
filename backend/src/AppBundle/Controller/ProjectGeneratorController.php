@@ -180,7 +180,7 @@ class ProjectGeneratorController extends AbstractController
     public function companyShippingAction(Request $request, Order $order)
     {
         $rule = $order->getShippingRules();
-        if (!is_array($rule['company'])) {
+        if (!array_key_exists('company', $rule) || !is_array($rule['company'])) {
             $rule['company'] = [];
         }
 
