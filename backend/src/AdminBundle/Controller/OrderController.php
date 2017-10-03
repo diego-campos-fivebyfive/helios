@@ -3,7 +3,6 @@
 namespace AdminBundle\Controller;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity\Customer;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Form\Order\OrderType;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,7 +11,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
- * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
+ * @Security("has_role('ROLE_PLATFORM_AFTER_SALES')")
  *
  * @Route("orders")
  * @Breadcrumb("Orçamentos")
