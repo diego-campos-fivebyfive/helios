@@ -13,7 +13,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
- * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
+ * @Security("has_role('ROLE_PLATFORM_AFTER_SALES')")
  *
  * @Route("orders")
  * @Breadcrumb("Orçamentos")
@@ -21,57 +21,19 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 class OrderController extends AbstractController
 {
     /**
-     * @Route("/", name="index_orders")
+     * @Route("/", name="orders")
      */
     public function orderAction(Request $request)
     {
-        $user = $this->user();
-        $manager = $this->manager('order');
+        $agent = $this->member();
 
-        $parameters = [
-            'platform' => Order::SOURCE_PLATFORM,
-            'account' => Order::SOURCE_ACCOUNT
-        ];
+        /** @var \AppBundle\Service\Order\OrderFinder $finder */
+        $finder = $this->get('order_finder');
 
-        $qb = $manager->createQueryBuilder();
-
-        $qb->where(
-            $qb->expr()->orX(
-                $qb->expr()->eq('o.source', ':platform'),
-                $qb->expr()->andX(
-                    $qb->expr()->eq('o.source', ':account'),
-                    $qb->expr()->notIn('o.status', [Order::STATUS_BUILDING])
-                )
-            )
-        );
-
-        if(!$user->isPlatformAdmin() && !$user->isPlatformMaster()) {
-
-            $member = $this->member();
-
-            $qbc = $this->manager('customer')->createQueryBuilder();
-
-            $qbc->select('c.id')
-                ->where("c.context = :context")
-                ->andWhere('c.agent = :agent')
-                ->setParameters([
-                    'context' => Customer::CONTEXT_ACCOUNT,
-                    'agent' => $member->getId()
-                ]);
-
-            $accounts = array_map('current',$qbc->getQuery()->getResult());
-            if (count($accounts) == 0)
-                $accounts = 0;
-
-            $qb->andWhere(
-                $qb->expr()->in('o.account', $accounts)
-            );
-        }
-
-        $qb->setParameters($parameters);
+        $finder->set('agent', $agent);
 
         $pagination = $this->getPaginator()->paginate(
-            $qb->getQuery(),
+            $finder->query(),
             $request->query->getInt('page', 1),
             10
         );
@@ -177,10 +139,5 @@ class OrderController extends AbstractController
         }
 
         return $paymentMethods;
-    }
-
-    private function findPaymentMethod()
-    {
-
     }
 }

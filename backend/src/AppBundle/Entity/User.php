@@ -257,7 +257,9 @@ class User extends AbstractUser implements UserInterface
 
         return [
             self::ROLE_PLATFORM_ADMIN => 'Administrador',
-            self::ROLE_PLATFORM_COMMERCIAL => 'Comercial'
+            self::ROLE_PLATFORM_COMMERCIAL => 'Comercial',
+            self::ROLE_PLATFORM_FINANCIAL => 'Financeiro',
+            self::ROLE_PLATFORM_AFTER_SALES => 'Pós-Venda'
         ];
     }
 
@@ -269,7 +271,9 @@ class User extends AbstractUser implements UserInterface
         return [
             self::ROLE_PLATFORM_MASTER,
             self::ROLE_PLATFORM_ADMIN,
-            self::ROLE_PLATFORM_COMMERCIAL
+            self::ROLE_PLATFORM_COMMERCIAL,
+            self::ROLE_PLATFORM_FINANCIAL,
+            self::ROLE_PLATFORM_AFTER_SALES
         ];
     }
 }

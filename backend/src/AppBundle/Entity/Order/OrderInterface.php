@@ -11,6 +11,7 @@
 namespace AppBundle\Entity\Order;
 
 use AppBundle\Entity\AccountInterface;
+use AppBundle\Entity\MemberInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -24,6 +25,7 @@ interface OrderInterface
     const STATUS_VALIDATED = 2;
     const STATUS_APPROVED = 3;
     const STATUS_REJECTED = 4;
+    const STATUS_DONE = 5;
 
     const SOURCE_ACCOUNT = 0;
     const SOURCE_PLATFORM = 1;
@@ -67,15 +69,26 @@ interface OrderInterface
     public function getNote();
 
     /**
-     * @param $account
+     * @param AccountInterface $account
      * @return OrderInterface
      */
-    public function setAccount($account);
+    public function setAccount(AccountInterface $account);
 
     /**
      * @return AccountInterface
      */
     public function getAccount();
+
+    /**
+     * @param MemberInterface $agent
+     * @return OrderInterface
+     */
+    public function setAgent(MemberInterface $agent);
+
+    /**
+     * @return MemberInterface|null
+     */
+    public function getAgent();
 
     /**
      * @param $status
@@ -87,6 +100,16 @@ interface OrderInterface
      * @return int
      */
     public function getStatus();
+
+    /**
+     * @return int
+     */
+    public static function getStatusNames();
+
+    /**
+     * @return string
+     */
+    public function getStatusName();
 
     /**
      * @return float
@@ -344,4 +367,34 @@ interface OrderInterface
      * @return int
      */
     public function getSource();
+
+    /**
+     * @return bool
+     */
+    public function isBuilding();
+
+    /**
+     * @return bool
+     */
+    public function isPending();
+
+    /**
+     * @return bool
+     */
+    public function isValidated();
+
+    /**
+     * @return bool
+     */
+    public function isApproved();
+
+    /**
+     * @return bool
+     */
+    public function isRejected();
+
+    /**
+     * @return bool
+     */
+    public function isDone();
 }

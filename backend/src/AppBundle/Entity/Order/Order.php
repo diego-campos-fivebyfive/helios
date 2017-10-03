@@ -11,6 +11,7 @@
 
 namespace AppBundle\Entity\Order;
 
+use AppBundle\Entity\MemberInterface;
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\MetadataTrait;
@@ -182,6 +183,12 @@ class Order implements OrderInterface, InsurableInterface
     private $account;
 
     /**
+     * @var MemberInterface|null
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer")
+     */
+    protected $agent;
+
+    /**
      * @var OrderInterface
      *
      * @ORM\ManyToOne(targetEntity="Order", inversedBy="childrens")
@@ -293,6 +300,33 @@ class Order implements OrderInterface, InsurableInterface
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function getStatusNames()
+    {
+        return [
+            self::STATUS_BUILDING => 'building',
+            self::STATUS_PENDING => 'pending',
+            self::STATUS_VALIDATED => 'validated',
+            self::STATUS_APPROVED => 'approved',
+            self::STATUS_REJECTED => 'rejected',
+            self::STATUS_DONE => 'done'
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getStatusName()
+    {
+        $statusNames = self::getStatusNames();
+
+        if(is_null($this->status)) $this->status = self::STATUS_BUILDING;
+
+        return $statusNames[$this->status];
     }
 
     /**
@@ -637,7 +671,7 @@ class Order implements OrderInterface, InsurableInterface
      */
     public function getPaymentMethod($format =  'json')
     {
-        $data = $this->metadata['payment_method'];
+        $data = $this->getMetadata('payment_method');
 
         return  'json' == $format ? json_encode($data) : $data ;
     }
@@ -645,9 +679,16 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @inheritDoc
      */
-    public function setAccount($account)
+    public function setAccount(AccountInterface $account)
     {
         $this->account = $account;
+
+        if(null != $agent = $account->getAgent()){
+            $this->setAgent($agent);
+        }
+
+        $this->refreshCustomer();
+
         return $this;
     }
 
@@ -657,6 +698,28 @@ class Order implements OrderInterface, InsurableInterface
     public function getAccount()
     {
         return $this->account;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setAgent(MemberInterface $agent)
+    {
+        if(!$agent->isPlatformUser()){
+            throw new \InvalidArgumentException('Invalid user role');
+        }
+
+        $this->agent = $agent;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAgent()
+    {
+        return $this->agent;
     }
 
     /**
@@ -754,7 +817,7 @@ class Order implements OrderInterface, InsurableInterface
      */
     public function isBudget()
     {
-        return $this->childrens->count() > 0;
+        return !$this->childrens->isEmpty() || !$this->parent;
     }
 
     /**
@@ -773,6 +836,76 @@ class Order implements OrderInterface, InsurableInterface
     public function getSource()
     {
         return $this->source;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isBuilding()
+    {
+        return self::STATUS_BUILDING == $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isPending()
+    {
+        return self::STATUS_PENDING == $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isValidated()
+    {
+        return self::STATUS_VALIDATED == $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isApproved()
+    {
+        return self::STATUS_APPROVED == $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isRejected()
+    {
+        return self::STATUS_REJECTED == $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isDone()
+    {
+        return self::STATUS_DONE == $this->status;
+    }
+
+    /**
+     * Refresh customer data by reference account
+     */
+    private function refreshCustomer()
+    {
+        if($this->account instanceof AccountInterface) {
+            $this->customer = $this->account->getFirstname();
+            $this->cnpj = $this->account->getDocument();
+            $this->ie = $this->account->getExtraDocument();
+            $this->postcode = $this->account->getPostcode();
+            $this->state = $this->account->getState();
+            $this->city = $this->account->getCity();
+            $this->address = $this->account->getStreet();
+
+            if(null != $owner = $this->account->getOwner()) {
+                $this->contact = $owner->getName();
+                $this->email = $owner->getEmail();
+                $this->phone = $owner->getPhone();
+            }
+        }
     }
 }
 

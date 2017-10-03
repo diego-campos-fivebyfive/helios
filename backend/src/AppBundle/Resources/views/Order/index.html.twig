@@ -14,6 +14,7 @@
                             <tr>
                                 <td class="col-md-1 text-center">PEDIDO</td>
                                 <td>DATA</td>
+                                <td>STATUS</td>
                                 <td>SISTEMAS</td>
                                 <td class="col-md-2 text-center">VALOR TOTAL</td>
                                 <td class="col-md-2 text-center">AÇÃO</td>
@@ -24,6 +25,7 @@
                             <tr>
                                 <td class="text-center">{{ item.id }} </td>
                                 <td>{{ item.createdAt|date('d/m/Y') }}</td>
+                                <td> {{ item.statusName|capitalize|trans }} </td>
                                 <td>SISTEMA(S) DE
                                     {% for element in item.childrens %}
                                     <b>{{ element.power }}</b>,
@@ -34,6 +36,11 @@
                                     <a href="{{ path('order_show', { 'id':item.id }) }}"
                                         class="btn btn-default">
                                         <i class="fa fa-eye"></i> {{ 'View'|trans }}
+                                    </a>
+
+                                    <br>
+                                    <a href="{{ path('project_generator',{order:item.id}) }}">
+                                        Editar (Temporário)
                                     </a>
                                 </td>
                             </tr>

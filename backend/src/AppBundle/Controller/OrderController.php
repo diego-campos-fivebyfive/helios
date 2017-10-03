@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Service\Pricing\Insurance;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
@@ -29,7 +30,6 @@ class OrderController extends AbstractController
                 $qb2->select('o2')
                     ->from(Order::class, 'o2')
                     ->where('o2.parent is null')
-                    ->andWhere('o2.sendAt is not null')
                 ->getQuery()->getDQL()
             )
         )->andWhere('o.account = :account')
@@ -59,6 +59,34 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/status", name="order_status")
+     * @Method("post")
+     */
+    public function statusAction(Request $request, Order $order)
+    {
+        $this->denyAccessUnlessGranted('edit', $order);
+
+        $status = (int) $request->get('status');
+
+        $manipulator = $this->get('order_manipulator');
+
+        if($manipulator->acceptStatus($order, $status, $this->user())){
+
+            $order->setStatus($status);
+
+            $this->manager('order')->save($order);
+            // TODO (Email): Manter comentado até aprovação de layouts
+            //$this->get('order_mailer')->sendOrderMessage($order);
+
+            return $this->json();
+        }
+
+        return $this->json([
+            'error' => 'O status solicitado não pode ser definido.'
+        ], Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
      * @Route("/budgets/create", name="order_budget_create")
      */
     public function createBudgetAction(Request $request)
@@ -70,7 +98,11 @@ class OrderController extends AbstractController
 
         $order->setSendAt(new \DateTime('now'));
         $order->setMetadata($order->getChildrens()->first()->getMetadata());
+        $order->setStatus(Order::STATUS_PENDING);
         $manager->save($order);
+
+        // TODO (Email): Manter comentado até aprovação de layouts
+        //$this->get('order_mailer')->sendOrderMessage($order);
 
         return $this->json([
             'order' => [

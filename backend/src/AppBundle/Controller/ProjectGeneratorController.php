@@ -11,6 +11,7 @@ use AppBundle\Form\Component\GeneratorType;
 use AppBundle\Form\Financial\CompanyType;
 use AppBundle\Form\Order\ElementType;
 use AppBundle\Form\Order\OrderType;
+use AppBundle\Service\Order\OrderFinder;
 use AppBundle\Service\Pricing\Insurance;
 use AppBundle\Service\ProjectGenerator\ShippingRuler;
 use AppBundle\Form\Financial\ShippingType;
@@ -23,7 +24,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 
 /**
- * @Security("has_role('ROLE_OWNER') or has_role('ROLE_PLATFORM_COMMERCIAL')")
+ * @Security("has_role('ROLE_OWNER') or has_role('ROLE_PLATFORM_AFTER_SALES')")
  * @Route("project/generator")
  * @Breadcrumb("Orçamentos")
  */
@@ -38,16 +39,20 @@ class ProjectGeneratorController extends AbstractController
             return $this->resolveOrderReference();
         }
 
+        /** @var Order $order */
         $order = $this->manager('order')->find($id);
 
         $this->denyAccessUnlessGranted('edit', $order);
 
-        if (in_array($order->getStatus(), [Order::STATUS_APPROVED])) {
-            throw $this->createAccessDeniedException();
+        if(!$this->checkOrderStatus($order)){
+            return $this->render('generator.error', [
+                'order' => $order
+            ]);
         }
 
         return $this->render('generator.index', [
-            'order' => $order
+            'order' => $order,
+            'member' => $this->member()
         ]);
     }
 
@@ -418,24 +423,39 @@ class ProjectGeneratorController extends AbstractController
      */
     private function resolveOrderReference()
     {
-        $user = $this->user();
+        $member = $this->member();
         $account = $this->account();
         $manager = $this->manager('order');
+        $isPlatform = $member->isPlatformUser();
 
-        $criteria = ['status' => Order::STATUS_BUILDING];
+        $criteria = [
+            'status' => Order::STATUS_BUILDING,
+            'source' => $isPlatform ? Order::SOURCE_PLATFORM : Order::SOURCE_ACCOUNT,
+            'account' => $isPlatform ? null : $account,
+        ];
 
-        if(!$user->isPlatform()){
-            $criteria['account'] = $account;
+        if($member->isPlatformCommercial())
+            $criteria['agent'] = $member;
+
+        /** @var \AppBundle\Service\Order\OrderFinder $finder */
+        $finder = $this->get('order_finder');
+
+        foreach ($criteria as $property => $value){
+            $finder->set($property, $value);
         }
 
         /** @var OrderInterface $order */
-        if(null == $order = $manager->findOneBy($criteria)){
+        if(null == $order = $finder->last()){
 
             $order = $manager->create();
 
-            if (!$user->isPlatform()) {
+            if (!$isPlatform) {
                 $order->setAccount($account);
+            }else{
+                $order->setAgent($this->member());
             }
+
+            $order->setSource($criteria['source']);
 
             $manager->save($order);
         }
@@ -443,6 +463,21 @@ class ProjectGeneratorController extends AbstractController
         return $this->redirectToRoute('project_generator', [
             'order' => $order->getId()
         ]);
+    }
+
+    /**
+     * @param Order $order
+     */
+    private function checkOrderStatus(Order $order)
+    {
+        $isPlatform = $this->user()->isPlatform();
+        $lockStatus = in_array($order->getStatus(), [Order::STATUS_APPROVED, Order::STATUS_REJECTED, Order::STATUS_DONE]);
+
+        if ($lockStatus || (!$isPlatform && $order->isPending()) || ($isPlatform && $order->isValidated())) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

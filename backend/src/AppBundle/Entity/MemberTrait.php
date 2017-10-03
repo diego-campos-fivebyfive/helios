@@ -2,6 +2,10 @@
 
 namespace AppBundle\Entity;
 
+/**
+ * Class MemberTrait
+ * @property UserInterface $user
+ */
 trait MemberTrait
 {
     /**
@@ -13,6 +17,46 @@ trait MemberTrait
             return $this->user->isPlatform();
 
         return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isPlatformMaster()
+    {
+        return $this->checkUserRole(UserInterface::ROLE_PLATFORM_MASTER);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isPlatformAdmin()
+    {
+        return $this->checkUserRole(UserInterface::ROLE_PLATFORM_ADMIN);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isPlatformCommercial()
+    {
+        return $this->checkUserRole(UserInterface::ROLE_PLATFORM_COMMERCIAL);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isPlatformFinancial()
+    {
+        return $this->checkUserRole(UserInterface::ROLE_PLATFORM_FINANCIAL);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isPlatformAfterSales()
+    {
+        return $this->checkUserRole(UserInterface::ROLE_PLATFORM_AFTER_SALES);
     }
 
     /**
@@ -41,6 +85,12 @@ trait MemberTrait
                 case User::ROLE_PLATFORM_COMMERCIAL:
                     $type = 'Commercial';
                     break;
+                case User::ROLE_PLATFORM_FINANCIAL:
+                    $type = 'Financial';
+                    break;
+                case User::ROLE_PLATFORM_AFTER_SALES:
+                    $type = 'Pós-Venda';
+                    break;
                 default:
                     $type = 'User';
                     break;
@@ -48,5 +98,24 @@ trait MemberTrait
         }
 
         return $type;
+    }
+
+    /**
+     * @param $role
+     * @return bool
+     */
+    private function checkUserRole($role)
+    {
+        $this->ensureMember();
+
+        return $this->user ? $this->user->hasRole($role) : false;
+    }
+
+    /**
+     * Ensure called context is member instance
+     */
+    private function ensureMember()
+    {
+        $this->ensureContext(Customer::CONTEXT_MEMBER);
     }
 }
