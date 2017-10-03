@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Orçamento</title>
+
+    {% include ('orders/emails/style.html.twig') %}
+</head>
+<body>
+<table class="body-wrap">
+    <tr>
+        <td></td>
+        <td class="container" width="600">
+            <div class="content">
+                <table class="main" width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td class="content-wrap">
+                            <table cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td>
+                                        <img alt="Sices Solar" class="img-responsive" src="{{ app.request.schemeAndHttpHost }}{{ asset('assets/images/register_email_header.jpg') }}"/>
+                                    </td>
+                                </tr>
+
+                                {% block body %}{% endblock %}
+
+                                <tr>
+                                    <td class="content-block">
+                                        <div class="width-float-total">
+                                            <div class="signature-left">
+                                                <p>
+                                                    <img alt="Sices Solar" class="img-responsive" src="{{ app.request.schemeAndHttpHost }}{{ asset('assets/images/email_signature.png') }}"/>
+                                                </p>
+                                            </div>
+
+                                            <div class="signature-left indentation spacing">
+                                                <p>
+                                                    <h4>{{ order.account.agent.firstname }}</h4>
+                                                    Comercial Fotovoltaico
+                                                    <br>
+                                                    Email: <span class="color-email">{{ order.account.agent.email }}</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <h4>SICES BRASIL LTDA</h4>
+                                        <div class="width-float-total">
+                                            <a href="https://maps.google.com/?q=Avenida+Portugal+1174&entry=gmail&source=g" target="_blank" class="color-blue">Avenida Portugal 1174</a>, Condomínio Empresarial ONIX galpão 1, 2, 3 e 4
+                                            <br>
+                                            <span class="color-blue">06696-060</span> – ITAPEVI (SP)
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                <div class="footer">
+
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

@@ -8,65 +8,69 @@
         }
     </style>
 
-    <div class="wrapper wrapper-content  animated fadeInRight">
-        <div class="row">
-            <div class="ibox">
-                <div class="ibox-title">
-                    <span class="pull-right small text-muted">
-                        <h3>{{ pagination.totalItemCount }} Conta(s) encontrada(s)</h3>
-                    </span>
-                    <h2> {{ 'Accounts'|trans }}</h2>
-                </div>
-                <div class="ibox-content no-padding border-left-right">
-                </div>
-                <div class="ibox-content">
+    <div class="row">
+        <div class="col-md-12">
+            {{ knp_pagination_filter(pagination, {'a.lastname, a.document, a.email':''}) }}
 
-                    {{ knp_pagination_filter(pagination, {'a.lastname, a.document, a.email':''}) }}
+            <span class="pull-right small text-muted">
+                <h3>{{ pagination.totalItemCount }} Conta(s) encontrada(s)</h3>
+            </span>
+            <div class="clients-list">
+                <div class="tab-content">
+                    <div class="tab-pane active">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th class="col-md-4"> Nome Fantasia </th>
+                                <th class="col-md-2 text-center"> Cnpj </th>
+                                <th class="col-md-4"> Email </th>
+                                <th class="col-md-2"> Registro </th>
+                            </tr>
+                            </thead>
+                            <tbody>
 
-                    <div class="clients-list">
-                        <div class="tab-content">
-                            <div class="tab-pane active">
-                                <table class="table table-striped table-hover">
-                                    <thead>
-                                    <tr>
-                                        <th class="col-md-4"> Nome Fantasia </th>
-                                        <th class="col-md-2 text-center"> Cnpj </th>
-                                        <th class="col-md-4"> Email </th>
-                                        <th class="col-md-2"> Registro </th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
+                            {% for account in pagination.items if account.owner%}
+                                <tr data-account="{{ account.id }}"
+                                    data-info="{{ {'email':account.email, 'firstname':account.firstname,
+                                    'cnpj':account.document, 'ie':account.extraDocument, 'phone':account.phone,
+                                    'postcode':account.postcode, 'state':account.state, 'city':account.city,
+                                    'street':account.street, 'contact':account.owner.firstname}|json_encode() }}"
+                                    data-dismiss="modal" class="pointer">
+                                    <td> {{ account.lastname }} </td>
+                                    <td class="text-center"> {{ account.document }} </td>
+                                    <td><i class="fa fa-envelope"></i>&nbsp;  {{ account.email }} </td>
+                                    <td> {{ account.createdAt|date('d/m/Y') }}</td>
+                                </tr>
+                            {% endfor %}
 
-                                    {% for account in pagination.items %}
-                                        <tr data-account="{{ account.id }}" data-lastname="{{ account.lastname|slice(0,30) }}" data-dismiss="modal" class="pointer">
-                                            <td> {{ account.lastname }} </td>
-                                            <td class="text-center"> {{ account.document }} </td>
-                                            <td><i class="fa fa-envelope"></i>&nbsp;  {{ account.email }} </td>
-                                            <td> {{ account.createdAt|date('d/m/Y') }}</td>
-                                        </tr>
-                                    {% endfor %}
-
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="row text-center">
-                                <div class="btn-group bt-xs">
-                                    {{ knp_pagination_render(pagination) }}
-                                </div>
-                            </div>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row text-center">
+                        <div class="btn-group bt-xs">
+                            {{ knp_pagination_render(pagination) }}
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+
     <script>
 
         $(' [data-account] ').on('click', function () {
             $('#order_account').val($(this).data('account'));
-            $('#lastname').html($(this).data('lastname'));
+            $('#order_customer').val($(this).data('info')['firstname']);
+            $('#order_cnpj').val($(this).data('info')['cnpj']);
+            $('#order_ie').val($(this).data('info')['ie']);
+            $('#order_contact').val($(this).data('info')['contact']);
+            $('#order_email').val($(this).data('info')['email']);
+            $('#order_phone').val($(this).data('info')['phone']);
+            $('#order_postcode').val($(this).data('info')['postcode']);
+            $('#order_state').val($(this).data('info')['state']);
+            $('#order_city').val($(this).data('info')['city']);
+            $('#order_address').val($(this).data('info')['street']);
         });
 
         form = $('#form_filtration');
