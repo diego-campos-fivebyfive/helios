@@ -41,7 +41,7 @@
 
     <div class="wrapper wrapper-content animated fadeIn">
         <div class="row">
-            <div class="col-lg-12 flow-h">
+            <div class="col-lg-12">
                 <div class="panel panel-info flow-lg">
                     <div class="panel-heading">
                         <h3>Meus Pedidos</h3>
@@ -50,49 +50,83 @@
                         <table id="extras_table" class="table table-condensed table-bordered col-md-12">
                             <thead>
                             <tr>
-                                <td class="col-md-1 text-center">PEDIDO</td>
-                                <td>DATA</td>
-                                <td>STATUS</td>
-                                <td>SISTEMAS</td>
-                                <td class="col-md-2 text-center">VALOR TOTAL</td>
-                                <td class="col-md-2 text-center">AÇÃO</td>
+                                <td class="col-md-1 text-center">Pedido</td>
+                                <td class="text-center">Data</td>
+                                <td>Sistemas</td>
+                                <td>Status</td>
+                                <td>Valor</td>
+                                <td class="col-md-2">&nbsp;</td>
                             </tr>
                             </thead>
                             <tbody>
                             {% for item in orders if item.childrens.count %}
+                                {% set order = item %}
+
                                 <tr>
                                     <td class="text-center col-md-1">{{ item.id }} </td>
-                                    <td class="col-md-1">{{ item.createdAt|date('d/m/Y') }}</td>
-                                    <td class="col-md-6">SISTEMA(S) DE
-                                    <td class="text-center">{{ item.id }} </td>
                                     <td>{{ item.createdAt|date('d/m/Y') }}</td>
-                                    <td> {{ item.statusName|capitalize|trans }} </td>
                                     <td>SISTEMA(S) DE
                                         {% for element in item.childrens %}
                                             <b>{{ element.power }}</b>,
                                         {% endfor %} KWP
                                     </td>
-                                    <td class="col-md-2 text-right">{{ item.total|currency }}</td>
-                                    <td class="btn-group btn-group-sm btn-group-justified col-md-2">
-                                        <a href="{{ path('order_show', { 'id':item.id }) }}"
-                                           class="btn btn-default">
-                                            <i class="fa fa-eye"></i> {{ 'View'|trans }}
-                                        </a>
-                                        <a data-url="{{ path('generator_company_shipping',{id: item.id}) }}"
-                                           data-toggle="modal"
-                                           data-target="#modal_details"
-                                           class="btn btn-primary">
-                                            <i class="fa fa-truck"></i> {{ 'Frete'|trans }}
+                                    <td>
+                                        <span class="label">
+                                            {{ item.statusName|capitalize|trans }}
+                                        </span>
+                                    </td>
 
-                                            <br>
-                                            <a href="{{ path('project_generator',{order:item.id}) }}">
-                                                Editar (Temporário)
-                                            </a>
-                                            <br>
+                                    <td>{{ item.total|currency }}</td>
+                                    <td>
 
-                                            <a data-target="#modal_upload" data-toggle="modal" data-href="{{ path('order_upload',{id:item.id}) }}">
-                                                Enviar Comprovante
-                                            </a>
+                                        <div class="btn-group btn-group-justified">
+                                            <button style="width: 100%;" type="button"
+                                                    class="btn btn-sm btn-primary dropdown-toggle"
+                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-arrow-down pull-left"></i>
+                                                Operações
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+
+                                                {% if order.isApproved %}
+
+                                                    <li>
+                                                        <a data-target="#modal_upload" data-toggle="modal"
+                                                           data-href="{{ path('order_upload',{id:item.id}) }}">
+                                                            <i class="fa fa-file-text"></i> Enviar Comprovante
+                                                        </a>
+                                                    </li>
+
+                                                    {% set shippingRules = order.shippingRules %}
+
+                                                    {% if attribute(shippingRules, 'type') is defined and 'self' == shippingRules.type %}
+
+                                                    <li>
+                                                        <a data-url="{{ path('generator_company_shipping',{id: item.id}) }}"
+                                                           data-toggle="modal"
+                                                           data-target="#modal_details">
+                                                            <i class="fa fa-truck"></i> Transportadora
+                                                        </a>
+                                                    </li>
+
+                                                    {% endif %}
+
+                                                {% endif %}
+
+                                                <li>
+                                                    <a href="{{ path('project_generator', {order:item.id}) }}">
+                                                        <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
+                                                    </a>
+                                                </li>
+
+                                                <li>
+                                                    <a href="{{ path('order_show', {id:item.id}) }}">
+                                                        <i class="fa fa-eye"></i> {{ 'View'|trans }}
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -154,12 +188,12 @@
         var modalUpload = $('#modal_upload');
         var modalUploadBody = modalUpload.find('.modal-body');
 
-        modalUpload.on('show.bs.modal', function(event){
+        modalUpload.on('show.bs.modal', function (event) {
             var target = $(event.relatedTarget);
             var url = target.data('href');
             $.ajax({
                 url: url,
-                success: function(response){
+                success: function (response) {
                     modalUploadBody.html(response);
                 }
             });
