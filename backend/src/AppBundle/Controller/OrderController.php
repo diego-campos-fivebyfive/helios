@@ -75,7 +75,9 @@ class OrderController extends AbstractController
 
             $order->setStatus($status);
 
+            // TODO: Manter comentado até aprovação de layouts
             $this->manager('order')->save($order);
+            //$this->get('order_mailer')->sendOrderMessage($order);
 
             return $this->json();
         }
