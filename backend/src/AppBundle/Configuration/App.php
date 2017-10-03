@@ -39,6 +39,7 @@ class App
             'modules' => 'fa fa-th',
             'money' => 'fa fa-money',
             'my-requests' => 'fa fa-files-o',
+            'orders' => 'fa fa-file-text-o',
             'packages' => 'fa fa-archive',
             'person' => 'fa fa-user',
             'plug' => 'fa fa-plug',
