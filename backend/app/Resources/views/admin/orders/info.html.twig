@@ -30,6 +30,9 @@
                 {{ form_widget(form.customer, {attr:{class:'form-control'}}) }}
             </div>
             <div class="col-md-4">
+
+                {% if attribute(form, 'account') is defined %}
+
                 {{ form_label(form.account, 'Integrador') }}
                 <br>
                 <a data-url="{{ path('accounts_list') }}"
@@ -39,6 +42,8 @@
                     <i class="fa fa-user"></i> <span id="lastname">Selecionar Integrador</span>
                 </a>
                 {{ form_widget(form.account, {attr:{class:'hidden'}}) }}
+
+                {% endif %}
 
             </div>
         </div>
