@@ -471,16 +471,9 @@ class ProjectGeneratorController extends AbstractController
     private function checkOrderStatus(Order $order)
     {
         $isPlatform = $this->user()->isPlatform();
+        $lockStatus = in_array($order->getStatus(), [Order::STATUS_APPROVED, Order::STATUS_REJECTED, Order::STATUS_DONE]);
 
-        if (in_array($order->getStatus(), [Order::STATUS_APPROVED, Order::STATUS_REJECTED, Order::STATUS_DONE])) {
-            return false;
-        }
-
-        if(!$isPlatform && $order->isPending()){
-            return false;
-        }
-
-        if($isPlatform && $order->isValidated()){
+        if ($lockStatus || (!$isPlatform && $order->isPending()) || ($isPlatform && $order->isValidated())) {
             return false;
         }
 
