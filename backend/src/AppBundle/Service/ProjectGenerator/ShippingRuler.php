@@ -222,7 +222,7 @@ abstract class ShippingRuler
     {
         $rule['value'] = 0;
         $rule['markup'] = 0;
-        $rule['company'] = null;
+        $rule['company'] = array_key_exists('company', $rule) ? $rule['company'] : null;
         $rule['state'] = null;
         $rule['kind'] = null;
         $rule['region'] = null;
