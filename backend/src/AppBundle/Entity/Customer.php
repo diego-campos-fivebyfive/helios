@@ -738,6 +738,10 @@ class Customer extends AbstractCustomer
             $owner = $owners[0];
         }
 
+        if (!$owner) {
+            $owner = $this->members->first();
+        }
+
         return $owner;
     }
 
