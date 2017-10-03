@@ -24,7 +24,7 @@ class AppListener
     /**
      * @var bool
      */
-    private $handleExceptions = false;
+    private $handleExceptions = true;
 
     /**
      * @var array
@@ -41,6 +41,10 @@ class AppListener
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+
+        if('dev' === $container->get('kernel')->getEnvironment()){
+            $this->handleExceptions = false;
+        }
     }
 
     /**
@@ -75,17 +79,13 @@ class AppListener
     }
 
     /**
-     * @param FilterResponseEvent $event
-     */
-    public function onKernelResponse(FilterResponseEvent $event)
-    {
-    }
-
-    /**
      * @param GetResponseForExceptionEvent $event
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
+        if(!$this->handleExceptions)
+            throw $event->getException();
+
         $request = $event->getRequest();
         $pathInfo = $request->getPathInfo();
 
@@ -106,14 +106,6 @@ class AppListener
     }
 
     /**
-     * @param LifecycleEventArgs $args
-     */
-    public function postLoad(LifecycleEventArgs $args)
-    {
-        return;
-    }
-
-    /**
      * @return \AppBundle\Entity\BusinessInterface
      */
     public function getAccount()
@@ -124,7 +116,7 @@ class AppListener
     }
 
     /**
-     * @return \AppBundle\Entity\BusinessInterface|null
+     * @return \AppBundle\Entity\MemberInterface|null
      */
     private function getMember()
     {

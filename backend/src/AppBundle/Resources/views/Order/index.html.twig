@@ -31,6 +31,7 @@
                             <tr>
                                 <td class="col-md-1 text-center">PEDIDO</td>
                                 <td>DATA</td>
+                                <td>STATUS</td>
                                 <td>SISTEMAS</td>
                                 <td class="col-md-2 text-center">VALOR TOTAL</td>
                                 <td class="col-md-2 text-center">AÇÃO</td>
@@ -42,6 +43,10 @@
                                 <td class="text-center col-md-1">{{ item.id }} </td>
                                 <td class="col-md-1">{{ item.createdAt|date('d/m/Y') }}</td>
                                 <td class="col-md-6">SISTEMA(S) DE
+                                <td class="text-center">{{ item.id }} </td>
+                                <td>{{ item.createdAt|date('d/m/Y') }}</td>
+                                <td> {{ item.statusName|capitalize|trans }} </td>
+                                <td>SISTEMA(S) DE
                                     {% for element in item.childrens %}
                                     <b>{{ element.power }}</b>,
                                     {% endfor %} KWP
@@ -57,6 +62,10 @@
                                        data-target="#modal_details"
                                        class="btn btn-primary">
                                         <i class="fa fa-truck"></i> {{ 'Frete'|trans }}
+
+                                    <br>
+                                    <a href="{{ path('project_generator',{order:item.id}) }}">
+                                        Editar (Temporário)
                                     </a>
                                 </td>
                             </tr>
@@ -86,6 +95,7 @@
     }
 </style>
 {% endblock %}
+
 {% block scripts %}
 <script>
 

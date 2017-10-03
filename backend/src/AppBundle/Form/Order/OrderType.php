@@ -22,6 +22,9 @@ class OrderType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        /** @var Order $order */
+        $order = $options['data'];
+
         /** @var MemberInterface $member */
         $member = $options['member'];
 
@@ -33,8 +36,9 @@ class OrderType extends AbstractType
 
         if(self::TARGET_REVIEW == $options['target']){
 
-            $builder
-                ->add('account', EntityType::class, [
+            if($order->isBuilding()){
+
+                $builder->add('account', EntityType::class, [
                     'class' => Customer::class,
                     'query_builder' => function(EntityRepository $er) use($member){
 
@@ -57,7 +61,10 @@ class OrderType extends AbstractType
 
                         return $qb;
                     }
-                ])
+                ]);
+            }
+
+            $builder
                 ->add('customer')
                 ->add('cnpj')
                 ->add('ie')

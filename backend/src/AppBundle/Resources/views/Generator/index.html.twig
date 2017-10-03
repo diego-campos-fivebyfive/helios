@@ -6,129 +6,186 @@
 
 {% block body %}
 
-{% include view('helper.style-wizard') %}
+    {% include view('helper.style-wizard') %}
 
-<div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <h5>Orçamentos</h5>
-                </div>
-                <div class="ibox-content">
-                    <div id="rootwizard">
-                        <div class="navbar">
-                            <div class="navbar-inner">
-                                <div class="container col-md-12">
-                                    <ul>
-                                        <li><a href="#tab1" data-toggle="tab">1. Gerador</a></li>
-                                        <li><a href="#tab2" data-toggle="tab">2. Orçamento Atual</a></li>
-                                        <li><a href="#tab3" data-toggle="tab">3. Revisão</a></li>
-                                    </ul>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Orçamentos</h5>
+                    </div>
+                    <div class="ibox-content">
+
+                        <div class="col-md-12">
+                            {% if order.validated %}
+                                <div class="alert alert-danger">
+                                    <i class="fa fa-warning"></i>
+                                    Ao editar este orçamento será necessário uma revalidação pela equipe da Sices.
                                 </div>
-                            </div>
+                                <div class="alert alert-success">
+                                    <i class="fa fa-info-circle"></i>
+                                    Ao aprovar este orçamento você receberá a proforma e seu pedido de compra será
+                                    processado
+                                </div>
+                            {% endif %}
                         </div>
-                        <div class="tab-content">
-                            <div class="tab-pane" id="tab1">
-                                <div class="col-md-12">
-                                    <div class="panel panel-info">
-                                        <div class="panel-heading" id="info_power">
-                                            Gerador
-                                        </div>
-                                        <div class="panel-body">
 
-                                            <div id="generator_form" class="col-md-12 flow-h">
-                                            </div>
-
-                                            <div id="generator_components" class="col-md-12 flow-h">
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                    <div id="generator_config">
+                        <div id="rootwizard">
+                            <div class="navbar">
+                                <div class="navbar-inner">
+                                    <div class="container col-md-12">
+                                        <ul>
+                                            <li><a href="#tab1" data-toggle="tab">1. Gerador</a></li>
+                                            <li><a href="#tab2" data-toggle="tab">2. Orçamento Atual</a></li>
+                                            <li><a href="#tab3" data-toggle="tab">3. Revisão</a></li>
+                                        </ul>
                                     </div>
                                 </div>
-
-                                <nav class="pager wizard">
-                                    <a id="add_project_to_order" class="btn btn-primary pull-right" style="margin-right: 15px;">
-                                        Adicionar ao orçamento atual <i class="fa fa-arrow-right"></i>
-                                        <li class="next hide" href="javascript:;" id="next">Next</li>
-                                    </a>
-                                </nav>
                             </div>
-
-                            <div class="tab-pane" id="tab2">
-                                <div id="generator_orders" class="col-md-12 flow-h">
-                                </div>
-
-                                <nav class="pager wizard">
-                                    <li class="previous"><a href="javascript:;" class="btn btn-default" style="margin-left: 15px;">
-                                            <i class="fa fa-arrow-left"></i> voltar</a></li>
-                                    <li class="next"><a href="javascript:;" class="btn btn-primary" style="margin-right: 15px;">
-                                            próximo  <i class="fa fa-arrow-right"></i></a></li>
-                                </nav>
-                            </div>
-
-                            <div class="tab-pane" id="tab3">
-                                <div class="col-md-12">
-                                    {% if app.user.isPlatform %}
+                            <div class="tab-content">
+                                <div class="tab-pane" id="tab1">
+                                    <div class="col-md-12">
                                         <div class="panel panel-info">
-                                            <div class="panel-heading">
-                                                <i class="fa fa-user"></i>
-                                                Informações do Cliente
+                                            <div class="panel-heading" id="info_power">
+                                                Gerador
                                             </div>
                                             <div class="panel-body">
-                                                {{ render(controller('AdminBundle:Order:info', {id:order.id})) }}
+
+                                                <div id="generator_form" class="col-md-12 flow-h">
+                                                </div>
+
+                                                <div id="generator_components" class="col-md-12 flow-h">
+                                                </div>
+
                                             </div>
                                         </div>
-                                    {% endif %}
 
-                                    <div class="panel panel-primary">
-                                        <div class="panel-heading">
-                                            Lista de Sistemas
-                                        </div>
-                                        <div class="panel-body" id="orders_list">
-                                            {% include view('Generator.review_orders') %}
+                                        <div id="generator_config">
                                         </div>
                                     </div>
 
-                                    <div class="panel panel-warning">
-                                        <div class="panel-heading">
-                                            <i class="fa fa-truck"></i>
-                                            Frete
-                                        </div>
-                                        <div class="panel-body" id="generator_financial_shipping">
-                                        </div>
-                                    </div>
-
-                                    <div class="panel panel-primary">
-                                        <div class="panel-heading">
-                                            Total
-                                        </div>
-                                        <div class="panel-body">
-                                            <div class="col-md-9"><h2>Valor total:</h2></div>
-                                            <h2 id="order-total">{{ order.total|currency }}</h2>
-                                        </div>
-                                    </div>
+                                    <nav class="pager wizard">
+                                        <a id="add_project_to_order" class="btn btn-primary pull-right"
+                                           style="margin-right: 15px;">
+                                            Adicionar ao orçamento atual <i class="fa fa-arrow-right"></i>
+                                            <li class="next hide" href="javascript:;" id="next">Next</li>
+                                        </a>
+                                    </nav>
                                 </div>
 
-                                <nav class="pager wizard">
-                                    <li class="previous"><a href="javascript:;" class="btn btn-default" style="margin-left: 15px;">
-                                            <i class="fa fa-arrow-left"></i> voltar</a></li>
-                                    <button type="button" id="btn_budget" data-url="{{ path('order_budget_create') }}"
-                                            class="btn btn-warning pull-right" style="margin-right: 15px;">
-                                        <i class="fa fa-arrow-right"></i> Enviar solicitação para SICES
-                                    </button>
-                                </nav>
+                                <div class="tab-pane" id="tab2">
+                                    <div id="generator_orders" class="col-md-12 flow-h">
+                                    </div>
+
+                                    <nav class="pager wizard">
+                                        <li class="previous"><a href="javascript:;" class="btn btn-default"
+                                                                style="margin-left: 15px;">
+                                                <i class="fa fa-arrow-left"></i> voltar</a></li>
+                                        <li class="next"><a href="javascript:;" class="btn btn-primary"
+                                                            style="margin-right: 15px;">
+                                                próximo <i class="fa fa-arrow-right"></i></a></li>
+                                    </nav>
                                 </div>
+
+                                <div class="tab-pane" id="tab3">
+                                    <div class="col-md-12">
+                                        {% if app.user.isPlatform %}
+                                            <div class="panel panel-info">
+                                                <div class="panel-heading">
+                                                    <i class="fa fa-user"></i>
+                                                    Informações do Cliente
+                                                </div>
+                                                <div class="panel-body">
+                                                    {{ render(controller('AdminBundle:Order:info', {id:order.id})) }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                Lista de Sistemas
+                                            </div>
+                                            <div class="panel-body" id="orders_list">
+                                                {% include view('Generator.review_orders') %}
+                                            </div>
+                                        </div>
+
+                                        <div class="panel panel-warning">
+                                            <div class="panel-heading">
+                                                <i class="fa fa-truck"></i>
+                                                Frete
+                                            </div>
+                                            <div class="panel-body" id="generator_financial_shipping">
+                                            </div>
+                                        </div>
+
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                Total
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="col-md-9"><h2>Valor total:</h2></div>
+                                                <h2 id="order-total">{{ order.total|currency }}</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <nav class="pager wizard">
+
+                                        <li class="previous">
+                                            <a href="javascript:;" class="btn btn-default" style="margin-left: 15px;">
+                                                <i class="fa fa-arrow-left"></i> voltar</a>
+                                        </li>
+
+                                        {% set hideBudget = false %}
+                                        {% if member.isPlatformUser and (order.isPending or order.isBuilding) %}
+
+                                            {% set hideBudget = true %}
+
+                                            <button id="btn_validate"
+                                                    data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_VALIDATED') }}"
+                                                    class="btn btn-md btn-success pull-right special-actions"
+                                                    style="margin-right: 15px;">
+                                                <i class="fa fa-check"></i> Validar Orçamento
+                                            </button>
+
+                                        {% endif %}
+
+                                        <button type="button" id="btn_budget"
+                                                data-url="{{ path('order_budget_create') }}"
+                                                class="btn btn-warning pull-right {{ hideBudget or order.isValidated ? 'hide' }}"
+                                                style="margin-right: 15px;">
+                                            <i class="fa fa-arrow-right"></i> Enviar solicitação para SICES
+                                        </button>
+
+                                        {% if not member.isPlatformUser and order.validated %}
+
+                                            <div class="btn-group pull-right special-actions" style="margin-right: 15px;">
+                                                <button type="button" id="btn_approve"
+                                                        data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') }}"
+                                                        class="btn btn-success">
+                                                    <i class="fa fa-check"></i> Aprovar Orçamento
+                                                </button>
+
+                                                <button type="button" id="btn_reject"
+                                                    data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_REJECTED') }}"
+                                                    class="btn btn-danger">
+                                                    <i class="fa fa-close"></i> Rejeitar Orçamento
+                                                </button>
+                                            </div>
+
+                                        {% endif %}
+
+                                    </nav>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 {% endblock %}
 
@@ -144,23 +201,24 @@
         var orderId = {{ order.id }};
 
         GeneratorHandler = {
-            project: {id:0,power:0},
+            project: {id: 0, power: 0},
+            orderStatus: {{ order.status }},
             resetGenerator: function () {
                 $('#generator_config').html('');
                 $('#info_power').html('Gerador');
             },
-            getProject: function(){
+            getProject: function () {
                 return this.project;
             },
-            resetProject: function(){
-                this.project = {id:0,power:0};
+            resetProject: function () {
+                this.project = {id: 0, power: 0};
                 this.onResetProject();
             },
-            getForm: function(){
+            getForm: function () {
                 var id = this.getProject().id;
                 Request.send({
                     url: '{{ path('generator',{project:'_id_'}) }}'.replace(/_id_/g, id),
-                    callback: function(xhr){
+                    callback: function (xhr) {
                         $('#generator_form').html(xhr.responseText);
                         FormGenerator.field('source').find('option[value="power"]').attr('selected', 'selected').trigger('change');
                         var blocks = FormGenerator.form.find('.middle-block');
@@ -169,21 +227,38 @@
                     }
                 });
             },
-            setPower: function(power) {
-                $('#info_power').html('Sistema de '+power+' kWp');
+            setPower: function (power) {
+                $('#info_power').html('Sistema de ' + power + ' kWp');
             },
-            getComponents: function(){
+            resetBudgetButton: function () {
+                {% if not member.isPlatformUser %}
+                var building = {{ constant('AppBundle\\Entity\\Order\\Order::STATUS_BUILDING') }};
+                if (building != this.orderStatus) {
+                    $.ajax({
+                        url: '{{ path('order_status', {id:order.id}) }}',
+                        method: 'post',
+                        data: {status: building},
+                        complete: function () {
+                            GeneratorHandler.orderStatus = building;
+                            $('.special-actions').remove();
+                            $('#btn_budget').removeClass('hide');
+                        }
+                    });
+                }
+                {% endif %}
+            },
+            getComponents: function () {
                 var id = this.getProject().id;
-                if(id){
+                if (id) {
                     Request.send({
                         url: '{{ path('generator_components',{id:'_id_'}) }}'.replace(/_id_/g, id),
-                        callback: function(xhr){
+                        callback: function (xhr) {
 
                             $('#generator_components').html(xhr.responseText);
 
                             Request.send({
                                 url: '{{ path('generator_position',{id:'_id_'}) }}'.replace(/_id_/g, id),
-                                callback: function(xhr){
+                                callback: function (xhr) {
                                     $('#generator_config').html(xhr.responseText);
                                 }
                             });
@@ -192,37 +267,38 @@
                     });
                 }
             },
-            getOrders: function(){
+            getOrders: function () {
                 Request.send({
                     url: '{{ path('generator_orders',{id: order.id}) }}',
-                    callback: function(xhr){
+                    callback: function (xhr) {
                         $('#generator_orders').html(xhr.responseText);
                     }
                 });
             },
             getOrdersList: function () {
-              Request.send({
-                  url: '{{ path('generator_orders_list',{id: order.id}) }}',
-                  callback: function (xhr) {
-                      $('#orders_list').html(xhr.responseText);
-                  }
-              });
+                Request.send({
+                    url: '{{ path('generator_orders_list',{id: order.id}) }}',
+                    callback: function (xhr) {
+                        $('#orders_list').html(xhr.responseText);
+                    }
+                });
             },
-            onSaveProject: function(project){
+            onSaveProject: function (project) {
                 this.project = project;
                 this.getComponents();
                 this.getForm();
             },
-            onResetProject: function(){
+            onResetProject: function () {
                 $('#generator_components').html('');
             },
-            onSaveOrder: function(){
+            onSaveOrder: function () {
                 this.getOrders();
                 this.resetProject();
                 this.getForm();
                 this.getOrdersList();
+                this.resetBudgetButton();
             },
-            init: function(){
+            init: function () {
                 this.getForm();
                 this.getComponents();
                 this.getOrders();
@@ -267,19 +343,74 @@
             }
         });
 
-        $(document).ready(function() {
-            $('#rootwizard').bootstrapWizard({onTabShow: function(tab, navigation, index) {
-                var $total = navigation.find('li').length;
-                var $current = index+1;
-                var $percent = ($current/$total) * 100;
-                $('#rootwizard').find('.bar').css({width:$percent+'%'});
-            }});
-            $('#rootwizard .finish').click(function() {
+        $(document).ready(function () {
+            $('#rootwizard').bootstrapWizard({
+                onTabShow: function (tab, navigation, index) {
+                    var $total = navigation.find('li').length;
+                    var $current = index + 1;
+                    var $percent = ($current / $total) * 100;
+                    $('#rootwizard').find('.bar').css({width: $percent + '%'});
+                }
+            });
+            $('#rootwizard .finish').click(function () {
                 alert('Finished!, Starting over!');
                 $('#rootwizard').find("a[href*='tab1']").trigger('click');
             });
         });
 
-</script>
+        $('[data-status]').on('click', function () {
+            var status = $(this).data('status');
+
+            swal({
+                title: 'Confirma a operação?',
+                //text: 'O integrador receberá um email informando esta operação.',
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: '{{ 'Confirmar'|trans }}',
+                cancelButtonText: '{{ 'Cancelar'|trans }}',
+                closeOnConfirm: false
+            }, function () {
+
+                $.ajax({
+                    url: '{{ path('order_status',{id:order.id}) }}',
+                    method: 'post',
+                    data: {status: status},
+                    complete: function (xhr) {
+
+                        if (200 == xhr.status) {
+
+                            swal({
+                                title: "Concluído.",
+                                text: "Operação realizada com sucesso.",
+                                type: "success",
+                                showConfirmButton: false
+                            });
+
+                            window.setTimeout(function () {
+                                swal.close();
+                                window.location.reload();
+                            }, 1500);
+
+                        } else {
+                            var response = xhr.responseJSON;
+                            swal('Ooops', response.hasOwnProperty('error') ? response.error : 'Falha ao executar a operação', 'error');
+                        }
+                    },
+                    beforeSend: function () {
+                        swal({
+                            title: "Processando...",
+                            text: "Aguarde.",
+                            type: "info",
+                            showConfirmButton: false
+                        });
+                    }
+                });
+
+            });
+
+        });
+
+    </script>
 
 {% endblock %}

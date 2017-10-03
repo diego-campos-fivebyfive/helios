@@ -6,8 +6,6 @@ services:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
-            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
-            - { name: doctrine.event_listener, event: postLoad }
 
     doctrine_event_listener:
         class: AppBundle\EventListener\DoctrineListener
@@ -139,6 +137,9 @@ services:
         class: AppBundle\Manager\ThemeManager
         arguments: ['AppBundle\Entity\Theme', '@doctrine']
 
+    member_manager:
+        alias: customer_manager
+
     # Services
     component_collector:
         class: AppBundle\Service\Order\ComponentCollector
@@ -247,3 +248,10 @@ services:
     memorial_cloner:
         class: AppBundle\Service\Pricing\MemorialCloner
         arguments: ['@memorial_manager']
+
+    order_manipulator:
+        class: AppBundle\Service\Order\OrderManipulator
+
+    order_finder:
+        class: AppBundle\Service\Order\OrderFinder
+        arguments: ['@order_manager']

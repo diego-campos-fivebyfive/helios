@@ -3,6 +3,11 @@
 {% block body %}
 <div class="wrapper wrapper-content animated fadeIn">
     <div class="row">
+        <div class="col-md-12" style="margin-bottom: 1rem;">
+            <a class="btn btn-success pull-right" href="{{ path('project_generator') }}">
+                <i class="fa fa-plus"></i> Orçamento
+            </a>
+        </div>
         <div class="col-lg-12 flow-h">
             <div class="panel panel-info flow-lg">
                 <div class="panel-heading">
@@ -20,29 +25,42 @@
                             </tr>
                         </thead>
                         <tbody>
-                        {% for item in orders if item.childrens.count %}
+                        {% for order in orders %}
                             <tr>
-                                <td>{{ item.account.firstName }}</td>
-                                <td>Sistemas(s) de
-                                    {% for element in item.childrens %}
-                                    <b>{{ element.power }}</b>,
+                                <td>{{ order.account ? order.account.firstname : 'Não definido' }}</td>
+                                <td>
+                                    {% if order.childrens.count %}
+                                    Sistemas(s) de
+                                    {% for children in order.childrens %}
+                                    <b>{{ children.power }}</b>,
                                     {% endfor %} kWp
-                                </td>
-                                <td class="text-center">
-                                    {% if item.status == 0 %}
-                                        <span class="label label-defaut">Construção</span>
-                                    {% elseif item.status == 1 %}
-                                        <span class="label label-warning">Pendente</span>
-                                    {% elseif item.status == 2 %}
-                                        <span class="label label-primary">Validado</span>
-                                    {% elseif item.status == 3 %}
-                                        <span class="label label-success">Aprovado</span>
-                                    {% elseif item.status == 4 %}
-                                        <span class="label label-danger">Rejeitado</span>
+                                    {% else %}
+                                        Sem sistemas
                                     {% endif %}
                                 </td>
-                                <td class="text-right">{{ item.total|currency }}</td>
+                                <td class="text-center">
+                                    <span class="label label-default">
+                                        {{ order.statusName|capitalize|trans }}
+                                    </span>
+                                </td>
+                                <td class="text-right">{{ order.total|currency }}</td>
                                 <td>
+
+                                    <div class="btn-group btn-group-justified">
+                                        <button style="width: 100%;" type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fa fa-arrow-down pull-left"></i>
+                                            Operações
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+
+                                            <li>
+                                                <a href="{{ path('project_generator', {order:order.id}) }}">
+                                                    <i class="fa fa-pencil"></i> Editar Orçamento
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
 
                                 </td>
                             </tr>

@@ -39,6 +39,8 @@
                 OrderManager.renderTotal(total);
                 var message = 201 == xhr.status ? 'Componente adicionado com sucesso!' : 'Componente atualizado com sucesso!' ;
                 $('#form_element_container').html('<h2>'+message+'</h2>');
+
+                GeneratorHandler.resetBudgetButton();
             }
         });
     });

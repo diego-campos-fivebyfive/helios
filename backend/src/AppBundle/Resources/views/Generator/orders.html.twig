@@ -115,15 +115,17 @@
         }
     });
 
-    var ShippingManager = {
-        getElements: function () {
-            Request.send({
-                url: '{{ path('generator_financial_shipping', {id:order.id}) }}',
-                callback: function (xhr) {
-                    $('#generator_financial_shipping').html(xhr.responseText);
-                }
-            });
-        }
+    if(typeof ShippingManager == 'undefined'){
+        ShippingManager = {};
+    }
+
+    ShippingManager.getElements = function () {
+        Request.send({
+            url: '{{ path('generator_financial_shipping', {id:order.id}) }}',
+            callback: function (xhr) {
+                $('#generator_financial_shipping').html(xhr.responseText);
+            }
+        });
     };
 
     ShippingManager.getElements();

@@ -1,0 +1,33 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+    {% set messages = {
+        building: 'Orçamento em edição.',
+        pending: 'Aguardando análise do comercial.',
+        validated: 'Aguardando aprovação do integrador.',
+        approved: 'Aguardando confirmação de pagamento.',
+        rejected: 'Não é possível editar esta solicitação.',
+        done: 'Não é possível editar esta solicitação.'
+    } %}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="alert alert-info text-center">
+                        <h2>
+                            <i class="fa fa-info-circle"></i>
+                            Status: <strong style="text-transform: uppercase"> {{ order.statusName|capitalize|trans }} </strong>
+                            <br>
+                            {{ messages[order.statusName] }}
+                        </h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
