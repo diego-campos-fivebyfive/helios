@@ -817,7 +817,7 @@ class Order implements OrderInterface, InsurableInterface
      */
     public function isBudget()
     {
-        return $this->childrens->count() > 0 || !$this->parent;
+        return !$this->childrens->isEmpty() || !$this->parent;
     }
 
     /**
