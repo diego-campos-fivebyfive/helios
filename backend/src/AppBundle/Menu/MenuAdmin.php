@@ -129,9 +129,9 @@ trait MenuAdmin
         ]);
 
         if($this->user->hasRole(UserInterface::ROLE_PLATFORM_MASTER)){
-            $settings->addChild('Globais', [
+            $settings->addChild('Gerais', [
                 'route' => 'platform_settings',
-                'extras' => ['icon' => self::icon('globe')]
+                'extras' => ['icon' => self::icon('sliders')]
             ]);
         }
     }
