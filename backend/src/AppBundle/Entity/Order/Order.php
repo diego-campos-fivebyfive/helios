@@ -251,7 +251,7 @@ class Order implements OrderInterface, InsurableInterface
      */
     public function getReference()
     {
-        return $this->reference;
+        return $this->reference ?: $this->id;
     }
 
     /**
