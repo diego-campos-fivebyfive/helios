@@ -1,0 +1,105 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+
+            <div class="row" id="real-content">
+                <div class="col-md-12">
+                    <div class="ibox flow-h">
+                        <div class="ibox-content flow-lg" style="min-height: 650px;">
+                            <div class="row">
+
+                                <div class="col-md-12" id="spinner_settings" style="height: 30px;">
+                                    {% include view('helper.spinner') %}
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            Emails Globais
+                                        </div>
+                                        <div class="panel-body">
+
+                                            {{ form_start(form) }}
+
+                                            {% set form_params = form.parameters %}
+
+                                            <div class="form-group">
+                                                {{ form_label(form_params.email_platform, 'Email da Plataforma') }}
+                                                {{ form_widget(form_params.email_platform) }}
+                                            </div>
+
+                                            <div class="form-group">
+                                                {{ form_label(form_params.email_master, 'Email da Plataforma') }}
+                                                {{ form_widget(form_params.email_master) }}
+                                            </div>
+
+                                            <div class="form-group">
+                                                {{ form_label(form_params.email_admin, 'Email da Plataforma') }}
+                                                {{ form_widget(form_params.email_admin) }}
+                                            </div>
+
+                                            {{ form_end(form) }}
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+
+        var spinnerSettings = $('#spinner_settings');
+        var spinnerLoader = spinnerSettings.html();
+
+        var formSettings = $('form[name="settings"]');
+
+        function changeSpinner(display) {
+            if (display) {
+                spinnerSettings.html(spinnerLoader);
+            } else {
+                spinnerSettings.html('&nbsp;');
+            }
+        }
+        changeSpinner();
+
+        formSettings.on('submit', function (event) {
+            event.preventDefault();
+            var form = $(this);
+            changeSpinner(true);
+            $.ajax({
+                url: form.attr('action'),
+                method: form.attr('method'),
+                data: form.serialize(),
+                complete: function (xhr) {
+                    if (200 == xhr.status) {
+                        changeSpinner(false);
+                    } else {
+                        swal('Ooops', 'Houve uma falha ao processar as configurações', 'error');
+                    }
+                }
+            });
+        });
+
+        formSettings.find('input').on('change', function () {
+            formSettings.trigger('submit');
+        });
+
+    </script>
+
+{% endblock %}
