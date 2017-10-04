@@ -314,9 +314,11 @@
                     </p>
 
                     <label class="width-float-total no-margins">Condições de pagamentos:</label>
-                    <span class="indentation"> a) TED 50% antecipado 31/08/2017 (amanhã)</span>
-                    <span class="pull-right field-width"> R$ 10.384,57</span>
+                    {% for payment in order.metadata['payment_method'] %}
+                    <span class="indentation"> {{ loop.index }} ) TED {{ order.metadata['payment_method']['quotas']['1']['percent'] }} % antecipado {{ order.metadata['payment_method']['name'] }}</span>
+                    <span class="pull-right field-width"> {{ order.metadata['payment_method']['quotas']['1']['value']|currency }} </span>
                     <br/>
+                    {% endfor %}
 
                     <label class="spacing">DADOS BANCÁRIOS PARA PAGAMENTO EM CASO DE TRASFERÊNCIA BANCÁRIA</label>
 
