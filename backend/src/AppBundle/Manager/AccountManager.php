@@ -7,14 +7,6 @@ use AppBundle\Entity\BusinessInterface;
 class AccountManager extends AbstractManager
 {
     /**
-     * @inheritDoc
-     */
-    public function findOneBy(array $criteria, array $orderBy = null)
-    {
-        dump($criteria); die;
-    }
-
-    /**
      * @param BusinessInterface $account
      * @param $index
      * @return BusinessInterface
