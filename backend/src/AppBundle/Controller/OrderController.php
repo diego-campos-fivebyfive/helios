@@ -212,8 +212,8 @@ class OrderController extends AbstractController
             $snappy->setOption('margin-right', 0);
             $snappy->setOption('zoom', 2);
 
-            $dir = $this->get('kernel')->getRootDir() . '/../storage/';
-            $filename = 'proform_' . $order->getId() . '.pdf';
+            $dir = $this->get('kernel')->getRootDir() . '/../storage/orders/';
+            $filename = sprintf('proforma_%s_%s_.pdf', $order->getId(), (new \DateTime())->format('Ymd-His'));
             $file = $dir . $filename;
 
             $url = $this->generateUrl('proforma_pdf', ['id' => $order->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -226,7 +226,15 @@ class OrderController extends AbstractController
                     $status = Response::HTTP_OK;
                 }
 
-            } catch (\Exception $error) {
+                $order->setProforma($filename);
+
+                $this->manager('order')->save($order);
+
+            } catch (\Exception $exception) {
+
+                return $this->json([
+                    'error' => $exception->getMessage()
+                ], $status);
             }
         }
 
