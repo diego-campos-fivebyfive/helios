@@ -81,11 +81,10 @@ class OrderController extends AbstractController
             $this->manager('order')->save($order);
 
             if ($order->isDone()){
-                // TODO Generate Proforma
+                $this->generatorProformaAction($order);
             }
 
-            // TODO (Email): Manter comentado até aprovação de layouts
-            //$this->get('order_mailer')->sendOrderMessage($order);
+            $this->sendOrderEmail($order);
 
             return $this->json();
         }
@@ -110,8 +109,7 @@ class OrderController extends AbstractController
         $order->setStatus(Order::STATUS_PENDING);
         $manager->save($order);
 
-        // TODO (Email): Manter comentado até aprovação de layouts
-        //$this->get('order_mailer')->sendOrderMessage($order);
+        $this->sendOrderEmail($order);
 
         return $this->json([
             'order' => [
@@ -212,9 +210,8 @@ class OrderController extends AbstractController
             $snappy->setOption('margin-right', 0);
             $snappy->setOption('zoom', 2);
 
-            $dir = $this->get('kernel')->getRootDir() . '/../storage/orders/';
             $filename = sprintf('proforma_%s_%s_.pdf', $order->getId(), (new \DateTime())->format('Ymd-His'));
-            $file = $dir . $filename;
+            $file = $this->getUploadDir() . $filename;
 
             $url = $this->generateUrl('proforma_pdf', ['id' => $order->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
 
@@ -243,6 +240,13 @@ class OrderController extends AbstractController
         ], $status);
     }
 
+    /**
+     * @param Order $order
+     */
+    private function sendOrderEmail(Order $order)
+    {
+        $this->get('order_mailer')->sendOrderMessage($order);
+    }
 
     /**
      * @return string
