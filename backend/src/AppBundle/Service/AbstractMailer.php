@@ -12,6 +12,7 @@
 namespace AppBundle\Service;
 
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -53,15 +54,19 @@ abstract class AbstractMailer
     protected $errors = [];
 
     /**
-     * Mailer constructor.
-     * @param \Swift_Mailer $mailer
-     * @param UrlGeneratorInterface $router
-     * @param EngineInterface $templating
+     * @var ContainerInterface
      */
-    public function __construct(UrlGeneratorInterface  $router, EngineInterface $templating)
+    protected $container;
+
+    /**
+     * AbstractMailer constructor.
+     * @param ContainerInterface $container
+     */
+    public function __construct(ContainerInterface $container)
     {
-        $this->router = $router;
-        $this->templating = $templating;
+        $this->router = $container->get('router');
+        $this->templating = $container->get('templating');
+        $this->container = $container;
     }
 
     /**
@@ -140,5 +145,14 @@ abstract class AbstractMailer
     protected function render($view, array $parameters = [])
     {
         return $this->templating->render($view, $parameters);
+    }
+
+    /**
+     * @param $id
+     * @return object|\AppBundle\Manager\AbstractManager
+     */
+    protected function manager($id)
+    {
+        return $this->container->get(sprintf('%s_manager', $id));
     }
 }
