@@ -51,15 +51,15 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="order_show")
-     * @Method("get")
+     * @Route("/{id}/show", name="order_show")
      */
-    public function showAction(Request $request, Order $order)
+    public function showAction(Order $order)
     {
-        return $this->render('order.show', [
-            'order' => $order,
-            'element' => $order->getElements()
-        ]);
+        $this->denyAccessUnlessGranted('view', $order);
+
+        return $this->render('admin/orders/show.html.twig', array(
+            'order' => $order
+        ));
     }
 
     /**
