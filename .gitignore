@@ -11,3 +11,8 @@ backend/web/uploads
 
 node_modules
 vendor
+
+.temp
+.mirror
+.backup
+.uploads
