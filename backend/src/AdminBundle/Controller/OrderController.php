@@ -115,6 +115,16 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/shipping", name="order_shipping")
+     */
+    public function shippingAction(Order $order)
+    {
+        return $this->render('admin/orders/shipping.html.twig', array(
+            'order' => $order
+        ));
+    }
+
+    /**
      * @Route("/proforma/{id}", name="index_proforma")
      */
     public function proformaAction(Order $order)
@@ -124,6 +134,9 @@ class OrderController extends AbstractController
         ));
     }
 
+    /**
+     * @return array
+     */
     private function getPaymentMethods()
     {
         $manager = $this->manager('parameter');
