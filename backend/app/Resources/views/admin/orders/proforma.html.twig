@@ -234,7 +234,7 @@
                             </tbody>
                         </table>
 
-
+                        {% if item.insurance %}
                         <table class="spacing width-total">
                             <thead>
                             <tr>
@@ -260,6 +260,7 @@
                             </tr>
                             </tbody>
                         </table>
+                        {% endif %}
 
                         <label class="pull-right spacing"><h3>Valor do Sistema: {{ item.total|currency }}</h3></label>
 
