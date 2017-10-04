@@ -13,7 +13,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
- * //@Security("has_role('ROLE_PLATFORM_AFTER_SALES')")
+ * @Security("has_role('ROLE_PLATFORM_AFTER_SALES')")
  *
  * @Route("orders")
  * @Breadcrumb("Orçamentos")
