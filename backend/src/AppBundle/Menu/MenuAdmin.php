@@ -38,7 +38,7 @@ trait MenuAdmin
             }
             foreach ($access as $role){
                 if(in_array($role, $roles)){
-                    self::$method($menu);
+                    $this->$method($menu);
                 }
             }
         }
@@ -49,7 +49,7 @@ trait MenuAdmin
     /**
      * @param ItemInterface $menu
      */
-    private static function addAccounts(ItemInterface $menu)
+    private function addAccounts(ItemInterface $menu)
     {
         $menu->addChild('Accounts', [
             'route' => 'account_index',
@@ -60,7 +60,7 @@ trait MenuAdmin
     /**
      * @param ItemInterface $menu
      */
-    private static function addMemorials(ItemInterface $menu)
+    private function addMemorials(ItemInterface $menu)
     {
         $menu->addChild('Memoriais', [
             'route' => 'memorials',
@@ -71,7 +71,7 @@ trait MenuAdmin
     /**
      * @param ItemInterface $menu
      */
-    private static function addOrders(ItemInterface $menu)
+    private function addOrders(ItemInterface $menu)
     {
         $menu->addChild('Orçamentos', [
             'route' => 'orders',
@@ -82,7 +82,7 @@ trait MenuAdmin
     /**
      * @param ItemInterface $menu
      */
-    private static function addSystems(ItemInterface $menu)
+    private function addSystems(ItemInterface $menu)
     {
         $menu->addChild('Lista de Sistemas', [
             'uri' => '#',
@@ -93,7 +93,7 @@ trait MenuAdmin
     /**
      * @param ItemInterface $menu
      */
-    private static function addUsers(ItemInterface $menu)
+    private function addUsers(ItemInterface $menu)
     {
         $menu->addChild('Usuários Sices', [
             'route' => 'user_index',
@@ -104,7 +104,7 @@ trait MenuAdmin
     /**
      * @param ItemInterface $menu
      */
-    private static function addPaymentMethods(ItemInterface $menu)
+    private function addPaymentMethods(ItemInterface $menu)
     {
         $menu->addChild('Cond. Pagamento', [
             'route' => 'payment_methods',
@@ -115,7 +115,7 @@ trait MenuAdmin
     /**
      * @param ItemInterface $menu
      */
-    private static function addSettings(ItemInterface $menu)
+    private function addSettings(ItemInterface $menu)
     {
         $settings = $menu->addChild('Settings', [
             'uri' => '#',
@@ -127,5 +127,12 @@ trait MenuAdmin
             'route' => 'member_profile',
             'extras' => ['icon' => self::icon('profile')]
         ]);
+
+        if($this->user->hasRole(UserInterface::ROLE_PLATFORM_MASTER)){
+            $settings->addChild('Globais', [
+                'route' => 'platform_settings',
+                'extras' => ['icon' => self::icon('globe')]
+            ]);
+        }
     }
 }
