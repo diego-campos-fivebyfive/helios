@@ -13,7 +13,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
- * @Security("has_role('ROLE_PLATFORM_AFTER_SALES')")
+ * //@Security("has_role('ROLE_PLATFORM_AFTER_SALES')")
  *
  * @Route("orders")
  * @Breadcrumb("Orçamentos")
@@ -111,16 +111,6 @@ class OrderController extends AbstractController
         return $this->render('admin/orders/info.html.twig', array(
             'order' => $order,
             'form' => $form->createView()
-        ));
-    }
-
-    /**
-     * @Route("/proforma/{id}", name="index_proforma")
-     */
-    public function proformaAction(Order $order)
-    {
-        return $this->render('admin/orders/proforma.html.twig', array(
-            'order' => $order
         ));
     }
 
