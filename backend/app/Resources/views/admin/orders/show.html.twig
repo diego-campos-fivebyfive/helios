@@ -1,0 +1,250 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+    <style>
+        .collapse {
+            display: none;
+        }
+        .color-rows {
+            color: #676a6c;
+        }
+        .table-components {
+            border: solid 1px #d3d3d3;
+        }
+        .row-total {
+            display: block;
+        }
+        .spacing {
+            margin-top: 8px;
+        }
+        .minimize {
+            background-color: #EEE;
+        }
+    </style>
+
+    {% set orders = order.childrens %}
+    <div class="wrapper wrapper-content  animated fadeInRight">
+        <div class="row">
+            <div class="ibox border-bottom">
+                <div class="ibox-content">
+                    <div class="tab-content">
+                        <div class="tab-pane active">
+                            <div class="row">
+                                <div class="row wrapper">
+                                    <div class="col-lg-12 border-bottom">
+                                        <h2>Orçamento</h2>
+                                    </div>
+                                    <div class="col-lg-12 border-bottom">
+                                        <ol class="breadcrumb">
+                                            <li>
+                                                <label>Dados do integrador</label>
+                                            </li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Cliente</label>
+                                        {{ order.customer }}
+                                    </div>
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">CNPJ</label>
+                                        {{ order.cnpj }}
+                                    </div>
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Inscrição Estadual</label>
+                                        {{ order.ie }}
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Contato</label>
+                                        {{ order.contact }}
+                                    </div>
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Email</label>
+                                        {{ order.email }}
+                                    </div>
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Telefone</label>
+                                        {{ order.phone }}
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-3 spacing">
+                                        <label class="row-total">Cep</label>
+                                        {{ order.postcode }}
+                                    </div>
+                                    <div class="col-md-1 spacing">
+                                        <label class="row-total">Estado</label>
+                                        {{ order.state }}
+                                    </div>
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Cidade</label>
+                                        {{ order.city }}
+                                    </div>
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Endereço</label>
+                                        {{ order.address }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            {% if order.shippingrules and order.shippingrules['type'] == 'self' %}
+                    <div class="ibox border-bottom">
+                        <div class="ibox-content">
+                            <div class="tab-content">
+                                <div class="tab-pane active">
+                                    <div class="row">
+                                        <div class="row wrapper">
+                                            <div class="col-lg-12 border-bottom">
+                                                <ol class="breadcrumb">
+                                                    <li>
+                                                        <label>Dados da transportadora</label>
+                                                    </li>
+                                                </ol>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Razão Social</label>
+                                                {{ order.shippingrules['company']['name'] }}
+                                            </div>
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">CNPJ</label>
+                                                {{ order.shippingrules['company']['cnpj'] }}
+                                            </div>
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Inscrição Estadual</label>
+                                                {{ order.shippingrules['company']['ie'] }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Contato</label>
+                                                {{ order.shippingrules['company']['contact'] }}
+                                            </div>
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Email</label>
+                                                {{ order.shippingrules['company']['email'] }}
+                                            </div>
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Telefone</label>
+                                                {{ order.shippingrules['company']['phone'] }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="col-md-3 spacing">
+                                                <label class="row-total">Cep</label>
+                                                {{ order.shippingrules['company']['postcode'] }}
+                                            </div>
+                                            <div class="col-md-1 spacing">
+                                                <label class="row-total">Estado</label>
+                                                {{ order.shippingrules['company']['state'] }}
+                                            </div>
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Cidade</label>
+                                                {{ order.shippingrules['company']['city'] }}
+                                            </div>
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Endereço</label>
+                                                {{ order.shippingrules['company']['address'] }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+            {% endif %}
+
+            <div class="ibox border-bottom">
+                <div class="ibox-content">
+                    <div class="tab-content">
+                        <div class="tab-pane active">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                <tr>
+                                    <th class="col-md-5"> Descrição </th>
+                                    <th class="col-md-2 text-center"> Data </th>
+                                    <th class="col-md-1 text-center"> Qtde Itens </th>
+                                    <th class="col-md-2"> <span class="pull-right">Valor dos equipamentos</span> </th>
+                                    <th class="col-md-2"> <span class="pull-right">Valor do seguro</span> </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for order in orders if not order.budget %}
+                                    <tr>
+                                        <td colspan="5">
+                                            <div>
+                                                <h4>
+                                                    <a data-toggle="collapse" href="#{{ order.id }}">
+                                                        <span class="col-md-5 color-rows"> {{ order.description }} </span>
+                                                        <span class="col-md-2 color-rows text-center"> {{ order.createdAt|date('d/m/Y') }} </span>
+                                                        <span class="col-md-1 color-rows text-center"> {{ order.elements.count }} Itens</span>
+                                                        <span class="col-md-2 color-rows"> <span class="pull-right">{{ order.subTotal|currency }}</span> </span>
+                                                        <span class="col-md-2 color-rows"> <span class="pull-right">{{ order.insurance|currency }}</span> </span>
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr >
+                                        <td colspan="5" style="padding: 0;">
+                                            <div id="{{ order.id }}" class="collapse">
+                                                <div>
+                                                    <table class="table table-striped table-components">
+                                                        <thead>
+                                                        <tr>
+                                                            <td><b>ITEM</b></td>
+                                                            <td class="col-md-2"><b>CÓDIGO</b></td>
+                                                            <td class="col-md-5"><b>PRODUTO</b></td>
+                                                            <td class="col-md-1 text-center"><b>QTD</b></td>
+                                                            <td class="col-md-2 text-center"><b>VALOR UNIT</b></td>
+                                                            <td class="col-md-2 text-center"><b>VALOR TOTAL</b></td>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for element in order.elements %}
+                                                            <tr>
+                                                                <td class="text-center"><b>{{ loop.index }}</b></td>
+                                                                <td>{{ element.code }}</td>
+                                                                <td>{{ element.description }}</td>
+                                                                <td class="text-center">{{ element.quantity }}</td>
+                                                                <td class="text-center">{{ element.unitPrice|currency }}</td>
+                                                                <td class="text-center">{{ element.total|currency }}</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                    {% if order.insurance %}
+                                                        <div class="col-md-12 border-bottom">
+                                                        <h4 class="pull-right">Seguro: {{ order.insurance|currency }}</h4>
+                                                        </div>
+                                                    {% endif %}
+                                                    <a data-toggle="collapse" href="#{{ order.id }}" class="color-rows">
+                                                        <div class="col-md-12 text-center minimize">
+                                                            <i class="fa fa-chevron-up"></i>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

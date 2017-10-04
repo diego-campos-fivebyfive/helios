@@ -88,6 +88,16 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/show/{id}", name="order_sices_show")
+     */
+    public function showAction(Order $order)
+    {
+        return $this->render('admin/orders/show.html.twig', array(
+            'order' => $order
+        ));
+    }
+
+    /**
      * @Route("/{id}/info", name="orders_info")
      */
     public function infoAction(Request $request, Order $order)
@@ -114,6 +124,19 @@ class OrderController extends AbstractController
         ));
     }
 
+    /**
+     * @Route("/{id}/shipping", name="order_shipping")
+     */
+    public function shippingAction(Order $order)
+    {
+        return $this->render('admin/orders/shipping.html.twig', array(
+            'order' => $order
+        ));
+    }
+
+    /**
+     * @return array
+     */
     private function getPaymentMethods()
     {
         $manager = $this->manager('parameter');

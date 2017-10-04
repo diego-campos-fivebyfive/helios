@@ -79,6 +79,11 @@ class OrderController extends AbstractController
             $order->setStatus($status);
 
             $this->manager('order')->save($order);
+
+            if ($order->isDone()){
+                // TODO Generate Proforma
+            }
+
             // TODO (Email): Manter comentado até aprovação de layouts
             //$this->get('order_mailer')->sendOrderMessage($order);
 

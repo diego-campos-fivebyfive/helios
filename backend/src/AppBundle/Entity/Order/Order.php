@@ -814,7 +814,7 @@ class Order implements OrderInterface, InsurableInterface
      */
     public function addChildren(OrderInterface $children)
     {
-        if($children->isBudget() || $this->parent)
+        if($children->isBudget())
             throw new \InvalidArgumentException('You can not add a budget to another');
 
         if(!$this->childrens->contains($children)){
