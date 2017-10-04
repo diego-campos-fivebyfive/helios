@@ -13,7 +13,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 /**
  * @Security("has_role('ROLE_PLATFORM_MASTER')")
  *
- * @Breadcrumb("Configurações Globais")
+ * @Breadcrumb("Configurações Gerais")
  *
  * @Route("/settings")
  */
