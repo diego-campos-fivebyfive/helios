@@ -87,7 +87,7 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/show/{id}", name="order_show")
+     * @Route("/show/{id}", name="order_sices_show")
      */
     public function showAction(Order $order)
     {
