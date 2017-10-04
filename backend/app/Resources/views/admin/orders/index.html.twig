@@ -1,105 +1,269 @@
 {% extends view('layout') %}
 
+{% block styles %}
+
+    <style>
+        table tbody tr {
+            display: table-row !important;
+        }
+    </style>
+
+{% endblock %}
+
 {% block body %}
-<div class="wrapper wrapper-content animated fadeIn">
-    <div class="row">
-        <div class="col-md-12" style="margin-bottom: 1rem;">
-            <a class="btn btn-success pull-right" href="{{ path('project_generator') }}">
-                <i class="fa fa-plus"></i> Orçamento
-            </a>
-        </div>
-        <div class="col-lg-12 flow-h">
-            <div class="panel panel-info flow-lg">
-                <div class="panel-heading">
-                    <h3>Pedidos</h3>
+
+    {% set displayProforma = member.isPlatformFinancial or member.isPlatformAfterSales %}
+    {% set displayFilePayment = member.isPlatformFinancial %}
+    {% set allowAdd = not displayProforma %} {# TODO: Regra temporária #}
+
+    <div class="modal inmodal" id="modal_shipping" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <i class="fa fa-truck"></i> Dados da Transportadora
+                    </h4>
                 </div>
-                <div class="panel-body">
-                    <table id="extras_table" class="table table-condensed table-bordered col-md-12">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Integrador</th>
-                                <th class="text-center">Sistemas</th>
-                                <th class="col-md-1 text-center">Status</th>
-                                {% if member.isPlatformFinancial %}
-                                    <th>Proforma</th>
-                                    <th>Comprovante</th>
-                                {% endif %}
-                                <th class="col-md-2 text-center">Valor</th>
-                                <th class="col-md-2 text-center">Ação</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {% for order in orders %}
-                            <tr>
-                                <td>{{ order.account ? order.account.firstname : 'Não definido' }}</td>
-                                <td>
-                                    {% if order.childrens.count %}
-                                    Sistemas(s) de
-                                    {% for children in order.childrens %}
-                                    <b>{{ children.power }}</b>,
-                                    {% endfor %} kWp
-                                    {% else %}
-                                        Sem sistemas
-                                    {% endif %}
-                                </td>
-                                <td class="text-center">
-                                    <span class="label label-default">
-                                        {{ order.statusName|capitalize|trans }}
-                                    </span>
-                                </td>
-
-                                {% if member.isPlatformFinancial %}
-                                    <td>
-                                        <a href="#">
-                                            Proforma
-                                        </a>
-                                    </td>
-                                    <td>
-                                        {% if order.hasFilePayment %}
-                                            <a href="{{ path('order_file',{id:order.id, type:'file_payment'}) }}" target="_blank"> Visualizar </a>
-                                        {% else %}
-                                            Indisponível
-                                        {% endif %}
-                                    </td>
-                                {% endif %}
-
-                                <td class="text-right">{{ order.total|currency }}</td>
-                                <td>
-
-                                    <div class="btn-group btn-group-justified">
-                                        <button style="width: 100%;" type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fa fa-arrow-down pull-left"></i>
-                                            Operações
-                                            <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu">
-
-                                            <li>
-                                                <a href="{{ path('project_generator', {order:order.id}) }}">
-                                                    <i class="fa fa-pencil"></i> Editar Orçamento
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_save">
+                        <i class="fa fa-close"></i> {{ 'Close'|trans }}
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="row text-center">
-    <div class="btn-group bt-xs">
-        {{ knp_pagination_render(orders) }}
+
+
+    <div class="wrapper wrapper-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12" style="margin-bottom: 10px;">
+                {% if allowAdd %}
+                <a class="btn btn-success pull-right" href="{{ path('project_generator') }}">
+                    <i class="fa fa-plus"></i> Orçamento
+                </a>
+                {% endif %}
+            </div>
+            <div class="col-lg-12">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3>Pedidos</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table id="extras_table" class="table table-condensed table-bordered col-md-12">
+                            <thead>
+                            <tr>
+                                <th class="text-center">Integrador</th>
+                                <th class="text-center">Sistemas</th>
+                                <th class="col-md-1 text-center">Status</th>
+                                {% if displayProforma %}
+                                    <th class="text-center">Proforma</th>
+                                {% endif %}
+                                {% if displayFilePayment %}
+                                    <th>Comprovante</th>
+                                {% endif %}
+                                <th class="col-md-2">Valor</th>
+                                <th class="col-md-2 text-center">Ação</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for order in orders %}
+                                <tr>
+                                    <td>{{ order.account ? order.account.firstname : 'Não definido' }}</td>
+                                    <td>
+                                        {% if order.childrens.count %}
+                                            Sistemas(s) de
+                                            {% for children in order.childrens %}
+                                                <b>{{ children.power }}</b>,
+                                            {% endfor %} kWp
+                                        {% else %}
+                                            Sem sistemas
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                    <span class="label label-default">
+                                        {{ order.statusName|capitalize|trans }}
+                                    </span>
+                                    </td>
+
+                                    {% if displayProforma %}
+                                        <td class="text-center">
+                                            <a href="#">
+                                                Proforma
+                                            </a>
+                                        </td>
+                                    {% endif %}
+
+                                    {% if displayFilePayment %}
+                                        <td>
+                                            {% if order.hasFilePayment %}
+                                                <a href="{{ path('order_file',{id:order.id, type:'file_payment'}) }}"
+                                                   target="_blank"> Visualizar </a>
+                                            {% else %}
+                                                Indisponível
+                                            {% endif %}
+                                        </td>
+                                    {% endif %}
+
+                                    <td>{{ order.total|currency }}</td>
+                                    <td>
+
+                                        <div class="btn-group btn-group-justified">
+                                            <button style="width: 100%;" type="button"
+                                                    class="btn btn-sm btn-primary dropdown-toggle"
+                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-arrow-down pull-left"></i>
+                                                Operações
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+
+                                                {% if member.isPlatformFinancial %}
+
+                                                    {% if order.isApproved %}
+
+                                                        <li>
+                                                            <a data-id="{{ order.id }}"
+                                                               data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DONE') }}">
+                                                                <i class="fa fa-check-square-o"></i> Pagamento
+                                                                confirmado
+                                                            </a>
+                                                        </li>
+
+                                                        <li>
+                                                            <a data-id="{{ order.id }}"
+                                                               data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_REJECTED') }}">
+                                                                <i class="fa fa-warning"></i> Pagamento não confirmado
+                                                            </a>
+                                                        </li>
+
+                                                    {% endif %}
+
+                                                {% endif %}
+
+                                                {% if member.isPlatformCommercial %}
+
+                                                    {% if not (order.isDone or order.isApproved or order.isRejected) %}
+
+                                                        <li>
+                                                            <a href="{{ path('project_generator', {order:order.id}) }}">
+                                                                <i class="fa fa-pencil"></i> Editar Orçamento
+                                                            </a>
+                                                        </li>
+
+                                                    {% endif %}
+
+                                                {% endif %}
+
+
+                                                {% if member.isPlatformAfterSales %}
+
+                                                    <li>
+                                                        <a data-toggle="modal" data-target="#modal_shipping"
+                                                           data-url="{{ path('order_shipping', {id:order.id}) }}">
+                                                            <i class="fa fa-truck"></i> Transportadora
+                                                        </a>
+                                                    </li>
+
+                                                {% endif %}
+
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="fa fa-eye"></i> Visualizar (Desenvolvendo)
+                                                    </a>
+                                                </li>
+
+                                            </ul>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-<style>
-    table tbody tr{
-        display: table-row !important;
-    }
-</style>
+    <div class="row text-center">
+        <div class="btn-group bt-xs">
+            {{ knp_pagination_render(orders) }}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+
+        $('[data-status]').on('click', function () {
+            var id = $(this).data('id');
+            var status = $(this).data('status');
+
+            swal({
+                title: 'Confirma a operação?',
+                text: 'Este processo não pode ser desfeito',
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: '{{ 'Confirmar'|trans }}',
+                cancelButtonText: '{{ 'Cancelar'|trans }}',
+                closeOnConfirm: false
+            }, function () {
+
+                $.ajax({
+                    url: '{{ path('order_status',{id:'_id_'}) }}'.replace(/_id_/g, id),
+                    method: 'post',
+                    data: {status: status},
+                    complete: function (xhr) {
+
+                        if (200 == xhr.status) {
+
+                            swal({
+                                title: "Concluído.",
+                                text: "Operação realizada com sucesso.",
+                                type: "success",
+                                showConfirmButton: false
+                            });
+
+                            window.setTimeout(function () {
+                                swal.close();
+                                window.location.reload();
+                            }, 1500);
+
+                        } else {
+                            var response = xhr.responseJSON;
+                            swal('Ooops', response.hasOwnProperty('error') ? response.error : 'Falha ao executar a operação', 'error');
+                        }
+                    },
+                    beforeSend: function () {
+                        swal({
+                            title: "Processando...",
+                            text: "Aguarde.",
+                            type: "info",
+                            showConfirmButton: false
+                        });
+                    }
+                });
+
+            });
+        });
+
+        var modalShipping = $('#modal_shipping');
+        modalShipping.on('show.bs.modal', function(event){
+            var target = $(event.relatedTarget);
+            var url = target.data('url');
+            $.ajax({
+                url: url,
+                success: function(response){
+                    modalShipping.find('.modal-body').html(response);
+                }
+            });
+        });
+
+    </script>
+
 {% endblock %}
