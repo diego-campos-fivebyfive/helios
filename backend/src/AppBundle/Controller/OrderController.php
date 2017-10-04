@@ -80,7 +80,7 @@ class OrderController extends AbstractController
 
             $this->manager('order')->save($order);
 
-            if ($order->isDone()){
+            if ($order->isApproved()){
                 $this->generatorProformaAction($order);
             }
 
