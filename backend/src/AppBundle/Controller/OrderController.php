@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @Route("orders")
@@ -192,6 +193,48 @@ class OrderController extends AbstractController
 
         throw $this->createNotFoundException('File not found');
     }
+
+    /**
+     * @Route("/{id}/generator", name="proforma_pdf_generator")
+     */
+    public function generatorProformaAction(Order $order)
+    {
+        $status = Response::HTTP_CONFLICT;
+        $filename = null;
+
+        if ($order) {
+
+            $snappy = $this->get('knp_snappy.pdf');
+            $snappy->setOption('viewport-size', '1280x1024');
+            $snappy->setOption('margin-top', 0);
+            $snappy->setOption('margin-bottom', 0);
+            $snappy->setOption('margin-left', 0);
+            $snappy->setOption('margin-right', 0);
+            $snappy->setOption('zoom', 2);
+
+            $dir = $this->get('kernel')->getRootDir() . '/../storage/';
+            $filename = 'proform_' . $order->getId() . '.pdf';
+            $file = $dir . $filename;
+
+            $url = $this->generateUrl('proforma_pdf', ['id' => $order->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
+
+            try {
+
+                $snappy->generate($url, $file);
+
+                if (file_exists($file)) {
+                    $status = Response::HTTP_OK;
+                }
+
+            } catch (\Exception $error) {
+            }
+        }
+
+        return $this->json([
+            'filename' => $filename
+        ], $status);
+    }
+
 
     /**
      * @return string

@@ -5,6 +5,7 @@ namespace AppBundle\Controller\PublicAccess;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Theme;
+use AppBundle\Entity\Order\Order;
 use Buzz\Message\Request;
 use Knp\Bundle\SnappyBundle\Snappy\LoggableGenerator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -110,6 +111,16 @@ class FileController extends AbstractController
         $process->run();
 
         dump($process->getOutput()); die;
+    }
+
+    /**
+     * @Route("/{id}/proforma", name="proforma_pdf")
+     */
+    public function proformaAction(Order $order)
+    {
+        return $this->render('admin/orders/proforma.html.twig', array(
+            'order' => $order
+        ));
     }
 
     /**

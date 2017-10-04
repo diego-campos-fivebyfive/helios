@@ -135,16 +135,6 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/proforma/{id}", name="index_proforma")
-     */
-    public function proformaAction(Order $order)
-    {
-        return $this->render('admin/orders/proforma.html.twig', array(
-            'order' => $order
-        ));
-    }
-
-    /**
      * @return array
      */
     private function getPaymentMethods()
