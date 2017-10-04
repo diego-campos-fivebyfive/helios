@@ -1,0 +1,47 @@
+{% set rules = order.shippingRules %}
+
+
+<table class="table table-bordered">
+    <tbody>
+
+    {% if 'self' == rules.type and rules.company|length > 5 %}
+
+        {% set company = rules.company %}
+
+        <tr>
+            <th class="text-right"> Razão Social</th>
+            <td> {{ company.name }} </td>
+            <th class="text-right"> CNPJ</th>
+            <td> {{ company.cnpj }} </td>
+            <th class="text-right"> Incrição Estadual</th>
+            <td> {{ company.ie }} </td>
+        </tr>
+
+        <tr>
+            <th class="text-right"> Contato</th>
+            <td> {{ company.contact }} </td>
+            <th class="text-right"> Email</th>
+            <td> {{ company.email }} </td>
+            <th class="text-right"> Telefone</th>
+            <td> {{ company.phone }} </td>
+        </tr>
+
+        <tr>
+            <th class="text-right"> CEP</th>
+            <td> {{ company.postcode }} </td>
+            <th class="text-right"> Endereço</th>
+            <td> {{ company.address }} </td>
+            <th class="text-right"> Cidade-UF</th>
+            <td> {{ company.city }}-{{ company.state }} </td>
+        </tr>
+
+    {% else %}
+
+        <tr>
+            <th class="text-center"> <h2> Frete Sices </h2> </th>
+        </tr>
+
+    {% endif %}
+
+    </tbody>
+</table>
