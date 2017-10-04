@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class ProposalController extends AbstractController
 {
-    
+
     /**
      * @Route("/{id}/save", name="proposal_save")
      */
@@ -215,18 +215,6 @@ class ProposalController extends AbstractController
                         $manager = $this->manager('project');
                         $project->setIssuedAt(new \DateTime('now'));
                         $manager->save($project);
-                        $member = $project->getMember();
-
-                        $this->get('notifier')->notify([
-                            'Evento' => '509',
-                            'Callback' => 'proposal_issued',
-                            'Body' => [
-                                'Valor' => $project->getCostPrice(),
-                                'Empresa' => $member->getAccount()->getFirstname(),
-                                'Contato' => $member->getFirstname()
-                            ]
-                        ]);
-
                     }
                 }
 
