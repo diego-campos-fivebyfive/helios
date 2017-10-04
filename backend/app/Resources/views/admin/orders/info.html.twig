@@ -23,15 +23,15 @@
 
         <div class="col-md-6">
             {% if attribute(form, 'account') is defined %}
-                {{ form_label(form.account, 'Integrador') }}
-                <br>
-                <a data-url="{{ path('accounts_list') }}"
-                   data-toggle="modal"
-                   data-target="#modal_accounts"
-                   class="btn btn-success">
-                    <i class="fa fa-user"></i>  Selecionar Integrador
-                </a>
-                {{ form_widget(form.account, {attr:{class:'hidden'}}) }}
+            {{ form_label(form.account, 'Integrador') }}
+            <br>
+            <a data-url="{{ path('accounts_list') }}"
+               data-toggle="modal"
+               data-target="#modal_accounts"
+               class="btn btn-success">
+                <i class="fa fa-user"></i>  Selecionar Integrador
+            </a>
+            {{ form_widget(form.account, {attr:{class:'hidden'}}) }}
             {% endif %}
         </div>
     </div>
