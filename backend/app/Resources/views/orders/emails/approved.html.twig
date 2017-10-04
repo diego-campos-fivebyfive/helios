@@ -1,2 +1,39 @@
-<h1> [APPROVED TEMPLATE] </h1>
-<h3> Develop content here </h3>
+{% extends ('orders/emails/layout.html.twig') %}
+{% block body %}
+<tr>
+    <td class="content-block">
+        <p>
+            Prezado {{ order.account.owner.firstname }},
+        </p>
+        <p>
+            Você aprovou o orçamento nº {{ order.reference }}.
+        </p>
+        <p>
+            Segue em anexo a pró-forma da solicitação.
+        </p>
+    </td>
+</tr>
+<tr>
+    <td class="content-block">
+        <h4>AVISOS IMPORTANTES</h4>
+        <p>
+            1 - Faça o upload do comprovante de pagamento (conforme pró-forma) na Plataforma.
+            Isso irá agilizar o processo de identificação e separação de seu pedido.
+            Sua solicitação somente será processada mediante confirmação de pagamento.
+        </p>
+        <p>
+            2 - Caso não tenha cotado frete conosco, é imprescindível inserir na Plataforma
+            os dados cadastrais da transportadora que realizará a coleta.
+        </p>
+    </td>
+</tr>
+
+<tr>
+    <td class="content-block">
+        - COLOCAR AQUI UM PRINT DA PLATAFORMA DO LOCAL ONDE O INTEGRADOR DEVERÁ FAZER O "1" e o "2". -
+        <p>
+            Obrigado.
+        </p>
+    </td>
+</tr>
+{% endblock %}

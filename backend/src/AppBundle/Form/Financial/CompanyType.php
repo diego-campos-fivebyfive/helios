@@ -20,5 +20,7 @@ class CompanyType extends AbstractType
         $builder->add('postcode', null, ['required' => false]);
         $builder->add('city', null, ['required' => false]);
         $builder->add('state', null, ['required' => false]);
+        $builder->add('cnpj', null, ['required' => false]);
+        $builder->add('ie', null, ['required' => false]);
     }
 }

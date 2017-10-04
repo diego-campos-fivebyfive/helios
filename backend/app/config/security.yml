@@ -6,6 +6,8 @@ security:
         ROLE_ADMIN: ROLE_OWNER
         ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
         # PLATFORM ROLES
+        ROLE_PLATFORM_FINANCIAL: ROLE_PLATFORM_AFTER_SALES
+        ROLE_PLATFORM_COMMERCIAL: ROLE_PLATFORM_FINANCIAL
         ROLE_PLATFORM_ADMIN: ROLE_PLATFORM_COMMERCIAL
         ROLE_PLATFORM_MASTER: ROLE_PLATFORM_ADMIN
 
@@ -65,5 +67,4 @@ security:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register/*, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting/*, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin/*, role: ROLE_PLATFORM_COMMERCIAL }
         - { path: ^/*, role: ROLE_USER }

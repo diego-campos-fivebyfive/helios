@@ -28,7 +28,7 @@
                                 </thead>
                                 <tbody>
 
-                                {% for member in members %}
+                                {% for member in members if not member.isPlatformMaster %}
 
                                     {% set label = member.isPlatformMaster ? 'success' : (member.isPlatformAdmin ? 'info' : 'default') %}
 
@@ -37,7 +37,7 @@
                                         <td><i class="fa fa-envelope"></i>&nbsp;  {{ member.email }} </td>
                                         <td class="text-center">
                                             <span class="label label-{{ label }}" style="width: 100% !important; display: inline-block;">
-                                                {{ member.userType }}
+                                                {{ member.userType|trans }}
                                             </span>
                                         </td>
                                         <td class="text-center">

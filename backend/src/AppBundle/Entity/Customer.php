@@ -674,54 +674,6 @@ class Customer extends AbstractCustomer
     }
 
     /**
-     * @inheritDoc
-     */
-    public function isPlatformMaster()
-    {
-        if(!$this->isMember()) {
-            $this->unsupportedContextException();
-        }
-
-        if($this->user){
-            return $this->user->hasRole(UserInterface::ROLE_PLATFORM_MASTER);
-        }
-
-        return false;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function isPlatformAdmin()
-    {
-        if(!$this->isMember()) {
-            $this->unsupportedContextException();
-        }
-
-        if($this->user){
-            return $this->user->hasRole(UserInterface::ROLE_PLATFORM_ADMIN);
-        }
-
-        return false;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function isPlatformCommercial()
-    {
-        if(!$this->isMember()) {
-            $this->unsupportedContextException();
-        }
-
-        if($this->user){
-            return $this->user->hasRole(UserInterface::ROLE_PLATFORM_COMMERCIAL);
-        }
-
-        return false;
-    }
-
-    /**
      * Caution: This is a several reverse definition
      * @param null $isOwner
      * @return $this|bool
@@ -784,6 +736,10 @@ class Customer extends AbstractCustomer
         if (!$owner) {
             $owners = $this->getOwners();
             $owner = $owners[0];
+        }
+
+        if (!$owner) {
+            $owner = $this->members->first();
         }
 
         return $owner;

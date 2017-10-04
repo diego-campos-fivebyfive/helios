@@ -1,61 +1,203 @@
 {% extends view('layout') %}
 
 {% block body %}
-<div class="wrapper wrapper-content animated fadeIn">
-    <div class="row">
-        <div class="col-lg-12 flow-h">
-            <div class="panel panel-info flow-lg">
-                <div class="panel-heading">
-                    <h3>Meus Pedidos</h3>
+
+    <div class="modal inmodal" id="e_modal_details" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <h4 class="modal-title">Meu Frete</h4>
                 </div>
-                <div class="panel-body">
-                    <table id="extras_table" class="table table-condensed table-bordered col-md-12">
-                        <thead>
-                            <tr>
-                                <td class="col-md-1 text-center">PEDIDO</td>
-                                <td>DATA</td>
-                                <td>SISTEMAS</td>
-                                <td class="col-md-2 text-center">VALOR TOTAL</td>
-                                <td class="col-md-2 text-center">AÇÃO</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {% for item in orders if item.childrens.count %}
-                            <tr>
-                                <td class="text-center">{{ item.id }} </td>
-                                <td>{{ item.createdAt|date('d/m/Y') }}</td>
-                                <td>SISTEMA(S) DE
-                                    {% for element in item.childrens %}
-                                    <b>{{ element.power }}</b>,
-                                    {% endfor %} KWP
-                                </td>
-                                <td class="col-md-2 text-right">{{ item.total|currency }}</td>
-                                <td>
-                                    <a href="{{ path('order_show', { 'id':item.id }) }}"
-                                        class="btn btn-default">
-                                        <i class="fa fa-eye"></i> {{ 'View'|trans }}
-                                    </a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                <div class="modal-body" id="edit_freight">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="bt_save">
+                        {{ 'Save'|trans }}
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="row text-center">
-    <div class="btn-group bt-xs">
-        {{ knp_pagination_render(orders) }}
+
+    <div class="modal inmodal" id="modal_upload" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <i class="fa fa-file-text"></i> Enviar Comprovante de Pagamento
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    {% include view('helper.spinner') %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa fa-close"></i> {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-<style>
-    table tbody tr{
-        display: table-row !important;
-    }
-    table thead tr td{
-        font-weight: bold;
-    }
-</style>
+
+    <div class="wrapper wrapper-content animated fadeIn">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-info flow-lg">
+                    <div class="panel-heading">
+                        <h3>Meus Pedidos</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table id="extras_table" class="table table-condensed table-bordered col-md-12">
+                            <thead>
+                            <tr>
+                                <td class="col-md-1 text-center">Pedido</td>
+                                <td class="text-center">Data</td>
+                                <td>Sistemas</td>
+                                <td>Status</td>
+                                <td>Valor</td>
+                                <td class="col-md-2">&nbsp;</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in orders if item.childrens.count %}
+                                {% set order = item %}
+
+                                <tr>
+                                    <td class="text-center col-md-1">{{ item.id }} </td>
+                                    <td>{{ item.createdAt|date('d/m/Y') }}</td>
+                                    <td>SISTEMA(S) DE
+                                        {% for element in item.childrens %}
+                                            <b>{{ element.power }}</b>,
+                                        {% endfor %} KWP
+                                    </td>
+                                    <td>
+                                        <span class="label">
+                                            {{ item.statusName|capitalize|trans }}
+                                        </span>
+                                    </td>
+
+                                    <td>{{ item.total|currency }}</td>
+                                    <td>
+
+                                        <div class="btn-group btn-group-justified">
+                                            <button style="width: 100%;" type="button"
+                                                    class="btn btn-sm btn-primary dropdown-toggle"
+                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-arrow-down pull-left"></i>
+                                                Operações
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+
+                                                {% if order.isApproved %}
+
+                                                    <li>
+                                                        <a data-target="#modal_upload" data-toggle="modal"
+                                                           data-href="{{ path('order_upload',{id:item.id}) }}">
+                                                            <i class="fa fa-file-text"></i> Enviar Comprovante
+                                                        </a>
+                                                    </li>
+
+                                                    {% set shippingRules = order.shippingRules %}
+
+                                                    {% if attribute(shippingRules, 'type') is defined and 'self' == shippingRules.type %}
+
+                                                    <li>
+                                                        <a data-url="{{ path('generator_company_shipping',{id: item.id}) }}"
+                                                           data-toggle="modal"
+                                                           data-target="#modal_details">
+                                                            <i class="fa fa-truck"></i> Transportadora
+                                                        </a>
+                                                    </li>
+
+                                                    {% endif %}
+
+                                                {% endif %}
+
+                                                <li>
+                                                    <a href="{{ path('project_generator', {order:item.id}) }}">
+                                                        <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
+                                                    </a>
+                                                </li>
+
+                                                <li>
+                                                    <a href="{{ path('order_show', {id:item.id}) }}">
+                                                        <i class="fa fa-eye"></i> {{ 'View'|trans }}
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row text-center">
+        <div class="btn-group bt-xs">
+            {{ knp_pagination_render(orders) }}
+        </div>
+    </div>
+    <style>
+        table tbody tr {
+            display: table-row !important;
+        }
+
+        table thead tr td {
+            font-weight: bold;
+        }
+
+        #company-save {
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block scripts %}
+
+    {% include view('helper.plugins_js') %}
+
+    <script>
+
+        var edit_freight = $('#edit_freight');
+        $('[data-target="#modal_details"]').on('click', function () {
+            var url = $(this).data('url');
+            if (url) {
+                $('#e_modal_details').modal('show');
+                $.ajax({
+                    url: url,
+                    method: 'get',
+                    success: function (response) {
+                        edit_freight.html(response);
+                    }
+                });
+            } else {
+                edit_freight.html('<h1> Erro ao Editar </h1>');
+            }
+        });
+
+        $('#bt_save').click(function () {
+            $('#company-save').trigger('click');
+            $('#e_modal_details').modal('hide');
+        });
+
+        var modalUpload = $('#modal_upload');
+        var modalUploadBody = modalUpload.find('.modal-body');
+
+        modalUpload.on('show.bs.modal', function (event) {
+            var target = $(event.relatedTarget);
+            var url = target.data('href');
+            $.ajax({
+                url: url,
+                success: function (response) {
+                    modalUploadBody.html(response);
+                }
+            });
+        });
+
+    </script>
 {% endblock %}

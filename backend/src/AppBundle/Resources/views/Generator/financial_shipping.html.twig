@@ -104,9 +104,9 @@
             });
         },
         company: function () {
-            Request.send({
+            $.ajax({
                 url: '{{ path('generator_company_shipping',{id: order.id}) }}',
-                callback: function (xhr) {
+                complete: function (xhr) {
                     $('#form-company').html(xhr.responseText).show();
                 }
             });

@@ -5,6 +5,10 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Service\Pricing\Insurance;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
@@ -29,7 +33,6 @@ class OrderController extends AbstractController
                 $qb2->select('o2')
                     ->from(Order::class, 'o2')
                     ->where('o2.parent is null')
-                    ->andWhere('o2.sendAt is not null')
                 ->getQuery()->getDQL()
             )
         )->andWhere('o.account = :account')
@@ -41,7 +44,7 @@ class OrderController extends AbstractController
             10
         );
 
-        return $this->render('Order.index', array(
+        return $this->render('order.index', array(
             'orders' => $pagination
         ));
     }
@@ -59,6 +62,34 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/status", name="order_status")
+     * @Method("post")
+     */
+    public function statusAction(Request $request, Order $order)
+    {
+        $this->denyAccessUnlessGranted('edit', $order);
+
+        $status = (int) $request->get('status');
+
+        $manipulator = $this->get('order_manipulator');
+
+        if($manipulator->acceptStatus($order, $status, $this->user())){
+
+            $order->setStatus($status);
+
+            $this->manager('order')->save($order);
+            // TODO (Email): Manter comentado até aprovação de layouts
+            //$this->get('order_mailer')->sendOrderMessage($order);
+
+            return $this->json();
+        }
+
+        return $this->json([
+            'error' => 'O status solicitado não pode ser definido.'
+        ], Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
      * @Route("/budgets/create", name="order_budget_create")
      */
     public function createBudgetAction(Request $request)
@@ -70,7 +101,11 @@ class OrderController extends AbstractController
 
         $order->setSendAt(new \DateTime('now'));
         $order->setMetadata($order->getChildrens()->first()->getMetadata());
+        $order->setStatus(Order::STATUS_PENDING);
         $manager->save($order);
+
+        // TODO (Email): Manter comentado até aprovação de layouts
+        //$this->get('order_mailer')->sendOrderMessage($order);
 
         return $this->json([
             'order' => [
@@ -96,5 +131,68 @@ class OrderController extends AbstractController
                 'total' => $order->getTotal()
             ]
         ]);
+    }
+
+    /**
+     * @Route("/{id}/upload", name="order_upload")
+     */
+    public function uploadAction(Order $order, Request $request)
+    {
+        if($request->isMethod('post')){
+
+            $file = $request->files->get('file');
+
+            if($file instanceof UploadedFile) {
+
+                $dir = $this->getUploadDir();
+
+                $current = $dir . $order->getFilePayment();
+
+                if(is_file($current)) unlink($current);
+
+                $name = sprintf(
+                    'payment_file_%s_%s.%s', $order->getId(),
+                    (new \DateTime())->format('Ymd-His'),
+                    $file->getClientOriginalExtension()
+                );
+
+                $file->move($dir, $name);
+
+                $order->setFilePayment($name);
+
+                $this->manager('order')->save($order);
+
+                return $this->json([
+                    'name' => $name
+                ]);
+            }
+        }
+
+        return $this->render('order.upload', [
+            'order' => $order
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/file", name="order_file")
+     */
+    public function fileAction(Order $order)
+    {
+        if(null != $filePayment = $order->getFilePayment()) {
+
+            $file = $this->getUploadDir() . $filePayment;
+
+            return new BinaryFileResponse($file, Response::HTTP_OK, [], true, ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+        }
+
+        throw $this->createNotFoundException('File not found');
+    }
+
+    /**
+     * @return string
+     */
+    private function getUploadDir()
+    {
+        return $this->get('kernel')->getRootDir() . '/../storage/orders/';
     }
 }

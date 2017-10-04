@@ -52,6 +52,16 @@ interface MemberInterface
     /**
      * @return bool
      */
+    public function isPlatformFinancial();
+
+    /**
+     * @return bool
+     */
+    public function isPlatformAfterSales();
+
+    /**
+     * @return bool
+     */
     public function isPlatformUser();
 
     /**
