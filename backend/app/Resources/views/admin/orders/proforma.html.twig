@@ -120,6 +120,18 @@
     .sf-toolbar {
         display: none !important;
     }
+    .bank-data {
+        padding-left: 10px;
+        padding-bottom: 3px;
+        padding-top: 3px;
+    }
+    .hr-style {
+        margin: 0;
+        padding: 0;
+        height: 1px;
+        background-color: #00a7d0;
+        color: #00a7d0;
+    }
 
 </style>
 
@@ -267,6 +279,7 @@
                     </div>
 
                     <div class="p-footer">
+                        <hr class="hr-style">
                         <label class="blue-sices">SICES BRASIL LTDA</label>
                         <span class="width-float-total">
                         Avenida Portugal, 1174 – Condomínio Empresarial ONIX, galpão 1,2,3,4 e 5
@@ -302,25 +315,28 @@
                     <span class="indentation"> 2) Frete</span>
                     <span class="pull-right field-width">
                         {% if order.shippingrules and order.shippingrules['type'] == 'sices' %}
-                        Incluso{% elseif order.shippingrules['type'] == 'self' %}{{ order.shippingrules['company']['name'] }}{% endif %}
+                        INCLUSO{% elseif order.shippingrules['type'] == 'self' %}{{ order.shippingrules['company']['name'] }}{% endif %}
                     </span>
                     <br/>
                     <label class="no-margins">TOTAL FORNECIMENTO</label>
                     <label class="pull-right no-margins field-width">{{ order.total|currency }}</label>
 
                     <p>
-                        *O preço poderá sofrer alterações decorrente de variações cambias, e o cliente arcará com as
+                        &#8270; O preço poderá sofrer alterações decorrente de variações cambias, e o cliente arcará com as
                         mesmas, caso no ato do pagamento final/integral a cotação EUR/BRL (EURBRL=X PTAX) for superior a XX,XX
                     </p>
 
                     <label class="width-float-total no-margins">Condições de pagamentos:</label>
-                    <span class="indentation"> a) TED 50% antecipado 31/08/2017 (amanhã)</span>
-                    <span class="pull-right field-width"> R$ 10.384,57</span>
+                    {% for payment in order.metadata.payment_method.quotas %}
+                    <span class="indentation"> &#{{ loop.index + 96 }}; ) {{ payment.description }}
+                        {{ payment.percent }}% - {{ payment.date|date('d/m/Y') }}</span>
+                    <span class="pull-right field-width">{{ payment.value|currency }}</span>
                     <br/>
+                    {% endfor %}
 
                     <label class="spacing">DADOS BANCÁRIOS PARA PAGAMENTO EM CASO DE TRASFERÊNCIA BANCÁRIA</label>
 
-                    <div class="width-total border-black">
+                    <div class="width-total border-black bank-data">
                         Banco Itaù Unibanco S/A nº341<br/>
                         AG 4807<br/>
                         C/C: 30.334 DIG: 4<br/>
@@ -329,18 +345,23 @@
                     </div>
 
                     <div class="indentation spacing">
-                        <label class="no-margins">- Disponibilidade para coleta:</label> 11/09/2017<br/>
-                        <label class="no-margins">- Prazo de entrega:</label> 10 DIAS UTEIS<br/>
-                        <label class="no-margins">- Validade da proposta:</label> 3 (três) dias<br/>
-                        <label class="no-margins">- Embalagem unitário:</label> Padrão<br/>
-                        <label class="no-margins">- Transporte e seguro:</label> INCLUSO<br/>
-                        <label class="no-margins">- Serviço de Start-up:</label> NÃO INCLUSO<br/>
-                        <label class="no-margins">- Endereço de entrega:  :</label> Rua Américo Pieri, nº 6, Limoeiro, Pedreira/SP.
+                        <label class="no-margins">&#10004; Disponibilidade para coleta:</label> {{ "now"|date_modify("+10 day")|date('d/m/Y') }}<br/>
+                        <label class="no-margins">&#10004; Prazo de entrega:</label> 10 DIAS UTEIS<br/>
+                        <label class="no-margins">&#10004; Validade da proposta:</label> 3 (três) dias<br/>
+                        <label class="no-margins">&#10004; Embalagem unitário:</label> Padrão<br/>
+                        <label class="no-margins">&#10004; Transporte:</label>
+                        {% if order.shippingrules and order.shippingrules['type'] == 'sices' %}
+                        INCLUSO{% elseif order.shippingrules['type'] == 'self' %}{{ order.shippingrules['company']['name'] }}{% endif %}
+                        <br/>
+                        <label class="no-margins">&#10004; Seguro:</label> {% if order.TotalInsurance %} {{ order.TotalInsurance|currency }} {% else %} Sem Seguro {% endif %}<br/>
+                        <label class="no-margins">&#10004; Serviço de Start-up:</label> NÃO INCLUSO<br/>
+                        <label class="no-margins">&#10004; Endereço de entrega:  :</label> {{ order.address }}, {{ order.city }}, {{ order.state }}.
                     </div>
 
                 </div>
 
                 <div class="p-footer">
+                    <hr class="hr-style">
                     <label class="blue-sices">SICES BRASIL LTDA</label>
                     <span class="width-float-total">
                         Avenida Portugal, 1174 – Condomínio Empresarial ONIX, galpão 1,2,3,4 e 5
@@ -379,13 +400,12 @@
                     </label>
 
                     <div class="indentation">
-                        - Emissão de NF-e como único item “GERADOR FOTOVOLTAICO” conforme Convênio CONFAZ 101/97, que
+                        &#10004; Emissão de NF-e como único item “GERADOR FOTOVOLTAICO” conforme Convênio CONFAZ 101/97, que
                         concede isenção do ICMS nas operações com equipamentos e componentes para o aproveitamento
                         das energias solar e eólica.
                     </div>
-                    <br>
                     <div class="indentation bold">
-                        - Impostos:
+                        &#10004; Impostos:
                     </div>
 
                     <table class="width-total">
@@ -511,7 +531,7 @@
                     <br/>
 
                     <p>
-                        Itapevi-SP, 30 de AGOSTO de 2017
+                        Itapevi-SP, {{ "now"|format_date(null, null, null, constant('IntlDateFormatter::LONG'))}}
                     </p>
 
                     <p>
@@ -529,6 +549,7 @@
                 </div>
 
                 <div class="p-footer">
+                    <hr class="hr-style">
                     <label class="blue-sices">SICES BRASIL LTDA</label>
                     <span class="width-float-total">
                         Avenida Portugal, 1174 – Condomínio Empresarial ONIX, galpão 1,2,3,4 e 5
@@ -557,7 +578,7 @@
                     <label class="width-float-total text-underline text-center"><h2>Certificado de Seguro</h2></label>
 
                     <p>
-                        Os bens fornecidos, conforme constam na nota fiscal referente a proforma de <label class="no-margins">nº6312</label>
+                        Os bens fornecidos, conforme constam na nota fiscal referente a proforma de <label class="no-margins">nº {{ order.reference }}</label>
                         encontram-se segurados do Seguro Contra Riscos de Engenharia Processo SUSEP 15414.000736/201235
                         – Instalação e Montagem da <label class="no-margins">ARGO SEGUROS S.A</label>, garantindo os equipamentos que venham a sofrer danos,
                         conforme condições gerais e particulares da apólice. Confira as coberturas previstas em apólice:
@@ -641,9 +662,19 @@
                     <label class="width-float-total indentation">Descrevendo a data da ocorrência e fatos relacionados ao acidente. </label>
                     <label class="indentation">E-mail:</label> <span class="color-blue">atendimento@umbriaprivate.com.br</span>
 
+                    <div style="margin-top: 30px;">
+                        <div width="50%" style="float: left; padding-left: 50px">
+                            <img width="300"  alt="image" src="{{ asset('assets/images/argo.png') }}">
+                        </div>
+                        <div width="50%" style="float: left; padding-left: 30px">
+                            <img width="200"  alt="image" src="{{ asset('assets/images/umbria.png') }}">
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="p-footer">
+                    <hr class="hr-style">
                     <label class="blue-sices">SICES BRASIL LTDA</label>
                     <span class="width-float-total">
                         Avenida Portugal, 1174 – Condomínio Empresarial ONIX, galpão 1,2,3,4 e 5

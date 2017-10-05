@@ -694,6 +694,13 @@ class Order implements OrderInterface, InsurableInterface
     {
         $data = json_decode($paymentMethod, true);
 
+        foreach ($data['quotas'] as $key=>$quota){
+            $percent = (float)$quota['percent']/100;
+            $data['quotas'][$key]['value'] = $percent * $this->getTotal();
+            $date = $quota['days'];
+            $data['quotas'][$key]['date'] = (new \DateTime('+'.$date.'day'))->format('Y-m-d H:i:s');
+        }
+
         $this->addMetadata('payment_method', $data);
 
         return $this;
