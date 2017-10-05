@@ -25,22 +25,13 @@ class OrderController extends AbstractController
      */
     public function orderAction(Request $request)
     {
-        $manager = $this->manager('order');
+        /** @var \AppBundle\Service\Order\OrderFinder $finder */
+        $finder = $this->get('order_finder');
 
-        $qb = $manager->createQueryBuilder();
-        $qb2 = $manager->getEntityManager()->createQueryBuilder();
-        $qb->where(
-            $qb->expr()->in('o.id',
-                $qb2->select('o2')
-                    ->from(Order::class, 'o2')
-                    ->where('o2.parent is null')
-                ->getQuery()->getDQL()
-            )
-        )->andWhere('o.account = :account')
-        ->setParameter('account', $this->account());
+        $finder->set('account', $this->account());
 
         $pagination = $this->getPaginator()->paginate(
-            $qb->getQuery(),
+            $finder->query(),
             $request->query->getInt('page', 1),
             10
         );
@@ -148,7 +139,7 @@ class OrderController extends AbstractController
 
             if($file instanceof UploadedFile) {
 
-                $dir = $this->getUploadDir();
+                $dir = $this->getUploadDir('file_payment');
 
                 $current = $dir . $order->getFilePayment();
 
@@ -184,7 +175,7 @@ class OrderController extends AbstractController
     {
         if(null != $filePayment = $order->getFilePayment()) {
 
-            $file = $this->getUploadDir() . $filePayment;
+            $file = $this->getUploadDir('file_payment') . $filePayment;
 
             return new BinaryFileResponse($file, Response::HTTP_OK, [], true, ResponseHeaderBag::DISPOSITION_ATTACHMENT);
         }
@@ -200,7 +191,7 @@ class OrderController extends AbstractController
         $status = Response::HTTP_CONFLICT;
         $filename = null;
 
-        if ($order) {
+        if ('prod' == $this->get('kernel')->getEnvironment()) {
 
             $snappy = $this->get('knp_snappy.pdf');
             $snappy->setOption('viewport-size', '1280x1024');
@@ -211,7 +202,7 @@ class OrderController extends AbstractController
             $snappy->setOption('zoom', 2);
 
             $filename = sprintf('proforma_%s_%s_.pdf', $order->getId(), (new \DateTime())->format('Ymd-His'));
-            $file = $this->getUploadDir() . $filename;
+            $file = $this->getUploadDir('proforma') . $filename;
 
             $url = $this->generateUrl('proforma_pdf', ['id' => $order->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
 
@@ -245,14 +236,20 @@ class OrderController extends AbstractController
      */
     private function sendOrderEmail(Order $order)
     {
-        $this->get('order_mailer')->sendOrderMessage($order);
+        //$this->get('order_mailer')->sendOrderMessage($order);
     }
 
     /**
      * @return string
      */
-    private function getUploadDir()
+    private function getUploadDir($subDir = null)
     {
-        return $this->get('kernel')->getRootDir() . '/../storage/orders/';
+        $dir = $this->get('kernel')->getRootDir() . '/../../.uploads/order/';
+
+        if($subDir){
+            $dir .= $subDir . '/';
+        }
+
+        return $dir;
     }
 }
