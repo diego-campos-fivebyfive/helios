@@ -27,36 +27,26 @@ class OrderMailer extends AbstractMailer
     /**
      * @var array
      */
-    private $options = [];
-
-    /**
-     * OrderMailer constructor.
-     * @param UrlGeneratorInterface $router
-     * @param EngineInterface $templating
-     * @param array $options
-     */
-    function __construct(UrlGeneratorInterface $router, EngineInterface $templating, array $options = [])
-    {
-        parent::__construct($router, $templating);
-
-        $this->options = $options;
-    }
-
-    /**
-     * @var array
-     */
-    private $config = [
+    private $mapping = [
         OrderInterface::STATUS_PENDING => [
-            'subject' => '[Edit this subject] - Pending'
+            'enabled' => true,
+            'subject' => 'Plataforma SICES Solar - Orçamento Preliminar nº %s'
         ],
         OrderInterface::STATUS_VALIDATED => [
-            'subject' => '[Edit this subject] - Validated'
+            'enabled' => true,
+            'subject' => 'Plataforma SICES Solar - Orçamento Validado nº %s'
         ],
         OrderInterface::STATUS_APPROVED => [
-            'subject' => '[Edit this subject] - Approved'
+            'enabled' => true,
+            'subject' => 'Plataforma SICES Solar - Orçamento Aprovado nº %s'
         ],
         OrderInterface::STATUS_REJECTED => [
-            'subject' => '[Edit this subject] - Rejected'
+            'enabled' => false,
+            'subject' => 'Plataforma SICES Solar - Orçamento Rejeitado nº %s'
+        ],
+        OrderInterface::STATUS_DONE => [
+            'enabled' => false,
+            'subject' => 'Plataforma SICES Solar - Orçamento Concluído nº %s'
         ]
     ];
 
@@ -65,12 +55,13 @@ class OrderMailer extends AbstractMailer
      */
     public function sendOrderMessage(OrderInterface $order)
     {
-        $this->ensureOrder($order);
+        if($this->ensureOrder($order)) {
 
-        $message = $this->createOrderMessage($order);
+            $message = $this->createOrderMessage($order);
 
-        if($message instanceof \Swift_Message){
-            $this->sendMessage($message);
+            if ($message instanceof \Swift_Message) {
+                $this->sendMessage($message);
+            }
         }
     }
 
@@ -80,11 +71,27 @@ class OrderMailer extends AbstractMailer
      */
     private function createOrderMessage(OrderInterface $order)
     {
+        $account = $order->getAccount();
+        $owner = $account->getOwner();
         $parameters  = $this->getMessageParameters($order);
 
         $message = $this->createMessage($parameters);
 
-        if($order->getStatus() === OrderInterface::STATUS_APPROVED){
+        $this->resolvePlatformEmails($message);
+
+        $message->setTo($owner->getEmail(), $owner->getName());
+
+        if(null != $agent = $account->getAgent()) {
+
+            $agentEmail = $agent->getEmail();
+            $agentName = $agent->getName();
+
+            $message
+                ->setCc($agentEmail, $agentName)
+                ->setReplyTo($agentEmail, $agentName);
+        }
+
+        if($order->isApproved() && $order->getProforma()){
             $message->attach($this->createOrderAttachment($order));
         }
 
@@ -97,11 +104,9 @@ class OrderMailer extends AbstractMailer
      */
     private function createOrderAttachment(OrderInterface $order)
     {
-        // TODO: Change 'proforma.pdf' to $order->getFilename();
-        $filename = 'proforma.pdf';
-        $storage = $this->options['storage'];
+        $storage = $this->container->get('kernel')->getRootDir() . '/../../.uploads/order/proforma/';
 
-        $path = $storage . $filename;
+        $path = $storage . $order->getProforma();
 
         return $this->createAttachment($path);
     }
@@ -112,12 +117,10 @@ class OrderMailer extends AbstractMailer
      */
     private function getMessageParameters(OrderInterface $order)
     {
-        $config = $this->config[$order->getStatus()];
-        $account = $order->getAccount();
+        $config = $this->mapping[$order->getStatus()];
 
         $parameters = [
-            'subject' => $config['subject'],
-            'to' => $account->getEmail(),
+            'subject' => sprintf($config['subject'], $order->getReference()),
             'body' => $this->createBody($order)
         ];
 
@@ -142,14 +145,47 @@ class OrderMailer extends AbstractMailer
      */
     private function ensureOrder(OrderInterface $order)
     {
-        if(!array_key_exists($order->getStatus(), $this->config))
-            self::exception('Incompatible order status.');
-
         if(!$order->isBudget())
             self::exception('This order is not master');
 
-        if(OrderInterface::STATUS_BUILDING == $order->getStatus())
-            self::exception(sprintf('Incompatible order status: [%s]', self::statusToText($order->getStatus())));
+        if(array_key_exists($order->getStatus(), $this->mapping)){
+            return $this->mapping[$order->getStatus()]['enabled'];
+        }
+
+        return false;
+    }
+
+    /**
+     * @param \Swift_Message $message
+     */
+    private function resolvePlatformEmails(\Swift_Message $message)
+    {
+        $settings = $this->getPlatformSettings();
+
+        $addIfDefined = function($target, $bcc = false) use($settings, $message){
+            if(array_key_exists($target, $settings) && !empty($settings[$target]['email'])){
+                if($bcc){
+                    $message->addBcc($settings[$target]['email'], $settings[$target]['name']);
+                }else {
+                    $message->addCc($settings[$target]['email'], $settings[$target]['name']);
+                }
+            }
+        };
+
+        $addIfDefined('admin');
+        $addIfDefined('master', true);
+    }
+
+    /**
+     * @return array
+     */
+    private function getPlatformSettings()
+    {
+        $manager = $this->manager('parameter');
+
+        $settings = $manager->findOrCreate('platform_settings')->all();
+
+        return $settings;
     }
 
     /**
@@ -158,11 +194,15 @@ class OrderMailer extends AbstractMailer
      */
     private static function statusToText($status)
     {
-        $statuses = ['building', 'pending', 'validated', 'approved', 'rejected'];
+        $statuses = ['building', 'pending', 'validated', 'approved', 'rejected', 'done'];
 
         return $statuses[$status];
     }
 
+    /**
+     * Generate exception
+     * @param $message
+     */
     private static function exception($message)
     {
         throw new \InvalidArgumentException($message);
