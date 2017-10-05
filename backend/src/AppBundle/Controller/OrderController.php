@@ -28,7 +28,7 @@ class OrderController extends AbstractController
         /** @var \AppBundle\Service\Order\OrderFinder $finder */
         $finder = $this->get('order_finder');
 
-        $finder->set('account', $this->account());
+        $finder->set('member', $this->member());
 
         $pagination = $this->getPaginator()->paginate(
             $finder->query(),
