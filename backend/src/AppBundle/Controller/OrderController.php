@@ -236,7 +236,7 @@ class OrderController extends AbstractController
      */
     private function sendOrderEmail(Order $order)
     {
-        //$this->get('order_mailer')->sendOrderMessage($order);
+        $this->get('order_mailer')->sendOrderMessage($order);
     }
 
     /**
