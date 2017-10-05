@@ -1,3 +1,4 @@
+*.swp
 .ssh
 .idea
 backend/app/logs/*
