@@ -399,17 +399,17 @@ Esclarecimentos gerais relacionados a documentação:
   <a name="pdf--teste-local"></a><a name="7.1"></a>
   - [7.1](#pdf--teste-local) **Teste Local do Processo Completo de Geração**:
 
-    - ##### 7.1.1. *Execução até falha*: gere o PDF e aguarde aproximadamente um minuto até que uma mensagem de falha apareça na tela, em seguida o PDF estará disponível na pasta `$SICES_PATH/.uploads`.
+    - 7.1.1. **Execução até falha**: gere o PDF e aguarde aproximadamente um minuto até que uma mensagem de falha apareça na tela, em seguida o PDF estará disponível na pasta `$SICES_PATH/.uploads`.
 
       > Essas parte se faz necessária pois localmente o PDF apenas é gerado após timeout no processo de geração (aprox. 1 minuto após execução).
 
-    - ##### 7.1.2. *Atribuindo File Name Estátio*: cria uma nova váriavel `$tempFileName` na controller do gerador, onde a mesma recebe nome do PDF gerado. Em seguida comente a linha original. Exemplo:
+    - 7.1.2. **Atribuição de File Name estático**: cria uma nova váriavel `$tempFileName` na controller do gerador, onde a mesma recebe nome do PDF gerado. Em seguida comente a linha original. Exemplo:
       ```php
       //$tempFileName = md5(uniqid()) . '.pdf';
       $tempFileName = 'f6971985f1787ec54a4fef316d8064ab.pdf';
       ```
 
-    - ##### 7.1.3. *Ignorando a criação de novo PDF*: para que o processo possa ser executado até o final comente a linha de geração de um novo PDF.
+    - 7.1.3. **Ignorando a criação de novo PDF**: para que o processo possa ser executado até o final comente a linha de geração de um novo PDF.
       ```php
       //$snappy->generate($snappyUrl, $tempFilePath);
       ```
