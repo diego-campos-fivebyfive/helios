@@ -198,14 +198,13 @@ class ProposalController extends AbstractController
         $snappy->setOption('zoom', 2);
 
         $PATH = "{$this->get('kernel')->getRootDir()}/../..";
-        //$tempFileName = md5(uniqid()) . '.pdf';
-        $tempFileName = 'f6971985f1787ec54a4fef316d8064ab.pdf';
+        $tempFileName = md5(uniqid()) . '.pdf';
         $tempFilePath = "{$PATH}/.uploads/{$tempFileName}";
 
         $absoluteUrl = UrlGeneratorInterface::ABSOLUTE_URL;
         $snappyUrl = $this->generateUrl('proposal_pdf', [ 'id' => $theme->getId() ], $absoluteUrl);
 
-        //$snappy->generate($snappyUrl, $tempFilePath);
+        $snappy->generate($snappyUrl, $tempFilePath);
 
         if (!file_exists($tempFilePath)) {
             return $this->json([ 'filename' => $tempFileName ], Response::HTTP_UNPROCESSABLE_ENTITY);
