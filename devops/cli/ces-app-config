@@ -16,5 +16,7 @@ else
   mkdir .temp
   mkdir .mirror
   mkdir .backup
+  mkdir .uploads
+  mkdir .uploads/proposal
 
 fi

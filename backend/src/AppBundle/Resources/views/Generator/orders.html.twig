@@ -1,7 +1,13 @@
 {% set orders = order.childrens %}
 
+<style>
+    .width-modal {
+        width: 90%;
+    }
+</style>
+
 <div class="modal inmodal fade" id="e_modal_details" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog width-modal">
         <div class="modal-content">
             <div class="modal-body" id="edit_order"></div>
             <div class="modal-footer">

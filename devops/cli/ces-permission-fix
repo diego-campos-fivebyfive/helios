@@ -16,6 +16,6 @@ elif [ $1 == '--homolog' ] || [ $1 == '--staging' ]; then
 
   sudo chmod 775 backend/web/uploads
   sudo chmod 775 backend/web/uploads/components
-  sudo chmod 775 backend/storage
+  sudo chmod 775 .uploads/proposal
 
 fi

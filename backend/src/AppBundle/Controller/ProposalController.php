@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use Aws\S3\S3Client;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Theme;
 use AppBundle\Service\Editor\Formatter;
@@ -22,7 +23,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class ProposalController extends AbstractController
 {
-    
     /**
      * @Route("/{id}/save", name="proposal_save")
      */
@@ -185,58 +185,46 @@ class ProposalController extends AbstractController
     {
         $theme = $this->resolveTheme($project);
 
-        $status = Response::HTTP_CONFLICT;
-        $filename = null;
-
-        if($theme) {
-
-            $snappy = $this->get('knp_snappy.pdf');
-            $snappy->setOption('viewport-size', '1280x1024');
-            $snappy->setOption('margin-top', 0);
-            $snappy->setOption('margin-bottom', 0);
-            $snappy->setOption('margin-left', 0);
-            $snappy->setOption('margin-right', 0);
-            $snappy->setOption('zoom', 2);
-
-            $dir = $this->get('kernel')->getRootDir() . '/../storage/';
-            $filename = md5(uniqid(time())) . '.pdf';
-            $file = $dir . $filename;
-
-            $url = $this->generateUrl('proposal_pdf', ['id' => $theme->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
-
-            try {
-
-                $snappy->generate($url, $file);
-
-                if (file_exists($file)) {
-                    $status = Response::HTTP_OK;
-
-                    if (!$project->getIssuedAt()) {
-                        $manager = $this->manager('project');
-                        $project->setIssuedAt(new \DateTime('now'));
-                        $manager->save($project);
-                        $member = $project->getMember();
-
-                        $this->get('notifier')->notify([
-                            'Evento' => '509',
-                            'Callback' => 'proposal_issued',
-                            'Body' => [
-                                'Valor' => $project->getCostPrice(),
-                                'Empresa' => $member->getAccount()->getFirstname(),
-                                'Contato' => $member->getFirstname()
-                            ]
-                        ]);
-
-                    }
-                }
-
-            } catch (\Exception $error) {
-            }
+        if(!$theme) {
+            return $this->json([], Response::HTTP_NO_CONTENT);
         }
 
-        return $this->json([
-            'filename' => $filename
-        ], $status);
+        $snappy = $this->get('knp_snappy.pdf');
+        $snappy->setOption('viewport-size', '1280x1024');
+        $snappy->setOption('margin-top', 0);
+        $snappy->setOption('margin-bottom', 0);
+        $snappy->setOption('margin-left', 0);
+        $snappy->setOption('margin-right', 0);
+        $snappy->setOption('zoom', 2);
+
+        $PATH = "{$this->get('kernel')->getRootDir()}/../..";
+        $tempFileName = md5(uniqid()) . '.pdf';
+        $tempFile = "{$PATH}/.uploads/proposal/{$tempFileName}";
+
+        $absoluteUrl = UrlGeneratorInterface::ABSOLUTE_URL;
+        $snappyUrl = $this->generateUrl('proposal_pdf', [ 'id' => $theme->getId() ], $absoluteUrl);
+
+        $snappy->generate($snappyUrl, $tempFile);
+
+        if (!file_exists($tempFile)) {
+            return $this->json([ 'filename' => $tempFileName ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        if (!$project->getIssuedAt()) {
+            $manager = $this->manager('project');
+            $project->setIssuedAt(new \DateTime('now'));
+            $manager->save($project);
+        }
+
+        $s3 = $this->get('aws.s3');
+        $s3->putObject([
+            'Bucket' => 'pss-geral',
+            'Key' => "proposal/$tempFileName",
+            'Body' => fopen($tempFile, 'rb'),
+            'ACL' => 'public-read'
+        ]);
+
+        return $this->json([ 'filename' => $tempFileName ], Response::HTTP_OK);
     }
 
     /**
@@ -244,17 +232,13 @@ class ProposalController extends AbstractController
      */
     public function displayAction($filename)
     {
-        $dir = $this->get('kernel')->getRootDir() . '/../storage/';
-        $file = $dir.$filename;
+        $PATH = "{$this->get('kernel')->getRootDir()}/../..";
+        $tempFile = "{$PATH}/.uploads/proposal/{$filename}";
 
-        if(file_exists($file)){
-
-            return new BinaryFileResponse(new File($file));
-        }else{
-            return $this->json(
-                ['error' => 'File not found.'],
-                Response::HTTP_NOT_FOUND);
+        if (file_exists($tempFile)) {
+            return new BinaryFileResponse(new File($tempFile));
         }
 
+        return $this->json([ 'error' => 'File not found.' ], Response::HTTP_NOT_FOUND);
     }
 }

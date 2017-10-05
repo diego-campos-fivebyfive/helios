@@ -10,6 +10,7 @@ use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Model\KitPricing;
 use AppBundle\Service\Mailer;
+use Aws\S3\S3Client;
 use Doctrine\Common\Inflector\Inflector;
 use Exporter\Exporter;
 use Exporter\Handler;
@@ -499,4 +500,16 @@ class DebugController extends AbstractController
         $manager->save($order);
         //
     }
+
+   /**
+    * @Route("/s3", name="debug_s3")
+    */
+   public function s3Action()
+   {
+        $s3 = $this->get('aws.s3');
+        $data = $s3->listBuckets();
+        $buckets = $data['Buckets'];
+
+       dump($buckets); die;
+   }
 }

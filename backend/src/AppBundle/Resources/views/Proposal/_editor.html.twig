@@ -417,7 +417,7 @@
                                     cancelButtonText: '{{ 'Cancelar'|trans }}'
                                 }, function () {
 
-                                    var url = '{{ path('proposal_display_pdf',{filename:'_file_'}) }}'.replace(/_file_/g, filename);
+                                    var url = '{{ path('proposal_display_pdf',{tempFileName:'_file_'}) }}'.replace(/_file_/g, filename);
                                     window.open(url, '_blank');
                                 });
                             },500);
