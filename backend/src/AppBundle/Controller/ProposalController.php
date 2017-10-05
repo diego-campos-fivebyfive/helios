@@ -199,7 +199,7 @@ class ProposalController extends AbstractController
 
         $PATH = "{$this->get('kernel')->getRootDir()}/../..";
         $tempFileName = md5(uniqid()) . '.pdf';
-        $tempFile = "{$PATH}/.uploads/{$tempFileName}";
+        $tempFile = "{$PATH}/.uploads/proposal/{$tempFileName}";
 
         $absoluteUrl = UrlGeneratorInterface::ABSOLUTE_URL;
         $snappyUrl = $this->generateUrl('proposal_pdf', [ 'id' => $theme->getId() ], $absoluteUrl);
@@ -233,7 +233,7 @@ class ProposalController extends AbstractController
     public function displayAction($tempFileName)
     {
         $PATH = "{$this->get('kernel')->getRootDir()}/../..";
-        $tempFile = "{$PATH}/.uploads/{$tempFileName}";
+        $tempFile = "{$PATH}/.uploads/proposal/{$tempFileName}";
 
         if (file_exists($tempFile)) {
             return new BinaryFileResponse(new File($tempFile));
