@@ -2,6 +2,36 @@
 
 {% block body %}
 
+    {% macro formInfo(form) %}
+
+        <div class="row">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label> {{ form.vars.name|capitalize|trans }} </label>
+                </div>
+                <div class="col-md-5">
+                    <div class="input-group m-b">
+                        <span class="input-group-addon" title="Nome">
+                            <i class="fa fa-user"></i>
+                        </span>
+                        {{ form_widget(form.name, {attr:{class:'form-control', placeholder: 'Nome'}}) }}
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="input-group m-b">
+                        <span class="input-group-addon" title="Email">
+                            <i class="fa fa-envelope"></i>
+                        </span>
+                        {{ form_widget(form.email, {attr:{class:'form-control', placeholder: 'Email'}}) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endmacro %}
+
+    {% import _self as this %}
+
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
 
@@ -15,31 +45,25 @@
                                     {% include view('helper.spinner') %}
                                 </div>
 
-                                <div class="col-lg-4">
-                                    <div class="panel panel-default">
+                                <div class="col-lg-6">
+                                    <div class="panel panel-success">
                                         <div class="panel-heading">
-                                            Emails
+                                            <i class="fa fa-briefcase"></i> Informações Administrativas
                                         </div>
                                         <div class="panel-body">
 
                                             {{ form_start(form) }}
 
                                             {% set form_params = form.parameters %}
+                                            {% set form_master = form_params.master %}
+                                            {% set form_admin = form_params.admin %}
+                                            {% set form_platform = form_params.platform %}
 
-                                            <div class="form-group">
-                                                {{ form_label(form_params.email_platform, 'Email da Plataforma') }}
-                                                {{ form_widget(form_params.email_platform) }}
-                                            </div>
+                                            {{ this.formInfo(form_platform) }}
 
-                                            <div class="form-group">
-                                                {{ form_label(form_params.email_master, 'Email Master') }}
-                                                {{ form_widget(form_params.email_master) }}
-                                            </div>
+                                            {{ this.formInfo(form_master) }}
 
-                                            <div class="form-group">
-                                                {{ form_label(form_params.email_admin, 'Email Administrador') }}
-                                                {{ form_widget(form_params.email_admin) }}
-                                            </div>
+                                            {{ this.formInfo(form_admin) }}
 
                                             {{ form_end(form) }}
 
