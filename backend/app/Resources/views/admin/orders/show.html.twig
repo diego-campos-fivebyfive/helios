@@ -96,7 +96,8 @@
                 </div>
             </div>
 
-            {% if order.shippingrules and order.shippingrules['type'] == 'self' %}
+            {% if order.shippingrules and order.shippingrules['type'] == 'self' and order.shippingRules.company is not null %}
+
                     <div class="ibox border-bottom">
                         <div class="ibox-content">
                             <div class="tab-content">
@@ -163,6 +164,7 @@
 
                         </div>
                     </div>
+
             {% endif %}
 
             <div class="ibox border-bottom">
