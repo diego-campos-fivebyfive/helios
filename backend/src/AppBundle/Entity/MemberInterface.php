@@ -12,6 +12,11 @@ interface MemberInterface
     public function getId();
 
     /**
+     * @return string
+     */
+    public function getName();
+
+    /**
      * @param $isquik_id
      * @return MemberInterface
      */
