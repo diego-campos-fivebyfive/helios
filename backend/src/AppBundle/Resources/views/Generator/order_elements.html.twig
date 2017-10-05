@@ -1,11 +1,17 @@
+
+{% set isPlatform = app.user.isPlatform %}
+
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
             <th> Código </th>
-            <th> Descrição </th>
-            <th> Custo Unitário </th>
+            <th class="col-md-3"> Descrição </th>
+            {% if isPlatform %}
+            <th> Markup </th>
+            {% endif %}
+            <th class="col-md-2"> Custo Unitário </th>
             <th> Qtde </th>
-            <th> Custo Total </th>
+            <th class="col-md-2"> Custo Total </th>
             <th>&nbsp;</th>
         </tr>
     </thead>
@@ -16,6 +22,11 @@
         <tr>
             <td> {{ element.code }} </td>
             <td> {{ element.description }} </td>
+            {% if isPlatform %}
+                <td> <input class="form-control markup" data-markup-element="{{ path('order_element_update',{id:element.id}) }}"
+                            id="input{{ element.id }}" readonly="readonly" value="{{ element.markup }}">
+                </td>
+            {% endif %}
             <td> {{ element.unitPrice|currency }} </td>
             <td class="text-center"> {{ element.quantity }} </td>
             <td width="15%"> {{ element.total|currency }} </td>
@@ -34,20 +45,35 @@
 
     {% endfor %}
 
-    {# INSURE LINE #}
-    {% set insureOrigin = 'order' %}
-    {% include view('helper.insure_line') %}
+    <tr>
+        <td> SSS_2017_2018 </td>
+        <td> SEGURO SOLAR RICO ENGENHARIA PROJETO E INSTALAÇÃO </td>
+        {% if isPlatform %}
+        <td></td>
+        {% endif %}
+        <td> {{ 0|currency }} </td>
+        <td class="text-center"> 1 </td>
+        <td> {{ 0|currency }} </td>
+        <td></td>
+    </tr>
 
     </tbody>
     <thead>
         <tr>
-            <th colspan="3"></th>
+            <th colspan="2"></th>
+            {% if isPlatform %}
+                <th></th>
+            {% endif %}
             <th class="text-right" id="subtotal"> SubTotal </th>
+            <th></th>
             <th> {{ order.subTotal|currency }} </th>
             <th></th>
         </tr>
     </thead>
 </table>
+
+
+
 
 <script>
 
@@ -99,6 +125,46 @@
         });
     });
 
+    $('[data-markup-element]').on('click', function(){
+        $(this).removeAttr('readonly');
+    });
+    $('[data-markup-element]').on('blur', function(){
+        $(this).attr('readonly','readonly');
+    });
+
+
+    $('[data-markup-element]').on('change', function(){
+        var markup = parseFloat($(this).val().replace(',','.'));
+        Request.send({
+            url: $(this).data('markup-element'),
+            method:  'post',
+            data: {markup:markup},
+            callback: function (xhr) {
+                //if 200 RECALCULAR ORDER
+                if (xhr.status == 200) {
+                    toastr.success('Markup aplicado!', '', {
+                        positionClass: 'toast-top-center',
+                        progressBar: true
+                    });
+                } else {
+                    toastr.error('Não foi possível aplicar o Markup!', '', {
+                        positionClass: 'toast-top-center',
+                        progressBar: true
+                    });
+                }
+
+            }
+        });
+    });
+
     $('#order_description').val('Sistema de ' + {{ order.power }}+'kWp');
     form_button.trigger('click');
+
+    if ({{ isPlatform }}) {
+        var inputMarkup = $('.markup');
+
+        $.each(inputMarkup, function (i, elem) {
+            Numbers.mask($(elem));
+        });
+    }
 </script>

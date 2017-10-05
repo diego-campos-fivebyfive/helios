@@ -62,6 +62,20 @@ class Element implements ElementInterface
     private $metadata;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(name="markup", type="float")
+     */
+    private $markup;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="cmv", type="float")
+     */
+    private $cmv;
+
+    /**
      * @var OrderInterface
      *
      * @ORM\ManyToOne(targetEntity="Order", inversedBy="elements")
@@ -90,6 +104,8 @@ class Element implements ElementInterface
         $this->quantity = 1;
         $this->metadata = [];
         $this->unitPrice = 0;
+        $this->markup = 0;
+        $this->cmv = 0;
     }
 
     /**
@@ -238,6 +254,40 @@ class Element implements ElementInterface
     public function getOrder()
     {
         return $this->order;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMarkup()
+    {
+        return $this->markup;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setMarkup($markup)
+    {
+        $this->markup = $markup;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCmv()
+    {
+        return $this->cmv;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setCmv($cmv)
+    {
+        $this->cmv = $cmv;
+        return $this;
     }
 
     /**
