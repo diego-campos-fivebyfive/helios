@@ -21,7 +21,7 @@
             {{ form_widget(form.paymentMethod, {attr:{class:'form-control'}}) }}
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-6" id="block_account_selector">
             {% if attribute(form, 'account') is defined %}
             {{ form_label(form.account, 'Integrador') }}
             <br>
@@ -96,7 +96,7 @@
         <div class="row">
             <div class="col-md-9">&nbsp;</div>
             <div class="col-md-3">
-                <button type="submit" class="btn btn-success btn-block">
+                <button id="button_account" type="submit" data-style="zoom-in" class="btn btn-success btn-block ladda-button">
                     <i class="fa fa-save"></i> Salvar
                 </button>
             </div>
@@ -110,8 +110,16 @@
 {{ form_end(form) }}
 
 <script>
+
+    var orderAccount = $('#order_account');
+    var buttonAccount = $('#button_account');
+
     $('#form_order_info').on('submit', function (event) {
         event.preventDefault();
+
+        buttonAccount.ladda();
+        buttonAccount.ladda('start');
+
         var form = $(this);
         $.ajax({
             url: form.attr('action'),
@@ -119,10 +127,16 @@
             data: form.serialize(),
             complete: function(xhr){
                 if(200 == xhr.status){
-                    // handle success here!
+
+                    if(orderAccount.length && orderAccount.val()){
+                        $('#block_account_selector').remove();
+                    }
+
                 }else{
                     swal('Ooops', 'Falha ao executar a operação.', 'error');
                 }
+
+                buttonAccount.ladda('stop');
             }
         });
     });

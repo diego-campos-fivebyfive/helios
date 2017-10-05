@@ -235,11 +235,11 @@ services:
 
     app_mailer:
         class: AppBundle\Service\Mailer
-        arguments: ['@router', '@templating']
+        arguments: ['@service_container']
 
     order_mailer:
         class: AppBundle\Service\Order\OrderMailer
-        arguments: ['@router', '@templating', {storage: '%kernel.root_dir%/../storage/'}]
+        arguments: ['@service_container']
 
     range_normalizer:
         class: AppBundle\Service\Pricing\RangeNormalizer
