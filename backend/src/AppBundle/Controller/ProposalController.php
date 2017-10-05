@@ -199,14 +199,14 @@ class ProposalController extends AbstractController
 
         $PATH = "{$this->get('kernel')->getRootDir()}/../..";
         $tempFileName = md5(uniqid()) . '.pdf';
-        $tempFilePath = "{$PATH}/.uploads/{$tempFileName}";
+        $tempFile = "{$PATH}/.uploads/{$tempFileName}";
 
         $absoluteUrl = UrlGeneratorInterface::ABSOLUTE_URL;
         $snappyUrl = $this->generateUrl('proposal_pdf', [ 'id' => $theme->getId() ], $absoluteUrl);
 
-        $snappy->generate($snappyUrl, $tempFilePath);
+        $snappy->generate($snappyUrl, $tempFile);
 
-        if (!file_exists($tempFilePath)) {
+        if (!file_exists($tempFile)) {
             return $this->json([ 'filename' => $tempFileName ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
@@ -220,7 +220,7 @@ class ProposalController extends AbstractController
         $s3->putObject([
             'Bucket' => 'pss-geral',
             'Key' => "proposal/$tempFileName",
-            'Body' => fopen($tempFilePath, 'rb'),
+            'Body' => fopen($tempFile, 'rb'),
             'ACL' => 'public-read'
         ]);
 
@@ -230,19 +230,15 @@ class ProposalController extends AbstractController
     /**
      * @Route("/display/{filename}", name="proposal_display_pdf")
      */
-    public function displayAction($filename)
+    public function displayAction($tempFileName)
     {
-        $dir = $this->get('kernel')->getRootDir() . '/../storage/';
-        $file = $dir.$filename;
+        $PATH = "{$this->get('kernel')->getRootDir()}/../..";
+        $tempFile = "{$PATH}/.uploads/{$tempFileName}";
 
-        if(file_exists($file)){
-
-            return new BinaryFileResponse(new File($file));
-        }else{
-            return $this->json(
-                ['error' => 'File not found.'],
-                Response::HTTP_NOT_FOUND);
+        if (file_exists($tempFile)) {
+            return new BinaryFileResponse(new File($tempFile));
         }
 
+        return $this->json([ 'error' => 'File not found.' ], Response::HTTP_NOT_FOUND);
     }
 }
