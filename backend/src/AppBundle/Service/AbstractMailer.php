@@ -115,11 +115,12 @@ abstract class AbstractMailer
     protected function createMessage(array $parameters)
     {
         $accessor = PropertyAccess::createPropertyAccessor();
-        $message = new \Swift_Message();
+        $message = \Swift_Message::newInstance();
 
         $message
             ->setContentType('text/html')
-            ->setFrom(self::FROM_EMAIL, self::FROM_NAME);
+            ->setFrom([self::FROM_EMAIL => self::FROM_NAME])
+        ;
 
         foreach ($parameters as $property => $value){
             $accessor->setValue($message, $property, $value);
