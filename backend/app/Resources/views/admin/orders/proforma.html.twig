@@ -117,6 +117,9 @@
     .field-width {
         width: 35mm;
     }
+    .sf-toolbar {
+        display: none !important;
+    }
 
 </style>
 
@@ -126,7 +129,7 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
 
             {% set page = order.childrens|length %}
             {% for item in order.childrens %}
@@ -144,45 +147,45 @@
                                     <label class="no-margins">Proposta: </label> {{ order.id }}
                                 </td>
                                 <td colspan="2">
-                                    <label  class="no-margins">Data: </label> 30/ 08 / 2017 (hoje)
+                                    <label  class="no-margins">Data: </label> {{ order.createdAt|date('d/m/Y') }}
                                 </td>
                             </tr>
                             </thead>
                             <tbody>
                             <tr>
                                 <td><label class="no-margins">Cliente: </label></td>
-                                <td>cliente_ENSOLAR ENERGIA SOLAR LTDA-ME</td>
+                                <td> {{ order.customer }} </td>
 
                                 <td><label class="no-margins">CNPJ: </label></td>
-                                <td>08.824.904/0001-43</td>
+                                <td> {{ order.cnpj }} </td>
                             </tr>
                             <tr>
                                 <td><label class="no-margins">Endereço: </label></td>
-                                <td>cliente_ENSOLAR ENERGIA SOLAR LTDA-ME</td>
+                                <td> {{ order.address }} </td>
 
                                 <td><label class="no-margins">IE: </label></td>
-                                <td>456/0002702</td>
+                                <td> {{ order.ie }} </td>
                             </tr>
                             <tr>
                                 <td><label class="no-margins">Cidade: </label></td>
-                                <td>cliente_ENSOLAR ENERGIA SOLAR LTDA-ME</td>
+                                <td> {{ order.city }} </td>
 
                                 <td><label class="no-margins">Estado: </label></td>
-                                <td>SP</td>
+                                <td> {{ order.state }} </td>
                             </tr>
                             <tr>
                                 <td><label class="no-margins">Contato: </label></td>
-                                <td>ANDRE</td>
+                                <td> {{ order.contact }} </td>
 
                                 <td><label class="no-margins">Tel: </label></td>
-                                <td>19 99288-4556</td>
+                                <td> {{ order.phone }} </td>
                             </tr>
                             <tr>
                                 <td><label class="no-margins">Email: </label></td>
-                                <td class="color-blue">andrerodriguesx@hotmail.com </td>
+                                <td class="color-blue"> {{ order.email }} </td>
 
                                 <td><label class="no-margins">CEP: </label></td>
-                                <td>13.023-101</td>
+                                <td> {{ order.postcode }} </td>
                             </tr>
                             </tbody>
                         </table>
@@ -231,7 +234,7 @@
                             </tbody>
                         </table>
 
-
+                        {% if item.insurance %}
                         <table class="spacing width-total">
                             <thead>
                             <tr>
@@ -252,11 +255,12 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <label class="pull-right">Valor do seguro: R$ 67,04</label>
+                                    <label class="pull-right">Valor do seguro: {{ item.insurance|currency }}</label>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
+                        {% endif %}
 
                         <label class="pull-right spacing"><h3>Valor do Sistema: {{ item.total|currency }}</h3></label>
 
@@ -280,7 +284,6 @@
                     </div>
                 </div>
 
-                <div style="width: 100%; height: 5mm;"></div>
             {% endfor %}
 
             <div class="p-leaf leaf-style">
@@ -297,7 +300,10 @@
                     <span class="pull-right field-width">{{ order.subTotal|currency }}</span>
                     <br/>
                     <span class="indentation"> 2) Frete</span>
-                    <span class="pull-right field-width"> {% if order.shippingRules is defined %}INCLUSO{% else %}NÃO INCLUSO{% endif %}</span>
+                    <span class="pull-right field-width">
+                        {% if order.shippingrules and order.shippingrules['type'] == 'sices' %}
+                        Incluso{% elseif order.shippingrules['type'] == 'self' %}{{ order.shippingrules['company']['name'] }}{% endif %}
+                    </span>
                     <br/>
                     <label class="no-margins">TOTAL FORNECIMENTO</label>
                     <label class="pull-right no-margins field-width">{{ order.total|currency }}</label>
@@ -352,8 +358,6 @@
                 </div>
             </div>
 
-            <div style="width: 100%; height: 5mm;"></div>
-
             <div class="p-leaf leaf-style">
                 <div class="p-header">
                     <img width="250"  alt="image" src="{{ asset('assets/images/proformaHeader.png') }}">
@@ -379,6 +383,7 @@
                         concede isenção do ICMS nas operações com equipamentos e componentes para o aproveitamento
                         das energias solar e eólica.
                     </div>
+                    <br>
                     <div class="indentation bold">
                         - Impostos:
                     </div>
@@ -541,15 +546,13 @@
                 </div>
             </div>
 
-            <div style="width: 100%; height: 5mm;"></div>
-
             <div class="p-leaf leaf-style">
                 <div class="p-header">
                     <img width="250"  alt="image" src="{{ asset('assets/images/proformaHeader.png') }}">
                     <span class="page-number">Página - {{ page + 3 }}/{{ page + 3 }}</span>
                 </div>
 
-                <div class="p-body" style="font-size: 14px;">
+                <div class="p-body" style="font-size: 14px; height: 227mm !important;">
 
                     <label class="width-float-total text-underline text-center"><h2>Certificado de Seguro</h2></label>
 
@@ -657,8 +660,6 @@
                     </span>
                 </div>
             </div>
-
-        </div>
     </div>
 </div>
 
