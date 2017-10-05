@@ -52,7 +52,7 @@ class OrderController extends AbstractController
         $paginator = $this->getPaginator();
 
         $parameters = [
-            'context' => $this->getAccountContext(),
+            'context' => BusinessInterface::CONTEXT_ACCOUNT,
             'status' => BusinessInterface::ACTIVATED
         ];
 
@@ -143,13 +143,5 @@ class OrderController extends AbstractController
         }
 
         return $paymentMethods;
-    }
-
-    /**
-     * @return \Sonata\ClassificationBundle\Model\ContextInterface
-     */
-    private function getAccountContext()
-    {
-        return $this->getContextManager()->find(BusinessInterface::CONTEXT_ACCOUNT);
     }
 }
