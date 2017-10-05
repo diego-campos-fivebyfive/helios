@@ -47,19 +47,15 @@ elif [ $1 = '--production' ]; then
 
   echo "Moving untracked files..."
   rsync -avzh $SICES_PATH/.backup/backend/web/uploads/** $SICES_PATH/.temp/backend/web/uploads
-  rsync -avzh $SICES_PATH/.backup/.uploads/proposal/** $SICES_PATH/.temp/.uploads/proposal
+  rsync -avzh $SICES_PATH/.backup/.uploads/** $SICES_PATH/.temp/.uploads
 
   # Remove it after deploy command optimizations
-  rm $SICES_PATH/.temp/devops/aws/homolog.pem
-  rm $SICES_PATH/.temp/devops/aws/staging.pem
+  rm -rf $SICES_PATH/.temp/devops/aws/
   rm $SICES_PATH/.temp/backend/app/config/parameters.yml
   rm $SICES_PATH/.temp/backend/src/AppBundle/Service/Notifier/Notifier.php
   cp \
-    $SICES_PATH/.backup/devops/aws/homolog.pem \
-    $SICES_PATH/.temp/devops/aws/homolog.pem
-  cp \
-    $SICES_PATH/.backup/devops/aws/staging.pem \
-    $SICES_PATH/.temp/devops/aws/staging.pem
+    $SICES_PATH/.backup/devops/aws \
+    $SICES_PATH/.temp/devops/aws
   cp \
     $SICES_PATH/.backup/backend/app/config/parameters.yml \
     $SICES_PATH/.temp/backend/app/config/parameters.yml
