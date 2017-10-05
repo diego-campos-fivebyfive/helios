@@ -103,6 +103,28 @@ interface ElementInterface
     public function getOrder();
 
     /**
+     * @return mixed
+     */
+    public function getMarkup();
+
+    /**
+     * @param $markup
+     * @return mixed
+     */
+    public function setMarkup($markup);
+
+    /**
+     * @return mixed
+     */
+    public function getCmv();
+
+    /**
+     * @param $cmv
+     * @return mixed
+     */
+    public function setCmv($cmv);
+
+    /**
      * @param \DateTime $created_at
      * @return ElementInterface
      */
