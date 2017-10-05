@@ -228,12 +228,12 @@ class ProposalController extends AbstractController
     }
 
     /**
-     * @Route("/display/{tempFileName}", name="proposal_display_pdf")
+     * @Route("/display/{filename}", name="proposal_display_pdf")
      */
-    public function displayAction($tempFileName)
+    public function displayAction($filename)
     {
         $PATH = "{$this->get('kernel')->getRootDir()}/../..";
-        $tempFile = "{$PATH}/.uploads/proposal/{$tempFileName}";
+        $tempFile = "{$PATH}/.uploads/proposal/{$filename}";
 
         if (file_exists($tempFile)) {
             return new BinaryFileResponse(new File($tempFile));
