@@ -213,7 +213,7 @@ class OrderController extends AbstractController
             $snappy->setOption('zoom', 2);
 
             $dir = $this->get('kernel')->getRootDir() . '/../storage/';
-            $filename = 'proform_' . $order->getId() . '.pdf';
+            $filename = 'proforma_' . $order->getId() . '.pdf';
             $file = $dir . $filename;
 
             $url = $this->generateUrl('proforma_pdf', ['id' => $order->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
