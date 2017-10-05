@@ -228,7 +228,7 @@ class ProposalController extends AbstractController
     }
 
     /**
-     * @Route("/display/{filename}", name="proposal_display_pdf")
+     * @Route("/display/{tempFileName}", name="proposal_display_pdf")
      */
     public function displayAction($tempFileName)
     {
