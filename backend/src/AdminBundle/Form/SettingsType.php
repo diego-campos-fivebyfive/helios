@@ -5,6 +5,7 @@ namespace AdminBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class SettingsType extends AbstractType
@@ -17,24 +18,24 @@ class SettingsType extends AbstractType
         $builder->add(
             $builder
                 ->create('parameters', FormType::class)
-                ->add('email_platform', EmailType::class, [
-                    'attr' => [
-                        'class' => 'form-control',
-                        'placeholder' => 'Email da Plataforma'
-                    ]
-                ])
-                ->add('email_master', EmailType::class, [
-                    'attr' => [
-                        'class' => 'form-control',
-                        'placeholder' => 'Email Master'
-                    ]
-                ])
-                ->add('email_admin', EmailType::class, [
-                    'attr' => [
-                        'class' => 'form-control',
-                        'placeholder' => 'Email Administrador'
-                    ]
-                ])
+                ->add(
+                    $builder
+                        ->create('platform', FormType::class)
+                        ->add('name', TextType::class)
+                        ->add('email', EmailType::class)
+                )
+                ->add(
+                    $builder
+                        ->create('master', FormType::class)
+                        ->add('name', TextType::class)
+                        ->add('email', EmailType::class)
+                )
+                ->add(
+                    $builder
+                        ->create('admin', FormType::class)
+                        ->add('name', TextType::class)
+                        ->add('email', EmailType::class)
+                )
         );
     }
 }
