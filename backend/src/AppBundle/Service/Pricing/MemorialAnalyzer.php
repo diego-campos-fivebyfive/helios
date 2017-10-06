@@ -61,7 +61,6 @@ class MemorialAnalyzer
      * @var array
      */
     private $criteria = [
-        'status' => true,
         'available' => true
     ];
 
