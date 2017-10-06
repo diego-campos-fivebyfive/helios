@@ -382,6 +382,17 @@ interface OrderInterface
     public function getShipping();
 
     /**
+     * @param $deliveryAddress
+     * @return OrderInterface
+     */
+    public function setDeliveryAddress($deliveryAddress);
+
+    /**
+     * @return string
+     */
+    public function getDeliveryAddress();
+
+    /**
      * @param \DateTime $deliveryAt
      * @return OrderInterface
      */
