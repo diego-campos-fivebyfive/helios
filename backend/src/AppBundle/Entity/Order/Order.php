@@ -410,6 +410,14 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @inheritDoc
      */
+    public function hasProforma()
+    {
+        return strlen($this->proforma);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setFilePayment($filePayment)
     {
         $this->filePayment = $filePayment;
