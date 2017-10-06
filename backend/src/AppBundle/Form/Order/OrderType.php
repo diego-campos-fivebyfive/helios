@@ -40,6 +40,7 @@ class OrderType extends AbstractType
 
                 $builder->add('account', EntityType::class, [
                     'class' => Customer::class,
+                    'required' => false,
                     'query_builder' => function(EntityRepository $er) use($member){
 
                         $parameters = [
