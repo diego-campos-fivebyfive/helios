@@ -180,20 +180,9 @@ trait MenuAccount
      */
     private function requestsMenu(ItemInterface &$menu)
     {
-        $requests = $menu->addChild('Pedidos', [
-            'uri' => '#',
-            'childrenAttributes' => ['class' => 'nav nav-second-level collapse orders'],
-            'attributes' => ['id' => 'idPedidos'],
-            'extras' => ['icon' => self::icon('requests')]
-        ]);
-
-        $requests->addChild('Orçamento', [
-            'route' => 'project_generator',
-            'extras' => ['icon' => self::icon('money')]
-        ]);
-
-        $requests->addChild('Meus Pedidos', [
+        $menu->addChild('Pedidos', [
             'route' => 'index_order',
+            'attributes' => ['id' => 'idPedidos'],
             'extras' => ['icon' =>self::icon('my-requests')]
         ]);
     }
