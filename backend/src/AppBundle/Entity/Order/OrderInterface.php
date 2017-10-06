@@ -209,15 +209,15 @@ interface OrderInterface
     public function getSendAt();
 
     /**
-     * @param string $filename
+     * @param string $proforma
      * @return OrderInterface
      */
-    public function setFilename($filename);
+    public function setProforma($proforma);
 
     /**
      * @return string
      */
-    public function getFilename();
+    public function getProforma();
 
     /**
      * @param $filePayment

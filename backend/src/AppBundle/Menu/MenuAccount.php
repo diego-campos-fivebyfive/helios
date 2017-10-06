@@ -42,7 +42,7 @@ trait MenuAccount
             ]);
         }
 
-        self::addComponents($menu);
+        $this->addComponents($menu);
         
         if($user->isOwner() || $user->isOwnerMaster()){
 
@@ -69,7 +69,7 @@ trait MenuAccount
     /**
      * @param ItemInterface $menu
      */
-    private static function addComponents(ItemInterface &$menu)
+    private function addComponents(ItemInterface &$menu)
     {
         $components = $menu->addChild('Components', [
             'uri' => '#',

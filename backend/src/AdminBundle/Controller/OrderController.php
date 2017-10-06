@@ -54,7 +54,7 @@ class OrderController extends AbstractController
         $paginator = $this->getPaginator();
 
         $parameters = [
-            'context' => $this->getAccountContext(),
+            'context' => BusinessInterface::CONTEXT_ACCOUNT,
             'status' => BusinessInterface::ACTIVATED
         ];
 
@@ -86,16 +86,6 @@ class OrderController extends AbstractController
 
         return $this->render('admin/orders/accounts.html.twig', array(
             'pagination' => $pagination
-        ));
-    }
-
-    /**
-     * @Route("/show/{id}", name="order_sices_show")
-     */
-    public function showAction(Order $order)
-    {
-        return $this->render('admin/orders/show.html.twig', array(
-            'order' => $order
         ));
     }
 
@@ -179,13 +169,5 @@ class OrderController extends AbstractController
         }
 
         return $paymentMethods;
-    }
-
-    /**
-     * @return \Sonata\ClassificationBundle\Model\ContextInterface
-     */
-    private function getAccountContext()
-    {
-        return $this->getContextManager()->find(BusinessInterface::CONTEXT_ACCOUNT);
     }
 }

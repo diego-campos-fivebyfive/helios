@@ -90,7 +90,7 @@ class Order implements OrderInterface, InsurableInterface
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    private $filename;
+    private $proforma;
 
     /**
      * @var string
@@ -259,7 +259,7 @@ class Order implements OrderInterface, InsurableInterface
      */
     public function getReference()
     {
-        return $this->reference;
+        return $this->reference ?: $this->id;
     }
 
     /**
@@ -400,9 +400,9 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @inheritDoc
      */
-    public function setFilename($filename)
+    public function setProforma($proforma)
     {
-        $this->filename = $filename;
+        $this->proforma = $proforma;
 
         return $this;
     }
@@ -410,9 +410,9 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @inheritDoc
      */
-    public function getFilename()
+    public function getProforma()
     {
-        return $this->filename;
+        return $this->proforma;
     }
 
     /**

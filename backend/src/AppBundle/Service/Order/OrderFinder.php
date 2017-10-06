@@ -122,7 +122,10 @@ class OrderFinder
         $check = sprintf(' = :%s', $property);
 
         switch ($property){
-
+            case 'member':
+                $this->addMemberParameter($qb);
+                return;
+                break;
             case 'agent':
                 $this->addAgentParameter($qb);
                 return;
@@ -145,6 +148,9 @@ class OrderFinder
     {
         /** @var MemberInterface $agent */
         $agent = $this->parameters['agent'];
+
+        if(!$agent->isPlatformUser())
+            throw new \InvalidArgumentException('Invalid agent type');
 
         $includeStatus = [];
         if($agent->isPlatformAfterSales()){
@@ -183,5 +189,35 @@ class OrderFinder
                 )
             )
         ;
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     */
+    private function addMemberParameter(QueryBuilder $qb)
+    {
+        /** @var MemberInterface $agent */
+        $member = $this->parameters['member'];
+
+        if ($member->isPlatformUser())
+            throw new \InvalidArgumentException('Invalid member type');
+
+        $account = $member->getAccount();
+
+        $qb
+            ->andWhere('o.account = :account')
+            ->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->eq('o.source', Order::SOURCE_ACCOUNT),
+                    $qb->expr()->andX(
+                        $qb->expr()->eq('o.source', Order::SOURCE_PLATFORM),
+                        $qb->expr()->notIn('o.status', [Order::STATUS_BUILDING])
+                    )
+                )
+            );
+
+        $this->parameters['account'] = $account;
+
+        unset($this->parameters['member']);
     }
 }

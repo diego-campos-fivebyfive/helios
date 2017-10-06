@@ -157,6 +157,16 @@ class AccessVoter extends Voter
      * @param TokenInterface $token
      * @return bool
      */
+    private function voteViewOrder(Order $order, TokenInterface $token)
+    {
+        return $this->voteEditOrder($order, $token);
+    }
+
+    /**
+     * @param Order $order
+     * @param TokenInterface $token
+     * @return bool
+     */
     private function voteEditOrder(Order $order, TokenInterface $token)
     {
         $user = $token->getUser();

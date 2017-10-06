@@ -6,6 +6,17 @@
         table tbody tr {
             display: table-row !important;
         }
+        .label.label-status{
+            background-color: #f2f2f2;
+            border: 1px solid #b2b2b2;
+            color: #555;
+        }
+        .label.status-building i{  color: #898989;  }
+        .label.status-pending i{  color: #ff7701;  }
+        .label.status-validated i{  color: #0a6aa1;  }
+        .label.status-approved i{  color: #00a157;  }
+        .label.status-rejected i{  color: #ffcd70;  }
+        .label.status-done i{  color: #777;  }
     </style>
 
 {% endblock %}
@@ -82,8 +93,8 @@
                                         {% endif %}
                                     </td>
                                     <td class="text-center">
-                                    <span class="label label-default">
-                                        {{ order.statusName|capitalize|trans }}
+                                    <span class="label label-status status-{{ order.statusName }}">
+                                        <i class="fa fa-circle"></i> {{ order.statusName|capitalize|trans }}
                                     </span>
                                     </td>
 
@@ -169,8 +180,8 @@
                                                 {% endif %}
 
                                                 <li>
-                                                    <a href="#">
-                                                        <i class="fa fa-eye"></i> Visualizar (Desenvolvendo)
+                                                    <a href="{{ path('order_show', {id: order.id}) }}">
+                                                        <i class="fa fa-eye"></i> Visualizar
                                                     </a>
                                                 </li>
 
