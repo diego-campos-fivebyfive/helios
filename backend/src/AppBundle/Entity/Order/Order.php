@@ -12,6 +12,7 @@
 namespace AppBundle\Entity\Order;
 
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\Pricing\RangeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\MetadataTrait;
@@ -167,6 +168,13 @@ class Order implements OrderInterface, InsurableInterface
      * @ORM\Column(type="string", nullable=true)
      */
     private $ie;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $level;
 
     /**
      * @var array
@@ -735,6 +743,8 @@ class Order implements OrderInterface, InsurableInterface
             $this->setAgent($agent);
         }
 
+        $this->level = $account->getLevel();
+
         $this->refreshCustomer();
 
         return $this;
@@ -889,6 +899,25 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @inheritDoc
      */
+    public function setLevel($level)
+    {
+        $this->level = $level;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLevel()
+    {
+        return $this->level;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
     public function isBuilding()
     {
         return self::STATUS_BUILDING == $this->status;
@@ -933,6 +962,44 @@ class Order implements OrderInterface, InsurableInterface
     {
         return self::STATUS_DONE == $this->status;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTotalCmv()
+    {
+        $totalCmv = 0;
+
+        if ($this->isBudget()) {
+            foreach ($this->childrens as $children) {
+                $totalCmv += $children->getTotalCmv();
+            }
+        } else {
+            foreach ($this->getElements() as $element) {
+                $totalCmv += $element->getTotalCmv();
+            }
+        }
+
+        return $totalCmv;
+
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTotalTaxes()
+    {
+        return $this->getSubTotal() * RangeInterface::DEFAULT_TAX;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMargin()
+    {
+        return $this->getSubTotal() - $this->getTotalCmv() - $this->getTotalTaxes();
+    }
+
 
     /**
      * Refresh customer data by reference account

@@ -236,6 +236,21 @@ interface OrderInterface
     public function getFilePayment();
 
     /**
+     * @return float
+     */
+    public function getTotalCmv();
+
+    /**
+     * @return float
+     */
+    public function getTotalTaxes();
+
+    /**
+     * @return float
+     */
+    public function getMargin();
+
+    /**
      * @return bool
      */
     public function hasFilePayment();
@@ -418,4 +433,15 @@ interface OrderInterface
      * @return bool
      */
     public function isDone();
+
+    /**
+     * @param $level
+     * @return OrderInterface
+     */
+    public function setLevel($level);
+
+    /**
+     * @return string
+     */
+    public function getLevel();
 }

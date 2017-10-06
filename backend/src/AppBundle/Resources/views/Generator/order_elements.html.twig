@@ -1,4 +1,3 @@
-
 {% set isPlatform = app.user.isPlatform %}
 
 <table class="table table-bordered table-hover">
@@ -60,9 +59,9 @@
     </tbody>
     <thead>
         <tr>
-            <th colspan="2"></th>
+            <th colspan="2" class="text-right">{% if isPlatform %}Margem bruta da operação{% endif %}</th>
             {% if isPlatform %}
-                <th></th>
+                <th>{{ order.margin|currency }}</th>
             {% endif %}
             <th class="text-right" id="subtotal"> SubTotal </th>
             <th></th>
@@ -140,19 +139,21 @@
             method:  'post',
             data: {markup:markup},
             callback: function (xhr) {
-                //if 200 RECALCULAR ORDER
+                var response = xhr.responseJSON;
+                var total = response.total;
                 if (xhr.status == 200) {
                     toastr.success('Markup aplicado!', '', {
                         positionClass: 'toast-top-center',
                         progressBar: true
                     });
+                    OrderManager.getElements()
+                    OrderManager.renderTotal(total)
                 } else {
                     toastr.error('Não foi possível aplicar o Markup!', '', {
                         positionClass: 'toast-top-center',
                         progressBar: true
                     });
                 }
-
             }
         });
     });
@@ -160,7 +161,7 @@
     $('#order_description').val('Sistema de ' + {{ order.power }}+'kWp');
     form_button.trigger('click');
 
-    if ({{ isPlatform }}) {
+    if ({{ isPlatform ? 'true': 'false' }}) {
         var inputMarkup = $('.markup');
 
         $.each(inputMarkup, function (i, elem) {

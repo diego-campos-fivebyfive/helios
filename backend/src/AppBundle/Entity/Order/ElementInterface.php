@@ -125,6 +125,22 @@ interface ElementInterface
     public function setCmv($cmv);
 
     /**
+     * @param $tax
+     * @return ElementInterface
+     */
+    public function setTax($tax);
+
+    /**
+     * @return mixed
+     */
+    public function getTax();
+
+    /**
+     * @return float
+     */
+    public function getTotalCmv();
+
+    /**
      * @param \DateTime $created_at
      * @return ElementInterface
      */
