@@ -270,7 +270,7 @@ class Element implements ElementInterface
      */
     public function getMarkup()
     {
-        return $this->markup;
+        return $this->markup*100;
     }
 
     /**
