@@ -185,7 +185,7 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @var int
      *
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $deadline;
 
