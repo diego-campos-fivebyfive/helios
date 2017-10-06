@@ -1,4 +1,67 @@
 
+06/10/2017 - TESTE DE PROCESSO COMPLETO - ORÇAMENTOS
+==========================================================
+
+:: INTEGRADOR
+Menu: Deixar "Pedidos" sem dropdown - navega direto para lista de pedidos - Incluir botão adicionar (parecido com o de user sices)
+Orçamentos
+- Remover a verificação de orçamento em edição - Ao clicar para criar um novo, gerar um novo registro.
+- Habilitar o botão editar
+- Mover as ações de "Transportadora e Comprovante" para colunas da listagem com ícone
+-- Trocar o nome "Transportadora" para "Frete"
+-- Quando já existir comprovante o ícone deve ter cor azul
+-- No link de "Visualizar" alterar de download para visualização em tela.
+-- Habilitar o envio de comprovante em "pdf"
+-- Na modal "Frete" exibir os dados atuais + Endereço de entrega (campo novo)
+- Incluir coluna "Proforma" com ícone "pdf" e link de visualização
+
+:: SICES
+Editar Orçamento (wizard)
+Uma nova guia de configuração (painel) "Prazos" após a guia de "Informações do  Cliente"
+- Disponibilidade: Campo de data
+- Prazo: Campo de data (apenas se opção não for "Meu frete")
+Abaixo do prazo, incluir o campo "Observações"
+
+:: INTEGRADOR E SICES
+- Verificar em orçamentos novos (sem sistema) está aparecendo um valor total
+- Corrigir mensagem de seguro (RICO >> RISCO) na lista de itens de um orçamento/sistema
+- Corrigir altura de campos na edição de grupos (baixíssima prioridade)
+- Ao editar um orçamento (etapa 2 do wirzard) remover o campo "Observações"
+- Remover os campos de ações de status na tela de edição (trocar por um botão "Aplicar" - volta para tela de visualização) (vide: Visualizar Orçamento)
+
+Editar Orçamento (wizard)
+No painel "Frete"
+- O formulário de dados da transportadora deve estar identificado com "Dados da Transportadora"
+- Incluir um novo campo "Endereço de entrega" que deve aparecer nas duas opções (tanto "sices" quanto "meu frete")
+
+Visualizar Orçamento
+- Após a listagem de sistemas, incluir o valor do frete (abaixo)
+- No topo da página
+-- Lado esquerdo (grupo de botões com: STATUS e ações de status)
+-- Lado direito (botão editar "Editar Orçamento")
+-- Incluir as mensagens de alerta (status VALIDATED (Verificar no editor)) no topo da página (quando aplicável) - Remover a mensagem do wizard (de aprovar apenas)
+
+Emails
+- Caso haja seguro, incluir o valor do mesmo uma linha do "Valor total do Sistema" - label "Valor do Seguro"
+- Caso haja frete (apenas frete sices), incluir o valor do frete abaixo do "Valor total do Sistema" - Pular duas linhas para deixar espaçado.
+- Admin não recebe email CC - OrderMailer - Alterar a chamada do método setCc para addCc na linha 90
+
+Proforma
+- Item "Proposta econômica"
+-- Frete - ajustar as regras
+--- Quando for frete Sices - Mostrar o valor em reais do frete
+--- Quando a opção for "Meu frete" - Mostrar a mensagem "Não Incluso"
+--- "Incluso" ainda não existe (será ativado apenas no promocional)
+- Não está exibindo as Condições de Pagamento
+
+- Item "Disponibilidade para coleta"
+-- Valor configurado no wizard
+- Item "Prazo de entrega" deve exibir somente se for frete sices ou incluso (que ainda não existe)
+- Item "Observações" (novo) - Deve exibir as informações digitadas no campo "Observações"
+
+Página 5 (Bug visual): Verificar sobreposição do conteúdo no rodapé
+
+
 18/09/2017 - REGRAS PARA ORÇAMENTOS / PEDIDOS
 ==========================================================
 
