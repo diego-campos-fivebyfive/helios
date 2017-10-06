@@ -1,3 +1,10 @@
+<style>
+    #form_order_info textarea {
+        resize: none;
+        height: 125px;
+    }
+</style>
+
 <div class="modal inmodal" id="e_modal_accounts" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content animated bounceInRight">
@@ -23,18 +30,20 @@
 
         <div class="col-md-6" id="block_account_selector">
             {% if attribute(form, 'account') is defined %}
-            {{ form_label(form.account, 'Integrador') }}
-            <br>
-            <a data-url="{{ path('accounts_list') }}"
-               data-toggle="modal"
-               data-target="#modal_accounts"
-               class="btn btn-success">
-                <i class="fa fa-user"></i>  Selecionar Integrador
-            </a>
-            {{ form_widget(form.account, {attr:{class:'hidden'}}) }}
+                {{ form_label(form.account, 'Integrador') }}
+                <br>
+                <a data-url="{{ path('accounts_list') }}"
+                   data-toggle="modal"
+                   data-target="#modal_accounts"
+                   class="btn btn-success">
+                    <i class="fa fa-user"></i> Selecionar Integrador
+                </a>
+                {{ form_widget(form.account, {attr:{class:'hidden'}}) }}
             {% endif %}
         </div>
     </div>
+
+    <div class="hr-line-dashed col-md-12"></div>
 
     <div class="form-group col-md-12">
 
@@ -92,14 +101,37 @@
         </div>
     </div>
 
+    <div class="hr-line-dashed col-md-12"></div>
+
     <div class="form-group col-md-12">
-        <div class="row">
-            <div class="col-md-9">&nbsp;</div>
-            <div class="col-md-3">
-                <button id="button_account" type="submit" data-style="zoom-in" class="btn btn-success btn-block ladda-button">
-                    <i class="fa fa-save"></i> Salvar
-                </button>
+
+        <div class="col-md-9">
+            {{ form_label(form.note, 'Observações') }}
+            {{ form_widget(form.note, {attr:{class:'form-control'}}) }}
+        </div>
+
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    {{ form_label(form.deliveryAt, 'Disponibilidade de Entrega (data)') }}
+                    {{ form_widget(form.deliveryAt, {attr:{class:'form-control', 'data-mask':'00/00/0000', placeholder: '__/__/____'}}) }}
+                </div>
+                <div class="col-md-12" id="order_deadline_block" style="margin-top: 30px;">
+                    {{ form_label(form.deadline, 'Prazo de Entrega (dias)') }}
+                    {{ form_widget(form.deadline, {attr:{class:'form-control'}}) }}
+                </div>
             </div>
+        </div>
+
+    </div>
+
+    <div class="form-group col-md-12">
+        <div class="col-md-9">&nbsp;</div>
+        <div class="col-md-3">
+            <button id="button_account" type="submit" data-style="zoom-in"
+                    class="btn btn-success btn-block ladda-button">
+                <i class="fa fa-save"></i> Salvar
+            </button>
         </div>
     </div>
 
@@ -111,8 +143,55 @@
 
 <script>
 
-    var orderAccount = $('#order_account');
     var buttonAccount = $('#button_account');
+
+    var InfoManager = {
+        accountSelector: $('#order_account'),
+        shippingSelector: null,
+        deadlineBlock: $('#order_deadline_block'),
+        deliveryAt: $('#order_deliveryAt'),
+        getAccount: function () {
+            return this.accountSelector.val();
+        },
+        getShippingType: function(){
+            return this.shippingSelector.val();
+        },
+        fillAccount: function (data) {
+            $.each(data, function (i, value) {
+                switch (i) {
+                    case 'firstname':
+                        i = 'customer';
+                        break;
+                    case 'street':
+                        i = 'address';
+                        break;
+                }
+                $('#order_' + i).val(value);
+            });
+        },
+        checkShippingOption: function(){
+            if('self' != this.getShippingType()){
+                this.deadlineBlock.show();
+            }else{
+                this.deadlineBlock.hide();
+            }
+        },
+        init: function(){
+
+            var checkShippingTypePresence = window.setInterval(function(){
+                InfoManager.shippingSelector = $('#shipping_type');
+                if(InfoManager.shippingSelector.length){
+                    clearInterval(checkShippingTypePresence);
+                    InfoManager.shippingSelector.on('change', function(){
+                        InfoManager.checkShippingOption();
+                    });
+                    InfoManager.checkShippingOption();
+                }
+            }, 500);
+        }
+    };
+
+    InfoManager.init();
 
     $('#form_order_info').on('submit', function (event) {
         event.preventDefault();
@@ -125,14 +204,14 @@
             url: form.attr('action'),
             method: form.attr('method'),
             data: form.serialize(),
-            complete: function(xhr){
-                if(200 == xhr.status){
+            complete: function (xhr) {
+                if (200 == xhr.status) {
 
-                    if(orderAccount.length && orderAccount.val()){
+                    if (InfoManager.getAccount()) {
                         $('#block_account_selector').remove();
                     }
 
-                }else{
+                } else {
                     swal('Ooops', 'Falha ao executar a operação.', 'error');
                 }
 
@@ -141,7 +220,7 @@
         });
     });
 
-    $('#order_postcode').on('change', function(){
+    $('#order_postcode').on('change', function () {
         var postcode = $(this).val();
         $.ajax({
             url: '{{ path('utils_postcode') }}',
@@ -160,7 +239,7 @@
     });
 
     var content_accounts = $('#content_accounts');
-    $('[data-target="#modal_accounts"]').on('click', function() {
+    $('[data-target="#modal_accounts"]').on('click', function () {
         var url = $(this).data('url');
 
         $('#e_modal_accounts').modal('show');

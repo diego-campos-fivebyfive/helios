@@ -184,6 +184,20 @@ class Order implements OrderInterface, InsurableInterface
     private $shippingRules;
 
     /**
+     * @var DateTime
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $deliveryAt;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $deadline;
+
+    /**
      * @var int
      *
      * @ORM\Column(type="smallint")
@@ -654,6 +668,42 @@ class Order implements OrderInterface, InsurableInterface
     {
         return  is_array($this->shippingRules) && array_key_exists('shipping', $this->shippingRules)
             ? $this->shippingRules['shipping'] : 0 ;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setDeliveryAt(\DateTime $deliveryAt)
+    {
+        $this->deliveryAt = $deliveryAt;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDeliveryAt()
+    {
+        return $this->deliveryAt;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setDeadline($deadline)
+    {
+        $this->deadline = $deadline;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDeadline()
+    {
+        return $this->deadline;
     }
 
     /**
