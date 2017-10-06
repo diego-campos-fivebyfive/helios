@@ -162,6 +162,14 @@ class ProjectGeneratorController extends AbstractController
 
             $this->calculateShipping($order, $rule);
 
+            /**
+             * TODO: This is a temporary solution, it will soon be moved to exclusive processing
+             */
+            if(null != $deliveryAddress = $request->request->get('deliveryAddress')){
+                $order->setDeliveryAddress($deliveryAddress);
+                $this->manager('order')->save($order);
+            }
+
             return $this->json([
                 'shipping' => $order->getShipping(),
                 'total' => $order->getTotal()
