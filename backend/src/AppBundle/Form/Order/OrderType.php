@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -36,7 +37,7 @@ class OrderType extends AbstractType
 
         if(self::TARGET_REVIEW == $options['target']){
 
-            if($order->isBuilding()){
+            if($order->isBuilding() && !$order->getAccount()){
 
                 $builder->add('account', EntityType::class, [
                     'class' => Customer::class,
@@ -79,6 +80,12 @@ class OrderType extends AbstractType
                 ->add('paymentMethod', ChoiceType::class, [
                     'choices' => $options['paymentMethods']
                 ])
+                ->add('deliveryAt', DateType::class, [
+                    'widget' => 'single_text',
+                    'format' => 'dd/MM/YYYY'
+                ])
+                ->add('deadline')
+                ->add('note')
             ;
 
         }
