@@ -102,7 +102,7 @@ class OrderPrecifier
 
         return $power;
     }
-    
+
     /**
      * @return \AppBundle\Entity\Pricing\MemorialInterface
      */
