@@ -5,6 +5,7 @@ namespace AppBundle\Service\Order;
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Entity\Pricing\RangeInterface;
+use Proxies\__CG__\AppBundle\Entity\Pricing\Range;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class OrderPrecifier
@@ -30,29 +31,42 @@ class OrderPrecifier
         OrderManipulator::checkPower($order);
 
         $power = $this->checkPower($order);
-        $level = $this->checkLevel($order);
+        $level = $order->getLevel();
         $codes = $this->checkCodes($order);
         $memorial = $this->checkMemorial();
+        $powerRange = $order->getMetadata('power_range');
+        $rangeIsChanged = true;
 
-        /** @var \AppBundle\Service\Pricing\RangeLoader $loader */
-        $loader = $this->container->get('range_loader');
+        if ($powerRange){
+            $rangeIsChanged = ($power < $powerRange[0] || $power > $powerRange[1]);
+        }
 
-        $ranges = $loader->load($memorial, $power, $level, $codes);
+        if ($rangeIsChanged) {
 
-        foreach($order->getElements() as $element){
+                /** @var \AppBundle\Service\Pricing\RangeLoader $loader */
+                $loader = $this->container->get('range_loader');
 
-            $code = $element->getCode();
+                $ranges = $loader->load($memorial, $power, $level, $codes);
 
-            if(array_key_exists($code, $ranges)) {
+                foreach ($order->getElements() as $element) {
 
-                $range = $ranges[$code];
+                    $code = $element->getCode();
 
-                if ($range instanceof RangeInterface) {
-                    $price = (float)$range->getPrice();
-                    $element->setUnitPrice($price);
+                    if (array_key_exists($code, $ranges)) {
+
+                        $range = $ranges[$code];
+                        if ($range instanceof RangeInterface) {
+                            $cmv = (float)$range->getCostPrice();
+                            $markup = (float)$range->getMarkup();
+                            $element->setCmv($cmv);
+                            $element->setMarkup($markup);
+                            $element->setTax(Range::DEFAULT_TAX);
+
+                            $order->addMetadata('power_range', [$range->getInitialPower(), $range->getFinalPower()]);
+                        }
+                    }
                 }
             }
-        }
 
         $order->addMetadata('memorial', $memorial->toArray());
 
@@ -88,29 +102,7 @@ class OrderPrecifier
 
         return $power;
     }
-
-    /**
-     * @param OrderInterface $order
-     * @return string
-     */
-    private function checkLevel(OrderInterface $order)
-    {
-        $account = $order->getAccount();
-
-        $error = 'Order account is undefined';
-
-        if($account instanceof AccountInterface){
-
-            if(null != $level = $account->getLevel()){
-                return $level;
-            }
-
-            $error = 'Invalid account level';
-        }
-
-        throw new \InvalidArgumentException($error);
-    }
-
+    
     /**
      * @return \AppBundle\Entity\Pricing\MemorialInterface
      */
