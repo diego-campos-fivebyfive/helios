@@ -220,6 +220,11 @@ interface OrderInterface
     public function getProforma();
 
     /**
+     * @return bool
+     */
+    public function hasProforma();
+
+    /**
      * @param $filePayment
      * @return OrderInterface
      */
