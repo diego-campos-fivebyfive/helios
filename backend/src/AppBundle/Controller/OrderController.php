@@ -171,13 +171,23 @@ class OrderController extends AbstractController
     /**
      * @Route("/{id}/file", name="order_file")
      */
-    public function fileAction(Order $order)
+    public function fileAction(Request $request, Order $order)
     {
-        if(null != $filePayment = $order->getFilePayment()) {
+        if($request->query->get('type') == 'proforma') {
 
-            $file = $this->getUploadDir('file_payment') . $filePayment;
+            if(null != $proforma = $order->getProforma()) {
 
-            return new BinaryFileResponse($file, Response::HTTP_OK, [], true, ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+                $file = $this->getUploadDir('proforma') . $proforma;
+
+                return new BinaryFileResponse($file, Response::HTTP_OK, [], true, ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+            }
+        } elseif ($request->query->get('type') == 'file_payment') {
+            if(null != $filePayment = $order->getFilePayment()) {
+
+                $file = $this->getUploadDir('file_payment') . $filePayment;
+
+                return new BinaryFileResponse($file, Response::HTTP_OK, [], true, ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+            }
         }
 
         throw $this->createNotFoundException('File not found');
