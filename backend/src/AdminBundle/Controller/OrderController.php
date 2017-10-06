@@ -146,7 +146,7 @@ class OrderController extends AbstractController
         try {
             $markup = $request->get('markup');
 
-            $element->setMarkup($markup);
+            $element->setMarkup($markup/100);
 
             $manager->save($element);
 
@@ -155,7 +155,9 @@ class OrderController extends AbstractController
             $status = Response::HTTP_EXPECTATION_FAILED;
         }
 
-        return $this->json([], $status);
+        return $this->json([
+            'total' => $element->getOrder()->getTotal()
+        ], $status);
     }
 
     /**
