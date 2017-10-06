@@ -382,6 +382,28 @@ interface OrderInterface
     public function getShipping();
 
     /**
+     * @param \DateTime $deliveryAt
+     * @return OrderInterface
+     */
+    public function setDeliveryAt(\DateTime $deliveryAt);
+
+    /**
+     * @return \DateTime
+     */
+    public function getDeliveryAt();
+
+    /**
+     * @param $deadline
+     * @return OrderInterface
+     */
+    public function setDeadline($deadline);
+
+    /**
+     * @return int
+     */
+    public function getDeadline();
+
+    /**
      * @param $paymentMethod
      * @return OrderInterface
      */

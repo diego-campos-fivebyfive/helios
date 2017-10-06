@@ -63,16 +63,7 @@
 
         $(' [data-account] ').on('click', function () {
             $('#order_account').val($(this).data('account'));
-            $('#order_customer').val($(this).data('info')['firstname']);
-            $('#order_cnpj').val($(this).data('info')['cnpj']);
-            $('#order_ie').val($(this).data('info')['ie']);
-            $('#order_contact').val($(this).data('info')['contact']);
-            $('#order_email').val($(this).data('info')['email']);
-            $('#order_phone').val($(this).data('info')['phone']);
-            $('#order_postcode').val($(this).data('info')['postcode']);
-            $('#order_state').val($(this).data('info')['state']);
-            $('#order_city').val($(this).data('info')['city']);
-            $('#order_address').val($(this).data('info')['street']);
+            InfoManager.fillAccount($(this).data('info'));
         });
 
         form = $('#form_filtration');
