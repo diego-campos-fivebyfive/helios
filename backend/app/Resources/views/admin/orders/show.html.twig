@@ -18,21 +18,119 @@
         .spacing {
             margin-top: 8px;
         }
+        .spacing-bottom {
+            margin-bottom: 8px;
+        }
         .minimize {
             background-color: #EEE;
+        }
+        .btn.btn-status{
+            background-color: #f2f2f2;
+            border: 1px solid #b2b2b2;
+            color: #555;
+        }
+        .btn.status-building i{  color: #898989;  }
+        .btn.status-pending i{  color: #ff7701;  }
+        .btn.status-validated i{  color: #0a6aa1;  }
+        .btn.status-approved i{  color: #00a157;  }
+        .btn.status-rejected i{  color: #ffcd70;  }
+        .btn.status-done i{  color: #777;  }
+        .btn-green, .btn-green:hover, .btn-green:focus {
+            background-color: #dff0d8;
+            color: #3c763d;
+            border-color: #a7e1a1;
+        }
+        .btn-orange, .btn-orange:hover, .btn-orange:focus {
+            background-color: #fab966;
+            color: #222;
+            border-color: #FFA54E;
         }
     </style>
 
     {% set orders = order.childrens %}
     <div class="wrapper wrapper-content  animated fadeInRight">
         <div class="row">
+
+            <div class="col-md-12">
+                {% if not member.isPlatformUser %}
+                    {% if order.validated %}
+                        <div class="alert alert-danger">
+                            <i class="fa fa-warning"></i>
+                            Ao editar este orçamento será necessário uma revalidação pela equipe da Sices.
+                        </div>
+                        <div class="alert alert-success">
+                            <i class="fa fa-info-circle"></i>
+                            Ao aprovar este orçamento você receberá a proforma e seu pedido de compra será
+                            processado.
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
             <div class="ibox border-bottom">
                 <div class="ibox-content">
                     <div class="tab-content">
                         <div class="tab-pane active">
                             <div class="row">
                                 <div class="row wrapper">
-                                    <div class="col-lg-12 border-bottom">
+                                    <div class="col-md-12 border-bottom">
+                                        <div class="btn-group spacing-bottom">
+
+                                            <span class="btn btn-sm btn-status status-{{ order.statusName }}">
+                                                <i class="fa fa-circle"></i> {{ order.statusName|capitalize|trans }}
+                                            </span>
+
+                                            {% if order.isBuilding %}
+                                                <a class="btn btn-sm btn-danger" href="#">
+                                                    <i class="fa fa-close"></i> Excluir
+                                                </a>
+                                            {% endif %}
+
+                                            {% if member.isPlatformUser %}
+                                                {% if order.isPending %}
+                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_VALIDATED') }}">
+                                                        <i class="fa fa-check"></i> Validar
+                                                    </a>
+                                                {% endif %}
+                                            {% endif %}
+
+                                            {% if not member.isPlatformUser %}
+                                                {% if order.isValidated %}
+                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') }}">
+                                                        <i class="fa fa-thumbs-o-up"></i> Aprovar
+                                                    </a>
+                                                    <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
+                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_REJECTED') }}">
+                                                        <i class="fa fa-thumbs-o-down"></i> Rejeitar
+                                                    </a>
+                                                {% endif %}
+                                            {% endif %}
+
+                                            {% if member.isPlatformFinancial %}
+                                                {% if order.isApproved %}
+                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DONE') }}">
+                                                        <i class="fa fa-check-square-o"></i> Pagamento confirmado
+                                                    </a>
+                                                    <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
+                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_REJECTED') }}">
+                                                        <i class="fa fa-warning"></i> Pagamento não confirmado
+                                                    </a>
+                                                {% endif %}
+                                            {% endif %}
+
+                                        </div>
+                                        <div class="pull-right">
+                                            {% if not (order.isDone or order.isApproved or order.isRejected)
+                                            and (order.isBuilding or (order.isPending and member.isPlatformUser) or (order.isValidated and not member.isPlatformUser)) %}
+                                                <a class="btn btn-sm btn-success pull-right" href="{{ path('project_generator', {order:order.id}) }}">
+                                                    <i class="fa fa-pencil"></i> Editar Orçamento
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 border-bottom">
                                         <h2>Orçamento</h2>
                                     </div>
                                     <div class="col-lg-12 border-bottom">
@@ -243,10 +341,66 @@
                                 {% endfor %}
                                 </tbody>
                             </table>
+                            <h4>Frete: {% if order.shippingrules and order.shippingrules.type == "sices" %} {{ order.shippingrules.value|currency }} {% else %} Não Incluso {% endif %}</h4>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        $('[data-status]').on('click', function () {
+            var id = $(this).data('id');
+            var status = $(this).data('status');
+
+            swal({
+                title: 'Confirma a operação?',
+                text: 'Este processo não pode ser desfeito',
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: '{{ 'Confirmar'|trans }}',
+                cancelButtonText: '{{ 'Cancelar'|trans }}',
+                closeOnConfirm: false
+            }, function () {
+
+                $.ajax({
+                    url: '{{ path('order_status',{id:'_id_'}) }}'.replace(/_id_/g, id),
+                    method: 'post',
+                    data: {status: status},
+                    complete: function (xhr) {
+
+                        if (200 == xhr.status) {
+
+                            swal({
+                                title: "Concluído.",
+                                text: "Operação realizada com sucesso.",
+                                type: "success",
+                                showConfirmButton: false
+                            });
+
+                            window.setTimeout(function () {
+                                swal.close();
+                                window.location.reload();
+                            }, 1500);
+
+                        } else {
+                            var response = xhr.responseJSON;
+                            swal('Ooops', response.hasOwnProperty('error') ? response.error : 'Falha ao executar a operação', 'error');
+                        }
+                    },
+                    beforeSend: function () {
+                        swal({
+                            title: "Processando...",
+                            text: "Aguarde.",
+                            type: "info",
+                            showConfirmButton: false
+                        });
+                    }
+                });
+
+            });
+        });
+    </script>
 {% endblock %}
