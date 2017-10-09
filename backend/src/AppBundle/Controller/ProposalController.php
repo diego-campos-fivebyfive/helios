@@ -197,9 +197,9 @@ class ProposalController extends AbstractController
         $snappy->setOption('margin-right', 0);
         $snappy->setOption('zoom', 2);
 
-        $PATH = "{$this->get('kernel')->getRootDir()}/../..";
+        $path = "{$this->get('kernel')->getRootDir()}/../..";
         $tempFileName = md5(uniqid()) . '.pdf';
-        $tempFile = "{$PATH}/.uploads/proposal/{$tempFileName}";
+        $tempFile = "{$path}/.uploads/proposal/{$tempFileName}";
 
         $absoluteUrl = UrlGeneratorInterface::ABSOLUTE_URL;
         $snappyUrl = $this->generateUrl('proposal_pdf', [ 'id' => $theme->getId() ], $absoluteUrl);
@@ -216,9 +216,11 @@ class ProposalController extends AbstractController
             $manager->save($project);
         }
 
+        $ambience = (getenv('CES_AMBIENCE') == 'production') ? 'production' : 'homolog';
+
         $s3 = $this->get('aws.s3');
         $s3->putObject([
-            'Bucket' => 'pss-geral',
+            'Bucket' => "pss-{$ambience}-private",
             'Key' => "proposal/$tempFileName",
             'Body' => fopen($tempFile, 'rb'),
             'ACL' => 'public-read'
@@ -232,8 +234,8 @@ class ProposalController extends AbstractController
      */
     public function displayAction($tempFileName)
     {
-        $PATH = "{$this->get('kernel')->getRootDir()}/../..";
-        $tempFile = "{$PATH}/.uploads/proposal/{$tempFileName}";
+        $path = "{$this->get('kernel')->getRootDir()}/../..";
+        $tempFile = "{$path}/.uploads/proposal/{$tempFileName}";
 
         if (file_exists($tempFile)) {
             return new BinaryFileResponse(new File($tempFile));
