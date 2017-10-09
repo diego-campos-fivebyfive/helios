@@ -9,10 +9,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @Route("orders")
@@ -239,6 +239,25 @@ class OrderController extends AbstractController
         return $this->json([
             'filename' => $filename
         ], $status);
+    }
+
+    /**
+     * @Route("/{id}/delete", name="order_delete")
+     * @Method("delete")
+     */
+    public function deleteAction(Order $order)
+    {
+        $this->denyAccessUnlessGranted('edit', $order);
+
+        if(!$order->isBuilding()){
+            return $this->json([
+                'error' => 'Somente orçamentos em edição podem ser excluídos'
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $this->manager('order')->delete($order);
+
+        return $this->json([]);
     }
 
     /**

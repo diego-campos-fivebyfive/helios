@@ -166,6 +166,26 @@ interface OrderInterface
     public function getParent();
 
     /**
+     * @return bool
+     */
+    public function isParent();
+
+    /**
+     * @return bool
+     */
+    public function isMaster();
+
+    /**
+     * @return bool
+     */
+    public function isChildren();
+
+    /**
+     * @return bool
+     */
+    public function hasChildren();
+
+    /**
      * @param OrderInterface $children
      * @return OrderInterface
      */
@@ -183,6 +203,9 @@ interface OrderInterface
     public function getChildrens();
 
     /**
+     * @deprecated This method can be removed
+     * @see Order::isMaster
+     *
      * @return bool
      */
     public function isBudget();
