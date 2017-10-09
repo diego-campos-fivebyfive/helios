@@ -417,7 +417,7 @@
 
                             window.setTimeout(function () {
                                 swal.close();
-                                window.location.href = '{{ path('index_order') }}';
+                                window.location.href = '{{ path( app.user.isPlatform ? 'orders' : 'index_order') }}';
                             }, 1500);
 
                         } else {
