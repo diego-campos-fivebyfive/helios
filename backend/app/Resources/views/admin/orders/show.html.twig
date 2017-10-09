@@ -6,40 +6,67 @@
         .collapse {
             display: none;
         }
+
         .color-rows {
             color: #676a6c;
         }
+
         .table-components {
             border: solid 1px #d3d3d3;
         }
+
         .row-total {
             display: block;
         }
+
         .spacing {
             margin-top: 8px;
         }
+
         .spacing-bottom {
             margin-bottom: 8px;
         }
+
         .minimize {
             background-color: #EEE;
         }
-        .btn.btn-status{
+
+        .btn.btn-status {
             background-color: #f2f2f2;
             border: 1px solid #b2b2b2;
             color: #555;
         }
-        .btn.status-building i{  color: #898989;  }
-        .btn.status-pending i{  color: #ff7701;  }
-        .btn.status-validated i{  color: #0a6aa1;  }
-        .btn.status-approved i{  color: #00a157;  }
-        .btn.status-rejected i{  color: #ffcd70;  }
-        .btn.status-done i{  color: #777;  }
+
+        .btn.status-building i {
+            color: #898989;
+        }
+
+        .btn.status-pending i {
+            color: #ff7701;
+        }
+
+        .btn.status-validated i {
+            color: #0a6aa1;
+        }
+
+        .btn.status-approved i {
+            color: #00a157;
+        }
+
+        .btn.status-rejected i {
+            color: #ffcd70;
+        }
+
+        .btn.status-done i {
+            color: #777;
+        }
+
         .btn-green, .btn-green:hover, .btn-green:focus {
             background-color: #dff0d8;
             color: #3c763d;
             border-color: #a7e1a1;
         }
+
         .btn-orange, .btn-orange:hover, .btn-orange:focus {
             background-color: #fab966;
             color: #222;
@@ -80,7 +107,8 @@
                                             </span>
 
                                             {% if order.isBuilding %}
-                                                <a class="btn btn-sm btn-danger" href="#">
+                                                <a class="btn btn-sm btn-danger"
+                                                   data-delete="{{ path('order_delete', {id:order.id}) }}">
                                                     <i class="fa fa-close"></i> Excluir
                                                 </a>
                                             {% endif %}
@@ -124,7 +152,8 @@
                                         <div class="pull-right">
                                             {% if not (order.isDone or order.isApproved or order.isRejected)
                                             and (order.isBuilding or (order.isPending and member.isPlatformUser) or (order.isValidated and not member.isPlatformUser)) %}
-                                                <a class="btn btn-sm btn-success pull-right" href="{{ path('project_generator', {order:order.id}) }}">
+                                                <a class="btn btn-sm btn-success pull-right"
+                                                   href="{{ path('project_generator', {order:order.id}) }}">
                                                     <i class="fa fa-pencil"></i> Editar Orçamento
                                                 </a>
                                             {% endif %}
@@ -196,72 +225,72 @@
 
             {% if order.shippingrules and order.shippingrules['type'] == 'self' and order.shippingRules.company is not null %}
 
-                    <div class="ibox border-bottom">
-                        <div class="ibox-content">
-                            <div class="tab-content">
-                                <div class="tab-pane active">
-                                    <div class="row">
-                                        <div class="row wrapper">
-                                            <div class="col-lg-12 border-bottom">
-                                                <ol class="breadcrumb">
-                                                    <li>
-                                                        <label>Dados da transportadora</label>
-                                                    </li>
-                                                </ol>
-                                            </div>
+                <div class="ibox border-bottom">
+                    <div class="ibox-content">
+                        <div class="tab-content">
+                            <div class="tab-pane active">
+                                <div class="row">
+                                    <div class="row wrapper">
+                                        <div class="col-lg-12 border-bottom">
+                                            <ol class="breadcrumb">
+                                                <li>
+                                                    <label>Dados da transportadora</label>
+                                                </li>
+                                            </ol>
                                         </div>
-                                        <div class="col-md-12">
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Razão Social</label>
-                                                {{ order.shippingrules['company']['name'] }}
-                                            </div>
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">CNPJ</label>
-                                                {{ order.shippingrules['company']['cnpj'] }}
-                                            </div>
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Inscrição Estadual</label>
-                                                {{ order.shippingrules['company']['ie'] }}
-                                            </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Razão Social</label>
+                                            {{ order.shippingrules['company']['name'] }}
                                         </div>
-                                        <div class="col-md-12">
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Contato</label>
-                                                {{ order.shippingrules['company']['contact'] }}
-                                            </div>
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Email</label>
-                                                {{ order.shippingrules['company']['email'] }}
-                                            </div>
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Telefone</label>
-                                                {{ order.shippingrules['company']['phone'] }}
-                                            </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">CNPJ</label>
+                                            {{ order.shippingrules['company']['cnpj'] }}
                                         </div>
-                                        <div class="col-md-12">
-                                            <div class="col-md-3 spacing">
-                                                <label class="row-total">Cep</label>
-                                                {{ order.shippingrules['company']['postcode'] }}
-                                            </div>
-                                            <div class="col-md-1 spacing">
-                                                <label class="row-total">Estado</label>
-                                                {{ order.shippingrules['company']['state'] }}
-                                            </div>
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Cidade</label>
-                                                {{ order.shippingrules['company']['city'] }}
-                                            </div>
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Endereço</label>
-                                                {{ order.shippingrules['company']['address'] }}
-                                            </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Inscrição Estadual</label>
+                                            {{ order.shippingrules['company']['ie'] }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Contato</label>
+                                            {{ order.shippingrules['company']['contact'] }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Email</label>
+                                            {{ order.shippingrules['company']['email'] }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Telefone</label>
+                                            {{ order.shippingrules['company']['phone'] }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-3 spacing">
+                                            <label class="row-total">Cep</label>
+                                            {{ order.shippingrules['company']['postcode'] }}
+                                        </div>
+                                        <div class="col-md-1 spacing">
+                                            <label class="row-total">Estado</label>
+                                            {{ order.shippingrules['company']['state'] }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Cidade</label>
+                                            {{ order.shippingrules['company']['city'] }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Endereço</label>
+                                            {{ order.shippingrules['company']['address'] }}
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
+
                     </div>
+                </div>
 
             {% endif %}
 
@@ -272,11 +301,11 @@
                             <table class="table table-striped table-hover">
                                 <thead>
                                 <tr>
-                                    <th class="col-md-5"> Descrição </th>
-                                    <th class="col-md-2 text-center"> Data </th>
-                                    <th class="col-md-1 text-center"> Qtde Itens </th>
-                                    <th class="col-md-2"> <span class="pull-right">Valor dos equipamentos</span> </th>
-                                    <th class="col-md-2"> <span class="pull-right">Valor do seguro</span> </th>
+                                    <th class="col-md-5"> Descrição</th>
+                                    <th class="col-md-2 text-center"> Data</th>
+                                    <th class="col-md-1 text-center"> Qtde Itens</th>
+                                    <th class="col-md-2"><span class="pull-right">Valor dos equipamentos</span></th>
+                                    <th class="col-md-2"><span class="pull-right">Valor do seguro</span></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -288,15 +317,18 @@
                                                     <a data-toggle="collapse" href="#{{ order.id }}">
                                                         <span class="col-md-5 color-rows"> {{ order.description }} </span>
                                                         <span class="col-md-2 color-rows text-center"> {{ order.createdAt|date('d/m/Y') }} </span>
-                                                        <span class="col-md-1 color-rows text-center"> {{ order.elements.count }} Itens</span>
-                                                        <span class="col-md-2 color-rows"> <span class="pull-right">{{ order.subTotal|currency }}</span> </span>
-                                                        <span class="col-md-2 color-rows"> <span class="pull-right">{{ order.insurance|currency }}</span> </span>
+                                                        <span class="col-md-1 color-rows text-center"> {{ order.elements.count }}
+                                                            Itens</span>
+                                                        <span class="col-md-2 color-rows"> <span
+                                                                    class="pull-right">{{ order.subTotal|currency }}</span> </span>
+                                                        <span class="col-md-2 color-rows"> <span
+                                                                    class="pull-right">{{ order.insurance|currency }}</span> </span>
                                                     </a>
                                                 </h4>
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr >
+                                    <tr>
                                         <td colspan="5" style="padding: 0;">
                                             <div id="{{ order.id }}" class="collapse">
                                                 <div>
@@ -326,7 +358,8 @@
                                                     </table>
                                                     {% if order.insurance %}
                                                         <div class="col-md-12 border-bottom">
-                                                        <h4 class="pull-right">Seguro: {{ order.insurance|currency }}</h4>
+                                                            <h4 class="pull-right">
+                                                                Seguro: {{ order.insurance|currency }}</h4>
                                                         </div>
                                                     {% endif %}
                                                     <a data-toggle="collapse" href="#{{ order.id }}" class="color-rows">
@@ -341,7 +374,8 @@
                                 {% endfor %}
                                 </tbody>
                             </table>
-                            <h4>Frete: {% if order.shippingrules and order.shippingrules.type == "sices" %} {{ order.shippingrules.value|currency }} {% else %} Não Incluso {% endif %}</h4>
+                            <h4>
+                                Frete: {% if order.shippingrules and order.shippingrules.type == "sices" %} {{ order.shippingrules.value|currency }} {% else %} Não Incluso {% endif %}</h4>
                         </div>
                     </div>
                 </div>
@@ -350,6 +384,60 @@
     </div>
 
     <script>
+
+        $('[data-delete]').on('click', function () {
+
+            var url = $(this).data('delete');
+
+            swal({
+                title: 'Confirma a exclusão?',
+                text: 'Todos os dados da mesma serão perdidos.',
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: '{{ 'Confirmar'|trans }}',
+                cancelButtonText: '{{ 'Cancelar'|trans }}',
+                closeOnConfirm: false
+            }, function () {
+
+                $.ajax({
+                    url: url,
+                    method: 'post',
+                    data: {_method: 'delete'},
+                    complete: function (xhr) {
+
+                        if (200 == xhr.status) {
+
+                            swal({
+                                title: "Concluído",
+                                text: "Exclusão realizada com sucesso.",
+                                type: "success",
+                                showConfirmButton: false
+                            });
+
+                            window.setTimeout(function () {
+                                swal.close();
+                                window.location.href = '{{ path('index_order') }}';
+                            }, 1500);
+
+                        } else {
+                            var response = xhr.responseJSON;
+                            swal('Ooops', response.hasOwnProperty('error') ? response.error : 'Falha ao executar a operação', 'error');
+                        }
+                    },
+                    beforeSend: function () {
+                        swal({
+                            title: 'Excluindo...',
+                            text: 'Aguarde',
+                            type: 'info',
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            });
+        });
+
+
         $('[data-status]').on('click', function () {
             var id = $(this).data('id');
             var status = $(this).data('status');
