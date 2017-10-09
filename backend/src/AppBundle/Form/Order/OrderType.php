@@ -31,8 +31,7 @@ class OrderType extends AbstractType
 
         if(self::TARGET_EDIT == $options['target']) {
             $builder
-                ->add('description')
-                ->add('note');
+                ->add('description');
         }
 
         if(self::TARGET_REVIEW == $options['target']){
@@ -85,7 +84,6 @@ class OrderType extends AbstractType
                     'format' => 'dd/MM/YYYY'
                 ])
                 ->add('deadline')
-                ->add('note')
             ;
 
         }
