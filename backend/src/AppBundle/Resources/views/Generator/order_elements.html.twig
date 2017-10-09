@@ -1,4 +1,4 @@
-{% set isPlatform = app.user.isPlatform %}
+{% set isPlatform = app.user.isPlatformAdmin or app.user.isPlatformMaster %}
 
 <table class="table table-bordered table-hover">
     <thead>
