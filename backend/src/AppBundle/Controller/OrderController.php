@@ -200,44 +200,37 @@ class OrderController extends AbstractController
         $status = Response::HTTP_CONFLICT;
         $filename = null;
 
-        if ('prod' == $this->get('kernel')->getEnvironment()) {
+        $snappy = $this->get('knp_snappy.pdf');
+        $snappy->setOption('viewport-size', '1280x1024');
+        $snappy->setOption('margin-top', 0);
+        $snappy->setOption('margin-bottom', 0);
+        $snappy->setOption('margin-left', 0);
+        $snappy->setOption('margin-right', 0);
+        $snappy->setOption('zoom', 2);
 
-            $snappy = $this->get('knp_snappy.pdf');
-            $snappy->setOption('viewport-size', '1280x1024');
-            $snappy->setOption('margin-top', 0);
-            $snappy->setOption('margin-bottom', 0);
-            $snappy->setOption('margin-left', 0);
-            $snappy->setOption('margin-right', 0);
-            $snappy->setOption('zoom', 2);
+        $filename = sprintf('proforma_%s_%s_.pdf', $order->getId(), (new \DateTime())->format('Ymd-His'));
+        $file = $this->getUploadDir('proforma') . $filename;
 
-            $filename = sprintf('proforma_%s_%s_.pdf', $order->getId(), (new \DateTime())->format('Ymd-His'));
-            $file = $this->getUploadDir('proforma') . $filename;
+        $url = $this->generateUrl('proforma_pdf', ['id' => $order->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
 
-            $url = $this->generateUrl('proforma_pdf', ['id' => $order->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
+        try {
 
-            try {
+            $snappy->generate($url, $file);
 
-                $snappy->generate($url, $file);
-
-                if (file_exists($file)) {
-                    $status = Response::HTTP_OK;
-                }
-
-                $order->setProforma($filename);
-
-                $this->manager('order')->save($order);
-
-            } catch (\Exception $exception) {
-
-                return $this->json([
-                    'error' => $exception->getMessage()
-                ], $status);
+            if (file_exists($file)) {
+                $status = Response::HTTP_OK;
             }
-        }
 
-        return $this->json([
-            'filename' => $filename
-        ], $status);
+            $order->setProforma($filename);
+
+            $this->manager('order')->save($order);
+
+        } catch (\Exception $exception) {
+
+            return $this->json([
+                'error' => $exception->getMessage()
+            ], $status);
+        }
     }
 
     /**
