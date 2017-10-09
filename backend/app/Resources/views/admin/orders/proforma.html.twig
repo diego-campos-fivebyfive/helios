@@ -314,8 +314,11 @@
                     <br/>
                     <span class="indentation"> 2) Frete</span>
                     <span class="pull-right field-width">
-                        {% if order.shippingrules and order.shippingrules['type'] == 'sices' %}
-                        INCLUSO{% elseif order.shippingrules['type'] == 'self' %}{{ order.shippingrules['company']['name'] }}{% endif %}
+                        {% if order.shippingrules and order.shippingrules.type == 'sices' %}
+                            {{ order.shippingrules.value|currency }}
+                        {% elseif order.shippingrules.type == 'self' %}
+                            Não Incluso
+                        {% endif %}
                     </span>
                     <br/>
                     <label class="no-margins">TOTAL FORNECIMENTO</label>
@@ -326,8 +329,8 @@
                         mesmas, caso no ato do pagamento final/integral a cotação EUR/BRL (EURBRL=X PTAX) for superior a XX,XX
                     </p>
 
-                    <label class="width-float-total no-margins">Condições de pagamentos:</label>
-                    {% for payment in order.metadata.payment_method.quotas %}
+                    <label class="width-float-total no-margins">Condições de pagamento:</label>
+                    {% for payment in order.paymentMethod('array').quotas %}
                     <span class="indentation"> &#{{ loop.index + 96 }}; ) {{ payment.description }}
                         {{ payment.percent }}% - {{ payment.date|date('d/m/Y') }}</span>
                     <span class="pull-right field-width">{{ payment.value|currency }}</span>
@@ -345,17 +348,23 @@
                     </div>
 
                     <div class="indentation spacing">
-                        <label class="no-margins">&#10004; Disponibilidade para coleta:</label> {{ "now"|date_modify("+10 day")|date('d/m/Y') }}<br/>
-                        <label class="no-margins">&#10004; Prazo de entrega:</label> 10 DIAS UTEIS<br/>
+                        <label class="no-margins">&#10004; Disponibilidade para coleta:</label> {{ order.deliveryAt.date|date('d/m/Y') }}<br/>
+                        {% if order.shippingrules and order.shippingrules.type == 'sices' %}
+                            <label class="no-margins">&#10004; Prazo de entrega:</label> 10 DIAS UTEIS<br/>
+                        {% endif %}
                         <label class="no-margins">&#10004; Validade da proposta:</label> 3 (três) dias<br/>
                         <label class="no-margins">&#10004; Embalagem unitário:</label> Padrão<br/>
                         <label class="no-margins">&#10004; Transporte:</label>
-                        {% if order.shippingrules and order.shippingrules['type'] == 'sices' %}
-                        INCLUSO{% elseif order.shippingrules['type'] == 'self' %}{{ order.shippingrules['company']['name'] }}{% endif %}
+                        {% if order.shippingrules and order.shippingrules.type == 'sices' %}
+                            {{ order.shippingrules.value|currency }}
+                        {% elseif order.shippingrules.type == 'self' %}
+                            Não Incluso
+                        {% endif %}
                         <br/>
                         <label class="no-margins">&#10004; Seguro:</label> {% if order.TotalInsurance %} {{ order.TotalInsurance|currency }} {% else %} Sem Seguro {% endif %}<br/>
                         <label class="no-margins">&#10004; Serviço de Start-up:</label> NÃO INCLUSO<br/>
-                        <label class="no-margins">&#10004; Endereço de entrega:  :</label> {{ order.address }}, {{ order.city }}, {{ order.state }}.
+                        <label class="no-margins">&#10004; Endereço de entrega:</label> {{ order.address }}, {{ order.city }}, {{ order.state }}.<br/>
+                        <label class="no-margins">&#10004; Observações:</label> {{ order.note }}
                     </div>
 
                 </div>
@@ -411,18 +420,10 @@
                     <table class="width-total">
                         <thead>
                         <tr class="back-l-gray">
-                            <th>
-                                PIS
-                            </th>
-                            <th>
-                                CONFINS
-                            </th>
-                            <th>
-                                IPI
-                            </th>
-                            <th>
-                                ICMS
-                            </th>
+                            <th>PIS</th>
+                            <th>CONFINS</th>
+                            <th>IPI</th>
+                            <th>ICMS</th>
                         </tr>
                         </thead>
                         <tbody>
