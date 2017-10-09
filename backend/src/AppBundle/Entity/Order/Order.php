@@ -184,6 +184,13 @@ class Order implements OrderInterface, InsurableInterface
     private $shippingRules;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $deliveryAddress;
+
+    /**
      * @var DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
@@ -668,6 +675,24 @@ class Order implements OrderInterface, InsurableInterface
     {
         return  is_array($this->shippingRules) && array_key_exists('shipping', $this->shippingRules)
             ? $this->shippingRules['shipping'] : 0 ;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setDeliveryAddress($deliveryAddress)
+    {
+        $this->deliveryAddress = $deliveryAddress;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDeliveryAddress()
+    {
+        return $this->deliveryAddress;
     }
 
     /**
