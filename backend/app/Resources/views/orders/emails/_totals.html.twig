@@ -1,0 +1,31 @@
+<table class="width-total" border="0" cellpadding="5" cellspacing="0">
+
+    <tr>
+        <td colspan="3"> &nbsp; </td>
+    </tr>
+
+    {% if item.insurance %}
+        <tr class="line-info">
+            <th align="left">
+                Valor do Seguro
+            </th>
+            <th align="left">
+                {{ item.insurance|currency }}
+            </th>
+        </tr>
+    {% endif %}
+
+    <tr class="line-info">
+        <th width="40%" align="left">
+            Valor Total do Sistema
+        </th>
+        <th align="left">
+            {{ item.total|currency }}
+        </th>
+    </tr>
+
+    <tr>
+        <td colspan="3"> &nbsp; </td>
+    </tr>
+
+</table>

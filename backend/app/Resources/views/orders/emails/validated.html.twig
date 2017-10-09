@@ -52,9 +52,11 @@
                 </tbody>
             </table>
 
-            <h4>Valor total do Sistema: {{ item.total|currency }}</h4>
-            </p>
+            {% include 'orders/emails/_totals.html.twig' %}
+
         {% endfor %}
+
+        {% include 'orders/emails/_shipping.html.twig' %}
 
     </td>
 </tr>
