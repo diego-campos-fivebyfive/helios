@@ -3,6 +3,13 @@
     {% set projectModule = project.projectModules.first %}
 
     {% if projectModule %}
+
+        <style>
+            .group-components {
+                height: 44px;
+            }
+        </style>
+
         <div class="panel panel-primary">
             <div class="panel-heading" id="info_power">
                 Disposição dos Módulos
@@ -14,11 +21,11 @@
                     <tr class="dist-line">
                         <td class="col-md-4 line-padding">
                             <input placeholder="Número de Linhas" type="text" value="__lines__"
-                                   class="form-control dist-line-number">
+                                   class="form-control dist-line-number group-components">
                         </td>
                         <td class="col-md-4 line-padding">
                             <input placeholder="Módulos por Linha" type="text" value="__modules__"
-                                   class="form-control dist-line-module">
+                                   class="form-control dist-line-module group-components">
                         </td>
                         <td class="col-md-3">
                             <div class="btn-group btn-group-justified" data-toggle="buttons">
