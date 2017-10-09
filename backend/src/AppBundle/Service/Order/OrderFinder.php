@@ -106,7 +106,9 @@ class OrderFinder
             $this->handleParameter($qb, $property);
         }
 
-        $qb->setParameters($this->parameters);
+        $qb
+            ->andWhere('o.parent is null')
+            ->setParameters($this->parameters);
 
         return $qb;
     }
