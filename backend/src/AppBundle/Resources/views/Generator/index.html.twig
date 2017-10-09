@@ -158,17 +158,10 @@
                                         {% if not member.isPlatformUser and order.validated %}
 
                                             <div class="btn-group pull-right special-actions" style="margin-right: 15px;">
-                                                <button type="button" id="btn_approve"
-                                                        data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') }}"
-                                                        class="btn btn-success">
-                                                    <i class="fa fa-check"></i> Aprovar Orçamento
-                                                </button>
-
-                                                <button type="button" id="btn_reject"
-                                                    data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_REJECTED') }}"
-                                                    class="btn btn-danger">
-                                                    <i class="fa fa-close"></i> Rejeitar Orçamento
-                                                </button>
+                                                <a href="{{ path('order_show', {id:order.id}) }}"
+                                                   class="btn btn-success">
+                                                    <i class="fa fa-check"></i> Aplicar
+                                                </a>
                                             </div>
 
                                         {% endif %}
@@ -352,59 +345,6 @@
                 alert('Finished!, Starting over!');
                 $('#rootwizard').find("a[href*='tab1']").trigger('click');
             });
-        });
-
-        $('[data-status]').on('click', function () {
-            var status = $(this).data('status');
-
-            swal({
-                title: 'Confirma a operação?',
-                //text: 'O integrador receberá um email informando esta operação.',
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: '{{ 'Confirmar'|trans }}',
-                cancelButtonText: '{{ 'Cancelar'|trans }}',
-                closeOnConfirm: false
-            }, function () {
-
-                $.ajax({
-                    url: '{{ path('order_status',{id:order.id}) }}',
-                    method: 'post',
-                    data: {status: status},
-                    complete: function (xhr) {
-
-                        if (200 == xhr.status) {
-
-                            swal({
-                                title: "Concluído.",
-                                text: "Operação realizada com sucesso.",
-                                type: "success",
-                                showConfirmButton: false
-                            });
-
-                            window.setTimeout(function () {
-                                swal.close();
-                                window.location.reload();
-                            }, 1500);
-
-                        } else {
-                            var response = xhr.responseJSON;
-                            swal('Ooops', response.hasOwnProperty('error') ? response.error : 'Falha ao executar a operação', 'error');
-                        }
-                    },
-                    beforeSend: function () {
-                        swal({
-                            title: "Processando...",
-                            text: "Aguarde.",
-                            type: "info",
-                            showConfirmButton: false
-                        });
-                    }
-                });
-
-            });
-
         });
 
     </script>
