@@ -137,10 +137,12 @@ class AppExtension extends \Twig_Extension
 
     public function getComponentFilePath($file)
     {
-        empty($file) && $file = 'default_thumb.jpg';
+        if(!$file) $file = 'default_thumb.jpg';
 
         $type = strpos($file, 'thumb') ? 'image' : 'datasheet';
-        $path = "https://s3-sa-east-1.amazonaws.com/pss-component/{$type}";
+        $ambience = (getenv('CES_AMBIENCE') == 'production') ? 'production' : 'homolog';
+        $path = "https://s3-sa-east-1.amazonaws.com/pss-{$ambience}-public/component/{$type}";
+
         return "{$path}/{$file}";
     }
 
