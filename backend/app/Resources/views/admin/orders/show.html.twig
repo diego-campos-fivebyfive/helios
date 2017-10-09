@@ -45,9 +45,6 @@
             color: #222;
             border-color: #FFA54E;
         }
-        .p-right {
-            float: right;
-        }
     </style>
 
     {% set orders = order.childrens %}
@@ -125,7 +122,7 @@
                                             {% endif %}
 
                                         </div>
-                                        <div class="p-right">
+                                        <div class="pull-right">
 
                                             {% if not (order.isDone or order.isApproved or order.isRejected)
                                             and (order.isBuilding or (order.isPending and member.isPlatformUser) or (order.isValidated and not member.isPlatformUser)) %}
