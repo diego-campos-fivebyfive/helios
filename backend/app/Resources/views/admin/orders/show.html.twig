@@ -66,7 +66,6 @@
                     {% endif %}
                 {% endif %}
             </div>
-
             <div class="ibox border-bottom">
                 <div class="ibox-content">
                     <div class="tab-content">
@@ -123,7 +122,6 @@
 
                                         </div>
                                         <div class="pull-right">
-
                                             {% if not (order.isDone or order.isApproved or order.isRejected)
                                             and (order.isBuilding or (order.isPending and member.isPlatformUser) or (order.isValidated and not member.isPlatformUser)) %}
                                                 <a class="btn btn-sm btn-success pull-right" href="{{ path('project_generator', {order:order.id}) }}">
