@@ -23,7 +23,7 @@
             <td> {{ element.description }} </td>
             {% if isPlatform %}
                 <td> <input class="form-control markup" data-markup-element="{{ path('order_element_update',{id:element.id}) }}"
-                            id="input{{ element.id }}" readonly="readonly" value="{{ element.markup }}">
+                            id="input{{ element.id }}" readonly="readonly" value="{{ element.markup|round(2) }}">
                 </td>
             {% endif %}
             <td> {{ element.unitPrice|currency }} </td>
