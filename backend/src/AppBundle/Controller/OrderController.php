@@ -110,6 +110,21 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/shipping", name="order_shipping_info")
+     */
+    public function shippingInfoAction(Request $request, Order $order)
+    {
+        if(null != $deliveryAddress = $request->request->get('deliveryAddress')){
+            $order->setDeliveryAddress($deliveryAddress);
+            $this->manager('order')->save($order);
+        }
+
+        return $this->render('order.shipping_info', array(
+            'order' => $order
+        ));
+    }
+
+    /**
      * @Route("/{id}/insure", name="order_insure")
      * @Method("post")
      */
