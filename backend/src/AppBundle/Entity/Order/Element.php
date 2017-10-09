@@ -347,6 +347,7 @@ class Element implements ElementInterface
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -364,12 +365,13 @@ class Element implements ElementInterface
     public function setUpdatedAt($updatedAt)
     {
         $this->updatedAt = $updatedAt;
+
         return $this;
     }
 
     private function calculatePrice()
     {
-        $this->unitPrice = $this->getCmv() * (1 + $this->getMarkup()) / (1 - $this->getTax());
+        $this->unitPrice = $this->cmv * (1 + $this->markup) / (1 - $this->tax);
     }
 
 
