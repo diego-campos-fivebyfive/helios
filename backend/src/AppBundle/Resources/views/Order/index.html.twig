@@ -17,6 +17,8 @@
         .label.status-approved i{  color: #00a157;  }
         .label.status-rejected i{  color: #ffcd70;  }
         .label.status-done i{  color: #777;  }
+
+        .validated {  color: #0a6aa1;  }
     </style>
 
 {% endblock %}
@@ -60,101 +62,98 @@
         </div>
     </div>
 
-    <div class="wrapper wrapper-content animated fadeIn">
+    <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
+
             <div class="col-md-12" style="margin-bottom: 10px;">
                 <a class="btn btn-success pull-right" href="{{ path('project_generator') }}">
                     <i class="fa fa-plus"></i> Orçamento
                 </a>
             </div>
-            <div class="col-lg-12">
-                <div class="panel panel-info flow-lg">
-                    <div class="panel-heading">
-                        <h3>Meus Pedidos</h3>
-                    </div>
-                    <div class="panel-body">
-                        <table id="extras_table" class="table table-condensed table-bordered col-md-12">
-                            <thead>
-                            <tr>
-                                <td class="col-md-1 text-center">Pedido</td>
-                                <td class="text-center">Data</td>
-                                <td>Sistemas</td>
-                                <td>Status</td>
-                                <td>Valor</td>
-                                <td class="col-md-2">&nbsp;</td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for item in orders if item.childrens.count %}
-                                {% set order = item %}
 
+            <div class="col-md-12">
+                <div class="ibox float-e-margins flow-h">
+                    <div class="ibox-title flow-lg">
+                        <h5>
+                            <i class="fa fa-files-o"> </i> Meus Pedidos
+                        </h5>
+                    </div>
+
+                    <div class="ibox-content flow-lg">
+                        <table class="table table-stripped">
+                            <thead>
                                 <tr>
-                                    <td class="text-center col-md-1">{{ item.id }} </td>
-                                    <td>{{ item.createdAt|date('d/m/Y') }}</td>
-                                    <td>SISTEMA(S) DE
-                                        {% for element in item.childrens %}
-                                            <b>{{ element.power }}</b>,
-                                        {% endfor %} KWP
+                                    <td class="col-md-2 text-center">Nº</td>
+                                    <td class="text-center">Sistemas</td>
+                                    <td class="text-center">Status</td>
+                                    <td class="text-center">Arquivos</td>
+                                    <td class="col-md-2">&nbsp;</td>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                            {% for item in orders %}
+                            {% set order = item %}
+                                <tr>
+                                    <td class="text-center col-md-2">
+                                        <h4>{{ item.id }}</h4>
+                                        <small>{{ item.createdAt|format_date }}</small>
                                     </td>
-                                    <td>
-                                       <span class="label label-status status-{{ order.statusName }}">
+                                    <td class="text-center ">
+                                        <h4>
+                                            {% if order.childrens.count %}
+                                                {% for children in order.childrens %}
+                                                    {{ children.power }}, kWp
+                                                {% endfor %}
+                                            {% else %}
+                                                Sem sistemas
+                                            {% endif %}
+                                        </h4>
+                                        <small> {{ order.total|currency }} </small>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="label label-status status-{{ order.statusName }}">
                                             <i class="fa fa-circle"></i> {{ order.statusName|capitalize|trans }}
                                         </span>
                                     </td>
+                                    <td class="text-center col-md-4">
+                                        <div class="btn-group btn-group-sm col-md-12 btn-group-justified">
+                                            {% if order.hasProforma %}
+                                                <a class="btn btn-default {{ order.proforma ? 'validated' }}" href="{{ path('order_file',{id:order.id, type:'proforma'}) }}"
+                                                   target="_blank"> <i class="fa fa-file-pdf-o"></i>
+                                                    <br><small>Proforma</small>
+                                                </a>
+                                            {% else %}
+                                                <i class="btn btn-default fa fa-file-excel-o">
+                                                    <br><small>Proforma</small>
+                                                </i>
+                                            {% endif %}
 
-                                    <td>{{ item.total|currency }}</td>
-                                    <td>
+                                            {% set shippingRules = order.shippingRules %}
 
-                                        <div class="btn-group btn-group-justified">
-                                            <button style="width: 100%;" type="button"
-                                                    class="btn btn-sm btn-primary dropdown-toggle"
-                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fa fa-arrow-down pull-left"></i>
-                                                Operações
-                                                <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu">
+                                            {% if attribute(shippingRules, 'type') is defined and 'self' == shippingRules.type %}
 
-                                                {% if order.isApproved %}
+                                                <a class="btn btn-default {{ order.deliveryAddress ? 'validated' }}" data-url="{{ path('generator_company_shipping',{id: item.id}) }}"
+                                                   data-toggle="modal"
+                                                   data-target="#modal_details">
+                                                    <i class="fa fa-truck"></i>
+                                                    <br><small>Transportadora</small>
+                                                </a>
 
-                                                    <li>
-                                                        <a data-target="#modal_upload" data-toggle="modal"
-                                                           data-href="{{ path('order_upload',{id:item.id}) }}">
-                                                            <i class="fa fa-file-text"></i> Enviar Comprovante
-                                                        </a>
-                                                    </li>
+                                            {% endif %}
 
-                                                    {% set shippingRules = order.shippingRules %}
+                                            <a class="btn btn-default {{ order.FilePayment ? 'validated' }}" data-target="#modal_upload" data-toggle="modal"
+                                               data-href="{{ path('order_upload',{id:item.id}) }}">
+                                                <i class="fa fa-file-text"></i>
+                                                <br><small>Comprovante</small>
+                                            </a>
 
-                                                    {% if attribute(shippingRules, 'type') is defined and 'self' == shippingRules.type %}
-
-                                                    <li>
-                                                        <a data-url="{{ path('generator_company_shipping',{id: item.id}) }}"
-                                                           data-toggle="modal"
-                                                           data-target="#modal_details">
-                                                            <i class="fa fa-truck"></i> Transportadora
-                                                        </a>
-                                                    </li>
-
-                                                    {% endif %}
-
-                                                {% endif %}
-
-                                                {% if not (order.isDone or order.isRejected or order.isApproved) %}
-                                                    <li>
-                                                        <a href="{{ path('project_generator', {order:item.id}) }}">
-                                                            <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
-                                                        </a>
-                                                    </li>
-                                                {% endif %}
-
-                                                <li>
-                                                    <a href="{{ path('order_show', {id:item.id}) }}">
-                                                        <i class="fa fa-eye"></i> {{ 'View'|trans }}
-                                                    </a>
-                                                </li>
-                                            </ul>
                                         </div>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-default" href="{{ path('order_show', {id:item.id}) }}">
+                                            <i class="fa fa-eye"></i> {{ 'View'|trans }}
+                                        </a>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -163,6 +162,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
     <div class="row text-center">
@@ -201,6 +201,7 @@
                     method: 'get',
                     success: function (response) {
                         edit_freight.html(response);
+                        $('.address').removeClass('hide');
                     }
                 });
             } else {
