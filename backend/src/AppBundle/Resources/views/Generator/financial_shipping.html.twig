@@ -34,6 +34,13 @@
         <h2 id="shipping_output"> {{ order.shipping|currency }} </h2>
     </div>
 
+    <div class="col-md-12">
+        <div class="form-group col-md-12">
+            <h3> <i class="fa fa-map-marker"></i> Endereço de Entrega </h3>
+            <input id="deliveryAddress" name="deliveryAddress" value="{{ order.deliveryAddress }}" type="text" class="form-control" placeholder="Endereço de Entrega">
+        </div>
+    </div>
+
     <div class="form-group col-md-12" id="form-company">
     </div>
 
@@ -48,6 +55,7 @@
         percent: $('#shipping_percent'),
         kind: $('#shipping_kind'),
         output: $('#shipping_output'),
+        deliveryAddress: $('#deliveryAddress'),
         checkState: function(){
             var state = ShippingManager.state.val();
             var kinds = ['SP', 'RJ', 'MG'];
@@ -57,6 +65,9 @@
                 $('.group-kind').hide();
             }
         },
+        getDeliveryAddress: function(){
+            return this.deliveryAddress.val();
+        },
         checkType: function(){
             var type = ShippingManager.type.val();
             if ('sices' == type) {
@@ -64,6 +75,7 @@
                 $('.group-self').hide();
                 $('.output').show();
                 $('#form-company').hide();
+                ShippingManager.calculate();
             } else {
                 $('.group-self').hide();
                 $('.group-sices').hide();
@@ -89,10 +101,15 @@
 
             button.ladda('start');
 
+            /**
+             * TODO: This is a temporary solution, it will soon be moved to exclusive processing
+             */
+            var data = form.serialize() + '&deliveryAddress=' + this.getDeliveryAddress();
+
             Request.send({
                 url: form.attr('action'),
                 method: 'post',
-                data: form.serialize(),
+                data: data,
                 callback: function (xhr) {
                     button.ladda('stop');
                     var response = xhr.responseJSON;

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Order;
 
+use AppBundle\Entity\Pricing\RangeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -76,6 +77,13 @@ class Element implements ElementInterface
     private $cmv;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $tax;
+
+    /**
      * @var OrderInterface
      *
      * @ORM\ManyToOne(targetEntity="Order", inversedBy="elements")
@@ -106,6 +114,7 @@ class Element implements ElementInterface
         $this->unitPrice = 0;
         $this->markup = 0;
         $this->cmv = 0;
+        $this->tax = RangeInterface::DEFAULT_TAX;
     }
 
     /**
@@ -261,7 +270,7 @@ class Element implements ElementInterface
      */
     public function getMarkup()
     {
-        return $this->markup;
+        return $this->markup*100;
     }
 
     /**
@@ -270,6 +279,9 @@ class Element implements ElementInterface
     public function setMarkup($markup)
     {
         $this->markup = $markup;
+
+        $this->calculatePrice();
+
         return $this;
     }
 
@@ -287,7 +299,38 @@ class Element implements ElementInterface
     public function setCmv($cmv)
     {
         $this->cmv = $cmv;
+
+        $this->calculatePrice();
+
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setTax($tax)
+    {
+        $this->tax = $tax;
+
+        $this->calculatePrice();
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTax()
+    {
+        return $this->tax;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTotalCmv()
+    {
+        return $this->cmv * $this->quantity;
     }
 
     /**
@@ -322,6 +365,11 @@ class Element implements ElementInterface
     {
         $this->updatedAt = $updatedAt;
         return $this;
+    }
+
+    private function calculatePrice()
+    {
+        $this->unitPrice = $this->getCmv() * (1 + $this->getMarkup()) / (1 - $this->getTax());
     }
 
 

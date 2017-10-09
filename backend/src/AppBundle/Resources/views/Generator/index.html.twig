@@ -23,11 +23,6 @@
                                     <i class="fa fa-warning"></i>
                                     Ao editar este orçamento será necessário uma revalidação pela equipe da Sices.
                                 </div>
-                                <div class="alert alert-success">
-                                    <i class="fa fa-info-circle"></i>
-                                    Ao aprovar este orçamento você receberá a proforma e seu pedido de compra será
-                                    processado
-                                </div>
                             {% endif %}
                         </div>
 
@@ -91,10 +86,10 @@
                                 <div class="tab-pane" id="tab3">
                                     <div class="col-md-12">
                                         {% if app.user.isPlatform %}
-                                            <div class="panel panel-info">
+                                            <div class="panel panel-success">
                                                 <div class="panel-heading">
-                                                    <i class="fa fa-user"></i>
-                                                    Informações do Cliente
+                                                    <i class="fa fa-edit"></i>
+                                                    Pagamento / Cliente / Entrega
                                                 </div>
                                                 <div class="panel-body">
                                                     {{ render(controller('AdminBundle:Order:info', {id:order.id})) }}
@@ -104,6 +99,7 @@
 
                                         <div class="panel panel-primary">
                                             <div class="panel-heading">
+                                                <i class="fa fa-th"></i>
                                                 Lista de Sistemas
                                             </div>
                                             <div class="panel-body" id="orders_list">

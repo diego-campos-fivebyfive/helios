@@ -100,9 +100,12 @@
 
                                     {% if displayProforma %}
                                         <td class="text-center">
-                                            <a href="#">
-                                                Proforma
-                                            </a>
+                                            {% if order.hasProforma %}
+                                                <a href="{{ path('order_file',{id:order.id, type:'proforma'}) }}"
+                                                   target="_blank"> Proforma </a>
+                                            {% else %}
+                                                Indisponível
+                                            {% endif %}
                                         </td>
                                     {% endif %}
 

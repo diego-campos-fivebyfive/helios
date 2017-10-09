@@ -220,6 +220,11 @@ interface OrderInterface
     public function getProforma();
 
     /**
+     * @return bool
+     */
+    public function hasProforma();
+
+    /**
      * @param $filePayment
      * @return OrderInterface
      */
@@ -229,6 +234,21 @@ interface OrderInterface
      * @return string
      */
     public function getFilePayment();
+
+    /**
+     * @return float
+     */
+    public function getTotalCmv();
+
+    /**
+     * @return float
+     */
+    public function getTotalTaxes();
+
+    /**
+     * @return float
+     */
+    public function getMargin();
 
     /**
      * @return bool
@@ -362,6 +382,39 @@ interface OrderInterface
     public function getShipping();
 
     /**
+     * @param $deliveryAddress
+     * @return OrderInterface
+     */
+    public function setDeliveryAddress($deliveryAddress);
+
+    /**
+     * @return string
+     */
+    public function getDeliveryAddress();
+
+    /**
+     * @param \DateTime $deliveryAt
+     * @return OrderInterface
+     */
+    public function setDeliveryAt(\DateTime $deliveryAt);
+
+    /**
+     * @return \DateTime
+     */
+    public function getDeliveryAt();
+
+    /**
+     * @param $deadline
+     * @return OrderInterface
+     */
+    public function setDeadline($deadline);
+
+    /**
+     * @return int
+     */
+    public function getDeadline();
+
+    /**
      * @param $paymentMethod
      * @return OrderInterface
      */
@@ -413,4 +466,15 @@ interface OrderInterface
      * @return bool
      */
     public function isDone();
+
+    /**
+     * @param $level
+     * @return OrderInterface
+     */
+    public function setLevel($level);
+
+    /**
+     * @return string
+     */
+    public function getLevel();
 }
