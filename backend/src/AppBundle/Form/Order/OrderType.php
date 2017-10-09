@@ -84,6 +84,7 @@ class OrderType extends AbstractType
                     'format' => 'dd/MM/YYYY'
                 ])
                 ->add('deadline')
+                ->add('note')
             ;
 
         }
