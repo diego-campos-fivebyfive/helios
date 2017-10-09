@@ -9,10 +9,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @Route("orders")
@@ -154,14 +154,14 @@ class OrderController extends AbstractController
 
             if($file instanceof UploadedFile) {
 
-                $dir = $this->getUploadDir('file_payment');
+                $dir = $this->getUploadDir('filePayment');
 
                 $current = $dir . $order->getFilePayment();
 
                 if(is_file($current)) unlink($current);
 
                 $name = sprintf(
-                    'payment_file_%s_%s.%s', $order->getId(),
+                    'filePayment_%s_%s.%s', $order->getId(),
                     (new \DateTime())->format('Ymd-His'),
                     $file->getClientOriginalExtension()
                 );
@@ -184,28 +184,27 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/file", name="order_file")
+     * @Route("/{id}/file/{type}", name="order_file")
      */
-    public function fileAction(Request $request, Order $order)
+    public function fileAction(Order $order, $type)
     {
-        if($request->query->get('type') == 'proforma') {
+        $this->denyAccessUnlessGranted('edit', $order);
 
-            if(null != $proforma = $order->getProforma()) {
+        $getter = 'get' . ucfirst($type);
 
-                $file = $this->getUploadDir('proforma') . $proforma;
+        if(!method_exists($order, $getter))
+            throw $this->createNotFoundException(sprintf('The class %s does not have %s file', get_class($order), $type));
 
-                return new BinaryFileResponse($file, Response::HTTP_OK, [], true, ResponseHeaderBag::DISPOSITION_ATTACHMENT);
-            }
-        } elseif ($request->query->get('type') == 'file_payment') {
-            if(null != $filePayment = $order->getFilePayment()) {
+        if(null != $filename = $order->$getter()){
 
-                $file = $this->getUploadDir('file_payment') . $filePayment;
+            $file = $this->getUploadDir($type) . $filename;
 
-                return new BinaryFileResponse($file, Response::HTTP_OK, [], true, ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+            if(is_file($file)) {
+                return new BinaryFileResponse($file, Response::HTTP_OK, [], true, ResponseHeaderBag::DISPOSITION_INLINE);
             }
         }
 
-        throw $this->createNotFoundException('File not found');
+        throw $this->createNotFoundException(sprintf('File %s not found', $type));
     }
 
     /**
@@ -254,6 +253,25 @@ class OrderController extends AbstractController
         return $this->json([
             'filename' => $filename
         ], $status);
+    }
+
+    /**
+     * @Route("/{id}/delete", name="order_delete")
+     * @Method("delete")
+     */
+    public function deleteAction(Order $order)
+    {
+        $this->denyAccessUnlessGranted('edit', $order);
+
+        if(!$order->isBuilding()){
+            return $this->json([
+                'error' => 'Somente orçamentos em edição podem ser excluídos'
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $this->manager('order')->delete($order);
+
+        return $this->json([]);
     }
 
     /**
