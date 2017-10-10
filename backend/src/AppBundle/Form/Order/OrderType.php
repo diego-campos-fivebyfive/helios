@@ -62,39 +62,39 @@ class OrderType extends AbstractType
                 ]);
 
             $builder
-                ->add('firstname', TextType::class, array(
+                ->add('firstname', TextType::class, [
                     'read_only' => true
-                ))
-                ->add('lastname', TextType::class, array(
+                ])
+                ->add('lastname', TextType::class, [
                     'read_only' => true
-                ))
-                ->add('cnpj', TextType::class, array(
+                ])
+                ->add('cnpj', TextType::class, [
                     'read_only' => true
-                ))
-                ->add('ie', TextType::class, array(
+                ])
+                ->add('ie', TextType::class, [
                     'read_only' => true
-                ))
-                ->add('contact', TextType::class, array(
+                ])
+                ->add('contact', TextType::class, [
                     'read_only' => true
-                ))
-                ->add('phone', TextType::class, array(
+                ])
+                ->add('phone', TextType::class, [
                     'read_only' => true
-                ))
-                ->add('email', TextType::class, array(
+                ])
+                ->add('email', TextType::class, [
                     'read_only' => true
-                ))
-                ->add('postcode', TextType::class, array(
+                ])
+                ->add('postcode', TextType::class, [
                     'read_only' => true
-                ))
-                ->add('address', TextType::class, array(
+                ])
+                ->add('address', TextType::class, [
                     'read_only' => true
-                ))
-                ->add('city', TextType::class, array(
+                ])
+                ->add('city', TextType::class, [
                     'read_only' => true
-                ))
-                ->add('state', TextType::class, array(
+                ])
+                ->add('state', TextType::class, [
                     'read_only' => true
-                ))
+                ])
                 ->add('paymentMethod', ChoiceType::class, [
                     'choices' => $options['paymentMethods']
                 ])
