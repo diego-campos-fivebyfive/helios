@@ -231,59 +231,6 @@
 
     <script>
 
-        $('[data-status]').on('click', function () {
-            var id = $(this).data('id');
-            var status = $(this).data('status');
-
-            swal({
-                title: 'Confirma a operação?',
-                text: 'Este processo não pode ser desfeito',
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: '{{ 'Confirmar'|trans }}',
-                cancelButtonText: '{{ 'Cancelar'|trans }}',
-                closeOnConfirm: false
-            }, function () {
-
-                $.ajax({
-                    url: '{{ path('order_status',{id:'_id_'}) }}'.replace(/_id_/g, id),
-                    method: 'post',
-                    data: {status: status},
-                    complete: function (xhr) {
-
-                        if (200 == xhr.status) {
-
-                            swal({
-                                title: "Concluído.",
-                                text: "Operação realizada com sucesso.",
-                                type: "success",
-                                showConfirmButton: false
-                            });
-
-                            window.setTimeout(function () {
-                                swal.close();
-                                window.location.reload();
-                            }, 1500);
-
-                        } else {
-                            var response = xhr.responseJSON;
-                            swal('Ooops', response.hasOwnProperty('error') ? response.error : 'Falha ao executar a operação', 'error');
-                        }
-                    },
-                    beforeSend: function () {
-                        swal({
-                            title: "Processando...",
-                            text: "Aguarde.",
-                            type: "info",
-                            showConfirmButton: false
-                        });
-                    }
-                });
-
-            });
-        });
-
         var modalShipping = $('#modal_shipping');
         modalShipping.on('show.bs.modal', function (event) {
             var target = $(event.relatedTarget);
