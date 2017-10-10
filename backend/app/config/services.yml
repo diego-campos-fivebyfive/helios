@@ -180,6 +180,9 @@ services:
         class: AppBundle\Service\Component\FileHandler
         arguments: ['@service_container']
 
+    app_storage:
+        alias: component_file_handler
+
     proposal_filter:
         class: AppBundle\Service\ProposalFilter
         arguments: ['@project_manager']
