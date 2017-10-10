@@ -113,15 +113,6 @@
                                                 </a>
                                             {% endif %}
 
-                                            {% if member.isPlatformUser %}
-                                                {% if order.isPending %}
-                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_VALIDATED') }}">
-                                                        <i class="fa fa-check"></i> Validar
-                                                    </a>
-                                                {% endif %}
-                                            {% endif %}
-
                                             {% if not member.isPlatformUser %}
                                                 {% if order.isValidated %}
                                                     <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
