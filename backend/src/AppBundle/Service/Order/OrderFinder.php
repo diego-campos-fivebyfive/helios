@@ -236,21 +236,22 @@ class OrderFinder
      */
     private function addFilterParameter(QueryBuilder $qb)
     {
-        $filter = $this->parameters['filter'];
+        if(null != $filter = $this->parameters['filter']) {
 
-        if(array_key_exists('like', $filter) && null != $filter['like']){
+            if (array_key_exists('like', $filter) && null != $filter['like']) {
 
-            $expressions = [];
-            foreach ($this->likes as $field) {
-                $expressions[] = $qb->expr()->like($field, $qb->expr()->literal('%' . $filter['like'] . '%'));
+                $expressions = [];
+                foreach ($this->likes as $field) {
+                    $expressions[] = $qb->expr()->like($field, $qb->expr()->literal('%' . $filter['like'] . '%'));
+                }
+
+                $qb->andWhere($qb->expr()->orX()->addMultiple($expressions));
             }
 
-            $qb->andWhere($qb->expr()->orX()->addMultiple($expressions));
-        }
-
-        if(array_key_exists('status', $filter) && is_int($filter['status'])){
-            $qb->andWhere('o.status = :status');
-            $this->parameters['status'] = $filter['status'];
+            if (array_key_exists('status', $filter) && is_int($filter['status'])) {
+                $qb->andWhere('o.status = :status');
+                $this->parameters['status'] = $filter['status'];
+            }
         }
 
         unset($this->parameters['filter']);
