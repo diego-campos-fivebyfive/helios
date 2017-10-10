@@ -40,6 +40,11 @@ class FileHandler
     /**
      * @var string
      */
+    private $bucketAmbience;
+
+    /**
+     * @var string
+     */
     private $container;
 
 
@@ -51,6 +56,7 @@ class FileHandler
     {
         $this->s3 = $container->get('aws.s3');
         $this->ambience = $container->getParameter('ambience');
+        $this->bucketAmbience = ($this->ambience == 'production') ? 'production' : 'homolog';
     }
 
     /**
@@ -109,10 +115,9 @@ class FileHandler
     public function move(array $config)
     {
         $acl = ($config['access'] == 'public') ? 'public-read' : 'private';
-        $ambience = ($this->ambience == 'production') ? 'production' : 'homolog';
 
         $this->s3->putObject([
-            'Bucket' => "pss-{$ambience}-{$config['access']}",
+            'Bucket' => "pss-{$this->bucketAmbience}-{$config['access']}",
             'Key' => "{$config['root']}/{$config['type']}/{$config['filename']}",
             'Body' => fopen($config['file'], 'rb'),
             'ACL' => $acl
@@ -125,8 +130,7 @@ class FileHandler
     public function link(array $config)
     {
         $host = 'https://s3-sa-east-1.amazonaws.com';
-        $ambience = ($this->ambience == 'production') ? 'production' : 'homolog';
-        $bucket = "pss-{$ambience}-{$config['access']}";
+        $bucket = "pss-{$this->bucketAmbience}-{$config['access']}";
         $path = "{$host}/{$bucket}/{$config['root']}/{$config['type']}";
 
         return "{$path}/{$config['filename']}";
