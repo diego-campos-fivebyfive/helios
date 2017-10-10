@@ -69,31 +69,33 @@ trait MemberTrait
         if ($this->user instanceof UserInterface){
 
             $roles = $this->user->getRoles();
-
-            switch ($roles[0]){
-                case User::ROLE_DEFAULT:
-                    $type = 'User';
-                    break;
-                case User::ROLE_OWNER:
-                case User::ROLE_OWNER_MASTER:
-                case User::ROLE_PLATFORM_ADMIN:
-                    $type = 'Administrator';
-                    break;
-                case User::ROLE_PLATFORM_MASTER:
-                    $type = 'Master';
-                    break;
-                case User::ROLE_PLATFORM_COMMERCIAL:
-                    $type = 'Commercial';
-                    break;
-                case User::ROLE_PLATFORM_FINANCIAL:
-                    $type = 'Financial';
-                    break;
-                case User::ROLE_PLATFORM_AFTER_SALES:
-                    $type = 'Pós-Venda';
-                    break;
-                default:
-                    $type = 'User';
-                    break;
+            
+            if (array_key_exists(0, $roles)) {
+                switch ($roles[0]) {
+                    case User::ROLE_DEFAULT:
+                        $type = 'User';
+                        break;
+                    case User::ROLE_OWNER:
+                    case User::ROLE_OWNER_MASTER:
+                    case User::ROLE_PLATFORM_ADMIN:
+                        $type = 'Administrator';
+                        break;
+                    case User::ROLE_PLATFORM_MASTER:
+                        $type = 'Master';
+                        break;
+                    case User::ROLE_PLATFORM_COMMERCIAL:
+                        $type = 'Commercial';
+                        break;
+                    case User::ROLE_PLATFORM_FINANCIAL:
+                        $type = 'Financial';
+                        break;
+                    case User::ROLE_PLATFORM_AFTER_SALES:
+                        $type = 'Pós-Venda';
+                        break;
+                    default:
+                        $type = 'User';
+                        break;
+                }
             }
         }
 
