@@ -139,7 +139,7 @@
                                             </a>
 
                                             {% if order.hasFilePayment %}
-                                                <a class="btn btn-default {{ order.FilePayment ? 'validated' }}" href="{{ path('order_file',{id:order.id, type:'file_payment'}) }}"
+                                                <a class="btn btn-default {{ order.FilePayment ? 'validated' }}" href="{{ path('order_file',{id:order.id, type:'filePayment'}) }}"
                                                    target="_blank"> <i class="fa fa-file-text"></i> <br><small>Comprovante</small></a>
                                             {% else %}
                                                 <i class="btn btn-default fa fa-file-excel-o">
