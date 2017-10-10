@@ -285,10 +285,5 @@
         }
     }).on('apply.daterangepicker', function(event, picker){
         $('input[name="order[deliveryAt]"]').val(picker.startDate.format('DD/MM/YYYY'));
-    }).on('show.daterangepicker', function(){
-        if (!customized) {
-            $('.calendar').prepend();
-            customized = true;
-        }
     });
 </script>
