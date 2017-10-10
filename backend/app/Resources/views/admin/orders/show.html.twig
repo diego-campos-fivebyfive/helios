@@ -144,18 +144,22 @@
                                 <div class="col-md-12">
                                     <div class="col-md-4 spacing">
                                         <label class="row-total">Cliente</label>
-                                        {{ order.customer }}
+                                        {{ order.firstname }}
+                                    </div>
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Nome</label>
+                                        {{ order.lastname }}
                                     </div>
                                     <div class="col-md-4 spacing">
                                         <label class="row-total">CNPJ</label>
                                         {{ order.cnpj }}
                                     </div>
+                                </div>
+                                <div class="col-md-12">
                                     <div class="col-md-4 spacing">
                                         <label class="row-total">Inscrição Estadual</label>
                                         {{ order.ie }}
                                     </div>
-                                </div>
-                                <div class="col-md-12">
                                     <div class="col-md-4 spacing">
                                         <label class="row-total">Contato</label>
                                         {{ order.contact }}
@@ -164,13 +168,13 @@
                                         <label class="row-total">Email</label>
                                         {{ order.email }}
                                     </div>
-                                    <div class="col-md-4 spacing">
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-2 spacing">
                                         <label class="row-total">Telefone</label>
                                         {{ order.phone }}
                                     </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="col-md-3 spacing">
+                                    <div class="col-md-1 spacing">
                                         <label class="row-total">Cep</label>
                                         {{ order.postcode }}
                                     </div>
