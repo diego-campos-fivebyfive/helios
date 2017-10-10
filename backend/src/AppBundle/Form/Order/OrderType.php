@@ -11,6 +11,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -24,9 +25,6 @@ class OrderType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        /** @var Order $order */
-        $order = $options['data'];
-
         /** @var MemberInterface $member */
         $member = $options['member'];
 
@@ -36,8 +34,6 @@ class OrderType extends AbstractType
         }
 
         if(self::TARGET_REVIEW == $options['target']){
-
-            if($order->isBuilding() && !$order->getAccount()){
 
                 $builder->add('account', EntityType::class, [
                     'class' => Customer::class,
@@ -64,20 +60,41 @@ class OrderType extends AbstractType
                         return $qb;
                     }
                 ]);
-            }
 
             $builder
-                ->add('firstname')
-                ->add('lastname')
-                ->add('cnpj')
-                ->add('ie')
-                ->add('contact')
-                ->add('phone')
-                ->add('email')
-                ->add('postcode')
-                ->add('address')
-                ->add('city')
-                ->add('state')
+                ->add('firstname', TextType::class, [
+                    'read_only' => true
+                ])
+                ->add('lastname', TextType::class, [
+                    'read_only' => true
+                ])
+                ->add('cnpj', TextType::class, [
+                    'read_only' => true
+                ])
+                ->add('ie', TextType::class, [
+                    'read_only' => true
+                ])
+                ->add('contact', TextType::class, [
+                    'read_only' => true
+                ])
+                ->add('phone', TextType::class, [
+                    'read_only' => true
+                ])
+                ->add('email', TextType::class, [
+                    'read_only' => true
+                ])
+                ->add('postcode', TextType::class, [
+                    'read_only' => true
+                ])
+                ->add('address', TextType::class, [
+                    'read_only' => true
+                ])
+                ->add('city', TextType::class, [
+                    'read_only' => true
+                ])
+                ->add('state', TextType::class, [
+                    'read_only' => true
+                ])
                 ->add('paymentMethod', ChoiceType::class, [
                     'choices' => $options['paymentMethods']
                 ])
