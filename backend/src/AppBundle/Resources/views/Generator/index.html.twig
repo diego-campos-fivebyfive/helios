@@ -140,7 +140,7 @@
                                             {% set hideBudget = true %}
 
                                             {% if member.isPlatformUser %}
-                                                {% if order.isPending %}
+                                                {% if order.isPending or order.isBuilding %}
                                                     <button id="btn_validate" data-id="{{ order.id }}"
                                                     data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_VALIDATED') }}"
                                                     class="btn btn-md btn-success pull-right special-actions"

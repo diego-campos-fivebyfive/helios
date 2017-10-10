@@ -179,6 +179,9 @@
         getShippingType: function(){
             return this.shippingSelector.val();
         },
+        setDeliveryAt: function(deliveryAt){
+            this.deliveryAt.val(deliveryAt);
+        },
         fillAccount: function (data) {
             $.each(data, function (i, value) {
                 $('#order_' + i).val(value);
@@ -290,8 +293,9 @@
         }
     });
 
-    var customized = false;
-    $('#delivery_at').daterangepicker({
+    var sourceDeliveryAt = $('#delivery_at');
+
+    sourceDeliveryAt.daterangepicker({
         startDate: '{{ order.deliveryAt|date('d/m/Y') }}',
         singleDatePicker: true,
         minDate: moment(),
@@ -314,6 +318,8 @@
             ]
         }
     }).on('apply.daterangepicker', function(event, picker){
-        $('input[name="order[deliveryAt]"]').val(picker.startDate.format('DD/MM/YYYY'));
+        InfoManager.setDeliveryAt(sourceDeliveryAt.val());
     });
+
+    InfoManager.setDeliveryAt(sourceDeliveryAt.val());
 </script>
