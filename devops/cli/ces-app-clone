@@ -46,7 +46,6 @@ elif [ $1 = '--production' ]; then
   rsync -avzh --delete $SICES_PATH/** $SICES_PATH/.backup
 
   echo "Moving untracked files..."
-  rsync -avzh $SICES_PATH/.backup/backend/web/uploads/** $SICES_PATH/.temp/backend/web/uploads
   rsync -avzh $SICES_PATH/.backup/.uploads/** $SICES_PATH/.temp/.uploads
 
   # Remove it after deploy command optimizations

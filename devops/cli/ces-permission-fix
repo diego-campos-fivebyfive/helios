@@ -14,8 +14,6 @@ elif [ $1 == '--homolog' ] || [ $1 == '--staging' ]; then
   sudo chown -R www-data:admin /var/www/*
   sudo chmod -R g+rwx /var/www/*
 
-  sudo chmod 775 backend/web/uploads
-  sudo chmod 775 backend/web/uploads/components
-  sudo chmod 775 .uploads/proposal
+  sudo chmod -R 775 .uploads
 
 fi
