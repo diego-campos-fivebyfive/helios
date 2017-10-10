@@ -135,15 +135,17 @@ class AppExtension extends \Twig_Extension
         return $view;
     }
 
-    public function getComponentFilePath($file)
+    public function getComponentFilePath($filename)
     {
-        if(!$file) $file = 'default_thumb.jpg';
+        if(!$filename) $filename = 'default_thumb.jpg';
+        $type = strpos($filename, 'thumb') ? 'image' : 'datasheet';
 
-        $type = strpos($file, 'thumb') ? 'image' : 'datasheet';
-        $ambience = (getenv('CES_AMBIENCE') == 'production') ? 'production' : 'homolog';
-        $path = "https://s3-sa-east-1.amazonaws.com/pss-{$ambience}-public/component/{$type}";
-
-        return "{$path}/{$file}";
+        return $this->container->get('app_storage')->link([
+            'filename' => $filename,
+            'root' => 'component',
+            'type' => $type,
+            'access' => 'public'
+        ]);
     }
 
     /**
