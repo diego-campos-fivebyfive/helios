@@ -3,6 +3,10 @@
         resize: none;
         height: 125px;
     }
+    .input-label, .input-label:focus {
+        background-color: transparent !important;
+        border-color: transparent !important;
+    }
 </style>
 
 <script type="text/javascript" src="{{ asset('assets/fullcalendar/lib/moment.min.js') }}"></script>
@@ -29,21 +33,19 @@
     <div class="form-group col-md-12">
         <div class="col-md-6">
             {{ form_label(form.paymentMethod, 'Condição de Pagamento') }}
-            {{ form_widget(form.paymentMethod, {attr:{class:'form-control'}}) }}
+            {{ form_widget(form.paymentMethod, {attr:{class:'form-control', disabled: 'disabled'}}) }}
         </div>
 
-        <div class="col-md-6" id="block_account_selector">
-            {% if attribute(form, 'account') is defined %}
-                {{ form_label(form.account, 'Integrador') }}
-                <br>
-                <a data-url="{{ path('accounts_list') }}"
-                   data-toggle="modal"
-                   data-target="#modal_accounts"
-                   class="btn btn-success">
-                    <i class="fa fa-user"></i> Selecionar Integrador
-                </a>
-                {{ form_widget(form.account, {attr:{class:'hidden'}}) }}
-            {% endif %}
+        <div class="col-md-6 hide" id="block_account_selector">
+            {{ form_label(form.account, 'Integrador') }}
+            <br>
+            <a data-url="{{ path('accounts_list') }}"
+               data-toggle="modal"
+               data-target="#modal_accounts"
+               class="btn btn-success">
+                <i class="fa fa-user"></i> Selecionar Integrador
+            </a>
+            {{ form_widget(form.account, {attr:{class:'hidden'}}) }}
         </div>
     </div>
 
@@ -52,61 +54,62 @@
     <div class="form-group col-md-12">
         <div class="col-md-4">
             {{ form_label(form.firstname, 'Cliente') }}
-            {{ form_widget(form.firstname, {attr:{class:'form-control'}}) }}
+            {{ form_widget(form.firstname, {attr:{class:'form-control input-label'}}) }}
         </div>
 
         <div class="col-md-4">
             {{ form_label(form.lastname, 'Nome') }}
-            {{ form_widget(form.lastname, {attr:{class:'form-control'}}) }}
+            {{ form_widget(form.lastname, {attr:{class:'form-control input-label'}}) }}
         </div>
 
         <div class="col-md-4">
             {{ form_label(form.cnpj) }}
-            {{ form_widget(form.cnpj, {attr:{class:'form-control'}}) }}
+            {{ form_widget(form.cnpj, {attr:{class:'form-control input-label'}}) }}
         </div>
     </div>
 
     <div class="form-group col-md-12">
         <div class="col-md-4">
             {{ form_label(form.ie, 'Inscrição Estadual') }}
-            {{ form_widget(form.ie, {attr:{class:'form-control'}}) }}
+            {{ form_widget(form.ie, {attr:{class:'form-control input-label'}}) }}
         </div>
 
         <div class="col-md-4">
             {{ form_label(form.contact) }}
-            {{ form_widget(form.contact, {attr:{class:'form-control'}}) }}
+            {{ form_widget(form.contact, {attr:{class:'form-control input-label'}}) }}
         </div>
 
         <div class="col-md-4">
             {{ form_label(form.email) }}
-            {{ form_widget(form.email, {attr:{class:'form-control'}}) }}
+            {{ form_widget(form.email, {attr:{class:'form-control input-label'}}) }}
         </div>
     </div>
 
     <div class="form-group col-md-12">
-        <div class="col-md-3">
+        <div class="col-md-4">
             {{ form_label(form.phone) }}
-            {{ form_widget(form.phone, {attr:{class:'form-control'}}) }}
+            {{ form_widget(form.phone, {attr:{class:'form-control input-label'}}) }}
         </div>
 
-        <div class="col-md-2">
+        <div class="col-md-4">
             {{ form_label(form.postcode) }}
-            {{ form_widget(form.postcode, {attr:{class:'form-control'}}) }}
+            {{ form_widget(form.postcode, {attr:{class:'form-control input-label'}}) }}
         </div>
 
-        <div class="col-md-1">
+        <div class="col-md-4">
             {{ form_label(form.state) }}
-            {{ form_widget(form.state, {attr:{class:'form-control'}}) }}
+            {{ form_widget(form.state, {attr:{class:'form-control input-label'}}) }}
         </div>
-
-        <div class="col-md-3">
+    </div>
+    <div class="form-group col-md-12">
+        <div class="col-md-4">
             {{ form_label(form.city) }}
-            {{ form_widget(form.city, {attr:{class:'form-control'}}) }}
+            {{ form_widget(form.city, {attr:{class:'form-control input-label'}}) }}
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-4">
             {{ form_label(form.address) }}
-            {{ form_widget(form.address, {attr:{class:'form-control'}}) }}
+            {{ form_widget(form.address, {attr:{class:'form-control input-label'}}) }}
         </div>
     </div>
 
@@ -116,18 +119,18 @@
 
         <div class="col-md-9">
             {{ form_label(form.note, 'Observações') }}
-            {{ form_widget(form.note, {attr:{class:'form-control'}}) }}
+            {{ form_widget(form.note, {attr:{class:'form-control', disabled: 'disabled'}}) }}
         </div>
 
         <div class="col-md-3">
             <div class="row">
                 <div class="col-md-12">
                     <label for="delivery_at">Disponibilidade de Entrega</label>
-                    <input class="form-control" id="delivery_at" type="text">
+                    <input class="form-control" id="delivery_at" type="text" disabled="disabled">
                 </div>
                 <div class="col-md-12" id="order_deadline_block" style="margin-top: 30px;">
                     {{ form_label(form.deadline, 'Prazo de Entrega (dias)') }}
-                    {{ form_widget(form.deadline, {attr:{class:'form-control'}}) }}
+                    {{ form_widget(form.deadline, {attr:{class:'form-control', disabled: 'disabled'}}) }}
                 </div>
             </div>
         </div>
@@ -137,8 +140,11 @@
     <div class="form-group col-md-12">
         <div class="col-md-9">&nbsp;</div>
         <div class="col-md-3">
+            <a id="button_edit" class="btn btn-success btn-block">
+                <i class="fa fa-edit"></i> Editar
+            </a>
             <button id="button_account" type="submit" data-style="zoom-in"
-                    class="btn btn-success btn-block ladda-button">
+                    class="btn btn-success btn-block ladda-button hide">
                 <i class="fa fa-save"></i> Salvar
             </button>
         </div>
@@ -155,6 +161,11 @@
 <script>
 
     var buttonAccount = $('#button_account');
+    var buttonEdit = $('#button_edit');
+
+    $(buttonEdit).on('click', function () {
+        InfoManager.changeEditable(true);
+    });
 
     var InfoManager = {
         accountSelector: $('#order_account'),
@@ -192,6 +203,30 @@
                     InfoManager.checkShippingOption();
                 }
             }, 500);
+        },
+        changeEditable: function(editable) {
+
+            if (editable) {
+                $(buttonAccount).removeClass('hide');
+                $(buttonEdit).addClass('hide');
+
+                $('#order_note').removeAttr('disabled');
+                $('#delivery_at').removeAttr('disabled');
+                $('#order_deadline').removeAttr('disabled');
+                $('#order_paymentMethod').removeAttr('disabled');
+                $('#block_account_selector').removeClass('hide');
+                $('#btn_validate').addClass('hide');
+            } else {
+                $(buttonAccount).addClass('hide');
+                $(buttonEdit).removeClass('hide');
+
+                $('#order_note').attr('disabled','disabled');
+                $('#delivery_at').attr('disabled','disabled');
+                $('#order_deadline').attr('disabled','disabled');
+                $('#order_paymentMethod').attr('disabled','disabled');
+                $('#block_account_selector').addClass('hide');
+                $('#btn_validate').removeClass('hide');
+            }
         }
     };
 
@@ -209,17 +244,12 @@
             method: form.attr('method'),
             data: form.serialize(),
             complete: function (xhr) {
-                if (200 == xhr.status) {
-
-                    if (InfoManager.getAccount()) {
-                        $('#block_account_selector').remove();
-                    }
-
-                } else {
+                if (200 != xhr.status) {
                     swal('Ooops', 'Falha ao executar a operação.', 'error');
                 }
 
                 buttonAccount.ladda('stop');
+                InfoManager.changeEditable(false);
             }
         });
     });
