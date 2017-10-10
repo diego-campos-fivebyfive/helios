@@ -66,7 +66,8 @@ class OrderType extends AbstractType
             }
 
             $builder
-                ->add('customer')
+                ->add('firstname')
+                ->add('lastname')
                 ->add('cnpj')
                 ->add('ie')
                 ->add('contact')

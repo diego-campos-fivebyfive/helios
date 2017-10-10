@@ -32,10 +32,10 @@
 
                             {% for account in pagination.items %}
                                 <tr data-account="{{ account.id }}"
-                                    data-info="{{ {'email':account.email, 'firstname':account.firstname,
+                                    data-info="{{ {'email':account.email, 'firstname':account.firstname, 'lastname':account.lastname,
                                     'cnpj':account.document, 'ie':account.extraDocument, 'phone':account.phone,
                                     'postcode':account.postcode, 'state':account.state, 'city':account.city,
-                                    'street':account.street, 'contact':account.owner.firstname}|json_encode() }}"
+                                    'address':account.street, 'contact':account.owner.firstname}|json_encode() }}"
                                     data-dismiss="modal" class="pointer">
                                     <td>{{ loop.index }}</td>
                                     <td> {{ account.lastname }} </td>
@@ -57,7 +57,6 @@
             </div>
         </div>
     </div>
-
 
     <script>
 

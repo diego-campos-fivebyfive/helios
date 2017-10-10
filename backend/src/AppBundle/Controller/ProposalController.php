@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-use Aws\S3\S3Client;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Theme;
 use AppBundle\Service\Editor\Formatter;
@@ -197,9 +196,9 @@ class ProposalController extends AbstractController
         $snappy->setOption('margin-right', 0);
         $snappy->setOption('zoom', 2);
 
-        $PATH = "{$this->get('kernel')->getRootDir()}/../..";
+        $path = "{$this->get('kernel')->getRootDir()}/../..";
         $tempFileName = md5(uniqid()) . '.pdf';
-        $tempFile = "{$PATH}/.uploads/proposal/{$tempFileName}";
+        $tempFile = "{$path}/.uploads/proposal/{$tempFileName}";
 
         $absoluteUrl = UrlGeneratorInterface::ABSOLUTE_URL;
         $snappyUrl = $this->generateUrl('proposal_pdf', [ 'id' => $theme->getId() ], $absoluteUrl);
@@ -216,12 +215,12 @@ class ProposalController extends AbstractController
             $manager->save($project);
         }
 
-        $s3 = $this->get('aws.s3');
-        $s3->putObject([
-            'Bucket' => 'pss-geral',
-            'Key' => "proposal/$tempFileName",
-            'Body' => fopen($tempFile, 'rb'),
-            'ACL' => 'public-read'
+        $this->get('app_storage')->move([
+            'file' => $tempFile,
+            'filename' => $tempFileName,
+            'root' => 'proposal',
+            'type' => 'proposal',
+            'access' => 'private'
         ]);
 
         return $this->json([ 'filename' => $tempFileName ], Response::HTTP_OK);
@@ -232,8 +231,8 @@ class ProposalController extends AbstractController
      */
     public function displayAction($tempFileName)
     {
-        $PATH = "{$this->get('kernel')->getRootDir()}/../..";
-        $tempFile = "{$PATH}/.uploads/proposal/{$tempFileName}";
+        $path = "{$this->get('kernel')->getRootDir()}/../..";
+        $tempFile = "{$path}/.uploads/proposal/{$tempFileName}";
 
         if (file_exists($tempFile)) {
             return new BinaryFileResponse(new File($tempFile));

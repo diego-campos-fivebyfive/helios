@@ -165,42 +165,45 @@
                             <tbody>
                             <tr>
                                 <td><label class="no-margins">Cliente: </label></td>
-                                <td> {{ order.customer }} </td>
+                                <td> {{ order.firstname }} </td>
 
-                                <td><label class="no-margins">CNPJ: </label></td>
-                                <td> {{ order.cnpj }} </td>
+                                <td><label class="no-margins">Nome: </label></td>
+                                <td> {{ order.lastname }} </td>
                             </tr>
                             <tr>
                                 <td><label class="no-margins">Endereço: </label></td>
                                 <td> {{ order.address }} </td>
 
-                                <td><label class="no-margins">IE: </label></td>
-                                <td> {{ order.ie }} </td>
+                                <td><label class="no-margins">CNPJ: </label></td>
+                                <td> {{ order.cnpj }} </td>
                             </tr>
                             <tr>
                                 <td><label class="no-margins">Cidade: </label></td>
                                 <td> {{ order.city }} </td>
 
-                                <td><label class="no-margins">Estado: </label></td>
-                                <td> {{ order.state }} </td>
+                                <td><label class="no-margins">IE: </label></td>
+                                <td> {{ order.ie }} </td>
                             </tr>
                             <tr>
                                 <td><label class="no-margins">Contato: </label></td>
                                 <td> {{ order.contact }} </td>
 
-                                <td><label class="no-margins">Tel: </label></td>
-                                <td> {{ order.phone }} </td>
+                                <td><label class="no-margins">Estado: </label></td>
+                                <td> {{ order.state }} </td>
                             </tr>
                             <tr>
                                 <td><label class="no-margins">Email: </label></td>
                                 <td class="color-blue"> {{ order.email }} </td>
 
-                                <td><label class="no-margins">CEP: </label></td>
-                                <td> {{ order.postcode }} </td>
+                                <td><label class="no-margins">Tel: </label></td>
+                                <td> {{ order.phone }} </td>
                             </tr>
                             <tr>
                                 <td><label class="no-margins">Atendente: </label></td>
-                                <td colspan="3"> {{ order.agent.name }} </td>
+                                <td> {{ order.agent.name }} </td>
+
+                                <td><label class="no-margins">CEP: </label></td>
+                                <td> {{ order.postcode }} </td>
                             </tr>
                             </tbody>
                         </table>
@@ -217,21 +220,11 @@
                         <table class="width-total">
                             <thead>
                             <tr>
-                                <th>
-                                    Código
-                                </th>
-                                <th style="width: 50%;">
-                                    Produto
-                                </th>
-                                <th>
-                                    Custo Un.
-                                </th>
-                                <th>
-                                    QTD
-                                </th>
-                                <th>
-                                    Custo T.
-                                </th>
+                                <th>Código</th>
+                                <th style="width: 50%;">Produto</th>
+                                <th>Custo Un.</th>
+                                <th>QTD</th>
+                                <th>Custo T.</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -357,7 +350,7 @@
                     <div class="indentation spacing">
                         <label class="no-margins">&#10004; Disponibilidade para coleta:</label> {{ order.deliveryAt.date|date('d/m/Y') }}<br/>
                         {% if order.shippingrules and order.shippingrules.type == 'sices' %}
-                            <label class="no-margins">&#10004; Prazo de entrega:</label> 10 DIAS UTEIS<br/>
+                            <label class="no-margins">&#10004; Prazo de entrega:</label> {{ order.deadline }} DIAS<br/>
                         {% endif %}
                         <label class="no-margins">&#10004; Validade da proposta:</label> 3 (três) dias<br/>
                         <label class="no-margins">&#10004; Embalagem unitário:</label> Padrão<br/>
@@ -370,7 +363,7 @@
                         <br/>
                         <label class="no-margins">&#10004; Seguro:</label> {% if order.TotalInsurance %} {{ order.TotalInsurance|currency }} {% else %} Sem Seguro {% endif %}<br/>
                         <label class="no-margins">&#10004; Serviço de Start-up:</label> NÃO INCLUSO<br/>
-                        <label class="no-margins">&#10004; Endereço de entrega:</label> {{ order.address }}, {{ order.city }}, {{ order.state }}.<br/>
+                        <label class="no-margins">&#10004; Endereço de entrega:</label> {{ order.deliveryAddress }}{% if order.shippingRules.state %}, <label class="no-margins">{{ order.shippingRules.state }}</label>{% endif %}.<br/>
                         <label class="no-margins">&#10004; Observações:</label> {{ order.note }}
                     </div>
 
@@ -525,7 +518,7 @@
                     <label class="width-float-total text-center">TERMO DE ACEITAÇÃO</label>
 
                     <p>
-                        <label class="no-margins">{{ order.contact }}</label>, Aceita todas as condições de fornecimento ofertadas nesta
+                        <label class="no-margins">{{ order.lastname }}</label>, Aceita todas as condições de fornecimento ofertadas nesta
                         proposta e condições de vendas e garantias da Sices Brasil:
                         <span class="color-blue text-underline">Condições gerais</span>.
                     </p>
