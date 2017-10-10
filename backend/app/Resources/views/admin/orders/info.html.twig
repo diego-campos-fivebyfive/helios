@@ -9,6 +9,10 @@
     }
 </style>
 
+<script type="text/javascript" src="{{ asset('assets/fullcalendar/lib/moment.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/daterangepicker/daterangepicker.js') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ asset('assets/daterangepicker/daterangepicker.css') }}" />
+
 <div class="modal inmodal" id="e_modal_accounts" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content animated bounceInRight">
@@ -121,8 +125,8 @@
         <div class="col-md-3">
             <div class="row">
                 <div class="col-md-12">
-                    {{ form_label(form.deliveryAt, 'Disponibilidade de Entrega (data)') }}
-                    {{ form_widget(form.deliveryAt, {attr:{class:'form-control', 'data-mask':'00/00/0000', placeholder: '__/__/____', disabled: 'disabled'}}) }}
+                    <label for="delivery_at">Disponibilidade de Entrega</label>
+                    <input class="form-control" id="delivery_at" type="text" disabled="disabled">
                 </div>
                 <div class="col-md-12" id="order_deadline_block" style="margin-top: 30px;">
                     {{ form_label(form.deadline, 'Prazo de Entrega (dias)') }}
@@ -146,7 +150,9 @@
         </div>
     </div>
 
-    {{ form_rest(form) }}
+    <div class="form-group hide">
+        {{ form_rest(form) }}
+    </div>
 
 </div>
 
@@ -166,6 +172,7 @@
         shippingSelector: null,
         deadlineBlock: $('#order_deadline_block'),
         deliveryAt: $('#order_deliveryAt'),
+        date_delivery: $('#date_range'),
         getAccount: function () {
             return this.accountSelector.val();
         },
@@ -204,7 +211,7 @@
                 $(buttonEdit).addClass('hide');
 
                 $('#order_note').removeAttr('disabled');
-                $('#order_deliveryAt').removeAttr('disabled');
+                $('#delivery_at').removeAttr('disabled');
                 $('#order_deadline').removeAttr('disabled');
                 $('#order_paymentMethod').removeAttr('disabled');
                 $('#block_account_selector').removeClass('hide');
@@ -214,7 +221,7 @@
                 $(buttonEdit).removeClass('hide');
 
                 $('#order_note').attr('disabled','disabled');
-                $('#order_deliveryAt').attr('disabled','disabled');
+                $('#delivery_at').attr('disabled','disabled');
                 $('#order_deadline').attr('disabled','disabled');
                 $('#order_paymentMethod').attr('disabled','disabled');
                 $('#block_account_selector').addClass('hide');
@@ -281,5 +288,32 @@
         } else {
             content_accounts.html('<h2> Erro ao selecionar Integrador</h2>');
         }
+    });
+
+    var customized = false;
+    $('#delivery_at').daterangepicker({
+        startDate: '{{ order.deliveryAt|date('d/m/Y') }}',
+        singleDatePicker: true,
+        minDate: moment(),
+        locale: {
+            format: 'DD/MM/YYYY',
+            daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+            monthNames: [
+                "Janeiro",
+                "Fevereiro",
+                "Março",
+                "Abril",
+                "Maio",
+                "Junho",
+                "Julho",
+                "Agosto",
+                "Setembro",
+                "Outubro",
+                "Novembro",
+                "Dezembro"
+            ]
+        }
+    }).on('apply.daterangepicker', function(event, picker){
+        $('input[name="order[deliveryAt]"]').val(picker.startDate.format('DD/MM/YYYY'));
     });
 </script>

@@ -154,7 +154,7 @@
                     <div class="p-header">
                         <img width="250"  alt="image" src="{{ asset('assets/images/proformaHeader.png') }}">
                         <span class="pull-right">
-                           <span class="spacing-right">Proposta: <label>{{ order.id }}</label> </span>
+                           <span class="spacing-right">Proposta: <label>{{ order.reference }}</label> </span>
                            <span class="spacing-right"><label>{{ order.createdAt|date('d/m/Y') }}</label> </span>
                            <span class="page-number">Página - {{ loop.index }}/{{ page + 3 }}</span>
                         </span>
@@ -299,7 +299,7 @@
                 <div class="p-header">
                     <img width="250"  alt="image" src="{{ asset('assets/images/proformaHeader.png') }}">
                     <span class="pull-right">
-                        <span class="spacing-right">Proposta: <label>{{ order.id }}</label> </span>
+                        <span class="spacing-right">Proposta: <label>{{ order.reference }}</label> </span>
                         <span class="spacing-right"><label>{{ order.createdAt|date('d/m/Y') }}</label> </span>
                         <span class="page-number">Página - {{ page + 1 }}/{{ page + 3 }}</span>
                     </span>
@@ -392,7 +392,7 @@
                 <div class="p-header">
                     <img width="250"  alt="image" src="{{ asset('assets/images/proformaHeader.png') }}">
                     <span class="pull-right">
-                        <span class="spacing-right">Proposta: <label>{{ order.id }}</label> </span>
+                        <span class="spacing-right">Proposta: <label>{{ order.reference }}</label> </span>
                         <span class="spacing-right"><label>{{ order.createdAt|date('d/m/Y') }}</label> </span>
                         <span class="page-number">Página - {{ page + 2 }}/{{ page + 3 }}</span>
                     </span>
@@ -570,7 +570,7 @@
                 <div class="p-header">
                     <img width="250"  alt="image" src="{{ asset('assets/images/proformaHeader.png') }}">
                     <span class="pull-right">
-                        <span class="spacing-right">Proposta: <label>{{ order.id }}</label> </span>
+                        <span class="spacing-right">Proposta: <label>{{ order.reference }}</label> </span>
                         <span class="spacing-right"><label>{{ order.createdAt|date('d/m/Y') }}</label> </span>
                         <span class="page-number">Página - {{ page + 3 }}/{{ page + 3 }}</span>
                     </span>

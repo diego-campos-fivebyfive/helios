@@ -258,3 +258,7 @@ services:
     order_finder:
         class: AppBundle\Service\Order\OrderFinder
         arguments: ['@order_manager']
+
+    order_reference:
+        class: AppBundle\Service\Order\OrderReference
+        arguments: ['@order_manager']

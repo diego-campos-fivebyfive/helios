@@ -469,6 +469,8 @@ class ProjectGeneratorController extends AbstractController
 
         $manager->save($order);
 
+        $this->get('order_reference')->generate($order);
+
         return $this->redirectToRoute('project_generator', [
             'order' => $order->getId()
         ]);
