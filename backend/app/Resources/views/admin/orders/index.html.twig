@@ -162,20 +162,18 @@
 
                                     <td class="text-center">
                                         <div class="btn-group btn-group-sm col-md-12 btn-group-justified">
-                                            {% if displayProforma %}
-                                                {% if order.hasProforma %}
-                                                    <a class="btn btn-default {{ order.proforma ? 'validated' }}"
-                                                       href="{{ path('order_file',{id:order.id, type:'proforma'}) }}"
-                                                       target="_blank"> <i class="fa fa-file-pdf-o"></i>
-                                                        <br>
-                                                        <small>Proforma</small>
-                                                    </a>
-                                                {% else %}
-                                                    <i class="btn btn-default fa fa-file-excel-o">
-                                                        <br>
-                                                        <small>Proforma</small>
-                                                    </i>
-                                                {% endif %}
+                                            {% if order.hasProforma %}
+                                                <a class="btn btn-default {{ order.proforma ? 'validated' }}"
+                                                   href="{{ path('order_file',{id:order.id, type:'proforma'}) }}"
+                                                   target="_blank"> <i class="fa fa-file-pdf-o"></i>
+                                                    <br>
+                                                    <small>Proforma</small>
+                                                </a>
+                                            {% else %}
+                                                <i class="btn btn-default fa fa-file-pdf-o">
+                                                    <br>
+                                                    <small>Proforma</small>
+                                                </i>
                                             {% endif %}
 
                                             <a class="btn btn-default {{ order.deliveryAddress ? 'validated' }}"
@@ -192,7 +190,7 @@
                                                     <small>Comprovante</small>
                                                 </a>
                                             {% else %}
-                                                <i class="btn btn-default fa fa-file-excel-o">
+                                                <i class="btn btn-default fa fa fa-file-text">
                                                     <br>
                                                     <small>Comprovante</small>
                                                 </i>
