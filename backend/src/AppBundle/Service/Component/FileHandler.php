@@ -14,7 +14,9 @@ namespace AppBundle\Service\Component;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\FileBag;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Util\Inflector;
+use Aws\S3\S3Client;
 
 /**
  * This class
@@ -28,15 +30,27 @@ class FileHandler
     /**
      * @var string
      */
-    private $uploadDir;
+    private $s3;
+
+    /**
+     * @var string
+     */
+    private $ambience;
+
+    /**
+     * @var string
+     */
+    private $container;
+
 
     /**
      * FileHandler constructor.
      * @param $uploadDir
      */
-    function __construct($uploadDir)
+    function __construct(ContainerInterface $container)
     {
-        $this->uploadDir = $uploadDir;
+        $this->s3 = $container->get('aws.s3');
+        $this->ambience = $container->getParameter('ambience') == 'production' ? 'production' : 'homolog';
     }
 
     /**
@@ -65,15 +79,41 @@ class FileHandler
 
                 $extension = $file->getClientOriginalExtension();
 
-                $format = 'pdf' == $extension ? '%s_%s.%s' : '%s_%s_thumb.%s';
+                if ('pdf' == $extension) {
+                    $format = '%s_%s.%s';
+                    $type = 'datasheet';
+                }
+                else {
+                    $format = '%s_%s_thumb.%s';
+                    $type = 'image';
+                }
 
                 $filename = sprintf($format, $name, $component->getId(), $extension);
 
-                $file->move($this->uploadDir, $filename);
+                $this->move([
+                    'file' => $file,
+                    'filename' => $filename,
+                    'root' => 'component',
+                    'type' => $type,
+                    'access' => 'public'
+                ]);
 
                 $accessor->setValue($component, $field, $filename);
             }
         }
+    }
+
+    /**
+     * @param $files
+     */
+    public function move(array $config)
+    {
+        $this->s3->putObject([
+            'Bucket' => "pss-{$this->ambience}-{$config['access']}",
+            'Key' => "{$config['root']}/{$config['type']}/{$config['filename']}",
+            'Body' => fopen($config['file'], 'rb'),
+            'ACL' => "{$config['access']}-read"
+        ]);
     }
 
     /**
