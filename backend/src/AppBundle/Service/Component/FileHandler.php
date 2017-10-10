@@ -104,16 +104,30 @@ class FileHandler
     }
 
     /**
-     * @param $files
+     * @param $config
      */
     public function move(array $config)
     {
+        $acl = ($config['access'] == 'public') ? 'public-read' : 'private';
+
         $this->s3->putObject([
             'Bucket' => "pss-{$this->ambience}-{$config['access']}",
             'Key' => "{$config['root']}/{$config['type']}/{$config['filename']}",
             'Body' => fopen($config['file'], 'rb'),
-            'ACL' => "{$config['access']}-read"
+            'ACL' => $acl
         ]);
+    }
+
+    /**
+     * @param $config
+     */
+    public function link(array $config)
+    {
+        $host = 'https://s3-sa-east-1.amazonaws.com';
+        $bucket = "pss-{$this->ambience}-{$config['access']}";
+        $path = "{$host}/{$bucket}/{$config['root']}/{$config['type']}";
+
+        return "{$path}/{$config['filename']}";
     }
 
     /**
