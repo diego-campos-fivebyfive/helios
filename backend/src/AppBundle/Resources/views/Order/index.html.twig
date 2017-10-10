@@ -69,11 +69,30 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
 
-            <div class="col-md-12" style="margin-bottom: 10px;">
-                <a class="btn btn-success pull-right" href="{{ path('project_generator') }}">
-                    <i class="fa fa-plus"></i> Orçamento
-                </a>
-            </div>
+                <div class="col-md-8">
+                    <div class="row">
+
+                        {{ form_start(form) }}
+
+                        <div class="form-group col-md-3">
+                            {{ form_widget(form.status,{attr:{class:'form-control'}}) }}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-md">
+                            <i class="fa fa-search"></i> Pesquisar
+                        </button>
+
+                        {{ form_end(form) }}
+
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <a class="btn btn-success pull-right" href="{{ path('project_generator') }}">
+                        <i class="fa fa-plus"></i> Orçamento
+                    </a>
+                </div>
+
 
             <div class="col-md-12">
                 <div class="ibox float-e-margins flow-h">
@@ -87,7 +106,7 @@
                         <table class="table table-stripped">
                             <thead>
                                 <tr>
-                                    <td class="col-md-2 text-center">Nº</td>
+                                    <td class="col-md-2 text-center">Número</td>
                                     <td class="text-center">Sistemas</td>
                                     <td class="text-center">Status</td>
                                     <td class="text-center">Arquivos</td>
