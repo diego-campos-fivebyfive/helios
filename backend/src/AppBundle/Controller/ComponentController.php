@@ -122,22 +122,14 @@ class ComponentController extends AbstractController
     public function updateAction(Request $request, $type, $id)
     {
         $component = $this->findComponent($type, $id);
-
-        if ('module' == $type) {
-            $formClass = ModuleType::class;
-        }
-        else {
-            $formClass = InverterType::class;
-        }
+        $formClass = ('module' == $type) ? ModuleType::class : InverterType::class;
 
         $form = $this->createForm($formClass, $component);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->saveComponent($component, $type, $request);
         }
-
 
         return $this->render($type.'.form', [
             'form' => $form->createView(),
@@ -182,37 +174,9 @@ class ComponentController extends AbstractController
     private function saveComponent($component, $type, Request $request)
     {
         $manager = $this->manager($type);
-
         $manager->save($component);
 
-        $uploadDir = $this->getComponentsDir();
-
-        foreach ($request->files->all() as $field => $uploadedFile) {
-
-            if ($uploadedFile instanceof UploadedFile) {
-
-                $getter = 'get' . ucfirst($field);
-                $setter = 'set' . ucfirst($field);
-
-                $ext = $uploadedFile->getClientOriginalExtension();
-                $currentFile = $component->$getter();
-
-                $format = 'pdf' == $ext ? '%s_%s.%s' : '%s_%s_thumb.%s';
-
-                $filename = sprintf($format, $type, $component->getId(), $ext);
-
-                if ($currentFile) {
-                    $currentFilePath = $uploadDir . $currentFile;
-                    if (file_exists($currentFilePath)) {
-                        unlink($currentFilePath);
-                    }
-                }
-
-                $uploadedFile->move($uploadDir, $filename);
-
-                $component->$setter($filename);
-            }
-        }
+        $this->get('component_file_handler')->upload($component, $request->files);
 
         $manager->save($component);
 
