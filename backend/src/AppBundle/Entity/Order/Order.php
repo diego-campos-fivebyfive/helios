@@ -800,7 +800,7 @@ class Order implements OrderInterface, InsurableInterface
      */
     public function getInsuranceQuota()
     {
-        return $this->getTotal();
+        return $this->getSubTotal();
     }
 
     /**
