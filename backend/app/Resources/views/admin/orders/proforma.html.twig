@@ -28,7 +28,6 @@
     }
     .leaf-style {
         color: #000000;
-        font-family:Arial, Helvetica, sans-serif;
         font-size: 12px;
     }
     .p-header {
@@ -37,14 +36,15 @@
     }
     .p-body {
         width: 100%;
-        height: 232mm;
+        height: 227mm;
     }
     .p-footer {
         width: 100%;
-        height: 30mm;
+        height: 35mm;
     }
     p {
         margin-top: 5mm;
+        text-align: justify;
     }
     table {
         border: solid #AAA 1px;
@@ -69,7 +69,6 @@
         width: 100%;
     }
     .page-number {
-        float: right;
         color: #808080;
     }
     .color-blue {
@@ -101,6 +100,12 @@
     }
     .indentation {
         margin-left: 5mm;
+    }
+    .indentation-l {
+        margin-left: 10mm;
+    }
+    .spacing-right {
+        margin-right: 10mm;
     }
     .name-line {
         width: 60mm;
@@ -148,53 +153,54 @@
                 <div class="p-leaf leaf-style">
                     <div class="p-header">
                         <img width="250"  alt="image" src="{{ asset('assets/images/proformaHeader.png') }}">
-                        <span class="page-number">Página - {{ loop.index }}/{{ page + 3 }}</span>
+                        <span class="pull-right">
+                           <span class="spacing-right">Proposta: <label>{{ order.id }}</label> </span>
+                           <span class="spacing-right"><label>{{ order.createdAt|date('d/m/Y') }}</label> </span>
+                           <span class="page-number">Página - {{ loop.index }}/{{ page + 3 }}</span>
+                        </span>
                     </div>
 
                     <div class="p-body">
                         <table class="initial-data width-total" style="border: transparent;">
-                            <thead>
-                            <tr>
-                                <td colspan="2">
-                                    <label class="no-margins">Proposta: </label> {{ order.id }}
-                                </td>
-                                <td colspan="2">
-                                    <label  class="no-margins">Data: </label> {{ order.createdAt|date('d/m/Y') }}
-                                </td>
-                            </tr>
-                            </thead>
                             <tbody>
                             <tr>
                                 <td><label class="no-margins">Cliente: </label></td>
-                                <td> {{ order.customer }} </td>
+                                <td> {{ order.firstname }} </td>
 
-                                <td><label class="no-margins">CNPJ: </label></td>
-                                <td> {{ order.cnpj }} </td>
+                                <td><label class="no-margins">Nome: </label></td>
+                                <td> {{ order.lastname }} </td>
                             </tr>
                             <tr>
                                 <td><label class="no-margins">Endereço: </label></td>
                                 <td> {{ order.address }} </td>
 
-                                <td><label class="no-margins">IE: </label></td>
-                                <td> {{ order.ie }} </td>
+                                <td><label class="no-margins">CNPJ: </label></td>
+                                <td> {{ order.cnpj }} </td>
                             </tr>
                             <tr>
                                 <td><label class="no-margins">Cidade: </label></td>
                                 <td> {{ order.city }} </td>
 
-                                <td><label class="no-margins">Estado: </label></td>
-                                <td> {{ order.state }} </td>
+                                <td><label class="no-margins">IE: </label></td>
+                                <td> {{ order.ie }} </td>
                             </tr>
                             <tr>
                                 <td><label class="no-margins">Contato: </label></td>
                                 <td> {{ order.contact }} </td>
 
-                                <td><label class="no-margins">Tel: </label></td>
-                                <td> {{ order.phone }} </td>
+                                <td><label class="no-margins">Estado: </label></td>
+                                <td> {{ order.state }} </td>
                             </tr>
                             <tr>
                                 <td><label class="no-margins">Email: </label></td>
                                 <td class="color-blue"> {{ order.email }} </td>
+
+                                <td><label class="no-margins">Tel: </label></td>
+                                <td> {{ order.phone }} </td>
+                            </tr>
+                            <tr>
+                                <td><label class="no-margins">Atendente: </label></td>
+                                <td> {{ order.agent.name }} </td>
 
                                 <td><label class="no-margins">CEP: </label></td>
                                 <td> {{ order.postcode }} </td>
@@ -214,21 +220,11 @@
                         <table class="width-total">
                             <thead>
                             <tr>
-                                <th>
-                                    Código
-                                </th>
-                                <th style="width: 50%;">
-                                    Produto
-                                </th>
-                                <th>
-                                    Custo Un.
-                                </th>
-                                <th>
-                                    QTD
-                                </th>
-                                <th>
-                                    Custo T.
-                                </th>
+                                <th>Código</th>
+                                <th style="width: 50%;">Produto</th>
+                                <th>Custo Un.</th>
+                                <th>QTD</th>
+                                <th>Custo T.</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -257,7 +253,7 @@
                             </thead>
                             <tbody>
                             <tr>
-                                <td>
+                                <td class="text-justify" style="font-size: 11px;">
                                     COBERTURA SICES SOLAR ALL RISK DO SISTEMA SOLAR FV INSTALADO POR 1 ANO APOS
                                     60 DIAS NFE SICES APOLICE EMITIDA AO CLIENTE FINAL CPF O PROPRIETARIO ABAIXO
                                     COBRE O VALOR DOS EQUIPAMENTOS SICES + 50% CONTRA DANOS DE CAUSA EXTERNA DANOS
@@ -302,7 +298,11 @@
             <div class="p-leaf leaf-style">
                 <div class="p-header">
                     <img width="250"  alt="image" src="{{ asset('assets/images/proformaHeader.png') }}">
-                    <span class="page-number">Página - {{ page + 1 }}/{{ page + 3 }}</span>
+                    <span class="pull-right">
+                        <span class="spacing-right">Proposta: <label>{{ order.id }}</label> </span>
+                        <span class="spacing-right"><label>{{ order.createdAt|date('d/m/Y') }}</label> </span>
+                        <span class="page-number">Página - {{ page + 1 }}/{{ page + 3 }}</span>
+                    </span>
                 </div>
 
                 <div class="p-body">
@@ -314,8 +314,11 @@
                     <br/>
                     <span class="indentation"> 2) Frete</span>
                     <span class="pull-right field-width">
-                        {% if order.shippingrules and order.shippingrules['type'] == 'sices' %}
-                        INCLUSO{% elseif order.shippingrules['type'] == 'self' %}{{ order.shippingrules['company']['name'] }}{% endif %}
+                        {% if order.shippingrules and order.shippingrules.type == 'sices' %}
+                            {{ order.shippingrules.value|currency }}
+                        {% elseif order.shippingrules.type == 'self' %}
+                            Não Incluso
+                        {% endif %}
                     </span>
                     <br/>
                     <label class="no-margins">TOTAL FORNECIMENTO</label>
@@ -326,8 +329,8 @@
                         mesmas, caso no ato do pagamento final/integral a cotação EUR/BRL (EURBRL=X PTAX) for superior a XX,XX
                     </p>
 
-                    <label class="width-float-total no-margins">Condições de pagamentos:</label>
-                    {% for payment in order.metadata.payment_method.quotas %}
+                    <label class="width-float-total no-margins">Condições de pagamento:</label>
+                    {% for payment in order.paymentMethod('array').quotas %}
                     <span class="indentation"> &#{{ loop.index + 96 }}; ) {{ payment.description }}
                         {{ payment.percent }}% - {{ payment.date|date('d/m/Y') }}</span>
                     <span class="pull-right field-width">{{ payment.value|currency }}</span>
@@ -345,17 +348,23 @@
                     </div>
 
                     <div class="indentation spacing">
-                        <label class="no-margins">&#10004; Disponibilidade para coleta:</label> {{ "now"|date_modify("+10 day")|date('d/m/Y') }}<br/>
-                        <label class="no-margins">&#10004; Prazo de entrega:</label> 10 DIAS UTEIS<br/>
+                        <label class="no-margins">&#10004; Disponibilidade para coleta:</label> {{ order.deliveryAt.date|date('d/m/Y') }}<br/>
+                        {% if order.shippingrules and order.shippingrules.type == 'sices' %}
+                            <label class="no-margins">&#10004; Prazo de entrega:</label> {{ order.deadline }} DIAS<br/>
+                        {% endif %}
                         <label class="no-margins">&#10004; Validade da proposta:</label> 3 (três) dias<br/>
                         <label class="no-margins">&#10004; Embalagem unitário:</label> Padrão<br/>
                         <label class="no-margins">&#10004; Transporte:</label>
-                        {% if order.shippingrules and order.shippingrules['type'] == 'sices' %}
-                        INCLUSO{% elseif order.shippingrules['type'] == 'self' %}{{ order.shippingrules['company']['name'] }}{% endif %}
+                        {% if order.shippingrules and order.shippingrules.type == 'sices' %}
+                            {{ order.shippingrules.value|currency }}
+                        {% elseif order.shippingrules.type == 'self' %}
+                            Não Incluso
+                        {% endif %}
                         <br/>
                         <label class="no-margins">&#10004; Seguro:</label> {% if order.TotalInsurance %} {{ order.TotalInsurance|currency }} {% else %} Sem Seguro {% endif %}<br/>
                         <label class="no-margins">&#10004; Serviço de Start-up:</label> NÃO INCLUSO<br/>
-                        <label class="no-margins">&#10004; Endereço de entrega:  :</label> {{ order.address }}, {{ order.city }}, {{ order.state }}.
+                        <label class="no-margins">&#10004; Endereço de entrega:</label> {{ order.deliveryAddress }}{% if order.shippingRules.state %}, <label class="no-margins">{{ order.shippingRules.state }}</label>{% endif %}.<br/>
+                        <label class="no-margins">&#10004; Observações:</label> {{ order.note }}
                     </div>
 
                 </div>
@@ -382,7 +391,11 @@
             <div class="p-leaf leaf-style">
                 <div class="p-header">
                     <img width="250"  alt="image" src="{{ asset('assets/images/proformaHeader.png') }}">
-                    <span class="page-number">Página - {{ page + 2 }}/{{ page + 3 }}</span>
+                    <span class="pull-right">
+                        <span class="spacing-right">Proposta: <label>{{ order.id }}</label> </span>
+                        <span class="spacing-right"><label>{{ order.createdAt|date('d/m/Y') }}</label> </span>
+                        <span class="page-number">Página - {{ page + 2 }}/{{ page + 3 }}</span>
+                    </span>
                 </div>
 
                 <div class="p-body">
@@ -394,12 +407,12 @@
                         NCM 8501.34.20 conforme convenio CONFAZ 101/97
                     </p>
 
-                    <label class="width-float-total text-center text-underline">
+                    <label class="width-float-total text-underline text-justify">
                         De um ponto de vista geral, tudo que não é claramente especificado fica excluído do fornecimento
                         e o “comprador” tem pleno conhecimento de todos os aspectos técnicos dos equipamentos e componentes ofertados
                     </label>
 
-                    <div class="indentation">
+                    <div class="indentation text-justify">
                         &#10004; Emissão de NF-e como único item “GERADOR FOTOVOLTAICO” conforme Convênio CONFAZ 101/97, que
                         concede isenção do ICMS nas operações com equipamentos e componentes para o aproveitamento
                         das energias solar e eólica.
@@ -411,18 +424,10 @@
                     <table class="width-total">
                         <thead>
                         <tr class="back-l-gray">
-                            <th>
-                                PIS
-                            </th>
-                            <th>
-                                CONFINS
-                            </th>
-                            <th>
-                                IPI
-                            </th>
-                            <th>
-                                ICMS
-                            </th>
+                            <th>PIS</th>
+                            <th>CONFINS</th>
+                            <th>IPI</th>
+                            <th>ICMS</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -505,24 +510,22 @@
                         </tbody>
                     </table>
 
-                    <label class="spacing">
-                        Observação: Nos primeiros 12/24/36 meses a garantia será atendida diretamente pela SICES BRASIL,
-                        após este prazo o processo para efeito de garantia deverá ser direto com o Fabricante.
-                    </label>
-
                     <p>
                         Esperamos que o presente orçamento corresponda as necessidades, e, colocamo-nos ao inteiro dispor
                         de V.Sas., para quaisquer informações ou esclarecimentos adicionais.
                     </p>
 
-                    <label class="text-center">TERMO DE ACEITAÇÃO</label>
+                    <label class="width-float-total text-center">TERMO DE ACEITAÇÃO</label>
 
                     <p>
-                        <label class="no-margins">ENSOLAR ENERGIA SOLAR LTDA-ME</label>, Aceita todas as condições de fornecimento ofertadas nesta
+                        <label class="no-margins">{{ order.lastname }}</label>, Aceita todas as condições de fornecimento ofertadas nesta
                         proposta e condições de vendas e garantias da Sices Brasil:
                         <span class="color-blue text-underline">Condições gerais</span>.
                     </p>
 
+                    <p class="text-center">
+                        Itapevi-SP, {{ "now"|format_date(null, null, null, constant('IntlDateFormatter::LONG'))}}
+                    </p>
 
                     <div class="spacing">
                         <span class="spacing name-line name-line-left"></span>
@@ -530,22 +533,18 @@
                     </div>
                     <br/>
 
-                    <p>
-                        Itapevi-SP, {{ "now"|format_date(null, null, null, constant('IntlDateFormatter::LONG'))}}
-                    </p>
 
-                    <p>
+                    <p class="indentation-l">
                         Cordialmente<br/>
                         Jackson De Souza Chirollo<br/>
-                        <span class="color-blue">E-mail: jackson.chirollo@sices.eu</span>
+                        <span class="color-blue">E-mail: jackson.chirollo@sicesbrasil.com.br</span>
                     </p>
 
-                    <p>
-                        Por Pamela Camila Lodi<br/>
+                    <p class="indentation-l">
+                        Por {{ order.agent.name }}<br/>
                         Assistente comercial<br/>
-                        <span class="color-blue">E-mail: comercial9@sicesbrasil.com.br</span>
+                        <span class="color-blue">E-mail: {{ order.agent.email }}</span>
                     </p>
-
                 </div>
 
                 <div class="p-footer">
@@ -570,10 +569,14 @@
             <div class="p-leaf leaf-style">
                 <div class="p-header">
                     <img width="250"  alt="image" src="{{ asset('assets/images/proformaHeader.png') }}">
-                    <span class="page-number">Página - {{ page + 3 }}/{{ page + 3 }}</span>
+                    <span class="pull-right">
+                        <span class="spacing-right">Proposta: <label>{{ order.id }}</label> </span>
+                        <span class="spacing-right"><label>{{ order.createdAt|date('d/m/Y') }}</label> </span>
+                        <span class="page-number">Página - {{ page + 3 }}/{{ page + 3 }}</span>
+                    </span>
                 </div>
 
-                <div class="p-body" style="font-size: 14px; height: 227mm !important;">
+                <div class="p-body" style="height: 223mm !important;">
 
                     <label class="width-float-total text-underline text-center"><h2>Certificado de Seguro</h2></label>
 

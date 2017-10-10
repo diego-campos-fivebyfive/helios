@@ -31,8 +31,7 @@ class OrderType extends AbstractType
 
         if(self::TARGET_EDIT == $options['target']) {
             $builder
-                ->add('description')
-                ->add('note');
+                ->add('description');
         }
 
         if(self::TARGET_REVIEW == $options['target']){
@@ -67,7 +66,8 @@ class OrderType extends AbstractType
             }
 
             $builder
-                ->add('customer')
+                ->add('firstname')
+                ->add('lastname')
                 ->add('cnpj')
                 ->add('ie')
                 ->add('contact')

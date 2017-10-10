@@ -46,23 +46,28 @@
     <div class="hr-line-dashed col-md-12"></div>
 
     <div class="form-group col-md-12">
+        <div class="col-md-4">
+            {{ form_label(form.firstname, 'Cliente') }}
+            {{ form_widget(form.firstname, {attr:{class:'form-control'}}) }}
+        </div>
 
         <div class="col-md-4">
-            {{ form_label(form.customer, 'Cliente') }}
-            {{ form_widget(form.customer, {attr:{class:'form-control'}}) }}
+            {{ form_label(form.lastname, 'Nome') }}
+            {{ form_widget(form.lastname, {attr:{class:'form-control'}}) }}
         </div>
 
         <div class="col-md-4">
             {{ form_label(form.cnpj) }}
             {{ form_widget(form.cnpj, {attr:{class:'form-control'}}) }}
         </div>
+    </div>
+
+    <div class="form-group col-md-12">
         <div class="col-md-4">
             {{ form_label(form.ie, 'Inscrição Estadual') }}
             {{ form_widget(form.ie, {attr:{class:'form-control'}}) }}
         </div>
-    </div>
 
-    <div class="form-group col-md-12">
         <div class="col-md-4">
             {{ form_label(form.contact) }}
             {{ form_widget(form.contact, {attr:{class:'form-control'}}) }}
@@ -72,15 +77,15 @@
             {{ form_label(form.email) }}
             {{ form_widget(form.email, {attr:{class:'form-control'}}) }}
         </div>
-
-        <div class="col-md-4">
-            {{ form_label(form.phone) }}
-            {{ form_widget(form.phone, {attr:{class:'form-control'}}) }}
-        </div>
     </div>
 
     <div class="form-group col-md-12">
-        <div class="col-md-4">
+        <div class="col-md-3">
+            {{ form_label(form.phone) }}
+            {{ form_widget(form.phone, {attr:{class:'form-control'}}) }}
+        </div>
+
+        <div class="col-md-2">
             {{ form_label(form.postcode) }}
             {{ form_widget(form.postcode, {attr:{class:'form-control'}}) }}
         </div>
@@ -95,7 +100,7 @@
             {{ form_widget(form.city, {attr:{class:'form-control'}}) }}
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             {{ form_label(form.address) }}
             {{ form_widget(form.address, {attr:{class:'form-control'}}) }}
         </div>
@@ -158,14 +163,6 @@
         },
         fillAccount: function (data) {
             $.each(data, function (i, value) {
-                switch (i) {
-                    case 'firstname':
-                        i = 'customer';
-                        break;
-                    case 'street':
-                        i = 'address';
-                        break;
-                }
                 $('#order_' + i).val(value);
             });
         },

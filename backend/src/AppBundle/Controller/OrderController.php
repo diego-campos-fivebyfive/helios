@@ -9,10 +9,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @Route("orders")
@@ -110,6 +110,21 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/shipping", name="order_shipping_info")
+     */
+    public function shippingInfoAction(Request $request, Order $order)
+    {
+        if(null != $deliveryAddress = $request->request->get('deliveryAddress')){
+            $order->setDeliveryAddress($deliveryAddress);
+            $this->manager('order')->save($order);
+        }
+
+        return $this->render('order.shipping_info', array(
+            'order' => $order
+        ));
+    }
+
+    /**
      * @Route("/{id}/insure", name="order_insure")
      * @Method("post")
      */
@@ -139,14 +154,14 @@ class OrderController extends AbstractController
 
             if($file instanceof UploadedFile) {
 
-                $dir = $this->getUploadDir('file_payment');
+                $dir = $this->getUploadDir('filePayment');
 
                 $current = $dir . $order->getFilePayment();
 
                 if(is_file($current)) unlink($current);
 
                 $name = sprintf(
-                    'payment_file_%s_%s.%s', $order->getId(),
+                    'filePayment_%s_%s.%s', $order->getId(),
                     (new \DateTime())->format('Ymd-His'),
                     $file->getClientOriginalExtension()
                 );
@@ -169,28 +184,27 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/file", name="order_file")
+     * @Route("/{id}/file/{type}", name="order_file")
      */
-    public function fileAction(Request $request, Order $order)
+    public function fileAction(Order $order, $type)
     {
-        if($request->query->get('type') == 'proforma') {
+        $this->denyAccessUnlessGranted('edit', $order);
 
-            if(null != $proforma = $order->getProforma()) {
+        $getter = 'get' . ucfirst($type);
 
-                $file = $this->getUploadDir('proforma') . $proforma;
+        if(!method_exists($order, $getter))
+            throw $this->createNotFoundException(sprintf('The class %s does not have %s file', get_class($order), $type));
 
-                return new BinaryFileResponse($file, Response::HTTP_OK, [], true, ResponseHeaderBag::DISPOSITION_ATTACHMENT);
-            }
-        } elseif ($request->query->get('type') == 'file_payment') {
-            if(null != $filePayment = $order->getFilePayment()) {
+        if(null != $filename = $order->$getter()){
 
-                $file = $this->getUploadDir('file_payment') . $filePayment;
+            $file = $this->getUploadDir($type) . $filename;
 
-                return new BinaryFileResponse($file, Response::HTTP_OK, [], true, ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+            if(is_file($file)) {
+                return new BinaryFileResponse($file, Response::HTTP_OK, [], true, ResponseHeaderBag::DISPOSITION_INLINE);
             }
         }
 
-        throw $this->createNotFoundException('File not found');
+        throw $this->createNotFoundException(sprintf('File %s not found', $type));
     }
 
     /**
@@ -201,44 +215,56 @@ class OrderController extends AbstractController
         $status = Response::HTTP_CONFLICT;
         $filename = null;
 
-        if ('prod' == $this->get('kernel')->getEnvironment()) {
+        $snappy = $this->get('knp_snappy.pdf');
+        $snappy->setOption('viewport-size', '1280x1024');
+        $snappy->setOption('margin-top', 0);
+        $snappy->setOption('margin-bottom', 0);
+        $snappy->setOption('margin-left', 0);
+        $snappy->setOption('margin-right', 0);
+        $snappy->setOption('zoom', 2);
 
-            $snappy = $this->get('knp_snappy.pdf');
-            $snappy->setOption('viewport-size', '1280x1024');
-            $snappy->setOption('margin-top', 0);
-            $snappy->setOption('margin-bottom', 0);
-            $snappy->setOption('margin-left', 0);
-            $snappy->setOption('margin-right', 0);
-            $snappy->setOption('zoom', 2);
+        $filename = sprintf('proforma_%s_%s_.pdf', $order->getId(), (new \DateTime())->format('Ymd-His'));
+        $file = $this->getUploadDir('proforma') . $filename;
 
-            $filename = sprintf('proforma_%s_%s_.pdf', $order->getId(), (new \DateTime())->format('Ymd-His'));
-            $file = $this->getUploadDir('proforma') . $filename;
+        $url = $this->generateUrl('proforma_pdf', ['id' => $order->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
 
-            $url = $this->generateUrl('proforma_pdf', ['id' => $order->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
+        try {
 
-            try {
+            $snappy->generate($url, $file);
 
-                $snappy->generate($url, $file);
-
-                if (file_exists($file)) {
-                    $status = Response::HTTP_OK;
-                }
-
-                $order->setProforma($filename);
-
-                $this->manager('order')->save($order);
-
-            } catch (\Exception $exception) {
-
-                return $this->json([
-                    'error' => $exception->getMessage()
-                ], $status);
+            if (file_exists($file)) {
+                $status = Response::HTTP_OK;
             }
+
+            $order->setProforma($filename);
+
+            $this->manager('order')->save($order);
+
+        } catch (\Exception $exception) {
+
+            return $this->json([
+                'error' => $exception->getMessage()
+            ], $status);
+        }
+    }
+
+    /**
+     * @Route("/{id}/delete", name="order_delete")
+     * @Method("delete")
+     */
+    public function deleteAction(Order $order)
+    {
+        $this->denyAccessUnlessGranted('edit', $order);
+
+        if(!$order->isBuilding()){
+            return $this->json([
+                'error' => 'Somente orçamentos em edição podem ser excluídos'
+            ], Response::HTTP_BAD_REQUEST);
         }
 
-        return $this->json([
-            'filename' => $filename
-        ], $status);
+        $this->manager('order')->delete($order);
+
+        return $this->json([]);
     }
 
     /**

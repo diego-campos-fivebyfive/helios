@@ -22,6 +22,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * @Security("has_role('ROLE_OWNER') or has_role('ROLE_PLATFORM_AFTER_SALES')")
@@ -43,6 +44,9 @@ class ProjectGeneratorController extends AbstractController
         $order = $this->manager('order')->find($id);
 
         $this->denyAccessUnlessGranted('edit', $order);
+
+        if($order->isChildren())
+            throw $this->createAccessDeniedException('Only master order can be edited');
 
         if(!$this->checkOrderStatus($order)){
             return $this->render('generator.error', [
@@ -200,6 +204,14 @@ class ProjectGeneratorController extends AbstractController
             $rule['company'] = $form->getData();
 
             $order->setShippingRules($rule);
+
+            /**
+             * TODO: This is a temporary solution, it will soon be moved to exclusive processing
+             */
+            if(null != $deliveryAddress = $request->request->get('deliveryAddress')){
+                $order->setDeliveryAddress($deliveryAddress);
+                $this->manager('order')->save($order);
+            }
 
             $this->manager('order')->save($order);
 
@@ -431,42 +443,31 @@ class ProjectGeneratorController extends AbstractController
      */
     private function resolveOrderReference()
     {
+        $manager = $this->manager('order');
         $member = $this->member();
         $account = $this->account();
-        $manager = $this->manager('order');
         $isPlatform = $member->isPlatformUser();
 
         $criteria = [
             'status' => Order::STATUS_BUILDING,
             'source' => $isPlatform ? Order::SOURCE_PLATFORM : Order::SOURCE_ACCOUNT,
-            'account' => $isPlatform ? null : $account,
         ];
 
-        if($member->isPlatformCommercial())
+        if(!$isPlatform){
+            $criteria['account'] = $account;
+        }else{
             $criteria['agent'] = $member;
+        }
 
-        /** @var \AppBundle\Service\Order\OrderFinder $finder */
-        $finder = $this->get('order_finder');
+        $accessor = PropertyAccess::createPropertyAccessor();
+
+        $order = $manager->create();
 
         foreach ($criteria as $property => $value){
-            $finder->set($property, $value);
+            $accessor->setValue($order, $property, $value);
         }
 
-        /** @var OrderInterface $order */
-        if(null == $order = $finder->last()){
-
-            $order = $manager->create();
-
-            if (!$isPlatform) {
-                $order->setAccount($account);
-            }else{
-                $order->setAgent($this->member());
-            }
-
-            $order->setSource($criteria['source']);
-
-            $manager->save($order);
-        }
+        $manager->save($order);
 
         return $this->redirectToRoute('project_generator', [
             'order' => $order->getId()

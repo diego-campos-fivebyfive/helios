@@ -125,7 +125,14 @@ class Order implements OrderInterface, InsurableInterface
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    private $customer;
+    private $firstname;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $lastname;
 
     /**
      * @var string
@@ -380,7 +387,7 @@ class Order implements OrderInterface, InsurableInterface
      */
     public function getPower()
     {
-        if ($this->isBudget()) {
+        if ($this->isMaster()) {
             $power = $this->power;
         } else {
             $power = $this->power + $this->getSubPower();
@@ -527,9 +534,9 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @inheritDoc
      */
-    public function setCustomer($customer)
+    public function setFirstname($firstname)
     {
-        $this->customer = $customer;
+        $this->firstname = $firstname;
 
         return $this;
     }
@@ -537,9 +544,27 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @inheritDoc
      */
-    public function getCustomer()
+    public function getFirstname()
     {
-        return $this->customer;
+        return $this->firstname;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setLastname($lastname)
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLastname()
+    {
+        return $this->lastname;
     }
 
     /**
@@ -737,7 +762,7 @@ class Order implements OrderInterface, InsurableInterface
     public function getSubTotal()
     {
         $total = 0;
-        $sources = $this->isBudget() ? $this->childrens : $this->elements;
+        $sources = $this->isMaster() ? $this->childrens : $this->elements;
         foreach ($sources as $element){
             $total += $element instanceof Element ? $element->getTotal() : $element->getSubTotal();
         }
@@ -750,7 +775,7 @@ class Order implements OrderInterface, InsurableInterface
      */
     public function getTotal()
     {
-        $insurance = $this->isBudget() ? $this->getTotalInsurance() : $this->getInsurance();
+        $insurance = $this->isMaster() ? $this->getTotalInsurance() : $this->getInsurance();
 
         $total = $this->getSubTotal() + $this->getShipping() + $insurance;
 
@@ -878,8 +903,27 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @inheritDoc
      */
+    public function isParent()
+    {
+        return $this->hasChildren();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isMaster()
+    {
+        return $this->isParent();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function addElement(ElementInterface $element)
     {
+        if($this->isMaster())
+            throw new \InvalidArgumentException('Master order can not have elements');
+
         if (!$this->elements->contains($element)) {
             $this->elements->add($element);
 
@@ -912,14 +956,34 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @inheritDoc
      */
+    public function isChildren()
+    {
+        return $this->parent instanceof OrderInterface;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasChildren()
+    {
+        return !$this->childrens->isEmpty();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function addChildren(OrderInterface $children)
     {
-        if($children->isBudget())
-            throw new \InvalidArgumentException('You can not add a budget to another');
+        if($children->isParent() || $children === $this || $this->isChildren())
+            throw new \InvalidArgumentException('The children order is parent');
 
         if(!$this->childrens->contains($children)){
+
             $this->childrens->add($children);
-            if(!$children->getParent()) $children->setParent($this);
+
+            if(!$children->getParent()){
+                $children->setParent($this);
+            }
         }
 
         return $this;
@@ -946,11 +1010,13 @@ class Order implements OrderInterface, InsurableInterface
     }
 
     /**
+     * @deprecated This is a insecure method. Can be removed.
+     * @see Order::isMaster() method
      * @inheritDoc
      */
     public function isBudget()
     {
-        return !$this->childrens->isEmpty() || !$this->parent;
+        return $this->isMaster();
     }
 
     /**
@@ -1045,7 +1111,7 @@ class Order implements OrderInterface, InsurableInterface
     {
         $totalCmv = 0;
 
-        if ($this->isBudget()) {
+        if ($this->isMaster()) {
             foreach ($this->childrens as $children) {
                 $totalCmv += $children->getTotalCmv();
             }

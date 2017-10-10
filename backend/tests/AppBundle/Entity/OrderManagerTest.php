@@ -15,6 +15,40 @@ class OrderManagerTest extends AppTestCase
 {
     use ObjectHelperTest;
 
+    public function testChildrenAndParentCheck()
+    {
+        $manager = $this->getOrderManager();
+
+        $order1 = $manager->create();
+
+        $this->assertFalse($order1->isChildren());
+        $this->assertFalse($order1->isParent());
+
+        $order2 = $manager->create();
+        $order2->setParent($order1);
+
+        $this->assertFalse($order1->isChildren());
+        $this->assertTrue($order1->isParent());
+        $this->assertTrue($order2->isChildren());
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testExceptionWhenAddingElementOnMasterOrder()
+    {
+        $manager = $this->getOrderManager();
+
+        $order1 = $manager->create();
+        $order2 = $manager->create();
+
+        $order1->addChildren($order2);
+
+        $element = new Element();
+
+        $order1->addElement($element);
+    }
+
     public function testFluentSetterProperties()
     {
         $data = [
@@ -25,7 +59,7 @@ class OrderManagerTest extends AppTestCase
             'power' => 175.25,
             'shippingRules' => ['foo' => 'bar'],
             'sendAt' => new \DateTime('-10 days'),
-            'filename' => 'order_file.pdf',
+            'proforma' => 'order_file.pdf',
             'contact' => 'Name of contact',
             'email' => 'emailofcontact@gmail.com',
             'phone' => '(11) 99987-5874',
@@ -73,31 +107,17 @@ class OrderManagerTest extends AppTestCase
         }
 
         $order->setMetadata(['memorial' => [
-            'version' => 10,
-            'isquik_id' => 200
+            'version' => 10
         ]]);
 
         $metadata = $order->getMetadata('memorial');
 
+        $this->assertFalse($order->isMaster());
         $this->assertArrayHasKey('version',$metadata);
-
         $this->assertEquals(5, $order->getElements()->count());
-        $this->assertEquals($total, $order->getTotal());
+        $this->assertEquals($total, $order->getSubtotal());
 
         $manager->save($order);
-    }
-
-    public function testSelfAssociations()
-    {
-        $manager = $this->getOrderManager();
-
-        $order1 = $manager->create();
-        $order2 = $manager->create();
-
-        $this->assertFalse($order1->isBudget());
-
-        $order1->addChildren($order2);
-        $this->assertTrue($order1->isBudget());
     }
 
     /**
@@ -112,17 +132,19 @@ class OrderManagerTest extends AppTestCase
         $order3 = $manager->create();
 
         $order2->setParent($order1);
-        $this->assertTrue($order1->isBudget());
+        $this->assertTrue($order1->isMaster());
 
         // TODO: Uncomment to run all tests
-        //$order3->addChildren($order1);    via addChildren(parent)
-        //$order2->addChildren($order3);    via children::addChildren
-        //$order1->setParent($order3);      via parent::setParent()
-        $order3->setParent($order3);      //via sameObject
+        //$order3->addChildren($order1);    //via addChildren(orderParent)
+        //$order2->addChildren($order3);    //via children::addChildren(anotherOrderChildren)
+        $order1->setParent($order3);      //via parent::setParent()
+        //$order3->setParent($order3);      //via sameObject
     }
 
     public function testMetadata()
     {
+        $this->markTestSkipped();
+
         $element = new Element();
 
         // Test value undefined
