@@ -17,40 +17,7 @@
                 <p>
                 <h4 class="text-center">{{ item.description }}</h4>
 
-                <table class="width-total orders" border="1" cellpadding="4" cellspacing="0">
-                    <thead>
-                    <tr class="th">
-                        <th>
-                            Código
-                        </th>
-                        <th style="width: 45%;">
-                            Produto
-                        </th>
-                        <th>
-                            Custo Un.
-                        </th>
-                        <th>
-                            QTD
-                        </th>
-                        <th>
-                            Custo T.
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    {% for element in item.elements %}
-                        <tr class="td">
-                            <td>{{ element.code }}</td>
-                            <td class="text-left">{{ element.description }}</td>
-                            <td>{{ element.unitPrice|currency }}</td>
-                            <td class="text-center">{{ element.quantity }}</td>
-                            <td>{{ element.total|currency }}</td>
-                        </tr>
-                    {% endfor %}
-
-                    </tbody>
-                </table>
+                {% include 'orders/emails/_items.html.twig' %}
 
                 {% include 'orders/emails/_totals.html.twig' %}
 
@@ -63,7 +30,7 @@
 
     <tr>
         <td class="content-block">
-            Pedimos, que aguarde a VALIDAÇÂO de seu orçamento para prosseguirmos com a negociação.
+            Pedimos, que aguarde a VALIDAÇÃO de seu orçamento para prosseguirmos com a negociação.
             <p>
                 Obrigado.
             </p>
