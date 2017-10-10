@@ -289,15 +289,26 @@ interface OrderInterface
     public function getPhone();
 
     /**
-     * @param string $customer
+     * @param string $firstname
      * @return OrderInterface
      */
-    public function setCustomer($customer);
+    public function setFirstname($firstname);
 
     /**
      * @return string
      */
-    public function getCustomer();
+    public function getFirstname();
+
+    /**
+     * @param string $lastname
+     * @return OrderInterface
+     */
+    public function setLastname($lastname);
+
+    /**
+     * @return string
+     */
+    public function getLastname();
 
     /**
      * @param string $postcode

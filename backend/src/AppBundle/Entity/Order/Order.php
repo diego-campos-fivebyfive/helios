@@ -125,7 +125,14 @@ class Order implements OrderInterface, InsurableInterface
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    private $customer;
+    private $firstname;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $lastname;
 
     /**
      * @var string
@@ -527,9 +534,9 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @inheritDoc
      */
-    public function setCustomer($customer)
+    public function setFirstname($firstname)
     {
-        $this->customer = $customer;
+        $this->firstname = $firstname;
 
         return $this;
     }
@@ -537,9 +544,27 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @inheritDoc
      */
-    public function getCustomer()
+    public function getFirstname()
     {
-        return $this->customer;
+        return $this->firstname;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setLastname($lastname)
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLastname()
+    {
+        return $this->lastname;
     }
 
     /**
