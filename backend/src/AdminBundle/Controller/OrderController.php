@@ -37,30 +37,12 @@ class OrderController extends AbstractController
         /** @var \AppBundle\Service\Order\OrderFinder $finder */
         $finder = $this->get('order_finder');
 
-        $finder->set('agent', $member);
+        $finder
+            ->set('agent', $member)
+            ->set('filter', $data)
+        ;
 
         $qb = $finder->queryBuilder();
-
-        if($data){
-
-            $likes = ['o.id', 'o.firstname', 'o.lastname', 'o.cnpj', 'o.power'];
-            $like = $data['like'];
-
-            if(!empty($like)) {
-                $expressions = [];
-                foreach ($likes as $field) {
-                    $expressions[] = $qb->expr()->like($field, $qb->expr()->literal('%' . $like . '%'));
-                }
-
-                $qb->andWhere($qb->expr()->orX()->addMultiple($expressions));
-            }
-
-            if(is_int($data['status'])){
-                $qb->andWhere('o.status = :status')->setParameter('status', $data['status']);
-            }
-        }
-
-        //dump($qb->getQuery()->getSQL()); die;
 
         $pagination = $this->getPaginator()->paginate(
             $qb->getQuery(),
