@@ -2,6 +2,7 @@
 
 namespace AdminBundle\Controller;
 
+use AdminBundle\Form\Order\FilterType;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
@@ -29,20 +30,48 @@ class OrderController extends AbstractController
     {
         $member = $this->member();
 
+        $form = $this->createForm(FilterType::class);
+
+        $data = $form->handleRequest($request)->getData();
+
         /** @var \AppBundle\Service\Order\OrderFinder $finder */
         $finder = $this->get('order_finder');
 
         $finder->set('agent', $member);
 
+        $qb = $finder->queryBuilder();
+
+        if($data){
+
+            $likes = ['o.id', 'o.firstname', 'o.lastname', 'o.cnpj', 'o.power'];
+            $like = $data['like'];
+
+            if(!empty($like)) {
+                $expressions = [];
+                foreach ($likes as $field) {
+                    $expressions[] = $qb->expr()->like($field, $qb->expr()->literal('%' . $like . '%'));
+                }
+
+                $qb->andWhere($qb->expr()->orX()->addMultiple($expressions));
+            }
+
+            if(is_int($data['status'])){
+                $qb->andWhere('o.status = :status')->setParameter('status', $data['status']);
+            }
+        }
+
+        //dump($qb->getQuery()->getSQL()); die;
+
         $pagination = $this->getPaginator()->paginate(
-            $finder->query(),
+            $qb->getQuery(),
             $request->query->getInt('page', 1),
             10
         );
 
         return $this->render('admin/orders/index.html.twig', array(
             'orders' => $pagination,
-            'member' => $member
+            'member' => $member,
+            'form' => $form->createView()
         ));
     }
 
