@@ -2,6 +2,7 @@
 
 namespace AdminBundle\Controller;
 
+use AdminBundle\Form\Order\FilterType;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
@@ -29,20 +30,30 @@ class OrderController extends AbstractController
     {
         $member = $this->member();
 
+        $form = $this->createForm(FilterType::class);
+
+        $data = $form->handleRequest($request)->getData();
+
         /** @var \AppBundle\Service\Order\OrderFinder $finder */
         $finder = $this->get('order_finder');
 
-        $finder->set('agent', $member);
+        $finder
+            ->set('agent', $member)
+            ->set('filter', $data)
+        ;
+
+        $qb = $finder->queryBuilder();
 
         $pagination = $this->getPaginator()->paginate(
-            $finder->query(),
+            $qb->getQuery(),
             $request->query->getInt('page', 1),
             10
         );
 
         return $this->render('admin/orders/index.html.twig', array(
             'orders' => $pagination,
-            'member' => $member
+            'member' => $member,
+            'form' => $form->createView()
         ));
     }
 

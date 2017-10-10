@@ -6,19 +6,40 @@
         table tbody tr {
             display: table-row !important;
         }
-        .label.label-status{
+
+        .label.label-status {
             background-color: #f2f2f2;
             border: 1px solid #b2b2b2;
             color: #555;
         }
-        .label.status-building i{  color: #898989;  }
-        .label.status-pending i{  color: #ff7701;  }
-        .label.status-validated i{  color: #0a6aa1;  }
-        .label.status-approved i{  color: #00a157;  }
-        .label.status-rejected i{  color: #ffcd70;  }
-        .label.status-done i{  color: #777;  }
 
-        .validated {  color: #0a6aa1;  }
+        .label.status-building i {
+            color: #898989;
+        }
+
+        .label.status-pending i {
+            color: #ff7701;
+        }
+
+        .label.status-validated i {
+            color: #0a6aa1;
+        }
+
+        .label.status-approved i {
+            color: #00a157;
+        }
+
+        .label.status-rejected i {
+            color: #ffcd70;
+        }
+
+        .label.status-done i {
+            color: #777;
+        }
+
+        .validated {
+            color: #0a6aa1;
+        }
     </style>
 
 {% endblock %}
@@ -52,15 +73,36 @@
 
         <div class="row">
 
-            {{ knp_pagination_filter(orders, {'p.number, c.firstname, s.name':''}) }}
+                <div class="col-md-8">
+                    <div class="row">
 
-            <div class="col-md-12" style="margin-bottom: 10px;">
-                {% if allowAdd %}
-                    <a class="btn btn-success pull-right" href="{{ path('project_generator') }}">
-                        <i class="fa fa-plus"></i> Orçamento
-                    </a>
-                {% endif %}
-            </div>
+                        {{ form_start(form) }}
+
+                        <div class="form-group col-md-5">
+                            {{ form_widget(form.like,{attr:{class:'form-control', placeholder: 'nome, razão social, cnpj, número...'}}) }}
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            {{ form_widget(form.status,{attr:{class:'form-control'}}) }}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-md">
+                            <i class="fa fa-search"></i> Pesquisar
+                        </button>
+
+                        {{ form_end(form) }}
+
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    {% if allowAdd %}
+                        <a class="btn btn-success pull-right" href="{{ path('project_generator') }}">
+                            <i class="fa fa-plus"></i> Orçamento
+                        </a>
+                    {% endif %}
+                </div>
+
         </div>
 
         <div class="row" id="real-content">
@@ -85,7 +127,7 @@
 
                                 <tr>
                                     <td class="text-center">
-                                        <h4> {{ order.id }} </h4>
+                                        <h4> {{ order.reference }} </h4>
                                         {% if order.createdAt %}
                                             <small>
                                                 {{ order.createdAt|format_date }}
@@ -122,28 +164,37 @@
                                         <div class="btn-group btn-group-sm col-md-12 btn-group-justified">
                                             {% if displayProforma %}
                                                 {% if order.hasProforma %}
-                                                    <a class="btn btn-default {{ order.proforma ? 'validated' }}" href="{{ path('order_file',{id:order.id, type:'proforma'}) }}"
+                                                    <a class="btn btn-default {{ order.proforma ? 'validated' }}"
+                                                       href="{{ path('order_file',{id:order.id, type:'proforma'}) }}"
                                                        target="_blank"> <i class="fa fa-file-pdf-o"></i>
-                                                        <br><small>Proforma</small>
+                                                        <br>
+                                                        <small>Proforma</small>
                                                     </a>
                                                 {% else %}
                                                     <i class="btn btn-default fa fa-file-excel-o">
-                                                        <br><small>Proforma</small>
+                                                        <br>
+                                                        <small>Proforma</small>
                                                     </i>
                                                 {% endif %}
                                             {% endif %}
 
-                                            <a class="btn btn-default {{ order.deliveryAddress ? 'validated' }}" data-toggle="modal" data-target="#modal_shipping"
+                                            <a class="btn btn-default {{ order.deliveryAddress ? 'validated' }}"
+                                               data-toggle="modal" data-target="#modal_shipping"
                                                data-url="{{ path('order_shipping', {id:order.id}) }}">
-                                                <i class="fa fa-truck"></i> <br><small>Frete</small>
+                                                <i class="fa fa-truck"></i> <br>
+                                                <small>Frete</small>
                                             </a>
 
                                             {% if order.hasFilePayment %}
-                                                <a class="btn btn-default {{ order.FilePayment ? 'validated' }}" href="{{ path('order_file',{id:order.id, type:'filePayment'}) }}"
-                                                   target="_blank"> <i class="fa fa-file-text"></i> <br><small>Comprovante</small></a>
+                                                <a class="btn btn-default {{ order.FilePayment ? 'validated' }}"
+                                                   href="{{ path('order_file',{id:order.id, type:'filePayment'}) }}"
+                                                   target="_blank"> <i class="fa fa-file-text"></i> <br>
+                                                    <small>Comprovante</small>
+                                                </a>
                                             {% else %}
                                                 <i class="btn btn-default fa fa-file-excel-o">
-                                                    <br><small>Comprovante</small>
+                                                    <br>
+                                                    <small>Comprovante</small>
                                                 </i>
                                             {% endif %}
 
@@ -180,66 +231,13 @@
 
     <script>
 
-        $('[data-status]').on('click', function () {
-            var id = $(this).data('id');
-            var status = $(this).data('status');
-
-            swal({
-                title: 'Confirma a operação?',
-                text: 'Este processo não pode ser desfeito',
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: '{{ 'Confirmar'|trans }}',
-                cancelButtonText: '{{ 'Cancelar'|trans }}',
-                closeOnConfirm: false
-            }, function () {
-
-                $.ajax({
-                    url: '{{ path('order_status',{id:'_id_'}) }}'.replace(/_id_/g, id),
-                    method: 'post',
-                    data: {status: status},
-                    complete: function (xhr) {
-
-                        if (200 == xhr.status) {
-
-                            swal({
-                                title: "Concluído.",
-                                text: "Operação realizada com sucesso.",
-                                type: "success",
-                                showConfirmButton: false
-                            });
-
-                            window.setTimeout(function () {
-                                swal.close();
-                                window.location.reload();
-                            }, 1500);
-
-                        } else {
-                            var response = xhr.responseJSON;
-                            swal('Ooops', response.hasOwnProperty('error') ? response.error : 'Falha ao executar a operação', 'error');
-                        }
-                    },
-                    beforeSend: function () {
-                        swal({
-                            title: "Processando...",
-                            text: "Aguarde.",
-                            type: "info",
-                            showConfirmButton: false
-                        });
-                    }
-                });
-
-            });
-        });
-
         var modalShipping = $('#modal_shipping');
-        modalShipping.on('show.bs.modal', function(event){
+        modalShipping.on('show.bs.modal', function (event) {
             var target = $(event.relatedTarget);
             var url = target.data('url');
             $.ajax({
                 url: url,
-                success: function(response){
+                success: function (response) {
                     modalShipping.find('.modal-body').html(response);
                 }
             });

@@ -34,6 +34,11 @@ class OrderFinder
     private $parameters = [];
 
     /**
+     * @var array
+     */
+    private $likes = ['o.id', 'o.firstname', 'o.lastname', 'o.cnpj', 'o.power'];
+
+    /**
      * OrderFinder constructor.
      * @param OrderManager $manager
      */
@@ -132,7 +137,10 @@ class OrderFinder
                 $this->addAgentParameter($qb);
                 return;
                 break;
-
+            case 'filter':
+                $this->addFilterParameter($qb);
+                return;
+                break;
         }
 
         if(is_null($this->parameters[$property])){
@@ -221,5 +229,31 @@ class OrderFinder
         $this->parameters['account'] = $account;
 
         unset($this->parameters['member']);
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     */
+    private function addFilterParameter(QueryBuilder $qb)
+    {
+        if(null != $filter = $this->parameters['filter']) {
+
+            if (array_key_exists('like', $filter) && null != $filter['like']) {
+
+                $expressions = [];
+                foreach ($this->likes as $field) {
+                    $expressions[] = $qb->expr()->like($field, $qb->expr()->literal('%' . $filter['like'] . '%'));
+                }
+
+                $qb->andWhere($qb->expr()->orX()->addMultiple($expressions));
+            }
+
+            if (array_key_exists('status', $filter) && is_int($filter['status'])) {
+                $qb->andWhere('o.status = :status');
+                $this->parameters['status'] = $filter['status'];
+            }
+        }
+
+        unset($this->parameters['filter']);
     }
 }
