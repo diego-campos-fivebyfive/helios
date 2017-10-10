@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-use Aws\S3\S3Client;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Theme;
 use AppBundle\Service\Editor\Formatter;
@@ -216,14 +215,12 @@ class ProposalController extends AbstractController
             $manager->save($project);
         }
 
-        $ambience = (getenv('CES_AMBIENCE') == 'production') ? 'production' : 'homolog';
-
-        $s3 = $this->get('aws.s3');
-        $s3->putObject([
-            'Bucket' => "pss-{$ambience}-private",
-            'Key' => "proposal/$tempFileName",
-            'Body' => fopen($tempFile, 'rb'),
-            'ACL' => 'public-read'
+        $this->get('app_storage')->move([
+            'file' => $tempFile,
+            'filename' => $tempFileName,
+            'root' => 'proposal',
+            'type' => 'proposal',
+            'access' => 'private'
         ]);
 
         return $this->json([ 'filename' => $tempFileName ], Response::HTTP_OK);
