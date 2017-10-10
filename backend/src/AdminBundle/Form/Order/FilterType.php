@@ -1,15 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: claudinei
- * Date: 10/10/17
- * Time: 10:40
- */
 
 namespace AdminBundle\Form\Order;
 
+use AppBundle\Form\Order\FilterType as AppFilterType;
 
-class OrderType
+class FilterType extends AppFilterType
 {
 
 }
