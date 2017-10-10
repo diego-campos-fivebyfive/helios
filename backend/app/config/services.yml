@@ -178,7 +178,7 @@ services:
 
     component_file_handler:
         class: AppBundle\Service\Component\FileHandler
-        arguments: ['%kernel.root_dir%/../web/uploads/components/']
+        arguments: ['@service_container']
 
     proposal_filter:
         class: AppBundle\Service\ProposalFilter
