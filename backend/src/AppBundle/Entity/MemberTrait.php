@@ -64,42 +64,29 @@ trait MemberTrait
      */
     public function getUserType()
     {
-        $type = 'None';
+        $roles = array(
+            UserInterface::ROLE_DEFAULT => 'User',
+            UserInterface::ROLE_OWNER => 'Administrador',
+            UserInterface::ROLE_OWNER_MASTER => 'Administrador',
+            UserInterface::ROLE_PLATFORM_ADMIN => 'Administrador',
+            UserInterface::ROLE_PLATFORM_MASTER => 'Master',
+            UserInterface::ROLE_PLATFORM_COMMERCIAL => 'Commercial',
+            UserInterface::ROLE_PLATFORM_FINANCIAL => 'Financial',
+            UserInterface::ROLE_PLATFORM_AFTER_SALES => 'Pós-Venda'
+        );
 
-        if ($this->user instanceof UserInterface){
+        if ($this->user instanceof UserInterface) {
 
-            $roles = $this->user->getRoles();
-            
-            if (array_key_exists(0, $roles)) {
-                switch ($roles[0]) {
-                    case User::ROLE_DEFAULT:
-                        $type = 'User';
-                        break;
-                    case User::ROLE_OWNER:
-                    case User::ROLE_OWNER_MASTER:
-                    case User::ROLE_PLATFORM_ADMIN:
-                        $type = 'Administrator';
-                        break;
-                    case User::ROLE_PLATFORM_MASTER:
-                        $type = 'Master';
-                        break;
-                    case User::ROLE_PLATFORM_COMMERCIAL:
-                        $type = 'Commercial';
-                        break;
-                    case User::ROLE_PLATFORM_FINANCIAL:
-                        $type = 'Financial';
-                        break;
-                    case User::ROLE_PLATFORM_AFTER_SALES:
-                        $type = 'Pós-Venda';
-                        break;
-                    default:
-                        $type = 'User';
-                        break;
-                }
+            $userRoles = $this->user->getRoles();
+
+            if(!$userRoles) {
+                return $roles['ROLE_DEFAULT'];
             }
+
+            $mainRole = $userRoles[0];
         }
 
-        return $type;
+        return $roles[$mainRole];
     }
 
     /**
