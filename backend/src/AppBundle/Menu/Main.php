@@ -39,21 +39,12 @@ class Main extends AbstractMenu
             return $menu;
         }
 
-        /**
-         * ROLE_ADMIN
-         */
-        if($user->isAdmin()) {
+        $this->account($menu);
 
-            $this->menuPlatform($menu);
+        if ($user->isSuperAdmin()) {
 
-            // MENU EXCLUSIVO DE INTEGRADORES (Account) - MenuAccount
-            $this->account($menu);
+            $this->menuSuperAdmin($menu);
 
-        }else{
-
-            $this->account($menu);
-
-            $this->menuSuperAdmin($menu, $user);
         }
 
         $this->resolveActiveMenu($menu);
