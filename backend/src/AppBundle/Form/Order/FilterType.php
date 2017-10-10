@@ -19,9 +19,6 @@ class FilterType extends AbstractType
         $statusNames = array_map('ucfirst', Order::getStatusNames());
 
         $builder
-            ->add('like', TextType::class, [
-                'required' => false
-            ])
             ->add('status', ChoiceType::class, [
                 'required' => false,
                 'placeholder' => 'Status',
