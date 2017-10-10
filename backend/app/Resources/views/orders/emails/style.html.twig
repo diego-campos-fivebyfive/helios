@@ -260,8 +260,8 @@
     .width-total {
         width: 100%;
     }
-    table .orders{
-        border: solid #AAA 1px;
+    table.orders{
+        border: 0;
     }
     .th th {
         text-align: center;
@@ -269,7 +269,8 @@
         color: #fff;
     }
     .td td, .th th {
-        border: solid #AAA 1px;
+        /*border: solid #AAA 1px;*/
+        border: 0;
         padding: 0;
         padding-left: 1mm;
         padding-right: 1mm;
@@ -319,6 +320,25 @@
         color: #111;
         background: #f6f6f6;
         border-bottom: 0;
+    }
+    table.orders{
+        border: 1px solid #d4d4d4;
+    }
+    table.orders thead tr th{
+        padding-bottom: 10px;
+        padding-top: 10px;
+        text-transform: uppercase;
+    }
+    table.orders tbody tr td{
+        border-bottom: 1px dashed #888;
+        padding: 5px;
+        vertical-align: middle;
+    }
+    table.orders tbody tr:last-child td{
+        border-bottom: 0;
+    }
+    table.orders tbody tr td:not(:first-child){
+        border-left: 1px dashed #e1e1e1;
     }
 
 </style>
