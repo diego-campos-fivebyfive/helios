@@ -75,16 +75,12 @@ trait MemberTrait
             UserInterface::ROLE_PLATFORM_AFTER_SALES => 'Pós-Venda'
         );
 
-        if ($this->user instanceof UserInterface) {
-
-            $userRoles = $this->user->getRoles();
-
-            if(!$userRoles) {
+        if (!$this->user instanceof UserInterface || !$this->user->getRoles()) {
                 return $roles['ROLE_DEFAULT'];
-            }
-
-            $mainRole = $userRoles[0];
         }
+
+        $userRoles = $this->user->getRoles();
+        $mainRole = $userRoles[0];
 
         return $roles[$mainRole];
     }
