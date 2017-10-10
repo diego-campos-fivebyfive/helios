@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Order\Order;
+use AppBundle\Form\Order\FilterType;
 use AppBundle\Service\Pricing\Insurance;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,10 +26,17 @@ class OrderController extends AbstractController
      */
     public function orderAction(Request $request)
     {
+        $form = $this->createForm(FilterType::class);
+
+        $filter = $form->handleRequest($request)->getData();
+
         /** @var \AppBundle\Service\Order\OrderFinder $finder */
         $finder = $this->get('order_finder');
 
-        $finder->set('member', $this->member());
+        $finder
+            ->set('member', $this->member())
+            ->set('filter', $filter)
+        ;
 
         $pagination = $this->getPaginator()->paginate(
             $finder->query(),
@@ -37,7 +45,8 @@ class OrderController extends AbstractController
         );
 
         return $this->render('order.index', array(
-            'orders' => $pagination
+            'orders' => $pagination,
+            'form' => $form->createView()
         ));
     }
 
