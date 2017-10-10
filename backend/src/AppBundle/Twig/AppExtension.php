@@ -135,19 +135,17 @@ class AppExtension extends \Twig_Extension
         return $view;
     }
 
-    public function getComponentFilePath($file)
+    public function getComponentFilePath($filename)
     {
-        $basePath = $this->container->get('assets.context')->getBasePath();
+        if(!$filename) $filename = 'default_thumb.jpg';
+        $type = strpos($filename, 'thumb') ? 'image' : 'datasheet';
 
-        if(0 == strlen($basePath)){
-            $basePath = '/';
-        }
-
-        if(!$file){
-            $file = 'noimage.jpg';
-        }
-
-        return $basePath . 'uploads/components/' . $file;
+        return $this->container->get('app_storage')->link([
+            'filename' => $filename,
+            'root' => 'component',
+            'type' => $type,
+            'access' => 'public'
+        ]);
     }
 
     /**
