@@ -511,4 +511,9 @@ interface OrderInterface
      * @return string
      */
     public function getLevel();
+
+    /**
+     * @return bool
+     */
+    public function isPromotional();
 }
