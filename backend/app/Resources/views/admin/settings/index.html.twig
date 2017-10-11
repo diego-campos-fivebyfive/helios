@@ -2,6 +2,8 @@
 
 {% block body %}
 
+    {% set isMaster = app.user.isPlatformMaster %}
+
     {% macro formInfo(form) %}
 
         <div class="row">
@@ -35,38 +37,96 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
 
+            {{ form_start(form) }}
+
+            {% set form_params = form.parameters %}
+
             <div class="row" id="real-content">
                 <div class="col-md-12">
                     <div class="ibox flow-h">
-                        <div class="ibox-content flow-lg" style="min-height: 650px;">
+                        <div class="ibox-content" style="min-height: 650px;">
                             <div class="row">
 
                                 <div class="col-md-12" id="spinner_settings" style="height: 30px;">
                                     {% include view('helper.spinner') %}
                                 </div>
 
-                                <div class="col-lg-6">
-                                    <div class="panel panel-success">
-                                        <div class="panel-heading">
-                                            <i class="fa fa-briefcase"></i> Informações Administrativas
-                                        </div>
-                                        <div class="panel-body">
+                                <div class="col-md-12">
+                                    <div class="tabs-container">
+                                        <ul class="nav nav-tabs">
 
-                                            {{ form_start(form) }}
+                                            {% if isMaster %}
+                                            <li class="active">
+                                                <a data-toggle="tab" href="#tab-1" aria-expanded="false">
+                                                    <i class="fa fa-dashboard"></i> Parâmetros da Plataforma
+                                                </a>
+                                            </li>
+                                            {% endif %}
 
-                                            {% set form_params = form.parameters %}
-                                            {% set form_master = form_params.master %}
-                                            {% set form_admin = form_params.admin %}
-                                            {% set form_platform = form_params.platform %}
+                                            <li class="{{ not isMaster ? 'active' }}">
+                                                <a data-toggle="tab" href="#tab-2" aria-expanded="true">
+                                                    <i class="fa fa-briefcase"></i> Parâmetros de Negócio
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content">
 
-                                            {{ this.formInfo(form_platform) }}
+                                            {% if isMaster %}
 
-                                            {{ this.formInfo(form_master) }}
+                                            <div id="tab-1" class="tab-pane active">
+                                                <div class="panel-body">
+                                                    <div class="row">
 
-                                            {{ this.formInfo(form_admin) }}
+                                                    <div class="col-lg-6">
+                                                        <div class="panel panel-success">
+                                                            <div class="panel-heading">
+                                                                <i class="fa fa-briefcase"></i> Informações Administrativas
+                                                            </div>
+                                                            <div class="panel-body">
 
-                                            {{ form_end(form) }}
+                                                                {% set form_master = form_params.master %}
+                                                                {% set form_admin = form_params.admin %}
+                                                                {% set form_platform = form_params.platform %}
 
+                                                                {{ this.formInfo(form_platform) }}
+
+                                                                {{ this.formInfo(form_master) }}
+
+                                                                {{ this.formInfo(form_admin) }}
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {% endif %}
+
+                                            <div id="tab-2" class="tab-pane {{ not isMaster ? 'active' }}">
+                                                <div class="panel-body">
+                                                   <div class="row">
+
+                                                       <div class="col-lg-6">
+                                                           <div class="panel panel-primary">
+                                                               <div class="panel-heading">
+                                                                   <i class="fa fa-briefcase"></i> Status de Recursos
+                                                               </div>
+                                                               <div class="panel-body">
+
+                                                                   {{ form_widget(form_params.enable_promo) }} &nbsp;
+                                                                   {{ form_label(form_params.enable_promo, 'Ativar orçamentos promocionais') }}
+
+                                                               </div>
+
+                                                           </div>
+                                                       </div>
+
+                                                   </div>
+                                                </div>
+                                            </div>
                                         </div>
 
                                     </div>
@@ -78,6 +138,8 @@
 
                 </div>
             </div>
+
+            {{ form_end(form) }}
 
         </div>
     </div>

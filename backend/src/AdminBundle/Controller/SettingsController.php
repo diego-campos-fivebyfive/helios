@@ -11,7 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 
 /**
- * @Security("has_role('ROLE_PLATFORM_MASTER')")
+ * @Security("has_role('ROLE_PLATFORM_ADMIN')")
  *
  * @Breadcrumb("Configurações Gerais")
  *
