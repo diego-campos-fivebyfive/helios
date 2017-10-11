@@ -8,6 +8,7 @@ use AppBundle\Entity\Component\Maker;
 use AppBundle\Entity\Component\Module;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\Parameter;
 use AppBundle\Service\ProjectGenerator\Checker\Checker;
 use AppBundle\Service\ProjectGenerator\ModuleProvider;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,11 +33,6 @@ class GeneratorType extends AbstractType
     private $checker;
 
     /**
-     * @var bool
-     */
-    private $enablePromotional = false;
-
-    /**
      * @param Checker $checker
      */
     public function __construct(Checker $checker)
@@ -52,6 +48,8 @@ class GeneratorType extends AbstractType
         $defaults = $options['data'];
 
         $result = $this->checker->checkDefaults($defaults);
+
+        //dump($defaults); die;
 
         $modules = $result['modules'];
         $inverterMakers = $result['inverter_makers'];
@@ -147,11 +145,7 @@ class GeneratorType extends AbstractType
             ])
         ;
 
-        if($this->enablePromotional){
-            $builder->add('is_promotional', CheckboxType::class, [
-                'required' => false
-            ]);
-        }
+        $this->addPromotionalSelector($builder);
     }
 
     /**
@@ -166,6 +160,25 @@ class GeneratorType extends AbstractType
         ]);
     }
 
+    /**
+     * @param FormBuilderInterface $builder
+     */
+    private function addPromotionalSelector(FormBuilderInterface $builder)
+    {
+        $parameter = $this->checker->getEntityManager()->getRepository(Parameter::class)->find('platform_settings');
+
+        if($parameter instanceof Parameter && $parameter->get('enable_promo')){
+
+            $builder->add('is_promotional', CheckboxType::class, [
+                'required' => false
+            ]);
+        }
+    }
+
+    /**
+     * @param AccountInterface $account
+     * @return array
+     */
     private function loadStages(AccountInterface $account)
     {
         $em = $this->checker->getEntityManager();
