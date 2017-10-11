@@ -36,7 +36,7 @@ class OrderFinder
     /**
      * @var array
      */
-    private $likes = ['o.id', 'o.firstname', 'o.lastname', 'o.cnpj', 'o.power'];
+    private $likes = ['o.reference', 'o.firstname', 'o.lastname', 'o.cnpj', 'o.power'];
 
     /**
      * OrderFinder constructor.
@@ -113,7 +113,9 @@ class OrderFinder
 
         $qb
             ->andWhere('o.parent is null')
-            ->setParameters($this->parameters);
+            ->orderBy('o.id', 'desc')
+            ->setParameters($this->parameters)
+            ;
 
         return $qb;
     }
