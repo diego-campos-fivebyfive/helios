@@ -95,6 +95,9 @@
     .bold {
         font-weight: bold;
     }
+    .orders-font {
+        font-size: 11px;
+    }
     .spacing {
         margin-top: 5mm;
     }
@@ -217,14 +220,18 @@
                             <h2  class="no-margins bold">{{ item.description }}</h2>
                         </label>
 
-                        <table class="width-total">
+                        <table class="width-total orders-font">
                             <thead>
                             <tr>
                                 <th>Código</th>
-                                <th style="width: 50%;">Produto</th>
+                                <th style="min-width: 50%;">Produto</th>
+                                {% if not item.isPromotional %}
                                 <th>Custo Un.</th>
+                                {% endif %}
                                 <th>QTD</th>
+                                {% if not item.isPromotional %}
                                 <th>Custo T.</th>
+                                {% endif %}
                             </tr>
                             </thead>
                             <tbody>
@@ -233,9 +240,13 @@
                             <tr>
                                 <td>{{ element.code }}</td>
                                 <td class="text-left">{{ element.description }}</td>
+                                {% if not item.isPromotional %}
                                 <td>{{ element.unitPrice|currency }}</td>
+                                {% endif %}
                                 <td class="text-center">{{ element.quantity }}</td>
+                                {% if not item.isPromotional %}
                                 <td>{{ element.total|currency }}</td>
+                                {% endif %}
                             </tr>
                             {% endfor %}
 
@@ -253,7 +264,7 @@
                             </thead>
                             <tbody>
                             <tr>
-                                <td class="text-justify" style="font-size: 11px;">
+                                <td class="text-justify orders-font">
                                     COBERTURA SICES SOLAR ALL RISK DO SISTEMA SOLAR FV INSTALADO POR 1 ANO APOS
                                     60 DIAS NFE SICES APOLICE EMITIDA AO CLIENTE FINAL CPF O PROPRIETARIO ABAIXO
                                     COBRE O VALOR DOS EQUIPAMENTOS SICES + 50% CONTRA DANOS DE CAUSA EXTERNA DANOS
@@ -337,7 +348,7 @@
                     <br/>
                     {% endfor %}
 
-                    <label class="spacing">DADOS BANCÁRIOS PARA PAGAMENTO EM CASO DE TRASFERÊNCIA BANCÁRIA</label>
+                    <label class="spacing">DADOS BANCÁRIOS PARA PAGAMENTO EM CASO DE TRANSFERÊNCIA BANCÁRIA</label>
 
                     <div class="width-total border-black bank-data">
                         Banco Itaú Unibanco S/A nº341<br/>
@@ -617,7 +628,6 @@
                                 45 dias a partir da emissão da Nota Fiscal
                             </td>
                         </tr>
-
                         <tr class="text-center">
                             <td>
                                 Sistemas FV de 20,1kWp até 60kWp
