@@ -331,11 +331,13 @@
                                                         <thead>
                                                         <tr>
                                                             <td><b>ITEM</b></td>
-                                                            <td class="col-md-2"><b>CÓDIGO</b></td>
-                                                            <td class="col-md-5"><b>PRODUTO</b></td>
+                                                            <td><b>CÓDIGO</b></td>
+                                                            <td><b>PRODUTO</b></td>
                                                             <td class="col-md-1 text-center"><b>QTD</b></td>
+                                                            {% if not order.isPromotional %}
                                                             <td class="col-md-2 text-center"><b>VALOR UNIT</b></td>
                                                             <td class="col-md-2 text-center"><b>VALOR TOTAL</b></td>
+                                                            {% endif %}
                                                         </tr>
                                                         </thead>
                                                         <tbody>
@@ -345,8 +347,10 @@
                                                                 <td>{{ element.code }}</td>
                                                                 <td>{{ element.description }}</td>
                                                                 <td class="text-center">{{ element.quantity }}</td>
+                                                                {% if not order.isPromotional %}
                                                                 <td class="text-center">{{ element.unitPrice|currency }}</td>
                                                                 <td class="text-center">{{ element.total|currency }}</td>
+                                                                {% endif %}
                                                             </tr>
                                                         {% endfor %}
                                                         </tbody>

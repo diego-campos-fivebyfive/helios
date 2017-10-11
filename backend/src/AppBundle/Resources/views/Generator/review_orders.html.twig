@@ -53,10 +53,10 @@
     <thead>
         <tr>
             <th class="col-md-4"> Descrição </th>
-            <th class="col-md-2" style="text-align: center"> Data </th>
-            <th class="col-md-2" > Qtde Itens </th>
-            <th class="col-md-2" style="text-align: center"> Vr. Equipamentos </th>
-            <th class="col-md-2" style="text-align: center"> Vr. Seguro </th>
+            <th class="col-md-2 text-center"> Data </th>
+            <th class="col-md-2"> Qtde Itens </th>
+            <th class="col-md-2 text-center"> Vr. Equipamentos </th>
+            <th class="col-md-2 text-center"> Vr. Seguro </th>
 
         </tr>
     </thead>
@@ -71,8 +71,8 @@
                         <span class="col-md-4 order"> {{ order.description }} </span>
                         <span class="col-md-2 order"> {{ order.createdAt|date('d/m/Y') }} </span>
                         <span class="col-md-2 order"> {{ order.elements.count }} Itens</span>
-                        <span class="col-md-2 order" style="text-align: right"> {{ order.subTotal|currency }} </span>
-                        <span class="col-md-2 order" style="text-align: right"> {{ order.insurance|currency }} </span>
+                        <span class="col-md-2 order text-right"> {{ order.subTotal|currency }} </span>
+                        <span class="col-md-2 order text-right"> {{ order.insurance|currency }} </span>
                     </a>
                 </h4>
         </div>
@@ -83,11 +83,13 @@
                     <thead>
                     <tr>
                         <td><b>ITEM</b></td>
-                        <td class="col-md-2"><b>CÓDIGO</b></td>
-                        <td class="col-md-5"><b>PRODUTO</b></td>
+                        <td><b>CÓDIGO</b></td>
+                        <td><b>PRODUTO</b></td>
                         <td class="col-md-1 text-center"><b>QTD</b></td>
+                        {% if not order.isPromotional %}
                         <td class="col-md-2 text-center"><b>VALOR UNIT</b></td>
                         <td class="col-md-2 text-center"><b>VALOR TOTAL</b></td>
+                        {% endif %}
                     </tr>
                     </thead>
                     {% for element in order.elements %}
@@ -97,8 +99,10 @@
                             <td>{{ element.code }}</td>
                             <td>{{ element.description }}</td>
                             <td class="text-center">{{ element.quantity }}</td>
+                            {% if not order.isPromotional %}
                             <td class="text-center">{{ element.unitPrice|currency }}</td>
                             <td class="text-center">{{ element.total|currency }}</td>
+                            {% endif %}
                         </tr>
                         </tbody>
                     {% endfor %}
