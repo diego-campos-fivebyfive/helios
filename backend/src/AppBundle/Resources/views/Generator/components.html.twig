@@ -1,17 +1,8 @@
-{% set isPromo = project.defaults.is_promotional %}
+{% set isPromo = project.isPromotional %}
+{% set showPrices = not isPromo or app.user.isPlatform %}
 
 <style>
-    .line-padding {
-        padding-top: 4rem !important;
-    }
-
-    {% if isPromo %}
-    .cost-col {
-        display: none;
-    }
-
-    {% endif %}
-
+    .line-padding { padding-top: 4rem !important; }
 </style>
 
 <div class="modal inmodal fade" id="modal_component" tabindex="-1" role="dialog" aria-hidden="true">
@@ -35,9 +26,13 @@
     <tr class="flow-lg">
         <th width="15%"> Código</th>
         <th width="47%"> Descrição</th>
-        <th width="15%"><span class="cost-col">Custo unitário</span></th>
-        <th width="10%" align="center"> Quantidade</th>
-        <th align="center" width="13%"> Total</th>
+        {% if showPrices %}
+            <th width="15%"><span class="cost-col">Custo unitário</span></th>
+        {% endif %}
+        <th width="10%" class="text-center"> Quantidade</th>
+        {% if showPrices %}
+            <th align="center" width="13%"> Total</th>
+        {% endif %}
     </tr>
     </thead>
     <tbody>
@@ -52,9 +47,13 @@
                     {{ projectModule.module.model }}
                 </a>
             </td>
-            <td class="promotional"> {{ projectModule.unitCostPrice|currency }} </td>
+            {% if showPrices %}
+                <td> {{ projectModule.unitCostPrice|currency }} </td>
+            {% endif %}
             <td class="text-center"> {{ projectModule.quantity }} </td>
-            <td> {{ (projectModule.unitCostPrice * projectModule.quantity)|currency }} </td>
+            {% if showPrices %}
+                <td> {{ (projectModule.unitCostPrice * projectModule.quantity)|currency }} </td>
+            {% endif %}
         </tr>
     {% endfor %}
 
@@ -68,9 +67,13 @@
                     {{ group.inverter.model }}
                 </a>
             </td>
-            <td class="promotional"> {{ group.unitCostPrice|currency }} </td>
+            {% if showPrices %}
+                <td> {{ group.unitCostPrice|currency }} </td>
+            {% endif %}
             <td class="text-center"> {{ group.quantity }} </td>
-            <td> {{ (group.unitCostPrice * group.quantity)|currency }} </td>
+            {% if showPrices %}
+                <td> {{ (group.unitCostPrice * group.quantity)|currency }} </td>
+            {% endif %}
         </tr>
     {% endfor %}
 
@@ -79,17 +82,25 @@
         <tr>
             <td> {{ project.transformer.variety.code }} </td>
             <td> {{ project.transformer.variety.description }} </td>
-            <td class="promotional"> {{ project.transformer.unitCostPrice|currency }} </td>
+            {% if showPrices %}
+                <td> {{ project.transformer.unitCostPrice|currency }} </td>
+            {% endif %}
             <td class="text-center"> {{ 1 }} </td>
-            <td> {{ project.transformer.unitCostPrice|currency }} </td>
+            {% if showPrices %}
+                <td> {{ project.transformer.unitCostPrice|currency }} </td>
+            {% endif %}
         </tr>
     {% elseif 'required' == project.transformerStatus %}
         <tr>
             <td class="text-center">&nbsp;</td>
             <td><i class="fa fa-info-circle"></i> Verificar cotação de transformadores separadamente</td>
+            {% if showPrices %}
+                <td class="text-center"> &nbsp; </td>
+            {% endif %}
             <td class="text-center"> &nbsp; </td>
-            <td class="text-center"> &nbsp; </td>
-            <td class="text-center"> &nbsp; </td>
+            {% if showPrices %}
+                <td class="text-center"> &nbsp; </td>
+            {% endif %}
         </tr>
     {% endif %}
 
@@ -103,9 +114,13 @@
                     {{ projectStringBox.stringBox.description }}
                 </a>
             </td>
-            <td class="promotional"> {{ projectStringBox.unitCostPrice|currency }} </td>
+            {% if showPrices %}
+                <td> {{ projectStringBox.unitCostPrice|currency }} </td>
+            {% endif %}
             <td class="text-center"> {{ projectStringBox.quantity }} </td>
-            <td> {{ (projectStringBox.unitCostPrice * projectStringBox.quantity)|currency }} </td>
+            {% if showPrices %}
+                <td> {{ (projectStringBox.unitCostPrice * projectStringBox.quantity)|currency }} </td>
+            {% endif %}
         </tr>
     {% endfor %}
 
@@ -125,9 +140,13 @@
                     {% endif %}
                 </a>
             </td>
-            <td class="promotional"> {{ projectStructure.unitCostPrice|currency }} </td>
+            {% if showPrices %}
+                <td> {{ projectStructure.unitCostPrice|currency }} </td>
+            {% endif %}
             <td class="text-center"> {{ projectStructure.quantity }} </td>
-            <td> {{ (projectStructure.unitCostPrice * projectStructure.quantity)|currency }} </td>
+            {% if showPrices %}
+                <td> {{ (projectStructure.unitCostPrice * projectStructure.quantity)|currency }} </td>
+            {% endif %}
         </tr>
     {% endfor %}
 
@@ -141,9 +160,13 @@
                     {{ projectVariety.variety.description }}
                 </a>
             </td>
-            <td class="promotional"> {{ projectVariety.unitCostPrice|currency }} </td>
+            {% if showPrices %}
+                <td> {{ projectVariety.unitCostPrice|currency }} </td>
+            {% endif %}
             <td class="text-center"> {{ projectVariety.quantity }} </td>
-            <td> {{ (projectVariety.unitCostPrice * projectVariety.quantity)|currency }} </td>
+            {% if showPrices %}
+                <td> {{ (projectVariety.unitCostPrice * projectVariety.quantity)|currency }} </td>
+            {% endif %}
         </tr>
     {% endfor %}
 
@@ -154,9 +177,13 @@
     <tr>
         <th></th>
         <th></th>
+        {% if showPrices %}
         <td></td>
         <td></td>
         <th> {{ project.costPriceComponents|currency }} </th>
+        {% else %}
+            <th class="text-center"> {{ project.costPriceComponents|currency }} </th>
+        {% endif %}
     </tr>
     </tbody>
 </table>

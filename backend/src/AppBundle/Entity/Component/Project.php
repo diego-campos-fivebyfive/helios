@@ -1862,6 +1862,14 @@ class Project implements ProjectInterface, InsurableInterface
     /**
      * @inheritDoc
      */
+    public function isPromotional()
+    {
+        return array_key_exists('is_promotional', $this->defaults) && $this->defaults['is_promotional'];
+    }
+
+    /**
+     * @inheritDoc
+     */
     public static function getPriceStrategies()
     {
         return [
