@@ -1,16 +1,22 @@
 {% set isPlatform = app.user.isPlatformAdmin or app.user.isPlatformMaster %}
+{% set isPromo = order.isPromotional %}
+{% set showPrices = not isPromo or app.user.isPlatform %}
 
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
             <th> Código </th>
-            <th class="col-md-3"> Descrição </th>
+            <th> Descrição </th>
             {% if isPlatform %}
             <th> Markup </th>
             {% endif %}
+            {% if showPrices %}
             <th class="col-md-2"> Custo Unitário </th>
+            {% endif %}
             <th> Qtde </th>
+            {% if showPrices %}
             <th class="col-md-2"> Custo Total </th>
+            {% endif %}
             <th>&nbsp;</th>
         </tr>
     </thead>
@@ -26,9 +32,13 @@
                             id="input{{ element.id }}" readonly="readonly" value="{{ element.markup|round(2) }}">
                 </td>
             {% endif %}
+            {% if showPrices %}
             <td> {{ element.unitPrice|currency }} </td>
+            {% endif %}
             <td class="text-center"> {{ element.quantity }} </td>
+            {% if showPrices %}
             <td width="15%"> {{ element.total|currency }} </td>
+            {% endif %}
             <td width="15%">
                 <div class="btn-group btn-group-justified btn-group-sm">
                     <a data-update-element="{{ path('generator_orders_element_update',{id:element.id}) }}" class="btn btn-primary">
@@ -50,9 +60,13 @@
         {% if isPlatform %}
         <td></td>
         {% endif %}
+        {% if showPrices %}
         <td> {{ 0|currency }} </td>
+        {% endif %}
         <td class="text-center"> 1 </td>
+        {% if showPrices %}
         <td> {{ 0|currency }} </td>
+        {% endif %}
         <td></td>
     </tr>
 
@@ -76,6 +90,7 @@
         <th></th>
     </tr>
     {% endif %}
+    {% if showPrices %}
     <tr>
         <th colspan="2" class="text-right">{% if isPlatform %}Margem bruta da operação{% endif %}</th>
         {% if isPlatform %}
@@ -86,11 +101,9 @@
         <th> {{ order.subTotal|currency }} </th>
         <th></th>
     </tr>
+    {% endif %}
     </tfoot>
 </table>
-
-
-
 
 <script>
 
