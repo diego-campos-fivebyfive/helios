@@ -128,8 +128,8 @@ trait MenuAdmin
             'extras' => ['icon' => self::icon('profile')]
         ]);
 
-        if($this->user->hasRole(UserInterface::ROLE_PLATFORM_MASTER)){
-            $settings->addChild('Gerais', [
+        if($this->user->isPlatformMaster() || $this->user->isPlatformAdmin()){
+            $settings->addChild('Parâmetros', [
                 'route' => 'platform_settings',
                 'extras' => ['icon' => self::icon('sliders')]
             ]);
