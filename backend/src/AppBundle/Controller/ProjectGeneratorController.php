@@ -37,7 +37,7 @@ class ProjectGeneratorController extends AbstractController
     public function indexAction(Request $request)
     {
         if (0 == $id = $request->query->getInt('order')) {
-            return $this->resolveOrderReference();
+            return $this->resolveOrderReference($request);
         }
 
         /** @var Order $order */
@@ -63,8 +63,12 @@ class ProjectGeneratorController extends AbstractController
     /**
      * @Route("/{id}/components", name="generator_components")
      */
-    public function componentsAction(Project $project)
+    public function componentsAction(Project $project, Request $request)
     {
+        if(null != $level = $request->query->get('level')){
+            $project->setLevel($level);
+        }
+
         $this->getGenerator()->pricing($project);
 
         return $this->render('generator.components', [
@@ -441,28 +445,31 @@ class ProjectGeneratorController extends AbstractController
     /**
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    private function resolveOrderReference()
+    private function resolveOrderReference(Request $request)
     {
+        if(null != $accountId = $request->query->get('account')){
+            $account = $this->manager('account')->find($accountId);
+        }else{
+            $account = $this->account();
+        }
+
         $manager = $this->manager('order');
         $member = $this->member();
-        $account = $this->account();
         $isPlatform = $member->isPlatformUser();
 
         $criteria = [
             'status' => Order::STATUS_BUILDING,
             'source' => $isPlatform ? Order::SOURCE_PLATFORM : Order::SOURCE_ACCOUNT,
+            'account' => $account
         ];
 
-        if(!$isPlatform){
-            $criteria['account'] = $account;
-        }else{
+        if($isPlatform){
             $criteria['agent'] = $member;
         }
 
         $accessor = PropertyAccess::createPropertyAccessor();
 
         $order = $manager->create();
-
         foreach ($criteria as $property => $value){
             $accessor->setValue($order, $property, $value);
         }
