@@ -1,4 +1,3 @@
-{% set orders = order.childrens %}
 <style>
     .card{
         position: relative;
@@ -49,6 +48,9 @@
 
 </style>
 
+{% set orders = order.childrens %}
+{% set isPlatform = app.user.isPlatform %}
+
 <table class="table table-striped" id="thead">
     <thead>
         <tr>
@@ -86,7 +88,7 @@
                         <td><b>CÓDIGO</b></td>
                         <td><b>PRODUTO</b></td>
                         <td class="col-md-1 text-center"><b>QTD</b></td>
-                        {% if not order.isPromotional %}
+                        {% if not order.isPromotional or isPlatform %}
                         <td class="col-md-2 text-center"><b>VALOR UNIT</b></td>
                         <td class="col-md-2 text-center"><b>VALOR TOTAL</b></td>
                         {% endif %}
@@ -99,7 +101,7 @@
                             <td>{{ element.code }}</td>
                             <td>{{ element.description }}</td>
                             <td class="text-center">{{ element.quantity }}</td>
-                            {% if not order.isPromotional %}
+                            {% if not order.isPromotional or isPlatform %}
                             <td class="text-center">{{ element.unitPrice|currency }}</td>
                             <td class="text-center">{{ element.total|currency }}</td>
                             {% endif %}
