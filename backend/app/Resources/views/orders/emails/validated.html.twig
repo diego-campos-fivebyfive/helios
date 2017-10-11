@@ -4,7 +4,7 @@
     <td class="content-block">
 
         <p>
-            Prezado {{ order.account.owner.firstname }},
+            Prezado {{ order.contact }},
         </p>
         <p>
             O orçamento nº {{ order.reference }} foi validado.
@@ -25,12 +25,14 @@
 
         {% include 'orders/emails/_shipping.html.twig' %}
 
+        {% include 'orders/emails/_total.html.twig' %}
+
     </td>
 </tr>
 
 <tr>
     <td class="content-block">
-        Para prosseguir com a negociaçâo, pedimos que acesse nossa Plataforma para APROVAR seu pedido.
+        Para prosseguir com a negociação, pedimos que acesse nossa Plataforma para APROVAR seu pedido.
 
         <p>
             Obrigado.
