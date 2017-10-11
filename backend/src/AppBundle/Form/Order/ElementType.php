@@ -20,10 +20,11 @@ class ElementType extends AbstractType
         $element = $options['data'];
         $order = $element->getOrder();
         $manager = $options['manager'];
+        $promotional = $options['promocional'];
 
         $builder
             ->add('code', ChoiceType::class, [
-                'choices' => $this->findElements($manager, $order, $element->getCode()),
+                'choices' => $this->findElements($manager, $promotional, $order, $element->getCode()),
             ])
             ->add('quantity', TextType::class)
         ;
@@ -35,7 +36,8 @@ class ElementType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'class' => Element::class
+            'class' => Element::class,
+            'promocional' => null
         ]);
 
         $resolver->setRequired('manager');
@@ -45,7 +47,7 @@ class ElementType extends AbstractType
      * @param \AppBundle\Manager\AbstractManager $manager
      * @param Order $order
      */
-    private function findElements($manager, Order $order, $code = null)
+    private function findElements($manager, $promotional, Order $order, $code = null)
     {
         $codes = $order->getElements()->map(function (Element $element){
             return $element->getCode();
@@ -67,6 +69,16 @@ class ElementType extends AbstractType
             'status' => 1,
             'available' => 1
         ]);
+
+        if ($promotional) {
+            $qb->andWhere($aliases[0].'.promotional = :promotional');
+            $qb->setParameters([
+                'status' => 1,
+                'available' => 1,
+                'promotional' => 1
+            ]);
+        }
+
 
         $components = $qb->getQuery()->getResult();
 
