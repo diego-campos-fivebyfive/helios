@@ -465,21 +465,6 @@ class DebugController extends AbstractController
 
     }
 
-//    /**
-//     * @Route("/notifier", name="debug_notifier")
-//     */
-//    public function notifierAction()
-//    {
-//        $this->get('notifier')->notify([
-//            'callback' => 'product_validate',
-//            'body' => [
-//                'id' => '62'
-//            ]
-//        ]);
-//
-//        return $this->json();
-//    }
-
     /**
      * @Route("/order", name="debug_order")
      */
