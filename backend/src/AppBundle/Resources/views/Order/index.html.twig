@@ -229,13 +229,9 @@
         $('[data-target="#modal_details"]').on('click', function () {
             var url = $(this).data('url');
 
-            title = $(this).data('title');
-
-            if(title =="transportadora"){
-                titleModal.html('<i class="fa fa-truck"> </i>'+' Dados Transportadora');
-            } else {
-                titleModal.html('<i class="fa fa-truck"> </i>'+' Frete Sices');
-            }
+            var shipping = $(this).data('title');
+            var title = (shipping == "sices") ? ' Frete Sices' : ' Dados da Transportadora';
+            titleModal.html('<i class="fa fa-truck"> </i>'+ title);
 
             if (url) {
                 $('#e_modal_details').modal('show');

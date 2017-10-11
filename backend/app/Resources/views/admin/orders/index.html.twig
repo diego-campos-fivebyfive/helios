@@ -273,11 +273,9 @@
             $.ajax({
                 url: url,
                 success: function (response) {
-                    if(shipping == "sices"){
-                        titleModal.html('<i class="fa fa-truck"> </i>'+' Frete Sices');
-                    } else {
-                        titleModal.html('<i class="fa fa-truck"> </i>'+' Dados Transportadora');
-                    }
+                    var title = (shipping == "sices") ? ' Frete Sices' : ' Dados da Transportadora';
+                        titleModal.html('<i class="fa fa-truck"> </i>'+ title);
+
 
                     modalShipping.find('.modal-body').html(response);
                 }
