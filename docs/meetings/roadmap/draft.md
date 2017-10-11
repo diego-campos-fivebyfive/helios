@@ -1,34 +1,61 @@
 
-10/10/2017 - SEGUNDO TESTE DE PROCESSO COMPLETO - ORÇAMENTOS
+10/10/2017 - TERCEIRO TESTE DE PROCESSO COMPLETO - ORÇAMENTOS
 ====================================================
 
+:: REGRAS DO PROMOCIONAL
+[295]
+- Adicionar gestão de Parâmetros
+-- Habilitar promocional: booleano para o gerador (checkbox). true = mostra / false = oculta
+[295]
+[297]
+-- Frase do checkbox: "Gerar sistema PROMOCIONAL" centralizada no topo - antes dos outros campos de configuração.
+- Ao selecionar a opção promocional - o form de configuração deve ser resetado com os dados compatíveis, bem como o projeto (se já tiver sido gerado).
+- Apenas para Integrador - No promocional, na lista de itens ocultar as colunas "Custo unitário" e "Total", exibir apenas a qtde e o total abaixo.
+-- Verificar essas regras na listagem do projeto, na edição do orçamento (modal), na lista de sistemas (Revisão), tela de visualização
+-- A regra global é - se for promocional as colunas "Custo Unit" e "Total" não devem aparecer.
+-- Nos emails e na proforma - vale a regra global
+- O nome do orçamento deve ser sufixado com "[promo]"
+- Ao editar um orçamento promocional, os itens carregados no form deve ser apenas promocionais.
+*** No gerador do "Projeto" NÃO haverá promocional.
+[297]
+
 :: SICES
-Listagem
-- Ativar link de visualização da proforma pelo usuário sices [273]
+Listagem [292]
+- A identificação do item "Frete" (ícone + texto) deve ser igual ao da visão do integrador (o texto muda conforme o tipo de frete)
+- Modal: Atualizar o título conforme o tipo de frete
+- OrderFinder: na propriedade $likes, alterar o campo 'o.id' para 'o.reference'
+- Filtro: Apenas para ADMIN e MASTER - Seletor de usuários comercial
 
-Wizard
-- Quando edita um orçamento, o valor total (da revisão) não está atualizando. [271]
-- Campo "Disponibilidade de Entrega" - Incluir calendário (limitar para das apenas acima ou igual a atual). [272]
-[274]
-- Na edição de dados - painel "Pagamento/Cliente/Frete" - configurar um toggle "Editar/Salvar". 
--- Isto deve possibilitar que o usuário possa alterar o integrador e os dados do formulário.
--- O botão "Validar" deve estar bloqueado caso o este formulário estiver em modo "Edição".
--- Tanto os campos quanto o seletor de integrador devem ficar bloqueados para edição enquanto o botão "Editar" não é clicado.
--- Deixar os campos de dados do cliente apenas para visualização (disativar os campos de formulário).
--- O seletor de integrador deve aparecer sempre.
-[274]
+Wizard [291]
+- Apenas ADMIN e MASTER:
+-- Ao editar um markup não está atualizando o seguro.
+-- Incluir acima da "Margem bruta da operação": Total de CMV e Total de Impostos (duas linhas) 
 
-Visualização
-[280]
-- A opção "Validar" atual abre espaço para um erro (validação de orçamento sem definição de forma de pgto)
-- Solução: Mover o processo de "Validar" para o wizard novamente (Adicionar checagem)
-[280]
+:: GERAL
+Listagem [292]
+- Ordenar os orçamentos de forma inversa (mais recentes primeiro)
+- Incluir no topo, a informação do total de resultados encontrados (parecido com o de contas)
 
-Email
-[274]
-- Padronizar bordas das tabelas de orçamentos
-- Corrigir a palavra "VALIDAÇÃO" - está "VALIDAÇÂO"
-[274]
+Wizard [291]
+- No form de edição de um orçamento, estão aparecendo módulos inativos.
+- Frete Sices - Processar o form de cálculo ao alterar um dos combos (estado / (interior/capital)).
+- Ao definir o integrador >> Verificar no método Order::refreshCustomer():
+-- Não estão sendo copiados os dados (Nome Fantasia, Razão).
+-- Contato - deve ser o 'firstname' do dono da conta.
+- No form do cliente, deixar os valores ao lado das labels (não embaixo).
+
+Emails [294]
+- Alterar de valor do frete >> Frete
+- Adicionar TOTAL >> Total da order master
+- Email VALIDATED - A palavra negociação está incorreta
+- OrderMailer: Alterar o método que define o nome do integrador no envio, de getName() >> getFirstname()
+- Ajustar as tabelas para promocional
+
+Proforma [293]
+- Bug visual (sobreposição) na tabela estática após o texto do "Certificado de Seguro"
+- Reduzir a fonte da tabela de produtos de cada sistema
+- Corrigir a palavra "TRASFERÊNCIA"
+- Ajustar as tabelas para promocional
 
 
 18/09/2017 - REGRAS PARA ORÇAMENTOS / PEDIDOS
