@@ -29,17 +29,16 @@ class FilterType extends AppFilterType
         ]);
 
         if($member->isPlatformMaster() || $member->isPlatformAdmin()) {
+
             $builder->add('agent', EntityType::class, [
                 'required' => false,
                 'placeholder' => 'Usuário',
                 'class' => Customer::class,
                 'query_builder' => function (EntityRepository $er) {
 
-                    $qb = $er
+                    return $er
                         ->createQueryBuilder('a')
                         ->join(Order::class, 'o', 'WITH', 'a.id = o.agent');
-
-                    return $qb;
                 }
             ]);
         }
