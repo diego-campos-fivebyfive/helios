@@ -49,8 +49,6 @@ class GeneratorType extends AbstractType
 
         $result = $this->checker->checkDefaults($defaults);
 
-        //dump($defaults); die;
-
         $modules = $result['modules'];
         $inverterMakers = $result['inverter_makers'];
         $stringBoxMakers = $result['string_box_makers'];
