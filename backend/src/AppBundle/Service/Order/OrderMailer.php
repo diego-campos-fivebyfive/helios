@@ -84,7 +84,7 @@ class OrderMailer extends AbstractMailer
         if(null != $agent = $account->getAgent()) {
 
             $agentEmail = $agent->getEmail();
-            $agentName = $agent->getName();
+            $agentName = $agent->getFirstname();
 
             $message
                 ->addCc($agentEmail, $agentName)
