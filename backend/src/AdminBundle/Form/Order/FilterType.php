@@ -30,16 +30,17 @@ class FilterType extends AppFilterType
 
         if($member->isPlatformMaster() || $member->isPlatformAdmin()) {
 
+            $account = $member->getAccount();
+
+            $agents = $account->getMembers()->filter(function (MemberInterface $member){
+                return $member->isPlatformCommercial();
+            });
+
             $builder->add('agent', EntityType::class, [
                 'required' => false,
                 'placeholder' => 'Usuário',
                 'class' => Customer::class,
-                'query_builder' => function (EntityRepository $er) {
-
-                    return $er
-                        ->createQueryBuilder('a')
-                        ->join(Order::class, 'o', 'WITH', 'a.id = o.agent');
-                }
+                'choices' => $agents
             ]);
         }
     }
