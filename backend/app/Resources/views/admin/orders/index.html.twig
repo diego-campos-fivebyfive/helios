@@ -50,6 +50,19 @@
     {% set displayFilePayment = member.isPlatformFinancial %}
     {% set allowAdd = not displayProforma %} {# TODO: Regra temporária #}
 
+    <div class="modal inmodal" id="e_modal_accounts" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <h2><i class="fa fa-bookmark"></i> {{ 'Accounts'|trans }}</h2>
+                </div>
+                <div class="modal-body" id="content_accounts">
+                    {% include view('Helper.spinner') %}
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal inmodal" id="modal_shipping" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content animated bounceInRight">
@@ -106,7 +119,10 @@
 
                 <div class="col-md-4">
                     {% if allowAdd %}
-                        <a class="btn btn-success pull-right" href="{{ path('project_generator') }}">
+                        <a data-url="{{ path('accounts_list') }}"
+                           data-toggle="modal"
+                           data-target="#modal_accounts"
+                           class="btn btn-success pull-right">
                             <i class="fa fa-plus"></i> Orçamento
                         </a>
                     {% endif %}
@@ -256,6 +272,7 @@
 
 {% block scripts %}
 
+    {% include view('helper.request') %}
 
     <script>
 
@@ -280,6 +297,24 @@
                     modalShipping.find('.modal-body').html(response);
                 }
             });
+        });
+
+        var content_accounts = $('#content_accounts');
+        $('[data-target="#modal_accounts"]').on('click', function () {
+            var url = $(this).data('url');
+
+            $('#e_modal_accounts').modal('show');
+            if (url) {
+                $.ajax({
+                    url: url,
+                    method: 'get',
+                    complete: function (xhr) {
+                        content_accounts.html(xhr.responseText);
+                    }
+                });
+            } else {
+                content_accounts.html('<h2> Erro ao selecionar Integrador</h2>');
+            }
         });
 
     </script>

@@ -13,19 +13,6 @@
 <script type="text/javascript" src="{{ asset('assets/daterangepicker/daterangepicker.js') }}"></script>
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/daterangepicker/daterangepicker.css') }}" />
 
-<div class="modal inmodal" id="e_modal_accounts" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content animated bounceInRight">
-            <div class="modal-header">
-                <h2><i class="fa fa-bookmark"></i> {{ 'Accounts'|trans }}</h2>
-            </div>
-            <div class="modal-body" id="content_accounts">
-                {% include view('Helper.spinner') %}
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="row" id="block_form_info">
 
     {{ form_start(form,{attr:{action: app.request.uri, id:'form_order_info'}}) }}
@@ -34,18 +21,6 @@
         <div class="col-md-6">
             {{ form_label(form.paymentMethod, 'Condição de Pagamento') }}
             {{ form_widget(form.paymentMethod, {attr:{class:'form-control', disabled: 'disabled'}}) }}
-        </div>
-
-        <div class="col-md-6 hide" id="block_account_selector">
-            {{ form_label(form.account, 'Integrador') }}
-            <br>
-            <a data-url="{{ path('accounts_list') }}"
-               data-toggle="modal"
-               data-target="#modal_accounts"
-               class="btn btn-success">
-                <i class="fa fa-user"></i> Selecionar Integrador
-            </a>
-            {{ form_widget(form.account, {attr:{class:'hidden'}}) }}
         </div>
     </div>
 
@@ -235,7 +210,6 @@
                 $('#delivery_at').removeAttr('disabled');
                 $('#order_deadline').removeAttr('disabled');
                 $('#order_paymentMethod').removeAttr('disabled');
-                $('#block_account_selector').removeClass('hide');
                 $('#btn_validate').addClass('hide');
             } else {
                 $(buttonAccount).addClass('hide');
@@ -245,7 +219,6 @@
                 $('#delivery_at').attr('disabled','disabled');
                 $('#order_deadline').attr('disabled','disabled');
                 $('#order_paymentMethod').attr('disabled','disabled');
-                $('#block_account_selector').addClass('hide');
                 $('#btn_validate').removeClass('hide');
             }
         }
@@ -291,24 +264,6 @@
                 }
             }
         });
-    });
-
-    var content_accounts = $('#content_accounts');
-    $('[data-target="#modal_accounts"]').on('click', function () {
-        var url = $(this).data('url');
-
-        $('#e_modal_accounts').modal('show');
-        if (url) {
-            $.ajax({
-                url: url,
-                method: 'get',
-                complete: function (xhr) {
-                    content_accounts.html(xhr.responseText);
-                }
-            });
-        } else {
-            content_accounts.html('<h2> Erro ao selecionar Integrador</h2>');
-        }
     });
 
     var sourceDeliveryAt = $('#delivery_at');

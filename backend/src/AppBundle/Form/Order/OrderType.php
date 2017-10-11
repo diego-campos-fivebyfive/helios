@@ -35,32 +35,6 @@ class OrderType extends AbstractType
 
         if(self::TARGET_REVIEW == $options['target']){
 
-                $builder->add('account', EntityType::class, [
-                    'class' => Customer::class,
-                    'required' => false,
-                    'query_builder' => function(EntityRepository $er) use($member){
-
-                        $parameters = [
-                            'context' => Customer::CONTEXT_ACCOUNT
-                        ];
-
-                        $qb = $er->createQueryBuilder('a');
-
-                        $qb->where('a.context = :context');
-
-                        if($member->isPlatformCommercial()){
-
-                            $qb->andWhere('a.agent = :agent');
-
-                            $parameters['agent'] = $member;
-                        }
-
-                        $qb->setParameters($parameters);
-
-                        return $qb;
-                    }
-                ]);
-
             $builder
                 ->add('firstname', TextType::class, [
                     'read_only' => true
