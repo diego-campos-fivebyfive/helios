@@ -3,6 +3,16 @@
 {{ form_start(form,{attr:{id:'form_generator'}}) }}
 
 <div class="row">
+
+    {% if enablePromotional %}
+        <div class="form-group">
+            <div class="col-md-12 text-center" style="margin-bottom: 10px;">
+                {{ form_widget(form.is_promotional) }} &nbsp;
+                {{ form_label(form.is_promotional, 'Gerar sistema PROMOCIONAL') }}
+            </div>
+        </div>
+    {% endif %}
+
     <div class="form-group">
         <div class="col-md-3">
             <div class="row col-xs-12">
@@ -51,18 +61,9 @@
             {{ form_label(form.grid_phase_number, 'Fases') }}
             {{ form_widget(form.grid_phase_number,{attr:{class:'form-control'}}) }}
         </div>
-        <div class="col-md-3 col-xs-6" style="font-size: 12px; margin-top: 1rem;">
-
-            {{ not enablePromotional ? '<br>' }}
-
+        <div class="col-md-3 col-xs-6" style="font-size: 12px; margin-top: 30px;">
             {{ form_widget(form.use_transformer) }} &nbsp;
             {{ form_label(form.use_transformer, 'Incluir transformador se necessário') }}
-
-            {% if enablePromotional %}
-            <br>
-            {{ form_widget(form.is_promotional) }} &nbsp;
-            {{ form_label(form.is_promotional, 'Utilizar tabela promocional') }}
-            {% endif %}
         </div>
 
         <div class="col-md-2">
