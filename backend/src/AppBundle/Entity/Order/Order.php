@@ -357,7 +357,7 @@ class Order implements OrderInterface, InsurableInterface
             self::STATUS_VALIDATED => 'validated',
             self::STATUS_APPROVED => 'approved',
             self::STATUS_REJECTED => 'rejected',
-            self::STATUS_DONE => 'done'
+            self::STATUS_DONE => 'confirmed'
         ];
     }
 

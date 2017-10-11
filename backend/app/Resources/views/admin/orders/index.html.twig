@@ -54,8 +54,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content animated bounceInRight">
                 <div class="modal-header">
-                    <h4 class="modal-title">
-                        <i class="fa fa-truck"></i> Dados da Transportadora
+                    <h4 class="modal-title" id="title">
                     </h4>
                 </div>
                 <div class="modal-body">
@@ -117,6 +116,15 @@
 
         <div class="row" id="real-content">
             <div class="col-md-12">
+                <div class="ibox-title flow-lg">
+                    <h5>
+                        <i class="fa fa-files-o"> </i> Orçamentos
+                    </h5>
+
+                    <span class="pull-right small text-muted">
+                        <h4>{{ orders.totalItemCount }} Solicitações(s) encontrada(s)</h4>
+                    </span>
+                </div>
                 <div class="ibox flow-h">
                     <div class="ibox-content flow-lg">
 
@@ -124,10 +132,10 @@
                             <thead>
                             <tr>
                                 <th class="text-center col-md-2"> Número</th>
-                                <th class="text-center col-md-3"> Integrador</th>
+                                <th class="text-center col-md-2"> Integrador</th>
                                 <th class="text-center col-md-2"> Sistemas</th>
                                 <th class="text-center"> Status</th>
-                                <th class="text-center col-md-4"> Arquivos</th>
+                                <th class="text-center col-md-5"> Arquivos</th>
                                 <th class="text-center col-md-1"> &nbsp; </th>
                             </tr>
                             </thead>
@@ -186,12 +194,23 @@
                                                 </i>
                                             {% endif %}
 
-                                            <a class="btn btn-default {{ order.deliveryAddress ? 'validated' }}"
-                                               data-toggle="modal" data-target="#modal_shipping"
-                                               data-url="{{ path('order_shipping', {id:order.id}) }}">
-                                                <i class="fa fa-truck"></i> <br>
-                                                <small>Frete</small>
-                                            </a>
+                                            {% set shippingRules = order.shippingRules %}
+
+                                            {% if attribute(shippingRules, 'type') is defined and 'self' == shippingRules.type %}
+                                                <a class="btn btn-default {{ order.deliveryAddress ? 'validated' }}"
+                                                   data-toggle="modal" data-target="#modal_shipping"
+                                                   data-url="{{ path('order_shipping', {id:order.id}) }}"
+                                                   data-shipping="self">
+                                                    <i class="fa fa-truck"></i><br><small>Transportadora</small>
+                                                </a>
+                                            {% else %}
+                                                <a class="btn btn-default {{ order.deliveryAddress ? 'validated' }}"
+                                                   data-toggle="modal" data-target="#modal_shipping"
+                                                   data-shipping="sices"
+                                                   data-url="{{ path('order_shipping', {id:order.id}) }}">
+                                                    <i class="fa fa-truck"></i><br><small>Frete Sices</small>
+                                                </a>
+                                            {% endif %}
 
                                             {% if order.hasFilePayment %}
                                                 <a class="btn btn-default {{ order.FilePayment ? 'validated' }}"
@@ -237,15 +256,27 @@
 
 {% block scripts %}
 
+
     <script>
 
+        var titleModal = $('#title');
         var modalShipping = $('#modal_shipping');
+        var shipping = 'self';
+
+        $('[data-shipping]').on('click', function () {
+            shipping = $(this).data('shipping');
+        });
+
         modalShipping.on('show.bs.modal', function (event) {
             var target = $(event.relatedTarget);
             var url = target.data('url');
             $.ajax({
                 url: url,
                 success: function (response) {
+                    var title = (shipping == "sices") ? ' Frete Sices' : ' Dados da Transportadora';
+                        titleModal.html('<i class="fa fa-truck"> </i>'+ title);
+
+
                     modalShipping.find('.modal-body').html(response);
                 }
             });
