@@ -24,7 +24,7 @@
 
     <div class="form-group output col-md-2">
         <label> &nbsp; </label>
-        <button class="btn btn-success btn-block ladda-button" data-style="zoom-in" type="submit">
+        <button class="btn btn-success btn-block ladda-button" id="submit_shipping" data-style="zoom-in" type="submit">
             <i class="fa fa-refresh"></i> Calcular
         </button>
     </div>
@@ -48,6 +48,13 @@
 {{ form_end(form) }}
 <script>
 
+    $('#shipping_state').on('change', function () {
+        ShippingManager.submitShipping();
+    });
+    $('#shipping_kind').on('change', function () {
+        ShippingManager.submitShipping();
+    });
+
     var ShippingManager = {
         form: $('#form_shipping'),
         type: $('#shipping_type'),
@@ -56,6 +63,9 @@
         kind: $('#shipping_kind'),
         output: $('#shipping_output'),
         deliveryAddress: $('#deliveryAddress'),
+        submitShipping: function(){
+            $('#submit_shipping').trigger('click');
+        },
         checkState: function(){
             var state = ShippingManager.state.val();
             var kinds = ['SP', 'RJ', 'MG'];

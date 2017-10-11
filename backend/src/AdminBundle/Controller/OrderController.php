@@ -30,15 +30,19 @@ class OrderController extends AbstractController
     {
         $member = $this->member();
 
-        $form = $this->createForm(FilterType::class);
+        $form = $this->createForm(FilterType::class, null, [
+            'member' => $member
+        ]);
 
         $data = $form->handleRequest($request)->getData();
+
+        if(!$data['agent']) $data['agent'] = $member;
 
         /** @var \AppBundle\Service\Order\OrderFinder $finder */
         $finder = $this->get('order_finder');
 
         $finder
-            ->set('agent', $member)
+            ->set('agent', $data['agent'])
             ->set('filter', $data)
         ;
 

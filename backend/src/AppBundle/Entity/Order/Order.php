@@ -12,6 +12,7 @@
 namespace AppBundle\Entity\Order;
 
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\Pricing\MemorialInterface;
 use AppBundle\Entity\Pricing\RangeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\AccountInterface;
@@ -1055,6 +1056,13 @@ class Order implements OrderInterface, InsurableInterface
         return $this->level;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function isPromotional()
+    {
+        return MemorialInterface::LEVEL_PROMOTIONAL == $this->level;
+    }
 
     /**
      * @inheritDoc
@@ -1148,7 +1156,8 @@ class Order implements OrderInterface, InsurableInterface
     private function refreshCustomer()
     {
         if($this->account instanceof AccountInterface) {
-            $this->customer = $this->account->getFirstname();
+            $this->firstname = $this->account->getFirstname();
+            $this->lastname = $this->account->getLastname();
             $this->cnpj = $this->account->getDocument();
             $this->ie = $this->account->getExtraDocument();
             $this->postcode = $this->account->getPostcode();
@@ -1157,7 +1166,7 @@ class Order implements OrderInterface, InsurableInterface
             $this->address = $this->account->getStreet();
 
             if(null != $owner = $this->account->getOwner()) {
-                $this->contact = $owner->getName();
+                $this->contact = $owner->getFirstname();
                 $this->email = $owner->getEmail();
                 $this->phone = $owner->getPhone();
             }

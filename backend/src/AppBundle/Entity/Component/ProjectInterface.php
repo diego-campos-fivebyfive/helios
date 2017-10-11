@@ -786,6 +786,11 @@ interface ProjectInterface
     public function isClosed();
 
     /**
+     * @return bool
+     */
+    public function isPromotional();
+
+    /**
      * @return array
      */
     public static function getPriceStrategies();
