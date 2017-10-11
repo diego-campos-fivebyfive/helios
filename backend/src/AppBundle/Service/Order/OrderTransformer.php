@@ -16,6 +16,7 @@ use AppBundle\Entity\Component\ModuleInterface;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Order\Element;
 use AppBundle\Entity\Order\OrderInterface;
+use AppBundle\Entity\Pricing\MemorialInterface;
 use AppBundle\Manager\OrderManager;
 
 /**
@@ -65,6 +66,10 @@ class OrderTransformer
         $order->setDescription(sprintf('Sistema de %skWp', $project->getPower()));
         $order->setShippingRules($project->getShippingRules());
         $order->setInsurance($project->getInsurance());
+
+        if($project->isPromotional()){
+            $order->setLevel(MemorialInterface::LEVEL_PROMOTIONAL);
+        }
 
         if($persist) $this->manager->save($order);
 
