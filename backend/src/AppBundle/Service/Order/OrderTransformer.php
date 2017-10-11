@@ -68,7 +68,9 @@ class OrderTransformer
         $order->setInsurance($project->getInsurance());
 
         if($project->isPromotional()){
-            $order->setLevel(MemorialInterface::LEVEL_PROMOTIONAL);
+            $order
+                ->setDescription($order->getDescription() . ' [promo]')
+                ->setLevel(MemorialInterface::LEVEL_PROMOTIONAL);
         }
 
         if($persist) $this->manager->save($order);
