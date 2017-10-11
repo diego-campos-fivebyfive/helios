@@ -781,6 +781,17 @@ interface ProjectInterface
     public function getCostPriceExtra();
 
     /**
+     * @param $level
+     * @return ProjectInterface
+     */
+    public function setLevel($level);
+
+    /**
+     * @return string
+     */
+    public function getLevel();
+
+    /**
      * @return bool
      */
     public function isClosed();
