@@ -61,8 +61,7 @@
     <script>
 
         $(' [data-account] ').on('click', function () {
-            $('#order_account').val($(this).data('account'));
-            InfoManager.fillAccount($(this).data('info'));
+            window.location.href = '{{ path('project_generator',{account:'_account_'}) }}'.replace(/_account_/g, $(this).data('account'));
         });
 
         form = $('#form_filtration');
