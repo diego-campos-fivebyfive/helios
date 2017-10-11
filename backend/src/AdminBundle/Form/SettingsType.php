@@ -3,6 +3,7 @@
 namespace AdminBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -36,6 +37,7 @@ class SettingsType extends AbstractType
                         ->add('name', TextType::class)
                         ->add('email', EmailType::class)
                 )
+                ->add('enable_promo', CheckboxType::class)
         );
     }
 }
