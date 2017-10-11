@@ -1,21 +1,11 @@
 <table class="width-total orders" cellspacing="0">
     <thead>
     <tr class="th">
-        <th>
-            Código
-        </th>
-        <th style="width: 45%;">
-            Produto
-        </th>
-        <th>
-            Custo Un.
-        </th>
-        <th>
-            QTD
-        </th>
-        <th>
-            Custo T.
-        </th>
+        <th>Código</th>
+        <th style="min-width: 45%;">Produto</th>
+        {% if not item.ispromotional %}<th>Custo Un.</th>{% endif %}
+        <th>QTD</th>
+        {% if not item.ispromotional %}<th>Custo T.</th>{% endif %}
     </tr>
     </thead>
     <tbody>
@@ -24,9 +14,9 @@
         <tr class="td">
             <td>{{ element.code }}</td>
             <td class="text-left">{{ element.description }}</td>
-            <td>{{ element.unitPrice|currency }}</td>
+            {% if not item.ispromotional %}<td>{{ element.unitPrice|currency }}</td>{% endif %}
             <td class="text-center">{{ element.quantity }}</td>
-            <td>{{ element.total|currency }}</td>
+            {% if not item.ispromotional %}<td>{{ element.total|currency }}</td>{% endif %}
         </tr>
     {% endfor %}
 

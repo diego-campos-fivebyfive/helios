@@ -4,7 +4,7 @@
         <td class="content-block">
 
             <p>
-                Prezado {{ order.account.owner.firstname }},
+                Prezado {{ order.contact }},
             </p>
             <p>
                 Você solicitou o orçamento preliminar nº {{ order.reference }}.
@@ -24,6 +24,8 @@
             {% endfor %}
 
             {% include 'orders/emails/_shipping.html.twig' %}
+
+            {% include 'orders/emails/_total.html.twig' %}
 
         </td>
     </tr>
