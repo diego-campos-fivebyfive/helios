@@ -1,3 +1,7 @@
+{% if showPrices is not defined %}
+    {% set showPrices = true %}
+{% endif %}
+
 <tr>
     {% if 'proposal' != insureOrigin %}
         <td> SSS_2017_2018 </td>
@@ -5,7 +9,7 @@
 
     <td> SEGURO SOLAR RISCO ENGENHARIA PROJETO E INSTALAÇÃO </td>
 
-    {% if 'generator' == insureOrigin or 'order' == insureOrigin %}
+    {% if showPrices and ('generator' == insureOrigin or 'order' == insureOrigin) %}
         <td> {{ 0|currency }} </td>
     {% endif %}
 
@@ -18,7 +22,7 @@
         <td class="text-center"> 1 </td>
     {% endif %}
 
-    {% if 'generator' == insureOrigin %}
+    {% if 'generator' == insureOrigin and showPrices %}
         <td> {{ 0|currency }} </td>
     {% endif %}
 
