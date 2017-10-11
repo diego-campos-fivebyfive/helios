@@ -78,17 +78,27 @@
 
                         {{ form_start(form) }}
 
-                        <div class="form-group col-md-5">
+                        {% set hasAgent = attribute(form, 'agent') is defined %}
+
+                        <div class="form-group col-md-{{ hasAgent ? '4' : '6' }}">
                             {{ form_widget(form.like,{attr:{class:'form-control', placeholder: 'nome, razão social, cnpj, número...'}}) }}
                         </div>
 
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-{{ hasAgent ? '3' : '4' }}">
                             {{ form_widget(form.status,{attr:{class:'form-control'}}) }}
                         </div>
 
-                        <button type="submit" class="btn btn-primary btn-md">
+                        {% if hasAgent %}
+                            <div class="form-group col-md-3">
+                                {{ form_widget(form.agent,{attr:{class:'form-control'}}) }}
+                            </div>
+                        {% endif %}
+
+                        <div class="form-group col-md-2">
+                        <button type="submit" class="btn btn-primary btn-md btn-block">
                             <i class="fa fa-search"></i> Pesquisar
                         </button>
+                        </div>
 
                         {{ form_end(form) }}
 
