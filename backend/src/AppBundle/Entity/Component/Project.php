@@ -263,6 +263,13 @@ class Project implements ProjectInterface, InsurableInterface
     private $proposal;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $level;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="issued_at", type="datetime", nullable=true)
@@ -1365,6 +1372,8 @@ class Project implements ProjectInterface, InsurableInterface
     {
         $this->member = $member;
 
+        $this->level = $member->getAccount()->getLevel();
+
         return $this;
     }
 
@@ -1849,6 +1858,24 @@ class Project implements ProjectInterface, InsurableInterface
     public function getInsuranceQuota()
     {
         return $this->getCostPriceComponents();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setLevel($level)
+    {
+        $this->level = $level;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLevel()
+    {
+        return $this->level;
     }
 
     /**
