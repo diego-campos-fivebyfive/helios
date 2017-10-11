@@ -340,8 +340,11 @@ class ProjectGeneratorController extends AbstractController
         $element = $manager->create();
         $element->setOrder($order);
 
+        $promo = $order->isPromotional();
+
         $form = $this->createForm(ElementType::class, $element, [
-            'manager' => $componentManager
+            'manager' => $componentManager,
+            'promocional' => $promo
         ]);
 
         $form->handleRequest($request);
@@ -371,8 +374,11 @@ class ProjectGeneratorController extends AbstractController
         $componentManager = $this->manager($element->getFamily());
         $manager = $this->manager('order_element');
 
+        $promo = $element->getOrder()->isPromotional();
+
         $form = $this->createForm(ElementType::class, $element, [
-            'manager' => $componentManager
+            'manager' => $componentManager,
+            'promocional' => $promo
         ]);
 
         $form->handleRequest($request);
