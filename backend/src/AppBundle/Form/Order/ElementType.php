@@ -61,6 +61,12 @@ class ElementType extends AbstractType
         $aliases = $qb->getRootAliases();
 
         $qb->where($qb->expr()->notIn(sprintf('%s.code', $aliases[0]), $codes));
+        $qb->andWhere($aliases[0].'.status = :status');
+        $qb->andWhere($aliases[0].'.available = :available');
+        $qb->setParameters([
+            'status' => 1,
+            'available' => 1
+        ]);
 
         $components = $qb->getQuery()->getResult();
 
