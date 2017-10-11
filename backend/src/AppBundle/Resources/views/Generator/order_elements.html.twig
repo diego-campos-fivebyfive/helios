@@ -57,18 +57,36 @@
     </tr>
 
     </tbody>
-    <thead>
-        <tr>
-            <th colspan="2" class="text-right">{% if isPlatform %}Margem bruta da operação{% endif %}</th>
-            {% if isPlatform %}
-                <th>{{ order.margin|currency }}</th>
-            {% endif %}
-            <th class="text-right" id="subtotal"> SubTotal </th>
-            <th></th>
-            <th> {{ order.subTotal|currency }} </th>
-            <th></th>
-        </tr>
-    </thead>
+    <tfoot>
+    {% if isPlatform %}
+    <tr>
+        <th colspan="2" class="text-right">Total de CMV</th>
+        <th>{{ order.totalCmv|currency }}</th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
+    <tr>
+        <th colspan="2" class="text-right">Total de impostos</th>
+        <th>{{ order.totalTaxes|currency }}</th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
+    {% endif %}
+    <tr>
+        <th colspan="2" class="text-right">{% if isPlatform %}Margem bruta da operação{% endif %}</th>
+        {% if isPlatform %}
+            <th>{{ order.margin|currency }}</th>
+        {% endif %}
+        <th class="text-right" id="subtotal"> SubTotal </th>
+        <th></th>
+        <th> {{ order.subTotal|currency }} </th>
+        <th></th>
+    </tr>
+    </tfoot>
 </table>
 
 
@@ -146,8 +164,9 @@
                         positionClass: 'toast-top-center',
                         progressBar: true
                     });
-                    OrderManager.getElements()
-                    OrderManager.renderTotal(total)
+                    InsuranceHandler.apply();
+                    OrderManager.getElements();
+                    OrderManager.renderTotal(total);
                 } else {
                     toastr.error('Não foi possível aplicar o Markup!', '', {
                         positionClass: 'toast-top-center',
