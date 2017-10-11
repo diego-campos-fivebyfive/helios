@@ -67,13 +67,13 @@ class Precifier
 
         if($memorial){
 
-            $member = $project->getMember();
-            $account = $member->getAccount();
+            //$member = $project->getMember();
+            //$account = $member->getAccount();
             $defaults = $project->getDefaults();
 
             if(!array_key_exists('is_promotional', $defaults)) $defaults['is_promotional'] = false;
 
-            $level = $defaults['is_promotional'] ? 'promotional' : $account->getLevel();
+            $level = $defaults['is_promotional'] ? 'promotional' : $project->getLevel();
 
             $power = $project->getPower();
             $components = self::extractComponents($project);
