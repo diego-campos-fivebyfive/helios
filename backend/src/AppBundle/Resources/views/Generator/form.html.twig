@@ -5,7 +5,7 @@
 <div class="row">
 
     {% if enablePromotional %}
-        <div class="form-group">
+        <div class="form-group" id="block_promo_selector">
             <div class="col-md-12 text-center" style="margin-bottom: 10px;">
                 {{ form_widget(form.is_promotional) }} &nbsp;
                 {{ form_label(form.is_promotional, 'Gerar sistema PROMOCIONAL') }}
