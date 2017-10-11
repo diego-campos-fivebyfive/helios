@@ -1148,7 +1148,8 @@ class Order implements OrderInterface, InsurableInterface
     private function refreshCustomer()
     {
         if($this->account instanceof AccountInterface) {
-            $this->customer = $this->account->getFirstname();
+            $this->firstname = $this->account->getFirstname();
+            $this->lastname = $this->account->getLastname();
             $this->cnpj = $this->account->getDocument();
             $this->ie = $this->account->getExtraDocument();
             $this->postcode = $this->account->getPostcode();
@@ -1157,7 +1158,7 @@ class Order implements OrderInterface, InsurableInterface
             $this->address = $this->account->getStreet();
 
             if(null != $owner = $this->account->getOwner()) {
-                $this->contact = $owner->getName();
+                $this->contact = $owner->getFirstname();
                 $this->email = $owner->getEmail();
                 $this->phone = $owner->getPhone();
             }
