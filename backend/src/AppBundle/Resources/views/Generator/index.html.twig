@@ -248,7 +248,7 @@
                 var id = this.getProject().id;
                 if (id) {
                     Request.send({
-                        url: '{{ path('generator_components',{id:'_id_'}) }}'.replace(/_id_/g, id),
+                        url: '{{ path('generator_components',{id:'_id_', level:order.level}) }}'.replace(/_id_/g, id),
                         callback: function (xhr) {
 
                             $('#generator_components').html(xhr.responseText);
