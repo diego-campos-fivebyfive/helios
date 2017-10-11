@@ -41,6 +41,9 @@
         .ibox-content{
 
         }
+        #block_promo_selector{
+            display: none;
+        }
     </style>
 
     <style type="text/css">
@@ -440,7 +443,9 @@
             getForm: function(){
                 if(this.project.id){
                     var url = this.createUrl('{{ path('generator',{project:'_id_'}) }}', {id: this.project.id});
-                    this.requestContent(url, '#generator_form');
+                    this.requestContent(url, '#generator_form', function(){
+                        $('#block_promo_selector').remove();
+                    });
                 }
             },
             getComponents: function(){
@@ -449,9 +454,10 @@
                     this.requestContent(url, '#project_components');
                 }
             },
-            requestContent: function(url, element){
+            requestContent: function(url, element, callback){
                 this.request(url, 'get', null, function(xhr){
                    GeneratorHandler.render(element, xhr.responseText);
+                   if(callback) callback();
                 });
             },
             request: function(url, method, data, callback){
