@@ -221,40 +221,35 @@ class OrderController extends AbstractController
      */
     public function generatorProformaAction(Order $order)
     {
-        $status = Response::HTTP_CONFLICT;
-        $filename = null;
+        $id = $order->getId();
+        $date = (new \DateTime())->format('Ymd-His');
+        $filename = sprintf('proforma_%s_%s_.pdf', $order->getId(), $date);
 
-        $snappy = $this->get('knp_snappy.pdf');
-        $snappy->setOption('viewport-size', '1280x1024');
-        $snappy->setOption('margin-top', 0);
-        $snappy->setOption('margin-bottom', 0);
-        $snappy->setOption('margin-left', 0);
-        $snappy->setOption('margin-right', 0);
-        $snappy->setOption('zoom', 2);
+        $options = array(
+            'id' => $id,
+            'root' => 'order',
+            'type' => 'proforma',
+            'doc' => 'proforma_pdf',
+            'filename' => $filename,
+            'access' => 'private'
+        );
 
-        $filename = sprintf('proforma_%s_%s_.pdf', $order->getId(), (new \DateTime())->format('Ymd-His'));
-        $file = $this->getUploadDir('proforma') . $filename;
+        $file = $this->get('app_storage')->location($options);
 
-        $url = $this->generateUrl('proforma_pdf', ['id' => $order->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
+        $this->get('app_generator')->pdf($options, $file);
 
-        try {
-
-            $snappy->generate($url, $file);
-
-            if (file_exists($file)) {
-                $status = Response::HTTP_OK;
-            }
-
-            $order->setProforma($filename);
-
-            $this->manager('order')->save($order);
-
-        } catch (\Exception $exception) {
-
-            return $this->json([
-                'error' => $exception->getMessage()
-            ], $status);
+        if (!file_exists($file)) {
+            $message = "Could not generate $type PDF.";
+            return $this->json([ 'error' => $message ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+
+        $this->get('app_storage')->push($options, $file);
+
+        $order->setProforma($filename);
+
+        $this->manager('order')->save($order);
+
+        return $this->json([ 'filename' => $filename ], Response::HTTP_OK);
     }
 
     /**
