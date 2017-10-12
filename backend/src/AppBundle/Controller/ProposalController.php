@@ -189,7 +189,7 @@ class ProposalController extends AbstractController
         }
 
         $id = $theme->getId();
-        $filename = md5(uniqid()) . '.pdf';
+        $filename = md5(uniqid(time())) . '.pdf';
 
         $options = array(
             'id' => $id,

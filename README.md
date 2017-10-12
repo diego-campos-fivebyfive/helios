@@ -405,7 +405,7 @@ Esclarecimentos gerais relacionados a documentação:
 
     - 7.1.2. **Atribuição de File Name estático**: cria uma nova váriavel `$filename` na controller que chama o gerador, onde a mesma recebe nome do PDF gerado. Em seguida comente a linha original. Exemplo:
       ```php
-      //$filename = md5(uniqid()) . '.pdf';
+      //$filename = md5(uniqid(time())) . '.pdf';
       $filename = 'f6971985f1787ec54a4fef316d8064ab.pdf';
       ```
 
