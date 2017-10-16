@@ -51,16 +51,12 @@ elif [ $1 = '--production' ]; then
   # Remove it after deploy command optimizations
   rm -rf $SICES_PATH/.temp/devops/aws/
   rm $SICES_PATH/.temp/backend/app/config/parameters.yml
-  rm $SICES_PATH/.temp/backend/src/AppBundle/Service/Notifier/Notifier.php
   cp \
     $SICES_PATH/.backup/devops/aws \
     $SICES_PATH/.temp/devops/aws
   cp \
     $SICES_PATH/.backup/backend/app/config/parameters.yml \
     $SICES_PATH/.temp/backend/app/config/parameters.yml
-  cp \
-    $SICES_PATH/.backup/backend/src/AppBundle/Service/Notifier/Notifier.php \
-    $SICES_PATH/.temp/backend/src/AppBundle/Service/Notifier/Notifier.php
   # Finish Remove it
 
   echo "Deploying files from Temp..."

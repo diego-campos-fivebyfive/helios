@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\Component\Structure;
 use AppBundle\Form\Component\StructureType;
-use AppBundle\Service\Notifier\Notifier;
 
 /**
  * Class StructureController
