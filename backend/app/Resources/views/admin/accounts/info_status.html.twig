@@ -1,10 +1,13 @@
 <div id="info-status" class="pull-right">
     {% if account.status == 0 %}
-        <h3>Aguardando confirmação de Email</h3>
+        <a class="btn btn-danger"
+           data-status="{{ path('account_change_status',{'token':account.token}) }}">
+            Reenviar verificação de email
+        </a>
     {% elseif account.status == 1 %}
         <a class="btn btn-danger"
            data-status="{{ path('account_change_status',{'token':account.token}) }}">
-            Enviar Email de confirmação
+            Aprovar Integrador
         </a>
     {% elseif account.status == 2 %}
         <a class="btn btn-danger"
