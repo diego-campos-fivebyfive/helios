@@ -141,6 +141,12 @@ interface ElementInterface
     public function getTotalCmv();
 
     /**
+     * @param $family
+     * @return bool
+     */
+    public function isFamily($family);
+
+    /**
      * @param \DateTime $created_at
      * @return ElementInterface
      */
