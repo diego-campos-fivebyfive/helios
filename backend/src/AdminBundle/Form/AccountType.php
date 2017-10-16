@@ -50,12 +50,11 @@ class AccountType extends AbstractType
                 'choices' => $levels
             ]);
 
-
         if ($isAdmin) {
 
-            $account = $member->getAccount();
+            $platform = $member->getAccount();
 
-            $members = $account->getMembers()->filter(function (MemberInterface $member){
+            $members = $platform->getMembers()->filter(function (MemberInterface $member){
                 return $member->isPlatformCommercial();
             });
 
