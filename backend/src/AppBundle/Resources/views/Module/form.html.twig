@@ -109,19 +109,24 @@
                                             {{ form_widget(form.height,{attr:{class:'form-control'}}) }}
                                         </div>
 
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-3">
                                             {{ form_widget(form.status) }}
                                             {{ form_label(form.status, 'Ativo', {label_attr:{class:'check-label'}}) }}
                                         </div>
 
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-3">
                                             {{ form_widget(form.available)}}
                                             {{ form_label(form.available, 'Disponível para venda', {label_attr:{class:'check-label'}}) }}
                                         </div>
 
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-3">
                                             {{ form_widget(form.promotional)}}
                                             {{ form_label(form.promotional, 'Produto Promocional', {label_attr:{class:'check-label'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-md-3">
+                                            {{ form_label(form.promoEndAt, 'Data limite') }}
+                                            {{ form_widget(form.promoEndAt, {attr:{class:'form-control', placeholder:"Data limite"}})}}
                                         </div>
                                     </div>
                                 </div>
@@ -320,6 +325,31 @@
 
         $('#module_cellNumber').mask('0#', {reverse: false});
         $('#module_temperatureOperation').mask('0#', {reverse: false});
+
+        var promoEndAt = $('#module_promoEndAt');
+
+        promoEndAt.daterangepicker({
+            singleDatePicker: true,
+            minDate: moment(),
+            locale: {
+                format: 'DD/MM/YYYY',
+                daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+                monthNames: [
+                    "Janeiro",
+                    "Fevereiro",
+                    "Março",
+                    "Abril",
+                    "Maio",
+                    "Junho",
+                    "Julho",
+                    "Agosto",
+                    "Setembro",
+                    "Outubro",
+                    "Novembro",
+                    "Dezembro"
+                ]
+            }
+        });
 
     </script>
 
