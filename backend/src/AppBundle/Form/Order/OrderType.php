@@ -29,8 +29,7 @@ class OrderType extends AbstractType
         $member = $options['member'];
 
         if(self::TARGET_EDIT == $options['target']) {
-            $builder
-                ->add('description');
+            $builder->add('description');
         }
 
         if(self::TARGET_REVIEW == $options['target']){
