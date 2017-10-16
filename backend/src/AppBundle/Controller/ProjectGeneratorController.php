@@ -357,7 +357,9 @@ class ProjectGeneratorController extends AbstractController
 
             $this->finishElement($element);
 
-            return $this->json([], Response::HTTP_CREATED);
+            return $this->json([
+                'description' => $order->getDescription()
+            ], Response::HTTP_CREATED);
         }
 
         return $this->render('generator.element', [
@@ -394,7 +396,9 @@ class ProjectGeneratorController extends AbstractController
             $this->finishElement($element);
 
             return $this->json([
-                'total' => $element->getOrder()->getTotal()
+                'total' => $element->getOrder()->getTotal(),
+                'power' => $element->getOrder()->getPower(),
+                'description' => $element->getOrder()->getDescription()
             ], Response::HTTP_ACCEPTED);
         }
 
@@ -414,8 +418,11 @@ class ProjectGeneratorController extends AbstractController
 
         $this->finishElement($element);
 
+        $order = $element->getOrder();
+
         return $this->json([
-            'total' => $element->getOrder()->getTotal()
+            'total' => $order->getTotal(),
+            'description' => $order->getDescription()
         ]);
     }
 
