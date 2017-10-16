@@ -16,24 +16,11 @@ class OwnerType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        //$member = $options['data'];
-
         $builder
             ->add('firstname', TextType::class, [
                 'required' => true,
                 'label' => false
             ]);
-
-        /*if (!$member) {
-            $builder
-                ->add('email', HiddenType::class)
-                ->add('phone', HiddenType::class);
-        } else {
-            $builder
-                ->remove('email', EmailType::class)
-                ->remove('phone', NumberType::class);
-        }*/
-
     }
 
     /**
