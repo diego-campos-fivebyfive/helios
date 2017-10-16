@@ -44,7 +44,7 @@ class OrderTransformerTest extends AppTestCase
     private function createProject()
     {
         // Module
-        $moduleMock = $this->getMockBuilder(Inverter::class)->getMock();
+        $moduleMock = $this->getMockBuilder(Module::class)->getMock();
         $moduleMock->method('getCode')->willReturn('MOD001');
         $moduleMock->method('getModel')->willReturn('Module A');
 

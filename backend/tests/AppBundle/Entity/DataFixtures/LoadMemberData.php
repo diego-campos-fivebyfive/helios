@@ -23,6 +23,7 @@ class LoadMemberData extends AbstractFixture implements OrderedFixtureInterface
             ->setContext(Member::CONTEXT_MEMBER)
             ->setFirstname(self::randomString(15))
             ->setEmail(sprintf('%s@%s.com', self::randomString(5), self::randomString(5)))
+            ->setAccount($this->getReference('account'))
         ;
 
         $manager->persist($member);
