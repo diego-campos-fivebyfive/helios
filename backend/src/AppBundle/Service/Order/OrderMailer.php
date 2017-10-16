@@ -110,7 +110,7 @@ class OrderMailer extends AbstractMailer
             'type' => 'proforma'
         );
 
-        $file = $this->get('app_storage')->location($options);
+        $file = $this->container->get('app_storage')->location($options);
 
         return $this->createAttachment($file);
     }
