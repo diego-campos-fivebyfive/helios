@@ -87,12 +87,15 @@
                                                                 {% set form_master = form_params.master %}
                                                                 {% set form_admin = form_params.admin %}
                                                                 {% set form_platform = form_params.platform %}
+                                                                {% set form_financial = form_params.financial %}
 
                                                                 {{ this.formInfo(form_platform) }}
 
                                                                 {{ this.formInfo(form_master) }}
 
                                                                 {{ this.formInfo(form_admin) }}
+
+                                                                {{ this.formInfo(form_financial) }}
 
                                                             </div>
 
@@ -116,8 +119,14 @@
                                                                </div>
                                                                <div class="panel-body">
 
-                                                                   {{ form_widget(form_params.enable_promo) }} &nbsp;
-                                                                   {{ form_label(form_params.enable_promo, 'Ativar orçamentos promocionais') }}
+                                                                   <div class="col-md-8">
+                                                                       {{ form_widget(form_params.enable_promo) }} &nbsp;
+                                                                       {{ form_label(form_params.enable_promo, 'Ativar orçamentos promocionais') }}
+                                                                   </div>
+                                                                   <div class="col-md-4">
+                                                                       {{ form_label(form_params.promo_end_at, 'Data limite') }}
+                                                                       {{ form_widget(form_params.promo_end_at, {attr:{class:'form-control', placeholder:"Data limite"}})}}
+                                                                   </div>
 
                                                                </div>
 
@@ -189,6 +198,30 @@
             formSettings.trigger('submit');
         });
 
+        var promoEndAt = $('#settings_parameters_promo_end_at');
+
+        promoEndAt.daterangepicker({
+            singleDatePicker: true,
+            minDate: moment(),
+            locale: {
+                format: 'DD/MM/YYYY',
+                daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+                monthNames: [
+                    "Janeiro",
+                    "Fevereiro",
+                    "Março",
+                    "Abril",
+                    "Maio",
+                    "Junho",
+                    "Julho",
+                    "Agosto",
+                    "Setembro",
+                    "Outubro",
+                    "Novembro",
+                    "Dezembro"
+                ]
+            }
+        });
     </script>
 
 {% endblock %}
