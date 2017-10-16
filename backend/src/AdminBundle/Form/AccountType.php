@@ -24,8 +24,6 @@ class AccountType extends AbstractType
         $account  = $options['data'];
         $member = $options['member'];
 
-        $members = $options['agents']->toArray();
-
         $isAdmin =  $member->isPlatformAdmin() || $member->isPlatformMaster();
 
         $accountId = $account->getId();
@@ -54,6 +52,13 @@ class AccountType extends AbstractType
 
 
         if ($isAdmin) {
+
+            $account = $member->getAccount();
+
+            $members = $account->getMembers()->filter(function (MemberInterface $member){
+                return $member->isPlatformCommercial();
+            });
+
             $builder->add('agent', EntityType::class,[
                 'choices' => $members,
                 'class' => 'AppBundle:Customer'
@@ -92,7 +97,6 @@ class AccountType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => Customer::class,
-            'agents' => null,
             'member' => null
         ));
     }
