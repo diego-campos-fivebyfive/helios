@@ -157,39 +157,36 @@ class OrderController extends AbstractController
      */
     public function uploadAction(Order $order, Request $request)
     {
-        if($request->isMethod('post')){
+        $file = $request->files->get('file');
 
-            $file = $request->files->get('file');
-
-            if($file instanceof UploadedFile) {
-
-                $dir = $this->getUploadDir('filePayment');
-
-                $current = $dir . $order->getFilePayment();
-
-                if(is_file($current)) unlink($current);
-
-                $name = sprintf(
-                    'filePayment_%s_%s.%s', $order->getId(),
-                    (new \DateTime())->format('Ymd-His'),
-                    $file->getClientOriginalExtension()
-                );
-
-                $file->move($dir, $name);
-
-                $order->setFilePayment($name);
-
-                $this->manager('order')->save($order);
-
-                return $this->json([
-                    'name' => $name
-                ]);
-            }
+        if (!$file instanceof UploadedFile) {
+            return $this->render('order.upload', [ 'order' => $order ]);
         }
 
-        return $this->render('order.upload', [
-            'order' => $order
-        ]);
+        $format = 'filePayment_%s_%s.%s';
+        $date = (new \DateTime())->format('Ymd-His');
+        $extention = $file->getClientOriginalExtension();
+
+        $filename = sprintf($format, $order->getId(), $date, $extention);
+
+        $options = [
+            'filename' => $filename,
+            'root' => 'order',
+            'type' => 'payment',
+            'access' => 'private'
+        ];
+
+        $this->container->get('app_storage')->push($options, $file);
+
+        $location = $this->container->get('app_storage')->location($options);
+        $path = str_replace($filename, '', $location);
+        $file->move($path, $filename);
+
+        $order->setFilePayment($filename);
+
+        $this->manager('order')->save($order);
+
+        return $this->json([ 'name' => $filename ]);
     }
 
     /**
@@ -199,21 +196,32 @@ class OrderController extends AbstractController
     {
         $this->denyAccessUnlessGranted('edit', $order);
 
-        $getter = 'get' . ucfirst($type);
+        $method = 'get' . ucfirst($type);
 
-        if(!method_exists($order, $getter))
-            throw $this->createNotFoundException(sprintf('The class %s does not have %s file', get_class($order), $type));
-
-        if(null != $filename = $order->$getter()){
-
-            $file = $this->getUploadDir($type) . $filename;
-
-            if(is_file($file)) {
-                return new BinaryFileResponse($file, Response::HTTP_OK, [], true, ResponseHeaderBag::DISPOSITION_INLINE);
-            }
+        if (!method_exists($order, $method)) {
+            $message = 'The class %s does not have %s file';
+            throw $this->createNotFoundException(sprintf($message, get_class($order), $type));
         }
 
-        throw $this->createNotFoundException(sprintf('File %s not found', $type));
+        $filename = $order->$method();
+
+        if (!$filename) {
+            $message = 'File %s not found';
+            throw $this->createNotFoundException(sprintf($message, $type));
+        }
+
+        $options = [
+            'filename' => $filename,
+            'root' => 'order',
+            'type' => 'payment'
+        ];
+
+        $file = $this->container->get('app_storage')->location($options);
+
+        if (is_file($file)) {
+            $header = ResponseHeaderBag::DISPOSITION_INLINE;
+            return new BinaryFileResponse($file, Response::HTTP_OK, [], true, $header);
+        }
     }
 
     /**
