@@ -27,6 +27,12 @@ class StructureType extends AbstractType
             ->add('cmvProtheus', null, ['required' => true])
             ->add('cmvApplied', null, ['required' => true])
             ->add('promotional', null, ['required' => false])
+            ->add('promoEndAt', 'datetime', array(
+                    'required' => false,
+                    'widget' => 'single_text',
+                    'format' => 'dd/MM/yyyy'
+                )
+            )
             ->add('status', CheckboxType::class, [
                 'label'  => 'Ativo',
                 'required' => false
