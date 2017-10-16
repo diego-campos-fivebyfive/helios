@@ -4,16 +4,13 @@ cd $SICES_PATH
 
 echo 'Fixing permissions...'
 
-if [ -z ${1+x} ] || [ $1 == '--development' ]; then
-
-  chmod 600 devops/aws/homolog.pem
-  chmod 600 devops/aws/staging.pem
-
-elif [ $1 == '--homolog' ] || [ $1 == '--staging' ]; then
+if [ $1 == '--homolog' ] || [ $1 == '--staging' ]; then
 
   sudo chown -R www-data:admin /var/www/*
   sudo chmod -R g+rwx /var/www/*
 
-  sudo chmod -R 775 .uploads
-
 fi
+
+sudo chmod 600 devops/aws/*
+sudo chmod -R 775 .uploads
+
