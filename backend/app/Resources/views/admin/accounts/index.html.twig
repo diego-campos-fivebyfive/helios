@@ -97,7 +97,7 @@
                                     {% for account in pagination.items %}
 
                                         <tr>
-                                            <td> {{ account.lastname }} </td>
+                                            <td> {{ account.firstname }} </td>
                                             <td class="text-center"> {{ account.document }} </td>
                                             <td><i class="fa fa-envelope"></i>&nbsp;  {{ account.email }} </td>
                                             <td> {{ account.createdAt|date('d/m/Y') }}</td>
