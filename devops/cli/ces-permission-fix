@@ -4,7 +4,7 @@ cd $SICES_PATH
 
 echo 'Fixing permissions...'
 
-if [ $1 == '--homolog' ] || [ $1 == '--staging' ]; then
+if [[ $1 = '--homolog' ]] || [[ $1 = '--staging' ]]; then
 
   sudo chown -R www-data:admin /var/www/*
   sudo chmod -R g+rwx /var/www/*
