@@ -403,15 +403,15 @@ Esclarecimentos gerais relacionados a documentação:
 
       > Essas parte se faz necessária pois localmente o PDF apenas é gerado após timeout no processo de geração (aprox. 1 minuto após execução).
 
-    - 7.1.2. **Atribuição de File Name estático**: cria uma nova váriavel `$tempFileName` na controller do gerador, onde a mesma recebe nome do PDF gerado. Em seguida comente a linha original. Exemplo:
+    - 7.1.2. **Atribuição de File Name estático**: cria uma nova váriavel `$filename` na controller que chama o gerador, onde a mesma recebe nome do PDF gerado. Em seguida comente a linha original. Exemplo:
       ```php
-      //$tempFileName = md5(uniqid()) . '.pdf';
-      $tempFileName = 'f6971985f1787ec54a4fef316d8064ab.pdf';
+      //$filename = md5(uniqid(time())) . '.pdf';
+      $filename = 'f6971985f1787ec54a4fef316d8064ab.pdf';
       ```
 
-    - 7.1.3. **Ignorando a criação de novo PDF**: para que o processo possa ser executado até o final comente a linha de geração de um novo PDF.
+    - 7.1.3. **Ignorando a criação de novo PDF**: para que o processo possa ser executado até o final comente a linha que solicita a geração de um novo PDF.
       ```php
-      //$snappy->generate($snappyUrl, $tempFilePath);
+      //$this->get('app_generator')->pdf($options, $file);
       ```
 
      > Com as etapas acima implementadas será possivel testar o fluxo completo usando PDF estático.

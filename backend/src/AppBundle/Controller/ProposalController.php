@@ -188,25 +188,28 @@ class ProposalController extends AbstractController
             return $this->json([], Response::HTTP_NO_CONTENT);
         }
 
-        $snappy = $this->get('knp_snappy.pdf');
-        $snappy->setOption('viewport-size', '1280x1024');
-        $snappy->setOption('margin-top', 0);
-        $snappy->setOption('margin-bottom', 0);
-        $snappy->setOption('margin-left', 0);
-        $snappy->setOption('margin-right', 0);
-        $snappy->setOption('zoom', 2);
-
-        $path = "{$this->get('kernel')->getRootDir()}/../..";
-        $tempFileName = md5(uniqid()) . '.pdf';
-        $tempFile = "{$path}/.uploads/proposal/{$tempFileName}";
+        $id = $theme->getId();
+        $filename = md5(uniqid(time())) . '.pdf';
 
         $absoluteUrl = UrlGeneratorInterface::ABSOLUTE_URL;
-        $snappyUrl = $this->generateUrl('proposal_pdf', [ 'id' => $theme->getId() ], $absoluteUrl);
+        $snappyUrl = $this->generateUrl('proposal_pdf', ['id' => $id], $absoluteUrl);
 
-        $snappy->generate($snappyUrl, $tempFile);
+        $options = array(
+            'id' => $id,
+            'root' => 'proposal',
+            'type' => 'proposal',
+            'filename' => $filename,
+            'access' => 'private',
+            'snappy' => $snappyUrl
+        );
 
-        if (!file_exists($tempFile)) {
-            return $this->json([ 'filename' => $tempFileName ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        $file = $this->get('app_storage')->location($options);
+
+        $this->get('app_generator')->pdf($options, $file);
+
+        if (!file_exists($file)) {
+            $message = "Could not generate $type PDF.";
+            return $this->json([ 'error' => $message ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         if (!$project->getIssuedAt()) {
@@ -215,29 +218,29 @@ class ProposalController extends AbstractController
             $manager->save($project);
         }
 
-        $this->get('app_storage')->move([
-            'file' => $tempFile,
-            'filename' => $tempFileName,
-            'root' => 'proposal',
-            'type' => 'proposal',
-            'access' => 'private'
-        ]);
+        $this->get('app_storage')->push($options, $file);
 
-        return $this->json([ 'filename' => $tempFileName ], Response::HTTP_OK);
+        return $this->json([ 'filename' => $filename ], Response::HTTP_OK);
     }
 
     /**
-     * @Route("/display/{tempFileName}", name="proposal_display_pdf")
+     * @Route("/display/{filename}", name="proposal_display_pdf")
      */
-    public function displayAction($tempFileName)
+    public function displayAction($filename)
     {
-        $path = "{$this->get('kernel')->getRootDir()}/../..";
-        $tempFile = "{$path}/.uploads/proposal/{$tempFileName}";
+        $options = array(
+            'root' => 'proposal',
+            'type' => 'proposal',
+            'filename' => $filename
+        );
 
-        if (file_exists($tempFile)) {
-            return new BinaryFileResponse(new File($tempFile));
+        $file = $this->get('app_storage')->location($options);
+
+        if (!file_exists($file)) {
+            $message = 'File not found.';
+            return $this->json([ 'error' =>  $message ], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json([ 'error' => 'File not found.' ], Response::HTTP_NOT_FOUND);
+        return new BinaryFileResponse(new File($file));
     }
 }

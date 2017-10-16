@@ -183,6 +183,9 @@ services:
     app_storage:
         alias: component_file_handler
 
+    app_generator:
+        alias: component_file_handler
+
     proposal_filter:
         class: AppBundle\Service\ProposalFilter
         arguments: ['@project_manager']
