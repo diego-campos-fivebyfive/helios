@@ -54,4 +54,3 @@ elif [ $1 = '--production' ]; then
   rsync -avzh --delete $SICES_PATH/.temp/** $SICES_PATH
 
 fi
-

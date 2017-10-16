@@ -13,4 +13,3 @@ fi
 
 sudo chmod 600 devops/aws/*
 sudo chmod -R 775 .uploads
-
