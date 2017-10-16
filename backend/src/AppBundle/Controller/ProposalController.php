@@ -191,13 +191,16 @@ class ProposalController extends AbstractController
         $id = $theme->getId();
         $filename = md5(uniqid(time())) . '.pdf';
 
+        $absoluteUrl = UrlGeneratorInterface::ABSOLUTE_URL;
+        $snappyUrl = $this->generateUrl('proposal_pdf', ['id' => $id], $absoluteUrl);
+
         $options = array(
             'id' => $id,
             'root' => 'proposal',
             'type' => 'proposal',
-            'doc' => 'proposal_pdf',
             'filename' => $filename,
-            'access' => 'private'
+            'access' => 'private',
+            'snappy' => $snappyUrl
         );
 
         $file = $this->get('app_storage')->location($options);

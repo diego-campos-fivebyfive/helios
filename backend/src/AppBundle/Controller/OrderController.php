@@ -225,13 +225,16 @@ class OrderController extends AbstractController
         $date = (new \DateTime())->format('Ymd-His');
         $filename = sprintf('proforma_%s_%s_.pdf', $order->getId(), $date);
 
+        $absoluteUrl = UrlGeneratorInterface::ABSOLUTE_URL;
+        $snappyUrl = $this->generateUrl('proforma_pdf', ['id' => $id], $absoluteUrl);
+
         $options = array(
             'id' => $id,
             'root' => 'order',
             'type' => 'proforma',
-            'doc' => 'proforma_pdf',
             'filename' => $filename,
-            'access' => 'private'
+            'access' => 'private',
+            'snappy' => $snappyUrl
         );
 
         $file = $this->get('app_storage')->location($options);
