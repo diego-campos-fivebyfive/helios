@@ -117,10 +117,14 @@
                                 {{ form_widget(form.status,{attr:{class:'form-control', 'placeholder':'Status'}}) }}
                             </div>
                         {% endif %}
+
+                        {% set isPlatform = app.user.isPlatformAdmin or app.user.isPlatformMaster %}
+                        {% if isPlatform %}
                         <div class="col-md-4">
                             {{ form_label(form.level, 'Nivel de Conta *') }}
                             {{ form_widget(form.level,{attr:{class:'form-control', 'placeholder':'Status'}}) }}
                         </div>
+                        {% endif %}
 
                         {% if form.agent is defined %}
                             <div class="col-md-3">
@@ -140,6 +144,8 @@
                     </div>
 
                 </div>
+                <div class="form-group hide">{{ form_rest(form) }}</div>
+
                 {{ form_end(form) }}
             </div>
         </div>
