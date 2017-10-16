@@ -91,8 +91,6 @@ class AccountController extends AdminController
      */
     public function createAction(Request $request)
     {
-        $agents = $this->account()->getMembers();
-
         /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
         $userManager = $this->get('fos_user.user_manager');
         $accountManager = $this->manager('customer');
@@ -114,7 +112,6 @@ class AccountController extends AdminController
 
         $form = $this->createForm(AccountType::class, $account, array(
             'method' => 'post',
-            'agents' => $agents,
             'member' => $this->member()
         ));
         $form->handleRequest($request);
@@ -187,7 +184,6 @@ class AccountController extends AdminController
      */
     public function updateAction(Request $request, Customer $account)
     {
-        $agents = $this->account()->getMembers();
 
         $manager = $this->manager('customer');
 
@@ -195,7 +191,6 @@ class AccountController extends AdminController
 
         $form = $this->createForm(AccountType::class, $account, array(
             'method' => 'post',
-            'agents' => $agents,
             'member' => $this->member()
         ));
 
@@ -237,22 +232,22 @@ class AccountController extends AdminController
     public function changeAction(Customer $account)
     {
         try {
-            switch ($account) {
-                case $account->isPending():
+            switch ($account->getStatus()) {
+                case BusinessInterface::PENDING:
                     $this->getMailer()->sendAccountVerifyMessage($account);
                     break;
-                case $account->isStanding():
+                case BusinessInterface::STANDING:
                     $account = $this->changeStatus($account, BusinessInterface::APROVED);
                     $account->setAgent($this->member());
                     $this->getMailer()->sendAccountConfirmationMessage($account);
                     break;
-                case $account->isAproved():
+                case BusinessInterface::APROVED:
                     $this->getMailer()->sendAccountConfirmationMessage($account);
                     break;
-                case $account->isActivated():
+                case BusinessInterface::ACTIVATED:
                     $this->changeStatus($account, BusinessInterface::LOCKED);
                     break;
-                case $account->isLocked():
+                case BusinessInterface::LOCKED:
                     foreach ($account->getMembers() as $member){
                         $member->getUser()->setEnabled(1);
                     }
