@@ -45,18 +45,14 @@ elif [ $1 = '--production' ]; then
   echo "Creating current version Backup..."
   rsync -avzh --delete $SICES_PATH/** $SICES_PATH/.backup
 
+  # Remove it after permission-fix pem implementation and S3 file read
   echo "Moving untracked files..."
   rsync -avzh $SICES_PATH/.backup/.uploads/** $SICES_PATH/.temp/.uploads
 
-  # Remove it after deploy command optimizations
   rm -rf $SICES_PATH/.temp/devops/aws/
-  rm $SICES_PATH/.temp/backend/app/config/parameters.yml
   cp \
     $SICES_PATH/.backup/devops/aws \
     $SICES_PATH/.temp/devops/aws
-  cp \
-    $SICES_PATH/.backup/backend/app/config/parameters.yml \
-    $SICES_PATH/.temp/backend/app/config/parameters.yml
   # Finish Remove it
 
   echo "Deploying files from Temp..."
