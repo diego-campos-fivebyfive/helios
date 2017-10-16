@@ -35,6 +35,7 @@ elif [ $1 = '--production' ]; then
 
   $CLI_PATH/ces-slack-notify --devops '@here: Starting Production Deploy...'
   $CLI_PATH/ces-app-clone --production --homolog
+  $CLI_PATH/ces-permission-fix --production
   source $CLI_PATH/config/variables-ci --production
   $CLI_PATH/ces-app-config --production
   $CLI_PATH/ces-cache-clear
