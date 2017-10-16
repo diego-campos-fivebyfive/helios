@@ -67,6 +67,17 @@ interface ComponentInterface
     public function setPromotional($promotional);
 
     /**
+     * @return mixed
+     */
+    public function getPromoEndAt();
+
+    /**
+     * @param $date
+     * @return mixed
+     */
+    public function setPromoEndAt($date);
+
+    /**
      * @param $ncm
      * @return mixed
      */
