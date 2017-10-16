@@ -982,6 +982,10 @@ class Order implements OrderInterface, InsurableInterface
 
             $this->childrens->add($children);
 
+            if(!$children->getLevel()) {
+                $children->setLevel($this->level);
+            }
+
             if(!$children->getParent()){
                 $children->setParent($this);
             }

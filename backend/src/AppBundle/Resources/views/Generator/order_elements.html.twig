@@ -190,12 +190,8 @@
         });
     });
 
-    $('#order_description').val('Sistema de ' + {{ order.power }}+'kWp');
-    form_button.trigger('click');
-
     if ({{ isPlatform ? 'true': 'false' }}) {
         var inputMarkup = $('.markup');
-
         $.each(inputMarkup, function (i, elem) {
             Numbers.mask($(elem));
         });

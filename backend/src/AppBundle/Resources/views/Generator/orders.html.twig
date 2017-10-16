@@ -6,19 +6,6 @@
     }
 </style>
 
-<div class="modal inmodal fade" id="e_modal_details" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog width-modal">
-        <div class="modal-content animated bounceInLeft">
-            <div class="modal-body" id="edit_order"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" id="bt_save">
-                    {{ 'Save'|trans }}
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
     {% include view('Generator.orders_list') %}
 
 <script>
@@ -137,24 +124,6 @@
     ShippingManager.getElements();
 
     var edit_order = $('#edit_order');
-    var detail_spinner = edit_order.html();
-    $('[data-target="#modal_details"]').on('click', function(){
-        var url = $(this).data('url');
-        if (url) {
-            $('#e_modal_details').modal('show');
-            edit_order.html(detail_spinner);
-            $.ajax({
-                url: url,
-                method: 'get',
-                success: function (response) {
-                    edit_order.html(response);
-                }
-            });
-        } else {
-            edit_order.html('<h1> Erro ao Editar </h1>');
-        }
-    });
-
     $('#bt_save').click(function () {
         $.ajax({
             url: '{{ path('generator_orders', {id:order.id}) }}',

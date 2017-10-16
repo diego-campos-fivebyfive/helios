@@ -31,16 +31,10 @@
             method: $(this).attr('method'),
             data: $(this).serialize(),
             callback: function (xhr) {
-                var response = xhr.responseJSON;
-                var total = response.total;
-                form_element_btn.ladda('stop');
-                OrderManager.getElements();
                 InsuranceHandler.apply();
-                OrderManager.renderTotal(total);
-                var message = 201 == xhr.status ? 'Componente adicionado com sucesso!' : 'Componente atualizado com sucesso!' ;
-                $('#form_element_container').html('<h2>'+message+'</h2>');
-
+                GeneratorHandler.refreshWizardModal();
                 GeneratorHandler.resetBudgetButton();
+                GeneratorHandler.getOrders();
             }
         });
     });

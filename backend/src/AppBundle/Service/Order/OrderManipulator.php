@@ -35,7 +35,10 @@ class OrderManipulator
             }
         }
 
-        $order->setPower($power);
+        $order
+            ->setPower($power)
+            ->setDescription(sprintf('Sistema de %skWp%s', $power, ($order->isPromotional() ? ' [promo]': '')))
+        ;
     }
 
     /**

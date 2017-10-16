@@ -8,6 +8,32 @@
 
     {% include view('helper.style-wizard') %}
 
+    <div class="modal inmodal fade" id="wizard_modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog width-modal">
+            <div class="modal-content animated bounceInLeft">
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">
+                        {{ 'Save'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal fade" id="e_modal_details" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog width-modal">
+            <div class="modal-content animated bounceInLeft">
+                <div class="modal-body" id="edit_order"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="bt_save">
+                        {{ 'Save'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-md-12">
@@ -197,6 +223,9 @@
         GeneratorHandler = {
             project: {id: 0, power: 0},
             orderStatus: {{ order.status }},
+            wizardModal: $('#wizard_modal'),
+            wizardBody: null,
+            wizardUrl: null,
             resetGenerator: function () {
                 $('#generator_config').html('');
                 $('#info_power').html('Gerador');
@@ -264,6 +293,28 @@
                     });
                 }
             },
+            loadWizardModal: function(url){
+                Request.send({
+                    url: url,
+                    callback: function(xhr){
+                        GeneratorHandler.render(GeneratorHandler.wizardBody, xhr.responseText);
+                    }
+                });
+            },
+            refreshWizardModal: function(){
+                if(this.wizardUrl){
+                    this.loadWizardModal(this.wizardUrl);
+                }
+            },
+            configureWizardModal: function(){
+                this.wizardBody = this.wizardModal.find('.modal-body');
+                this.wizardModal.on('show.bs.modal', function(event){
+                    var target = $(event.relatedTarget);
+                    var url = target.data('url');
+                    GeneratorHandler.wizardUrl = url;
+                    GeneratorHandler.loadWizardModal(url);
+                });
+            },
             getOrders: function () {
                 Request.send({
                     url: '{{ path('generator_orders',{id: order.id}) }}',
@@ -297,10 +348,15 @@
                 this.getOrdersList();
                 this.resetBudgetButton();
             },
+            render: function(element, content){
+                if('object' == typeof element) element = $(element);
+                element.html(content);
+            },
             init: function () {
                 this.getForm();
                 this.getComponents();
                 this.getOrders();
+                this.configureWizardModal();
             }
         };
 

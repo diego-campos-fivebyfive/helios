@@ -336,6 +336,14 @@ class Element implements ElementInterface
     /**
      * @inheritDoc
      */
+    public function isFamily($family)
+    {
+        return self::FAMILY_MODULE === $this->family;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getCreatedAt()
     {
         return $this->createdAt;
