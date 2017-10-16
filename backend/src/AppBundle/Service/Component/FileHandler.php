@@ -35,12 +35,23 @@ class FileHandler
     /**
      * @var string
      */
+    private $snappy;
+
+    /**
+     * @var string
+     */
     private $ambience;
 
     /**
      * @var string
      */
     private $bucketAmbience;
+
+    /**
+     * @var string
+     */
+    private $projectRoot;
+
 
     /**
      * @var string
@@ -55,8 +66,10 @@ class FileHandler
     function __construct(ContainerInterface $container)
     {
         $this->s3 = $container->get('aws.s3');
+        $this->snappy = $container->get('knp_snappy.pdf');
         $this->ambience = $container->getParameter('ambience');
         $this->bucketAmbience = ($this->ambience == 'production') ? 'production' : 'homolog';
+        $this->projectRoot = "{$container->get('kernel')->getRootDir()}/../..";
     }
 
     /**
@@ -96,13 +109,14 @@ class FileHandler
 
                 $filename = sprintf($format, $name, $component->getId(), $extension);
 
-                $this->move([
-                    'file' => $file,
+                $options = [
                     'filename' => $filename,
                     'root' => 'component',
                     'type' => $type,
                     'access' => 'public'
-                ]);
+                ];
+
+                $this->push($options, $file);
 
                 $accessor->setValue($component, $field, $filename);
             }
@@ -110,30 +124,56 @@ class FileHandler
     }
 
     /**
-     * @param $config
+     * @param $options
+     * @param $file
      */
-    public function move(array $config)
+    public function push(array $options, $file)
     {
-        $acl = ($config['access'] == 'public') ? 'public-read' : 'private';
+        $acl = ($options['access'] == 'public') ? 'public-read' : 'private';
 
         $this->s3->putObject([
-            'Bucket' => "pss-{$this->bucketAmbience}-{$config['access']}",
-            'Key' => "{$config['root']}/{$config['type']}/{$config['filename']}",
-            'Body' => fopen($config['file'], 'rb'),
+            'Bucket' => "pss-{$this->bucketAmbience}-{$options['access']}",
+            'Key' => "{$options['root']}/{$options['type']}/{$options['filename']}",
+            'Body' => fopen($file, 'rb'),
             'ACL' => $acl
         ]);
     }
 
     /**
-     * @param $config
+     * @param $options
      */
-    public function link(array $config)
+    public function link(array $options)
     {
         $host = 'https://s3-sa-east-1.amazonaws.com';
-        $bucket = "pss-{$this->bucketAmbience}-{$config['access']}";
-        $path = "{$host}/{$bucket}/{$config['root']}/{$config['type']}";
+        $bucket = "pss-{$this->bucketAmbience}-{$options['access']}";
+        $path = "{$host}/{$bucket}/{$options['root']}/{$options['type']}";
 
-        return "{$path}/{$config['filename']}";
+        return "{$path}/{$options['filename']}";
+    }
+
+    /**
+     * @param $options
+     */
+    public function location(array $options)
+    {
+        $path = $this->projectRoot;
+        return "{$path}/.uploads/{$options['root']}/{$options['type']}/{$options['filename']}";
+    }
+
+    /**
+     * @param $options
+     * @param $file
+     */
+    public function pdf(array $options, $file)
+    {
+        $snappy = $this->snappy;
+        $snappy->setOption('viewport-size', '1280x1024');
+        $snappy->setOption('margin-top', 0);
+        $snappy->setOption('margin-bottom', 0);
+        $snappy->setOption('margin-left', 0);
+        $snappy->setOption('margin-right', 0);
+        $snappy->setOption('zoom', 2);
+        $snappy->generate($options['snappy'], $file);
     }
 
     /**

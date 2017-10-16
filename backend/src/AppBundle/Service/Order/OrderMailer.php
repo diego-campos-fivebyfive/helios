@@ -104,11 +104,15 @@ class OrderMailer extends AbstractMailer
      */
     private function createOrderAttachment(OrderInterface $order)
     {
-        $storage = $this->container->get('kernel')->getRootDir() . '/../../.uploads/order/proforma/';
+        $options = array(
+            'filename' => $order->getProforma(),
+            'root' => 'order',
+            'type' => 'proforma'
+        );
 
-        $path = $storage . $order->getProforma();
+        $file = $this->container->get('app_storage')->location($options);
 
-        return $this->createAttachment($path);
+        return $this->createAttachment($file);
     }
 
     /**
