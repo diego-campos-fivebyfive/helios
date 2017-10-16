@@ -12,6 +12,7 @@
 namespace AppBundle\Service\ProjectGenerator;
 
 use AppBundle\Entity\Component\Module;
+use AppBundle\Entity\Parameter;
 use AppBundle\Service\Filter\EntityFilter;
 use Doctrine\Common\Inflector\Inflector;
 
@@ -62,10 +63,10 @@ class DefaultsResolver
     public function resolve()
     {
         $this->module();
+        $this->promoEndAt();
         $this->maker('inverter');
         $this->maker('structure');
         $this->maker('string_box');
-        $this->maker('structure');
 
         return $this->defaults;
     }
@@ -83,6 +84,17 @@ class DefaultsResolver
         }
 
         $this->resolveDefault('module', $id);
+    }
+
+    /**
+     * Revolve default promoEndAt
+     */
+    public function promoEndAt()
+    {
+        $parameter = $this->resolveParameters(Parameter::class, ['id' => 'platform_settings']);
+        if($parameter instanceof Parameter && $parameter->get('enable_promo') ) {
+            $this->resolveDefault('promo_end_at', (new \DateTime($parameter->get('promo_end_at')['date']))->format('d/m/Y'));
+        }
     }
 
     /**
@@ -110,23 +122,33 @@ class DefaultsResolver
      */
     private function resolveArgs($class, array $arguments, $forceStrictArgs = true)
     {
-        $this->filter->fromClass($class);
-
         $strictArgs = ['available' => true, 'status' => true];
 
         $parameters = array_merge($arguments, $strictArgs);
 
-        foreach ($parameters as $parameter => $value){
-            $this->filter->equals($parameter, $value);
-        }
-
-        $entity = $this->filter->getOne();
+        $entity = $this->resolveParameters($class, $parameters);
 
         if(!$entity && $forceStrictArgs){
             $entity = $this->resolveArgs($class, [], false);
         }
 
         return $entity;
+    }
+
+    /**
+     * @param $class
+     * @param array $parameters
+     * @return mixed
+     */
+    private function resolveParameters($class, array $parameters)
+    {
+        $this->filter->fromClass($class);
+
+        foreach ($parameters as $parameter => $value){
+            $this->filter->equals($parameter, $value);
+        }
+
+        return $this->filter->getOne();
     }
 
     /**
@@ -194,7 +216,7 @@ class DefaultsResolver
      */
     private static function defaults()
     {
-        return  [
+        $defauts = [
             'address' => null,
             'latitude' => null,
             'longitude' => null,
@@ -213,7 +235,10 @@ class DefaultsResolver
             'structure_maker' => 61211,
             'string_box_maker' => 61209,
             'is_promotional' => false,
+            'promo_end_at' => null,
             'errors' => []
         ];
+
+        return $defauts;
     }
 }
