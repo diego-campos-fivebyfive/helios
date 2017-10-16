@@ -9,6 +9,7 @@ use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Entity\UserInterface;
 use Symfony\Component\Form\FormError;
 use Sonata\MediaBundle\Model\MediaInterface;
@@ -129,6 +130,10 @@ class AccountController extends AdminController
             $document = $accountManager->findBy([
                 'document' => $account->getDocument()
             ]);
+
+            if (!$this->member()->isPlatformAdmin() || !$this->member()->isPlatformMaster()) {
+                $account->setLevel(Memorial::LEVEL_PARTNER);
+            }
 
             $existsDoc = false;
 
