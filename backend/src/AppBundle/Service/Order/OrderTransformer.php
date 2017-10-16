@@ -57,12 +57,6 @@ class OrderTransformer
             $order->addElement($element);
         }
 
-        if(null != $member = $project->getMember()){
-            if(null != $account = $member->getAccount()){
-                $order->setAccount($account);
-            }
-        }
-
         $order->setDescription(sprintf('Sistema de %skWp', $project->getPower()));
         $order->setShippingRules($project->getShippingRules());
         $order->setInsurance($project->getInsurance());
