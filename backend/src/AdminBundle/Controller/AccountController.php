@@ -232,7 +232,11 @@ class AccountController extends AdminController
     public function changeAction(Customer $account)
     {
         try {
-            if($account->isStanding() || $account->isAproved()) {
+            if ($account->isPending()) {
+                $this->getMailer()->sendAccountVerifyMessage($account);
+
+            } elseif($account->isStanding() || $account->isAproved()) {
+                $account->setAgent($this->member());
                 $account = $this->changeStatus($account, BusinessInterface::APROVED);
 
                 $this->getMailer()->sendAccountConfirmationMessage($account);
