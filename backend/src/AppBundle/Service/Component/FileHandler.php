@@ -35,12 +35,23 @@ class FileHandler
     /**
      * @var string
      */
+    private $snappy;
+
+    /**
+     * @var string
+     */
     private $ambience;
 
     /**
      * @var string
      */
     private $bucketAmbience;
+
+    /**
+     * @var string
+     */
+    private $projectRoot;
+
 
     /**
      * @var string
@@ -55,8 +66,10 @@ class FileHandler
     function __construct(ContainerInterface $container)
     {
         $this->s3 = $container->get('aws.s3');
+        $this->snappy = $container->get('knp_snappy.pdf');
         $this->ambience = $container->getParameter('ambience');
         $this->bucketAmbience = ($this->ambience == 'production') ? 'production' : 'homolog';
+        $this->projectRoot = "{$container->get('kernel')->getRootDir()}/../..";
     }
 
     /**
@@ -96,13 +109,14 @@ class FileHandler
 
                 $filename = sprintf($format, $name, $component->getId(), $extension);
 
-                $this->move([
-                    'file' => $file,
+                $options = [
                     'filename' => $filename,
                     'root' => 'component',
                     'type' => $type,
                     'access' => 'public'
-                ]);
+                ];
+
+                $this->push($options, $file);
 
                 $accessor->setValue($component, $field, $filename);
             }
@@ -142,7 +156,7 @@ class FileHandler
      */
     public function location(array $options)
     {
-        $path = "{$this->container->get('kernel')->getRootDir()}/../..";
+        $path = $this->projectRoot;
         return "{$path}/.uploads/{$options['root']}/{$options['type']}/{$options['filename']}";
     }
 
@@ -152,18 +166,14 @@ class FileHandler
      */
     public function pdf(array $options, $file)
     {
-        $snappy = $this->get('knp_snappy.pdf');
+        $snappy = $this->snappy;
         $snappy->setOption('viewport-size', '1280x1024');
         $snappy->setOption('margin-top', 0);
         $snappy->setOption('margin-bottom', 0);
         $snappy->setOption('margin-left', 0);
         $snappy->setOption('margin-right', 0);
         $snappy->setOption('zoom', 2);
-
-        $absoluteUrl = UrlGeneratorInterface::ABSOLUTE_URL;
-        $snappyUrl = $this->generateUrl($options['doc'], ['id' => $options['id']], $absoluteUrl);
-
-        $snappy->generate($snappyUrl, $file);
+        $snappy->generate($options['snappy'], $file);
     }
 
     /**
