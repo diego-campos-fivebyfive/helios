@@ -90,12 +90,6 @@ class InverterType extends AbstractType
         $builder->add('promotional', null, [
             'required' => false
         ]);
-        $builder->add('promoEndAt', 'datetime', array(
-                'required' => false,
-                'widget' => 'single_text',
-                'format' => 'dd/MM/yyyy'
-            )
-        );
         $builder->add('connection_type', null,[
             'required' => false
         ]);

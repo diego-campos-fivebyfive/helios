@@ -78,22 +78,19 @@
                                             {% endif %}
                                         </div>
 
-                                        <div class="form-group col-md-3">
+                                        <div class="form-group col-md-4">
                                             {{ form_widget(form.status, {label_attr:{class:'check-label'}}) }}
                                             {{ form_label(form.status, 'Ativo') }}
                                         </div>
-                                        <div class="form-group col-md-3">
+                                        <div class="form-group col-md-4">
                                             {{ form_widget(form.available, {label_attr:{class:'check-label'}})}}
                                             {{ form_label(form.available, 'Disponível para venda') }}
                                         </div>
-                                        <div class="form-group col-md-3">
+                                        <div class="form-group col-md-4">
                                             {{ form_widget(form.promotional, {label_attr:{class:'check-label'}})}}
                                             {{ form_label(form.promotional, 'Produto promocional') }}
                                         </div>
-                                        <div class="form-group col-md-3">
-                                            {{ form_label(form.promoEndAt, 'Data limite') }}
-                                            {{ form_widget(form.promoEndAt, {attr:{class:'form-control', placeholder:"Data limite"}})}}
-                                        </div>
+
                                     </div>
                                 </div>
 
@@ -222,31 +219,6 @@
 
         $.each(targets, function (id, options) {
             custom_mask($('#' + id));
-        });
-
-        var promoEndAt = $('#appbundle_component_stringbox_promoEndAt');
-
-        promoEndAt.daterangepicker({
-            singleDatePicker: true,
-            minDate: moment(),
-            locale: {
-                format: 'DD/MM/YYYY',
-                daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
-                monthNames: [
-                    "Janeiro",
-                    "Fevereiro",
-                    "Março",
-                    "Abril",
-                    "Maio",
-                    "Junho",
-                    "Julho",
-                    "Agosto",
-                    "Setembro",
-                    "Outubro",
-                    "Novembro",
-                    "Dezembro"
-                ]
-            }
         });
 
     </script>

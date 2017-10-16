@@ -59,13 +59,6 @@ trait ComponentTrait
     protected $promotional;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="promo_end_at", type="datetime", nullable=true)
-     */
-    protected $promoEndAt;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="nmc", type="string", nullable=true)
@@ -215,24 +208,6 @@ trait ComponentTrait
     public function setPromotional($promotional)
     {
         $this->promotional = $promotional;
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getPromoEndAt()
-    {
-        return $this->promoEndAt;
-    }
-
-    /**
-     * @param $date
-     * @return $this
-     */
-    public function setPromoEndAt($date)
-    {
-        $this->promoEndAt = $date;
         return $this;
     }
 

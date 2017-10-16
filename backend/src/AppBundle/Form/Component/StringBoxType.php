@@ -25,13 +25,7 @@ class StringBoxType extends AbstractType
             ->add('ncm', null, ['required' => true])
             ->add('cmvProtheus', null, ['required' => true])
             ->add('cmvApplied', null, ['required' => true])
-            ->add('promotional', null, ['required' => false])
-            ->add('promoEndAt', 'datetime', array(
-                    'required' => false,
-                    'widget' => 'single_text',
-                    'format' => 'dd/MM/yyyy'
-                )
-            );
+            ->add('promotional', null, ['required' => false]);
         $builder->add('available', CheckboxType::class, [
             'label' => 'Disponivel',
             'required' => false,
