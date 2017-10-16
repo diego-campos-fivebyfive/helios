@@ -77,7 +77,7 @@ class OrderMailer extends AbstractMailer
 
         $message = $this->createMessage($parameters);
 
-        $this->resolvePlatformEmails($message);
+        $this->resolvePlatformEmails($message, $order->getStatus());
 
         $message->setTo($owner->getEmail(), $owner->getName());
 
@@ -162,7 +162,7 @@ class OrderMailer extends AbstractMailer
     /**
      * @param \Swift_Message $message
      */
-    private function resolvePlatformEmails(\Swift_Message $message)
+    private function resolvePlatformEmails(\Swift_Message $message, $status)
     {
         $settings = $this->getPlatformSettings();
 
@@ -175,6 +175,10 @@ class OrderMailer extends AbstractMailer
                 }
             }
         };
+
+        if (OrderInterface::STATUS_APPROVED == $status) {
+            $addIfDefined('financial');
+        }
 
         $addIfDefined('admin');
         $addIfDefined('master', true);
