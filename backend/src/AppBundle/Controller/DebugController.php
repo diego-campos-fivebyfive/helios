@@ -487,7 +487,7 @@ class DebugController extends AbstractController
     }
 
    /**
-    * @Route("/s3", name="debug_s3")
+    * @Route("/s3/buckets", name="debug_s3_buckets")
     */
    public function s3Action()
    {
@@ -497,4 +497,39 @@ class DebugController extends AbstractController
 
        dump($buckets); die;
    }
+
+    /**
+    * @Route("/s3/objects", name="debug_s3_objects")
+    */
+    public function s3ObjectsAction()
+    {
+        $s3 = $this->get('aws.s3');
+        $iterator = $s3->getIterator('ListObjects', array(
+            'Bucket' => 'pss-homolog-private'
+        ));
+
+        foreach ($iterator as $object) {
+            echo $object['Key'] . "\n";
+        }
+
+        //dump($iterator); die;
+    }
+
+    /**
+    * @Route("/s3/download", name="debug_s3_download")
+    */
+    public function s3DownloadAction()
+    {
+        $path = "{$this->container->get('kernel')->getRootDir()}/../..";
+        $file = 'order/proforma/proforma_429_20171017-101633_.pdf';
+
+        $s3 = $this->get('aws.s3');
+        $file = $s3->getObject([
+            'Bucket' => 'pss-homolog-private',
+            'Key' => $file,
+            'SaveAs' => "{$path}/.uploads/{$file}"
+        ]);
+
+        dump($file); die;
+    }
 }
