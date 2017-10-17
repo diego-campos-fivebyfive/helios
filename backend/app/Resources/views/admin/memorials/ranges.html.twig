@@ -441,7 +441,6 @@
             if(parent.is(':checked')) {
                 this.disableParents(type);
                 this.enableChildrens(type);
-                this.registerSources(line);
                 // TODO: do not change this call order
                 this.switchChild(line);
             }else{
@@ -451,6 +450,7 @@
                 this.disableChildrens(type);
             }
 
+            this.registerSources(line);
             this.normalizeLines(type);
         },
         normalizeLines: function(type){
