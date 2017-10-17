@@ -19,11 +19,9 @@ class MemorialClonerTest extends AppTestCase
 
         $this->assertTrue($memorial->getRanges()->count() > 1);
 
-        $cloner = new MemorialCloner();
+        $cloner = $this->getCloner();
 
         $memorialClone = $cloner->execute($memorial);
-
-        $this->manager('memorial')->save($memorialClone);
 
         $this->assertNotNull($memorialClone->getId());
         $this->assertInstanceOf(Memorial::class, $memorialClone);
@@ -52,6 +50,37 @@ class MemorialClonerTest extends AppTestCase
     }
 
     /**
+     * Test copy range by level source to target
+     */
+    public function testCloneRange()
+    {
+        $cloner = $this->getCloner();
+        $memorial = $this->createMemorial();
+        $source = Memorial::LEVEL_PARTNER;
+        $target = Memorial::LEVEL_PREMIUM;
+
+        $countBeforeConvert = $memorial->getRanges()->count();
+
+        $cloner->convertLevel($memorial, $source, $target);
+
+        $this->assertCount($countBeforeConvert * 2, $memorial->getRanges()->toArray());
+
+        // TODO: Prevent duplicate ranges
+
+        $cloner->convertLevel($memorial, $source, $target);
+
+        $filterTargets = $memorial->getRanges()->filter(function (Range $range) use($target){
+            return $target === $range->getLevel();
+        });
+
+        // Test collection update
+        $this->assertEquals($countBeforeConvert, $filterTargets->count());
+
+        // Test database update
+        $this->assertCount($countBeforeConvert * 2, $this->manager('memorial')->find($memorial->getId())->getRanges()->toArray());
+    }
+
+    /**
      * @return Memorial
      */
     private function createMemorial()
@@ -77,7 +106,7 @@ class MemorialClonerTest extends AppTestCase
                 ->setCostPrice($i + 100)
                 ->setInitialPower($i + 110)
                 ->setFinalPower($i + 220)
-                ->setLevel('random')
+                ->setLevel(Memorial::LEVEL_PARTNER)
                 ->setTax(Range::DEFAULT_TAX)
                 ->setPrice($i + 55.75)
             ;
@@ -86,5 +115,13 @@ class MemorialClonerTest extends AppTestCase
         $manager->save($memorial);
 
         return $memorial;
+    }
+
+    /**
+     * @return MemorialCloner|object
+     */
+    private function getCloner()
+    {
+       return $this->getContainer()->get('memorial_cloner');
     }
 }

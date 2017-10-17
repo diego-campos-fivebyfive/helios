@@ -97,6 +97,12 @@ interface MemorialInterface
     public function addRange(RangeInterface $range);
 
     /**
+     * @param RangeInterface $range
+     * @return RangeInterface
+     */
+    public function removeRange(RangeInterface $range);
+
+    /**
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getRanges();
