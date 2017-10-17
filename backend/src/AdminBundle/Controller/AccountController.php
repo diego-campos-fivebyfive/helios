@@ -91,8 +91,6 @@ class AccountController extends AdminController
      */
     public function createAction(Request $request)
     {
-        $agents = $this->account()->getMembers();
-
         /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
         $userManager = $this->get('fos_user.user_manager');
         $accountManager = $this->manager('customer');
@@ -114,7 +112,6 @@ class AccountController extends AdminController
 
         $form = $this->createForm(AccountType::class, $account, array(
             'method' => 'post',
-            'agents' => $agents,
             'member' => $this->member()
         ));
         $form->handleRequest($request);
@@ -187,7 +184,6 @@ class AccountController extends AdminController
      */
     public function updateAction(Request $request, Customer $account)
     {
-        $agents = $this->account()->getMembers();
 
         $manager = $this->manager('customer');
 
@@ -195,7 +191,6 @@ class AccountController extends AdminController
 
         $form = $this->createForm(AccountType::class, $account, array(
             'method' => 'post',
-            'agents' => $agents,
             'member' => $this->member()
         ));
 
@@ -237,22 +232,27 @@ class AccountController extends AdminController
     public function changeAction(Customer $account)
     {
         try {
-            if($account->isStanding() || $account->isAproved()) {
-                $account = $this->changeStatus($account, BusinessInterface::APROVED);
-
-                $this->getMailer()->sendAccountConfirmationMessage($account);
-            } elseif ($account->isActivated()) {
-                foreach ($account->getMembers() as $member){
-                    $member->getUser()->setEnabled(0);
-                }
-
-                $this->changeStatus($account, BusinessInterface::LOCKED);
-            } elseif ($account->isLocked()) {
-                foreach ($account->getMembers() as $member){
-                    $member->getUser()->setEnabled(1);
-                }
-
-                $this->changeStatus($account, BusinessInterface::ACTIVATED);
+            switch ($account->getStatus()) {
+                case BusinessInterface::PENDING:
+                    $this->getMailer()->sendAccountVerifyMessage($account);
+                    break;
+                case BusinessInterface::STANDING:
+                    $account = $this->changeStatus($account, BusinessInterface::APROVED);
+                    $account->setAgent($this->member());
+                    $this->getMailer()->sendAccountConfirmationMessage($account);
+                    break;
+                case BusinessInterface::APROVED:
+                    $this->getMailer()->sendAccountConfirmationMessage($account);
+                    break;
+                case BusinessInterface::ACTIVATED:
+                    $this->changeStatus($account, BusinessInterface::LOCKED);
+                    break;
+                case BusinessInterface::LOCKED:
+                    foreach ($account->getMembers() as $member){
+                        $member->getUser()->setEnabled(1);
+                    }
+                    $this->changeStatus($account, BusinessInterface::ACTIVATED);
+                    break;
             }
 
             $status = Response::HTTP_OK;
