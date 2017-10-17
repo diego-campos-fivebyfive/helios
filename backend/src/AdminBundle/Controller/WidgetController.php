@@ -22,7 +22,7 @@ class WidgetController extends AdminController
 {
 
     /**
-     * @Route("/proposal", name="widget_proposal")
+     * @Route("/orderGrapichs", name="widget_orders")
      */
     public function orderGraphicAction(Request $request)
     {
