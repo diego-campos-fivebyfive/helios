@@ -20,6 +20,41 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
  */
 class WidgetController extends AdminController
 {
+    /**
+     * @var array
+     */
+    private $filters = [
+        'member' => null,
+        'account' => null,
+        'date' => null,
+        'at' => 'month'
+    ];
+
+    /**
+     * @param $by
+     * @return $this
+     */
+    public function at($at)
+    {
+        $this->filters['at'] = $at;
+
+        return $this;
+    }
+
+    /**
+     * @param \DateTime|null $date
+     * @return $this
+     */
+    public function date(\DateTime $date = null)
+    {
+        if(!$date){
+            $date = new \DateTime();
+        }
+
+        $this->filters['date'] = $date;
+
+        return $this;
+    }
 
     /**
      * @Route("/orderGrapichs", name="widget_orders")
@@ -218,42 +253,6 @@ class WidgetController extends AdminController
         }
 
         return $qb;
-    }
-
-    /**
-     * @var array
-     */
-    private $filters = [
-        'member' => null,
-        'account' => null,
-        'date' => null,
-        'at' => 'month'
-    ];
-
-    /**
-     * @param $by
-     * @return $this
-     */
-    public function at($at)
-    {
-        $this->filters['at'] = $at;
-
-        return $this;
-    }
-
-    /**
-     * @param \DateTime|null $date
-     * @return $this
-     */
-    public function date(\DateTime $date = null)
-    {
-        if(!$date){
-            $date = new \DateTime();
-        }
-
-        $this->filters['date'] = $date;
-
-        return $this;
     }
 
     private function getOrderFilter()
