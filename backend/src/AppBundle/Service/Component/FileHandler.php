@@ -141,6 +141,19 @@ class FileHandler
 
     /**
      * @param $options
+     * @param $file
+     */
+    public function download(array $options, $file)
+    {
+        $this->s3->getObject([
+            'Bucket' => "pss-{$this->bucketAmbience}-{$options['access']}",
+            'Key' => "{$options['root']}/{$options['type']}/{$options['filename']}",
+            'SaveAs' => $file
+        ]);
+    }
+
+    /**
+     * @param $options
      */
     public function link(array $options)
     {
@@ -158,6 +171,20 @@ class FileHandler
     {
         $path = $this->projectRoot;
         return "{$path}/.uploads/{$options['root']}/{$options['type']}/{$options['filename']}";
+    }
+
+    /**
+     * @param $options
+     */
+    public function display(array $options)
+    {
+        $file = $this->location($options);
+
+        if (!file_exists($file)) {
+            $this->download($options, $file);
+        }
+
+        return $file;
     }
 
     /**
