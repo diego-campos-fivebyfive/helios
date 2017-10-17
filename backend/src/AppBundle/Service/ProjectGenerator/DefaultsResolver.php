@@ -216,7 +216,7 @@ class DefaultsResolver
      */
     private static function defaults()
     {
-        $defauts = [
+        return [
             'address' => null,
             'latitude' => null,
             'longitude' => null,
@@ -238,7 +238,5 @@ class DefaultsResolver
             'promo_end_at' => null,
             'errors' => []
         ];
-
-        return $defauts;
     }
 }
