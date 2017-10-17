@@ -8,18 +8,23 @@
 {% block fos_user_content %}
 
     {% if account %}
+        <style>
+            .middle-box {
+                min-width: 70%;
+            }
+        </style>
 
-    <h2> {{ account.owner.name }}, </h2>
-    <p style="font-size: 18px;">
-        O registro de sua empresa <strong> {{ account.firstname }} </strong> encontra-se em análise. <br>
-        Você receberá uma mensagem no email <strong> {{ account.owner.email }} </strong> assim que os dados forem confirmados.
-    </p>
+        <h2> {{ account.owner.name }}, </h2>
+        <p style="font-size: 18px;">
+            O registro de sua empresa <strong> {{ account.firstname }} </strong> encontra-se em análise. <br>
+            Você receberá uma mensagem no email <strong> {{ account.owner.email }} </strong> assim que os dados forem confirmados.
+        </p>
 
-    <p>
-        <a href="{{ path('fos_user_security_login') }}">
-            Voltar para o início
-        </a>
-    </p>
+        <p>
+            <a href="{{ path('fos_user_security_login') }}">
+                Voltar para o início
+            </a>
+        </p>
 
     {% else %}
 
