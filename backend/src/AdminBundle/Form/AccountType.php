@@ -28,9 +28,7 @@ class AccountType extends AbstractType
 
         $accountId = $account->getId();
         $levels = Memorial::getDefaultLevels();
-        $status = Customer::getStatusList();
 
-        unset($status[Customer::PENDING], $status[Customer::ACTIVATED], $status[Customer::LOCKED]);
         unset($levels[Memorial::LEVEL_PROMOTIONAL]);
 
         $builder->add('document',TextType::class, array(
@@ -71,10 +69,6 @@ class AccountType extends AbstractType
 
             $builder->add('members', CollectionType::class, [
                 'entry_type' => OwnerType::class
-            ]);
-
-            $builder->add('status', ChoiceType::class, [
-            'choices' => $status
             ]);
 
         } else {
