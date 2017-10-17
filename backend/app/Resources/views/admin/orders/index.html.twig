@@ -138,7 +138,11 @@
                     </h5>
 
                     <span class="pull-right small text-muted">
-                        <h4>{{ orders.totalItemCount }} Solicitação(ões) encontrada(s)</h4>
+                        {% set count = orders.totalItemCount %}
+                        <h4>
+                            {% if count == 0 %} Nenhuma {% else %} {{ count }} {% endif %}
+                            {% if count <= 1 %} Solicitação encontrada {% else %} Solicitações encontradas {% endif %}
+                        </h4>
                     </span>
                 </div>
                 <div class="ibox flow-h">
