@@ -256,6 +256,8 @@ class AccountController extends AdminController
                     break;
             }
 
+            $this->manager('customer')->save($account);
+
             $status = Response::HTTP_OK;
         } catch (\Exception $exception) {
             $status = Response::HTTP_NOT_FOUND;
