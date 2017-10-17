@@ -21,6 +21,14 @@
         overflow-x: hidden;
     }
 
+    .m-cell-25{
+        width: 25px;
+    }
+
+    .m-cell-50{
+        width: 50px;
+    }
+
     .m-cell-100 {
         width: 100px;
     }
@@ -83,6 +91,19 @@
     }
 </style>
 
+{% macro renderPopover(token, product) %}
+
+    data-toggle="popover"
+    data-title="{{ product.code }}"
+    data-content="{{ product.description }}"
+    data-trigger="focus"
+    data-placement="top"
+    data-container="#content-left-body"'
+
+{% endmacro %}
+
+{% import _self as helper %}
+
 
 {% set powers = collection.powers %}
 
@@ -102,25 +123,29 @@
                         </div>
                     </th>
                     <th>
-                        <div class="m-cell-200">
+                        <div class="m-cell-150">
                             Descrição
                         </div>
                     </th>
+                    <th colspan="2"> &nbsp; </th>
                     <th>
                         <div class="m-cell-100">
                             NCM
                         </div>
                     </th>
                     <th>
-                        <div class="m-cell-150">
+                        <div class="m-cell-100">
                             CMV Aplicado
                         </div>
                     </th>
                 </tr>
                 <tr>
-                    <th colspan="6">
+                    <th colspan="2">
                         &nbsp;
                     </th>
+                    <th> <div class="m-cell-25 text-center"> M </div></th>
+                    <th> <div class="m-cell-25 text-center"> F </div> </th>
+                    <th colspan="2"> &nbsp; </th>
                 </tr>
 
                 </thead>
@@ -162,12 +187,13 @@
 
         <div class="m-content-left">
             <div style="direction: ltr;">
-            <table class="table table-bordered table-striped" style="border-right: none;">
+            <table class="table table-bordered" style="border-right: none;">
                 <tbody id="content-left-body">
+
                 {% for type, config in collection.components %}
 
                     <tr>
-                        <td colspan="5" style="border-right: none; text-align: left">
+                        <td colspan="7" style="border-right: none; text-align: left">
                             <h1> {{ config.label|trans }} </h1>
                         </td>
                     </tr>
@@ -175,29 +201,36 @@
                     {% for item in config.items %}
                         {% set product = item.product %}
                         {% set token = type ~ '-' ~ product.id %}
+                        {% set popover = helper.renderPopover(token, product) %}
 
-                        <tr data-product-info="{{ token }}"
-                            data-toggle="popover"
-                            data-title="{{ product.code }}"
-                            data-content="{{ product.description }}"
-                            data-trigger="focus"
-                            data-placement="bottom"
-                            data-container="#content-left-body">
+                        <tr data-product-info="{{ token }}">
                             <td>
-                                {{ product.code }}
+                                <div class="m-cell-100">
+                                    {{ product.code }}
+                                </div>
                             </td>
                             <td>
-                                <div class="m-cell-200">
+                                <div class="m-cell-150" {{ popover }}>
                                     <input readonly="readonly" placeholder="Descrição" type="text" class="form-control product-description" value="{{ product.description }}">
                                 </div>
                             </td>
                             <td>
-                                <div class="m-cell-100">
+                                <div class="m-cell-25 text-center">
+                                    <input type="checkbox" placeholder="M" data-line-parent="{{ token }}">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="m-cell-25 text-center">
+                                    <input type="checkbox" placeholder="F" data-line-child="{{ token }}" disabled>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="m-cell-100" {{ popover }}>
                                     <input placeholder="NCM" type="text" class="form-control" data-field="ncm" value="{{ product.ncm }}">
                                 </div>
                             </td>
                             <td>
-                                <div class="m-cell-150 block-field-prefix">
+                                <div class="m-cell-100 block-field-prefix" {{ popover }}>
                                     <div class="input-group">
                                         <span class="input-group-addon">R$</span>
                                         <input id="{{ token ~ '-cmv-applied' }}" placeholder="CMV Aplicado" type="text" class="form-control" data-field="cmvApplied" value="{{ item.defaults.cmv }}">
@@ -222,7 +255,7 @@
 
         <div class="m-content-right">
 
-            <table class="table table-bordered table-striped" style="border-left: none;">
+            <table class="table table-bordered" style="border-left: none;">
                 {% for type, config in collection.components %}
 
                     <tr>
@@ -241,7 +274,7 @@
                                 <td>
                                     <div class="m-cell-100 block-field-suffix">
                                         <div class="input-group">
-                                            <input data-field="markup" data-range="{{ range.id }}" placeholder="Markup" value="{{ range.markup(true)|round(2) }}" class="form-control input-markup" data-pricing="markup">
+                                            <input id="{{ 'markup' ~ range.id }}" data-field="markup" data-range="{{ range.id }}" placeholder="Markup" value="{{ range.markup(true)|round(2) }}" class="form-control input-markup" data-pricing="markup">
                                             <span class="input-group-addon">%</span>
                                         </div>
                                     </div>
@@ -318,6 +351,160 @@
 
 <script>
 
+    var RangeHeritage = {
+        parentSelector: $('[data-line-parent]'),
+        childSelector: $('[data-line-child]'),
+        mapping: {},
+        disable: function(target){
+            target.prop('checked', false).attr('disabled', 'disabled');
+        },
+        enable: function(target){
+            target.removeAttr('disabled');
+        },
+        enableChildrens: function(type){
+            this.enable($('[data-line-child^="'+type+'"]'));
+        },
+        disableChildrens: function(type){
+            this.disable($('[data-line-child^="'+type+'"]'));
+        },
+        disableParents: function(type){
+            this.disable($('[data-line-parent^="'+type+'"]:not(:checked)'));
+        },
+        enableParents: function(type){
+            this.enable($('[data-line-parent^="'+type+'"]'));
+        },
+        switchChild: function(line){
+            var child = $('[data-line-child="'+line+'"]');
+            if(child.is(':disabled')){
+                this.enable(child);
+            }else{
+                this.disable(child);
+            }
+        },
+        getGroup: function(line){
+            return $('[data-range-product="'+line+'"]');
+        },
+        getMarkups: function(line){
+            return this.getGroup(line).find('.input-markup');
+        },
+        getRangeRow: function(line){
+            return $('[data-range-product="'+line+'"]');
+        },
+        registerSources: function(line){
+
+            var type = this.getTokenType(line);
+            var markups = this.getMarkups(line);
+            var sources = {};
+            $.each(markups, function(i, field){
+                var id = $(field).attr('id');
+                sources[id] = {
+                    input: $(field),
+                    targets: {}
+                }
+            });
+
+            this.mapping[type] = sources;
+        },
+        registerTargets: function(checkbox){
+
+            var line = checkbox.data('line-child');
+            var type = this.getTokenType(line);
+            var markups = this.getMarkups(line);
+            var sourceKeys = Object.keys(this.mapping[type]);
+            var insert = checkbox.is(':checked');
+
+            $.each(markups, function(i, field){
+                var id = $(field).attr('id');
+                var sourceId = sourceKeys[i];
+                var markup = RangeHeritage.mapping[type][sourceId]['input'].val();
+                if(insert) {
+                    $(field).val(markup);
+                    RangeHeritage.mapping[type][sourceId]['targets'][id] = $(field);
+                }else{
+                    delete RangeHeritage.mapping[type][sourceId]['targets'][id];
+                }
+            });
+
+            if(insert){
+                var cmv = RangeManager.toFloat($('#'+line+'-cmv-applied').val());
+                RangeManager.updateRanges(this.getRangeRow(line), cmv);
+            }
+
+            this.normalizeLines(type);
+        },
+        normalizeSelectors: function(parent){
+
+            var line = parent.data('line-parent');
+            var tokens = line.split('-');
+            var type = tokens[0];
+
+            if(parent.is(':checked')) {
+                this.disableParents(type);
+                this.enableChildrens(type);
+                this.registerSources(line);
+                // TODO: do not change this call order
+                this.switchChild(line);
+            }else{
+                // TODO: do not change this call order
+                this.switchChild(line);
+                this.enableParents(type);
+                this.disableChildrens(type);
+            }
+
+            this.normalizeLines(type);
+        },
+        normalizeLines: function(type){
+
+            var rows = $('[data-product-info^="'+type+'"]');
+
+            $.each(rows, function(r, row){
+                var inputs = $(row).find('input[type="checkbox"]:not(:disabled)');
+                var background = 'transparent';
+                if(inputs.length){
+                    $.each(inputs, function(i, input){
+                        if($(input).is(':checked')){
+                            background = $(input).data('line-parent') ? '#fcf8e3' : '#dff0d8';
+                        }
+                    });
+                }
+
+                $(row).css('background', background);
+                $('[data-range-product="'+$(row).data('product-info')+'"]').css('background', background);
+            });
+        },
+        initParent: function(){
+            this.parentSelector.on('change', function(){
+                RangeHeritage.normalizeSelectors($(this));
+            });
+        },
+        initChildrens: function(){
+            this.childSelector.on('change', function(){
+                RangeHeritage.registerTargets($(this));
+            });
+        },
+        markupIsChanged: function(field){
+            var id = field.attr('id');
+            var markup = field.val();
+            var line = field.closest('tr');
+            var type = this.getTokenType($(line).data('range-product'));
+            var sources = this.mapping[type];
+
+            if(sources.hasOwnProperty(id)){
+                $.each(sources[id].targets, function(i, target){
+                    target.val(markup).trigger('change');
+                });
+            }
+        },
+        getTokenType: function(token){
+            var tokens = token.split('-');
+            return tokens[0];
+        },
+        init: function(){
+            this.initParent();
+            this.initChildrens();
+        }
+    };
+
     var RangeManager = {
         getFloat: function (field) {
             return this.toFloat(field.val());
@@ -342,6 +529,7 @@
         },
         sendRanges: function(data){
             if (data.length) {
+                this.startLoader();
                 $.ajax({
                     url: '{{ path('memorials_range_update') }}',
                     method: 'post',
@@ -353,6 +541,8 @@
                             var price = numeral(range.price).format('$0,0.00');
                             $('#range_price_' + range.id).val(price);
                         });
+
+                        RangeManager.stopLoader();
                     }
                 });
             }
@@ -415,6 +605,12 @@
                 }
             });
         },
+        startLoader: function(){
+            MemorialManager.startLoader();
+        },
+        stopLoader: function(){
+            MemorialManager.stopLoader();
+        },
         init: function () {
 
             $('[data-field]').on('change', function () {
@@ -427,6 +623,7 @@
                         break;
                     case 'markup':
                         RangeManager.updateRange($(this));
+                        RangeHeritage.markupIsChanged($(this));
                         break;
                 }
             }).on('focus', function(){
@@ -443,6 +640,8 @@
             });
 
             $('[data-toggle="popover"]').popover();
+
+            RangeHeritage.init();
         }
     };
 
