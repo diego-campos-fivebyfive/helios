@@ -17,15 +17,6 @@
 
     {{ form_start(form,{attr:{action: app.request.uri, id:'form_order_info'}}) }}
 
-    <div class="form-group col-md-12">
-        <div class="col-md-6">
-            {{ form_label(form.paymentMethod, 'Condição de Pagamento') }}
-            {{ form_widget(form.paymentMethod, {attr:{class:'form-control', disabled: 'disabled'}}) }}
-        </div>
-    </div>
-
-    <div class="hr-line-dashed col-md-12"></div>
-
     <div class="form-group col-md-6">
         <div class="col-md-3">
             {{ form_label(form.firstname, 'Cliente') }}:
@@ -109,6 +100,15 @@
     <div class="hr-line-dashed col-md-12"></div>
 
     <div class="form-group col-md-12">
+        <div class="col-md-6">
+            {{ form_label(form.paymentMethod, 'Condição de Pagamento') }}
+            {{ form_widget(form.paymentMethod, {attr:{class:'form-control', disabled: 'disabled'}}) }}
+        </div>
+    </div>
+
+    <div class="hr-line-dashed col-md-12"></div>
+
+    <div class="form-group col-md-12">
 
         <div class="col-md-9">
             {{ form_label(form.note, 'Observações') }}
@@ -118,7 +118,7 @@
         <div class="col-md-3">
             <div class="row">
                 <div class="col-md-12">
-                    <label for="delivery_at">Disponibilidade de Entrega</label>
+                    <label for="delivery_at">Disponibilidade para Coleta</label>
                     <input class="form-control" id="delivery_at" type="text" disabled="disabled">
                 </div>
                 <div class="col-md-12" id="order_deadline_block" style="margin-top: 30px;">

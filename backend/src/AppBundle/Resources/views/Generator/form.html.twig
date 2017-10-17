@@ -1,14 +1,28 @@
 {% set enablePromotional = attribute(form, 'is_promotional') is defined %}
 
 {{ form_start(form,{attr:{id:'form_generator'}}) }}
-
+<style>
+    .font-normal {
+        font-weight: normal  !important;
+    }
+    .font-promotional {
+        font-size: 15px;
+    }
+</style>
 <div class="row">
 
     {% if enablePromotional %}
         <div class="form-group" id="block_promo_selector">
             <div class="col-md-12 text-center" style="margin-bottom: 10px;">
-                {{ form_widget(form.is_promotional) }} &nbsp;
-                {{ form_label(form.is_promotional, 'Gerar sistema PROMOCIONAL') }}
+                <div class="alert alert-success">
+                    {{ form_widget(form.is_promotional) }} &nbsp;
+                    <span class="font-promotional">
+                        {{ form_label(form.is_promotional, 'Gerar sistema', {label_attr:{class:'font-normal'}}) }}
+                        {{ form_label(form.is_promotional, 'PROMOCIONAL') }}
+                        {{ form_label(form.is_promotional, '- Válido até', {label_attr:{class:'font-normal'}}) }}
+                        {{ form_label(form.is_promotional, promoEndAt) }}
+                    </span>
+                </div>
             </div>
         </div>
     {% endif %}

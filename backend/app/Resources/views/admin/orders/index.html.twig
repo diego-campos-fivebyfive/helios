@@ -134,11 +134,15 @@
             <div class="col-md-12">
                 <div class="ibox-title flow-lg">
                     <h5>
-                        <i class="fa fa-files-o"> </i> Orçamentos
+                        <i class="fa fa-files-o"> </i> Solicitações
                     </h5>
 
                     <span class="pull-right small text-muted">
-                        <h4>{{ orders.totalItemCount }} Solicitações(s) encontrada(s)</h4>
+                        {% set count = orders.totalItemCount %}
+                        <h4>
+                            {% if count == 0 %} Nenhuma {% else %} {{ count }} {% endif %}
+                            {% if count <= 1 %} Solicitação encontrada {% else %} Solicitações encontradas {% endif %}
+                        </h4>
                     </span>
                 </div>
                 <div class="ibox flow-h">

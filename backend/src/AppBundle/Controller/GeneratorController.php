@@ -73,7 +73,8 @@ class GeneratorController extends AbstractController
         }
 
         return $this->render('generator.form', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'promoEndAt' => $form->getData()['promo_end_at']
         ]);
     }
 
