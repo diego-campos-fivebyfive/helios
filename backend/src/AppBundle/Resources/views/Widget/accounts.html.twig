@@ -1,0 +1,16 @@
+<div class="row">
+    <div class="col-md-6 text-center">
+        <h1 class="no-margins">{{ widget.total }}</h1>
+        <div class="font-bold text-navy">
+            {#{{ widget.peoples.rate }}% <i class="fa fa-level-up"></i>#}
+            <small> Total de contas </small>
+        </div>
+    </div>
+    <div class="col-md-6 text-center">
+        <h1 class="no-margins">{{ widget.current_week }}</h1>
+        <div class="font-bold {{ widget.rate ? 'text-navy' : 'text-danger' }}">
+            {{ widget.rate ? '+' }} {{ widget.rate }}% <i class="fa fa-level-up"></i>
+            <small> Esta semana </small>
+        </div>
+    </div>
+</div>
