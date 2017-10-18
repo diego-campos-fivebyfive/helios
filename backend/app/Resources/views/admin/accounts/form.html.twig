@@ -111,12 +111,6 @@
                             {{ form_label(form.number, 'Número *', {label_attr:{class:'pull-left'}}) }}
                             {{ form_widget(form.number,{attr:{class:'form-control', 'placeholder':'Número'}}) }}
                         </div>
-                        {% if form.status is defined %}
-                            <div class="col-md-4">
-                                {{ form_label(form.status, 'Status da Conta *') }}
-                                {{ form_widget(form.status,{attr:{class:'form-control', 'placeholder':'Status'}}) }}
-                            </div>
-                        {% endif %}
 
                         {% set isPlatform = app.user.isPlatformAdmin or app.user.isPlatformMaster %}
                         {% if isPlatform %}
@@ -162,6 +156,10 @@
                 preventDuplicates: true
             });
         }
+
+        $('#account_phone').mask(function (val) {
+            return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+        });
     </script>
 
     {% if errors|length %}

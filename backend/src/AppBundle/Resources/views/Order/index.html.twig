@@ -95,11 +95,15 @@
                 <div class="ibox float-e-margins flow-h">
                     <div class="ibox-title flow-lg">
                         <h5>
-                            <i class="fa fa-files-o"> </i> Meus Pedidos
+                            <i class="fa fa-files-o"> </i> Solicitações
                         </h5>
 
                         <span class="pull-right small text-muted">
-                            <h3>{{ orders.totalItemCount }} Orde(s) encontrada(s)</h3>
+                            {% set count = orders.totalItemCount %}
+                            <h4>
+                                {% if count == 0 %} Nenhuma {% else %} {{ count }} {% endif %}
+                                {% if count <= 1 %} Solicitação encontrada {% else %} Solicitações encontradas {% endif %}
+                            </h4>
                         </span>
                     </div>
 

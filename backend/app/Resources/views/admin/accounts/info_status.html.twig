@@ -1,10 +1,11 @@
+{% set user = app.user %}
 <div id="info-status" class="pull-right">
     {% if account.status == 0 %}
         <a class="btn btn-danger"
            data-status="{{ path('account_change_status',{'token':account.token}) }}">
             Reenviar verificação de email
         </a>
-    {% elseif account.status == 1 %}
+    {% elseif account.status == 1 and user.isplatformCommercial %}
         <a class="btn btn-danger"
            data-status="{{ path('account_change_status',{'token':account.token}) }}">
             Aprovar Integrador
