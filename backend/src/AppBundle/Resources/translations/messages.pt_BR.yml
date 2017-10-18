@@ -97,6 +97,7 @@ kit:
 
 Actived: Ativo
 Approved: Aprovado
+approved: Aprovado
 
 Both: Ambos
 Budget: "Orçamento"
@@ -106,6 +107,7 @@ Building: Editando
 Cancel: Cancelar
 Canceled: Cancelada
 Confirmed: Confirmado
+confirmed: Confirmado
 Category: Categoria
 Catalog: "Catálogo"
 City: Cidade
@@ -215,6 +217,7 @@ Only Account: Somente da conta
 
 Paid: Pago
 Pending: Pendente
+pending: Pendente
 Password: Senha
 Password Confirm: Confirmar Senha
 Phone: Telefone
@@ -246,6 +249,7 @@ Really delete: "Confirma exclusão"
 Region: "Região"
 Rate: Percentual
 Rejected: Rejeitado
+rejected: Rejeitado
 
 Sale Step: Etapa de Venda
 Sale Steps: Etapas de Venda
@@ -302,6 +306,7 @@ Unit Price: "Preço Unit."
 
 Value: Valor
 Validated: Validado
+validated: Validado
 
 Operation: Operação
 
