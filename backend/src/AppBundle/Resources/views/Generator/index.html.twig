@@ -221,6 +221,8 @@
         var orderId = {{ order.id }};
 
         GeneratorHandler = {
+            btnValidate: $('#btn_validate'),
+            enableValidate: 0,
             project: {id: 0, power: 0},
             orderStatus: {{ order.status }},
             wizardModal: $('#wizard_modal'),

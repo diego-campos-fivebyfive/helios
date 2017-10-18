@@ -13,59 +13,63 @@
 
         <div class="form-group col-md-3">
             {{ form_label(form.name, 'Razão Social') }}
-            {{ form_widget(form.name,{attr:{class:'form-control', 'placeholder':'Razão Social'}}) }}
+            {{ form_widget(form.name,{attr:{class:'form-control', 'placeholder':'Razão Social', disabled: 'disabled'}}) }}
         </div>
 
         <div class="form-group col-md-3">
             {{ form_label(form.cnpj, 'CNPJ') }}
-            {{ form_widget(form.cnpj,{attr:{class:'form-control', 'placeholder':'CNPJ'}}) }}
+            {{ form_widget(form.cnpj,{attr:{class:'form-control', 'placeholder':'CNPJ', disabled: 'disabled'}}) }}
         </div>
 
         <div class="form-group col-md-3">
             {{ form_label(form.ie, 'Inscrição Estadural') }}
-            {{ form_widget(form.ie, {attr:{class:'form-control', 'placeholder':'Inscrição Estadual'}}) }}
+            {{ form_widget(form.ie, {attr:{class:'form-control', 'placeholder':'Inscrição Estadual', disabled: 'disabled'}}) }}
         </div>
 
         <div class="form-group col-md-3">
             {{ form_label(form.contact, 'Pessoa para contato') }}
-            {{ form_widget(form.contact,{attr:{class:'form-control', 'placeholder':'Pessoa para contato'}}) }}
+            {{ form_widget(form.contact,{attr:{class:'form-control', 'placeholder':'Pessoa para contato', disabled: 'disabled'}}) }}
         </div>
 
         <div class="form-group col-md-3">
             {{ form_label(form.phone, 'Telefone') }}
-            {{ form_widget(form.phone,{attr:{class:'form-control', 'placeholder':'Telefone'}}) }}
+            {{ form_widget(form.phone,{attr:{class:'form-control', 'placeholder':'Telefone', disabled: 'disabled'}}) }}
         </div>
 
         <div class="form-group  col-md-3">
             {{ form_label(form.email, 'E-mail') }}
-            {{ form_widget(form.email,{attr:{class:'form-control', 'placeholder':'E-mail'}}) }}
+            {{ form_widget(form.email,{attr:{class:'form-control', 'placeholder':'E-mail', disabled: 'disabled'}}) }}
         </div>
 
         <div class="form-group col-md-3">
             {{ form_label(form.postcode, 'CEP') }}
-            {{ form_widget(form.postcode,{attr:{class:'form-control', 'placeholder':'CEP'}}) }}
+            {{ form_widget(form.postcode,{attr:{class:'form-control', 'placeholder':'CEP', disabled: 'disabled'}}) }}
         </div>
 
         <div class="form-group col-md-3">
             {{ form_label(form.state, 'Estado') }}
-            {{ form_widget(form.state,{attr:{class:'form-control', 'placeholder':'Estado'}}) }}
+            {{ form_widget(form.state,{attr:{class:'form-control', 'placeholder':'Estado', disabled: 'disabled'}}) }}
         </div>
 
         <div class="form-group col-md-3">
             {{ form_label(form.city, 'Cidade') }}
-            {{ form_widget(form.city,{attr:{class:'form-control', 'placeholder':'Cidade'}}) }}
+            {{ form_widget(form.city,{attr:{class:'form-control', 'placeholder':'Cidade', disabled: 'disabled'}}) }}
         </div>
 
         <div class="form-group col-md-3">
             {{ form_label(form.address, 'Endereço') }}
-            {{ form_widget(form.address,{attr:{class:'form-control', 'placeholder':'Endereço'}}) }}
+            {{ form_widget(form.address,{attr:{class:'form-control', 'placeholder':'Endereço', disabled: 'disabled'}}) }}
         </div>
 
         <div class="form-group col-md-12">
             <label> &nbsp; </label>
-            <button class="btn btn-success ladda-button pull-right" data-style="zoom-in" type="submit" id="company-save">
+            <button id="btn_submit" class="btn btn-success ladda-button pull-right hide" data-style="zoom-in" type="submit" id="company-save">
                 <i class="fa fa-save"></i> {{ 'Save'|trans }}
             </button>
+            <a id="btn_edit" class="btn btn-success pull-right">
+                <i class="fa fa-edit"></i> Editar
+            </a>
+
         </div>
     </div>
 </div>
@@ -89,9 +93,60 @@
                 if ('object' == typeof ShippingManager) {
                 ShippingManager.calculate(0);
                 }
+                Shipping.editableShipping(false);
             }
         });
     });
+
+    var btnSubmit = $('#btn_submit');
+    var btnEdit = $('#btn_edit');
+
+    $(btnEdit).on('click', function () {
+        Shipping.editableShipping(true);
+    });
+
+    Shipping = {
+        editableShipping: function(editable)
+        {
+
+            if (editable) {
+                $(btnSubmit).removeClass('hide');
+                $(btnEdit).addClass('hide');
+
+                $('#company_name').removeAttr('disabled');
+                $('#company_cnpj').removeAttr('disabled');
+                $('#company_ie').removeAttr('disabled');
+                $('#company_contact').removeAttr('disabled');
+                $('#company_phone').removeAttr('disabled');
+                $('#company_email').removeAttr('disabled');
+                $('#company_postcode').removeAttr('disabled');
+                $('#company_state').removeAttr('disabled');
+                $('#company_city').removeAttr('disabled');
+                $('#company_address').removeAttr('disabled');
+
+                GeneratorHandler.enableValidate += 2;
+                GeneratorHandler.btnValidate.addClass('hide');
+            } else {
+                $(btnSubmit).addClass('hide');
+                $(btnEdit).removeClass('hide');
+
+                $('#company_name').attr('disabled', 'disabled');
+                $('#company_cnpj').attr('disabled', 'disabled');
+                $('#company_ie').attr('disabled', 'disabled');
+                $('#company_contact').attr('disabled', 'disabled');
+                $('#company_phone').attr('disabled', 'disabled');
+                $('#company_email').attr('disabled', 'disabled');
+                $('#company_postcode').attr('disabled', 'disabled');
+                $('#company_state').attr('disabled', 'disabled');
+                $('#company_city').attr('disabled', 'disabled');
+                $('#company_address').attr('disabled', 'disabled');
+
+                GeneratorHandler.enableValidate -= 2;
+                if (!GeneratorHandler.enableValidate)
+                    GeneratorHandler.btnValidate.removeClass('hide');
+            }
+        }
+    };
 
     $("#company_postcode").mask("00.000-000");
     $('#company_cnpj').mask("00.000.000/0000-00");

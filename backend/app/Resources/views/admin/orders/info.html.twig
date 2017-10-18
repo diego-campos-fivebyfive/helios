@@ -210,7 +210,9 @@
                 $('#delivery_at').removeAttr('disabled');
                 $('#order_deadline').removeAttr('disabled');
                 $('#order_paymentMethod').removeAttr('disabled');
-                $('#btn_validate').addClass('hide');
+
+                GeneratorHandler.enableValidate ++;
+                GeneratorHandler.btnValidate.addClass('hide');
             } else {
                 $(buttonAccount).addClass('hide');
                 $(buttonEdit).removeClass('hide');
@@ -219,7 +221,10 @@
                 $('#delivery_at').attr('disabled','disabled');
                 $('#order_deadline').attr('disabled','disabled');
                 $('#order_paymentMethod').attr('disabled','disabled');
-                $('#btn_validate').removeClass('hide');
+
+                GeneratorHandler.enableValidate --;
+                if (!GeneratorHandler.enableValidate)
+                    GeneratorHandler.btnValidate.removeClass('hide');
             }
         }
     };
