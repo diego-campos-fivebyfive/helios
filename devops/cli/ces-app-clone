@@ -2,19 +2,23 @@
 
 cd $SICES_PATH
 
-if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
+_getHelp()
+{
   printf "ces-app-clone - help:
-
   Usage:
-
-  ces-app-clone --AMBIENCE
-
+  ces-app-clone --AMBIENCE \n
   Exemple:
+  ces-app-clone --production \n
+  Avaliable Args:
+  [ --homolog ]
+  [ --staging ]
+  [ --production
+      --homolog | --staging] \n"
+}
 
-  ces-app-clone --production
-
-  "
-  exit 0;
+if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
+  _getHelp
+  exit 0
 fi
 
 echo "Cloning $1 files..."
@@ -34,7 +38,8 @@ elif [ $1 = '--production' ]; then
     origin='homolog'
 
   else
-    "Invalid origin server argument"
+    echo "Invalid Origin Argument"
+    _getHelp
     exit 1
   fi
 
@@ -45,12 +50,11 @@ elif [ $1 = '--production' ]; then
   echo "Creating current version Backup..."
   rsync -avzh --delete $SICES_PATH/** $SICES_PATH/.backup
 
-  # Remove it after S3 file read implementation
-  echo "Moving untracked files..."
-  rsync -avzh $SICES_PATH/.backup/.uploads/** $SICES_PATH/.temp/.uploads
-  # Finish Remove it
-
   echo "Deploying files from Temp..."
   rsync -avzh --delete $SICES_PATH/.temp/** $SICES_PATH
 
+else
+  echo "Invalid Ambience Argument"
+  _getHelp
+  exit 1
 fi
