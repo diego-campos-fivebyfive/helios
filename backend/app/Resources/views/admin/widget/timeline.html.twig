@@ -4,29 +4,7 @@
     }
 </style>
 
-{% for subscription in subscriptions %}
-
-    {% set notification = subscription.notification %}
-
     <div class="timeline-item">
         <div class="row">
-            <div class="col-xs-3 date">
-                <i class="fa {{ notification.icon }}"></i>
-                {{ notification.createdAt|date('d/m/Y') }}
-                <br/>
-                <small class="text-navy">
-                    {{ notification.createdAt|date('H:i') }}
-                </small>
-            </div>
-            <div class="col-xs-7 content no-top-border">
-                <p class="m-b-xs">
-                    <strong> {{ notification.title|trans }} </strong>
-                </p>
-                <p>
-                    {{ notification.content|raw }}
-                </p>
-            </div>
         </div>
     </div>
-
-{% endfor %}
