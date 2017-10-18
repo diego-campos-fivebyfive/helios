@@ -46,7 +46,7 @@ class StringBoxCalculator
                 }
 
                 $quantity = 1;
-                $mpptNumber = 1;
+                $mpptNumber = $projectInverter->getProjectAreas()->count();
                 $inputs = $strings;
 
                 $stringBoxes = $this->loader->load($inputs, $mpptNumber, $maker);
