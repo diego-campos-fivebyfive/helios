@@ -772,7 +772,7 @@ class ProjectGenerator
      * Exclusive handling for ABB inverters with code:22SMA0200380
      * @param ProjectInterface $project
      */
-    private function handleABBInverters(ProjectInterface $project)
+    public function handleABBInverters(ProjectInterface $project)
     {
         $abbInverters = $project->getProjectInverters()->filter(function(ProjectInverter $projectInverter){
             return '22ABB0500380' === $projectInverter->getInverter()->getCode();

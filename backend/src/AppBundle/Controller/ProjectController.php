@@ -555,6 +555,8 @@ class ProjectController extends AbstractController
                 ->generateStringBoxes($project)
                 ->handleAreas($project)
                 ->generateVarieties($project)
+                ->handleABBInverters($project)
+
             ;
 
             $generator->save($project, true);
