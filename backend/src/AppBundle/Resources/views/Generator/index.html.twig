@@ -291,6 +291,8 @@
                                 }
                             });
 
+                            if('object' == typeof InsuranceHandler)
+                                InsuranceHandler.apply();
                         }
                     });
                 }
@@ -319,7 +321,7 @@
             },
             getOrders: function () {
                 Request.send({
-                    url: '{{ path('generator_orders',{id: order.id}) }}',
+                url: '{{ path('generator_orders',{id: order.id}) }}',
                     callback: function (xhr) {
                         $('#generator_orders').html(xhr.responseText);
                     }
@@ -337,7 +339,6 @@
                 this.project = project;
                 this.getComponents();
                 this.getForm();
-                InsuranceHandler.apply();
             },
             onResetProject: function () {
                 $('#generator_components').html('');
