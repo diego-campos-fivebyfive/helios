@@ -208,7 +208,7 @@ class MemorialController extends AdminController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() && $request->isXmlHttpRequest()) {
 
             $analyzer = new MemorialAnalyzer($this->container);
 
