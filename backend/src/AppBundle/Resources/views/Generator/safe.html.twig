@@ -40,6 +40,8 @@
                     value = response.order.insurance;
                     total = response.order.total;
                     OrderManager.renderTotal(total);
+
+                    GeneratorHandler.getOrders();
                 }
                 InsuranceHandler.output.html(numeral(value).format('$0,0.00'));
             });

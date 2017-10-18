@@ -261,6 +261,18 @@ class Memorial implements MemorialInterface
     /**
      * @inheritDoc
      */
+    public function removeRange(RangeInterface $range)
+    {
+        if($this->ranges->contains($range)){
+            $this->ranges->removeElement($range);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getRanges()
     {
         return $this->ranges;

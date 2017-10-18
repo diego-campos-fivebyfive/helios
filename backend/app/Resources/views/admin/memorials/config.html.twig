@@ -42,22 +42,68 @@
 
 {% block body %}
 
+    <div class="modal inmodal" id="modal_copy_level" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="title">
+                        <i class="fa fa-copy"></i> Copiar configurações de markup
+                    </h4>
+                    <small class="font-bold">
+                        Atenção! Ao efetuar a cópia, todos os registros do nível atual são substituídos.
+                    </small>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="input-group">
+                            <span class="input-group-addon">Selecione o nível de desconto a ser copiado</span>
+                            <span id="source_copy_level"></span>
+                            <span class="input-group-btn">
+                                <button id="btn_copy_level" type="button" class="btn btn-success">
+                                    <i class="fa fa-copy"></i> Copiar
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa fa-close"></i> {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="row" id="real-content">
                 <div class="col-md-12">
                     <div class="ibox flow-h">
                         <div class="ibox-content flow-lg">
+
+                            <div class="row" style="margin-bottom: 10px;">
+                                <div class="btn-group btn-group-sm col-md-4">
+
+                                    <a href="{{ path('memorials') }}" class="btn btn-default">
+                                        <i class="fa fa-arrow-left"></i>
+                                        Voltar
+                                    </a>
+                                </div>
+
+                                <div class="btn-group btn-group-sm col-md-4">
+                                    &nbsp;
+                                </div>
+
+                                <div class="col-md-4 text-right">
+                                    <div class="pull-right" id="config-loader">
+                                        {% include view('helper.spinner') %}
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="row">
 
-                                <div class="col-md-12">
-
-                                    <div class="btn-group col-md-12" style="margin-bottom: 1rem;">
-                                        <a href="{{ path('memorials') }}" class="btn btn-sm btn-default">
-                                            <i class="fa fa-arrow-left"></i>
-                                            Voltar
-                                        </a>
-                                    </div>
 
                                     {{ form_start(form,{attr:{id:'form_filter'}}) }}
 
@@ -66,12 +112,19 @@
                                         {{ form_widget(form.memorial, {attr:{class:'form-control'}}) }}
                                     </div>
 
-                                    <div class="form-group col-md-2">
+                                    <div class="form-group col-md-4">
                                         {{ form_label(form.level,'Nível de Desconto') }}
-                                        {{ form_widget(form.level, {attr:{class:'form-control'}}) }}
+                                        <div class="input-group">
+                                            {{ form_widget(form.level, {attr:{class:'form-control'}}) }}
+                                            <span class="input-group-btn">
+                                            <a data-toggle="modal" data-target="#modal_copy_level" class="btn btn-primary">
+                                                <i class="fa fa-copy"></i> Copiar de outro nível
+                                            </a>
+                                            </span>
+                                        </div>
                                     </div>
 
-                                    <div class="col-md-8" id="memorial_filter_components">
+                                    <div class="col-md-6" id="memorial_filter_components">
 
                                         <div class="form-group col-md-12">
                                             <label> Componentes </label>
@@ -89,7 +142,6 @@
                                     </div>
                                     {{ form_end(form) }}
 
-                                </div>
                             </div>
 
                             <div class="row" id="render_memorial">
@@ -117,6 +169,18 @@
             form: $('#form_filter'),
             method: 'post',
             uri: '{{ app.request.uri }}',
+            loader: $('#config-loader'),
+            loaderSpinner: null,
+            startLoader: function(){
+                this.loader.html(this.loaderSpinner);
+            },
+            stopLoader: function(){
+                this.loader.html('');
+            },
+            initLoader: function(){
+                this.loaderSpinner = this.loader.html();
+                this.stopLoader();
+            },
             render: function (content) {
                 $('#render_memorial').html(content);
             },
@@ -139,12 +203,15 @@
 
                     this.updateUri(memorial);
 
+                    this.startLoader();
+
                     $.ajax({
                         url: this.uri,
                         method: this.method,
                         data: this.form.serialize(),
                         complete: function (xhr) {
                             MemorialManager.render(xhr.responseText);
+                            MemorialManager.stopLoader();
                         }
                     });
                 } else {
@@ -166,11 +233,90 @@
                 $("body").toggleClass("mini-navbar");
                 SmoothlyMenu();
 
+                this.initLoader();
+
                 MemorialManager.analyze();
             }
         };
 
         MemorialManager.init();
+
+
+        var modalCopyLevel = $('#modal_copy_level');
+        var filterLevel = $('#memorial_filter_level');
+        var btnCopyLevel = $('#btn_copy_level');
+        var source = null;
+        var target = null;
+
+        modalCopyLevel.on('show.bs.modal', function(){
+            target = filterLevel.val();
+            var clone = filterLevel.clone();
+            clone.attr('id', 'copy_level_selector');
+            clone.find('option[value="promotional"]').remove();
+            clone.find('option[value="'+target+'"]').remove();
+
+            clone.on('change', function(){
+                source = $(this).val();
+            }).trigger('change');
+
+            $('#source_copy_level').html(clone);
+        });
+
+        btnCopyLevel.on('click', function(){
+
+            if(source && target) {
+
+                swal({
+                    title: 'Confirma a cópia de configurações? <br>'+ source + ' &raquo; ' + target,
+                    text: 'Os dados presentes em <strong>'+  target + '</strong> serão perdidos.',
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: '{{ 'Confirmar'|trans }}',
+                    cancelButtonText: '{{ 'Cancelar'|trans }}',
+                    closeOnConfirm: false,
+                    html: true
+                }, function () {
+
+                    $.ajax({
+                        url: '{{ path('memorials_copy_ranges', {id:'_id_'}) }}'.replace(/_id_/g, MemorialManager.get('memorial')),
+                        method: 'post',
+                        data: {source:source, target:target},
+                        complete: function (xhr) {
+
+                            if (200 == xhr.status) {
+
+                                swal({
+                                    title: "Concluído",
+                                    text: "Cópia realizada com sucesso!",
+                                    type: "success",
+                                    showConfirmButton: false
+                                });
+
+                                MemorialManager.analyze();
+
+                                window.setTimeout(function () {
+                                    swal.close();
+                                    modalCopyLevel.modal('hide');
+                                }, 1000);
+
+                            } else {
+                                var response = xhr.responseJSON;
+                                swal('Ooops', response.hasOwnProperty('error') ? response.error : 'Falha ao executar a operação', 'error');
+                            }
+                        },
+                        beforeSend: function () {
+                            swal({
+                                title: 'Copiando...',
+                                text: 'Aguarde',
+                                type: 'info',
+                                showConfirmButton: false
+                            });
+                        }
+                    });
+                });
+            }
+        });
 
     </script>
 
