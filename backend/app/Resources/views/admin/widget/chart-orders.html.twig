@@ -32,7 +32,7 @@
         width: 50%;
         float: left;
         margin-top: -3px;
-        text-align: center !important;
+        text-align: center;
         border-color: #00A7EC;
     }
     option:hover,option:focus,option:active,option:checked {
@@ -183,7 +183,7 @@
 
             var chartData = [
                 {
-                    label: "Valor das propostas",
+                    label: "Valor dos orçamentos",
                     data: data.amounts,
                     color: "#F2A019",
                     bars: {
@@ -194,7 +194,7 @@
                     }
                 },
                 {
-                    label: "Quantidade de propostas",
+                    label: "Quantidade de orçamentos",
                     data: data.counts,
                     color: "#00A7EC",
                     yaxis: 2,
@@ -202,15 +202,6 @@
                         show: true
                     }
                 }
-                /*{
-                    label: "Potência das propostas",
-                    data: data.powers,
-                    color: "#1C84C6",
-                    yaxis: 2,
-                    lines: {
-                        show: true
-                    }
-                }*/
             ];
 
             chartOptions = {
@@ -228,7 +219,6 @@
                 }, {
                     tickDecimals: 0,
                     position: "right"
-                    //tickFormatter: powerFormatter
                 }],
                 legend: {
                     noColumns: 1,
