@@ -3,30 +3,28 @@
         <span class="label label-success pull-right">
             <i class="{{ icon('sale_stages') }}"></i>
         </span>
-        <h5> Etapas de venda dos projetos </h5>
+        <h5> Status dos orçamentos </h5>
     </div>
 
     {% for data in collection %}
 
-        {% set stage = data.status %}
-
     <div class="ibox-content">
         <div class="row">
             <div class="col-xs-3">
-                <small class="stats-label"> Etapa de venda </small>
+                <small class="stats-label"> Status dos orçamentos </small>
                 <h4> {{ data.status }} </h4>
             </div>
 
             <div class="col-xs-3">
-                <small class="stats-label"> Quantidade de projetos </small>
+                <small class="stats-label"> Qtde de orçamentos </small>
                 <h4> {{ data.count }} </h4>
             </div>
             <div class="col-xs-3">
-                <small class="stats-label"> Valor dos projetos </small>
+                <small class="stats-label"> Valor dos orçamentos </small>
                 <h4> {{ data.amount|currency }} </h4>
             </div>
             <div class="col-xs-3">
-                <small class="stats-label"> Potência dos projetos </small>
+                <small class="stats-label"> Potência dos orçamentos </small>
                 <h4> {{ data.power|decimal }} kWp </h4>
             </div>
         </div>
