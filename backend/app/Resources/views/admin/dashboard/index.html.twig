@@ -1,0 +1,153 @@
+{% extends view('layout') %}
+
+{% block body %}
+    <div class="wrapper wrapper-content">
+
+        <div class="row">
+            <style>
+                .label-warning, .label-primary, .label-success{
+                    background-color: #00A7EC;
+                }
+            </style>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-lg-4">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                    <span class="label label-success pull-right">
+                        <i class="fa fa-file-text-o"></i>
+                    </span>
+                                <h5> Total de orçamentos emitidos </h5>
+                            </div>
+                            <div class="ibox-content">
+                                <h1 class="no-margins" id="summary-count">
+                                    <div class="text-center">
+                                        {% include view('helper.spinner') %}
+                                    </div>
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <span class="label label-primary pull-right">
+                        <i class="fa fa-money"></i>
+                    </span>
+                                <h5> Valor total dos orçamentos emitidos </h5>
+                            </div>
+                            <div class="ibox-content">
+                                <h1 class="no-margins" id="summary-amount">
+                                    <div class="text-center">
+                                        {% include view('helper.spinner') %}
+                                    </div>
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <span class="label label-warning pull-right">
+                        <i class="fa fa-flash"></i>
+                    </span>
+                                <h5> Potência total dos orçamentos </h5>
+                            </div>
+                            <div class="ibox-content">
+                                <h1 class="no-margins" id="summary-power">
+                                    <div class="text-center">
+                                        {% include view('helper.spinner') %}
+                                    </div>
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12" id="widget-chart-proposals">
+                  {% include 'admin/widget/chart-proposals.html.twig' %}
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-lg-8 flow-h" id="widget-status-orders">
+                <div class="col-md-2 col-md-offset-5 text-center" style="margin-top: 6rem;">
+                    {% include view('helper.spinner') %}
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-warning pull-right">
+                            <i class="fa fa-bell-o"></i>
+                        </span>
+                        <h5> Notificações </h5>
+                    </div>
+                    <div class="ibox-content inspinia-timeline" id="widget-timeline">
+                        {% include view('helper.spinner') %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    {% include view('helper.scripts') %}
+
+    {% javascripts output='public/assets/widgets.js' filter='uglifyjs2'
+        'assets/flot/jquery.flot.js'
+        'assets/flot/jquery.flot.tooltip.min.js'
+        'assets/flot/jquery.flot.spline.js'
+        'assets/flot/jquery.flot.resize.js'
+        'assets/flot/jquery.flot.pie.js'
+        'assets/flot/jquery.flot.symbol.js'
+        'assets/flot/jquery.flot.time.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script>
+
+        $.ajax({
+            url: '{{ path('widget_time') }}',
+            complete: function (xhr) {
+                $('#widget-timeline').html(xhr.responseText);
+            }
+        })
+
+        $.ajax({
+            url: '{{ path('status_orders') }}',
+            complete: function (xhr) {
+                $('#widget-status-orders').html(xhr.responseText);
+            }
+        })
+
+        $.ajax({
+            url:'{{ path('widgets_summary') }}',
+            complete: function (xhr) {
+                if (200 == xhr.status) {
+                    var response = xhr.responseJSON;
+                    var data = response.data;
+
+                    $('#summary-count').html(data.count);
+                    $('#summary-amount').html(formatCurrency(data.amount));
+                    $('#summary-power').html(formatPower(data.power));
+                } else {
+                    console.log(xhr.status);
+                }
+            }
+        })
+
+    </script>
+
+{% endblock %}
+
