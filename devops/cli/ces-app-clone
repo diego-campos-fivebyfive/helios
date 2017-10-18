@@ -38,7 +38,7 @@ elif [ $1 = '--production' ]; then
     origin='homolog'
 
   else
-    echo "Invalid Origin Argument"
+    echo -e "\033[0;31mError: Invalid Origin Argument:\033[0m $2"
     _getHelp
     exit 1
   fi
@@ -54,7 +54,7 @@ elif [ $1 = '--production' ]; then
   rsync -avzh --delete $SICES_PATH/.temp/** $SICES_PATH
 
 else
-  echo "Invalid Ambience Argument"
+  echo -e "\033[0;31mError: Invalid Ambience Argument:\033[0m $1"
   _getHelp
   exit 1
 fi
