@@ -106,14 +106,25 @@ class MemorialController extends AdminController
      */
     public function cloneAction(Memorial $memorial)
     {
-        /** @var MemorialCloner $cloner */
-        $cloner = $this->get('memorial_cloner');
-
-        $cloned = $cloner->execute($memorial);
+        $cloned = $this->getCloner()->execute($memorial);
 
         return $this->json([
             'memorial' => $cloned->toArray()
         ]);
+    }
+
+    /**
+     * @Route("/{id}/copy-ranges", name="memorials_copy_ranges")
+     * @Method("post")
+     */
+    public function copyRangesAction(Memorial $memorial, Request $request)
+    {
+        $source = $request->get('source');
+        $target = $request->get('target');
+
+        $this->getCloner()->convertLevel($memorial, $source, $target);
+
+        return $this->json([]);
     }
 
     /**
@@ -197,7 +208,7 @@ class MemorialController extends AdminController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() && $request->isXmlHttpRequest()) {
 
             $analyzer = new MemorialAnalyzer($this->container);
 
@@ -331,5 +342,13 @@ class MemorialController extends AdminController
 
             $manager->flush();
         }
+    }
+
+    /**
+     * @return MemorialCloner|object
+     */
+    private function getCloner()
+    {
+        return $this->get('memorial_cloner');
     }
 }

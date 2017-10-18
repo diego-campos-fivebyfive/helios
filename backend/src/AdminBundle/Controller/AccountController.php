@@ -153,11 +153,12 @@ class AccountController extends AdminController
 
                 $member->setUser($user);
 
+                $account->setStatus(Customer::APROVED);
+
                 $accountManager->save($account);
 
                 $this->setNotice("Conta criada com sucesso !");
 
-                // ENVIAR EMAIL OU NÃO
                 if ($account->isAproved()) {
                     $this->getMailer()->sendAccountConfirmationMessage($account);
                 }
@@ -254,6 +255,8 @@ class AccountController extends AdminController
                     $this->changeStatus($account, BusinessInterface::ACTIVATED);
                     break;
             }
+
+            $this->manager('customer')->save($account);
 
             $status = Response::HTTP_OK;
         } catch (\Exception $exception) {

@@ -86,6 +86,11 @@
                 $('.output').show();
                 $('#form-company').hide();
                 ShippingManager.calculate();
+
+                if (GeneratorHandler.enableValidate > 1)
+                    GeneratorHandler.enableValidate -= 2;
+                if (!GeneratorHandler.enableValidate)
+                    GeneratorHandler.btnValidate.removeClass('hide');
             } else {
                 $('.group-self').hide();
                 $('.group-sices').hide();

@@ -213,10 +213,11 @@ class OrderController extends AbstractController
         $options = [
             'filename' => $filename,
             'root' => 'order',
-            'type' => 'payment'
+            'type' => ($type == 'proforma') ? 'proforma' : 'payment',
+            'access' => 'private'
         ];
 
-        $file = $this->container->get('app_storage')->location($options);
+        $file = $this->container->get('app_storage')->display($options);
 
         if (is_file($file)) {
             $header = ResponseHeaderBag::DISPOSITION_INLINE;
@@ -250,7 +251,7 @@ class OrderController extends AbstractController
         $this->get('app_generator')->pdf($options, $file);
 
         if (!file_exists($file)) {
-            $message = "Could not generate $type PDF.";
+            $message = "Could not generate proforma PDF.";
             return $this->json([ 'error' => $message ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 

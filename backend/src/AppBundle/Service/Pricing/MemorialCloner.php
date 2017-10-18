@@ -5,6 +5,7 @@ namespace AppBundle\Service\Pricing;
 use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Entity\Pricing\MemorialInterface;
 use AppBundle\Entity\Pricing\Range;
+use AppBundle\Entity\Pricing\RangeInterface;
 use AppBundle\Manager\Pricing\MemorialManager;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
@@ -66,21 +67,78 @@ class MemorialCloner
 
         /** @var Range $sourceRange */
         foreach ($source->getRanges() as $sourceRange){
-
-            $range = new Range();
-
-            foreach ($this->rangeProperties as $property){
-
-                $value = $this->accessor->getValue($sourceRange, $property);
-
-                $this->accessor->setValue($range, $property, $value);
-            }
-
-            $range->setMemorial($memorial);
+            $this->cloneRange($sourceRange, [
+                'memorial' => $memorial
+            ]);
         }
 
         $this->manager->save($memorial);
 
         return $memorial;
+    }
+
+    /**
+     * @param MemorialInterface $memorial
+     * @param $source
+     * @param $target
+     */
+    public function convertLevel(MemorialInterface $memorial, $source, $target)
+    {
+        $sources = $this->filterRangesByLevel($memorial, $source);
+
+        if(!$sources->isEmpty()) {
+
+            $targets = $this->filterRangesByLevel($memorial, $target);
+
+            $em = $this->manager->getEntityManager();
+            foreach ($targets as $range){
+                $memorial->removeRange($range);
+                $em->remove($range);
+            }
+
+            foreach ($sources as $source) {
+                $this->cloneRange($source, [
+                    'memorial' => $memorial,
+                    'level' => $target
+                ]);
+            }
+
+            $this->manager->save($memorial);
+        }
+    }
+
+    /**
+     * @param MemorialInterface $memorial
+     * @param $level
+     * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection
+     */
+    private function filterRangesByLevel(MemorialInterface $memorial, $level)
+    {
+        return $memorial->getRanges()->filter(function (RangeInterface $range) use($level){
+            return $level === $range->getLevel();
+        });
+    }
+
+    /**
+     * @param RangeInterface $source
+     * @param array $definitions
+     * @return Range
+     */
+    private function cloneRange(RangeInterface $source, array $definitions = [])
+    {
+        $range = new Range();
+
+        foreach ($this->rangeProperties as $property){
+
+            $value = $this->accessor->getValue($source, $property);
+
+            $this->accessor->setValue($range, $property, $value);
+        }
+
+        foreach ($definitions as $property => $value){
+            $this->accessor->setValue($range, $property, $value);
+        }
+
+        return $range;
     }
 }
