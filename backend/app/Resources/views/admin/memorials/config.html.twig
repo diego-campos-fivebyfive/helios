@@ -4,7 +4,6 @@
 
     <style>
         .table th span {
-            /*background: #068;*/
             width: 75%;
             margin: 0;
             float: left;
@@ -36,11 +35,23 @@
         .input-code.collapsed {
             width: 75px;
         }
+        #memorial_filter_components .form-group{
+            width: 20%;
+            float: left;
+        }
+        #memorial_filter_components label{
+            cursor: pointer;
+        }
+        form .btn-single{
+            margin-top: 22px;
+        }
     </style>
 
 {% endblock %}
 
 {% block body %}
+
+    {% set icons = {module: 'th', inverter: 'exchange', structure: 'sitemap', string_box: 'plug', variety: 'wrench'} %}
 
     <div class="modal inmodal" id="modal_copy_level" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-md">
@@ -82,66 +93,65 @@
                     <div class="ibox flow-h">
                         <div class="ibox-content flow-lg">
 
-                            <div class="row" style="margin-bottom: 10px;">
-                                <div class="btn-group btn-group-sm col-md-4">
-
-                                    <a href="{{ path('memorials') }}" class="btn btn-default">
-                                        <i class="fa fa-arrow-left"></i>
-                                        Voltar
-                                    </a>
-                                </div>
-
-                                <div class="btn-group btn-group-sm col-md-4">
-                                    &nbsp;
-                                </div>
-
-                                <div class="col-md-4 text-right">
-                                    <div class="pull-right" id="config-loader">
-                                        {% include view('helper.spinner') %}
-                                    </div>
-                                </div>
-                            </div>
-
                             <div class="row">
 
-
                                     {{ form_start(form,{attr:{id:'form_filter'}}) }}
+
+                                    <div class="form-group col-md-1">
+                                        <a href="{{ path('memorials') }}" class="btn btn-default btn-block btn-single">
+                                            <i class="fa fa-arrow-left"></i>
+                                            Voltar
+                                        </a>
+                                    </div>
 
                                     <div class="form-group col-md-2">
                                         {{ form_label(form.memorial) }}
                                         {{ form_widget(form.memorial, {attr:{class:'form-control'}}) }}
                                     </div>
 
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-2">
                                         {{ form_label(form.level,'Nível de Desconto') }}
-                                        <div class="input-group">
-                                            {{ form_widget(form.level, {attr:{class:'form-control'}}) }}
-                                            <span class="input-group-btn">
-                                            <a data-toggle="modal" data-target="#modal_copy_level" class="btn btn-primary">
-                                                <i class="fa fa-copy"></i> Copiar de outro nível
-                                            </a>
-                                            </span>
-                                        </div>
+                                        {{ form_widget(form.level, {attr:{class:'form-control'}}) }}
                                     </div>
 
                                     <div class="col-md-6" id="memorial_filter_components">
 
-                                        <div class="form-group col-md-12">
+                                        <div class="col-md-12" style="margin-bottom: 5px;">
                                             <label> Componentes </label>
                                         </div>
 
                                         {% for component in form.components %}
 
-                                            <div class="form-group col-md-2">
+                                            <div class="form-group">
                                                 {{ form_widget(component) }}
+                                                <i class="fa fa-{{ attribute(icons, component.vars.value) }}"></i>
                                                 {{ form_label(component) }}
                                             </div>
 
                                         {% endfor %}
 
                                     </div>
+
+                                    <div class="form-group col-md-1">
+                                        <a data-toggle="modal" data-target="#modal_copy_level" class="btn btn-success btn-block btn-single">
+                                            <i class="fa fa-copy"></i> Copiar
+                                        </a>
+                                    </div>
+
                                     {{ form_end(form) }}
 
+                            </div>
+
+                            <div class="row" style="height: 35px;">
+                                <div class="col-md-1"><h2>&nbsp;</h2></div>
+                                <div class="col-md-10">
+                                    <h2 id="memorial_info"></h2>
+                                </div>
+                                <div class="col-md-1 text-right" style="padding-top: 5px;">
+                                    <div class="pull-right" id="config-loader">
+                                        {% include view('helper.spinner') %}
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="row" id="render_memorial">
@@ -167,10 +177,12 @@
         var MemorialManager = {
             listeners: $('[id^="memorial_filter_"]'),
             form: $('#form_filter'),
-            method: 'post',
+            method: 'get',
             uri: '{{ app.request.uri }}',
             loader: $('#config-loader'),
             loaderSpinner: null,
+            info: $('#memorial_info'),
+            container: $('#render_memorial'),
             startLoader: function(){
                 this.loader.html(this.loaderSpinner);
             },
@@ -182,7 +194,7 @@
                 this.stopLoader();
             },
             render: function (content) {
-                $('#render_memorial').html(content);
+                this.container.html(content);
             },
             get: function (id) {
                 return this.field(id).val();
@@ -205,10 +217,14 @@
 
                     this.startLoader();
 
+                    var data = this.form.serialize();
+
+                    window.history.pushState({}, null, '{{ path('memorials_config',{id:'_id_'}) }}'.replace(/_id_/g, memorial) + '?' + data);
+
                     $.ajax({
                         url: this.uri,
                         method: this.method,
-                        data: this.form.serialize(),
+                        data: data,
                         complete: function (xhr) {
                             MemorialManager.render(xhr.responseText);
                             MemorialManager.stopLoader();
@@ -217,6 +233,9 @@
                 } else {
                     MemorialManager.render('');
                 }
+            },
+            displayInfo: function(info){
+                this.info.html(info);
             },
             init: function () {
 
@@ -293,11 +312,10 @@
                                     showConfirmButton: false
                                 });
 
-                                MemorialManager.analyze();
-
                                 window.setTimeout(function () {
                                     swal.close();
                                     modalCopyLevel.modal('hide');
+                                    window.location.reload();
                                 }, 1000);
 
                             } else {

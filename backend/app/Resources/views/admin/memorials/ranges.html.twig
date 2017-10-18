@@ -45,6 +45,10 @@
         width: 250px;
     }
 
+    .m-block-100, .m-cell-block{
+        width: 100%;
+    }
+
     [class^="m-cell-"]>input{
         width: 100% !important;
     }
@@ -62,6 +66,9 @@
         direction: rtl;
     }
 
+    .m-table-header{
+        background: #f2f2f2;
+    }
     .m-content-right {
         width: 50%;
         float: left;
@@ -91,6 +98,8 @@
     }
 </style>
 
+{% set icons = {module: 'th', inverter: 'exchange', structure: 'sitemap', string_box: 'plug', variety: 'wrench'} %}
+
 {% macro renderPopover(token, product) %}
 
     data-toggle="popover"
@@ -100,6 +109,11 @@
     data-placement="top"
     data-container="#content-left-body"'
 
+{% endmacro %}
+
+{% macro renderInfo(product, type) %}
+    {% set icons = {module: 'th', inverter: 'exchange', structure: 'sitemap', string_box: 'plug', variety: 'wrench'} %}
+    data-info="<i class='fa fa-{{ attribute(icons, type) }}'></i> {{ product.description }} &mdash; {{ product.code }}"
 {% endmacro %}
 
 {% import _self as helper %}
@@ -123,11 +137,16 @@
                         </div>
                     </th>
                     <th>
-                        <div class="m-cell-150">
+                        <div class="m-cell-100">
                             Descrição
                         </div>
                     </th>
-                    <th colspan="2"> &nbsp; </th>
+                    <th>
+                        <div class="m-cell-25 text-center"> M </div>
+                    </th>
+                    <th>
+                        <div class="m-cell-25 text-center"> F </div>
+                    </th>
                     <th>
                         <div class="m-cell-100">
                             NCM
@@ -140,12 +159,9 @@
                     </th>
                 </tr>
                 <tr>
-                    <th colspan="2">
+                    <th colspan="7">
                         &nbsp;
                     </th>
-                    <th> <div class="m-cell-25 text-center"> M </div></th>
-                    <th> <div class="m-cell-25 text-center"> F </div> </th>
-                    <th colspan="2"> &nbsp; </th>
                 </tr>
 
                 </thead>
@@ -192,48 +208,51 @@
 
                 {% for type, config in collection.components %}
 
-                    <tr>
-                        <td colspan="7" style="border-right: none; text-align: left">
-                            <h1> {{ config.label|trans }} </h1>
-                        </td>
+                    <tr class="m-table-header">
+                        <th><div class="m-cell-100"> <i class="fa fa-{{ attribute(icons, type) }}"></i> {{ config.label|trans|upper }} </div></th>
+                        <td><div class="m-cell-100">&nbsp;</div></td>
+                        <td><div class="m-cell-25">&nbsp;</div></td>
+                        <td><div class="m-cell-25">&nbsp;</div></td>
+                        <td><div class="m-cell-100">&nbsp;</div></td>
+                        <td><div class="m-cell-100">&nbsp;</div></td>
                     </tr>
 
                     {% for item in config.items %}
                         {% set product = item.product %}
                         {% set token = type ~ '-' ~ product.id %}
-                        {% set popover = helper.renderPopover(token, product) %}
+                        {% set info = helper.renderInfo(product, type) %}
 
                         <tr data-product-info="{{ token }}">
                             <td>
-                                <div class="m-cell-100">
-                                    {{ product.code }}
+                                <div class="m-cell-block">
+                                    <input {{ info }}readonly="readonly" placeholder="Código" type="text" value="{{ product.code }}" class="form-control">
                                 </div>
                             </td>
                             <td>
-                                <div class="m-cell-150" {{ popover }}>
-                                    <input readonly="readonly" placeholder="Descrição" type="text" class="form-control product-description" value="{{ product.description }}">
+                                <div class="m-cell-block">
+                                    <input {{ info }} readonly="readonly" placeholder="Descrição" type="text" class="form-control product-description" value="{{ product.description }}">
                                 </div>
                             </td>
-                            <td>
+                            <th>
                                 <div class="m-cell-25 text-center">
-                                    <input type="checkbox" placeholder="M" data-line-parent="{{ token }}">
+                                    <input {{ info }} type="checkbox" placeholder="M" data-line-parent="{{ token }}">
                                 </div>
-                            </td>
-                            <td>
+                            </th>
+                            <th>
                                 <div class="m-cell-25 text-center">
-                                    <input type="checkbox" placeholder="F" data-line-child="{{ token }}" disabled>
+                                    <input{{ info }} type="checkbox" placeholder="F" data-line-child="{{ token }}" disabled>
+                                </div>
+                            </th>
+                            <td>
+                                <div class="m-cell-block">
+                                    <input {{ info }} placeholder="NCM" type="text" class="form-control" data-field="ncm" value="{{ product.ncm }}">
                                 </div>
                             </td>
                             <td>
-                                <div class="m-cell-100" {{ popover }}>
-                                    <input placeholder="NCM" type="text" class="form-control" data-field="ncm" value="{{ product.ncm }}">
-                                </div>
-                            </td>
-                            <td>
-                                <div class="m-cell-100 block-field-prefix" {{ popover }}>
+                                <div class="m-cell-block block-field-prefix">
                                     <div class="input-group">
                                         <span class="input-group-addon">R$</span>
-                                        <input id="{{ token ~ '-cmv-applied' }}" placeholder="CMV Aplicado" type="text" class="form-control" data-field="cmvApplied" value="{{ item.defaults.cmv }}">
+                                        <input {{ info }} id="{{ token ~ '-cmv-applied' }}" placeholder="CMV Aplicado" type="text" class="form-control" data-field="cmvApplied" value="{{ item.defaults.cmv }}">
                                     </div>
                                 </div>
                             </td>
@@ -258,15 +277,16 @@
             <table class="table table-bordered" style="border-left: none;">
                 {% for type, config in collection.components %}
 
-                    <tr>
+                    <tr class="m-table-header">
                         <td colspan="{{ powers|length }}" style="border-left: none;">
-                            <h1> &nbsp; </h1>
+                            &nbsp;
                         </td>
                     </tr>
 
                     {% for item in config.items %}
                         {% set product = item.product %}
                         {% set token = type ~ '-' ~ product.id %}
+                        {% set info = helper.renderInfo(product, type) %}
 
                         <tr data-range-product="{{ token }}">
 
@@ -274,14 +294,14 @@
                                 <td>
                                     <div class="m-cell-100 block-field-suffix">
                                         <div class="input-group">
-                                            <input id="{{ 'markup' ~ range.id }}" data-field="markup" data-range="{{ range.id }}" placeholder="Markup" value="{{ range.markup(true)|round(2) }}" class="form-control input-markup" data-pricing="markup">
+                                            <input {{ info }} id="{{ 'markup' ~ range.id }}" data-field="markup" data-range="{{ range.id }}" placeholder="Markup" value="{{ range.markup(true)|round(2) }}" class="form-control input-markup" data-pricing="markup">
                                             <span class="input-group-addon">%</span>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="m-cell-150">
-                                        <input data-field="price" id="range_price_{{ range.id }}" readonly="readonly" placeholder="Valor" value="{{ range.price|currency }}" class="form-control input-price">
+                                        <input {{ info }} data-field="price" id="range_price_{{ range.id }}" readonly="readonly" placeholder="Valor" value="{{ range.price|currency }}" class="form-control input-price">
                                     </div>
                                 </td>
                             {% endfor %}
@@ -611,6 +631,9 @@
         stopLoader: function(){
             MemorialManager.stopLoader();
         },
+        displayInfo: function(element){
+            MemorialManager.displayInfo(element.data('info'));
+        },
         init: function () {
 
             $('[data-field]').on('change', function () {
@@ -639,7 +662,11 @@
                 }
             });
 
-            $('[data-toggle="popover"]').popover();
+            $('[data-info]').on('focus', function(){
+                RangeManager.displayInfo($(this));
+            }).on('blur', function(){
+                MemorialManager.displayInfo('&nbsp;');
+            });
 
             RangeHeritage.init();
         }

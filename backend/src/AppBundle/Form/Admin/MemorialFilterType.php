@@ -50,6 +50,8 @@ class MemorialFilterType extends AbstractType
         $resolver
             ->setRequired('memorial')
             ->setDefaults([
+                'method' => 'get',
+                'csrf_protection' => false,
                 'levels' => [],
                 'memorials' => []
             ])
