@@ -24,10 +24,17 @@ class AppController extends AbstractController
         
         $member = $this->member();
 
-        return $this->render('dashboard.default', array(
-            'member' => $member,
-            'woopraEvent' => $this->requestWoopraEvent($request)
-        ));
+        if ($member->isPlatformUser()) {
+            return $this->render('admin/dashboard/index.html.twig', array(
+                'member' => $member,
+                'woopraEvent' => $this->requestWoopraEvent($request)
+            ));
+        } else {
+            return $this->render('dashboard.default', array(
+                'member' => $member,
+                'woopraEvent' => $this->requestWoopraEvent($request)
+            ));
+        }
     }
 
     /**

@@ -2,23 +2,22 @@
 
 namespace AdminBundle\Controller;
 
+use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Order\Order;
+use AppBundle\Entity\Notification;
 use AppBundle\Entity\Order\OrderInterface;
+use Doctrine\ORM\Query\Expr\Join;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
- * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
- *
- * @Breadcrumb("Dashboard", route={"name"="app_index"})
- * @Breadcrumb("Accounts", route={"name"="account_index"})
- *
- * @Route("account")
+ * @Route("widget")
  */
-class WidgetController extends AdminController
+class WidgetsController extends AdminController
 {
     /**
      * @var array
@@ -95,6 +94,7 @@ class WidgetController extends AdminController
 
             $power = 0;
             $total = 0;
+
             foreach ($order->getChildrens() as $children){
                 $total += $children->getTotal();
                 $power += $children->getPower();
@@ -114,7 +114,7 @@ class WidgetController extends AdminController
     }
 
     /**
-     * @Route("/count", name="debug_orders_count")
+     * @Route("/summaryOrder", name="widgets_summary")
      */
     public function orderCountAction()
     {
@@ -124,7 +124,9 @@ class WidgetController extends AdminController
             'power' => 0
         ];
 
-        $orders = $this->getOrders();
+        $ordersCollection = $this->getOrders();
+
+        $orders = $ordersCollection->getQuery()->getResult();
 
         foreach ($orders as $order) {
             $power = 0;
@@ -144,7 +146,7 @@ class WidgetController extends AdminController
     }
 
     /**
-     * @Route("/status_orders", name="status_orders")
+     * @Route("/orders_status", name="status_orders")
      */
     public function ordersStatusAction()
     {
@@ -182,9 +184,9 @@ class WidgetController extends AdminController
             }
         }
 
-        return $this->json([
+        return $this->render('admin/widget/status-orders.html.twig', [
             'collection' => $collection
-        ], Response::HTTP_OK);
+        ]);
     }
 
     private function startDefaults()
@@ -275,17 +277,33 @@ class WidgetController extends AdminController
                 $end = $date->format(sprintf('Y-m-%d 23:59:59', $lastDay));
             }
 
-            $qb->where('o.createdAt >= :start')
+            $qb->andWhere('o.createdAt >= :start')
                 ->andWhere('o.createdAt <= :end')
                 ->andWhere('o.parent is null')
                 ->orderBy('o.id', 'desc')
-                ->andWhere('o.status != 0');
-
-            $qb->setParameter('start', $start);
-            $qb->setParameter('end', $end);
+                ->andWhere('o.status != 0')
+                ->setParameter('start', $start)
+                ->setParameter('end', $end);
         }
 
         return $qb->getQuery()->getResult();
 
+    }
+
+    /**
+     * @Route("/widget_time", name="widget_time")
+     */
+    public function timelineWidgetAction()
+    {
+        $member = $this->member();
+
+        $subscriptions = $this->manager('notification')->subscriptions($member, [
+            'type' => Notification::TYPE_TIMELINE,
+            'limit' => 6
+        ]);
+
+        return $this->render('admin/widget/timeline.html.twig', [
+            'subscriptions' => $subscriptions
+        ]);
     }
 }

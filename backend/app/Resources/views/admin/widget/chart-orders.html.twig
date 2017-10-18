@@ -1,0 +1,322 @@
+{% set user = app.user %}
+{% set member = user.info %}
+{% set account = member.account %}
+
+{% set startYear = account.createdAt|date('Y') %}
+{% set currentYear = 'now'|date('Y') %}
+{% set currentMonth = 'now'|date('m') %}
+
+{% set months = {
+'01':'Janeiro',
+'02':'Fevereiro',
+'03':'Março',
+'04':'Abril',
+'05':'Maio',
+'06':'Junho',
+'07':'Julho',
+'08':'Agosto',
+'09':'Setembro',
+'10':'Outubro',
+'11':'Novembro',
+'12':'Dezembro'
+} %}
+
+
+<style>
+    .ibox-title > .col-md-4,
+    .ibox-title > .col-md-2 {
+        margin-top: -4px;
+        /*padding-right: 0;*/
+    }
+    .ibox-title select {
+        width: 50%;
+        float: left;
+        margin-top: -3px;
+        text-align: center;
+        border-color: #00A7EC;
+    }
+    option:hover,option:focus,option:active,option:checked {
+        background-color: #00A7EC !important;
+    }
+    .btn-primary.btn-outline {
+        background-color: white !important;
+        border: solid 1px #00A7EC !important;
+        color: #00A7EC;
+    }
+    .btn-primary.btn-outline:hover {
+        background-color: #00A7EC !important;
+        border: solid 1px #00A7EC;
+        color: white;
+    }
+    .btn-primary.btn-outline.select {
+        border: solid 1px #00A7EC;
+    }
+    .btn-primary.active {
+        background-color: #00A7EC !important;
+        border-color: #00A7EC;
+        color: white;
+    }
+    .sel {
+        border-color: #00A7EC !important;
+        border-radius: 4px;
+    }
+    .sel:focus {
+        border-color: #00A7EC !important;
+    }
+
+</style>
+
+<div class="ibox float-e-margins">
+    <div class="ibox-title">
+        <div class="col-md-4">
+            <h5> Histórico de orçamentos emitidos </h5>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <input id="proposal-group" value="" type="hidden">
+                <select id="proposal-month" class="form-control sel">
+                    {% for key, name in months %}
+                        <option {{ key == currentMonth ? 'selected="selected"' }}
+                                value="{{ key }}"> {{ name }} </option>
+                    {% endfor %}
+                </select>
+                <select id="proposal-year" class="form-control sel">
+                    {% for year in startYear..currentYear %}
+                        <option {{ year == currentYear ? 'selected="selected"' }}
+                                value="{{ year }}"> {{ year }} </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="col-md-2"> &nbsp; </div>
+        <div class="col-md-2 btn-group">
+            <button data-group="month" class="btn btn-sm btn-outline btn-primary col-md-6">
+                Mês
+            </button>
+            <button data-group="year" class="btn btn-sm btn-outline btn-primary col-md-6">
+                Ano
+            </button>
+        </div>
+    </div>
+    <div class="ibox-content">
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="flot-chart flow-h">
+                    <div class="flot-chart-content flow-lg" id="proposals-chart"></div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <ul class="stat-list">
+                    <li>
+                        <h2 class="no-margins" id="issued-proposals"></h2>
+                        <small> Orçamentos emitidos </small>
+                        <p> &nbsp; </p>
+                    </li>
+                    <li>
+                        <h2 class="no-margins" id="amount-proposals"></h2>
+                        <small> Valor dos orçamentos </small>
+                        <p> &nbsp; </p>
+                    </li>
+                    <li>
+                        <h2 class="no-margins" id="power-proposals"></h2>
+                        <small> Potência dos orçamentos </small>
+                        <p> &nbsp; </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(function () {
+
+        var btnGroups = $('[data-group]');
+        var btnMonth = $('[data-group="month"]');
+        var btnYear = $('[data-group="year"]');
+        var selectorYear = $('#proposal-year');
+        var selectorMonth = $('#proposal-month');
+        var inputGroup = $('#proposal-group');
+        var currentYear = '{{ currentYear }}';
+        var currentMonth = '{{ currentMonth }}';
+
+        function checkMonthSelector() {
+            var year = selectorYear.val();
+            $.each(selectorMonth.find('option'), function (i, o) {
+                var option = $(o);
+                if (parseInt(option.val()) > parseInt({{ currentMonth }}) && year == {{ currentYear }}) {
+                    option.hide();
+                } else {
+                    option.show();
+                }
+            });
+        }checkMonthSelector();
+
+        function generateUrl(group, year, month) {
+            return '{{ path('widget_orders',{group:'_group_', year:'_year_', month:'_month_'})|raw }}'
+                .replace(/_group_/g, group)
+                .replace(/_year_/g, year)
+                .replace(/_month_/g, month);
+        }
+
+        function monthFormatter(v, axis) {
+            var months = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+            return months[parseInt(v) - 1];
+        }
+
+        function currencyFormatter(v, axis) {
+            return formatCurrency(v);
+        }
+
+        function powerFormatter(v, axis) {
+            return formatPower(v);
+        }
+
+        function intFormatter(v, axis){
+            return parseInt(v);
+        }
+
+        function renderGraph(data){
+
+            var isYear = ('year' == data.group);
+
+            var chartData = [
+                {
+                    label: "Valor dos orçamentos",
+                    data: data.amounts,
+                    color: "#F2A019",
+                    bars: {
+                        show: true,
+                        align: "center",
+                        barWidth: 1, //24 * 60 * 60 * 600,
+                        lineWidth: 1
+                    }
+                },
+                {
+                    label: "Quantidade de orçamentos",
+                    data: data.counts,
+                    color: "#00A7EC",
+                    yaxis: 2,
+                    lines: {
+                        show: true
+                    }
+                }
+            ];
+
+            chartOptions = {
+                xaxes: [{
+                    tickSize: 1,
+                    tickFormatter: isYear ? monthFormatter : intFormatter ,
+                    min: isYear ? null : 1,
+                    max: isYear ? null : data.options.last_day
+                }],
+                yaxes: [{
+                    tickDecimals: 0,
+                    position: "left",
+                    tickFormatter: currencyFormatter,
+                    max: data.amountMax
+                }, {
+                    tickDecimals: 0,
+                    position: "right"
+                }],
+                legend: {
+                    noColumns: 1,
+                    labelBoxBorderColor: "#333",
+                    position: "sw",
+                    margin: [0, -55]
+                },
+                grid: {
+                    hoverable: true,
+                    borderWidth: 0
+                },
+                tooltip: true,
+                tooltipOpts: {
+                    content: isYear ? "Mês %x - %y" : "Dia %x - %y"
+                }
+            };
+
+            $.plot($("#proposals-chart"), chartData, chartOptions);
+        }
+
+        function requestData() {
+
+            var year = selectorYear.val();
+            var month = selectorMonth.val();
+            var group = inputGroup.val();
+
+            var issuedProposals = 0;
+            var amountProposals = 0;
+            var powerProposals  = 0;
+
+            $.ajax({
+                url: generateUrl(group, year, month),
+                complete: function (xhr) {
+
+                    var response = xhr.responseJSON;
+                    var data = response.data;
+                    var options = response.options;
+
+                    var amounts = [];
+                    var powers = [];
+                    var counts = [];
+                    var amountMax = 0;
+
+                    $.each(data, function (i, group) {
+
+                        amounts[amounts.length] = [i, group.amount];
+                        powers[powers.length] = [i, group.power];
+                        counts[counts.length] = [i, group.count];
+
+                        if (group.amount > amountMax) {
+                            amountMax = group.amount;
+                        }
+
+                        issuedProposals += group.count;
+                        amountProposals += group.amount;
+                        powerProposals += group.power;
+                    });
+
+                    renderGraph({
+                        group: group,
+                        year: year,
+                        month: month,
+                        amounts: amounts,
+                        powers: powers,
+                        counts: counts,
+                        options: response.options,
+                        amountMax: amountMax
+                    });
+
+                    $('#issued-proposals').html(issuedProposals);
+                    $('#amount-proposals').html(currencyFormatter(amountProposals));
+                    $('#power-proposals').html(powerFormatter(powerProposals));
+                }
+            });
+        }
+
+        btnGroups.on('click', function () {
+            var group = $(this).data('group');
+            if ('year' == group) {
+                selectorMonth.hide();
+                btnMonth.removeClass('active');
+                btnYear.addClass('active');
+            } else {
+                selectorMonth.show();
+                btnYear.removeClass('active');
+                btnMonth.addClass('active');
+            }
+            inputGroup.val(group);
+            requestData();
+        });
+
+        btnMonth.trigger('click');
+
+        $('#proposal-year, #proposal-month').on('change', function () {
+            checkMonthSelector();
+            requestData();
+        });
+
+    });
+
+</script>
