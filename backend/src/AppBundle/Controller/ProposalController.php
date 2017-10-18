@@ -208,7 +208,7 @@ class ProposalController extends AbstractController
         $this->get('app_generator')->pdf($options, $file);
 
         if (!file_exists($file)) {
-            $message = "Could not generate $type PDF.";
+            $message = "Could not generate proposal PDF.";
             return $this->json([ 'error' => $message ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
@@ -231,10 +231,11 @@ class ProposalController extends AbstractController
         $options = array(
             'root' => 'proposal',
             'type' => 'proposal',
-            'filename' => $filename
+            'filename' => $filename,
+            'access' => 'private'
         );
 
-        $file = $this->get('app_storage')->location($options);
+        $file = $this->get('app_storage')->display($options);
 
         if (!file_exists($file)) {
             $message = 'File not found.';
