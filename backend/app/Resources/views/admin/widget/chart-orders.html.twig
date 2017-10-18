@@ -69,7 +69,7 @@
 <div class="ibox float-e-margins">
     <div class="ibox-title">
         <div class="col-md-4">
-            <h5> Histórico de Propostas emitidas </h5>
+            <h5> Histórico de orçamentos emitidos </h5>
         </div>
         <div class="col-md-4">
             <div class="form-group">
@@ -109,30 +109,18 @@
                 <ul class="stat-list">
                     <li>
                         <h2 class="no-margins" id="issued-proposals"></h2>
-                        <small> Propostas emitidas </small>
+                        <small> Orçamentos emitidos </small>
                         <p> &nbsp; </p>
-                        {#<div class="stat-percent"> &nbsp; </div>
-                        <div class="progress progress-mini">
-                            <div style="width: 0%;" class="progress-bar"></div>
-                        </div>#}
                     </li>
                     <li>
                         <h2 class="no-margins" id="amount-proposals"></h2>
-                        <small> Valor das propostas </small>
+                        <small> Valor dos orçamentos </small>
                         <p> &nbsp; </p>
-                        {#<div class="stat-percent">60% <i class="fa fa-level-down text-navy"></i></div>
-                        <div class="progress progress-mini">
-                            <div style="width: 60%;" class="progress-bar"></div>
-                        </div>#}
                     </li>
                     <li>
                         <h2 class="no-margins" id="power-proposals"></h2>
-                        <small> Potência das propostas </small>
+                        <small> Potência dos orçamentos </small>
                         <p> &nbsp; </p>
-                        {#<div class="stat-percent">22% <i class="fa fa-bolt text-navy"></i></div>
-                        <div class="progress progress-mini">
-                            <div style="width: 22%;" class="progress-bar"></div>
-                        </div>#}
                     </li>
                 </ul>
             </div>
@@ -166,7 +154,7 @@
         }checkMonthSelector();
 
         function generateUrl(group, year, month) {
-            return '{{ path('widget_proposal',{group:'_group_', year:'_year_', month:'_month_'})|raw }}'
+            return '{{ path('widget_orders',{group:'_group_', year:'_year_', month:'_month_'})|raw }}'
                 .replace(/_group_/g, group)
                 .replace(/_year_/g, year)
                 .replace(/_month_/g, month);
