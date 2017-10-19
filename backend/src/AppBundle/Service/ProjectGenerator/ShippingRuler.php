@@ -30,7 +30,7 @@ abstract class ShippingRuler
      */
     public static function apply(&$rule)
     {
-        if('self' == $rule['type'] || 0 == $rule['price']){
+        if('sices' != $rule['type'] || 0 == $rule['price']){
             self::defaults($rule);
         }else {
             self::definitions($rule);
@@ -226,6 +226,6 @@ abstract class ShippingRuler
         $rule['state'] = null;
         $rule['kind'] = null;
         $rule['region'] = null;
-        $rule['shipping'] = round($rule['price'] * $rule['percent'], 2);
+        $rule['shipping'] = null;
     }
 }
