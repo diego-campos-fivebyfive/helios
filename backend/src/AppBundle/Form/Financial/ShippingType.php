@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ShippingType extends AbstractType
 {
@@ -16,13 +17,24 @@ class ShippingType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $member = $options['member'];
+
+        $choices = [
+            'self' => 'Meu Frete',
+            'sices' => 'Frete Sices'
+        ];
+
+        if ($member->isPlatformUser()) {
+            $choices['Include'] = 'Frete Incluso';
+        }
+
         $builder
+
             ->add('type', ChoiceType::class, [
-                'choices' => [
-                    'self' => 'Meu Frete',
-                    'sices' => 'Frete Sices'
-                ]
-            ])
+                'choices' => $choices
+            ]);
+
+        $builder
             ->add('state', ChoiceType::class, [
                 'choices' => Brazil::states()
             ])
@@ -54,6 +66,16 @@ class ShippingType extends AbstractType
             function($kind){
                 return $kind;
             }
+        ));
+    }
+
+    /**
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'member' => null
         ));
     }
 
