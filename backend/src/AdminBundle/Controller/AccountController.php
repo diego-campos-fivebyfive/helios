@@ -69,9 +69,10 @@ class AccountController extends AdminController
             'context' => MemberInterface::CONTEXT,
             'account' => $this->account()
         ]);
+
         $membersSices = [];
         foreach ($members as $i => $member) {
-            if($member->getUser()->isEnabled()) {
+            if($member->getUser()->isEnabled() && $member->isPlatformCommercial()) {
                 $membersSices[$i] = $member;
             }
         }
