@@ -25,7 +25,7 @@ class ShippingType extends AbstractType
         ];
 
         if ($member->isPlatformUser()) {
-            $choices['Include'] = 'Frete Incluso';
+            $choices['included'] = 'Frete Incluso';
         }
 
         $builder
