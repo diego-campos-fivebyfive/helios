@@ -6,9 +6,29 @@
 
     {% trans_default_domain 'FOSUserBundle' %}
 
-    <h3 class="block-title">
-        Seu Email foi confirmado,
-        Aguarde a ativação da sua conta.
-    </h3>
+    {% if account %}
+        <style>
+            .middle-box {
+                min-width: 70%;
+            }
+        </style>
+
+        <h2>Prezado {{ account.owner.firstname }}, </h2>
+        <p style="font-size: 18px;">
+            O registro da empresa <strong> {{ account.firstname }} </strong> encontra-se em análise. <br>
+            Você receberá uma mensagem no email <strong> {{ account.owner.email }} </strong> assim que os dados forem confirmados.
+        </p>
+
+        <p>
+            <a href="{{ path('fos_user_security_login') }}">
+                Voltar para o início
+            </a>
+        </p>
+
+    {% else %}
+
+        <h2> Desculpe, não há dados aqui para você. </h2>
+
+    {% endif %}
 
 {% endblock fos_user_content %}
