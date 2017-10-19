@@ -174,7 +174,7 @@ class RegisterController extends AbstractController
             }
 
             if ($account->isStanding()) {
-                return $this->redirectToRoute('app_account_verify', []);
+                return $this->redirectToRoute('app_account_verify', ['account' => $account]);
             }
         } else {
             $message = 'Conta não identificada';
@@ -186,11 +186,13 @@ class RegisterController extends AbstractController
     }
 
     /**
-     * @Route("/verify", name="app_account_verify")
+     * @Route("/{account}/verify", name="app_account_verify")
      */
-    public function accountVerifyAction()
+    public function accountVerifyAction(Customer $account)
     {
-        return $this->render('FOSUserBundle:Register:verify.html.twig', []);
+        return $this->render('FOSUserBundle:Register:verify.html.twig', [
+            'account' => $account
+        ]);
     }
 
     /**
