@@ -109,7 +109,7 @@ class UsersController extends AbstractController
     public function showAction(Customer $member)
     {
         return $this->render('admin/user/show.html.twig', array(
-            'member' => $member,
+            '_member' => $member,
             'is_admin' => $member->isPlatformAdmin()
         ));
     }
