@@ -329,6 +329,8 @@
                             {{ order.shippingrules.value|currency }}
                         {% elseif order.shippingrules.type == 'self' %}
                             Não Incluso
+                        {% else %}
+                            Incluso
                         {% endif %}
                     </span>
                     <br/>
