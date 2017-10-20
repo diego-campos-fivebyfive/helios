@@ -120,8 +120,14 @@
                                                                <div class="panel-body">
 
                                                                    <div class="col-md-8">
-                                                                       {{ form_widget(form_params.enable_promo) }} &nbsp;
-                                                                       {{ form_label(form_params.enable_promo, 'Ativar orçamentos promocionais') }}
+                                                                       <div>
+                                                                           {{ form_widget(form_params.enable_promo) }} &nbsp;
+                                                                           {{ form_label(form_params.enable_promo, 'Ativar orçamentos promocionais') }}
+                                                                       </div>
+                                                                       <div>
+                                                                           {{ form_widget(form_params.shipping_included) }} &nbsp;
+                                                                           {{ form_label(form_params.shipping_included, 'Habilitar frete INCLUSO') }}
+                                                                       </div>
                                                                    </div>
                                                                    <div class="col-md-4">
                                                                        {{ form_label(form_params.promo_end_at, 'Data limite') }}
@@ -195,6 +201,16 @@
         });
 
         formSettings.find('input').on('change', function () {
+            if (this.id == 'settings_parameters_enable_promo') {
+                var shipping_included = $('#settings_parameters_shipping_included');
+                if (this.checked)
+                    shipping_included.removeAttr('disabled');
+                else {
+                    shipping_included.attr('checked', false);
+                    shipping_included.attr('disabled' , 'disabled');
+                }
+            }
+
             formSettings.trigger('submit');
         });
 
