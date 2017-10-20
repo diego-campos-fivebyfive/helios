@@ -84,25 +84,6 @@
         },
         checkType: function(){
             var type = ShippingManager.type.val();
-            /*if ('sices' == type) {
-                $('.group-sices').show();
-                $('.group-self').hide();
-                $('.output').show();
-                $('#form-company').hide();
-                ShippingManager.calculate();
-
-                if (GeneratorHandler.enableValidate > 1)
-                    GeneratorHandler.enableValidate -= 2;
-                if (!GeneratorHandler.enableValidate)
-                    GeneratorHandler.btnValidate.removeClass('hide');
-            } else {
-                $('.group-self').hide();
-                $('.group-sices').hide();
-                $('.output').hide();
-                ShippingManager.calculate(0);
-                ShippingManager.company();
-            }*/
-
             switch (type) {
                 case 'sices':
                     $('.group-sices').show();
