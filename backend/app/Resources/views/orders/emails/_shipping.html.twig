@@ -1,4 +1,4 @@
-{% if 'sices' == order.shippingRules.type %}
+{% if 'self' != order.shippingRules.type %}
 
     <table class="width-total" border="0" cellpadding="5" cellspacing="0">
         <tr class="line-info info-extra">
@@ -6,7 +6,7 @@
                 Frete
             </th>
             <th align="left">
-                {{ order.shipping|currency }}
+                {{ 'sices' == order.shippingRules.type ? order.shipping|currency : "INCLUSO" }}
             </th>
         </tr>
     </table>
