@@ -156,7 +156,8 @@ class ProjectGeneratorController extends AbstractController
         $rule = $order->getShippingRules();
 
         $form = $this->createForm(ShippingType::class, $rule, [
-            'member' => $this->member()
+            'member' => $this->member(),
+            'order' => $order
         ]);
 
         $form->handleRequest($request);
