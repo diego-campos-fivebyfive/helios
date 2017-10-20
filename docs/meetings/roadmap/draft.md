@@ -5,7 +5,7 @@
 
 2. **TELA DE DETALHES**: Na sessão de visualização de detalhes de um cliente/integrador especifico o usuário Sices, poderá visualizar detalhes do cliente/integrador e terá acesso as tarefas relacionadas a este cliente/integrador e aos orçamentos emitidos pelo cliente/integrador ou para este, podendo ter acesso ao detalhes de ambos, e se necessário e possivel for, efetuar alterações tanto em orçamentos quanto em tarefas.
 
-3.**TAREFAS**:
+3. **TAREFAS**:
   - 3.1. A sessão tarefas estará relacionada diretamente com o usuário sices, podendo ou não, ter vinculos com o cliente/integrador  de acordo com a tarefa definida. Por exemplo:
 
   - 3.2. O usuário sices terá uma reunião com um determinado cliente/integrador via call, no dia 12/12/2017 em um determinado horário, ele poderá já descrever detalhes como, assuntos que serão abordados, se for uma apresentação quais produtos ou serviços que ele irá apresentar, ou sejá como se decorrerá a reunião a fim de satisfazer espectativas do cliente. Ou a terefa definida pode tratar de assuntos internos,  referentes a processos da equipe de usuários.
