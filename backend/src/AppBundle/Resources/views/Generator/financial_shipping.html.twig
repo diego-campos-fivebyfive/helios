@@ -34,6 +34,10 @@
         <h2 id="shipping_output"> {{ order.shipping|currency }} </h2>
     </div>
 
+    <div class="form-group included col-md-6 text-center">
+        <h2 style="padding-top: 15px;"> INCLUSO </h2>
+    </div>
+
     <div class="col-md-12">
         <div class="form-group col-md-12">
             <h3> <i class="fa fa-map-marker"></i> Endereço de Entrega </h3>
@@ -80,22 +84,37 @@
         },
         checkType: function(){
             var type = ShippingManager.type.val();
-            if ('sices' == type) {
-                $('.group-sices').show();
-                $('.group-self').hide();
-                $('.output').show();
-                $('#form-company').hide();
-                ShippingManager.calculate();
+            switch (type) {
+                case 'sices':
+                    $('.group-sices').show();
+                    $('.output').show();
+                    $('.group-self').hide();
+                    $('.included').hide();
+                    $('#form-company').hide();
+                    ShippingManager.calculate();
 
-                if (GeneratorHandler.enableValidate > 1)
-                    GeneratorHandler.enableValidate -= 2;
-                if (!GeneratorHandler.enableValidate)
-                    GeneratorHandler.btnValidate.removeClass('hide');
-            } else {
-                $('.group-self').hide();
-                $('.group-sices').hide();
-                $('.output').hide();
-                ShippingManager.company();
+                    if (GeneratorHandler.enableValidate > 1)
+                        GeneratorHandler.enableValidate -= 2;
+                    if (!GeneratorHandler.enableValidate)
+                        GeneratorHandler.btnValidate.removeClass('hide');
+                    break;
+
+                case 'self':
+                    $('.group-self').hide();
+                    $('.included').hide();
+                    $('.group-sices').hide();
+                    $('.output').hide();
+                    ShippingManager.company();
+                    break;
+
+                case 'included':
+                    $('.included').show();
+                    $('.group-self').hide();
+                    $('.group-sices').hide();
+                    $('.output').hide();
+                    $('#form-company').hide();
+                    ShippingManager.calculate(0);
+                    break;
             }
 
         },
