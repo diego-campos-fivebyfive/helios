@@ -200,6 +200,9 @@
             });
         });
 
+        if($('#settings_parameters_enable_promo').attr('checked') != 'checked')
+            $('#settings_parameters_shipping_included').attr('disabled' , 'disabled');
+
         formSettings.find('input').on('change', function () {
             if (this.id == 'settings_parameters_enable_promo') {
                 var shipping_included = $('#settings_parameters_shipping_included');
