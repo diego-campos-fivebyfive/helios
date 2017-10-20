@@ -12,7 +12,6 @@
 namespace AppBundle\Entity\Order;
 
 use AppBundle\Entity\MemberInterface;
-use AppBundle\Entity\ParameterManagerInterface;
 use AppBundle\Entity\Pricing\MemorialInterface;
 use AppBundle\Entity\Pricing\RangeInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -255,16 +254,10 @@ class Order implements OrderInterface, InsurableInterface
     private $childrens;
 
     /**
-     * @var ParameterManagerInterface
-     */
-    private $parameterManager;
-
-    /**
      * Order constructor.
      */
-    public function __construct(ParameterManagerInterface $parameterManager)
+    public function __construct()
     {
-        $this->parameterManager = $parameterManager;
         $this->elements = new ArrayCollection();
         $this->childrens = new ArrayCollection();
         $this->shippingRules = [];
