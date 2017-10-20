@@ -14,6 +14,7 @@ Sistema de suporte para empresas do setor de energia solar fotovoltaíca.
   1. [Execução de Tarefas](#execução-de-tarefas)
   1. [Lista de Comandos](#comandos)
   1. [Gerador de PDF](#gerador-de-pdf)
+  1. [Amazon](#amazon)
   1. [Sobre](#sobre)
 
 ## Guia Geral
@@ -30,6 +31,8 @@ Esclarecimentos gerais relacionados a documentação:
   - [1.2](#guia--siglas) **Siglas**:
 
     - PR: Pull Request
+    - AWS: Amazon Web Services
+    - S3: Amazon Simple Storage Service
 
   <a name="guia--notas"></a><a name="1.3"></a>
   - [1.3](#guia--notas) **Notas Gerais**:
@@ -416,10 +419,68 @@ Esclarecimentos gerais relacionados a documentação:
 
      > Com as etapas acima implementadas será possivel testar o fluxo completo usando PDF estático.
 
-## Sobre
 
-  <a name="sobre--equipe"></a><a name="8.1"></a>
-  - [8.1](#sobre--equipe) **A equipe**:
+**[⬆ Voltar ao Topo](#sumário)**
+
+## Gerencialmento de arquivos
+
+  <a name="uploads--buckets"></a><a name="8.1"></a>
+  - [8.1](#uploads--buckets) **Amazon S3**:
+
+    - 8.1.1. **Carteiras**:
+      ```
+      pss-general
+      pss-homolog-private
+      pss-homolog-public
+      pss-production-private
+      pss-production-public
+      ```
+
+    - 8.1.2. **Nomenclaturas**: Toda carteira segue o padrão de nomenclatura inciado por `pss`, seguido por `ambiente` e `access`, que é o tipo de acesso.
+
+    - 8.1.3. **Tipos de acesso**: São distribuidos entre `private` e `public`, onde, os arquivos de tipo privado, apenas podem ser acessados via pianel adm. do S3 ou através de download pelos sistema Sices; os arquivos publicos por sua vez está disponíveis diretamente para acesso através dos links do S3.
+
+  <a name="uploads--local"></a><a name="8.2"></a>
+  - [8.2](#uploads--local) **Arquivos temporários**:
+
+    - 8.2.1. **Pasta .uploads**: Nessa pasta encontram-se documentos de usuários do sistema, como por exemplo proformas e propostas geradas.
+
+    - 8.2.2. **Processo**: Durante o processo de upload ou geração de um arquivo o mesmo será salvo no sistema dentro da sua respectiva pasta temporária, sendo enviado na sequência para o S3 e "excluido" da pasta temporária a cada deploy realizado.
+
+    - 8.2.3. **Pastas de agrupamento**: Cada pasta temporaria segue o padrão de estrutura da seguiteformas: `root` que corresponde ao módulo do documento e `type` que correponde ao tipo de documento.
+      ```
+      Ex:
+
+      $SICES_PATH/.uploads/order/proforma/
+
+      Onde:
+
+      Root: Order
+      Type: Proforma
+
+      ```
+
+  <a name="uploads--file"></a><a name="8.2"></a>
+  - [8.3](#uploads--file) **Nomenclatura de arquivos**: Como o S3 e a pasta de arquivos temporários seguem o padrão de `root`/`type` os arquivos devem ser salvos não utilizando sufixos que contenham essas informações, devem conter identificadores unicos gerados randomicamente junto com suas extensões.
+    ```
+    Ex. Proposal: 1a86be152bb4663e118d57a428ee70fd.pdf
+
+    ```
+
+
+  <a name="uploads--services"></a><a name="8.2"></a>
+  - [8.4](#uploads--services) **Services**: Para gerenciamento dos arquivos o sistema disponibiliza dois serviços, sendo eles:
+
+    - 8.4.1. **Storage** `app_storage`: Serviço de gerenciamento de alocação de arquivos e leitura, disponibiliza funções de upload, integração com o S3 e exibição de arquivos.
+
+    - 8.4.2. **Generator** `app_generator`: Serviço de criação de arquivos, como por exemplo gerador de pdf.
+
+
+**[⬆ Voltar ao Topo](#sumário)**
+
+## Sobre
+  <a name="sobre--equipe"></a><a name="9.1"></a>
+  - [9.1](#sobre--equipe) **A equipe**:
 
     - #### Alisson Alves
     ```
