@@ -1071,6 +1071,17 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @inheritDoc
      */
+    public function isFullyPromotional()
+    {
+        foreach ($this->getChildrens() as $order)
+            if (!$order->isPromotional())
+                return false;
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function isBuilding()
     {
         return self::STATUS_BUILDING == $this->status;
