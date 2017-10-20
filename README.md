@@ -13,6 +13,7 @@ Sistema de suporte para empresas do setor de energia solar fotovoltaíca.
   1. [Padrões de Desenvolvimento](#padrões-de-desenvolvimento)
   1. [Execução de Tarefas](#execução-de-tarefas)
   1. [Lista de Comandos](#comandos)
+  1. [Gerenciamento de Arquivos](#gerenciamento-de-arquivos)
   1. [Gerador de PDF](#gerador-de-pdf)
   1. [Sobre](#sobre)
 
@@ -30,6 +31,8 @@ Esclarecimentos gerais relacionados a documentação:
   - [1.2](#guia--siglas) **Siglas**:
 
     - PR: Pull Request
+    - AWS: Amazon Web Services
+    - S3: Amazon Simple Storage Service
 
   <a name="guia--notas"></a><a name="1.3"></a>
   - [1.3](#guia--notas) **Notas Gerais**:
@@ -394,32 +397,84 @@ Esclarecimentos gerais relacionados a documentação:
 
 **[⬆ Voltar ao Topo](#sumário)**
 
+## Gerenciamento de Arquivos
+
+  <a name="uploads--buckets"></a><a name="7.1"></a>
+  - [7.1](#uploads--buckets) **Amazon S3**:
+
+    - 7.1.1. **Carteiras**:
+      ```
+      pss-general
+      pss-homolog-private
+      pss-homolog-public
+      pss-production-private
+      pss-production-public
+      ```
+
+    - 7.1.2. **Nomenclaturas**: Toda carteira segue o padrão de nomenclatura inciado por `pss`, seguido por `ambiente` e `access`, que é o tipo de acesso.
+
+    - 7.1.3. **Tipos de acesso**: São distribuidos entre `private` e `public`, onde, os arquivos de tipo privado, apenas podem ser acessados via pianel adm. do S3 ou através de download pelos sistema Sices; os arquivos públicos por sua vez estão disponíveis diretamente para acesso através dos links do S3.
+
+  <a name="uploads--local"></a><a name="7.2"></a>
+  - [7.2](#uploads--local) **Arquivos temporários**:
+
+    - 7.2.1. **Pasta .uploads**: Nessa pasta encontram-se documentos de usuários do sistema, como por exemplo proformas e propostas geradas.
+
+    - 7.2.2. **Processo**: Durante o processo de upload ou geração de um arquivo o mesmo será salvo no sistema dentro da sua respectiva pasta temporária, sendo enviado na sequência para o S3 e "excluido" da pasta temporária a cada deploy realizado.
+
+    - 7.2.3. **Pastas de agrupamento**: Cada pasta temporária segue o padrão de estrutura da seguite forma: `root` que corresponde ao módulo do documento e `type` que correponde ao tipo de documento.
+      ```
+      Ex:
+      $SICES_PATH/.uploads/order/proforma/
+
+      Root: Order
+      Type: Proforma
+      ```
+
+  <a name="uploads--file"></a><a name="7.3"></a>
+  - [7.3](#uploads--file) **Nomenclatura de arquivos**: Como o S3 e a pasta de arquivos temporários seguem o padrão de `root`/`type` os arquivos devem ser salvos não utilizando sufixos que contenham essas informações, devem conter identificadores unicos gerados randomicamente junto com suas extensões.
+    ```
+    Ex. Proposal: 1a86be152bb4663e118d57a428ee70fd.pdf
+    ```
+
+  <a name="uploads--services"></a><a name="7.4"></a>
+  - [7.4](#uploads--services) **Services**: Para gerenciamento dos arquivos o sistema disponibiliza dois serviços, sendo eles:
+
+    - 7.4.1. **Storage** (app_storage): Serviço de gerenciamento de alocação de arquivos e leitura, disponibiliza funções de upload, integração com o S3 e exibição de arquivos.
+
+    - 7.4.2. **Generator** (app_generator): Serviço de criação de arquivos, como por exemplo o [Gerador de PDF](#gerador-de-pdf).
+
+
+**[⬆ Voltar ao Topo](#sumário)**
+
 ## Gerador de PDF
 
-  <a name="pdf--teste-local"></a><a name="7.1"></a>
-  - [7.1](#pdf--teste-local) **Teste Local do Processo Completo de Geração**:
+  <a name="pdf--teste-local"></a><a name="8.1"></a>
+  - [8.1](#pdf--teste-local) **Teste Local do Processo Completo de Geração**:
 
-    - 7.1.1. **Execução até falha**: gere o PDF e aguarde aproximadamente um minuto até que uma mensagem de falha apareça na tela, em seguida o PDF estará disponível na pasta `$SICES_PATH/.uploads`.
+    - 8.1.1. **Execução até falha**: gere o PDF e aguarde aproximadamente um minuto até que uma mensagem de falha apareça na tela, em seguida o PDF estará disponível na pasta `$SICES_PATH/.uploads`.
 
       > Essas parte se faz necessária pois localmente o PDF apenas é gerado após timeout no processo de geração (aprox. 1 minuto após execução).
 
-    - 7.1.2. **Atribuição de File Name estático**: cria uma nova váriavel `$filename` na controller que chama o gerador, onde a mesma recebe nome do PDF gerado. Em seguida comente a linha original. Exemplo:
+    - 8.1.2. **Atribuição de File Name estático**: cria uma nova váriavel `$filename` na controller que chama o gerador, onde a mesma recebe nome do PDF gerado. Em seguida comente a linha original. Exemplo:
       ```php
       //$filename = md5(uniqid(time())) . '.pdf';
       $filename = 'f6971985f1787ec54a4fef316d8064ab.pdf';
       ```
 
-    - 7.1.3. **Ignorando a criação de novo PDF**: para que o processo possa ser executado até o final comente a linha que solicita a geração de um novo PDF.
+    - 8.1.3. **Ignorando a criação de novo PDF**: para que o processo possa ser executado até o final comente a linha que solicita a geração de um novo PDF.
       ```php
       //$this->get('app_generator')->pdf($options, $file);
       ```
 
      > Com as etapas acima implementadas será possivel testar o fluxo completo usando PDF estático.
 
-## Sobre
 
-  <a name="sobre--equipe"></a><a name="8.1"></a>
-  - [8.1](#sobre--equipe) **A equipe**:
+**[⬆ Voltar ao Topo](#sumário)**
+
+## Sobre
+  <a name="sobre--equipe"></a><a name="9.1"></a>
+  - [9.1](#sobre--equipe) **A equipe**:
 
     - #### Alisson Alves
     ```
