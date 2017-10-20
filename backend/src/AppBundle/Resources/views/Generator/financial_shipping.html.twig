@@ -176,6 +176,10 @@
                 ShippingManager.calculate();
             });
 
+            ShippingManager.deliveryAddress.on('change', function () {
+                ShippingManager.form.submit();
+            });
+
             Numbers.mask(ShippingManager.percent);
 
             ShippingManager.state.on('change', function(){
