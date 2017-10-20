@@ -24,6 +24,17 @@ class ShippingType extends AbstractType
             'sices' => 'Frete Sices'
         ];
 
+        /*if ($rule['type'] != 'included'){
+            $choices = [
+                'self' => 'Meu Frete',
+                'sices' => 'Frete Sices'
+            ];
+        }
+
+        if ($member->isPlatformUser() || $rule['type'] == 'included' && !$member->isPlatformUser() ) {
+            $choices['included'] = 'Frete Incluso';
+        }*/
+
         if ($member->isPlatformUser()) {
             $choices['included'] = 'Frete Incluso';
         }
@@ -75,7 +86,8 @@ class ShippingType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'member' => null
+            'member' => null,
+            'order' => null
         ));
     }
 
