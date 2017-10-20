@@ -7,6 +7,7 @@ use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Order\Element;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
+use AppBundle\Entity\Parameter;
 use AppBundle\Form\Component\GeneratorType;
 use AppBundle\Form\Financial\CompanyType;
 use AppBundle\Form\Order\ElementType;
@@ -157,7 +158,10 @@ class ProjectGeneratorController extends AbstractController
 
         $form = $this->createForm(ShippingType::class, $rule, [
             'member' => $this->member(),
-            'order' => $order
+            'order' => $order,
+            'isProject' => false,
+            'rule' => $rule,
+            'parameters' => $this->findSettings()
         ]);
 
         $form->handleRequest($request);
@@ -520,5 +524,18 @@ class ProjectGeneratorController extends AbstractController
     private function getGenerator()
     {
         return $this->get('project_generator');
+    }
+
+    /**
+     * @return Parameter
+     */
+    private function findSettings()
+    {
+        $manager = $this->manager('parameter');
+
+        /** @var Parameter $parameter */
+        $parameter = $manager->findOrCreate('platform_settings');
+
+        return $parameter;
     }
 }
