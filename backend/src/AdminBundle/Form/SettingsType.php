@@ -45,6 +45,7 @@ class SettingsType extends AbstractType
                         ->add('email', EmailType::class)
                 )
                 ->add('enable_promo', CheckboxType::class)
+                ->add('shipping_included', CheckboxType::class)
                 ->add('promo_end_at', TextType::class)
         );
         $builder->get('parameters')
