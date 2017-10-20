@@ -70,7 +70,13 @@ class ProjectFinancialController extends AbstractController
     public function shippingAction(Request $request, Project $project)
     {
         $rule = $project->getShippingRules();
-        $form = $this->createForm(ShippingType::class, $rule);
+        $form = $this->createForm(ShippingType::class, $rule, [
+            'member' => $this->member(),
+            'order' => $project,
+            'isProject' => true,
+            'rule' => $rule,
+            'parameters' => $this->findSettings()
+        ]);
 
         $form->handleRequest($request);
 
@@ -353,5 +359,18 @@ class ProjectFinancialController extends AbstractController
     private function getGenerator()
     {
         return $this->get('project_generator');
+    }
+
+    /**
+     * @return Parameter
+     */
+    private function findSettings()
+    {
+        $manager = $this->manager('parameter');
+
+        /** @var Parameter $parameter */
+        $parameter = $manager->findOrCreate('platform_settings');
+
+        return $parameter;
     }
 }
