@@ -516,4 +516,9 @@ interface OrderInterface
      * @return bool
      */
     public function isPromotional();
+
+    /**
+     * @return bool
+     */
+    public function isFullyPromotional();
 }

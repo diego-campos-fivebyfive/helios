@@ -12,6 +12,7 @@
 namespace AppBundle\Entity\Order;
 
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\ParameterManagerInterface;
 use AppBundle\Entity\Pricing\MemorialInterface;
 use AppBundle\Entity\Pricing\RangeInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -254,10 +255,16 @@ class Order implements OrderInterface, InsurableInterface
     private $childrens;
 
     /**
+     * @var ParameterManagerInterface
+     */
+    private $parameterManager;
+
+    /**
      * Order constructor.
      */
-    public function __construct()
+    public function __construct(ParameterManagerInterface $parameterManager)
     {
+        $this->parameterManager = $parameterManager;
         $this->elements = new ArrayCollection();
         $this->childrens = new ArrayCollection();
         $this->shippingRules = [];
@@ -1066,6 +1073,17 @@ class Order implements OrderInterface, InsurableInterface
     public function isPromotional()
     {
         return MemorialInterface::LEVEL_PROMOTIONAL == $this->level;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isFullyPromotional()
+    {
+        foreach ($this->getChildrens() as $order)
+            if (!$order->isPromotional())
+                return false;
+        return true;
     }
 
     /**
