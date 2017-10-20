@@ -18,14 +18,36 @@ class ShippingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $member = $options['member'];
+        $isProject = $options['isProject'];
 
-        $choices = [
-            'self' => 'Meu Frete',
-            'sices' => 'Frete Sices'
-        ];
+        $rule = $options['rule'];
+        if (!$rule)
+            $rule['type'] = 'self';
 
-        if ($member->isPlatformUser()) {
+        $order = $options['order'];
+        $parameters = $options['parameters'];
+        $enablePromo = $parameters->getParameters()['enable_promo'];
+        $shippingIncluded = $parameters->getParameters()['shipping_included'];
+
+        $choices = [];
+
+        if (!$isProject && !$member->isPlatformUser() && $rule['type'] == 'included'
+            || ($enablePromo && $shippingIncluded && $order->isFullyPromotional())) {
+
             $choices['included'] = 'Frete Incluso';
+
+        } elseif (!$isProject && $member->isPlatformUser() && $shippingIncluded) {
+
+            $choices = [
+                'self' => 'Meu Frete',
+                'sices' => 'Frete Sices',
+                'included' => 'Frete Incluso'
+            ];
+        } else {
+            $choices = [
+                'self' => 'Meu Frete',
+                'sices' => 'Frete Sices'
+            ];
         }
 
         $builder
@@ -75,7 +97,11 @@ class ShippingType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'member' => null
+            'member' => null,
+            'order' => null,
+            'rule' => null,
+            'parameters' => null,
+            'isProject' => null
         ));
     }
 
