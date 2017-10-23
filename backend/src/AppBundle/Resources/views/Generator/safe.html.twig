@@ -1,5 +1,4 @@
 {% set target = project is defined ? project : order %}
-
 <div class="row">
     <div class="form-group col-md-8">
         <label style="font-size: small; text-align: justify; font-weight: lighter;">
@@ -12,7 +11,7 @@
     <div class="col-md-2">
         <div class="form-group col-md-12">
             <label>
-                <input id="financial_insurance" type="checkbox" {{ target.insurance ? 'checked="checked"' }}/> &nbsp;
+                <input id="financial_insurance" type="checkbox" {{ isPromo ? 'disabled="disabled"' }} {{ isPromo or target.insurance ? 'checked="checked"' }}/> &nbsp;
                 Seguro All Risk
             </label>
         </div>
