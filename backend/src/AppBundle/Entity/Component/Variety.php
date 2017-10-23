@@ -252,7 +252,8 @@ class Variety implements VarietyInterface, ComponentInterface
         return [
             self::TYPE_CABLE,
             self::TYPE_CONNECTOR,
-            self::TYPE_TRANSFORMER
+            self::TYPE_TRANSFORMER,
+            self::TYPE_MONITOR
         ];
     }
 }

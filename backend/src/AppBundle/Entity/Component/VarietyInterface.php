@@ -21,6 +21,7 @@ interface VarietyInterface
     const TYPE_CABLE = 'cabo';
     const TYPE_CONNECTOR = 'conector';
     const TYPE_TRANSFORMER = 'transformer';
+    const TYPE_MONITOR = 'monitor';
 
     /**
      * @return int
