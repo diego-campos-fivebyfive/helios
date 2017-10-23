@@ -26,8 +26,8 @@ class ShippingType extends AbstractType
 
         $order = $options['order'];
         $parameters = $options['parameters'];
-        $enablePromo = $parameters->getParameters()['enable_promo'];
-        $shippingIncluded = $parameters->getParameters()['shipping_included'];
+        $enablePromo = $parameters->get('enable_promo');
+        $shippingIncluded = $parameters->get('shipping_included');
 
         $choices = [];
 
