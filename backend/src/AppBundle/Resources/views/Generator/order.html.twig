@@ -65,6 +65,7 @@
         Seguro
     </div>
     <div class="panel-body" id="financial_safe">
+        {% set isPromo = order.isPromotional %}
         {% include view('generator.safe') %}
     </div>
 </div>
@@ -85,7 +86,6 @@
     {% include view('helper.request') %}
 
     <script>
-
         var OrderManager = {
             getElements: function () {
                 Request.send({
