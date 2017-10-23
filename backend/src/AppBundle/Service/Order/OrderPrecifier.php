@@ -41,32 +41,31 @@ class OrderPrecifier
             $rangeIsChanged = ($power < $powerRange[0] || $power > $powerRange[1]);
         }
 
-        if ($rangeIsChanged) {
+        /** @var \AppBundle\Service\Pricing\RangeLoader $loader */
+        $loader = $this->container->get('range_loader');
 
-                /** @var \AppBundle\Service\Pricing\RangeLoader $loader */
-                $loader = $this->container->get('range_loader');
+        $ranges = $loader->load($memorial, $power, $level, $codes);
 
-                $ranges = $loader->load($memorial, $power, $level, $codes);
+        foreach ($order->getElements() as $element) {
 
-                foreach ($order->getElements() as $element) {
+            $code = $element->getCode();
 
-                    $code = $element->getCode();
+            if (array_key_exists($code, $ranges)) {
 
-                    if (array_key_exists($code, $ranges)) {
-
-                        $range = $ranges[$code];
-                        if ($range instanceof RangeInterface) {
-                            $cmv = (float)$range->getCostPrice();
-                            $markup = (float)$range->getMarkup();
-                            $element->setCmv($cmv);
-                            $element->setMarkup($markup);
-                            $element->setTax(Range::DEFAULT_TAX);
-
-                            $order->addMetadata('power_range', [$range->getInitialPower(), $range->getFinalPower()]);
-                        }
+                $range = $ranges[$code];
+                if ($range instanceof RangeInterface) {
+                    $cmv = (float)$range->getCostPrice();
+                    $markup = (float)$range->getMarkup();
+                    $element->setCmv($cmv);
+                    if ($rangeIsChanged) {
+                        $element->setMarkup($markup);
                     }
+                    $element->setTax(Range::DEFAULT_TAX);
+
+                    $order->addMetadata('power_range', [$range->getInitialPower(), $range->getFinalPower()]);
                 }
             }
+        }
 
         $order->addMetadata('memorial', $memorial->toArray());
 
