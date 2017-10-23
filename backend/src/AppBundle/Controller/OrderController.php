@@ -139,7 +139,13 @@ class OrderController extends AbstractController
      */
     public function insureAction(Order $order, Request $request)
     {
-        Insurance::apply($order, (bool) $request->get('insure'));
+        $insure = $request->get('insure');
+
+        $is_promotional = $order->getLevel() == 'promotional';
+        if ($is_promotional)
+            $insure = true;
+
+        Insurance::apply($order, (bool) $insure);
 
         $this->manager('order')->save($order);
 
@@ -147,7 +153,8 @@ class OrderController extends AbstractController
             'order' => [
                 'id' => $order->getId(),
                 'insurance' => $order->getInsurance(),
-                'total' => $order->getTotal()
+                'total' => $order->getTotal(),
+                'is_promotional' => $is_promotional
             ]
         ]);
     }

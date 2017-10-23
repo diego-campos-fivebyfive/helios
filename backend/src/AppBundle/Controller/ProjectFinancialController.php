@@ -243,14 +243,21 @@ class ProjectFinancialController extends AbstractController
      */
     public function insureAction(Project $project, Request $request)
     {
-        Insurance::apply($project, (bool) $request->get('insure'));
+        $insure = $request->get('insure');
+
+        $is_promotional = $project->getDefaults()['is_promotional'];
+        if ($is_promotional)
+            $insure = true;
+
+        Insurance::apply($project, (bool) $insure);
 
         $this->manager('project')->save($project);
 
         return $this->json([
             'project' => [
                 'id' => $project->getId(),
-                'insurance' => $project->getInsurance()
+                'insurance' => $project->getInsurance(),
+                'isPromotional' => $is_promotional
             ]
         ]);
     }
