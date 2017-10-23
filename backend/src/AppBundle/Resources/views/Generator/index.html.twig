@@ -324,6 +324,7 @@
                     url: '{{ path('generator_orders',{id: order.id}) }}',
                     callback: function (xhr) {
                         $('#generator_orders').html(xhr.responseText);
+                        GeneratorHandler.getOrdersList();
                     }
                 });
             },
