@@ -243,11 +243,7 @@ class ProjectFinancialController extends AbstractController
      */
     public function insureAction(Project $project, Request $request)
     {
-        $insure = $request->get('insure');
-
-        $is_promotional = $project->getDefaults()['is_promotional'];
-        if ($is_promotional)
-            $insure = true;
+        $insure = $project->getDefaults()['is_promotional']? true : $request->get('insure');
 
         Insurance::apply($project, (bool) $insure);
 
