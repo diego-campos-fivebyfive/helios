@@ -136,6 +136,7 @@
                 data: {_method: 'delete'},
                 callback: function (xhr) {
                     var response = xhr.responseJSON;
+                    InsuranceHandler.apply();
                     OrderManager.renderTotal(response.total);
                     swal.close();
                     OrderManager.getElements();

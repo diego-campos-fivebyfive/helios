@@ -23,6 +23,7 @@
 <script>
     var form_element_btn = $('#form_element_btn');
     form_element_btn.ladda();
+
     $('#form-element').on('submit', function (event) {
         event.preventDefault();
         form_element_btn.ladda('start');
@@ -34,7 +35,6 @@
                 InsuranceHandler.apply();
                 GeneratorHandler.refreshWizardModal();
                 GeneratorHandler.resetBudgetButton();
-                GeneratorHandler.getOrders();
             }
         });
     });
