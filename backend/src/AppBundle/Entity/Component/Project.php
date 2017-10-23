@@ -990,11 +990,17 @@ class Project implements ProjectInterface, InsurableInterface
      */
     public function getCostPriceComponents()
     {
-        return $this->getCostPriceInverters()
+        $price =  $this->getCostPriceInverters()
             + $this->getCostPriceModules()
             + $this->getCostPriceStringBoxes()
             + $this->getCostPriceStructures()
             + $this->getCostPriceVarieties();
+
+        if(null != $transformer = $this->getTransformer()){
+            $price += $transformer->getTotalCostPrice();
+        }
+
+        return $price;
     }
 
     /**
@@ -1109,11 +1115,17 @@ class Project implements ProjectInterface, InsurableInterface
      */
     public function getSalePriceComponents()
     {
-        return $this->getSalePriceInverters()
+        $price = $this->getSalePriceInverters()
             + $this->getSalePriceModules()
             + $this->getSalePriceStringBoxes()
             + $this->getSalePriceStructures()
             + $this->getSalePriceVarieties();
+
+        if(null != $transformer = $this->getTransformer()){
+            $price += $transformer->getTotalSalePrice();
+        }
+
+        return $price;
     }
 
     /**
