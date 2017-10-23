@@ -50,16 +50,29 @@ class ModuleCombiner
             $qte_min_mod_ser = ceil($inverter->getMpptMin() / $vmin_mod);
             $qte_max_mod_par = floor(($inverter->getMpptMaxDcCurrent() * $inverter->getMpptNumber()) / ($module->getShortCircuitCurrent()));
 
+            $collection = [];
             for ($p = 1; $p <= $qte_max_mod_par; $p++) {
                 for ($s = $qte_min_mod_ser; $s <= $qte_max_mod_ser; $s++) {
                     $pot = ($p * $s) * ($module->getMaxPower() / 1000);
                     if ($pot >= ($power * $percentPower[$key])) {
-                        $projectInverter->setSerial((int) $s);
-                        $projectInverter->setParallel((int) $p);
-                        break 2;
+
+                        $collection[] = [
+                            'parallel' => $p,
+                            'serial' => $s,
+                            'power' => $pot
+                        ];
+
+                        break;
                     }
                 }
             }
+
+            usort($collection, function($prev, $next){
+                return $next['power'] < $prev['power'];
+            });
+
+            $projectInverter->setParallel($collection[0]['parallel']);
+            $projectInverter->setSerial($collection[0]['serial']);
         }
     }
 }
