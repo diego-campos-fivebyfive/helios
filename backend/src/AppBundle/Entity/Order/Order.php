@@ -1073,6 +1073,8 @@ class Order implements OrderInterface, InsurableInterface
      */
     public function isFullyPromotional()
     {
+        if (!$this->getChildrens()->count())
+            return false;
         foreach ($this->getChildrens() as $order)
             if (!$order->isPromotional())
                 return false;
