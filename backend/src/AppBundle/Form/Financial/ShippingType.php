@@ -35,32 +35,26 @@ class ShippingType extends AbstractType
         if (!$isProject)
             $isFullyPromotional = $order->isFullyPromotional();
 
-        if (!$isProject && !$member->isPlatformUser() && $rule['type'] == 'included'
-            || ($enablePromo && $shippingIncluded && $isFullyPromotional)) {
-
+        if (!$isProject && $isFullyPromotional && $enablePromo && $shippingIncluded)
             $choices['included'] = 'Frete Incluso';
 
-        } elseif (!$isProject && $member->isPlatformUser() && $shippingIncluded) {
-
+        elseif (!$isProject && $member->isPlatformUser() && $shippingIncluded)
             $choices = [
                 'self' => 'Meu Frete',
                 'sices' => 'Frete Sices',
                 'included' => 'Frete Incluso'
             ];
-        } else {
-            $choices = [
+
+         else
+             $choices = [
                 'self' => 'Meu Frete',
                 'sices' => 'Frete Sices'
             ];
-        }
 
         $builder
-
             ->add('type', ChoiceType::class, [
                 'choices' => $choices
-            ]);
-
-        $builder
+            ])
             ->add('state', ChoiceType::class, [
                 'choices' => Brazil::states()
             ])
@@ -72,8 +66,7 @@ class ShippingType extends AbstractType
                     'interior' => 'Interior',
                     'capital' => 'Capital'
                 ]
-            ])
-        ;
+            ]);
 
         $builder->get('percent')->addModelTransformer(new CallbackTransformer(
             function($percent){
