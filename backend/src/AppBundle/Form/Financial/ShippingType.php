@@ -31,8 +31,12 @@ class ShippingType extends AbstractType
 
         $choices = [];
 
+        $isFullyPromotional = false;
+        if (!$isProject)
+            $isFullyPromotional = $order->isFullyPromotional();
+
         if (!$isProject && !$member->isPlatformUser() && $rule['type'] == 'included'
-            || ($enablePromo && $shippingIncluded && $order->isFullyPromotional())) {
+            || ($enablePromo && $shippingIncluded && $isFullyPromotional)) {
 
             $choices['included'] = 'Frete Incluso';
 
