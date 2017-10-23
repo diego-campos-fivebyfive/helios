@@ -338,6 +338,10 @@ class ComponentExtractor
 
         $fromProjectVarieties = self::fromProjectVarieties($project->getProjectVarieties());
 
+        if(null != $transformer = $project->getTransformer()){
+            $fromProjectVarieties[] = self::fromProjectVariety($transformer);
+        }
+
         return array_merge(
             $fromProjectModules,
             $fromGroupInverters,
