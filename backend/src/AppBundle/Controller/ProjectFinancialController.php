@@ -256,8 +256,7 @@ class ProjectFinancialController extends AbstractController
         return $this->json([
             'project' => [
                 'id' => $project->getId(),
-                'insurance' => $project->getInsurance(),
-                'isPromotional' => $is_promotional
+                'insurance' => $project->getInsurance()
             ]
         ]);
     }

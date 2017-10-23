@@ -153,8 +153,7 @@ class OrderController extends AbstractController
             'order' => [
                 'id' => $order->getId(),
                 'insurance' => $order->getInsurance(),
-                'total' => $order->getTotal(),
-                'is_promotional' => $is_promotional
+                'total' => $order->getTotal()
             ]
         ]);
     }
