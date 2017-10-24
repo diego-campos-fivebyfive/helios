@@ -22,7 +22,7 @@ $CLI_PATH/ces-app-install
 $CLI_PATH/ces-database-update
 
 if [ $2 ]; then
-  curl -X POST -u "$2" -d '{"assignees": ["$2"]}' \
+  curl -X POST -u "$2" -d "{\"assignees\": [\"$2\"]}" \
     https://api.github.com/repos/sices/sices/issues/$1/assignees
 fi
 
