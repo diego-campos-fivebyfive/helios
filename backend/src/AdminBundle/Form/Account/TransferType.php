@@ -15,7 +15,7 @@ class TransferType extends AbstractType
     {
         $account = $options['account'];
 
-        $members = $account->getMembers()->filter(function (MemberInterface $member){
+        $members = $account->getMembers()->filter(function (MemberInterface $member) {
             return $member->isPlatformCommercial();
         });
 
