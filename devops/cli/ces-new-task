@@ -21,5 +21,8 @@ git checkout -b issue-$1
 $CLI_PATH/ces-app-install
 $CLI_PATH/ces-database-update
 
+curl -X POST -u "$2" -d '{"assignees": ["$2"]}' \
+  https://api.github.com/repos/sices/sices/issues/$1/assignees
+
 $CLI_PATH/util/user-notify "Branch created" "now on issue-$1"
 echo "Done, now on Branch: issue-$1"
