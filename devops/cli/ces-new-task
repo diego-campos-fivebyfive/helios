@@ -5,10 +5,10 @@ cd $SICES_PATH
 if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
   printf "ces-new-task - help:
   Usage:
-  ces-new-task [ISSUE_NUMBER]
+  ces-new-task [ISSUE_NUMBER] [GITHUB_USER_NAME]
 
   Exemple:
-  ces-new-task 100
+  ces-new-task 100 rafaelkendrik
   "
   exit 0;
 fi
@@ -21,8 +21,10 @@ git checkout -b issue-$1
 $CLI_PATH/ces-app-install
 $CLI_PATH/ces-database-update
 
-curl -X POST -u "$2" -d '{"assignees": ["$2"]}' \
-  https://api.github.com/repos/sices/sices/issues/$1/assignees
+if [ $2 ]; then
+  curl -X POST -u "$2" -d '{"assignees": ["$2"]}' \
+    https://api.github.com/repos/sices/sices/issues/$1/assignees
+fi
 
 $CLI_PATH/util/user-notify "Branch created" "now on issue-$1"
 echo "Done, now on Branch: issue-$1"
