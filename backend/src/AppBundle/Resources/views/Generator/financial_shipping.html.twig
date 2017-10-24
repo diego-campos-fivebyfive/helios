@@ -1,3 +1,46 @@
+<style>
+    .a {
+        text-align: justify;
+    }
+</style>
+<div class="modal inmodal" id="modal_shipping_info" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <i class="fa fa-warning"></i> AVISO SOBRE FRETES, ENTREGAS E GERENCIAMENTOS DE ENTREGAS.
+            </div>
+            <div class="modal-body text-justify">
+                <p>
+                    Informamos que o gerenciamento de frete realizado pela <strong>SICES BRASIL</strong>, é destinado a
+                    empresas  integradoras e/ou  empresas  que  possuem  estruturas e  meios  apropriados
+                    para manuseios de cargas pesadas, tais como: armazém, doca, empilhadeira e paleteira.
+                    As  solicitações  de  entrega  diretas  ao  cliente  final,  serão  avaliadas  previamente  pela
+                    <strong>SICES Brasil</strong> e atendendo os processos fiscais, a entrega poderá ser realizada, porém tais
+                    tipos  de  entregas  não  caracterizam  descarregamento  em  locais  residenciais  com
+                    logística crítica (escadas, rampas, locais de difícil acesso, calçadas irregulares, subsolos,
+                    porões, coberturas, acesso por elevadores e afins) ou seja que não possua estrutura
+                    necessária para recebimento de grandes volumes de equipamentos, por tanto, a
+                    <strong>SICES Brasil</strong> não  se  responsabiliza  pelo  descarregamento  e  alocação  dos  Equipamentos em
+                    local  abrigado  em  residência  e/ou  no  canteiro de  obra  com  as  características  acima
+                    descritas.
+                </p>
+                <p>
+                    Antes de confirmar o gerenciamento de frete, certifique-se que após colocação da carga
+                    ao  solo  pela  transportadora,  o  local  possua  meios  e  pessoas  necessárias  para
+                    recebimento  dos  equipamentos  de  pesos  e  volumes  elevados  e  os  transfira  e  os
+                    condicione em abrigo adequado.
+                </p>
+                <p>
+                    A conferência dos produtos deverá ser no ato da entrega e em caso de divergência o
+                    pedido  deverá  ser  recusado,  <strong>NÃO</strong>  sendo  aceito  quaisquer  requerimentos  ou
+                    reclamações posteriores por divergências após aceitação da mercadoria e assinatura da
+                    Nota Fiscal.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
 {{ form_start(form, {attr:{id:'form_shipping', action: app.request.uri}}) }}
 <div class="row">
     <div class="col-md-6">
@@ -35,7 +78,12 @@
     </div>
 
     <div class="form-group included col-md-6 text-center">
-        <h2 style="padding-top: 15px;"> INCLUSO </h2>
+        <h3 style="padding-top: 15px;"> INCLUSO (Exceto para AM, AC, RO, RR, AP e Ilhas da Federação) </h3>
+    </div>
+
+    <div class="col-md-12" id="info_shipping" style="margin-left: 15px; margin-bottom: 10px;">
+            <a style="color: darkred" data-toggle="modal"
+               data-target="#modal_shipping_info"><i class="fa fa-warning"></i> Aviso sobre fretes</a>
     </div>
 
     <div class="col-md-12">
@@ -91,6 +139,7 @@
                     $('.group-self').hide();
                     $('.included').hide();
                     $('#form-company').hide();
+                    $('#info_shipping').show();
                     ShippingManager.calculate();
 
                     if (GeneratorHandler.enableValidate > 1)
@@ -104,6 +153,7 @@
                     $('.included').hide();
                     $('.group-sices').hide();
                     $('.output').hide();
+                    $('#info_shipping').hide();
                     ShippingManager.calculate(0);
                     ShippingManager.company();
                     break;
@@ -114,6 +164,7 @@
                     $('.group-sices').hide();
                     $('.output').hide();
                     $('#form-company').hide();
+                    $('#info_shipping').show();
                     ShippingManager.calculate(0);
                     break;
             }
