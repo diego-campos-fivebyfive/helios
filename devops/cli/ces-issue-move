@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+ISSUE=$1
+LOGIN=$CLI_PATH/ces-github-credentials --login
+
+STAGE_TO='["Stage: In-progress"]'
+STAGE_FROM='Stage:%20To-do'
+
+curl -X DELETE -u $LOGIN $GITHUB_REPOSITORY/issues/$ISSUE/labels/$STAGE_FROM > /dev/null 2>&1
+curl -X POST -u $LOGIN -d $STAGE_TO $GITHUB_REPOSITORY/issues/$ISSUE/labels > /dev/null 2>&1
