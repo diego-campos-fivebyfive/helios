@@ -5,10 +5,10 @@ cd $SICES_PATH
 if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
   printf "ces-new-task - help:
   Usage:
-  ces-new-task [ISSUE_NUMBER] [GITHUB_USER_NAME]
+  ces-new-task [ISSUE_NUMBER]
 
   Exemple:
-  ces-new-task 100 rafaelkendrik
+  ces-new-task 100
   "
   exit 0;
 fi
@@ -21,11 +21,28 @@ git checkout -b issue-$1
 $CLI_PATH/ces-app-install
 $CLI_PATH/ces-database-update
 
-if [ $2 ]; then
-  curl -X POST -u "$2" -d "{\"assignees\": [\"$2\"]}" $GITHUB_REPOSITORY/issues/$1/assignees
-  curl -X DELETE -u "$2" $GITHUB_REPOSITORY/issues/$1/labels/Stage:%20To-do
-  curl -X POST -u "$2" -d '["Stage: In-progress"]' $GITHUB_REPOSITORY/issues/$1/labels
+CREDENTIALS_FILE='~/.ces-credentials'
+
+if [[ -e $CREDENTIALS_FILE ]]; then
+  user=$(head -n1 $CREDENTIALS_FILE | tr -d "[:space:]")
+  pass=$(tail -n1 $CREDENTIALS_FILE | tr -d "[:space:]")
+else
+  read -p "Type your Github user: " user
+  read -p "Type your Github password: " pass
+
+  read -p "Do you wanna keep your credentials in $CREDENTIALS_FILE (y/n)?" accept > /dev/tty
+
+  if [[ $accept == 'y' ]]; then
+    echo $user >> $CREDENTIALS_FILE
+    echo $pass >> $CREDENTIALS_FILE
+  fi
 fi
+
+u="$user:$pass"
+
+curl -X POST -u $u -d "{\"assignees\": [\"$user\"]}" $GITHUB_REPOSITORY/issues/$1/assignees
+curl -X DELETE -u $u $GITHUB_REPOSITORY/issues/$1/labels/Stage:%20To-do
+curl -X POST -u $u -d '["Stage: In-progress"]' $GITHUB_REPOSITORY/issues/$1/labels
 
 $CLI_PATH/util/user-notify "Branch created" "now on issue-$1"
 echo "Done, now on Branch: issue-$1"
