@@ -2,6 +2,7 @@
 
 namespace AdminBundle\Controller;
 
+use AdminBundle\Form\Account\TransferType;
 use AdminBundle\Form\AccountType;
 use AdminBundle\Form\EmailMemberType;
 use AdminBundle\Form\MemberType;
@@ -224,6 +225,30 @@ class AccountController extends AdminController
             'errors' => $form->getErrors(true),
             'form' => $form->createView(),
             'account' => $account
+        ]);
+    }
+
+    /**
+     * @Route("/transfer", name="account_transfer")
+     */
+    public function transferAction(Request $request)
+    {
+        $form = $this->createForm(TransferType::class, null, [
+            'account' => $this->account()
+        ]);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+
+            $source = $form->getData()['source'];
+            $target = $form->getData()['target'];
+
+            //dump($source->getId(), $target->getId());die;
+        }
+
+        return $this->render('admin/accounts/transfer.html.twig', [
+            'form' => $form->createView()
         ]);
     }
 

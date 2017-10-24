@@ -1,0 +1,11 @@
+{{ form_start(form) }}
+
+    {{ form_label(form.source, 'Origem') }}
+    {{ form_widget(form.source) }}
+
+    {{ form_label(form.target, 'Destino') }}
+    {{ form_widget(form.target) }}
+
+    <input type="submit" value="submit">
+
+{{ form_end(form) }}
