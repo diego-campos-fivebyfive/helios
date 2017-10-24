@@ -254,7 +254,7 @@ Esclarecimentos gerais relacionados a documentação:
 
     Preparar ambiente para a execução da tarefa:
     ```
-    $ ces-new-task issue-[ISSUE_NUMBER]
+    $ ces-new-task issue-[ISSUE_NUMBER] [GITHUB_USER_NAME]
     ```
 
     Adicionar arquivos modificados, realizar commit e envio ao repositório:
