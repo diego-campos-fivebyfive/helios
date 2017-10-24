@@ -22,8 +22,9 @@ $CLI_PATH/ces-app-install
 $CLI_PATH/ces-database-update
 
 if [ $2 ]; then
-  curl -X POST -u "$2" -d '{"assignees": ["$2"]}' \
-    https://api.github.com/repos/sices/sices/issues/$1/assignees
+  curl -X POST -u "$2" -d "{\"assignees\": [\"$2\"]}" $GITHUB_REPOSITORY/issues/$1/assignees
+  curl -X DELETE -u "$2" $GITHUB_REPOSITORY/issues/$1/labels/Stage:%20To-do
+  curl -X POST -u "$2" -d '["Stage: In-progress"]' $GITHUB_REPOSITORY/issues/$1/labels
 fi
 
 $CLI_PATH/util/user-notify "Branch created" "now on issue-$1"
