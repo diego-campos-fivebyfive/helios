@@ -254,7 +254,7 @@ Esclarecimentos gerais relacionados a documentação:
 
     Preparar ambiente para a execução da tarefa:
     ```
-    $ ces-new-task issue-[ISSUE_NUMBER]
+    $ ces-issue-start [ISSUE_NUMBER]
     ```
 
     Adicionar arquivos modificados, realizar commit e envio ao repositório:
