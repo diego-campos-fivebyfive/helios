@@ -1,6 +1,10 @@
 <style>
-    .a {
-        text-align: justify;
+    .color-red {
+        color: #8b0000;
+    }
+    .shipping-info {
+        margin-left: 15px;
+        margin-bottom: 10px;
     }
 </style>
 <div class="modal inmodal" id="modal_shipping_info" tabindex="-1" role="dialog" aria-hidden="true">
@@ -81,8 +85,8 @@
         <h3 style="padding-top: 15px;"> INCLUSO (Exceto para AM, AC, RO, RR, AP e Ilhas da Federação) </h3>
     </div>
 
-    <div class="col-md-12" id="info_shipping" style="margin-left: 15px; margin-bottom: 10px;">
-            <a style="color: darkred" data-toggle="modal"
+    <div class="col-md-12 shipping-info" id="info_shipping">
+            <a class="color-red" data-toggle="modal"
                data-target="#modal_shipping_info"><i class="fa fa-warning"></i> Aviso sobre fretes</a>
     </div>
 
