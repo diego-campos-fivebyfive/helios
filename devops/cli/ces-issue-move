@@ -10,10 +10,10 @@ if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
 fi
 
 ISSUE=$1
-LOGIN=$CLI_PATH/util/github-credentials --login
+LOGIN=$($CLI_PATH/util/github-credentials --login)
 
 STAGE_TO='["Stage: In-progress"]'
 STAGE_FROM='Stage:%20To-do'
 
 curl -X DELETE -u $LOGIN $GITHUB_REPOSITORY/issues/$ISSUE/labels/$STAGE_FROM > /dev/null 2>&1
-curl -X POST -u $LOGIN -d $STAGE_TO $GITHUB_REPOSITORY/issues/$ISSUE/labels > /dev/null 2>&1
+curl -X POST -u $LOGIN -d "$STAGE_TO" $GITHUB_REPOSITORY/issues/$ISSUE/labels > /dev/null 2>&1

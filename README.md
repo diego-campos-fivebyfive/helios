@@ -274,12 +274,12 @@ Esclarecimentos gerais relacionados a documentação:
 
     Mover tarefa no quadro:
     ```
-    $ ces-issue-move [ISSUE_NUMBER]
+    $ ces-issue-move [ISSUE_NUMBER] [STAGE_TO]
     ```
 
     Assinar tarefa no quadro:
     ```
-    $ ces-issue-assign [ISSUE_NUMBER] [STAGE_TO]
+    $ ces-issue-assign [ISSUE_NUMBER]
     ```
 
 **[⬆ Voltar ao Topo](#sumário)**
