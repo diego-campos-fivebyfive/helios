@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 ISSUE=$1
-USER=$CLI_PATH/ces-github-credentials --user
-LOGIN=$CLI_PATH/ces-github-credentials --login
+USER=$CLI_PATH/util/ces-github-credentials --user
+LOGIN=$CLI_PATH/util/ces-github-credentials --login
 
 ASSIGNEES="{\"assignees\": [\"$USER\"]}"
 
