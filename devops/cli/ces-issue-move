@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ISSUE=$1
-LOGIN=$CLI_PATH/util/ces-github-credentials --login
+LOGIN=$CLI_PATH/util/github-credentials --login
 
 STAGE_TO='["Stage: In-progress"]'
 STAGE_FROM='Stage:%20To-do'
