@@ -150,9 +150,10 @@ interface OrderInterface
     public function removeElement(ElementInterface $element);
 
     /**
+     * @param null $family
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getElements();
+    public function getElements($family = null);
 
     /**
      * @param OrderInterface $parent
