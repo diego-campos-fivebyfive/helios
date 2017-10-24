@@ -57,7 +57,7 @@ class OrderPrecifier
                     $cmv = (float)$range->getCostPrice();
                     $markup = (float)$range->getMarkup();
                     $element->setCmv($cmv);
-                    if ($rangeIsChanged) {
+                    if ($rangeIsChanged || !$element->getMarkup()) {
                         $element->setMarkup($markup);
                     }
                     $element->setTax(Range::DEFAULT_TAX);

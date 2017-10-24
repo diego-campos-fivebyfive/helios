@@ -947,11 +947,19 @@ class Order implements OrderInterface, InsurableInterface
     }
 
     /**
-     * @return ArrayCollection
+     * @inheritdoc
      */
-    public function getElements()
+    public function getElements($family = null)
     {
-        return $this->elements;
+        $elements = $this->elements;
+
+        if($family) {
+            $elements = $elements->filter(function (ElementInterface $element) use($family) {
+                return $element->isFamily($family);
+            });
+        }
+
+        return $elements;
     }
 
     /**
