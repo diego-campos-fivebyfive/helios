@@ -44,10 +44,16 @@
                     <a data-update-element="{{ path('generator_orders_element_update',{id:element.id}) }}" class="btn btn-primary">
                         <i class="fa fa-pencil"></i>
                     </a>
+
+                    {% set allowDelete = not element.isFamily('module') or order.elements('module').count > 1 %}
+
+                    {% if allowDelete %}
                     <a data-delete-element="{{ path('generator_orders_element_delete',{id:element.id}) }}"
                        class="btn btn-danger">
                         <i class="fa fa-trash"></i>
                     </a>
+                    {% endif %}
+
                 </div>
             </td>
         </tr>
@@ -135,12 +141,15 @@
                 method: 'post',
                 data: {_method: 'delete'},
                 callback: function (xhr) {
-                    var response = xhr.responseJSON;
-                    InsuranceHandler.apply();
-                    OrderManager.renderTotal(response.total);
+
+                    if(200 == xhr.status) {
+                        var response = xhr.responseJSON;
+                        InsuranceHandler.apply();
+                        OrderManager.renderTotal(response.total);
+                    }
+
                     swal.close();
                     OrderManager.getElements();
-
                     $('#add_order_element').trigger('change');
                 }
             });
