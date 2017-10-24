@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
+  printf "ces-issue-move - help:
+  Usage:
+  ces-issue-move [ISSUE_NUMBER] [STAGE_TO] \n
+  Exemple:
+  ces-issue-move 100 --in-progress \n"
+  exit 0;
+fi
+
 ISSUE=$1
 LOGIN=$CLI_PATH/util/github-credentials --login
 

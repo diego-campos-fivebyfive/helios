@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
+  printf "ces-issue-assign - help:
+  Usage:
+  ces-issue-assign [ISSUE_NUMBER] \n
+  Exemple:
+  ces-issue-assign 100 \n"
+  exit 0;
+fi
+
 ISSUE=$1
 USER=$CLI_PATH/util/github-credentials --user
 LOGIN=$CLI_PATH/util/github-credentials --login
