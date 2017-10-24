@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+ISSUE=$1
+USER=$CLI_PATH/ces-github-credentials --user
+LOGIN=$CLI_PATH/ces-github-credentials --login
+
+ASSIGNEES="{\"assignees\": [\"$USER\"]}"
+
+curl -X POST -u $LOGIN -d $ASSIGNEES $GITHUB_REPOSITORY/issues/$ISSUE/assignees > /dev/null 2>&1
