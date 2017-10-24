@@ -22,8 +22,24 @@ $CLI_PATH/ces-app-install
 $CLI_PATH/ces-database-update
 
 if [ $2 ]; then
-  user=$(head -n1 ~/.ces-credentials | tr -d "[:space:]")
-  pass=$(head -n2 ~/.ces-credentials | tail -1 | tr -d "[:space:]")
+
+  CREDENTIALS_FILE='~/.ces-credentials'
+
+  if [[ -e $CREDENTIALS_FILE ]]; then
+    user=$(head -n1 $CREDENTIALS_FILE | tr -d "[:space:]")
+    pass=$(head -n2 $CREDENTIALS_FILE | tail -1 | tr -d "[:space:]")
+  else
+    read -p "Type your Github user: " user
+    read -p "Type your Github password: " pass
+
+    read -p "Do you wanna keep your credentials in $CREDENTIALS_FILE (y/n)?" accept > /dev/tty
+
+    if [[ $accept == 'y' ]]; then
+      echo $user >> $CREDENTIALS_FILE
+      echo $pass >> $CREDENTIALS_FILE
+    fi
+  fi
+
   u="$user:$pass"
 
   curl -X POST -u $u -d "{\"assignees\": [\"$user\"]}" $GITHUB_REPOSITORY/issues/$1/assignees
