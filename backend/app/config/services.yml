@@ -265,3 +265,7 @@ services:
     order_reference:
         class: AppBundle\Service\Order\OrderReference
         arguments: ['@order_manager']
+
+    platform_counter:
+        class: AppBundle\Service\Util\PlatformCounter
+        arguments: ['@parameter_manager']
