@@ -75,5 +75,7 @@ class OrderReferenceTest extends AppTestCase
 
         $this->assertLessThan($order2->getReference(), $order1->getReference());
         $this->assertLessThan($order3->getReference(), $order2->getReference());
+
+        $this->assertEquals(9, strlen($order1->getReference()));
     }
 }
