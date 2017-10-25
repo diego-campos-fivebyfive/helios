@@ -1,11 +1,87 @@
-{{ form_start(form) }}
+<div class="panel-body">
+    <div class="row">
+        {{ form_start(form, {attr:{id:'form_transfer', action:path('account_transfer') }}) }}
 
-    {{ form_label(form.source, 'Origem') }}
-    {{ form_widget(form.source) }}
+        <div class="col-md-12 text-center">
+            <div class="col-md-5">
+                {{ form_label(form.source, 'Origem') }}
+                {{ form_widget(form.source, {attr:{class:'form-control'}}) }}
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary ladda-button" data-style="zoom-in">
+                    <i class="fa fa-arrow-right"></i> Tranferir <i class="fa fa-arrow-right"></i>
+                </button>
+            </div>
+            <div class="col-md-5">
+                {{ form_label(form.target, 'Destino') }}
+                {{ form_widget(form.target, {attr:{class:'form-control'}}) }}
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+<script>
 
-    {{ form_label(form.target, 'Destino') }}
-    {{ form_widget(form.target) }}
+    $('#form_transfer').on('submit', function (event) {
+        event.preventDefault();
 
-    <input type="submit" value="submit">
+        if ($('#transfer_source').val() == $('#transfer_target').val()) {
+            swal({
+                title: "Ooops",
+                text: "Os usuários de origem e destino nao podem ser iguais",
+                type: "error"
+            });
+        } else {
+            var form = this;
 
-{{ form_end(form) }}
+            swal({
+                title: 'Confirma a transferência?',
+                text: 'Todas as contas serão transferiadas.',
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: '{{ 'Confirmar'|trans }}',
+                cancelButtonText: '{{ 'Cancelar'|trans }}',
+                closeOnConfirm: false
+            }, function () {
+                $.ajax({
+                    url: form.action,
+                    data: $(form).serialize(),
+                    type: "POST",
+                    complete: function(xhr){
+                        if (200 == xhr.status) {
+                            swal({
+                                title: "Concluído",
+                                text: "Transferência realizada com sucesso.",
+                                type: "success",
+                                showConfirmButton: false
+                            });
+
+                            window.setTimeout(function () {
+                                swal.close();
+                            }, 1500);
+                        } else {
+                            var response = xhr.responseJSON;
+                            swal({
+                                title: "Ooops",
+                                text: response.hasOwnProperty('error') ? response.error : 'Falha ao executar a operação',
+                                type: "error"
+                            });
+                        }
+                    },
+                    beforeSend: function () {
+                        swal({
+                            title: 'Transferindo...',
+                            text: 'Aguarde',
+                            type: 'info',
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            });
+        }
+    });
+
+
+</script>
+

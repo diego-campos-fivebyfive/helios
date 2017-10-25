@@ -244,7 +244,7 @@ class AccountController extends AdminController
             $source = $form->getData()['source'];
             $target = $form->getData()['target'];
 
-            //dump($source->getId(), $target->getId());die;
+            return $this->json([]);
         }
 
         return $this->render('admin/accounts/transfer.html.twig', [
