@@ -391,7 +391,7 @@ Esclarecimentos gerais relacionados a documentação:
 
     - ##### Notificar chat #sices-devops
       ```
-      $ ces-slack-notify '[MESSAGE]'
+      $ ces-slack-notify --[CHANNEL] '[MESSAGE]'
       ```
 
     - ##### Corrigir permissões de arquivos e pastas
