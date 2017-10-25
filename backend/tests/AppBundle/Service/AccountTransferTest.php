@@ -121,7 +121,7 @@ class AccountTransferTest extends AppTestCase
             ->setUsername('eloa@eloa.com')
             ->setPlainPassword(uniqid())
             ->setRoles([
-                UserInterface::ROLE_PLATFORM_COMMERCIAL
+                UserInterface::ROLE_OWNER_MASTER
             ]);
 
         /** @var AccountInterface $account */
@@ -178,7 +178,7 @@ class AccountTransferTest extends AppTestCase
             ->setUsername('andre@andre.com')
             ->setPlainPassword(uniqid())
             ->setRoles([
-                UserInterface::ROLE_PLATFORM_COMMERCIAL
+                UserInterface::ROLE_OWNER_MASTER
             ]);
 
         /** @var AccountInterface $account */
@@ -235,7 +235,7 @@ class AccountTransferTest extends AppTestCase
             ->setUsername('bernardo@bernardo.com')
             ->setPlainPassword(uniqid())
             ->setRoles([
-                UserInterface::ROLE_PLATFORM_COMMERCIAL
+                UserInterface::ROLE_OWNER_MASTER
             ]);
 
         /** @var AccountInterface $account */
@@ -292,7 +292,7 @@ class AccountTransferTest extends AppTestCase
             ->setUsername('fernando@fernando.com')
             ->setPlainPassword(uniqid())
             ->setRoles([
-                UserInterface::ROLE_PLATFORM_COMMERCIAL
+                UserInterface::ROLE_OWNER_MASTER
             ]);
 
         /** @var AccountInterface $account */
@@ -349,7 +349,7 @@ class AccountTransferTest extends AppTestCase
             ->setUsername('iago@iago.com')
             ->setPlainPassword(uniqid())
             ->setRoles([
-                UserInterface::ROLE_PLATFORM_COMMERCIAL
+                UserInterface::ROLE_OWNER_MASTER
             ]);
 
         /** @var AccountInterface $account */
@@ -406,7 +406,7 @@ class AccountTransferTest extends AppTestCase
             ->setUsername('isaac@isaac.com')
             ->setPlainPassword(uniqid())
             ->setRoles([
-                UserInterface::ROLE_PLATFORM_COMMERCIAL
+                UserInterface::ROLE_OWNER_MASTER
             ]);
 
         /** @var AccountInterface $account */
@@ -463,7 +463,7 @@ class AccountTransferTest extends AppTestCase
             ->setUsername('mariana@mariana.com')
             ->setPlainPassword(uniqid())
             ->setRoles([
-                UserInterface::ROLE_PLATFORM_COMMERCIAL
+                UserInterface::ROLE_OWNER_MASTER
             ]);
 
         /** @var AccountInterface $account */
@@ -520,7 +520,7 @@ class AccountTransferTest extends AppTestCase
             ->setUsername('pietro@pietro.com')
             ->setPlainPassword(uniqid())
             ->setRoles([
-                UserInterface::ROLE_PLATFORM_COMMERCIAL
+                UserInterface::ROLE_OWNER_MASTER
             ]);
 
         /** @var AccountInterface $account */
@@ -577,7 +577,7 @@ class AccountTransferTest extends AppTestCase
             ->setUsername('debora@debora.com')
             ->setPlainPassword(uniqid())
             ->setRoles([
-                UserInterface::ROLE_PLATFORM_COMMERCIAL
+                UserInterface::ROLE_OWNER_MASTER
             ]);
 
         /** @var AccountInterface $account */
@@ -634,7 +634,7 @@ class AccountTransferTest extends AppTestCase
             ->setUsername('antonia@antonia.com')
             ->setPlainPassword(uniqid())
             ->setRoles([
-                UserInterface::ROLE_PLATFORM_COMMERCIAL
+                UserInterface::ROLE_OWNER_MASTER
             ]);
 
         /** @var AccountInterface $account */
