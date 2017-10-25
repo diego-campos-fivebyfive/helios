@@ -88,9 +88,11 @@
                                href="{{ path('account_create')}}">
                             <i class="fa fa-plus-square"></i> Nova conta
                         </a>
-                        <a class="btn btn-success" data-url="{{ path('account_transfer') }}" data-toggle="modal" data-target="#e_modal_transfer">
-                            <i class="fa fa-random"></i>
-                        </a>
+                        {% if app.user.isPlatformMaster %}
+                            <a class="btn btn-success" data-url="{{ path('account_transfer') }}" data-toggle="modal" data-target="#e_modal_transfer">
+                                <i class="fa fa-random"></i>
+                            </a>
+                        {% endif %}
                     </div>
                     <div class="clients-list">
                         <div class="tab-content">

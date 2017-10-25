@@ -12,6 +12,7 @@ use AppBundle\Entity\Customer;
 use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Entity\UserInterface;
+use AppBundle\Service\Util\AccountTransfer;
 use Symfony\Component\Form\FormError;
 use Sonata\MediaBundle\Model\MediaInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -241,8 +242,10 @@ class AccountController extends AdminController
 
         if($form->isSubmitted() && $form->isValid()) {
 
-            $source = $form->getData()['source'];
-            $target = $form->getData()['target'];
+            /** @var \AppBundle\Service\Util\AccountTransfer $transfer */
+            $transfer = $this->get('account_transfer');
+
+            $transfer->transfer($form->getData()['source'], $form->getData()['target']);
 
             return $this->json([]);
         }
