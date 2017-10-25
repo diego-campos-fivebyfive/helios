@@ -23,7 +23,7 @@ if [[ $1 == '--review' ]]; then
   body="connect to #$ISSUE"
 
   json="{\"head\": \"$head\", \"base\": \"$base\", \"title\": \"$title\", \"body\": \"$body\"}"
-  curl -X POST -u $LOGIN -d "$json" $GITHUB_REPOSITORY/pulls
+  curl -X POST -u $LOGIN -d "$json" $GITHUB_REPOSITORY/pulls > /dev/null 2>&1
 
   $CLI_PATH/ces-issue-move $ISSUE --review
 
