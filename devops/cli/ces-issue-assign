@@ -9,6 +9,8 @@ if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
   exit 0;
 fi
 
+echo 'Assigning Github issue...'
+
 ISSUE=$1
 LOGIN=$($CLI_PATH/util/github-credentials --login)
 USER=$([ $2 ] && echo $2 || echo $($CLI_PATH/util/github-credentials --user))
