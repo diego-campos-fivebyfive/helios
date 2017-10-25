@@ -3,15 +3,15 @@
 if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
   printf "ces-issue-assign - help:
   Usage:
-  ces-issue-assign [ISSUE_NUMBER] \n
+  ces-issue-assign [ISSUE_NUMBER] [GITHUB_USER_NAME]\n
   Exemple:
-  ces-issue-assign 100 \n"
+  ces-issue-assign 100 rafaelkendrik \n"
   exit 0;
 fi
 
 ISSUE=$1
-USER=$($CLI_PATH/util/github-credentials --user)
 LOGIN=$($CLI_PATH/util/github-credentials --login)
+USER=$([ $2 ] && echo $2 || echo $($CLI_PATH/util/github-credentials --user))
 
 ASSIGNEES="{\"assignees\": [\"$USER\"]}"
 
