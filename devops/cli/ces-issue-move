@@ -9,10 +9,20 @@ if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
   exit 0;
 fi
 
+label_format() {
+  echo ${1^}
+}
+
+input_stage_format() {
+  local split=${1/--/}
+  echo $(label_format $split)
+}
+
 ISSUE=$1
+STAGE=$2
 LOGIN=$($CLI_PATH/util/github-credentials --login)
 
-STAGE_TO='["Stage: In-progress"]'
+STAGE_TO="[\"Stage: $(input_stage_format $STAGE)\"]"
 STAGE_FROM='Stage:%20To-do'
 
 curl -X DELETE -u $LOGIN $GITHUB_REPOSITORY/issues/$ISSUE/labels/$STAGE_FROM > /dev/null 2>&1
