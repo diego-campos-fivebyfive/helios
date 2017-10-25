@@ -1,9 +1,23 @@
 <?php
 
+/*
+ * This file is part of the SicesSolar package.
+ *
+ * (c) SicesSolar <http://sicesbrasil.com.br/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace AppBundle\Service\Util;
 
 use AppBundle\Manager\ParameterManager;
 
+/**
+ * Class PlatformCounter
+ * This class generates sequential counting according to the registry key
+ * @author Claudinei Machado <claudinei@kolinalabs.com>
+ */
 class PlatformCounter
 {
     private $id = 'platform_counter';
