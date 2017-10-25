@@ -29,6 +29,20 @@
         }
     </style>
 
+    <div class="modal inmodal" id="e_modal_transfer" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <h3><i class="fa fa-random"></i> Transferência de contas</h3>
+                    <h5>As contas vinculadas ao usuário comercial de origem passarão para o usuário comercial de destino.</h5>
+                </div>
+                <div class="modal-body">
+                    {% include view('Helper.spinner') %}
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="wrapper wrapper-content  animated fadeInRight">
         <div class="row">
             <div class="ibox">
@@ -71,8 +85,11 @@
 
                     <div class="btn-group pull-right">
                         <a class="btn btn-primary"
-                           href="{{ path('account_create')}}">
+                               href="{{ path('account_create')}}">
                             <i class="fa fa-plus-square"></i> Nova conta
+                        </a>
+                        <a class="btn btn-success" data-url="{{ path('account_transfer') }}" data-toggle="modal" data-target="#e_modal_transfer">
+                            <i class="fa fa-random"></i>
                         </a>
                     </div>
                     <div class="clients-list">
@@ -143,6 +160,19 @@
     </div>
 
     <script>
+
+        $('#e_modal_transfer').on('show.bs.modal', function(event) {
+            var modal = $(this), body = modal.find('.modal-body'), target = $(event.relatedTarget);
+            var url = target.data('url');
+            if(url){
+                $.ajax({
+                    url: url,
+                    complete: function(xhr){
+                        body.html(xhr.responseText);
+                    }
+                })
+            }
+        });
 
         var form_filtration = $('#form_filtration');
         var current_status = '{{ current_status }}';
