@@ -154,9 +154,10 @@
 
                                         <div class="panel panel-success">
                                             <div class="panel-heading">
-                                                Observações para seu atendente comercial.
+                                                Mensagem
                                             </div>
                                             <div class="panel-body">
+                                                <label>Observações para seu atendente comercial.</label>
                                                 <form action="{{ path('generator_order_message',{id:order.id}) }}" method="post" id="form_order_message">
                                                     <textarea rows="6" readonly="readonly" id="order_message" class="form-control" placeholder="Mensagem">{{ order.message }}</textarea>
                                                 </form>
