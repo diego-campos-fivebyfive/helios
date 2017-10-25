@@ -59,7 +59,7 @@ class OrderReference
 
             $date = new \DateTime();
 
-            $reference = sprintf('%02d%02d%02d%06d',
+            $reference = sprintf('%02d%02d%02d%03d',
                 $date->format('y'),
                 $date->format('n'),
                 $date->format('j'),
