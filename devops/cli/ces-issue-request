@@ -25,6 +25,9 @@ if [[ $1 == '--review' ]]; then
   json="{\"head\": \"$head\", \"base\": \"$base\", \"title\": \"$title\", \"body\": \"$body\"}"
   curl -X POST -u $LOGIN -d "$json" $GITHUB_REPOSITORY/pulls
 
+  message="[$BRANCH] @here, _${USER}_ needs a *REVIEW*: https://github.com/sices/sices/pull/$ISSUE"
+  $CLI_PATH/ces-slack-notify --devops "$message"
+
 elif [[ $1 == '--test' ]]; then
   echo 'send to test'
 else
