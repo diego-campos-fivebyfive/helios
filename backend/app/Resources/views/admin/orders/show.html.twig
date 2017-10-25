@@ -383,7 +383,13 @@
                                 </tbody>
                             </table>
                             <h4>
-                                Frete: {% if order.shippingrules and order.shippingrules.type == "sices" %} {{ order.shippingrules.value|currency }} {% else %} Não Incluso {% endif %}</h4>
+                                Frete: {% if order.shippingrules and order.shippingrules.type == "sices" %}
+                                    {{ order.shippingrules.value|currency }}
+                                {% elseif order.shippingrules and order.shippingrules.type == "self" %}
+                                    Não Incluso
+                                {% else %}
+                                    INCLUSO (Exceto para AM, AC, RO, RR, AP e Ilhas da Federação)
+                                {% endif %}</h4>
                         </div>
                     </div>
                 </div>
