@@ -265,3 +265,7 @@ services:
     order_reference:
         class: AppBundle\Service\Order\OrderReference
         arguments: ['@order_manager']
+
+    account_transfer:
+        class: AppBundle\Service\Util\AccountTransfer
+        arguments: ['@member_manager']
