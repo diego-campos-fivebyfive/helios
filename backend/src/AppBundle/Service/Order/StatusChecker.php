@@ -135,6 +135,13 @@ class StatusChecker
                         UserInterface::ROLE_PLATFORM_FINANCIAL
                     ]
                 ],
+            ],
+            OrderInterface::STATUS_DONE => [
+                OrderInterface::STATUS_INSERTED => [
+                    UserInterface::TYPE_PLATFORM => [
+                        UserInterface::ROLE_PLATFORM_AFTER_SALES
+                    ]
+                ]
             ]
         ];
     }

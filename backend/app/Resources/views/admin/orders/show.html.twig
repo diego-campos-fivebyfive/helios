@@ -61,6 +61,10 @@
             color: #777;
         }
 
+        .btn.status-inserted i {
+            color: #771a22;
+        }
+
         .btn-green, .btn-green:hover, .btn-green:focus {
             background-color: #dff0d8;
             color: #3c763d;
@@ -106,6 +110,13 @@
                                             <span class="btn btn-sm btn-status status-{{ order.statusName }}">
                                                 <i class="fa fa-circle"></i> {{ order.statusName|capitalize|trans }}
                                             </span>
+
+                                            {% if order.isDone and member.isPlatformAfterSales %}
+                                                <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
+                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}">
+                                                    <i class="fa fa-thumbs-o-up"></i> Inserir
+                                                </a>
+                                            {% endif %}
 
                                             {% if order.isBuilding %}
                                                 <a class="btn btn-sm btn-danger"
