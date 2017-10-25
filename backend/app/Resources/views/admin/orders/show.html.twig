@@ -112,9 +112,9 @@
                                             </span>
 
                                             {% if order.isDone and member.isPlatformAfterSales %}
-                                                <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
+                                                <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
                                                    data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}">
-                                                    <i class="fa fa-thumbs-o-up"></i> Inserir
+                                                    <i class="fa fa-check"></i> Inserido
                                                 </a>
                                             {% endif %}
 
