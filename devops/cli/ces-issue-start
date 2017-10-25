@@ -11,7 +11,8 @@ if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
   exit 0;
 fi
 
-last_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+USER=$($CLI_PATH/util/github-credentials --user)
+LAST_BRANCH=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
 
 git checkout master
 git fetch origin
@@ -25,12 +26,13 @@ $CLI_PATH/ces-log-clear
 $CLI_PATH/ces-issue-assign $1
 $CLI_PATH/ces-issue-move $1 --in-progress
 
-$CLI_PATH/util/user-notify "Branch created" "now on issue-$1"
 echo "Done, now on Branch: issue-$1"
+$CLI_PATH/util/user-notify 'Branch created' "now on issue-$1"
+$CLI_PATH/ces-slack-notify --devops "$USER has been working on issue-$1"
 
-read -p "Would you like to remove last branch $last_branch? [y|n] " accept > /dev/tty
+read -p "Would you like to remove last branch $LAST_BRANCH? [y|n]: " accept > /dev/tty
 
 if [[ $accept == 'y' ]]; then
-  git branch -D $last_branch
-  git push origin --delete $last_branch
+  git branch -D $LAST_BRANCH
+  git push origin --delete $LAST_BRANCH
 fi
