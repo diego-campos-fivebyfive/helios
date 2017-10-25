@@ -274,15 +274,14 @@ class OrderController extends AbstractController
     {
         $this->denyAccessUnlessGranted('edit', $order);
 
-        if(!$order->isBuilding()){
-            return $this->json([
-                'error' => 'Somente orçamentos em edição podem ser excluídos'
-            ], Response::HTTP_BAD_REQUEST);
+        if(in_array($order, [$order->isBuilding(), $order->isRejected()])){
+            $this->manager('order')->delete($order);
+            return $this->json([]);
         }
 
-        $this->manager('order')->delete($order);
-
-        return $this->json([]);
+        return $this->json([
+            'error' => 'Somente orçamentos em edição podem ser excluídos'
+        ], Response::HTTP_BAD_REQUEST);
     }
 
     /**
