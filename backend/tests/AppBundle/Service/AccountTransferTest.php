@@ -8,6 +8,7 @@ use AppBundle\Entity\Customer;
 use AppBundle\Entity\UserInterface;
 use Tests\AppBundle\AppTestCase;
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Service\Util\AccountTransfer;
 
 /**
  * Class AccountTransferTest
@@ -17,8 +18,10 @@ class AccountTransferTest extends AppTestCase
 {
     public function testAccountTransfer()
     {
-        $member01 = $this->createUser();
-        $member02 = $this->createUser2();
+        $container = $this->getContainer();
+
+        $source = $this->createUser();
+        $target = $this->createUser2();
 
         $account1 = $this->createAccount1();
         $account2 = $this->createAccount2();
@@ -31,8 +34,13 @@ class AccountTransferTest extends AppTestCase
         $account9 = $this->createAccount9();
         $account10 = $this->createAccount10();
 
-        $this->assertInstanceOf(MemberInterface::class, $member01);
-        $this->assertNotNull($member01->getId());
+        /** @var \AppBundle\Service\Util\AccountTransfer $transfer */
+        $accountTransfer = $container->get('account_transfer');
+
+        $accountTransfer->transfer($source, $target);
+
+        $this->assertInstanceOf(MemberInterface::class, $source);
+        $this->assertNotNull($source->getId());
     }
 
     private function createUser()
