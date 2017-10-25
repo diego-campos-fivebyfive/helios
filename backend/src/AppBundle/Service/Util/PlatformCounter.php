@@ -97,7 +97,7 @@ class PlatformCounter
         /** @var array $counter */
         $counter = $this->parameter->get($key);
 
-        if(0 == $counter['current'] || ($this->date->format('Y-m-d') == $counter['date']->format('Y-m-d'))) {
+        if(0 == $counter['current'] || ($this->format($this->date) == $this->format($counter['date']))) {
             $this->define($key, $this->date, ($counter['current'] +1), true);
         }
 
@@ -135,7 +135,7 @@ class PlatformCounter
             /** @var array|null $counter */
             $counter = $this->parameter->get($key);
 
-            if(!$counter || ($this->date->format('Y-m-d') != $counter['date']->format('Y-m-d'))){
+            if(!$counter || ($this->format($this->date) != $this->format($counter['date']))){
                 $this->define($key, $this->date, 0, false);
             }
         }
@@ -156,6 +156,23 @@ class PlatformCounter
         ]);
 
         if($save) $this->save();
+    }
+
+    /**
+     * @param $date
+     * @return string
+     */
+    private function format($date){
+
+        if($date instanceof \DateTime){
+            return $date->format('Y-m-d');
+        }
+
+        if(is_array($date) && array_key_exists('date', $date)){
+            return $this->format(new \DateTime($date['date']));
+        }
+
+        throw new \InvalidArgumentException('Invalid datetime base format');
     }
 
     /**
