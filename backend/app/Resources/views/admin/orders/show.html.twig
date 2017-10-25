@@ -118,7 +118,7 @@
                                                 </a>
                                             {% endif %}
 
-                                            {% if order.isBuilding %}
+                                            {% if order.isBuilding or order.isRejected%}
                                                 <a class="btn btn-sm btn-danger"
                                                    data-delete="{{ path('order_delete', {id:order.id}) }}">
                                                     <i class="fa fa-close"></i> Excluir
