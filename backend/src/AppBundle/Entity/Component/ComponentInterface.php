@@ -8,6 +8,11 @@ namespace AppBundle\Entity\Component;
 interface ComponentInterface
 {
     /**
+     * @return int
+     */
+    public function getId();
+
+    /**
      * @param $datasheet
      * @return mixed
      */
