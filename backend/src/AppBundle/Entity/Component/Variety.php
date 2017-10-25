@@ -101,6 +101,13 @@ class Variety implements VarietyInterface, ComponentInterface
     private $available;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="required", type="boolean", nullable=true)
+     */
+    private $required;
+
+    /**
      * @inheritDoc
      */
     function __toString()
@@ -243,6 +250,25 @@ class Variety implements VarietyInterface, ComponentInterface
     {
         return $this->power;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setRequired($required)
+    {
+        $this->required = $required;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getRequired()
+    {
+        return $this->required;
+    }
+
 
     /**
      * @inheritDoc
