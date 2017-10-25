@@ -70,6 +70,17 @@ interface OrderInterface
     public function getNote();
 
     /**
+     * @param $note
+     * @return OrderInterface
+     */
+    public function setMessage($note);
+
+    /**
+     * @return string
+     */
+    public function getMessage();
+
+    /**
      * @param AccountInterface $account
      * @return OrderInterface
      */

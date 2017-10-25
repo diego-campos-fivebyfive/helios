@@ -66,6 +66,13 @@ class Order implements OrderInterface, InsurableInterface
     private $note;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $message;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="status", type="smallint", nullable=true)
@@ -325,6 +332,24 @@ class Order implements OrderInterface, InsurableInterface
     public function getNote()
     {
         return $this->note;
+    }
+    /**
+     * @inheritDoc
+     */
+
+    public function setMessage($message)
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMessage()
+    {
+        return $this->message;
     }
 
     /**
