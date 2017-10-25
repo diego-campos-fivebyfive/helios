@@ -23,10 +23,8 @@ use AppBundle\Entity\Component\ComponentInterface;
  */
 class Accumulator
 {
-    const VARIETY = 'variety';
-
     private $components = [
-        self::VARIETY => [
+        Types::VARIETY => [
             'class' => Variety::class,
             'items' => []
         ]

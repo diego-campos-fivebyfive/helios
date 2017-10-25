@@ -4,6 +4,7 @@ namespace Tests\AppBundle\Service\ProjectGenerator\Dependency;
 
 use AppBundle\Entity\Component\VarietyInterface;
 use AppBundle\Service\ProjectGenerator\Dependency\Accumulator;
+use AppBundle\Service\ProjectGenerator\Dependency\Types;
 use Tests\AppBundle\AppTestCase;
 use Tests\AppBundle\Helpers\ObjectHelperTest;
 
@@ -43,11 +44,11 @@ class AccumulatorTest extends AppTestCase
             $data[$variety->getId()] += $mapping[1];
         }
 
-        foreach ($accumulator->get(Accumulator::VARIETY) as $item){
+        foreach ($accumulator->get(Types::VARIETY) as $item){
             $this->assertEquals($data[$item['component']->getId()], $item['quantity']);
         }
 
-        $items = $accumulator->get(Accumulator::VARIETY);
+        $items = $accumulator->get(Types::VARIETY);
         $item = $items[$varieties[1]->getId()];
 
         $this->assertEquals(8, $item['quantity']);
