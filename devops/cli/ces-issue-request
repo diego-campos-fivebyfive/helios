@@ -22,6 +22,7 @@ if [[ $1 == '--review' ]]; then
   title="$BRANCH"
   body="connect to #$ISSUE"
 
+  echo 'Creating Github pull request...'
   json="{\"head\": \"$head\", \"base\": \"$base\", \"title\": \"$title\", \"body\": \"$body\"}"
   curl -X POST -u $LOGIN -d "$json" $GITHUB_REPOSITORY/pulls > /dev/null 2>&1
 
