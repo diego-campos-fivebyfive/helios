@@ -282,6 +282,11 @@ Esclarecimentos gerais relacionados a documentação:
     $ ces-issue-assign [ISSUE_NUMBER] [GITHUB_USER_NAME]
     ```
 
+    Abrir review de tarefa:
+    ```
+    $ ces-issue-request --review
+    ```
+
 **[⬆ Voltar ao Topo](#sumário)**
 
 ## Comandos

@@ -22,8 +22,14 @@ if [[ $1 == '--review' ]]; then
   title="$BRANCH"
   body="connect to #$ISSUE"
 
+  echo 'Creating Github pull request...'
   json="{\"head\": \"$head\", \"base\": \"$base\", \"title\": \"$title\", \"body\": \"$body\"}"
-  curl -X POST -u $LOGIN -d "$json" $GITHUB_REPOSITORY/pulls
+  curl -X POST -u $LOGIN -d "$json" $GITHUB_REPOSITORY/pulls > /dev/null 2>&1
+
+  $CLI_PATH/ces-issue-move $ISSUE --review
+
+  message="[$BRANCH] @here, _${USER}_ needs a *REVIEW*: https://github.com/sices/sices/pull/$ISSUE/files"
+  $CLI_PATH/ces-slack-notify --devops "$message"
 
 elif [[ $1 == '--test' ]]; then
   echo 'send to test'

@@ -16,8 +16,4 @@ else
 
 fi
 
-curl -s \
-  -X POST \
-  -H "Content-type:application/json" \
-  -d "$json" \
-  $slack_hook
+curl -s -X POST -H "Content-type:application/json" -d "$json" $slack_hook > /dev/null 2>&1
