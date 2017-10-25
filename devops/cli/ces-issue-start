@@ -32,4 +32,5 @@ read -p "Would you like to remove last branch $last_branch? [y|n] " accept > /de
 
 if [[ $accept == 'y' ]]; then
   git branch -D $last_branch
+  git push origin --delete $last_branch
 fi
