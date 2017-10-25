@@ -167,9 +167,7 @@ class PlatformCounter
         if($date instanceof \DateTime)
             return $date->format('Y-m-d');
 
-        $time = 'now';
-        if(is_array($date) && array_key_exists('date', $date))
-            $time = $date['date'];
+        $time = (is_array($date) && array_key_exists('date', $date)) ? $date['date'] : 'now';
 
         return $this->format(new \DateTime($time));
     }
