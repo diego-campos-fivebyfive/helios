@@ -28,7 +28,7 @@ $CLI_PATH/ces-issue-move $1 --in-progress
 
 echo "Done, now on Branch: issue-$1"
 $CLI_PATH/util/user-notify 'Branch created' "now on issue-$1"
-$CLI_PATH/ces-slack-notify --devops "$USER has been working on issue-$1"
+$CLI_PATH/ces-slack-notify --devops "[issue-$1] _${USER}_ has been working on"
 
 read -p "Would you like to remove last branch $LAST_BRANCH? [y|n]: " accept > /dev/tty
 
