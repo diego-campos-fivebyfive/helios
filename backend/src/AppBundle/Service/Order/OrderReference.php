@@ -13,6 +13,7 @@ namespace AppBundle\Service\Order;
 
 use AppBundle\Manager\OrderManager;
 use AppBundle\Entity\Order\OrderInterface;
+use AppBundle\Service\Util\PlatformCounter;
 
 /**
  * Class OrderReference
@@ -27,27 +28,23 @@ class OrderReference
     private $manager;
 
     /**
-     * @var array
+     * @var PlatformCounter
      */
-    private $lockDrivers = ['pdo_mysql'];
-
-    /**
-     * @var bool
-     */
-    private $isLocked = false;
+    private $counter;
 
     /**
      * @var string
      */
-    private $sqlCount = /** @lang text */"SELECT count(id) as counter FROM %s WHERE created_at >= '%s' AND reference IS NOT NULL";
+    private $counterKey = 'orders';
 
     /**
      * OrderReference constructor.
      * @param OrderManager $manager
      */
-    function __construct(OrderManager $manager)
+    function __construct(OrderManager $manager, PlatformCounter $counter)
     {
         $this->manager = $manager;
+        $this->counter = $counter;
     }
 
     /**
@@ -58,62 +55,23 @@ class OrderReference
     {
         $this->checkOrder($order);
 
-        $reference = $order->getReference();
-
-        if(!$reference) {
+        if(null == $reference = $order->getReference()) {
 
             $date = new \DateTime();
-            $table = $this->getTable($order);
 
-            $sql = sprintf($this->sqlCount, $table, $date->format('Y-m-d'));
+            $reference = sprintf('%02d%02d%02d%06d',
+                $date->format('y'),
+                $date->format('n'),
+                $date->format('j'),
+                $this->counter->next($this->counterKey)
+            );
 
-            $this->lockOrUnlockTable($table);
+            $order->setReference($reference);
 
-            try {
-
-                $statement = $this->manager->getConnection()->query($sql);
-                $row = $statement->fetch();
-
-                $reference = sprintf('%02d%02d%02d%06d',
-                    $date->format('y'),
-                    $date->format('n'),
-                    $date->format('j'),
-                    $row['counter'] + 1
-                );
-
-                $this->manager->getConnection()->update($table, ['reference' => $reference], ['id' => $order->getId()]);
-
-                $order->setReference($reference);
-
-            } catch (\Exception $e) {
-                // Exception is not handled!
-            }
-
-            $this->lockOrUnlockTable($table);
+            $this->manager->save($order);
         }
 
         return $reference;
-    }
-
-    /**
-     * @param OrderInterface $order
-     * @return string
-     */
-    private function getTable(OrderInterface $order)
-    {
-        return $this->manager->getTableName();
-    }
-
-    /**
-     * @param $table
-     */
-    private function lockOrUnlockTable($table)
-    {
-        if(in_array($this->manager->getConnection()->getDriver()->getName(), $this->lockDrivers)){
-            $sql = $this->isLocked ? sprintf('UNLOCK TABLES') : sprintf('LOCK TABLES %s WRITE', $table);
-            $this->manager->getConnection()->exec($sql);
-            $this->isLocked = !$this->isLocked;
-        }
     }
 
     /**
