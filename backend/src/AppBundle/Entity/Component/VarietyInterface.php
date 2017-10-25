@@ -139,6 +139,17 @@ interface VarietyInterface
     public function getMaker();
 
     /**
+     * @param $required
+     * @return VarietyInterface
+     */
+    public function setRequired($required);
+
+    /**
+     * @return boolean
+     */
+    public function getRequired();
+
+    /**
      * @return \DateTime
      */
     public function getCreatedAt();
