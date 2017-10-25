@@ -84,18 +84,15 @@
         <div class="row">
 
             <div class="col-md-12">
-                {% if not member.isPlatformUser %}
-                    {% if order.validated %}
-                        <div class="alert alert-danger">
-                            <i class="fa fa-warning"></i>
-                            Ao editar este orçamento será necessário uma revalidação pela equipe da Sices.
-                        </div>
-                        <div class="alert alert-success">
-                            <i class="fa fa-info-circle"></i>
-                            Ao aprovar este orçamento você receberá a proforma e seu pedido de compra será
-                            processado.
-                        </div>
-                    {% endif %}
+                {% if not member.isPlatformUser and order.validated %}
+                    <div class="alert alert-danger">
+                        <i class="fa fa-warning"></i>
+                        Ao editar este orçamento será necessário uma revalidação pela equipe da Sices.
+                    </div>
+                    <div class="alert alert-success">
+                        <i class="fa fa-info-circle"></i>
+                        Ao aprovar este orçamento você receberá a proforma e seu pedido de compra será processado.
+                    </div>
                 {% endif %}
             </div>
             <div class="ibox border-bottom">
@@ -125,30 +122,30 @@
                                                 </a>
                                             {% endif %}
 
-                                            {% if not member.isPlatformUser %}
-                                                {% if order.isValidated %}
-                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') }}">
-                                                        <i class="fa fa-thumbs-o-up"></i> Aprovar
-                                                    </a>
-                                                    <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_REJECTED') }}">
-                                                        <i class="fa fa-thumbs-o-down"></i> Rejeitar
-                                                    </a>
-                                                {% endif %}
+                                            {% if not member.isPlatformUser and order.isValidated %}
+                                                <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') }}">
+                                                    <i class="fa fa-thumbs-o-up"></i> Aprovar
+                                                </a>
                                             {% endif %}
 
-                                            {% if member.isPlatformFinancial %}
-                                                {% if order.isApproved %}
-                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DONE') }}">
-                                                        <i class="fa fa-check-square-o"></i> Pagamento confirmado
-                                                    </a>
-                                                    <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_REJECTED') }}">
-                                                        <i class="fa fa-warning"></i> Pagamento não confirmado
-                                                    </a>
-                                                {% endif %}
+                                            {% if (not member.isPlatformUser and order.isValidated)
+                                            or (member.isPlatformUser and (order.isValidated or order.isPending or order.isApproved)) %}
+                                                <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
+                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_REJECTED') }}">
+                                                    <i class="fa fa-thumbs-o-down"></i> Rejeitar
+                                                </a>
+                                            {% endif %}
+
+                                            {% if member.isPlatformFinancial and order.isApproved %}
+                                                <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DONE') }}">
+                                                    <i class="fa fa-check-square-o"></i> Pagamento confirmado
+                                                </a>
+                                                <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
+                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_REJECTED') }}">
+                                                    <i class="fa fa-warning"></i> Pagamento não confirmado
+                                                </a>
                                             {% endif %}
 
                                         </div>
