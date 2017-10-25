@@ -164,15 +164,14 @@ class PlatformCounter
      */
     private function format($date){
 
-        if($date instanceof \DateTime){
+        if($date instanceof \DateTime)
             return $date->format('Y-m-d');
-        }
 
-        if(is_array($date) && array_key_exists('date', $date)){
-            return $this->format(new \DateTime($date['date']));
-        }
+        $time = 'now';
+        if(is_array($date) && array_key_exists('date', $date))
+            $time = $date['date'];
 
-        throw new \InvalidArgumentException('Invalid datetime base format');
+        return $this->format(new \DateTime($time));
     }
 
     /**
