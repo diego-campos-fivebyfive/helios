@@ -80,6 +80,13 @@ trait ComponentTrait
     protected $cmvApplied;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $dependencies;
+
+    /**
      * @var int
      *
      * @Serializer\Expose()
@@ -263,5 +270,23 @@ trait ComponentTrait
     public function getCmvApplied()
     {
         return $this->cmvApplied;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setDependencies($dependencies)
+    {
+        $this->dependencies = $dependencies;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDependencies()
+    {
+        return $this->dependencies;
     }
 }
