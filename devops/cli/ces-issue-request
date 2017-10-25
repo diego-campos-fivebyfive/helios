@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
+  printf "ces-issue-request - help:
+  Usage:
+  ces-issue-request --[REQUEST_TYPE] \n
+  Exemple:
+  ces-issue-request --review \n"
+  exit 0;
+fi
+
+BRANCH=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+ISSUE=${BRANCH/issue-/}
+
+USER=$($CLI_PATH/util/github-credentials --user)
+LOGIN=$($CLI_PATH/util/github-credentials --login)
+
+if [[ $1 == '--review' ]]; then
+
+  head="sices:$BRANCH"
+  base="master"
+  title="$BRANCH"
+  body="connect to #$ISSUE"
+
+  json="{\"head\": \"$head\", \"base\": \"$base\", \"title\": \"$title\", \"body\": \"$body\"}"
+  curl -X POST -u $LOGIN -d "$json" $GITHUB_REPOSITORY/pulls
+
+elif [[ $1 == '--test' ]]; then
+  echo 'send to test'
+else
+  echo "Error: invalid argument $1"
+  exit 1
+fi
