@@ -174,7 +174,7 @@ class RegisterController extends AbstractController
             }
 
             if ($account->isStanding()) {
-                return $this->redirectToRoute('app_account_verify', ['account' => $account]);
+                return $this->redirectToRoute('app_account_verify', ['id' => $account->getId()]);
             }
         } else {
             $message = 'Conta não identificada';
@@ -186,7 +186,7 @@ class RegisterController extends AbstractController
     }
 
     /**
-     * @Route("/{account}/verify", name="app_account_verify")
+     * @Route("/{id}/verify", name="app_account_verify")
      */
     public function accountVerifyAction(Customer $account)
     {
