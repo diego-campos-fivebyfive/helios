@@ -3,13 +3,11 @@
 cd $SICES_PATH
 
 if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
-  printf "ces-new-task - help:
+  printf "ces-issue-start - help:
   Usage:
-  ces-new-task [ISSUE_NUMBER]
-
+  ces-issue-start [ISSUE_NUMBER] \n
   Exemple:
-  ces-new-task 100
-  "
+  ces-issue-start 100 \n"
   exit 0;
 fi
 
@@ -20,6 +18,9 @@ git checkout -b issue-$1
 
 $CLI_PATH/ces-app-install
 $CLI_PATH/ces-database-update
+
+$CLI_PATH/ces-issue-assign $1
+$CLI_PATH/ces-issue-move $1 --in-progress
 
 $CLI_PATH/util/user-notify "Branch created" "now on issue-$1"
 echo "Done, now on Branch: issue-$1"

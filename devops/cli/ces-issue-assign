@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
+  printf "ces-issue-assign - help:
+  Usage:
+  ces-issue-assign [ISSUE_NUMBER] [GITHUB_USER_NAME]\n
+  Exemple:
+  ces-issue-assign 100 rafaelkendrik \n"
+  exit 0;
+fi
+
+ISSUE=$1
+LOGIN=$($CLI_PATH/util/github-credentials --login)
+USER=$([ $2 ] && echo $2 || echo $($CLI_PATH/util/github-credentials --user))
+
+ASSIGNEES="{\"assignees\": [\"$USER\"]}"
+
+curl -X POST -u $LOGIN -d "$ASSIGNEES" $GITHUB_REPOSITORY/issues/$ISSUE/assignees > /dev/null 2>&1

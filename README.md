@@ -247,14 +247,14 @@ Esclarecimentos gerais relacionados a documentação:
 
 **[⬆ Voltar ao Topo](#sumário)**
 
-## Execução de Tarefas
+## Execução e gerenciamento de Tarefas
 
-  <a name="execução-tarefas--comandos"></a><a name="5.1"></a>
-  - [5.1](#execução-tarefas--comandos) **Comandos de execução**: Comandos para execução de tarefas em ambiente local.
+  <a name="execucao-tarefas--execucao"></a><a name="5.1"></a>
+  - [5.1](#execucao-tarefas--execucao) **Comandos de execução**: Comandos para execução de tarefas em ambiente local.
 
     Preparar ambiente para a execução da tarefa:
     ```
-    $ ces-new-task issue-[ISSUE_NUMBER]
+    $ ces-issue-start [ISSUE_NUMBER]
     ```
 
     Adicionar arquivos modificados, realizar commit e envio ao repositório:
@@ -269,6 +269,18 @@ Esclarecimentos gerais relacionados a documentação:
     $ git branch -D issue-[ISSUE_NUMBER]
     ```
 
+  <a name="execucao-tarefas--gerenciamento"></a><a name="5.2"></a>
+  - [5.2](#execucao-tarefas--gerenciamento) **Comandos de gerenciamento**: Comandos para gerenciamento de tarefas.
+
+    Mover tarefa no quadro:
+    ```
+    $ ces-issue-move [ISSUE_NUMBER] [STAGE_TO]
+    ```
+
+    Assinar tarefa no quadro:
+    ```
+    $ ces-issue-assign [ISSUE_NUMBER] [GITHUB_USER_NAME]
+    ```
 
 **[⬆ Voltar ao Topo](#sumário)**
 

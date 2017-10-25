@@ -338,7 +338,7 @@ class Element implements ElementInterface
      */
     public function isFamily($family)
     {
-        return self::FAMILY_MODULE === $this->family;
+        return $family === $this->family;
     }
 
     /**

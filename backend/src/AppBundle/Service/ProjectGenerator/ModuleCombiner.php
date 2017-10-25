@@ -46,9 +46,9 @@ class ModuleCombiner
             /** @var \AppBundle\Entity\Component\InverterInterface $inverter */
             $inverter = $projectInverter->getInverter();
 
-            $qte_max_mod_ser = floor($inverter->getMaxDcVoltage() / $vmax_mod);
+            $qte_max_mod_ser = ceil($inverter->getMaxDcVoltage() / $vmax_mod);
             $qte_min_mod_ser = ceil($inverter->getMpptMin() / $vmin_mod);
-            $qte_max_mod_par = floor(($inverter->getMpptMaxDcCurrent() * $inverter->getMpptNumber()) / ($module->getShortCircuitCurrent()));
+            $qte_max_mod_par = ceil(($inverter->getMpptMaxDcCurrent() * $inverter->getMpptNumber()) / ($module->getShortCircuitCurrent()));
 
             $collection = [];
             for ($p = 1; $p <= $qte_max_mod_par; $p++) {
