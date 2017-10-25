@@ -333,10 +333,10 @@ class Order implements OrderInterface, InsurableInterface
     {
         return $this->note;
     }
+
     /**
      * @inheritDoc
      */
-
     public function setMessage($message)
     {
         $this->message = $message;
