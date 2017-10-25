@@ -21,46 +21,6 @@ class ResolverTest extends AppTestCase
     public function testDefaultResolverByConfig()
     {
         $project = $this->createProject();
-
-        /*$config = [
-            ['code' => 'ABCDE'],
-            ['code' => 'FGHIJ'],
-            ['code' => 'KLMNO'],
-            ['code' => 'PQRST'],
-            ['code' => 'UVWXY']
-        ];
-
-        $manager = $this->manager('variety');
-
-        foreach ($config as $key => $data){
-            $variety = $manager->create();
-            $data['description'] = sprintf('%s - Description', $data['code']);
-            self::fluentSetters($variety, $data);
-            $manager->save($variety);
-            $config[$key]['id'] = $variety->getId();
-        }
-
-        $loader = new Loader($this->getContainer());
-
-        $component = $loader->load($config[0]['id'], 'variety');
-
-        $this->assertInstanceOf(Variety::class, $component);
-        $this->assertNull($loader->load(0, Types::VARIETY));
-
-        $settings = [
-            [
-                'type' => Types::VARIETY,
-                'id' => $config[0]['id'],
-                'quantity' => 3
-            ],
-            [
-                'type' => Types::VARIETY,
-                'id' => $config[1]['id'],
-                'quantity' => 2
-            ]
-        ];*/
-
-        //dump($mapping); die;*/
     }
 
     private function createProject()
