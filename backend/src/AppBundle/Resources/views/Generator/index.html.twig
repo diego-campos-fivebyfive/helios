@@ -151,6 +151,18 @@
                                                 <h2 id="order-total">{{ order.total|currency }}</h2>
                                             </div>
                                         </div>
+
+                                        <div class="panel panel-success">
+                                            <div class="panel-heading">
+                                                Mensagem
+                                            </div>
+                                            <div class="panel-body">
+                                                <label>Observações para seu atendente comercial.</label>
+                                                <form action="{{ path('generator_order_message',{id:order.id}) }}" method="post" id="form_order_message">
+                                                    <textarea rows="6" readonly="readonly" id="order_message" class="form-control" placeholder="Mensagem">{{ order.message }}</textarea>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <nav class="pager wizard">
@@ -221,6 +233,7 @@
         var orderId = {{ order.id }};
 
         GeneratorHandler = {
+            message: $('#order_message'),
             btnValidate: $('#btn_validate'),
             enableValidate: 0,
             project: {id: 0, power: 0},
@@ -319,6 +332,26 @@
                     GeneratorHandler.loadWizardModal(url);
                 });
             },
+            listenerFormMessage: function () {
+                GeneratorHandler.message.on('focus', function () {
+                    GeneratorHandler.message.removeAttr('readonly');
+                });
+
+                GeneratorHandler.message.on('blur', function () {
+                    GeneratorHandler.message.attr('readonly','readonly')
+                });
+
+                GeneratorHandler.message.on('change', function () {
+                    var form = $('#form_order_message');
+                    var data = GeneratorHandler.message.val();
+
+                    $.ajax({
+                        url: form.attr('action'),
+                        method: 'post',
+                        data: {message: data}
+                    });
+                });
+            },
             getOrders: function () {
                 Request.send({
                     url: '{{ path('generator_orders',{id: order.id}) }}',
@@ -362,6 +395,7 @@
                 this.getComponents();
                 this.getOrders();
                 this.configureWizardModal();
+                this.listenerFormMessage();
             }
         };
 
