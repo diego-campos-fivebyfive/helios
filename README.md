@@ -279,7 +279,7 @@ Esclarecimentos gerais relacionados a documentação:
 
     Assinar tarefa no quadro:
     ```
-    $ ces-issue-assign [ISSUE_NUMBER]
+    $ ces-issue-assign [ISSUE_NUMBER] [GITHUB_USER_NAME]
     ```
 
 **[⬆ Voltar ao Topo](#sumário)**
