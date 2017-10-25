@@ -3,17 +3,33 @@
 if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
   printf "ces-issue-move - help:
   Usage:
-  ces-issue-move [ISSUE_NUMBER] [STAGE_TO] \n
+  ces-issue-move [ISSUE_NUMBER] --[STAGE_TO] \n
   Exemple:
   ces-issue-move 100 --in-progress \n"
   exit 0;
 fi
 
+if [[ -z $2 ]]; then
+  echo 'Error: Stage argument could not be null'
+  exit 1
+fi
+
 ISSUE=$1
+STAGE=$2
 LOGIN=$($CLI_PATH/util/github-credentials --login)
 
-STAGE_TO='["Stage: In-progress"]'
-STAGE_FROM='Stage:%20To-do'
+get_input_stage() {
+  local split=${1/--/}
+  echo ${split^}
+}
+
+get_current_stage() {
+  local labels=$(curl -s -X GET -u $LOGIN $GITHUB_REPOSITORY/issues/$ISSUE/labels)
+  echo $labels | grep -oP '(?<=Stage:%20).*(?=", "name": "Stage)'
+}
+
+STAGE_TO="[\"Stage: $(get_input_stage $STAGE)\"]"
+STAGE_FROM="Stage:%20$(get_current_stage)"
 
 curl -X DELETE -u $LOGIN $GITHUB_REPOSITORY/issues/$ISSUE/labels/$STAGE_FROM > /dev/null 2>&1
 curl -X POST -u $LOGIN -d "$STAGE_TO" $GITHUB_REPOSITORY/issues/$ISSUE/labels > /dev/null 2>&1
