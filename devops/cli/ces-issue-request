@@ -28,7 +28,7 @@ if [[ $1 == '--review' ]]; then
 
   $CLI_PATH/ces-issue-move $ISSUE --review
 
-  message="[$BRANCH] @here, _${USER}_ needs a *REVIEW*: https://github.com/sices/sices/pull/$ISSUE"
+  message="[$BRANCH] @here, _${USER}_ needs a *REVIEW*: https://github.com/sices/sices/pull/$ISSUE/files"
   $CLI_PATH/ces-slack-notify --devops "$message"
 
 elif [[ $1 == '--test' ]]; then
