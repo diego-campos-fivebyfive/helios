@@ -11,12 +11,10 @@ if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
   exit 0;
 fi
 
-BRANCH=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
-if [ $BRANCH == 'master' ]; then
-  exit 0
-fi
+BRANCH="issue-$1"
+ISSUE=$1
 
-STAGE=$($CLI_PATH/ces-issue-info $1 --stage)
+STAGE=$($CLI_PATH/ces-issue-info $ISSUE --stage)
 if [ $STAGE == 'Review' ]; then
   read -p "Note: branch issue-$1 could not be deleted, there is at least one opened Pull Request related to this branch, you must delete it manually. Press ENTER to continue."
   exit 0
