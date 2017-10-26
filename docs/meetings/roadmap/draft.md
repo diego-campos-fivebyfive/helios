@@ -1,3 +1,14 @@
+25/10/2017 - DASHBOARD
+==========================================
+Dashboard
+1. Remover quadro de notificações (Apenas ocultar)
+- Estender o quadro de "Orçamentos por status"
+-- Novas colunas: 
+--- Valor Médio - Valor total dos orçamentos / Qtde de orçamentos (no status)
+--- Potência Média - Total de potências / Qtde de orçamentos (no status)
+-- Tratar divisões por zero
+-- Cores dos textos em azul (Cor similar a dos ícones de arquivo no orçamento)
+
 20/10/2017 - NEW FEATURES - DESCRITIVO CRM
 ==========================================
 

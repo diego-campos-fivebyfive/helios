@@ -5,19 +5,15 @@ echo "Sending Slack devops chat notification..."
 message=$(echo ${2:0:1500} | sed 's/"/\\"/g')
 
 if [ $1 = '--devops' ]; then
-
   slack_hook=$SLACK_HOOK_DEVOPS
-  json="{\"text\": \"$message\", \"link_names\": \"1\"}"
-
+elif [ $1 = '--homolog' ]; then
+  slack_hook=$SLACK_HOOK_HOMOLOG
+elif [ $1 = '--production' ]; then
+  slack_hook=$SLACK_HOOK_PRODUCTION
 else
-
   echo "Invalid chat argument"
   exit 1
-
 fi
 
-curl -s \
-  -X POST \
-  -H "Content-type:application/json" \
-  -d "$json" \
-  $slack_hook
+json="{\"text\": \"$message\", \"link_names\": \"1\"}"
+curl -s -X POST -H "Content-type:application/json" -d "$json" $slack_hook > /dev/null 2>&1

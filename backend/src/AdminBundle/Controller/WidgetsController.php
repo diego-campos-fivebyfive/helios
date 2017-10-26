@@ -181,6 +181,9 @@ class WidgetsController extends AdminController
                 case OrderInterface::STATUS_DONE:
                     $collection = $this->getArrayStatus($collection, OrderInterface::STATUS_DONE, $total, $power);
                     break;
+                case OrderInterface::STATUS_INSERTED:
+                    $collection = $this->getArrayStatus($collection, OrderInterface::STATUS_INSERTED, $total, $power);
+                    break;
             }
         }
 
@@ -234,11 +237,11 @@ class WidgetsController extends AdminController
 
         $includeStatus = [];
         if ($member->isPlatformFinancial()) {
-            $includeStatus = [Order::STATUS_APPROVED, Order::STATUS_DONE];
+            $includeStatus = [Order::STATUS_APPROVED, Order::STATUS_DONE, Order::STATUS_INSERTED];
         }
 
         if ($member->isPlatformAfterSales()) {
-            $includeStatus = [Order::STATUS_DONE];
+            $includeStatus = [Order::STATUS_DONE, Order::STATUS_INSERTED];
         }
 
         if(!empty($includeStatus)){

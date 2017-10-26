@@ -282,6 +282,11 @@ Esclarecimentos gerais relacionados a documentação:
     $ ces-issue-assign [ISSUE_NUMBER] [GITHUB_USER_NAME]
     ```
 
+    Abrir review de tarefa:
+    ```
+    $ ces-issue-request --review
+    ```
+
 **[⬆ Voltar ao Topo](#sumário)**
 
 ## Comandos
@@ -391,7 +396,7 @@ Esclarecimentos gerais relacionados a documentação:
 
     - ##### Notificar chat #sices-devops
       ```
-      $ ces-slack-notify '[MESSAGE]'
+      $ ces-slack-notify --[CHANNEL] '[MESSAGE]'
       ```
 
     - ##### Corrigir permissões de arquivos e pastas

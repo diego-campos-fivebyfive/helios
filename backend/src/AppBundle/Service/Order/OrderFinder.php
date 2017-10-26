@@ -166,11 +166,11 @@ class OrderFinder
 
         $includeStatus = [];
         if($agent->isPlatformAfterSales()){
-            $includeStatus = [Order::STATUS_DONE];
+            $includeStatus = [Order::STATUS_DONE, Order::STATUS_INSERTED];
         }
 
         if($agent->isPlatformFinancial()){
-            $includeStatus = [Order::STATUS_APPROVED, Order::STATUS_REJECTED, Order::STATUS_DONE];
+            $includeStatus = [Order::STATUS_APPROVED, Order::STATUS_REJECTED, Order::STATUS_DONE, Order::STATUS_INSERTED];
         }
 
         if(!empty($includeStatus)){

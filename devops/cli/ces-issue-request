@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
+  printf "ces-issue-request - help:
+  Usage:
+  ces-issue-request --[REQUEST_TYPE] \n
+  Exemple:
+  ces-issue-request --review \n"
+  exit 0;
+fi
+
+BRANCH=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+ISSUE=${BRANCH/issue-/}
+
+USER=$($CLI_PATH/util/github-credentials --user)
+LOGIN=$($CLI_PATH/util/github-credentials --login)
+
+open_pull_request() {
+  head="sices:$BRANCH"
+  base="master"
+  title="$BRANCH"
+  body="connect to #$ISSUE"
+
+  json="{\"head\": \"$head\", \"base\": \"$base\", \"title\": \"$title\", \"body\": \"$body\"}"
+  curl -s -X POST -u $LOGIN -d "$json" $GITHUB_REPOSITORY/pulls
+}
+
+get_pull_request_number() {
+  read x
+  echo $x | grep \"number\" | grep -oP '(?<="number": ).*(?=, "state")'
+}
+
+if [[ $1 == '--review' ]]; then
+
+  echo 'Creating Github pull request...'
+  pr=$(open_pull_request | get_pull_request_number)
+
+  if [[ -z $pr ]]; then
+    echo 'Error: could not proccess pull request'
+    exit 1
+  fi
+
+  url="https://github.com/sices/sices/pull/$pr/files"
+  message="[$BRANCH] @here _${USER}_ needs a *REVIEW*: $url"
+
+  $CLI_PATH/ces-slack-notify --devops "$message"
+  $CLI_PATH/ces-issue-move $ISSUE --review
+
+elif [[ $1 == '--test' ]]; then
+  echo 'tester proccess'
+else
+  echo "Error: invalid argument $1"
+  exit 1
+fi

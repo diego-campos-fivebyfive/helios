@@ -148,6 +148,19 @@ class ProjectGeneratorController extends AbstractController
             'errors' => $form->getErrors(true)->count()
         ]);
     }
+    /**
+     * @Route("/{id}/message", name="generator_order_message")
+     *
+     * @Method("post")
+     */
+    public function messageAction(Request $request, Order $order)
+    {
+        $order->setMessage($request->get('message'));
+
+        $this->manager('order')->save($order);
+
+        return $this->json([]);
+    }
 
     /**
      * @Route("/{id}/shipping", name="generator_financial_shipping")

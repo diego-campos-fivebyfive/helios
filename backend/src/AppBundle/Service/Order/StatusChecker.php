@@ -110,6 +110,9 @@ class StatusChecker
                 OrderInterface::STATUS_BUILDING => [
                     UserInterface::TYPE_ACCOUNT,
                     UserInterface::TYPE_PLATFORM
+                ],
+                OrderInterface::STATUS_REJECTED => [
+                    UserInterface::TYPE_PLATFORM
                 ]
             ],
             OrderInterface::STATUS_VALIDATED => [
@@ -121,20 +124,26 @@ class StatusChecker
                     UserInterface::TYPE_ACCOUNT
                 ],
                 OrderInterface::STATUS_REJECTED => [
-                    UserInterface::TYPE_ACCOUNT
+                    UserInterface::TYPE_ACCOUNT,
+                    UserInterface::TYPE_PLATFORM
                 ]
             ],
             OrderInterface::STATUS_APPROVED => [
                 OrderInterface::STATUS_REJECTED => [
-                    UserInterface::TYPE_PLATFORM => [
-                        UserInterface::ROLE_PLATFORM_FINANCIAL
-                    ]
+                    UserInterface::TYPE_PLATFORM
                 ],
                 OrderInterface::STATUS_DONE => [
                     UserInterface::TYPE_PLATFORM => [
                         UserInterface::ROLE_PLATFORM_FINANCIAL
                     ]
                 ],
+            ],
+            OrderInterface::STATUS_DONE => [
+                OrderInterface::STATUS_INSERTED => [
+                    UserInterface::TYPE_PLATFORM => [
+                        UserInterface::ROLE_PLATFORM_AFTER_SALES
+                    ]
+                ]
             ]
         ];
     }

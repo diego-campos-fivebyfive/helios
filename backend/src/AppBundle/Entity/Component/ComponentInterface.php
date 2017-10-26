@@ -103,4 +103,15 @@ interface ComponentInterface
      * @return mixed
      */
     public function getCmvApplied();
+
+    /**
+     * @param $dependencies
+     * @return mixed
+     */
+    public function setDependencies($dependencies);
+
+    /**
+     * @return mixed
+     */
+    public function getDependencies();
 }
