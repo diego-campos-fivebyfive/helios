@@ -200,25 +200,45 @@ class AccountController extends AdminController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
+        if($form->isSubmitted() && $form->isValid()) {
 
             if ($this->member()->isPlatformCommercial() && !$account->getAgent()) {
                 $account->setAgent($this->member());
             }
 
             $helper = $this->getRegisterHelper();
+            $masterOwner = $account->getOwner();
+            $newEmail = $account->getEmail();
 
-            if($email != $account->getEmail() && !$helper->emailCanBeUsed($account->getEmail())) {
-
-                $form->addError(new FormError('Este email não pode ser usado'));
-
-            } else {
+            if (!$helper->emailCanBeUsed($newEmail) && $masterOwner->getEmail() == $newEmail
+                || $helper->emailCanBeUsed($newEmail)) {
 
                 $manager->save($account);
 
-                $this->setNotice("Conta atualizada com sucesso !");
+                $masterOwner->setEmail($newEmail);
+                $manager->save($masterOwner);
 
-                return $this->redirectToRoute('account_index');
+                /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+                $userManager = $this->get('fos_user.user_manager');
+
+                $user = $masterOwner->getUser();
+                $user->setEmail($newEmail);
+                $user->setEmailCanonical($newEmail);
+                $user->setUsername($newEmail);
+                $user->setUsernameCanonical($newEmail);
+
+                $userManager->updateUser($user);
+
+                $this->setNotice("Conta atualizada com sucesso!");
+
+                return $this->redirectToRoute('account_show', [
+                    'id' => $account->getId()
+                ]);
+
+            } else {
+
+                $form->addError(new FormError('Este email não pode ser usado'));
+
             }
         }
 
@@ -347,14 +367,15 @@ class AccountController extends AdminController
             $account = $member->getAccount();
             $newEmail = $member->getEmail();
 
-            if ($member->isMasterOwner() &&
-                (!$helper->emailCanBeUsed($newEmail) && $account->getEmail() == $newEmail
-                    || $helper->emailCanBeUsed($newEmail))) {
+            if ($member->isMasterOwner() && !$helper->emailCanBeUsed($newEmail) && $account->getEmail() == $newEmail
+                || $helper->emailCanBeUsed($newEmail)) {
 
                 $manager->save($member);
 
-                $account->setEmail($newEmail);
-                $manager->save($account);
+                if ($member->isMasterOwner()) {
+                    $account->setEmail($newEmail);
+                    $manager->save($account);
+                }
 
                 /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
                 $userManager = $this->get('fos_user.user_manager');
@@ -369,17 +390,12 @@ class AccountController extends AdminController
 
                 return $this->json([
                     'id_email' => $member->getId(),
-                    'email' => $member->getEmail()
+                    'email' => $member->getEmail(),
+                    'owner' => true
                 ],Response::HTTP_OK);
-            } else if ($email != $newEmail && !$helper->emailCanBeUsed($newEmail)) {
-                $form->addError(new FormError('Este email não pode ser usado'));
-            } else {
-                $manager->save($member);
-                return $this->json([
-                    'id_email' => $member->getId(),
-                    'email' => $member->getEmail()
-                ],Response::HTTP_OK);
+
             }
+
             return $this->json([],Response::HTTP_CONFLICT);
         }
 

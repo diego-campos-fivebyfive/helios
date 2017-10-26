@@ -9,28 +9,35 @@
 <div class="form-group col-md-1">
     <input type="submit" class="btn btn-primary" value="Salvar" />
 </div>
-
 {{ form_end(form) }}
+<input id="user_email" type="hidden" value="{{ member.email }}">
+
 <script>
     var form = $('#email_member');
         form.on('submit', function (event) {
             event.preventDefault();
 
-            var url = $(form).data('action');
+            if ($('#email_member_email').val() == $('#user_email').val()) {
+                $('#email_form').html('');
+            } else {
+                var url = $(form).data('action');
 
-            $.ajax({
-                url: url,
-                method: 'post',
-                data: $(form).serialize(),
-                complete: function (xhr) {
-                    if (200 == xhr.status) {
-                        $('#email_form').html('');
-                        $('#'+xhr.responseJSON['id_email']).html(xhr.responseJSON['email']);
-                        $('#email_account').html(xhr.responseJSON['email']);
-                    } else {
-                        display_error('Este email não pode ser usado.');
+                $.ajax({
+                    url: url,
+                    method: 'post',
+                    data: $(form).serialize(),
+                    complete: function (xhr) {
+                        if (200 == xhr.status) {
+                            $('#email_form').html('');
+                            $('#'+xhr.responseJSON['id_email']).html(xhr.responseJSON['email']);
+                            if (xhr.responseJSON['owner'])
+                                $('#email_account').html(xhr.responseJSON['email']);
+                            display_success('Email atualizado com sucesso.');
+                        } else {
+                            display_error('Este email não pode ser usado.');
+                        }
                     }
-                }
-            });
+                });
+            }
         });
 </script>

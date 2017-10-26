@@ -170,6 +170,13 @@
                 preventDuplicates: true
             });
         }
+        function display_success(message){
+            toastr.success(message, '', {
+                positionClass: 'toast-top-center',
+                progressBar: true,
+                preventDuplicates: true
+            });
+        }
 
         var dataEmail = $('[data-user-email]');
         if(dataEmail.length){
