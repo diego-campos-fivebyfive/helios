@@ -28,7 +28,7 @@ if [[ $1 == '--review' ]]; then
   json="{\"head\": \"$head\", \"base\": \"$base\", \"title\": \"$title\", \"body\": \"$body\"}"
   response=$(curl -s -X POST -u $LOGIN -d "$json" $GITHUB_REPOSITORY/pulls)
 
-  pr=$(echo $response | grep \"number\" | grep -oP '(?<="number": ).*(?=,)')
+  pr=$(echo $response | grep \"number\" | grep -oP '(?<="number": ).*(?=, "state")')
   url="https://github.com/sices/sices/pull/$pr/files"
   message="[$BRANCH] @here, _${USER}_ needs a *REVIEW*: $url"
 
