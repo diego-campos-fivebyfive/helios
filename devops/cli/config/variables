@@ -16,4 +16,6 @@ export SICES_HOOK_PORT=3000
 
 slack_uri='https://hooks.slack.com/services/T637J8WTD'
 export SLACK_HOOK_DEVOPS="$slack_uri/B6GU2PZFY/q4Va8VlWX7lv7zUv3uQIgryM"
+export SLACK_HOOK_HOMOLOG="$slack_uri/B7PPVC42D/FIXd946YfYB6wN5XBIE9P5yR"
+export SLACK_HOOK_PRODUCTION="$slack_uri/B7PKYSBEC/R2k2c5GqdzjtazDFuabywnmG"
 export GITHUB_REPOSITORY='https://api.github.com/repos/sices/sices'
