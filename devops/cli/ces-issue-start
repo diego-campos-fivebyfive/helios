@@ -13,6 +13,7 @@ fi
 
 USER=$($CLI_PATH/util/github-credentials --user)
 LAST_BRANCH=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+STAGE=$($CLI_PATH/ces-issue-info $1 --stage)
 
 git checkout master
 git fetch origin
@@ -34,7 +35,7 @@ if [ $LAST_BRANCH != 'master' ]; then
   read -p "Would you like to remove last branch $LAST_BRANCH? [y|n]: " accept > /dev/tty
 fi
 
-if [[ $accept == 'y' ]]; then
+if [[ $accept == 'y' ]] && [[ $STAGE != 'Review' ]]; then
   git branch -D $LAST_BRANCH
   git push origin --delete $LAST_BRANCH > /dev/null 2>&1
 fi
