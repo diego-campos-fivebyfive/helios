@@ -106,12 +106,12 @@ interface ComponentInterface
 
     /**
      * @param $dependencies
-     * @return mixed
+     * @return ComponentInterface
      */
     public function setDependencies($dependencies);
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getDependencies();
 }
