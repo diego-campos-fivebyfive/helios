@@ -286,6 +286,11 @@ Esclarecimentos gerais relacionados a documentação:
     ```
     $ ces-issue-request --review
     ```
+    Informações sobre uma tarefa:
+    ```
+    $ ces-issue-info [ISSUE_NUMBER] --[INFO_TYPE]
+    ```
+
 
 **[⬆ Voltar ao Topo](#sumário)**
 
