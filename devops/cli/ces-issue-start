@@ -12,8 +12,7 @@ if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
 fi
 
 USER=$($CLI_PATH/util/github-credentials --user)
-
-$CLI_PATH/ces-issue-close $1
+LAST_BRANCH=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
 
 git checkout master
 git fetch origin
@@ -27,7 +26,12 @@ $CLI_PATH/ces-log-clear
 $CLI_PATH/ces-issue-assign $1
 $CLI_PATH/ces-issue-move $1 --in-progress
 
-$CLI_PATH/util/user-notify 'Branch created' "now on issue-$1"
-$CLI_PATH/ces-slack-notify --devops "[issue-$1] _${USER}_ has been working on it"
 echo "Done, now on Branch: issue-$1"
+$CLI_PATH/util/user-notify 'Branch created' "now on issue-$1"
+
+if [ $LAST_BRANCH != 'master' ]; then
+  $CLI_PATH/ces-issue-close ${LAST_BRANCH/issue-/}
+fi
+
+$CLI_PATH/ces-slack-notify --devops "[issue-$1] _${USER}_ has been working on it"
 

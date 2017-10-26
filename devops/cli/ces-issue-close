@@ -11,23 +11,24 @@ if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
   exit 0;
 fi
 
-BRANCH=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
-if [ $BRANCH == 'master' ]; then
-  exit 0
-fi
+BRANCH="issue-$1"
+ISSUE=$1
 
-STAGE=$($CLI_PATH/ces-issue-info $1 --stage)
+STAGE=$($CLI_PATH/ces-issue-info $ISSUE --stage)
 if [ $STAGE == 'Review' ]; then
   read -p "Note: branch issue-$1 could not be deleted, there is at least one opened Pull Request related to this branch, you must delete it manually. Press ENTER to continue."
   exit 0
 fi
 
-read -p "Would you like to remove last branch $BRANCH? [y|n]: " accept > /dev/tty
+read -p "Would you like to remove last branch $BRANCH and close issue $ISSUE? [y|n]: " accept > /dev/tty
 
 if [[ $accept == 'y' ]]; then
   git branch -D $BRANCH
   git push origin --delete $BRANCH > /dev/null 2>&1
 
   USER=$($CLI_PATH/util/github-credentials --user)
+  LOGIN=$($CLI_PATH/util/github-credentials --login)
+
+  curl -s -X PATCH -u $LOGIN -d '{"state": "closed"}' $GITHUB_REPOSITORY/issues/$ISSUE
   $CLI_PATH/ces-slack-notify --devops "[issue-$1] _${USER}_ closed current branch related to"
 fi
