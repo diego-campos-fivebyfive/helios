@@ -3,11 +3,11 @@
 cd $SICES_PATH
 
 if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
-  printf "ces-issue-start - help:
+  printf "ces-issue-close - help:
   Usage:
-  ces-issue-start [ISSUE_NUMBER] \n
+  ces-issue-close [ISSUE_NUMBER] \n
   Exemple:
-  ces-issue-start 100 \n"
+  ces-issue-close 100 \n"
   exit 0;
 fi
 
