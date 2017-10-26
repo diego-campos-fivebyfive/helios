@@ -1,4 +1,4 @@
-25/10/2017 - 
+25/10/2017 - DASHBOARD
 ==========================================
 Dashboard
 1. Remover quadro de notificações (Apenas ocultar)
