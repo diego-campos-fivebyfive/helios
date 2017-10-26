@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+cd $SICES_PATH
+
+if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
+  printf "ces-issue-start - help:
+  Usage:
+  ces-issue-start [ISSUE_NUMBER] \n
+  Exemple:
+  ces-issue-start 100 \n"
+  exit 0;
+fi
+
+STAGE=$($CLI_PATH/ces-issue-info $1 --stage)
+USER=$($CLI_PATH/util/github-credentials --user)
+BRANCH=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+
+if [ $BRANCH == 'master' ] || [ $STAGE == 'Review' ]; then
+  exit 0
+fi
+
+read -p "Would you like to remove last branch $BRANCH? [y|n]: " accept > /dev/tty
+
+if [[ $accept == 'y' ]]; then
+  git branch -D $BRANCH
+  git push origin --delete $BRANCH > /dev/null 2>&1
+
+  $CLI_PATH/ces-slack-notify --devops "[issue-$1] _${USER}_ closed current branch related to"
+fi
