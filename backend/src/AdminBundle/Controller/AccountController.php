@@ -372,7 +372,10 @@ class AccountController extends AdminController
 
                 $manager->save($member);
 
+                $owner = false;
                 if ($member->isMasterOwner()) {
+                    $owner = true;
+
                     $account->setEmail($newEmail);
                     $manager->save($account);
                 }
@@ -391,7 +394,7 @@ class AccountController extends AdminController
                 return $this->json([
                     'id_email' => $member->getId(),
                     'email' => $member->getEmail(),
-                    'owner' => true
+                    'owner' => $owner
                 ],Response::HTTP_OK);
 
             }
