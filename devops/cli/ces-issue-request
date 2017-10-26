@@ -16,8 +16,6 @@ USER=$($CLI_PATH/util/github-credentials --user)
 LOGIN=$($CLI_PATH/util/github-credentials --login)
 
 open_pull_request() {
-  echo 'Creating Github pull request...'
-
   head="sices:$BRANCH"
   base="master"
   title="$BRANCH"
@@ -28,19 +26,25 @@ open_pull_request() {
 }
 
 get_pull_request_number() {
-  echo $1 | grep \"number\" | grep -oP '(?<="number": ).*(?=, "state")'
+  read x
+  echo $x | grep \"number\" | grep -oP '(?<="number": ).*(?=, "state")'
 }
 
 if [[ $1 == '--review' ]]; then
 
-  $CLI_PATH/ces-issue-move $ISSUE --review
-
+  echo 'Creating Github pull request...'
   pr=$(open_pull_request | get_pull_request_number)
 
+  if [[ -z $pr ]]; then
+    echo 'Error: could not proccess pull request'
+    exit 1
+  fi
+
   url="https://github.com/sices/sices/pull/$pr/files"
-  message="[$BRANCH] @here, _${USER}_ needs a *REVIEW*: $url"
+  message="[$BRANCH] @here _${USER}_ needs a *REVIEW*: $url"
 
   $CLI_PATH/ces-slack-notify --devops "$message"
+  $CLI_PATH/ces-issue-move $ISSUE --review
 
 elif [[ $1 == '--test' ]]; then
   echo 'tester proccess'
