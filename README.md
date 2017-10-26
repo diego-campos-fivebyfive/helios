@@ -269,33 +269,6 @@ Esclarecimentos gerais relacionados a documentação:
     $ git branch -D issue-[ISSUE_NUMBER]
     ```
 
-  <a name="execucao-tarefas--gerenciamento"></a><a name="5.2"></a>
-  - [5.2](#execucao-tarefas--gerenciamento) **Comandos de gerenciamento**: Comandos para gerenciamento de tarefas.
-
-    Mover tarefa no quadro:
-    ```
-    $ ces-issue-move [ISSUE_NUMBER] --[STAGE_TO]
-    ```
-
-    Assinar tarefa no quadro:
-    ```
-    $ ces-issue-assign [ISSUE_NUMBER] [GITHUB_USER_NAME]
-    ```
-
-    Abrir review de tarefa:
-    ```
-    $ ces-issue-request --review
-    ```
-
-    Informações sobre uma tarefa:
-    ```
-    $ ces-issue-info [ISSUE_NUMBER] --[INFO_TYPE]
-    ```
-
-    Para finalizar uma tarefa:
-    ```
-    $ ces-issue-close [ISSUE_NUMBER]
-    ```
 
 **[⬆ Voltar ao Topo](#sumário)**
 
@@ -401,8 +374,41 @@ Esclarecimentos gerais relacionados a documentação:
       $ ces-frontend-compile
       ```
 
-  <a name="comandos--outros"></a><a name="6.7"></a>
-  - [6.7](#comandos--outros) **Outros**:
+  <a name="comandos--tarefas"></a><a name="6.7"></a>
+  - [6.7](#comandos--tarefas) **Comandos de gerenciamento de tarefas**:
+
+    Preparar ambiente para a execução da tarefa:
+    ```
+    $ ces-issue-start [ISSUE_NUMBER]
+    ```
+
+    Mover tarefa no quadro:
+    ```
+    $ ces-issue-move [ISSUE_NUMBER] --[STAGE_TO]
+    ```
+
+    Assinar tarefa no quadro:
+    ```
+    $ ces-issue-assign [ISSUE_NUMBER] [GITHUB_USER_NAME]
+    ```
+
+    Abrir review de tarefa:
+    ```
+    $ ces-issue-request --review
+    ```
+
+    Informações sobre uma tarefa:
+    ```
+    $ ces-issue-info [ISSUE_NUMBER] --[INFO_TYPE]
+    ```
+
+    Para finalizar uma tarefa:
+    ```
+    $ ces-issue-close [ISSUE_NUMBER]
+    ```
+
+  <a name="comandos--outros"></a><a name="6.8"></a>
+  - [6.8](#comandos--outros) **Outros**:
 
     - ##### Notificar chat #sices-devops
       ```
