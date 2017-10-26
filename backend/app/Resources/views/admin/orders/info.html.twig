@@ -276,7 +276,7 @@
     sourceDeliveryAt.daterangepicker({
         startDate: '{{ order.deliveryAt|date('d/m/Y') }}',
         singleDatePicker: true,
-        minDate: moment(),
+        minDate: moment().add(3, 'days'),
         locale: {
             format: 'DD/MM/YYYY',
             daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
