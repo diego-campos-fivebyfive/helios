@@ -286,11 +286,16 @@ Esclarecimentos gerais relacionados a documentação:
     ```
     $ ces-issue-request --review
     ```
+
     Informações sobre uma tarefa:
     ```
     $ ces-issue-info [ISSUE_NUMBER] --[INFO_TYPE]
     ```
 
+    Para finalizar uma tarefa:
+    ```
+    $ ces-issue-close [ISSUE_NUMBER]
+    ```
 
 **[⬆ Voltar ao Topo](#sumário)**
 

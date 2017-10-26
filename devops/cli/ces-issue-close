@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+cd $SICES_PATH
+
+if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
+  printf "ces-issue-close - help:
+  Usage:
+  ces-issue-close [ISSUE_NUMBER] \n
+  Exemple:
+  ces-issue-close 100 \n"
+  exit 0;
+fi
+
+BRANCH=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+if [ $BRANCH == 'master' ]; then
+  exit 0
+fi
+
+STAGE=$($CLI_PATH/ces-issue-info $1 --stage)
+if [ $STAGE == 'Review' ]; then
+  read -p "Note: branch issue-$1 could not be deleted, there is at least one opened Pull Request related to this branch, you must delete it manually. Press ENTER to continue."
+  exit 0
+fi
+
+read -p "Would you like to remove last branch $BRANCH? [y|n]: " accept > /dev/tty
+
+if [[ $accept == 'y' ]]; then
+  git branch -D $BRANCH
+  git push origin --delete $BRANCH > /dev/null 2>&1
+
+  USER=$($CLI_PATH/util/github-credentials --user)
+  $CLI_PATH/ces-slack-notify --devops "[issue-$1] _${USER}_ closed current branch related to"
+fi
