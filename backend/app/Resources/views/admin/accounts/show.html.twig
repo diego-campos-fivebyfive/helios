@@ -53,7 +53,7 @@
                                         </div>
                                         <div class="col-md-12">
                                             <label> {{ 'Email'|trans }}: </label>
-                                            {{ account.email }}
+                                            <span id="email_account">{{ account.email }}</span>
                                         </div>
                                     </div>
 
@@ -165,6 +165,13 @@
 
         function display_error(message){
             toastr.error(message, '', {
+                positionClass: 'toast-top-center',
+                progressBar: true,
+                preventDuplicates: true
+            });
+        }
+        function display_success(message){
+            toastr.success(message, '', {
                 positionClass: 'toast-top-center',
                 progressBar: true,
                 preventDuplicates: true
