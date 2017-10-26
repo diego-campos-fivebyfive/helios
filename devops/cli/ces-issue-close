@@ -29,6 +29,6 @@ if [[ $accept == 'y' ]]; then
   USER=$($CLI_PATH/util/github-credentials --user)
   LOGIN=$($CLI_PATH/util/github-credentials --login)
 
-  curl -s -X PATCH -u $LOGIN -d '{"state": "closed"}' $GITHUB_REPOSITORY/issues/$ISSUE
+  curl -s -X PATCH -u $LOGIN -d '{"state": "closed"}' $GITHUB_REPOSITORY/issues/$ISSUE > /dev/null 2>&1
   $CLI_PATH/ces-slack-notify --devops "[issue-$1] _${USER}_ closed current branch related to"
 fi
