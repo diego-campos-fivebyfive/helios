@@ -1578,7 +1578,7 @@ class Project implements ProjectInterface, InsurableInterface
             if(array_key_exists($id, $collection)){
                 $collection[$id]['quantity'] += $projectInverter->getQuantity();
             }else{
-                $collection[$inverter->getId()] = [
+                $collection[$id] = [
                     'inverter' => $inverter,
                     'projectInverter' => $projectInverter,
                     'quantity' => $projectInverter->getQuantity()
@@ -1586,7 +1586,9 @@ class Project implements ProjectInterface, InsurableInterface
             }
 
             // Prevent price overwriting with zero value
-            $collection[$inverter->getId()]['unitCostPrice'] = $projectInverter->getUnitCostPrice();
+            $collection[$id]['unitCostPrice'] = $projectInverter->getUnitCostPrice();
+            $collection[$id]['unitSalePrice'] = $projectInverter->getUnitSalePrice();
+            $collection[$id]['totalSalePrice'] = $projectInverter->getUnitSalePrice() * $collection[$id]['quantity'];
         }
 
         return $collection;
