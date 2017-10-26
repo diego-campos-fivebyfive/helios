@@ -30,7 +30,9 @@ echo "Done, now on Branch: issue-$1"
 $CLI_PATH/util/user-notify 'Branch created' "now on issue-$1"
 $CLI_PATH/ces-slack-notify --devops "[issue-$1] _${USER}_ has been working on"
 
-read -p "Would you like to remove last branch $LAST_BRANCH? [y|n]: " accept > /dev/tty
+if [ $LAST_BRANCH != 'master' ]; then
+  read -p "Would you like to remove last branch $LAST_BRANCH? [y|n]: " accept > /dev/tty
+fi
 
 if [[ $accept == 'y' ]]; then
   git branch -D $LAST_BRANCH
