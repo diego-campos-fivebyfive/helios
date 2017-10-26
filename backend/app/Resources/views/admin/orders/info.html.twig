@@ -111,7 +111,7 @@
     <div class="form-group col-md-12">
 
         <div class="col-md-9">
-            {{ form_label(form.note, 'Observações') }}
+            {{ form_label(form.note, 'Observações a serem inseridas na pró-forma') }}
             {{ form_widget(form.note, {attr:{class:'form-control', disabled: 'disabled'}}) }}
         </div>
 
@@ -274,7 +274,7 @@
     var sourceDeliveryAt = $('#delivery_at');
 
     sourceDeliveryAt.daterangepicker({
-        startDate: '{{ order.deliveryAt|date('d/m/Y') }}',
+        startDate: '{{ order.deliveryAt|date_modify("+3 day")|date('d/m/Y') }}',
         singleDatePicker: true,
         minDate: moment(),
         locale: {
