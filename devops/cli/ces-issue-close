@@ -20,12 +20,15 @@ if [ $STAGE == 'Review' ]; then
   exit 0
 fi
 
-read -p "Would you like to remove last branch $BRANCH? [y|n]: " accept > /dev/tty
+read -p "Would you like to remove last branch $BRANCH and close issue $ISSUE? [y|n]: " accept > /dev/tty
 
 if [[ $accept == 'y' ]]; then
   git branch -D $BRANCH
   git push origin --delete $BRANCH > /dev/null 2>&1
 
   USER=$($CLI_PATH/util/github-credentials --user)
+  LOGIN=$($CLI_PATH/util/github-credentials --login)
+
+  curl -s -X PATCH -u $LOGIN -d '{"state": "closed"}' $GITHUB_REPOSITORY/issues/$ISSUE
   $CLI_PATH/ces-slack-notify --devops "[issue-$1] _${USER}_ closed current branch related to"
 fi
