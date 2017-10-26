@@ -44,13 +44,14 @@ class WidgetsController extends AdminController
      * @param \DateTime|null $date
      * @return $this
      */
-    public function date(\DateTime $date = null)
+    public function filters(\DateTime $date = null, $status)
     {
         if(!$date){
             $date = new \DateTime();
         }
 
         $this->filters['date'] = $date;
+        $this->filters['status'] = $status;
 
         return $this;
     }
@@ -62,6 +63,7 @@ class WidgetsController extends AdminController
     {
         $today = new \DateTime;
 
+        $status = $request->get('status');
         $group = $request->get('group', 'month');
         $year = $request->get('year', $today->format('Y'));
         $month = $request->get('month', $today->format('m'));
@@ -71,7 +73,7 @@ class WidgetsController extends AdminController
         $lastDay = cal_days_in_month(CAL_GREGORIAN, $date->format('m'), $date->format('Y'));
 
         $this->at($group);
-        $this->date($date);
+        $this->filters($date, $status);
 
         $data = $this->getOrderFilter();
 
@@ -104,6 +106,7 @@ class WidgetsController extends AdminController
             $groups[$index]['power'] += $power;
             $groups[$index]['amount'] += $total;
         }
+
 
         return $this->json([
             'options' => [
@@ -156,6 +159,40 @@ class WidgetsController extends AdminController
 
         $orders = $ordersCollection->getQuery()->getResult();
 
+        $collection = $this->getOrdersStatus($collection, $orders);
+
+        return $this->render('admin/widget/status-orders.html.twig', [
+            'collection' => $collection
+        ]);
+    }
+
+    private function startDefaults()
+    {
+        $collection = [];
+        foreach (Order::getStatusNames() as $key => $statusName) {
+            $collection[$key] = [
+                'count' => 0,
+                'amount' => 0,
+                'power' => 0,
+                'status' => $statusName
+            ];
+        }
+        unset($collection[0]);
+
+        return $collection;
+    }
+
+    private function getArrayStatus($collection, $status, $total, $power)
+    {
+        $collection[$status]['count'] += 1;
+        $collection[$status]['amount'] += $total;
+        $collection[$status]['power'] += $power;
+
+        return $collection;
+    }
+
+    private function getOrdersStatus($collection, $orders)
+    {
         foreach ($orders as $order) {
             $power = 0;
             $total = 0;
@@ -186,33 +223,6 @@ class WidgetsController extends AdminController
                     break;
             }
         }
-
-        return $this->render('admin/widget/status-orders.html.twig', [
-            'collection' => $collection
-        ]);
-    }
-
-    private function startDefaults()
-    {
-        $collection = [];
-        foreach (Order::getStatusNames() as $key => $statusName) {
-            $collection[$key] = [
-                'count' => 0,
-                'amount' => 0,
-                'power' => 0,
-                'status' => $statusName
-            ];
-        }
-        unset($collection[0]);
-
-        return $collection;
-    }
-
-    private function getArrayStatus($collection, $status, $total, $power)
-    {
-        $collection[$status]['count'] += 1;
-        $collection[$status]['amount'] += $total;
-        $collection[$status]['power'] += $power;
 
         return $collection;
     }
@@ -264,6 +274,7 @@ class WidgetsController extends AdminController
     {
         $qb = $this->getOrders();
 
+        $status = $this->filters['status'];
         $date = $this->filters['date'];
 
         //  Add Date Reference
@@ -287,6 +298,12 @@ class WidgetsController extends AdminController
                 ->andWhere('o.status != 0')
                 ->setParameter('start', $start)
                 ->setParameter('end', $end);
+
+            if ($status) {
+                $qb
+                    ->andWhere('o.status = :status')
+                    ->setParameter('status', $status);
+            }
         }
 
         return $qb->getQuery()->getResult();
