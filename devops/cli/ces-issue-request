@@ -22,7 +22,7 @@ open_pull_request() {
   body="connect to #$ISSUE"
 
   json="{\"head\": \"$head\", \"base\": \"$base\", \"title\": \"$title\", \"body\": \"$body\"}"
-  curl -s -X POST -u $LOGIN -d "$json" $GITHUB_REPOSITORY/pulls
+  echo $(curl -s -X POST -u $LOGIN -d "$json" $GITHUB_REPOSITORY/pulls)
 }
 
 get_pull_request_number() {
