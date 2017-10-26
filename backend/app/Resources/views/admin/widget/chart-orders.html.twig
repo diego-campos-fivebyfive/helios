@@ -21,6 +21,15 @@
 '12':'Dezembro'
 } %}
 
+{% set status = {
+'':'Status',
+'1':'Pendente',
+'2':'Validado',
+'3':'Aprovado',
+'4':'Rejeitado',
+'5':'Confirmado',
+'6':'Inserido',
+} %}
 
 <style>
     .ibox-title > .col-md-4,
@@ -29,7 +38,7 @@
         /*padding-right: 0;*/
     }
     .ibox-title select {
-        width: 50%;
+        width: 33.3%;
         float: left;
         margin-top: -3px;
         text-align: center;
@@ -71,9 +80,15 @@
         <div class="col-md-4">
             <h5> Histórico de orçamentos emitidos </h5>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="form-group">
                 <input id="proposal-group" value="" type="hidden">
+                <select id="proposal-status" class="form-control sel">
+                    {% for key, name in status %}
+                        <option {{ key == status ? 'selected="selected"' }}
+                                value="{{ key }}"> {{ name }} </option>
+                    {% endfor %}
+                </select>
                 <select id="proposal-month" class="form-control sel">
                     {% for key, name in months %}
                         <option {{ key == currentMonth ? 'selected="selected"' }}
@@ -88,7 +103,6 @@
                 </select>
             </div>
         </div>
-        <div class="col-md-2"> &nbsp; </div>
         <div class="col-md-2 btn-group">
             <button data-group="month" class="btn btn-sm btn-outline btn-primary col-md-6">
                 Mês
@@ -135,6 +149,7 @@
         var btnGroups = $('[data-group]');
         var btnMonth = $('[data-group="month"]');
         var btnYear = $('[data-group="year"]');
+        var selectorStatus = $('#proposal-status');
         var selectorYear = $('#proposal-year');
         var selectorMonth = $('#proposal-month');
         var inputGroup = $('#proposal-group');
@@ -153,9 +168,10 @@
             });
         }checkMonthSelector();
 
-        function generateUrl(group, year, month) {
-            return '{{ path('widget_orders',{group:'_group_', year:'_year_', month:'_month_'})|raw }}'
+        function generateUrl(group, year, month, status) {
+            return '{{ path('widget_orders',{group:'_group_', year:'_year_', month:'_month_', status:'_status_'})|raw }}'
                 .replace(/_group_/g, group)
+                .replace(/_status_/g, status)
                 .replace(/_year_/g, year)
                 .replace(/_month_/g, month);
         }
@@ -241,6 +257,7 @@
 
         function requestData() {
 
+            var status = selectorStatus.val();
             var year = selectorYear.val();
             var month = selectorMonth.val();
             var group = inputGroup.val();
@@ -250,11 +267,12 @@
             var powerProposals  = 0;
 
             $.ajax({
-                url: generateUrl(group, year, month),
+                url: generateUrl(group, year, month, status),
                 complete: function (xhr) {
 
                     var response = xhr.responseJSON;
                     var data = response.data;
+                    var status = response.status;
                     var options = response.options;
 
                     var amounts = [];
@@ -279,6 +297,7 @@
 
                     renderGraph({
                         group: group,
+                        status: status,
                         year: year,
                         month: month,
                         amounts: amounts,
@@ -312,7 +331,7 @@
 
         btnMonth.trigger('click');
 
-        $('#proposal-year, #proposal-month').on('change', function () {
+        $('#proposal-year, #proposal-month, #proposal-status').on('change', function () {
             checkMonthSelector();
             requestData();
         });
