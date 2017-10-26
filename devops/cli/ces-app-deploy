@@ -21,7 +21,7 @@ echo "Starting Deploy..."
 
 if [ $1 = '--homolog' ] || [ $1 = '--staging' ]; then
 
-  $CLI_PATH/ces-slack-notify --devops "Starting ${CES_AMBIENCE^} Deploy..."
+  $CLI_PATH/ces-slack-notify --homolog "Starting ${CES_AMBIENCE^} Deploy..."
   $CLI_PATH/ces-app-clone $1
   $CLI_PATH/ces-permission-fix $1
   source $CLI_PATH/config/variables-ci $1
@@ -29,18 +29,18 @@ if [ $1 = '--homolog' ] || [ $1 = '--staging' ]; then
   $CLI_PATH/ces-database-update
   $CLI_PATH/ces-cache-clear
   $CLI_PATH/ces-frontend-compile
-  $CLI_PATH/ces-slack-notify --devops "${CES_AMBIENCE^} Deploy Done!"
+  $CLI_PATH/ces-slack-notify --homolog "${CES_AMBIENCE^} Deploy Done!"
 
 elif [ $1 = '--production' ]; then
 
-  $CLI_PATH/ces-slack-notify --devops '@here: Starting Production Deploy...'
+  $CLI_PATH/ces-slack-notify --production '@here: Starting Production Deploy...'
   $CLI_PATH/ces-permission-fix --production
   $CLI_PATH/ces-app-clone --production --homolog
   source $CLI_PATH/config/variables-ci --production
   $CLI_PATH/ces-app-config --production
   $CLI_PATH/ces-cache-clear
   $CLI_PATH/ces-database-update
-  $CLI_PATH/ces-slack-notify --devops '@here: Production Deploy Done!'
+  $CLI_PATH/ces-slack-notify --production '@here: Production Deploy Done!'
 
 fi
 
