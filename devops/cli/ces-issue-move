@@ -25,13 +25,8 @@ get_input_stage() {
   echo ${split^}
 }
 
-get_current_stage() {
-  local labels=$(curl -s -X GET -u $LOGIN $GITHUB_REPOSITORY/issues/$ISSUE/labels)
-  echo $labels | grep -oP '(?<=Stage:%20).*(?=", "name": "Stage)'
-}
-
 STAGE_TO="[\"Stage: $(get_input_stage $STAGE)\"]"
-STAGE_FROM="Stage:%20$(get_current_stage)"
+STAGE_FROM="Stage:%20$($CLI_PATH/ces-issue-info $ISSUE --stage)"
 
 curl -X DELETE -u $LOGIN $GITHUB_REPOSITORY/issues/$ISSUE/labels/$STAGE_FROM > /dev/null 2>&1
 curl -X POST -u $LOGIN -d "$STAGE_TO" $GITHUB_REPOSITORY/issues/$ISSUE/labels > /dev/null 2>&1

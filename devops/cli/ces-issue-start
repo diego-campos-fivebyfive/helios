@@ -13,6 +13,7 @@ fi
 
 USER=$($CLI_PATH/util/github-credentials --user)
 LAST_BRANCH=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+STAGE=$($CLI_PATH/ces-issue-info $1 --stage)
 
 git checkout master
 git fetch origin
@@ -28,13 +29,13 @@ $CLI_PATH/ces-issue-move $1 --in-progress
 
 echo "Done, now on Branch: issue-$1"
 $CLI_PATH/util/user-notify 'Branch created' "now on issue-$1"
-$CLI_PATH/ces-slack-notify --devops "[issue-$1] _${USER}_ has been working on"
+$CLI_PATH/ces-slack-notify --devops "[issue-$1] _${USER}_ has been working on it"
 
-if [ $LAST_BRANCH != 'master' ]; then
+if [ $LAST_BRANCH != 'master' ] && [[ $STAGE != 'Review' ]]; then
   read -p "Would you like to remove last branch $LAST_BRANCH? [y|n]: " accept > /dev/tty
 fi
 
 if [[ $accept == 'y' ]]; then
   git branch -D $LAST_BRANCH
-  git push origin --delete $LAST_BRANCH
+  git push origin --delete $LAST_BRANCH > /dev/null 2>&1
 fi
