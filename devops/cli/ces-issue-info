@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
+  printf "ces-issue-info - help:
+  Usage:
+  ces-issue-info [ISSUE_NUMBER] --[INFO_TYPE] \n
+  Exemple:
+  ces-issue-info 100 --stage \n"
+  exit 0;
+fi
+
+ISSUE=$1
+LOGIN=$($CLI_PATH/util/github-credentials --login)
+
+get_current_stage() {
+  local labels=$(curl -s -X GET -u $LOGIN $GITHUB_REPOSITORY/issues/$ISSUE/labels)
+  echo $labels | grep -oP '(?<=Stage:%20).*(?=", "name": "Stage)'
+}
+
+if [[ $2 == '--stage' ]]; then
+  get_current_stage
+fi
