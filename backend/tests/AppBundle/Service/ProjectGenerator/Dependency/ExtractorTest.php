@@ -66,7 +66,7 @@ class ExtractorTest extends AppTestCase
             'associationClass' => ProjectStringBox::class,
             'projectGetter' => 'getProjectStringBoxes',
             'componentGetter' => 'getStringBox',
-            'cycles' => 3,
+            'cycles' => 5,
             'quantity' => 3,
             'dependencies' => [
                 ['type' => 'variety', 'id' => 555, 'ratio' => 3],
@@ -82,7 +82,7 @@ class ExtractorTest extends AppTestCase
             'associationClass' => ProjectStructure::class,
             'projectGetter' => 'getProjectStructures',
             'componentGetter' => 'getStructure',
-            'cycles' => 7,
+            'cycles' => 5,
             'quantity' => 10,
             'dependencies' => [
                 ['type' => 'variety', 'id' => 9000, 'ratio' => 3],
@@ -127,6 +127,8 @@ class ExtractorTest extends AppTestCase
                 $this->assertArrayHasKey($dependency['id'], $dependencies['variety']);
             }
         }
+
+        $this->assertCount(count($counters), $dependencies['variety']);
     }
 
     /**
