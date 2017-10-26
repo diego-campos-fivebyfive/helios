@@ -15,20 +15,28 @@ ISSUE=${BRANCH/issue-/}
 USER=$($CLI_PATH/util/github-credentials --user)
 LOGIN=$($CLI_PATH/util/github-credentials --login)
 
-if [[ $1 == '--review' ]]; then
-
-  $CLI_PATH/ces-issue-move $ISSUE --review
+open_pull_request() {
+  echo 'Creating Github pull request...'
 
   head="sices:$BRANCH"
   base="master"
   title="$BRANCH"
   body="connect to #$ISSUE"
 
-  echo 'Creating Github pull request...'
   json="{\"head\": \"$head\", \"base\": \"$base\", \"title\": \"$title\", \"body\": \"$body\"}"
-  response=$(curl -s -X POST -u $LOGIN -d "$json" $GITHUB_REPOSITORY/pulls)
+  curl -s -X POST -u $LOGIN -d "$json" $GITHUB_REPOSITORY/pulls
+}
 
-  pr=$(echo $response | grep \"number\" | grep -oP '(?<="number": ).*(?=, "state")')
+get_pull_request_number() {
+  echo $1 | grep \"number\" | grep -oP '(?<="number": ).*(?=, "state")'
+}
+
+if [[ $1 == '--review' ]]; then
+
+  $CLI_PATH/ces-issue-move $ISSUE --review
+
+  pr=$(open_pull_request | get_pull_request_number)
+
   url="https://github.com/sices/sices/pull/$pr/files"
   message="[$BRANCH] @here, _${USER}_ needs a *REVIEW*: $url"
 
