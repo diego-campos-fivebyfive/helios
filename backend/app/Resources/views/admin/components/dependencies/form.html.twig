@@ -1,0 +1,31 @@
+{{ form_start(form,{attr:{action:app.request.uri, id:'form_dependency'}}) }}
+
+<div class="row">
+    <div class="form-group">
+        <div class="col-md-6">
+            {{ form_label(form.id, 'Dependência') }}
+            {{ form_widget(form.id, {attr:{class:'form-control'}}) }}
+        </div>
+        <div class="col-md-2">
+            {{ form_label(form.ratio, ' Proporção (1:n)') }}
+            {{ form_widget(form.ratio, {attr:{class:'form-control'}}) }}
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-success btn-block">
+                <i class="fa fa-save"></i> Salvar
+            </button>
+        </div>
+        <div class="col-md-2">
+            <button type="reset" class="btn btn-default btn-block">
+                <i class="fa fa-save"></i> Cancelar
+            </button>
+        </div>
+    </div>
+</div>
+
+{{ form_end(form) }}
+
+<script>
+    DependencyManager.onLoadForm();
+</script>
+

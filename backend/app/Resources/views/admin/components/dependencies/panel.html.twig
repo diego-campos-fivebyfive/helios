@@ -1,0 +1,99 @@
+<style>
+    #dependency_form .btn-block{
+        margin-top: 25px;
+    }
+    #dependency_ratio{
+        text-align: center;
+    }
+</style>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <i class="fa fa-random"></i> Gerenciar Dependências
+    </div>
+    <div class="panel-body">
+        <div class="col-md-12" id="dependency_form">
+        </div>
+        <div class="col-md-12 hr-line-dashed"></div>
+        <div class="col-md-12" id="dependency_list"></div>
+    </div>
+</div>
+
+<script>
+
+    var DependencyManager = {
+        form: null,
+        listContainer: $('#dependency_list'),
+        formContainer: $('#dependency_form'),
+        save: function () {
+            var data = this.form.serialize();
+            $.post(this.form.attr('action'), data, function (response) {
+                DependencyManager.getList();
+                DependencyManager.getForm();
+            });
+        },
+        getList: function () {
+            this.listContainer.load('{{ path('component_dependencies',{family:family, component:component.id}) }}');
+        },
+        getForm: function (url) {
+            if (!url) {
+                url = '{{ path('component_dependency_create',{family:family, component:component.id}) }}';
+            }
+            this.formContainer.load(url);
+        },
+        onLoadForm: function () {
+
+            $('#dependency_id').chosen();
+
+            this.form = $('#form_dependency');
+
+            this.form.on('submit', function (event) {
+                event.preventDefault();
+                DependencyManager.save();
+            });
+
+            this.form.find('[type="reset"]').on('click', function(){
+                DependencyManager.getForm();
+                $('.btn-delete-dependency').removeClass('disabled');
+            });
+
+            $('#dependency_ratio').TouchSpin({
+                min: 1,
+                max: 100000
+            });
+        },
+        deleteDependency: function (url) {
+            swal({
+                title: "Confirma exclusão desta dependência?",
+                text: null,
+                type: "info",
+                showCancelButton: true,
+                cancelButtonText: "{{ 'Cancel'|trans }}",
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "{{ 'Confirm'|trans }}",
+                closeOnConfirm: false
+            }, function () {
+                $.ajax({
+                    url: url,
+                    method: 'post',
+                    data: {_method: 'delete'},
+                    complete: function (xhr) {
+                        if (200 == xhr.status) {
+                            swal('', 'Exlusão efetuada com sucesso!', 'success');
+                            DependencyManager.getList();
+                        } else {
+                            swal('', 'Falha ao executar a operação.', 'error');
+                        }
+                    }
+                });
+            });
+        },
+        init: function () {
+            this.getList();
+            this.getForm();
+        }
+    };
+
+    DependencyManager.init();
+
+</script>
