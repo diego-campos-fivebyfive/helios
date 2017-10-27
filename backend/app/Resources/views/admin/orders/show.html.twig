@@ -199,15 +199,15 @@
                                     </div>
                                 </div>
                                 <div class="col-md-12">
-                                    <div class="col-md-2 spacing">
+                                    <div class="col-md-4 spacing">
                                         <label class="row-total">Telefone</label>
                                         {{ order.phone }}
                                     </div>
-                                    <div class="col-md-1 spacing">
+                                    <div class="col-md-2 spacing">
                                         <label class="row-total">Cep</label>
                                         {{ order.postcode }}
                                     </div>
-                                    <div class="col-md-1 spacing">
+                                    <div class="col-md-2 spacing">
                                         <label class="row-total">Estado</label>
                                         {{ order.state }}
                                     </div>
@@ -215,15 +215,24 @@
                                         <label class="row-total">Cidade</label>
                                         {{ order.city }}
                                     </div>
+                                </div>
+                                <div class="col-md-12">
                                     <div class="col-md-4 spacing">
                                         <label class="row-total">Endereço</label>
                                         {{ order.address }}
+                                    </div>
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Usuário Sices vinculado</label>
+                                        {{ order.agent }}
+                                    </div>
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Nível de desconto</label>
+                                        {{ order.account.level|trans }}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
 
@@ -292,7 +301,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
@@ -321,12 +329,13 @@
                                                     <a data-toggle="collapse" href="#{{ order.id }}">
                                                         <span class="col-md-5 color-rows"> {{ order.description }} </span>
                                                         <span class="col-md-2 color-rows text-center"> {{ order.createdAt|date('d/m/Y') }} </span>
-                                                        <span class="col-md-1 color-rows text-center"> {{ order.elements.count }}
-                                                            Itens</span>
-                                                        <span class="col-md-2 color-rows"> <span
-                                                                    class="pull-right">{{ order.subTotal|currency }}</span> </span>
-                                                        <span class="col-md-2 color-rows"> <span
-                                                                    class="pull-right">{{ order.insurance|currency }}</span> </span>
+                                                        <span class="col-md-1 color-rows text-center"> {{ order.elements.count }} Itens</span>
+                                                        <span class="col-md-2 color-rows">
+                                                            <span class="pull-right">{{ order.subTotal|currency }}</span>
+                                                        </span>
+                                                        <span class="col-md-2 color-rows">
+                                                            <span class="pull-right">{{ order.insurance|currency }}</span>
+                                                        </span>
                                                     </a>
                                                 </h4>
                                             </div>
