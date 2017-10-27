@@ -85,7 +85,7 @@ class ComponentController extends AbstractController
     }
 
     /**
-     * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
+     * @Security("has_role('ROLE_PLATFORM_MASTER')")
      *
      * @Route("/create", name="component_create")
      * @Method({"get","post"})
@@ -114,7 +114,7 @@ class ComponentController extends AbstractController
     }
 
     /**
-     * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
+     * @Security("has_role('ROLE_PLATFORM_MASTER')")
      *
      * @Route("/{id}/update", name="component_update")
      * @Method({"get","post"})
@@ -138,7 +138,7 @@ class ComponentController extends AbstractController
     }
 
     /**
-     * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
+     * @Security("has_role('ROLE_PLATFORM_MASTER')")
      *
      * @Route("/{id}/delete/", name="component_delete")
      * @Method({"delete"})
