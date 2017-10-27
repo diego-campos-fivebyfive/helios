@@ -95,6 +95,12 @@ kit:
     error:
         project_has_component: "Este %component% esta associado a %count% projeto(s) aberto(s)"
 
+black: Black
+platinum: Platinum
+premium: Premium
+partner: Parceiro
+promotional: Promocional
+
 Actived: Ativo
 Approved: Aprovado
 approved: Aprovado
