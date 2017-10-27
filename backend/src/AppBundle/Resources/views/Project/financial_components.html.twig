@@ -1,4 +1,4 @@
-{% set isPromo = project.defaults.is_promotional %}
+{% set isPromo = defaults.is_promotional %}
 {% set member = app.user.info %}
 <style>
     {% if isPromo %}
@@ -38,19 +38,19 @@
     {% endfor %}
 
     {# INVERTERS #}
-    {% for id, group in project.groupInverters %}
+    {% for projectInverter in project.groupInverters %}
         <tr>
-            <td class="col-md-2"> {{ group.inverter.code }} </td>
+            <td class="col-md-2"> {{ projectInverter.inverter.code }} </td>
             <td>
-                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('component_show', {type:'inverter', id:group.inverter.id}) }}">
-                {{ group.inverter.model }}
+                <a data-toggle="modal" data-target="#modal_component" data-url="{{ path('component_show', {type:'inverter', id:projectInverter.inverter.id}) }}">
+                {{ projectInverter.inverter.model }}
                 </a>
             </td>
-            {% if member.isOwner %}<td class="price-columns"> {{ group.projectInverter.unitCostPrice|currency }} </td>{% endif %}
-            <td class="price-columns"> {{ group.projectInverter.unitSalePrice|currency }} </td>
-            <td class="col-md-1 text-center"> {{ group.quantity }} </td>
+            {% if member.isOwner %}<td class="price-columns"> {{ projectInverter.unitCostPrice|currency }} </td>{% endif %}
+            <td class="price-columns"> {{ projectInverter.unitSalePrice|currency }} </td>
+            <td class="col-md-1 text-center"> {{ projectInverter.quantity }} </td>
 
-            <td> {{ group.projectInverter.totalSalePrice|currency }} </td>
+                <td> {{ projectInverter.totalSalePrice|currency }} </td>
         </tr>
     {% endfor %}
 
