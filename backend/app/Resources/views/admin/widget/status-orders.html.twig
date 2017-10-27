@@ -1,3 +1,8 @@
+<style>
+    .med-values {
+        color: #0a6aa1;
+    }
+</style>
 <div class="ibox float-e-margins flow-md">
     <div class="ibox-title">
         <span class="label label-success pull-right">
@@ -10,22 +15,30 @@
 
     <div class="ibox-content">
         <div class="row">
-            <div class="col-xs-3">
+            <div class="col-xs-2">
                 <small class="stats-label"> Status dos orçamentos </small>
                 <h4> {{ data.status|trans }}s </h4>
             </div>
 
-            <div class="col-xs-3">
+            <div class="col-xs-2">
                 <small class="stats-label"> Qtde de orçamentos </small>
                 <h4> {{ data.count }} </h4>
             </div>
-            <div class="col-xs-3">
+            <div class="col-xs-2">
                 <small class="stats-label"> Valor dos orçamentos </small>
                 <h4> {{ data.amount|currency }} </h4>
             </div>
-            <div class="col-xs-3">
+            <div class="col-xs-2">
                 <small class="stats-label"> Potência dos orçamentos </small>
                 <h4> {{ data.power|decimal }} kWp </h4>
+            </div>
+            <div class="col-xs-2">
+                <small class="stats-label"> Valor Médio </small>
+                <h4 class="med-values"> {{ data.medValue ? data.medValue|currency : '-' }} </h4>
+            </div>
+            <div class="col-xs-2">
+                <small class="stats-label"> Potência Média </small>
+                <h4 class="med-values"> {{ data.medPower ? data.medPower|round(2, 'floor') : '-' }} kWp </h4>
             </div>
         </div>
     </div>
