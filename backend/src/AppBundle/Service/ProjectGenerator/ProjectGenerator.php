@@ -153,6 +153,7 @@ class ProjectGenerator
         $this->generateStringBoxes($this->project);
 
         // RESOLVE ABB-EXTRA REFERENCE
+        // TODO: Remove this call when changing this $resolveDependencies to true
         $this->handleABBInverters($project);
 
         // RESOLVE THE PROJECT DEPENDENCIES
