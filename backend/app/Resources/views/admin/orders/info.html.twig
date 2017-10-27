@@ -274,7 +274,7 @@
     var sourceDeliveryAt = $('#delivery_at');
 
     sourceDeliveryAt.daterangepicker({
-        startDate: '{{ order.deliveryAt|date_modify("+3 day")|date('d/m/Y') }}',
+        startDate: '{{ order.deliveryAt ? order.deliveryAt|date('d/m/Y') : 'now'|date_modify("+3 day")|date('d/m/Y') }}',
         singleDatePicker: true,
         minDate: moment(),
         locale: {
