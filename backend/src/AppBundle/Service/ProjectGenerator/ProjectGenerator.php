@@ -10,6 +10,7 @@ use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverter;
 use AppBundle\Entity\Component\ProjectModule;
 use AppBundle\Entity\Component\VarietyInterface;
+use AppBundle\Service\ProjectGenerator\Dependency\Resolver;
 use AppBundle\Service\ProjectProcessor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -46,6 +47,11 @@ class ProjectGenerator
     private $services = [
         'variety_calculator' => null
     ];
+
+    /**
+     * @var bool
+     */
+    private $resolveDependencies = false;
 
     /**
      * @inheritDoc
@@ -147,7 +153,11 @@ class ProjectGenerator
         $this->generateStringBoxes($this->project);
 
         // RESOLVE ABB-EXTRA REFERENCE
+        // TODO: Remove this call when changing this $resolveDependencies to true
         $this->handleABBInverters($project);
+
+        // RESOLVE THE PROJECT DEPENDENCIES
+        $this->resolveDependencies($project);
 
         // SAVING
         $this->autoSave = true;
@@ -771,6 +781,9 @@ class ProjectGenerator
      * Handle after inverters distribution
      * Exclusive handling for ABB inverters with code:22SMA0200380
      * @param ProjectInterface $project
+     * @deprecated
+     *
+     * TODO: This feature should be disabled/removed when changing this $resolveDependencies property to true
      */
     public function handleABBInverters(ProjectInterface $project)
     {
@@ -804,6 +817,18 @@ class ProjectGenerator
             }
 
             $this->save($project);
+        }
+    }
+
+    /**
+     * @param ProjectInterface $project
+     * @param bool $save
+     */
+    public function resolveDependencies(ProjectInterface $project, $save = false)
+    {
+        if($this->resolveDependencies){
+            Resolver::create($this->container)->resolve($project);
+            $this->save($project, $save);
         }
     }
 

@@ -555,8 +555,8 @@ class ProjectController extends AbstractController
                 ->generateStringBoxes($project)
                 ->handleAreas($project)
                 ->generateVarieties($project)
-                ->handleABBInverters($project)
-
+                ->resolveDependencies($project)
+                ->handleABBInverters($project) // TODO: Remove this call when changing the ProjectGenerator::$resolveDependencies to true
             ;
 
             $generator->save($project, true);
