@@ -6,6 +6,10 @@ use AppBundle\Manager\AbstractManager;
 use AppBundle\Entity\Component\ComponentInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Class Loader
+ * @package AppBundle\Service\ProjectGenerator\Dependency
+ */
 class Loader
 {
     /**
@@ -27,7 +31,7 @@ class Loader
      * Loader constructor.
      * @param ContainerInterface $container
      */
-    function __construct(ContainerInterface $container)
+    private function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
@@ -35,25 +39,63 @@ class Loader
     /**
      * @param $id
      * @param $type
-     * @return null|ComponentInterface
+     * @return array
      */
-    public function load($id, $type)
+    public function load(array $dependencies)
     {
-        $manager = $this->manager($type);
+        foreach ($dependencies as $type => $dependency){
+            $this->fetch($type, $dependency);
+        }
 
+        return $this->components;
+    }
+
+    /**
+     * @param $type
+     * @param array $dependencies
+     */
+    private function fetch($type, array $dependencies = [])
+    {
         if(!array_key_exists($type, $this->components))
             $this->components[$type] = [];
 
+        foreach ($dependencies as $dependency){
+            $this->resolve($type, $dependency);
+        }
+    }
+
+    /**
+     * @param $type
+     * @param $id
+     */
+    private function resolve($type, $id)
+    {
         if(!array_key_exists($id, $this->components[$type])){
 
-            $component = $manager->find($id);
+            $component = $this->find($type, $id);
 
-            if($component instanceof ComponentInterface) {
-                $this->components[$type][$id] = $component;
-            }
+            if($component instanceof ComponentInterface)
+                $this->add($type, $component);
         }
+    }
 
-        return array_key_exists($id, $this->components[$type])  ? $this->components[$type][$id] : null ;
+    /**
+     * @param $type
+     * @param $id
+     * @return null|object
+     */
+    private function find($type, $id)
+    {
+        return $this->manager($type)->find($id);
+    }
+
+    /**
+     * @param $type
+     * @param ComponentInterface $component
+     */
+    private function add($type, ComponentInterface $component)
+    {
+        $this->components[$type][] = $component;
     }
 
     /**
@@ -66,5 +108,14 @@ class Loader
             $this->managers[$type] = $this->container->get(sprintf('%s_manager', $type));
 
         return $this->managers[$type];
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @return Loader
+     */
+    public static function create(ContainerInterface $container)
+    {
+        return new self($container);
     }
 }
