@@ -2,7 +2,7 @@
 
 const { exec } = require('child_process')
 
-const postHook = (request, response) => {
+const hook = (request, response) => {
   if (!request.headers['user-agent'].includes('GitHub-Hookshot')) {
     return
   }
@@ -18,5 +18,5 @@ const postHook = (request, response) => {
 }
 
 module.exports = {
-  post: postHook
+  hook
 }
