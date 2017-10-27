@@ -174,6 +174,8 @@ class WidgetsController extends AdminController
                 'count' => 0,
                 'amount' => 0,
                 'power' => 0,
+                'medValue' => 0,
+                'medPower' => 0,
                 'status' => $statusName
             ];
         }
@@ -187,6 +189,8 @@ class WidgetsController extends AdminController
         $collection[$status]['count'] += 1;
         $collection[$status]['amount'] += $total;
         $collection[$status]['power'] += $power;
+        $collection[$status]['medValue'] = $collection[$status]['amount'] / $collection[$status]['count'];
+        $collection[$status]['medPower'] = $collection[$status]['power'] / $collection[$status]['count'];
 
         return $collection;
     }
