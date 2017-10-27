@@ -13,6 +13,8 @@ use AppBundle\Entity\Component\StringBoxInterface;
 use AppBundle\Entity\Component\StructureInterface;
 use AppBundle\Entity\Component\VarietyInterface;
 use AppBundle\Entity\Order\ElementInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -24,6 +26,16 @@ class ComponentExtractor
      * @var Serializer
      */
     private static $serializer;
+
+    /**
+     * @var PropertyAccessor
+     */
+    private static $accessor;
+
+    /**
+     * @var bool
+     */
+    private static $checkAvailable = true;
 
     /**
      * Init serializer
@@ -58,6 +70,7 @@ class ComponentExtractor
             ]);
 
             self::$serializer = new Serializer([$normalizer], [$encoder]);
+            self::$accessor = PropertyAccess::createPropertyAccessor();
         }
     }
 
@@ -246,7 +259,8 @@ class ComponentExtractor
     {
         $data = [];
         foreach ($projectStructures as $projectStructure) {
-            $data[] = self::fromProjectStructure($projectStructure);
+            if(self::allowAdd($projectStructure->getStructure()))
+                $data[] = self::fromProjectStructure($projectStructure);
         }
 
         return $data;
@@ -287,8 +301,9 @@ class ComponentExtractor
     public static function fromProjectVarieties($projectVarieties)
     {
         $data = [];
-        foreach($projectVarieties as $projectVariety){
-            $data[] = self::fromProjectVariety($projectVariety);
+        foreach ($projectVarieties as $projectVariety) {
+            if(self::allowAdd($projectVariety->getVariety()))
+                $data[] = self::fromProjectVariety($projectVariety);
         }
 
         return $data;
@@ -339,7 +354,8 @@ class ComponentExtractor
         $fromProjectVarieties = self::fromProjectVarieties($project->getProjectVarieties());
 
         if(null != $transformer = $project->getTransformer()){
-            $fromProjectVarieties[] = self::fromProjectVariety($transformer);
+            if(self::allowAdd($transformer->getVariety()))
+                $fromProjectVarieties[] = self::fromProjectVariety($transformer);
         }
 
         return array_merge(
@@ -349,6 +365,15 @@ class ComponentExtractor
             $fromProjectStructures,
             $fromProjectVarieties
         );
+    }
+
+    /**
+     * @param $component
+     * @return bool
+     */
+    private static function allowAdd($component)
+    {
+        return !self::$checkAvailable || self::$accessor->getValue($component, 'available');
     }
 
     /**
