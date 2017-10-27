@@ -321,7 +321,7 @@
                     <label class="width-float-total no-margins">Proposta economica:</label>
 
                     <span class="indentation"> 1) Equipamentos conforme descriminado</span>
-                    <span class="pull-right field-width">{{ order.subTotal|currency }}</span>
+                    <span class="pull-right field-width">{{ (order.subTotal + order.totalInsurance)|currency }}</span>
                     <br/>
                     <span class="indentation"> 2) Frete</span>
                     <span class="pull-right field-width">
@@ -369,7 +369,7 @@
                         <label class="no-margins">&#10004; Embalagem unitário:</label> Padrão<br/>
                         <label class="no-margins">&#10004; Transporte:</label>
                         {% if order.shippingrules and order.shippingrules.type == 'sices' %}
-                            {{ order.shippingrules.value|currency }}
+                            {{ order.shipping|currency }}
                         {% elseif order.shippingrules.type == 'self' %}
                             Não Incluso
                         {% endif %}
