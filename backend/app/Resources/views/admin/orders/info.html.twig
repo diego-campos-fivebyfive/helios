@@ -59,6 +59,13 @@
         <div class="col-md-9">
             {{ form_widget(form.address, {attr:{class:'input-label'}}) }}
         </div>
+
+        <div class="col-md-4">
+            <strong>Nível de desconto</strong>:
+        </div>
+        <div class="col-md-8">
+            {{ order.account.level|trans }}
+        </div>
     </div>
     <div class="col-md-6">
         <div class="col-md-3">
@@ -94,6 +101,13 @@
         </div>
         <div class="col-md-9">
             {{ form_widget(form.city, {attr:{class:'input-label'}}) }}
+        </div>
+
+        <div class="col-md-5">
+            <strong>Usuário Sices vinculado</strong>:
+        </div>
+        <div class="col-md-7">
+            {{ order.agent }}
         </div>
     </div>
 
