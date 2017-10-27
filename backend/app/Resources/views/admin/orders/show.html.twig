@@ -233,7 +233,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
 
@@ -302,7 +301,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
@@ -331,12 +329,13 @@
                                                     <a data-toggle="collapse" href="#{{ order.id }}">
                                                         <span class="col-md-5 color-rows"> {{ order.description }} </span>
                                                         <span class="col-md-2 color-rows text-center"> {{ order.createdAt|date('d/m/Y') }} </span>
-                                                        <span class="col-md-1 color-rows text-center"> {{ order.elements.count }}
-                                                            Itens</span>
-                                                        <span class="col-md-2 color-rows"> <span
-                                                                    class="pull-right">{{ order.subTotal|currency }}</span> </span>
-                                                        <span class="col-md-2 color-rows"> <span
-                                                                    class="pull-right">{{ order.insurance|currency }}</span> </span>
+                                                        <span class="col-md-1 color-rows text-center"> {{ order.elements.count }} Itens</span>
+                                                        <span class="col-md-2 color-rows">
+                                                            <span class="pull-right">{{ order.subTotal|currency }}</span>
+                                                        </span>
+                                                        <span class="col-md-2 color-rows">
+                                                            <span class="pull-right">{{ order.insurance|currency }}</span>
+                                                        </span>
                                                     </a>
                                                 </h4>
                                             </div>
