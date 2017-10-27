@@ -16,7 +16,7 @@ ISSUE=$1
 
 STAGE=$($CLI_PATH/ces-issue-info $ISSUE --stage)
 if [ $STAGE == 'Review' ]; then
-  read -p "Note: branch issue-$1 could not be deleted, there is at least one opened Pull Request related to this branch, you must delete it manually. Press ENTER to continue."
+  read -p "Note: branch issue-$1 could not be deleted, maybe could be one or more opened Pull Request related to this branch, you must delete it manually. Press ENTER to continue."
   exit 0
 fi
 
@@ -30,5 +30,5 @@ if [[ $accept == 'y' ]]; then
   LOGIN=$($CLI_PATH/util/github-credentials --login)
 
   curl -s -X PATCH -u $LOGIN -d '{"state": "closed"}' $GITHUB_REPOSITORY/issues/$ISSUE > /dev/null 2>&1
-  $CLI_PATH/ces-slack-notify --devops "[issue-$1] _${USER}_ closed current branch related to"
+  $CLI_PATH/ces-slack-notify --devops "[issue-$1] _${USER}_ closed these current branch and issue"
 fi
