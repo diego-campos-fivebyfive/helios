@@ -155,6 +155,9 @@ class ProjectGenerator
         // RESOLVE ABB-EXTRA REFERENCE
         $this->handleABBInverters($project);
 
+        // RESOLVE THE PROJECT DEPENDENCIES
+        $this->resolveDependencies($project);
+
         // SAVING
         $this->autoSave = true;
         $this->save($this->project);
@@ -822,7 +825,7 @@ class ProjectGenerator
      */
     public function resolveDependencies(ProjectInterface $project, $save = false)
     {
-        if(!$this->resolveDependencies){
+        if($this->resolveDependencies){
             Resolver::create($this->container)->resolve($project);
             $this->save($project, $save);
         }
