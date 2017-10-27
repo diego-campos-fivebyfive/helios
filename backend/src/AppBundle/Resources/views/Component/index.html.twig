@@ -69,7 +69,7 @@
                 <i class="fa fa-eye"></i> {{ 'View'|trans }}
             </a>
 
-            {% if member.isPlatformAdmin or member.isPlatformMaster %}
+            {% if member.isPlatformMaster %}
             <a href="{{ path('component_update',{type:extra.type,id:component.id}) }}"
                class="btn btn-success">
                 <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
@@ -98,7 +98,7 @@
                 </a>
             </div>
 
-            {% if member.isAdmin or member.isPlatformAdmin or member.isPlatformMaster %}
+            {% if member.isPlatformMaster %}
                 <span class="pull-right col-md-2">
                     <a class="pull-right btn btn-primary" href="{{ path('component_create', {type:type}) }}">
                     <i class="fa fa-plus-square" aria-hidden="true"></i> Cadastrar {{ is_module ? 'module'|trans : 'inverter'|trans }}</a>
