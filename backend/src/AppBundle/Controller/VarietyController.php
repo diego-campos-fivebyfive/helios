@@ -66,6 +66,8 @@ class VarietyController extends AbstractController
     }
 
     /**
+     * @Security("has_role('ROLE_PLATFORM_MASTER')")
+     *
      * @Route("/create", name="create_variety")
      * @Method({"GET", "POST"})
      */
@@ -110,7 +112,7 @@ class VarietyController extends AbstractController
     }
 
     /**
-     * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
+     * @Security("has_role('ROLE_PLATFORM_MASTER')")
      *
      * @Route("/{id}/update", name="variety_edit")
      * @Method({"GET", "POST"})
@@ -142,7 +144,7 @@ class VarietyController extends AbstractController
     }
 
     /**
-     * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
+     * @Security("has_role('ROLE_PLATFORM_MASTER')")
      *
      * @Route("/{id}/delete/", name="variety_delete")
      * @Method("DELETE")

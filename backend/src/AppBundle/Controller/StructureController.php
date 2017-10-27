@@ -69,7 +69,7 @@ class StructureController extends AbstractController
 
     /**
      * @Route("/create", name="structure_create")
-     * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
+     * @Security("has_role('ROLE_PLATFORM_MASTER')")
      */
     public function createAction(Request $request)
     {
@@ -104,7 +104,7 @@ class StructureController extends AbstractController
      * @Breadcrumb("Edit")
      * @Route("/{id}/update", name="structure_update")
      * @Method({"GET","POST"})
-     * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
+     * @Security("has_role('ROLE_PLATFORM_MASTER')")
      */
     public function updateAction(Request $request, Structure $structure)
     {
@@ -135,7 +135,7 @@ class StructureController extends AbstractController
     /**
      * @Route("/{id}/delete", name="structure_delete")
      * @Method("delete")
-     * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
+     * @Security("has_role('ROLE_PLATFORM_MASTER')")
      */
     public function deleteAction(Structure $structure)
     {
