@@ -83,7 +83,7 @@ class ExtractorTest extends AppTestCase
             'projectGetter' => 'getProjectStructures',
             'componentGetter' => 'getStructure',
             'cycles' => 5,
-            'quantity' => 10,
+            'quantity' => 15,
             'dependencies' => [
                 ['type' => 'variety', 'id' => 9000, 'ratio' => 3],
                 ['type' => 'variety', 'id' => 1000, 'ratio' => 10],
