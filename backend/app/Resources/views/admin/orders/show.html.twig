@@ -384,7 +384,7 @@
                             </table>
                             <h4>
                                 Frete: {% if order.shippingrules and order.shippingrules.type == "sices" %}
-                                    {{ order.shippingrules.value|currency }}
+                                    {{ order.shipping|currency }}
                                 {% elseif order.shippingrules and order.shippingrules.type == "self" %}
                                     Não Incluso
                                 {% else %}

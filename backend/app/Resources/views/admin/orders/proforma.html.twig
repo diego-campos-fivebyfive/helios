@@ -326,7 +326,7 @@
                     <span class="indentation"> 2) Frete</span>
                     <span class="pull-right field-width">
                         {% if order.shippingrules and order.shippingrules.type == 'sices' %}
-                            {{ order.shippingrules.value|currency }}
+                            {{ order.shipping|currency }}
                         {% elseif order.shippingrules.type == 'self' %}
                             Não Incluso
                         {% else %}
