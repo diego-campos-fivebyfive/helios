@@ -51,7 +51,7 @@ class ProjectGenerator
     /**
      * @var bool
      */
-    private $resolveDependencies = false;
+    private $resolveDependencies = true;
 
     /**
      * @inheritDoc
@@ -798,9 +798,9 @@ class ProjectGenerator
             $count = $abbInverters->count();
 
             $codes = [
-                '22ABB0050380' => $count,
+                /*'22ABB0050380' => $count,
                 '22ABB0005380' => $count,
-                '22ABB5000380' => $count,
+                '22ABB5000380' => $count,*/
                 '25MC4I005' => 1
             ];
 

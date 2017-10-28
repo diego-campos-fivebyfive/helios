@@ -1,0 +1,43 @@
+
+<table class="table table-bordered table-condensed">
+    <thead>
+        <tr>
+            <th> Código </th>
+            <th> Descrição </th>
+            <th> Proporção </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for key, dependency in dependencies %}
+        <tr>
+            <td> {{ dependency.component.code }}  </td>
+            <td> {{ dependency.component.description }} </td>
+            <td> 1:{{ dependency.ratio }} </td>
+            <td class="col-md-2">
+                <div class="btn-group btn-group-sm btn-group-justified">
+                    <a class="btn btn-primary" data-update="{{ path('component_dependency_update', {family:family, component:component.id, index:key}) }}">
+                        <i class="fa fa-pencil"></i> Editar
+                    </a>
+                    <a class="btn btn-delete-dependency btn-danger" data-delete="{{ path('component_dependency_delete', {family:family, component:component.id, index:key}) }}">
+                        <i class="fa fa-trash"></i> Excluir
+                    </a>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    $('a[data-update]').on('click', function(){
+        DependencyManager.getForm($(this).data('update'));
+        $('.btn-delete-dependency').removeClass('disabled');
+        $(this).next().addClass('disabled');
+
+    });
+
+    $('a[data-delete]').on('click', function(){
+        DependencyManager.deleteDependency($(this).data('delete'));
+    });
+</script>

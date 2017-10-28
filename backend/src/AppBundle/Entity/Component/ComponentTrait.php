@@ -102,6 +102,7 @@ trait ComponentTrait
     public function setDatasheet($datasheet)
     {
         $this->datasheet = $datasheet;
+        $this->dependencies = [];
 
         return $this;
     }
@@ -287,6 +288,6 @@ trait ComponentTrait
      */
     public function getDependencies()
     {
-        return $this->dependencies;
+        return (array) $this->dependencies;
     }
 }

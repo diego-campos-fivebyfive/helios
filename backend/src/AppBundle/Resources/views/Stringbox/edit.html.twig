@@ -1,5 +1,9 @@
 {% extends view('layout') %}
 
+{% block styles %}
+    {% include view('helper.plugins_css') %}
+{% endblock %}
+
 {% block body %}
 
     {#{% set componentAccount = inverter.account %}#}
@@ -166,6 +170,10 @@
                                 {{ form_end(form) }}
 
                             </div>
+
+                            {# DEPENDENCIES CONTAINER #}
+                            <div class="col-md-12" id="dependency_container" style="margin-top: 10px;"></div>
+
                         </div>
                     </div>
                 </div>
@@ -176,6 +184,13 @@
 {% endblock %}
 
 {% block scripts %}
+
+    {% if stringBox.id %}
+    {% include view('helper.plugins_js') %}
+        <script>
+            $('#dependency_container').load('{{ path('component_dependency_panel',{family:'string_box', component:stringBox.id}) }}');
+        </script>
+    {% endif %}
 
     {% include view('helper.chosen') with({
     element: '#appbundle_component_stringbox_maker',

@@ -1,5 +1,9 @@
 {% extends view('layout') %}
 
+{% block styles %}
+    {% include view('helper.plugins_css') %}
+{% endblock %}
+
 {% block body %}
 
     <style>
@@ -9,6 +13,10 @@
         .check-label {
             vertical-align: middle;
             padding-right: 5px;
+        }
+        #dependency_ratio{
+            margin-top: 2px !important;
+            text-align: center;
         }
     </style>
 
@@ -147,9 +155,17 @@
                                         </a>
                                 </div>
 
+                                <div class="form-group">
+                                    {{ form_rest(form) }}
+                                </div>
+
                                 {{ form_end(form) }}
 
                             </div>
+
+                            {# DEPENDENCIES CONTAINER #}
+                            <div class="col-md-12" id="dependency_container" style="margin-top: 10px;"></div>
+
                         </div>
                     </div>
                 </div>
@@ -160,6 +176,14 @@
 {% endblock %}
 
 {% block scripts %}
+
+    {% if structure.id %}
+    {% include view('helper.plugins_js') %}
+        <script>
+            $('#dependency_container').load('{{ path('component_dependency_panel',{family:'structure', component:structure.id}) }}');
+        </script>
+    {% endif %}
+
     <script>
         var sanitize = function(element){
             function clear(v){ return v.replace(/\D+/g,''); }
