@@ -51,7 +51,8 @@ class ComponentDependencyController extends AdminController
         $component = $this->filterComponent($family, $component);
 
         $form = $this->createForm(DependencyType::class, ['ratio' => 1], [
-            'component' => $component
+            'component' => $component,
+            'source' => DependencyType::SOURCE_CREATE
         ]);
 
         $form->handleRequest($request);
@@ -84,7 +85,8 @@ class ComponentDependencyController extends AdminController
         $data['id'] = $this->filterComponent('variety', $data['id']);
 
         $form = $this->createForm(DependencyType::class, $data, [
-            'component' => $component
+            'component' => $component,
+            'source' => DependencyType::SOURCE_UPDATE
         ]);
 
         $form->handleRequest($request);
