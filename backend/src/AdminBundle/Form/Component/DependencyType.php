@@ -14,13 +14,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DependencyType extends AbstractType
 {
+    const SOURCE_CREATE = 0;
+    const SOURCE_UPDATE = 1;
+
     /**
      * @inheritDoc
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $component = $options['component'];
-        $dependencyIds = $this->filterDependencyIds($component->getDependencies());
+        $dependencyIds = $options['source'] == self::SOURCE_CREATE ? $this->filterDependencyIds($component->getDependencies()) : [];
 
         $builder
             ->add('type', HiddenType::class, [
@@ -60,9 +63,11 @@ class DependencyType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'component' => null
-        ]);
+        $resolver
+            ->setDefaults([
+                'component' => null
+            ])
+            ->setRequired(['source']);
     }
 
     /**
