@@ -64,6 +64,11 @@ class WidgetsController extends AdminController
         $today = new \DateTime;
 
         $status = $request->get('status');
+        if ($status == "null")
+            $status = null;
+        else
+            $status = array_merge(explode(",", $status));
+
         $group = $request->get('group', 'month');
         $year = $request->get('year', $today->format('Y'));
         $month = $request->get('month', $today->format('m'));
@@ -304,9 +309,8 @@ class WidgetsController extends AdminController
                 ->setParameter('end', $end);
 
             if ($status) {
-                $qb
-                    ->andWhere('o.status = :status')
-                    ->setParameter('status', $status);
+                $qb->andWhere(
+                   $qb->expr()->in('o.status', $status));
             }
         }
 

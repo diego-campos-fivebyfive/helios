@@ -22,7 +22,6 @@
 } %}
 
 {% set status = {
-'':'Status',
 '1':'Pendente',
 '2':'Validado',
 '3':'Aprovado',
@@ -51,6 +50,7 @@
         background-color: white !important;
         border: solid 1px #00A7EC !important;
         color: #00A7EC;
+        padding: 6px !important;
     }
     .btn-primary.btn-outline:hover {
         background-color: #00A7EC !important;
@@ -72,6 +72,15 @@
     .sel:focus {
         border-color: #00A7EC !important;
     }
+    .chosen-choices {
+        border-color: #00A7EC !important;
+        border-radius: 4px;
+        padding: 2px !important;
+    }
+    .sel-date {
+        padding-left: 0;
+        padding-right: 0;
+    }
 
 </style>
 
@@ -80,39 +89,47 @@
         <div class="col-md-4">
             <h5> Histórico de orçamentos emitidos </h5>
         </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                <input id="proposal-group" value="" type="hidden">
-                <select id="proposal-status" class="form-control sel">
-                    {% for key, name in status %}
-                        <option {{ key == status ? 'selected="selected"' }}
-                                value="{{ key }}"> {{ name }} </option>
-                    {% endfor %}
-                </select>
-                <select id="proposal-month" class="form-control sel">
-                    {% for key, name in months %}
-                        <option {{ key == currentMonth ? 'selected="selected"' }}
-                                value="{{ key }}"> {{ name }} </option>
-                    {% endfor %}
-                </select>
-                <select id="proposal-year" class="form-control sel">
-                    {% for year in startYear..currentYear %}
-                        <option {{ year == currentYear ? 'selected="selected"' }}
-                                value="{{ year }}"> {{ year }} </option>
-                    {% endfor %}
-                </select>
-            </div>
-        </div>
-        <div class="col-md-2 btn-group">
-            <button data-group="month" class="btn btn-sm btn-outline btn-primary col-md-6">
-                Mês
-            </button>
-            <button data-group="year" class="btn btn-sm btn-outline btn-primary col-md-6">
-                Ano
-            </button>
-        </div>
     </div>
     <div class="ibox-content">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="form-group">
+                    <div class="col-md-8">
+                        <select id="proposal-status" data-placeholder="Status" multiple class="form-control sel chosen-select">
+                            {% for key, name in status %}
+                                <option {{ key == status ? 'selected="selected"' }}
+                                        value="{{ key }}"> {{ name }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input id="proposal-group" value="" type="hidden">
+                    <div class="col-md-2 sel-date">
+                        <select id="proposal-month" class="form-control sel">
+                            {% for key, name in months %}
+                                <option {{ key == currentMonth ? 'selected="selected"' }}
+                                        value="{{ key }}"> {{ name }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2 sel-date">
+                        <select id="proposal-year" class="form-control sel">
+                            {% for year in startYear..currentYear %}
+                                <option {{ year == currentYear ? 'selected="selected"' }}
+                                        value="{{ year }}"> {{ year }} </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 btn-group" style="padding-left: 0;">
+                <button data-group="month" class="btn btn-sm btn-outline btn-primary col-md-6">
+                    Mês
+                </button>
+                <button data-group="year" class="btn btn-sm btn-outline btn-primary col-md-6">
+                    Ano
+                </button>
+            </div>
+        </div>
         <div class="row">
             <div class="col-lg-9">
                 <div class="flot-chart flow-h">
@@ -335,6 +352,8 @@
             checkMonthSelector();
             requestData();
         });
+
+        $('#proposal-status').chosen({});
 
     });
 
