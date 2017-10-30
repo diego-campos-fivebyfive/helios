@@ -80,6 +80,13 @@ class Order implements OrderInterface, InsurableInterface
     private $status;
 
     /**
+     * @var DateTime
+     *
+     * @ORM\Column(name="status_at", type="datetime", nullable=true)
+     */
+    private $statusAt;
+
+    /**
      * @var float
      *
      * @ORM\Column(type="float", nullable=true)
@@ -409,6 +416,10 @@ class Order implements OrderInterface, InsurableInterface
     {
         $this->status = $status;
 
+        $this->statusAt = new \DateTime();
+
+        $this->calculatePaymentMethod();
+
         return $this;
     }
 
@@ -418,6 +429,14 @@ class Order implements OrderInterface, InsurableInterface
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getStatusAt()
+    {
+        return $this->statusAt;
     }
 
     /**
@@ -1012,14 +1031,9 @@ class Order implements OrderInterface, InsurableInterface
     {
         $data = json_decode($paymentMethod, true);
 
-        foreach ($data['quotas'] as $key=>$quota){
-            $percent = (float)$quota['percent']/100;
-            $data['quotas'][$key]['value'] = $percent * $this->getTotal();
-            $date = $quota['days'];
-            $data['quotas'][$key]['date'] = (new \DateTime('+'.$date.'day'))->format('Y-m-d H:i:s');
-        }
-
         $this->addMetadata('payment_method', $data);
+
+        $this->calculatePaymentMethod();
 
         return $this;
     }
@@ -1383,7 +1397,6 @@ class Order implements OrderInterface, InsurableInterface
         return $this->getSubTotal() - $this->getTotalCmv() - $this->getTotalTaxes();
     }
 
-
     /**
      * Refresh customer data by reference account
      */
@@ -1405,6 +1418,26 @@ class Order implements OrderInterface, InsurableInterface
                 $this->phone = $owner->getPhone();
             }
         }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    private function calculatePaymentMethod()
+    {
+        $data = $this->getPaymentMethod('array');
+
+        if ($this->status == self::STATUS_APPROVED) {
+            foreach ($data['quotas'] as $key => $quota) {
+                $percent = (float)$quota['percent'] / 100;
+                $data['quotas'][$key]['value'] = $percent * $this->getTotal();
+                $data['quotas'][$key]['date'] = $this->statusAt->format('Y-m-d H:i:s');
+            }
+        }
+
+        $this->addMetadata('payment_method', $data);
+
+        return $this;
     }
 }
 
