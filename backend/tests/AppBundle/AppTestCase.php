@@ -52,6 +52,15 @@ class AppTestCase extends WebTestCase
      */
     protected function manager($id)
     {
-        return $this->getContainer()->get(sprintf('%s_manager', $id));
+        return $this->service(sprintf('%s_manager', $id));
+    }
+
+    /**
+     * @param $id
+     * @return object
+     */
+    protected function service($id)
+    {
+        return $this->getContainer()->get($id);
     }
 }
