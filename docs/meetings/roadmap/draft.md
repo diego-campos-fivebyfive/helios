@@ -1,13 +1,64 @@
-25/10/2017 - DASHBOARD
+30/10/2017 - ROADMAP 30/10 - 03/11
 ==========================================
-Dashboard
-1. Remover quadro de notificações (Apenas ocultar)
-- Estender o quadro de "Orçamentos por status"
--- Novas colunas: 
---- Valor Médio - Valor total dos orçamentos / Qtde de orçamentos (no status)
---- Potência Média - Total de potências / Qtde de orçamentos (no status)
--- Tratar divisões por zero
--- Cores dos textos em azul (Cor similar a dos ícones de arquivo no orçamento)
+
+ROADMAP MAPEADO
+1. Controle de Estoque
+1.1 Transações
+1.1.1 Ao aprovar - debita do estoque
+1.1.2 Ao rejeitar - credita no estoque
+1.2 Propriedades: Descrição, Data/Hora, Quantidade(C/Sinal: + ou -) / Exibir saldo atual
+1.4 Mapeamento: Stock <-> StockTransactions
+1.5 Paginação e Filtros por data e operações
+1.6 Seção "Estoque"
+1.6.1 Exibe a lista de componentes, separadas por tipo com filtros por tipo
+1.6.1 Código, Descrição, Estoque, [Extrato] - Extrato de Transações (3)
+1.7 Extrato
+1.7.1 Identificação do componente
+1.7.2 Histórico de transações
+1.7.3 Tela única (Lista de componentes e transações)
+** O controle deve executar as operações de - entrada e saída.
+
+538
+2. Ajustes visuais
+2.1 Na barra superior - Nível da conta com ícone: Conta <nível> <ícone>
+
+540, 541
+Baixíssima prioridade - Após estoque
+3. Parâmetros: Definir tipos de telhados disponíveis (Envolve parâmetros e gerador).
+
+539
+4. Email para orçamentos com status 'REJECTED'
+4.1 Adequar layout + texto
+4.2 Ativar serviço no OrderMailer
+
+535, 536
+5. Implementar novos campos para Endereço de entrega (CEP, Estado, Cidade, Bairro, Logradouro, Número e Complemento)
+5.1 Autocompletar com CEP
+5.2 Todos obrigatórios, exceto complemento
+
+537
+6. Possibilitar ao user sices FINANCIAL, revogar um orçamento com status 'CONFIRMED', retornando para 'APPROVED'
+6.1 Label: "Cancelar confirmação"
+
+532, 533, 534
+BUGS
+1. Está gerando orçamento sem opção de pagamento. 532
+2. Na listagem de componentes para admin, aplicar regras da consulta usada para comercial. 533
+3. Em estrutura ao deixar 'status' como false, na edição o 'available' também aparece como false. 534
+
+PENDÊNCIAS MAURO
+Ícones 
+Texto do email
+
+PREVISÕES
+Memorial Finame
+Sistema de pontuação (Junto ao CRM)
+Lista de sistemas
+CRM
+Smartcode e Protheus
+Modo Engenharia
+Timeline de ações do orçamento
+Verificar possibilidade de alerta caso um componente não seja precificado (camada extra).
 
 20/10/2017 - NEW FEATURES - DESCRITIVO CRM
 ==========================================
