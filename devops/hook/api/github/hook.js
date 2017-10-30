@@ -12,7 +12,7 @@ const hook = (request, response) => {
     .json({ message: 'Hook Recieved' })
     .end()
 
-  if (request.body.ref.includes('master')) {
+  if (request.body.ref && request.body.ref.includes('master')) {
     exec('$CLI_PATH/ces-app-deploy --$CES_AMBIENCE')
   }
 
