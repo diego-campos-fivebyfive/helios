@@ -4,54 +4,67 @@
 
 <table class="table table-bordered table-hover">
     <thead>
-        <tr>
-            <th> Código </th>
-            <th> Descrição </th>
-            {% if isPlatform %}
-            <th> Markup </th>
-            {% endif %}
-            {% if showPrices %}
-            <th class="col-md-2"> Custo Unitário </th>
-            {% endif %}
-            <th> Qtde </th>
-            {% if showPrices %}
-            <th class="col-md-2"> Custo Total </th>
-            {% endif %}
-            <th>&nbsp;</th>
-        </tr>
+    <tr>
+        <th> Código</th>
+        <th> Descrição</th>
+        {% if isPlatform %}
+            <th> Markup</th>
+        {% endif %}
+        {% if showPrices %}
+            <th class="col-md-2"> Custo Unitário</th>
+        {% endif %}
+        <th> Qtde</th>
+        {% if showPrices %}
+            <th class="col-md-2"> Custo Total</th>
+        {% endif %}
+        <th>&nbsp;</th>
+    </tr>
     </thead>
     <tbody id="order_elements">
 
     {% for element in order.elements %}
 
         <tr>
-            <td> {{ element.code }} </td>
+            <td width="15%"> {{ element.code }} </td>
             <td> {{ element.description }} </td>
             {% if isPlatform %}
-                <td> <input class="form-control markup" data-markup-element="{{ path('order_element_update',{id:element.id}) }}"
-                            id="input{{ element.id }}" readonly="readonly" value="{{ element.markup|round(2) }}">
+                <td width="10%">
+                    <input type="text"
+                           placeholder="Markup"
+                           class="form-control markup"
+                           data-element-update="{{ path('order_element_update',{id:element.id}) }}"
+                           id="input{{ element.id }}"
+                           name="markup"
+                           readonly="readonly"
+                           value="{{ element.markup|round(2) }}">
                 </td>
             {% endif %}
             {% if showPrices %}
-            <td> {{ element.unitPrice|currency }} </td>
+                <td width="10%"> {{ element.unitPrice|currency }} </td>
             {% endif %}
-            <td class="text-center"> {{ element.quantity }} </td>
+            <td width="10%" class="text-center">
+                <input type="number"
+                       name="quantity"
+                       data-element-update="{{ path('order_element_update',{id:element.id}) }}"
+                       placeholder="Qtde"
+                       value="{{ element.quantity }}"
+                       readonly="readonly"
+                       min="1"
+                       class="form-control">
+            </td>
             {% if showPrices %}
-            <td width="15%"> {{ element.total|currency }} </td>
+                <td width="15%"> {{ element.total|currency }} </td>
             {% endif %}
-            <td width="15%">
+            <td width="5%">
                 <div class="btn-group btn-group-justified btn-group-sm">
-                    <a data-update-element="{{ path('generator_orders_element_update',{id:element.id}) }}" class="btn btn-primary">
-                        <i class="fa fa-pencil"></i>
-                    </a>
 
                     {% set allowDelete = not element.isFamily('module') or order.elements('module').count > 1 %}
 
                     {% if allowDelete %}
-                    <a data-delete-element="{{ path('generator_orders_element_delete',{id:element.id}) }}"
-                       class="btn btn-danger">
-                        <i class="fa fa-trash"></i>
-                    </a>
+                        <a data-delete-element="{{ path('generator_orders_element_delete',{id:element.id}) }}"
+                           class="btn btn-block btn-danger">
+                            <i class="fa fa-trash"></i>
+                        </a>
                     {% endif %}
 
                 </div>
@@ -61,17 +74,17 @@
     {% endfor %}
 
     <tr>
-        <td> SSS_2017_2018 </td>
-        <td> SEGURO SOLAR RISCO ENGENHARIA PROJETO E INSTALAÇÃO </td>
+        <td> SSS_2017_2018</td>
+        <td> SEGURO SOLAR RISCO ENGENHARIA PROJETO E INSTALAÇÃO</td>
         {% if isPlatform %}
-        <td></td>
+            <td></td>
         {% endif %}
         {% if showPrices %}
-        <td> {{ 0|currency }} </td>
+            <td> {{ 0|currency }} </td>
         {% endif %}
-        <td class="text-center"> 1 </td>
+        <td class="text-center"> 1</td>
         {% if showPrices %}
-        <td> {{ 0|currency }} </td>
+            <td> {{ 0|currency }} </td>
         {% endif %}
         <td></td>
     </tr>
@@ -79,34 +92,34 @@
     </tbody>
     <tfoot>
     {% if isPlatform %}
-    <tr>
-        <th colspan="2" class="text-right">Total de CMV</th>
-        <th>{{ order.totalCmv|currency }}</th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-    </tr>
-    <tr>
-        <th colspan="2" class="text-right">Total de impostos</th>
-        <th>{{ order.totalTaxes|currency }}</th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-    </tr>
+        <tr>
+            <th colspan="2" class="text-right">Total de CMV</th>
+            <th>{{ order.totalCmv|currency }}</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr>
+            <th colspan="2" class="text-right">Total de impostos</th>
+            <th>{{ order.totalTaxes|currency }}</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
     {% endif %}
     {% if showPrices %}
-    <tr>
-        <th colspan="2" class="text-right">{% if isPlatform %}Margem bruta da operação{% endif %}</th>
-        {% if isPlatform %}
-            <th>{{ order.margin|currency }}</th>
-        {% endif %}
-        <th class="text-right" id="subtotal"> SubTotal </th>
-        <th></th>
-        <th> {{ order.subTotal|currency }} </th>
-        <th></th>
-    </tr>
+        <tr>
+            <th colspan="2" class="text-right">{% if isPlatform %}Margem bruta da operação{% endif %}</th>
+            {% if isPlatform %}
+                <th>{{ order.margin|currency }}</th>
+            {% endif %}
+            <th class="text-right" id="subtotal"> SubTotal</th>
+            <th></th>
+            <th> {{ order.subTotal|currency }} </th>
+            <th></th>
+        </tr>
     {% endif %}
     </tfoot>
 </table>
@@ -142,7 +155,7 @@
                 data: {_method: 'delete'},
                 callback: function (xhr) {
 
-                    if(200 == xhr.status) {
+                    if (200 == xhr.status) {
                         var response = xhr.responseJSON;
                         OrderManager.renderTotal(response.total);
                     }
@@ -156,46 +169,11 @@
         });
     });
 
-    $('[data-update-element]').on('click', function(){
+    $('[data-update-element]').on('click', function () {
         Request.send({
             url: $(this).data('update-element'),
             callback: function (xhr) {
                 $('#form_element_container').html(xhr.responseText);
-            }
-        });
-    });
-
-    $('[data-markup-element]').on('click', function(){
-        $(this).removeAttr('readonly');
-    });
-    $('[data-markup-element]').on('blur', function(){
-        $(this).attr('readonly','readonly');
-    });
-
-
-    $('[data-markup-element]').on('change', function(){
-        var markup = parseFloat($(this).val().replace(',','.'));
-        Request.send({
-            url: $(this).data('markup-element'),
-            method:  'post',
-            data: {markup:markup},
-            callback: function (xhr) {
-                var response = xhr.responseJSON;
-                var total = response.total;
-                if (xhr.status == 200) {
-                    toastr.success('Markup aplicado!', '', {
-                        positionClass: 'toast-top-center',
-                        progressBar: true
-                    });
-                    InsuranceHandler.apply();
-                    OrderManager.getElements();
-                    OrderManager.renderTotal(total);
-                } else {
-                    toastr.error('Não foi possível aplicar o Markup!', '', {
-                        positionClass: 'toast-top-center',
-                        progressBar: true
-                    });
-                }
             }
         });
     });
@@ -206,4 +184,51 @@
             Numbers.mask($(elem));
         });
     }
+
+    function updateOrderElement(url, property, value) {
+
+        var data = {order: {}};
+        data['order'][property] = value;
+        $.post(url, data, function (response) {
+
+            toastr.success('Item atualizado!', '', {
+                positionClass: 'toast-top-center',
+                progressBar: true,
+                timeOut: 1000
+            });
+
+            InsuranceHandler.apply();
+            OrderManager.getElements();
+            OrderManager.renderTotal(response.total);
+        });
+    }
+
+    var elementUpdateFields = $('[data-element-update]');
+    var currentValue = null;
+    elementUpdateFields.on('blur', function () {
+
+        var property = $(this).attr('name');
+        var value = $(this).val();
+
+        if(value != currentValue) {
+
+            switch (property) {
+                case 'markup':
+                    value = (value / 100);
+                    break;
+                case 'quantity':
+                    if (isNaN(parseInt(value))) value = 1;
+                    break;
+            }
+
+            updateOrderElement($(this).data('element-update'), property, value);
+        }
+
+        $(this).attr('readonly', 'readonly');
+
+    }).on('focus', function () {
+        currentValue = $(this).val();
+        $(this).removeAttr('readonly');
+    });
+
 </script>
