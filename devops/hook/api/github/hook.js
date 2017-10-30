@@ -14,13 +14,9 @@ const hook = (request, response) => {
 
   if (request.body.ref && request.body.ref.includes('master')) {
     const { message } = request.body.head_commit
+    const issue = message.match(/'issue-'(?:.*)'\n\n'/)
 
-    const issue = message.match(/'issue-'(?:.*)'\n\n'/);
-
-    /*eslint-disable */
-      exec(`$CLI_PATH/ces-issue-move \'${issue}\' --testing`)
-    /*eslint-enable */
-
+    exec(`$CLI_PATH/ces-issue-move \'${issue}\' --testing`)
     exec('$CLI_PATH/ces-app-deploy --$CES_AMBIENCE')
 
     return
@@ -37,11 +33,7 @@ const hook = (request, response) => {
     const link = `*<${url}|#${number}>*`
     const message = `[${title}] @${developer}: _${reviewer}_ ${action} pull-request ${link}`
 
-    /*eslint-disable */
-      exec(`$CLI_PATH/ces-slack-notify --devops \'${message}\'`)
-    /*eslint-enable */
-
-    return
+    exec(`$CLI_PATH/ces-slack-notify --devops \'${message}\'`)
   }
 }
 
