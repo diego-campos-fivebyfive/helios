@@ -26,12 +26,10 @@ $CLI_PATH/ces-log-clear
 $CLI_PATH/ces-issue-assign $1
 $CLI_PATH/ces-issue-move $1 --in-progress
 
-echo "Done, now on Branch: issue-$1"
-$CLI_PATH/util/user-notify 'Branch created' "now on issue-$1"
-
 if [ $LAST_BRANCH != 'master' ]; then
   $CLI_PATH/ces-issue-close ${LAST_BRANCH/issue-/}
 fi
 
-$CLI_PATH/ces-slack-notify --devops "[issue-$1] _${USER}_ has been working on it"
-
+$CLI_PATH/ces-slack-notify --devops "[issue-$1] _${USER}_ has been working on"
+$CLI_PATH/util/user-notify 'Branch created' "now on issue-$1"
+echo "Everything done, now on Branch: issue-$1"

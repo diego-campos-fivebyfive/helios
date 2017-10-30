@@ -1,9 +1,9 @@
 'use strict'
 
-const { post } = require('./post')
+const { hook } = require('./hook')
 
 const github = {
-  post
+  hook
 }
 
 module.exports = github
