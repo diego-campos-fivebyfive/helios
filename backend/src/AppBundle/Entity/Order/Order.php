@@ -812,7 +812,16 @@ class Order implements OrderInterface, InsurableInterface
      */
     public function getDeliveryAddress()
     {
-        return $this->deliveryAddress;
+        $address = (
+            $this->getDeliveryStreet() . ',  '
+            . $this->getDeliveryNumber() . ' - '
+            . $this->getDeliveryDistrict() . ', '
+            . $this->getDeliveryCity() . ' - '
+            . $this->getDeliveryState() . ', '
+            . $this->getDeliveryPostcode() . ' - '
+            . $this->getDeliveryComplement()
+        );
+        return $address;
     }
 
     /**

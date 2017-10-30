@@ -90,11 +90,7 @@
                data-target="#modal_shipping_info"><i class="fa fa-warning"></i> Aviso sobre fretes</a>
     </div>
 
-    <div class="col-md-12">
-        <div class="form-group col-md-12">
-            <h3> <i class="fa fa-map-marker"></i> Endereço de Entrega </h3>
-            <input id="deliveryAddress" name="deliveryAddress" value="{{ order.deliveryAddress }}" type="text" class="form-control" placeholder="Endereço de Entrega">
-        </div>
+    <div class="form-group col-md-12" id="form-delivery">
     </div>
 
     <div class="form-group col-md-12" id="form-company">
@@ -118,7 +114,6 @@
         percent: $('#shipping_percent'),
         kind: $('#shipping_kind'),
         output: $('#shipping_output'),
-        deliveryAddress: $('#deliveryAddress'),
         submitShipping: function(){
             $('#submit_shipping').trigger('click');
         },
@@ -130,9 +125,6 @@
             }else{
                 $('.group-kind').hide();
             }
-        },
-        getDeliveryAddress: function(){
-            return this.deliveryAddress.val();
         },
         checkType: function(){
             var type = ShippingManager.type.val();
@@ -191,15 +183,10 @@
 
             button.ladda('start');
 
-            /**
-             * TODO: This is a temporary solution, it will soon be moved to exclusive processing
-             */
-            var data = form.serialize() + '&deliveryAddress=' + this.getDeliveryAddress();
-
             Request.send({
                 url: form.attr('action'),
                 method: 'post',
-                data: data,
+                data: form.serialize(),
                 callback: function (xhr) {
                     button.ladda('stop');
                     var response = xhr.responseJSON;
@@ -218,6 +205,14 @@
                 }
             });
         },
+        deliveryAddress: function () {
+            $.ajax({
+                url: '{{ path('generator_delivery_address',{id: order.id}) }}',
+                complete: function (xhr) {
+                    $('#form-delivery').html(xhr.responseText);
+                }
+            });
+        },
         init: function () {
 
             ShippingManager.type.on('change', function () {
@@ -231,9 +226,7 @@
                 ShippingManager.calculate();
             });
 
-            ShippingManager.deliveryAddress.on('change', function () {
-                ShippingManager.form.submit();
-            });
+            ShippingManager.deliveryAddress();
 
             Numbers.mask(ShippingManager.percent);
 

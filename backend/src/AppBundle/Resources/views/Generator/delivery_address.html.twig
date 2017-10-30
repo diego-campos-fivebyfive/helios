@@ -1,0 +1,132 @@
+<h3> <i class="fa fa-map-marker"></i> Endereço de Entrega </h3>
+{{ form_start(form, {attr:{id:'form_delivery', action: app.request.uri}}) }}
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group col-md-3">
+            {{ form_label(form.deliveryPostcode, 'CEP *') }}
+            {{ form_widget(form.deliveryPostcode,{attr:{class:'form-control', 'placeholder':'CEP', readonly: 'readonly'}}) }}
+        </div>
+        <div class="form-group col-md-3">
+            {{ form_label(form.deliveryState, 'Estado *') }}
+            {{ form_widget(form.deliveryState,{attr:{class:'form-control', 'placeholder':'Estado', readonly: 'readonly'}}) }}
+        </div>
+        <div class="form-group col-md-3">
+            {{ form_label(form.deliveryCity, 'Cidade *') }}
+            {{ form_widget(form.deliveryCity,{attr:{class:'form-control', 'placeholder':'Cidade', readonly: 'readonly'}}) }}
+        </div>
+        <div class="form-group col-md-3">
+            {{ form_label(form.deliveryDistrict, 'Bairro *') }}
+            {{ form_widget(form.deliveryDistrict,{attr:{class:'form-control', 'placeholder':'Bairro', readonly: 'readonly'}}) }}
+        </div>
+        <div class="form-group col-md-3">
+            {{ form_label(form.deliveryStreet, 'Logradouro *') }}
+            {{ form_widget(form.deliveryStreet,{attr:{class:'form-control', 'placeholder':'Logradouro', readonly: 'readonly'}}) }}
+        </div>
+        <div class="form-group col-md-3">
+            {{ form_label(form.deliveryNumber, 'Número *') }}
+            {{ form_widget(form.deliveryNumber,{attr:{class:'form-control', 'placeholder':'Numero', readonly: 'readonly'}}) }}
+        </div>
+        <div class="form-group col-md-6">
+            {{ form_label(form.deliveryComplement, 'Complementos') }}
+            {{ form_widget(form.deliveryComplement,{attr:{class:'form-control', 'placeholder':'Complementos', readonly: 'readonly'}}) }}
+        </div>
+        <div class="form-group col-md-12">
+            <label> &nbsp; </label>
+            <button class="btn btn-success ladda-button pull-right hide" data-style="zoom-in" type="submit" id="delivery-save">
+                <i class="fa fa-save"></i> {{ 'Save'|trans }}
+            </button>
+            <a id="btn_edit_delivery" class="btn btn-success pull-right">
+                <i class="fa fa-edit"></i> Editar
+            </a>
+
+        </div>
+    </div>
+</div>
+{{ form_end(form) }}
+
+<script>
+    var form = $('#form_delivery');
+    var button = $('#delivery-save');
+    button.ladda();
+
+    form.on('submit', function (event) {
+        event.preventDefault();
+        button.ladda('start');
+        $.ajax({
+            url: $(this).attr('action'),
+            method: 'post',
+            data: form.serialize(),
+            success: function (xhr) {
+                button.ladda('stop');
+                if ('object' == typeof ShippingManager) {
+                    ShippingManager.calculate(0);
+                }
+                Delivery.editableShipping(false);
+            }
+        });
+    });
+
+    form.trigger('submit');
+
+    var btnSubmitDelivery = $('#delivery-save');
+    var btnEditDelivery = $('#btn_edit_delivery');
+
+    $(btnEditDelivery).on('click', function () {
+        Delivery.editableShipping(true);
+    });
+
+    Delivery = {
+        editableShipping: function(editable) {
+
+            if (editable) {
+                $(btnSubmitDelivery).removeClass('hide');
+                $(btnEditDelivery).addClass('hide');
+
+                $('#delivery_deliveryPostcode').removeAttr('readonly');
+                $('#delivery_deliveryState').removeAttr('readonly');
+                $('#delivery_deliveryCity').removeAttr('readonly');
+                $('#delivery_deliveryDistrict').removeAttr('readonly');
+                $('#delivery_deliveryStreet').removeAttr('readonly');
+                $('#delivery_deliveryNumber').removeAttr('readonly');
+                $('#delivery_deliveryComplement').removeAttr('readonly');
+
+                GeneratorHandler.enableValidate += 2;
+                GeneratorHandler.btnValidate.addClass('hide');
+            } else {
+                $(btnSubmitDelivery).addClass('hide');
+                $(btnEditDelivery).removeClass('hide');
+
+                $('#delivery_deliveryPostcode').attr('readonly', 'readonly');
+                $('#delivery_deliveryState').attr('readonly', 'readonly');
+                $('#delivery_deliveryCity').attr('readonly', 'readonly');
+                $('#delivery_deliveryDistrict').attr('readonly', 'readonly');
+                $('#delivery_deliveryStreet').attr('readonly', 'readonly');
+                $('#delivery_deliveryNumber').attr('readonly', 'readonly');
+                $('#delivery_deliveryComplement').attr('readonly', 'readonly');
+
+                GeneratorHandler.enableValidate -= 2;
+                if (!GeneratorHandler.enableValidate)
+                    GeneratorHandler.btnValidate.removeClass('hide');
+            }
+        }
+    };
+
+    $("#delivery_deliveryPostcode").mask("00.000-000");
+
+    $('#delivery_deliveryPostcode').change(function () {
+        $.ajax({
+            url: '{{ path('utils_postcode') }}',
+            method: 'post',
+            data: {postcode: $('#delivery_deliveryPostcode').val()},
+            complete: function (xhr) {
+                if (200 == xhr.status) {
+                    $('#delivery_deliveryState').val(xhr.responseJSON.uf);
+                    $('#delivery_deliveryCity').val(xhr.responseJSON.cidade);
+                    $('#delivery_deliveryDistrict').val(xhr.responseJSON.bairro);
+                    $('#delivery_deliveryStreet').val(xhr.responseJSON.logradouro);
+                }
+            }
+        });
+    });
+
+</script>
