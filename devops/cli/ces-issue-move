@@ -16,17 +16,24 @@ fi
 
 echo 'Moving Github issue...'
 
+input_format() {
+  local s=${1/--/}
+  echo ${s^}
+}
+
 ISSUE=$1
 STAGE=$2
 LOGIN=$($CLI_PATH/util/github-credentials --login)
 
-get_input_stage() {
-  local split=${1/--/}
-  echo ${split^}
-}
+STAGE_FROM=$($CLI_PATH/ces-issue-info $ISSUE --stage)
+STAGE_TO=$(input_format $STAGE)
 
-STAGE_TO="[\"Stage: $(get_input_stage $STAGE)\"]"
-STAGE_FROM="Stage:%20$($CLI_PATH/ces-issue-info $ISSUE --stage)"
+if [[ $STAGE_FROM == $STAGE_TO ]]; then
+  exit 0
+fi
 
-curl -X DELETE -u $LOGIN $GITHUB_REPOSITORY/issues/$ISSUE/labels/$STAGE_FROM > /dev/null 2>&1
-curl -X POST -u $LOGIN -d "$STAGE_TO" $GITHUB_REPOSITORY/issues/$ISSUE/labels > /dev/null 2>&1
+QUERY_STRING="Stage:%20$STAGE_FROM"
+JSON="[\"Stage: $STAGE_TO\"]"
+
+curl -X DELETE -u $LOGIN $GITHUB_REPOSITORY/issues/$ISSUE/labels/$QUERY_STRING > /dev/null 2>&1
+curl -X POST -u $LOGIN -d "$JSON" $GITHUB_REPOSITORY/issues/$ISSUE/labels > /dev/null 2>&1
