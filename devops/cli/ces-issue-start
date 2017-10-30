@@ -27,7 +27,13 @@ $CLI_PATH/ces-issue-assign $1
 $CLI_PATH/ces-issue-move $1 --in-progress
 
 if [ $LAST_BRANCH != 'master' ]; then
-  $CLI_PATH/ces-issue-close ${LAST_BRANCH/issue-/}
+  read -p "Do you wanna $LAST_BRANCH to be tested by product team? [Y/n]: " accept > /dev/tty
+
+  if [[ $accept == 'y' ]]; then
+    $CLI_PATH/ces-issue-request --testing
+  else
+    $CLI_PATH/ces-issue-close "${LAST_BRANCH/issue-/}"
+  fi
 fi
 
 $CLI_PATH/ces-slack-notify --devops "[issue-$1] _${USER}_ has been working on"
