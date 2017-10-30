@@ -75,7 +75,6 @@
 </div>
 {{ form_end(form) }}
 
-{% block scripts %}
 <script>
     var form = $('#form_company');
     var button = $('#company-save');
@@ -91,17 +90,17 @@
             success: function (xhr) {
                 button.ladda('stop');
                 if ('object' == typeof ShippingManager) {
-                ShippingManager.calculate(0);
+                    ShippingManager.calculate(0);
                 }
                 Shipping.editableShipping(false);
             }
         });
     });
 
+    form.trigger('submit');
+
     var btnSubmit = $('#btn_submit');
     var btnEdit = $('#btn_edit');
-
-    btnSubmit.trigger('click');
 
     $(btnEdit).on('click', function () {
         Shipping.editableShipping(true);
@@ -171,4 +170,5 @@
         return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
     });
 </script>
+{% block scripts %}
 {% endblock %}
