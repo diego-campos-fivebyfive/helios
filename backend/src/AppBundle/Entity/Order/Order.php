@@ -206,6 +206,55 @@ class Order implements OrderInterface, InsurableInterface
     private $deliveryAddress;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="delivery_postcode", type="string", length=25, nullable=true)
+     */
+    private $deliveryPostcode;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="delivery_state", type="string", length=50, nullable=true)
+     */
+    private $delireryState;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="delivery_city", type="string", length=100, nullable=true)
+     */
+    private $deliveryCity;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="delivery_district", type="string", length=100, nullable=true)
+     */
+    private $deliveryDistrict;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="delivery_street", type="string", length=100, nullable=true)
+     */
+    private $deliveryStreet;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="delivery_number", type="string", length=50, nullable=true)
+     */
+    private $deliveryNumber;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="delivery_complement", type="string", length=100, nullable=true)
+     */
+    private $deliveryComplement;
+
+    /**
      * @var DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
@@ -745,6 +794,132 @@ class Order implements OrderInterface, InsurableInterface
     public function getDeliveryAddress()
     {
         return $this->deliveryAddress;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setDeliveryPostcode($deliveryPostcode)
+    {
+        $this->deliveryPostcode = $deliveryPostcode;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDeliveryPostcode()
+    {
+        return $this->deliveryPostcode;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setDeliveryState($deliveryState)
+    {
+        $this->delireryState = $deliveryState;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDeliveryState()
+    {
+        return $this->delireryState;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setDeliveryCity($deliveryCity)
+    {
+        $this->deliveryCity = $deliveryCity;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDeliveryCity()
+    {
+        return $this->deliveryCity;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setDeliveryDistrict($deliveryDistrict)
+    {
+        $this->deliveryDistrict = $deliveryDistrict;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDeliveryDistrict()
+    {
+        return $this->deliveryDistrict;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setDeliveryStreet($deliveryStreet)
+    {
+        $this->deliveryStreet = $deliveryStreet;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDeliveryStreet()
+    {
+        return $this->deliveryStreet;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setDeliveryNumber($deliveryNumber)
+    {
+        $this->deliveryNumber = $deliveryNumber;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDeliveryNumber()
+    {
+        return $this->deliveryNumber;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setDeliveryComplement($deliveryComplement)
+    {
+        $this->deliveryComplement = $deliveryComplement;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDeliveryComplement()
+    {
+        return $this->deliveryComplement;
     }
 
     /**
