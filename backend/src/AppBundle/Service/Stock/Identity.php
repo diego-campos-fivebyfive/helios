@@ -56,7 +56,16 @@ class Identity
             return $ids;
         }
 
-        return sprintf('%s::%s', ClassUtils::getClass($source), $source->getId());
+        return sprintf('%s::%s', self::getClass($source), $source->getId());
+    }
+
+    /**
+     * @param $object
+     * @return string
+     */
+    public static function getClass($object)
+    {
+        return ClassUtils::getClass($object);
     }
 
     /**
