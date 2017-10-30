@@ -10,6 +10,7 @@ use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Entity\Parameter;
 use AppBundle\Form\Component\GeneratorType;
 use AppBundle\Form\Financial\CompanyType;
+use AppBundle\Form\Order\DeliveryType;
 use AppBundle\Form\Order\ElementType;
 use AppBundle\Form\Order\OrderType;
 use AppBundle\Service\Order\OrderFinder;
@@ -190,14 +191,6 @@ class ProjectGeneratorController extends AbstractController
 
             $this->calculateShipping($order, $rule);
 
-            /**
-             * TODO: This is a temporary solution, it will soon be moved to exclusive processing
-             */
-            if(null != $deliveryAddress = $request->request->get('deliveryAddress')){
-                $order->setDeliveryAddress($deliveryAddress);
-                $this->manager('order')->save($order);
-            }
-
             return $this->json([
                 'shipping' => $order->getShipping(),
                 'total' => $order->getTotal()
@@ -229,14 +222,6 @@ class ProjectGeneratorController extends AbstractController
 
             $order->setShippingRules($rule);
 
-            /**
-             * TODO: This is a temporary solution, it will soon be moved to exclusive processing
-             */
-            if(null != $deliveryAddress = $request->request->get('deliveryAddress')){
-                $order->setDeliveryAddress($deliveryAddress);
-                $this->manager('order')->save($order);
-            }
-
             $this->manager('order')->save($order);
 
             return $this->json([]);
@@ -245,6 +230,27 @@ class ProjectGeneratorController extends AbstractController
         return $this->render('generator.company_shipping', [
             'order' => $order,
             'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/delivery", name="generator_delivery_address")
+     */
+    public function deliveryAddressAction(Request $request, Order $order)
+    {
+        $form = $this->createForm(DeliveryType::class, $order);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $this->manager('order')->save($order);
+
+            return $this->json([]);
+        }
+
+        return $this->render('generator.delivery_address', [
+           'order' => $order,
+           'form' => $form->createView()
         ]);
     }
 
