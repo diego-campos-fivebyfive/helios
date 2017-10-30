@@ -140,6 +140,10 @@ services:
     member_manager:
         alias: customer_manager
 
+    stock_product_manager:
+        class: AppBundle\Manager\Stock\ProductManager
+        arguments: ['AppBundle\Entity\Stock\Product', '@doctrine']
+
     # Services
     component_collector:
         class: AppBundle\Service\Order\ComponentCollector
