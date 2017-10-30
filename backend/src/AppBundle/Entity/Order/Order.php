@@ -922,7 +922,6 @@ class Order implements OrderInterface, InsurableInterface
         return $this->deliveryComplement;
     }
 
-
     /**
      * @inheritDoc
      */
