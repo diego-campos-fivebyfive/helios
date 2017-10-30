@@ -7,7 +7,7 @@ use AppBundle\Service\Stock\Identity;
 use Tests\AppBundle\AppTestCase;
 
 /**
- * Class SynchronizerTest
+ * Class IdentityTest
  * @group stock
  * @group stock_identity
  */
