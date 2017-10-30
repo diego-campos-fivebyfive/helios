@@ -47,9 +47,9 @@ class ShippingType extends AbstractType
 
          else
              $choices = [
-                'self' => 'Meu Frete',
-                'sices' => 'Frete Sices'
-            ];
+                 'self' => 'Meu Frete',
+                 'sices' => 'Frete Sices'
+             ];
 
         $builder
             ->add('type', ChoiceType::class, [
