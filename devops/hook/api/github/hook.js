@@ -17,11 +17,11 @@ const hook = (request, response) => {
   }
 
   if (request.body.action === 'submitted') {
-    const { title, url, number } = request.pull_request
-    const { login: reviewer } = request.review.user
-    const { state } = request.review
+    const { title, url, number } = request.body.pull_request
+    const { login: reviewer } = request.body.review.user
+    const { state } = request.body.review
 
-    const message = `[${title}] _${reviewer}_ ${state} pull request <${url}|#${number}>`
+    const message = `[${title}] _${reviewer}_ ${state} pull-request *<${url}|#${number}>*`
 
     /*eslint-disable */
       exec(`$CLI_PATH/ces-slack-notify --devops \'${message}\'`)
