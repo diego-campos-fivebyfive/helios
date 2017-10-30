@@ -324,7 +324,7 @@ class Order implements OrderInterface, InsurableInterface
         $this->elements = new ArrayCollection();
         $this->childrens = new ArrayCollection();
         $this->shippingRules = [];
-        $this->status = self::STATUS_BUILDING;
+        $this->setStatus(self::STATUS_BUILDING);
         $this->source = self::SOURCE_ACCOUNT;
     }
 
