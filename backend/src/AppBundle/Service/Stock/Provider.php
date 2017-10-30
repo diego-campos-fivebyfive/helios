@@ -12,6 +12,7 @@
 namespace AppBundle\Service\Stock;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * Class Provider
@@ -42,16 +43,26 @@ class Provider
     }
 
     /**
-     * @param $service
+     * @param $id
      * @return object
      */
-    public function get($service)
+    public function get($id)
     {
-        if(!$this->has($service)){
-            $this->services[$service] = $this->container->get($service);
+        if(!$this->has($id)){
+
+            switch ($id){
+                case 'accessor':
+                    $service = PropertyAccess::createPropertyAccessor();
+                    break;
+                default:
+                    $service = $this->container->get($id);
+                    break;
+            }
+
+            $this->services[$id] = $service;
         }
 
-        return $this->services[$service];
+        return $this->services[$id];
     }
 
     /**
