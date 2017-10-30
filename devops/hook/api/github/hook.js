@@ -14,18 +14,23 @@ const hook = (request, response) => {
 
   if (request.body.ref && request.body.ref.includes('master')) {
     exec('$CLI_PATH/ces-app-deploy --$CES_AMBIENCE')
+    return
   }
 
   if (request.body.action === 'submitted') {
-    const { title, url, number } = request.body.pull_request
+    const { title, number, html_url: url } = request.body.pull_request
+    const { login: developer } = request.body.pull_request.user
     const { login: reviewer } = request.body.review.user
     const { state } = request.body.review
 
-    const message = `[${title}] _${reviewer}_ ${state} pull-request *<${url}|#${number}>*`
+    const link = `*<${url}|#${number}>*`
+    const message = `[${title}] @${developer}: _${reviewer}_ ${state} pull-request ${link}`
 
     /*eslint-disable */
       exec(`$CLI_PATH/ces-slack-notify --devops \'${message}\'`)
     /*eslint-enable */
+
+    return
   }
 }
 
