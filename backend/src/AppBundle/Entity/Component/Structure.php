@@ -72,26 +72,6 @@ class Structure implements StructureInterface, ComponentInterface
     private $size;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="status", type="boolean")
-     *
-     * @Serializer\Expose()
-     * @Serializer\Groups({"api"})
-     */
-    private $status;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="available", type="boolean")
-     *
-     * @Serializer\Expose()
-     * @Serializer\Groups({"api"})
-     */
-    private $available;
-
-    /**
      * Constructor
      */
     public function __construct()
@@ -213,65 +193,5 @@ class Structure implements StructureInterface, ComponentInterface
     public function getSize()
     {
         return $this->size;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setAvailable($available)
-    {
-        $this->available = $available;
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function isAvailable($checkStatus = true)
-    {
-        return $this->available && (($checkStatus) ? $this->isActive() : true );
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function isDisable()
-    {
-        return self::DISABLE == $this->status;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function isActive()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function getStatusOptions()
-    {
-        return [
-            self::DISABLE  => 'Inativo',
-            self::ACTIVE => 'Ativo'
-        ];
     }
 }

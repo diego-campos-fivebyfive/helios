@@ -7,6 +7,9 @@ namespace AppBundle\Entity\Component;
  */
 interface ComponentInterface
 {
+    const DISABLE = 0;
+    const ACTIVE = 1;
+
     /**
      * @return int
      */
@@ -114,4 +117,47 @@ interface ComponentInterface
      * @return array
      */
     public function getDependencies();
+
+    /**
+     * @param $available
+     * @return ModuleInterface
+     */
+    public function setAvailable($available);
+
+    /**
+     * @return boolean
+     */
+    public function getAvailable();
+
+    /**
+     * @return bool
+     */
+    public function isAvailable();
+
+    /**
+     * @param $status
+     * @return mixed
+     */
+    public function setStatus($status);
+
+    /**
+     * @return bool
+     */
+    public function getStatus();
+
+    /**
+     * @return bool
+     */
+    public function isDisable();
+
+    /**
+     * @return bool
+     */
+    public function isActive();
+
+    /**
+     * @return array
+     */
+    public static function getStatusOptions();
+
 }
