@@ -277,3 +277,7 @@ services:
     platform_counter:
         class: AppBundle\Service\Util\PlatformCounter
         arguments: ['@parameter_manager']
+
+    stock_provider:
+        class: AppBundle\Service\Stock\Provider
+        arguments: ['@service_container']
