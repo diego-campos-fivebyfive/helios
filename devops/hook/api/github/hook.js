@@ -14,6 +14,7 @@ const hook = (request, response) => {
 
   if (request.body.ref && request.body.ref.includes('master')) {
     exec('$CLI_PATH/ces-app-deploy --$CES_AMBIENCE')
+    return
   }
 
   if (request.body.action === 'submitted') {
@@ -28,6 +29,8 @@ const hook = (request, response) => {
     /*eslint-disable */
       exec(`$CLI_PATH/ces-slack-notify --devops \'${message}\'`)
     /*eslint-enable */
+
+    return
   }
 }
 
