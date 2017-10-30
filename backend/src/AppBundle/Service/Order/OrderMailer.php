@@ -41,7 +41,7 @@ class OrderMailer extends AbstractMailer
             'subject' => 'Plataforma SICES Solar - Orçamento Aprovado nº %s'
         ],
         OrderInterface::STATUS_REJECTED => [
-            'enabled' => false,
+            'enabled' => true,
             'subject' => 'Plataforma SICES Solar - Orçamento Rejeitado nº %s'
         ],
         OrderInterface::STATUS_DONE => [
