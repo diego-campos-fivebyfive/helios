@@ -18,8 +18,6 @@ namespace AppBundle\Entity\Component;
  */
 interface InverterInterface
 {
-    const DISABLE = 0;
-    const ACTIVE = 1;
 
     /**
      * @return int
@@ -258,17 +256,6 @@ interface InverterInterface
     public function getStatus();
 
     /**
-     * @param $available
-     * @return InverterInterface
-     */
-    public function setAvailable($available);
-
-    /**
-     * @return boolean
-     */
-    public function getAvailable();
-
-    /**
      * @param $compatibility
      * @return InverterInterface
      */
@@ -278,21 +265,6 @@ interface InverterInterface
      * @return int
      */
     public function getCompatibility();
-
-    /**
-     * @return bool
-     */
-    public function isDisable();
-
-    /**
-     * @return bool
-     */
-    public function isActive();
-
-    /**
-     * @return array
-     */
-    public static function getStatusOptions();
 
     /**
      * @return \DateTime

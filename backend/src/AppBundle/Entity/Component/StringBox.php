@@ -81,26 +81,6 @@ class StringBox implements StringBoxInterface, ComponentInterface
     private $fuses;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="status", type="boolean", nullable=true)
-     *
-     * @Serializer\Expose()
-     * @Serializer\Groups({"api"})
-     */
-    private $status;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="available", type="boolean", nullable=true)
-     *
-     * @Serializer\Expose()
-     * @Serializer\Groups({"api"})
-     */
-    private $available;
-
-    /**
      * @inheritDoc
      */
     function __toString()
@@ -205,40 +185,4 @@ class StringBox implements StringBoxInterface, ComponentInterface
     {
         return $this->fuses;
     }
-
-    /**
-     * @inheritDoc
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setAvailable($available)
-    {
-        $this->available = $available;
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAvailable()
-    {
-        return $this->available;
-    }
-
-
 }

@@ -181,26 +181,6 @@ class Module implements ModuleInterface, ComponentInterface
     private $currentPrice;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="status", type="boolean", nullable=true)
-     *
-     * @Serializer\Expose()
-     * @Serializer\Groups({"api"})
-     */
-    private $status;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="available", type="boolean", nullable=true)
-     *
-     * @Serializer\Expose()
-     * @Serializer\Groups({"api"})
-     */
-    private $available;
-
-    /**
      * This property is used by management only
      * @var bool
      */
@@ -652,66 +632,5 @@ class Module implements ModuleInterface, ComponentInterface
     public function getCurrentPrice()
     {
         return (float) $this->currentPrice;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setAvailable($available)
-    {
-        $this->available = $available;
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAvailable()
-    {
-        return $this->available;
-    }
-
-
-    /**
-     * @inheritDoc
-     */
-    public function isDisable()
-    {
-        return self::DISABLE == $this->status;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function isActive()
-    {
-        return self::ACTIVE == $this->status;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function getStatusOptions()
-    {
-        return [
-            self::DISABLE  => 'Inativo',
-            self::ACTIVE => 'Ativo'
-        ];
     }
 }
