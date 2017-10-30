@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "Sending Slack devops chat notification..."
+echo "Sending Slack notification..."
 
 message=$(echo ${2:0:1500} | sed 's/"/\\"/g')
 

@@ -47,7 +47,6 @@ if [[ $1 == '--review' ]]; then
   $CLI_PATH/ces-issue-move $ISSUE --review
 
 elif [[ $1 == '--testing' ]]; then
-  echo 'Sending Slack testing notification...'
   message="[$BRANCH] _${USER}_ needs this issue to be *TEST*"
   $CLI_PATH/ces-slack-notify --tester "$message"
 else
