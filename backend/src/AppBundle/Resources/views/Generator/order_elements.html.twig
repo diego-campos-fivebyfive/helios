@@ -1,4 +1,4 @@
-{% set isPlatform = app.user.isPlatformAdmin or app.user.isPlatformMaster %}
+{% set isPlatform = app.user.isPlatform %}
 {% set isPromo = order.isPromotional %}
 {% set showPrices = not isPromo or app.user.isPlatform %}
 
@@ -36,6 +36,7 @@
                            id="input{{ element.id }}"
                            name="markup"
                            readonly="readonly"
+                           {{ not (app.user.isPlatformMaster or app.user.isPlatformAdmin) ? 'disabled="disabled"' }}
                            value="{{ element.markup|round(2) }}">
                 </td>
             {% endif %}
