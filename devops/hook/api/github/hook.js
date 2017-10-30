@@ -14,7 +14,7 @@ const hook = (request, response) => {
 
   if (request.body.ref && request.body.ref.includes('master')) {
     const { message } = request.body.head_commit
-    const issue = message.match(/'issue-'(?:.*)'\n\n'/)
+    const [ issue ] = message.split(/issue-/).reverse()
 
     exec(`$CLI_PATH/ces-issue-move \'${issue}\' --testing`)
     exec('$CLI_PATH/ces-app-deploy --$CES_AMBIENCE')
