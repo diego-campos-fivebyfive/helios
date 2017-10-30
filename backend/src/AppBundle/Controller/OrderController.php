@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Order\Element;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Form\Order\FilterType;
 use AppBundle\Service\Pricing\Insurance;
@@ -115,6 +116,24 @@ class OrderController extends AbstractController
             'order' => [
                 'id' => $order->getId()
             ]
+        ]);
+    }
+
+    /**
+     * @Route("/element/{id}/update", name="order_element_update")
+     * @Method("post")
+     */
+    public function updateOrderElementAction(Request $request, Element $element)
+    {
+        foreach ($request->request->get('order') as $field => $value){
+            $setter = 'set' . ucfirst($field);
+            $element->$setter($value);
+        }
+
+        $this->manager('order_element')->save($element);
+
+        return $this->json([
+            'total' => $element->getOrder()->getTotal()
         ]);
     }
 
