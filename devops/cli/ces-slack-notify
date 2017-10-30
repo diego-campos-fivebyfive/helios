@@ -10,6 +10,8 @@ elif [ $1 = '--homolog' ]; then
   slack_hook=$SLACK_HOOK_HOMOLOG
 elif [ $1 = '--production' ]; then
   slack_hook=$SLACK_HOOK_PRODUCTION
+elif [ $1 = '--tester' ]; then
+  slack_hook=$SLACK_HOOK_TESTER
 else
   echo "Invalid chat argument"
   exit 1
