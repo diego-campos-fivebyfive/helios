@@ -95,6 +95,13 @@ trait ComponentTrait
      */
     protected $makerId;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $stock;
+
     /***
      * @param $datasheet
      * @return $this
@@ -289,5 +296,23 @@ trait ComponentTrait
     public function getDependencies()
     {
         return (array) $this->dependencies;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setStock($stock)
+    {
+        $this->stock = $stock;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getStock()
+    {
+        return (int) $this->stock;
     }
 }

@@ -114,4 +114,15 @@ interface ComponentInterface
      * @return array
      */
     public function getDependencies();
+
+    /**
+     * @param int $stock
+     * @return ComponentInterface
+     */
+    public function setStock($stock);
+
+    /**
+     * @return int
+     */
+    public function getStock();
 }
