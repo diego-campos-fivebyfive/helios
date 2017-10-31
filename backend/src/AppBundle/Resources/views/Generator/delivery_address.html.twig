@@ -1,7 +1,9 @@
-<h3> <i class="fa fa-map-marker"></i> Endereço de Entrega </h3>
 {{ form_start(form, {attr:{id:'form_delivery', action: app.request.uri}}) }}
 <div class="row">
     <div class="col-md-12">
+        <div class="col-md-12">
+            <h3> <i class="fa fa-map-marker"></i> Endereço de Entrega </h3>
+        </div>
         <div class="form-group col-md-3">
             {{ form_label(form.deliveryPostcode, 'CEP *') }}
             {{ form_widget(form.deliveryPostcode,{attr:{class:'form-control', 'placeholder':'CEP', readonly: 'readonly'}}) }}
@@ -61,21 +63,26 @@
                 if ('object' == typeof ShippingManager) {
                     ShippingManager.calculate(0);
                 }
-                Delivery.editableShipping(false);
+                if (Delivery.clickByDelivery) {
+                    Delivery.editableShipping(false);
+                    Delivery.clickByDelivery = false;
+                }
             }
         });
     });
 
-    form.trigger('submit');
+    form.trigger('#delivery-save');
 
     var btnSubmitDelivery = $('#delivery-save');
     var btnEditDelivery = $('#btn_edit_delivery');
 
     $(btnEditDelivery).on('click', function () {
+        Delivery.clickByDelivery = true;
         Delivery.editableShipping(true);
     });
 
     Delivery = {
+        clickByDelivery: false,
         editableShipping: function(editable) {
 
             if (editable) {

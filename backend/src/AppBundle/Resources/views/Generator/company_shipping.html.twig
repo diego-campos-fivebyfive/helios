@@ -92,7 +92,10 @@
                 if ('object' == typeof ShippingManager) {
                     ShippingManager.calculate(0);
                 }
-                Shipping.editableShipping(false);
+                if (Shipping.clickByShipping) {
+                    Shipping.clickByShipping = false;
+                    Shipping.editableShipping(false);
+                }
             }
         });
     });
@@ -103,10 +106,12 @@
     var btnEdit = $('#btn_edit');
 
     $(btnEdit).on('click', function () {
+        Shipping.clickByShipping = true;
         Shipping.editableShipping(true);
     });
 
     Shipping = {
+        clickByShipping: false,
         editableShipping: function(editable) {
 
             if (editable) {
@@ -124,7 +129,7 @@
                 $('#company_city').removeAttr('readonly');
                 $('#company_address').removeAttr('readonly');
 
-                GeneratorHandler.enableValidate += 2;
+                GeneratorHandler.enableValidate += 3;
                 GeneratorHandler.btnValidate.addClass('hide');
             } else {
                 $(btnSubmit).addClass('hide');
@@ -141,7 +146,7 @@
                 $('#company_city').attr('readonly', 'readonly');
                 $('#company_address').attr('readonly', 'readonly');
 
-                GeneratorHandler.enableValidate -= 2;
+                GeneratorHandler.enableValidate -= 3;
                 if (!GeneratorHandler.enableValidate)
                     GeneratorHandler.btnValidate.removeClass('hide');
             }
