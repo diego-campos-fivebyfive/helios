@@ -813,40 +813,20 @@ class Order implements OrderInterface, InsurableInterface
     public function getDeliveryAddress()
     {
         $address = '';
-
-        if ($this->deliveryAddressDefined()) {
-            $address = (
-                $this->getDeliveryStreet() . ',  '
-                . $this->getDeliveryNumber() . ' - '
-                . $this->getDeliveryDistrict() . ', '
-                . $this->getDeliveryCity() . ' - '
-                . $this->getDeliveryState() . ', '
-                . $this->getDeliveryPostcode() . ' - '
-                . $this->getDeliveryComplement()
-            );
-        }
-
-        return $address;
-    }
-
-
-    private function deliveryAddressDefined()
-    {
-        $address = '';
         if ($this->getDeliveryStreet())
-            $address += $this->getDeliveryStreet();
+            $address .= $this->getDeliveryStreet() . ',  ';
         if ($this->getDeliveryNumber())
-            $address += $this->getDeliveryNumber();
+            $address .= $this->getDeliveryNumber() . ' - ';
         if ($this->getDeliveryDistrict())
-            $address += $this->getDeliveryDistrict();
+            $address .= $this->getDeliveryDistrict() . ', ';
         if ($this->getDeliveryCity())
-            $address += $this->getDeliveryCity();
+            $address .= $this->getDeliveryCity() . ' - ';
         if ($this->getDeliveryState())
-            $address += $this->getDeliveryState();
+            $address .= $this->getDeliveryState() . ', ';
         if ($this->getDeliveryPostcode())
-            $address += $this->getDeliveryPostcode();
+            $address .= $this->getDeliveryPostcode();
         if ($this->getDeliveryComplement())
-            $address += $this->getDeliveryComplement();
+            $address .= ' - ' . $this->getDeliveryComplement();
 
         return $address;
     }
