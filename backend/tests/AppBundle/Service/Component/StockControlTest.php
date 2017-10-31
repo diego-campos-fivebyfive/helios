@@ -13,11 +13,27 @@ use Tests\AppBundle\AppTestCase;
  */
 class StockControlTest extends AppTestCase
 {
-    public function testDebitProcess()
+    public function testTransactProcess()
     {
         $module = $this->getFixture('module');
 
         $this->assertEquals(0, $module->getStock());
+
+        $transactions = [
+            [
+                'component' => $module,
+                'amount' => 100
+            ]
+        ];
+
+        $stockComponent = $this->service('stock_component');
+
+        $stockComponent->transact($transactions);
+
+        $this->assertEquals(100, $module->getStock());
+
+        //$components = [$module];
+        /*$this->assertEquals(0, $module->getStock());
 
         $stockControl = $this->service('stock_control');
         //$componentStock = $this->service('component_stock');
@@ -36,7 +52,7 @@ class StockControlTest extends AppTestCase
 
         $componentStock->update([$module]);
 
-        $this->assertEquals($total, $module->getStock());
+        $this->assertEquals($total, $module->getStock());*/
     }
 
     /**

@@ -23,6 +23,11 @@ class StockControl
         $this->container = $container;
     }
 
+    public function transact(array $transactions)
+    {
+        dump($transactions); die;
+    }
+
     /**
      * @param array $components
      */
