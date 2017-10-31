@@ -40,6 +40,10 @@ if [[ $STAGE == 'Testing' ]]; then
   fi
 fi
 
+if [[ $STAGE == 'Closed' ]]; then
+  $CLI_PATH/ces-branch-clear $LAST_ISSUE
+fi
+
 $CLI_PATH/ces-slack-notify --devops "[issue-$1] _${USER}_ has been working on"
 $CLI_PATH/util/user-notify 'Branch created' "now on issue-$1"
 echo "Everything done, now on Branch: issue-$1"

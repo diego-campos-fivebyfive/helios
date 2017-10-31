@@ -16,6 +16,12 @@ fi
 ISSUE=$1
 STAGE=$($CLI_PATH/ces-issue-info $ISSUE --stage)
 
+if [[ $STAGE == 'Closed' ]]; then
+  echo "issue-$1 already closed."
+  $CLI_PATH/ces-branch-clear $ISSUE $2
+  exit 0
+fi
+
 if [ "$2" != '-f' ] && [[ $STAGE != 'Testing' ]]; then
   read -p "Warning: this issue-$1 is not on testing column, if you are sure about deleting this, you must use -f arg. Press ENTER to continue."
   exit 0
