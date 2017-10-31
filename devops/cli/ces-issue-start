@@ -34,11 +34,10 @@ if [[ $STAGE == 'Testing' ]]; then
 
   if [[ $accept == 'y' ]]; then
     $CLI_PATH/ces-issue-request --testing $LAST_ISSUE
+    $CLI_PATH/ces-branch-clear $LAST_ISSUE
   else
     $CLI_PATH/ces-issue-close $LAST_ISSUE
   fi
-
-  $CLI_PATH/ces-branch-clear $LAST_ISSUE
 fi
 
 $CLI_PATH/ces-slack-notify --devops "[issue-$1] _${USER}_ has been working on"
