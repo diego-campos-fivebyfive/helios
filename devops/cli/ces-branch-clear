@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+cd $SICES_PATH
+
+if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
+  printf "ces-branch-clear - help:
+  Usage:
+  ces-branch-clear [ISSUE_NUMBER] \n
+  Exemple:
+  ces-branch-clear 100 \n"
+  exit 0;
+fi
+
+ISSUE=$1
+BRANCH="issue-$1"
+STAGE=$($CLI_PATH/ces-issue-info $ISSUE --stage)
+USER=$($CLI_PATH/util/github-credentials --user)
+
+if [ $2 != '-f' ] && [[ $STAGE != 'Testing' ]]; then
+  read -p "Note: issue-$1 is not on testing column, if there is any opened Pull Request related to this branch, you'll must delete it manually using ces-issue-close after it be tested. Press ENTER to continue."
+  exit 0
+fi
+
+echo "Closing current local and remote branch $BRANCH..."
+
+git branch -D $BRANCH
+git push origin --delete $BRANCH > /dev/null 2>&1
+
+$CLI_PATH/ces-slack-notify --devops "[$BRANCH] _${USER}_ closed these local and remote branch"
