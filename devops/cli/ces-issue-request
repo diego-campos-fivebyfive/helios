@@ -9,7 +9,8 @@ if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
   exit 0;
 fi
 
-BRANCH=$([[ $2 ]] && echo "issue-$2" || echo $(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,'))
+BRANCH_CURRENT=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+BRANCH=$([[ $2 ]] && echo "issue-$2" || echo $BRANCH_CURRENT)
 ISSUE=${BRANCH/issue-/}
 
 USER=$($CLI_PATH/util/github-credentials --user)
@@ -31,6 +32,16 @@ get_pull_request_number() {
 }
 
 if [[ $1 == '--review' ]]; then
+
+  if [[ $BRANCH != $BRANCH_CURRENT ]]; then
+    git stash
+    git checkout -b $BRANCH
+    git push origin $BRANCH
+    git checkout -b $BRANCH_CURRENT
+    git stash apply
+  else
+    git push origin $BRANCH
+  fi
 
   echo 'Creating Github pull request...'
   pr=$(open_pull_request | get_pull_request_number)
