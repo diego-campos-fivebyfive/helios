@@ -13,11 +13,14 @@ const hook = (request, response) => {
     .end()
 
   if (request.body.ref && request.body.ref.includes('master')) {
-    const { message } = request.body.head_commit
-    const [ issue ] = message.split(/issue-/).reverse()
+    const { message: description } = request.body.head_commit
+    const [ issue ] = description.split(/issue-/).reverse()
+
+    const message = `[issue-${issue}] successfully merged to homolog`
 
     exec(`$CLI_PATH/ces-issue-move \'${issue}\' --testing`)
     exec('$CLI_PATH/ces-app-deploy --$CES_AMBIENCE')
+    exec(`$CLI_PATH/ces-slack-notify --devops \'${message}\'`)
 
     return
   }
