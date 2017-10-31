@@ -148,6 +148,13 @@
                                                 </a>
                                             {% endif %}
 
+                                            {% if member.isPlatformFinancial and order.isDone %}
+                                                <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
+                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') }}">
+                                                    <i class="fa fa-stop"></i> Cancelar Confirmação
+                                                </a>
+                                            {% endif %}
+
                                         </div>
                                         <div class="pull-right">
                                             {% if not (order.isDone or order.isApproved or order.isRejected)

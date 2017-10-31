@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Order\Element;
 use AppBundle\Entity\Order\Order;
+use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Form\Order\FilterType;
 use AppBundle\Service\Pricing\Insurance;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,17 +76,19 @@ class OrderController extends AbstractController
 
         $manipulator = $this->get('order_manipulator');
 
-        if($manipulator->acceptStatus($order, $status, $this->user())){
+        if($manipulator->acceptStatus($order, $status, $this->user())) {
+
+            $currentStatus = $order->getStatus();
 
             $order->setStatus($status);
 
             $this->manager('order')->save($order);
 
-            if ($order->isApproved()){
+            if ($order->isApproved() && $currentStatus != OrderInterface::STATUS_DONE)
                 $this->generatorProformaAction($order);
-            }
 
-            $this->sendOrderEmail($order);
+            if (!($currentStatus == OrderInterface::STATUS_DONE && $order->isApproved()))
+                $this->sendOrderEmail($order);
 
             return $this->json();
         }
