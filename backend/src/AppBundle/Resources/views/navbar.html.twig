@@ -12,6 +12,34 @@
         border-color: #00A7EC !important;
         color: white !important;
 }
+
+.label-level {
+    padding: 10px 42px;
+}
+.label.label-level {
+    background-color: white;
+    border: 1px solid white;
+    border-radius: 3px;
+    color: #555;
+}
+
+.label.level-black {
+    background-image: url({{ asset('assets/images/black_01.png') }});
+    background-size: 100%;
+}
+.label.level-partner {
+    background-image: url({{ asset('assets/images/partner_01.png') }});
+    background-size: 100%;
+}
+.label.level-premium {
+    background-image: url({{ asset('assets/images/premium_01.png') }});
+    background-size: 100%;
+}
+.label.level-platinum {
+    background-image: url({{ asset('assets/images/platinum_01.png') }});
+    background-size: 100%;
+}
+
 @media screen and (max-width: 480px) {
     .navbar-right {
         float: right !important;
@@ -65,9 +93,8 @@
             {% endif %}#}
             {% if app.user and not app.user.isPlatform %}
                 <li>
-                    <h4 class="m-r-sm text-muted welcome-message">
-                        Conta&nbsp;<strong>{{ account.level|trans|upper }}</strong>
-                    </h4>
+                    <div class="label label-level label-size level-{{ account.level }}">
+                    </div>
                 </li>
             {% endif %}
 
