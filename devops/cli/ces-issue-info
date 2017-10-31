@@ -11,10 +11,24 @@ fi
 
 ISSUE=$1
 LOGIN=$($CLI_PATH/util/github-credentials --login)
+INFO=$(curl -s -X GET -u $LOGIN $GITHUB_REPOSITORY/issues/$ISSUE)
 
 get_current_stage() {
-  local labels=$(curl -s -X GET -u $LOGIN $GITHUB_REPOSITORY/issues/$ISSUE/labels)
-  echo $labels | grep -oP '(?<=Stage:%20).*(?=", "name": "Stage)'
+  local state=$(echo $INFO | python -m json.tool | grep -oP '(?<="state": ").*(?=",)')
+
+  if [[ $state == 'closed' ]]; then
+    echo 'Closed'
+    exit 0
+  fi
+
+  local label=$(echo $INFO | python -m json.tool | grep -oP '(?<="Stage: ).*(?=",)')
+
+  if [[ $label ]]; then
+    echo $label
+    exit 0
+  fi
+
+  echo 'Backlog-general'
 }
 
 if [[ $2 == '--stage' ]]; then
