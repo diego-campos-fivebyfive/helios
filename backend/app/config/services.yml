@@ -289,3 +289,7 @@ services:
     stock_control:
         class: AppBundle\Service\Stock\Control
         arguments: ['@stock_product_manager']
+
+    stock_component:
+        class: AppBundle\Service\Stock\Component
+        arguments: ['@service_container']
