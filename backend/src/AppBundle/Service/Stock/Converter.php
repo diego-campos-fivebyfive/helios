@@ -3,6 +3,7 @@
 namespace AppBundle\Service\Stock;
 
 use AppBundle\Entity\Component\ComponentInterface;
+use AppBundle\Entity\Stock\Product;
 use AppBundle\Entity\Stock\ProductInterface;
 
 class Converter
@@ -15,14 +16,7 @@ class Converter
     /**
      * @var array
      */
-    private $benchmark = [
-        'total_queries' => 0
-    ];
-
-    /**
-     * @var array
-     */
-    private $reversed = [];
+    private $cache = [];
 
     /**
      * Converter constructor.
@@ -34,40 +28,22 @@ class Converter
     }
 
     /**
-     * @param object|array $source
-     * @return ProductInterface|array|null
+     * @param array $components
+     * @return array
      */
-    public function transform($source)
+    public function transform(array $components)
     {
-        if($source instanceof ProductInterface)
-            throw new \InvalidArgumentException('Invalid source object instance.');
+        $identities = Identity::create($components);
 
-        if(is_array($source)){
-            $products = [];
-            foreach ($source as $item){
-                $products[] = $this->transform($item);
-            }
+        $this->cacheIdentities($identities);
+        $this->cacheComponents($components);
+        $this->cacheProducts($components);
 
-            return $products;
-        }
+        $products = array_values(array_map(function($data){
+            return $data['product'];
+        }, $this->cache));
 
-        $id = Identity::create($source);
-
-        if(null == $product = $this->find($id)){
-
-            $manager = $this->provider->manager('stock_product');
-            /** @var ProductInterface $product */
-            $product = $manager->create();
-            $product
-                ->setId($id)
-                ->setCode($source->getCode())
-                ->setDescription($source->getDescription())
-            ;
-
-            $manager->save($product);
-        }
-
-        return $product;
+        return $products;
     }
 
     /**
@@ -106,11 +82,98 @@ class Converter
     }
 
     /**
-     * @return int
+     * @param array $identities
      */
-    public function totalQueries()
+    private function cacheIdentities(array $identities)
     {
-        return $this->benchmark['total_queries'];
+        foreach ($identities as $identity){
+            if(!array_key_exists($identity, $this->cache)){
+                $this->cache[$identity] = [
+                    'component' => null,
+                    'product' => null
+                ];
+            }
+        }
+    }
+
+    /**
+     * @param array $components
+     */
+    private function cacheComponents(array $components)
+    {
+        foreach ($components as $component){
+            $identity = Identity::create($component);
+            if(!$this->cache[$identity]['component']) $this->cache[$identity]['component'] = $component;
+        }
+    }
+
+    /**
+     * 1. Check product cache
+     * 2. Find uncached products
+     * 3. Create not found products
+     * 4. Cache products
+     */
+    private function cacheProducts()
+    {
+        $identities = [];
+        foreach ($this->cache as $identity => $data){
+            if(!$data['product']) $identities[] = $identity;
+        }
+
+        if(!empty($identities)) {
+
+            $products = $this->findProducts($identities);
+
+            foreach ($products as $product){
+
+                $this->cache[$product->getId()]['product'] = $product;
+
+                $index = array_search($product->getId(), $identities);
+                unset($identities[$index]);
+            }
+        }
+
+        if(!empty($identities)){
+
+            $manager = $this->provider->get('stock_product_manager');
+
+            foreach ($identities as $key => $identity){
+
+                /** @var ComponentInterface $component */
+                $component = $this->cache[$identity]['component'];
+
+                /** @var ProductInterface $product */
+                $product = $manager->create();
+
+                $product
+                    ->setId($identity)
+                    ->setCode($component->getCode())
+                    ->setDescription($component->getDescription())
+                ;
+
+                $manager->save($product);
+
+                $this->cache[$identity]['product'] = $product;
+            }
+        }
+    }
+
+    /**
+     * @param array $identities
+     * @return array
+     */
+    private function findProducts(array $identities)
+    {
+        $em = $this->getManager();
+        $qb = $em->createQueryBuilder();
+
+        $qb
+            ->select('p')
+            ->from(Product::class, 'p')
+            ->where($qb->expr()->in('p.id', $identities))
+        ;
+
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -183,5 +246,13 @@ class Converter
         }
 
         return $normalized;
+    }
+
+    /**
+     * @return object|\Doctrine\ORM\EntityManagerInterface
+     */
+    private function getManager()
+    {
+        return $this->provider->get('em');
     }
 }

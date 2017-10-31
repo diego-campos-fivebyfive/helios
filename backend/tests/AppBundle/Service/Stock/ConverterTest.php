@@ -51,6 +51,11 @@ class ConverterTest extends AppTestCase
             $this->assertInstanceOf(ProductInterface::class, $product);
             $this->assertEquals($id, $product->getId());
         }
+
+        // step 2 - cached
+        $cachedProducts = $this->getConverter()->transform($components);
+
+        $this->assertEquals(count($products), count($cachedProducts));
     }
 
     // Single product
