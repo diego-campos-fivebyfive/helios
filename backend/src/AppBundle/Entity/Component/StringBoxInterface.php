@@ -79,28 +79,6 @@ interface StringBoxInterface
     public function getFuses();
 
     /**
-     * @param $status
-     * @return StringBoxInterface
-     */
-    public function setStatus($status);
-
-    /**
-     * @return boolean
-     */
-    public function getStatus();
-
-    /**
-     * @param $available
-     * @return StringBoxInterface
-     */
-    public function setAvailable($available);
-
-    /**
-     * @return boolean
-     */
-    public function getAvailable();
-
-    /**
      * @param MakerInterface $maker
      * @return StringBoxInterface
      */

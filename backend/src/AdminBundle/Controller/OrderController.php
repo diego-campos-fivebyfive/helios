@@ -11,6 +11,7 @@ use AppBundle\Entity\Order\Order;
 use AppBundle\Form\Order\OrderType;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
@@ -139,30 +140,6 @@ class OrderController extends AbstractController
         return $this->render('admin/orders/shipping.html.twig', array(
             'order' => $order
         ));
-    }
-
-    /**
-     * @Route("/element/{id}/update", name="order_element_update")
-     */
-    public function updateOrderElementAction(Request $request, Element $element)
-    {
-        $manager = $this->manager('order_element');
-
-        try {
-            $markup = $request->get('markup');
-
-            $element->setMarkup($markup/100);
-
-            $manager->save($element);
-
-            $status = Response::HTTP_OK;
-        } catch (\Exception $exception) {
-            $status = Response::HTTP_EXPECTATION_FAILED;
-        }
-
-        return $this->json([
-            'total' => $element->getOrder()->getTotal()
-        ], $status);
     }
 
     /**

@@ -114,6 +114,11 @@ interface OrderInterface
     public function getStatus();
 
     /**
+     * @return \DateTime
+     */
+    public function getStatusAt();
+
+    /**
      * @return int
      */
     public static function getStatusNames();
@@ -438,6 +443,83 @@ interface OrderInterface
      * @return string
      */
     public function getDeliveryAddress();
+
+    /**
+     * @param $deliveryPostcode
+     * @return OrderInterface
+     */
+    public function setDeliveryPostcode($deliveryPostcode);
+
+    /**
+     * @return string
+     */
+    public function getDeliveryPostcode();
+
+    /**
+     * @param $deliveryState
+     * @return OrderInterface
+     */
+    public function setDeliveryState($deliveryState);
+
+    /**
+     * @return string
+     */
+    public function getDeliveryState();
+
+    /**
+     * @param $deliveryCity
+     * @return OrderInterface
+     */
+    public function setDeliveryCity($deliveryCity);
+
+    /**
+     * @return string
+     */
+    public function getDeliveryCity();
+
+    /**
+     * @param $deliveryDistrict
+     * @return OrderInterface
+     */
+    public function setDeliveryDistrict($deliveryDistrict);
+
+    /**
+     * @return string
+     */
+    public function getDeliveryDistrict();
+
+    /**
+     * @param $deliveryStreet
+     * @return OrderInterface
+     */
+    public function setDeliveryStreet($deliveryStreet);
+
+    /**
+     * @return string
+     */
+    public function getDeliveryStreet();
+
+    /**
+     * @param $deliveryNumber
+     * @return OrderInterface
+     */
+    public function setDeliveryNumber($deliveryNumber);
+
+    /**
+     * @return string
+     */
+    public function getDeliveryNumber();
+
+    /**
+     * @param $deliveryComplement
+     * @return OrderInterface
+     */
+    public function setDeliveryComplement($deliveryComplement);
+
+    /**
+     * @return string
+     */
+    public function getDeliveryComplement();
 
     /**
      * @param \DateTime $deliveryAt

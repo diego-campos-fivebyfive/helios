@@ -11,8 +11,8 @@ if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
   exit 0;
 fi
 
-USER=$($CLI_PATH/util/github-credentials --user)
 LAST_BRANCH=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+LAST_ISSUE=${LAST_BRANCH/issue-/}
 
 git checkout master
 git fetch origin
@@ -26,8 +26,18 @@ $CLI_PATH/ces-log-clear
 $CLI_PATH/ces-issue-assign $1
 $CLI_PATH/ces-issue-move $1 --in-progress
 
-if [ $LAST_BRANCH != 'master' ]; then
-  $CLI_PATH/ces-issue-close ${LAST_BRANCH/issue-/}
+USER=$($CLI_PATH/util/github-credentials --user)
+STAGE=$($CLI_PATH/ces-issue-info $LAST_ISSUE --stage)
+
+if [[ $STAGE == 'Testing' ]]; then
+  read -p "Do you wanna $LAST_BRANCH to be tested by product team? [Y/n]: " accept > /dev/tty
+
+  if [[ $accept == 'y' ]]; then
+    $CLI_PATH/ces-issue-request --testing $LAST_ISSUE
+    $CLI_PATH/ces-branch-clear $LAST_ISSUE
+  else
+    $CLI_PATH/ces-issue-close $LAST_ISSUE
+  fi
 fi
 
 $CLI_PATH/ces-slack-notify --devops "[issue-$1] _${USER}_ has been working on"

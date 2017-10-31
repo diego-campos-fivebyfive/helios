@@ -116,7 +116,7 @@
     <div class="form-group col-md-12">
         <div class="col-md-6">
             {{ form_label(form.paymentMethod, 'Condição de Pagamento') }}
-            {{ form_widget(form.paymentMethod, {attr:{class:'form-control', disabled: 'disabled'}}) }}
+            {{ form_widget(form.paymentMethod, {attr:{class:'form-control', readonly: 'readonly'}}) }}
         </div>
     </div>
 
@@ -126,18 +126,18 @@
 
         <div class="col-md-9">
             {{ form_label(form.note, 'Observações a serem inseridas na pró-forma') }}
-            {{ form_widget(form.note, {attr:{class:'form-control', disabled: 'disabled'}}) }}
+            {{ form_widget(form.note, {attr:{class:'form-control', readonly: 'readonly'}}) }}
         </div>
 
         <div class="col-md-3">
             <div class="row">
                 <div class="col-md-12">
                     <label for="delivery_at">Disponibilidade para Coleta</label>
-                    <input class="form-control" id="delivery_at" type="text" disabled="disabled">
+                    <input class="form-control" id="delivery_at" type="text" readonly="readonly">
                 </div>
                 <div class="col-md-12" id="order_deadline_block" style="margin-top: 30px;">
                     {{ form_label(form.deadline, 'Prazo de Entrega (dias)') }}
-                    {{ form_widget(form.deadline, {attr:{class:'form-control', disabled: 'disabled'}}) }}
+                    {{ form_widget(form.deadline, {attr:{class:'form-control', readonly: 'readonly'}}) }}
                 </div>
             </div>
         </div>
@@ -171,10 +171,12 @@
     var buttonEdit = $('#button_edit');
 
     $(buttonEdit).on('click', function () {
+        InfoManager.clickByPayment = true;
         InfoManager.changeEditable(true);
     });
 
     var InfoManager = {
+        clickByPayment: false,
         accountSelector: $('#order_account'),
         shippingSelector: null,
         deadlineBlock: $('#order_deadline_block'),
@@ -220,10 +222,10 @@
                 $(buttonAccount).removeClass('hide');
                 $(buttonEdit).addClass('hide');
 
-                $('#order_note').removeAttr('disabled');
-                $('#delivery_at').removeAttr('disabled');
-                $('#order_deadline').removeAttr('disabled');
-                $('#order_paymentMethod').removeAttr('disabled');
+                $('#order_note').removeAttr('readonly');
+                $('#delivery_at').removeAttr('readonly');
+                $('#order_deadline').removeAttr('readonly');
+                $('#order_paymentMethod').removeAttr('readonly');
 
                 GeneratorHandler.enableValidate ++;
                 GeneratorHandler.btnValidate.addClass('hide');
@@ -231,10 +233,10 @@
                 $(buttonAccount).addClass('hide');
                 $(buttonEdit).removeClass('hide');
 
-                $('#order_note').attr('disabled','disabled');
-                $('#delivery_at').attr('disabled','disabled');
-                $('#order_deadline').attr('disabled','disabled');
-                $('#order_paymentMethod').attr('disabled','disabled');
+                $('#order_note').attr('readonly','readonly');
+                $('#delivery_at').attr('readonly','readonly');
+                $('#order_deadline').attr('readonly','readonly');
+                $('#order_paymentMethod').attr('readonly','readonly');
 
                 GeneratorHandler.enableValidate --;
                 if (!GeneratorHandler.enableValidate)
@@ -262,7 +264,10 @@
                 }
 
                 buttonAccount.ladda('stop');
-                InfoManager.changeEditable(false);
+                if (InfoManager.clickByPayment) {
+                    InfoManager.changeEditable(false);
+                    InfoManager.clickByPayment = false;
+                }
             }
         });
     });

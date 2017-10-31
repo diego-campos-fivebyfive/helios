@@ -35,5 +35,5 @@ fi
 QUERY_STRING="Stage:%20$STAGE_FROM"
 JSON="[\"Stage: $STAGE_TO\"]"
 
-curl -X DELETE -u $LOGIN $GITHUB_REPOSITORY/issues/$ISSUE/labels/$QUERY_STRING > /dev/null 2>&1
 curl -X POST -u $LOGIN -d "$JSON" $GITHUB_REPOSITORY/issues/$ISSUE/labels > /dev/null 2>&1
+curl -X DELETE -u $LOGIN $GITHUB_REPOSITORY/issues/$ISSUE/labels/$QUERY_STRING > /dev/null 2>&1

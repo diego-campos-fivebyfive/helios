@@ -281,3 +281,11 @@ services:
     stock_provider:
         class: AppBundle\Service\Stock\Provider
         arguments: ['@service_container']
+
+    stock_converter:
+        class: AppBundle\Service\Stock\Converter
+        arguments: ['@stock_provider']
+
+    stock_control:
+        class: AppBundle\Service\Stock\Control
+        arguments: ['@stock_product_manager']

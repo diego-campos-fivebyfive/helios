@@ -63,6 +63,13 @@
                     </a>
                 </li>
             {% endif %}#}
+            {% if app.user and not app.user.isPlatform %}
+                <li>
+                    <h4 class="m-r-sm text-muted welcome-message">
+                        Conta&nbsp;<strong>{{ account.level|trans|upper }}</strong>
+                    </h4>
+                </li>
+            {% endif %}
 
             <li>
                 <span class="m-r-sm text-muted welcome-message">

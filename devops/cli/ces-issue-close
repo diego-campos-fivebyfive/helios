@@ -7,28 +7,21 @@ if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
   Usage:
   ces-issue-close [ISSUE_NUMBER] \n
   Exemple:
-  ces-issue-close 100 \n"
+  ces-issue-close 100 \n
+  Force close exemple:
+  ces-issue-close 100 -f \n"
   exit 0;
 fi
 
-BRANCH="issue-$1"
 ISSUE=$1
-
 STAGE=$($CLI_PATH/ces-issue-info $ISSUE --stage)
-if [[ $STAGE == 'Review' ]]; then
-  read -p "Note: branch issue-$1 could not be deleted, could be one or more opened Pull Request related to this branch, you must delete it manually. Press ENTER to continue."
+
+if [ "$2" != '-f' ] && [[ $STAGE != 'Testing' ]]; then
+  read -p "Warning: this issue-$1 is not on testing column, if you are sure about deleting this, you must use -f arg. Press ENTER to continue."
   exit 0
 fi
 
-read -p "Would you like to remove last branch $BRANCH and close issue $ISSUE? [y|n]: " accept > /dev/tty
+LOGIN=$($CLI_PATH/util/github-credentials --login)
 
-if [[ $accept == 'y' ]]; then
-  git branch -D $BRANCH
-  git push origin --delete $BRANCH > /dev/null 2>&1
-
-  USER=$($CLI_PATH/util/github-credentials --user)
-  LOGIN=$($CLI_PATH/util/github-credentials --login)
-
-  curl -s -X PATCH -u $LOGIN -d '{"state": "closed"}' $GITHUB_REPOSITORY/issues/$ISSUE > /dev/null 2>&1
-  $CLI_PATH/ces-slack-notify --devops "[issue-$1] _${USER}_ closed these current branch and issue"
-fi
+curl -s -X PATCH -u $LOGIN -d '{"state": "closed"}' $GITHUB_REPOSITORY/issues/$ISSUE >/dev/null 2>&1
+$CLI_PATH/ces-branch-clear $ISSUE $2

@@ -167,26 +167,6 @@ class Inverter implements InverterInterface, ComponentInterface
     private $currentPrice;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="status", type="boolean", nullable=true)
-     *
-     * @Serializer\Expose()
-     * @Serializer\Groups({"api"})
-     */
-    private $status;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="available", type="boolean", nullable=true)
-     *
-     * @Serializer\Expose()
-     * @Serializer\Groups({"api"})
-     */
-    private $available;
-
-    /**
      * @var int
      *
      * @ORM\Column(type="smallint", nullable=true)
@@ -549,40 +529,6 @@ class Inverter implements InverterInterface, ComponentInterface
     /**
      * @inheritDoc
      */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setAvailable($available)
-    {
-        $this->available = $available;
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAvailable()
-    {
-        return $this->available;
-    }
-
-
-    /**
-     * @inheritDoc
-     */
     public function setCompatibility($compatibility)
     {
         $this->compatibility = $compatibility;
@@ -596,32 +542,5 @@ class Inverter implements InverterInterface, ComponentInterface
     public function getCompatibility()
     {
         return $this->compatibility;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function isDisable()
-    {
-        return self::DISABLE == $this->status;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function isActive()
-    {
-        return self::ACTIVE == $this->status;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function getStatusOptions()
-    {
-        return [
-            self::DISABLE  => 'Inativo',
-            self::ACTIVE => 'Ativo'
-        ];
     }
 }

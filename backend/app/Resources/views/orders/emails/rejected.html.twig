@@ -1,2 +1,25 @@
-<h1> [REJECTED TEMPLATE] </h1>
-<h3> Develop content here </h3>
+{% extends ('orders/emails/layout.html.twig') %}
+{% block body %}
+    <tr>
+        <td class="content-block">
+            <p>
+                Prezado {{ order.contact }},
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td class="content-block aligncenter">
+            <h4>ATENÇÃO</h4>
+            <p>
+                O orçamento nº {{ order.reference }} foi <strong>CANCELADO</strong>.
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td class="content-block aligncenter">
+            <p>
+                Obrigado.
+            </p>
+        </td>
+    </tr>
+{% endblock %}

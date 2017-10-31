@@ -148,6 +148,13 @@
                                                 </a>
                                             {% endif %}
 
+                                            {% if member.isPlatformFinancial and order.isDone %}
+                                                <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
+                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') }}">
+                                                    <i class="fa fa-stop"></i> Cancelar Confirmação
+                                                </a>
+                                            {% endif %}
+
                                         </div>
                                         <div class="pull-right">
                                             {% if not (order.isDone or order.isApproved or order.isRejected)
@@ -305,6 +312,58 @@
                 </div>
 
             {% endif %}
+
+            <div class="ibox border-bottom">
+                <div class="ibox-content">
+                    <div class="tab-content">
+                        <div class="tab-pane active">
+                            <div class="row">
+                                <div class="row wrapper">
+                                    <div class="col-lg-12 border-bottom">
+                                        <ol class="breadcrumb">
+                                            <li>
+                                                <label>Endereço de Entrega</label>
+                                            </li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">CEP</label>
+                                        {{ order.deliveryPostcode }}
+                                    </div>
+                                    <div class="col-md-2 spacing">
+                                        <label class="row-total">Estado</label>
+                                        {{ order.deliveryState }}
+                                    </div>
+                                    <div class="col-md-3 spacing">
+                                        <label class="row-total">Cidade</label>
+                                        {{ order.deliveryCity }}
+                                    </div>
+                                    <div class="col-md-3 spacing">
+                                        <label class="row-total">Bairro</label>
+                                        {{ order.deliveryDistrict }}
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Logradouro</label>
+                                        {{ order.deliveryStreet }}
+                                    </div>
+                                    <div class="col-md-2 spacing">
+                                        <label class="row-total">Número</label>
+                                        {{ order.deliveryNumber }}
+                                    </div>
+                                    <div class="col-md-6 spacing">
+                                        <label class="row-total">Complementos</label>
+                                        {{ order.deliveryComplement }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="ibox border-bottom">
                 <div class="ibox-content">

@@ -3,13 +3,13 @@
 if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
   printf "ces-issue-request - help:
   Usage:
-  ces-issue-request --[REQUEST_TYPE] \n
+  ces-issue-request --[REQUEST_TYPE] [ISSUE_NUMBER] \n
   Exemple:
-  ces-issue-request --review \n"
+  ces-issue-request --review 100 \n"
   exit 0;
 fi
 
-BRANCH=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+BRANCH=$([[ $2 ]] && echo "issue-$2" || echo $(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,'))
 ISSUE=${BRANCH/issue-/}
 
 USER=$($CLI_PATH/util/github-credentials --user)
@@ -46,8 +46,10 @@ if [[ $1 == '--review' ]]; then
   $CLI_PATH/ces-slack-notify --devops "$message"
   $CLI_PATH/ces-issue-move $ISSUE --review
 
-elif [[ $1 == '--test' ]]; then
-  echo 'tester proccess'
+elif [[ $1 == '--testing' ]]; then
+  message="[$BRANCH] _${USER}_ requests a use *TEST*"
+  $CLI_PATH/ces-slack-notify --tester "$message"
+  $CLI_PATH/ces-slack-notify --devops "$message"
 else
   echo "Error: invalid argument $1"
   exit 1

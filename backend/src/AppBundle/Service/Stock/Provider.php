@@ -54,6 +54,9 @@ class Provider
                 case 'accessor':
                     $service = PropertyAccess::createPropertyAccessor();
                     break;
+                case 'em':
+                    $service = $this->container->get('doctrine')->getManager();
+                    break;
                 default:
                     $service = $this->container->get($id);
                     break;

@@ -141,9 +141,14 @@
                                         <small> {{ order.total|currency }} </small>
                                     </td>
                                     <td class="text-center">
-                                        <span class="label label-status status-{{ order.statusName }}">
-                                            <i class="fa fa-circle"></i> {{ order.statusName|capitalize|trans }}
-                                        </span>
+                                        <h5>
+                                            <span class="label label-status status-{{ order.statusName }}">
+                                                <i class="fa fa-circle"></i> {{ order.statusName|capitalize|trans }}
+                                            </span>
+                                        </h5>
+                                        {% if order.statusAt %}
+                                            <small> {{ order.statusAt|format_date }} </small>
+                                        {% endif %}
                                     </td>
                                     <td class="text-center col-md-4">
                                         <div class="btn-group btn-group-sm col-md-12 btn-group-justified">
@@ -245,7 +250,11 @@
                     method: 'get',
                     success: function (response) {
                         edit_freight.html(response);
-                        $('.address').removeClass('hide');
+                        if (shipping == "transportadora") {
+                            Shipping.deliveryModal();
+                        } else {
+                            Delivery.deliveryModal();
+                        }
                     }
                 });
             } else {

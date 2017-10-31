@@ -2,7 +2,9 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Order\Element;
 use AppBundle\Entity\Order\Order;
+use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Form\Order\FilterType;
 use AppBundle\Service\Pricing\Insurance;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,17 +76,19 @@ class OrderController extends AbstractController
 
         $manipulator = $this->get('order_manipulator');
 
-        if($manipulator->acceptStatus($order, $status, $this->user())){
+        if($manipulator->acceptStatus($order, $status, $this->user())) {
+
+            $currentStatus = $order->getStatus();
 
             $order->setStatus($status);
 
             $this->manager('order')->save($order);
 
-            if ($order->isApproved()){
+            if ($order->isApproved() && $currentStatus != OrderInterface::STATUS_DONE)
                 $this->generatorProformaAction($order);
-            }
 
-            $this->sendOrderEmail($order);
+            if (!($currentStatus == OrderInterface::STATUS_DONE && $order->isApproved()))
+                $this->sendOrderEmail($order);
 
             return $this->json();
         }
@@ -115,6 +119,24 @@ class OrderController extends AbstractController
             'order' => [
                 'id' => $order->getId()
             ]
+        ]);
+    }
+
+    /**
+     * @Route("/element/{id}/update", name="order_element_update")
+     * @Method("post")
+     */
+    public function updateOrderElementAction(Request $request, Element $element)
+    {
+        foreach ($request->request->get('order') as $field => $value){
+            $setter = 'set' . ucfirst($field);
+            $element->$setter($value);
+        }
+
+        $this->manager('order_element')->save($element);
+
+        return $this->json([
+            'total' => $element->getOrder()->getTotal()
         ]);
     }
 

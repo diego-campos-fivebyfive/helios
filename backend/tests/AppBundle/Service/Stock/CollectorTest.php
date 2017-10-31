@@ -1,15 +1,18 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: claudinei
- * Date: 30/10/17
- * Time: 11:08
- */
 
 namespace Tests\AppBundle\Service\Stock;
 
+use Tests\AppBundle\AppTestCase;
 
-class CollectorTest
+/**
+ * Class CollectorTest
+ * @group stock
+ * @group stock_collector
+ */
+class CollectorTest extends AppTestCase
 {
-
+    public function testSingleCollector()
+    {
+        //$collector = $this->service('stock_collector');
+    }
 }
