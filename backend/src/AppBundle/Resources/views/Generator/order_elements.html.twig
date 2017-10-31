@@ -199,8 +199,8 @@
             });
 
             InsuranceHandler.apply();
-            OrderManager.getElements();
-            OrderManager.renderTotal(response.total);
+            GeneratorHandler.refreshWizardModal();
+            GeneratorHandler.resetBudgetButton();
         });
     }
 
