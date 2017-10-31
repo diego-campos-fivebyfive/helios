@@ -7,6 +7,7 @@ use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Form\Order\FilterType;
 use AppBundle\Service\Pricing\Insurance;
+use AppBundle\Service\ProjectGenerator\ShippingRuler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -135,8 +136,12 @@ class OrderController extends AbstractController
 
         $this->manager('order_element')->save($element);
 
+        $this->finishElement($element);
+
         return $this->json([
-            'total' => $element->getOrder()->getTotal()
+            'total' => $element->getOrder()->getTotal(),
+            'power' => $element->getOrder()->getPower(),
+            'description' => $element->getOrder()->getDescription()
         ]);
     }
 
@@ -326,5 +331,34 @@ class OrderController extends AbstractController
         }
 
         return $dir;
+    }
+
+    private function finishElement(Element $element)
+    {
+        $order = $element->getOrder();
+
+        $this->get('order_precifier')->precify($order);
+
+        $parent = $order->getParent();
+
+        $this->calculateShipping($parent);
+    }
+
+    /**
+     * @param Order $order
+     * @param array $rule
+     */
+    private function calculateShipping(Order $order, array $rule = [])
+    {
+        if (empty($rule)) {
+            $rule = $order->getShippingRules();
+            $rule['price'] = $order->getSubTotal();
+        }
+
+        ShippingRuler::apply($rule);
+
+        $order->setShippingRules($rule);
+
+        $this->manager('order')->save($order);
     }
 }
