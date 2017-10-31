@@ -2,9 +2,7 @@
 <div class="row">
     <div class="col-md-12">
 
-        <div class="form-group col-md-12 hide address">
-            <h3> <i class="fa fa-map-marker"></i> Endereço de Entrega </h3>
-            <input id="deliveryAddress" name="deliveryAddress" value="{{ order.deliveryAddress }}" type="text" class="form-control" placeholder="Endereço de Entrega">
+        <div class="form-group col-md-12 hide address" id="formDelivery">
         </div>
 
         <div class="col-md-12">
@@ -150,6 +148,16 @@
                 if (!GeneratorHandler.enableValidate)
                     GeneratorHandler.btnValidate.removeClass('hide');
             }
+        },
+        deliveryModal: function () {
+            $('.address').removeClass('hide');
+            $('.address').removeClass('col-md-12');
+            $.ajax({
+                url: '{{ path('generator_delivery_address',{id: order.id}) }}',
+                complete: function (xhr) {
+                    $('#formDelivery').html(xhr.responseText);
+                }
+            });
         }
     };
 
