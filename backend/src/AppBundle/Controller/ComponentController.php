@@ -38,7 +38,7 @@ class ComponentController extends AbstractController
             ->orderBy('m.name', 'asc')
             ->addOrderBy('c.model', 'asc');
 
-        if (!$this->user()->isAdmin() && !$this->user()->isPlatformAdmin() && !$this->user()->isPlatformMaster()) {
+        if (!$this->user()->isAdmin() && !$this->user()->isPlatformMaster()) {
             $qb->where('c.status = :status');
             $qb->andWhere('c.available = :available');
             $qb->setParameters([
