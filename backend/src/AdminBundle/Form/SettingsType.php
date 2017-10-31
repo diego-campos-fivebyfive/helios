@@ -2,9 +2,11 @@
 
 namespace AdminBundle\Form;
 
+use AppBundle\Entity\Component\Project;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -46,6 +48,15 @@ class SettingsType extends AbstractType
                 )
                 ->add('enable_promo', CheckboxType::class)
                 ->add('shipping_included', CheckboxType::class)
+                ->add('enabled_roof_types', ChoiceType::class, [
+                        'multiple' => true,
+                        'expanded' => true,
+                        'choices'  => Project::getRoofTypes(),
+                        'choice_attr' => function() {
+                            return ['class' => 'choices-roof'];
+                        }
+                    ]
+                )
                 ->add('promo_end_at', TextType::class)
         );
         $builder->get('parameters')

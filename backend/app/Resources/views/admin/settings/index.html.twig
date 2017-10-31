@@ -2,6 +2,16 @@
 
 {% block body %}
 
+    <style>
+        .choices-roof {
+            width: 5%;
+        }
+        #settings_parameters_enabled_roof_types label {
+            width: 95%;
+        }
+
+    </style>
+
     {% set isMaster = app.user.isPlatformMaster %}
 
     {% macro formInfo(form) %}
@@ -77,30 +87,45 @@
                                                 <div class="panel-body">
                                                     <div class="row">
 
-                                                    <div class="col-lg-6">
-                                                        <div class="panel panel-success">
-                                                            <div class="panel-heading">
-                                                                <i class="fa fa-briefcase"></i> Informações Administrativas
+                                                        <div class="col-lg-6">
+                                                            <div class="panel panel-success">
+                                                                <div class="panel-heading">
+                                                                    <i class="fa fa-briefcase"></i> Informações Administrativas
+                                                                </div>
+                                                                <div class="panel-body">
+
+                                                                    {% set form_master = form_params.master %}
+                                                                    {% set form_admin = form_params.admin %}
+                                                                    {% set form_platform = form_params.platform %}
+                                                                    {% set form_financial = form_params.financial %}
+
+                                                                    {{ this.formInfo(form_platform) }}
+
+                                                                    {{ this.formInfo(form_master) }}
+
+                                                                    {{ this.formInfo(form_admin) }}
+
+                                                                    {{ this.formInfo(form_financial) }}
+
+                                                                </div>
+
                                                             </div>
-                                                            <div class="panel-body">
-
-                                                                {% set form_master = form_params.master %}
-                                                                {% set form_admin = form_params.admin %}
-                                                                {% set form_platform = form_params.platform %}
-                                                                {% set form_financial = form_params.financial %}
-
-                                                                {{ this.formInfo(form_platform) }}
-
-                                                                {{ this.formInfo(form_master) }}
-
-                                                                {{ this.formInfo(form_admin) }}
-
-                                                                {{ this.formInfo(form_financial) }}
-
-                                                            </div>
-
                                                         </div>
-                                                    </div>
+
+                                                        <div class="col-lg-6">
+                                                            <div class="panel panel-success">
+                                                                <div class="panel-heading">
+                                                                    <i class="fa fa-briefcase"></i> Gerador de Sistemas
+                                                                </div>
+                                                                <div class="panel-body">
+
+                                                                    {{ form_label(form_params.enabled_roof_types, 'Tipos de telhado disponíveis') }}
+                                                                    {{ form_widget(form_params.enabled_roof_types) }} &nbsp;
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
 
                                                     </div>
                                                 </div>
