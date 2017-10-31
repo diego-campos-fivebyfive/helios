@@ -4,6 +4,7 @@ namespace Tests\AppBundle\Service\Stock;
 
 use AppBundle\Entity\Stock\ProductInterface;
 use AppBundle\Service\Stock\Control;
+use AppBundle\Service\Stock\Operation;
 use Tests\AppBundle\AppTestCase;
 
 /**
@@ -27,18 +28,20 @@ class ControlTest extends AppTestCase
             $amount = (0 == $i % 2) ? 100 : -75;
             $stocks[$i] = $amount;
 
+            $operation = Operation::create($products[$i], $amount, 'Test');
+
             // Via setOperations()
-            //$operations[] = [$products[$i], $amount, 'Test'];
+            $operations[] = $operation;
 
             // Via addOperation()
-            $control->addOperation($products[$i], $amount, 'Test');
+            // $control->addOperation($operation);
         }
 
         // Via addOperation()
-        $control->process();
+        // $control->process();
 
         // Via setOperations()
-        // $control->process($operations);
+        $control->process($operations);
 
         foreach ($products as $key => $product){
             $this->assertEquals($stocks[$key], $product->getStock());
