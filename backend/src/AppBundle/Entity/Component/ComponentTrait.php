@@ -59,6 +59,20 @@ trait ComponentTrait
     protected $promotional;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="status", type="boolean", nullable=true)
+     */
+    protected $status;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="available", type="boolean", nullable=true)
+     */
+    protected $available;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="nmc", type="string", nullable=true)
@@ -313,6 +327,75 @@ trait ComponentTrait
      */
     public function getStock()
     {
-        return (int) $this->stock;
+        return (int)$this->stock;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setAvailable($available)
+    {
+        $this->available = $available;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAvailable()
+    {
+        return $this->available;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isAvailable()
+    {
+        return $this->available;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isDisable()
+    {
+        return self::DISABLE == $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isActive()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function getStatusOptions()
+    {
+        return [
+            self::DISABLE  => 'Inativo',
+            self::ACTIVE => 'Ativo'
+        ];
     }
 }
