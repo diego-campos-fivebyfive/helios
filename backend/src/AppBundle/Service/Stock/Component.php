@@ -1,13 +1,14 @@
 <?php
 
-namespace AppBundle\Service\Component;
+namespace AppBundle\Service\Stock;
 
 use AppBundle\Entity\Component\ComponentInterface;
+use AppBundle\Entity\Stock\ProductInterface;
 use AppBundle\Service\Stock\Converter;
 use AppBundle\Service\Stock\Provider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class StockControl
+class Component
 {
     /**
      * @var ContainerInterface
@@ -25,6 +26,17 @@ class StockControl
 
     public function transact(array $transactions)
     {
+        $this->normalizeTransactions($transactions);
+
+        $products = $this->filterProducts($transactions);
+
+        dump($products); die;
+
+        //$converter = $this->getConverter();
+        //$products = $converter->transform($components);
+
+        //dump($products); die;
+        //dump($converter); die;
         dump($transactions); die;
     }
 
@@ -46,14 +58,40 @@ class StockControl
     }
 
     /**
+     * @param array $transactions
+     */
+    private function normalizeTransactions(array &$transactions)
+    {
+        foreach ($transactions as &$transaction){
+            $transaction['identity'] = Identity::create($transaction['component']);
+        }
+    }
+
+    /**
+     * @param array $transactions
+     * @return array
+     */
+    private function filterProducts(array &$transactions)
+    {
+        $components = array_map(function($transaction){
+            return $transaction['component'];
+        }, $transactions);
+
+        $products = $this->getConverter()->transform($components);
+
+        $ids = array_map(function(ProductInterface $product){
+            return $product->getId();
+        }, $products);
+
+        return array_combine($ids, $products);
+    }
+
+    /**
      * @return Converter
      */
     private function getConverter()
     {
-        /** @var Provider $provider */
-        $provider = $this->container->get('stock_provider');
-
-        return new Converter($provider);
+        return $this->container->get('stock_converter');
     }
 
     /**
