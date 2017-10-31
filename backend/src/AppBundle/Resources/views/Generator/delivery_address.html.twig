@@ -61,21 +61,26 @@
                 if ('object' == typeof ShippingManager) {
                     ShippingManager.calculate(0);
                 }
-                Delivery.editableShipping(false);
+                if (Delivery.clickByDelivery) {
+                    Delivery.editableShipping(false);
+                    Delivery.clickByDelivery = false;
+                }
             }
         });
     });
 
-    form.trigger('submit');
+    form.trigger('#delivery-save');
 
     var btnSubmitDelivery = $('#delivery-save');
     var btnEditDelivery = $('#btn_edit_delivery');
 
     $(btnEditDelivery).on('click', function () {
+        Delivery.clickByDelivery = true;
         Delivery.editableShipping(true);
     });
 
     Delivery = {
+        clickByDelivery: false,
         editableShipping: function(editable) {
 
             if (editable) {

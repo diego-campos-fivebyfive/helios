@@ -171,10 +171,12 @@
     var buttonEdit = $('#button_edit');
 
     $(buttonEdit).on('click', function () {
+        InfoManager.clickByPayment = true;
         InfoManager.changeEditable(true);
     });
 
     var InfoManager = {
+        clickByPayment: false,
         accountSelector: $('#order_account'),
         shippingSelector: null,
         deadlineBlock: $('#order_deadline_block'),
@@ -262,7 +264,10 @@
                 }
 
                 buttonAccount.ladda('stop');
-                InfoManager.changeEditable(false);
+                if (InfoManager.clickByPayment) {
+                    InfoManager.changeEditable(false);
+                    InfoManager.clickByPayment = false;
+                }
             }
         });
     });
