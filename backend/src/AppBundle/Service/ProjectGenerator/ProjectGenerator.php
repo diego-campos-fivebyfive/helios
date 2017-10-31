@@ -823,6 +823,8 @@ class ProjectGenerator
     /**
      * @param ProjectInterface $project
      * @param bool $save
+     * @return $this
+     *
      */
     public function resolveDependencies(ProjectInterface $project, $save = false)
     {
@@ -830,6 +832,8 @@ class ProjectGenerator
             Resolver::create($this->container)->resolve($project);
             $this->save($project, $save);
         }
+
+        return $this;
     }
 
     /**
