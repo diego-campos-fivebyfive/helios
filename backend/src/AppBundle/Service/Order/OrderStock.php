@@ -33,9 +33,7 @@ class OrderStock
         $components = $this->mappingComponents($order);
         $products = $this->converter->transform($components);
 
-
-
-        dump($products); die;
+        dump($components); die;
     }
 
     /**
