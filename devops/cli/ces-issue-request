@@ -47,8 +47,9 @@ if [[ $1 == '--review' ]]; then
   $CLI_PATH/ces-issue-move $ISSUE --review
 
 elif [[ $1 == '--testing' ]]; then
-  message="[$BRANCH] _${USER}_ needs this issue to be *TEST*"
+  message="[$BRANCH] _${USER}_ requests a use *TEST*"
   $CLI_PATH/ces-slack-notify --tester "$message"
+  $CLI_PATH/ces-slack-notify --devops "$message"
 else
   echo "Error: invalid argument $1"
   exit 1
