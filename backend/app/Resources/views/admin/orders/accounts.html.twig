@@ -7,7 +7,7 @@
             width: 250px !important;
         }
     </style>
-
+    {% set notAgent = 'Sem Agente Vinculado' %}
     <div class="row">
         <div class="col-md-12">
             {{ knp_pagination_filter(pagination, {'a.lastname, a.document, a.email':''}) }}
@@ -22,10 +22,11 @@
                             <thead>
                             <tr>
                                 <th> </th>
-                                <th class="col-md-4"> Nome Fantasia </th>
+                                <th class="col-md-3"> Nome Fantasia </th>
                                 <th class="col-md-2 text-center"> Cnpj </th>
-                                <th class="col-md-4"> Email </th>
-                                <th class="col-md-2"> Registro </th>
+                                <th class="col-md-3"> Email </th>
+                                <th class="col-md-2"> Nivel de Desconto </th>
+                                <th class="col-md-2"> Atendente </th>
                             </tr>
                             </thead>
                             <tbody>
@@ -41,7 +42,13 @@
                                     <td> {{ account.lastname }} </td>
                                     <td class="text-center"> {{ account.document }} </td>
                                     <td><i class="fa fa-envelope"></i>&nbsp;  {{ account.email }} </td>
-                                    <td> {{ account.createdAt|date('d/m/Y') }}</td>
+                                    <td>
+                                        <div class="label label-level label-size level-{{ account.level }}">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {{ account.agent ? account.agent : notAgent }}
+                                    </td>
                                 </tr>
                             {% endfor %}
 

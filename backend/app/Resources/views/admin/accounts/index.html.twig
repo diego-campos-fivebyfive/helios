@@ -27,6 +27,7 @@
         .selected:focus {
             border-color: #00A7EC !important;
         }
+
     </style>
 
     <div class="modal inmodal" id="e_modal_transfer" tabindex="-1" role="dialog" aria-hidden="true">
@@ -100,10 +101,10 @@
                                 <table class="table table-striped table-hover">
                                     <thead>
                                     <tr>
-                                        <th class="col-md-3"> Nome Fantasia </th>
+                                        <th class="col-md-2"> Nome Fantasia </th>
                                         <th class="col-md-2 text-center"> Cnpj </th>
                                         <th class="col-md-3"> Email </th>
-                                        <th class="col-md-1"> Registro </th>
+                                        <th class="col-md-2"> Nivel de Desconto </th>
                                         <th class="col-md-1"> Status </th>
                                         <th class="col-md-2">
                                             <i class="fa fa-search-plus"></i>
@@ -119,7 +120,10 @@
                                             <td> {{ account.firstname }} </td>
                                             <td class="text-center"> {{ account.document }} </td>
                                             <td><i class="fa fa-envelope"></i>&nbsp;  {{ account.email }} </td>
-                                            <td> {{ account.createdAt|date('d/m/Y') }}</td>
+                                            <td class="text-center">
+                                                <div class="label label-level label-size level-{{ account.level }}">
+                                                </div>
+                                            </td>
                                             <td class="client-status">
                                                 {% if account.status == 0 %}
                                                     <span class="label label-defaut">Pendente</span>
