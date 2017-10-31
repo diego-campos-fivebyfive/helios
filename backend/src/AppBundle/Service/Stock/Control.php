@@ -34,16 +34,12 @@ class Control
     }
 
     /**
-     * @param ProductInterface $product
-     * @param $amount
-     * @param $description
+     * @param Operation $operation
      * @return $this
      */
-    public function addOperation(ProductInterface $product, $amount, $description)
+    public function addOperation(Operation $operation)
     {
-        if(!is_int($amount)) throw new \InvalidArgumentException('Invalid amount value type');
-
-        $this->operations[] = [$product, $amount, $description];
+        $this->operations[] = $operation;
 
         return $this;
     }
@@ -55,8 +51,7 @@ class Control
     public function setOperations(array $operations = [])
     {
         foreach ($operations as $operation){
-            list($product, $amount, $description) = $operation;
-            $this->addOperation($product, $amount, $description);
+            $this->addOperation($operation);
         }
 
         return $this;
@@ -70,31 +65,28 @@ class Control
         if(!empty($operations))
             $this->setOperations($operations);
 
+        /** @var Operation $operation */
         foreach ($this->operations as $operation){
-
-            list($product, $amount, $description) = $operation;
-
-            $this->transact($product, $amount, $description);
+            $this->transact($operation);
         }
 
         $this->commit();
     }
 
     /**
-     * @param ProductInterface $product
-     * @param $amount
-     * @param $description
+     * @param Operation $operation
      */
-    public function transact(ProductInterface $product, $amount, $description, $commit = false)
+    public function transact(Operation $operation, $commit = false)
     {
         $transaction = new Transaction();
+
         $transaction
-            ->setProduct($product)
-            ->setAmount($amount)
-            ->setDescription($description)
+            ->setProduct($operation->product)
+            ->setAmount($operation->amount)
+            ->setDescription($operation->description)
         ;
 
-        $this->manager->save($product, $commit);
+        $this->manager->save($operation->product, $commit);
     }
 
     /**
