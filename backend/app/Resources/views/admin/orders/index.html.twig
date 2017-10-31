@@ -157,9 +157,10 @@
                             <tr>
                                 <th class="text-center col-md-2"> Número</th>
                                 <th class="text-center col-md-2"> Integrador</th>
+                                <th class="text-center col-md-1"> Atendente</th>
                                 <th class="text-center col-md-2"> Sistemas</th>
                                 <th class="text-center"> Status</th>
-                                <th class="text-center col-md-4"> Arquivos</th>
+                                <th class="text-center col-md-3"> Arquivos</th>
                                 <th class="text-center"> &nbsp; </th>
                             </tr>
                             </thead>
@@ -176,11 +177,21 @@
                                             </small>
                                         {% endif %}
                                     </td>
+
                                     <td class="text-center">
                                         <h4>{{ order.account ? order.account.firstname : 'Não definido' }}</h4>
                                         <small>
                                             {{ order.cnpj }}
                                         </small>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <h4>
+                                            <div class="label label-level label-size level-{{ order.account.level }}">
+                                            </div>
+                                        </h4>
+                                        <small style="margin-top: 4px;">{{ order.agent }}</small>
+
                                     </td>
 
                                     <td class="text-center">
@@ -214,12 +225,12 @@
                                                    href="{{ path('order_file',{id:order.id, type:'proforma'}) }}"
                                                    target="_blank"> <i class="fa fa-file-pdf-o"></i>
                                                     <br>
-                                                    <small>Proforma</small>
+                                                    <small>Prof.</small>
                                                 </a>
                                             {% else %}
                                                 <i class="btn btn-default fa fa-file-pdf-o">
                                                     <br>
-                                                    <small>Proforma</small>
+                                                    <small>Prof.</small>
                                                 </i>
                                             {% endif %}
 
@@ -230,7 +241,7 @@
                                                    data-toggle="modal" data-target="#modal_shipping"
                                                    data-url="{{ path('order_shipping', {id:order.id}) }}"
                                                    data-shipping="self">
-                                                    <i class="fa fa-truck"></i><br><small>Transportadora</small>
+                                                    <i class="fa fa-truck"></i><br><small>Transport.</small>
                                                 </a>
                                             {% else %}
                                                 <a class="btn btn-default {{ order.deliveryAddress ? 'validated' }}"
@@ -245,12 +256,12 @@
                                                 <a class="btn btn-default {{ order.FilePayment ? 'validated' }}"
                                                    href="{{ path('order_file',{id:order.id, type:'filePayment'}) }}"
                                                    target="_blank"> <i class="fa fa-file-text"></i> <br>
-                                                    <small>Comprovante</small>
+                                                    <small>Comprov.</small>
                                                 </a>
                                             {% else %}
                                                 <i class="btn btn-default fa fa fa-file-text">
                                                     <br>
-                                                    <small>Comprovante</small>
+                                                    <small>Comprov.</small>
                                                 </i>
                                             {% endif %}
 

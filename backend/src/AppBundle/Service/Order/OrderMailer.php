@@ -30,23 +30,23 @@ class OrderMailer extends AbstractMailer
     private $mapping = [
         OrderInterface::STATUS_PENDING => [
             'enabled' => true,
-            'subject' => 'Plataforma SICES Solar - Orçamento Preliminar nº %s'
+            'subject' => 'Orçamento Preliminar nº %s'
         ],
         OrderInterface::STATUS_VALIDATED => [
             'enabled' => true,
-            'subject' => 'Plataforma SICES Solar - Orçamento Validado nº %s'
+            'subject' => 'Orçamento Validado nº %s'
         ],
         OrderInterface::STATUS_APPROVED => [
             'enabled' => true,
-            'subject' => 'Plataforma SICES Solar - Orçamento Aprovado nº %s'
+            'subject' => 'Orçamento Aprovado nº %s'
         ],
         OrderInterface::STATUS_REJECTED => [
             'enabled' => true,
-            'subject' => 'Plataforma SICES Solar - Orçamento Rejeitado nº %s'
+            'subject' => 'Orçamento Rejeitado nº %s'
         ],
         OrderInterface::STATUS_DONE => [
             'enabled' => false,
-            'subject' => 'Plataforma SICES Solar - Orçamento Concluído nº %s'
+            'subject' => 'Orçamento Concluído nº %s'
         ]
     ];
 
