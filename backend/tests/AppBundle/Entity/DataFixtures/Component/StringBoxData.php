@@ -17,15 +17,7 @@ class StringBoxData extends AbstractFixture implements OrderedFixtureInterface
      */
     public function load(ObjectManager $manager)
     {
-        $data = [
-            'code' => '1SLM300101A0790',
-            'description' => 'STRING BOX ABB 1 OU 2 CORDA 1 SAIDA - no fusiveis',
-            'inputs' => 3,
-            'outputs' => 2,
-            'fuses' => 1,
-            'promotional' => false,
-            'maker' => $this->getReference('maker')
-        ];
+        $data = self::getData();
 
         $stringBox = new StringBox();
 
@@ -38,5 +30,20 @@ class StringBoxData extends AbstractFixture implements OrderedFixtureInterface
     public function getOrder()
     {
         return 1;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getData()
+    {
+        return [
+            'code' => '1SLM300101A0790',
+            'description' => 'STRING BOX ABB 1 OU 2 CORDA 1 SAIDA - no fusiveis',
+            'inputs' => 3,
+            'outputs' => 2,
+            'fuses' => 1,
+            'promotional' => false
+        ];
     }
 }
