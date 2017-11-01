@@ -27,6 +27,7 @@ $CLI_PATH/ces-issue-assign $1
 $CLI_PATH/ces-issue-move $1 --in-progress
 
 USER=$($CLI_PATH/util/github-credentials --user)
+NICK=$($CLI_PATH/util/user-credentials $USER --slack)
 STAGE=$($CLI_PATH/ces-issue-info $LAST_ISSUE --stage)
 
 if [[ $STAGE == 'Testing' ]]; then
@@ -44,6 +45,6 @@ if [[ $STAGE == 'Closed' ]]; then
   $CLI_PATH/ces-branch-clear $LAST_ISSUE
 fi
 
-$CLI_PATH/ces-slack-notify --devops "[issue-$1] _${USER}_ has been working on"
+$CLI_PATH/ces-slack-notify --devops "[issue-$1] _${NICK}_ has been working on"
 $CLI_PATH/util/user-notify 'Branch created' "now on issue-$1"
 echo "Everything done, now on Branch: issue-$1"

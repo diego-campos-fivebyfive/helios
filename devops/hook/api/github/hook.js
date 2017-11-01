@@ -31,12 +31,13 @@ const hook = (request, response) => {
     const { login: reviewer } = request.body.review.user
     const { state } = request.body.review
 
+    const link = `*<${url}|#${number}>*`
     const action = (state === 'changes_requested') ? '`requested changes in`' : state
 
-    const link = `*<${url}|#${number}>*`
-    const message = `[${title}] @${developer}: _${reviewer}_ ${action} pull-request ${link}`
-
-    exec(`$CLI_PATH/ces-slack-notify --devops \'${message}\'`)
+    exec(`$CLI_PATH/util/user-credentials ${developer} --slack`, (error, stdout) => {
+      const message = `[${title}] @${stdout}: _${reviewer}_ ${action} pull-request ${link}`
+      exec(`$CLI_PATH/ces-slack-notify --devops \'${message}\'`)
+    })
   }
 }
 
