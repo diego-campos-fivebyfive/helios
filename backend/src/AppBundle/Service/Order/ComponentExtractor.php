@@ -373,7 +373,7 @@ class ComponentExtractor
      */
     private static function allowAdd($component)
     {
-        return !self::$checkAvailable || self::$accessor->getValue($component, 'available');
+        return !self::$checkAvailable || self::$accessor->getValue($component, 'salable');
     }
 
     /**
