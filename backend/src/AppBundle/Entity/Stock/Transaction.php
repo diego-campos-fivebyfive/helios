@@ -98,6 +98,8 @@ class Transaction implements TransactionInterface
         $this->product = $product;
 
         $product->addTransaction($this);
+
+        return $this;
     }
 
     /**

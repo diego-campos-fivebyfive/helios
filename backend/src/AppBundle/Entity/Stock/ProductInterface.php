@@ -6,7 +6,7 @@ interface ProductInterface
 {
     /**
      * @param $id
-     * @return string
+     * @return ProductInterface
      */
     public function setId($id);
 

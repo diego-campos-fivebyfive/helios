@@ -31,6 +31,7 @@ class AppTestCase extends WebTestCase
             Fixtures\Component\InverterData::class,
             Fixtures\Component\StringBoxData::class,
             Fixtures\Component\VarietyData::class,
+            Fixtures\Component\StructureData::class,
             Fixtures\LoadProjectData::class,
             Fixtures\LoadProjectModuleData::class,
             Fixtures\LoadProjectInverterData::class,
@@ -52,6 +53,15 @@ class AppTestCase extends WebTestCase
      */
     protected function manager($id)
     {
-        return $this->getContainer()->get(sprintf('%s_manager', $id));
+        return $this->service(sprintf('%s_manager', $id));
+    }
+
+    /**
+     * @param $id
+     * @return object
+     */
+    protected function service($id)
+    {
+        return $this->getContainer()->get($id);
     }
 }

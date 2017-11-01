@@ -119,6 +119,17 @@ interface ComponentInterface
     public function getDependencies();
 
     /**
+     * @param int $stock
+     * @return ComponentInterface
+     */
+    public function setStock($stock);
+
+    /**
+     * @return int
+     */
+    public function getStock();
+
+    /**
      * @param $available
      * @return ModuleInterface
      */
@@ -159,5 +170,4 @@ interface ComponentInterface
      * @return array
      */
     public static function getStatusOptions();
-
 }

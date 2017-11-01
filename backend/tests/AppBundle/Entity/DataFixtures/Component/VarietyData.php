@@ -17,14 +17,7 @@ class VarietyData extends AbstractFixture implements OrderedFixtureInterface
      */
     public function load(ObjectManager $manager)
     {
-        $data = [
-            'code' => md5(uniqid(time())),
-            'description' => 'This is a Variety ' . uniqid(),
-            'type' => 'cabo',
-            'subtype' => 'conector',
-            'promotional' => false,
-            'maker' => $this->getReference('maker'),
-        ];
+        $data = self::getData();
 
         $variety = new Variety();
 
@@ -37,5 +30,19 @@ class VarietyData extends AbstractFixture implements OrderedFixtureInterface
     public function getOrder()
     {
         return 1;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getData()
+    {
+        return [
+            'code' => md5(uniqid(time())),
+            'description' => 'This is a Variety ' . uniqid(),
+            'type' => 'cabo',
+            'subtype' => 'conector',
+            'promotional' => false,
+        ];
     }
 }

@@ -18,7 +18,27 @@ class InverterData extends AbstractFixture implements OrderedFixtureInterface
      */
     public function load(ObjectManager $manager)
     {
-        $data = [
+        $data = self::getData();
+
+        $inverter = new Inverter();
+
+        $this->fillAndSave($inverter, $data, $manager, 'inverter');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getOrder()
+    {
+        return 1;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getData()
+    {
+        return [
             'code' => self::randomString(8),
             'model' => self::randomString(4),
             'maxDcPower' => self::randomFloat(),
@@ -38,17 +58,5 @@ class InverterData extends AbstractFixture implements OrderedFixtureInterface
             'dataSheet' => self::randomString(15),
             'image' => self::randomString(10)
         ];
-
-        $inverter = new Inverter();
-
-        $this->fillAndSave($inverter, $data, $manager, 'inverter');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getOrder()
-    {
-        return 1;
     }
 }
