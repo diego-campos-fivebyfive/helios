@@ -6,10 +6,10 @@ use AppBundle\Service\Stock\Component;
 use Tests\AppBundle\AppTestCase;
 
 /**
- * Class StockControlTest
+ * Class ComponentTest
  * @group stock_component
  */
-class StockControlTest extends AppTestCase
+class ComponentTest extends AppTestCase
 {
     public function testTransactProcess()
     {
