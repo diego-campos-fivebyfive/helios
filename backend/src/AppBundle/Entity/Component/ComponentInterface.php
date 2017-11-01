@@ -167,6 +167,11 @@ interface ComponentInterface
     public function isActive();
 
     /**
+     * @return bool
+     */
+    public function isSalable();
+
+    /**
      * @return array
      */
     public static function getStatusOptions();
