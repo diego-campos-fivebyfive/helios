@@ -1,11 +1,26 @@
 <?php
 
+/*
+ * This file is part of the SicesSolar package.
+ *
+ * (c) SicesSolar <http://sicesbrasil.com.br/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace AppBundle\Service\Stock;
 
 use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Stock\Product;
 use AppBundle\Entity\Stock\ProductInterface;
 
+/**
+ * Class Converter
+ * This class convert components to controllable products
+ *
+ * @author Claudinei Machado <claudinei@kolinalabs.com>
+ */
 class Converter
 {
     /**
