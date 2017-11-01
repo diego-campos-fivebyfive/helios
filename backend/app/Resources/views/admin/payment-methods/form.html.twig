@@ -27,9 +27,10 @@
                     <table id="container_quotas" class="table table-bordered"
                            data-prototype="{{ form_widget(form.quotas.vars.prototype)|e }}">
                         <tr class="configured">
-                            <th class="col-md-4"> Descrição </th>
-                            <th class="text-center col-md-3"> Percentual (%) </th>
-                            <th class="text-center col-md-3"> Dias</th>
+                            <th class="col-md-3"> Descrição </th>
+                            <th class="text-center col-md-2"> Percentual (%) </th>
+                            <th class="text-center col-md-2"> Dias</th>
+                            <th class="text-center col-md-3"> Exibir data de pgto</th>
                             <th class="col-md-2">
                                 <a class="btn btn-success btn-sm btn-block" id="add_quota">
                                     <i class="fa fa-plus"></i> Parcela
@@ -46,6 +47,9 @@
                                 </td>
                                 <td class="col-md-3">
                                     {{ form_widget(quota.days, {attr:{class:'form-control input-days'}}) }}
+                                </td>
+                                <td class="col-md-3">
+                                    {{ form_widget(quota.display_payment_date, {attr:{class:'form-control'}}) }}
                                 </td>
                                 <td class="col-md-2">
                                     <a class="btn btn-danger btn-sm btn-block">
