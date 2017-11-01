@@ -293,3 +293,7 @@ services:
     stock_component:
         class: AppBundle\Service\Stock\Component
         arguments: ['@service_container']
+
+    order_stock:
+        class: AppBundle\Service\Order\OrderStock
+        arguments: ['@component_collector', '@stock_component']
