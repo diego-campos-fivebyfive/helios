@@ -14,7 +14,7 @@ LOGIN=$($CLI_PATH/util/github-credentials --login)
 INFO=$(curl -s -X GET -u $LOGIN $GITHUB_REPOSITORY/issues/$ISSUE)
 
 get_current_stage() {
-  local state=$(echo $INFO | python -m json.tool | grep -oP '(?<="state": ").*(?=",)')
+  local state=$(echo $INFO | python -m json.tool | grep -oP '(?<="state": ").*(?=",)' | tail -n1)
 
   if [[ $state == 'closed' ]]; then
     echo 'Closed'
