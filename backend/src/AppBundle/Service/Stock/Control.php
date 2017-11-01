@@ -81,12 +81,12 @@ class Control
         $transaction = new Transaction();
 
         $transaction
-            ->setProduct($operation->product)
-            ->setAmount($operation->amount)
-            ->setDescription($operation->description)
+            ->setProduct($operation->getProduct())
+            ->setAmount($operation->getAmount())
+            ->setDescription($operation->getDescription())
         ;
 
-        $this->manager->save($operation->product, $commit);
+        $this->manager->save($operation->getProduct(), $commit);
     }
 
     /**
@@ -95,5 +95,6 @@ class Control
     public function commit()
     {
         $this->manager->getEntityManager()->flush();
+        $this->operations = [];
     }
 }
