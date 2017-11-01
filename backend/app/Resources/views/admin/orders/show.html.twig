@@ -233,8 +233,9 @@
                                         {{ order.agent }}
                                     </div>
                                     <div class="col-md-4 spacing">
+                                        {% set notLevel = 'Sem Nivel' %}
                                         <label class="row-total">Nível de desconto</label>
-                                        {{ order.account.level|trans }}
+                                        {{ order.account ? order.account.level : notLevel }}
                                     </div>
                                 </div>
                             </div>
