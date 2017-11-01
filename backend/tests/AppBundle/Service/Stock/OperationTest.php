@@ -34,6 +34,6 @@ class OperationTest extends AppTestCase
 
         $this->assertInstanceOf(Operation::class, $operation);
 
-        $this->assertEquals($amount, $operation->amount);
+        $this->assertEquals($amount, $operation->getAmount());
     }
 }
