@@ -37,48 +37,13 @@ class Converter
 
         $this->cacheIdentities($identities);
         $this->cacheComponents($components);
-        $this->cacheProducts($components);
+        $this->cacheProducts();
 
         $products = array_values(array_map(function($data){
             return $data['product'];
         }, $this->cache));
 
         return $products;
-    }
-
-    /**
-     * @param string|object|array $product
-     * @return null|object|array
-     */
-    public function reverse($product)
-    {
-        if(is_array($product)){
-            $components = [];
-            foreach ($product as $item){
-                $components[] = $this->reverse($item);
-            }
-
-            return $components;
-        }
-
-        if($product instanceof ProductInterface)
-            $product = $product->getId();
-
-        list($class, $id) = explode('::', $product);
-
-        if(array_key_exists($class, $this->reversed) && array_key_exists($id, $this->reversed[$class]))
-            return $this->reversed[$class][$id];
-
-        /** @var \Doctrine\ORM\EntityManagerInterface $em */
-        $em = $this->provider->get('em');
-
-        $this->benchmark['total_queries'] += 1;
-
-        $component = $em->getRepository($class)->find($id);
-
-        $this->reversed[$class][$id] = $component;
-
-        return $component;
     }
 
     /**
@@ -109,7 +74,7 @@ class Converter
 
     /**
      * 1. Check product cache
-     * 2. Find uncached products
+     * 2. Find un cached products
      * 3. Create not found products
      * 4. Cache products
      */
