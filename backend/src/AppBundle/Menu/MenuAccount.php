@@ -180,7 +180,7 @@ trait MenuAccount
      */
     private function requestsMenu(ItemInterface &$menu)
     {
-        $menu->addChild('Pedidos', [
+        $menu->addChild('Orçamento SICES', [
             'route' => 'index_order',
             'attributes' => ['id' => 'idPedidos'],
             'extras' => ['icon' =>self::icon('my-requests')]
