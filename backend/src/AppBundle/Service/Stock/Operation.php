@@ -1,12 +1,23 @@
 <?php
 
+/*
+ * This file is part of the SicesSolar package.
+ *
+ * (c) SicesSolar <http://sicesbrasil.com.br/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace AppBundle\Service\Stock;
 
 use AppBundle\Entity\Stock\ProductInterface;
 
 /**
- * Class Operation
- * @package AppBundle\Service\Stock
+ * Class Component
+ * This class generates a operation pattern for stock control
+ *
+ * @author Claudinei Machado <claudinei@kolinalabs.com>
  */
 class Operation
 {
