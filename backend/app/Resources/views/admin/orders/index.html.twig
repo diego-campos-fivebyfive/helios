@@ -186,8 +186,9 @@
                                     </td>
 
                                     <td class="text-center">
+                                        {% set notLevel = 'Sem Nivel' %}
                                         <h4>
-                                            <div class="label label-level label-size level-{{ order.account.level }}">
+                                            <div class="label label-level label-size level-{{ order.account ? order.account.level : notLevel }}">
                                             </div>
                                         </h4>
                                         <small style="margin-top: 4px;">{{ order.agent }}</small>

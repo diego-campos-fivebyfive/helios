@@ -346,8 +346,11 @@
 
                     <label class="width-float-total no-margins">Condições de pagamento:</label>
                     {% for payment in order.paymentMethod('array').quotas %}
-                    <span class="indentation"> &#{{ loop.index + 96 }}; ) {{ payment.description }}
-                        {{ payment.percent }}% - {{ payment.date|date('d/m/Y') }}</span>
+                        <span class="indentation"> &#{{ loop.index + 96 }}; ) {{ payment.description }}
+                        {{ payment.percent }}%
+                        {% if payment.display_payment_date and payment.display_payment_date == 'true' %}
+                            - {{ payment.date|date('d/m/Y') }}</span>
+                    {% endif %}
                     <span class="pull-right field-width">{{ payment.value|currency }}</span>
                     <br/>
                     {% endfor %}
