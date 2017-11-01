@@ -41,12 +41,27 @@ class Operation
     }
 
     /**
-     * @param $name
-     * @return mixed|string|object|int
+     * @return ProductInterface
      */
-    function __get($name)
+    public function getProduct()
     {
-        return $this->$name;
+        return $this->product;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     /**
