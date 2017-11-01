@@ -1447,7 +1447,7 @@ class Order implements OrderInterface, InsurableInterface
             foreach ($data['quotas'] as $key => $quota) {
                 $percent = (float)$quota['percent'] / 100;
                 $data['quotas'][$key]['value'] = $percent * $this->getTotal();
-                $data['quotas'][$key]['date'] = $this->statusAt->format('Y-m-d H:i:s');
+                $data['quotas'][$key]['date'] = $this->statusAt->add(new \DateInterval('P'.$data['quotas'][$key]['days'].'D'))->format('Y-m-d H:i:s');
             }
         }
 
