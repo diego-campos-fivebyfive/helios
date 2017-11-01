@@ -3,6 +3,7 @@
 namespace AdminBundle\Form\PaymentMethod;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class PaymentQuotaType extends AbstractType
@@ -16,6 +17,9 @@ class PaymentQuotaType extends AbstractType
             ->add('description')
             ->add('percent')
             ->add('days')
+            ->add('display_payment_date', CheckboxType::class,[
+                'required' => false
+            ])
         ;
     }
 }
