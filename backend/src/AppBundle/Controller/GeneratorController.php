@@ -72,13 +72,10 @@ class GeneratorController extends AbstractController
             }
         }
 
-        $parameterManager = $this->manager('parameter');
-        $shippingIncluded = $parameterManager->find('platform_settings')->getParameters()['shipping_included'];
-
         return $this->render('generator.form', [
             'form' => $form->createView(),
             'promoEndAt' => $form->getData()['promo_end_at'],
-            'shippingIncluded' => $shippingIncluded
+            'shippingIncluded' => $form->getData()['shipping_included']
         ]);
     }
 
