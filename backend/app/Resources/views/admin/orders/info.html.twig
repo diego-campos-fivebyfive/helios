@@ -224,7 +224,7 @@
 
                 $('#order_note').removeAttr('readonly');
                 $('#delivery_at').removeAttr('readonly, disabled');
-                $('#order_deadline').removeAttr('readonly');
+                $('#order_deadline').removeAttr('readonly, disabled');
                 $('#order_paymentMethod').removeAttr('readonly, disabled');
 
                 GeneratorHandler.enableValidate ++;
@@ -271,6 +271,7 @@
 
                 $('#order_paymentMethod').attr('disabled', 'disabled');
                 $('#delivery_at').attr('disabled', 'disabled');
+                $('#order_deadline').attr('disabled','disabled');
             }
         });
     });
