@@ -223,9 +223,9 @@
                 $(buttonEdit).addClass('hide');
 
                 $('#order_note').removeAttr('readonly');
-                $('#delivery_at').removeAttr('readonly');
+                $('#delivery_at').removeAttr('readonly, disabled');
                 $('#order_deadline').removeAttr('readonly');
-                $('#order_paymentMethod').removeAttr('readonly');
+                $('#order_paymentMethod').removeAttr('readonly, disabled');
 
                 GeneratorHandler.enableValidate ++;
                 GeneratorHandler.btnValidate.addClass('hide');
@@ -268,6 +268,9 @@
                     InfoManager.changeEditable(false);
                     InfoManager.clickByPayment = false;
                 }
+
+                $('#order_paymentMethod').attr('disabled', 'disabled');
+                $('#delivery_at').attr('disabled', 'disabled');
             }
         });
     });
