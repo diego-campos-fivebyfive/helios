@@ -13,7 +13,6 @@ namespace AppBundle\Service\Stock;
 
 use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Stock\ProductInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class Component
@@ -24,14 +23,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Component
 {
     /**
-     * @var ContainerInterface
+     * @var Provider
      */
-    private $container;
-
-    /**
-     * @var \Doctrine\ORM\EntityManagerInterface
-     */
-    private $em;
+    private $provider;
 
     /**
      * @var array
@@ -39,13 +33,12 @@ class Component
     private $transactions = [];
 
     /**
-     * StockControl constructor.
-     * @param ContainerInterface $container
+     * Component constructor.
+     * @param Provider $provider
      */
-    function __construct(ContainerInterface $container)
+    function __construct(Provider $provider)
     {
-        $this->container = $container;
-        $this->em = $this->container->get('doctrine')->getManager();
+        $this->provider = $provider;
     }
 
     /**
@@ -88,9 +81,7 @@ class Component
             $operations[] = $operation;
         }
 
-        $stockControl = $this->container->get('stock_control');
-
-        $stockControl->process($operations);
+        $this->provider->get('stock_control')->process($operations);
 
         $this->refresh();
 
@@ -102,6 +93,8 @@ class Component
      */
     public function refresh()
     {
+        $em = $this->provider->get('em');
+
         foreach ($this->transactions as $transaction){
 
             /** @var ComponentInterface $component */
@@ -112,10 +105,10 @@ class Component
 
             $component->setStock($product->getStock());
 
-            $this->em->persist($component);
+            $em->persist($component);
         }
 
-        $this->em->flush();
+        $em->flush();
     }
 
     /**
@@ -151,7 +144,7 @@ class Component
             return $transaction['component'];
         }, $this->transactions);
 
-        $products = $this->getConverter()->transform($components);
+        $products = $this->provider->get('stock_converter')->transform($components);
 
         $ids = array_map(function(ProductInterface $product){
             return $product->getId();
@@ -162,13 +155,5 @@ class Component
         foreach ($this->transactions as $key => $transaction){
             $this->transactions[$key]['product'] = $products[$transaction['identity']];
         }
-    }
-
-    /**
-     * @return Converter|object
-     */
-    private function getConverter()
-    {
-        return $this->container->get('stock_converter');
     }
 }
