@@ -40,7 +40,7 @@ class Identity
 {
     /**
      * @param $object
-     * @return string
+     * @return string|array
      */
     public static function create($source)
     {
