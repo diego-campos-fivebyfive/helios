@@ -14,6 +14,11 @@ class Component
     private $container;
 
     /**
+     * @var \Doctrine\ORM\EntityManagerInterface
+     */
+    private $em;
+
+    /**
      * @var array
      */
     private $transactions = [];
@@ -25,6 +30,7 @@ class Component
     function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+        $this->em = $this->container->get('doctrine')->getManager();
     }
 
     /**
@@ -72,6 +78,8 @@ class Component
         $stockControl->process($operations);
 
         $this->refresh();
+
+        $this->transactions = [];
     }
 
     /**
@@ -79,9 +87,6 @@ class Component
      */
     public function refresh()
     {
-        /** @var \Doctrine\ORM\EntityManagerInterface $em */
-        $em = $this->container->get('doctrine')->getManager();
-
         foreach ($this->transactions as $transaction){
 
             /** @var ComponentInterface $component */
@@ -92,10 +97,10 @@ class Component
 
             $component->setStock($product->getStock());
 
-            $em->persist($component);
+            $this->em->persist($component);
         }
 
-        $em->flush();
+        $this->em->flush();
     }
 
     /**
