@@ -4,8 +4,6 @@ namespace AppBundle\Service\Stock;
 
 use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Stock\ProductInterface;
-use AppBundle\Service\Stock\Converter;
-use AppBundle\Service\Stock\Provider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Component
@@ -16,6 +14,11 @@ class Component
     private $container;
 
     /**
+     * @var array
+     */
+    private $transactions = [];
+
+    /**
      * StockControl constructor.
      * @param ContainerInterface $container
      */
@@ -24,33 +27,71 @@ class Component
         $this->container = $container;
     }
 
-    public function transact(array $transactions)
+    /**
+     * @param ComponentInterface $component
+     * @param $amount
+     * @param $description
+     * @return $this
+     */
+    public function add(ComponentInterface $component, $amount, $description)
     {
-        $this->normalizeTransactions($transactions);
+        $this->transactions[] = [
+            'component' => $component,
+            'amount' => $amount,
+            'description' => $description
+        ];
 
-        $products = $this->filterProducts($transactions);
-
-        dump($products); die;
-
-        //$converter = $this->getConverter();
-        //$products = $converter->transform($components);
-
-        //dump($products); die;
-        //dump($converter); die;
-        dump($transactions); die;
+        return $this;
     }
 
     /**
-     * @param array $components
+     * @param array $transactions
      */
-    public function update(array $components)
+    public function transact(array $transactions = [])
+    {
+        if(!empty($transactions))
+            $this->registerTransactions($transactions);
+
+        $this->normalizeTransactions();
+        $this->filterProducts();
+
+        $operations = [];
+        foreach ($this->transactions as $transaction){
+
+            $operation = Operation::create(
+                $transaction['product'],
+                $transaction['amount'],
+                $transaction['description']
+            );
+
+            $operations[] = $operation;
+        }
+
+        $stockControl = $this->container->get('stock_control');
+
+        $stockControl->process($operations);
+
+        $this->refresh();
+    }
+
+    /**
+     * Refresh stock components
+     */
+    public function refresh()
     {
         /** @var \Doctrine\ORM\EntityManagerInterface $em */
         $em = $this->container->get('doctrine')->getManager();
 
-        foreach ($components as $component) {
-            $product = $this->getProduct($component);
+        foreach ($this->transactions as $transaction){
+
+            /** @var ComponentInterface $component */
+            $component = $transaction['component'];
+
+            /** @var ProductInterface $product */
+            $product = $transaction['product'];
+
             $component->setStock($product->getStock());
+
             $em->persist($component);
         }
 
@@ -60,22 +101,35 @@ class Component
     /**
      * @param array $transactions
      */
-    private function normalizeTransactions(array &$transactions)
+    private function registerTransactions(array $transactions)
     {
-        foreach ($transactions as &$transaction){
+        foreach ($transactions as $transaction){
+            $this->add(
+                $transaction['component'],
+                $transaction['amount'],
+                $transaction['description']
+            );
+        }
+    }
+
+    /**
+     * Normalize
+     */
+    private function normalizeTransactions()
+    {
+        foreach ($this->transactions as &$transaction){
             $transaction['identity'] = Identity::create($transaction['component']);
         }
     }
 
     /**
-     * @param array $transactions
-     * @return array
+     * Filter products
      */
-    private function filterProducts(array &$transactions)
+    private function filterProducts()
     {
         $components = array_map(function($transaction){
             return $transaction['component'];
-        }, $transactions);
+        }, $this->transactions);
 
         $products = $this->getConverter()->transform($components);
 
@@ -83,23 +137,18 @@ class Component
             return $product->getId();
         }, $products);
 
-        return array_combine($ids, $products);
+        $products = array_combine($ids, $products);
+
+        foreach ($this->transactions as $key => $transaction){
+            $this->transactions[$key]['product'] = $products[$transaction['identity']];
+        }
     }
 
     /**
-     * @return Converter
+     * @return Converter|object
      */
     private function getConverter()
     {
         return $this->container->get('stock_converter');
-    }
-
-    /**
-     * @param ComponentInterface $component
-     * @return \AppBundle\Entity\Stock\ProductInterface|array|null
-     */
-    private function getProduct(ComponentInterface $component)
-    {
-        return $this->getConverter()->transform($component);
     }
 }
