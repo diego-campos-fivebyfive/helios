@@ -115,7 +115,7 @@ class GeneratorType extends AbstractType
                 ]
             ])
             ->add('roof_type', ChoiceType::class, [
-                'choices' => Project::getRoofTypes()
+                'choices' => $this->checker->checkRoofTypes()
             ])
             ->add('module', ChoiceType::class, [
                 'choices' => self::createChoices($modules)
