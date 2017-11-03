@@ -17,3 +17,5 @@ vendor
 .mirror
 .backup
 .uploads
+
+devops/cli/stash/temp
