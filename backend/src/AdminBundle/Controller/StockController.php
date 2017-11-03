@@ -2,6 +2,7 @@
 
 namespace AdminBundle\Controller;
 
+use AdminBundle\Form\Stock\TransactionType;
 use AppBundle\Entity\Component\Structure;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -117,6 +118,36 @@ class StockController extends AbstractController
 
         return $this->render('admin/stock/transaction_content.html.twig',[
             'pagination' => $pagination
+        ]);
+    }
+
+    /**
+     * @Route("/transactions/{type}/{id}", name="transactions")
+     */
+    public function transactionsAction(Request $request, $type, $id)
+    {
+        $component = $this->manager($type)->find($id);
+
+        $form = $this->createForm(TransactionType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+
+            $data = $form->getData();
+
+            $amount = $data['amount'] * $data['mode'];
+            $description = $data['description'];
+            $stockComponent = $this->get('stock_component');
+
+            $stockComponent->add($component, $amount, $description);
+
+            $stockComponent->transact();
+
+            return $this->json([]);
+        }
+
+        return $this->render('admin/stock/form.html.twig', [
+            'form' => $form->createView()
         ]);
     }
 }

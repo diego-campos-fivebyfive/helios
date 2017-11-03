@@ -1,3 +1,17 @@
+<div class="modal inmodal" id="modal_transaction" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="bt_save_transaction">
+                    <i class="fa fa-check-square-o"></i> {{ 'Save'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <table id="table_transaction" data-transactions="{{ route('list_transactions_stock', {component:component.id}) }}" class="table table-bordered">
     <thead>
     <tr class="m-table-header">
@@ -5,17 +19,24 @@
             <div class="col-md-">
                 <h2 class="text-center">Transações</h2>
                 <form id="transactions_filter" action="{{ route('list_transactions_stock', {component:component.id}) }}">
-                    <div class="col-md-3 filters">
+                    <div class="col-md-2 filters">
                         <input id="start_at" name="start_at" class="form-control" placeholder="Data Inicial">
                     </div>
-                    <div class="col-md-3 filters">
+                    <div class="col-md-2 filters">
                         <input id="end_at" name="end_at" class="form-control" placeholder="Data Final">
                     </div>
-                    <div class="col-md-4 filters">
+                    <div class="col-md-3 filters">
                         <input name="filter" class="form-control" placeholder="Pesquisar">
                     </div>
                     <div class="col-md-2 filters">
                         <button type="submit" class="btn btn-primary pull-right"><i class="fa fa-search"></i> Filtrar</button>
+                    </div>
+
+                    <div class="col-md-3">
+                        <button class="btn btn-primary"
+                           data-toggle="modal" data-target="#modal_transaction">
+                            <i class="fa fa-plus-square"></i> Operação
+                        </button>
                     </div>
                 </form>
             </div>
@@ -38,6 +59,23 @@
 </table>
 
 <script>
+
+    var modalTransaction = $('#modal_transaction');
+
+    modalTransaction.on('show.bs.modal', function (event) {
+        var target = $(event.relatedTarget);
+        var url = target.data('url');
+        $.ajax({
+            url: '{{ path('transactions', {type:'structure', id:component.id}) }}',
+            success: function (response) {
+                modalTransaction.find('.modal-body').html(response);
+            }
+        });
+    });
+
+    $('#bt_save_transaction').click(function () {
+        $('#btn_transaction').trigger('click');
+    });
 
     TransactionStock = {
         form: $('#transactions_filter'),
