@@ -1,18 +1,16 @@
-<table id="table_transaction" data-transactions="{{ route('list_transactions_stock', {component:component.id}) }}" class="table table-bordered">
+<table id="table_transaction" data-transactions="{{ route('list_transactions_stock', {id:component.id, family:component.family}) }}" class="table table-bordered">
     <thead>
     <tr class="m-table-header">
         <th colspan="3">
             <div class="col-md-">
                 <h2 class="text-center">Transações</h2>
-                <form id="transactions_filter" action="{{ route('list_transactions_stock', {component:component.id}) }}">
-                    <div class="col-md-3 filters">
-                        <input id="start_at" name="start_at" class="form-control" placeholder="Data Inicial">
+                <form id="transactions_filter" action="{{ route('list_transactions_stock', {id:component.id, family:component.family}) }}">
+                    <div class="col-md-5 filters">
+                        <input id="date" name="date" class="form-control" placeholder="Filtrar por data">
                     </div>
-                    <div class="col-md-3 filters">
-                        <input id="end_at" name="end_at" class="form-control" placeholder="Data Final">
-                    </div>
-                    <div class="col-md-4 filters">
-                        <input name="filter" class="form-control" placeholder="Pesquisar">
+                    <div class="col-md-5 filters">
+                        <input type="hidden" value="t.description" name="filter_name">
+                        <input name="filter_value" class="form-control" placeholder="Pesquisar">
                     </div>
                     <div class="col-md-2 filters">
                         <button type="submit" class="btn btn-primary pull-right"><i class="fa fa-search"></i> Filtrar</button>
@@ -53,7 +51,6 @@
         },
         datePicker: function (element) {
             element.daterangepicker({
-                singleDatePicker: true,
                 locale: {
                     format: 'DD/MM/YYYY',
                     daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
@@ -90,8 +87,7 @@
         init: function () {
             this.filter();
             this.loadTransactions();
-            this.datePicker($('#start_at'));
-            this.datePicker($('#end_at'));
+            this.datePicker($('#date'));
         }
     };
 
