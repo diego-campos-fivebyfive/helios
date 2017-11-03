@@ -301,3 +301,7 @@ services:
     order_stock:
         class: AppBundle\Service\Order\OrderStock
         arguments: ['@component_collector', '@stock_component']
+
+    component_query:
+        class: AppBundle\Service\Component\Query
+        arguments: ['@service_container']
