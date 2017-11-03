@@ -53,6 +53,14 @@ class OrderStock
      */
     public function process(OrderInterface $order, $mode)
     {
+        if($order->isMaster()){
+            foreach ($order->getChildrens() as $children){
+                $this->process($children, $mode);
+            }
+
+            return;
+        }
+
         $transactions = $this->mappingTransactions($order, $mode);
 
         $this->stock->transact($transactions);
@@ -80,9 +88,11 @@ class OrderStock
      */
     private function mappingTransactions(OrderInterface $order, $mode)
     {
+        $reference = $order->isMaster() ? $order->getReference() : $order->getParent()->getReference();
+
         $description = sprintf(
             'Orçamento %s - %s',
-            $order->getReference(),
+            $reference,
             (new \DateTime())->format('d/m/Y H:i')
         );
 

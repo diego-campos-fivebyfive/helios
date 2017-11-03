@@ -23,6 +23,10 @@ class OrderStockTest extends AppTestCase
     public function testTransactElements()
     {
         $manager = $this->manager('order');
+
+        // Add a master order
+        $master = $manager->create();
+
         $order = $manager->create();
         $components = $this->createComponents(25);
         $stocks = [];
@@ -46,9 +50,11 @@ class OrderStockTest extends AppTestCase
             $stocks[$identity] += $amount;
         }
 
-        $manager->save($order);
+        $master->addChildren($order);
 
-        $this->service('order_reference')->generate($order);
+        $manager->save($master);
+
+        $this->service('order_reference')->generate($master);
 
         // Test elements is added
         $this->assertCount(count($components), $order->getElements()->toArray());
@@ -61,7 +67,7 @@ class OrderStockTest extends AppTestCase
         }
 
         // Process debit
-        $orderStock->debit($order);
+        $orderStock->debit($master);
 
         // Check stock updated
         foreach ($components as $key => $component){
@@ -72,11 +78,19 @@ class OrderStockTest extends AppTestCase
         }
 
         // Process credit
-        $orderStock->credit($order);
+        $orderStock->credit($master);
 
         // Check stock return to 0
         foreach ($components as $key => $component){
             $this->assertEquals(0, $component->getStock());
+        }
+
+        $products = $this->service('stock_converter')->transform($components);
+
+        foreach ($products as $product){
+            foreach ($product->getTransactions() as $transaction){
+                $this->assertContains($master->getReference(), $transaction->getDescription());
+            }
         }
     }
 
