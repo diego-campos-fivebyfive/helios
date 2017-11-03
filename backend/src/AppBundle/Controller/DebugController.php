@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AdminBundle\Form\Stock\TransactionType;
 use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Component\PricingManager;
 use AppBundle\Entity\Customer;
@@ -9,10 +10,13 @@ use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Entity\Component\Project;
+use AppBundle\Entity\Stock\ProductInterface;
+use AppBundle\Entity\Stock\Transaction;
 use AppBundle\Manager\OrderManager;
 use AppBundle\Model\KitPricing;
 use AppBundle\Service\Mailer;
 use AppBundle\Service\ProjectGenerator\Checker\Checker;
+use AppBundle\Service\Stock\Operation;
 use Aws\S3\S3Client;
 use Doctrine\Common\Inflector\Inflector;
 use Exporter\Exporter;
@@ -816,5 +820,37 @@ class DebugController extends AbstractController
 
         dump($testRoofs);die;
         return $testRoofs;
+    }
+
+    //TODO: Este metodo será movido e  utilizado posteriormente para StockController para o gerenciamento
+    //TODO: de transações de entrada e saida de estoque de componentes;
+    /**
+     * @Route("/transactions/{type}/{id}", name="transactions")
+     */
+    public function transactionsAction(Request $request, $type, $id)
+    {
+        $component = $this->manager($type)->find($id);
+
+        $form = $this->createForm(TransactionType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+
+            $data = $form->getData();
+
+            $amount = $data['amount'] * $data['mode'];
+            $description = $data['description'];
+            $stockComponent = $this->get('stock_component');
+
+            $stockComponent->add($component, $amount, $description);
+
+            $stockComponent->transact();
+
+            return $this->json([]);
+        }
+
+        return $this->render('admin/stock/form.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 }
