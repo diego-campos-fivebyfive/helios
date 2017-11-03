@@ -9,6 +9,9 @@ if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
   exit 0;
 fi
 
+PR_FILE=$CLI_PATH/stash/.ces-pull-request
+[[ -f $PR_FILE ]] && PR_CURRENT=$(tail -n1 $PR_FILE | tr -d "[:space:]")
+
 BRANCH_CURRENT=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
 BRANCH=$([[ $2 ]] && echo "issue-$2" || echo $BRANCH_CURRENT)
 ISSUE=${BRANCH/issue-/}
@@ -44,12 +47,18 @@ if [[ $1 == '--review' ]]; then
     git push origin $BRANCH
   fi
 
-  echo 'Creating Github pull request...'
-  pr=$(open_pull_request | get_pull_request_number)
+  if [[ -z $PR_CURRENT ]]; then
+    echo 'Creating Github pull request...'
+    pr=$(open_pull_request | get_pull_request_number)
+  else
+    pr=$PR_CURRENT
+  fi
 
   if [[ -z $pr ]]; then
     echo 'Error: could not proccess pull request'
     exit 1
+  else
+    echo $pr > $PR_FILE
   fi
 
   url="https://github.com/sices/sices/pull/$pr/files"
