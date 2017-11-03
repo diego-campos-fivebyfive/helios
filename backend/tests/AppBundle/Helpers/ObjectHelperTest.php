@@ -31,7 +31,7 @@ trait ObjectHelperTest
      */
     protected static function randomString($size)
     {
-        return substr(uniqid(time()), 0, $size);
+        return substr(md5(time()), 0, $size);
     }
 
     /**
