@@ -172,6 +172,11 @@ interface ComponentInterface
     public function isSalable();
 
     /**
+     * @return string
+     */
+    public function getFamily();
+
+    /**
      * @return array
      */
     public static function getStatusOptions();
