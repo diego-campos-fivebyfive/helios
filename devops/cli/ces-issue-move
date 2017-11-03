@@ -14,8 +14,6 @@ if [[ -z $2 ]]; then
   exit 1
 fi
 
-echo 'Moving Github issue...'
-
 input_format() {
   local s=${1/--/}
   echo ${s^}
@@ -31,6 +29,8 @@ STAGE_TO=$(input_format $STAGE)
 if [[ $STAGE_FROM == $STAGE_TO ]]; then
   exit 0
 fi
+
+echo 'Moving Github issue...'
 
 QUERY_STRING="Stage:%20$STAGE_FROM"
 JSON="[\"Stage: $STAGE_TO\"]"
