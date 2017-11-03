@@ -11,6 +11,7 @@ interface MakerInterface
     const CONTEXT_MODULE = 'module';
     const CONTEXT_STRUCTURE = 'structure';
     const CONTEXT_STRING_BOX = 'string_box';
+    const CONTEXT_VARIETY = 'variety';
 
     const STATUS_ENABLED = 1;
     const STATUS_DISABLED = 0;

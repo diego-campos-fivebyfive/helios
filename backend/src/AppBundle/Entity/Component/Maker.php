@@ -205,7 +205,8 @@ class Maker implements MakerInterface
             self::CONTEXT_MODULE => self::CONTEXT_MODULE,
             self::CONTEXT_INVERTER => self::CONTEXT_INVERTER,
             self::CONTEXT_STRUCTURE => self::CONTEXT_STRUCTURE,
-            self::CONTEXT_STRING_BOX => self::CONTEXT_STRING_BOX
+            self::CONTEXT_STRING_BOX => self::CONTEXT_STRING_BOX,
+            self::CONTEXT_VARIETY => self::CONTEXT_VARIETY
         ];
     }
 
