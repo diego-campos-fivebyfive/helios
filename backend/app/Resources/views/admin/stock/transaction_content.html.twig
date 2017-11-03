@@ -1,0 +1,45 @@
+{% set transactions = pagination.items %}
+
+{% for transaction in transactions %}
+    <tr>
+        <td>
+            {{ transaction.code }}
+        </td>
+        <td>
+            {{ transaction.description }}
+        </td>
+        <td>
+
+        </td>
+    </tr>
+{% endfor %}
+
+<tr>
+    <td colspan="3">
+        <div class="row text-center">
+            <div id="pagination_transaction" class="btn-group bt-xs">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </td>
+</tr>
+
+<script>
+    $(' #pagination_transaction ul[class="pagination"] li a ').toArray().forEach(function (el) {
+        rout = $(el).attr('href');
+        $(el).removeAttr('href');
+        $(el).attr('data-page-transaction', rout);
+    });
+
+    $(' [data-page-transaction] ').on( 'click', function () {
+        var url = $(this).data('page-transaction');
+        $.ajax({
+            url: url,
+            method: 'get',
+            complete: function (xhr) {
+                TransactionStock.transactionContent.html(xhr.responseText);
+            }
+        });
+    });
+</script>
+
