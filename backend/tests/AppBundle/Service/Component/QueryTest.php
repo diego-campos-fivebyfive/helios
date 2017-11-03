@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Tests\AppBundle\AppTestCase;
 
 /**
- * Class MultiQueryTest
+ * Class QueryTest
  * @group component_query
  */
 class MultiQueryTest extends AppTestCase
