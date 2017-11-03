@@ -34,6 +34,12 @@ const hook = (request, response) => {
     const link = `*<${url}|#${number}>*`
     const action = (state === 'changes_requested') ? '`requested changes in`' : state
 
+    if (developer === reviewer) {
+      const message = `[${title}] _${developer}_ responded pull-request ${link}`
+      exec(`$CLI_PATH/ces-slack-notify --devops \'${message}\'`)
+      return
+    }
+
     exec(`$CLI_PATH/util/user-credentials ${developer} --slack`, (error, stdout) => {
       const nickname = stdout.trim()
       const message = `[${title}] @${nickname}: _${reviewer}_ ${action} pull-request ${link}`
