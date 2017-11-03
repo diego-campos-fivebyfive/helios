@@ -222,7 +222,7 @@ class DefaultsResolver
             'longitude' => null,
             'customer' => null,
             'stage' => null,
-            'roof_type' => 'ROOF_ROMAN_AMERICAN',
+            'roof_type' => 'ROOF_CEMENT',
             'source' => 'consumption',
             'power' => 0,
             'consumption' => 0,
