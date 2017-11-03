@@ -201,6 +201,17 @@ class Checker
     }
 
     /**
+     * @return array
+     */
+    public function checkRoofTypes()
+    {
+        $parameter = $this->findSettings();
+        $roofType = $parameter->get('enabled_roof_types');
+
+        return array_combine($roofType, $roofType);
+    }
+
+    /**
      * @param array $data
      * @return array
      */
@@ -220,5 +231,18 @@ class Checker
         $filter->fromClass($class);
 
         return $filter;
+    }
+
+    /**
+     * @return Parameter
+     */
+    private function findSettings()
+    {
+        $manager = $this->container->get('parameter_manager');
+
+        /** @var Parameter $parameter */
+        $parameter = $manager->findOrCreate('platform_settings');
+
+        return $parameter;
     }
 }

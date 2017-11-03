@@ -12,6 +12,7 @@ use AppBundle\Entity\Component\Project;
 use AppBundle\Manager\OrderManager;
 use AppBundle\Model\KitPricing;
 use AppBundle\Service\Mailer;
+use AppBundle\Service\ProjectGenerator\Checker\Checker;
 use Aws\S3\S3Client;
 use Doctrine\Common\Inflector\Inflector;
 use Exporter\Exporter;
@@ -801,5 +802,19 @@ class DebugController extends AbstractController
         }
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @Route("/rooftype", name="roof_types")
+     */
+    public function roofTypesAction()
+    {
+        /** @var \AppBundle\Service\ProjectGenerator\Checker\Checker $checkerRoofs */
+        $checkerRoofs = $this->container->get('generator_checker');
+
+        $testRoofs = $checkerRoofs->checkRoofTypes();
+
+        dump($testRoofs);die;
+        return $testRoofs;
     }
 }

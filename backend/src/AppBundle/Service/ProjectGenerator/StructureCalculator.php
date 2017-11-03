@@ -13,8 +13,8 @@ use AppBundle\Manager\StructureManager;
  */
 class StructureCalculator
 {
-    const ROOF_ROMAN_AMERICAN   = 'ROOF_ROMAN_AMERICAN';    //0
-    const ROOF_CEMENT           = 'ROOF_CEMENT';            //1
+    const ROOF_CEMENT           = 'ROOF_CEMENT';            //0
+    const ROOF_ROMAN_AMERICAN   = 'ROOF_ROMAN_AMERICAN';    //1
     const ROOF_FLAT_SLAB        = 'ROOF_FLAT_SLAB';         //2
     const ROOF_SHEET_METAL      = 'ROOF_SHEET_METAL';       //3
     const ROOF_SHEET_METAL_PFM  = 'ROOF_SHEET_METAL_PFM';   //4
@@ -410,8 +410,8 @@ class StructureCalculator
     public static function getRoofTypes()
     {
         return [
-            self::ROOF_ROMAN_AMERICAN,
             self::ROOF_CEMENT,
+            self::ROOF_ROMAN_AMERICAN,
             self::ROOF_FLAT_SLAB,
             self::ROOF_SHEET_METAL,
             self::ROOF_SHEET_METAL_PFM
