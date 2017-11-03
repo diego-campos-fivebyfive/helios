@@ -1,8 +1,39 @@
-{% block body %}
-{{ form_start(form, {attr:{id:'form-transaction'}}) }}
+{{ form_start(form, {attr:{id:'form-transaction', action: app.request.uri}}) }}
+<div class="row">
+    <div class="col-md-12">
 
-    <button type="submit" id="btn_transaction">Enviar</button>
+        <div class="form-group col-md-12">
+            {{ form_label(form.description, 'Descrição') }}
+            {{ form_widget(form.description,{attr:{class:'form-control', 'placeholder':'Descrição'}}) }}
+        </div>
+
+        <div class="form-group col-md-6">
+            {{ form_label(form.amount, 'Quantidade') }}
+            {{ form_widget(form.amount,{attr:{class:'form-control', 'placeholder':'Quantidade'}}) }}
+        </div>
+
+        <div class="form-group col-md-6">
+            {{ form_label(form.mode, 'Operação') }}
+            {{ form_widget(form.mode,{attr:{class:'form-control', 'placeholder':'Operação'}}) }}
+        </div>
+
+        <button type="submit" id="btn_transaction" class="hide">Enviar</button>
+    </div>
+</div>
 {{ form_end(form) }}
 
+<script>
 
-{% endblock %}
+    $('#form-transaction').on('submit', function (event) {
+        event.preventDefault();
+        $.ajax({
+            url: $(this).attr('action'),
+            method: $(this).attr('method'),
+            data: $(this).serialize(),
+            complete: function (xhr) {
+                Stock.reloadContent();
+            }
+        });
+    });
+
+</script>

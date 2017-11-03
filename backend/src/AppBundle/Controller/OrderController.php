@@ -85,11 +85,18 @@ class OrderController extends AbstractController
 
             $this->manager('order')->save($order);
 
-            if ($order->isApproved() && $currentStatus != OrderInterface::STATUS_DONE)
+            // TODO - Estas operações serão movidas para switch-case ou um serviço extra em breve
+
+            if ($order->isApproved() && $currentStatus != OrderInterface::STATUS_DONE) {
                 $this->generatorProformaAction($order);
+                $this->getStock()->debit($order);
+            }
 
             if (!($currentStatus == OrderInterface::STATUS_DONE && $order->isApproved()))
                 $this->sendOrderEmail($order);
+
+            if($order->isRejected() && $currentStatus == OrderInterface::STATUS_APPROVED)
+                $this->getStock()->credit($order);
 
             return $this->json();
         }
@@ -360,5 +367,13 @@ class OrderController extends AbstractController
         $order->setShippingRules($rule);
 
         $this->manager('order')->save($order);
+    }
+
+    /**
+     * @return \AppBundle\Service\Order\OrderStock|object
+     */
+    private function getStock()
+    {
+        return $this->get('order_stock');
     }
 }
