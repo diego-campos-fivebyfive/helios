@@ -294,6 +294,10 @@ services:
         class: AppBundle\Service\Stock\Component
         arguments: ['@stock_provider']
 
+    stock_query:
+        class: AppBundle\Service\Stock\Query
+        arguments: ['@stock_provider']
+
     order_stock:
         class: AppBundle\Service\Order\OrderStock
         arguments: ['@component_collector', '@stock_component']
