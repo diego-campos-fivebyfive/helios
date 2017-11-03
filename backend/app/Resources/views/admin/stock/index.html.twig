@@ -1,0 +1,47 @@
+{% extends view('layout') %}
+
+{% block body %}
+    <style>
+        .filters {
+            padding-right: 3px;
+            padding-left: 3px;
+        }
+    </style>
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="ibox flow-h">
+                    <div class="ibox-content flow-lg">
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                {% include view('admin/stock/components.html.twig') %}
+                            </div>
+
+                            <div id="transations_block" class="col-md-6">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(' body ').toggleClass('mini-navbar');
+
+        Stock = {
+            transactionsBlock: $('#transations_block'),
+            loadTransaction: function (urlComponent) {
+                $.ajax({
+                    url: urlComponent,
+                    complete: function (xhr) {
+                        Stock.transactionsBlock.html(xhr.responseText);
+                    }
+                });
+            }
+        }
+    </script>
+{% endblock %}

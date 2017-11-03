@@ -1,0 +1,99 @@
+<table id="table_transaction" data-transactions="{{ route('list_transactions_stock', {component:component.id}) }}" class="table table-bordered">
+    <thead>
+    <tr class="m-table-header">
+        <th colspan="3">
+            <div class="col-md-">
+                <h2 class="text-center">Transações</h2>
+                <form id="transactions_filter" action="{{ route('list_transactions_stock', {component:component.id}) }}">
+                    <div class="col-md-3 filters">
+                        <input id="start_at" name="start_at" class="form-control" placeholder="Data Inicial">
+                    </div>
+                    <div class="col-md-3 filters">
+                        <input id="end_at" name="end_at" class="form-control" placeholder="Data Final">
+                    </div>
+                    <div class="col-md-4 filters">
+                        <input name="filter" class="form-control" placeholder="Pesquisar">
+                    </div>
+                    <div class="col-md-2 filters">
+                        <button type="submit" class="btn btn-primary pull-right"><i class="fa fa-search"></i> Filtrar</button>
+                    </div>
+                </form>
+            </div>
+        </th>
+    </tr>
+    <tr class="m-table-header">
+        <th colspan="">
+            Data
+        </th>
+        <th colspan="">
+            Descrição
+        </th>
+        <th colspan="">
+            Quantidade
+        </th>
+    </tr>
+    </thead>
+    <tbody id="transaction_content">
+    </tbody>
+</table>
+
+<script>
+
+    TransactionStock = {
+        form: $('#transactions_filter'),
+        tableTransaction: $('#table_transaction'),
+        transactionContent: $('#transaction_content'),
+        loadTransactions: function () {
+            $.ajax({
+                url: TransactionStock.tableTransaction.data('transactions'),
+                complete: function (xhr) {
+                    TransactionStock.transactionContent.html(xhr.responseText);
+                }
+            });
+        },
+        datePicker: function (element) {
+            element.daterangepicker({
+                singleDatePicker: true,
+                locale: {
+                    format: 'DD/MM/YYYY',
+                    daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+                    monthNames: [
+                        "Janeiro",
+                        "Fevereiro",
+                        "Março",
+                        "Abril",
+                        "Maio",
+                        "Junho",
+                        "Julho",
+                        "Agosto",
+                        "Setembro",
+                        "Outubro",
+                        "Novembro",
+                        "Dezembro"
+                    ]
+                }
+            });
+            element.val('');
+        },
+        filter: function () {
+            this.form.on('submit', function (event) {
+                event.preventDefault();
+                $.ajax({
+                    url: this.action,
+                    data: TransactionStock.form.serialize(),
+                    complete: function (xhr) {
+                        TransactionStock.transactionContent.html(xhr.responseText);
+                    }
+                });
+            });
+        },
+        init: function () {
+            this.filter();
+            this.loadTransactions();
+            this.datePicker($('#start_at'));
+            this.datePicker($('#end_at'));
+        }
+    };
+
+    TransactionStock.init();
+</script>

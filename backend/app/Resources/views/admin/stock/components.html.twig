@@ -1,0 +1,81 @@
+<style>
+    tr[data-url-component]:hover{
+        background-color: #F3F3F3;
+        cursor: pointer;
+    }
+</style>
+
+<table id="table_components" data-components="{{ route('components_stock') }}" class="table table-bordered">
+    <thead>
+    <tr class="m-table-header">
+        <th colspan="3">
+            <h2 class="text-center">Componentes</h2>
+            <div class="col-md-12">
+                <form id="components_filter" action="{{ route('components_stock') }}">
+                    <div class="col-md-4 filters">
+                        <select name="type" class="form-control">
+                            <option value="">Tipo</option>
+                            <option value="0">Modulo</option>
+                            <option value="1">Inverter</option>
+                        </select>
+                    </div>
+                    <div class="col-md-5 filters">
+                        <input name="filter" class="form-control" placeholder="Pesquisar">
+                    </div>
+                    <div class="col-md-3 filters">
+                        <button type="submit" class="btn btn-primary pull-right"><i class="fa fa-search"></i> Filtrar</button>
+                    </div>
+                </form>
+            </div>
+        </th>
+    </tr>
+    <tr class="m-table-header">
+        <th colspan="">
+            Código
+        </th>
+        <th colspan="">
+            Descrição
+        </th>
+        <th colspan="">
+            Estoque
+        </th>
+    </tr>
+    </thead>
+    <tbody id="components_content">
+    </tbody>
+</table>
+
+<script>
+    ComponentsStock = {
+        form: $('#components_filter'),
+        tableComponents: $('#table_components'),
+        componentsContent: $('#components_content'),
+        loadComponents: function () {
+            $.ajax({
+                url: ComponentsStock.tableComponents.data('components'),
+                method: 'get',
+                complete: function(xhr) {
+                    ComponentsStock.componentsContent.html(xhr.responseText);
+                }
+            });
+        },
+        filter: function () {
+            this.form.on('submit', function (event) {
+                event.preventDefault();
+                $.ajax({
+                    url: this.action,
+                    data: ComponentsStock.form.serialize(),
+                    complete: function (xhr) {
+                        ComponentsStock.componentsContent.html(xhr.responseText);
+                    }
+                });
+            });
+        },
+        init: function () {
+            this.filter();
+            this.loadComponents();
+        }
+    };
+
+    ComponentsStock.init();
+</script>

@@ -64,6 +64,7 @@ class DefaultsResolver
     {
         $this->module();
         $this->promoEndAt();
+        $this->shippingIncluded();
         $this->maker('inverter');
         $this->maker('structure');
         $this->maker('string_box');
@@ -95,6 +96,16 @@ class DefaultsResolver
         if($parameter instanceof Parameter && $parameter->get('enable_promo') ) {
             $this->resolveDefault('promo_end_at', (new \DateTime($parameter->get('promo_end_at')['date']))->format('d/m/Y'));
         }
+    }
+
+    /**
+     * Resolve default shippingIncluded
+     */
+    public function shippingIncluded()
+    {
+        $parameter = $this->resolveParameters(Parameter::class, ['id' => 'platform_settings']);
+        if($parameter instanceof Parameter && $parameter->get('shipping_included'))
+            $this->resolveDefault('shipping_included', $parameter->get('shipping_included'));
     }
 
     /**
@@ -235,6 +246,7 @@ class DefaultsResolver
             'structure_maker' => 61211,
             'string_box_maker' => 61209,
             'is_promotional' => false,
+            'shipping_included' => false,
             'promo_end_at' => null,
             'errors' => []
         ];

@@ -1,0 +1,49 @@
+{% set components = pagination.items %}
+
+{% for component in components %}
+    <tr data-url-component="{{ route('transaction_stock', {component:component.id  }) }}">
+        <td>
+            {{ component.code }}
+        </td>
+        <td>
+            {{ component.description }}
+        </td>
+        <td>
+
+        </td>
+    </tr>
+{% endfor %}
+
+<tr>
+    <td colspan="3">
+        <div class="row text-center">
+            <div id="pagination_components" class="btn-group bt-xs">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </td>
+</tr>
+
+<script>
+    $(' #pagination_components ul[class="pagination"] li a ').toArray().forEach(function (el) {
+        rout = $(el).attr('href');
+        $(el).removeAttr('href');
+        $(el).attr('data-page-component', rout);
+    });
+
+    $(' [data-page-component] ').on( 'click', function () {
+        var url = $(this).data('page-component');
+        $.ajax({
+            url: url,
+            method: 'get',
+            complete: function (xhr) {
+                ComponentsStock.componentsContent.html(xhr.responseText);
+            }
+        });
+    });
+
+    $(' [data-url-component] ').on( 'click', function () {
+        var urlComponent = $(this).data('url-component');
+        Stock.loadTransaction(urlComponent);
+    });
+</script>
