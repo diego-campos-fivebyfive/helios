@@ -133,7 +133,7 @@
                 <a data-toggle="modal" data-target="#modal_component"
                    data-url="{{ path('structure_show', {id:structure.id}) }}">
                     {{ structure.description }}
-                    {% if not structure.available %}
+                    {% if not structure.salable %}
                         <span class="label label-danger">
                             Produto Indisponível
                         </span>

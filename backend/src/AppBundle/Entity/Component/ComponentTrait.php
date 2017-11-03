@@ -388,6 +388,11 @@ trait ComponentTrait
         return $this->status;
     }
 
+    public function isSalable()
+    {
+        return $this->status;
+    }
+
     /**
      * @inheritDoc
      */
