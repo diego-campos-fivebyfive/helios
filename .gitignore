@@ -18,4 +18,4 @@ vendor
 .backup
 .uploads
 
-devops/cli/stash/.ces-pull-request
+devops/cli/stash/temp
