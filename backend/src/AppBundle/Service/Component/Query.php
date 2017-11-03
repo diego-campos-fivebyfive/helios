@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service\Component;
 
+use AppBundle\Entity\Component\Maker;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -38,7 +39,7 @@ class Query
             'like' => null
         ], $criteria);
 
-        $families = ['inverter', 'module', 'string_box', 'structure', 'variety'];
+        $families = Maker::getContextList();
 
         $family = $criteria['family'];
         $like = $criteria['like'];
