@@ -36,7 +36,7 @@ class ModuleData extends AbstractFixture implements OrderedFixtureInterface
     public static function getData()
     {
         return [
-            'model' => self::randomString(4),
+            'model' => self::randomString(25),
             'code' => self::randomString(8),
             'cellNumber' => self::randomInt(),
             'maxPower' => self::randomFloat(),
