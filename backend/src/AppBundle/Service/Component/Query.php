@@ -77,11 +77,7 @@ class Query
 
         $paginator = $this->getPaginator();
 
-        $pagination = $paginator->paginate(
-            $data,
-            $page,
-            $perPage
-        );
+        $pagination = $paginator->paginate($data, $page, $perPage);
 
         return $pagination;
     }
