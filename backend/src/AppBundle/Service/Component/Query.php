@@ -2,37 +2,53 @@
 
 namespace AppBundle\Service\Component;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class MultiQuery
+class Query
 {
+    /**
+     * @var array
+     */
     private $managers = [];
 
-    function __construct()
-    {
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
 
+    /**
+     * Query constructor.
+     * @param ContainerInterface $container
+     */
+    function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
     }
 
-    public function process($source)
+    /**
+     * @param array $criteria
+     * @return mixed
+     */
+    public function fromCriteria(array $criteria = [])
     {
+        $criteria = array_merge([
+            'page' => 1,
+            'family' => null,
+            'like' => null
+        ], $criteria);
 
-    }
-
-    public function fromRequest(Request $request)
-    {
         $families = ['inverter', 'module', 'string_box', 'structure', 'variety'];
 
-        $family = $request->query->get('family');
-        $like = $request->query->get('like');
+        $family = $criteria['family'];
+        $like = $criteria['like'];
+        $page = (int) $criteria['page'];
         $perPage = 10;
-        $page = $request->query->getInt('page', 1);
 
         if($family) $families = [$family];
 
         $data = [];
         foreach ($families as $family){
-
-            //$data[] = ['code' => 'breakpoint', 'description' => $family];
 
             $manager = $this->manager($family);
             $qb = $manager->createQueryBuilder();
@@ -67,21 +83,21 @@ class MultiQuery
             $perPage
         );
 
-        foreach ($pagination as $key => $item){
-            dump($item->getDescription());
-        }
-
-        die;
+        return $pagination;
     }
 
-    private function family()
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function fromRequest(Request $request)
     {
-
+        return $this->fromCriteria($request->query->all());
     }
 
     /**
      * @param $family
-     * @return mixed
+     * @return object|\AppBundle\Manager\AbstractManager
      */
     private function manager($family)
     {
@@ -89,5 +105,13 @@ class MultiQuery
             $this->managers[$family] = $this->container->get(sprintf('%s_manager', $family));
 
         return $this->managers[$family];
+    }
+
+    /**
+     * @return object
+     */
+    private function getPaginator()
+    {
+        return $this->container->get('knp_paginator');
     }
 }
