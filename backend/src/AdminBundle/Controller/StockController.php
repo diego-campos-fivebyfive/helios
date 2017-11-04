@@ -2,6 +2,7 @@
 
 namespace AdminBundle\Controller;
 
+use AppBundle\Entity\Component\Maker;
 use AdminBundle\Form\Stock\TransactionType;
 use AppBundle\Entity\Component\Structure;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
@@ -23,8 +24,11 @@ class StockController extends AbstractController
      */
     public function stockAction()
     {
+        $families = Maker::getContextList();
 
-        return $this->render('admin/stock/index.html.twig');
+        return $this->render('admin/stock/index.html.twig', [
+            'families' => $families
+        ]);
     }
 
     /**
@@ -32,92 +36,67 @@ class StockController extends AbstractController
      */
     public function componentsAction(Request $request)
     {
-        // TODO: codigo para teste
-        $manager = $this->manager('structure');
-        $paginator = $this->getPaginator();
-
-        $qb = $manager->getEntityManager()->createQueryBuilder();
-        $qb->select('s')
-            ->from(Structure::class, 's')
-            ->leftJoin('s.maker', 'm', 'WITH')
-            ->orderBy('m.name', 'asc')
-            ->addOrderBy('s.description', 'asc');
-
-        if(!$this->user()->isAdmin() && !$this->user()->isPlatformMaster()) {
-            $qb->where('s.status = :status');
-            $qb->andWhere('s.available = :available');
-            $qb->setParameters([
-                'status' => 1,
-                'available' => 1
-            ]);
-        }
-
-        $this->overrideGetFilters();
-
-        $pagination = $paginator->paginate(
-            $qb->getQuery(),
-            $request->query->getInt('page', 1),
-            'grid' == $request->query->get('display', 'grid') ? 8 : 10,
-            ['distinct' => false]
-        );
+        $componentsPaginator = $this->get('component_query')->fromCriteria([
+            'page' => $request->query->getInt('page',1),
+            'family' => $request->query->get('type',null),
+            'like' => $request->query->get('filter',null)
+        ]);
 
         return $this->render('admin/stock/components_content.html.twig',[
-            'pagination' => $pagination
+            'pagination' => $componentsPaginator
         ]);
     }
 
     /**
-     * @Route("/{component}/transaction", name="transaction_stock")
+     * @Route("/{id}/{family}/transaction", name="transaction_stock")
      */
-    public function transactionAction($component)
+    public function transactionAction($id, $family)
     {
-        // TODO: adaptar para pegar a familia do componente
-        $manager = $this->manager('structure');
-
-        $component = $manager->find($component);
+        $component = $this->manager($family)->find($id);
 
         return $this->render('admin/stock/transaction.html.twig',[
-            'component' => $component
+            'component' => $component,
+            'family' => $family
         ]);
     }
 
     /**
-     * @Route("/transaction/{component}/list", name="list_transactions_stock")
+     * @Route("/transaction/{id}/{family}/list", name="list_transactions_stock")
      */
-    public function listTransactionAction(Request $request, $component)
+    public function listTransactionAction(Request $request, $id, $family)
     {
-        // TODO: codigo de teste
-        $manager = $this->manager('structure');
+        $date = $request->query->get('date',null);
 
-        $paginator = $this->getPaginator();
+        $startAt = null;
+        $endAt = null;
 
-        $qb = $manager->getEntityManager()->createQueryBuilder();
-        $qb->select('s')
-            ->from(Structure::class, 's')
-            ->leftJoin('s.maker', 'm', 'WITH')
-            ->orderBy('m.name', 'asc')
-            ->addOrderBy('s.description', 'asc');
+        $formatDate = function($date){
+            return implode('-', array_reverse(explode('/', $date)));
+        };
 
-        if(!$this->user()->isAdmin() && !$this->user()->isPlatformMaster()) {
-            $qb->where('s.status = :status');
-            $qb->andWhere('s.available = :available');
-            $qb->setParameters([
-                'status' => 1,
-                'available' => 1
-            ]);
+        if ($date) {
+            $date = explode(' - ',$date);
+            $startAt = new \DateTime($formatDate($date[0]));
+            $endAt = new \DateTime($formatDate($date[1]));
         }
+
+        $component = $this->manager($family)->find($id);
+
+        $products = $this->get('stock_converter')->transform([$component]);
 
         $this->overrideGetFilters();
 
-        $pagination = $paginator->paginate(
-            $qb->getQuery(),
-            $request->query->getInt('page', 1),
-            'grid' == $request->query->get('display', 'grid') ? 8 : 10,
-            ['distinct' => false]
-        );
+        $stockQuery = $this->get('stock_query');
+
+        if ($startAt and $endAt)
+            $stockQuery->between($startAt, $endAt);
+
+        $product = $stockQuery->product($products[0]);
+
+        $page = $request->query->getInt('page',1);
 
         return $this->render('admin/stock/transaction_content.html.twig',[
-            'pagination' => $pagination
+            'pagination' => $product->pagination($page)
         ]);
     }
 

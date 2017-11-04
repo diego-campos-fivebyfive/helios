@@ -1,7 +1,7 @@
 {% set components = pagination.items %}
 
 {% for component in components %}
-    <tr data-url-component="{{ route('transaction_stock', {component:component.id  }) }}">
+    <tr data-url-component="{{ route('transaction_stock', {id:component.id, family:component.family}) }}">
         <td>
             {{ component.code }}
         </td>
@@ -9,7 +9,7 @@
             {{ component.description }}
         </td>
         <td>
-
+            {{ component.stock }}
         </td>
     </tr>
 {% endfor %}

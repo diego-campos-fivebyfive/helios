@@ -15,8 +15,9 @@
                     <div class="col-md-4 filters">
                         <select name="type" class="form-control">
                             <option value="">Tipo</option>
-                            <option value="0">Modulo</option>
-                            <option value="1">Inverter</option>
+                            {% for family in families %}
+                                <option value="{{ family }}">{{ family|trans }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                     <div class="col-md-5 filters">

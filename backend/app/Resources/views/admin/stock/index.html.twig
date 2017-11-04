@@ -41,6 +41,10 @@
                         Stock.transactionsBlock.html(xhr.responseText);
                     }
                 });
+            },
+            reloadContent: function () {
+                ComponentsStock.loadComponents();
+                TransactionStock.loadTransactions();
             }
         }
     </script>

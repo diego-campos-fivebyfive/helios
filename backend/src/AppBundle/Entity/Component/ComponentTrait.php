@@ -116,7 +116,7 @@ trait ComponentTrait
      */
     protected $stock;
 
-    /***
+    /**
      * @param $datasheet
      * @return $this
      */
@@ -128,7 +128,7 @@ trait ComponentTrait
         return $this;
     }
 
-    /***
+    /**
      * @return string
      */
     public function getDatasheet()
@@ -240,7 +240,7 @@ trait ComponentTrait
         return $this;
     }
 
-    /***
+    /**
      * @param string $ncm
      * @return $this
      */
@@ -250,7 +250,7 @@ trait ComponentTrait
         return $this;
     }
 
-    /***
+    /**
      * @return string
      */
     public function getNcm()
@@ -258,7 +258,7 @@ trait ComponentTrait
         return $this->ncm;
     }
 
-    /***
+    /**
      * @param string $cmvProtheus
      * @return $this
      */
@@ -268,7 +268,7 @@ trait ComponentTrait
         return $this;
     }
 
-    /***
+    /**
      * @return string
      */
     public function getCmvProtheus()
@@ -276,7 +276,7 @@ trait ComponentTrait
         return $this->cmvProtheus;
     }
 
-    /***
+    /**
      * @param $cmvApplied
      * @return $this
      */
@@ -286,7 +286,7 @@ trait ComponentTrait
         return $this;
     }
 
-    /***
+    /**
      * @return string
      */
     public function getCmvApplied()
@@ -393,6 +393,16 @@ trait ComponentTrait
         return $this->status;
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function getFamily()
+    {
+        if ($this->maker)
+            return $this->maker->getContext();
+        return null;
+    }
+    
     /**
      * @inheritDoc
      */

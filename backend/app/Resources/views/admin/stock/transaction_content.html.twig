@@ -3,13 +3,13 @@
 {% for transaction in transactions %}
     <tr>
         <td>
-            {{ transaction.code }}
+            {{ transaction.createdAt|date('d/m/Y H:i') }}
         </td>
         <td>
             {{ transaction.description }}
         </td>
         <td>
-
+            {{ transaction.amount }}
         </td>
     </tr>
 {% endfor %}

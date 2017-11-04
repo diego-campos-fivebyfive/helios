@@ -91,9 +91,10 @@ class Query
     /**
      * @return Pagination
      */
-    public function pagination()
+    public function pagination($page)
     {
-        return $this->get('pagination');
+        $query = $this->get('query');
+        return $this->provider->get('knp_paginator')->paginate($query, $page, 10);
     }
 
     /**
@@ -126,7 +127,7 @@ class Query
                 break;
             case 'pagination':
                 $query = $this->get('query');
-                return $this->provider->get('knp_paginator')->paginate($query);
+                return $this->provider->get('knp_paginator')->paginate($query, 1, 1);
                 break;
             case 'count':
                 return count($this->result());
@@ -146,6 +147,7 @@ class Query
         $this->qb->select('t')
             ->from(Transaction::class, 't')
             ->join('t.product', 'p')
+            ->orderBy('t.createdAt', 'desc')
         ;
     }
 }
