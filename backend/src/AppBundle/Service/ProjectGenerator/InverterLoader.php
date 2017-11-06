@@ -163,12 +163,12 @@ class InverterLoader
 
                                 $qb2->expr()->orX(
                                     $qb2->expr()->andX(
-                                        $qb2->expr()->eq('i2.phases', ':phases'),
-                                        $qb2->expr()->eq('i2.phaseVoltage', ':phaseVoltage')
+                                        $qb2->expr()->eq('i2.phases', ':phases')
+                                        //$qb2->expr()->eq('i2.phaseVoltage', ':phaseVoltage')
                                     ),
                                     $qb2->expr()->andX(
-                                        $qb2->expr()->lt('i2.phases', ':phases'),
-                                        $qb2->expr()->eq('i2.phaseVoltage', ':phaseVoltage')
+                                        $qb2->expr()->lt('i2.phases', ':phases')
+                                        //$qb2->expr()->eq('i2.phaseVoltage', ':phaseVoltage')
                                     )
                                 ),
 
