@@ -2,6 +2,7 @@
 
 namespace AdminBundle\Form;
 
+use AppBundle\Configuration\Brazil;
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\MemberInterface;
@@ -38,7 +39,9 @@ class AccountType extends AbstractType
         $builder->add('lastname',TextType::class);
         $builder->add('firstname',TextType::class);
         $builder->add('postcode',TextType::class);
-        $builder->add('state',TextType::class);
+        $builder->add('state',ChoiceType::class, [
+                'choices' => Brazil::states()
+        ]);
         $builder->add('city',TextType::class);
         $builder->add('district',TextType::class);
         $builder->add('street',TextType::class);
