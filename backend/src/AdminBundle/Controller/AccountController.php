@@ -59,6 +59,11 @@ class AccountController extends AdminController
             $qb->setParameter('status', $status);
         }
 
+        if(-1 != $level = $request->get('level', -1)){
+            $qb->andWhere('a.level = :level');
+            $qb->setParameter('level', $level);
+        }
+
         $this->overrideGetFilters();
 
         $pagination = $paginator->paginate(
@@ -79,9 +84,15 @@ class AccountController extends AdminController
             }
         }
 
+        $levels = Memorial::getDefaultLevels();
+
+        unset($levels[Memorial::LEVEL_PROMOTIONAL]);
+
         return $this->render('admin/accounts/index.html.twig', array(
             'current_status' => $status,
             'allStatus' =>Customer::getStatusList(),
+            'current_level' => $level,
+            'allLevels' => $levels,
             'current_bond' => $bond,
             'members' => $membersSices,
             'pagination' => $pagination
