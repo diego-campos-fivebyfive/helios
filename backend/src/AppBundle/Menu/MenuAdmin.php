@@ -20,8 +20,8 @@ trait MenuAdmin
             'Accounts' => [$master, $admin, $commercial],
             'Memorials' => [$master, $admin],
             'Orders' => '*',
-            'Systems' => [$master, $admin],
             'Components' => [$master, $admin, $commercial],
+            'Stock' => [$master, $admin],
             'Users' => [$master, $admin],
             'PaymentMethods' => [$master, $admin],
             'Settings' => '*'
@@ -82,11 +82,11 @@ trait MenuAdmin
     /**
      * @param ItemInterface $menu
      */
-    private function addSystems(ItemInterface $menu)
+    private function addStock(ItemInterface $menu)
     {
-        $menu->addChild('Lista de Sistemas', [
-            'uri' => '#',
-            'extras' => ['icon' => self::icon('th')]
+        $menu->addChild('Estoque', [
+            'route' => 'stock',
+            'extras' => ['icon' => self::icon('kits')]
         ]);
     }
 
