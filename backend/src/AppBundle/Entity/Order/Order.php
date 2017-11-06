@@ -324,6 +324,13 @@ class Order implements OrderInterface, InsurableInterface
     private $childrens;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="delivery_delay", type="smallint", nullable=true)
+     */
+    private $deliveryDelay;
+
+    /**
      * Order constructor.
      */
     public function __construct()
@@ -1330,6 +1337,24 @@ class Order implements OrderInterface, InsurableInterface
     public function isPromotional()
     {
         return MemorialInterface::LEVEL_PROMOTIONAL == $this->level;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setDeliveryDelay($deliveryDelay)
+    {
+        $this->deliveryDelay = $deliveryDelay;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDeliveryDelay()
+    {
+        return $this->deliveryDelay;
     }
 
     /**
