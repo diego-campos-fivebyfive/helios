@@ -35,7 +35,7 @@ const hook = (request, response) => {
     const action = (state === 'changes_requested') ? '`requested changes in`' : state
 
     if (developer === reviewer) {
-      const message = `[${title}] _${developer}_ responded pull-request ${link}`
+      const message = `[${title}] _${developer}_ had responded a pull-request comment ${link}`
       exec(`$CLI_PATH/ces-slack-notify --devops \'${message}\'`)
       return
     }

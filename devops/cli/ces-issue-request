@@ -68,7 +68,11 @@ if [[ $1 == '--review' ]]; then
   $CLI_PATH/ces-issue-move $ISSUE --review
 
 elif [[ $1 == '--testing' ]]; then
+  read -p 'Enter some additional testing information and/or press ENTER to go: ' additional > /dev/tty
+
   message="[$BRANCH] _${NICK}_ requests a use *TEST*"
+  [[ -n $additional ]] && message="${message}: _$additional_"
+
   $CLI_PATH/ces-slack-notify --tester "$message"
   $CLI_PATH/ces-slack-notify --devops "$message"
 else
