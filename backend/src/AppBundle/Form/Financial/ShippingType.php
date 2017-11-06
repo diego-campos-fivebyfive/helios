@@ -37,15 +37,15 @@ class ShippingType extends AbstractType
 
         if (!$isProject && $isFullyPromotional && $enablePromo && $shippingIncluded)
             $choices = [
-                'self' => 'Meu Frete',
-                'included' => 'Frete Incluso'
+                'included' => 'Frete Incluso',
+                'self' => 'Meu Frete'
             ];
 
         elseif (!$isProject && $member->isPlatformUser() && $shippingIncluded)
             $choices = [
-                'self' => 'Meu Frete',
+                'included' => 'Frete Incluso',
                 'sices' => 'Frete Sices',
-                'included' => 'Frete Incluso'
+                'self' => 'Meu Frete'
             ];
 
          else

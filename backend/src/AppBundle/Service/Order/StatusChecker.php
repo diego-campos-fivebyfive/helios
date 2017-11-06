@@ -120,6 +120,9 @@ class StatusChecker
                     UserInterface::TYPE_ACCOUNT,
                     UserInterface::TYPE_PLATFORM
                 ],
+                OrderInterface::STATUS_PENDING => [
+                    UserInterface::TYPE_PLATFORM
+                ],
                 OrderInterface::STATUS_APPROVED => [
                     UserInterface::TYPE_ACCOUNT
                 ],

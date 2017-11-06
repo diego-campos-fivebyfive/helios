@@ -137,6 +137,13 @@
                                                 </a>
                                             {% endif %}
 
+                                            {% if member.isPlatformUser and order.isValidated %}
+                                                <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_PENDING') }}">
+                                                    <i class="fa fa-arrow-left"></i> Remover Validação
+                                                </a>
+                                            {% endif %}
+
                                             {% if member.isPlatformFinancial and order.isApproved %}
                                                 <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
                                                    data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DONE') }}">
