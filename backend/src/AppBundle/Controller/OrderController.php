@@ -92,7 +92,8 @@ class OrderController extends AbstractController
                 $this->getStock()->debit($order);
             }
 
-            if (!($currentStatus == OrderInterface::STATUS_DONE && $order->isApproved()))
+            if (!($currentStatus == OrderInterface::STATUS_DONE && $order->isApproved()) &&
+                !($currentStatus == OrderInterface::STATUS_VALIDATED && $order->isPending()))
                 $this->sendOrderEmail($order);
 
             if($order->isRejected() && $currentStatus == OrderInterface::STATUS_APPROVED)
