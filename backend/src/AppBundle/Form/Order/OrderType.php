@@ -77,6 +77,7 @@ class OrderType extends AbstractType
                 ])
                 ->add('deadline')
                 ->add('note')
+                ->add('deliveryDelay')
             ;
 
         }

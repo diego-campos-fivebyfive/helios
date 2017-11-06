@@ -132,8 +132,12 @@
         <div class="col-md-3">
             <div class="row">
                 <div class="col-md-12">
-                    <label for="delivery_at">Disponibilidade para Coleta</label>
+                    <label for="delivery_at">Disp. para Coleta (data)</label>
                     <input class="form-control" id="delivery_at" type="text" readonly="readonly">
+                </div>
+                <div class="col-md-12" style="margin-top: 30px;">
+                    {{ form_label(form.deliveryDelay, 'Disp. para Coleta (dias após pagamento)') }}
+                    {{ form_widget(form.deliveryDelay, {attr:{class:'form-control', readonly: 'readonly'}}) }}
                 </div>
                 <div class="col-md-12" id="order_deadline_block" style="margin-top: 30px;">
                     {{ form_label(form.deadline, 'Prazo de Entrega (dias)') }}
@@ -224,6 +228,7 @@
 
                 $('#order_note').removeAttr('readonly');
                 $('#delivery_at').removeAttr('readonly disabled');
+                $('#order_deliveryDelay').removeAttr('readonly disabled');
                 $('#order_deadline').removeAttr('readonly disabled');
                 $('#order_paymentMethod').removeAttr('readonly disabled');
 
@@ -235,6 +240,7 @@
 
                 $('#order_note').attr('readonly','readonly');
                 $('#delivery_at').attr('readonly','readonly');
+                $('#order_deliveryDelay').attr('readonly','readonly');
                 $('#order_deadline').attr('readonly','readonly');
                 $('#order_paymentMethod').attr('readonly','readonly');
 
@@ -271,6 +277,7 @@
 
                 $('#order_paymentMethod').attr('disabled', 'disabled');
                 $('#delivery_at').attr('disabled', 'disabled');
+                $('#order_deliveryDelay').attr('disabled', 'disabled');
                 $('#order_deadline').attr('disabled','disabled');
             }
         });
