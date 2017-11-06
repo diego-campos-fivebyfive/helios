@@ -346,13 +346,14 @@
 
                     <label class="width-float-total no-margins">Condições de pagamento:</label>
                     {% for payment in order.paymentMethod('array').quotas %}
-                        <span class="indentation"> &#{{ loop.index + 96 }}; ) {{ payment.description }}
-                        {{ payment.percent }}%
-                        {% if payment.display_payment_date and payment.display_payment_date == 'true' %}
-                            - {{ payment.date|date('d/m/Y') }}</span>
-                    {% endif %}
-                    <span class="pull-right field-width">{{ payment.value|currency }}</span>
-                    <br/>
+                        <span class="indentation">
+                            &#{{ loop.index + 96 }}; ) {{ payment.description }} {{ payment.percent }}%
+                            {% if payment.display_payment_date is defined and payment.display_payment_date == 'true' %}
+                                - {{ payment.date|date('d/m/Y') }}
+                            {% endif %}
+                        </span>
+                        <span class="pull-right field-width">{{ payment.value|currency }}</span>
+                        <br/>
                     {% endfor %}
 
                     <label class="spacing">DADOS BANCÁRIOS PARA PAGAMENTO EM CASO DE TRANSFERÊNCIA BANCÁRIA</label>
@@ -366,7 +367,8 @@
                     </div>
 
                     <div class="indentation spacing">
-                        <label class="no-margins">&#10004; Disponibilidade para coleta:</label> {{ order.deliveryAt.date|date('d/m/Y') }}<br/>
+                        <label class="no-margins">&#10004; Disponibilidade para coleta:</label> {{ order.deliveryAt.date|date('d/m/Y') }}
+                        {% if order.deliveryDelay %} ou {{ order.deliveryDelay }} dia(s) após a identificação do pagamento.{% endif %}<br/>
                         {% if order.shippingrules and order.shippingrules.type == 'sices' %}
                             <label class="no-margins">&#10004; Prazo de entrega:</label> {{ order.deadline }} DIAS<br/>
                         {% endif %}

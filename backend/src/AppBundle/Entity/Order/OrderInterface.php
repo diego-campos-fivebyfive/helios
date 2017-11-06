@@ -632,4 +632,15 @@ interface OrderInterface
      * @return bool
      */
     public function isFullyPromotional();
+
+    /**
+     * @param $deliveryDelay
+     * @return OrderInterface
+     */
+    public function setDeliveryDelay($deliveryDelay);
+
+    /**
+     * @return int
+     */
+    public function getDeliveryDelay();
 }
