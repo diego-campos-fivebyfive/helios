@@ -48,6 +48,18 @@
         <div class="row">
             <div class="ibox">
                 <div class="ibox-title">
+                    <div class="btn-group pull-right" style="padding-left: 10px;">
+                        <a class="btn btn-primary"
+                           href="{{ path('account_create')}}">
+                            <i class="fa fa-plus-square"></i> Nova conta
+                        </a>
+                        {% if app.user.isPlatformMaster %}
+                            <a class="btn btn-success" data-url="{{ path('account_transfer') }}" data-toggle="modal" data-target="#e_modal_transfer">
+                                <i class="fa fa-random"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+
                     <span class="pull-right small text-muted">
                         <h3>{{ pagination.totalItemCount }} Conta(s) encontrada(s)</h3>
                     </span>
@@ -84,17 +96,16 @@
                         </select>
                     </div>
 
-                    <div class="btn-group pull-right">
-                        <a class="btn btn-primary"
-                               href="{{ path('account_create')}}">
-                            <i class="fa fa-plus-square"></i> Nova conta
-                        </a>
-                        {% if app.user.isPlatformMaster %}
-                            <a class="btn btn-success" data-url="{{ path('account_transfer') }}" data-toggle="modal" data-target="#e_modal_transfer">
-                                <i class="fa fa-random"></i>
-                            </a>
-                        {% endif %}
+                    <div class="col-md-2">
+                        <select id="filter-level" class="form-control selected" title="Nivel"
+                                style="width: 98%;">
+                            <option value="-1"> Niveis &raquo; Todos </option>
+                            {% for key, level in allLevels %}
+                                <option {{ current_level == key ? 'selected="selected"' }} value="{{ key }}"> {{ level|capitalize|trans }} </option>
+                            {% endfor %}
+                        </select>
                     </div>
+
                     <div class="clients-list">
                         <div class="tab-content">
                             <div class="tab-pane active">
@@ -183,17 +194,24 @@
         var form_filtration = $('#form_filtration');
         var current_status = '{{ current_status }}';
         var current_bond = '{{ current_bond }}';
+        var current_level = '{{ current_level }}';
         var filter_status = $('#filter-status');
         var filter_bond = $('#filter-bond');
+        var filter_level = $('#filter-level');
         if(form_filtration.length){
             form_filtration.append($('<input type="hidden" name="status"/>').val(current_status));
             form_filtration.append($('<input type="hidden" name="bond"/>').val(current_bond));
+            form_filtration.append($('<input type="hidden" name="level"/>').val(current_level));
             filter_status.on('change', function(){
                 $('input[name="status"]').val($(this).val());
                 form_filtration.trigger('submit');
             });
             filter_bond.on('change', function(){
                 $('input[name="bond"]').val($(this).val());
+                form_filtration.trigger('submit');
+            });
+            filter_level.on('change', function(){
+                $('input[name="level"]').val($(this).val());
                 form_filtration.trigger('submit');
             });
         }
