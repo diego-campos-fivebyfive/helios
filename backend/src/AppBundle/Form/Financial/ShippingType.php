@@ -50,8 +50,8 @@ class ShippingType extends AbstractType
 
          else
              $choices = [
-                 'self' => 'Meu Frete',
-                 'sices' => 'Frete Sices'
+                 'sices' => 'Frete Sices',
+                 'self' => 'Meu Frete'
              ];
 
         $builder
