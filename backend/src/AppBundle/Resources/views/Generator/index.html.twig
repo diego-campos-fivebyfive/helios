@@ -37,7 +37,7 @@
     <div class="modal inmodal" id="modal_conditions" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content animated bounceInRight">
-                <div class="modal-body text-justify" id="content_conditions">
+                <div class="modal-body text-justify">
                     {% include view('helper.spinner') %}
                 </div>
             </div>
@@ -201,7 +201,7 @@
 
                                         {% endif %}
 
-                                        <div id="conditions_sices" class="text-right">
+                                        <div id="conditions_sices" class="text-right {{ hideBudget or order.isValidated ? 'hide' }}">
                                             <input type="checkbox" id="conditions">
                                             Aceito as condições de frete,
                                             <a data-toggle="modal" data-target="#modal_conditions"
@@ -209,7 +209,7 @@
                                         </div>
                                         <button type="button" id="btn_budget" disabled="disabled"
                                                 data-url="{{ path('order_budget_create') }}"
-                                                class="btn btn-warning pull-right {{ hideBudget or order.isValidated ? 'hid' }}"
+                                                class="btn btn-warning pull-right {{ hideBudget or order.isValidated ? 'hide' }}"
                                                 style="margin-right: 15px;">
                                             <i class="fa fa-arrow-right"></i> Enviar solicitação para SICES
                                         </button>
@@ -324,6 +324,7 @@
                             GeneratorHandler.orderStatus = building;
                             $('.special-actions').remove();
                             $('#btn_budget').removeClass('hide');
+                            $('#conditions_sices').removeClass('hide');
                         }
                     });
                 }
