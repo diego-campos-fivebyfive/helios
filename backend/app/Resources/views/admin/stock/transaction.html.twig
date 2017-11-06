@@ -23,7 +23,7 @@
     <thead>
     <tr class="m-table-header">
         <th colspan="3">
-            <h2 class="text-center">Transações</h2>
+            <h2 class="text-center">{{ component.description }}</h2>
             <form id="transactions_filter" action="{{ route('list_transactions_stock', {id:component.id, family:component.family}) }}">
                 <div class="col-md-1 filters">
                     <button type="button" id="clear" class="btn btn-primary pull-right"><i class="fa fa-eraser"></i></button>
@@ -40,7 +40,7 @@
                     <button type="submit" class="btn btn-primary pull-right"><i class="fa fa-search"></i> Filtrar</button>
                 </div>
                 <div class="col-md-3 filters spacing-top pull-right">
-                    <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#modal_transaction">
+                    <button class="btn btn-success pull-right" data-toggle="modal" data-target="#modal_transaction">
                         <i class="fa fa-plus-square"></i> Operação
                     </button>
                 </div>
