@@ -89,6 +89,13 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @var float
      *
+     * @ORM\Column(name="discount", type="float", nullable=true)
+     */
+    private $discount;
+
+    /**
+     * @var float
+     *
      * @ORM\Column(type="float", nullable=true)
      */
     private $power;
@@ -465,6 +472,24 @@ class Order implements OrderInterface, InsurableInterface
         if(is_null($this->status)) $this->status = self::STATUS_BUILDING;
 
         return $statusNames[$this->status];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setDiscount($discount)
+    {
+        $this->discount = $discount;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDiscount()
+    {
+        return $this->discount;
     }
 
     /**
