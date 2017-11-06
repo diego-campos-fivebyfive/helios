@@ -18,4 +18,4 @@ vendor
 .backup
 .uploads
 
-devops/cli/stash/temp
+devops/cli/stash/temp/*
