@@ -74,6 +74,7 @@
                     url: this.action,
                     data: ComponentsStock.form.serialize(),
                     complete: function (xhr) {
+                        ComponentsStock.setUrl(this.url);
                         ComponentsStock.componentsContent.html(xhr.responseText);
                     }
                 });
