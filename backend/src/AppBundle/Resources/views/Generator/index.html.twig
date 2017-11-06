@@ -189,13 +189,12 @@
 
                                             {% if member.isPlatformUser %}
                                                 {% if order.isPending or order.isBuilding %}
-
-                                                    {#<button id="btn_validate" data-id="{{ order.id }}"#}
-                                                    {#data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_VALIDATED') }}"#}
-                                                    {#class="btn btn-md btn-success pull-right special-actions"#}
-                                                    {#style="margin-right: 15px;">#}
-                                                    {#<i class="fa fa-check"></i> Validar Orçamento#}
-                                                    {#</button>#}
+                                                    <button id="btn_validate" data-id="{{ order.id }}"
+                                                    data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_VALIDATED') }}"
+                                                    class="btn btn-md btn-success pull-right special-actions"
+                                                    style="margin-right: 15px;">
+                                                    <i class="fa fa-check"></i> Validar Orçamento
+                                                    </button>
                                                 {% endif %}
                                             {% endif %}
 
