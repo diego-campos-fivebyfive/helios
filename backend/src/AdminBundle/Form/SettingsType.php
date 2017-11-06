@@ -58,6 +58,7 @@ class SettingsType extends AbstractType
                     ]
                 )
                 ->add('promo_end_at', TextType::class)
+                ->add('max_order_discount', TextType::class)
         );
         $builder->get('parameters')
             ->get('promo_end_at')
