@@ -30,9 +30,9 @@ abstract class ShippingRuler
      */
     public static function apply(&$rule)
     {
-        if(in_array($rule['type'], ['included', 'self']) || 0 == $rule['price']){
+        if(in_array($rule['type'], ['included', 'self']) || 0 == $rule['price']) {
             self::defaults($rule);
-        }else {
+        } else {
             self::definitions($rule);
             self::percent($rule);
             self::value($rule);
