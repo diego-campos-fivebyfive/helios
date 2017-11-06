@@ -33,6 +33,7 @@
 
     $(' [data-page-component] ').on( 'click', function () {
         var url = $(this).data('page-component');
+        ComponentsStock.setUrl(url);
         $.ajax({
             url: url,
             method: 'get',

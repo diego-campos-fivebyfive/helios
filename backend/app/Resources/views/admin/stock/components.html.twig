@@ -48,17 +48,24 @@
 
 <script>
     ComponentsStock = {
+        url: null,
         form: $('#components_filter'),
         tableComponents: $('#table_components'),
         componentsContent: $('#components_content'),
         loadComponents: function () {
+            var url = ComponentsStock.tableComponents.data('components');
+            if (this.url)
+                url = this.url;
             $.ajax({
-                url: ComponentsStock.tableComponents.data('components'),
+                url: url,
                 method: 'get',
                 complete: function(xhr) {
                     ComponentsStock.componentsContent.html(xhr.responseText);
                 }
             });
+        },
+        setUrl: function (url) {
+            this.url = url;
         },
         filter: function () {
             this.form.on('submit', function (event) {
@@ -67,6 +74,7 @@
                     url: this.action,
                     data: ComponentsStock.form.serialize(),
                     complete: function (xhr) {
+                        ComponentsStock.setUrl(this.url);
                         ComponentsStock.componentsContent.html(xhr.responseText);
                     }
                 });
