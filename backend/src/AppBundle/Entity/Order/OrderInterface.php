@@ -119,6 +119,17 @@ interface OrderInterface
     public function getStatusAt();
 
     /**
+     * @param $discount
+     * @return OrderInterface
+     */
+    public function setDiscount($discount);
+
+    /**
+     * @return float
+     */
+    public function getDiscount();
+
+    /**
      * @return int
      */
     public static function getStatusNames();
