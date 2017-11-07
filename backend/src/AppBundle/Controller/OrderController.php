@@ -85,22 +85,36 @@ class OrderController extends AbstractController
 
             $this->manager('order')->save($order);
 
-            // TODO - Estas operações serão movidas para switch-case ou um serviço extra em breve
+            switch ($order->getStatus()){
+                case OrderInterface::STATUS_VALIDATED:
 
-            if ($order->isApproved() && $currentStatus != OrderInterface::STATUS_DONE) {
-                $this->generatorProformaAction($order);
-                $this->getStock()->debit($order);
+                    if($this->member()->isPlatformUser())
+                        $this->get('order_reference')->generate($order);
+
+                    break;
+
+                case OrderInterface::STATUS_APPROVED:
+
+                    if($currentStatus != OrderInterface::STATUS_DONE) {
+
+                        $this->generatorProformaAction($order);
+                        $this->getStock()->debit($order);
+                    }
+
+                    break;
+
+                case OrderInterface::STATUS_REJECTED:
+
+                    if($currentStatus == OrderInterface::STATUS_APPROVED)
+                        $this->getStock()->credit($order);
+
+                    break;
             }
 
+            // TODO - Assim que possível, favor mover esta checagem para o switch acima
             if (!($currentStatus == OrderInterface::STATUS_DONE && $order->isApproved()) &&
                 !($currentStatus == OrderInterface::STATUS_VALIDATED && $order->isPending()))
                 $this->sendOrderEmail($order);
-
-            if($order->isRejected() && $currentStatus == OrderInterface::STATUS_APPROVED)
-                $this->getStock()->credit($order);
-
-            if($order->isValidated() && $this->member()->isPlatformUser())
-                $this->get('order_reference')->generate($order);
 
             return $this->json();
         }
