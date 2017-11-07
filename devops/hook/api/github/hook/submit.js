@@ -29,7 +29,7 @@ const params = ({ pull_request: pull, review }) => ({
   action: getAction(pull.user.login, review.user.login)
 })
 
-const bin = ({ action, args }) => exec(`${path} --${action} \'${args}\'`)
+const bin = ({ action, args }) => exec(`${PATH} --${action} \'${args}\'`)
 
 const submit = body => pipe(
   params,
