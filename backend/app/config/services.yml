@@ -73,6 +73,10 @@ services:
         class: AppBundle\Manager\OrderElementManager
         arguments: ['AppBundle\Entity\Order\Element', '@doctrine']
 
+    order_message_manager:
+        class: AppBundle\Manager\OrderMessageManager
+        arguments: ['AppBundle\Entity\Order\Message', '@doctrine']
+
     parameter_manager:
         class: AppBundle\Manager\ParameterManager
         arguments: ['AppBundle\Entity\Parameter', '@doctrine']
