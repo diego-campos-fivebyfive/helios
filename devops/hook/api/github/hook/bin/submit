@@ -1,4 +1,4 @@
-#/usr/bin/env bash
+#!/usr/bin/env bash
 
 ACTION=$1
 ARGS=$2
@@ -9,7 +9,7 @@ arg() {
 
 title=$(arg '1')
 developer=$(arg '2')
-review=$(arg '3')
+reviewer=$(arg '3')
 state=$(arg '4')
 link=$(arg '5')
 
