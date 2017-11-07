@@ -123,7 +123,6 @@ class OrderController extends AbstractController
         $order->setSendAt(new \DateTime('now'));
         $order->setMetadata($order->getChildrens()->first()->getMetadata());
         $order->setStatus(Order::STATUS_PENDING);
-        //$manager->save($order);
 
         $this->get('order_reference')->generate($order);
 
