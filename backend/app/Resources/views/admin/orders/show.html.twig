@@ -271,7 +271,7 @@
                                         {% if order.paymentMethod('array') %}
                                             {% for payment in order.paymentMethod('array').quotas %}
                                                     &#{{ loop.index + 96 }}; ) {{ payment.description }} {{ payment.percent }}%
-                                                    {% if payment.display_payment_date is defined and payment.display_payment_date == 'true' %}
+                                                    {% if payment.display_payment_date is defined and order.isApproved %}
                                                         - {{ payment.date|date('d/m/Y') }}
                                                     {% endif %}<br>
                                             {% endfor %}
