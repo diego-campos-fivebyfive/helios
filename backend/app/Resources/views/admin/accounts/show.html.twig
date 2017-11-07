@@ -2,6 +2,8 @@
 
 {% block body %}
 
+    {% set showActions = not app.user.isPlatformFinancial and not app.user.isPlatformAfterSales %}
+
     <div class="wrapper wrapper-content">
         <div class="row animated fadeInRight">
             <div class="ibox float-e-margins">
@@ -15,13 +17,16 @@
                            href="{{ path('account_index',{'id':account.id}) }}">
                             <i class="fa fa-arrow-left"></i> Voltar
                         </a>
+                        {% if showActions %}
                         <a class="btn btn-info"
                            href="{{ path('account_update',{'id':account.id}) }}">
                             <i class="fa fa-edit"></i> {{ 'Edit'|trans }}
                         </a>
+                        {% endif %}
                     </div>
-
-                    {% include view('admin/accounts/info_status.html.twig') %}
+                    {% if showActions %}
+                        {% include view('admin/accounts/info_status.html.twig') %}
+                    {% endif %}
 
                 </div>
                 <div class="ibox-content no-padding border-left-right">
@@ -132,8 +137,10 @@
                                                 <tr>
                                                     <td> {{ member.firstname }} </td>
                                                     <td>
+                                                        {% if showActions %}
                                                         <a class="label label-primary" data-user-email="{{ path('email_user_update', { 'id': member.id }) }}">
                                                             <i class="fa fa-pencil"></i></a>
+                                                        {% endif %}
                                                         <span id="{{ member.id }}">{{ member.email }}</span>
                                                     </td>
                                                     <td data-value="{{ member.isOwner ? 'a' : 'z' }}">

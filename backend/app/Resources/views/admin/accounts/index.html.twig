@@ -44,15 +44,19 @@
         </div>
     </div>
 
+    {% set showActions = not app.user.isPlatformFinancial and not app.user.isPlatformAfterSales %}
+
     <div class="wrapper wrapper-content  animated fadeInRight">
         <div class="row">
             <div class="ibox">
                 <div class="ibox-title">
                     <div class="btn-group pull-right" style="padding-left: 10px;">
+                        {% if showActions %}
                         <a class="btn btn-primary"
                            href="{{ path('account_create')}}">
                             <i class="fa fa-plus-square"></i> Nova conta
                         </a>
+                        {% endif %}
                         {% if app.user.isPlatformMaster %}
                             <a class="btn btn-success" data-url="{{ path('account_transfer') }}" data-toggle="modal" data-target="#e_modal_transfer">
                                 <i class="fa fa-random"></i>
