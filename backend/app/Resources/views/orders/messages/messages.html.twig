@@ -1,0 +1,79 @@
+{% set isPlatform = app.user.isPlatform %}
+
+    {% for message in messages %}
+        {% set thisUser = message.sender.user.id == app.user.id  %}
+
+        <div class="col-md-10 margin-bottom shadow border-message {% if thisUser %}pull-right{% endif %}">
+            <div class="header col-md-12">
+                <span class="{% if not thisUser %}pull-right{% endif %}" style="font-size: 10px;">{{ message.createdAt }}</span>
+
+                <span class="name {% if thisUser %}pull-right{% endif %}">
+                    {{ message.sender.firstname }}
+                    {% if thisUser and isPlatform %}
+                        <button type="button" class="btn label label-danger" data-delete="{#{{ path('del_mes', {id:message.id})}}#}">Excluir</button>
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="content {% if thisUser %}pull-right aling-right{% endif %}">
+                {{ message.content }}
+            </div>
+        </div>
+
+    {% endfor %}
+
+<script>
+
+    // TODO: depende das rotas
+    /*$('[data-delete]').on('click', function () {
+
+        var url = $(this).data('delete');
+
+        swal({
+            title: 'Confirma a exclusão?',
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar',
+            closeOnConfirm: false
+        }, function () {
+
+            $.ajax({
+                url: url,
+                method: 'post',
+                data: {_method: 'delete'},
+                complete: function (xhr) {
+
+                    if (200 == xhr.status) {
+
+                        swal({
+                            title: "Concluído",
+                            text: "Exclusão realizada com sucesso.",
+                            type: "success",
+                            showConfirmButton: false
+                        });
+
+                        window.setTimeout(function () {
+                            swal.close();
+                            Message.loadMessages();
+                        }, 1500);
+
+                    } else {
+                        var response = xhr.responseJSON;
+                        swal('Ooops', response.hasOwnProperty('error') ? response.error : 'Falha na exclusão', 'error');
+                    }
+                },
+                beforeSend: function () {
+                    swal({
+                        title: 'Excluindo...',
+                        text: 'Aguarde',
+                        type: 'info',
+                        showConfirmButton: false
+                    });
+                }
+            });
+        });
+    });*/
+</script>
+
