@@ -346,11 +346,12 @@ class OrderController extends AbstractController
      */
     public function orderMessageAction(Request $request, Order $order)
     {
-        $contentMessage = $request->getContent();
+        $contentMessage = $request->get('message');
 
         if ($request->isMethod('POST') && $contentMessage) {
 
             $messageManager = $this->manager('order_message');
+
             /** @var MessageInterface $message */
             $message = $messageManager->create();
 
@@ -364,9 +365,8 @@ class OrderController extends AbstractController
 
         $messages = $order->getMessages();
 
-        // TODO: Esta View já foi implementada na issue 685 e será linkada porteriormente
         return $this->render('orders/messages/messages.html.twig', [
-            'messages' => $messages,
+            'messages' => $messages->getValues(),
             'order' => $order
         ]);
 
@@ -374,8 +374,8 @@ class OrderController extends AbstractController
 
     /**
      * @Route("/{id}/message/{message}/delete", name="order_message_delete")
+     *
      * @Method("delete")
-     * @Security("has_role('ROLE_PLATFORM_FINANCIAL)")
      */
     public function messageDeleteAction(Order $order, Message $message)
     {

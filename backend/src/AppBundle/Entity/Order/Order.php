@@ -1238,9 +1238,6 @@ class Order implements OrderInterface, InsurableInterface
      */
     public function addMessage(MessageInterface $message)
     {
-        if($this->isMaster())
-            throw new \InvalidArgumentException('Master order can not have elements');
-
         if (!$this->messages->contains($message)) {
             $this->messages->add($message);
 
