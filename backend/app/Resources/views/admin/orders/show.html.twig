@@ -251,6 +251,55 @@
                 </div>
             </div>
 
+            <div class="ibox border-bottom">
+                <div class="ibox-content">
+                    <div class="tab-content">
+                        <div class="tab-pane active">
+                            <div class="row">
+                                <div class="row wrapper">
+                                    <div class="col-lg-12 border-bottom">
+                                        <ol class="breadcrumb">
+                                            <li>
+                                                <label>Pagamento e Entrega</label>
+                                            </li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Condição de pagamento</label>
+                                        {% if order.paymentMethod('array') %}
+                                            {% for payment in order.paymentMethod('array').quotas %}
+                                                    &#{{ loop.index + 96 }}; ) {{ payment.description }} {{ payment.percent }}%
+                                                    {% if payment.display_payment_date is defined and payment.display_payment_date == 'true' %}
+                                                        - {{ payment.date|date('d/m/Y') }}
+                                                    {% endif %}<br>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Disponibilidade para coleta (data)</label>
+                                        {% if order.deliveryAt %}{{ order.deliveryAt.date|date('d/m/Y') }}{% endif %}
+                                    </div>
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Disponibilidade para coleta (dias após pagamento)</label>
+                                        {% if order.deliveryDelay %} {{ order.deliveryDelay }} dia(s) após a identificação do pagamento.{% endif %}<br/>
+                                    </div>
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Prazo de entrega</label>
+                                        {{ order.deadline }} DIAS
+                                    </div>
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Observações</label>
+                                        {{ order.note }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {% if order.shippingrules and order.shippingrules['type'] == 'self' and order.shippingRules.company is not null %}
 
                 <div class="ibox border-bottom">
