@@ -5,7 +5,10 @@ const { util } = require('../../../widgets')
 
 const { pipe } = util
 
-const getArgs = (...args) => args.reduce((sum, arg) => `${sum};${arg}`, '')
+const PATH = '$SICES_PATH/devops/hook/api/github/hook/bin/submit'
+
+const getArgs = params =>
+  Object.values(params).reduce((sum, param) => `${sum};${param}`)
 
 const getLink = (url, number) => `*<${url}|#${number}>*`
 
@@ -26,7 +29,7 @@ const params = ({ pull_request: pull, review }) => ({
   action: getAction(pull.user.login, review.user.login)
 })
 
-const bin = ({ action, args }) => exec(`./bin/submit --${action} ${args}`)
+const bin = ({ action, args }) => exec(`${path} --${action} \'${args}\'`)
 
 const submit = body => pipe(
   params,
