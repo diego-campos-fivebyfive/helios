@@ -1,21 +1,20 @@
-{% set isPlatform = app.user.isPlatform %}
-
     {% for message in messages %}
-        {% set thisUser = message.sender.user.id == app.user.id  %}
+        {% set isPlatform = message.author.user.isPlatform %}
+        {% set thisUser = message.author.user.id == app.user.id  %}
 
-        <div class="col-md-10 margin-bottom shadow border-message {% if thisUser %}pull-right{% endif %}">
-            <div class="header col-md-12">
-                <span class="{% if not thisUser %}pull-right{% endif %}" style="font-size: 10px;">{{ message.createdAt }}</span>
+        <div class="col-md-10 margin-bottom shadow border-message {% if isPlatform %}pull-right{% endif %}">
+            <div class="header">
+                <span class="{% if not isPlatform %}pull-right{% endif %}" style="font-size: 10px;">{{ message.createdAt|date('d/m/Y H:i') }}</span>
 
-                <span class="name {% if thisUser %}pull-right{% endif %}">
-                    {{ message.sender.firstname }}
+                <span class="{% if isPlatform %}pull-right{% endif %}">
+                    <span class="name">{{ message.author.firstname }}</span>
                     {% if thisUser and isPlatform %}
-                        <button type="button" class="btn label label-danger" data-delete="{#{{ path('del_mes', {id:message.id})}}#}">Excluir</button>
+                        - <i class="fa fa-times-circle delete-message" data-delete-message="{{ path('order_message_delete', {id:order.id, message:message.id})}}"></i>
                     {% endif %}
                 </span>
             </div>
 
-            <div class="content {% if thisUser %}pull-right aling-right{% endif %}">
+            <div class="content {% if isPlatform %}pull-right aling-right{% endif %}">
                 {{ message.content }}
             </div>
         </div>
@@ -24,10 +23,9 @@
 
 <script>
 
-    // TODO: depende das rotas
-    /*$('[data-delete]').on('click', function () {
+    $('[data-delete-message]').on('click', function () {
 
-        var url = $(this).data('delete');
+        var url = $(this).data('delete-message');
 
         swal({
             title: 'Confirma a exclusão?',
@@ -41,7 +39,7 @@
 
             $.ajax({
                 url: url,
-                method: 'post',
+                method: 'delete',
                 data: {_method: 'delete'},
                 complete: function (xhr) {
 
@@ -57,7 +55,7 @@
                         window.setTimeout(function () {
                             swal.close();
                             Message.loadMessages();
-                        }, 1500);
+                        }, 1000);
 
                     } else {
                         var response = xhr.responseJSON;
@@ -74,6 +72,6 @@
                 }
             });
         });
-    });*/
+    });
 </script>
 

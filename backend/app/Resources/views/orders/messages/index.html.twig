@@ -1,8 +1,10 @@
 <style>
     .shadow {
-        -webkit-box-shadow: 7px 5px 5px rgba(50, 50, 50, 0.77);
-        -moz-box-shadow:    7px 5px 5px rgba(50, 50, 50, 0.77);
-        box-shadow:         7px 5px 5px rgba(50, 50, 50, 0.77);
+        background-color: #eee;
+        border-radius: 4px;
+        -webkit-box-shadow: 2px 2px 2px #bbb;
+        -moz-box-shadow:    2px 2px 2px #bbb;
+        box-shadow:         2px 2px 2px #bbb;
     }
     .margin-bottom {
         margin-bottom: 15px;
@@ -17,6 +19,9 @@
     .border-message {
         border: solid #C7C7C7 1px;
     }
+    .delete-message {
+        cursor: pointer;
+    }
 </style>
 
 <div id="list_messages">
@@ -24,7 +29,7 @@
 
 <div style="border-bottom: solid 1px #c7c7c7; " class="col-md-12 margin-bottom"></div>
 
-<form action="{{ path('debug_order_message',{id:order.id}) }}" method="post" id="form_order_message" class="col-md-10 pull-right">
+<form action="{{ path('order_message',{id:order.id}) }}" method="post" id="form_order_message" class="col-md-10 pull-right">
     <textarea  id="message" class="form-control margin-bottom" placeholder="Mensagem" ></textarea>
     <button type="submit" class="btn btn-success pull-right" ><i class="fa fa-send"></i> Enviar</button>
 </form>
@@ -38,8 +43,8 @@
         loaded: true,
         loadMessages: function () {
             $.ajax({
-                url: '{{ path('debug_order_message', {id:order.id}) }}',
-                method: 'get',
+                url: '{{ path('order_message', {id:order.id}) }}',
+                method: 'GET',
                 complete: function (xhr) {
                     Message.listMessages.html(xhr.responseText);
                     Message.loaded = true;
@@ -49,7 +54,7 @@
         send: function () {
             $.ajax({
                 url: Message.form.attr('action'),
-                method: 'post',
+                method: 'POST',
                 data: {message: Message.message.val()},
                 complete: function (xhr) {
                     Message.listMessages.html(xhr.responseText);
