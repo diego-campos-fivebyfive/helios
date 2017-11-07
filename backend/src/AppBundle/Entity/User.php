@@ -110,6 +110,22 @@ class User extends AbstractUser implements UserInterface
     /**
      * @inheritDoc
      */
+    public function isPlatformFinancial()
+    {
+        return $this->hasRole(self::ROLE_PLATFORM_FINANCIAL);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isPlatformAfterSales()
+    {
+        return $this->hasRole(self::ROLE_PLATFORM_AFTER_SALES);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function isAdmin()
     {
         return $this->hasRole(self::ROLE_ADMIN);

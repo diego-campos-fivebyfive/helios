@@ -23,7 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
- * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
+ * @Security("has_role('ROLE_PLATFORM_AFTER_SALES')")
  *
  * @Breadcrumb("Dashboard", route={"name"="app_index"})
  * @Breadcrumb("Accounts", route={"name"="account_index"})
@@ -100,6 +100,8 @@ class AccountController extends AdminController
     }
 
     /**
+     * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
+     *
      * @Breadcrumb("New Account")
      * @Route("/create", name="account_create")
      */
@@ -194,6 +196,8 @@ class AccountController extends AdminController
     }
 
     /**
+     * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
+     *
      * @Breadcrumb("update.account")
      * @Route("/{id}/update", name="account_update")
      */
