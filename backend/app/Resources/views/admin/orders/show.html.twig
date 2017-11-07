@@ -287,7 +287,9 @@
                                     </div>
                                     <div class="col-md-4 spacing">
                                         <label class="row-total">Prazo de entrega</label>
-                                        {{ order.deadline }} DIAS
+                                        {% if order.deadline %}
+                                            {{ order.deadline }} DIAS
+                                        {% endif %}
                                     </div>
                                     <div class="col-md-4 spacing">
                                         <label class="row-total">Observações</label>
