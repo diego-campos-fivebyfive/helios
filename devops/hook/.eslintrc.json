@@ -9,7 +9,7 @@
   },
   "rules": {
     "semi": ["error", "never"],
-    "max-len": ["error", 100],
+    "max-len": ["error", 80],
     "strict": ["error", "global"],
     "comma-dangle": ["error", "never"],
     "arrow-parens": ["error", "as-needed"],
