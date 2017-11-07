@@ -149,6 +149,15 @@ class ProjectGeneratorController extends AbstractController
             'errors' => $form->getErrors(true)->count()
         ]);
     }
+
+    /**
+     * @Route("/conditions", name="order_conditions")
+     */
+    public function conditionsAction()
+    {
+        return $this->render('generator.conditions');
+    }
+
     /**
      * @Route("/{id}/message", name="generator_order_message")
      *
