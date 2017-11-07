@@ -99,6 +99,9 @@ class OrderController extends AbstractController
             if($order->isRejected() && $currentStatus == OrderInterface::STATUS_APPROVED)
                 $this->getStock()->credit($order);
 
+            if($order->isValidated() && $this->member()->isPlatformUser())
+                $this->get('order_reference')->generate($order);
+
             return $this->json();
         }
 
@@ -120,7 +123,8 @@ class OrderController extends AbstractController
         $order->setSendAt(new \DateTime('now'));
         $order->setMetadata($order->getChildrens()->first()->getMetadata());
         $order->setStatus(Order::STATUS_PENDING);
-        $manager->save($order);
+
+        $this->get('order_reference')->generate($order);
 
         $this->sendOrderEmail($order);
 
