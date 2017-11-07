@@ -486,14 +486,62 @@ class DebugController extends AbstractController
         /** @var OrderInterface $order */
         $order = $manager->create();
         $order->setStatus(1)
-              ->setAccount($accounts);
+            ->setAccount($accounts);
         $project->setOrder($order);
 
         $manager->save($order);
         //
     }
 
-   /**
+    /**
+     * @Route("/{id}/order-message-test", name="debug_order_message")
+     */
+    public function orderMessageAction(Request $request, Order $order)
+    {
+        $session = $request->getSession();
+
+        if(!$session->get('cont'))
+            $session->set('cont', 0);
+
+        if($session->get('i'))
+            $session->set('i', false);
+        else
+            $session->set('i', true);
+
+        $manager = $this->manager('member');
+        $memb = $manager->find(2217);
+
+
+        $message = [];
+        /*
+         * content
+         * createdAt
+         * order
+         * sender
+         * */
+        $message['content'] = $request->get('message');
+        $message['createdAt'] = (new \DateTime())->format('d/m/Y H:i');
+
+        $sender = $memb;
+        if($session->get('i'))
+            $sender = $this->member();
+
+        $message['sender'] = $sender;
+
+        $messages = $session->get('messages');
+
+        $messages[$session->get('cont')] = $message;
+        $session->set('cont', $session->get('cont') + 1);
+
+        $session->set('messages', $messages);
+
+        return $this->render('orders/messages/messages.html.twig', [
+            'messages' => $session->get('messages'),
+            'order' => $order
+        ]);
+    }
+
+    /**
     * @Route("/s3/buckets", name="debug_s3_buckets")
     */
    public function s3BucketsAction()
