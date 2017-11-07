@@ -319,6 +319,13 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @var ArrayCollection
      *
+     * @ORM\OneToMany(targetEntity="Message", mappedBy="order", cascade={"persist", "remove"})
+     */
+    private $messages;
+
+    /**
+     * @var ArrayCollection
+     *
      * @ORM\OneToMany(targetEntity="Order", mappedBy="parent", cascade={"persist", "remove"})
      */
     private $childrens;
@@ -337,6 +344,7 @@ class Order implements OrderInterface, InsurableInterface
     {
         $this->elements = new ArrayCollection();
         $this->childrens = new ArrayCollection();
+        $this->messages = new ArrayCollection();
         $this->shippingRules = [];
         $this->setStatus(self::STATUS_BUILDING);
         $this->source = self::SOURCE_ACCOUNT;
@@ -1224,6 +1232,44 @@ class Order implements OrderInterface, InsurableInterface
 
         return $elements;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function addMessage(MessageInterface $message)
+    {
+        if($this->isMaster())
+            throw new \InvalidArgumentException('Master order can not have elements');
+
+        if (!$this->messages->contains($message)) {
+            $this->messages->add($message);
+
+            if (!$message->getOrder()) $message->setOrder($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeMessage(MessageInterface $message)
+    {
+        if ($this->messages->contains($message)) {
+            $this->messages->removeElement($message);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMessages()
+    {
+        return $this->messages;
+    }
+
 
     /**
      * @inheritDoc

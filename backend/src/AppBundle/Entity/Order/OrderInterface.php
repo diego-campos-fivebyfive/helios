@@ -184,6 +184,24 @@ interface OrderInterface
     public function getElements($family = null);
 
     /**
+     * @param MessageInterface $message
+     * @return OrderInterface
+     */
+    public function addMessage(MessageInterface $message);
+
+    /**
+     * @param MessageInterface $message
+     * @return OrderInterface
+     */
+    public function removeMessage(MessageInterface $message);
+
+    /**
+     * @param null $order
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getMessages();
+
+    /**
      * @param OrderInterface $parent
      * @return OrderInterface
      */
