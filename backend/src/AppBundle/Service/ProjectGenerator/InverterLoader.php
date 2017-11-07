@@ -10,12 +10,12 @@ class InverterLoader
     /**
      * @var float
      */
-    private $fdiMin = 0.7;
+    private $fdiMin = 0.75;
 
     /**
      * @var float
      */
-    private $fdiMax = 1;
+    private $fdiMax = 1.2;
 
     /**
      * @var bool
