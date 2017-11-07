@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+message="[issue-${1}] successfully merged to homolog"
+
+$CLI_PATH/ces-issue-move $1 --testing
+$CLI_PATH/ces-app-deploy --$CES_AMBIENCE
+$CLI_PATH/ces-slack-notify --devops "$message"

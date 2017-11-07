@@ -1,0 +1,25 @@
+#/usr/bin/env bash
+
+ACTION=$1
+ARGS=$2
+
+arg() {
+  echo $ARGS | awk -F$';' "{print \$$1}"
+}
+
+title=$(arg '1')
+developer=$(arg '2')
+review=$(arg '3')
+state=$(arg '4')
+link=$(arg '5')
+
+[[ $ACTION == '--answer' ]] && {
+  message="[${title}] _${developer}_ had answer a pull-request comment ${link}"
+}
+
+[[ $ACTION == '--submitted' ]] && {
+  nickname=$($CLI_PATH/util/user-credentials ${developer} --slack)
+  message="[${title}] @${nickname}: _${reviewer}_ ${state} pull-request ${link}"
+}
+
+$CLI_PATH/ces-slack-notify --devops "${message}"

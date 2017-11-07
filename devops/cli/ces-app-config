@@ -8,6 +8,7 @@ $CLI_PATH/util/variables-replacer
 
 if [ -z ${1+x} ] || [ $1 = '--development' ]; then
 
+  mkdir $CLI_PATH/stash/temp
   cp $CLI_PATH/util/pre-push .git/hooks/pre-push
   $CLI_PATH/util/github-credentials --config
   $CLI_PATH/ces-database-config --development
