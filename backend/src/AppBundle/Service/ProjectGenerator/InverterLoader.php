@@ -7,15 +7,6 @@ use Doctrine\ORM\QueryBuilder;
 
 class InverterLoader
 {
-    /**
-     * @var float
-     */
-    private $fdiMin = 0.75;
-
-    /**
-     * @var float
-     */
-    private $fdiMax = 1.2;
 
     /**
      * @var bool
@@ -52,8 +43,8 @@ class InverterLoader
         do {
 
             $combine = false;
-            $min = ($power * $this->fdiMin);
-            $max = ($power * $this->fdiMax);
+            $min = ($power * (float) $defaults['fdi_min']);
+            $max = ($power * (float) $defaults['fdi_max']);
             $attemptCycle = 0;
 
             $inverters = $this->$method($min, $max, $phaseNumber, $phaseVoltage, $maker, 'asc');

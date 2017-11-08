@@ -4,7 +4,7 @@ message="[issue-${1}] successfully merged to homolog"
 stage=$($CLI_PATH/ces-issue-info $1 --stage)
 
 if [[ $stage == 'Review' ]]; then
-  $CLI_PATH/ces-issue-move $1 --testing
+  $CLI_PATH/ces-issue-move $1 --testing-tech
 fi
 
 $CLI_PATH/ces-app-deploy --$CES_AMBIENCE
