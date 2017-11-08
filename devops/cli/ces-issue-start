@@ -54,6 +54,6 @@ fi
 
 > $CLI_PATH/stash/temp/.ces-pull-request
 
-$CLI_PATH/ces-slack-notify --devops "[issue-$1] _${NICK}_ has been working on"
+$CLI_PATH/ces-slack-notify --devops "[issue-$1] _${NICK}_ has been working on it"
 $CLI_PATH/util/user-notify 'Branch created' "now on issue-$1"
 echo "Everything done, now on Branch: issue-$1"
