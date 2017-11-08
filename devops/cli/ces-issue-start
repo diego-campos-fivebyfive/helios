@@ -17,7 +17,14 @@ LAST_ISSUE=${LAST_BRANCH/issue-/}
 git checkout master
 git fetch origin
 git pull origin master
-git checkout -b issue-$1
+
+if [[ -n $(git branch | grep issue-$1) ]]; then
+  git checkout issue-$1
+  git pull origin issue-$1
+  git pull origin master
+else
+  git checkout -b issue-$1
+fi
 
 $CLI_PATH/ces-app-install
 $CLI_PATH/ces-database-update
