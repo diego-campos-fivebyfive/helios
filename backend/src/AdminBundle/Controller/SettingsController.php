@@ -24,7 +24,7 @@ class SettingsController extends AdminController
      */
     public function settingsAction(Request $request)
     {
-        $parameter = $this->formatValue($this->findSettings());
+        $parameter = $this->formatValues($this->findSettings());
 
         $form = $this->createForm(SettingsType::class, $parameter);
 
@@ -32,7 +32,7 @@ class SettingsController extends AdminController
 
         if($form->isSubmitted() && $form->isValid()){
 
-            $parameter = $this->formatValue($parameter, true);
+            $parameter = $this->formatValues($parameter, true);
 
             $this->manager('parameter')->save($parameter);
 
@@ -65,7 +65,7 @@ class SettingsController extends AdminController
         return $parameter;
     }
 
-    private function formatValue($parameter, $toDb = false)
+    private function formatValues($parameter, $toDb = false)
     {
         $fields = [
             'max_order_discount',
