@@ -17,7 +17,7 @@ STAGE=$($CLI_PATH/ces-issue-info $ISSUE --stage)
 USER=$($CLI_PATH/util/github-credentials --user)
 NICK=$($CLI_PATH/util/user-credentials $USER --slack)
 
-if [ "$2" != '-f' ] && [[ ( $STAGE != 'Testing' && $STAGE != 'Closed' ) ]]; then
+if [ "$2" != '-f' ] && [[ ( $STAGE != 'Testing-tech' && $STAGE != 'Testing-product' && $STAGE != 'Closed' ) ]]; then
   read -p "Note: issue-$1 is not on testing column, if there is any opened Pull Request related to this branch, you'll must delete it manually using ces-issue-close after it be tested. Press ENTER to continue."
   exit 0
 fi
