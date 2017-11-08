@@ -68,6 +68,8 @@ class DefaultsResolver
         $this->maker('inverter');
         $this->maker('structure');
         $this->maker('string_box');
+        $this->fdi('min');
+        $this->fdi('max');
 
         return $this->defaults;
     }
@@ -106,6 +108,18 @@ class DefaultsResolver
         $parameter = $this->resolveParameters(Parameter::class, ['id' => 'platform_settings']);
         if($parameter instanceof Parameter && $parameter->get('shipping_included'))
             $this->resolveDefault('shipping_included', $parameter->get('shipping_included'));
+    }
+
+    private function fdi($type)
+    {
+        $tag = sprintf('fdi_%s', $type);
+
+        $parameter = $this->resolveParameters(Parameter::class, ['id' => 'platform_settings']);
+
+        if($parameter instanceof Parameter && $parameter->get($tag))
+            $value = (float)$parameter->get($tag);
+
+        $this->resolveDefault($tag, $value);
     }
 
     /**
@@ -248,6 +262,8 @@ class DefaultsResolver
             'is_promotional' => false,
             'shipping_included' => false,
             'promo_end_at' => null,
+            'fdi_min' => null,
+            'fdi_max' => null,
             'errors' => []
         ];
     }

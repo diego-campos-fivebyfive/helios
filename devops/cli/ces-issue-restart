@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+cd $SICES_PATH
+
+BRANCH=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+ISSUE=${BRANCH/issue-/}
+
+if [[ -n $1 ]]; then
+  echo "Note: only current branch could be restarted. You can just run ces-issue-restart next time, without $1 argument."
+fi
+
+git pull origin $BRANCH
+git pull origin master
+
+$CLI_PATH/ces-app-install
+$CLI_PATH/ces-database-update
+$CLI_PATH/ces-log-clear
+
+$CLI_PATH/ces-issue-move $ISSUE --in-progress
+
+USER=$($CLI_PATH/util/github-credentials --user)
+NICK=$($CLI_PATH/util/user-credentials $USER --slack)
+
+$CLI_PATH/ces-slack-notify --devops "[issue-$ISSUE] _${NICK}_ stills working on it"
