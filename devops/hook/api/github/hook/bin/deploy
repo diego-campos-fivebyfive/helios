@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
 message="[issue-${1}] successfully merged to homolog"
+stage=$($CLI_PATH/ces-issue-info $1 --stage)
 
-$CLI_PATH/ces-issue-move $1 --testing
+if [[ $stage == 'Review' ]]; then
+  $CLI_PATH/ces-issue-move $1 --testing
+fi
+
 $CLI_PATH/ces-app-deploy --$CES_AMBIENCE
 $CLI_PATH/ces-slack-notify --devops "$message"
