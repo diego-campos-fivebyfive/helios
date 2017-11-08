@@ -9,9 +9,6 @@ if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
   exit 0;
 fi
 
-PR_FILE=$CLI_PATH/stash/temp/.ces-pull-request
-[[ -f $PR_FILE ]] && PR_CURRENT=$(tail -n1 $PR_FILE | tr -d "[:space:]")
-
 BRANCH_CURRENT=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
 BRANCH=$([[ $2 ]] && echo "issue-$2" || echo $BRANCH_CURRENT)
 ISSUE=${BRANCH/issue-/}
@@ -20,13 +17,30 @@ USER=$($CLI_PATH/util/github-credentials --user)
 NICK=$($CLI_PATH/util/user-credentials $USER --slack)
 LOGIN=$($CLI_PATH/util/github-credentials --login)
 
-open_pull_request() {
-  head="sices:$BRANCH"
-  base="master"
-  title="$BRANCH"
-  body="connect to #$ISSUE"
+get_pull_request_state() {
+  local info=$(curl -s -X GET -u $LOGIN $GITHUB_REPOSITORY/pulls/$1)
+  echo $info | python -m json.tool | grep -oP '(?<="state": ").*(?=",)'
+}
 
-  json="{\"head\": \"$head\", \"base\": \"$base\", \"title\": \"$title\", \"body\": \"$body\"}"
+get_pull_request_current() {
+  local number=$(tail -n1 $PR_FILE | tr -d "[:space:]")
+  local state=$(get_pull_request_state $number)
+
+  if [[ $state != 'closed' ]]; then
+    echo $number
+  else
+    > $PR_FILE
+    echo
+  fi
+}
+
+open_pull_request() {
+  local head="sices:$BRANCH"
+  local base="master"
+  local title="$BRANCH"
+  local body="connect to #$ISSUE"
+
+  local json="{\"head\":\"$head\",\"base\":\"$base\",\"title\":\"$title\",\"body\":\"$body\"}"
   echo $(curl -s -X POST -u $LOGIN -d "$json" $GITHUB_REPOSITORY/pulls)
 }
 
@@ -34,6 +48,9 @@ get_pull_request_number() {
   read x
   echo $x | grep \"number\" | grep -oP '(?<="number": ).*(?=, "state")'
 }
+
+PR_FILE=$CLI_PATH/stash/temp/.ces-pull-request
+[[ -f $PR_FILE ]] && PR_CURRENT=$(get_pull_request_current)
 
 if [[ $1 == '--review' ]]; then
 
