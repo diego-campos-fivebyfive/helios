@@ -72,7 +72,7 @@ if [[ $1 == '--review' ]]; then
   fi
 
   if [[ -z $pr ]]; then
-    echo 'Error: could not proccess pull request'
+    echo 'Error: could not proccess pull request, maybe everything is updated'
     exit 1
   else
     echo $pr > $PR_FILE
