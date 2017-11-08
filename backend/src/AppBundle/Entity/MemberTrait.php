@@ -62,6 +62,22 @@ trait MemberTrait
     /**
      * @inheritDoc
      */
+    public function isPlatformExpanse()
+    {
+        return $this->checkUserRole(UserInterface::ROLE_PLATFORM_EXPANSE);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isPlatformLogistic()
+    {
+       return $this->checkUserRole(UserInterface::ROLE_PLATFORM_LOGISTIC);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getUserType()
     {
         $roles = array(
@@ -72,7 +88,9 @@ trait MemberTrait
             UserInterface::ROLE_PLATFORM_MASTER => 'Master',
             UserInterface::ROLE_PLATFORM_COMMERCIAL => 'Commercial',
             UserInterface::ROLE_PLATFORM_FINANCIAL => 'Financial',
-            UserInterface::ROLE_PLATFORM_AFTER_SALES => 'Pós-Venda'
+            UserInterface::ROLE_PLATFORM_AFTER_SALES => 'Pós-Venda',
+            UserInterface::ROLE_PLATFORM_EXPANSE => 'Expansão',
+            UserInterface::ROLE_PLATFORM_LOGISTIC => 'Logística'
         );
 
         if (!$this->user instanceof UserInterface || !$this->user->getRoles()) {

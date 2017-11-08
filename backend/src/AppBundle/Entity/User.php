@@ -126,6 +126,23 @@ class User extends AbstractUser implements UserInterface
     /**
      * @inheritDoc
      */
+    public function isPlatformExpanse()
+    {
+        return $this->hasRole(self::ROLE_PLATFORM_EXPANSE);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isPlatformLogistic()
+    {
+        return $this->hasRole(self::ROLE_PLATFORM_LOGISTIC);
+    }
+
+
+    /**
+     * @inheritDoc
+     */
     public function isAdmin()
     {
         return $this->hasRole(self::ROLE_ADMIN);
@@ -275,7 +292,9 @@ class User extends AbstractUser implements UserInterface
             self::ROLE_PLATFORM_ADMIN => 'Administrador',
             self::ROLE_PLATFORM_COMMERCIAL => 'Comercial',
             self::ROLE_PLATFORM_FINANCIAL => 'Financeiro',
-            self::ROLE_PLATFORM_AFTER_SALES => 'Pós-Venda'
+            self::ROLE_PLATFORM_AFTER_SALES => 'Pós-Venda',
+            self::ROLE_PLATFORM_EXPANSE => 'Expansão',
+            self::ROLE_PLATFORM_LOGISTIC => 'Logística'
         ];
     }
 
@@ -289,7 +308,9 @@ class User extends AbstractUser implements UserInterface
             self::ROLE_PLATFORM_ADMIN,
             self::ROLE_PLATFORM_COMMERCIAL,
             self::ROLE_PLATFORM_FINANCIAL,
-            self::ROLE_PLATFORM_AFTER_SALES
+            self::ROLE_PLATFORM_AFTER_SALES,
+            self::ROLE_PLATFORM_EXPANSE,
+            self::ROLE_PLATFORM_LOGISTIC
         ];
     }
 }
