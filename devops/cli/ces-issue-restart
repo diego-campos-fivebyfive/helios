@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+cd $SICES_PATH
+
+if [[ -z $1 ]]; then
+  branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+  issue=${branch/issue-/}
+
+  git pull origin $branch
+  git pull origin master
+
+  $CLI_PATH/ces-app-install
+  $CLI_PATH/ces-database-update
+  $CLI_PATH/ces-log-clear
+
+  $CLI_PATH/ces-issue-move $issue --in-progress
+
+  user=$($CLI_PATH/util/github-credentials --user)
+  nick=$($CLI_PATH/util/user-credentials $user --slack)
+
+  $CLI_PATH/ces-slack-notify --devops "[issue-$issue] _${nick}_ stills working on it"
+fi
