@@ -67,6 +67,16 @@ interface MemberInterface
     /**
      * @return bool
      */
+    public function isPlatformExpanse();
+
+    /**
+     * @return bool
+     */
+    public function isPlatformLogistic();
+
+    /**
+     * @return bool
+     */
     public function isPlatformUser();
 
     /**
