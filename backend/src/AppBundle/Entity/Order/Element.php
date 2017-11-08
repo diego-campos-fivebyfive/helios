@@ -91,6 +91,13 @@ class Element implements ElementInterface
     private $order;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $discount;
+
+    /**
      * var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
@@ -339,6 +346,24 @@ class Element implements ElementInterface
     public function isFamily($family)
     {
         return $family === $this->family;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setDiscount($discount)
+    {
+        $this->discount = $discount;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDiscount()
+    {
+        return $this->discount;
     }
 
     /**
