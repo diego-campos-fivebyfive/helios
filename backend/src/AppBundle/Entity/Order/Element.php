@@ -366,7 +366,7 @@ class Element implements ElementInterface
      */
     public function getDiscount()
     {
-        return $this->discount;
+        return $this->discount*100;
     }
 
     /**
@@ -407,7 +407,9 @@ class Element implements ElementInterface
 
     private function calculatePrice()
     {
-        $this->unitPrice = $this->cmv * (1 + $this->markup - $this->discount) / (1 - $this->tax);
+        $markup = ($this->markup - $this->discount) < 0 ? 0 : $this->markup - $this->discount;
+
+        $this->unitPrice = $this->cmv * (1 + $markup) / (1 - $this->tax);
     }
 
 
