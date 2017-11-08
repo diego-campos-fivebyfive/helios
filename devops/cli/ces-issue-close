@@ -22,7 +22,7 @@ if [[ $STAGE == 'Closed' ]]; then
   exit 0
 fi
 
-if [ "$2" != '-f' ] && [[ $STAGE != 'Testing' ]]; then
+if [ "$2" != '-f' ] && [[ $STAGE != 'Testing-tech' ]] && [[ $STAGE != 'Testing-product' ]]; then
   read -p "Warning: this issue-$1 is not on testing column, if you are sure about deleting this, you must use -f arg. Press ENTER to continue."
   exit 0
 fi

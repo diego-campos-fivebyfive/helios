@@ -72,7 +72,7 @@ if [[ $1 == '--review' ]]; then
   fi
 
   if [[ -z $pr ]]; then
-    echo 'Error: could not proccess pull request'
+    echo 'Error: could not proccess pull request, maybe everything is updated'
     exit 1
   else
     echo $pr > $PR_FILE
@@ -92,6 +92,8 @@ elif [[ $1 == '--testing' ]]; then
 
   [[ -n $additional ]] && message="${message}: _${additional}_"
   $CLI_PATH/ces-slack-notify --tester "$message"
+
+  $CLI_PATH/ces-issue-move $ISSUE --testing-product
 else
   echo "Error: invalid argument $1"
   exit 1
