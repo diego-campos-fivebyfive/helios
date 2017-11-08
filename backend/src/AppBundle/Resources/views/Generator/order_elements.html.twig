@@ -1,7 +1,6 @@
 {% set isPlatform = app.user.isPlatform %}
 {% set isPromo = order.isPromotional %}
 {% set showPrices = not isPromo or app.user.isPlatform %}
-
 <table class="table table-bordered table-hover">
     <thead>
     <tr>
@@ -9,6 +8,7 @@
         <th> Descrição</th>
         {% if isPlatform %}
             <th> Markup</th>
+            <th> Desconto</th>
         {% endif %}
         {% if showPrices %}
             <th class="col-md-2"> Custo Unitário</th>
@@ -36,8 +36,18 @@
                            id="input{{ element.id }}"
                            name="markup"
                            readonly="readonly"
-                           {{ not (app.user.isPlatformMaster or app.user.isPlatformAdmin) ? 'disabled="disabled"' }}
+                            {{ not (app.user.isPlatformMaster or app.user.isPlatformAdmin) ? 'disabled="disabled"' }}
                            value="{{ element.markup|round(2) }}">
+                </td>
+                <td width="10%">
+                    <input type="text"
+                           placeholder="Desconto"
+                           class="form-control markup"
+                           data-element-update="{{ path('order_element_update',{id:element.id}) }}"
+                           id="discount_input_{{ element.id }}"
+                           name="discount"
+                           readonly="readonly"
+                           value="{{ element.discount|round(2) }}">
                 </td>
             {% endif %}
             {% if showPrices %}
@@ -79,6 +89,7 @@
         <td> SEGURO SOLAR RISCO ENGENHARIA PROJETO E INSTALAÇÃO</td>
         {% if isPlatform %}
             <td></td>
+            <td></td>
         {% endif %}
         {% if showPrices %}
             <td> {{ 0|currency }} </td>
@@ -100,10 +111,12 @@
             <th></th>
             <th></th>
             <th></th>
+            <th></th>
         </tr>
         <tr>
             <th colspan="2" class="text-right">Total de impostos</th>
             <th>{{ order.totalTaxes|currency }}</th>
+            <th></th>
             <th></th>
             <th></th>
             <th></th>
@@ -115,6 +128,7 @@
             <th colspan="2" class="text-right">{% if isPlatform %}Margem bruta da operação{% endif %}</th>
             {% if isPlatform %}
                 <th>{{ order.margin|currency }}</th>
+                <th></th>
             {% endif %}
             <th class="text-right" id="subtotal"> SubTotal</th>
             <th></th>
@@ -126,7 +140,6 @@
 </table>
 
 <script>
-
     $('[data-delete-element]').on('click', function () {
 
         var row = $(this).closest('tr');
@@ -217,8 +230,13 @@
                 case 'markup':
                     value = (value / 100);
                     break;
+                case 'discount':
+                    var maxOrderDiscount = {{ maxOrderDiscount }};
+                    value = (maxOrderDiscount < value) ? maxOrderDiscount : value;
+                    value = (value / 100);
+                    break;
                 case 'quantity':
-                    if (isNaN(parseInt(value))) value = 1;
+                    if (!parseInt(value)) value = 1;
                     break;
             }
 
