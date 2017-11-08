@@ -91,6 +91,13 @@ class Element implements ElementInterface
     private $order;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $discount;
+
+    /**
      * var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
@@ -115,6 +122,7 @@ class Element implements ElementInterface
         $this->markup = 0;
         $this->cmv = 0;
         $this->tax = RangeInterface::DEFAULT_TAX;
+        $this->discount = 0;
     }
 
     /**
@@ -344,6 +352,26 @@ class Element implements ElementInterface
     /**
      * @inheritDoc
      */
+    public function setDiscount($discount)
+    {
+        $this->discount = $discount;
+
+        $this->calculatePrice();
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDiscount()
+    {
+        return $this->discount;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getCreatedAt()
     {
         return $this->createdAt;
@@ -379,7 +407,7 @@ class Element implements ElementInterface
 
     private function calculatePrice()
     {
-        $this->unitPrice = $this->cmv * (1 + $this->markup) / (1 - $this->tax);
+        $this->unitPrice = $this->cmv * (1 + $this->markup - $this->discount) / (1 - $this->tax);
     }
 
 

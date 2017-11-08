@@ -147,6 +147,17 @@ interface ElementInterface
     public function isFamily($family);
 
     /**
+     * @param $discount
+     * @return float
+     */
+    public function setDiscount($discount);
+
+    /**
+     * @return float
+     */
+    public function getDiscount();
+
+    /**
      * @param \DateTime $created_at
      * @return ElementInterface
      */

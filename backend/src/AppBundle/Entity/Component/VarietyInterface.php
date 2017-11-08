@@ -22,6 +22,7 @@ interface VarietyInterface
     const TYPE_CONNECTOR = 'conector';
     const TYPE_TRANSFORMER = 'transformer';
     const TYPE_MONITOR = 'monitor';
+    const TYPE_FUSE = 'fuse';
 
     /**
      * @return int
