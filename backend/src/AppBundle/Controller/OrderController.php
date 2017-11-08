@@ -3,6 +3,8 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Order\Element;
+use AppBundle\Entity\Order\Message;
+use AppBundle\Entity\Order\MessageInterface;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Form\Order\FilterType;
@@ -17,6 +19,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
 
 /**
  * @Route("orders")
@@ -335,6 +339,51 @@ class OrderController extends AbstractController
         return $this->json([
             'error' => 'Somente orçamentos em edição podem ser excluídos'
         ], Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
+     * @Route("/{id}/message", name="order_message")
+     */
+    public function orderMessageAction(Request $request, Order $order)
+    {
+        $contentMessage = $request->get('message');
+
+        if ($request->isMethod('POST') && $contentMessage) {
+
+            $messageManager = $this->manager('order_message');
+
+            /** @var MessageInterface $message */
+            $message = $messageManager->create();
+
+            $message
+                ->setOrder($order)
+                ->setAuthor($this->member())
+                ->setContent($contentMessage);
+
+            $messageManager->save($message);
+        }
+
+        $messages = $order->getMessages();
+
+        return $this->render('orders/messages/messages.html.twig', [
+            'messages' => $messages->getValues(),
+            'order' => $order
+        ]);
+
+    }
+
+    /**
+     * @Route("/{id}/message/{message}/delete", name="order_message_delete")
+     *
+     * @Method("delete")
+     */
+    public function messageDeleteAction(Order $order, Message $message)
+    {
+        $this->denyAccessUnlessGranted('edit', $order);
+
+        $this->manager('order_message')->delete($message);
+
+        return $this->json([]);
     }
 
     /**

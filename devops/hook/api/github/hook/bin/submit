@@ -14,7 +14,7 @@ state=$(arg '4')
 link=$(arg '5')
 
 [[ $ACTION == '--answer' ]] && {
-  message="[${title}] _${developer}_ had answer a pull-request comment ${link}"
+  message="[${title}] _${developer}_ had answered a pull-request comment ${link}"
 }
 
 [[ $ACTION == '--submitted' ]] && {
