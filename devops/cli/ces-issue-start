@@ -37,7 +37,7 @@ USER=$($CLI_PATH/util/github-credentials --user)
 NICK=$($CLI_PATH/util/user-credentials $USER --slack)
 STAGE=$($CLI_PATH/ces-issue-info $LAST_ISSUE --stage)
 
-if [[ $STAGE == 'Testing' ]]; then
+if [[ $STAGE == 'Testing-tech' ]]; then
   read -p "Do you wanna $LAST_BRANCH to be tested by product team? [Y/n]: " accept > /dev/tty
 
   if [[ $accept == 'y' ]]; then

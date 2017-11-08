@@ -92,6 +92,8 @@ elif [[ $1 == '--testing' ]]; then
 
   [[ -n $additional ]] && message="${message}: _${additional}_"
   $CLI_PATH/ces-slack-notify --tester "$message"
+
+  $CLI_PATH/ces-issue-move $ISSUE --testing-product
 else
   echo "Error: invalid argument $1"
   exit 1
