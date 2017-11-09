@@ -17,7 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Security("has_role('ROLE_PLATFORM_AFTER_SALES')")
+ * @Security("has_role('ROLE_PLATFORM_LOGISTIC')")
  *
  * @Route("orders")
  * @Breadcrumb("Orçamentos")
