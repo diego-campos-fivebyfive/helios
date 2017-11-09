@@ -152,6 +152,20 @@ class StatusChecker
                         UserInterface::ROLE_PLATFORM_FINANCIAL
                     ]
                 ]
+            ],
+            OrderInterface::STATUS_INSERTED => [
+                OrderInterface::STATUS_AVAILABLE => [
+                    UserInterface::TYPE_PLATFORM => [
+                        UserInterface::ROLE_PLATFORM_LOGISTIC
+                    ]
+                ]
+            ],
+            OrderInterface::STATUS_AVAILABLE => [
+                OrderInterface::STATUS_COLLECTED => [
+                    UserInterface::TYPE_PLATFORM => [
+                        UserInterface::ROLE_PLATFORM_LOGISTIC
+                    ]
+                ]
             ]
         ];
     }
