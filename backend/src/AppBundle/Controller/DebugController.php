@@ -32,7 +32,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @Route("debug")
- * //@Security("has_role('ROLE_SUPER_ADMIN')")
+ *
  */
 class DebugController extends AbstractController
 {
@@ -900,5 +900,18 @@ class DebugController extends AbstractController
         return $this->render('admin/stock/form.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/order/{id}/message/", name="one_order_message")
+     */
+    public function messageOrderAction(Order $order)
+    {
+        $message = $order->getMessages()->last();
+
+        return $this->render('orders/emails/message.html.twig', array(
+            'message' => $message,
+            'order' => $order
+        ));
     }
 }
