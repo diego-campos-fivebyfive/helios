@@ -174,7 +174,7 @@
                                                 <a class="btn btn-default {{ order.deliveryAddress ? 'validated' }}"
                                                    data-url="{{ path('generator_company_shipping',{id: item.id}) }}"
                                                    data-toggle="modal"
-                                                   data-test="{{ path('generator_delivery_address',{id: item.id}) }}"
+                                                   data-delivery="{{ path('generator_delivery_address',{id: item.id}) }}"
                                                    data-target="#modal_details"
                                                    data-title="transportadora">
                                                     <i class="fa fa-truck"></i>
@@ -245,7 +245,7 @@
 
         $('[data-target="#modal_details"]').on('click', function () {
             var url = $(this).data('url');
-            var test = $(this).data('test');
+            var delivery = $(this).data('delivery');
 
             var shipping = $(this).data('title');
             var title = (shipping == "sices") ? ' Frete Sices' : ' Dados da Transportadora';
@@ -255,10 +255,10 @@
             if (url) {
                 $('#e_modal_details').modal('show');
 
-                if (test) {
+                if (delivery) {
                     form_Delivery.removeClass('hide');
                     $.ajax({
-                        url: test,
+                        url: delivery,
                         method: 'get',
                         success: function (response) {
                             form_Delivery.html(response);
