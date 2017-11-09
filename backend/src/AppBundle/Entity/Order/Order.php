@@ -473,7 +473,9 @@ class Order implements OrderInterface, InsurableInterface
             self::STATUS_APPROVED => 'approved',
             self::STATUS_REJECTED => 'rejected',
             self::STATUS_DONE => 'confirmed',
-            self::STATUS_INSERTED => 'inserted'
+            self::STATUS_INSERTED => 'inserted',
+            self::STATUS_AVAILABLE => 'available',
+            self::STATUS_COLLECTED => 'collected'
         ];
     }
 
@@ -1467,6 +1469,22 @@ class Order implements OrderInterface, InsurableInterface
     public function isInserted()
     {
         return self::STATUS_INSERTED == $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isAvailable()
+    {
+        return self::STATUS_AVAILABLE == $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isCollected()
+    {
+        return self::STATUS_COLLECTED == $this->status;
     }
 
     /**

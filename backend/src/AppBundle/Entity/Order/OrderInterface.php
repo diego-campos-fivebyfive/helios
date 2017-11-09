@@ -27,6 +27,8 @@ interface OrderInterface
     const STATUS_REJECTED = 4;
     const STATUS_DONE = 5;
     const STATUS_INSERTED = 6;
+    const STATUS_AVAILABLE = 7;
+    const STATUS_COLLECTED = 8;
 
     const SOURCE_ACCOUNT = 0;
     const SOURCE_PLATFORM = 1;
@@ -629,6 +631,16 @@ interface OrderInterface
      * @return bool
      */
     public function isInserted();
+
+    /**
+     * @return bool
+     */
+    public function isAvailable();
+
+    /**
+     * @return bool
+     */
+    public function isCollected();
 
     /**
      * @param $level
