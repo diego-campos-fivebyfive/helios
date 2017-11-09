@@ -165,6 +165,10 @@ class OrderFinder
             throw new \InvalidArgumentException('Invalid agent type');
 
         $includeStatus = [];
+        if($agent->isPlatformLogistic()){
+            $includeStatus = [Order::STATUS_INSERTED, Order::STATUS_AVAILABLE, Order::STATUS_COLLECTED];
+        }
+
         if($agent->isPlatformAfterSales()){
             $includeStatus = [Order::STATUS_DONE, Order::STATUS_INSERTED];
         }
