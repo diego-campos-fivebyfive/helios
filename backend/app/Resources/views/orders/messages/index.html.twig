@@ -58,8 +58,16 @@
                 data: {message: Message.message.val()},
                 complete: function (xhr) {
                     Message.listMessages.html(xhr.responseText);
+                    Message.sendEmail();
                     Message.message.val('');
                 }
+            });
+        },
+        sendEmail: function () {
+
+            $.ajax({
+                url: '{{ path('message_email', {id:order.id}) }}',
+                method: 'GET'
             });
         },
         init: function () {
