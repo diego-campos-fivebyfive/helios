@@ -19,6 +19,8 @@ absolute: Absoluto
 Advance: "Avançar"
 Administrator: Administrador
 Admin Components: Admin Componentes
+Available: Coleta disponível
+available: Coleta disponível
 
 add:
     person: Adicionar Pessoa
@@ -148,6 +150,8 @@ contact_category: Categorias de Contato
 Climatic data: "Dados Climáticos"
 Consumption: Consumo
 credit: Entrada
+Collected: Coletado
+collected: Coletado
 
 debit: Saida
 Definitions: "Definições"
