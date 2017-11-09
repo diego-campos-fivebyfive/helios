@@ -33,7 +33,11 @@
                     <h4 class="modal-title" id="id_title">
                     </h4>
                 </div>
-                <div class="modal-body" id="edit_freight">
+                <div class="modal-body">
+                    <div class="form-group hide col-md-12" id="formDelivery">
+                    </div>
+                    <div class="form-group col-md-12" id="edit_freight">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal" id="bt_save">
@@ -167,8 +171,10 @@
 
                                             {% if attribute(shippingRules, 'type') is defined and 'self' == shippingRules.type %}
 
-                                                <a class="btn btn-default {{ order.deliveryAddress ? 'validated' }}" data-url="{{ path('generator_company_shipping',{id: item.id}) }}"
+                                                <a class="btn btn-default {{ order.deliveryAddress ? 'validated' }}"
+                                                   data-url="{{ path('generator_company_shipping',{id: item.id}) }}"
                                                    data-toggle="modal"
+                                                   data-delivery="{{ path('generator_delivery_address',{id: item.id}) }}"
                                                    data-target="#modal_details"
                                                    data-title="transportadora">
                                                     <i class="fa fa-truck"></i>
@@ -235,24 +241,38 @@
     <script>
         var titleModal = $('#id_title');
         var edit_freight = $('#edit_freight');
+        var form_Delivery = $('#formDelivery');
 
         $('[data-target="#modal_details"]').on('click', function () {
             var url = $(this).data('url');
+            var delivery = $(this).data('delivery');
 
             var shipping = $(this).data('title');
             var title = (shipping == "sices") ? ' Frete Sices' : ' Dados da Transportadora';
             titleModal.html('<i class="fa fa-truck"> </i>'+ title);
 
+
             if (url) {
                 $('#e_modal_details').modal('show');
+
+                if (delivery) {
+                    form_Delivery.removeClass('hide');
+                    $.ajax({
+                        url: delivery,
+                        method: 'get',
+                        success: function (response) {
+                            form_Delivery.html(response);
+                        }
+                    });
+                }
+
                 $.ajax({
                     url: url,
                     method: 'get',
                     success: function (response) {
                         edit_freight.html(response);
-                        if (shipping == "transportadora") {
-                            Shipping.deliveryModal();
-                        } else {
+                        if (shipping == "sices") {
+                            form_Delivery.addClass('hide');
                             Delivery.deliveryModal();
                         }
                     }

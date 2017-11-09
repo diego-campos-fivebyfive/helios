@@ -2,9 +2,6 @@
 <div class="row">
     <div class="col-md-12">
 
-        <div class="form-group col-md-12 hide address" id="formDelivery">
-        </div>
-
         <div class="col-md-12">
             <h3> <i class="fa fa-truck"></i> Dados da Transportadora </h3>
         </div>
@@ -148,16 +145,6 @@
                 if (!GeneratorHandler.enableValidate)
                     GeneratorHandler.btnValidate.removeClass('hide');
             }
-        },
-        deliveryModal: function () {
-            $('.address').removeClass('hide');
-            $('.address').removeClass('col-md-12');
-            $.ajax({
-                url: '{{ path('generator_delivery_address',{id: order.id}) }}',
-                complete: function (xhr) {
-                    $('#formDelivery').html(xhr.responseText);
-                }
-            });
         }
     };
 
