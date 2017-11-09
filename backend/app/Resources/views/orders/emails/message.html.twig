@@ -1,0 +1,44 @@
+{% extends ('orders/emails/layout.html.twig') %}
+
+{% block body %}
+
+    <style>
+        .shadow {
+            background-color: #eee;
+            border-radius: 4px;
+            -webkit-box-shadow: 2px 2px 2px #bbb;
+            -moz-box-shadow:    2px 2px 2px #bbb;
+            box-shadow:         2px 2px 2px #bbb;
+        }
+        .margin-bottom {
+            margin-bottom: 15px;
+        }
+        .name {
+            color: #00a7ec;
+        }
+        .border-message {
+            border: solid #C7C7C7 1px;
+        }
+
+    </style>
+
+    <tr>
+        <td class="content-block">
+            {% set isPlatform = message.author.user.isPlatform %}
+            {% set thisUser = message.author.user.id == app.user.id  %}
+            <br>
+            <div class="header">
+                <span class="pull-right">
+                    <span class="name">{{ message.author.firstname }}</span>, enviou uma mensagem.<br>
+                </span>
+                Orçamento Nº: {{ order.reference ? order.reference : order.id }}
+            </div>
+            <div class="col-md-10 margin-bottom shadow border-message">
+                <div class="content">
+                    {{ message.content }}
+                </div>
+            </div>
+        </td>
+    </tr>
+
+{% endblock %}
