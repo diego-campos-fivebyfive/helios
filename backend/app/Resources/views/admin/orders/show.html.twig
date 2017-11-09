@@ -65,6 +65,14 @@
             color: #1aa10f;
         }
 
+        .btn.status-available i {
+            color: #faa;
+        }
+
+        .btn.status-collected i {
+            color: #43ecec;
+        }
+
         .btn-green, .btn-green:hover, .btn-green:focus {
             background-color: #dff0d8;
             color: #3c763d;
@@ -108,6 +116,20 @@
                                                 <i class="fa fa-circle"></i> {{ order.statusName|capitalize|trans }}
                                             </span>
 
+                                            {% if order.isInserted and member.isPlatformLogistic %}
+                                                <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_AVAILABLE') }}">
+                                                    <i class="fa fa-archive"></i> Coleta disponível
+                                                </a>
+                                            {% endif %}
+
+                                            {% if order.isAvailable and member.isPlatformLogistic %}
+                                                <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_COLLECTED') }}">
+                                                    <i class="fa fa-check"></i> Coletado
+                                                </a>
+                                            {% endif %}
+
                                             {% if order.isDone and member.isPlatformAfterSales %}
                                                 <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
                                                    data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}">
@@ -115,7 +137,7 @@
                                                 </a>
                                             {% endif %}
 
-                                            {% if order.isBuilding or order.isRejected%}
+                                            {% if order.isBuilding or order.isRejected %}
                                                 <a class="btn btn-sm btn-danger"
                                                    data-delete="{{ path('order_delete', {id:order.id}) }}">
                                                     <i class="fa fa-close"></i> Excluir
