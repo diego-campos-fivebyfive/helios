@@ -47,17 +47,17 @@
 {{ form_end(form) }}
 
 <script>
-    var form = $('#form_delivery');
+    var formDelivery = $('#form_delivery');
     var button = $('#delivery-save');
     button.ladda();
 
-    form.on('submit', function (event) {
+    formDelivery.on('submit', function (event) {
         event.preventDefault();
         button.ladda('start');
         $.ajax({
             url: $(this).attr('action'),
             method: 'post',
-            data: form.serialize(),
+            data: formDelivery.serialize(),
             success: function (xhr) {
                 button.ladda('stop');
                 if ('object' == typeof ShippingManager) {
@@ -71,7 +71,7 @@
         });
     });
 
-    form.trigger('#delivery-save');
+    formDelivery.trigger('#delivery-save');
 
     var btnSubmitDelivery = $('#delivery-save');
     var btnEditDelivery = $('#btn_edit_delivery');
