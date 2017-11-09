@@ -359,8 +359,11 @@ class ProjectGeneratorController extends AbstractController
      */
     public function getOrderElementsAction(Order $order)
     {
+        $maxOrderDiscount = $this->findSettings()->get('max_order_discount');
+
         return $this->render('generator.order_elements', [
-            'order' => $order
+            'order' => $order,
+            'maxOrderDiscount' => $maxOrderDiscount
         ]);
     }
 
