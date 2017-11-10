@@ -13,15 +13,15 @@ fi
 
 LAST_BRANCH=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
 LAST_ISSUE=${LAST_BRANCH/issue-/}
+LAST_STAGE=$($CLI_PATH/ces-issue-info $LAST_ISSUE --stage)
+STAGE=$($CLI_PATH/ces-issue-info $1 --stage)
 
-STAGE=$($CLI_PATH/ces-issue-info $LAST_ISSUE --stage)
-
-if [[ $STAGE == 'Review' ]]; then
+if [[ $LAST_STAGE == 'Review' ]]; then
   echo "Forbidden: You must stand $LAST_BRANCH reviews and merge to be able to start a new one"
   exit 0
 fi
 
-if [[ $STAGE == 'In-progress' ]]; then
+if [[ $LAST_STAGE == 'In-progress' ]]; then
   $CLI_PATH/ces-issue-block $LAST_ISSUE
 fi
 
@@ -52,7 +52,7 @@ $CLI_PATH/ces-issue-move $1 --in-progress
 USER=$($CLI_PATH/util/github-credentials --user)
 NICK=$($CLI_PATH/util/user-credentials $USER --slack)
 
-if [[ $STAGE == 'Testing-tech' ]]; then
+if [[ $LAST_STAGE == 'Testing-tech' ]]; then
   read -p "Do you wanna $LAST_BRANCH to be tested by product team? [Y/n]: " accept > /dev/tty
 
   if [[ $accept == 'y' ]]; then
@@ -63,7 +63,7 @@ if [[ $STAGE == 'Testing-tech' ]]; then
   fi
 fi
 
-if [[ $STAGE == 'Closed' ]]; then
+if [[ $LAST_STAGE == 'Closed' ]]; then
   $CLI_PATH/ces-branch-clear $LAST_ISSUE
 fi
 
