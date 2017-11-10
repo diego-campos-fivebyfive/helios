@@ -196,7 +196,10 @@
 
 {% block scripts %}{% endblock %}
 
-{#{{ render(controller('AppBundle:App:intercom')) }}#}
+<!-- {{ app.request.host }} -->
+{% if 'app.plataformasicessolar.com.br' == app.request.host and not member.platformUser %}
+    {{ render(controller('AppBundle:App:intercom')) }}
+{% endif %}
 
 <script>
     $('.support_link a').attr('target', '_blank');
