@@ -3,6 +3,7 @@
 namespace Tests\AppBundle;
 
 use Liip\FunctionalTestBundle\Test\WebTestCase;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use Tests\AppBundle\Entity\DataFixtures as Fixtures;
 
 /**
@@ -14,6 +15,9 @@ class AppTestCase extends WebTestCase
      * @var \Doctrine\Common\DataFixtures\ProxyReferenceRepository
      */
     protected $fixtures;
+
+    /** @var  \Symfony\Component\PropertyAccess\PropertyAccessor */
+    protected $accessor;
 
     public function setUp()
     {
@@ -37,6 +41,8 @@ class AppTestCase extends WebTestCase
             Fixtures\LoadProjectInverterData::class,
             Fixtures\LoadProjectAreaData::class
         ])->getReferenceRepository();
+
+        $this->accessor = PropertyAccess::createPropertyAccessor();
     }
 
     /**
