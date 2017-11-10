@@ -20,15 +20,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 interface OrderInterface
 {
-    const STATUS_BUILDING = 0;
-    const STATUS_PENDING = 1;
-    const STATUS_VALIDATED = 2;
-    const STATUS_APPROVED = 3;
-    const STATUS_REJECTED = 4;
-    const STATUS_DONE = 5;
-    const STATUS_INSERTED = 6;
-    const STATUS_AVAILABLE = 7;
-    const STATUS_COLLECTED = 8;
+    const STATUS_BUILDING = 0;  // Order opened, but not yet submitted
+    const STATUS_PENDING = 1;   // Order submitted, but not yet validated by user sices
+    const STATUS_VALIDATED = 2; // Order validated, waiting for integrator user action
+    const STATUS_APPROVED = 3;  // Order approved, awaiting payment
+    const STATUS_REJECTED = 4;  // Order rejected, actions closed
+    const STATUS_DONE = 5;      // Order done, payment confirmed
+    const STATUS_INSERTED = 6;  // Order inserted on CRM (Protheus),
+    const STATUS_AVAILABLE = 7; // Product available for delivery collect
+    const STATUS_COLLECTED = 8; // Product collected for delivery
 
     const SOURCE_ACCOUNT = 0;
     const SOURCE_PLATFORM = 1;
@@ -673,4 +673,175 @@ interface OrderInterface
      * @return int
      */
     public function getDeliveryDelay();
+
+    /**
+     * @param $billingDirect
+     * @return OrderInterface
+     */
+    public function setBillingDirect($billingDirect);
+
+    /**
+     * @return string
+     */
+    public function isBillingDirect();
+
+    /**
+     * @param $billingFirstname
+     * @return OrderInterface
+     */
+    public function setBillingFirstname($billingFirstname);
+
+    /**
+     * @return string
+     */
+    public function getBillingFirstname();
+
+    /**
+     * @param $billingLastname
+     * @return OrderInterface
+     */
+    public function setBillingLastname($billingLastname);
+
+    /**
+     * @return string
+     */
+    public function getBillingLastname();
+
+    /**
+     * @param $billingContact
+     * @return OrderInterface
+     */
+    public function setBillingContact($billingContact);
+
+    /**
+     * @return string
+     */
+    public function getBillingContact();
+
+    /**
+     * @param $billingCnpj
+     * @return OrderInterface
+     */
+    public function setBillingCnpj($billingCnpj);
+
+    /**
+     * @return string
+     */
+    public function getBillingCnpj();
+
+    /**
+     * @param $billingIe
+     * @return OrderInterface
+     */
+    public function setBillingIe($billingIe);
+
+    /**
+     * @return string
+     */
+    public function getBillingIe();
+
+    /**
+     * @param $billingPhone
+     * @return OrderInterface
+     */
+    public function setBillingPhone($billingPhone);
+
+    /**
+     * @return string
+     */
+    public function getBillingPhone();
+
+    /**
+     * @param $billingEmail
+     * @return OrderInterface
+     */
+    public function setBillingEmail($billingEmail);
+
+    /**
+     * @return string
+     */
+    public function getBillingEmail();
+
+    /**
+     * @param $billingPostcode
+     * @return OrderInterface
+     */
+    public function setBillingPostcode($billingPostcode);
+
+    /**
+     * @return string
+     */
+    public function getBillingPostcode();
+
+    /**
+     * @param $billingState
+     * @return OrderInterface
+     */
+    public function setBillingState($billingState);
+
+    /**
+     * @return string
+     */
+    public function getBillingState();
+
+    /**
+     * @param $billingCity
+     * @return OrderInterface
+     */
+    public function setBillingCity($billingCity);
+
+    /**
+     * @return string
+     */
+    public function getBillingCity();
+
+    /**
+     * @param $billingDistrict
+     * @return OrderInterface
+     */
+    public function setBillingDistrict($billingDistrict);
+
+    /**
+     * @return string
+     */
+    public function getBillingDistrict();
+
+    /**
+     * @param $billingStreet
+     * @return OrderInterface
+     */
+    public function setBillingStreet($billingStreet);
+
+    /**
+     * @return string
+     */
+    public function getBillingStreet();
+
+    /**
+     * @param $billingNumber
+     * @return OrderInterface
+     */
+    public function setBillingNumber($billingNumber);
+
+    /**
+     * @return string
+     */
+    public function getBillingNumber();
+
+
+    /**
+     * @param $billingComplement
+     * @return OrderInterface
+     */
+    public function setBillingComplement($billingComplement);
+
+    /**
+     * @return string
+     */
+    public function getBillingComplement();
+
+    /**
+     * @return string
+     */
+    public function getBillingAddress();
 }
