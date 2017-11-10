@@ -34,16 +34,6 @@
         </div>
     </div>
 
-    <div class="modal inmodal" id="modal_conditions" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content animated bounceInRight">
-                <div class="modal-body text-justify">
-                    {% include view('helper.spinner') %}
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-md-12">
@@ -201,8 +191,7 @@
                                         <div id="conditions_sices" class="text-right {{ hideBudget or order.isValidated ? 'hide' }}">
                                             <input type="checkbox" id="conditions">
                                             Aceito as condições de frete,
-                                            <a data-toggle="modal" data-target="#modal_conditions"
-                                               data-url="{{ path('order_conditions') }}">vendas e garantias da SICES</a>
+                                            <a href="https://sicessolar.com.br/condicoes.pdf" target="_blank">vendas e garantias da SICES</a>
                                         </div>
                                         <button type="button" id="btn_budget" disabled="disabled"
                                                 data-url="{{ path('order_budget_create') }}"
@@ -252,18 +241,6 @@
                 $(this).removeAttr('checked');
                 $('#btn_budget').attr('disabled','disabled');
             }
-        });
-
-        $('#modal_conditions').on('show.bs.modal', function(event){
-            var modal_body = $(this).find('.modal-body');
-            var target = $(event.relatedTarget);
-            var url = target.data('url');
-            Request.send({
-                url: url,
-                callback: function(xhr){
-                    modal_body.html(xhr.responseText);
-                }
-            });
         });
 
         $('#form_order_info').trigger('submit');
