@@ -206,31 +206,13 @@ class WidgetsController extends AdminController
             $power = 0;
             $total = 0;
 
-            foreach ($order->getChildrens() as $children){
+            foreach ($order->getChildrens() as $children) {
                 $total += $children->getTotal();
                 $power += $children->getPower();
             }
 
-            switch ($order->getStatus()) {
-                case OrderInterface::STATUS_PENDING:
-                    $collection = $this->getArrayStatus($collection, OrderInterface::STATUS_PENDING, $total, $power);
-                    break;
-                case OrderInterface::STATUS_VALIDATED:
-                    $collection = $this->getArrayStatus($collection, OrderInterface::STATUS_VALIDATED, $total, $power);
-                    break;
-                case OrderInterface::STATUS_APPROVED:
-                    $collection = $this->getArrayStatus($collection, OrderInterface::STATUS_APPROVED, $total, $power);
-                    break;
-                case OrderInterface::STATUS_REJECTED:
-                    $collection = $this->getArrayStatus($collection, OrderInterface::STATUS_REJECTED, $total, $power);
-                    break;
-                case OrderInterface::STATUS_DONE:
-                    $collection = $this->getArrayStatus($collection, OrderInterface::STATUS_DONE, $total, $power);
-                    break;
-                case OrderInterface::STATUS_INSERTED:
-                    $collection = $this->getArrayStatus($collection, OrderInterface::STATUS_INSERTED, $total, $power);
-                    break;
-            }
+            if (in_array($order->getStatus(), Order::getStatusList()))
+                $collection = $this->getArrayStatus($collection, $order->getStatus(), $total, $power);
         }
 
         return $collection;
