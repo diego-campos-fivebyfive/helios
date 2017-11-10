@@ -113,17 +113,92 @@ class Mailer extends AbstractMailer
      */
     public function sendOrderMessage(OrderInterface $order)
     {
-        $email = $order->getEmail();
+        $message = $this->createMessageOrder($order);
+
+        if ($message instanceof \Swift_Message) {
+            $this->sendMessage($message);
+        }
+    }
+
+    /**
+     * @param OrderInterface $order
+     * @return \Swift_Message
+     */
+    private function createMessageOrder(OrderInterface $order)
+    {
+        $account = $order->getAccount();
+        $owner = $account->getOwner();
+        $parameters  = $this->getMessageParameters($order);
+
+        $message = $this->createMessage($parameters);
+
+        $this->resolvePlatformEmails($message);
+
+        $message->setTo($owner->getEmail(), $owner->getName());
+
+        if(null != $agent = $account->getAgent()) {
+
+            $agentEmail = $agent->getEmail();
+            $agentName = $agent->getFirstname();
+
+            $message
+                ->addCc($agentEmail, $agentName)
+                ->setReplyTo($agentEmail, $agentName);
+        }
+
+        return $message;
+    }
+
+    /**
+     * @param OrderInterface $order
+     * @return array
+     */
+    private function getMessageParameters(OrderInterface $order)
+    {
         $message = $order->getMessages()->last();
 
-        $rendered = $this->templating->render('orders/emails/message.html.twig', array(
-            'message' => $message,
-            'order' => $order
-        ));
+        $parameters = [
+            'subject' => 'Nova mensagem',
+            'body' => $this->templating->render('orders/emails/message.html.twig', array(
+                'message' => $message,
+                'order' => $order
+            ))
+        ];
 
-        $this->sendEmailMessage('Plataforma Sices Solar - Mensagem', $rendered, self::FROM_EMAIL, $email);
+        return $parameters;
+    }
 
-        return $rendered;
+    /**
+     * @param \Swift_Message $message
+     */
+    private function resolvePlatformEmails(\Swift_Message $message)
+    {
+        $settings = $this->getPlatformSettings();
+
+        $addIfDefined = function($target, $bcc = false) use($settings, $message){
+            if(array_key_exists($target, $settings) && !empty($settings[$target]['email'])){
+                if($bcc){
+                    $message->addBcc($settings[$target]['email'], $settings[$target]['name']);
+                }else {
+                    $message->addCc($settings[$target]['email'], $settings[$target]['name']);
+                }
+            }
+        };
+
+        $addIfDefined('admin');
+        $addIfDefined('master', true);
+    }
+
+    /**
+     * @return array
+     */
+    private function getPlatformSettings()
+    {
+        $manager = $this->manager('parameter');
+
+        $settings = $manager->findOrCreate('platform_settings')->all();
+
+        return $settings;
     }
 
     /**
