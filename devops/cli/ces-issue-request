@@ -79,7 +79,7 @@ if [[ $1 == '--review' ]]; then
   fi
 
   url="https://github.com/sices/sices/pull/$pr/files"
-  message="[$BRANCH] @here _${NICK}_ needs a *REVIEW*: $url"
+  message="[$BRANCH] @here: _${NICK}_ needs a *REVIEW*: $url"
 
   $CLI_PATH/ces-slack-notify --devops "$message"
   $CLI_PATH/ces-issue-move $ISSUE --review
