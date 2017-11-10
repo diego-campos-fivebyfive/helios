@@ -2,11 +2,13 @@
 
 namespace AppBundle\Entity;
 
+use Kolina\CustomerBundle\Entity\CustomerInterface;
+
 /**
  * Interface AccountInterface
  * This interface is exclusively account properties and methods
  */
-interface AccountInterface
+interface AccountInterface extends CustomerInterface
 {
     # Representative key for monthly counting of projects in free accounts
     const ATTR_PROJECTS_COUNT = 'projects_count';
