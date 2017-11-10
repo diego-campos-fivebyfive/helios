@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Configuration\App;
+use AppBundle\Service\Business\Intercom;
 use AppBundle\Service\WidgetGenerator;
 use Symfony\Component\HttpFoundation\Request;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
@@ -118,52 +119,14 @@ class AppController extends AbstractController
      */
     public function intercomAction()
     {
-        $member = $this->member();
-        $account = $member->getAccount();
+        /** @var \Doctrine\ORM\EntityManager $em */
+        $em = $this->get('doctrine.orm.entity_manager');
 
-
-        /*$filter = $this->getProposalFilter();
-
-        if (!$member->isAdmin()) {
-            if ($member->isOwner()) {
-                $filter->account($member->getAccount());
-            } else {
-                $filter->member($member);
-            }
-        }
-
-        $data = array_filter($filter->get(), function(ProjectFinancialInterface $financial){
-            return $financial->isIssued();
-        });*/
-
-        $contacts = $member->isOwner() ? $member->getAccountContacts() : $member->getContacts() ;
-
-        $tasks = $member->getAssignedTasks();
-        //$projects = $member->isOwner() ? $member->getAccount()->getProjects() : $member->getProjects();
-        $projects = 10;
-        $data = array_fill(0, 10, 2);
-
-        /*if(!$account->isLocked()) {
-            $plan = 'Trial';
-            $signature = $account->getSignature();
-            if(null != $signature['subscription']){
-                $plan = 'Assinante';
-            }
-        }*/
-
-        $plan = 'Trial';
-        if(!$account->isFreeAccount()){
-            $plan = 'Assinante';
-        }
+        $intercom = new Intercom($em);
+        $info = $intercom->extractInfo($this->member(), $this->getCurrentRequest());
 
         return $this->render('helper.intercom', [
-            'member' => $member,
-            'proposals' => count($data),
-            'projects' => $projects,
-            'tasks' => $tasks->count(),
-            'contacts' => $contacts->count(),
-            'plan' => $plan,
-            'month_projects' => $account->getProjectsCount()
+            'info' => $info
         ]);
     }
 

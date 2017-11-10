@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class Intercom
 {
+    const APP_ID = 't2yycetv';
+
     /**
      * @var EntityManagerInterface
      */
@@ -41,12 +43,12 @@ class Intercom
     {
         $this->initializeParameters($member);
 
-
         /** @var AccountInterface $account */
         $account = $this->parameters['account'];
         $host = $request->getHost();
 
         $info = [
+            'app_id' => self::APP_ID,
             'host' => $host,
             'name' => $member->getName(),
             'email' => $member->getEmail(),
