@@ -63,7 +63,7 @@ class OrderManagerTest extends AppTestCase
             'contact' => 'Name of contact',
             'email' => 'emailofcontact@gmail.com',
             'phone' => '(11) 99987-5874',
-            'customer' => 'Full Customer Name',
+            'firstname' => 'Full Customer Name',
             'postcode' => '85472-251',
             'address' => 'The Customer Address, 1578',
             'city' => 'The City',
@@ -71,7 +71,22 @@ class OrderManagerTest extends AppTestCase
             'cnpj' => '11.111.111./0001-11',
             'ie' => '254.785-58',
             'createdAt' => new \DateTime('-1 week'),
-            'updatedAt' => new \DateTime('-10 days')
+            'updatedAt' => new \DateTime('-10 days'),
+            'billingDirect' => true,
+            'billingFirstname' => 'Billing Firstname',
+            'billingLastname' => 'Billing Lastname',
+            'billingContact' => 'Billing Contact',
+            'billingCnpj' => '12.457.758/0002-52',
+            'billingIe' => '455478-55445.22',
+            'billingPhone' => '(42) 9998-7852',
+            'billingEmail' => 'email@billing.com',
+            'billingPostcode' => '88874-582',
+            'billingCity' => 'Billing City',
+            'billingState' => 'Billing State',
+            'billingDistrict' => 'Billing District',
+            'billingStreet' => 'Billing Street',
+            'billingNumber' => 'Billing Street',
+            'billingComplement' => 'Billing Street'
         ];
 
         $manager = $this->manager('order');
@@ -143,7 +158,7 @@ class OrderManagerTest extends AppTestCase
 
     public function testMetadata()
     {
-        $this->markTestSkipped();
+        //$this->markTestSkipped();
 
         $element = new Element();
 
