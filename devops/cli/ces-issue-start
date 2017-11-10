@@ -21,6 +21,10 @@ if [[ $STAGE == 'Review' ]]; then
   exit 0
 fi
 
+if [[ $STAGE == 'In-progress' ]]; then
+  $CLI_PATH/ces-issue-block $LAST_ISSUE
+fi
+
 # Branch Master
 git checkout master
 git fetch origin

@@ -25,10 +25,11 @@ get_block_observation() {
 
 observation="[$(date +'%d/%m/%y-%H:%M')] BLOCKED: $(get_block_observation)"
 body="$(get_issue_description)\n\n${observation}"
-
 json="{\"body\":\"${body}\"}"
 
 curl -s -X PATCH -u $LOGIN -d "$json" $GITHUB_REPOSITORY/issues/$ISSUE > /dev/null
+
+git push origin $BRANCH
 
 $CLI_PATH/ces-issue-move $ISSUE --blocked
 $CLI_PATH/ces-slack-notify --devops "[$BRANCH] has been blocked by _${NICK}_"
