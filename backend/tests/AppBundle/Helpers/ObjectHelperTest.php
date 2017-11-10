@@ -58,6 +58,9 @@ trait ObjectHelperTest
 
             $setter = 'set' . ucfirst($property);
             $getter = 'get' . ucfirst($property);
+            $is = 'is' . ucfirst($property);
+
+            $getter = method_exists($object, $getter) ? $getter : $is;
 
             $this->assertEquals($value, $object->$setter($value)->$getter());
         }

@@ -290,6 +290,118 @@ class Order implements OrderInterface, InsurableInterface
     private $source;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="delivery_delay", type="smallint", nullable=true)
+     */
+    private $deliveryDelay;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $billingDirect;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $billingFirstname;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $billingLastname;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $billingContact;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $billingCnpj;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $billingIe;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $billingPhone;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $billingEmail;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $billingPostcode;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $billingState;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $billingCity;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $billingDistrict;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $billingStreet;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $billingNumber;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $billingComplement;
+
+    /**
      * @var AccountInterface
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer")
@@ -329,13 +441,6 @@ class Order implements OrderInterface, InsurableInterface
      * @ORM\OneToMany(targetEntity="Order", mappedBy="parent", cascade={"persist", "remove"})
      */
     private $childrens;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="delivery_delay", type="smallint", nullable=true)
-     */
-    private $deliveryDelay;
 
     /**
      * Order constructor.
@@ -1400,6 +1505,293 @@ class Order implements OrderInterface, InsurableInterface
     public function getDeliveryDelay()
     {
         return $this->deliveryDelay;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setBillingDirect($billingDirect)
+    {
+        $this->billingDirect = $billingDirect;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isBillingDirect()
+    {
+        return $this->billingDirect;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setBillingFirstname($billingFirstname)
+    {
+        $this->billingFirstname = $billingFirstname;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBillingFirstname()
+    {
+        return $this->billingFirstname;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setBillingLastname($billingLastname)
+    {
+        $this->billingLastname = $billingLastname;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBillingLastname()
+    {
+        return $this->billingLastname;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setBillingContact($billingContact)
+    {
+        $this->billingContact = $billingContact;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBillingContact()
+    {
+        return $this->billingContact;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setBillingCnpj($billingCnpj)
+    {
+        $this->billingCnpj = $billingCnpj;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBillingCnpj()
+    {
+        return $this->billingCnpj;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setBillingIe($billingIe)
+    {
+        $this->billingIe = $billingIe;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBillingIe()
+    {
+        return $this->billingIe;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setBillingPhone($billingPhone)
+    {
+        $this->billingPhone = $billingPhone;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBillingPhone()
+    {
+        return $this->billingPhone;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setBillingEmail($billingEmail)
+    {
+        $this->billingEmail = $billingEmail;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBillingEmail()
+    {
+        return $this->billingEmail;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setBillingPostcode($billingPostcode)
+    {
+        $this->billingPostcode = $billingPostcode;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBillingPostcode()
+    {
+        return $this->billingPostcode;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setBillingState($billingState)
+    {
+        $this->billingState = $billingState;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBillingState()
+    {
+        return $this->billingState;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setBillingCity($billingCity)
+    {
+        $this->billingCity = $billingCity;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBillingCity()
+    {
+        return $this->billingCity;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setBillingDistrict($billingDistrict)
+    {
+        $this->billingDistrict = $billingDistrict;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBillingDistrict()
+    {
+        return $this->billingDistrict;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setBillingStreet($billingStreet)
+    {
+        $this->billingStreet = $billingStreet;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBillingStreet()
+    {
+        return $this->billingStreet;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setBillingNumber($billingNumber)
+    {
+        $this->billingNumber = $billingNumber;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBillingNumber()
+    {
+        return $this->billingNumber;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setBillingComplement($billingComplement)
+    {
+        $this->billingComplement = $billingComplement;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBillingComplement()
+    {
+        return $this->billingComplement;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBillingAddress()
+    {
+        return sprintf(
+            '%s, %s - %s, %s-%s, %s (%s)',
+            $this->billingStreet,
+            $this->billingNumber,
+            $this->billingDistrict,
+            $this->billingCity,
+            $this->billingState,
+            $this->billingPostcode,
+            $this->billingComplement
+        );
     }
 
     /**
