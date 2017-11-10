@@ -5,7 +5,6 @@
         <div class="col-md-10 margin-bottom shadow border-message {% if isPlatform %}pull-right{% endif %}">
             <div class="header">
                 <span class="{% if not isPlatform %}pull-right{% endif %}" style="font-size: 10px;">{{ message.createdAt|date('d/m/Y H:i') }}</span>
-
                 <span class="{% if isPlatform %}pull-right{% endif %}">
                     <span class="name">{{ message.author.firstname }}</span>
                     {% if thisUser and isPlatform %}

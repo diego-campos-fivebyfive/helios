@@ -373,6 +373,16 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/email", name="message_email")
+     */
+    public function messageEmailAction(Order $order)
+    {
+        $this->getMailer()->sendOrderMessage($order);
+
+        return $this->json([]);
+    }
+
+    /**
      * @Route("/{id}/message/{message}/delete", name="order_message_delete")
      *
      * @Method("delete")
@@ -443,5 +453,13 @@ class OrderController extends AbstractController
     private function getStock()
     {
         return $this->get('order_stock');
+    }
+
+    /**
+     * @return \AppBundle\Service\Mailer
+     */
+    private function getMailer()
+    {
+        return $this->get('app_mailer');
     }
 }

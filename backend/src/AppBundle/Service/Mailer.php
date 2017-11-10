@@ -13,6 +13,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\Order\OrderInterface;
 use Fos\UserBundle\Model\UserInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -103,6 +104,24 @@ class Mailer extends AbstractMailer
         ]);
 
         $this->sendEmailMessage('Plataforma Sices Solar - Convite', $rendered, self::FROM_EMAIL, $member->getEmail());
+
+        return $rendered;
+    }
+
+    /**
+     * @param OrderInterface $order
+     */
+    public function sendOrderMessage(OrderInterface $order)
+    {
+        $email = $order->getEmail();
+        $message = $order->getMessages()->last();
+
+        $rendered = $this->templating->render('orders/emails/message.html.twig', array(
+            'message' => $message,
+            'order' => $order
+        ));
+
+        $this->sendEmailMessage('Plataforma Sices Solar - Mensagem', $rendered, self::FROM_EMAIL, $email);
 
         return $rendered;
     }
