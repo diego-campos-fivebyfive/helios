@@ -587,6 +587,24 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @inheritDoc
      */
+    public static function getStatusList()
+    {
+        return [
+            self::STATUS_BUILDING => self::STATUS_BUILDING,
+            self::STATUS_PENDING => self::STATUS_PENDING,
+            self::STATUS_VALIDATED => self::STATUS_VALIDATED,
+            self::STATUS_APPROVED => self::STATUS_APPROVED,
+            self::STATUS_REJECTED => self::STATUS_REJECTED,
+            self::STATUS_DONE => self::STATUS_DONE,
+            self::STATUS_INSERTED => self::STATUS_INSERTED,
+            self::STATUS_AVAILABLE => self::STATUS_AVAILABLE,
+            self::STATUS_COLLECTED => self::STATUS_COLLECTED
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getStatusName()
     {
         $statusNames = self::getStatusNames();

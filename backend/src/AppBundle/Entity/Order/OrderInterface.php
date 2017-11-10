@@ -137,6 +137,11 @@ interface OrderInterface
     public static function getStatusNames();
 
     /**
+     * @return int
+     */
+    public static function getStatusList();
+
+    /**
      * @return string
      */
     public function getStatusName();
