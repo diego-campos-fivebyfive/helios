@@ -151,14 +151,6 @@ class ProjectGeneratorController extends AbstractController
     }
 
     /**
-     * @Route("/conditions", name="order_conditions")
-     */
-    public function conditionsAction()
-    {
-        return $this->render('generator.conditions');
-    }
-
-    /**
      * @Route("/{id}/message", name="generator_order_message")
      *
      * @Method("post")
