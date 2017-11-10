@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+USER=$($CLI_PATH/util/github-credentials --user)
+NICK=$($CLI_PATH/util/user-credentials $USER --slack)
+
+if [[ -z $1 ]]; then
+  BRANCH=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+  ISSUE=${BRANCH/issue-/}
+else
+  BRANCH="issue-${1}"
+  ISSUE=$1
+fi
+
+$CLI_PATH/ces-issue-move $ISSUE --blocked
+$CLI_PATH/ces-slack-notify --devops "[$BRANCH] has been blocked by _${NICK}_"
