@@ -282,23 +282,28 @@
             formSettings.trigger('submit');
         });
 
+        promo_text_area =  $('div[contenteditable]');
         function phrase_promo_editable() {
-            $('#show_promo_phrase').html($('div[contenteditable]').html());
+            $('#show_promo_phrase').html(promo_text_area.html());
 
-            $('#settings_parameters_promo_notice').val($('div[contenteditable]').html());
+            $('#settings_parameters_promo_notice').val(promo_text_area.html());
 
             formSettings.trigger('submit');
         }
 
-        $('div[contenteditable]').on("blur", function () {
-            phrase_promo_editable()
+        phrase_scrolling_page = function () {
+            phrase_promo_editable();
+            window.removeEventListener("scroll", phrase_scrolling_page);
+        }
+
+        promo_text_area.on("blur", function () {
+            phrase_promo_editable();
         });
 
-        $(window).scroll(function () {
-            phrase_promo_editable()
+        promo_text_area.on("focus", function () {
+            window.addEventListener("scroll", phrase_scrolling_page);
         });
-
-
+        
         var spinnerSettings = $('#spinner_settings');
         var spinnerLoader = spinnerSettings.html();
 
