@@ -2,8 +2,7 @@
 
 {% block body %}
 
-    <link href="{{ asset('assets/medium-editor/css/medium-editor.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/medium-editor/css/themes/default.css') }}" rel="stylesheet">
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.css" rel="stylesheet">
     <style>
         .choices-roof {
             width: 5%;
@@ -18,9 +17,6 @@
         .promo_phrase_div {
             padding-top: 10px;
             padding-bottom: 10px;
-        }
-        .font-promotional {
-            font-size: 14px;
         }
     </style>
 
@@ -175,7 +171,7 @@
 
                                                                        <div class="promo_phrase_div">
                                                                            <label>Frase para Orçamentos Promocionais</label>
-                                                                           <div class="editable promo_phrase" id="promo_phrase">
+                                                                           <div class="promo_phrase" id="promo_phrase">
                                                                            </div>
                                                                        </div>
 
@@ -253,25 +249,30 @@
 {% endblock %}
 
 {% block scripts %}
-
-    <script src="{{ asset('assets/medium-editor/js/medium-editor.js') }}"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.js"></script>
     <script src="{{ asset('assets/proposal2/jscolor.js') }}"></script>
 
     <script>
-
 
         var color = $('#settings_parameters_promo_background').val();
         $('#show-back-phrase').css('background-color', color);
 
         $('#promo_phrase').html($('#settings_parameters_promo_notice').val());
 
-        var editor = new MediumEditor('.editable', {
-            toolbar: {
-                buttons: ['bold', 'italic', 'underline']
-            }
+        $('#promo_phrase').summernote({
+            toolbar: [
+                // [groupName, [list of button]]
+                ['style', ['bold', 'italic', 'underline']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['paragraph']]
+            ],
+            height: 150,
+            disableDragAndDrop: false,
+            disableResizeEditor: true
         });
 
-        editor.init();
+        $('.note-editor').css('min-height', 150)
 
         $('.jscolor').on('blur', function () {
             var color = $('#styleInput').css('background-color')
@@ -281,15 +282,28 @@
             formSettings.trigger('submit');
         });
 
-        $('.editable').on('blur', function () {
-            $('#show_promo_phrase').html($(this).html());
+        promo_text_area =  $('div[contenteditable]');
+        function phrase_promo_editable() {
+            $('#show_promo_phrase').html(promo_text_area.html());
 
-            var promo_notice = $('#settings_parameters_promo_notice');
-            promo_notice.val($(this).html());
+            $('#settings_parameters_promo_notice').val(promo_text_area.html());
 
             formSettings.trigger('submit');
+        }
+
+        phrase_scrolling_page = function () {
+            phrase_promo_editable();
+            window.removeEventListener("scroll", phrase_scrolling_page);
+        }
+
+        promo_text_area.on("blur", function () {
+            phrase_promo_editable();
         });
 
+        promo_text_area.on("focus", function () {
+            window.addEventListener("scroll", phrase_scrolling_page);
+        });
+        
         var spinnerSettings = $('#spinner_settings');
         var spinnerLoader = spinnerSettings.html();
 
@@ -367,5 +381,4 @@
             }
         });
     </script>
-
 {% endblock %}
