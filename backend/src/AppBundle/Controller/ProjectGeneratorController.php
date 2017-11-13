@@ -18,6 +18,7 @@ use AppBundle\Service\Pricing\Insurance;
 use AppBundle\Service\ProjectGenerator\ShippingRuler;
 use AppBundle\Form\Financial\ShippingType;
 use AppBundle\Service\Order\ElementResolver;
+use AppBundle\Util\Validator\Document;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -456,6 +457,20 @@ class ProjectGeneratorController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/cnpj/validate", name="order_cnpj_validate")
+     */
+    public function cnpjValidateAction(Request $request)
+    {
+        $status = Response::HTTP_OK;
+
+        if (!Document::isCnpj($request->get('cnpj'))) {
+            $status = Response::HTTP_IM_USED;
+        }
+
+        return $this->json([],$status);
+    }
+
     private function finishElement(Element $element)
     {
         $order = $element->getOrder();
@@ -526,6 +541,7 @@ class ProjectGeneratorController extends AbstractController
 
     /**
      * @param Order $order
+     * @return bool
      */
     private function checkOrderStatus(Order $order)
     {
