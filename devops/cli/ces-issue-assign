@@ -9,17 +9,20 @@ if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
   exit 0;
 fi
 
-ISSUE=$1
-LOGIN=$($CLI_PATH/util/github-credentials --login)
-
-if [[ $2 == '--unassign' ]]; then
-  curl -X DELETE -u $LOGIN $GITHUB_REPOSITORY/issues/$ISSUE/assignees > /dev/null 2>&1
-  exit 0
+if [[ -z $2 || $2 == '--unassign' ]]; then
+  USER=$($CLI_PATH/util/github-credentials --user)
+else
+  USER=$2
 fi
 
-echo 'Assigning Github issue...'
-
-USER=$([ $2 ] && echo $2 || echo $($CLI_PATH/util/github-credentials --user))
+ISSUE=$1
+LOGIN=$($CLI_PATH/util/github-credentials --login)
 ASSIGNEES="{\"assignees\": [\"$USER\"]}"
 
-curl -X POST -u $LOGIN -d "$ASSIGNEES" $GITHUB_REPOSITORY/issues/$ISSUE/assignees > /dev/null 2>&1
+if [[ $2 == '--unassign' ]]; then
+  echo 'Unassigning Github issue...'
+  curl -X DELETE -u $LOGIN -d "$ASSIGNEES" $GITHUB_REPOSITORY/issues/$ISSUE/assignees > /dev/null 2>&1
+else
+  echo 'Assigning Github issue...'
+  curl -X POST -u $LOGIN -d "$ASSIGNEES" $GITHUB_REPOSITORY/issues/$ISSUE/assignees > /dev/null 2>&1
+fi
