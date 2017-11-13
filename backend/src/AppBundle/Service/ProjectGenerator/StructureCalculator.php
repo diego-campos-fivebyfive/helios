@@ -113,13 +113,12 @@ class StructureCalculator
             return $b->getSize() > $a->getSize();
         });
 
-        $position = $projectModule->getPosition();
         $maxProfileSize = 0;
-        if ($countModules <= 52) {
+        if ($countModules <= 52 && array_key_exists(1, $profiles)) {
             $maxProfileSize = 1;
-            if ($countModules <= 26) {
+            if ($countModules <= 26 && array_key_exists(2, $profiles)) {
                 $maxProfileSize = 2;
-                if ($countModules <= 12) {
+                if ($countModules <= 12 && array_key_exists(3, $profiles)) {
                     $maxProfileSize = 3;
                 }
             }
@@ -399,7 +398,8 @@ class StructureCalculator
     {
         $method = $single ? 'findOneBy' : 'findBy';
 
-        //CriteriaAggregator::finish($criteria);
+        if('perfil' == $criteria['type'])
+            CriteriaAggregator::finish($criteria);
 
         return $this->manager->$method($criteria);
     }
