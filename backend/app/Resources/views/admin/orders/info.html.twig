@@ -3,7 +3,7 @@
         resize: none;
         height: 125px;
     }
-    .input-label, .input-label:focus {
+    .client.input-label, .client.input-label:focus {
         border-color: transparent;
         width: 100%;
     }
@@ -17,47 +17,105 @@
 
     {{ form_start(form,{attr:{action: app.request.uri, id:'form_order_info'}}) }}
 
+    <div class="col-md-12">
+        {{ form_widget(form.billingDirect) }}
+        {{ form_label(form.billingDirect, 'Faturamento direto') }}
+    </div>
+
+    <div id="billing_direct_inputs" class="form-group col-md-12 hide">
+        <div class="col-md-3">
+            {{ form_label(form.billingFirstname, 'Cliente') }}
+            {{ form_widget(form.billingFirstname, {attr:{class:'form-control billing'}}) }}
+        </div>
+        <div class="col-md-3">
+            {{ form_label(form.billingLastname, 'Razão social') }}
+            {{ form_widget(form.billingLastname, {attr:{class:'form-control billing'}}) }}
+        </div>
+        <div class="col-md-3">
+            {{ form_label(form.billingContact, 'Contato') }}
+            {{ form_widget(form.billingContact, {attr:{class:'form-control billing'}}) }}
+        </div>
+        <div class="col-md-3">
+            {{ form_label(form.billingCnpj, 'CNPJ') }}
+            {{ form_widget(form.billingCnpj, {attr:{class:'form-control billing'}}) }}
+        </div>
+        <div class="col-md-3">
+            {{ form_label(form.billingIe, 'IE') }}
+            {{ form_widget(form.billingIe, {attr:{class:'form-control billing'}}) }}
+        </div>
+        <div class="col-md-3">
+            {{ form_label(form.billingPhone, 'Telefone') }}
+            {{ form_widget(form.billingPhone, {attr:{class:'form-control billing'}}) }}
+        </div>
+        <div class="col-md-3">
+            {{ form_label(form.billingEmail, 'Email') }}
+            {{ form_widget(form.billingEmail, {attr:{class:'form-control billing'}}) }}
+        </div>
+        <div class="col-md-3">
+            {{ form_label(form.billingPostcode, 'CEP') }}
+            {{ form_widget(form.billingPostcode, {attr:{class:'form-control billing'}}) }}
+        </div>
+        <div class="col-md-3">
+            {{ form_label(form.billingCity, 'Cidade') }}
+            {{ form_widget(form.billingCity, {attr:{class:'form-control billing'}}) }}
+        </div>
+        <div class="col-md-3">
+            {{ form_label(form.billingState, 'Estado') }}
+            {{ form_widget(form.billingState, {attr:{class:'form-control billing'}}) }}
+        </div>
+        <div class="col-md-3">
+            {{ form_label(form.billingDistrict, 'Bairro') }}
+            {{ form_widget(form.billingDistrict, {attr:{class:'form-control billing'}}) }}
+        </div>
+        <div class="col-md-3">
+            {{ form_label(form.billingStreet, 'Rua') }}
+            {{ form_widget(form.billingStreet, {attr:{class:'form-control billing'}}) }}
+        </div>
+    </div>
+
+    <div class="hr-line-dashed col-md-12"></div>
+
     <div class="form-group col-md-6">
         <div class="col-md-3">
             {{ form_label(form.firstname, 'Cliente') }}:
         </div>
         <div class="col-md-9">
-            {{ form_widget(form.firstname, {attr:{class:'input-label'}}) }}
+            {{ form_widget(form.firstname, {attr:{class:'client input-label'}}) }}
         </div>
 
         <div class="col-md-3">
             {{ form_label(form.cnpj) }}:
         </div>
         <div class="col-md-9">
-            {{ form_widget(form.cnpj, {attr:{class:'input-label'}}) }}
+            {{ form_widget(form.cnpj, {attr:{class:'client input-label'}}) }}
         </div>
 
         <div class="col-md-3">
             {{ form_label(form.phone) }}:
         </div>
         <div class="col-md-9">
-            {{ form_widget(form.phone, {attr:{class:'input-label'}}) }}
+            {{ form_widget(form.phone, {attr:{class:'client input-label'}}) }}
         </div>
 
         <div class="col-md-3">
             {{ form_label(form.email) }}:
         </div>
         <div class="col-md-9">
-            {{ form_widget(form.email, {attr:{class:'input-label'}}) }}
+            {{ form_widget(form.email, {attr:{class:'client input-label'}}) }}
         </div>
 
         <div class="col-md-3">
             {{ form_label(form.postcode) }}:
         </div>
         <div class="col-md-9">
-            {{ form_widget(form.postcode, {attr:{class:'input-label'}}) }}
+            {{ form_widget(form.postcode, {attr:{class:'client input-label'}}) }}
         </div>
 
         <div class="col-md-3">
             {{ form_label(form.address) }}:
         </div>
         <div class="col-md-9">
-            {{ form_widget(form.address, {attr:{class:'input-label'}}) }}
+            {{ form_widget(form.address, {attr:{class:'client input-label'}}) }}
         </div>
 
         <div class="col-md-4">
@@ -72,35 +130,35 @@
             {{ form_label(form.lastname, 'Nome') }}:
         </div>
         <div class="col-md-9">
-            {{ form_widget(form.lastname, {attr:{class:'input-label'}}) }}
+            {{ form_widget(form.lastname, {attr:{class:'client input-label'}}) }}
         </div>
 
         <div class="col-md-3">
             {{ form_label(form.ie, 'IE') }}:
         </div>
         <div class="col-md-9">
-            {{ form_widget(form.ie, {attr:{class:'input-label'}}) }}
+            {{ form_widget(form.ie, {attr:{class:'client input-label'}}) }}
         </div>
 
         <div class="col-md-3">
             {{ form_label(form.contact) }}:
         </div>
         <div class="col-md-9">
-            {{ form_widget(form.contact, {attr:{class:'input-label'}}) }}
+            {{ form_widget(form.contact, {attr:{class:'client input-label'}}) }}
         </div>
 
         <div class="col-md-3">
             {{ form_label(form.state) }}:
         </div>
         <div class="col-md-9">
-            {{ form_widget(form.state, {attr:{class:'input-label'}}) }}
+            {{ form_widget(form.state, {attr:{class:'client input-label'}}) }}
         </div>
 
         <div class="col-md-3">
             {{ form_label(form.city) }}:
         </div>
         <div class="col-md-9">
-            {{ form_widget(form.city, {attr:{class:'input-label'}}) }}
+            {{ form_widget(form.city, {attr:{class:'client input-label'}}) }}
         </div>
 
         <div class="col-md-5">
@@ -168,7 +226,6 @@
 </div>
 
 {{ form_end(form) }}
-
 <script>
 
     var buttonAccount = $('#button_account');
@@ -176,10 +233,14 @@
 
     $(buttonEdit).on('click', function () {
         InfoManager.clickByPayment = true;
+        InfoManager.editable = true;
         InfoManager.changeEditable(true);
     });
 
     var InfoManager = {
+        editable: false,
+        billingDirect: $('#order_billingDirect'),
+        billing_direct_inputs: $('#billing_direct_inputs'),
         clickByPayment: false,
         accountSelector: $('#order_account'),
         shippingSelector: null,
@@ -207,18 +268,65 @@
                 this.deadlineBlock.hide();
             }
         },
+        validateCnpj: function () {
+            $.ajax({
+                url: '{{ path('order_cnpj_validate') }}',
+                data: {cnpj:$('#order_billingCnpj').val()},
+                complete: function (xhr) {
+                    if (xhr.status != 200) {
+                        toastr.error('CNPJ inválido', '', {
+                            positionClass: 'toast-top-center',
+                            progressBar: true,
+                            preventDuplicates: true
+                        });
+                    }
+                }
+            });
+        },
         init: function(){
 
-            var checkShippingTypePresence = window.setInterval(function(){
+            var checkShippingTypePresence = window.setInterval(function() {
                 InfoManager.shippingSelector = $('#shipping_type');
-                if(InfoManager.shippingSelector.length){
+                if (InfoManager.shippingSelector.length) {
                     clearInterval(checkShippingTypePresence);
-                    InfoManager.shippingSelector.on('change', function(){
+                    InfoManager.shippingSelector.on('change', function() {
                         InfoManager.checkShippingOption();
                     });
                     InfoManager.checkShippingOption();
                 }
             }, 500);
+
+            if (this.billingDirect.attr('checked')) {
+                this.billing_direct_inputs.removeClass('hide');
+                $('#order_billingCnpj').attr('required','required');
+            }
+
+            setTimeout(function () {
+                $('#order_billingCnpj').mask("00.000.000/0000-00");
+                $("#order_billingPostcode").mask("00000-000");
+                $("#order_billingPhone").mask("(00) 00000-0000");
+            },1000);
+
+            $('#order_billingCnpj').on('change', function () {
+                InfoManager.validateCnpj();
+            });
+
+            this.billingDirect.on('change', function () {
+                if ($(this).attr('checked')) {
+                    $(this).removeAttr('checked');
+                    InfoManager.billing_direct_inputs.addClass('hide');
+                    $('#order_billingCnpj').removeAttr('required');
+                    if (!InfoManager.editable)
+                        $('#form_order_info').submit();
+                }
+                else {
+                    $(this).attr('checked','checked');
+                    InfoManager.billing_direct_inputs.removeClass('hide');
+                    $('#order_billingCnpj').attr('required','required');
+                    if (!InfoManager.editable)
+                        $('#form_order_info').submit();
+                }
+            })
         },
         changeEditable: function(editable) {
 
@@ -232,17 +340,21 @@
                 $('#order_deadline').removeAttr('readonly disabled');
                 $('#order_paymentMethod').removeAttr('readonly disabled');
 
+                $('.billing').removeAttr('readonly');
+
                 GeneratorHandler.enableValidate ++;
                 GeneratorHandler.btnValidate.addClass('hide');
             } else {
                 $(buttonAccount).addClass('hide');
                 $(buttonEdit).removeClass('hide');
 
-                $('#order_note').attr('readonly','readonly');
-                $('#delivery_at').attr('readonly','readonly');
-                $('#order_deliveryDelay').attr('readonly','readonly');
-                $('#order_deadline').attr('readonly','readonly');
-                $('#order_paymentMethod').attr('readonly','readonly');
+                $('#order_note').attr('readonly', 'readonly');
+                $('#delivery_at').attr('readonly', 'readonly');
+                $('#order_deliveryDelay').attr('readonly', 'readonly');
+                $('#order_deadline').attr('readonly', 'readonly');
+                $('#order_paymentMethod').attr('readonly', 'readonly');
+
+                $('.billing').attr('readonly', 'readonly');
 
                 GeneratorHandler.enableValidate --;
                 if (!GeneratorHandler.enableValidate)
@@ -271,6 +383,7 @@
 
                 buttonAccount.ladda('stop');
                 if (InfoManager.clickByPayment) {
+                    InfoManager.editable = false;
                     InfoManager.changeEditable(false);
                     InfoManager.clickByPayment = false;
                 }
@@ -279,6 +392,24 @@
                 $('#delivery_at').attr('disabled', 'disabled');
                 $('#order_deliveryDelay').attr('disabled', 'disabled');
                 $('#order_deadline').attr('disabled','disabled');
+            }
+        });
+    });
+
+    $('#order_billingPostcode').on('change', function () {
+        var postcode = $(this).val();
+        $.ajax({
+            url: '{{ path('utils_postcode') }}',
+            method: 'post',
+            data: {postcode: postcode},
+            complete: function (xhr) {
+                if (200 == xhr.status) {
+                    var response = xhr.responseJSON;
+                    $('#order_billingState').val(response.uf);
+                    $('#order_billingCity').val(response.cidade);
+                    $('#order_billingDistrict').val(response.bairro);
+                    $('#order_billingStreet').val(response.tipo_logradouro + ' ' + response.logradouro);
+                }
             }
         });
     });
