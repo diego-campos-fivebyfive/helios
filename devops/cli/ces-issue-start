@@ -17,6 +17,9 @@ LAST_STAGE=$($CLI_PATH/ces-issue-info $LAST_ISSUE --stage)
 LAST_MODIF=$(git log origin/master..HEAD)
 STAGE=$($CLI_PATH/ces-issue-info $1 --stage)
 
+USER=$($CLI_PATH/util/github-credentials --user)
+NICK=$($CLI_PATH/util/user-credentials $USER --slack)
+
 if [[ $LAST_STAGE == 'Review' ]]; then
   echo "Forbidden: You must stand $LAST_BRANCH reviews and merge to be able to start a new one."
   exit 0
@@ -56,6 +59,8 @@ if [[ $LAST_STAGE == 'In-progress' ]] && [[ -z $LAST_MODIF ]]; then
     $CLI_PATH/ces-issue-assign $LAST_ISSUE --unassign
     git branch -D $LAST_BRANCH
   else
+    $CLI_PATH/ces-slack-notify --devops "[$LAST_BRANCH] _${NICK}_ undid and canceled his progress on this issue"
+
     branch_current=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
     git checkout $LAST_BRANCH
     $CLI_PATH/ces-issue-block $LAST_ISSUE
@@ -69,9 +74,6 @@ $CLI_PATH/ces-log-clear
 
 $CLI_PATH/ces-issue-assign $1
 $CLI_PATH/ces-issue-move $1 --in-progress
-
-USER=$($CLI_PATH/util/github-credentials --user)
-NICK=$($CLI_PATH/util/user-credentials $USER --slack)
 
 if [[ $LAST_STAGE == 'Testing-tech' ]]; then
   read -p "Do you wanna $LAST_BRANCH to be tested by product team? [Y/n]: " accept > /dev/tty
