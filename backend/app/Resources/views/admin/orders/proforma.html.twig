@@ -168,46 +168,52 @@
                             <tbody>
                             <tr>
                                 <td><label class="no-margins">Cliente: </label></td>
-                                <td> {{ order.firstname }} </td>
+                                <td> {% if order.billingDirect %}{{ order.billingFirstname }}{% else %}{{ order.firstname }}{% endif %} </td>
 
                                 <td><label class="no-margins">Nome: </label></td>
-                                <td> {{ order.lastname }} </td>
+                                <td> {% if order.billingDirect %}{{ order.billingLastname }}{% else %}{{ order.lastname }}{% endif %} </td>
                             </tr>
                             <tr>
                                 <td><label class="no-margins">Endereço: </label></td>
-                                <td> {{ order.address }} </td>
+                                <td> {% if order.billingDirect %}{{ order.billingStreet }}{% else %}{{ order.address }}{% endif %} </td>
 
                                 <td><label class="no-margins">CNPJ: </label></td>
-                                <td> {{ order.cnpj }} </td>
+                                <td> {% if order.billingDirect %}{{ order.billingCnpj }}{% else %}{{ order.cnpj }}{% endif %} </td>
                             </tr>
                             <tr>
                                 <td><label class="no-margins">Cidade: </label></td>
-                                <td> {{ order.city }} </td>
+                                <td> {% if order.billingDirect %}{{ order.billingCity }}{% else %}{{ order.city }}{% endif %} </td>
 
                                 <td><label class="no-margins">IE: </label></td>
-                                <td> {{ order.ie }} </td>
+                                <td> {% if order.billingDirect %}{{ order.billingIe }}{% else %}{{ order.ie }}{% endif %} </td>
                             </tr>
                             <tr>
                                 <td><label class="no-margins">Contato: </label></td>
-                                <td> {{ order.contact }} </td>
+                                <td> {% if order.billingDirect %}{{ order.billingContact }}{% else %}{{ order.contact }}{% endif %} </td>
 
                                 <td><label class="no-margins">Estado: </label></td>
-                                <td> {{ order.state }} </td>
+                                <td> {% if order.billingDirect %}{{ order.billingState }}{% else %}{{ order.state }}{% endif %} </td>
                             </tr>
                             <tr>
                                 <td><label class="no-margins">Email: </label></td>
-                                <td class="color-blue"> {{ order.email }} </td>
+                                <td class="color-blue"> {% if order.billingDirect %}{{ order.billingEmail }}{% else %}{{ order.email }}{% endif %} </td>
 
                                 <td><label class="no-margins">Tel: </label></td>
-                                <td> {{ order.phone }} </td>
+                                <td> {% if order.billingDirect %}{{ order.billingPhone }}{% else %}{{ order.phone }}{% endif %} </td>
                             </tr>
                             <tr>
                                 <td><label class="no-margins">Atendente: </label></td>
                                 <td> {{ order.agent.name }} </td>
 
                                 <td><label class="no-margins">CEP: </label></td>
-                                <td> {{ order.postcode }} </td>
+                                <td> {% if order.billingDirect %}{{ order.billingPostcode }}{% else %}{{ order.postcode }}{% endif %} </td>
                             </tr>
+                            {% if order.billingDirect %}
+                                <tr>
+                                    <td><label class="no-margins">Integrador: </label></td>
+                                    <td colspan="3"> {{ order.lastname }} </td>
+                                </tr>
+                            {% endif %}
                             </tbody>
                         </table>
 
