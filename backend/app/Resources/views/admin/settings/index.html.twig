@@ -282,12 +282,20 @@
             formSettings.trigger('submit');
         });
 
-        $('div[contenteditable]').on("blur", function () {
-            $('#show_promo_phrase').html($(this).html());
+        function phrase_promo_editable() {
+            $('#show_promo_phrase').html($('div[contenteditable]').html());
 
-            $('#settings_parameters_promo_notice').val($(this).html());
+            $('#settings_parameters_promo_notice').val($('div[contenteditable]').html());
 
             formSettings.trigger('submit');
+        }
+
+        $('div[contenteditable]').on("blur", function () {
+            phrase_promo_editable()
+        });
+
+        $(window).scroll(function () {
+            phrase_promo_editable()
         });
 
 
