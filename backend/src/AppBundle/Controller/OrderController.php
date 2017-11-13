@@ -81,7 +81,7 @@ class OrderController extends AbstractController
 
         $manipulator = $this->get('order_manipulator');
 
-        if($manipulator->acceptStatus($order, $status, $this->user())) {
+        if($manipulator->acceptStatus($order, $status, $this->user()) or $this->user()->isPlatformMaster()) {
 
             $currentStatus = $order->getStatus();
 
