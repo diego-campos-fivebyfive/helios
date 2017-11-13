@@ -12,7 +12,7 @@
             width: 95%;
         }
         .promo_phrase {
-            border: solid rgba(10, 10, 10, 0.25) 1px;
+            border: 1px solid rgba(10, 10, 10, 0.2) ;
             border-radius: 2px;
         }
         .promo_phrase_div {
@@ -198,10 +198,10 @@
                                                                            {{ form_label(form_params.shipping_included, 'Habilitar frete INCLUSO') }}
                                                                        </div>
                                                                    </div>
-                                                                   {#<div class="col-md-4">
+                                                                   <div class="col-md-4">
                                                                        {{ form_label(form_params.promo_end_at, 'Data limite') }}
                                                                        {{ form_widget(form_params.promo_end_at, {attr:{class:'form-control', placeholder:"Data limite"}})}}
-                                                                   </div>#}
+                                                                   </div>
 
                                                                </div>
 
@@ -278,8 +278,6 @@
             var promo_color = $('#settings_parameters_promo_background');
             promo_color.val(color);
 
-            $('#show-back-phrase').css('background-color', color);
-
             formSettings.trigger('submit');
         });
 
@@ -317,6 +315,8 @@
                 complete: function (xhr) {
                     if (200 == xhr.status) {
                         changeSpinner(false);
+                        color = $('#settings_parameters_promo_background').val();
+                        $('#show-back-phrase').css('background-color', color);
                     } else {
                         swal('Ooops', 'Houve uma falha ao processar as configurações', 'error');
                     }
