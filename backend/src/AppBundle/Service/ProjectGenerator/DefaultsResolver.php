@@ -70,6 +70,8 @@ class DefaultsResolver
         $this->maker('string_box');
         $this->fdi('min');
         $this->fdi('max');
+        $this->promoNotice();
+        $this->promoBackground();
 
         return $this->defaults;
     }
@@ -108,6 +110,26 @@ class DefaultsResolver
         $parameter = $this->resolveParameters(Parameter::class, ['id' => 'platform_settings']);
         if($parameter instanceof Parameter && $parameter->get('shipping_included'))
             $this->resolveDefault('shipping_included', $parameter->get('shipping_included'));
+    }
+
+    /**
+     * Resolve default promoNotice
+     */
+    public function promoNotice()
+    {
+        $parameter = $this->resolveParameters(Parameter::class, ['id' => 'platform_settings']);
+        if($parameter instanceof Parameter && $parameter->get('promo_notice'))
+            $this->resolveDefault('promo_notice', $parameter->get('promo_notice'));
+    }
+
+    /**
+     * Resolve default promoBackground
+     */
+    public function promoBackground()
+    {
+        $parameter = $this->resolveParameters(Parameter::class, ['id' => 'platform_settings']);
+        if($parameter instanceof Parameter && $parameter->get('promo_background'))
+            $this->resolveDefault('promo_background', $parameter->get('promo_background'));
     }
 
     private function fdi($type)
@@ -262,6 +284,8 @@ class DefaultsResolver
             'is_promotional' => false,
             'shipping_included' => false,
             'promo_end_at' => null,
+            'promo_notice' => null,
+            'promo_background' => null,
             'fdi_min' => null,
             'fdi_max' => null,
             'errors' => []
