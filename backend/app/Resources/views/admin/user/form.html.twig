@@ -98,17 +98,22 @@
 
     <script>
 
+        var member_roles = $('#member_user_roles');
+
+        function showStates() {
+            var member_states = $('#member_states');
+
+            if (member_roles.val() == 'ROLE_PLATFORM_EXPANSE')
+                member_states.removeClass('hide');
+            else
+                member_states.addClass('hide');
+        }
+
         $(function () {
             $('#member_attributes_states').chosen({});
 
-            function showStates() {
-                if ($('#member_user_roles').val() == 'ROLE_PLATFORM_EXPANSE')
-                    $('#member_states').removeClass('hide');
-                else
-                    $('#member_states').addClass('hide');
-            }
-            $('#member_user_roles').on('change', function () {
-                showStates()
+            member_roles.on('change', function () {
+                showStates();
             });
             showStates();
         });
