@@ -4,11 +4,13 @@
 namespace AdminBundle\Form;
 
 
+use AppBundle\Configuration\Brazil;
 use AppBundle\Entity\Customer;
-use Sonata\AdminBundle\Form\Type\Filter\ChoiceType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -30,7 +32,14 @@ class MemberType extends AbstractType
             ->add('email', EmailType::class, [
                 'required' => true
             ])
-            ->add('user', UserType::class, ['data' => $member->getUser()]);
+            ->add('user', UserType::class, ['data' => $member->getUser()])
+            ->add(
+                $builder
+                    ->create('attributes', FormType::class)
+                    ->add('states', ChoiceType::class, [
+                        'multiple' => true,
+                        'choices' => Brazil::states()
+                    ]));
     }
 
     /**
