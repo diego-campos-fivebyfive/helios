@@ -47,6 +47,8 @@ class SettingsType extends AbstractType
                         ->add('email', EmailType::class)
                 )
                 ->add('enable_promo', CheckboxType::class)
+                ->add('promo_notice', TextType::class)
+                ->add('promo_background')
                 ->add('shipping_included', CheckboxType::class)
                 ->add('enabled_roof_types', ChoiceType::class, [
                         'multiple' => true,
