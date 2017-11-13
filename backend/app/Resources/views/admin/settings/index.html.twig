@@ -2,6 +2,8 @@
 
 {% block body %}
 
+    <link href="{{ asset('assets/medium-editor/css/medium-editor.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/medium-editor/css/themes/default.css') }}" rel="stylesheet">
     <style>
         .choices-roof {
             width: 5%;
@@ -9,7 +11,17 @@
         #settings_parameters_enabled_roof_types label {
             width: 95%;
         }
-
+        .promo_phrase {
+            border: solid rgba(10, 10, 10, 0.25) 1px;
+            border-radius: 2px;
+        }
+        .promo_phrase_div {
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        .font-promotional {
+            font-size: 12px;
+        }
     </style>
 
     {% set isMaster = app.user.isPlatformMaster %}
@@ -155,20 +167,41 @@
                                                                </div>
                                                                <div class="panel-body">
 
-                                                                   <div class="col-md-8">
+                                                                   <div class="col-md-12">
                                                                        <div>
                                                                            {{ form_widget(form_params.enable_promo) }} &nbsp;
                                                                            {{ form_label(form_params.enable_promo, 'Ativar orçamentos promocionais') }}
                                                                        </div>
+
+                                                                       <div class="promo_phrase_div">
+                                                                           <label>Frase para Orçamentos Promocionais</label>
+                                                                           <div class="editable promo_phrase" id="promo_phrase">
+                                                                           </div>
+                                                                       </div>
+
+                                                                       <div class="color-alert">
+                                                                           <button class="jscolor {valueElement:'valueInput', styleElement:'styleInput'}">
+                                                                               color
+                                                                           </button>
+                                                                       </div>
+
+                                                                       <div class="alert alert-success" hidden id="styleInput"></div>
+
+
+                                                                       <div class="alert alert-success" id="show-back-phrase">
+                                                                           <span class="font-promotional" id="show_promo_phrase">
+                                                                           </span>
+                                                                       </div>
+
                                                                        <div>
                                                                            {{ form_widget(form_params.shipping_included) }} &nbsp;
                                                                            {{ form_label(form_params.shipping_included, 'Habilitar frete INCLUSO') }}
                                                                        </div>
                                                                    </div>
-                                                                   <div class="col-md-4">
+                                                                   {#<div class="col-md-4">
                                                                        {{ form_label(form_params.promo_end_at, 'Data limite') }}
                                                                        {{ form_widget(form_params.promo_end_at, {attr:{class:'form-control', placeholder:"Data limite"}})}}
-                                                                   </div>
+                                                                   </div>#}
 
                                                                </div>
 
@@ -221,7 +254,43 @@
 
 {% block scripts %}
 
+    <script src="{{ asset('assets/medium-editor/js/medium-editor.js') }}"></script>
+    <script src="{{ asset('assets/proposal2/jscolor.js') }}"></script>
+
     <script>
+
+
+        var color = $('#settings_parameters_promo_background').val();
+        $('#show-back-phrase').css('background-color', color);
+
+        $('#promo_phrase').html($('#settings_parameters_promo_notice').val());
+
+        var editor = new MediumEditor('.editable', {
+            toolbar: {
+                buttons: ['bold', 'italic', 'underline']
+            }
+        });
+
+        editor.init();
+
+        $('.jscolor').on('blur', function () {
+            var color = $('#styleInput').css('background-color')
+            var promo_color = $('#settings_parameters_promo_background');
+            promo_color.val(color);
+
+            $('#show-back-phrase').css('background-color', color);
+
+            formSettings.trigger('submit');
+        });
+
+        $('.editable').on('blur', function () {
+            $('#show_promo_phrase').html($(this).html());
+
+            var promo_notice = $('#settings_parameters_promo_notice');
+            promo_notice.val($(this).html());
+
+            formSettings.trigger('submit');
+        });
 
         var spinnerSettings = $('#spinner_settings');
         var spinnerLoader = spinnerSettings.html();
@@ -261,6 +330,7 @@
         formSettings.find('input').on('change', function () {
             if (this.id == 'settings_parameters_enable_promo') {
                 var shipping_included = $('#settings_parameters_shipping_included');
+
                 if (this.checked)
                     shipping_included.removeAttr('disabled');
                 else {
