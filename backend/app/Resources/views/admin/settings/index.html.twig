@@ -255,9 +255,11 @@
     <script>
 
         var color = $('#settings_parameters_promo_background').val();
-        $('#show-back-phrase').css('background-color', color);
+        var phrase = $('#settings_parameters_promo_notice').val();
 
-        $('#promo_phrase').html($('#settings_parameters_promo_notice').val());
+        $('#show-back-phrase').css('background-color', color);
+        $('#show_promo_phrase').html(phrase);
+        $('#promo_phrase').html(phrase);
 
         $('#promo_phrase').summernote({
             toolbar: [
