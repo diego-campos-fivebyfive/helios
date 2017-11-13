@@ -18,8 +18,6 @@ use AppBundle\Service\Pricing\Insurance;
 use AppBundle\Service\ProjectGenerator\ShippingRuler;
 use AppBundle\Form\Financial\ShippingType;
 use AppBundle\Service\Order\ElementResolver;
-use AppBundle\Util\Validator\Constraints\ContainsCnpj;
-use AppBundle\Util\Validator\Constraints\ContainsCnpjValidator;
 use AppBundle\Util\Validator\Document;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
