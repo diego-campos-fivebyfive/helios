@@ -50,10 +50,14 @@
                                         </div>
 
                                         {% if attribute(form.user, 'roles') is defined %}
-                                        <div class="form-group col-lg-4">
-                                            {{ form_label(form.user.roles, 'Nível de Usuário') }}
+                                            <div class="form-group col-lg-4">
+                                                {{ form_label(form.user.roles, 'Nível de Usuário') }}
                                                 {{ form_widget(form.user.roles, {attr:{class:'form-control'}}) }}
-                                        </div>
+                                            </div>
+                                            <div id="member_states" class="form-group col-lg-12">
+                                                {{ form_label(form.attributes.states, 'Estados atendidos') }}
+                                                {{ form_widget(form.attributes.states, {attr:{class:'form-control'}}) }}
+                                            </div>
                                         {% endif %}
 
                                     </div>
@@ -93,6 +97,26 @@
     <script src="{{ asset('assets/toastr/toastr.min.js') }}"></script>
 
     <script>
+
+        var member_roles = $('#member_user_roles');
+
+        function showStates() {
+            var member_states = $('#member_states');
+
+            if (member_roles.val() == 'ROLE_PLATFORM_EXPANSE')
+                member_states.removeClass('hide');
+            else
+                member_states.addClass('hide');
+        }
+
+        $(function () {
+            $('#member_attributes_states').chosen({});
+
+            member_roles.on('change', function () {
+                showStates();
+            });
+            showStates();
+        });
 
         function display_error(message){
             toastr.error(message, '', {
