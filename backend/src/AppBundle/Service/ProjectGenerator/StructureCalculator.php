@@ -114,14 +114,12 @@ class StructureCalculator
         });
 
         $maxProfileSize = 0;
-        if ($countModules <= 52 && array_key_exists(1, $profiles)) {
+        if ($countModules <= 12 && array_key_exists(3, $profiles)) {
+            $maxProfileSize = 3;
+        } else if ($countModules <= 26 && array_key_exists(2, $profiles)) {
+            $maxProfileSize = 2;
+        } else if ($countModules <= 52 && array_key_exists(1, $profiles)) {
             $maxProfileSize = 1;
-            if ($countModules <= 26 && array_key_exists(2, $profiles)) {
-                $maxProfileSize = 2;
-                if ($countModules <= 12 && array_key_exists(3, $profiles)) {
-                    $maxProfileSize = 3;
-                }
-            }
         }
 
         $term_inter_bd = $items[self::TERMINAL_INTERMEDIARY];
