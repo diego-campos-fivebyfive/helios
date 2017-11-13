@@ -223,6 +223,7 @@
 
         var property = $(this).attr('name');
         var value = $(this).val();
+        value = value.replace(',','.');
 
         if(value != currentValue) {
 
