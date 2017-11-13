@@ -8,6 +8,7 @@ use AppBundle\Entity\Order\Order;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -33,6 +34,59 @@ class OrderType extends AbstractType
         }
 
         if(self::TARGET_REVIEW == $options['target']){
+
+            $builder
+                ->add('billingDirect', CheckboxType::class, [
+                    'required' => false
+                ])
+                ->add('billingFirstname', TextType::class, [
+                    'read_only' => true,
+                    'required' => false
+                ])
+                ->add('billingLastname', TextType::class, [
+                    'read_only' => true,
+                    'required' => false
+                ])
+                ->add('billingContact', TextType::class, [
+                    'read_only' => true,
+                    'required' => false
+                ])
+                ->add('billingCnpj', TextType::class, [
+                    'read_only' => true,
+                    'required' => false,
+                ])
+                ->add('billingIe', TextType::class, [
+                    'read_only' => true,
+                    'required' => false
+                ])
+                ->add('billingPhone', TextType::class, [
+                    'read_only' => true,
+                    'required' => false
+                ])
+                ->add('billingEmail', TextType::class, [
+                    'read_only' => true,
+                    'required' => false
+                ])
+                ->add('billingPostcode', TextType::class, [
+                    'read_only' => true,
+                    'required' => false
+                ])
+                ->add('billingCity', TextType::class, [
+                    'read_only' => true,
+                    'required' => false
+                ])
+                ->add('billingState', TextType::class, [
+                    'read_only' => true,
+                    'required' => false
+                ])
+                ->add('billingDistrict', TextType::class, [
+                    'read_only' => true,
+                    'required' => false
+                ])
+                ->add('billingStreet', TextType::class, [
+                    'read_only' => true,
+                    'required' => false
+                ]);
 
             $builder
                 ->add('firstname', TextType::class, [
