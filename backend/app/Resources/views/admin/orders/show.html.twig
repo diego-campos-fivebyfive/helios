@@ -195,9 +195,89 @@
                                             {% endif %}
                                         </div>
                                     </div>
-                                    <div class="col-md-12 border-bottom">
+                                    <div class="col-md-12 {% if order.billingDirect %}border-bottom{% endif %}">
                                         <h2>Orçamento {{ order.reference }}</h2>
                                     </div>
+                                    {% if order.billingDirect %}
+                                    <div class="col-lg-12 border-bottom">
+                                        <ol class="breadcrumb">
+                                            <li>
+                                                <label>Dados de faturamento</label>
+                                            </li>
+                                        </ol>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                {% if order.billingDirect %}
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Cliente</label>
+                                            {{ order.billingFirstname }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Razão Social</label>
+                                            {{ order.billingLastname }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">CNPJ</label>
+                                            {{ order.billingCnpj }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Inscrição Estadual</label>
+                                            {{ order.billingIe }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Contato</label>
+                                            {{ order.billingContact }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Email</label>
+                                            {{ order.billingEmail }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Telefone</label>
+                                            {{ order.billingPhone }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Cep</label>
+                                            {{ order.billingPostcode }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Estado</label>
+                                            {{ order.billingState }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Cidade</label>
+                                            {{ order.billingCity }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Bairro</label>
+                                            {{ order.billingDistrict }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Rua</label>
+                                            {{ order.billingStreet }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ibox border-bottom">
+                <div class="ibox-content">
+                    <div class="tab-content">
+                        <div class="tab-pane active">
+                            <div class="row">
+                                <div class="row wrapper">
                                     <div class="col-lg-12 border-bottom">
                                         <ol class="breadcrumb">
                                             <li>
