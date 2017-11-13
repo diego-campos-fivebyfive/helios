@@ -101,16 +101,16 @@
         $(function () {
             $('#member_attributes_states').chosen({});
 
-            function memberExpanse() {
+            function showStates() {
                 if ($('#member_user_roles').val() == 'ROLE_PLATFORM_EXPANSE')
                     $('#member_states').removeClass('hide');
                 else
                     $('#member_states').addClass('hide');
             }
             $('#member_user_roles').on('change', function () {
-                memberExpanse()
+                showStates()
             });
-            memberExpanse();
+            showStates();
         });
 
         function display_error(message){
