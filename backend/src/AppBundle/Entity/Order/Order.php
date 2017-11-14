@@ -1177,6 +1177,16 @@ class Order implements OrderInterface, InsurableInterface
      */
     public function getTotal()
     {
+        $total = $this->getTotalExcDiscount() - $this->getDiscount();
+
+        return $total;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTotalExcDiscount()
+    {
         $insurance = $this->isMaster() ? $this->getTotalInsurance() : $this->getInsurance();
 
         $total = $this->getSubTotal() + $this->getShipping() + $insurance;

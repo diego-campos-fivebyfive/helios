@@ -166,6 +166,23 @@ class ProjectGeneratorController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/discount", name="generator_order_discount")
+     *
+     * @Method("post")
+     */
+    public function discountAction(Request $request, Order $order)
+    {
+        $order->setDiscount(floatval($request->get('discount')));
+
+        $this->manager('order')->save($order);
+
+        return $this->json([
+            'total' => $order->getTotal(),
+            'orderDiscount' => $order->getDiscount()
+        ]);
+    }
+
+    /**
      * @Route("/{id}/shipping", name="generator_financial_shipping")
      */
     public function shippingAction(Request $request, Order $order)
@@ -195,7 +212,8 @@ class ProjectGeneratorController extends AbstractController
 
             return $this->json([
                 'shipping' => $order->getShipping(),
-                'total' => $order->getTotal()
+                'total' => $order->getTotal(),
+                'totalExcDiscount' => $order->getTotalExcDiscount()
             ]);
         }
 

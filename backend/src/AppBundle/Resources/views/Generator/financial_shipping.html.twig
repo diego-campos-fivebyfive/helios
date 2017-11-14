@@ -199,9 +199,10 @@
                 callback: function (xhr) {
                     button.ladda('stop');
                     var response = xhr.responseJSON;
-                        ShippingManager.output.html(
+                    ShippingManager.output.html(
                         numeral(response.shipping).format('$0,0.00')
                     );
+                    $('#order-totalExcDiscount').html(numeral(response.totalExcDiscount).format('$0,0.00'));
                     $('#order-total').html(numeral(response.total).format('$0,0.00'));
                 }
             });

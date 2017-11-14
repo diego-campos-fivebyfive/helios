@@ -159,6 +159,11 @@ interface OrderInterface
     /**
      * @return float
      */
+    public function getTotalExcDiscount();
+
+    /**
+     * @return float
+     */
     public function getTotalInsurance();
 
     /**
