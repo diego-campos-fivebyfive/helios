@@ -58,22 +58,48 @@ Esclarecimentos gerais relacionados a documentação:
   - [2.2](#workflow--tarefas) **Ciclo de vida de Tarefas**:
 
     - Para cada tarefa há um prazo máximo de execução de 2 dias;
-    - Caso a execução da tarefa fique travada em mais de 20min deve ser solicitada ajuda utilizando a flag `HELP`;
     - Caso a execução de uma tarefa ultrapasse 2 dias a mesma deve ser reavaliada pela a equipe;
     - Tarefas devem ser quebradas em caso de:
-      - Tarefas muito grandes,
-      - Tarefas que modifiquem diversas partes diferentes do projeto,
-      - Tarefas em que a execução ultrapasse os 2 dias;
+      - Tarefas muito grandes;
+      - Tarefas que modifiquem diversas partes diferentes do projeto;
+      - Tarefas em que a execução ultrapasse os 2 dias.
 
-      ##### A execução de tarefas segue o seguinte fluxo:
+      ##### Execução de tarefas em fluxo normal:
+
         ```
         1. Iniciada em Backlogs (general, devops)
         2. Incluida em Sprint Semanal (to do)
         3. Executada pelo Desenvolvedor (in progress) ou
            Apontada como execução impossibilitada (blocked)
-        4. Enviada para Revisão de código (review)
-        5. Enviada para Teste em Homolog (testing)
-        6. Marcada como concluida (done)
+        4. Enviada para Revisão de código pela equipe (review)
+        5. Disponibilizada para teste em Homolog pelo desenvolvedor (testing I)
+        6. Revisada pela equipe de produto, caso necessário (testing II)
+        7. Marcada como concluida (done)
+        ```
+
+      ##### Execução de tarefas por fluxo reiniciado:
+
+        Após o merge da pull request atual, a tarefa pode ser reiniciada para continuidade do trabalho, caso necessário, seguindo o seguinte fluxo:
+
+        ```
+        1. Disponibilizada para teste em Homolog pelo desenvolvedor (testing I)
+        2. Reiniciada pelo Desenvolvedor para continuidade de execução em mesma issue (in progress)
+        ```
+
+      ##### Execução de tarefas por fluxo quebrado:
+
+        Após iniciada uma tarefa, se houver necessidade de iniciar uma tarefa de maior importância de imediato, ou caso a execução da tarefa seja impedida por algum motivo, a mesma pode ser bloqueada, seguindo o seguinte fluxo:
+
+        ```
+        1. Sendo executada pelo Desenvolvedor (in progress)
+        2. Apontada como execução impossibilitada ou pausada (blocked)
+        ```
+
+        Caso a branch da tarefa ainda não contenha ajustes existe também de cancelar o trabalho na issue, seguindo o seguinte fluxo:
+
+        ```
+        1. Sendo executada pelo Desenvolvedor (in progress)
+        2. Cancelada execução pelo Desenvolvedor por não conter modificações (to do)
         ```
 
   <a name="workflow--review"></a><a name="2.3"></a>
