@@ -2,7 +2,7 @@
 
 {% block body %}
 
-    <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.css" rel="stylesheet">
     <style>
         .choices-roof {
             width: 5%;
@@ -177,7 +177,7 @@
 
                                                                        <div class="color-alert">
                                                                            <button class="jscolor {valueElement:'valueInput', styleElement:'styleInput'}">
-                                                                               color
+                                                                               Cor de fundo da mensagem
                                                                            </button>
                                                                        </div>
 
@@ -189,9 +189,13 @@
                                                                            </span>
                                                                        </div>
 
-                                                                       <div>
-                                                                           {{ form_widget(form_params.shipping_included) }} &nbsp;
+                                                                       <div class="col-md-6">
                                                                            {{ form_label(form_params.shipping_included, 'Habilitar frete INCLUSO') }}
+                                                                           {{ form_widget(form_params.shipping_included) }} &nbsp;
+                                                                       </div>
+                                                                       <div class="col-md-6">
+                                                                           {{ form_label(form_params.shipping_included_max_power, 'Potência limite para frete INCLUSO') }}
+                                                                           {{ form_widget(form_params.shipping_included_max_power, {attr:{class:'form-control'}}) }}
                                                                        </div>
                                                                    </div>
                                                                </div>
@@ -209,7 +213,7 @@
                                                                    <div class="col-md-6">
                                                                        <div>
                                                                            {{ form_label(form_params.max_order_discount, 'Desconto máximo permitido') }} &nbsp;
-                                                                           {{ form_widget(form_params.max_order_discount, {attr:{class:'form-control', 'data-mask':'00,00', placeholder:"Desconto máximo"}}) }}
+                                                                           {{ form_widget(form_params.max_order_discount, {attr:{class:'form-control', placeholder:"Desconto máximo"}}) }}
                                                                        </div>
                                                                    </div>
 
@@ -244,10 +248,14 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.js"></script>
     <script src="{{ asset('assets/proposal2/jscolor.js') }}"></script>
 
     <script>
+
+        $('#settings_parameters_shipping_included_max_power,' +
+            '#settings_parameters_max_order_discount,' +
+            '#settings_parameters_fdi_min,' + '#settings_parameters_fdi_max').mask('##,00',{reverse: true});
 
         var color = $('#settings_parameters_promo_background').val();
         var phrase = $('#settings_parameters_promo_notice').val();
