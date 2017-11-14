@@ -221,6 +221,25 @@ Esclarecimentos gerais relacionados a documentação:
     ```
     > Após os passos acima a aplicação estará disponível em: `http://localhost:8000`
 
+  <a name="aplicacao--outros"></a><a name="3.5"></a>
+  - [3.5](#aplicacao--outros) **Configurações adicionais (opicional)**:
+
+    - ##### 3.5.1. *Alias remote push*
+      ```
+      remote_push() {
+        if [[ $1 = '--pr' ]]; then
+          ces-issue-request --review
+        else
+          git push origin $(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+        fi
+      }
+
+      alias remote-push="remote_push"
+      ```
+
+      Uso:
+      - `remote-push` é similar ao `git push origin [BRANCH_NAME]`
+      - `remote-push --pr` é similar a `ces-issue-request --review`
 
 **[⬆ Voltar ao Topo](#sumário)**
 
