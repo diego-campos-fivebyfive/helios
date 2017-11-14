@@ -70,7 +70,8 @@ class SettingsController extends AdminController
         $fields = [
             'max_order_discount',
             'fdi_max',
-            'fdi_min'
+            'fdi_min',
+            'shipping_included_max_power'
             ];
 
         foreach ($fields as $field)
