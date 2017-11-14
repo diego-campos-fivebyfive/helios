@@ -222,7 +222,7 @@ Esclarecimentos gerais relacionados a documentação:
     > Após os passos acima a aplicação estará disponível em: `http://localhost:8000`
 
   <a name="aplicacao--outros"></a><a name="3.5"></a>
-  - [3.5](#aplicacao--outros) **Configurações adicionais (opicional)**:
+  - [3.5](#aplicacao--outros) **Configurações adicionais (opcional)**:
 
     - ##### 3.5.1. *Alias remote push*
       ```
@@ -469,7 +469,7 @@ Esclarecimentos gerais relacionados a documentação:
     $ ces-issue-request --review
     ```
 
-    Requsitar teste de tarefa:
+    Requisitar teste de tarefa:
     ```
     $ ces-issue-request --testing
     ```
