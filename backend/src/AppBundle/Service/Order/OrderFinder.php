@@ -164,18 +164,18 @@ class OrderFinder
         if(!$agent->isPlatformUser())
             throw new \InvalidArgumentException('Invalid agent type');
 
+        if($agent->isPlatformExpanse())
+            $qb->andWhere($qb->expr()->in('o.state', $agent->getAttributes()['states']));
+
         $includeStatus = [];
-        if($agent->isPlatformLogistic()){
+        if($agent->isPlatformLogistic())
             $includeStatus = [Order::STATUS_DONE, Order::STATUS_INSERTED, Order::STATUS_AVAILABLE, Order::STATUS_COLLECTED];
-        }
 
-        if($agent->isPlatformAfterSales()){
+        if($agent->isPlatformAfterSales())
             $includeStatus = [Order::STATUS_DONE, Order::STATUS_INSERTED];
-        }
 
-        if($agent->isPlatformFinancial()){
+        if($agent->isPlatformFinancial())
             $includeStatus = [Order::STATUS_APPROVED, Order::STATUS_REJECTED, Order::STATUS_DONE, Order::STATUS_INSERTED];
-        }
 
         if(!empty($includeStatus)){
             $qb->andWhere($qb->expr()->in('o.status', $includeStatus));
@@ -184,11 +184,11 @@ class OrderFinder
         }
 
         $exprAgent = null;
-        if($agent->isPlatformCommercial()){
+        if ($agent->isPlatformCommercial())
             $exprAgent = $qb->expr()->eq('o.agent', ':agent');
-        }else{
+        else
             unset($this->parameters['agent']);
-        }
+
 
         $qb
             ->andWhere(
