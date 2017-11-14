@@ -11,7 +11,7 @@ Sistema de suporte para empresas do setor de energia solar fotovoltaíca.
   1. [Workflow](#workflow)
   1. [Instalações da Aplicação](#instalações-da-aplicação)
   1. [Padrões de Desenvolvimento](#padrões-de-desenvolvimento)
-  1. [Execução de Tarefas](#execução-de-tarefas)
+  1. [Execução e Gerenciamento de Tarefas](#execução-e-gerenciamento-de-tarefas)
   1. [Lista de Comandos](#comandos)
   1. [Gerenciamento de Arquivos](#gerenciamento-de-arquivos)
   1. [Gerador de PDF](#gerador-de-pdf)
@@ -58,22 +58,47 @@ Esclarecimentos gerais relacionados a documentação:
   - [2.2](#workflow--tarefas) **Ciclo de vida de Tarefas**:
 
     - Para cada tarefa há um prazo máximo de execução de 2 dias;
-    - Caso a execução da tarefa fique travada em mais de 20min deve ser solicitada ajuda utilizando a flag `HELP`;
     - Caso a execução de uma tarefa ultrapasse 2 dias a mesma deve ser reavaliada pela a equipe;
     - Tarefas devem ser quebradas em caso de:
-      - Tarefas muito grandes,
-      - Tarefas que modifiquem diversas partes diferentes do projeto,
-      - Tarefas em que a execução ultrapasse os 2 dias;
+      - Tarefas muito grandes;
+      - Tarefas que modifiquem diversas áreas distintas do projeto;
+      - Tarefas em que a execução ultrapasse os 2 dias.
 
-      ##### A execução de tarefas segue o seguinte fluxo:
+      ##### Execução de tarefas em fluxo normal:
+
         ```
         1. Iniciada em Backlogs (general, devops)
         2. Incluida em Sprint Semanal (to do)
-        3. Executada pelo Desenvolvedor (in progress) ou
-           Apontada como execução impossibilitada (blocked)
-        4. Enviada para Revisão de código (review)
-        5. Enviada para Teste em Homolog (testing)
-        6. Marcada como concluida (done)
+        3. Executada pelo Desenvolvedor (in progress)
+        4. Enviada para Revisão de código pela equipe (review)
+        5. Disponibilizada para teste em Homolog pelo desenvolvedor (testing I)
+        6. Revisada pela equipe de produto, caso necessário (testing II)
+        7. Marcada como concluída (done)
+        ```
+
+      ##### Execução de tarefas por fluxo reiniciado:
+
+        Após o merge da pull request atual, a tarefa pode ser reiniciada para continuidade do trabalho, caso necessário, seguindo o seguinte fluxo:
+
+        ```
+        1. Disponibilizada para teste em Homolog pelo desenvolvedor (testing I)
+        2. Reiniciada pelo Desenvolvedor para continuidade de execução em mesma issue (in progress)
+        ```
+
+      ##### Execução de tarefas por fluxo quebrado:
+
+        Após iniciada uma tarefa, se houver necessidade de iniciar uma tarefa de maior importância de imediato, ou caso a execução da tarefa seja impedida por algum motivo, a mesma pode ser bloqueada, seguindo o seguinte fluxo:
+
+        ```
+        1. Sendo executada pelo Desenvolvedor (in progress)
+        2. Apontada como execução impossibilitada ou pausada (blocked)
+        ```
+
+        Caso a branch da tarefa ainda não contenha ajustes existe também a opção de cancelar o trabalho na issue, seguindo o seguinte fluxo:
+
+        ```
+        1. Sendo executada pelo Desenvolvedor (in progress)
+        2. Cancelada execução pelo Desenvolvedor por não conter modificações (to do)
         ```
 
   <a name="workflow--review"></a><a name="2.3"></a>
@@ -249,24 +274,52 @@ Esclarecimentos gerais relacionados a documentação:
 
 ## Execução e gerenciamento de Tarefas
 
-  <a name="execucao-tarefas--execucao"></a><a name="5.1"></a>
-  - [5.1](#execucao-tarefas--execucao) **Comandos de execução**: Comandos para execução de tarefas em ambiente local.
+  <a name="tarefas--automatizacao"></a><a name="5.1"></a>
+  - [5.1](#tarefas--automatizacao) **Movimentação automatica de issues por ação**:
 
-    Preparar ambiente para a execução da tarefa:
-    ```
-    $ ces-issue-start [ISSUE_NUMBER]
-    ```
+    - ##### 5.1.1. **Fluxo Normal**
+      ```
+      In progress: ces-issue-start
+      Review: ces-issue-request --review
+      Testing I: pull request merge
+      Testing II: ces-issue-start (from Testing I | accept [y])
+      Done: ces-issue-start (form Testing I | decline [n])
+      ```
 
-    Adicionar arquivos modificados, realizar commit e envio ao repositório:
-    ```
-    $ git add [FILE_OR_PATH]
-    $ git commit -m "[WHAT_WERE_MADE]"
-    $ git push origin issue-[ISSUE_NUMBER]
-    ```
+    - ##### 5.1.2. **Fluxo Reiniciado**
+      ```
+      In progress: ces-issue-restart
+      ```
 
-    Deletar branch local após merge de Pull Request:
+    - ##### 5.1.3. **Fluxo Quebrado**
+      ```
+      To do: ces-issue-start (from In progress | decline [n])
+      Blocked: ces-issue-start (from In progress | accept [y])
+      In progress: ces-issue-start
+      ```
+
+  <a name="tarefas--start"></a><a name="5.2"></a>
+  - [5.2](#tarefas--start) **Processos executados pelo comando ces-issue-start**:
+
+    | Stage From  | BG\|BD\|TD | B                | IP     | IP   | R   | TI     | TI     | TII\|D |
+    | :---        | :---:      | :---:            | :---:  | :--: | :-: | :---:  | :---:  | :---:  |
+    | Conditional | --         | --               | [N]    | [Y]  | --  | [Y]    | [N]    | --     |
+    | Branch      | Create     | Create \| Update | Remove | Keep | X   | Delete | Delete | --     |
+    | Assign      | Assign     | Assign           | Remove | Keep | X   | Keep   | Keep   | --     |
+    | Stage To    | IP         | IP               | TD     | B    | X   | TII    | D      | D\*    |
+
+    > \* Movimentação Manual
+
+    - #### Legenda:
     ```
-    $ git branch -D issue-[ISSUE_NUMBER]
+    BG: Backlog General       IP: In progress
+    BD: Backlog Devops        B: Blocked
+    TD: To do                 R: Review
+    TI: Testing I             D: Done
+    TII: Testing II
+
+    [N]: Decline          --: Not exist
+    [Y]: Accept           X: Not permited
     ```
 
 
@@ -425,6 +478,13 @@ Esclarecimentos gerais relacionados a documentação:
       ```
       $ cd [APP_PATH]
       $ yarn lint
+      ```
+
+    - ##### Adicionar arquivos modificados, realizar commit e envio ao repositório
+      ```
+      $ git add [FILE_OR_PATH]
+      $ git commit -m "[WHAT_WERE_MADE]"
+      $ git push origin issue-[ISSUE_NUMBER]
       ```
 
 
