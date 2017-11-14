@@ -11,7 +11,7 @@ Sistema de suporte para empresas do setor de energia solar fotovoltaíca.
   1. [Workflow](#workflow)
   1. [Instalações da Aplicação](#instalações-da-aplicação)
   1. [Padrões de Desenvolvimento](#padrões-de-desenvolvimento)
-  1. [Execução de Tarefas](#execução-de-tarefas)
+  1. [Execução e Gerenciamento de Tarefas](#execução-e-gerenciamento-de-tarefas)
   1. [Lista de Comandos](#comandos)
   1. [Gerenciamento de Arquivos](#gerenciamento-de-arquivos)
   1. [Gerador de PDF](#gerador-de-pdf)
@@ -61,7 +61,7 @@ Esclarecimentos gerais relacionados a documentação:
     - Caso a execução de uma tarefa ultrapasse 2 dias a mesma deve ser reavaliada pela a equipe;
     - Tarefas devem ser quebradas em caso de:
       - Tarefas muito grandes;
-      - Tarefas que modifiquem diversas partes diferentes do projeto;
+      - Tarefas que modifiquem diversas áreas distintas do projeto;
       - Tarefas em que a execução ultrapasse os 2 dias.
 
       ##### Execução de tarefas em fluxo normal:
@@ -69,11 +69,11 @@ Esclarecimentos gerais relacionados a documentação:
         ```
         1. Iniciada em Backlogs (general, devops)
         2. Incluida em Sprint Semanal (to do)
-        3. Executada pelo Desenvolvedor (in progress) ou
+        3. Executada pelo Desenvolvedor (in progress)
         4. Enviada para Revisão de código pela equipe (review)
         5. Disponibilizada para teste em Homolog pelo desenvolvedor (testing I)
         6. Revisada pela equipe de produto, caso necessário (testing II)
-        7. Marcada como concluida (done)
+        7. Marcada como concluída (done)
         ```
 
       ##### Execução de tarefas por fluxo reiniciado:
@@ -94,7 +94,7 @@ Esclarecimentos gerais relacionados a documentação:
         2. Apontada como execução impossibilitada ou pausada (blocked)
         ```
 
-        Caso a branch da tarefa ainda não contenha ajustes existe também de cancelar o trabalho na issue, seguindo o seguinte fluxo:
+        Caso a branch da tarefa ainda não contenha ajustes existe também a opção de cancelar o trabalho na issue, seguindo o seguinte fluxo:
 
         ```
         1. Sendo executada pelo Desenvolvedor (in progress)
@@ -480,7 +480,7 @@ Esclarecimentos gerais relacionados a documentação:
       $ yarn lint
       ```
 
-    - ##### Adicionar arquivos modificados, realizar commit e envio ao repositório:
+    - ##### Adicionar arquivos modificados, realizar commit e envio ao repositório
       ```
       $ git add [FILE_OR_PATH]
       $ git commit -m "[WHAT_WERE_MADE]"
