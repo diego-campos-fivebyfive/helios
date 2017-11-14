@@ -275,7 +275,7 @@ Esclarecimentos gerais relacionados a documentação:
 ## Execução e gerenciamento de Tarefas
 
   <a name="tarefas--automatizacao"></a><a name="5.1"></a>
-  - [5.1](#tarefas--automatizacao) **Movimentação automatica de issues**:
+  - [5.1](#tarefas--automatizacao) **Movimentação automatica de issues por ação**:
 
     - ##### 5.1.1. **Fluxo Normal**
       ```
@@ -301,6 +301,26 @@ Esclarecimentos gerais relacionados a documentação:
   <a name="tarefas--start"></a><a name="5.2"></a>
   - [5.2](#tarefas--start) **Processos executados pelo comando ces-issue-start**:
 
+    | Stage From  | BG\|BD\|TD | B                | IP     | IP   | R   | TI     | TI     | TII\|D |
+    | :---        | :---:      | :---:            | :---:  | :--: | :-: | :---:  | :---:  | :---:  |
+    | Conditional | --         | --               | [N]    | [Y]  | --  | [Y]    | [N]    | --     |
+    | Branch      | Create     | Create \| Update | Remove | Keep | X   | Delete | Delete | --     |
+    | Assign      | Assign     | Assign           | Remove | Keep | X   | Keep   | Keep   | --     |
+    | Stage To    | IP         | IP               | TD     | B    | X   | TII    | D      | D\*    |
+
+    > \* Movimentação Manual
+
+    - #### Legenda:
+    ```
+    BG: Backlog General       IP: In progress
+    BD: Backlog Devops        B: Blocked
+    TD: To do                 R: Review
+    TI: Testing I             D: Done
+    TII: Testing II
+
+    [N]: Decline          --: Not exist
+    [Y]: Accept           X: Not permited
+    ```
 
 
 **[⬆ Voltar ao Topo](#sumário)**
