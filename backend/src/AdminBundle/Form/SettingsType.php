@@ -54,6 +54,7 @@ class SettingsType extends AbstractType
                     'required' => false
                 ])
                 ->add('shipping_included', CheckboxType::class)
+                ->add('shipping_included_max_power', TextType::class)
                 ->add('enabled_roof_types', ChoiceType::class, [
                         'multiple' => true,
                         'expanded' => true,
