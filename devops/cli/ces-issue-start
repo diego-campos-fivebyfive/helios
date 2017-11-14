@@ -52,15 +52,14 @@ if [[ $STAGE == 'Blocked' ]]; then
 fi
 
 if [[ $LAST_STAGE == 'In-progress' ]] && [[ -z $LAST_MODIF ]]; then
-  read -p "You have not made any modifications. This script is going to delete local branch, move issue back to to-do column and unassign it. Do you agree? [Y/n] " accept > /dev/tty
+  read -p "You have not made any modifications. This script is going to delete local branch, move issue back to to-do column and unassign it. Do you agree? [Y/n]: " accept > /dev/tty
 
   if [[ $accept == 'y' ]]; then
+    $CLI_PATH/ces-slack-notify --devops "[$LAST_BRANCH] _${NICK}_ undid and canceled his progress on this issue"
     $CLI_PATH/ces-issue-move $LAST_ISSUE --to-do
     $CLI_PATH/ces-issue-assign $LAST_ISSUE --unassign
     git branch -D $LAST_BRANCH
   else
-    $CLI_PATH/ces-slack-notify --devops "[$LAST_BRANCH] _${NICK}_ undid and canceled his progress on this issue"
-
     branch_current=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
     git checkout $LAST_BRANCH
     $CLI_PATH/ces-issue-block $LAST_ISSUE
