@@ -70,7 +70,6 @@ Esclarecimentos gerais relacionados a documentação:
         1. Iniciada em Backlogs (general, devops)
         2. Incluida em Sprint Semanal (to do)
         3. Executada pelo Desenvolvedor (in progress) ou
-           Apontada como execução impossibilitada (blocked)
         4. Enviada para Revisão de código pela equipe (review)
         5. Disponibilizada para teste em Homolog pelo desenvolvedor (testing I)
         6. Revisada pela equipe de produto, caso necessário (testing II)
@@ -274,6 +273,34 @@ Esclarecimentos gerais relacionados a documentação:
 **[⬆ Voltar ao Topo](#sumário)**
 
 ## Execução e gerenciamento de Tarefas
+
+  <a name="tarefas--automatizacao"></a><a name="5.1"></a>
+  - [5.1](#tarefas--automatizacao) **Movimentação automatica de issues**:
+
+    - ##### 5.1.1. **Fluxo Normal**
+      ```
+      In progress: ces-issue-start
+      Review: ces-issue-request --review
+      Testing I: pull request merge
+      Testing II: ces-issue-start (from Testing I | accept [y])
+      Done: ces-issue-start (form Testing I | decline [n])
+      ```
+
+    - ##### 5.1.2. **Fluxo Reiniciado**
+      ```
+      In progress: ces-issue-restart
+      ```
+
+    - ##### 5.1.3. **Fluxo Quebrado**
+      ```
+      To do: ces-issue-start (from In progress | decline [n])
+      Blocked: ces-issue-start (from In progress | accept [y])
+      In progress: ces-issue-start
+      ```
+
+  <a name="tarefas--start"></a><a name="5.2"></a>
+  - [5.2](#tarefas--start) **Processos executados pelo comando ces-issue-start**:
+
 
 
 **[⬆ Voltar ao Topo](#sumário)**
