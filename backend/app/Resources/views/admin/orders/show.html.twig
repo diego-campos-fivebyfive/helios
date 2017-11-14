@@ -116,76 +116,78 @@
                                                 <i class="fa fa-circle"></i> {{ order.statusName|capitalize|trans }}
                                             </span>
 
-                                            {% if order.isInserted and member.isPlatformLogistic %}
-                                                <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_AVAILABLE') }}">
-                                                    <i class="fa fa-archive"></i> Coleta disponível
-                                                </a>
-                                            {% endif %}
+                                            {% if not member.isPlatformExpanse %}
+                                                {% if order.isInserted and member.isPlatformLogistic %}
+                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_AVAILABLE') }}">
+                                                        <i class="fa fa-archive"></i> Coleta disponível
+                                                    </a>
+                                                {% endif %}
 
-                                            {% if order.isAvailable and member.isPlatformLogistic %}
-                                                <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_COLLECTED') }}">
-                                                    <i class="fa fa-check"></i> Coletado
-                                                </a>
-                                            {% endif %}
+                                                {% if order.isAvailable and member.isPlatformLogistic %}
+                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_COLLECTED') }}">
+                                                        <i class="fa fa-check"></i> Coletado
+                                                    </a>
+                                                {% endif %}
 
-                                            {% if order.isDone and member.isPlatformAfterSales %}
-                                                <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}">
-                                                    <i class="fa fa-check"></i> Inserido
-                                                </a>
-                                            {% endif %}
+                                                {% if order.isDone and member.isPlatformAfterSales %}
+                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}">
+                                                        <i class="fa fa-check"></i> Inserido
+                                                    </a>
+                                                {% endif %}
 
-                                            {% if order.isBuilding or order.isRejected %}
-                                                <a class="btn btn-sm btn-danger"
-                                                   data-delete="{{ path('order_delete', {id:order.id}) }}">
-                                                    <i class="fa fa-close"></i> Excluir
-                                                </a>
-                                            {% endif %}
+                                                {% if order.isBuilding or order.isRejected %}
+                                                    <a class="btn btn-sm btn-danger"
+                                                       data-delete="{{ path('order_delete', {id:order.id}) }}">
+                                                        <i class="fa fa-close"></i> Excluir
+                                                    </a>
+                                                {% endif %}
 
-                                            {% if not member.isPlatformUser and order.isValidated %}
-                                                <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') }}">
-                                                    <i class="fa fa-thumbs-o-up"></i> Aprovar e gerar pró-forma
-                                                </a>
-                                            {% endif %}
+                                                {% if not member.isPlatformUser and order.isValidated %}
+                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') }}">
+                                                        <i class="fa fa-thumbs-o-up"></i> Aprovar e gerar pró-forma
+                                                    </a>
+                                                {% endif %}
 
-                                            {% if (not member.isPlatformUser and order.isValidated)
-                                            or (member.isPlatformUser and (order.isValidated or order.isPending or order.isApproved))
-                                            or (member.isPlatformMaster and not order.isBuilding and not order.isRejected) %}
-                                                <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
-                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_REJECTED') }}">
-                                                    <i class="fa fa-thumbs-o-down"></i> Rejeitar
-                                                </a>
-                                            {% endif %}
+                                                {% if (not member.isPlatformUser and order.isValidated)
+                                                or (member.isPlatformUser and (order.isValidated or order.isPending or order.isApproved))
+                                                or (member.isPlatformMaster and not order.isBuilding and not order.isRejected) %}
+                                                    <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
+                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_REJECTED') }}">
+                                                        <i class="fa fa-thumbs-o-down"></i> Rejeitar
+                                                    </a>
+                                                {% endif %}
 
-                                            {% if member.isPlatformUser and order.isValidated %}
-                                                <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_PENDING') }}">
-                                                    <i class="fa fa-arrow-left"></i> Remover Validação
-                                                </a>
-                                            {% endif %}
+                                                {% if member.isPlatformUser and order.isValidated %}
+                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_PENDING') }}">
+                                                        <i class="fa fa-arrow-left"></i> Remover Validação
+                                                    </a>
+                                                {% endif %}
 
-                                            {% if member.isPlatformFinancial and order.isApproved %}
-                                                <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DONE') }}">
-                                                    <i class="fa fa-check-square-o"></i> Pagamento confirmado
-                                                </a>
-                                                <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
-                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_REJECTED') }}">
-                                                    <i class="fa fa-warning"></i> Pagamento não confirmado
-                                                </a>
-                                            {% endif %}
+                                                {% if member.isPlatformFinancial and order.isApproved %}
+                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DONE') }}">
+                                                        <i class="fa fa-check-square-o"></i> Pagamento confirmado
+                                                    </a>
+                                                    <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
+                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_REJECTED') }}">
+                                                        <i class="fa fa-warning"></i> Pagamento não confirmado
+                                                    </a>
+                                                {% endif %}
 
-                                            {% if member.isPlatformFinancial and order.isDone %}
-                                                <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
-                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') }}">
-                                                    <i class="fa fa-stop"></i> Cancelar Confirmação
-                                                </a>
+                                                {% if member.isPlatformFinancial and order.isDone %}
+                                                    <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
+                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') }}">
+                                                        <i class="fa fa-stop"></i> Cancelar Confirmação
+                                                    </a>
+                                                {% endif %}
                                             {% endif %}
-
                                         </div>
+                                        {% if not member.isPlatformExpanse %}
                                         <div class="pull-right">
                                             {% if not (order.isDone or order.isApproved or order.isRejected)
                                             and (order.isBuilding or (order.isPending and member.isPlatformUser) or (order.isValidated and not member.isPlatformUser)) %}
@@ -195,6 +197,7 @@
                                                 </a>
                                             {% endif %}
                                         </div>
+                                        {% endif %}
                                     </div>
                                     <div class="col-md-12 {% if order.billingDirect %}border-bottom{% endif %}">
                                         <h2>Orçamento {{ order.reference }}</h2>

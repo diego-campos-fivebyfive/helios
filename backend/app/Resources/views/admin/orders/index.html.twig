@@ -60,7 +60,7 @@
 
     {% set displayProforma = member.isPlatformFinancial or member.isPlatformAfterSales %}
     {% set displayFilePayment = member.isPlatformFinancial %}
-    {% set allowAdd = not displayProforma %} {# TODO: Regra temporária #}
+    {% set allowAdd = not displayProforma and not member.isPlatformExpanse %} {# TODO: Regra temporária #}
 
     <div class="modal inmodal" id="e_modal_accounts" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg">
