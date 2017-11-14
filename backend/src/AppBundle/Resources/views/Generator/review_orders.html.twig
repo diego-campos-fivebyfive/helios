@@ -130,5 +130,7 @@
     </tfoot>
 </table>
 <script>
+    $('#order-totalExcDiscount').html('{{ order.totalExcDiscount|currency }}');
+    $('#order-discount').html('-{{ order.discount|currency }}');
     $('#order-total').html('{{ order.total|currency }}');
 </script>
