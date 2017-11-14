@@ -46,11 +46,10 @@
 
 <table class="table table-bordered">
     <tr>
+        <h3> <i class="fa fa-map-marker"></i> Endereço de Entrega </h3>
         {% if order.deliveryAddress %}
-            <h3> <i class="fa fa-map-marker"></i> Endereço de Entrega </h3>
             <th> {{ order.deliveryAddress }} </th>
         {% else %}
-            <h3> <i class="fa fa-map-marker"></i> Endereço de Entrega </h3>
             <th> Endereço de entrega não definido </th>
         {% endif %}
     </tr>
