@@ -67,15 +67,5 @@ class SettingsType extends AbstractType
                 ->add('fdi_max', TextType::class)
                 ->add('max_order_discount', TextType::class)
         );
-        /*$builder->get('parameters')
-            ->get('promo_end_at')
-            ->addModelTransformer(new CallbackTransformer(
-                function ($endAt) {
-                    return (new \DateTime($endAt['date']))->format('d/m/Y');
-                },
-                function ($endAt) {
-                    return new \DateTime(implode('-', array_reverse(explode('/', $endAt))));
-                }
-            ));*/
     }
 }
