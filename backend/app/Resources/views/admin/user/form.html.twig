@@ -99,18 +99,22 @@
     <script>
 
         var member_roles = $('#member_user_roles');
+        var input_states = $('#member_attributes_states');
 
         function showStates() {
             var member_states = $('#member_states');
 
-            if (member_roles.val() == 'ROLE_PLATFORM_EXPANSE')
+            if (member_roles.val() == 'ROLE_PLATFORM_EXPANSE') {
                 member_states.removeClass('hide');
-            else
+                input_states.attr('required','required');
+            } else {
                 member_states.addClass('hide');
+                input_states.removeAttr('required');
+            }
         }
 
         $(function () {
-            $('#member_attributes_states').chosen({});
+            input_states.chosen({});
 
             member_roles.on('change', function () {
                 showStates();
