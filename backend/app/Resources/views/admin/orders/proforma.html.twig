@@ -326,7 +326,7 @@
 
                 <div class="p-body">
 
-                    <label class="width-float-total no-margins">Proposta economica:</label>
+                    <label class="width-float-total no-margins">Proposta econômica:</label>
 
                     <span class="indentation"> 1) Equipamentos conforme descriminado</span>
                     <span class="pull-right field-width">{{ (order.subTotal + order.totalInsurance)|currency }}</span>
@@ -342,6 +342,13 @@
                         {% endif %}
                     </span>
                     <br/>
+                    {% if order.total != order.totalExcDiscount and order.discount > 0 %}
+                        <span class="indentation"> 3) Desconto comercial</span>
+                        <span class="pull-right field-width">
+                            -{{ order.discount|currency }}
+                        </span>
+                        <br/>
+                    {% endif %}
                     <label class="no-margins">TOTAL FORNECIMENTO</label>
                     <label class="pull-right no-margins field-width">{{ order.total|currency }}</label>
 
