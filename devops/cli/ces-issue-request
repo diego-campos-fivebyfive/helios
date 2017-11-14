@@ -87,7 +87,7 @@ if [[ $1 == '--review' ]]; then
 elif [[ $1 == '--testing' ]]; then
   read -p 'Enter some additional testing information and/or press ENTER to go: ' additional > /dev/tty
 
-  message="[$BRANCH] _${NICK}_ requests a use *TEST*"
+  message="[$BRANCH] _${NICK}_ has requested a use *TEST*"
   $CLI_PATH/ces-slack-notify --devops "$message"
 
   [[ -n $additional ]] && message="${message}: _${additional}_"
