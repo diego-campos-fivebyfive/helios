@@ -65,7 +65,6 @@ class SettingsType extends AbstractType
                 )
                 ->add('fdi_min', TextType::class)
                 ->add('fdi_max', TextType::class)
-                ->add('promo_end_at', TextType::class)
                 ->add('max_order_discount', TextType::class)
         );
         $builder->get('parameters')

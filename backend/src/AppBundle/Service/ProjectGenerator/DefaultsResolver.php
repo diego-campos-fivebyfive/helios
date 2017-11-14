@@ -63,7 +63,6 @@ class DefaultsResolver
     public function resolve()
     {
         $this->module();
-        $this->promoEndAt();
         $this->shippingIncluded();
         $this->maker('inverter');
         $this->maker('structure');
@@ -89,17 +88,6 @@ class DefaultsResolver
         }
 
         $this->resolveDefault('module', $id);
-    }
-
-    /**
-     * Revolve default promoEndAt
-     */
-    public function promoEndAt()
-    {
-        $parameter = $this->resolveParameters(Parameter::class, ['id' => 'platform_settings']);
-        if($parameter instanceof Parameter && $parameter->get('enable_promo') ) {
-            $this->resolveDefault('promo_end_at', (new \DateTime($parameter->get('promo_end_at')['date']))->format('d/m/Y'));
-        }
     }
 
     /**
@@ -283,7 +271,6 @@ class DefaultsResolver
             'string_box_maker' => 61209,
             'is_promotional' => false,
             'shipping_included' => false,
-            'promo_end_at' => null,
             'promo_notice' => null,
             'promo_background' => null,
             'fdi_min' => null,
