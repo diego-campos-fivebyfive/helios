@@ -450,14 +450,29 @@ Esclarecimentos gerais relacionados a documentação:
     $ ces-issue-request --review
     ```
 
+    Requsitar teste de tarefa:
+    ```
+    $ ces-issue-request --testing
+    ```
+
     Informações sobre uma tarefa:
     ```
     $ ces-issue-info [ISSUE_NUMBER] --[INFO_TYPE]
     ```
 
-    Para finalizar uma tarefa:
+    Finalizar tarefa:
     ```
     $ ces-issue-close [ISSUE_NUMBER]
+    ```
+
+    Bloquear tarefa:
+    ```
+    $ ces-issue-block [ISSUE_NUMBER]
+    ```
+
+    Reiniciar trabalho em tarefa:
+    ```
+    $ ces-issue-restart
     ```
 
   <a name="comandos--outros"></a><a name="6.8"></a>

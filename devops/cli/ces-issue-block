@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+if [[ $1 == '--help' ]] || [[ $1 == '-h' ]]; then
+  printf "ces-issue-block - help:
+  Usage:
+  ces-issue-block [ISSUE_NUMBER] \n
+  Exemple:
+  ces-issue-block 100 \n"
+  exit 0;
+fi
+
 USER=$($CLI_PATH/util/github-credentials --user)
 NICK=$($CLI_PATH/util/user-credentials $USER --slack)
 LOGIN=$($CLI_PATH/util/github-credentials --login)
