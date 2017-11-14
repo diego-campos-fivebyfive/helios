@@ -249,26 +249,6 @@ Esclarecimentos gerais relacionados a documentação:
 
 ## Execução e gerenciamento de Tarefas
 
-  <a name="execucao-tarefas--execucao"></a><a name="5.1"></a>
-  - [5.1](#execucao-tarefas--execucao) **Comandos de execução**: Comandos para execução de tarefas em ambiente local.
-
-    Preparar ambiente para a execução da tarefa:
-    ```
-    $ ces-issue-start [ISSUE_NUMBER]
-    ```
-
-    Adicionar arquivos modificados, realizar commit e envio ao repositório:
-    ```
-    $ git add [FILE_OR_PATH]
-    $ git commit -m "[WHAT_WERE_MADE]"
-    $ git push origin issue-[ISSUE_NUMBER]
-    ```
-
-    Deletar branch local após merge de Pull Request:
-    ```
-    $ git branch -D issue-[ISSUE_NUMBER]
-    ```
-
 
 **[⬆ Voltar ao Topo](#sumário)**
 
@@ -425,6 +405,13 @@ Esclarecimentos gerais relacionados a documentação:
       ```
       $ cd [APP_PATH]
       $ yarn lint
+      ```
+
+    - ##### Adicionar arquivos modificados, realizar commit e envio ao repositório:
+      ```
+      $ git add [FILE_OR_PATH]
+      $ git commit -m "[WHAT_WERE_MADE]"
+      $ git push origin issue-[ISSUE_NUMBER]
       ```
 
 
