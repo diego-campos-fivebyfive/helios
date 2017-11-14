@@ -628,6 +628,14 @@
                                             {% endif %}
                                         </th>
                                     </tr>
+                                    {% if order.total != order.totalExcDiscount and order.discount > 0 %}
+                                    <tr>
+                                        <th colspan="6" class="text-right"> Total sem desconto: {{ order.totalExcDiscount|currency }} </th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="6" class="text-right"> Desconto: -{{ order.discount|currency }} </th>
+                                    </tr>
+                                    {% endif %}
                                     <tr>
                                         <th colspan="6" class="text-right"> Total: {{ order.total|currency }} </th>
                                     </tr>
