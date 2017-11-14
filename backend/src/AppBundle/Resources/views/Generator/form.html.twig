@@ -1,6 +1,8 @@
 {% set enablePromotional = attribute(form, 'is_promotional') is defined %}
 
 {{ form_start(form,{attr:{id:'form_generator'}}) }}
+<link href="{{ asset('assets/iCheck/custom.css') }}" rel="stylesheet">
+<link href="{{ asset('assets/iCheck/skins/all.css') }}" rel="stylesheet">
 <style>
     .font-normal {
         font-weight: normal  !important;
@@ -8,17 +10,20 @@
     .font-promotional {
         font-size: 15px;
     }
+    .box-promotional {
+        height: 25px;
+    }
 </style>
-<link href="{{ asset('assets/iCheck/custom.css') }}" rel="stylesheet">
-<link href="{{ asset('assets/iCheck/skins/all.css') }}" rel="stylesheet">
 <div class="row">
 
     {% if enablePromotional %}
         <div class="form-group" id="block_promo_selector">
             <div class="col-md-12 text-center" style="margin-bottom: 10px;">
                 <div class="alert alert-success" id="promo_background">
-                    <div class="i-checks">
-                        {{ form_widget(form.is_promotional) }}
+                    <div class="box-promotional">
+                        <div class="i-checks">
+                            {{ form_widget(form.is_promotional) }}
+                        </div>
                     </div>
                     <div id="promo_notice">
                     </div>
@@ -101,22 +106,22 @@
 {{ form_end(form) }}
 
 <script src="{{ asset('assets/iCheck/icheck.js') }}"></script>
-<script src="{{ asset('assets/iCheck/js/custom.js') }}"></script>
 
 <script>
-    // Check-Box Promocional
-    $('.i-checks').iCheck({
-        checkboxClass: 'icheckbox_square-green',
-        radioClass: 'iradio_square-green',
-    });
 
-    // Campos de renderização da frase promocional e background personalizados
     var promo_phrase = $('#generator_promo_notice').val();
     var promo_back = $('#generator_promo_background').val();
     $('#promo_notice').html(promo_phrase);
     $('#promo_background').css('background-color', promo_back);
 
-    //Formulário do gerador
+    $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+    });
+
+    $('.i-checks').on('ifChanged', function(){
+        $('input[name="generator[is_promotional]"]').trigger('change');
+    });
+    
     var FormGenerator = {
         form: $('#form_generator'),
         container: null,
