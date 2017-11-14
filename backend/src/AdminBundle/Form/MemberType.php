@@ -37,6 +37,7 @@ class MemberType extends AbstractType
                 $builder
                     ->create('attributes', FormType::class)
                     ->add('states', ChoiceType::class, [
+                        'required' => false,
                         'multiple' => true,
                         'choices' => Brazil::states()
                     ]));
