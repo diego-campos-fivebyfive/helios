@@ -23,7 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
- * @Security("has_role('ROLE_PLATFORM_AFTER_SALES')")
+ * @Security("has_role('ROLE_PLATFORM_AFTER_SALES') or has_role('ROLE_PLATFORM_EXPANSE')")
  *
  * @Breadcrumb("Dashboard", route={"name"="app_index"})
  * @Breadcrumb("Accounts", route={"name"="account_index"})
@@ -62,6 +62,13 @@ class AccountController extends AdminController
         if(-1 != $level = $request->get('level', -1)){
             $qb->andWhere('a.level = :level');
             $qb->setParameter('level', $level);
+        }
+
+        if ($this->member()->isPlatformExpanse()) {
+            $state = $this->member()->getAttributes()['states'];
+
+            $qb->andWhere('a.state = :state');
+            $qb->setParameter('state', $state);
         }
 
         $this->overrideGetFilters();

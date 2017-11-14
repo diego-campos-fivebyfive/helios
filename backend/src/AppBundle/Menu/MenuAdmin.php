@@ -17,9 +17,10 @@ trait MenuAdmin
         $commercial = UserInterface::ROLE_PLATFORM_COMMERCIAL;
         $financial = UserInterface::ROLE_PLATFORM_FINANCIAL;
         $afterSales = UserInterface::ROLE_PLATFORM_AFTER_SALES;
+        $expanse = UserInterface::ROLE_PLATFORM_EXPANSE;
 
         $config = [
-            'Accounts' => [$master, $admin, $commercial, $financial, $afterSales],
+            'Accounts' => [$master, $admin, $commercial, $financial, $afterSales, $expanse],
             'Memorials' => [$master, $admin],
             'Orders' => '*',
             'Components' => [$master, $admin, $commercial],
