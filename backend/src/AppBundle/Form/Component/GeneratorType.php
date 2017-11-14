@@ -170,6 +170,9 @@ class GeneratorType extends AbstractType
             $builder->add('is_promotional', CheckboxType::class, [
                 'required' => false
             ]);
+
+            $builder->add('promo_notice');
+            $builder->add('promo_background');
         }
     }
 

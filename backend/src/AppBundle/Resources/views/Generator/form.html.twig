@@ -14,19 +14,10 @@
     {% if enablePromotional %}
         <div class="form-group" id="block_promo_selector">
             <div class="col-md-12 text-center" style="margin-bottom: 10px;">
-                <div class="alert alert-success">
-                    {{ form_widget(form.is_promotional) }} &nbsp;
-                    <span class="font-promotional">
-                        {{ form_label(form.is_promotional, 'Gerar sistema', {label_attr:{class:'font-normal'}}) }}
-                        {{ form_label(form.is_promotional, 'PROMOCIONAL') }}
-                        {% if shippingIncluded %}
-                            {{ form_label(form.is_promotional, '- FRETE INCLUSO') }}
-                        {% endif %}
-                        {{ form_label(form.is_promotional, '- Válido até', {label_attr:{class:'font-normal'}}) }}
-                        {{ form_label(form.is_promotional, promoEndAt) }}
-                        {{ form_label(form.is_promotional, 'ou enquanto durar o lote promocional, sem aviso prévio',
-                        {label_attr:{class:'font-normal'}}) }}
-                    </span>
+                <div class="alert alert-success" id="promo_background">
+                    {{ form_widget(form.is_promotional) }}
+                    <div id="promo_notice">
+                    </div>
                 </div>
             </div>
         </div>
@@ -106,6 +97,11 @@
 {{ form_end(form) }}
 
 <script>
+
+    var promo_phrase = $('#generator_promo_notice').val();
+    var promo_back = $('#generator_promo_background').val();
+    $('#promo_notice').html(promo_phrase);
+    $('#promo_background').css('background-color', promo_back);
 
     var FormGenerator = {
         form: $('#form_generator'),

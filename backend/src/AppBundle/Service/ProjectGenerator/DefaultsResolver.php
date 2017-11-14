@@ -63,13 +63,14 @@ class DefaultsResolver
     public function resolve()
     {
         $this->module();
-        $this->promoEndAt();
         $this->shippingIncluded();
         $this->maker('inverter');
         $this->maker('structure');
         $this->maker('string_box');
         $this->fdi('min');
         $this->fdi('max');
+        $this->promoNotice();
+        $this->promoBackground();
 
         return $this->defaults;
     }
@@ -90,17 +91,6 @@ class DefaultsResolver
     }
 
     /**
-     * Revolve default promoEndAt
-     */
-    public function promoEndAt()
-    {
-        $parameter = $this->resolveParameters(Parameter::class, ['id' => 'platform_settings']);
-        if($parameter instanceof Parameter && $parameter->get('enable_promo') ) {
-            $this->resolveDefault('promo_end_at', (new \DateTime($parameter->get('promo_end_at')['date']))->format('d/m/Y'));
-        }
-    }
-
-    /**
      * Resolve default shippingIncluded
      */
     public function shippingIncluded()
@@ -108,6 +98,26 @@ class DefaultsResolver
         $parameter = $this->resolveParameters(Parameter::class, ['id' => 'platform_settings']);
         if($parameter instanceof Parameter && $parameter->get('shipping_included'))
             $this->resolveDefault('shipping_included', $parameter->get('shipping_included'));
+    }
+
+    /**
+     * Resolve default promoNotice
+     */
+    public function promoNotice()
+    {
+        $parameter = $this->resolveParameters(Parameter::class, ['id' => 'platform_settings']);
+        if($parameter instanceof Parameter && $parameter->get('promo_notice'))
+            $this->resolveDefault('promo_notice', $parameter->get('promo_notice'));
+    }
+
+    /**
+     * Resolve default promoBackground
+     */
+    public function promoBackground()
+    {
+        $parameter = $this->resolveParameters(Parameter::class, ['id' => 'platform_settings']);
+        if($parameter instanceof Parameter && $parameter->get('promo_background'))
+            $this->resolveDefault('promo_background', $parameter->get('promo_background'));
     }
 
     private function fdi($type)
@@ -261,7 +271,8 @@ class DefaultsResolver
             'string_box_maker' => 61209,
             'is_promotional' => false,
             'shipping_included' => false,
-            'promo_end_at' => null,
+            'promo_notice' => null,
+            'promo_background' => null,
             'fdi_min' => null,
             'fdi_max' => null,
             'errors' => []
