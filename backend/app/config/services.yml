@@ -306,6 +306,10 @@ services:
         class: AppBundle\Service\Order\OrderStock
         arguments: ['@component_collector', '@stock_component']
 
+    order_exporter:
+        class: AppBundle\Service\Order\OrderExporter
+        arguments: ['@service_container']
+
     component_query:
         class: AppBundle\Service\Component\Query
         arguments: ['@service_container']
