@@ -30,7 +30,7 @@ class ShippingType extends AbstractType
         $shippingIncluded = $parameters->get('shipping_included');
         $shippingIncludedMaxPower = $parameters->get('shipping_included_max_power');
 
-        $maxPowerValid = $shippingIncludedMaxPower < $order->getPower();
+        $maxPowerValid = $shippingIncludedMaxPower >= $order->getPower();
 
         $choices = [];
 
