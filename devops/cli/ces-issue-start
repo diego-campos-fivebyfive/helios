@@ -71,9 +71,6 @@ $CLI_PATH/ces-app-install
 $CLI_PATH/ces-database-update
 $CLI_PATH/ces-log-clear
 
-$CLI_PATH/ces-issue-assign $1
-$CLI_PATH/ces-issue-move $1 --in-progress
-
 if [[ $LAST_STAGE == 'Testing-tech' ]]; then
   read -p "Do you wanna $LAST_BRANCH to be tested by product team? [Y/n]: " accept > /dev/tty
 
@@ -94,6 +91,9 @@ if [[ $LAST_STAGE == 'Closed' ]]; then
 fi
 
 > $CLI_PATH/stash/temp/.ces-pull-request
+
+$CLI_PATH/ces-issue-assign $1
+$CLI_PATH/ces-issue-move $1 --in-progress
 
 $CLI_PATH/ces-slack-notify --devops "[issue-$1] _${NICK}_ has been working on it"
 $CLI_PATH/util/user-notify 'Branch created' "now on issue-$1"
