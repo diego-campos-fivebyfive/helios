@@ -28,6 +28,9 @@ class ShippingType extends AbstractType
         $parameters = $options['parameters'];
         $enablePromo = $parameters->get('enable_promo');
         $shippingIncluded = $parameters->get('shipping_included');
+        $shipping_included_max_power = $parameters->get('shipping_included_max_power');
+
+        $max_power_valid = $shipping_included_max_power < $order->getPower();
 
         $choices = [];
 
@@ -35,7 +38,7 @@ class ShippingType extends AbstractType
         if (!$isProject)
             $isFullyPromotional = $order->isFullyPromotional();
 
-        if (!$isProject && $isFullyPromotional && $enablePromo && $shippingIncluded)
+        if (!$isProject && $isFullyPromotional && $enablePromo && $shippingIncluded && $max_power_valid)
             $choices = [
                 'included' => 'Frete Incluso',
                 'self' => 'Meu Frete'
