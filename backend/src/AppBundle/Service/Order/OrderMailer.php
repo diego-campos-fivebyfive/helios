@@ -11,6 +11,7 @@
 
 namespace AppBundle\Service\Order;
 
+use AppBundle\Entity\MemberInterface;
 use AppBundle\Service\AbstractMailer;
 use AppBundle\Entity\Order\OrderInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
@@ -90,6 +91,8 @@ class OrderMailer extends AbstractMailer
                 ->addCc($agentEmail, $agentName)
                 ->setReplyTo($agentEmail, $agentName);
         }
+
+        $this->addExpanseCc($account, $message);
 
         if($order->isApproved() && $order->getProforma()){
             $message->attach($this->createOrderAttachment($order));
@@ -182,6 +185,39 @@ class OrderMailer extends AbstractMailer
 
         $addIfDefined('admin');
         $addIfDefined('master', true);
+    }
+
+    private function addExpanseCc($account, $message)
+    {
+        $state = $account->getState();
+
+        $qb = $this->manager('member')->createQueryBuilder();
+
+        $qb->where(
+            $qb->expr()->andX(
+                $qb->expr()->eq('c.context', ':member'),
+                $qb->expr()->like('c.attributes',
+                    $qb->expr()->literal('%"'.$state.'"%')
+                )
+            )
+        );
+
+        $qb->setParameters([
+            'member' => 'member'
+        ]);
+
+        $members = $qb->getQuery()->getResult();
+
+        /** @var MemberInterface $member */
+        foreach ($members as  $member) {
+            if($member->isPlatformExpanse()) {
+                $expanseEmail = $member->getEmail();
+                $expanseName = $member->getName();
+                $message
+                    ->addCc($expanseEmail, $expanseName)
+                    ->setReplyTo($expanseEmail, $expanseName);
+            }
+        }
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AdminBundle\Form\Stock\TransactionType;
+use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Component\PricingManager;
 use AppBundle\Entity\Customer;
@@ -903,15 +904,51 @@ class DebugController extends AbstractController
     }
 
     /**
-     * @Route("/order/{id}/message/", name="one_order_message")
+     * @Route("/order_test/{id}", name="one_order_message")
      */
     public function messageOrderAction(Order $order)
     {
-        $message = $order->getMessages()->last();
+        $account = $order->getAccount();
+        $state = $account->getState();
 
-        return $this->render('orders/emails/message.html.twig', array(
+        $qb = $this->manager('member')->createQueryBuilder();
+
+        $qb->where(
+            $qb->expr()->andX(
+                $qb->expr()->eq('c.context', ':member'),
+                $qb->expr()->like('c.attributes',
+                    $qb->expr()->literal('%"'.$state.'"%')
+                )
+            )
+        );
+
+        $qb->setParameters([
+            'member' => 'member'
+        ]);
+
+        //dump($qb->getQuery()->getResult()); die;
+
+        $members = $qb->getQuery()->getResult();
+
+        dump($members);
+        foreach ($members as  $member) {
+            if($member->isPlatformExpanse()) {
+                dump($member);die;
+            }
+        }
+
+
+        /*return $this->render('orders/emails/message.html.twig', array(
             'message' => $message,
             'order' => $order
-        ));
+        ));*/
+    }
+
+    /**
+     * @return \Sonata\ClassificationBundle\Model\ContextInterface
+     */
+    private function getMemberContext()
+    {
+        return $this->getContextManager()->find(BusinessInterface::CONTEXT_MEMBER);
     }
 }
