@@ -23,7 +23,7 @@ trait MenuAdmin
             'Accounts' => [$master, $admin, $commercial, $financial, $afterSales, $expanse],
             'Memorials' => [$master, $admin],
             'Orders' => '*',
-            'Components' => [$master, $admin, $commercial],
+            'Components' => [$master, $admin, $commercial, $expanse],
             'Stock' => [$master, $admin],
             'Users' => [$master, $admin],
             'PaymentMethods' => [$master, $admin],
