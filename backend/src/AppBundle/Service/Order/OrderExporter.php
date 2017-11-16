@@ -125,7 +125,7 @@ class OrderExporter
     {
         $data = [
             'reference' => $order->getParent()->getReference(),
-            'item' => $item,
+            'item' => $item >= 10 ? $item : sprintf('%02d', $item),
             'modules' => $this->countModules($order),
             'power' => $this->normalizePower($order),
             'power_initial' => $this->normalizePowerInitial($order),
