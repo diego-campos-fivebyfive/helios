@@ -62,13 +62,13 @@ class OrderController extends AbstractController
      */
     public function showAction(Order $order)
     {
-        $notExpired = $this->checkMemorial()->getPublishedAt() < $order->getCreatedAt();
+        $expired = $this->checkMemorial()->getPublishedAt() > $order->getCreatedAt();
 
         $this->denyAccessUnlessGranted('view', $order);
 
         return $this->render('admin/orders/show.html.twig', array(
             'order' => $order,
-            'notExpired' => $notExpired
+            'expired' => $expired
         ));
     }
 

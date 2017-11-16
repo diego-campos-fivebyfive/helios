@@ -187,7 +187,7 @@
                                                 {% endif %}
                                             {% endif %}
                                         </div>
-                                        {% if not member.isPlatformExpanse and notExpired %}
+                                        {% if not member.isPlatformExpanse and not expired %}
                                         <div class="pull-right">
                                             {% if not (order.isDone or order.isApproved or order.isRejected)
                                             and (order.isBuilding or (order.isPending and member.isPlatformUser) or (order.isValidated and not member.isPlatformUser)) %}
