@@ -59,16 +59,16 @@ class AccountController extends AdminController
             $qb->setParameter('status', $status);
         }
 
-        if(-1 != $level = $request->get('level', -1)){
+        if(-1 != $level = $request->get('level', -1)) {
             $qb->andWhere('a.level = :level');
             $qb->setParameter('level', $level);
         }
 
         if ($this->member()->isPlatformExpanse()) {
-            $state = $this->member()->getAttributes()['states'];
 
-            $qb->andWhere('a.state = :state');
-            $qb->setParameter('state', $state);
+            $states = $this->member()->getAttributes()['states'];
+
+            $qb->andWhere($qb->expr()->in('a.state', $states));
         }
 
         $this->overrideGetFilters();
