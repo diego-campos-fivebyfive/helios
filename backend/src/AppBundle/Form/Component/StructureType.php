@@ -3,6 +3,7 @@
 namespace AppBundle\Form\Component;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -35,6 +36,9 @@ class StructureType extends AbstractType
             'label' => 'Disponível',
             'required' => false
         ])
+            ->add('position', NumberType::class, [
+                'required' => false
+            ])
             ->add('code', TextType::class);
     }
 
