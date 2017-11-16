@@ -259,7 +259,7 @@ class WidgetsController extends AdminController
         }
 
         if ($member->isPlatformExpanse()) {
-            $qb->andWhere($qb->expr()->in('o.state', $this->member()->getAttributes()['states']));
+            $qb->andWhere($qb->expr()->in('o.state', $member->getAttributes()['states']));
         }
 
         return $qb;
