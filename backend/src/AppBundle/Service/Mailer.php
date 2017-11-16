@@ -146,6 +146,8 @@ class Mailer extends AbstractMailer
                 ->setReplyTo($agentEmail, $agentName);
         }
 
+        $this->addExpanseCc($account, $message);
+
         return $message;
     }
 
@@ -187,6 +189,39 @@ class Mailer extends AbstractMailer
 
         $addIfDefined('admin');
         $addIfDefined('master', true);
+    }
+
+    private function addExpanseCc($account, $message)
+    {
+        $state = $account->getState();
+
+        $qb = $this->manager('member')->createQueryBuilder();
+
+        $qb->where(
+            $qb->expr()->andX(
+                $qb->expr()->eq('c.context', ':member'),
+                $qb->expr()->like('c.attributes',
+                    $qb->expr()->literal('%"'.$state.'"%')
+                )
+            )
+        );
+
+        $qb->setParameters([
+            'member' => 'member'
+        ]);
+
+        $members = $qb->getQuery()->getResult();
+
+        /** @var MemberInterface $member */
+        foreach ($members as  $member) {
+            if($member->isPlatformExpanse()) {
+                $expanseEmail = $member->getEmail();
+                $expanseName = $member->getName();
+                $message
+                    ->addCc($expanseEmail, $expanseName)
+                    ->setReplyTo($expanseEmail, $expanseName);
+            }
+        }
     }
 
     /**
