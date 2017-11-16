@@ -76,7 +76,9 @@ class OrderExporterTest extends AppTestCase
 
         $exporter = $this->getOrderExporter();
 
-        $data = $exporter->normalizeData($children);
+        $data = $exporter->normalizeData($children, 1);
+
+        $this->assertCount(9,$data);
 
         $this->assertArrayHasKey('power', $data);
         $this->assertNotNull($order->getReference());
