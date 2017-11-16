@@ -30,6 +30,13 @@ trait ComponentTrait
     protected $image;
 
     /**
+     * @var smallint
+     *
+     * @ORM\Column(name="position", type="smallint", nullable=true)
+     */
+    protected $position;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
@@ -153,6 +160,22 @@ trait ComponentTrait
     public function getImage()
     {
         return $this->image;
+    }
+
+    /**
+     * @param smallint $position
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+    }
+
+    /**
+     * @return smallint
+     */
+    public function getPosition()
+    {
+        return $this->position;
     }
 
     /**
