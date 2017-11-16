@@ -90,6 +90,21 @@
     {% set isPlatform = app.user.isPlatform %}
     <div class="wrapper wrapper-content  animated fadeInRight">
         <div class="row">
+            {% if expired is defined and expired %}
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="alert alert-info text-center">
+                        <h2>
+                            <i class="fa fa-info-circle"></i>
+                            <strong style="text-transform: uppercase"> Expirado </strong>
+                            <br>
+                            Este orçamento não pode ser mais editado pois foi baseado em uma
+                            tabela de preço vencida. Favor gerar novo orçamento
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
 
             <div class="col-md-12">
                 {% if not member.isPlatformUser and order.validated %}
