@@ -10,6 +10,7 @@ use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Form\Order\FilterType;
 use AppBundle\Service\Pricing\Insurance;
 use AppBundle\Service\ProjectGenerator\ShippingRuler;
+use function PHPSTORM_META\type;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -106,7 +107,7 @@ class OrderController extends AbstractController
 
                         $this->generatorProformaAction($order);
                         $this->getStock()->debit($order);
-                        //$this->getExporter()->export($order);
+                        $this->getExporter()->export($order);
                     }
 
                     break;
@@ -273,10 +274,13 @@ class OrderController extends AbstractController
             throw $this->createNotFoundException(sprintf($message, $type));
         }
 
+        if ($type != 'proforma')
+            $type = ($type == 'fileExtract') ? 'order' : 'payment';
+
         $options = [
             'filename' => $filename,
             'root' => 'order',
-            'type' => ($type == 'proforma') ? 'proforma' : 'payment',
+            'type' => $type,
             'access' => 'private'
         ];
 
