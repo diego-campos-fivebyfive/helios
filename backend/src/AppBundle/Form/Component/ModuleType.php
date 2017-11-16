@@ -5,6 +5,7 @@ namespace AppBundle\Form\Component;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -123,6 +124,9 @@ class ModuleType extends AbstractType
             'required' => false
         ]);
         $builder->add('connection_type', null, [
+            'required' => false
+        ]);
+        $builder->add('position', NumberType::class, [
             'required' => false
         ]);
     }
