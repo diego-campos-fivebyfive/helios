@@ -8,7 +8,8 @@
         validated: 'Aguardando aprovação do integrador.',
         approved: 'Aguardando confirmação de pagamento.',
         rejected: 'Não é possível editar esta solicitação.',
-        done: 'Não é possível editar esta solicitação.'
+        done: 'Não é possível editar esta solicitação.',
+        expired: 'Este orçamento não pode mais ser alterado.'
     } %}
 
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -19,9 +20,15 @@
                     <div class="alert alert-info text-center">
                         <h2>
                             <i class="fa fa-info-circle"></i>
-                            Status: <strong style="text-transform: uppercase"> {{ order.statusName|capitalize|trans }} </strong>
-                            <br>
-                            {{ messages[order.statusName] }}
+                            {% if expired is defined and expired %}
+                                <strong style="text-transform: uppercase"> Expirado </strong>
+                                <br>
+                                {{ messages['expired'] }}
+                            {% else %}
+                                Status: <strong style="text-transform: uppercase"> {{ order.statusName|capitalize|trans }} </strong>
+                                <br>
+                                {{ messages[order.statusName] }}
+                            {% endif %}
                         </h2>
                     </div>
                 </div>
