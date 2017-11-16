@@ -402,6 +402,13 @@ class Order implements OrderInterface, InsurableInterface
     private $billingComplement;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $fileExtract;
+
+    /**
      * @var AccountInterface
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer")
@@ -1987,6 +1994,27 @@ class Order implements OrderInterface, InsurableInterface
         }
 
         $this->addMetadata('payment_method', $data);
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getFileExtract()
+    {
+        return $this->fileExtract;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setFileExtract($fileExtract)
+    {
+        if(!$this->isMaster())
+            throw new \InvalidArgumentException('Suborders do not store the generated CSV file name');
+
+        $this->fileExtract = $fileExtract;
 
         return $this;
     }
