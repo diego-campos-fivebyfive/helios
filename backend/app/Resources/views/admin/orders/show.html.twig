@@ -215,7 +215,16 @@
                                         {% endif %}
                                     </div>
                                     <div class="col-md-12 {% if order.billingDirect %}border-bottom{% endif %}">
-                                        <h2>Orçamento {{ order.reference }}</h2>
+                                        <h2>
+                                            Orçamento {{ order.reference }}
+                                            {% if order.fileExtract and
+                                            (member.isPlatformAdmin or member.isPlatformMaster or member.isPlatformAfterSales) %}
+                                                <a class="pull-right" target="_blank"
+                                                   href="{{ path('order_file',{id:order.id, type:'fileExtract'}) }}">
+                                                    <i class="fa fa-download"></i> CSV
+                                                </a>
+                                            {% endif %}
+                                        </h2>
                                     </div>
                                     {% if order.billingDirect %}
                                     <div class="col-lg-12 border-bottom">
