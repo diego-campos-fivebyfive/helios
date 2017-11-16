@@ -664,9 +664,7 @@ class Order implements OrderInterface, InsurableInterface
      */
     public function getSubPower()
     {
-        $power = $this->getPower();
-
-        return $power;
+        return $this->getPower();
     }
 
     /**
