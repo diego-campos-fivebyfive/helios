@@ -653,7 +653,7 @@ class Order implements OrderInterface, InsurableInterface
                 $power += $this->power + $children->getPower();
             }
         } else {
-            $power = $this->power;
+            $power = $this->power + $this->getSubPower();
         }
 
         return $power;
