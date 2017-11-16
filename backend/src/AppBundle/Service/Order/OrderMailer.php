@@ -232,8 +232,6 @@ class OrderMailer extends AbstractMailer
         return $settings;
     }
 
-
-
     /**
      * @param $status
      * @return string
