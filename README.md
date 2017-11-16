@@ -14,7 +14,7 @@ Sistema de suporte para empresas do setor de energia solar fotovoltaíca.
   1. [Execução e Gerenciamento de Tarefas](#execução-e-gerenciamento-de-tarefas)
   1. [Lista de Comandos](#comandos)
   1. [Gerenciamento de Arquivos](#gerenciamento-de-arquivos)
-  1. [Gerador de PDF](#gerador-de-pdf)
+  1. [Status](#status)
   1. [Sobre](#sobre)
 
 ## Guia Geral
@@ -221,6 +221,25 @@ Esclarecimentos gerais relacionados a documentação:
     ```
     > Após os passos acima a aplicação estará disponível em: `http://localhost:8000`
 
+  <a name="aplicacao--outros"></a><a name="3.5"></a>
+  - [3.5](#aplicacao--outros) **Configurações adicionais (opcional)**:
+
+    - ##### 3.5.1. *Alias remote push*
+      ```
+      remote_push() {
+        if [[ $1 = '--pr' ]]; then
+          ces-issue-request --review
+        else
+          git push origin $(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+        fi
+      }
+
+      alias remote-push="remote_push"
+      ```
+
+      Uso:
+      - `remote-push` é similar ao `git push origin [BRANCH_NAME]`
+      - `remote-push --pr` é similar a `ces-issue-request --review`
 
 **[⬆ Voltar ao Topo](#sumário)**
 
@@ -450,14 +469,29 @@ Esclarecimentos gerais relacionados a documentação:
     $ ces-issue-request --review
     ```
 
+    Requisitar teste de tarefa:
+    ```
+    $ ces-issue-request --testing
+    ```
+
     Informações sobre uma tarefa:
     ```
     $ ces-issue-info [ISSUE_NUMBER] --[INFO_TYPE]
     ```
 
-    Para finalizar uma tarefa:
+    Finalizar tarefa:
     ```
     $ ces-issue-close [ISSUE_NUMBER]
+    ```
+
+    Bloquear tarefa:
+    ```
+    $ ces-issue-block [ISSUE_NUMBER]
+    ```
+
+    Reiniciar trabalho em tarefa:
+    ```
+    $ ces-issue-restart
     ```
 
   <a name="comandos--outros"></a><a name="6.8"></a>
@@ -537,25 +571,20 @@ Esclarecimentos gerais relacionados a documentação:
 
     - 7.4.2. **Generator** (app_generator): Serviço de criação de arquivos, como por exemplo o [Gerador de PDF](#gerador-de-pdf).
 
+  <a name="uploads--teste-local"></a><a name="7.5"></a>
+  - [7.5](#uploads--teste-local) **Teste Local de Geração, Arquivamento (temp e S3) e Exibição de arquivos**:
 
-**[⬆ Voltar ao Topo](#sumário)**
-
-## Gerador de PDF
-
-  <a name="pdf--teste-local"></a><a name="8.1"></a>
-  - [8.1](#pdf--teste-local) **Teste Local do Processo Completo de Geração**:
-
-    - 8.1.1. **Execução até falha**: gere o PDF e aguarde aproximadamente um minuto até que uma mensagem de falha apareça na tela, em seguida o PDF estará disponível na pasta `$SICES_PATH/.uploads`.
+    - 7.5.1. **Execução até falha**: gere o PDF e aguarde aproximadamente um minuto até que uma mensagem de falha apareça na tela, em seguida o PDF estará disponível na pasta `$SICES_PATH/.uploads`.
 
       > Essas parte se faz necessária pois localmente o PDF apenas é gerado após timeout no processo de geração (aprox. 1 minuto após execução).
 
-    - 8.1.2. **Atribuição de File Name estático**: cria uma nova váriavel `$filename` na controller que chama o gerador, onde a mesma recebe nome do PDF gerado. Em seguida comente a linha original. Exemplo:
+    - 7.5.2. **Atribuição de File Name estático**: cria uma nova váriavel `$filename` na controller que chama o gerador, onde a mesma recebe nome do PDF gerado. Em seguida comente a linha original. Exemplo:
       ```php
       //$filename = md5(uniqid(time())) . '.pdf';
       $filename = 'f6971985f1787ec54a4fef316d8064ab.pdf';
       ```
 
-    - 8.1.3. **Ignorando a criação de novo PDF**: para que o processo possa ser executado até o final comente a linha que solicita a geração de um novo PDF.
+    - 7.5.3. **Ignorando a criação de novo PDF**: para que o processo possa ser executado até o final comente a linha que solicita a geração de um novo PDF.
       ```php
       //$this->get('app_generator')->pdf($options, $file);
       ```
@@ -565,7 +594,47 @@ Esclarecimentos gerais relacionados a documentação:
 
 **[⬆ Voltar ao Topo](#sumário)**
 
+## Status
+
+  <a name="status--conta"></a><a name="8.1"></a>
+  - [8.1](#status--conta) **Conta**:
+
+    | Constante | Valor | Descrição |
+    | :--- | :---: | :---|
+    | PENDING | 0 | Conta cadastrada, link de verificação de email enviado. |
+    | STANDING | 1 | Conta verificada, aguardando aprovação por usuário sices. |
+    | APPROVED | 2 | Conta aprovada, link de confirmação (configuração de senha) enviado. |
+    | ACTIVATED | 3 | Conta ativada, acesso liberado. |
+    | LOCKED | 4 | Conta bloqueada. |
+
+  <a name="status--orçamento"></a><a name="8.2"></a>
+  - [8.2](#status--orçamento) **Orçamento**:
+
+    | Constante | Valor | Descrição |
+    | :--- | :---: | :---|
+    | STATUS_BUILDING | 0 | Orçamento em edição. |
+    | STATUS_PENDING | 1 | Orçamento enviado, aguardando validação de sices comercial. |
+    | STATUS_VALIDATED | 2 | Orçamento validado, aguardando aprovação de integrador. |
+    | STATUS_APPROVED | 3 | Orçamento aprovado, aguardando pagamento. |
+    | STATUS_REJECTED | 4 | Orçamento rejeitado, ações bloqueadas. |
+    | STATUS_DONE | 5 | Orçamento concluído, pagamento efetuado. |
+    | STATUS_INSERTED | 6 | Orçamento lançado (em CRM Protheus) para produção. |
+    | STATUS_AVAILABLE | 7 | Produto (Sistema) disponível para coleta. |
+    | STATUS_COLLECTED | 8 | Produto (Sistema) coletado para entrega.|
+
+  <a name="status--orçamento-origem"></a><a name="8.3"></a>
+  - [8.3](#status--orçamento-origem) **Origem de Orçamentos**:
+
+    | Constante | Valor | Descrição |
+    | :--- | :---: | :---|
+    | SOURCE_ACCOUNT | 0 | Quando iniciado por um integrador |
+    | SOURCE_PLATFORM | 1 | Quando iniciado por um usuário sices |
+
+
+**[⬆ Voltar ao Topo](#sumário)**
+
 ## Sobre
+
   <a name="sobre--equipe"></a><a name="9.1"></a>
   - [9.1](#sobre--equipe) **A equipe**:
 

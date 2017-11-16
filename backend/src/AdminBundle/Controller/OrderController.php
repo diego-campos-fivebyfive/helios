@@ -37,7 +37,8 @@ class OrderController extends AbstractController
 
         $data = $form->handleRequest($request)->getData();
 
-        if(!$data['agent']) $data['agent'] = $member;
+        if(is_array($data) && !array_key_exists('agent',$data) || !$data['agent'])
+            $data['agent'] = $member;
 
         /** @var \AppBundle\Service\Order\OrderFinder $finder */
         $finder = $this->get('order_finder');

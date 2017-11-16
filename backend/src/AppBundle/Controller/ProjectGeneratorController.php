@@ -51,9 +51,12 @@ class ProjectGeneratorController extends AbstractController
         if($order->isChildren())
             throw $this->createAccessDeniedException('Only master order can be edited');
 
-        if(!$this->checkOrderStatus($order)){
+        $expired = $this->checkMemorial()->getPublishedAt() > $order->getCreatedAt();
+
+        if(!$this->checkOrderStatus($order) || $expired) {
             return $this->render('generator.error', [
-                'order' => $order
+                'order' => $order,
+                'expired' => $expired
             ]);
         }
 
@@ -592,5 +595,19 @@ class ProjectGeneratorController extends AbstractController
         $parameter = $manager->findOrCreate('platform_settings');
 
         return $parameter;
+    }
+
+    /**
+     * @return \AppBundle\Entity\Pricing\MemorialInterface
+     */
+    private function checkMemorial()
+    {
+        $memorial = $this->container->get('memorial_loader')->load();
+
+        if(!$memorial){
+            throw new \InvalidArgumentException('Memorial not loaded');
+        }
+
+        return $memorial;
     }
 }

@@ -62,10 +62,13 @@ class OrderController extends AbstractController
      */
     public function showAction(Order $order)
     {
+        $expired = $this->checkMemorial()->getPublishedAt() > $order->getCreatedAt();
+
         $this->denyAccessUnlessGranted('view', $order);
 
         return $this->render('admin/orders/show.html.twig', array(
-            'order' => $order
+            'order' => $order,
+            'expired' => $expired
         ));
     }
 
@@ -470,5 +473,19 @@ class OrderController extends AbstractController
     private function getExporter()
     {
         return $this->get('order_exporter');
+    }
+
+    /**
+     * @return \AppBundle\Entity\Pricing\MemorialInterface
+     */
+    private function checkMemorial()
+    {
+        $memorial = $this->container->get('memorial_loader')->load();
+
+        if(!$memorial){
+            throw new \InvalidArgumentException('Memorial not loaded');
+        }
+
+        return $memorial;
     }
 }
