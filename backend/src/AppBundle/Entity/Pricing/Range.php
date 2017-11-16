@@ -334,7 +334,7 @@ class Range implements RangeInterface
     {
         if(0 == $this->tax) $this->tax = self::DEFAULT_TAX;
 
-        $this->price = $this->costPrice * (1 + $this->markup) / (1 - $this->tax);
+        $this->price = round($this->costPrice * (1 + $this->markup) / (1 - $this->tax), 2);
 
         return $this;
     }
