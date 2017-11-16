@@ -113,9 +113,9 @@ Esclarecimentos gerais relacionados a documentação:
   <a name="workflow--flags"></a><a name="2.4"></a>
   - [2.4](#workflow--flags) **Solicitações no Slack**: utilizamos por padrão flags de classificações no inicio de cada solicitação.
 
-    - **HELP**: para solicitar ajuda/pair (chat [developers](https://kolinalabs-si.slack.com/messages/C6AS6KEK1))
-    - **REVIEW**: para solicitar review (chat [developers](https://kolinalabs-si.slack.com/messages/C6AS6KEK1))
-    - **TEST**: para solicitar test (chat [tester](https://kolinalabs-si.slack.com/messages/C63Q7FKBN))
+    - **HELP**: para solicitar ajuda/pair (chat [tech](https://kolinalabs-si.slack.com/messages/C65HXPEQM))
+    - **REVIEW**: para solicitar review (chat [devops](https://kolinalabs-si.slack.com/messages/C64ACCF2M))
+    - **TEST**: para solicitar test (chat [devops](https://kolinalabs-si.slack.com/messages/C64ACCF2M))
 
     `Ex.: @here, REVIEW: https://github.com/sices/sices/pull/0000`
 
