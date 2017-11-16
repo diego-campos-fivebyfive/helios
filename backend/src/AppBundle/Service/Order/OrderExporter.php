@@ -87,7 +87,7 @@ class OrderExporter
          */
         foreach ($order->getChildrens() as $key => $children) {
 
-            $data = $this->normalizeData($children);
+            $data = $this->normalizeData($children, $key+1);
 
             foreach ($children->getElements() as $element) {
 
@@ -118,12 +118,14 @@ class OrderExporter
 
     /**
      * @param OrderInterface $order
+     * @param $item
      * @return array
      */
-    public function normalizeData(OrderInterface $order)
+    public function normalizeData(OrderInterface $order, $item)
     {
         $data = [
             'reference' => $order->getParent()->getReference(),
+            'item' => $item >= 10 ? $item : sprintf('%02d', $item),
             'modules' => $this->countModules($order),
             'power' => $this->normalizePower($order),
             'power_initial' => $this->normalizePowerInitial($order),

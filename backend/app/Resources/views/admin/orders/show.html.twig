@@ -90,24 +90,27 @@
     {% set isPlatform = app.user.isPlatform %}
     <div class="wrapper wrapper-content  animated fadeInRight">
         <div class="row">
-            {% if expired is defined and expired %}
-            <div class="ibox">
-                <div class="ibox-content">
-                    <div class="alert alert-info text-center">
-                        <h2>
-                            <i class="fa fa-info-circle"></i>
-                            <strong style="text-transform: uppercase"> Expirado </strong>
-                            <br>
-                            Este orçamento não pode ser mais editado pois foi baseado em uma
-                            tabela de preço vencida. Favor gerar novo orçamento
-                        </h2>
+            {% if not member.isPlatformExpanse and expired %}
+                {% if not (order.isDone or order.isApproved or order.isRejected)
+                and (order.isBuilding or (order.isPending and member.isPlatformUser) or (order.isValidated and not member.isPlatformUser)) %}
+                    <div class="ibox">
+                        <div class="ibox-content">
+                            <div class="alert alert-info text-center">
+                                <h2>
+                                    <i class="fa fa-info-circle"></i>
+                                    <strong style="text-transform: uppercase"> Expirado </strong>
+                                    <br>
+                                    Este orçamento não pode ser mais editado pois foi baseado em uma
+                                    tabela de preço vencida. Favor gerar novo orçamento
+                                </h2>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                {% endif %}
             {% endif %}
 
+            {% if not member.isPlatformUser and order.validated and not expired %}
             <div class="col-md-12">
-                {% if not member.isPlatformUser and order.validated %}
                     <div class="alert alert-danger">
                         <i class="fa fa-warning"></i>
                         Ao editar este orçamento será necessário uma revalidação pela equipe da Sices.
@@ -116,8 +119,8 @@
                         <i class="fa fa-info-circle"></i>
                         Ao aprovar este orçamento você receberá a proforma e seu pedido de compra será processado.
                     </div>
-                {% endif %}
             </div>
+            {% endif %}
             <div class="ibox border-bottom">
                 <div class="ibox-content">
                     <div class="tab-content">
@@ -160,7 +163,7 @@
                                                     </a>
                                                 {% endif %}
 
-                                                {% if not member.isPlatformUser and order.isValidated %}
+                                                {% if not member.isPlatformUser and order.isValidated and not expired %}
                                                     <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
                                                        data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') }}">
                                                         <i class="fa fa-thumbs-o-up"></i> Aprovar e gerar pró-forma
