@@ -854,4 +854,15 @@ interface OrderInterface
      * @return string
      */
     public function getBillingAddress();
+
+    /**
+     * @return string
+     */
+    public function getFileExtract();
+
+    /**
+     * @param $fileExtract
+     * @return OrderInterface
+     */
+    public function setFileExtract($fileExtract);
 }
