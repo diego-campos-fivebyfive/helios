@@ -15,6 +15,7 @@ Sistema de suporte para empresas do setor de energia solar fotovoltaíca.
   1. [Lista de Comandos](#comandos)
   1. [Gerenciamento de Arquivos](#gerenciamento-de-arquivos)
   1. [Status](#status)
+  1. [Estrutura](#estrutura)
   1. [Sobre](#sobre)
 
 ## Guia Geral
@@ -633,10 +634,30 @@ Esclarecimentos gerais relacionados a documentação:
 
 **[⬆ Voltar ao Topo](#sumário)**
 
+## Estrutura
+
+  <a name="estrutura--raiz"></a><a name="9.1"></a>
+  - [9.1](#estrutura--raiz) **Pastas raiz**:
+
+    - `backend`: pasta main do projeto, contendo arquivos do sistema
+    - `devops`: pasta de uso geral de devops, como operações de ecossistema, processos, etc
+    - `docs`: além do `README.md`, utilizamos essa pasta para documentações de arquivos e UML
+
+  <a name="estrutura--temp"></a><a name="9.2"></a>
+  - [9.2](#estrutura--temp) **Pastas de arquivos temporários**:
+
+    - `.temp`: pasta para arquivos temporários de deploy, usada exclusivamente em produção
+    - `.backup`: pasta para backup de arquivos antes de deploy, usada exclusivamente em produção
+    - `.mirror`: pasta para export de arquivos de mirror de SQL
+    - `.uploads`: pasta arquivamento temporário de arquivos gerados e de downlaod do S3
+
+
+**[⬆ Voltar ao Topo](#sumário)**
+
 ## Sobre
 
-  <a name="sobre--equipe"></a><a name="9.1"></a>
-  - [9.1](#sobre--equipe) **A equipe**:
+  <a name="sobre--equipe"></a><a name="10.1"></a>
+  - [10.1](#sobre--equipe) **A equipe**:
 
     - #### Alisson Alves
     ```
