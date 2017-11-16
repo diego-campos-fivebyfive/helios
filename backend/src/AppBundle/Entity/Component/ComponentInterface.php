@@ -38,6 +38,17 @@ interface ComponentInterface
     public function getImage();
 
     /**
+     * @param $position
+     * @return mixed
+     */
+    public function setPosition($position);
+
+    /**
+     * @return mixed
+     */
+    public function getPosition();
+
+    /**
      * @return mixed
      */
     public function getCreatedAt();
