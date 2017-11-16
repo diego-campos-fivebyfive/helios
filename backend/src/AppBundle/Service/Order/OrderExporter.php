@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the SicesSolar package.
+ *
+ * (c) SicesSolar <http://sicesbrasil.com.br/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace AppBundle\Service\Order;
 
 use AppBundle\Entity\Component\ComponentInterface;
@@ -9,6 +18,12 @@ use AppBundle\Entity\Order\OrderInterface;
 use Exporter\Writer\CsvWriter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Class OrderExporter
+ * This class is a util export service for csv order, used in protheus crm
+ *
+ * @author Claudinei Machado <claudinei@kolinalabs.com>
+ */
 class OrderExporter
 {
     /**
