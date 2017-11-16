@@ -650,22 +650,21 @@ class Order implements OrderInterface, InsurableInterface
         if ($this->isMaster()) {
             $power = 0;
             foreach ($this->childrens as $children) {
-                $power += $this->power + $children->getPower();
+                $power += $children->getPower();
             }
         } else {
-            $power = $this->power + $this->getSubPower();
+            $power = $this->power;
         }
 
         return $power;
     }
 
+    /**
+     * @deprecated
+     */
     public function getSubPower()
     {
-        $power = 0;
-        foreach ($this->childrens as $children)
-        {
-            $power += $children['power'];
-        }
+        $power = $this->getPower();
 
         return $power;
     }
