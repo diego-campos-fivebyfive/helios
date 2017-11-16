@@ -157,7 +157,7 @@
                                                     </div>
                                                 </div>
                                                 {% endif %}
-                                                <div id="discount_info" class="{% if not order.discount > 0 %}hide{% endif %}">
+                                                <div id="discount_info" {% if not order.discount > 0 %}class="hide"{% endif %}>
                                                     <div class="col-md-9"><h2>Total sem desconto:</h2></div>
                                                     <h2 id="order-totalExcDiscount">{{ order.totalExcDiscount|currency }}</h2>
 
