@@ -106,6 +106,7 @@ class OrderController extends AbstractController
 
                         $this->generatorProformaAction($order);
                         $this->getStock()->debit($order);
+                        //$this->getExporter()->export($order);
                     }
 
                     break;
@@ -459,11 +460,19 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @return \AppBundle\Service\Mailer
+     * @return \AppBundle\Service\Mailer|object
      */
     private function getMailer()
     {
         return $this->get('app_mailer');
+    }
+
+    /**
+     * @return \AppBundle\Service\Order\OrderExporter|object
+     */
+    private function getExporter()
+    {
+        return $this->get('order_exporter');
     }
 
     /**
