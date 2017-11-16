@@ -157,14 +157,16 @@
                                                     </div>
                                                 </div>
                                                 {% endif %}
-                                                <div class="col-md-9"><h2>Total sem desconto:</h2></div>
-                                                <h2 id="order-totalExcDiscount">{{ order.totalExcDiscount|currency }}</h2>
+                                                <div id="discount_info" class="{% if not order.discount > 0 %}hide{% endif %}">
+                                                    <div class="col-md-9"><h2>Total sem desconto:</h2></div>
+                                                    <h2 id="order-totalExcDiscount">{{ order.totalExcDiscount|currency }}</h2>
 
-                                                <div class="col-md-9"><h2>Desconto comercial:</h2></div>
-                                                <h2 id="order-discount">-{{ order.discount|currency }}</h2>
+                                                    <div class="col-md-9"><h2>Desconto comercial:</h2></div>
+                                                    <h2 id="order-discount">-{{ order.discount|currency }}</h2>
+                                                </div>
 
                                                 <div class="col-md-9"><h2>Total:</h2></div>
-                                                <h2 id="order-total">{{ order.total|currency }}</h2>
+                                                    <h2 id="order-total">{{ order.total|currency }}</h2>
                                             </div>
                                         </div>
 
@@ -413,6 +415,10 @@
                         method: 'post',
                         complete: function (xhr) {
                             var response = xhr.responseJSON;
+                            if (response.orderDiscount > 0)
+                                $('#discount_info').removeClass('hide');
+                            else
+                                $('#discount_info').addClass('hide');
                             $('#order-discount').html('-'+numeral(response.orderDiscount).format('$0,0.00'));
                             $('#order-total').html(numeral(response.total).format('$0,0.00'));
                         }
