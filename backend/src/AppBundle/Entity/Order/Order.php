@@ -648,9 +648,12 @@ class Order implements OrderInterface, InsurableInterface
     public function getPower()
     {
         if ($this->isMaster()) {
-            $power = $this->power;
+            $power = 0;
+            foreach ($this->childrens as $children) {
+                $power += $this->power + $children->getPower();
+            }
         } else {
-            $power = $this->power + $this->getSubPower();
+            $power = $this->power;
         }
 
         return $power;
