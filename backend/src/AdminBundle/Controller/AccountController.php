@@ -66,9 +66,7 @@ class AccountController extends AdminController
 
         if ($this->member()->isPlatformExpanse()) {
 
-            $states = $this->member()->getAttributes()['states'];
-
-            $qb->andWhere($qb->expr()->in('a.state', $states));
+            $qb->andWhere($qb->expr()->in('a.state', $this->member()->getAttributes()['states']));
         }
 
         $this->overrideGetFilters();
