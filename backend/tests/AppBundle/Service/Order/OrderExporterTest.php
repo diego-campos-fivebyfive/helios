@@ -86,7 +86,7 @@ class OrderExporterTest extends AppTestCase
         $this->assertEquals('K', $data['power_initial']);
         $this->assertEquals('M', $data['module_maker_initial']);
         $this->assertEquals('I', $data['inverter_maker_initial']);
-        $this->assertEquals('S', $data['structure_maker_initial']);
+        $this->assertEquals('M', $data['structure_type_initial']);
 
         $exporter->export($order);
     }

@@ -129,7 +129,7 @@ class OrderExporter
             'power_initial' => $this->normalizePowerInitial($order),
             'module_maker_initial' => $this->normalizeElementMakerInitial($order, Element::FAMILY_MODULE),
             'inverter_maker_initial' => $this->normalizeElementMakerInitial($order, Element::FAMILY_INVERTER),
-            'structure_maker_initial' => $this->normalizeElementMakerInitial($order, Element::FAMILY_STRUCTURE),
+            'structure_type_initial' => 'M',
             'description' => $this->normalizeDescription($order)
         ];
 
