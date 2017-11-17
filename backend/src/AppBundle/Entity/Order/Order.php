@@ -101,6 +101,13 @@ class Order implements OrderInterface, InsurableInterface
     private $power;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="invoice_number", type="string", nullable=true)
+     */
+    private $invoiceNumber;
+
+    /**
      * @var DateTime
      *
      * @ORM\Column(name="send_at", type="datetime", nullable=true)
@@ -587,7 +594,9 @@ class Order implements OrderInterface, InsurableInterface
             self::STATUS_DONE => 'confirmed',
             self::STATUS_INSERTED => 'inserted',
             self::STATUS_AVAILABLE => 'available',
-            self::STATUS_COLLECTED => 'collected'
+            self::STATUS_COLLECTED => 'collected',
+            self::STATUS_BILLED => 'billed',
+            self::STATUS_DELIVERED => 'delivered'
         ];
     }
 
@@ -605,7 +614,9 @@ class Order implements OrderInterface, InsurableInterface
             self::STATUS_DONE => self::STATUS_DONE,
             self::STATUS_INSERTED => self::STATUS_INSERTED,
             self::STATUS_AVAILABLE => self::STATUS_AVAILABLE,
-            self::STATUS_COLLECTED => self::STATUS_COLLECTED
+            self::STATUS_COLLECTED => self::STATUS_COLLECTED,
+            self::STATUS_BILLED => self::STATUS_BILLED,
+            self::STATUS_DELIVERED => self::STATUS_DELIVERED
         ];
     }
 
@@ -1917,6 +1928,22 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @inheritDoc
      */
+    public function isBilled()
+    {
+        return self::STATUS_BILLED == $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isDelivered()
+    {
+        return self::STATUS_DELIVERED == $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getTotalCmv()
     {
         $totalCmv = 0;
@@ -2018,5 +2045,25 @@ class Order implements OrderInterface, InsurableInterface
 
         return $this;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setInvoiceNumber($invoiceNumber)
+    {
+        $this->invoiceNumber = $invoiceNumber;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getInvoiceNumber()
+    {
+        return $this->invoiceNumber;
+    }
+
+
 }
 
