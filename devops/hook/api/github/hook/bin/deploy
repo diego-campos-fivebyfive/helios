@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+if [[ $1 == 'undefined' ]]; then
+  if [[ $2 == 'true' ]]; then
+    message="*<Draft updated|https://github.com/sices/sices/blob/master/docs/meetings/roadmap/draft.md>*"
+    $CLI_PATH/ces-slack-notify --devops "$message"
+  fi
+  exit 0
+fi
+
 message="[issue-${1}] successfully merged to homolog"
 stage=$($CLI_PATH/ces-issue-info $1 --stage)
 
