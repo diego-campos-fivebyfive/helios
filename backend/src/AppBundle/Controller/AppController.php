@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Configuration\App;
+use AppBundle\Service\Business\DataCollector;
 use AppBundle\Service\Business\Intercom;
 use AppBundle\Service\WidgetGenerator;
 use Symfony\Component\HttpFoundation\Request;
@@ -119,14 +120,12 @@ class AppController extends AbstractController
      */
     public function intercomAction()
     {
-        /** @var \Doctrine\ORM\EntityManager $em */
-        $em = $this->get('doctrine.orm.entity_manager');
+        $collector = DataCollector::create($this->container);
 
-        $intercom = new Intercom($em);
-        $info = $intercom->extractInfo($this->member(), $this->getCurrentRequest());
+        $data = array_merge(['app_id' => 't2yycetv'], $collector->get('data'));
 
         return $this->render('helper.intercom', [
-            'info' => $info
+            'data' => $data
         ]);
     }
 
