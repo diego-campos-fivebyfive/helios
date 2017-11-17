@@ -73,6 +73,10 @@
             color: #43ecec;
         }
 
+        .btn.status-billed i {
+            color: #aa1111;
+        }
+
         .btn-green, .btn-green:hover, .btn-green:focus {
             background-color: #dff0d8;
             color: #3c763d;
@@ -137,6 +141,13 @@
                                             {% if not member.isPlatformExpanse %}
                                                 {% if order.isInserted and member.isPlatformLogistic %}
                                                     <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_BILLED') }}">
+                                                        <i class="fa fa-money"></i> Faturar
+                                                    </a>
+                                                {% endif %}
+
+                                                {% if order.isBilled and member.isPlatformLogistic %}
+                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
                                                        data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_AVAILABLE') }}">
                                                         <i class="fa fa-archive"></i> Coleta disponível
                                                     </a>
@@ -153,6 +164,13 @@
                                                     <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
                                                        data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}">
                                                         <i class="fa fa-check"></i> Inserido
+                                                    </a>
+                                                {% endif %}
+
+                                                {% if order.isCollected and member.isPlatformAfterSales %}
+                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DELIVERED') }}">
+                                                        <i class="fa fa-check"></i> Entregue
                                                     </a>
                                                 {% endif %}
 
