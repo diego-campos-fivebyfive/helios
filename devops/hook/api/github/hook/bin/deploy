@@ -2,9 +2,12 @@
 
 if [[ $1 == 'undefined' ]]; then
   if [[ $2 == 'true' ]]; then
-    message="*<https://github.com/sices/sices/blob/master/docs/meetings/roadmap/draft.md|Draft updated>*"
-    $CLI_PATH/ces-slack-notify --devops "$message"
+    message='*<https://github.com/sices/sices/blob/master/docs/meetings/roadmap/draft.md|Draft updated>*'
+  else
+    message='"someone commited on master..."'
   fi
+
+  $CLI_PATH/ces-slack-notify --devops "$message"
   exit 0
 fi
 
