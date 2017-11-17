@@ -56,8 +56,23 @@ Esclarecimentos gerais relacionados a documentação:
     - [Slack](https://kolinalabs-si.slack.com/messages): Chat e bots
     - [Hangout](https://hangouts.google.com/?hl=pt-BR): Calls
 
-  <a name="workflow--tarefas"></a><a name="2.2"></a>
-  - [2.2](#workflow--tarefas) **Ciclo de vida de Tarefas**:
+  <a name="workflow--fluxo"></a><a name="2.2"></a>
+  - [2.2](#workflow--fluxo) **Levantamento e distribuição de tarefas**:
+
+    - 2.2.1. Draft (Github):
+
+      Consiste no levantamento de demanda semanal em reunião de equipe tecnica com equipe de produto, onde são debatidas e anotadas todas as solicitações para serem convertidas em roadmap posteriormente.
+
+    - 2.2.2. Roadmap (Trello):
+
+      Consiste na distribuição das solicitações levantadas no `Draft` em cards e checklists, sendo esses, sub divisões das solicitações por área, que posteriormente servem de base para a criação de tarefas técnicas e acompanhamento de progresso em um âmbito geral. Em resumo cards são agrupamentos por área e checklists dizem a respeito do processo, ou "o que é a funcionalidade" ou "o que ela deve fazer".
+
+    - 2.2.3. Tasks (Waffle):
+
+     São as menores fragmentações do processo, são as tarefas técnicas executadas para que uma determinada funcionalidade seja implementada, sendo que essas nem sempre são independentes, e são necessárias diversas tarefas técnicas para completar um item de checklist do roadmap.
+
+  <a name="workflow--tarefas"></a><a name="2.3"></a>
+  - [2.3](#workflow--tarefas) **Ciclo de vida de Tarefas**:
 
     - Para cada tarefa há um prazo máximo de execução de 2 dias;
     - Caso a execução de uma tarefa ultrapasse 2 dias a mesma deve ser reavaliada pela a equipe;
@@ -103,15 +118,15 @@ Esclarecimentos gerais relacionados a documentação:
         2. Cancelada execução pelo Desenvolvedor por não conter modificações (to do)
         ```
 
-  <a name="workflow--review"></a><a name="2.3"></a>
-  - [2.3](#workflow--review) **Revisão de Pull Request**:
+  <a name="workflow--review"></a><a name="2.4"></a>
+  - [2.4](#workflow--review) **Revisão de Pull Request**:
 
     - As revisões de Pull Request devem ser feitas exclusivamente através do Github;
     - Comentários devem ser feitos na Pull Request e avisados via Slack;
     - É proibido realizar merge de Pull Request sem responder aos comentários;
 
-  <a name="workflow--flags"></a><a name="2.4"></a>
-  - [2.4](#workflow--flags) **Solicitações no Slack**: utilizamos por padrão flags de classificações no inicio de cada solicitação.
+  <a name="workflow--flags"></a><a name="2.5"></a>
+  - [2.5](#workflow--flags) **Solicitações no Slack**: utilizamos por padrão flags de classificações no inicio de cada solicitação.
 
     - **HELP**: para solicitar ajuda/pair (chat [tech](https://kolinalabs-si.slack.com/messages/C65HXPEQM))
     - **REVIEW**: para solicitar review (chat [devops](https://kolinalabs-si.slack.com/messages/C64ACCF2M))
