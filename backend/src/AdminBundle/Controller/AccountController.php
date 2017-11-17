@@ -546,9 +546,8 @@ class AccountController extends AdminController
 
             $states = [];
 
-            foreach ($filterStates as $state) {
+            foreach ($filterStates as $state)
                 $states[$state] = $allStates[$state];
-            }
 
             asort($states);
 
