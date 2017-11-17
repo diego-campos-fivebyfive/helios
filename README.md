@@ -329,6 +329,44 @@ Esclarecimentos gerais relacionados a documentação:
 
       Definem `sprints` de execução, onde cada nova sprint é adicionada a direita da coluna principal (coluna Roadmap), seguindo o fluxo de mais nova para mais antiga, de esquerda para a direita. Os títulos de cada coluna apresentam data de vigência, mês e semana de vigência e número de issues executadas.
 
+  <a name="tarefas--waffle"></a><a name="5.2"></a>
+  - [5.2](#tarefas--waffle) **Waffle**:
+
+    - ##### 5.2.1. **Etiquetas de tipo (type)**
+
+      - `Bug`: usada para tarefas de ajuste de bugs.
+      - `Improvement`: usada para aprimoramento de features já existentes.
+      - `New feature`: usada para implementação de features não existentes.
+
+    - ##### 5.2.2. **Etiquetas de prioridade (priority)**
+
+      - `High`: Utilizada para tarefas com maior relevância.
+      - `Highest`: Utilizada para tarefas com necessidade de execução imediata.
+      - `Low`: Utilizada para tarefas com baixa relevância.
+      - `Lowest`: Utilizada para tarefas que agregam valor extremamente baixo.
+      - `Medium`: Valor padrão de relevância de tarefas, para tarefas comuns.
+
+    - ##### 5.2.3. **Etiquetas de categorias (category)**
+
+      - `Backend`: Utilizada para issues server side.
+      - `Devops`: Utilizada para issues relacionadas ao devops.
+      - `Docs`: Utilizada para issues de documentação.
+      - `Frontend`: Utilizada para issues client side.
+      - `Infra`: Utilizada para issues de infraestrutura.
+      - `Random`: Utilizada para issues de âmbito geral que não se enquadrão nas anteriores.
+
+    - ##### 5.1.3. **Colunas e estágios (stage)**:
+
+      - `Backlog General`: Utilizada para issues fora da sprint de contexto geral.
+      - `Backlog Devops`: Utilizada para issues fora da sprint de contexto devops.
+      - `To Do`: Utilizada para indicar issues da sprint atual para execução.
+      - `Blocked`: Utilizada para indicar issues bloqueadas ou pausadas.
+      - `In Progress`: Utilizada para issues em progresso.
+      - `Review`: Utilizada para issues em revisão.
+      - `Testing I`: Utilizada para issues disponíveis para teste técnico.
+      - `Testing II`: Utilizada para issues disponíveis para teste de produto.
+      - `Done`: Utilizada para indicar issues já finalizadas.
+
   <a name="tarefas--automatizacao"></a><a name="5.3"></a>
   - [5.3](#tarefas--automatizacao) **Movimentação automática de issues por ação**:
 
