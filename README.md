@@ -728,7 +728,7 @@ Esclarecimentos gerais relacionados a documentação:
 
     - #### Marcelo Marco
     ```
-    AWS enginner
+    Sysadmin
     Slack: @marcelomarco1981
     Github: @marcelomarco
     E-mail: marcelomarco1981@gmail.com
