@@ -409,7 +409,7 @@ class Element implements ElementInterface
     {
         $markup = ($this->markup - $this->discount) < 0 ? 0 : $this->markup - $this->discount;
 
-        $this->unitPrice = $this->cmv * (1 + $markup) / (1 - $this->tax);
+        $this->unitPrice = round($this->cmv * (1 + $markup) / (1 - $this->tax), 2);
     }
 
 
