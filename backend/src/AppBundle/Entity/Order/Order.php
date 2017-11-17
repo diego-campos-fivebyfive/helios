@@ -587,7 +587,9 @@ class Order implements OrderInterface, InsurableInterface
             self::STATUS_DONE => 'confirmed',
             self::STATUS_INSERTED => 'inserted',
             self::STATUS_AVAILABLE => 'available',
-            self::STATUS_COLLECTED => 'collected'
+            self::STATUS_COLLECTED => 'collected',
+            self::STATUS_BILLED => 'billed',
+            self::STATUS_DELIVERED => 'delivered'
         ];
     }
 
@@ -605,7 +607,9 @@ class Order implements OrderInterface, InsurableInterface
             self::STATUS_DONE => self::STATUS_DONE,
             self::STATUS_INSERTED => self::STATUS_INSERTED,
             self::STATUS_AVAILABLE => self::STATUS_AVAILABLE,
-            self::STATUS_COLLECTED => self::STATUS_COLLECTED
+            self::STATUS_COLLECTED => self::STATUS_COLLECTED,
+            self::STATUS_BILLED => self::STATUS_BILLED,
+            self::STATUS_DELIVERED => self::STATUS_DELIVERED
         ];
     }
 
@@ -1912,6 +1916,22 @@ class Order implements OrderInterface, InsurableInterface
     public function isCollected()
     {
         return self::STATUS_COLLECTED == $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isBilled()
+    {
+        return self::STATUS_BILLED == $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isDelivered()
+    {
+        return self::STATUS_DELIVERED == $this->status;
     }
 
     /**

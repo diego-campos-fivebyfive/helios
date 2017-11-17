@@ -20,15 +20,17 @@ use Doctrine\ORM\Mapping as ORM;
  */
 interface OrderInterface
 {
-    const STATUS_BUILDING = 0;  // Order opened, but not yet submitted
-    const STATUS_PENDING = 1;   // Order submitted, but not yet validated by user sices
-    const STATUS_VALIDATED = 2; // Order validated, waiting for integrator user action
-    const STATUS_APPROVED = 3;  // Order approved, awaiting payment
-    const STATUS_REJECTED = 4;  // Order rejected, actions closed
-    const STATUS_DONE = 5;      // Order done, payment confirmed
-    const STATUS_INSERTED = 6;  // Order inserted on CRM (Protheus),
-    const STATUS_AVAILABLE = 7; // Product available for delivery collect
-    const STATUS_COLLECTED = 8; // Product collected for delivery
+    const STATUS_BUILDING = 0;      // Order opened, but not yet submitted
+    const STATUS_PENDING = 1;       // Order submitted, but not yet validated by user sices
+    const STATUS_VALIDATED = 2;     // Order validated, waiting for integrator user action
+    const STATUS_APPROVED = 3;      // Order approved, awaiting payment
+    const STATUS_REJECTED = 4;      // Order rejected, actions closed
+    const STATUS_DONE = 5;          // Order done, payment confirmed
+    const STATUS_INSERTED = 6;      // Order inserted on CRM (Protheus),
+    const STATUS_AVAILABLE = 7;     // Product available for delivery collect
+    const STATUS_COLLECTED = 8;     // Product collected for delivery
+    const STATUS_BILLED = 9;        // Billed product
+    const STATUS_DELIVERED = 10;    // Product delivered
 
     const SOURCE_ACCOUNT = 0;
     const SOURCE_PLATFORM = 1;
@@ -651,6 +653,16 @@ interface OrderInterface
      * @return bool
      */
     public function isCollected();
+
+    /**
+     * @return bool
+     */
+    public function isBilled();
+
+    /**
+     * @return bool
+     */
+    public function isDelivered();
 
     /**
      * @param $level
