@@ -310,10 +310,29 @@ Esclarecimentos gerais relacionados a documentação:
 
 ## Execução e gerenciamento de Tarefas
 
-  <a name="tarefas--automatizacao"></a><a name="5.1"></a>
-  - [5.1](#tarefas--automatizacao) **Movimentação automatica de issues por ação**:
+  <a name="tarefas--trello"></a><a name="5.1"></a>
+  - [5.1](#tarefas--trello) **Trello**:
 
-    - ##### 5.1.1. **Fluxo Normal**
+    - ##### 5.1.1. **Etiquetas de estágio (stage)**:
+
+      - `Done`: Utilizado para cards já concluídos.
+      - `Late`: utilizado para cards que não não foram finalizados no período e estão em atraso.
+      - `In-progress`: Utilizado para cards que estão em andamento dentro do período estipulado.
+      - `Peding`: Utilizado para cards que apresentam alguma dependência para continuidade.
+
+    - ##### 5.1.2. **Etiquetas de tipo (type)**:
+
+      - `Date`: Utilizada para designar datas de apresentações e marcos importantes.
+      - `Meeting`: Utilizada para designar cards de reuniões, contendo datas e horários em título.
+
+    - ##### 5.1.3. **Colunas**:
+
+      Definem `sprints` de execução, onde cada nova sprint é adicionada a direita da coluna principal (coluna Roadmap), seguindo o fluxo de mais nova para mais antiga, de esquerda para a direita. Os títulos de cada coluna apresentam data de vigência, mês e semana de vigência e número de issues executadas.
+
+  <a name="tarefas--automatizacao"></a><a name="5.3"></a>
+  - [5.3](#tarefas--automatizacao) **Movimentação automática de issues por ação**:
+
+    - ##### 5.3.1. **Fluxo Normal**
       ```
       In progress: ces-issue-start
       Review: ces-issue-request --review
@@ -322,20 +341,20 @@ Esclarecimentos gerais relacionados a documentação:
       Done: ces-issue-start (form Testing I | decline [n])
       ```
 
-    - ##### 5.1.2. **Fluxo Reiniciado**
+    - ##### 5.3.2. **Fluxo Reiniciado**
       ```
       In progress: ces-issue-restart
       ```
 
-    - ##### 5.1.3. **Fluxo Quebrado**
+    - ##### 5.3.3. **Fluxo Quebrado**
       ```
       To do: ces-issue-start (from In progress | decline [n])
       Blocked: ces-issue-start (from In progress | accept [y])
       In progress: ces-issue-start
       ```
 
-  <a name="tarefas--start"></a><a name="5.2"></a>
-  - [5.2](#tarefas--start) **Processos executados pelo comando ces-issue-start**:
+  <a name="tarefas--start"></a><a name="5.4"></a>
+  - [5.4](#tarefas--start) **Processos executados pelo comando ces-issue-start**:
 
     | Stage From  | BG\|BD\|TD | B                | IP     | IP   | R   | TI     | TI     | TII\|D |
     | :---        | :---:      | :---:            | :---:  | :--: | :-: | :---:  | :---:  | :---:  |
@@ -637,7 +656,9 @@ Esclarecimentos gerais relacionados a documentação:
     | STATUS_DONE | 5 | Orçamento concluído, pagamento efetuado. |
     | STATUS_INSERTED | 6 | Orçamento lançado (em CRM Protheus) para produção. |
     | STATUS_AVAILABLE | 7 | Produto (Sistema) disponível para coleta. |
-    | STATUS_COLLECTED | 8 | Produto (Sistema) coletado para entrega.|
+    | STATUS_COLLECTED | 8 | Produto (Sistema) coletado para entrega. |
+    | STATUS_BILLED | 9 | Produto (Sistema) faturado. |
+    | STATUS_DELIVERED | 10 | Produto (Sistema) entregue. |
 
   <a name="status--orçamento-origem"></a><a name="8.3"></a>
   - [8.3](#status--orçamento-origem) **Origem de Orçamentos**:
@@ -685,6 +706,7 @@ Esclarecimentos gerais relacionados a documentação:
     - [Integração - Protheus](docs/integrations/protheus)
     - [Roadmap - Draft Semanal](docs/meetings/roadmap/draft.md)
     - [Diagramas - UML](docs/uml/diagrams.md)
+    - [Tasks - Millestons](https://github.com/sices/sices/milestones)
 
 
 **[⬆ Voltar ao Topo](#sumário)**

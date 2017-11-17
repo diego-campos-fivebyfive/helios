@@ -24,6 +24,7 @@ else
   mkdir .uploads/component
   mkdir .uploads/order/proforma
   mkdir .uploads/order/payment
+  mkdir .uploads/order/order
   mkdir .uploads/proposal/proposal
   mkdir .uploads/component/image
   mkdir .uploads/component/datasheet
