@@ -332,6 +332,12 @@
                                             <li>
                                                 <label>Dados do integrador</label>
                                             </li>
+                                            {% if member.isPlatformLogistic %}
+                                                <div class="pull-right" style="padding-bottom: 10px;">
+                                                    <label style="padding-right: 10px;">Número da Nota Fiscal: </label>
+                                                    <input id="invoice-number" value="{{ order.invoiceNumber }}" type="text">
+                                                </div>
+                                            {% endif %}
                                         </ol>
                                     </div>
                                 </div>
@@ -394,6 +400,12 @@
                                         {% set notLevel = 'Sem Nivel' %}
                                         <label class="row-total">Nível de desconto</label>
                                         {{ order.account ? order.account.level|trans : notLevel }}
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Nº da Nota Fiscal</label>
+                                        {{ order.invoiceNumber }}
                                     </div>
                                 </div>
                             </div>
@@ -769,6 +781,14 @@
                         });
                     }
                 });
+            });
+        });
+
+        $('#invoice-number').on('change', function () {
+            $.ajax({
+                url: '{{ path('invoice_number', {id:order.id}) }}',
+                method: 'post',
+                data: {invoice_number: $('#invoice-number').val()}
             });
         });
     </script>
