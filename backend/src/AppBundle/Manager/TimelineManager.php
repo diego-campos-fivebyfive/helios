@@ -8,8 +8,7 @@
 
 namespace AppBundle\Manager;
 
-
-class TimelineManager
+class TimelineManager extends AbstractManager
 {
 
 }
