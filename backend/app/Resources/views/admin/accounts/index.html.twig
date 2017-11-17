@@ -74,13 +74,17 @@
                 <div class="ibox-content">
                     {{ knp_pagination_filter(pagination, {'a.lastname, a.document, a.email':''}) }}
 
-                    <div style="padding-right:0;padding-top:7px;" class="col-md-1 text-right">
-                        <label style="width: 100%;">
-                            <i class="fa fa-filter"></i> Filtro
-                        </label>
+                    <div class="col-md-2">
+                        <select id="filter-state" class="form-control selected" title="Estado"
+                                style=";width: 98%;">
+                            <option value="-1"> Estado &raquo; Todos </option>
+                            {% for key, state in states %}
+                                <option {{ current_state == key ? 'selected="selected"' }}  value="{{ key }}"> {{ state }} </option>
+                            {% endfor %}
+                        </select>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <select id="filter-bond" class="form-control selected" title="Vínculo"
                                 style=";width: 98%;">
                             <option value="-1"> Vínculo &raquo; Todos </option>
@@ -196,16 +200,23 @@
         });
 
         var form_filtration = $('#form_filtration');
+        var current_state = '{{ current_state }}';
         var current_status = '{{ current_status }}';
         var current_bond = '{{ current_bond }}';
         var current_level = '{{ current_level }}';
+        var filter_state = $('#filter-state');
         var filter_status = $('#filter-status');
         var filter_bond = $('#filter-bond');
         var filter_level = $('#filter-level');
         if(form_filtration.length){
+            form_filtration.append($('<input type="hidden" name="state"/>').val(current_state));
             form_filtration.append($('<input type="hidden" name="status"/>').val(current_status));
             form_filtration.append($('<input type="hidden" name="bond"/>').val(current_bond));
             form_filtration.append($('<input type="hidden" name="level"/>').val(current_level));
+            filter_state.on('change', function(){
+                $('input[name="state"]').val($(this).val());
+                form_filtration.trigger('submit');
+            });
             filter_status.on('change', function(){
                 $('input[name="status"]').val($(this).val());
                 form_filtration.trigger('submit');

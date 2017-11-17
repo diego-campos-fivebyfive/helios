@@ -6,6 +6,7 @@ use AdminBundle\Form\Account\TransferType;
 use AdminBundle\Form\AccountType;
 use AdminBundle\Form\EmailMemberType;
 use AdminBundle\Form\MemberType;
+use AppBundle\Configuration\Brazil;
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
@@ -49,6 +50,11 @@ class AccountController extends AdminController
                 'context' => $this->getAccountContext()
             ]);
 
+        if(-1 != $state = $request->get('state', -1)){
+            $qb->andWhere('a.state = :state');
+            $qb->setParameter('state', $state);
+        }
+
         if(-1 != $bond = $request->get('bond', -1)){
             $qb->andWhere('a.agent = :bond');
             $qb->setParameter('bond', $bond);
@@ -64,9 +70,12 @@ class AccountController extends AdminController
             $qb->setParameter('level', $level);
         }
 
+        $expanseStates = [];
         if ($this->member()->isPlatformExpanse()) {
 
-            $qb->andWhere($qb->expr()->in('a.state', $this->member()->getAttributes()['states']));
+            $expanseStates = $this->member()->getAttributes()['states'];
+
+            $qb->andWhere($qb->expr()->in('a.state', $expanseStates));
         }
 
         $this->overrideGetFilters();
@@ -93,13 +102,17 @@ class AccountController extends AdminController
 
         unset($levels[Memorial::LEVEL_PROMOTIONAL]);
 
+        $states = $this->getStates($expanseStates);
+
         return $this->render('admin/accounts/index.html.twig', array(
+            'current_state' => $state,
             'current_status' => $status,
             'allStatus' =>Customer::getStatusList(),
             'current_level' => $level,
             'allLevels' => $levels,
             'current_bond' => $bond,
             'members' => $membersSices,
+            'states' => $states,
             'pagination' => $pagination
         ));
     }
@@ -519,5 +532,29 @@ class AccountController extends AdminController
     private function getRegisterHelper()
     {
         return $this->get('app.register_helper');
+    }
+
+    /**
+     * @param $filterStates
+     * @return array
+     */
+    private function getStates($filterStates)
+    {
+        $allStates = Brazil::states();
+
+        if ($this->member()->isPlatformExpanse()) {
+
+            $states = [];
+
+            foreach ($filterStates as $state) {
+                $states[$state] = $allStates[$state];
+            }
+
+            asort($states);
+
+            return $states;
+        }
+
+        return $allStates;
     }
 }
