@@ -61,11 +61,11 @@ Esclarecimentos gerais relacionados a documentação:
 
     - 2.2.1. Draft (Github):
 
-      Consiste no levantamento de demanda semanal em reunião de equipe tecnica com equipe de produto, onde são debatidas e anotadas todas as solicitações para serem convertidas em roadmap posteriormente.
+      Consiste no levantamento de demanda semanal em reunião de equipe técnica com equipe de produto, onde são debatidas e anotadas todas as solicitações para serem convertidas em roadmap posteriormente.
 
     - 2.2.2. Roadmap (Trello):
 
-      Consiste na distribuição das solicitações levantadas no `Draft` em cards e checklists, sendo esses, sub divisões das solicitações por área, que posteriormente servem de base para a criação de tarefas técnicas e acompanhamento de progresso em um âmbito geral. Em resumo cards são agrupamentos por área e checklists dizem a respeito do processo, ou "o que é a funcionalidade" ou "o que ela deve fazer".
+      Consiste na distribuição das solicitações levantadas no `Draft` em cards e checklists, sendo esses, subdivisões das solicitações por área, que posteriormente servem de base para a criação de tarefas técnicas e acompanhamento de progresso em um âmbito geral. Em resumo cards são agrupamentos por área e checklists dizem a respeito do processo, ou "o que é a funcionalidade" ou "o que ela deve fazer".
 
     - 2.2.3. Tasks (Waffle):
 
@@ -126,7 +126,7 @@ Esclarecimentos gerais relacionados a documentação:
     - É proibido realizar merge de Pull Request sem responder aos comentários;
 
   <a name="workflow--flags"></a><a name="2.5"></a>
-  - [2.5](#workflow--flags) **Solicitações no Slack**: utilizamos por padrão flags de classificações no inicio de cada solicitação.
+  - [2.5](#workflow--flags) **Solicitações no Slack**: utilizamos por padrão flags de classificações no início de cada solicitação.
 
     - **HELP**: para solicitar ajuda/pair (chat [tech](https://kolinalabs-si.slack.com/messages/C65HXPEQM))
     - **REVIEW**: para solicitar review (chat [devops](https://kolinalabs-si.slack.com/messages/C64ACCF2M))
