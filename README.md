@@ -355,7 +355,7 @@ Esclarecimentos gerais relacionados a documentação:
       - `Infra`: Utilizada para issues de infraestrutura.
       - `Random`: Utilizada para issues de âmbito geral que não se enquadrão nas anteriores.
 
-    - ##### 5.1.3. **Colunas e estágios (stage)**:
+    - ##### 5.2.4. **Colunas e estágios (stage)**:
 
       - `Backlog General`: Utilizada para issues fora da sprint de contexto geral.
       - `Backlog Devops`: Utilizada para issues fora da sprint de contexto devops.
