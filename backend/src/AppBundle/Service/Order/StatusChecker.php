@@ -154,6 +154,13 @@ class StatusChecker
                 ]
             ],
             OrderInterface::STATUS_INSERTED => [
+                OrderInterface::STATUS_BILLED => [
+                    UserInterface::TYPE_PLATFORM => [
+                        UserInterface::ROLE_PLATFORM_LOGISTIC
+                    ]
+                ]
+            ],
+            OrderInterface::STATUS_BILLED => [
                 OrderInterface::STATUS_AVAILABLE => [
                     UserInterface::TYPE_PLATFORM => [
                         UserInterface::ROLE_PLATFORM_LOGISTIC
@@ -164,6 +171,13 @@ class StatusChecker
                 OrderInterface::STATUS_COLLECTED => [
                     UserInterface::TYPE_PLATFORM => [
                         UserInterface::ROLE_PLATFORM_LOGISTIC
+                    ]
+                ]
+            ],
+            OrderInterface::STATUS_COLLECTED => [
+                OrderInterface::STATUS_DELIVERED => [
+                    UserInterface::TYPE_PLATFORM => [
+                        UserInterface::ROLE_PLATFORM_AFTER_SALES
                     ]
                 ]
             ]
