@@ -78,7 +78,7 @@ class OrderExporterTest extends AppTestCase
 
         $data = $exporter->normalizeData($children, 2);
 
-        $this->assertCount(9,$data);
+        $this->assertCount(6,$data);
         $this->assertEquals('02', $data['item']);
         $this->assertArrayHasKey('power', $data);
         $this->assertNotNull($order->getReference());
@@ -86,9 +86,9 @@ class OrderExporterTest extends AppTestCase
         $this->assertEquals(1, $data['modules']);
         $this->assertEquals(0.500, $data['power']);
         $this->assertEquals('K', $data['power_initial']);
-        $this->assertEquals('M', $data['module_maker_initial']);
+        /*$this->assertEquals('M', $data['module_maker_initial']);
         $this->assertEquals('I', $data['inverter_maker_initial']);
-        $this->assertEquals('M', $data['structure_type_initial']);
+        $this->assertEquals('M', $data['structure_type_initial']);*/
 
         $exporter->export($order);
     }
