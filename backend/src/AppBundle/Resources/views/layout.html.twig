@@ -11,97 +11,86 @@
     {% block before_styles %}{% endblock %}
 
     {% stylesheets output='public/assets/css/main.css' filter='cssrewrite,uglifycss'
-        'assets/app.css'
-        'assets/bootstrap.min.css'
-        'public/assets/font-awesome/css/font-awesome.css'
-        'assets/jquery-ui/jquery-ui.min.css'
-        'assets/toastr/toastr.min.css'
-        'assets/steps/jquery.steps.css'
-        'assets/ladda/ladda-themeless.min.css'
-        'assets/sweetalert/sweetalert.css'
-        'assets/footable/footable.core.css'
-        'assets/animate.css'
-        'assets/daterangepicker/daterangepicker.css'
-        'assets/fullcalendar/fullcalendar.css'
-        'assets/chosen/chosen.css'
-        'assets/style.css'
-    %}
+    'assets/app.css'
+    'assets/bootstrap.min.css'
+    'public/assets/font-awesome/css/font-awesome.css'
+    'assets/jquery-ui/jquery-ui.min.css'
+    'assets/toastr/toastr.min.css'
+    'assets/steps/jquery.steps.css'
+    'assets/ladda/ladda-themeless.min.css'
+    'assets/sweetalert/sweetalert.css'
+    'assets/footable/footable.core.css'
+    'assets/animate.css'
+    'assets/daterangepicker/daterangepicker.css'
+    'assets/fullcalendar/fullcalendar.css'
+    'assets/chosen/chosen.css'
+    'assets/style.css' %}
     <link rel="stylesheet" href="{{ asset_url }}">
     {% endstylesheets %}
 
     {% block styles %}{% endblock %}
 
     {% javascripts output='public/assets/jquery.js' filter='uglifyjs2'
-        'assets/jquery-2.1.1.js'
-    %}
+    'assets/jquery-2.1.1.js' %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
-    <script>
 
-        {% set member = app.user.info %}
-        {% set request = app.request %}
-        {% set route = request.attributes.get('_route') %}
-        {% set host = 'localhost' %}
-        {% if host != request.host %}
-            {% set host = request.host != 'app.plataformasicessolar.com.br' ?  'homolog.plataformasicessolar.com.br' : 'app.plataformasicessolar.com.br' %}
-        {% endif %}
-
-        {#{% set track_routes = {
-            'member_business':true,
-            'member_profile':true
-        } %}#}
-
-        {% if host == 'app.plataformasicessolar.com.br' or host == 'homolog.plataformasicessolar.com.br' %}
-
-        (function(){
-            var t,i,e,n=window,o=document,a=arguments,s="script",r=["config","track","identify","visit","push","call","trackForm","trackClick"],c=function(){var t,i=this;for(i._e=[],t=0;r.length>t;t++)(function(t){i[t]=function(){return i._e.push([t].concat(Array.prototype.slice.call(arguments,0))),i}})(r[t])};for(n._w=n._w||{},t=0;a.length>t;t++)n._w[a[t]]=n[a[t]]=n[a[t]]||new c;i=o.createElement(s),i.async=1,i.src="//static.woopra.com/js/w.js",e=o.getElementsByTagName(s)[0],e.parentNode.insertBefore(i,e)
-        })("woopra");
-
-        woopra.config({
-            domain: '{{ host }}'
-        });
-
-        woopra.identify({
-            email: '{{ member.email }}',
-            name: '{{ member.name }}',
-            company: '{{ member.account }}',
-            profile: '{{ member.isOwner ? 'Dono da conta' : 'Agente' }}'
-        });
-
-        woopra.track();
-
-        {% endif %}
-
-    </script>
-
-    {#{% set allow_track = false %}
-    {% if woopraEvent is defined and woopraEvent is not null %}
-        {% if attribute(track_routes, route) is defined or 'turn-online' == woopraEvent.name %}
-            <script>woopra.track();</script>
-            {% set allow_track = true %}
-        {% else %}
-            {{ render(controller('AppBundle:App:woopra',{id:woopraEvent.id})) }}
-        {% endif %}
+    {% set member = app.user.info %}
+    {% set request = app.request %}
+    {% set route = request.attributes.get('_route') %}
+    {% set host = 'localhost' %}
+    {% if host != request.host %}
+        {% set host = request.host != 'app.plataformasicessolar.com.br' ?  'homolog.plataformasicessolar.com.br' : 'app.plataformasicessolar.com.br' %}
     {% endif %}
-    {% if not allow_track %}
-        <script>woopra.track();</script>
-    {% endif %}#}
+
+    {% if not member.isPlatformUser and (host == 'app.plataformasicessolar.com.br' or host == 'homolog.plataformasicessolar.com.br') %}
+
+        <script>
+
+            (function () {
+                var t, i, e, n = window, o = document, a = arguments, s = "script", r = ["config", "track", "identify", "visit", "push", "call", "trackForm", "trackClick"], c = function () {
+                    var t, i = this;
+                    for (i._e = [], t = 0; r.length > t; t++)(function (t) {
+                        i[t] = function () {
+                            return i._e.push([t].concat(Array.prototype.slice.call(arguments, 0))), i
+                        }
+                    })(r[t])
+                };
+                for (n._w = n._w || {}, t = 0; a.length > t; t++)n._w[a[t]] = n[a[t]] = n[a[t]] || new c;
+                i = o.createElement(s), i.async = 1, i.src = "//static.woopra.com/js/w.js", e = o.getElementsByTagName(s)[0], e.parentNode.insertBefore(i, e)
+            })("woopra");
+
+            woopra.config({
+                domain: '{{ host }}'
+            });
+
+            woopra.identify({{ trackAccount()|json_encode|raw }});
+
+            woopra.track();
+
+        </script>
+
+    {% endif %}
+
 </head>
 <style>
-    .navbar-default .support_link a{
+    .navbar-default .support_link a {
         background-color: #1c84c6;
         color: white;
     }
+
     .navbar-default .support_link a:focus,
-    .navbar-default .support_link a:hover{
+    .navbar-default .support_link a:hover {
         background-color: #1a7bb9 !important;
         color: white;
     }
-    #idPedidos ul li a{
-         color: white;
+
+    #idPedidos ul li a {
+        color: white;
     }
-    #idPedidos, #idPedidos a, #idPedidos :hover{
+
+    #idPedidos, #idPedidos a, #idPedidos :hover {
         background-color: #00A7EC !important;
         color: white !important;
     }
@@ -127,7 +116,8 @@
                         <span class="clear">
 
                             <span class="block m-t-xs">
-                                <strong class="font-bold"  style="color: #ffffff !important;"> {{ user.info.firstname }} </strong>
+                                <strong class="font-bold"
+                                        style="color: #ffffff !important;"> {{ user.info.firstname }} </strong>
                             </span>
 
                             {% if companyName %}
@@ -166,29 +156,28 @@
 </div>
 
 {% javascripts output='public/assets/main.js' filter='uglifyjs2'
-    'assets/http.js'
-    'assets/bootstrap.min.js'
-    'assets/metisMenu/jquery.metisMenu.js'
-    'assets/slimscroll/jquery.slimscroll.min.js'
-    'assets/steps/jquery.steps.min.js'
-    'assets/inspinia.js'
-    'assets/pace/pace.min.js'
-    'assets/jquery-ui/jquery-ui.min.js'
-    'assets/sparkline/jquery.sparkline.min.js'
-    'assets/idle-timer/idle-timer.min.js'
-    'assets/toastr/toastr.min.js'
-    'assets/ladda/spin.min.js'
-    'assets/ladda/ladda.min.js'
-    'assets/ladda/ladda.jquery.min.js'
-    'assets/sweetalert/sweetalert.min.js'
-    'assets/chosen/chosen.jquery.js'
-    'assets/footable/footable.all.min.js'
-    'assets/jquery.mask.js'
-    'assets/fullcalendar/lib/moment.min.js'
-    'assets/fullcalendar/fullcalendar.min.js'
-    'assets/fullcalendar/locale-all.js'
-    'assets/daterangepicker/daterangepicker.js'
-%}
+'assets/http.js'
+'assets/bootstrap.min.js'
+'assets/metisMenu/jquery.metisMenu.js'
+'assets/slimscroll/jquery.slimscroll.min.js'
+'assets/steps/jquery.steps.min.js'
+'assets/inspinia.js'
+'assets/pace/pace.min.js'
+'assets/jquery-ui/jquery-ui.min.js'
+'assets/sparkline/jquery.sparkline.min.js'
+'assets/idle-timer/idle-timer.min.js'
+'assets/toastr/toastr.min.js'
+'assets/ladda/spin.min.js'
+'assets/ladda/ladda.min.js'
+'assets/ladda/ladda.jquery.min.js'
+'assets/sweetalert/sweetalert.min.js'
+'assets/chosen/chosen.jquery.js'
+'assets/footable/footable.all.min.js'
+'assets/jquery.mask.js'
+'assets/fullcalendar/lib/moment.min.js'
+'assets/fullcalendar/fullcalendar.min.js'
+'assets/fullcalendar/locale-all.js'
+'assets/daterangepicker/daterangepicker.js' %}
 <script src="{{ asset_url }}"></script>
 {% endjavascripts %}
 

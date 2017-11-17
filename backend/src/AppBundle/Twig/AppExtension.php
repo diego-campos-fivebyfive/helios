@@ -5,6 +5,7 @@ namespace AppBundle\Twig;
 use AppBundle\Configuration\App;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Component\ComponentInterface;
+use AppBundle\Service\Business\DataCollector;
 use Sonata\IntlBundle\Twig\Extension\NumberExtension;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -33,54 +34,16 @@ class AppExtension extends \Twig_Extension
             new \Twig_SimpleFunction('app_title', array($this, 'renderTitle'/*, ['is_safe' => ['html']]*/)),
             new \Twig_SimpleFunction('icon', array($this, 'getIcon'), ["is_safe" => ["html"]]),
             new \Twig_SimpleFunction('sub_domain', array($this, 'getSubdomain'), ["is_safe" => ["html"]]),
-            new \Twig_SimpleFunction('trail_message', array($this, 'trailMessage'), ["is_safe" => ["html"]])
+            new \Twig_SimpleFunction('trackAccount', array($this, 'trackAccount'), ["is_safe" => ["html"]])
         ];
     }
 
     /**
-     * @param BusinessInterface $account
-     * @return string
+     * @return array
      */
-    public function trailMessage(BusinessInterface $account)
+    public function trackAccount()
     {
-        $message = '';
-
-        if($account->isExpired()){
-            return 'finalizado';
-        }
-
-        if($account->isTrailAccount()) {
-
-            $expireAt = date_diff(new \DateTime(), $account->getExpireAt());
-
-            $days = $expireAt->d;
-            $hours = $expireAt->h;
-            $minutes = $expireAt->i;
-
-            if($days > 0 || $hours > 0) {
-                if ($days > 0) {
-                    $message .= $days . ($days > 1 ? ' dias' : ' dia');
-                }
-                if ($days > 0 && $hours > 0) {
-                    $message .= ' e ';
-                }
-                if ($hours) {
-                    $message .= $hours . ($hours > 1 ? ' horas' : ' hora');
-                }
-
-                $message .= ($days > 1 && $hours > 1 ? ' restantes' : $hours > 1 ? ' restantes' : ' restante');
-
-            }else{
-                if($minutes > 0) {
-                    $message .= $minutes . ($minutes > 1 ? ' minutos restantes' : ' minuto restante');
-                }else{
-                    $seconds = $expireAt->s;
-                    $message  .= ' bloqueando conta em ' . $seconds . ($seconds > 0 ? ' segundos' : ' segundo');
-                }
-            }
-        }
-
-        return $message;
+        return DataCollector::create($this->container)->data();
     }
 
     /**
