@@ -27,6 +27,8 @@ class CriteriaAggregator
             foreach (self::$arguments as $argument => $value) {
                 $queryBuilder->andWhere(sprintf('%s.%s = :%s', $alias, $argument, $argument));
             }
+
+            $queryBuilder->addOrderBy(sprintf('%s.position', $alias), 'asc');
         }
 
         $criteria = array_merge($criteria, self::$arguments);
