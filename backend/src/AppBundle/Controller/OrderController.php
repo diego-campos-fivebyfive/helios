@@ -274,6 +274,8 @@ class OrderController extends AbstractController
             throw $this->createNotFoundException(sprintf($message, $type));
         }
 
+        $header = ($type == 'fileExtract') ? ResponseHeaderBag::DISPOSITION_ATTACHMENT : ResponseHeaderBag::DISPOSITION_INLINE;
+
         if ($type != 'proforma')
             $type = ($type == 'fileExtract') ? 'order' : 'payment';
 
@@ -287,7 +289,6 @@ class OrderController extends AbstractController
         $file = $this->container->get('app_storage')->display($options);
 
         if (is_file($file)) {
-            $header = ResponseHeaderBag::DISPOSITION_INLINE;
             return new BinaryFileResponse($file, Response::HTTP_OK, [], true, $header);
         }
     }
