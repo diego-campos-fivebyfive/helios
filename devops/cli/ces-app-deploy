@@ -42,11 +42,12 @@ elif [ $1 = '--production' ]; then
   $CLI_PATH/ces-database-update
 
   # Cleaning uploaded files
-  rm .uploads/component/image/*
-  rm .uploads/component/datasheet/*
-  rm .uploads/proposal/proposal/*
-  rm .uploads/order/payment/*
-  rm .uploads/order/proforma/*
+  rm .uploads/component/image/**
+  rm .uploads/component/datasheet/**
+  rm .uploads/proposal/proposal/**
+  rm .uploads/order/payment/**
+  rm .uploads/order/proforma/**
+  rm .uploads/order/order/**
 
   $CLI_PATH/ces-slack-notify --production '@here: Production Deploy Done!'
 fi
