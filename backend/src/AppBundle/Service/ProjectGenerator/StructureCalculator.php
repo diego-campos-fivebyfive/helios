@@ -396,10 +396,9 @@ class StructureCalculator
     {
         $method = $single ? 'findOneBy' : 'findBy';
 
-        if('perfil' == $criteria['type'])
-            CriteriaAggregator::finish($criteria);
+        CriteriaAggregator::finish($criteria);
 
-        return $this->manager->$method($criteria);
+        return $this->manager->$method($criteria, ['position' => 'asc']);
     }
 
     /**
