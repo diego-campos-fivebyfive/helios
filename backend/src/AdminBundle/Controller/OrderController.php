@@ -144,6 +144,20 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/invoice", name="invoice_number")
+     */
+    public function invoiceNumberAction(Request $request, Order $order)
+    {
+        $invoice = $request->request->get('invoice_number');
+
+        $order->setInvoiceNumber($invoice);
+
+        $this->manager('order')->save($order);
+
+        return $this->json([]);
+    }
+
+    /**
      * @return array
      */
     private function getPaymentMethods()
