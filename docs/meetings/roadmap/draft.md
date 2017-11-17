@@ -1,88 +1,11 @@
-30/10/2017 - ROADMAP 30/10 - 03/11
-==========================================
 
-ROADMAP MAPEADO
-1. Controle de Estoque
-1.1 Transações
-1.1.1 Ao aprovar - debita do estoque
-1.1.2 Ao rejeitar - credita no estoque
-1.2 Propriedades: Descrição, Data/Hora, Quantidade(C/Sinal: + ou -) / Exibir saldo atual
-1.4 Mapeamento: Stock <-> StockTransactions
-1.5 Paginação e Filtros por data e operações
-1.6 Seção "Estoque"
-1.6.1 Exibe a lista de componentes, separadas por tipo com filtros por tipo
-1.6.1 Código, Descrição, Estoque, [Extrato] - Extrato de Transações (3)
-1.7 Extrato
-1.7.1 Identificação do componente
-1.7.2 Histórico de transações
-1.7.3 Tela única (Lista de componentes e transações)
-** O controle deve executar as operações de - entrada e saída.
-
-538
-2. Ajustes visuais
-2.1 Na barra superior - Nível da conta com ícone: Conta <nível> <ícone>
-
-540, 541
-Baixíssima prioridade - Após estoque
-3. Parâmetros: Definir tipos de telhados disponíveis (Envolve parâmetros e gerador).
-
-539
-4. Email para orçamentos com status 'REJECTED'
-4.1 Adequar layout + texto
-4.2 Ativar serviço no OrderMailer
-
-535, 536
-5. Implementar novos campos para Endereço de entrega (CEP, Estado, Cidade, Bairro, Logradouro, Número e Complemento)
-5.1 Autocompletar com CEP
-5.2 Todos obrigatórios, exceto complemento
-
-537
-6. Possibilitar ao user sices FINANCIAL, revogar um orçamento com status 'CONFIRMED', retornando para 'APPROVED'
-6.1 Label: "Cancelar confirmação"
-
-532, 533, 534
-BUGS
-1. Está gerando orçamento sem opção de pagamento. 532
-2. Na listagem de componentes para admin, aplicar regras da consulta usada para comercial. 533
-3. Em estrutura ao deixar 'status' como false, na edição o 'available' também aparece como false. 534
-
-PENDÊNCIAS MAURO
-Ícones 
-Texto do email
-
-PREVISÕES
-Memorial Finame
-Sistema de pontuação (Junto ao CRM)
-Lista de sistemas
-CRM
-Smartcode e Protheus
-Modo Engenharia
-Timeline de ações do orçamento
-Verificar possibilidade de alerta caso um componente não seja precificado (camada extra).
-
-20/10/2017 - NEW FEATURES - DESCRITIVO CRM
-==========================================
-
-1. **LISTA DE CLIENTES**: Ao acessar esta sessão o usuário Sices, irá visualizar todos os cliente/integrador que estão vinculados a ele, com detalhes de principais (semalhante a visualização de contas) e status dos clientes (podendo filtra-los pelo status) e ao visualizar um cliente/integrador, terá acesso as detalhes deste  cliente/integrador.
-
-2. **TELA DE DETALHES**: Na sessão de visualização de detalhes de um cliente/integrador especifico o usuário Sices, poderá visualizar detalhes do cliente/integrador e terá acesso as tarefas relacionadas a este cliente/integrador e aos orçamentos emitidos pelo cliente/integrador ou para este, podendo ter acesso ao detalhes de ambos, e se necessário e possivel for, efetuar alterações tanto em orçamentos quanto em tarefas.
-
-3. **TAREFAS**:
-  - 3.1. A sessão tarefas estará relacionada diretamente com o usuário sices, podendo ou não, ter vinculos com o cliente/integrador  de acordo com a tarefa definida. Por exemplo:
-
-  - 3.2. O usuário sices terá uma reunião com um determinado cliente/integrador via call, no dia 12/12/2017 em um determinado horário, ele poderá já descrever detalhes como, assuntos que serão abordados, se for uma apresentação quais produtos ou serviços que ele irá apresentar, ou sejá como se decorrerá a reunião a fim de satisfazer espectativas do cliente. Ou a terefa definida pode tratar de assuntos internos,  referentes a processos da equipe de usuários.
-
-  - 3.3. *Listagem das Tarefas*: Em vias gerais as tarefas apresentadas na listagem são de contextos gerais, relacionadas a assuntos do usuário Sices ou vinculadas a um  cliente/integrador, podendo serem filtradas com cada contexto(cliente/integrador, data, tarefas correntes ou finalizadas).
-
-  - 3.4. *Cadastro / Edição / Exclusão / Finalização de Tarefas*:
-
-    - 3.4.1 Cadastro: No cadastro de tarefa o usuário Sices irá definir data e horário de inicio e término da tarefa, o contexto(categoria) na qual ela está inserida e se ela está vinculada ou não a um  cliente/integrador, caso não esteja está tarefa automaticamente é considerada como assunto interno.
-
-    - 3.4.2 Edição: Uma tarefa poderá ser editada pelo usuário de acordo com sua necessidade, para adicionar detalhes ou outros usuários a tarefa, ou até mesmo para redimensionamento de tempo ou data.
-
-    - 3.4.3 Exclusão: Tarefas finalizadas e que não serão utilizadas como possíveis histórico ou como base para tarefas futuras poderão ser excluidas pelo usuário de acordo com sua necessidade.
-
-    - 3.4.4 Finalização: Uma tarefa pode ser finalizada automaticamente sem a necessidade de o usuário finaliza-la manualmente se a tarefa não sofrer alterações em relação a data e tempo. E pode também ser finalizada pelo usuário, caso a tarefa seja concluida antes do prazo previsto, ou até mesmo caso a tarefa seja adia, isso será definido de acordo com a necessidade do usuário caso ele não queira exclui-la de imediato.
-
-
-  > **Observação**: Regras e definições de acessos e regras que cada  Role pode visualizar será definas em reunião posterior.
+17/11/2017 - Ajustes
+===========================================================================
+- Ajustar arredondamento do preço no elemento do orçamento.
+- Forçar download do arquivo CSV.
+- Rodar SQL de arredondamento de preço em produção (Apenas após deploy, aguardar confirmação).
+Intercom e Woopra
+- Padronizar os dados do woopra conforme os do intercom
+- Atualizar o parâmetro n_orders de forma que inclua os orçamentos com status BUILDING
+- Ajustar dados de retorno da propriedade name: trocar o método get utilizado de "name" para "firstname"
+- Nova propriedade: cnpj (CNPJ do integrador)
