@@ -99,6 +99,7 @@ class Checker
 
         $filter->equals('available', true);
         $filter->equals('status', true);
+        $filter->order('position');
 
         $modules = $filter->get();
 
