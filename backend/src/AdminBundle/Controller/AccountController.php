@@ -542,18 +542,14 @@ class AccountController extends AdminController
     {
         $allStates = Brazil::states();
 
-        if ($this->member()->isPlatformExpanse()) {
+        if (!$this->member()->isPlatformExpanse())
+            return $allStates;
 
-            $states = [];
+        $states = [];
+        foreach ($filterStates as $state)
+            $states[$state] = $allStates[$state];
 
-            foreach ($filterStates as $state)
-                $states[$state] = $allStates[$state];
-
-            asort($states);
-
-            return $states;
-        }
-
-        return $allStates;
+        asort($states);
+        return $states;
     }
 }
