@@ -685,6 +685,7 @@ Esclarecimentos gerais relacionados a documentação:
     - [Integração - Protheus](docs/integrations/protheus)
     - [Roadmap - Draft Semanal](docs/meetings/roadmap/draft.md)
     - [Diagramas - UML](docs/uml/diagrams.md)
+    - [Tasks - Millestons](https://github.com/sices/sices/milestones)
 
 
 **[⬆ Voltar ao Topo](#sumário)**
