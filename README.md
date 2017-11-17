@@ -637,7 +637,9 @@ Esclarecimentos gerais relacionados a documentação:
     | STATUS_DONE | 5 | Orçamento concluído, pagamento efetuado. |
     | STATUS_INSERTED | 6 | Orçamento lançado (em CRM Protheus) para produção. |
     | STATUS_AVAILABLE | 7 | Produto (Sistema) disponível para coleta. |
-    | STATUS_COLLECTED | 8 | Produto (Sistema) coletado para entrega.|
+    | STATUS_COLLECTED | 8 | Produto (Sistema) coletado para entrega. |
+    | STATUS_BILLED | 9 | Produto (Sistema) faturado. |
+    | STATUS_DELIVERED | 10 | Produto (Sistema) entregue. |
 
   <a name="status--orçamento-origem"></a><a name="8.3"></a>
   - [8.3](#status--orçamento-origem) **Origem de Orçamentos**:
