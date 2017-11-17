@@ -225,6 +225,18 @@ use Doctrine\ORM\EntityManagerInterface;
     }
 
     /**
+     * @param $field
+     * @param string $direction
+     * @return $this
+     */
+    public function order($field, $direction = 'asc')
+    {
+        $this->qb->addOrderBy(self::field($field), $direction);
+
+        return $this;
+    }
+
+    /**
      * Initialize Query Builder
      */
     private function initialize()
