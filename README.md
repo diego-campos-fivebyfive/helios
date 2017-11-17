@@ -329,6 +329,44 @@ Esclarecimentos gerais relacionados a documentação:
 
       Definem `sprints` de execução, onde cada nova sprint é adicionada a direita da coluna principal (coluna Roadmap), seguindo o fluxo de mais nova para mais antiga, de esquerda para a direita. Os títulos de cada coluna apresentam data de vigência, mês e semana de vigência e número de issues executadas.
 
+  <a name="tarefas--waffle"></a><a name="5.2"></a>
+  - [5.2](#tarefas--waffle) **Waffle**:
+
+    - ##### 5.2.1. **Etiquetas de tipo (type)**
+
+      - `Bug`: usada para tarefas de ajuste de bugs.
+      - `Improvement`: usada para aprimoramento de features já existentes.
+      - `New feature`: usada para implementação de features não existentes.
+
+    - ##### 5.2.2. **Etiquetas de prioridade (priority)**
+
+      - `High`: Utilizada para tarefas com maior relevância.
+      - `Highest`: Utilizada para tarefas com necessidade de execução imediata.
+      - `Low`: Utilizada para tarefas com baixa relevância.
+      - `Lowest`: Utilizada para tarefas que agregam valor extremamente baixo.
+      - `Medium`: Valor padrão de relevância de tarefas, para tarefas comuns.
+
+    - ##### 5.2.3. **Etiquetas de categorias (category)**
+
+      - `Backend`: Utilizada para issues server side.
+      - `Devops`: Utilizada para issues relacionadas ao devops.
+      - `Docs`: Utilizada para issues de documentação.
+      - `Frontend`: Utilizada para issues client side.
+      - `Infra`: Utilizada para issues de infraestrutura.
+      - `Random`: Utilizada para issues de âmbito geral que não se enquadrão nas anteriores.
+
+    - ##### 5.2.4. **Colunas e estágios (stage)**:
+
+      - `Backlog General`: Utilizada para issues fora da sprint de contexto geral.
+      - `Backlog Devops`: Utilizada para issues fora da sprint de contexto devops.
+      - `To Do`: Utilizada para indicar issues da sprint atual para execução.
+      - `Blocked`: Utilizada para indicar issues bloqueadas ou pausadas.
+      - `In Progress`: Utilizada para issues em progresso.
+      - `Review`: Utilizada para issues em revisão.
+      - `Testing I`: Utilizada para issues disponíveis para teste técnico.
+      - `Testing II`: Utilizada para issues disponíveis para teste de produto.
+      - `Done`: Utilizada para indicar issues já finalizadas.
+
   <a name="tarefas--automatizacao"></a><a name="5.3"></a>
   - [5.3](#tarefas--automatizacao) **Movimentação automática de issues por ação**:
 
@@ -485,47 +523,47 @@ Esclarecimentos gerais relacionados a documentação:
   <a name="comandos--tarefas"></a><a name="6.7"></a>
   - [6.7](#comandos--tarefas) **Comandos de gerenciamento de tarefas**:
 
-    Preparar ambiente para a execução da tarefa:
+    - ##### Preparar ambiente para a execução da tarefa:
     ```
     $ ces-issue-start [ISSUE_NUMBER]
     ```
 
-    Mover tarefa no quadro:
+    - ##### Mover tarefa no quadro:
     ```
     $ ces-issue-move [ISSUE_NUMBER] --[STAGE_TO]
     ```
 
-    Assinar tarefa no quadro:
+    - ##### Assinar tarefa no quadro:
     ```
     $ ces-issue-assign [ISSUE_NUMBER] [GITHUB_USER_NAME]
     ```
 
-    Abrir review de tarefa:
+    - ##### Abrir review de tarefa:
     ```
     $ ces-issue-request --review
     ```
 
-    Requisitar teste de tarefa:
+    - ##### Requisitar teste de tarefa:
     ```
     $ ces-issue-request --testing
     ```
 
-    Informações sobre uma tarefa:
+    - ##### Informações sobre uma tarefa:
     ```
     $ ces-issue-info [ISSUE_NUMBER] --[INFO_TYPE]
     ```
 
-    Finalizar tarefa:
+    - ##### Finalizar tarefa:
     ```
     $ ces-issue-close [ISSUE_NUMBER]
     ```
 
-    Bloquear tarefa:
+    - ##### Bloquear tarefa:
     ```
     $ ces-issue-block [ISSUE_NUMBER]
     ```
 
-    Reiniciar trabalho em tarefa:
+    - ##### Reiniciar trabalho em tarefa:
     ```
     $ ces-issue-restart
     ```
