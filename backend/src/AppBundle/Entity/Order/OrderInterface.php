@@ -877,4 +877,15 @@ interface OrderInterface
      * @return OrderInterface
      */
     public function setFileExtract($fileExtract);
+
+    /**
+     * @param $invoiceNumber
+     * @return OrderInterface
+     */
+    public function setInvoiceNumber($invoiceNumber);
+
+    /**
+     * @return string
+     */
+    public function getInvoiceNumber();
 }

@@ -101,6 +101,13 @@ class Order implements OrderInterface, InsurableInterface
     private $power;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="invoice_number", type="string", nullable=true)
+     */
+    private $invoiceNumber;
+
+    /**
      * @var DateTime
      *
      * @ORM\Column(name="send_at", type="datetime", nullable=true)
@@ -2038,5 +2045,25 @@ class Order implements OrderInterface, InsurableInterface
 
         return $this;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setInvoiceNumber($invoiceNumber)
+    {
+        $this->invoiceNumber = $invoiceNumber;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getInvoiceNumber()
+    {
+        return $this->invoiceNumber;
+    }
+
+
 }
 
