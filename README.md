@@ -523,47 +523,47 @@ Esclarecimentos gerais relacionados a documentação:
   <a name="comandos--tarefas"></a><a name="6.7"></a>
   - [6.7](#comandos--tarefas) **Comandos de gerenciamento de tarefas**:
 
-    Preparar ambiente para a execução da tarefa:
+    - ##### Preparar ambiente para a execução da tarefa:
     ```
     $ ces-issue-start [ISSUE_NUMBER]
     ```
 
-    Mover tarefa no quadro:
+    - ##### Mover tarefa no quadro:
     ```
     $ ces-issue-move [ISSUE_NUMBER] --[STAGE_TO]
     ```
 
-    Assinar tarefa no quadro:
+    - ##### Assinar tarefa no quadro:
     ```
     $ ces-issue-assign [ISSUE_NUMBER] [GITHUB_USER_NAME]
     ```
 
-    Abrir review de tarefa:
+    - ##### Abrir review de tarefa:
     ```
     $ ces-issue-request --review
     ```
 
-    Requisitar teste de tarefa:
+    - ##### Requisitar teste de tarefa:
     ```
     $ ces-issue-request --testing
     ```
 
-    Informações sobre uma tarefa:
+    - ##### Informações sobre uma tarefa:
     ```
     $ ces-issue-info [ISSUE_NUMBER] --[INFO_TYPE]
     ```
 
-    Finalizar tarefa:
+    - ##### Finalizar tarefa:
     ```
     $ ces-issue-close [ISSUE_NUMBER]
     ```
 
-    Bloquear tarefa:
+    - ##### Bloquear tarefa:
     ```
     $ ces-issue-block [ISSUE_NUMBER]
     ```
 
-    Reiniciar trabalho em tarefa:
+    - ##### Reiniciar trabalho em tarefa:
     ```
     $ ces-issue-restart
     ```
