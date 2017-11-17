@@ -81,7 +81,7 @@ class DefaultsResolver
     public function module()
     {
         $id = null;
-        $module = $this->resolveArgs(Module::class, ['id' => $this->defaults['module']]);
+        $module = $this->resolveArgs(Module::class, [], ['position' => 'asc']);
 
         if($module instanceof Module){
             $id = $module->getId();
@@ -120,9 +120,13 @@ class DefaultsResolver
             $this->resolveDefault('promo_background', $parameter->get('promo_background'));
     }
 
+    /**
+     * @param $type
+     */
     private function fdi($type)
     {
         $tag = sprintf('fdi_%s', $type);
+        $value = 'min' == $type ? 0.75 : 1.2 ;
 
         $parameter = $this->resolveParameters(Parameter::class, ['id' => 'platform_settings']);
 
@@ -155,16 +159,16 @@ class DefaultsResolver
      * @param array $arguments
      * @return null|object Entity instance
      */
-    private function resolveArgs($class, array $arguments, $forceStrictArgs = true)
+    private function resolveArgs($class, array $arguments, array $orderBy = [], $forceStrictArgs = true)
     {
         $strictArgs = ['available' => true, 'status' => true];
 
         $parameters = array_merge($arguments, $strictArgs);
 
-        $entity = $this->resolveParameters($class, $parameters);
+        $entity = $this->resolveParameters($class, $parameters, $orderBy);
 
         if(!$entity && $forceStrictArgs){
-            $entity = $this->resolveArgs($class, [], false);
+            $entity = $this->resolveArgs($class, [], $orderBy, false);
         }
 
         return $entity;
@@ -175,12 +179,16 @@ class DefaultsResolver
      * @param array $parameters
      * @return mixed
      */
-    private function resolveParameters($class, array $parameters)
+    private function resolveParameters($class, array $parameters, array $orderBy = [])
     {
         $this->filter->fromClass($class);
 
         foreach ($parameters as $parameter => $value){
             $this->filter->equals($parameter, $value);
+        }
+
+        foreach ($orderBy as $field => $direction){
+            $this->filter->order($field, $direction);
         }
 
         return $this->filter->getOne();
@@ -265,7 +273,7 @@ class DefaultsResolver
             'power_transformer' => 0,
             'grid_voltage' => '127/220',
             'grid_phase_number' => 'Biphasic',
-            'module' => 32433,
+            'module' => null,
             'inverter_maker' => 60627,
             'structure_maker' => 61211,
             'string_box_maker' => 61209,
