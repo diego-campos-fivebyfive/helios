@@ -23,3 +23,10 @@ Administrador e Master
 - Pode selecionar o memorial (incluindo memorial) e o nível
 
 CSV: Definições adiante.
+
+Etapas:
+- Desenvolvimento da interface estática (área do geraador e listagem)
+- Integração com mecanismo de geração (form)
+- Adequação das novas regras de geração (Quantificador, precificação, ciclos).
+- Ajustes nos processos de edição.
+- Exportação
