@@ -15,7 +15,16 @@ PREFIXES=$(printf "${LABELS}" \
   | awk '!a[$0]++'
 )
 
+# contains selection titles
+declare -A HEADERS=(
+  [Category]='Select at least one category:\nUsage: comma to pick more than one'
+  [Priority]='Select the priority:'
+  [Stage]='Select the stage:'
+  [Type]='Select the type:'
+)
+
 for prefix in ${PREFIXES[@]}; do
+  printf "\n${HEADERS[$prefix]}\n"
   OPTIONS=$(printf "${LABELS}" | grep $prefix | awk -F$':' '{print $2}')
   select option in $OPTIONS; do
     echo $option
