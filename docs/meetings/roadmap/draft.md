@@ -1,25 +1,25 @@
 
-17/11/2017 - Timeline
-=====================
-## Novos Status: 
-Entregue (depois do coletado)
-Faturado (depois do em produção e antes do coleta disponível)
-#### Regras de ação:
-Logística: Em produção >> Faturado >> Coleta Disponível >> Coletado
-Pós-Venda: Coletado >> Entregue
+20/11/2017 - Gerardor de lista de sistemas
+==========================================
+Gerar um determinado número de sistemas
+Cada sistema pode ser editado/excluído
+Cada item do sistema pode ser editado/excluído/adicionado
+Podem ser gerados sistemas promocionais, conforme as regras atuais
+A lista de sistemas poderá ser exportada para CSV.
 
-#### Atualizar regras de visualização e listagem de orçamentos por ROLE x STATUS de usuário
-ESTÃO LISTADOS AS RELAÇÕES DE STATUS QUE NÃO PODEM SER VISUALIZADOS PELO ROLE.
-MASTER, ADMIN, COMMERCIAL, EXPANSE: sem restrição
-FINANCIAL: BUILDING, PENDING, VALIDATED.
-AFTER_SALES e LOGISTIC: BUILDING, PENDING, VALIDATED, APPROVED.
+Usuários
+Integrador: 
+- Gerador simples, conforme o padrão
+- Uma lista por conta
+- Somente admin da conta pode ver
 
-## Novo campo editável (Numero da Nota Fiscal)
-Aparece para todos na tela de visualização (não editável)
-Para Logística aparece editável
-Apenas na tela de visualização: No cabeçalho do painel "Dados do Integrador" no lado direito.
-Label - Número da Nota Fiscal: {numero}
-Atualizar campo de busca para que busque também pelo nro da nota (não precisa de coluna na tabela, apenas pesquisa).
+Sices:
+- Uma lista por usuário
 
-## Timeline
-... AGUARDANDO...
+Comercial
+- Pode selecionar o nível, no memorial ativo
+
+Administrador e Master
+- Pode selecionar o memorial (incluindo memorial) e o nível
+
+CSV: Definições adiante.
