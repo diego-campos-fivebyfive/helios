@@ -332,6 +332,18 @@
                                             <li>
                                                 <label>Dados do integrador</label>
                                             </li>
+                                            {% if member.isPlatformLogistic %}
+                                                <div class="pull-right" style="padding-bottom: 10px;">
+                                                    <label style="padding-right: 10px;">Número da Nota Fiscal: </label>
+                                                    <input id="invoice-number" value="{{ order.invoiceNumber }}" type="text">
+                                                </div>
+                                            {% endif %}
+                                            {% if not member.isPlatformLogistic %}
+                                                <div class="pull-right" style="padding-bottom: 10px;">
+                                                    <label style="padding-right: 10px;">Número da Nota Fiscal: </label>
+                                                    {{ order.invoiceNumber }}
+                                                </div>
+                                            {% endif %}
                                         </ol>
                                     </div>
                                 </div>
@@ -769,6 +781,14 @@
                         });
                     }
                 });
+            });
+        });
+
+        $('#invoice-number').on('change', function () {
+            $.ajax({
+                url: '{{ path('invoice_number', {id:order.id}) }}',
+                method: 'post',
+                data: {invoice_number: $('#invoice-number').val()}
             });
         });
     </script>
