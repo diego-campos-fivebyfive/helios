@@ -203,8 +203,12 @@ services:
         arguments: ['@project_manager']
 
     order_transformer:
-        class: AppBundle\Service\Order\OrderTransformer
-        arguments: ['@order_manager']
+            class: AppBundle\Service\Order\OrderTransformer
+            arguments: ['@order_manager']
+
+    order_timeline:
+        class: AppBundle\Service\Order\OrderTimeline
+        arguments: ['@timeline_manager', '@security.token_storage']
 
     memorial_loader:
         class: AppBundle\Service\Pricing\MemorialLoader
