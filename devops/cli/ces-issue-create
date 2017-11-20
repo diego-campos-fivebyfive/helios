@@ -16,5 +16,9 @@ PREFIXES=$(printf "${LABELS}" \
 )
 
 for prefix in ${PREFIXES[@]}; do
-  printf "${LABELS}" | grep $prefix
+  OPTIONS=$(printf "${LABELS}" | grep $prefix | awk -F$':' '{print $2}')
+  select option in $OPTIONS; do
+    echo $option
+    break
+  done
 done
