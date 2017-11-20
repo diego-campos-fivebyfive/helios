@@ -15,15 +15,15 @@
     </style>
 
     <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
+        <div class="row">
         <div class="col-md-12">
             {#TODO: Gerador ficará neste bloco#}
             <div class="ibox float-e-margins">
                 <div class="ibox-title">Gerador</div>
                 <div class="ibox-content">
                     <div class="panel-body">
-                        <h2 align="center">ÁREA FIXA DO GERADOR</h2>
-                        <h4 align="center">Seletores, valores, opções, etc.</h4>
+                        <div id="generator_list_form" class="col-md-12 flow-h">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -111,6 +111,34 @@
                 </div>
             </div>
         </div>
+        </div>
     </div>
-</div>
+
+{% endblock %}
+{% block scripts %}
+    {% include view('helper.request') %}
+
+    <script>
+        GeneratorHandler = {
+            getForm: function () {
+                $.ajax({
+                    url: '{{ path('generator') }}',
+                    complete: function (xhr) {
+                        $('#generator_list_form').html(xhr.responseText)
+                    }
+                });
+            },
+            onSaveProject: function (project) {
+                this.project = project;
+            },
+
+            init: function () {
+                this.getForm();
+            }
+        };
+
+        GeneratorHandler.init();
+
+
+    </script>
 {% endblock %}
