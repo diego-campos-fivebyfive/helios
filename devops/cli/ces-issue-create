@@ -23,9 +23,16 @@ declare -A HEADERS=(
   [Type]='Select the type:'
 )
 
+# returns all labels filtered by prefix
+get_prefix_labels()
+{
+  printf "${LABELS}" | grep $1 | awk -F$':' '{print $2}'
+}
+
 for prefix in ${PREFIXES[@]}; do
   printf "\n${HEADERS[$prefix]}\n"
-  OPTIONS=$(printf "${LABELS}" | grep $prefix | awk -F$':' '{print $2}')
+
+  OPTIONS=$(get_prefix_labels $prefix)
   select option in $OPTIONS; do
     echo $option
     break
