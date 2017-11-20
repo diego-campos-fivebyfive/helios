@@ -2,11 +2,26 @@
 
 LOGIN=$($CLI_PATH/util/github-credentials --login)
 
+# returns all labels with allowed stage labels
+add_stage_labels()
+{
+  while read label; do
+    echo $label
+  done
+
+  local STAGE_LABELS=('Backlog-General' 'Backlog-Devops' 'To-do')
+  for label in ${STAGE_LABELS[@]}; do
+    echo "Stage:${label}"
+  done
+}
+
 # contains labels formatted by: prefix:value
 LABELS=$(curl -s -X GET -u $LOGIN $GITHUB_REPOSITORY/labels \
   | grep name \
+  | grep -v Stage \
   | sed 's/"//g;s/,//g' \
-  | awk '{print $2 $3}'
+  | awk '{print $2 $3}' \
+  | add_stage_labels
 )
 
 # contains prefixes compacted
