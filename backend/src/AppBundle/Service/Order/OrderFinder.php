@@ -36,7 +36,7 @@ class OrderFinder
     /**
      * @var array
      */
-    private $likes = ['o.reference', 'o.firstname', 'o.lastname', 'o.cnpj', 'o.power'];
+    private $likes = ['o.reference', 'o.firstname', 'o.lastname', 'o.cnpj', 'o.power', 'o.invoiceNumber'];
 
     /**
      * OrderFinder constructor.
