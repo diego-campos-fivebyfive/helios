@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+LOGIN=$($CLI_PATH/util/github-credentials --login)
+
+LABELS=$(curl -s -X GET -u $LOGIN $GITHUB_REPOSITORY/labels \
+  | grep name \
+  | sed 's/"//g;s/,//g' \
+  | awk '{print $2 $3}'
+)
+
+SEPARATOR=':'
+
+labels_type()
+{
+  printf "${LABELS}" | awk -F$"$SEPARATOR" '{print $1}' | awk '!a[$0]++'
+}
+
+types=($(labels_type))
+for type in ${types[@]}; do
+  printf "${LABELS}" | grep $type
+done
