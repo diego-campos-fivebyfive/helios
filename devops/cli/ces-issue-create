@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+LOGIN=$($CLI_PATH/util/github-credentials --login)
+
+# contains labels formatted by: prefix:value
+LABELS=$(curl -s -X GET -u $LOGIN $GITHUB_REPOSITORY/labels \
+  | grep name \
+  | sed 's/"//g;s/,//g' \
+  | awk '{print $2 $3}'
+)
+
+# contains prefixes compacted
+PREFIXES=$(printf "${LABELS}" \
+  | awk -F$':' '{print $1}' \
+  | awk '!a[$0]++'
+)
+
+for prefix in ${PREFIXES[@]}; do
+  printf "${LABELS}" | grep $prefix
+done
