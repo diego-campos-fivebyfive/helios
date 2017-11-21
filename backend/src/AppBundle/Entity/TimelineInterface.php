@@ -12,6 +12,11 @@ namespace AppBundle\Entity;
 
 interface TimelineInterface
 {
+    const TAG_STATUS = 'status';
+    const TAG_RETURNING_STATUS = 'returningStatus';
+    const TAG_FILE_PAYMENT = 'filePayment';
+    const TAG_DELIVERY_ADDRESS = 'deliveryAddress';
+
     /**
      * @return int
      */
