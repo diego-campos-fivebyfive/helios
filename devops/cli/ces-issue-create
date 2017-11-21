@@ -55,9 +55,12 @@ select_label()
   printf "\n${HEADERS[$prefix]}\n"
 
   select option in $options; do
-    echo "Selected label: ${option}"
-    ISSUE_LABELS[$prefix]=$option
-    break
+    if [[ -n $option ]]; then
+      echo "Selected label: ${option}"
+      ISSUE_LABELS[$prefix]=$option
+      break
+    fi
+    echo "Error: you must choose a valid option"
   done
 }
 
