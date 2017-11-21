@@ -44,12 +44,21 @@ get_prefix_labels()
   printf "${LABELS}" | grep $1 | awk -F$':' '{print $2}'
 }
 
-for prefix in ${PREFIXES[@]}; do
-  printf "\n${HEADERS[$prefix]}\n"
-
-  OPTIONS=$(get_prefix_labels $prefix)
-  select option in $OPTIONS; do
-    echo $option
+# request user to select labels options and increments ISSUE_LABELS with them
+declare -A ISSUE_LABELS
+select_labels()
+{
+  select option in $1; do
+    echo "Selected label: ${option}"
+    ISSUE_LABELS[$prefix]=$option
     break
   done
+}
+
+for prefix in ${PREFIXES[@]}; do
+  printf "\n${HEADERS[$prefix]}\n"
+  OPTIONS=$(get_prefix_labels $prefix)
+  select_labels "${OPTIONS}"
 done
+
+echo ${ISSUE_LABELS[@]}
