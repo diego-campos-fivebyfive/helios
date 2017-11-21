@@ -38,6 +38,13 @@ interface ProjectInterface
     const STRUCTURE_K2_SYSTEM     = 'K2_SYSTEM';
 
     /**
+     * Type Source
+     */
+    const SOURCE_PROJECT = 0;
+    const SOURCE_ORDER = 1;
+    const SOURCE_CATALOG = 2;
+
+    /**
      * @return int
      */
     public function getId();
@@ -800,6 +807,17 @@ interface ProjectInterface
      * @return bool
      */
     public function isPromotional();
+
+    /**
+     * @param $source
+     * @return ProjectInterface
+     */
+    public function setSource($source);
+
+    /**
+     * @return int
+     */
+    public function getSource();
 
     /**
      * @return array
