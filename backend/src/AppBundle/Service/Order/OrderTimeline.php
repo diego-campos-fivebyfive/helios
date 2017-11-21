@@ -123,7 +123,7 @@ class OrderTimeline
             OrderInterface::STATUS_BUILDING => 'editou o orçamento.',
             OrderInterface::STATUS_PENDING => 'enviou solicitação para SICES.',
             OrderInterface::STATUS_VALIDATED => 'validou o orçamento.',
-            OrderInterface::STATUS_APPROVED => $tag == TimelineInterface::TAG_RETURNING_STATUS? 'cancelou confirmação de pagamento.' : 'aprovou o orçamento.',
+            OrderInterface::STATUS_APPROVED => $tag == TimelineInterface::TAG_RETURNING_STATUS ? 'cancelou confirmação de pagamento.' : 'aprovou o orçamento.',
             OrderInterface::STATUS_REJECTED => 'cancelou o orçamento.',
             OrderInterface::STATUS_DONE => 'confirmou pagamento conforme pró-forma.',
             OrderInterface::STATUS_INSERTED => ': início da produção',
