@@ -2,30 +2,19 @@
 
 LOGIN=$($CLI_PATH/util/github-credentials --login)
 
-# returns all labels with allowed stage labels
-add_stage_labels()
-{
-  while read label; do
-    echo $label
-  done
-
-  local STAGE_LABELS=('Backlog-General' 'Backlog-Devops' 'To-do')
-  for label in ${STAGE_LABELS[@]}; do
-    echo "Stage:${label}"
-  done
-}
-
 # contains labels formatted by: prefix:value
 LABELS=$(curl -s -X GET -u $LOGIN $GITHUB_REPOSITORY/labels \
   | grep name \
   | grep -v Stage \
   | sed 's/"//g;s/,//g' \
-  | awk '{print $2 $3}' \
-  | add_stage_labels
+  | awk '{print $2 $3}'
 )
 
-# contains prefixes compacted
-PREFIXES=$(printf "${LABELS}" \
+# contains Stage prefix name
+STAGE_PREFIX=Stage
+
+# contains prefixes names without repetition
+GENERAL_PREFIXES=$(printf "${LABELS}" \
   | awk -F$':' '{print $1}' \
   | awk '!a[$0]++'
 )
@@ -39,26 +28,43 @@ declare -A HEADERS=(
 )
 
 # returns all labels filtered by prefix
-get_prefix_labels()
+get_prefixed_labels()
 {
   printf "${LABELS}" | grep $1 | awk -F$':' '{print $2}'
 }
 
 # request user to select labels options and increments ISSUE_LABELS with them
 declare -A ISSUE_LABELS
-select_labels()
+select_label()
 {
-  select option in $1; do
+  local prefix=$1
+  local options=$2
+
+  printf "\n${HEADERS[$prefix]}\n"
+
+  select option in $options; do
     echo "Selected label: ${option}"
     ISSUE_LABELS[$prefix]=$option
     break
   done
 }
 
-for prefix in ${PREFIXES[@]}; do
-  printf "\n${HEADERS[$prefix]}\n"
-  OPTIONS=$(get_prefix_labels $prefix)
-  select_labels "${OPTIONS}"
+# returns allowed stage labels, based on Category chosen
+get_stage_labels()
+{
+  if [[ ${ISSUE_LABELS[Category]} == 'Devops' ]]; then
+    echo 'Backlog-Devops'
+  else
+    echo 'Backlog-General'
+  fi
+
+  echo 'To-do'
+}
+
+for prefix in ${GENERAL_PREFIXES[@]}; do
+  select_label $prefix "$(get_prefixed_labels $prefix)"
 done
+
+select_label $STAGE_PREFIX "$(get_stage_labels)"
 
 echo ${ISSUE_LABELS[@]}
