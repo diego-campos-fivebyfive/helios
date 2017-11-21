@@ -21,7 +21,7 @@ GENERAL_PREFIXES=$(printf "${LABELS}" \
 
 # contains selection titles
 declare -A HEADERS=(
-  [Category]='Select at least one category:\nUsage: comma to pick more than one'
+  [Category]='Select at least one category:\nUsage: enter 0 for multiple choose'
   [Priority]='Select the priority:'
   [Stage]='Select the stage:'
   [Type]='Select the type:'
@@ -33,32 +33,64 @@ get_prefixed_labels()
   printf "${LABELS}" | grep $1 | awk -F$':' '{print $2}'
 }
 
-# request user to select labels options and increments ISSUE_LABELS with them
-declare -A ISSUE_LABELS
+# returns allowed stage labels, based on Category chosen
+get_stage_labels()
+{
+  local backlog_type='general'
+
+  for label in ${ISSUE_LABELS[@]}; do
+    [[ $label == *'Devops'* ]] && backlog_type='devops'
+  done
+
+  echo "Backlog-${backlog_type}"
+  echo 'To-do'
+}
+
+# contains all the selected labels
+ISSUE_LABELS=()
+
+# increments ISSUE_LABELS with the selected label prefixing it
+set_issue_label()
+{
+  echo "> Selected label: ${2}"
+  ISSUE_LABELS=(${ISSUE_LABELS[@]} "${1}:${2}")
+}
+
+# request the user to select multiple labels in the category options list
+set_issue_multiple_labels()
+{
+  local prefix=$1
+  local options=$2
+  local label=''
+
+  read -rep $'Usage: separate number using comma. sample: 1,4\n#? ' chosen
+
+  for label_position in ${chosen//,/ }; do
+    label=$(echo $options | awk "{print \$$label_position}")
+    set_issue_label $prefix $label
+  done
+}
+
+# requests the user to select a label in the options list
 select_label()
 {
   local prefix=$1
   local options=$2
+  local error_message='Error: you must choose a valid option'
 
-  printf "\n${HEADERS[$prefix]}\n"
+  echo "${HEADERS[$prefix]}"
 
-  select option in $options; do
-    echo "Selected label: ${option}"
-    ISSUE_LABELS[$prefix]=$option
-    break
+  select label in $options; do
+    if [[ -n $label ]]; then
+      set_issue_label $prefix $label
+      break
+    elif [[ $prefix == 'Category' ]]; then
+      set_issue_multiple_labels $prefix "${options}"
+      break
+    else
+      echo "${error_message}"
+    fi
   done
-}
-
-# returns allowed stage labels, based on Category chosen
-get_stage_labels()
-{
-  if [[ ${ISSUE_LABELS[Category]} == 'Devops' ]]; then
-    echo 'Backlog-Devops'
-  else
-    echo 'Backlog-General'
-  fi
-
-  echo 'To-do'
 }
 
 for prefix in ${GENERAL_PREFIXES[@]}; do
