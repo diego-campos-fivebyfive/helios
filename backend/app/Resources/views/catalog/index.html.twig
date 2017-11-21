@@ -123,6 +123,7 @@
             getForm: function () {
                 $.ajax({
                     url: '{{ path('generator') }}',
+                    data: {source: 2},
                     complete: function (xhr) {
                         $('#generator_list_form').html(xhr.responseText)
                     }

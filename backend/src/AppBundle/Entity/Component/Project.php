@@ -277,6 +277,13 @@ class Project implements ProjectInterface, InsurableInterface
     private $issuedAt;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(type="smallint", name="source", nullable=true)
+     */
+    private $source;
+
+    /**
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="ProjectModule", mappedBy="project", cascade={"persist", "remove"})
@@ -1907,6 +1914,25 @@ class Project implements ProjectInterface, InsurableInterface
     {
         return array_key_exists('is_promotional', $this->defaults) && $this->defaults['is_promotional'];
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setSource($source)
+    {
+        $this->source = $source;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSource()
+    {
+        return $this->source;
+    }
+
 
     /**
      * @inheritDoc

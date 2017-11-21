@@ -36,6 +36,7 @@ class GeneratorController extends AbstractController
         $form = $this->createForm(GeneratorType::class, $defaults, [
             'action' => $action
         ]);
+        $project->setSource($request->get('source'));
 
         $form->handleRequest($request);
 
