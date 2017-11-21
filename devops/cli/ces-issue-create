@@ -45,8 +45,16 @@ get_stage_labels()
   echo 'To-do'
 }
 
-# request user to select labels options and increments ISSUE_LABELS with them
+# contains all the selected labels
 declare -A ISSUE_LABELS
+
+# increments ISSUE_LABELS with the selected option in prefix position
+set_issue_label()
+{
+  ISSUE_LABELS[$1]=$2
+}
+
+# requests the user to select a label in the options list
 select_label()
 {
   local prefix=$1
@@ -57,7 +65,7 @@ select_label()
   select option in $options; do
     if [[ -n $option ]]; then
       echo "Selected label: ${option}"
-      ISSUE_LABELS[$prefix]=$option
+      set_issue_label $prefix $option
       break
     fi
     echo "Error: you must choose a valid option"
