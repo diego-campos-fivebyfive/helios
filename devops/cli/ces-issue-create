@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+# colors pallet
+CT='\033[0;33m'
+CI='\033[0;32m'
+CE='\033[0;31m'
+CD='\033[0;00m'
+CM='\033[0;30m'
+
 LOGIN=$($CLI_PATH/util/github-credentials --login)
 
 # contains labels formatted by: prefix:value
@@ -52,7 +59,7 @@ ISSUE_LABELS=()
 # increments ISSUE_LABELS with the selected label prefixing it
 set_issue_label()
 {
-  echo "> Selected label: ${2}"
+  echo -e "${CI}> Selected label: ${2}${CM}"
   ISSUE_LABELS=(${ISSUE_LABELS[@]} "${1}:${2}")
 }
 
@@ -62,8 +69,10 @@ set_issue_multiple_labels()
   local prefix=$1
   local options=$2
   local label=''
+  local usage_message='Usage: separate number using comma. sample: 1,4'
 
-  read -rep $'Usage: separate number using comma. sample: 1,4\n#? ' chosen
+  printf "${CT}${usage_message}${CM}\n#? "
+  read chosen
 
   for label_position in ${chosen//,/ }; do
     label=$(echo $options | awk "{print \$$label_position}")
@@ -78,7 +87,7 @@ select_label()
   local options=$2
   local error_message='Error: you must choose a valid option'
 
-  echo "${HEADERS[$prefix]}"
+  echo -e "${CT}${HEADERS[$prefix]}${CM}"
 
   select label in $options; do
     if [[ -n $label ]]; then
@@ -88,9 +97,11 @@ select_label()
       set_issue_multiple_labels $prefix "${options}"
       break
     else
-      echo "${error_message}"
+      echo -e "${CE}${error_message}${CM}"
     fi
   done
+
+  printf "${CD}"
 }
 
 for prefix in ${GENERAL_PREFIXES[@]}; do
