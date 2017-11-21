@@ -37,43 +37,43 @@
             color: #555;
         }
 
-        .btn.status-building i {
+        .fa-circle.status-building {
             color: #898989;
         }
 
-        .btn.status-pending i {
+        .fa-circle.status-pending {
             color: #ff7701;
         }
 
-        .btn.status-validated i {
+        .fa-circle.status-validated {
             color: #0a6aa1;
         }
 
-        .btn.status-approved i {
+        .fa-circle.status-approved {
             color: #00a157;
         }
 
-        .btn.status-rejected i {
+        .fa-circle.status-rejected {
             color: #ffcd70;
         }
 
-        .btn.status-done i {
+        .fa-circle.status-done {
             color: #777;
         }
 
-        .btn.status-inserted i {
+        .fa-circle.status-inserted {
             color: #1aa10f;
         }
 
-        .btn.status-available i {
+        .fa-circle.status-available {
             color: #faa;
         }
 
-        .btn.status-collected i {
+        .fa-circle.status-collected {
             color: #43ecec;
         }
 
-        .btn.status-billed i {
+        .fa-circle.status-billed {
             color: #aa1111;
         }
 
@@ -94,27 +94,27 @@
     {% set isPlatform = app.user.isPlatform %}
     <div class="wrapper wrapper-content  animated fadeInRight">
         <div class="row">
-            {% if not member.isPlatformExpanse and expired %}
-                {% if not (order.isDone or order.isApproved or order.isRejected)
-                and (order.isBuilding or (order.isPending and member.isPlatformUser) or (order.isValidated and not member.isPlatformUser)) %}
-                    <div class="ibox">
-                        <div class="ibox-content">
-                            <div class="alert alert-info text-center">
-                                <h2>
-                                    <i class="fa fa-info-circle"></i>
-                                    <strong style="text-transform: uppercase"> Expirado </strong>
-                                    <br>
-                                    Este orçamento não pode ser mais editado pois foi baseado em uma
-                                    tabela de preço vencida. Favor gerar novo orçamento
-                                </h2>
+            <div class="col-md-8">
+                {% if not member.isPlatformExpanse and expired %}
+                    {% if not (order.isDone or order.isApproved or order.isRejected)
+                    and (order.isBuilding or (order.isPending and member.isPlatformUser) or (order.isValidated and not member.isPlatformUser)) %}
+                        <div class="ibox">
+                            <div class="ibox-content">
+                                <div class="alert alert-info text-center">
+                                    <h2>
+                                        <i class="fa fa-info-circle"></i>
+                                        <strong style="text-transform: uppercase"> Expirado </strong>
+                                        <br>
+                                        Este orçamento não pode ser mais editado pois foi baseado em uma
+                                        tabela de preço vencida. Favor gerar novo orçamento
+                                    </h2>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    {% endif %}
                 {% endif %}
-            {% endif %}
 
-            {% if not member.isPlatformUser and order.validated and not expired %}
-            <div class="col-md-12">
+                {% if not member.isPlatformUser and order.validated and not expired %}
                     <div class="alert alert-danger">
                         <i class="fa fa-warning"></i>
                         Ao editar este orçamento será necessário uma revalidação pela equipe da Sices.
@@ -123,350 +123,203 @@
                         <i class="fa fa-info-circle"></i>
                         Ao aprovar este orçamento você receberá a proforma e seu pedido de compra será processado.
                     </div>
-            </div>
-            {% endif %}
-            <div class="ibox border-bottom">
-                <div class="ibox-content">
-                    <div class="tab-content">
-                        <div class="tab-pane active">
-                            <div class="row">
-                                <div class="row wrapper">
-                                    <div class="col-md-12 border-bottom">
-                                        <div class="btn-group spacing-bottom">
+                {% endif %}
 
-                                            <span class="btn btn-sm btn-status status-{{ order.statusName }}">
-                                                <i class="fa fa-circle"></i> {{ order.statusName|capitalize|trans }}
-                                            </span>
+                <div class="ibox border-bottom">
+                    <div class="ibox-content">
+                        <div class="tab-content">
+                            <div class="tab-pane active">
+                                <div class="row">
+                                    <div class="row wrapper">
+                                        <div class="col-md-12 border-bottom">
+                                            <div class="btn-group spacing-bottom">
 
-                                            {% if not member.isPlatformExpanse %}
-                                                {% if order.isInserted and member.isPlatformLogistic %}
-                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_BILLED') }}">
-                                                        <i class="fa fa-money"></i> Faturar
+                                                <span class="btn btn-sm btn-status">
+                                                    <i class="fa fa-circle status-{{ order.statusName }}"></i> {{ order.statusName|capitalize|trans }}
+                                                </span>
+
+                                                {% if not member.isPlatformExpanse %}
+                                                    {% if order.isInserted and member.isPlatformLogistic %}
+                                                        <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                           data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_BILLED') }}">
+                                                            <i class="fa fa-money"></i> Faturar
+                                                        </a>
+                                                    {% endif %}
+
+                                                    {% if order.isBilled and member.isPlatformLogistic %}
+                                                        <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                           data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_AVAILABLE') }}">
+                                                            <i class="fa fa-archive"></i> Coleta disponível
+                                                        </a>
+                                                    {% endif %}
+
+                                                    {% if order.isAvailable and member.isPlatformLogistic %}
+                                                        <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                           data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_COLLECTED') }}">
+                                                            <i class="fa fa-check"></i> Coletado
+                                                        </a>
+                                                    {% endif %}
+
+                                                    {% if order.isDone and member.isPlatformAfterSales %}
+                                                        <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                           data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}">
+                                                            <i class="fa fa-check"></i> Inserido
+                                                        </a>
+                                                    {% endif %}
+
+                                                    {% if order.isCollected and member.isPlatformAfterSales %}
+                                                        <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                           data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DELIVERED') }}">
+                                                            <i class="fa fa-check"></i> Entregue
+                                                        </a>
+                                                    {% endif %}
+
+                                                    {% if order.isBuilding or order.isRejected %}
+                                                        <a class="btn btn-sm btn-danger"
+                                                           data-delete="{{ path('order_delete', {id:order.id}) }}">
+                                                            <i class="fa fa-close"></i> Excluir
+                                                        </a>
+                                                    {% endif %}
+
+                                                    {% if not member.isPlatformUser and order.isValidated and not expired %}
+                                                        <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                           data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') }}">
+                                                            <i class="fa fa-thumbs-o-up"></i> Aprovar e gerar pró-forma
+                                                        </a>
+                                                    {% endif %}
+
+                                                    {% if (not member.isPlatformUser and order.isValidated)
+                                                    or (member.isPlatformUser and (order.isValidated or order.isPending or order.isApproved))
+                                                    or (member.isPlatformMaster and not order.isBuilding and not order.isRejected) %}
+                                                        <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
+                                                           data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_REJECTED') }}">
+                                                            <i class="fa fa-thumbs-o-down"></i> Rejeitar
+                                                        </a>
+                                                    {% endif %}
+
+                                                    {% if member.isPlatformUser and order.isValidated %}
+                                                        <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                           data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_PENDING') }}">
+                                                            <i class="fa fa-arrow-left"></i> Remover Validação
+                                                        </a>
+                                                    {% endif %}
+
+                                                    {% if member.isPlatformFinancial and order.isApproved %}
+                                                        <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                           data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DONE') }}">
+                                                            <i class="fa fa-check-square-o"></i> Pagamento confirmado
+                                                        </a>
+                                                        <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
+                                                           data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_REJECTED') }}">
+                                                            <i class="fa fa-warning"></i> Pagamento não confirmado
+                                                        </a>
+                                                    {% endif %}
+
+                                                    {% if member.isPlatformFinancial and order.isDone %}
+                                                        <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
+                                                           data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') }}">
+                                                            <i class="fa fa-stop"></i> Cancelar Confirmação
+                                                        </a>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </div>
+                                            {% if not member.isPlatformExpanse and not expired %}
+                                            <div class="pull-right">
+                                                {% if not (order.isDone or order.isApproved or order.isRejected)
+                                                and (order.isBuilding or (order.isPending and member.isPlatformUser) or (order.isValidated and not member.isPlatformUser)) %}
+                                                    <a class="btn btn-sm btn-success pull-right"
+                                                       href="{{ path('project_generator', {order:order.id}) }}">
+                                                        <i class="fa fa-pencil"></i> Editar Orçamento
                                                     </a>
                                                 {% endif %}
-
-                                                {% if order.isBilled and member.isPlatformLogistic %}
-                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_AVAILABLE') }}">
-                                                        <i class="fa fa-archive"></i> Coleta disponível
-                                                    </a>
-                                                {% endif %}
-
-                                                {% if order.isAvailable and member.isPlatformLogistic %}
-                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_COLLECTED') }}">
-                                                        <i class="fa fa-check"></i> Coletado
-                                                    </a>
-                                                {% endif %}
-
-                                                {% if order.isDone and member.isPlatformAfterSales %}
-                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}">
-                                                        <i class="fa fa-check"></i> Inserido
-                                                    </a>
-                                                {% endif %}
-
-                                                {% if order.isCollected and member.isPlatformAfterSales %}
-                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DELIVERED') }}">
-                                                        <i class="fa fa-check"></i> Entregue
-                                                    </a>
-                                                {% endif %}
-
-                                                {% if order.isBuilding or order.isRejected %}
-                                                    <a class="btn btn-sm btn-danger"
-                                                       data-delete="{{ path('order_delete', {id:order.id}) }}">
-                                                        <i class="fa fa-close"></i> Excluir
-                                                    </a>
-                                                {% endif %}
-
-                                                {% if not member.isPlatformUser and order.isValidated and not expired %}
-                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') }}">
-                                                        <i class="fa fa-thumbs-o-up"></i> Aprovar e gerar pró-forma
-                                                    </a>
-                                                {% endif %}
-
-                                                {% if (not member.isPlatformUser and order.isValidated)
-                                                or (member.isPlatformUser and (order.isValidated or order.isPending or order.isApproved))
-                                                or (member.isPlatformMaster and not order.isBuilding and not order.isRejected) %}
-                                                    <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_REJECTED') }}">
-                                                        <i class="fa fa-thumbs-o-down"></i> Rejeitar
-                                                    </a>
-                                                {% endif %}
-
-                                                {% if member.isPlatformUser and order.isValidated %}
-                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_PENDING') }}">
-                                                        <i class="fa fa-arrow-left"></i> Remover Validação
-                                                    </a>
-                                                {% endif %}
-
-                                                {% if member.isPlatformFinancial and order.isApproved %}
-                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DONE') }}">
-                                                        <i class="fa fa-check-square-o"></i> Pagamento confirmado
-                                                    </a>
-                                                    <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_REJECTED') }}">
-                                                        <i class="fa fa-warning"></i> Pagamento não confirmado
-                                                    </a>
-                                                {% endif %}
-
-                                                {% if member.isPlatformFinancial and order.isDone %}
-                                                    <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') }}">
-                                                        <i class="fa fa-stop"></i> Cancelar Confirmação
-                                                    </a>
-                                                {% endif %}
+                                            </div>
                                             {% endif %}
                                         </div>
-                                        {% if not member.isPlatformExpanse and not expired %}
-                                        <div class="pull-right">
-                                            {% if not (order.isDone or order.isApproved or order.isRejected)
-                                            and (order.isBuilding or (order.isPending and member.isPlatformUser) or (order.isValidated and not member.isPlatformUser)) %}
-                                                <a class="btn btn-sm btn-success pull-right"
-                                                   href="{{ path('project_generator', {order:order.id}) }}">
-                                                    <i class="fa fa-pencil"></i> Editar Orçamento
-                                                </a>
-                                            {% endif %}
+                                        <div class="col-md-12 {% if order.billingDirect %}border-bottom{% endif %}">
+                                            <h2>
+                                                Orçamento {{ order.reference }}
+                                                {% if order.fileExtract and
+                                                (member.isPlatformAdmin or member.isPlatformMaster or member.isPlatformAfterSales) %}
+                                                    <a class="pull-right" target="_blank"
+                                                       href="{{ path('order_file',{id:order.id, type:'fileExtract'}) }}">
+                                                        <i class="fa fa-download"></i> CSV
+                                                    </a>
+                                                {% endif %}
+                                            </h2>
+                                        </div>
+                                        {% if order.billingDirect %}
+                                        <div class="col-lg-12 border-bottom">
+                                            <ol class="breadcrumb">
+                                                <li>
+                                                    <label>Dados de faturamento</label>
+                                                </li>
+                                            </ol>
                                         </div>
                                         {% endif %}
-                                    </div>
-                                    <div class="col-md-12 {% if order.billingDirect %}border-bottom{% endif %}">
-                                        <h2>
-                                            Orçamento {{ order.reference }}
-                                            {% if order.fileExtract and
-                                            (member.isPlatformAdmin or member.isPlatformMaster or member.isPlatformAfterSales) %}
-                                                <a class="pull-right" target="_blank"
-                                                   href="{{ path('order_file',{id:order.id, type:'fileExtract'}) }}">
-                                                    <i class="fa fa-download"></i> CSV
-                                                </a>
-                                            {% endif %}
-                                        </h2>
                                     </div>
                                     {% if order.billingDirect %}
-                                    <div class="col-lg-12 border-bottom">
-                                        <ol class="breadcrumb">
-                                            <li>
-                                                <label>Dados de faturamento</label>
-                                            </li>
-                                        </ol>
-                                    </div>
+                                        <div class="col-md-12">
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Cliente</label>
+                                                {{ order.billingFirstname }}
+                                            </div>
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Razão Social</label>
+                                                {{ order.billingLastname }}
+                                            </div>
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">CNPJ</label>
+                                                {{ order.billingCnpj }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Inscrição Estadual</label>
+                                                {{ order.billingIe }}
+                                            </div>
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Contato</label>
+                                                {{ order.billingContact }}
+                                            </div>
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Email</label>
+                                                {{ order.billingEmail }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Telefone</label>
+                                                {{ order.billingPhone }}
+                                            </div>
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Cep</label>
+                                                {{ order.billingPostcode }}
+                                            </div>
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Estado</label>
+                                                {{ order.billingState }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Cidade</label>
+                                                {{ order.billingCity }}
+                                            </div>
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Bairro</label>
+                                                {{ order.billingDistrict }}
+                                            </div>
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Rua</label>
+                                                {{ order.billingStreet }}
+                                            </div>
+                                        </div>
                                     {% endif %}
                                 </div>
-                                {% if order.billingDirect %}
-                                    <div class="col-md-12">
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Cliente</label>
-                                            {{ order.billingFirstname }}
-                                        </div>
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Razão Social</label>
-                                            {{ order.billingLastname }}
-                                        </div>
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">CNPJ</label>
-                                            {{ order.billingCnpj }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Inscrição Estadual</label>
-                                            {{ order.billingIe }}
-                                        </div>
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Contato</label>
-                                            {{ order.billingContact }}
-                                        </div>
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Email</label>
-                                            {{ order.billingEmail }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Telefone</label>
-                                            {{ order.billingPhone }}
-                                        </div>
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Cep</label>
-                                            {{ order.billingPostcode }}
-                                        </div>
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Estado</label>
-                                            {{ order.billingState }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Cidade</label>
-                                            {{ order.billingCity }}
-                                        </div>
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Bairro</label>
-                                            {{ order.billingDistrict }}
-                                        </div>
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Rua</label>
-                                            {{ order.billingStreet }}
-                                        </div>
-                                    </div>
-                                {% endif %}
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="ibox border-bottom">
-                <div class="ibox-content">
-                    <div class="tab-content">
-                        <div class="tab-pane active">
-                            <div class="row">
-                                <div class="row wrapper">
-                                    <div class="col-lg-12 border-bottom">
-                                        <ol class="breadcrumb">
-                                            <li>
-                                                <label>Dados do integrador</label>
-                                            </li>
-                                            {% if member.isPlatformLogistic %}
-                                                <div class="pull-right" style="padding-bottom: 10px;">
-                                                    <label style="padding-right: 10px;">Número da Nota Fiscal: </label>
-                                                    <input id="invoice-number" value="{{ order.invoiceNumber }}" type="text">
-                                                </div>
-                                            {% endif %}
-                                            {% if not member.isPlatformLogistic %}
-                                                <div class="pull-right" style="padding-bottom: 10px;">
-                                                    <label style="padding-right: 10px;">Número da Nota Fiscal: </label>
-                                                    {{ order.invoiceNumber }}
-                                                </div>
-                                            {% endif %}
-                                        </ol>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="col-md-4 spacing">
-                                        <label class="row-total">Cliente</label>
-                                        {{ order.firstname }}
-                                    </div>
-                                    <div class="col-md-4 spacing">
-                                        <label class="row-total">Nome</label>
-                                        {{ order.lastname }}
-                                    </div>
-                                    <div class="col-md-4 spacing">
-                                        <label class="row-total">CNPJ</label>
-                                        {{ order.cnpj }}
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="col-md-4 spacing">
-                                        <label class="row-total">Inscrição Estadual</label>
-                                        {{ order.ie }}
-                                    </div>
-                                    <div class="col-md-4 spacing">
-                                        <label class="row-total">Contato</label>
-                                        {{ order.contact }}
-                                    </div>
-                                    <div class="col-md-4 spacing">
-                                        <label class="row-total">Email</label>
-                                        {{ order.email }}
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="col-md-4 spacing">
-                                        <label class="row-total">Telefone</label>
-                                        {{ order.phone }}
-                                    </div>
-                                    <div class="col-md-2 spacing">
-                                        <label class="row-total">Cep</label>
-                                        {{ order.postcode }}
-                                    </div>
-                                    <div class="col-md-2 spacing">
-                                        <label class="row-total">Estado</label>
-                                        {{ order.state }}
-                                    </div>
-                                    <div class="col-md-4 spacing">
-                                        <label class="row-total">Cidade</label>
-                                        {{ order.city }}
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="col-md-4 spacing">
-                                        <label class="row-total">Endereço</label>
-                                        {{ order.address }}
-                                    </div>
-                                    <div class="col-md-4 spacing">
-                                        <label class="row-total">Usuário Sices vinculado</label>
-                                        {{ order.agent }}
-                                    </div>
-                                    <div class="col-md-4 spacing">
-                                        {% set notLevel = 'Sem Nivel' %}
-                                        <label class="row-total">Nível de desconto</label>
-                                        {{ order.account ? order.account.level|trans : notLevel }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="ibox border-bottom">
-                <div class="ibox-content">
-                    <div class="tab-content">
-                        <div class="tab-pane active">
-                            <div class="row">
-                                <div class="row wrapper">
-                                    <div class="col-lg-12 border-bottom">
-                                        <ol class="breadcrumb">
-                                            <li>
-                                                <label>Pagamento e Entrega</label>
-                                            </li>
-                                        </ol>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="col-md-4 spacing">
-                                        <label class="row-total">Condição de pagamento</label>
-                                        {% if order.paymentMethod('array') %}
-                                            {% for payment in order.paymentMethod('array').quotas %}
-                                                    &#{{ loop.index + 96 }}; ) {{ payment.description }} {{ payment.percent }}%
-                                                    {% if payment.display_payment_date is defined
-                                                    and payment.display_payment_date == 'true' and order.isApproved %}
-                                                        - {{ payment.date|date('d/m/Y') }}
-                                                    {% endif %}<br>
-                                            {% endfor %}
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-md-4 spacing">
-                                        <label class="row-total">Disponibilidade para coleta (data)</label>
-                                        {% if order.deliveryAt %}{{ order.deliveryAt.date|date('d/m/Y') }}{% endif %}
-                                    </div>
-                                    <div class="col-md-4 spacing">
-                                        <label class="row-total">Disponibilidade para coleta (dias após pagamento)</label>
-                                        {% if order.deliveryDelay %} {{ order.deliveryDelay }} dia(s) após a identificação do pagamento.{% endif %}<br/>
-                                    </div>
-                                    <div class="col-md-4 spacing">
-                                        <label class="row-total">Prazo de entrega</label>
-                                        {% if order.deadline %}
-                                            {{ order.deadline }} DIAS
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-md-4 spacing">
-                                        <label class="row-total">Observações</label>
-                                        {{ order.note }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {% if order.shippingrules and order.shippingrules['type'] == 'self' and order.shippingRules.company is not null %}
 
                 <div class="ibox border-bottom">
                     <div class="ibox-content">
@@ -477,55 +330,134 @@
                                         <div class="col-lg-12 border-bottom">
                                             <ol class="breadcrumb">
                                                 <li>
-                                                    <label>Dados da transportadora</label>
+                                                    <label>Dados do integrador</label>
+                                                </li>
+                                                {% if member.isPlatformLogistic %}
+                                                    <div class="pull-right" style="padding-bottom: 10px;">
+                                                        <label style="padding-right: 10px;">Número da Nota Fiscal: </label>
+                                                        <input id="invoice-number" value="{{ order.invoiceNumber }}" type="text">
+                                                    </div>
+                                                {% endif %}
+                                                {% if not member.isPlatformLogistic %}
+                                                    <div class="pull-right" style="padding-bottom: 10px;">
+                                                        <label style="padding-right: 10px;">Número da Nota Fiscal: </label>
+                                                        {{ order.invoiceNumber }}
+                                                    </div>
+                                                {% endif %}
+                                            </ol>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Cliente</label>
+                                            {{ order.firstname }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Nome</label>
+                                            {{ order.lastname }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">CNPJ</label>
+                                            {{ order.cnpj }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Inscrição Estadual</label>
+                                            {{ order.ie }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Contato</label>
+                                            {{ order.contact }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Email</label>
+                                            {{ order.email }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Telefone</label>
+                                            {{ order.phone }}
+                                        </div>
+                                        <div class="col-md-2 spacing">
+                                            <label class="row-total">Cep</label>
+                                            {{ order.postcode }}
+                                        </div>
+                                        <div class="col-md-2 spacing">
+                                            <label class="row-total">Estado</label>
+                                            {{ order.state }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Cidade</label>
+                                            {{ order.city }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Endereço</label>
+                                            {{ order.address }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Usuário Sices vinculado</label>
+                                            {{ order.agent }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            {% set notLevel = 'Sem Nivel' %}
+                                            <label class="row-total">Nível de desconto</label>
+                                            {{ order.account ? order.account.level|trans : notLevel }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ibox border-bottom">
+                    <div class="ibox-content">
+                        <div class="tab-content">
+                            <div class="tab-pane active">
+                                <div class="row">
+                                    <div class="row wrapper">
+                                        <div class="col-lg-12 border-bottom">
+                                            <ol class="breadcrumb">
+                                                <li>
+                                                    <label>Pagamento e Entrega</label>
                                                 </li>
                                             </ol>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="col-md-4 spacing">
-                                            <label class="row-total">Razão Social</label>
-                                            {{ order.shippingrules['company']['name'] }}
+                                            <label class="row-total">Condição de pagamento</label>
+                                            {% if order.paymentMethod('array') %}
+                                                {% for payment in order.paymentMethod('array').quotas %}
+                                                        &#{{ loop.index + 96 }}; ) {{ payment.description }} {{ payment.percent }}%
+                                                        {% if payment.display_payment_date is defined
+                                                        and payment.display_payment_date == 'true' and order.isApproved %}
+                                                            - {{ payment.date|date('d/m/Y') }}
+                                                        {% endif %}<br>
+                                                {% endfor %}
+                                            {% endif %}
                                         </div>
                                         <div class="col-md-4 spacing">
-                                            <label class="row-total">CNPJ</label>
-                                            {{ order.shippingrules['company']['cnpj'] }}
+                                            <label class="row-total">Disponibilidade para coleta (data)</label>
+                                            {% if order.deliveryAt %}{{ order.deliveryAt.date|date('d/m/Y') }}{% endif %}
                                         </div>
                                         <div class="col-md-4 spacing">
-                                            <label class="row-total">Inscrição Estadual</label>
-                                            {{ order.shippingrules['company']['ie'] }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Contato</label>
-                                            {{ order.shippingrules['company']['contact'] }}
+                                            <label class="row-total">Disponibilidade para coleta (dias após pagamento)</label>
+                                            {% if order.deliveryDelay %} {{ order.deliveryDelay }} dia(s) após a identificação do pagamento.{% endif %}<br/>
                                         </div>
                                         <div class="col-md-4 spacing">
-                                            <label class="row-total">Email</label>
-                                            {{ order.shippingrules['company']['email'] }}
+                                            <label class="row-total">Prazo de entrega</label>
+                                            {% if order.deadline %}
+                                                {{ order.deadline }} DIAS
+                                            {% endif %}
                                         </div>
                                         <div class="col-md-4 spacing">
-                                            <label class="row-total">Telefone</label>
-                                            {{ order.shippingrules['company']['phone'] }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="col-md-3 spacing">
-                                            <label class="row-total">Cep</label>
-                                            {{ order.shippingrules['company']['postcode'] }}
-                                        </div>
-                                        <div class="col-md-1 spacing">
-                                            <label class="row-total">Estado</label>
-                                            {{ order.shippingrules['company']['state'] }}
-                                        </div>
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Cidade</label>
-                                            {{ order.shippingrules['company']['city'] }}
-                                        </div>
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Endereço</label>
-                                            {{ order.shippingrules['company']['address'] }}
+                                            <label class="row-total">Observações</label>
+                                            {{ order.note }}
                                         </div>
                                     </div>
                                 </div>
@@ -534,176 +466,244 @@
                     </div>
                 </div>
 
-            {% endif %}
+                {% if order.shippingrules and order.shippingrules['type'] == 'self' and order.shippingRules.company is not null %}
 
-            <div class="ibox border-bottom">
-                <div class="ibox-content">
-                    <div class="tab-content">
-                        <div class="tab-pane active">
-                            <div class="row">
-                                <div class="row wrapper">
-                                    <div class="col-lg-12 border-bottom">
-                                        <ol class="breadcrumb">
-                                            <li>
-                                                <label>Endereço de Entrega</label>
-                                            </li>
-                                        </ol>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="col-md-4 spacing">
-                                        <label class="row-total">CEP</label>
-                                        {{ order.deliveryPostcode }}
-                                    </div>
-                                    <div class="col-md-2 spacing">
-                                        <label class="row-total">Estado</label>
-                                        {{ order.deliveryState }}
-                                    </div>
-                                    <div class="col-md-3 spacing">
-                                        <label class="row-total">Cidade</label>
-                                        {{ order.deliveryCity }}
-                                    </div>
-                                    <div class="col-md-3 spacing">
-                                        <label class="row-total">Bairro</label>
-                                        {{ order.deliveryDistrict }}
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="col-md-4 spacing">
-                                        <label class="row-total">Logradouro</label>
-                                        {{ order.deliveryStreet }}
-                                    </div>
-                                    <div class="col-md-2 spacing">
-                                        <label class="row-total">Número</label>
-                                        {{ order.deliveryNumber }}
-                                    </div>
-                                    <div class="col-md-6 spacing">
-                                        <label class="row-total">Complementos</label>
-                                        {{ order.deliveryComplement }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="ibox border-bottom">
-                <div class="ibox-content">
-                    <div class="tab-content">
-                        <div class="tab-pane active">
-                            <table class="table table-striped table-hover">
-                                <thead>
-                                <tr>
-                                    <th class="col-md-5"> Descrição</th>
-                                    <th class="col-md-2 text-center"> Data</th>
-                                    <th class="col-md-1 text-center"> Qtde Itens</th>
-                                    <th class="col-md-2"><span class="pull-right">Valor dos equipamentos</span></th>
-                                    <th class="col-md-2"><span class="pull-right">Valor do seguro</span></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for order in orders if not order.budget %}
-                                    <tr>
-                                        <td colspan="5">
-                                            <div>
-                                                <h4>
-                                                    <a data-toggle="collapse" href="#{{ order.id }}">
-                                                        <span class="col-md-5 color-rows"> {{ order.description }} </span>
-                                                        <span class="col-md-2 color-rows text-center"> {{ order.createdAt|date('d/m/Y') }} </span>
-                                                        <span class="col-md-1 color-rows text-center"> {{ order.elements.count }} Itens</span>
-                                                        <span class="col-md-2 color-rows">
-                                                            <span class="pull-right">{{ order.subTotal|currency }}</span>
-                                                        </span>
-                                                        <span class="col-md-2 color-rows">
-                                                            <span class="pull-right">{{ order.insurance|currency }}</span>
-                                                        </span>
-                                                    </a>
-                                                </h4>
+                    <div class="ibox border-bottom">
+                        <div class="ibox-content">
+                            <div class="tab-content">
+                                <div class="tab-pane active">
+                                    <div class="row">
+                                        <div class="row wrapper">
+                                            <div class="col-lg-12 border-bottom">
+                                                <ol class="breadcrumb">
+                                                    <li>
+                                                        <label>Dados da transportadora</label>
+                                                    </li>
+                                                </ol>
                                             </div>
-                                        </td>
-                                    </tr>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Razão Social</label>
+                                                {{ order.shippingrules['company']['name'] }}
+                                            </div>
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">CNPJ</label>
+                                                {{ order.shippingrules['company']['cnpj'] }}
+                                            </div>
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Inscrição Estadual</label>
+                                                {{ order.shippingrules['company']['ie'] }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Contato</label>
+                                                {{ order.shippingrules['company']['contact'] }}
+                                            </div>
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Email</label>
+                                                {{ order.shippingrules['company']['email'] }}
+                                            </div>
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Telefone</label>
+                                                {{ order.shippingrules['company']['phone'] }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="col-md-3 spacing">
+                                                <label class="row-total">Cep</label>
+                                                {{ order.shippingrules['company']['postcode'] }}
+                                            </div>
+                                            <div class="col-md-1 spacing">
+                                                <label class="row-total">Estado</label>
+                                                {{ order.shippingrules['company']['state'] }}
+                                            </div>
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Cidade</label>
+                                                {{ order.shippingrules['company']['city'] }}
+                                            </div>
+                                            <div class="col-md-4 spacing">
+                                                <label class="row-total">Endereço</label>
+                                                {{ order.shippingrules['company']['address'] }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endif %}
+
+                <div class="ibox border-bottom">
+                    <div class="ibox-content">
+                        <div class="tab-content">
+                            <div class="tab-pane active">
+                                <div class="row">
+                                    <div class="row wrapper">
+                                        <div class="col-lg-12 border-bottom">
+                                            <ol class="breadcrumb">
+                                                <li>
+                                                    <label>Endereço de Entrega</label>
+                                                </li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">CEP</label>
+                                            {{ order.deliveryPostcode }}
+                                        </div>
+                                        <div class="col-md-2 spacing">
+                                            <label class="row-total">Estado</label>
+                                            {{ order.deliveryState }}
+                                        </div>
+                                        <div class="col-md-3 spacing">
+                                            <label class="row-total">Cidade</label>
+                                            {{ order.deliveryCity }}
+                                        </div>
+                                        <div class="col-md-3 spacing">
+                                            <label class="row-total">Bairro</label>
+                                            {{ order.deliveryDistrict }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Logradouro</label>
+                                            {{ order.deliveryStreet }}
+                                        </div>
+                                        <div class="col-md-2 spacing">
+                                            <label class="row-total">Número</label>
+                                            {{ order.deliveryNumber }}
+                                        </div>
+                                        <div class="col-md-6 spacing">
+                                            <label class="row-total">Complementos</label>
+                                            {{ order.deliveryComplement }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ibox border-bottom">
+                    <div class="ibox-content">
+                        <div class="tab-content">
+                            <div class="tab-pane active">
+                                <table class="table table-striped table-hover">
+                                    <thead>
                                     <tr>
-                                        <td colspan="5" style="padding: 0;">
-                                            <div id="{{ order.id }}" class="collapse">
+                                        <th class="col-md-5"> Descrição</th>
+                                        <th class="col-md-2 text-center"> Data</th>
+                                        <th class="col-md-1 text-center"> Qtde Itens</th>
+                                        <th class="col-md-2"><span class="pull-right">Valor dos equipamentos</span></th>
+                                        <th class="col-md-2"><span class="pull-right">Valor do seguro</span></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for order in orders if not order.budget %}
+                                        <tr>
+                                            <td colspan="5">
                                                 <div>
-                                                    <table class="table table-striped table-components">
-                                                        <thead>
-                                                        <tr>
-                                                            <td><b>ITEM</b></td>
-                                                            <td><b>CÓDIGO</b></td>
-                                                            <td><b>PRODUTO</b></td>
-                                                            <td class="col-md-1 text-center"><b>QTD</b></td>
-                                                            {% if not order.isPromotional or isPlatform %}
-                                                            <td class="col-md-2 text-center"><b>VALOR UNIT</b></td>
-                                                            <td class="col-md-2 text-center"><b>VALOR TOTAL</b></td>
-                                                            {% endif %}
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        {% for element in order.elements %}
+                                                    <h4>
+                                                        <a data-toggle="collapse" href="#{{ order.id }}">
+                                                            <span class="col-md-5 color-rows"> {{ order.description }} </span>
+                                                            <span class="col-md-2 color-rows text-center"> {{ order.createdAt|date('d/m/Y') }} </span>
+                                                            <span class="col-md-1 color-rows text-center"> {{ order.elements.count }} Itens</span>
+                                                            <span class="col-md-2 color-rows">
+                                                                <span class="pull-right">{{ order.subTotal|currency }}</span>
+                                                            </span>
+                                                            <span class="col-md-2 color-rows">
+                                                                <span class="pull-right">{{ order.insurance|currency }}</span>
+                                                            </span>
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" style="padding: 0;">
+                                                <div id="{{ order.id }}" class="collapse">
+                                                    <div>
+                                                        <table class="table table-striped table-components">
+                                                            <thead>
                                                             <tr>
-                                                                <td class="text-center"><b>{{ loop.index }}</b></td>
-                                                                <td>{{ element.code }}</td>
-                                                                <td>{{ element.description }}</td>
-                                                                <td class="text-center">{{ element.quantity }}</td>
+                                                                <td><b>ITEM</b></td>
+                                                                <td><b>CÓDIGO</b></td>
+                                                                <td><b>PRODUTO</b></td>
+                                                                <td class="col-md-1 text-center"><b>QTD</b></td>
                                                                 {% if not order.isPromotional or isPlatform %}
-                                                                <td class="text-center">{{ element.unitPrice|currency }}</td>
-                                                                <td class="text-center">{{ element.total|currency }}</td>
+                                                                <td class="col-md-2 text-center"><b>VALOR UNIT</b></td>
+                                                                <td class="col-md-2 text-center"><b>VALOR TOTAL</b></td>
                                                                 {% endif %}
                                                             </tr>
-                                                        {% endfor %}
-                                                        </tbody>
-                                                    </table>
-                                                    {% if order.insurance %}
-                                                        <div class="col-md-12 border-bottom">
-                                                            <h4 class="pull-right">
-                                                                Seguro: {{ order.insurance|currency }}</h4>
-                                                        </div>
-                                                    {% endif %}
-                                                    <a data-toggle="collapse" href="#{{ order.id }}" class="color-rows">
-                                                        <div class="col-md-12 text-center minimize">
-                                                            <i class="fa fa-chevron-up"></i>
-                                                        </div>
-                                                    </a>
+                                                            </thead>
+                                                            <tbody>
+                                                            {% for element in order.elements %}
+                                                                <tr>
+                                                                    <td class="text-center"><b>{{ loop.index }}</b></td>
+                                                                    <td>{{ element.code }}</td>
+                                                                    <td>{{ element.description }}</td>
+                                                                    <td class="text-center">{{ element.quantity }}</td>
+                                                                    {% if not order.isPromotional or isPlatform %}
+                                                                    <td class="text-center">{{ element.unitPrice|currency }}</td>
+                                                                    <td class="text-center">{{ element.total|currency }}</td>
+                                                                    {% endif %}
+                                                                </tr>
+                                                            {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                        {% if order.insurance %}
+                                                            <div class="col-md-12 border-bottom">
+                                                                <h4 class="pull-right">
+                                                                    Seguro: {{ order.insurance|currency }}</h4>
+                                                            </div>
+                                                        {% endif %}
+                                                        <a data-toggle="collapse" href="#{{ order.id }}" class="color-rows">
+                                                            <div class="col-md-12 text-center minimize">
+                                                                <i class="fa fa-chevron-up"></i>
+                                                            </div>
+                                                        </a>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th colspan="6" class="col-md-10 text-right">
-                                            Frete:
-                                            {% if order.shippingrules and order.shippingrules.type == "sices" %}
-                                                {{ order.shipping|currency }}
-                                            {% elseif order.shippingrules and order.shippingrules.type == "self" %}
-                                                Não Incluso
-                                            {% else %}
-                                                INCLUSO (Exceto para AM, AC, RO, RR, AP e Ilhas da Federação)
-                                            {% endif %}
-                                        </th>
-                                    </tr>
-                                    {% if order.total != order.totalExcDiscount and order.discount > 0 %}
-                                    <tr>
-                                        <th colspan="6" class="text-right"> Total sem desconto: {{ order.totalExcDiscount|currency }} </th>
-                                    </tr>
-                                    <tr>
-                                        <th colspan="6" class="text-right"> Desconto: -{{ order.discount|currency }} </th>
-                                    </tr>
-                                    {% endif %}
-                                    <tr>
-                                        <th colspan="6" class="text-right"> Total: {{ order.total|currency }} </th>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="6" class="col-md-10 text-right">
+                                                Frete:
+                                                {% if order.shippingrules and order.shippingrules.type == "sices" %}
+                                                    {{ order.shipping|currency }}
+                                                {% elseif order.shippingrules and order.shippingrules.type == "self" %}
+                                                    Não Incluso
+                                                {% else %}
+                                                    INCLUSO (Exceto para AM, AC, RO, RR, AP e Ilhas da Federação)
+                                                {% endif %}
+                                            </th>
+                                        </tr>
+                                        {% if order.total != order.totalExcDiscount and order.discount > 0 %}
+                                        <tr>
+                                            <th colspan="6" class="text-right"> Total sem desconto: {{ order.totalExcDiscount|currency }} </th>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="6" class="text-right"> Desconto: -{{ order.discount|currency }} </th>
+                                        </tr>
+                                        {% endif %}
+                                        <tr>
+                                            <th colspan="6" class="text-right"> Total: {{ order.total|currency }} </th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="ibox border-bottom">
+                <div class="ibox border-bottom">
                 <div class="ibox-content">
                     <div class="tab-content">
                         <div class="tab-pane active">
@@ -722,6 +722,30 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="col-md-4">
+                <div class="ibox border-bottom">
+                    <div class="ibox-content inspinia-timeline">
+
+                        <div class="timeline-item">
+                            <div class="row">
+                                <div class="col-md-3 date">
+                                    <i class="fa fa-circle status-available{#{{ timeline.status }}#}"></i>
+                                    21/11/2017
+                                    <br>
+                                    <small class="text-navy">8:22</small>
+                                </div>
+                                <div class="col-md-7 content no-top-border">
+                                    <p class="m-b-xs"><strong>Iniciado</strong></p>
+
+                                    <p>Fulano iniciou o orçamento.</p>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
