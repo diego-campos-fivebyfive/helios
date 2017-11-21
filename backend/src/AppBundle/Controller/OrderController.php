@@ -98,6 +98,13 @@ class OrderController extends AbstractController
             $tagTimeline = TimelineInterface::TAG_STATUS;
 
             switch ($order->getStatus()){
+                case OrderInterface::STATUS_PENDING:
+
+                    if($currentStatus == OrderInterface::STATUS_VALIDATED)
+                        $tagTimeline = TimelineInterface::TAG_RETURNING_STATUS;
+
+                    break;
+
                 case OrderInterface::STATUS_VALIDATED:
 
                     if($this->member()->isPlatformUser())
