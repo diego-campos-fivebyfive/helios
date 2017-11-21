@@ -37,6 +37,10 @@
             color: #555;
         }
 
+        .fa-circle.status-initiated {
+            color: #a9ff9f;
+        }
+
         .fa-circle.status-building {
             color: #898989;
         }
@@ -729,23 +733,23 @@
             <div class="col-md-4">
                 <div class="ibox border-bottom">
                     <div class="ibox-content inspinia-timeline">
+                        {% for item in timeline %}
+                            <div class="timeline-item">
+                                <div class="row">
+                                    <div class="col-md-3 date">
+                                        <i class="fa fa-circle status-{{ item.attributes.statusLabel }}"></i>
+                                        {{ item.createdAt|date('d/m/Y') }}
+                                        <br>
+                                        <small class="text-navy">{{ item.createdAt|date('H:i') }}</small>
+                                    </div>
+                                    <div class="col-md-7 content no-top-border">
+                                        <p class="m-b-xs"><strong>{{ item.attributes.statusLabel|trans }}</strong></p>
 
-                        <div class="timeline-item">
-                            <div class="row">
-                                <div class="col-md-3 date">
-                                    <i class="fa fa-circle status-available{#{{ timeline.status }}#}"></i>
-                                    21/11/2017
-                                    <br>
-                                    <small class="text-navy">8:22</small>
-                                </div>
-                                <div class="col-md-7 content no-top-border">
-                                    <p class="m-b-xs"><strong>Iniciado</strong></p>
-
-                                    <p>Fulano iniciou o orçamento.</p>
+                                        <p>{{ item.message }}</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
+                        {% endfor %}
                     </div>
                 </div>
             </div>
