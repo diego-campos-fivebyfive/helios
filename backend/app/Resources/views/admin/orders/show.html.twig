@@ -224,15 +224,15 @@
                                                 {% endif %}
                                             </div>
                                             {% if not member.isPlatformExpanse and not expired %}
-                                            <div class="pull-right">
-                                                {% if not (order.isDone or order.isApproved or order.isRejected)
-                                                and (order.isBuilding or (order.isPending and member.isPlatformUser) or (order.isValidated and not member.isPlatformUser)) %}
-                                                    <a class="btn btn-sm btn-success pull-right"
-                                                       href="{{ path('project_generator', {order:order.id}) }}">
-                                                        <i class="fa fa-pencil"></i> Editar Orçamento
-                                                    </a>
-                                                {% endif %}
-                                            </div>
+                                                <div class="pull-right">
+                                                    {% if not (order.isDone or order.isApproved or order.isRejected)
+                                                    and (order.isBuilding or (order.isPending and member.isPlatformUser) or (order.isValidated and not member.isPlatformUser)) %}
+                                                        <a class="btn btn-sm btn-success pull-right"
+                                                           href="{{ path('project_generator', {order:order.id}) }}">
+                                                            <i class="fa fa-pencil"></i> Editar Orçamento
+                                                        </a>
+                                                    {% endif %}
+                                                </div>
                                             {% endif %}
                                         </div>
                                         <div class="col-md-12 {% if order.billingDirect %}border-bottom{% endif %}">
@@ -248,13 +248,13 @@
                                             </h2>
                                         </div>
                                         {% if order.billingDirect %}
-                                        <div class="col-lg-12 border-bottom">
-                                            <ol class="breadcrumb">
-                                                <li>
-                                                    <label>Dados de faturamento</label>
-                                                </li>
-                                            </ol>
-                                        </div>
+                                            <div class="col-lg-12 border-bottom">
+                                                <ol class="breadcrumb">
+                                                    <li>
+                                                        <label>Dados de faturamento</label>
+                                                    </li>
+                                                </ol>
+                                            </div>
                                         {% endif %}
                                     </div>
                                     {% if order.billingDirect %}
@@ -433,11 +433,11 @@
                                             <label class="row-total">Condição de pagamento</label>
                                             {% if order.paymentMethod('array') %}
                                                 {% for payment in order.paymentMethod('array').quotas %}
-                                                        &#{{ loop.index + 96 }}; ) {{ payment.description }} {{ payment.percent }}%
-                                                        {% if payment.display_payment_date is defined
-                                                        and payment.display_payment_date == 'true' and order.isApproved %}
-                                                            - {{ payment.date|date('d/m/Y') }}
-                                                        {% endif %}<br>
+                                                    &#{{ loop.index + 96 }}; ) {{ payment.description }} {{ payment.percent }}%
+                                                    {% if payment.display_payment_date is defined
+                                                    and payment.display_payment_date == 'true' and order.isApproved %}
+                                                        - {{ payment.date|date('d/m/Y') }}
+                                                    {% endif %}<br>
                                                 {% endfor %}
                                             {% endif %}
                                         </div>
@@ -635,8 +635,8 @@
                                                                 <td><b>PRODUTO</b></td>
                                                                 <td class="col-md-1 text-center"><b>QTD</b></td>
                                                                 {% if not order.isPromotional or isPlatform %}
-                                                                <td class="col-md-2 text-center"><b>VALOR UNIT</b></td>
-                                                                <td class="col-md-2 text-center"><b>VALOR TOTAL</b></td>
+                                                                    <td class="col-md-2 text-center"><b>VALOR UNIT</b></td>
+                                                                    <td class="col-md-2 text-center"><b>VALOR TOTAL</b></td>
                                                                 {% endif %}
                                                             </tr>
                                                             </thead>
@@ -648,8 +648,8 @@
                                                                     <td>{{ element.description }}</td>
                                                                     <td class="text-center">{{ element.quantity }}</td>
                                                                     {% if not order.isPromotional or isPlatform %}
-                                                                    <td class="text-center">{{ element.unitPrice|currency }}</td>
-                                                                    <td class="text-center">{{ element.total|currency }}</td>
+                                                                        <td class="text-center">{{ element.unitPrice|currency }}</td>
+                                                                        <td class="text-center">{{ element.total|currency }}</td>
                                                                     {% endif %}
                                                                 </tr>
                                                             {% endfor %}
@@ -673,29 +673,29 @@
                                     {% endfor %}
                                     </tbody>
                                     <tfoot>
-                                        <tr>
-                                            <th colspan="6" class="col-md-10 text-right">
-                                                Frete:
-                                                {% if order.shippingrules and order.shippingrules.type == "sices" %}
-                                                    {{ order.shipping|currency }}
-                                                {% elseif order.shippingrules and order.shippingrules.type == "self" %}
-                                                    Não Incluso
-                                                {% else %}
-                                                    INCLUSO (Exceto para AM, AC, RO, RR, AP e Ilhas da Federação)
-                                                {% endif %}
-                                            </th>
-                                        </tr>
-                                        {% if order.total != order.totalExcDiscount and order.discount > 0 %}
+                                    <tr>
+                                        <th colspan="6" class="col-md-10 text-right">
+                                            Frete:
+                                            {% if order.shippingrules and order.shippingrules.type == "sices" %}
+                                                {{ order.shipping|currency }}
+                                            {% elseif order.shippingrules and order.shippingrules.type == "self" %}
+                                                Não Incluso
+                                            {% else %}
+                                                INCLUSO (Exceto para AM, AC, RO, RR, AP e Ilhas da Federação)
+                                            {% endif %}
+                                        </th>
+                                    </tr>
+                                    {% if order.total != order.totalExcDiscount and order.discount > 0 %}
                                         <tr>
                                             <th colspan="6" class="text-right"> Total sem desconto: {{ order.totalExcDiscount|currency }} </th>
                                         </tr>
                                         <tr>
                                             <th colspan="6" class="text-right"> Desconto: -{{ order.discount|currency }} </th>
                                         </tr>
-                                        {% endif %}
-                                        <tr>
-                                            <th colspan="6" class="text-right"> Total: {{ order.total|currency }} </th>
-                                        </tr>
+                                    {% endif %}
+                                    <tr>
+                                        <th colspan="6" class="text-right"> Total: {{ order.total|currency }} </th>
+                                    </tr>
                                     </tfoot>
                                 </table>
                             </div>
@@ -704,27 +704,27 @@
                 </div>
 
                 <div class="ibox border-bottom">
-                <div class="ibox-content">
-                    <div class="tab-content">
-                        <div class="tab-pane active">
-                            <div class="row">
-                                <div class="row wrapper">
-                                    <div class="col-lg-12 border-bottom">
-                                        <ol class="breadcrumb">
-                                            <li>
-                                                <label>Mensagens</label>
-                                            </li>
-                                        </ol>
+                    <div class="ibox-content">
+                        <div class="tab-content">
+                            <div class="tab-pane active">
+                                <div class="row">
+                                    <div class="row wrapper">
+                                        <div class="col-lg-12 border-bottom">
+                                            <ol class="breadcrumb">
+                                                <li>
+                                                    <label>Mensagens</label>
+                                                </li>
+                                            </ol>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-12 spacing">
-                                    {% include view('orders/messages/index.html.twig') %}
+                                    <div class="col-md-12 spacing">
+                                        {% include view('orders/messages/index.html.twig') %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
             </div>
             <div class="col-md-4">
                 <div class="ibox border-bottom">
