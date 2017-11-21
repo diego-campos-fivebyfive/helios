@@ -69,7 +69,8 @@ class OrderController extends AbstractController
 
         return $this->render('admin/orders/show.html.twig', array(
             'order' => $order,
-            'expired' => $expired
+            'expired' => $expired,
+            'timeline' => $this->get('order_timeline')->load($order)
         ));
     }
 
@@ -92,6 +93,8 @@ class OrderController extends AbstractController
             $order->setStatus($status);
 
             $this->manager('order')->save($order);
+
+            $this->get('order_timeline')->create($order);
 
             switch ($order->getStatus()){
                 case OrderInterface::STATUS_VALIDATED:
@@ -148,6 +151,8 @@ class OrderController extends AbstractController
         $order->setStatus(Order::STATUS_PENDING);
 
         $this->get('order_reference')->generate($order);
+
+        $this->get('order_timeline')->create($order);
 
         $this->sendOrderEmail($order);
 
