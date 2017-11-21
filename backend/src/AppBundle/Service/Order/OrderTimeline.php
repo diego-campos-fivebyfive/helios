@@ -5,6 +5,7 @@ namespace AppBundle\Service\Order;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
+use AppBundle\Entity\TimelineInterface;
 use AppBundle\Entity\UserInterface;
 use AppBundle\Manager\TimelineManager;
 use Doctrine\Common\Util\ClassUtils;
@@ -44,12 +45,13 @@ class OrderTimeline
      * @param OrderInterface $order
      * @return mixed|object
      */
-    public function create(OrderInterface $order)
+    public function create(OrderInterface $order, $tag = 'status')
     {
+
         $timeline = $this->manager->create();
 
         $timeline->setTarget(sprintf('%s::%s', self::getClass($order), $order->getId()))
-            ->setMessage(self::loadMessage($order))
+            ->setMessage(self::loadMessage($order, $tag))
             ->addAttribute('status', $order->getStatus())
             ->addAttribute('statusLabel', self::loadStatusLabel($order))
             ->setCreatedAt(new \DateTime());
@@ -65,9 +67,9 @@ class OrderTimeline
      */
     public function load(OrderInterface $order)
     {
-        return $this->manager->findBy([
+        return array_reverse($this->manager->findBy([
             'target' => sprintf('%s::%s', self::getClass($order), $order->getId())
-        ]);
+        ]));
     }
 
     /**
@@ -110,16 +112,26 @@ class OrderTimeline
      * @param $order
      * @return string
      */
-    private function loadMessage(OrderInterface $order)
+    private function loadMessage(OrderInterface $order, $tag)
     {
         $status = $order->getStatus();
-        $status = $status != OrderInterface::STATUS_BUILDING && $status != OrderInterface::STATUS_REJECTED
-        || $status == OrderInterface::STATUS_BUILDING && $order->getStatusAt() > $order->getCreatedAt()
-            ? 'other' : $status;
+        $status = $status == OrderInterface::STATUS_BUILDING && !count(self::load($order))
+            ? 'initiated' : $status;
 
-        $messages[OrderInterface::STATUS_BUILDING] = 'iniciou o orçamento.';
-        $messages[OrderInterface::STATUS_REJECTED] = 'rejeitou o orçamento.';
-        $messages['other'] = 'alterou o status do orçamento.';
+        $messages = [
+            'initiated' => 'criou o orçamento.',
+            OrderInterface::STATUS_BUILDING => 'editou o orçamento.',
+            OrderInterface::STATUS_PENDING => 'enviou solicitação para SICES.',
+            OrderInterface::STATUS_VALIDATED => 'validou o orçamento.',
+            OrderInterface::STATUS_APPROVED => $tag == TimelineInterface::TAG_RETURNING_STATUS? 'cancelou confirmação de pagamento.' : 'aprovou o orçamento.',
+            OrderInterface::STATUS_REJECTED => 'cancelou o orçamento.',
+            OrderInterface::STATUS_DONE => 'confirmou pagamento conforme pró-forma.',
+            OrderInterface::STATUS_INSERTED => ': início da produção',
+            OrderInterface::STATUS_AVAILABLE => ': disponível para coleta.',
+            OrderInterface::STATUS_COLLECTED => ': coleta realizada.',
+            OrderInterface::STATUS_BILLED => ': pedido faturado.',
+            OrderInterface::STATUS_DELIVERED => ': entrega realizada.'
+        ];
 
         return sprintf('%s %s', $this->getMember()->getFirstname(), $messages[$status]);
     }
@@ -130,8 +142,7 @@ class OrderTimeline
      */
     private function loadStatusLabel(OrderInterface $order)
     {
-        return $order->getStatusAt() <= $order->getCreatedAt()
-        && $order->getStatus() == OrderInterface::STATUS_BUILDING
+        return !count(self::load($order)) && $order->getStatus() == OrderInterface::STATUS_BUILDING
             ? 'initiated' : Order::getStatusNames()[$order->getStatus()];
     }
 }

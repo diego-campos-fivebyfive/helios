@@ -7,6 +7,7 @@ use AppBundle\Entity\Order\Message;
 use AppBundle\Entity\Order\MessageInterface;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
+use AppBundle\Entity\TimelineInterface;
 use AppBundle\Form\Order\FilterType;
 use AppBundle\Service\Pricing\Insurance;
 use AppBundle\Service\ProjectGenerator\ShippingRuler;
@@ -94,7 +95,7 @@ class OrderController extends AbstractController
 
             $this->manager('order')->save($order);
 
-            $this->get('order_timeline')->create($order);
+            $tagTimeline = TimelineInterface::TAG_STATUS;
 
             switch ($order->getStatus()){
                 case OrderInterface::STATUS_VALIDATED:
@@ -111,6 +112,8 @@ class OrderController extends AbstractController
                         $this->generatorProformaAction($order);
                         $this->getStock()->debit($order);
                         $this->getExporter()->export($order);
+                    } else {
+                        $tagTimeline = TimelineInterface::TAG_RETURNING_STATUS;
                     }
 
                     break;
@@ -122,6 +125,8 @@ class OrderController extends AbstractController
 
                     break;
             }
+
+            $this->get('order_timeline')->create($order, $tagTimeline);
 
             // TODO - Assim que possível, favor mover esta checagem para o switch acima
             if (!($currentStatus == OrderInterface::STATUS_DONE && $order->isApproved()) &&
