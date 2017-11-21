@@ -593,9 +593,9 @@ class Order implements OrderInterface, InsurableInterface
             self::STATUS_REJECTED => 'rejected',
             self::STATUS_DONE => 'confirmed',
             self::STATUS_INSERTED => 'inserted',
+            self::STATUS_BILLED => 'billed',
             self::STATUS_AVAILABLE => 'available',
             self::STATUS_COLLECTED => 'collected',
-            self::STATUS_BILLED => 'billed',
             self::STATUS_DELIVERED => 'delivered'
         ];
     }
@@ -613,9 +613,9 @@ class Order implements OrderInterface, InsurableInterface
             self::STATUS_REJECTED => self::STATUS_REJECTED,
             self::STATUS_DONE => self::STATUS_DONE,
             self::STATUS_INSERTED => self::STATUS_INSERTED,
+            self::STATUS_BILLED => self::STATUS_BILLED,
             self::STATUS_AVAILABLE => self::STATUS_AVAILABLE,
             self::STATUS_COLLECTED => self::STATUS_COLLECTED,
-            self::STATUS_BILLED => self::STATUS_BILLED,
             self::STATUS_DELIVERED => self::STATUS_DELIVERED
         ];
     }
