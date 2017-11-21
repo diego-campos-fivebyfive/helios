@@ -33,6 +33,18 @@ get_prefixed_labels()
   printf "${LABELS}" | grep $1 | awk -F$':' '{print $2}'
 }
 
+# returns allowed stage labels, based on Category chosen
+get_stage_labels()
+{
+  if [[ ${ISSUE_LABELS[Category]} == 'Devops' ]]; then
+    echo 'Backlog-Devops'
+  else
+    echo 'Backlog-General'
+  fi
+
+  echo 'To-do'
+}
+
 # request user to select labels options and increments ISSUE_LABELS with them
 declare -A ISSUE_LABELS
 select_label()
@@ -47,18 +59,6 @@ select_label()
     ISSUE_LABELS[$prefix]=$option
     break
   done
-}
-
-# returns allowed stage labels, based on Category chosen
-get_stage_labels()
-{
-  if [[ ${ISSUE_LABELS[Category]} == 'Devops' ]]; then
-    echo 'Backlog-Devops'
-  else
-    echo 'Backlog-General'
-  fi
-
-  echo 'To-do'
 }
 
 for prefix in ${GENERAL_PREFIXES[@]}; do
