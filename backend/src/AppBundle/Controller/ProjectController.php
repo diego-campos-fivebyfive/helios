@@ -241,6 +241,7 @@ class ProjectController extends AbstractController
         $project->setMember($member);
 
         $form->handleRequest($request);
+        $project->setSource(Project::SOURCE_PROJECT);
 
         if($form->isSubmitted() && $form->isValid()){
 
