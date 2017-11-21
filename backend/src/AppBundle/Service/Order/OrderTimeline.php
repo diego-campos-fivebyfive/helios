@@ -121,7 +121,7 @@ class OrderTimeline
         $messages = [
             'initiated' => 'criou o orçamento.',
             OrderInterface::STATUS_BUILDING => 'editou o orçamento.',
-            OrderInterface::STATUS_PENDING => 'enviou solicitação para SICES.',
+            OrderInterface::STATUS_PENDING => $tag == TimelineInterface::TAG_RETURNING_STATUS ? 'alterou o orçamento.' : 'enviou solicitação para SICES.',
             OrderInterface::STATUS_VALIDATED => 'validou o orçamento.',
             OrderInterface::STATUS_APPROVED => $tag == TimelineInterface::TAG_RETURNING_STATUS ? 'cancelou confirmação de pagamento.' : 'aprovou o orçamento.',
             OrderInterface::STATUS_REJECTED => 'cancelou o orçamento.',
