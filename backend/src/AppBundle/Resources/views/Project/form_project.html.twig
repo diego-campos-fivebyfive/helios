@@ -455,7 +455,7 @@
                 }
             },
             requestContent: function(url, element, callback){
-                this.request(url, 'get', null, function(xhr){
+                this.request(url, 'get', {source:0}, function(xhr){
                    GeneratorHandler.render(element, xhr.responseText);
                    if(callback) callback();
                 });
