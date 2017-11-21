@@ -236,17 +236,16 @@ class WidgetsController extends AdminController
 
         $qb = $this->queryBuilder();
 
-        $includeStatus = [];
-        if ($member->isPlatformFinancial()) {
-            $includeStatus = [Order::STATUS_APPROVED, Order::STATUS_DONE, Order::STATUS_INSERTED];
-        }
+        $excludeStatus = [];
+        if($member->isPlatformFinancial())
+            $excludeStatus = [Order::STATUS_BUILDING, Order::STATUS_PENDING, Order::STATUS_VALIDATED];
 
-        if ($member->isPlatformAfterSales()) {
-            $includeStatus = [Order::STATUS_DONE, Order::STATUS_INSERTED];
-        }
+        if($member->isPlatformLogistic() || $member->isPlatformAfterSales())
+            $excludeStatus = [Order::STATUS_BUILDING, Order::STATUS_PENDING, Order::STATUS_VALIDATED, Order::STATUS_APPROVED];
 
-        if(!empty($includeStatus)){
-            $qb->andWhere($qb->expr()->in('o.status', $includeStatus));
+
+        if(!empty($excludeStatus)){
+            $qb->andWhere($qb->expr()->notIn('o.status', $excludeStatus));
         }
 
         if($member->isPlatformCommercial()){
