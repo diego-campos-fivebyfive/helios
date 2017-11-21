@@ -117,6 +117,7 @@
 {% endblock %}
 {% block scripts %}
     {% include view('helper.request') %}
+    {% include view('helper.plugins_js') %}
 
     <script>
         GeneratorHandler = {
@@ -125,9 +126,20 @@
                     url: '{{ path('generator') }}',
                     data: {source: 2},
                     complete: function (xhr) {
-                        $('#generator_list_form').html(xhr.responseText)
+                        $('#generator_list_form').html(xhr.responseText);
+                        GeneratorHandler.getConfig();
                     }
                 });
+            },
+            getConfig: function () {
+              $.ajax({
+                  url: '{{ path('catalog_config') }}',
+                  complete: function (xhr) {
+                      $('#pre-form-area').removeClass('hide');
+                      $('#pre-form-area').html(xhr.responseText);
+                      $('#pre-form-area').addClass('')
+                  }
+              });
             },
             onSaveProject: function (project) {
                 this.project = project;
