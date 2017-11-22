@@ -63,7 +63,7 @@ ISSUE_LABELS=()
 set_issue_label()
 {
   echo -e "${CI}> Selected label: ${2}${CM}"
-  ISSUE_LABELS=(${ISSUE_LABELS[@]} "${1}:${2}")
+  ISSUE_LABELS=(${ISSUE_LABELS[@]} "${1}: ${2}")
 }
 
 # returns all labels filtered by prefix
@@ -190,8 +190,11 @@ read ISSUE_TITLE
 printf "${CT}${HEADERS[Description]}${CM}"
 read -d '\n' -r ISSUE_DESCRIPTION
 
-echo ${ISSUE_LABELS[@]}
-echo $ISSUE_MILESTONE
-echo $ISSUE_ASSIGNEE
-echo $ISSUE_TITLE
-printf "${ISSUE_DESCRIPTION}\n"
+title="\"title\":\"${ISSUE_TITLE}\""
+description="\"body\":\"${ISSUE_DESCRIPTION}\""
+assignee="\"assignees\":[\"${ISSUE_ASSIGNEE}\"]"
+milestone="\"milestone\":$(echo $ISSUE_MILESTONE | awk -F':' '{print $1}')"
+labels="\"labels\":[$(printf '"%s %s",' ${ISSUE_LABELS[@]} | sed 's/\(.*\),/\1/')]"
+
+json="{$title,$description,$assignee,$milestone,$labels}"
+curl -s -X POST -u $LOGIN -d "$json" $GITHUB_REPOSITORY/issues
