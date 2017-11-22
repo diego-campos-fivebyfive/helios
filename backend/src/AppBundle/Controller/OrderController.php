@@ -267,6 +267,8 @@ class OrderController extends AbstractController
 
         $this->manager('order')->save($order);
 
+        $this->get('order_timeline')->create($order, TimelineInterface::TAG_FILE_PAYMENT);
+
         return $this->json([ 'name' => $filename ]);
     }
 
