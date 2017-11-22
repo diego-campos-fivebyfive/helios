@@ -117,19 +117,12 @@ class OrderTimeline
         $status = $status == OrderInterface::STATUS_BUILDING && !count(self::load($order))
             ? 'initiated' : $status;
 
-        switch ($tag) {
-            case TimelineInterface::TAG_FILE_PAYMENT:
-                $status = 'filePayment';
-                break;
-
-            case TimelineInterface::TAG_DELIVERY_ADDRESS:
-                $status = 'deliveryAddress';
-                break;
-        }
+        if ($tag == TimelineInterface::TAG_FILE_PAYMENT || $tag == TimelineInterface::TAG_DELIVERY_ADDRESS)
+            $status = $tag;
 
         $messages = [
-            'filePayment' => 'adicionou/alterou comprovante de pagamento.',
-            'deliveryAddress' => 'adicionou/alterou endereço de entrega.',
+            TimelineInterface::TAG_FILE_PAYMENT => 'adicionou/alterou comprovante de pagamento.',
+            TimelineInterface::TAG_DELIVERY_ADDRESS => 'adicionou/alterou endereço de entrega.',
             'initiated' => 'criou o orçamento.',
             OrderInterface::STATUS_BUILDING => 'editou o orçamento.',
             OrderInterface::STATUS_PENDING => $tag == TimelineInterface::TAG_RETURNING_STATUS ? 'alterou o orçamento.' : 'enviou solicitação para SICES.',
