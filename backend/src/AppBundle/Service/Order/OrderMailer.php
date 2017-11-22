@@ -43,7 +43,7 @@ class OrderMailer extends AbstractMailer
         ],
         OrderInterface::STATUS_REJECTED => [
             'enabled' => true,
-            'subject' => 'Orçamento Rejeitado nº %s'
+            'subject' => 'Orçamento Cancelado nº %s'
         ],
         OrderInterface::STATUS_DONE => [
             'enabled' => false,
