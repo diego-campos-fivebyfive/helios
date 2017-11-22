@@ -17,6 +17,14 @@ LABELS=$(curl -s -X GET -u $LOGIN $GITHUB_REPOSITORY/labels \
   | awk '{print $2 $3}'
 )
 
+# contains milestones formatted by: id:prefix:value
+MILESTONES=$(curl -s -X GET -u $LOGIN $GITHUB_REPOSITORY/milestones \
+  | grep -E 'number|title' \
+  | tr -d '[:space:]' \
+  | sed 's/"//g;s/,//g;s/number:/\n/g;s/title//g;' \
+  | sed '1{/^$/d};$a\\r'
+)
+
 # contains Stage prefix name
 STAGE_PREFIX=Stage
 
@@ -29,10 +37,14 @@ GENERAL_PREFIXES=$(printf "${LABELS}" \
 # contains selection titles
 declare -A HEADERS=(
   [Category]='Select at least one category:\nUsage: enter 0 for multiple choose'
+  [Milestone]='Select the milestone:'
   [Priority]='Select the priority:'
   [Stage]='Select the stage:'
   [Type]='Select the type:'
 )
+
+# contains the selected milestone
+ISSUE_MILESTONE=''
 
 # contains all the selected labels
 ISSUE_LABELS=()
@@ -118,10 +130,22 @@ select_label()
   printf "${CD}"
 }
 
+select_milestone()
+{
+  echo -e "${CT}${HEADERS[Milestone]}${CM}"
+
+  select milestone in $(printf "$MILESTONES" | awk -F$':' '{print $3}'); do
+    ISSUE_MILESTONE=$(printf "$MILESTONES" | grep $milestone)
+    break
+  done
+}
+
 for prefix in ${GENERAL_PREFIXES[@]}; do
   select_label $prefix "$(get_prefixed_labels $prefix)"
 done
-
 select_label $STAGE_PREFIX "$(get_stage_labels)"
 
+select_milestone
+
 echo ${ISSUE_LABELS[@]}
+echo $ISSUE_MILESTONE
