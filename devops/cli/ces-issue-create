@@ -77,14 +77,17 @@ set_issue_multiple_labels()
   printf "${CT}${usage_message}${CM}\n#? "
   read chosen
 
+  # chosen validation, must be integer numbers and be allowed index
   for label_index in ${chosen//,/ }; do
-    [[ $label_index -gt $options_length ]] && {
+    re='^[0-9]+$'
+    [[ ! $label_index =~ $re || $label_index -gt $options_length ]] && {
       echo -e "${CE}${error_message}${CM}"
       set_issue_multiple_labels $prefix "$options"
       return 1
     }
   done
 
+  # if validations is OK, calls set_issue_label
   for label_index in ${chosen//,/ }; do
     label=$(echo $options | awk "{print \$$label_index}")
     set_issue_label $prefix $label
