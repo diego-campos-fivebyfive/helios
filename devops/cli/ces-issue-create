@@ -27,7 +27,7 @@ MILESTONES=$(curl -s -X GET -u $LOGIN $GITHUB_REPOSITORY/milestones \
 )
 
 # contains all Github users
-ASSIGNEES=$(printf "${USERS_FILE}" | awk -F$';' '{print $2}' | sed '1d;$a\\r')
+ASSIGNEES=$(printf "${USERS_FILE}" | awk -F$';' '{print $2}' | sed '1d')
 
 # contains Stage prefix name
 STAGE_PREFIX=Stage
@@ -45,10 +45,14 @@ declare -A HEADERS=(
   [Priority]='Select the priority:'
   [Stage]='Select the stage:'
   [Type]='Select the type:'
+  [Assignee]='Assign a github user to this issue\nUsage: enter 0 to no assign'
 )
 
 # contains the selected milestone
 ISSUE_MILESTONE=''
+
+# contains the selected assignee
+ISSUE_ASSIGNEE=''
 
 # contains all the selected labels
 ISSUE_LABELS=()
@@ -156,13 +160,28 @@ select_milestone()
     break
   done
 }
-printf "$ASSIGNEES"
+
+# requests the user to assign or not a user to the issue
+select_assignee()
+{
+  echo -e "${CT}${HEADERS[Assignee]}${CM}"
+
+  select assignee in $ASSIGNEES; do
+    if [[ -n $assignee ]]; then
+      ISSUE_ASSIGNEE=$assignee
+    fi
+    break
+  done
+}
+
 for prefix in ${GENERAL_PREFIXES[@]}; do
   select_label $prefix "$(get_prefixed_labels $prefix)"
 done
 select_label $STAGE_PREFIX "$(get_stage_labels)"
 
 select_milestone
+select_assignee
 
 echo ${ISSUE_LABELS[@]}
 echo $ISSUE_MILESTONE
+echo $ISSUE_ASSIGNEE
