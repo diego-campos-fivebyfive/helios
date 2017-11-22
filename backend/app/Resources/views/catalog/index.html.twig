@@ -13,6 +13,20 @@
             overflow-y: scroll;
         }
     </style>
+    <div class="modal inmodal fade" id="modal_component" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    {% include view('kit.spinner') %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">
+                        {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
@@ -32,81 +46,7 @@
         <div class="col-md-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-content scroll" id="content-list">
-                    <div class="panel-body">
-                        <div class="panel-group" id="accordion">
-                            {% for number in 1..10 %}
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h5 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{ number }}">
-                                            <i class="fa fa-chevron-down"></i>
-                                            Sistema {{ number }}
-                                        </a>
-                                        <div class="pull-right btn-actions">
-                                            <a href="#">
-                                                <i class="fa fa-pencil icon-catalog"></i>
-                                            </a>
-                                            <a href="#">
-                                                <i class="fa fa-trash icon-catalog"></i>
-                                            </a>
-                                        </div>
-                                    </h5>
-                                </div>
-                                <div id="collapse{{ number }}" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        <table class="col-md-12 table table-bordered flow-lg">
-                                            <tbody>
-                                            <tr>
-                                                <td colspan="4">
-                                                    Cell 1
-                                                </td>
-                                                <td colspan="4">
-                                                    Cell 2
-                                                </td>
-                                                <td colspan="4">
-                                                    Cell 3
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="4">
-                                                    Cell 4
-                                                </td>
-                                                <td colspan="4">
-                                                    Cell 5
-                                                </td>
-                                                <td colspan="4">
-                                                    Cell 6
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="4">
-                                                    Cell 7
-                                                </td>
-                                                <td colspan="4">
-                                                    Cell 8
-                                                </td>
-                                                <td colspan="4">
-                                                    Cell 9
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="4">
-                                                    Cell 10
-                                                </td>
-                                                <td colspan="4">
-                                                    Cell 11
-                                                </td>
-                                                <td colspan="4">
-                                                    Cell 12
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
+                    <div class="panel-body" id="catalog-list">
                     </div>
                 </div>
             </div>
@@ -143,6 +83,14 @@
                   }
               });
             },
+            getCatalog: function () {
+              $.ajax({
+                  url: '{{ path('catalog_list') }}',
+                  complete: function (xhr) {
+                      $('#catalog-list').html(xhr.responseText);
+                  }
+              });
+            },
             onPreProcess: function () {
               if (this.stage == 'start') {
                   this.count = $('#quantity').val();
@@ -158,14 +106,30 @@
                     this.stage = 'start';
                     this.count = 0;
                     this.getForm();
+                    this.getCatalog();
                 }
             },
             init: function () {
                 this.getForm();
+                this.getCatalog();
             }
         };
 
         GeneratorHandler.init();
+
+        var modal_component = $('#modal_component');
+        var modal_body = modal_component.find('.modal-body');
+
+        modal_component.on('show.bs.modal', function(event){
+            var target = $(event.relatedTarget);
+            var url = target.data('url');
+            Request.send({
+                url: url,
+                callback: function(xhr){
+                    modal_body.html(xhr.responseText);
+                }
+            });
+        });
 
 
     </script>

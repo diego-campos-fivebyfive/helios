@@ -6,6 +6,7 @@ use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Entity\Pricing\MemorialInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("catalog")
@@ -38,6 +39,27 @@ class CatalogController extends AbstractController
             'member' => $this->member(),
             'level' => $this->account()->getLevel(),
             'memorial' => $memorial
+        ]);
+    }
+
+    /**
+     * @Route("/catalog", name="catalog_list")
+     */
+    public function catalogAction()
+    {
+        $member = $this->member();
+
+        $qb = $this->manager('project')->createQueryBuilder();
+
+        $qb
+            ->where($qb->expr()->in('p.member', $member->getId()))
+            ->orderBy('p.id', 'desc')
+            ->andWhere('p.source = :source')->setParameter('source', 2);
+
+        $this->overrideGetFilters();
+
+        return $this->render('catalog/catalog.html.twig', [
+            'projects' => $qb->getQuery()->getResult()
         ]);
     }
 }
