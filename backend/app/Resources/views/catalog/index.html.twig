@@ -121,6 +121,8 @@
 
     <script>
         GeneratorHandler = {
+            count: 0,
+            stage: 'start',
             getForm: function () {
                 $.ajax({
                     url: '{{ path('generator') }}',
@@ -141,10 +143,23 @@
                   }
               });
             },
-            onSaveProject: function (project) {
-                this.project = project;
+            onPreProcess: function () {
+              if (this.stage == 'start') {
+                  this.count = $('#quantity').val();
+                  this.stage = 'cycle';
+              }
             },
-
+            onSaveProject: function () {
+                this.count -= 1;
+                if (this.count > 0) {
+                    FormGenerator.form.trigger('submit');
+                }
+                else {
+                    this.stage = 'start';
+                    this.count = 0;
+                    this.getForm();
+                }
+            },
             init: function () {
                 this.getForm();
             }
