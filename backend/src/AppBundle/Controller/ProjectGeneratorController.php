@@ -8,6 +8,7 @@ use AppBundle\Entity\Order\Element;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Entity\Parameter;
+use AppBundle\Entity\TimelineInterface;
 use AppBundle\Form\Component\GeneratorType;
 use AppBundle\Form\Financial\CompanyType;
 use AppBundle\Form\Order\DeliveryType;
@@ -267,6 +268,8 @@ class ProjectGeneratorController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $this->manager('order')->save($order);
+
+            $this->get('order_timeline')->create($order, TimelineInterface::TAG_DELIVERY_ADDRESS);
 
             return $this->json([]);
         }

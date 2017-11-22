@@ -45,9 +45,8 @@ class OrderTimeline
      * @param OrderInterface $order
      * @return mixed|object
      */
-    public function create(OrderInterface $order, $tag = 'status')
+    public function create(OrderInterface $order, $tag = TimelineInterface::TAG_STATUS)
     {
-
         $timeline = $this->manager->create();
 
         $timeline->setTarget(sprintf('%s::%s', self::getClass($order), $order->getId()))
@@ -118,7 +117,12 @@ class OrderTimeline
         $status = $status == OrderInterface::STATUS_BUILDING && !count(self::load($order))
             ? 'initiated' : $status;
 
+        if ($tag == TimelineInterface::TAG_FILE_PAYMENT || $tag == TimelineInterface::TAG_DELIVERY_ADDRESS)
+            $status = $tag;
+
         $messages = [
+            TimelineInterface::TAG_FILE_PAYMENT => 'adicionou/alterou comprovante de pagamento.',
+            TimelineInterface::TAG_DELIVERY_ADDRESS => 'adicionou/alterou endereço de entrega.',
             'initiated' => 'criou o orçamento.',
             OrderInterface::STATUS_BUILDING => 'editou o orçamento.',
             OrderInterface::STATUS_PENDING => $tag == TimelineInterface::TAG_RETURNING_STATUS ? 'alterou o orçamento.' : 'enviou solicitação para SICES.',
