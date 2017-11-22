@@ -130,11 +130,24 @@ select_label()
   printf "${CD}"
 }
 
+# requests the user to select a milestone, based on Category chosen
 select_milestone()
 {
+  local prefix_general='Plataforma'
+  local grep_type=''
+
+  for label in ${ISSUE_LABELS[@]}; do
+    [[ $label == *'Devops'* ]] && grep_type='-v'
+  done
+
+  local options=$(printf "$MILESTONES" \
+    | grep $grep_type $prefix_general \
+    | awk -F$':' '{print $3}'
+  )
+
   echo -e "${CT}${HEADERS[Milestone]}${CM}"
 
-  select milestone in $(printf "$MILESTONES" | awk -F$':' '{print $3}'); do
+  select milestone in $options; do
     ISSUE_MILESTONE=$(printf "$MILESTONES" | grep $milestone)
     break
   done
