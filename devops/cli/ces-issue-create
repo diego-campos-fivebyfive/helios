@@ -46,6 +46,8 @@ declare -A HEADERS=(
   [Stage]='Select the stage:'
   [Type]='Select the type:'
   [Assignee]='Assign a github user to this issue\nUsage: enter 0 to no assign:'
+  [Description]='Enter issue description:\nUsage: press \ when it was done\n'
+  [Title]='Enter the issue title:'
 )
 
 # contains the selected milestone
@@ -182,14 +184,14 @@ select_label $STAGE_PREFIX "$(get_stage_labels)"
 select_milestone
 select_assignee
 
-echo -e "${CT}Enter the issue title:${CM}"
+echo -e "${CT}${HEADERS[Title]}${CM}"
 read ISSUE_TITLE
 
-echo -e "${CT}Enter issue description:${CM}"
-read ISSUE_DESCRIPTION
+printf "${CT}${HEADERS[Description]}${CM}"
+read -d '\n' -r ISSUE_DESCRIPTION
 
 echo ${ISSUE_LABELS[@]}
 echo $ISSUE_MILESTONE
 echo $ISSUE_ASSIGNEE
 echo $ISSUE_TITLE
-printf "${ISSUE_DESCRIPTION}"
+printf "${ISSUE_DESCRIPTION}\n"
