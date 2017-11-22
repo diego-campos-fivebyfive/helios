@@ -63,6 +63,7 @@ ISSUE_LABELS=()
 set_issue_label()
 {
   echo -e "${CI}> Selected label: ${2}${CM}"
+  [[ $2 == *'general'* ]] && return 1
   ISSUE_LABELS=(${ISSUE_LABELS[@]} "${1}: ${2}")
 }
 
