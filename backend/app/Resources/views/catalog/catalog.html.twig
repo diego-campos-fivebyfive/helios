@@ -1,0 +1,151 @@
+<div class="panel-group" id="accordion">
+    {% for project in projects %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h5 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#{{ project.id }}">
+                        <i class="fa fa-chevron-down"></i>
+                        Sistema Nº {{ loop.index }}
+                    </a>
+                    <div class="pull-right btn-actions">
+                        <a href="#">
+                            <i class="fa fa-pencil icon-catalog"></i>
+                        </a>
+                        <a href="#">
+                            <i class="fa fa-trash icon-catalog"></i>
+                        </a>
+                    </div>
+                </h5>
+            </div>
+            <div id="{{ project.id }}" class="panel-collapse collapse">
+                <div class="panel-body">
+
+                    <table class="col-md-12 table flow-lg">
+                    <thead>
+                        <tr class="flow-lg">
+                            <th width="15%"> Código</th>
+                            <th width="47%"> Descrição</th>
+                            <th width="15%"><span class="cost-col">Custo unitário</span></th>
+                            <th width="10%" class="text-center"> Quantidade</th>
+                            <th align="center" width="13%"> Total</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                    {# MODULES #}
+                    {% for projectModule in project.projectModules %}
+                        <tr>
+                            <td> {{ projectModule.module.code }} </td>
+                            <td>
+                                <a data-toggle="modal" data-target="#modal_component"
+                                   data-url="{{ path('component_show', {type:'module', id:projectModule.module.id}) }}">
+                                    {{ projectModule.module.model }}
+                                </a>
+                            </td>
+                            <td> {{ projectModule.unitCostPrice|currency }} </td>
+                            <td class="text-center"> {{ projectModule.quantity }} </td>
+                            <td> {{ (projectModule.unitCostPrice * projectModule.quantity)|currency }} </td>
+                        </tr>
+                    {% endfor %}
+
+                    {# INVERTERS #}
+                    {% for id, group in project.groupInverters %}
+                        <tr>
+                            <td> {{ group.inverter.code }} </td>
+                            <td>
+                                <a data-toggle="modal" data-target="#modal_component"
+                                   data-url="{{ path('component_show', {type:'inverter', id:group.inverter.id}) }}">
+                                    {{ group.inverter.model }}
+                                </a>
+                            </td>
+                            <td> {{ group.unitCostPrice|currency }} </td>
+                            <td class="text-center"> {{ group.quantity }} </td>
+                            <td> {{ (group.unitCostPrice * group.quantity)|currency }} </td>
+                        </tr>
+                    {% endfor %}
+
+                    {# TRANSFORMER #}
+                    {% if 'resolved' == project.transformerStatus %}
+                        <tr>
+                            <td> {{ project.transformer.variety.code }} </td>
+                            <td> {{ project.transformer.variety.description }} </td>
+                            <td> {{ project.transformer.unitCostPrice|currency }} </td>
+                            <td class="text-center"> {{ 1 }} </td>
+                            <td> {{ project.transformer.unitCostPrice|currency }} </td>
+                        </tr>
+                    {% elseif 'required' == project.transformerStatus %}
+                        <tr>
+                            <td class="text-center">&nbsp;</td>
+                            <td><i class="fa fa-info-circle"></i> Verificar cotação de transformadores separadamente</td>
+                            <td class="text-center"> &nbsp; </td>
+                            <td class="text-center"> &nbsp; </td>
+                            <td class="text-center"> &nbsp; </td>
+                        </tr>
+                    {% endif %}
+
+                    {# STRING_BOXES #}
+                    {% for projectStringBox in project.projectStringBoxes %}
+                        <tr>
+                            <td> {{ projectStringBox.stringBox.code }} </td>
+                            <td>
+                                <a data-toggle="modal" data-target="#modal_component"
+                                   data-url="{{ path('stringbox_show', {id:projectStringBox.stringBox.id}) }}">
+                                    {{ projectStringBox.stringBox.description }}
+                                </a>
+                            </td>
+                            <td> {{ projectStringBox.unitCostPrice|currency }} </td>
+                            <td class="text-center"> {{ projectStringBox.quantity }} </td>
+                            <td> {{ (projectStringBox.unitCostPrice * projectStringBox.quantity)|currency }} </td>
+                        </tr>
+                    {% endfor %}
+
+                    {# STRUCTURES #}
+                    {% for projectStructure in project.projectStructures %}
+                        {% set structure = projectStructure.structure %}
+                        <tr>
+                            <td> {{ structure.code }} </td>
+                            <td>
+                                <a data-toggle="modal" data-target="#modal_component"
+                                   data-url="{{ path('structure_show', {id:structure.id}) }}">
+                                    {{ structure.description }}
+                                    {% if not structure.salable %}
+                                <span class="label label-danger">
+                                    Produto Indisponível
+                                </span>
+                                    {% endif %}
+                                </a>
+                            </td>
+                            <td> {{ projectStructure.unitCostPrice|currency }} </td>
+                            <td class="text-center"> {{ projectStructure.quantity }} </td>
+                            <td> {{ (projectStructure.unitCostPrice * projectStructure.quantity)|currency }} </td>
+                        </tr>
+                    {% endfor %}
+
+                    {# VARIETIES #}
+                    {% for projectVariety in project.projectVarieties if projectVariety.variety.type != 'transformer' %}
+                        <tr>
+                            <td> {{ projectVariety.variety.code }} </td>
+                            <td>
+                                <a data-toggle="modal" data-target="#modal_component"
+                                   data-url="{{ path('variety_show', {id:projectVariety.variety.id}) }}">
+                                    {{ projectVariety.variety.description }}
+                                </a>
+                            </td>
+                            <td> {{ projectVariety.unitCostPrice|currency }} </td>
+                            <td class="text-center"> {{ projectVariety.quantity }} </td>
+                            <td> {{ (projectVariety.unitCostPrice * projectVariety.quantity)|currency }} </td>
+                        </tr>
+                    {% endfor %}
+
+                    {# INSURE LINE #}
+                    {% set insureOrigin = 'generator' %}
+                    {% include view('helper.insure_line') %}
+
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
