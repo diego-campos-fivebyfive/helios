@@ -65,7 +65,6 @@
             count: 0,
             stage: 'start',
             project: {id: 0, power: 0},
-            editProject: false,
             getProject: function () {
                 return this.project;
             },
@@ -77,19 +76,18 @@
                     callback: function (xhr) {
                         $('#generator_list_form').html(xhr.responseText);
                         FormGenerator.field('source').find('option[value="power"]').attr('selected', 'selected').trigger('change');
-                        editProject = false;
-                        GeneratorHandler.getConfig(editProject);
+                        GeneratorHandler.getConfig(false);
                     }
                 });
             },
-            getConfig: function (ediProject) {
+            getConfig: function (editProject) {
               $.ajax({
                   url: '{{ path('catalog_config') }}',
                   complete: function (xhr) {
                       $('#pre-form-area').removeClass('hide');
                       $('#pre-form-area').html(xhr.responseText);
 
-                      if (ediProject == true) {
+                      if (editProject == true) {
                           $('#quantity').attr('disabled', 'disabled');
                       }
                   }

@@ -160,8 +160,7 @@
             data: {source: 2},
             complete: function (xhr) {
                 form_render.html(xhr.responseText);
-                editProject = true;
-                GeneratorHandler.getConfig(editProject);
+                GeneratorHandler.getConfig(true);
             }
         });
     });
