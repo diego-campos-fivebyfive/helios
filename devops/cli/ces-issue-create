@@ -34,6 +34,16 @@ declare -A HEADERS=(
   [Type]='Select the type:'
 )
 
+# contains all the selected labels
+ISSUE_LABELS=()
+
+# increments ISSUE_LABELS with the selected label prefixing it
+set_issue_label()
+{
+  echo -e "${CI}> Selected label: ${2}${CM}"
+  ISSUE_LABELS=(${ISSUE_LABELS[@]} "${1}:${2}")
+}
+
 # returns all labels filtered by prefix
 get_prefixed_labels()
 {
@@ -53,29 +63,30 @@ get_stage_labels()
   echo 'To-do'
 }
 
-# contains all the selected labels
-ISSUE_LABELS=()
-
-# increments ISSUE_LABELS with the selected label prefixing it
-set_issue_label()
-{
-  echo -e "${CI}> Selected label: ${2}${CM}"
-  ISSUE_LABELS=(${ISSUE_LABELS[@]} "${1}:${2}")
-}
-
 # request the user to select multiple labels in the category options list
 set_issue_multiple_labels()
 {
   local prefix=$1
   local options=$2
-  local label=''
+  local options_length=$(printf "${options}" | awk 'END {print NR}')
+
+  local error_message='Error: You must enter just valid numbers'
   local usage_message='Usage: separate number using comma. sample: 1,4'
+  local label=''
 
   printf "${CT}${usage_message}${CM}\n#? "
   read chosen
 
-  for label_position in ${chosen//,/ }; do
-    label=$(echo $options | awk "{print \$$label_position}")
+  for label_index in ${chosen//,/ }; do
+    [[ $label_index -gt $options_length ]] && {
+      echo -e "${CE}${error_message}${CM}"
+      set_issue_multiple_labels $prefix "$options"
+      return 1
+    }
+  done
+
+  for label_index in ${chosen//,/ }; do
+    label=$(echo $options | awk "{print \$$label_index}")
     set_issue_label $prefix $label
   done
 }
