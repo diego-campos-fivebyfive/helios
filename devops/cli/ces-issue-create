@@ -46,7 +46,7 @@ declare -A HEADERS=(
   [Stage]='Select the stage:'
   [Type]='Select the type:'
   [Assignee]='Assign a github user to this issue\nUsage: enter 0 to no assign:'
-  [Description]='Enter issue description:\nUsage: press \ when it was done\n'
+  [Description]='Enter issue description:\nUsage: enter /end when it was done\n'
   [Title]='Enter the issue title:'
 )
 
@@ -185,10 +185,13 @@ select_milestone
 select_assignee
 
 echo -e "${CT}${HEADERS[Title]}${CM}"
-read ISSUE_TITLE
+read -e ISSUE_TITLE
 
 printf "${CT}${HEADERS[Description]}${CM}"
-read -d '\n' -r ISSUE_DESCRIPTION
+while read line; do
+  [[ $line == '/end' ]] && break
+  ISSUE_DESCRIPTION="${ISSUE_DESCRIPTION}${line}\n"
+done
 
 title="\"title\":\"${ISSUE_TITLE}\""
 description="\"body\":\"${ISSUE_DESCRIPTION}\""
