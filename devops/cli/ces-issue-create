@@ -201,4 +201,17 @@ milestone="\"milestone\":$(echo $ISSUE_MILESTONE | awk -F':' '{print $1}')"
 labels="\"labels\":[$(printf '"%s %s",' ${ISSUE_LABELS[@]} | sed 's/\(.*\),/\1/')]"
 
 json="{$title,$description,$assignee,$milestone,$labels}"
-curl -s -X POST -u $LOGIN -d "$json" $GITHUB_REPOSITORY/issues
+
+ISSUE_NUMBER=$(curl -s -X POST -u $LOGIN -d "$json" $GITHUB_REPOSITORY/issues \
+  | grep -m 1 number \
+  | awk '{print $2}' \
+  | sed 's/,//g;'
+)
+
+if [[ -n $ISSUE_NUMBER ]]; then
+  echo -e "${CT}issue ${ISSUE_NUMBER} successfully created${CM}"
+else
+  echo -e "${CE}an excepected error has occurred${CM}"
+fi
+
+printf "${CD}"
