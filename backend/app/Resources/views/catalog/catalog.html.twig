@@ -8,7 +8,7 @@
                         Sistema Nº {{ loop.index }}
                     </a>
                     <div class="pull-right btn-actions">
-                        <a href="#">
+                        <a data-url="{{ path('generator', {project:project.id}) }}">
                             <i class="fa fa-pencil icon-catalog"></i>
                         </a>
                         <a href="#">
@@ -149,3 +149,19 @@
         </div>
     {% endfor %}
 </div>
+<script>
+    $('[data-url]').on('click', function (event) {
+        event.preventDefault();
+
+        var url = $(this).data('url');
+        var form_render = $('#generator_list_form');
+        $.ajax({
+            url: url,
+            data: {source: 2},
+            complete: function (xhr) {
+                form_render.html(xhr.responseText);
+                GeneratorHandler.getConfig(true);
+            }
+        });
+    });
+</script>
