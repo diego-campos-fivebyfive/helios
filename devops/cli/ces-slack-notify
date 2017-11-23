@@ -4,14 +4,16 @@ echo "Sending Slack notification..."
 
 message=$(echo ${2:0:1500} | sed 's/"/\\"/g')
 
-if [ $1 = '--devops' ]; then
+if [[ $1 == '--devops' ]]; then
   slack_hook=$SLACK_HOOK_DEVOPS
-elif [ $1 = '--homolog' ]; then
+elif [[ $1 == '--homolog' ]]; then
   slack_hook=$SLACK_HOOK_HOMOLOG
-elif [ $1 = '--production' ]; then
+elif [[ $1 == '--production' ]]; then
   slack_hook=$SLACK_HOOK_PRODUCTION
-elif [ $1 = '--tester' ]; then
+elif [[ $1 == '--tester' ]]; then
   slack_hook=$SLACK_HOOK_TESTER
+elif [[ $1 == '--tasks' ]]; then
+  slack_hook=$SLACK_HOOK_TASKS
 else
   echo "Invalid chat argument"
   exit 1
