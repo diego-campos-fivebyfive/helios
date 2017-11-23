@@ -183,6 +183,19 @@ select_assignee()
   done
 }
 
+# requests the user to enter issue title and description
+describe_issue()
+{
+  echo -e "${CT}${HEADERS[Title]}${CM}"
+  read -e ISSUE_TITLE
+
+  printf "${CT}${HEADERS[Description]}${CM}"
+  while read line; do
+    [[ $line == '/end' ]] && break
+    ISSUE_DESCRIPTION="${ISSUE_DESCRIPTION}${line}\n"
+  done
+}
+
 # returns github issue json format
 format_github_issue()
 {
@@ -213,15 +226,7 @@ select_label $STAGE_PREFIX "$(get_stage_labels)"
 
 select_milestone
 select_assignee
-
-echo -e "${CT}${HEADERS[Title]}${CM}"
-read -e ISSUE_TITLE
-
-printf "${CT}${HEADERS[Description]}${CM}"
-while read line; do
-  [[ $line == '/end' ]] && break
-  ISSUE_DESCRIPTION="${ISSUE_DESCRIPTION}${line}\n"
-done
+describe_issue
 
 ISSUE=$(format_github_issue)
 ISSUE_NUMBER=$(curl -s -X POST -u $LOGIN -d "$ISSUE" $GITHUB_REPOSITORY/issues \
