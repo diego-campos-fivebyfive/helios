@@ -2,12 +2,13 @@
 
 SLACK_CHANNEL=${1/--/}
 SLACK_URI=$(eval "echo \$SLACK_HOOK_${SLACK_CHANNEL^^}")
-MESSAGE=$(echo ${2:0:1500} | sed 's/"/\\"/g')
+INPUT_TYPE=${3/--/}
 
-if [[ $SLACK_CHANNEL == 'tasks' ]]; then
-  JSON="{\"attachments\":[{\"fallback\":\"${MESSAGE}\"}]}"
+if [[ $INPUT_TYPE == 'json' ]]; then
+  JSON="${2}"
 else
-  JSON="{\"text\": \"${MESSAGE}\", \"link_names\": \"1\"}"
+  input=$(echo ${2:0:1500} | sed 's/"/\\"/g')
+  JSON="{\"text\": \"${input}\", \"link_names\": \"1\"}"
 fi
 
 if [[ -n $SLACK_URI ]]; then
