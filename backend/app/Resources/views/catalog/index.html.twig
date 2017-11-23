@@ -33,7 +33,7 @@
         <div class="col-md-12">
             {#TODO: Gerador ficará neste bloco#}
             <div class="ibox float-e-margins">
-                <div class="ibox-title">Gerador</div>
+                <div class="ibox-title"><h4>Gerador de Lista de Sistemas</h4></div>
                 <div class="ibox-content">
                     <div class="panel-body">
                         <div id="generator_list_form" class="col-md-12 flow-h ladda">
@@ -62,6 +62,7 @@
 
     <script>
         GeneratorHandler = {
+            maxProjects: '{{ maxQuantity }}',
             count: 0,
             stage: 'start',
             project: {id: 0, power: 0},
@@ -77,6 +78,10 @@
                         $('#generator_list_form').html(xhr.responseText);
                         FormGenerator.field('source').find('option[value="power"]').attr('selected', 'selected').trigger('change');
                         GeneratorHandler.getConfig(false);
+
+                        if (GeneratorHandler.maxProjects <= 0 ) {
+                            $('#submit-form').attr('disabled', 'disabled');
+                        }
                     }
                 });
             },
@@ -87,8 +92,8 @@
                       $('#pre-form-area').removeClass('hide');
                       $('#pre-form-area').html(xhr.responseText);
 
-                      if (editProject == true) {
-                          $('#quantity').attr('disabled', 'disabled');
+                      if (editProject == true || GeneratorHandler.maxProjects <= 0 ) {
+                          $('#quantity-project').attr('disabled', 'disabled');
                       }
                   }
               });
@@ -103,9 +108,12 @@
             },
             onPreProcess: function () {
               if (this.stage == 'start') {
-                  this.count = $('#quantity').val();
+                  this.count = $('#quantity-project').val();
                   this.stage = 'cycle';
               }
+            },
+            onResetProject: function () {
+                this.getConfig(false);
             },
             onSaveProject: function () {
                 this.count -= 1;

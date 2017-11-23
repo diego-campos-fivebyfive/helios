@@ -755,7 +755,8 @@ class ProjectGenerator
         $this->resetInverters($project);
         $this->resetModules($project);
 
-        $this->save($project, true);
+        if ($project->getId())
+            $this->save($project, true);
     }
 
     /**

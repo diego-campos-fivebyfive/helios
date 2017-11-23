@@ -14,12 +14,16 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CatalogController extends AbstractController
 {
+    const CATALOG_MAX_PROJECTS = 10;
+
     /**
      * @Route("/", name="index_catalog")
      */
     public function indexAction()
     {
-        return $this->render('catalog/index.html.twig', []);
+        return $this->render('catalog/index.html.twig', [
+            'maxQuantity' => $this->getMaxProjects()
+        ]);
     }
 
     /**
@@ -34,6 +38,7 @@ class CatalogController extends AbstractController
         unset($levels[Memorial::LEVEL_PROMOTIONAL]);
 
         return $this->render('catalog/config.html.twig', [
+            'maxQuantity' => $this->getMaxProjects(),
             'allLevels' => $levels,
             'allMemorials' => $memorials,
             'member' => $this->member(),
@@ -47,14 +52,7 @@ class CatalogController extends AbstractController
      */
     public function catalogAction()
     {
-        $member = $this->member();
-
-        $qb = $this->manager('project')->createQueryBuilder();
-
-        $qb
-            ->where($qb->expr()->in('p.member', $member->getId()))
-            ->orderBy('p.id', 'desc')
-            ->andWhere('p.source = :source')->setParameter('source', 2);
+        $qb = $this->getCatalogQueryBuilder();
 
         $this->overrideGetFilters();
 
@@ -62,4 +60,45 @@ class CatalogController extends AbstractController
             'projects' => $qb->getQuery()->getResult()
         ]);
     }
+
+    /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function getCatalogQueryBuilder()
+    {
+        $member = $this->member();
+
+        $qb = $this->manager('project')->createQueryBuilder();
+        $qb
+            ->where($qb->expr()->in('p.member', $member->getId()))
+            ->orderBy('p.id', 'desc')
+            ->andWhere('p.source = :source')->setParameter('source', 2);
+
+        return $qb;
+    }
+
+    /**
+     * @return mixed
+     */
+    private function countProjectsCatalog()
+    {
+        $qb = $this->getCatalogQueryBuilder();
+        $qb->select('count(p.id)');
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * @return int
+     */
+    private function getMaxProjects()
+    {
+        $projectsCount = $this->countProjectsCatalog();
+
+        $maxQuantity = (self::CATALOG_MAX_PROJECTS - $projectsCount);
+
+        return $maxQuantity;
+    }
+
+
 }

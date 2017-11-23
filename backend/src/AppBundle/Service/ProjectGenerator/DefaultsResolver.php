@@ -80,8 +80,15 @@ class DefaultsResolver
      */
     public function module()
     {
-        $id = null;
-        $module = $this->resolveArgs(Module::class, [], ['position' => 'asc']);
+        $id = $this->defaults['module'];
+
+        $getModule = function ($id = null) {
+            return $this->resolveArgs(Module::class, $id ? ['id' => $id] : [], ['position' => 'asc']);
+        };
+
+        if (null == $module = $getModule($id)) {
+            $module = $getModule();
+        }
 
         if($module instanceof Module){
             $id = $module->getId();
