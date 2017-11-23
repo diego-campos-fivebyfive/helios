@@ -5,7 +5,7 @@ CT='\033[0;33m'
 CI='\033[0;32m'
 CE='\033[0;31m'
 CD='\033[0;00m'
-CM='\033[0;30m'
+CM='\033[0;00m'
 
 LOGIN=$($CLI_PATH/util/github-credentials --login)
 USERS_FILE=$(cat $CLI_PATH/stash/users.csv)
@@ -209,7 +209,7 @@ ISSUE_NUMBER=$(curl -s -X POST -u $LOGIN -d "$json" $GITHUB_REPOSITORY/issues \
 )
 
 if [[ -n $ISSUE_NUMBER ]]; then
-  echo -e "${CT}issue ${ISSUE_NUMBER} successfully created${CM}"
+  echo -e "${CI}issue ${ISSUE_NUMBER} successfully created${CM}"
   $CLI_PATH/ces-slack-notify --tasks "Issue ${ISSUE_NUMBER} successfully created"
 else
   echo -e "${CE}an excepected error has occurred${CM}"
