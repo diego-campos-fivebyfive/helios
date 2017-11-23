@@ -178,6 +178,8 @@ class ProjectGeneratorController extends AbstractController
     {
         $order->setDiscount(floatval($request->get('discount')));
 
+        $order->setTotal($order->getTotal());
+
         $this->manager('order')->save($order);
 
         return $this->json([
@@ -520,6 +522,8 @@ class ProjectGeneratorController extends AbstractController
         ShippingRuler::apply($rule);
 
         $order->setShippingRules($rule);
+
+        $order->setTotal($order->getTotal());
 
         $this->manager('order')->save($order);
     }

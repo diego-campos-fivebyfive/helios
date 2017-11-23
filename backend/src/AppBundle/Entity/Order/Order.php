@@ -974,7 +974,7 @@ class Order implements OrderInterface, InsurableInterface
     {
         $this->shippingRules = $shippingRules;
 
-        $this->shipping = $this->getShipping();
+        $this->setShipping($this->getShipping());
 
         return $this;
     }
@@ -1001,7 +1001,7 @@ class Order implements OrderInterface, InsurableInterface
      */
     public function setShipping($shipping)
     {
-        $this->shipping = $shipping;
+        $this->shipping = round($shipping, 2);
 
         return $this;
     }
@@ -1231,7 +1231,7 @@ class Order implements OrderInterface, InsurableInterface
      */
     public function setTotal($total)
     {
-        $this->total = $total;
+        $this->total = round($total, 2);
 
         return $this;
     }

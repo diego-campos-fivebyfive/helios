@@ -224,6 +224,8 @@ class OrderController extends AbstractController
 
         $order->setTotal($order->getTotal());
 
+        $order->getParent()->setTotal($order->getParent()->getTotal());
+
         $this->manager('order')->save($order);
 
         return $this->json([

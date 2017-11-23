@@ -71,6 +71,8 @@ class OrderPrecifier
 
         $order->setTotal($order->getTotal());
 
+        $order->getParent()->setTotal($order->getParent()->getTotal());
+
         $this->container->get('order_manager')->save($order);
     }
 
