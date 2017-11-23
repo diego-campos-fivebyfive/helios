@@ -28,7 +28,7 @@
         </div>
         <div class="col-md-4">
             <label>Quantidade de sistemas:</label>
-            <input class="form-control" type="text" id="quantity" name="quantity" placeholder="Digite a quantidade">
+            <input class="form-control" type="text" id="quantity-project" name="quantity" placeholder="Digite a quantidade">
         </div>
     </div>
     <div class="row">
@@ -38,9 +38,18 @@
 
 <script>
 
-    $('#quantity').TouchSpin({
+    var input_quantity = $("input[name='quantity']");
+    var max = '{{ maxQuantity }}';
+
+    input_quantity.TouchSpin({
         min: 1,
-        max: 10
+        max: max
+    });
+
+    input_quantity.on('change', function () {
+        if (input_quantity.val() > max ) {
+            input_quantity.val(max);
+        }
     });
 
 </script>
