@@ -210,6 +210,7 @@ ISSUE_NUMBER=$(curl -s -X POST -u $LOGIN -d "$json" $GITHUB_REPOSITORY/issues \
 
 if [[ -n $ISSUE_NUMBER ]]; then
   echo -e "${CT}issue ${ISSUE_NUMBER} successfully created${CM}"
+  $CLI_PATH/ces-slack-notify --tasks "Issue ${ISSUE_NUMBER} successfully created"
 else
   echo -e "${CE}an excepected error has occurred${CM}"
 fi
