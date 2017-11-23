@@ -69,6 +69,8 @@ class OrderPrecifier
 
         $order->addMetadata('memorial', $memorial->toArray());
 
+        $order->setTotal($order->getTotal());
+
         $this->container->get('order_manager')->save($order);
     }
 

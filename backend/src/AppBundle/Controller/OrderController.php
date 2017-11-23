@@ -222,6 +222,8 @@ class OrderController extends AbstractController
 
         Insurance::apply($order, (bool) $insure);
 
+        $order->setTotal($order->getTotal());
+
         $this->manager('order')->save($order);
 
         return $this->json([
