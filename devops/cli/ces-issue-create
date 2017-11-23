@@ -59,6 +59,12 @@ ISSUE_ASSIGNEE=''
 # contains all the selected labels
 ISSUE_LABELS=()
 
+# contains the issue description
+ISSUE_DESCRIPTION=''
+
+# contains the issue title
+ISSUE_TITLE=''
+
 # increments ISSUE_LABELS with the selected label prefixing it
 set_issue_label()
 {
@@ -177,6 +183,17 @@ select_assignee()
   done
 }
 
+# returns github issue json format
+format_github_issue()
+{
+  local title="\"title\":\"${ISSUE_TITLE}\""
+  local description="\"body\":\"${ISSUE_DESCRIPTION}\""
+  local assignee="\"assignees\":[\"${ISSUE_ASSIGNEE}\"]"
+  local milestone="\"milestone\":$(echo $ISSUE_MILESTONE | awk -F':' '{print $1}')"
+  local labels="\"labels\":[$(printf '"%s %s",' ${ISSUE_LABELS[@]} | sed 's/\(.*\),/\1/')]"
+  echo "{$title,$description,$assignee,$milestone,$labels}"
+}
+
 # returns slack notification json attachment format
 format_slack_notification()
 {
@@ -206,15 +223,8 @@ while read line; do
   ISSUE_DESCRIPTION="${ISSUE_DESCRIPTION}${line}\n"
 done
 
-title="\"title\":\"${ISSUE_TITLE}\""
-description="\"body\":\"${ISSUE_DESCRIPTION}\""
-assignee="\"assignees\":[\"${ISSUE_ASSIGNEE}\"]"
-milestone="\"milestone\":$(echo $ISSUE_MILESTONE | awk -F':' '{print $1}')"
-labels="\"labels\":[$(printf '"%s %s",' ${ISSUE_LABELS[@]} | sed 's/\(.*\),/\1/')]"
-
-json="{$title,$description,$assignee,$milestone,$labels}"
-
-ISSUE_NUMBER=$(curl -s -X POST -u $LOGIN -d "$json" $GITHUB_REPOSITORY/issues \
+ISSUE=$(format_github_issue)
+ISSUE_NUMBER=$(curl -s -X POST -u $LOGIN -d "$ISSUE" $GITHUB_REPOSITORY/issues \
   | grep -m 1 number \
   | awk '{print $2}' \
   | sed 's/,//g;'
