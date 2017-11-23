@@ -98,6 +98,13 @@ class Order implements OrderInterface, InsurableInterface
      *
      * @ORM\Column(type="float", nullable=true)
      */
+    private $total;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="float", nullable=true)
+     */
     private $power;
 
     /**
@@ -218,6 +225,13 @@ class Order implements OrderInterface, InsurableInterface
      * @ORM\Column(type="json", nullable=true)
      */
     private $shippingRules;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $shipping;
 
     /**
      * @var string
@@ -960,6 +974,8 @@ class Order implements OrderInterface, InsurableInterface
     {
         $this->shippingRules = $shippingRules;
 
+        $this->shipping = $this->getShipping();
+
         return $this;
     }
 
@@ -978,6 +994,16 @@ class Order implements OrderInterface, InsurableInterface
     {
         return  is_array($this->shippingRules) && array_key_exists('shipping', $this->shippingRules)
             ? $this->shippingRules['shipping'] : 0 ;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setShipping($shipping)
+    {
+        $this->shipping = $shipping;
+
+        return $this;
     }
 
     /**
@@ -1198,6 +1224,16 @@ class Order implements OrderInterface, InsurableInterface
         $total = $this->getTotalExcDiscount() - $this->getDiscount();
 
         return $total;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setTotal($total)
+    {
+        $this->total = $total;
+
+        return $this;
     }
 
     /**

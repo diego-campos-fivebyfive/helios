@@ -159,6 +159,12 @@ interface OrderInterface
     public function getTotal();
 
     /**
+     * @param $total
+     * @return OrderInterface
+     */
+    public function setTotal($total);
+
+    /**
      * @return float
      */
     public function getTotalExcDiscount();
@@ -475,6 +481,12 @@ interface OrderInterface
      * @return float
      */
     public function getShipping();
+
+    /**
+     * @param $shipping
+     * @return OrderInterface
+     */
+    public function setShipping($shipping);
 
     /**
      * @param $deliveryAddress
