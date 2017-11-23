@@ -177,6 +177,18 @@ select_assignee()
   done
 }
 
+# returns slack notification json attachment format
+format_slack_notification()
+{
+  local text="\"text\":\"${MESSAGE}\""
+  local stage="{\"title\":\"Column\",\"value\":\"Column\",\"short\":true}"
+  local assignee="{\"title\":\"Assignee\",\"value\":\"Assignee\",\"short\":true}"
+  local milestone="{\"title\":\"Milestone\",\"value\":\"Milestone\",\"short\":true}"
+  local fields="\"fields\": [$assignee,$stage,$milestone]"
+  local color="\"color\":\"#F1A900\""
+  echo "{\"attachments\":[{$text,$fields,$color}]}"
+}
+
 for prefix in ${GENERAL_PREFIXES[@]}; do
   select_label $prefix "$(get_prefixed_labels $prefix)"
 done
@@ -210,7 +222,7 @@ ISSUE_NUMBER=$(curl -s -X POST -u $LOGIN -d "$json" $GITHUB_REPOSITORY/issues \
 
 if [[ -n $ISSUE_NUMBER ]]; then
   echo -e "${CI}issue ${ISSUE_NUMBER} successfully created${CM}"
-  $CLI_PATH/ces-slack-notify --tasks "Issue ${ISSUE_NUMBER} successfully created"
+  $CLI_PATH/ces-slack-notify --tasks "$(format_slack_notification)" --json
 else
   echo -e "${CE}an excepected error has occurred${CM}"
 fi
