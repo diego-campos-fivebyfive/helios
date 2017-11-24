@@ -6,7 +6,9 @@ use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Notification;
 use AppBundle\Entity\Order\OrderInterface;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
@@ -30,7 +32,7 @@ class WidgetsController extends AdminController
     ];
 
     /**
-     * @param $by
+     * @param $at
      * @return $this
      */
     public function at($at)
@@ -80,7 +82,12 @@ class WidgetsController extends AdminController
         $this->at($group);
         $this->filters($date, $status);
 
-        $data = $this->getOrderFilter();
+        $qb = $this->getOrderFilter();
+
+        $qb
+            ->select('sum(o.total) as total, sum(o.power) as power, o.createdAt')
+            ->groupBy('o.id')
+        ;
 
         // Defaults
         $groups = [];
@@ -93,25 +100,22 @@ class WidgetsController extends AdminController
             ];
         }
 
+        $orders = $qb->getQuery()->getResult();
+
         /** @var OrderInterface $order */
-        foreach ($data as $order) {
+        foreach ($orders as $order) {
+
+            /** @var \DateTime $createdAt */
+            $createdAt = $order['createdAt'];
+
             $index = 'month' == $group
-                ? (int) $order->getCreatedAt()->format('d')
-                : (int) $order->getCreatedAt()->format('m');
-
-            $power = 0;
-            $total = 0;
-
-            foreach ($order->getChildrens() as $children){
-                $total += $children->getTotal();
-                $power += $children->getPower();
-            }
+                ? (int) $createdAt->format('d')
+                : (int) $createdAt->format('m');
 
             $groups[$index]['count'] += 1;
-            $groups[$index]['power'] += $power;
-            $groups[$index]['amount'] += $total;
+            $groups[$index]['power'] += $order['power'];
+            $groups[$index]['amount'] += $order['total'];
         }
-
 
         return $this->json([
             'options' => [
@@ -126,27 +130,24 @@ class WidgetsController extends AdminController
      */
     public function orderCountAction()
     {
+        $qb = $this->getOrders();
+
+        $qb->select($qb->expr()->count('o.id'));
+
+        $count = $qb->getQuery()->getResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
+
+        $amount = $qb->select('sum(o.total)')->getQuery()->getResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
+
+        $qb->select('sum(c.power)')
+            ->join('o.childrens', 'c');
+
+        $power = $qb->getQuery()->getResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
+
         $summary = [
-            'count' => 0,
-            'amount' => 0,
-            'power' => 0
+            'count' => (int) $count,
+            'amount' => (float) $amount,
+            'power' => (float) $power
         ];
-
-        $ordersCollection = $this->getOrders();
-
-        $orders = $ordersCollection->getQuery()->getResult();
-
-        foreach ($orders as $order) {
-            $power = 0;
-            $total = 0;
-            foreach ($order->getChildrens() as $children){
-                $total += $children->getTotal();
-                $power += $children->getPower();
-            }
-            $summary['count'] += 1;
-            $summary['amount'] += $total;
-            $summary['power'] += $power;
-        }
 
         return $this->json([
             'data' => $summary
@@ -158,19 +159,33 @@ class WidgetsController extends AdminController
      */
     public function ordersStatusAction()
     {
-        $collection = $this->startDefaults();
-
-        $ordersCollection = $this->getOrders();
-
-        $orders = $ordersCollection->getQuery()->getResult();
-
-        $collection = $this->getOrdersStatus($collection, $orders);
+        $collection = $this->getOrdersStatus();
 
         return $this->render('admin/widget/status-orders.html.twig', [
             'collection' => $collection
         ]);
     }
 
+    /**
+     * @Route("/widget_time", name="widget_time")
+     */
+    public function timelineWidgetAction()
+    {
+        $member = $this->member();
+
+        $subscriptions = $this->manager('notification')->subscriptions($member, [
+            'type' => Notification::TYPE_TIMELINE,
+            'limit' => 6
+        ]);
+
+        return $this->render('admin/widget/timeline.html.twig', [
+            'subscriptions' => $subscriptions
+        ]);
+    }
+
+    /**
+     * @return array
+     */
     private function startDefaults()
     {
         $collection = [];
@@ -189,35 +204,44 @@ class WidgetsController extends AdminController
         return $collection;
     }
 
-    private function getArrayStatus($collection, $status, $total, $power)
+    /**
+     * @return array
+     */
+    private function getOrdersStatus()
     {
-        $collection[$status]['count'] += 1;
-        $collection[$status]['amount'] += $total;
-        $collection[$status]['power'] += $power;
-        $collection[$status]['medValue'] = $collection[$status]['amount'] / $collection[$status]['count'];
-        $collection[$status]['medPower'] = $collection[$status]['power'] / $collection[$status]['count'];
+        $collection = $collection = $this->startDefaults();
 
-        return $collection;
-    }
+        $qb = $this->getOrders();
+        $qb
+            ->select('o.status as status, sum(o.total) as total, sum(o.power) as power')
+            ->groupBy('o.id')
+        ;
 
-    private function getOrdersStatus($collection, $orders)
-    {
+        $orders = $qb->getQuery()->getResult();
+
         foreach ($orders as $order) {
-            $power = 0;
-            $total = 0;
-
-            foreach ($order->getChildrens() as $children) {
-                $total += $children->getTotal();
-                $power += $children->getPower();
+            if (in_array($order['status'], Order::getStatusList())) {
+                $collection[$order['status']]['count'] += 1;
+                $collection[$order['status']]['amount'] += $order['total'];
+                $collection[$order['status']]['power'] += $order['power'];
             }
+        }
 
-            if (in_array($order->getStatus(), Order::getStatusList()))
-                $collection = $this->getArrayStatus($collection, $order->getStatus(), $total, $power);
+        foreach ($collection as $key => $item) {
+            if ($collection[$key]['count']) {
+                if ($collection[$key]['amount'])
+                    $collection[$key]['medValue'] = $collection[$key]['amount'] / $collection[$key]['count'];
+                if ($collection[$key]['power'])
+                    $collection[$key]['medPower'] = $collection[$key]['power'] / $collection[$key]['count'];
+            }
         }
 
         return $collection;
     }
 
+    /**
+     * @return QueryBuilder
+     */
     private function queryBuilder()
     {
         $qb = $this->manager('order')->createQueryBuilder();
@@ -230,6 +254,9 @@ class WidgetsController extends AdminController
         return $qb;
     }
 
+    /**
+     * @return QueryBuilder
+     */
     private function getOrders()
     {
         $member = $this->member();
@@ -264,6 +291,9 @@ class WidgetsController extends AdminController
         return $qb;
     }
 
+    /**
+     * @return QueryBuilder
+     */
     private function getOrderFilter()
     {
         $qb = $this->getOrders();
@@ -299,24 +329,7 @@ class WidgetsController extends AdminController
             }
         }
 
-        return $qb->getQuery()->getResult();
+        return $qb;
 
-    }
-
-    /**
-     * @Route("/widget_time", name="widget_time")
-     */
-    public function timelineWidgetAction()
-    {
-        $member = $this->member();
-
-        $subscriptions = $this->manager('notification')->subscriptions($member, [
-            'type' => Notification::TYPE_TIMELINE,
-            'limit' => 6
-        ]);
-
-        return $this->render('admin/widget/timeline.html.twig', [
-            'subscriptions' => $subscriptions
-        ]);
     }
 }
