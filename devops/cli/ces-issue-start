@@ -18,11 +18,20 @@ if [[ -z $1 ]]; then
   exit 0
 fi
 
+STAGE=$($CLI_PATH/ces-issue-info $1 --stage)
+INVALID_STAGES=(In-progress Review Testing-tech Testing-product Closed)
+
+for invalid_stage in $INVALID_STAGES; do
+  if [[ $invalid_stage == $STAGE ]]; then
+    echo "Error: you could not start issue-${1}, it is on ${STAGE} column now."
+    exit 1
+  fi
+done
+
 LAST_BRANCH=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
 LAST_ISSUE=${LAST_BRANCH/issue-/}
 LAST_STAGE=$($CLI_PATH/ces-issue-info $LAST_ISSUE --stage)
 LAST_MODIF=$(git log origin/master..HEAD)
-STAGE=$($CLI_PATH/ces-issue-info $1 --stage)
 
 USER=$($CLI_PATH/util/github-credentials --user)
 NICK=$($CLI_PATH/util/user-credentials $USER --slack)
