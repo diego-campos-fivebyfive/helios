@@ -5,9 +5,11 @@ CT='\033[0;33m'
 CI='\033[0;32m'
 CE='\033[0;31m'
 CD='\033[0;00m'
-CM='\033[0;30m'
+CM='\033[0;00m'
 
 LOGIN=$($CLI_PATH/util/github-credentials --login)
+USER=$($CLI_PATH/util/github-credentials --user)
+NICK=$($CLI_PATH/util/user-credentials $USER --slack)
 USERS_FILE=$(cat $CLI_PATH/stash/users.csv)
 
 # contains labels formatted by: prefix:value
@@ -58,6 +60,12 @@ ISSUE_ASSIGNEE=''
 
 # contains all the selected labels
 ISSUE_LABELS=()
+
+# contains the issue description
+ISSUE_DESCRIPTION=''
+
+# contains the issue title
+ISSUE_TITLE=''
 
 # increments ISSUE_LABELS with the selected label prefixing it
 set_issue_label()
@@ -159,6 +167,7 @@ select_milestone()
   echo -e "${CT}${HEADERS[Milestone]}${CM}"
 
   select milestone in $options; do
+    echo -e "${CI}> Selected milestone: ${milestone}${CM}"
     ISSUE_MILESTONE=$(printf "$MILESTONES" | grep $milestone)
     break
   done
@@ -171,10 +180,63 @@ select_assignee()
 
   select assignee in $ASSIGNEES; do
     if [[ -n $assignee ]]; then
+      echo -e "${CI}> Selected assignee: ${assignee}${CM}"
       ISSUE_ASSIGNEE=$assignee
     fi
     break
   done
+}
+
+# requests the user to enter issue title and description
+describe_issue()
+{
+  echo -e "${CT}${HEADERS[Title]}${CM}"
+  read -e ISSUE_TITLE
+
+  printf "${CT}${HEADERS[Description]}${CM}"
+  while read line; do
+    [[ $line == '/end' ]] && break
+    ISSUE_DESCRIPTION="${ISSUE_DESCRIPTION}${line}\n"
+  done
+}
+
+# returns github issue json format
+format_github_issue()
+{
+  local title="\"title\":\"${ISSUE_TITLE}\""
+  local description="\"body\":\"${ISSUE_DESCRIPTION}\""
+  local assignee="\"assignees\":[\"${ISSUE_ASSIGNEE}\"]"
+  local milestone="\"milestone\":$(echo $ISSUE_MILESTONE | awk -F':' '{print $1}')"
+  local labels="\"labels\":[$(printf '"%s %s",' ${ISSUE_LABELS[@]} | sed 's/\(.*\),/\1/')]"
+  echo "{$title,$description,$assignee,$milestone,$labels}"
+}
+
+# returns slack notification json attachment format
+format_slack_notification()
+{
+  local issue_url="<https://github.com/sices/sices/issues/${1}|issue-${1}>"
+  local message="*${NICK}* created ${issue_url}"
+  local pretext="\"pretext\":\"Título: ${message}\""
+  local text="\"text\":\"${ISSUE_TITLE}\""
+
+  local milestone="$(echo $ISSUE_MILESTONE | awk -F$':' '{print $3}')"
+  local assignee=$ISSUE_ASSIGNEE
+  [[ -z assignee ]] && assignee='No Assignee'
+
+  local stage='Backlog-general'
+  for i in "${ISSUE_LABELS[@]}"; do
+    [[ $i == *'Stage'* ]] && stage=$(echo $i | awk -F$':' '{print $2}')
+  done
+
+  stage="{\"title\":\"Column\",\"value\":\"${stage/-/ }\",\"short\":true}"
+  assignee="{\"title\":\"Assignee\",\"value\":\"${assignee}\",\"short\":true}"
+  milestone="{\"title\":\"Milestone\",\"value\":\"${milestone}\",\"short\":true}"
+
+  local fields="\"fields\": [$assignee,$stage,$milestone]"
+  local color="\"color\":\"#F1A900\""
+  local markdown="\"mrkdwn_in\": [\"pretext\"]"
+
+  echo "{\"attachments\":[{$pretext,$text,$fields,$color,$markdown}]}"
 }
 
 for prefix in ${GENERAL_PREFIXES[@]}; do
@@ -184,33 +246,19 @@ select_label $STAGE_PREFIX "$(get_stage_labels)"
 
 select_milestone
 select_assignee
+describe_issue
 
-echo -e "${CT}${HEADERS[Title]}${CM}"
-read -e ISSUE_TITLE
-
-printf "${CT}${HEADERS[Description]}${CM}"
-while read line; do
-  [[ $line == '/end' ]] && break
-  ISSUE_DESCRIPTION="${ISSUE_DESCRIPTION}${line}\n"
-done
-
-title="\"title\":\"${ISSUE_TITLE}\""
-description="\"body\":\"${ISSUE_DESCRIPTION}\""
-assignee="\"assignees\":[\"${ISSUE_ASSIGNEE}\"]"
-milestone="\"milestone\":$(echo $ISSUE_MILESTONE | awk -F':' '{print $1}')"
-labels="\"labels\":[$(printf '"%s %s",' ${ISSUE_LABELS[@]} | sed 's/\(.*\),/\1/')]"
-
-json="{$title,$description,$assignee,$milestone,$labels}"
-
-ISSUE_NUMBER=$(curl -s -X POST -u $LOGIN -d "$json" $GITHUB_REPOSITORY/issues \
+issue=$(format_github_issue)
+ISSUE_NUMBER=$(curl -s -X POST -u $LOGIN -d "$issue" $GITHUB_REPOSITORY/issues \
   | grep -m 1 number \
   | awk '{print $2}' \
   | sed 's/,//g;'
 )
 
 if [[ -n $ISSUE_NUMBER ]]; then
-  echo -e "${CT}issue ${ISSUE_NUMBER} successfully created${CM}"
-  $CLI_PATH/ces-slack-notify --tasks "Issue ${ISSUE_NUMBER} successfully created"
+  echo -e "${CI}issue ${ISSUE_NUMBER} successfully created${CM}"
+  notification=$(format_slack_notification $ISSUE_NUMBER)
+  $CLI_PATH/ces-slack-notify --tasks "${notification}" --json
 else
   echo -e "${CE}an excepected error has occurred${CM}"
 fi

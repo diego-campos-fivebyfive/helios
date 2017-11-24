@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 
-echo "Sending Slack notification..."
+SLACK_CHANNEL=${1/--/}
+SLACK_URI=$(eval "echo \$SLACK_HOOK_${SLACK_CHANNEL^^}")
+INPUT_TYPE=${3/--/}
 
-message=$(echo ${2:0:1500} | sed 's/"/\\"/g')
-
-if [[ $1 == '--devops' ]]; then
-  slack_hook=$SLACK_HOOK_DEVOPS
-elif [[ $1 == '--homolog' ]]; then
-  slack_hook=$SLACK_HOOK_HOMOLOG
-elif [[ $1 == '--production' ]]; then
-  slack_hook=$SLACK_HOOK_PRODUCTION
-elif [[ $1 == '--tester' ]]; then
-  slack_hook=$SLACK_HOOK_TESTER
-elif [[ $1 == '--tasks' ]]; then
-  slack_hook=$SLACK_HOOK_TASKS
+if [[ $INPUT_TYPE == 'json' ]]; then
+  JSON="${2}"
 else
-  echo "Invalid chat argument"
-  exit 1
+  input=$(echo ${2:0:1500} | sed 's/"/\\"/g')
+  JSON="{\"text\": \"${input}\", \"link_names\": \"1\"}"
 fi
 
-json="{\"text\": \"$message\", \"link_names\": \"1\"}"
-curl -s -X POST -H "Content-type:application/json" -d "$json" $slack_hook > /dev/null 2>&1
+if [[ -n $SLACK_URI ]]; then
+  echo "Sending Slack notification..."
+
+  curl -s -X POST \
+    -H "Content-type:application/json" \
+    -d "${JSON}" $SLACK_URI > /dev/null 2>&1
+else
+  echo "Error: something unexpected occurred, \
+    make sure channel ${SLACK_CHANNEL} is valid channel option"
+fi
