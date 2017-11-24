@@ -523,9 +523,21 @@ Esclarecimentos gerais relacionados a documentação:
   <a name="comandos--tarefas"></a><a name="6.7"></a>
   - [6.7](#comandos--tarefas) **Comandos de gerenciamento de tarefas**:
 
+    - ##### Criar uma issue utilizando terminal:
+    ```
+    $ ces-issue-create
+    ```
+
     - ##### Preparar ambiente para a execução da tarefa:
     ```
     $ ces-issue-start [ISSUE_NUMBER]
+    ```
+
+    - ##### Criar issue e preparar ambiente para a execução da tarefa:
+    ```
+    $ ces-issue-start
+    ou
+    $ ces-issue-create --start
     ```
 
     - ##### Mover tarefa no quadro:
