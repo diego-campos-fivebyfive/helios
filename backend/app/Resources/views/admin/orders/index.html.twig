@@ -97,11 +97,10 @@
 
         <div class="row">
 
-                <div class="col-md-8">
+                <div class="col-md-9">
+                    {{ form_start(form) }}
+
                     <div class="row">
-
-                        {{ form_start(form) }}
-
                         {% set hasAgent = attribute(form, 'agent') is defined %}
 
                         <div class="form-group col-md-{{ hasAgent ? '4' : '6' }}">
@@ -118,18 +117,27 @@
                             </div>
                         {% endif %}
 
+
                         <div class="form-group col-md-2">
                         <button type="submit" class="btn btn-primary btn-md btn-block">
                             <i class="fa fa-search"></i> Pesquisar
                         </button>
                         </div>
-
-                        {{ form_end(form) }}
-
                     </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            {{ form_widget(form.statusAt,{attr:{class:'form-control', placeholder:'Filtrar por data' }}) }}
+                        </div>
+                        <div class="col-md-1">
+                            <button type="button" id="clear-date" class="btn btn-primary pull-right"><i class="fa fa-eraser"></i></button>
+                        </div>
+                    </div>
+                    {{ form_end(form) }}
+
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-3">
                     {% if allowAdd %}
                         <a data-url="{{ path('accounts_list') }}"
                            data-toggle="modal"
@@ -145,9 +153,11 @@
         <div class="row" id="real-content">
             <div class="col-md-12">
                 <div class="ibox-title flow-lg">
-                    <h5>
+                    <span class="pull-left">
+                        <h4>
                         <i class="fa fa-files-o"> </i> Solicitações
-                    </h5>
+                        </h4>
+                    </span>
 
                     <span class="pull-right small text-muted">
                         {% set count = orders.totalItemCount %}
@@ -156,6 +166,7 @@
                             {% if count <= 1 %} Solicitação encontrada {% else %} Solicitações encontradas {% endif %}
                         </h4>
                     </span>
+
                 </div>
                 <div class="ibox flow-h">
                     <div class="ibox-content flow-lg">
@@ -348,6 +359,35 @@
             } else {
                 content_accounts.html('<h2> Erro ao selecionar Integrador</h2>');
             }
+        });
+
+        var dateStatus = $('#filter_statusAt');
+
+        dateStatus.daterangepicker({
+            locale: {
+                format: 'DD/MM/YYYY',
+                daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+                monthNames: [
+                    "Janeiro",
+                    "Fevereiro",
+                    "Março",
+                    "Abril",
+                    "Maio",
+                    "Junho",
+                    "Julho",
+                    "Agosto",
+                    "Setembro",
+                    "Outubro",
+                    "Novembro",
+                    "Dezembro"
+                ]
+            }
+        });
+
+        dateStatus.val('');
+
+        $('#clear-date').on('click', function () {
+            dateStatus.val('');
         });
 
     </script>

@@ -29,6 +29,7 @@ class OrderController extends AbstractController
      */
     public function orderAction(Request $request)
     {
+
         $member = $this->member();
 
         $form = $this->createForm(FilterType::class, null, [
@@ -36,6 +37,16 @@ class OrderController extends AbstractController
         ]);
 
         $data = $form->handleRequest($request)->getData();
+
+        $date = $data['statusAt'];
+
+        $startAt = null;
+        $endAt = null;
+
+        $formatDate = function($date){
+            return implode('-', array_reverse(explode('/', $date)));
+        };
+
 
         if(is_array($data) && !array_key_exists('agent',$data) || !$data['agent'])
             $data['agent'] = $member;
@@ -49,6 +60,18 @@ class OrderController extends AbstractController
         ;
 
         $qb = $finder->queryBuilder();
+
+        if ($date) {
+            $date = explode(' - ',$date);
+            $startAt = new \DateTime($formatDate($date[0]));
+            $endAt = new \DateTime($formatDate($date[1]));
+
+            $qb->andWhere('o.statusAt >= :startAt');
+            $qb->andWhere('o.statusAt <= :endAt');
+
+            $qb->setParameter('startAt', $startAt->format('Y-m-d 00:00:00'));
+            $qb->setParameter('endAt', $endAt->format('Y-m-d 23:59:59'));
+        }
 
         $pagination = $this->getPaginator()->paginate(
             $qb->getQuery(),

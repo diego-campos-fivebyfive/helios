@@ -43,6 +43,10 @@ class FilterType extends AppFilterType
                 'choices' => $agents
             ]);
         }
+
+        $builder->add('statusAt', null, [
+            'required' => false
+        ]);
     }
 
     /**
