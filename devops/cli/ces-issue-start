@@ -2,13 +2,18 @@
 
 cd $SICES_PATH
 
-if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
+if [[ $1 = '--help' ]] || [[ $1 = '-h' ]]; then
   printf "ces-issue-start - help:
   Usage:
   ces-issue-start [ISSUE_NUMBER] \n
   Exemple:
   ces-issue-start 100 \n"
   exit 0;
+fi
+
+if [[ -z $1 ]]; then
+  $CLI_PATH/ces-issue-create --start
+  exit 0
 fi
 
 LAST_BRANCH=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')

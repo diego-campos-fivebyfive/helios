@@ -259,6 +259,10 @@ if [[ -n $ISSUE_NUMBER ]]; then
   echo -e "${CI}issue ${ISSUE_NUMBER} successfully created${CM}"
   notification=$(format_slack_notification $ISSUE_NUMBER)
   $CLI_PATH/ces-slack-notify --tasks "${notification}" --json
+
+  if [[ $1 == '--start' ]]; then
+    $CLI_PATH/ces-issue-start $ISSUE_NUMBER
+  fi
 else
   echo -e "${CE}an excepected error has occurred${CM}"
 fi
