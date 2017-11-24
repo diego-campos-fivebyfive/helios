@@ -1,14 +1,15 @@
 23/11/2017 - Controle de estoque
-Status afetados: PENDING, VALIDATED
+==========================================
+Status afetados: `PENDING`, `VALIDATED`
 
-Tráfego de exemplo (50)
-
+#### Tráfego de exemplo (50)
+```
 BUILDING >> PENDING: PENDING: 50
 VALIDATED >> PENDING: PENDING: 50, VALIDATED: 0
 PENDING >> VALIDATED: PENDING: 0, VALIDATED: 50
 PENDING >> REJECTED: PENDING: 0
-
-Este mecanismo está em fase de análise...
+```
+> OBS.: Este mecanismo está em fase de análise.
 
 20/11/2017 - Gerardor de lista de sistemas
 ==========================================
