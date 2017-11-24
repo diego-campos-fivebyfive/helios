@@ -222,11 +222,9 @@ class OrderController extends AbstractController
 
         Insurance::apply($order, (bool) $insure);
 
-        $order->setTotal($order->getTotal());
-
-        $order->getParent()->setTotal($order->getParent()->getTotal());
-
         $this->manager('order')->save($order);
+
+        $this->get('order_manipulator')->normalizeInfo($order);
 
         return $this->json([
             'order' => [

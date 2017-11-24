@@ -5,9 +5,45 @@ namespace AppBundle\Service\Order;
 use AppBundle\Entity\Order\ElementInterface;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Entity\UserInterface;
+use AppBundle\Manager\OrderManager;
 
 class OrderManipulator
 {
+    /**
+     * @var OrderManager
+     */
+    private $manager;
+
+    /**
+     * OrderManipulator constructor.
+     * @param OrderManager $manager
+     */
+    function __construct(OrderManager $manager)
+    {
+        $this->manager = $manager;
+    }
+
+    /**
+     * @param OrderInterface $order
+     * @return OrderInterface
+     */
+    public function normalizeInfo(OrderInterface $order)
+    {
+        $order->setTotal($order->getTotal());
+
+        if ($order->isMaster()) {
+            $order->setPower($order->getPower());
+            $order->setShipping($order->getShipping());
+        }
+
+        $this->manager->save($order);
+
+        if (!$order->isMaster() && $order->getParent())
+            self::normalizeInfo($order->getParent());
+
+        return $order;
+    }
+
     /**
      * @param OrderInterface $order
      * @param $next

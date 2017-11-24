@@ -69,11 +69,9 @@ class OrderPrecifier
 
         $order->addMetadata('memorial', $memorial->toArray());
 
-        $order->setTotal($order->getTotal());
-
-        $order->getParent()->setTotal($order->getParent()->getTotal());
-
         $this->container->get('order_manager')->save($order);
+
+        $this->container->get('order_manipulator')->normalizeInfo($order);
     }
 
     /**

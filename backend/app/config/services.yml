@@ -273,6 +273,7 @@ services:
 
     order_manipulator:
         class: AppBundle\Service\Order\OrderManipulator
+        arguments: ['@order_manager']
 
     order_finder:
         class: AppBundle\Service\Order\OrderFinder
