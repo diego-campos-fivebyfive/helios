@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+if [[ $1 = '--help' ]] || [[ $1 = '-h' ]]; then
+  printf "ces-issue-create - help:
+  Usage:
+  ces-issue-create \n
+  Usage (create and start):
+  ces-issue-create --start \n"
+  exit 0;
+fi
+
 # colors pallet
 CT='\033[0;33m'
 CI='\033[0;32m'
@@ -259,6 +268,10 @@ if [[ -n $ISSUE_NUMBER ]]; then
   echo -e "${CI}issue ${ISSUE_NUMBER} successfully created${CM}"
   notification=$(format_slack_notification $ISSUE_NUMBER)
   $CLI_PATH/ces-slack-notify --tasks "${notification}" --json
+
+  if [[ $1 == '--start' ]]; then
+    $CLI_PATH/ces-issue-start $ISSUE_NUMBER
+  fi
 else
   echo -e "${CE}an excepected error has occurred${CM}"
 fi
