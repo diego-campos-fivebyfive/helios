@@ -167,6 +167,7 @@ select_milestone()
   echo -e "${CT}${HEADERS[Milestone]}${CM}"
 
   select milestone in $options; do
+    echo -e "${CI}> Selected milestone: ${milestone}${CM}"
     ISSUE_MILESTONE=$(printf "$MILESTONES" | grep $milestone)
     break
   done
@@ -179,6 +180,7 @@ select_assignee()
 
   select assignee in $ASSIGNEES; do
     if [[ -n $assignee ]]; then
+      echo -e "${CI}> Selected assignee: ${assignee}${CM}"
       ISSUE_ASSIGNEE=$assignee
     fi
     break
@@ -214,14 +216,14 @@ format_slack_notification()
 {
   local issue_url="<https://github.com/sices/sices/issues/${1}|issue-${1}>"
   local message="*${NICK}* created ${issue_url}"
-  local pretext="\"pretext\":\"${message}\""
+  local pretext="\"pretext\":\"Título: ${message}\""
   local text="\"text\":\"${ISSUE_TITLE}\""
 
-  local assignee=$ISSUE_ASSIGNEE
   local milestone="$(echo $ISSUE_MILESTONE | awk -F$':' '{print $3}')"
+  local assignee=$ISSUE_ASSIGNEE
+  [[ -z assignee ]] && assignee='No Assignee'
 
   local stage='Backlog-general'
-
   for i in "${ISSUE_LABELS[@]}"; do
     [[ $i == *'Stage'* ]] && stage=$(echo $i | awk -F$':' '{print $2}')
   done
