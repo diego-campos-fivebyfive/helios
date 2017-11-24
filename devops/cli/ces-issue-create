@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+if [[ -z $1 ]] || [[ $1 = '--help' ]] || [[ $1 = '-h' ]]; then
+  printf "ces-issue-create - help:
+  Usage:
+  ces-issue-create \n
+  Usage (create and start):
+  ces-issue-create --start \n"
+  exit 0;
+fi
+
 # colors pallet
 CT='\033[0;33m'
 CI='\033[0;32m'

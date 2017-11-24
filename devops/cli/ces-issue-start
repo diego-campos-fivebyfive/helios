@@ -6,6 +6,8 @@ if [[ $1 = '--help' ]] || [[ $1 = '-h' ]]; then
   printf "ces-issue-start - help:
   Usage:
   ces-issue-start [ISSUE_NUMBER] \n
+  Usage (create and start the issue):
+  ces-issue-start \n
   Exemple:
   ces-issue-start 100 \n"
   exit 0;
