@@ -29,8 +29,6 @@ class OrderManipulator
      */
     public function normalizeInfo(OrderInterface $order)
     {
-        //dump($order);die;
-
         $order->setTotal($order->getTotal());
 
         if ($order->isMaster()) {
