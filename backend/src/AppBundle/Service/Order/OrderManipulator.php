@@ -29,6 +29,8 @@ class OrderManipulator
      */
     public function normalizeInfo(OrderInterface $order)
     {
+        //dump($order);die;
+
         $order->setTotal($order->getTotal());
 
         if ($order->isMaster()) {
@@ -38,7 +40,7 @@ class OrderManipulator
 
         $this->manager->save($order);
 
-        if (!$order->isMaster())
+        if (!$order->isMaster() && $order->getParent())
             self::normalizeInfo($order->getParent());
 
         return $order;
