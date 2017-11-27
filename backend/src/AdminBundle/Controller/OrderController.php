@@ -234,13 +234,13 @@ class OrderController extends AbstractController
             $orders = [];
 
             if ($mapping)
-                $orders = $qb->where($qb->expr()->in('o.id',array_keys($mapping)))->getQuery()->getResult();
+                $orders = $qb->where($qb->expr()->in('o.reference',array_keys($mapping)))->getQuery()->getResult();
 
             $importations = 0;
 
             /** @var OrderInterface $order */
             foreach ($orders as $order) {
-                $order->setInvoiceNumber($mapping[$order->getId()]);
+                $order->setInvoiceNumber($mapping[$order->getReference()]);
                 $manager->save($order);
                 $importations++;
             }
