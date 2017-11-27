@@ -57,7 +57,7 @@
     var btn_init = $('#btn_init');
 
     var appUploader = new Dropzone('div#uploader', {
-        url: '{{ path('import_cmv', {filename:0}) }}',
+        url: '{{ path('import_csv', {filename:0}) }}',
         createImageThumbnails: false,
         uploadMultiple: false,
         maxFiles: 1,
@@ -87,7 +87,7 @@
         btn_init.ladda('start');
         var filename = $(this).data('filename');
         $.ajax({
-            url: '{{ path('import_cmv', {filename:'_filename_'}) }}'.replace('_filename_', filename),
+            url: '{{ path('import_csv', {filename:'_filename_'}) }}'.replace('_filename_', filename),
             success: function (response) {
                 import_info.html(response['importations'] + ' importações realizadas');
                 btn_init.ladda('stop');

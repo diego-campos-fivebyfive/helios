@@ -184,7 +184,7 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/{filename}/import", name="import_cmv")
+     * @Route("/{filename}/import", name="import_csv")
      */
     public function importAction(Request $request, $filename)
     {
