@@ -24,6 +24,8 @@ use Exporter\Exporter;
 use Exporter\Handler;
 use Exporter\Source\DoctrineORMQuerySourceIterator;
 use Exporter\Writer\CsvWriter;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\Pricing\Memorial;
@@ -37,6 +39,27 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
  */
 class DebugController extends AbstractController
 {
+    /**
+     * @Route("/csv-import", name="csv-import")
+     */
+    public function importCsvAction(Request $request)
+    {
+        /** @var File $file */
+        $file = $request->files->get('file');
+
+        if (!$file instanceof UploadedFile) {
+            return $this->render('admin/orders/upload_csv.html.twig');
+        }
+
+        $filename = md5(uniqid(time())) . '.csv';
+
+        $kernel = $this->get('kernel')->getCacheDir();
+
+        $file->move($kernel, $filename);
+
+        return $this->json([ 'name' => $filename ]);
+    }
+
     /**
      * @Route("/cmv-import")
      */
