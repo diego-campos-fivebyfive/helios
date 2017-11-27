@@ -1,6 +1,6 @@
 27/11/2017 - Seguros, Componentes e Finame
 
-#### SEGUROS ####
+#### SEGUROS - TODOS OS PONTOS PENDENTES ####
 Propriedades: 
 - type(insurance), 
 - name, 
@@ -56,16 +56,17 @@ Regras coletadas em 23/11/2017 - Controle de estoque
 - Comportamento similar ao que ocorre com o número da NF
 - Com datepicker
 
-4. Nova coluna na listagem
-- Disponibilidade para coleta
-
-5. Novo filtro na listagem
-- Disponibilidade para coleta
-
-6. 972 . Permitir seleção de itens inativos na edição de um orçamento quando user SICES.
+4. 972 . Permitir seleção de itens inativos na edição de um orçamento quando user SICES.
 - Destacar a label do item inativo com cor vermelha.
 
- 
+5. Nova coluna na listagem
+- Disponibilidade para coleta
+
+6. Novo filtro na listagem
+- Disponibilidade para coleta
+
+-----------------------------------------
+
 23/11/2017 - Controle de estoque
 ==========================================
 Status afetados: `PENDING`, `VALIDATED`
