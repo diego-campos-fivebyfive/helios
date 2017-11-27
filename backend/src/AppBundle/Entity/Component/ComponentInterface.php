@@ -191,4 +191,26 @@ interface ComponentInterface
      * @return array
      */
     public static function getStatusOptions();
+
+    /**
+     * @param $princingLevels
+     * @return mixed
+     */
+    public function setPrincingLevels($princingLevels);
+
+    /**
+     * @return array
+     */
+    public function getPrincingLevels();
+
+    /**
+     * @param $generatorLevels
+     * @return mixed
+     */
+    public function setGeneratorLevels($generatorLevels);
+
+    /**
+     * @return array
+     */
+    public function getGeneratorLevels();
 }

@@ -10,6 +10,8 @@ use AppBundle\Entity\Order\Element;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Form\Order\OrderType;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -182,47 +184,69 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/import", name="import_cmv")
+     * @Route("/{filename}/import", name="import_csv")
      */
-    public function importAction()
+    public function importAction(Request $request, $filename)
     {
-        $kernel = $this->get('kernel');
-        $file = $kernel->getCacheDir() . '/report.csv';
-        $content = file_get_contents($file);
-        $data = explode("\n", $content);
-        array_shift($data);
+        $kernel = $this->get('kernel')->getCacheDir();
 
-        $mapping = [];
+        if (!$filename) {
+            /** @var File $file */
+            $file = $request->files->get('file');
 
-        foreach ($data as $key => $line) {
+            if (!$file instanceof UploadedFile) {
+                return $this->render('admin/orders/upload_csv.html.twig');
+            }
 
-            $info = explode(';', $line);
+            $filename = md5(uniqid(time())) . '.csv';
 
-            if(array_key_exists(7, $info)) {
-                $reference = $info[4];
+            $file->move($kernel, $filename);
 
-                if (is_numeric($reference)) {
+            return $this->json(['name' => $filename]);
+        } else {
+            $file = $kernel . '/' . $filename;
+            $content = file_get_contents($file);
+            $data = explode("\n", $content);
+            array_shift($data);
 
-                    $nf = $info[7];
+            $mapping = [];
 
-                    $mapping[$reference] = $nf;
+            foreach ($data as $key => $line) {
+
+                $info = explode(';', $line);
+
+                if(array_key_exists(7, $info)) {
+                    $reference = $info[4];
+
+                    if (is_numeric($reference)) {
+
+                        $nf = $info[7];
+
+                        $mapping[$reference] = $nf;
+                    }
                 }
             }
+
+            $manager = $this->manager('order');
+
+            $qb = $manager->createQueryBuilder();
+
+            $orders = [];
+
+            if ($mapping)
+                $orders = $qb->where($qb->expr()->in('o.reference',array_keys($mapping)))->getQuery()->getResult();
+
+            $importations = 0;
+
+            /** @var OrderInterface $order */
+            foreach ($orders as $order) {
+                $order->setInvoiceNumber($mapping[$order->getReference()]);
+                $manager->save($order);
+                $importations++;
+            }
+
+            return $this->json(['importations' => $importations]);
         }
-
-        $manager = $this->manager('order');
-
-        $qb = $manager->createQueryBuilder();
-
-        $orders = $qb->where($qb->expr()->in('o.id',array_keys($mapping)))->getQuery()->getResult();
-
-        /** @var OrderInterface $order */
-        foreach ($orders as $order) {
-            $order->setInvoiceNumber($mapping[$order->getId()]);
-            $manager->save($order);
-        }
-
-        return $this->json([]);
     }
 
     /**
