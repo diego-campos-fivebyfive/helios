@@ -168,7 +168,7 @@
                     {% endif %}
                     {% if member.PlatformMaster or member.PlatformAdmin %}
                         <a class="btn btn-success" data-target="#modal_upload_csv" data-toggle="modal"
-                           data-href="{{ path('csv-import') }}">
+                           data-href="{{ path('import_cmv', {filename:0}) }}">
                             <i class="fa fa-file-text"> </i> <small>Importar CSV</small>
                         </a>
                     {% endif %}
