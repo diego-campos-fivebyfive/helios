@@ -124,6 +124,29 @@ trait ComponentTrait
     protected $stock;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(name="princing_levels", type="json", nullable=true)
+     */
+    protected $princingLevels;
+
+    /**
+     * @var array
+     *
+     * @ORM\Column(name="generator_levels", type="json", nullable=true)
+     */
+    protected $generatorLevels;
+
+    /**
+     * @inheritDoc
+     */
+    public function __construct()
+    {
+        $this->princingLevels = [];
+        $this->generatorLevels = [];
+    }
+
+    /**
      * @param $datasheet
      * @return $this
      */
@@ -435,5 +458,41 @@ trait ComponentTrait
             self::DISABLE  => 'Inativo',
             self::ACTIVE => 'Ativo'
         ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setPrincingLevels($princingLevels)
+    {
+        $this->princingLevels = $princingLevels;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPrincingLevels()
+    {
+        return $this->princingLevels;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setGeneratorLevels($generatorLevels)
+    {
+        $this->generatorLevels = $generatorLevels;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getGeneratorLevels()
+    {
+        return $this->generatorLevels;
     }
 }
