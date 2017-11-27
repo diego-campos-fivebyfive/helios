@@ -44,6 +44,7 @@ Aguardando conclusão de "COMPONENTES"
 Regras coletadas em 23/11/2017 - Controle de estoque
 
 #### ORÇAMENTOS - 2 PONTOS PENDENTES ####
+
 1. 968. Possibilitar deixar os campos "Disponibilidade para coleta" e "Dias após pagamento" em branco
 - Quando os dois estiverem em branco, não exibe a linha de informação (visualização e pró-forma).
 
