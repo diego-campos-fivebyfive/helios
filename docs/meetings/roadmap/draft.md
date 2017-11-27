@@ -19,14 +19,14 @@ Edição de orçamento
 Visualização (soma dos valores de seguros)
 Pró-forma (listado)
 
-#### COMPONENTES ####
+#### COMPONENTES - 4 PONTOS PENDENTES ####
 Inclusão de uma nova propriedade (json) nos componentes, onde o administrador irá selecionar os níveis de desconto em que o componente estará ativo.
 
-1. Configuração de propriedades novas (Novo paine "Regras de negócio", em cima)
-2. Ajustes no memorial (carregamento para configuração de preços)
+1. Configuração de propriedades novas (Novo paine "Regras de negócio", em cima) . 950, 962, 963, 964, 965, 966
+2. Ajustes no memorial (carregamento para configuração de preços) . 967
 3. Ajustes no gerador (defaults resolver e loaders)
 4. Ajustes no precificador (memorial e ranges)
-5. Inserção massiva de níveis em componentes (quando liberada).
+5. Inserção massiva de níveis em componentes (quando liberada)
 6. Ajustes nos forms de componentes (remoção de campos sem uso)
 
 Nomes dos novos campos
@@ -43,16 +43,16 @@ Aguardando conclusão de "COMPONENTES"
 #### ESTOQUE ####
 Regras coletadas em 23/11/2017 - Controle de estoque
 
-#### ORÇAMENTOS ####
-1. Possibilitar deixar os campos "Disponibilidade para coleta" e "Dias após pagamento" em branco
+#### ORÇAMENTOS - 2 PONTOS PENDENTES ####
+1. 968. Possibilitar deixar os campos "Disponibilidade para coleta" e "Dias após pagamento" em branco
 - Quando os dois estiverem em branco, não exibe a linha de informação (visualização e pró-forma).
 
-2. Novo campo "Validade da proposta (dias)"
+2. 969 . Novo campo "Validade da proposta (dias)"
 - Campo para informação de número.
 - Também não exibir caso esteja vazio.
 - Ajustar para que os campos acima e este novo fiquem em linha única, acima de "Observações".
 
-3. Permitir ao "Pós Venda" alterar a "Disponibilidade para coleta"
+3. 970 . Permitir ao "Pós Venda" alterar a "Disponibilidade para coleta"
 - Comportamento similar ao que ocorre com o número da NF
 - Com datepicker
 
@@ -62,7 +62,8 @@ Regras coletadas em 23/11/2017 - Controle de estoque
 5. Novo filtro na listagem
 - Disponibilidade para coleta
 
-6. Permitir seleção de itens inativos na edição de um orçamento quando user SICES.
+6. 972 . Permitir seleção de itens inativos na edição de um orçamento quando user SICES.
+- Destacar a label do item inativo com cor vermelha.
 
  
 23/11/2017 - Controle de estoque
