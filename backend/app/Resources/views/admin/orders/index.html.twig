@@ -93,6 +93,26 @@
         </div>
     </div>
 
+    <div class="modal inmodal" id="modal_upload_csv" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <i class="fa fa-file-text"></i> Importar arquivo CSV
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    {% include view('helper.spinner') %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa fa-close"></i> {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="wrapper wrapper-content animated fadeInRight">
 
         <div class="row">
@@ -144,6 +164,12 @@
                            data-target="#modal_accounts"
                            class="btn btn-success pull-right">
                             <i class="fa fa-plus"></i> Orçamento
+                        </a>
+                    {% endif %}
+                    {% if member.PlatformMaster or member.PlatformAdmin %}
+                        <a class="btn btn-success" data-target="#modal_upload_csv" data-toggle="modal"
+                           data-href="{{ path('csv-import') }}">
+                            <i class="fa fa-file-text"> </i> <small>Importar CSV</small>
                         </a>
                     {% endif %}
                 </div>
@@ -317,6 +343,8 @@
 {% block scripts %}
 
     {% include view('helper.request') %}
+    {% include view('helper.plugins_js') %}
+
 
     <script>
 
@@ -388,6 +416,20 @@
 
         $('#clear-date').on('click', function () {
             dateStatus.val('');
+        });
+
+        var modalUpload = $('#modal_upload_csv');
+        var modalUploadBody = modalUpload.find('.modal-body');
+
+        modalUpload.on('show.bs.modal', function (event) {
+            var target = $(event.relatedTarget);
+            var url = target.data('href');
+            $.ajax({
+                url: url,
+                success: function (response) {
+                    modalUploadBody.html(response);
+                }
+            });
         });
 
     </script>
