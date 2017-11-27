@@ -8,6 +8,7 @@ use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\Order\Element;
 use AppBundle\Entity\Order\Order;
+use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Form\Order\OrderType;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -176,6 +177,50 @@ class OrderController extends AbstractController
         $order->setInvoiceNumber($invoice);
 
         $this->manager('order')->save($order);
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/import", name="import_cmv")
+     */
+    public function importAction()
+    {
+        $kernel = $this->get('kernel');
+        $file = $kernel->getCacheDir() . '/report.csv';
+        $content = file_get_contents($file);
+        $data = explode("\n", $content);
+        array_shift($data);
+
+        $mapping = [];
+
+        foreach ($data as $key => $line) {
+
+            $info = explode(';', $line);
+
+            if(array_key_exists(7, $info)) {
+                $reference = $info[4];
+
+                if (is_numeric($reference)) {
+
+                    $nf = $info[7];
+
+                    $mapping[$reference] = $nf;
+                }
+            }
+        }
+
+        $manager = $this->manager('order');
+
+        $qb = $manager->createQueryBuilder();
+
+        $orders = $qb->where($qb->expr()->in('o.id',array_keys($mapping)))->getQuery()->getResult();
+
+        /** @var OrderInterface $order */
+        foreach ($orders as $order) {
+            $order->setInvoiceNumber($mapping[$order->getId()]);
+            $manager->save($order);
+        }
 
         return $this->json([]);
     }
