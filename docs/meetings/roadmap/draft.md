@@ -49,6 +49,7 @@ Regras coletadas em 23/11/2017 - Controle de estoque
 
 2. Novo campo "Validade da proposta (dias)"
 - Campo para informação de número.
+- Também não exibir caso esteja vazio.
 - Ajustar para que os campos acima e este novo fiquem em linha única, acima de "Observações".
 
 3. Permitir ao "Pós Venda" alterar a "Disponibilidade para coleta"
@@ -60,6 +61,8 @@ Regras coletadas em 23/11/2017 - Controle de estoque
 
 5. Novo filtro na listagem
 - Disponibilidade para coleta
+
+6. Permitir seleção de itens inativos na edição de um orçamento quando user SICES.
 
  
 23/11/2017 - Controle de estoque
