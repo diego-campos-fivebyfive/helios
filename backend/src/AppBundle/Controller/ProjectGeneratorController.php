@@ -401,7 +401,8 @@ class ProjectGeneratorController extends AbstractController
 
         $form = $this->createForm(ElementType::class, $element, [
             'manager' => $componentManager,
-            'promocional' => $promo
+            'promocional' => $promo,
+            'member' => $this->member()
         ]);
 
         $form->handleRequest($request);
@@ -437,7 +438,8 @@ class ProjectGeneratorController extends AbstractController
 
         $form = $this->createForm(ElementType::class, $element, [
             'manager' => $componentManager,
-            'promocional' => $promo
+            'promocional' => $promo,
+            'member' => $this->member()
         ]);
 
         $form->handleRequest($request);
