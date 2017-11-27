@@ -115,7 +115,8 @@
             onResetProject: function () {
                 this.getConfig(false);
             },
-            onSaveProject: function () {
+            onSaveProject: function (project) {
+                this.precifyProject(project);
                 this.count -= 1;
                 if (this.count > 0) {
                     FormGenerator.form.trigger('submit');
@@ -126,6 +127,17 @@
                     this.getForm();
                     this.getCatalog();
                 }
+            },
+            precifyProject(project) {
+                var memorial = $('#memorial-generator').val();
+                var level = $('#level-generator').val();
+                $.ajax({
+                    url: '{{ path('project_precify') }}',
+                    method: 'POST',
+                    data: {project: project.id, memorial: memorial, level: level},
+                    callback: function () {
+                    }
+                });
             },
             init: function () {
                 this.getForm();
