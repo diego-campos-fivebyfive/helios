@@ -12,6 +12,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ElementType extends AbstractType
 {
+    private $disabledCodes = [];
+
     /**
      * @inheritDoc
      */
@@ -21,10 +23,15 @@ class ElementType extends AbstractType
         $order = $element->getOrder();
         $manager = $options['manager'];
         $promotional = $options['promocional'];
+        $member = $options['member'];
+        $elements = $this->findElements($manager, $promotional, $order, $element->getCode(), $member);
 
         $builder
             ->add('code', ChoiceType::class, [
-                'choices' => $this->findElements($manager, $promotional, $order, $element->getCode()),
+                'choices' => $elements,
+                'choice_attr' => function ($id, $key, $code){
+                    return ['class' =>  'component-' . (in_array($code, $this->disabledCodes) ? 'off' : 'on')];
+                }
             ])
             ->add('quantity', TextType::class)
         ;
@@ -37,7 +44,8 @@ class ElementType extends AbstractType
     {
         $resolver->setDefaults([
             'class' => Element::class,
-            'promocional' => null
+            'promocional' => null,
+            'member' => null
         ]);
 
         $resolver->setRequired('manager');
@@ -47,7 +55,7 @@ class ElementType extends AbstractType
      * @param \AppBundle\Manager\AbstractManager $manager
      * @param Order $order
      */
-    private function findElements($manager, $promotional, Order $order, $code = null)
+    private function findElements($manager, $promotional, Order $order, $code = null, $member)
     {
         $codes = $order->getElements()->map(function (Element $element){
             return $element->getCode();
@@ -63,13 +71,23 @@ class ElementType extends AbstractType
         $aliases = $qb->getRootAliases();
 
         $parameters = [
-            'status' => 1,
             'available' => 1
         ];
 
+        if (!$member->isPlatformUser()) {
+            $parameters = [
+                'status' => 1,
+                'available' => 1
+            ];
+        }
+
+
         $qb->where($qb->expr()->notIn(sprintf('%s.code', $aliases[0]), $codes));
-        $qb->andWhere($aliases[0].'.status = :status');
         $qb->andWhere($aliases[0].'.available = :available');
+
+        if (!$member->isPlatformUser()) {
+            $qb->andWhere($aliases[0].'.status = :status');
+        }
 
         if ($promotional) {
             $qb->andWhere($aliases[0].'.promotional = :promotional');
@@ -91,6 +109,8 @@ class ElementType extends AbstractType
             }
 
             $data[$group][$code] = (string) $component;
+
+            if(!$component->getStatus()) $this->disabledCodes[] = $code;
         }
 
          return $data;
