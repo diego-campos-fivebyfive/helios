@@ -2,11 +2,11 @@
 
 #### SEGUROS ####
 Propriedades: 
-type(insurance), 
-name, 
-description, 
-value, 
-target (fixo ou percentual do sistema)
+- type(insurance), 
+- name, 
+- description, 
+- value, 
+- target (fixo ou percentual do sistema)
 
 Em cada um deve ter a opção de forçar (requirido) conforme o nível (exibe os níveis e marca).
 Comportamento similar ao seguro all risk atual (este será cadastrado futuramente).
@@ -40,8 +40,27 @@ Garante que não sejam selecionados níveis sem preços definidos
 #### FINAME ####
 Aguardando conclusão de "COMPONENTES"
 
-### ESTOQUE ###
+#### ESTOQUE ####
 Regras coletadas em 23/11/2017 - Controle de estoque
+
+#### ORÇAMENTOS ####
+1. Possibilitar deixar os campos "Disponibilidade para coleta" e "Dias após pagamento" em branco
+- Quando os dois estiverem em branco, não exibe a linha de informação (visualização e pró-forma).
+
+2. Novo campo "Validade da proposta (dias)"
+- Campo para informação de número.
+- Ajustar para que os campos acima e este novo fiquem em linha única, acima de "Observações".
+
+3. Permitir ao "Pós Venda" alterar a "Disponibilidade para coleta"
+- Comportamento similar ao que ocorre com o número da NF
+- Com datepicker
+
+4. Nova coluna na listagem
+- Disponibilidade para coleta
+
+5. Novo filtro na listagem
+- Disponibilidade para coleta
+
  
 23/11/2017 - Controle de estoque
 ==========================================
