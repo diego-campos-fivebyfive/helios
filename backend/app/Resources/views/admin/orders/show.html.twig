@@ -460,6 +460,10 @@
                                             {% endif %}
                                         </div>
                                         <div class="col-md-4 spacing">
+                                            <label class="row-total">Validade da proposta (dias)</label>
+                                            {% if order.expireDays %} {{ order.expireDays }} {% endif %}
+                                        </div>
+                                        <div class="col-md-4 spacing">
                                             <label class="row-total">Observações</label>
                                             {{ order.note }}
                                         </div>

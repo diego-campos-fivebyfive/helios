@@ -36,6 +36,9 @@ Ativos no gerador:
 Níveis cujos componentes serão disponibilizados 
 As opções são somente as selecionadas no anterior
 Garante que não sejam selecionados níveis sem preços definidos
+Labels
+- Para memorial: Disponíveis nos níveis de desconto
+- Para gerador: Disponíveis no gerador
 
 #### FINAME ####
 Aguardando conclusão de "COMPONENTES"

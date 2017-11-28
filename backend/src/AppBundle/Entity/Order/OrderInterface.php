@@ -900,4 +900,15 @@ interface OrderInterface
      * @return string
      */
     public function getInvoiceNumber();
+
+    /**
+     * @param $expireDays
+     * @return OrderInterface
+     */
+    public function setExpireDays($expireDays);
+
+    /**
+     * @return int
+     */
+    public function getExpireDays();
 }

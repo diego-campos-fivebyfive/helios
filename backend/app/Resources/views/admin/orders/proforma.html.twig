@@ -393,7 +393,9 @@
                         {% if order.shippingrules and order.shippingrules.type == 'sices' %}
                             <label class="no-margins">&#10004; Prazo de entrega:</label> {{ order.deadline }} DIAS<br/>
                         {% endif %}
-                        <label class="no-margins">&#10004; Validade da proposta:</label> 3 (três) dias<br/>
+                        {% if order.expireDays %}
+                            <label class="no-margins">&#10004; Validade da proposta:</label> {{ order.expireDays }} dia(s)<br/>
+                        {% endif %}
                         <label class="no-margins">&#10004; Embalagem unitário:</label> Padrão<br/>
                         <label class="no-margins">&#10004; Transporte:</label>
                         {% if order.shippingrules and order.shippingrules.type == 'sices' %}
