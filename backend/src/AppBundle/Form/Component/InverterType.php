@@ -2,9 +2,10 @@
 
 namespace AppBundle\Form\Component;
 
-use Sonata\AdminBundle\Form\Type\Filter\ChoiceType;
+use AppBundle\Entity\Pricing\Memorial;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -107,6 +108,16 @@ class InverterType extends AbstractType
         ]);
         $builder->add('code', TextType::class, [
             'label' => false
+        ]);
+        $builder->add('princingLevels', ChoiceType::class, [
+            'choices' => Memorial::getDefaultLevels(),
+            'multiple' => true,
+            'required' => false
+        ]);
+        $builder->add('generatorLevels', ChoiceType::class, [
+            'choices' => Memorial::getDefaultLevels(),
+            'multiple' => true,
+            'required' => false
         ]);
     }
 
