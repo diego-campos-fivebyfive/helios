@@ -33,6 +33,40 @@
 
                                 {{ form_start(form,{attr:{enctype:'multipart/form-data'}}) }}
 
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        &nbsp; Regras de Negócio
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group col-md-6">
+                                            {{ form_label(form.princingLevels, 'Disponível nos níveis de desconto') }}
+                                            {{ form_widget(form.princingLevels, {attr:{class:'form-control'}}) }}
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            {{ form_label(form.generatorLevels, 'Disponível no gerador') }}
+                                            {{ form_widget(form.generatorLevels, {attr:{class:'form-control'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_widget(form.status) }}
+                                            {{ form_label(form.status, 'Ativo', {label_attr:{class:'check-label'}}) }}
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            {{ form_widget(form.available) }}
+                                            {{ form_label(form.available, 'Disponível para venda', {label_attr:{class:'check-label'}}) }}
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            {{ form_widget(form.promotional) }}
+                                            {{ form_label(form.promotional, 'Produto Promocional', {label_attr:{class:'check-label'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                            {{ form_widget(form.required)}}
+                                            {{ form_label(form.required, 'Vincular esta variedade com qualquer sistema gerado.', {label_attr:{class:'check-label'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="panel panel-primary">
                                     <div class="panel-heading">
                                         &nbsp; Dados gerais
@@ -70,26 +104,6 @@
                                                     Este componente já possui imagem
                                                 </span>
                                             {% endif %}
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group col-md-4">
-                                                {{ form_widget(form.status) }}
-                                                {{ form_label(form.status, 'Ativo', {label_attr:{class:'check-label'}}) }}
-                                            </div>
-                                            <div class="form-group col-md-4">
-                                                {{ form_widget(form.available)}}
-                                                {{ form_label(form.available, 'Disponível para venda', {label_attr:{class:'check-label'}}) }}
-                                            </div>
-                                            <div class="form-group col-md-4">
-                                                {{ form_widget(form.promotional)}}
-                                                {{ form_label(form.promotional, 'Promocional', {label_attr:{class:'check-label'}}) }}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group col-md-6">
-                                                {{ form_widget(form.required)}}
-                                                {{ form_label(form.required, 'Vincular esta variedade com qualquer sistema gerado.', {label_attr:{class:'check-label'}}) }}
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -175,6 +189,8 @@
 {% endblock %}
 
 {% block scripts %}
+
+    {% include view('helper.chosen_levels') %}
 
     <script>
         var sanitize = function (element) {
