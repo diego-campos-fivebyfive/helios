@@ -3,8 +3,8 @@
         <div class="col-md-4">
             <label>Memorial:</label>
             {% if member.isPlatformMaster or member.isPlatformAdmin %}
-                <select id="memorial" class="form-control selected" title="Estado">
-                    <option value="-1"> Memorial &raquo; Todos </option>
+                <select id="memorial-generator" class="form-control selected" title="Estado">
+                    <option value=""> Memorial &raquo; Todos </option>
                     {% for key, name in allMemorials %}
                         <option value="{{ key }}"> {{ name|capitalize|trans }} </option>
                     {% endfor %}
@@ -16,8 +16,8 @@
         <div class="col-md-4">
             <label>Nível de desconto:</label>
             {% if member.isPlatformMaster or member.isPlatformAdmin  or member.isPlatformCommercial %}
-                <select id="level" class="form-control selected" title="Estado">
-                    <option value="-1"> Niveis &raquo; Todos </option>
+                <select id="level-generator" class="form-control selected" title="Estado">
+                    <option value=""> Niveis &raquo; Todos </option>
                     {% for key, level in allLevels %}
                         <option value="{{ key }}"> {{ level|capitalize|trans }} </option>
                     {% endfor %}

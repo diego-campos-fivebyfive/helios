@@ -15,6 +15,7 @@ use AppBundle\Entity\Component\InverterInterface;
 use AppBundle\Entity\Component\PricingManager as MarginManager;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverterInterface;
+use AppBundle\Entity\Pricing\MemorialInterface;
 use AppBundle\Entity\Pricing\Range;
 use AppBundle\Model\KitPricing;
 use AppBundle\Service\Pricing\MemorialLoader;
@@ -58,12 +59,13 @@ class Precifier
     /**
      * @param ProjectInterface $project
      */
-    public function priceCost(ProjectInterface $project)
+    public function priceCost(ProjectInterface $project, MemorialInterface $memorial = null)
     {
         if(!$project->getPower())
             $this->exception('Project power is null');
 
-        $memorial = $this->memorialLoader->load();
+        if (!$memorial)
+            $memorial = $this->memorialLoader->load();
 
         if($memorial){
 
