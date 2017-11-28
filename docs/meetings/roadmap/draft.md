@@ -37,8 +37,8 @@ Níveis cujos componentes serão disponibilizados
 As opções são somente as selecionadas no anterior
 Garante que não sejam selecionados níveis sem preços definidos
 Labels
-- Para memorial: Disponíveis nos níveis de desconto
-- Para gerador: Disponíveis no gerador
+- Para memorial: Disponível nos níveis de desconto
+- Para gerador: Disponível no gerador
 
 #### FINAME ####
 Aguardando conclusão de "COMPONENTES"
@@ -46,7 +46,7 @@ Aguardando conclusão de "COMPONENTES"
 #### ESTOQUE ####
 Regras coletadas em 23/11/2017 - Controle de estoque
 
-#### ORÇAMENTOS - 2 PONTOS PENDENTES ####
+#### ORÇAMENTOS - ISSUES OK ####
 
 1. 968. Possibilitar deixar os campos "Disponibilidade para coleta" e "Dias após pagamento" em branco
 - Quando os dois estiverem em branco, não exibe a linha de informação (visualização e pró-forma).
@@ -63,11 +63,13 @@ Regras coletadas em 23/11/2017 - Controle de estoque
 4. 972 . Permitir seleção de itens inativos na edição de um orçamento quando user SICES.
 - Destacar a label do item inativo com cor vermelha.
 
-5. Nova coluna na listagem
+5. 986. Nova coluna na listagem
 - Disponibilidade para coleta
 
-6. Novo filtro na listagem
+6. 987 . Novo filtro na listagem
 - Disponibilidade para coleta
+
+7. 984 . Mecanismo de clonagem de suborder
 
 -----------------------------------------
 
