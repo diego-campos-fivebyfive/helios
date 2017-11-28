@@ -1169,7 +1169,7 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @inheritDoc
      */
-    public function setDeliveryAt(\DateTime $deliveryAt)
+    public function setDeliveryAt(\DateTime $deliveryAt = null)
     {
         $this->deliveryAt = $deliveryAt;
 
