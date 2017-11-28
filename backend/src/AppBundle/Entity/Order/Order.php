@@ -115,6 +115,13 @@ class Order implements OrderInterface, InsurableInterface
     private $invoiceNumber;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="expire_days", type="smallint", nullable=true)
+     */
+    private $expireDays;
+
+    /**
      * @var DateTime
      *
      * @ORM\Column(name="send_at", type="datetime", nullable=true)
@@ -2098,6 +2105,24 @@ class Order implements OrderInterface, InsurableInterface
     public function getInvoiceNumber()
     {
         return $this->invoiceNumber;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setExpireDays($expireDays)
+    {
+        $this->expireDays = $expireDays;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getExpireDays()
+    {
+        return $this->expireDays;
     }
 
 

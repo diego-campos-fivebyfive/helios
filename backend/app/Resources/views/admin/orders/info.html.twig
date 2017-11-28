@@ -192,15 +192,23 @@
 
     <div class="form-group col-md-12">
 
-        <div class="col-md-9">
-            {{ form_label(form.note, 'Observações a serem inseridas na pró-forma') }}
-            {{ form_widget(form.note, {attr:{class:'form-control', readonly: 'readonly'}}) }}
-        </div>
-
-        <div class="col-md-3">
+        <div class="col-md-12">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-3">
                     <label for="delivery_at">Disp. para Coleta (data)</label>
+                </div>
+                <div class="col-md-3">
+                    {{ form_label(form.deliveryDelay, 'Disp. para Coleta (dias após pagamento)') }}
+                </div>
+                <div class="col-md-3" id="order_deadline_block">
+                    {{ form_label(form.deadline, 'Prazo de Entrega (dias)') }}
+                </div>
+                <div class="col-md-3">
+                    {{ form_label(form.expireDays, 'Validade da proposta (dias)') }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3" style="margin-top: 5px;">
                     <div class="btn-group clear-date-group">
                         <input class="form-control clear-date-input" id="delivery_at" type="text" readonly="readonly">
                         <button type="button" id="clear_date" class="btn btn-primary clear-date-btn">
@@ -208,17 +216,22 @@
                         </button>
                     </div>
                 </div>
-                <div class="col-md-12" style="margin-top: 30px;">
-                    {{ form_label(form.deliveryDelay, 'Disp. para Coleta (dias após pagamento)') }}
+                <div class="col-md-3" style="margin-top: 5px;">
                     {{ form_widget(form.deliveryDelay, {attr:{class:'form-control', readonly: 'readonly'}}) }}
                 </div>
-                <div class="col-md-12" id="order_deadline_block" style="margin-top: 30px;">
-                    {{ form_label(form.deadline, 'Prazo de Entrega (dias)') }}
+                <div class="col-md-3" id="order_deadline_block" style="margin-top: 5px;">
                     {{ form_widget(form.deadline, {attr:{class:'form-control', readonly: 'readonly'}}) }}
+                </div>
+                <div class="col-md-3" style="margin-top: 5px;">
+                    {{ form_widget(form.expireDays, {attr:{class:'form-control', readonly: 'readonly'}}) }}
                 </div>
             </div>
         </div>
 
+        <div class="col-md-12" style="margin-top: 5px;">
+            {{ form_label(form.note, 'Observações a serem inseridas na pró-forma') }}
+            {{ form_widget(form.note, {attr:{class:'form-control', readonly: 'readonly'}}) }}
+        </div>
     </div>
 
     <div class="form-group col-md-12">
@@ -355,6 +368,7 @@
                 $('#order_deliveryDelay').removeAttr('readonly disabled');
                 $('#order_deadline').removeAttr('readonly disabled');
                 $('#order_paymentMethod').removeAttr('readonly disabled');
+                $('#order_expireDays').removeAttr('readonly');
 
                 $('.billing').removeAttr('readonly');
 
@@ -370,6 +384,7 @@
                 $('#order_deliveryDelay').attr('readonly', 'readonly');
                 $('#order_deadline').attr('readonly', 'readonly');
                 $('#order_paymentMethod').attr('readonly', 'readonly');
+                $('#order_expireDays').attr('readonly', 'readonly');
 
                 $('.billing').attr('readonly', 'readonly');
 
