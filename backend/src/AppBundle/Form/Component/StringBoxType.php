@@ -2,7 +2,9 @@
 
 namespace AppBundle\Form\Component;
 
+use AppBundle\Entity\Pricing\Memorial;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -30,6 +32,16 @@ class StringBoxType extends AbstractType
             'label' => 'Disponivel',
             'required' => false,
             //'disabled' => true
+        ]);
+        $builder->add('princingLevels', ChoiceType::class, [
+            'choices' => Memorial::getDefaultLevels(),
+            'multiple' => true,
+            'required' => false
+        ]);
+        $builder->add('generatorLevels', ChoiceType::class, [
+            'choices' => Memorial::getDefaultLevels(),
+            'multiple' => true,
+            'required' => false
         ]);
     }
     
