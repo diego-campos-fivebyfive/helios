@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form\Component;
 
+use AppBundle\Entity\Pricing\Memorial;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -40,6 +41,16 @@ class StructureType extends AbstractType
                 'required' => false
             ])
             ->add('code', TextType::class);
+        $builder->add('princingLevels', ChoiceType::class, [
+            'choices' => Memorial::getDefaultLevels(),
+            'multiple' => true,
+            'required' => false
+        ]);
+        $builder->add('generatorLevels', ChoiceType::class, [
+            'choices' => Memorial::getDefaultLevels(),
+            'multiple' => true,
+            'required' => false
+        ]);
     }
 
     /**
