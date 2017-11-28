@@ -200,7 +200,7 @@
                 <div class="col-md-3">
                     {{ form_label(form.deliveryDelay, 'Disp. para Coleta (dias após pagamento)') }}
                 </div>
-                <div class="col-md-3" id="order_deadline_block">
+                <div class="col-md-3 order_deadline_block">
                     {{ form_label(form.deadline, 'Prazo de Entrega (dias)') }}
                 </div>
                 <div class="col-md-3">
@@ -219,7 +219,7 @@
                 <div class="col-md-3" style="margin-top: 5px;">
                     {{ form_widget(form.deliveryDelay, {attr:{class:'form-control', readonly: 'readonly'}}) }}
                 </div>
-                <div class="col-md-3" id="order_deadline_block" style="margin-top: 5px;">
+                <div class="col-md-3 order_deadline_block" style="margin-top: 5px;">
                     {{ form_widget(form.deadline, {attr:{class:'form-control', readonly: 'readonly'}}) }}
                 </div>
                 <div class="col-md-3" style="margin-top: 5px;">
@@ -272,7 +272,7 @@
         clickByPayment: false,
         accountSelector: $('#order_account'),
         shippingSelector: null,
-        deadlineBlock: $('#order_deadline_block'),
+        deadlineBlock: $('.order_deadline_block'),
         deliveryAt: $('#order_deliveryAt'),
         date_delivery: $('#date_range'),
         getAccount: function () {
