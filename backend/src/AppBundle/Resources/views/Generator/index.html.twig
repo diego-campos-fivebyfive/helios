@@ -208,8 +208,10 @@
 
                                         <div id="conditions_sices" class="text-right {{ hideBudget or order.isValidated ? 'hide' }}">
                                             <input type="checkbox" id="conditions">
-                                            Aceito as condições de frete,
-                                            <a href="https://sicessolar.com.br/condicoes.pdf" target="_blank">vendas e garantias da SICES</a>
+                                            <label for="conditions">Aceito as condições de frete,</label>
+                                            <label>
+                                                <a href="https://sicessolar.com.br/condicoes.pdf" target="_blank">vendas e garantias da SICES</a>
+                                            </label>
                                         </div>
                                         <button type="button" id="btn_budget" disabled="disabled"
                                                 data-url="{{ path('order_budget_create') }}"

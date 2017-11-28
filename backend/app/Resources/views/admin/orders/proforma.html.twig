@@ -380,8 +380,16 @@
                     </div>
 
                     <div class="indentation spacing">
-                        <label class="no-margins">&#10004; Disponibilidade para coleta:</label> {{ order.deliveryAt.date|date('d/m/Y') }}
-                        {% if order.deliveryDelay %} ou {{ order.deliveryDelay }} dia(s) após a identificação do pagamento.{% endif %}<br/>
+                        {% if order.deliveryDelay or order.deliveryAt %}
+                            <label class="no-margins">&#10004; Disponibilidade para coleta:</label>
+                            {% if order.deliveryAt %}
+                                {{ order.deliveryAt.date|date('d/m/Y') }}
+                            {% endif %}
+                            {% if order.deliveryDelay %}
+                                {% if order.deliveryAt %} ou {% endif %}
+                                {{ order.deliveryDelay }} dia(s) após a identificação do pagamento.
+                            {% endif %}<br/>
+                        {% endif %}
                         {% if order.shippingrules and order.shippingrules.type == 'sices' %}
                             <label class="no-margins">&#10004; Prazo de entrega:</label> {{ order.deadline }} DIAS<br/>
                         {% endif %}
