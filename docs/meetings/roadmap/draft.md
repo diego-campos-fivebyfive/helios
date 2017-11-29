@@ -46,6 +46,14 @@ Aguardando conclusão de "COMPONENTES"
 #### ESTOQUE ####
 Regras coletadas em 23/11/2017 - Controle de estoque
 
+#### NOVA ROLE - FINANCIAMENTO ####
+Nova propriedade em condições de pagamento (financiamento : booleana)
+Nova propriedade "financiamento" booleana em Orçamentos
+Atualização do comportamento ao definir forma de pagamento (verifica se é financiamento)
+Nova role de usuário e filtros de orçamento
+- Quando orçamento for financiado, exibe para este e não para o financeiro
+- Quando for sem financiamento, exibe para financeiro e não para financiamento.
+
 #### ORÇAMENTOS - ISSUES OK ####
 
 1. 968. Possibilitar deixar os campos "Disponibilidade para coleta" e "Dias após pagamento" em branco
