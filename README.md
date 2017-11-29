@@ -452,21 +452,15 @@ Esclarecimentos gerais relacionados a documentação:
       $ ssh -i $SICES_PATH/devops/aws/homolog.pem admin@54.233.150.10
       ```
 
-    - ##### Acesso ao ambiente de staging
-      ```
-      $ ssh -i $SICES_PATH/devops/aws/staging.pem admin@18.231.15.228
-      ```
-
   <a name="comandos--operacionais"></a><a name="6.3"></a>
   - [6.3](#comandos--operacionais) **Deploy e Start**:
 
     - ##### Deploy
-      ###### default ambience: no default value | default origin: staging
+      ###### default: this script always uses the current ambience
       ```
       $ cd AMBIENCE
-      $ ces-app-deploy --[AMBIENCE] --[ORIGIN]
+      $ ces-app-deploy
       ```
-      > **Nota**: Argumento ORIGIN apenas disponivel para AMBIENCE production
 
     - ##### Start de aplicações
       ###### default ambience: development | default application: only sices

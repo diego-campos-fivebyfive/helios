@@ -19,12 +19,12 @@ Edição de orçamento
 Visualização (soma dos valores de seguros)
 Pró-forma (listado)
 
-#### COMPONENTES - 4 PONTOS PENDENTES ####
+#### COMPONENTES - 3 PONTOS PENDENTES ####
 Inclusão de uma nova propriedade (json) nos componentes, onde o administrador irá selecionar os níveis de desconto em que o componente estará ativo.
 
 1. Configuração de propriedades novas (Novo paine "Regras de negócio", em cima) . 950, 962, 963, 964, 965, 966
 2. Ajustes no memorial (carregamento para configuração de preços) . 967
-3. Ajustes no gerador (defaults resolver e loaders)
+3. Ajustes no gerador (defaults resolver e loaders) . 980, 993, 995
 4. Ajustes no precificador (memorial e ranges)
 5. Inserção massiva de níveis em componentes (quando liberada)
 6. Ajustes nos forms de componentes (remoção de campos sem uso)
