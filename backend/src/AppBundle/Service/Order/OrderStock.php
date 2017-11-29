@@ -89,11 +89,14 @@ class OrderStock
     private function mappingTransactions(OrderInterface $order, $mode)
     {
         $reference = $order->isMaster() ? $order->getReference() : $order->getParent()->getReference();
+        $deliveryAt = $order->isMaster() ? $order->getDeliveryAt() : $order->getParent()->getDeliveryAt();
+        $deliveryInfo = $deliveryAt instanceof \DateTime ? ' - Disp: ' . $deliveryAt->format('d/m/Y') : '';
 
         $description = sprintf(
-            'Orçamento %s - %s',
+            '%s - %s%s',
             $reference,
-            (new \DateTime())->format('d/m/Y H:i')
+            (new \DateTime())->format('d/m/Y H:i'),
+            $deliveryInfo
         );
 
         $transactions = [];

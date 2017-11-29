@@ -2,40 +2,32 @@
 
 cd $SICES_PATH
 
-if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
-  printf "ces-app-clone - help:
-
+if [[ $1 == '--help' || $1 == '-h' ]]; then
+  printf "ces-app-deploy - help: \n
   Usage:
-
-  ces-app-clone --AMBIENCE
-
-  Exemple:
-
-  ces-app-clone --production
-
-  "
+  ces-app-deploy \n"
   exit 0;
 fi
 
 echo "Starting Deploy..."
 
-if [ $1 = '--homolog' ] || [ $1 = '--staging' ]; then
+if [[ $CES_AMBIENCE == 'homolog' ]]; then
 
-  $CLI_PATH/ces-slack-notify --homolog "Starting ${CES_AMBIENCE^} Deploy..."
-  $CLI_PATH/ces-app-clone $1
-  $CLI_PATH/ces-permission-fix $1
-  source $CLI_PATH/config/variables-ci $1
+  $CLI_PATH/ces-slack-notify --homolog "Starting Homolog Deploy..."
+  $CLI_PATH/ces-app-clone --homolog
+  $CLI_PATH/ces-permission-fix --homolog
+  source $CLI_PATH/config/variables-ci --homolog
   $CLI_PATH/ces-app-install
   $CLI_PATH/ces-database-update
   $CLI_PATH/ces-cache-clear
   $CLI_PATH/ces-frontend-compile
-  $CLI_PATH/ces-slack-notify --homolog "${CES_AMBIENCE^} Deploy Done!"
+  $CLI_PATH/ces-slack-notify --homolog "Homolog Deploy Done!"
 
-elif [ $1 = '--production' ]; then
+elif [[ $CES_AMBIENCE == 'production' ]]; then
 
   $CLI_PATH/ces-slack-notify --production '@here: Starting Production Deploy...'
   $CLI_PATH/ces-permission-fix --production
-  $CLI_PATH/ces-app-clone --production --homolog
+  $CLI_PATH/ces-app-clone --production
   source $CLI_PATH/config/variables-ci --production
   $CLI_PATH/ces-app-config --production
   $CLI_PATH/ces-cache-clear
@@ -50,6 +42,9 @@ elif [ $1 = '--production' ]; then
   rm .uploads/order/order/**
 
   $CLI_PATH/ces-slack-notify --production '@here: Production Deploy Done!'
+
+else
+  echo '$CES_AMBIENCE variable is not defined'
 fi
 
 echo 'Done.'

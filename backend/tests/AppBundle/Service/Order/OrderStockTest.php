@@ -27,6 +27,8 @@ class OrderStockTest extends AppTestCase
         // Add a master order
         $master = $manager->create();
 
+        $master->setDeliveryAt(new \DateTime('5 days'));
+
         $order = $manager->create();
         $components = $this->createComponents(25);
         $stocks = [];
