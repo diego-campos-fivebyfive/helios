@@ -225,8 +225,8 @@ format_slack_notification()
 {
   local issue_url="<https://github.com/sices/sices/issues/${1}|issue-${1}>"
   local message="*${NICK}* created ${issue_url}"
-  local pretext="\"pretext\":\"Título: ${message}\""
-  local text="\"text\":\"${ISSUE_TITLE}\""
+  local pretext="\"pretext\":\"${message}\""
+  local text="\"text\":\"Título: ${ISSUE_TITLE}\""
 
   local milestone="$(echo $ISSUE_MILESTONE | awk -F$':' '{print $3}')"
   local assignee=$ISSUE_ASSIGNEE
