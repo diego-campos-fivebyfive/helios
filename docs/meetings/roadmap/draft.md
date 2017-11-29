@@ -1,6 +1,6 @@
 27/11/2017 - Seguros, Componentes e Finame
 
-#### SEGUROS - TODOS OS PONTOS PENDENTES ####
+#### SEGUROS - 3 PONTOS PENDENTES ####
 Propriedades: 
 - type(insurance), 
 - name, 
@@ -18,6 +18,12 @@ Gerador de projetos
 Edição de orçamento
 Visualização (soma dos valores de seguros)
 Pró-forma (listado)
+
+1. 998 Mapear entidade.
+2. 1000 CRUD + Menu.
+3. Serviço de cálculo e atualização
+4. Integração com geradores
+5 Atualizaçãoe interfaces
 
 #### COMPONENTES - 3 PONTOS PENDENTES ####
 Inclusão de uma nova propriedade (json) nos componentes, onde o administrador irá selecionar os níveis de desconto em que o componente estará ativo.
