@@ -90,9 +90,7 @@ class OrderStock
     {
         $reference = $order->isMaster() ? $order->getReference() : $order->getParent()->getReference();
         $deliveryAt = $order->isMaster() ? $order->getDeliveryAt() : $order->getParent()->getDeliveryAt();
-        $deliveryInfo = '';
-
-        if($deliveryAt instanceof \DateTime) $deliveryInfo = ' - Disp: ' . $deliveryAt->format('d/m/Y');
+        $deliveryInfo = $deliveryAt instanceof \DateTime ? ' - Disp: ' . $deliveryAt->format('d/m/Y') : '';
 
         $description = sprintf(
             '%s - %s%s',
