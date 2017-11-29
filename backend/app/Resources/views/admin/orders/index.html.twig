@@ -146,11 +146,17 @@
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-md-4">
-                            {{ form_widget(form.statusAt,{attr:{class:'form-control', placeholder:'Filtrar por data' }}) }}
+                        <div class="form-group col-md-3">
+                            {{ form_widget(form.statusAt,{attr:{class:'form-control', placeholder:'Filtrar p/ data de status' }}) }}
                         </div>
                         <div class="col-md-1">
-                            <button type="button" id="clear-date" class="btn btn-primary pull-right"><i class="fa fa-eraser"></i></button>
+                            <button type="button" id="clear-date-status" class="btn btn-primary pull-right"><i class="fa fa-eraser"></i></button>
+                        </div>
+                        <div class="form-group col-md-3">
+                            {{ form_widget(form.deliveryAt,{attr:{class:'form-control', placeholder:'Filtrar p/ data de disponibilidade para coleta' }}) }}
+                        </div>
+                        <div class="col-md-1">
+                            <button type="button" id="clear-date-delivery" class="btn btn-primary pull-right"><i class="fa fa-eraser"></i></button>
                         </div>
                     </div>
                     {{ form_end(form) }}
@@ -419,8 +425,37 @@
 
         dateStatus.val('');
 
-        $('#clear-date').on('click', function () {
+        $('#clear-date-delivery').on('click', function () {
             dateStatus.val('');
+        });
+
+        var dateDelivery = $('#filter_deliveryAt');
+
+        dateDelivery.daterangepicker({
+            locale: {
+                format: 'DD/MM/YYYY',
+                daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+                monthNames: [
+                    "Janeiro",
+                    "Fevereiro",
+                    "Março",
+                    "Abril",
+                    "Maio",
+                    "Junho",
+                    "Julho",
+                    "Agosto",
+                    "Setembro",
+                    "Outubro",
+                    "Novembro",
+                    "Dezembro"
+                ]
+            }
+        });
+
+        dateDelivery.val('');
+
+        $('#clear-date-delivery').on('click', function () {
+            dateDelivery.val('');
         });
 
         var modalUpload = $('#modal_upload_csv');
