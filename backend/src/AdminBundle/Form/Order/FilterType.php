@@ -47,6 +47,10 @@ class FilterType extends AppFilterType
         $builder->add('statusAt', null, [
             'required' => false
         ]);
+
+        $builder->add('deliveryAt', null,  [
+            'required' => false
+        ]);
     }
 
     /**
