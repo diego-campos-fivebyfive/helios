@@ -13,6 +13,7 @@ use AppBundle\Form\Order\OrderType;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints\DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
@@ -181,6 +182,28 @@ class OrderController extends AbstractController
         $this->manager('order')->save($order);
 
         return $this->json([]);
+    }
+
+    /**
+     * @Route("/{id}/deliveryAt", name="delivery_at_order")
+     */
+    public function deliveryAtAction(Request $request, Order $order)
+    {
+        $date = $request->get('delivery');
+
+        $formatDate = function($date){
+            return implode('-', array_reverse(explode('/', $date)));
+        };
+
+        $deliveryAt = new \DateTime($formatDate($date));
+
+        $order->setDeliveryAt($deliveryAt);
+
+        $this->manager('order')->save($order);
+
+        return $this->json([
+            'deliveryAt' => $order->getDeliveryAt()
+        ]);
     }
 
     /**
