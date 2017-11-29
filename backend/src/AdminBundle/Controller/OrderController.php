@@ -42,13 +42,14 @@ class OrderController extends AbstractController
 
         $data = $form->handleRequest($request)->getData();
 
-        $date = $data['statusAt'];
+        $dateStatus = $data['statusAt'];
+        $formatDateStatus = function($dateStatus){
+            return implode('-', array_reverse(explode('/', $dateStatus)));
+        };
 
-        $startAt = null;
-        $endAt = null;
-
-        $formatDate = function($date){
-            return implode('-', array_reverse(explode('/', $date)));
+        $dateDelivery = $data['deliveryAt'];
+        $formatDateDelivery  = function($dateDelivery ){
+            return implode('-', array_reverse(explode('/', $dateDelivery )));
         };
 
 
@@ -65,17 +66,11 @@ class OrderController extends AbstractController
 
         $qb = $finder->queryBuilder();
 
-        if ($date) {
-            $date = explode(' - ',$date);
-            $startAt = new \DateTime($formatDate($date[0]));
-            $endAt = new \DateTime($formatDate($date[1]));
+        if ($dateStatus)
+            $this->filterDateStatusAt($qb, $dateStatus, $formatDateStatus);
 
-            $qb->andWhere('o.statusAt >= :startAt');
-            $qb->andWhere('o.statusAt <= :endAt');
-
-            $qb->setParameter('startAt', $startAt->format('Y-m-d 00:00:00'));
-            $qb->setParameter('endAt', $endAt->format('Y-m-d 23:59:59'));
-        }
+        if ($dateDelivery)
+            $this->filterDateDeliveryAt($qb, $dateDelivery, $formatDateDelivery);
 
         $pagination = $this->getPaginator()->paginate(
             $qb->getQuery(),
@@ -291,5 +286,47 @@ class OrderController extends AbstractController
         }
 
         return $paymentMethods;
+    }
+
+    /**
+     * @param $qb
+     * @param $dateStatus
+     * @param $formatDateStatus
+     * @return mixed
+     */
+    private function filterDateStatusAt($qb, $dateStatus, $formatDateStatus)
+    {
+        $dateStatus = explode(' - ',$dateStatus);
+        $startAt = new \DateTime($formatDateStatus($dateStatus[0]));
+        $endAt = new \DateTime($formatDateStatus($dateStatus[1]));
+
+        $qb->andWhere('o.statusAt >= :startAt');
+        $qb->andWhere('o.statusAt <= :endAt');
+
+        $qb->setParameter('startAt', $startAt->format('Y-m-d 00:00:00'));
+        $qb->setParameter('endAt', $endAt->format('Y-m-d 23:59:59'));
+
+        return $qb;
+    }
+
+    /**
+     * @param $qb
+     * @param $dateDelivery
+     * @param $formatDateDelivery
+     * @return mixed
+     */
+    private function filterDateDeliveryAt($qb, $dateDelivery, $formatDateDelivery)
+    {
+        $dateDelivery = explode(' - ',$dateDelivery);
+        $startAt = new \DateTime($formatDateDelivery($dateDelivery[0]));
+        $endAt = new \DateTime($formatDateDelivery($dateDelivery[1]));
+
+        $qb->andWhere('o.deliveryAt >= :startAt');
+        $qb->andWhere('o.deliveryAt <= :endAt');
+
+        $qb->setParameter('startAt', $startAt->format('Y-m-d 00:00:00'));
+        $qb->setParameter('endAt', $endAt->format('Y-m-d 23:59:59'));
+
+        return $qb;
     }
 }

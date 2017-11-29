@@ -3,9 +3,9 @@
 cd $SICES_PATH
 
 if [[ $1 == '--help' || $1 == '-h' ]]; then
-  printf "ces-app-clone - help: \n
+  printf "ces-app-deploy - help: \n
   Usage:
-  ces-app-clone \n"
+  ces-app-deploy \n"
   exit 0;
 fi
 
