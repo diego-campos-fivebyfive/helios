@@ -170,9 +170,10 @@ class MemorialAnalyzer
     private function updateItems($type, array $components)
     {
         foreach ($components as $component){
-            $this->collection['components'][$type]['items'][$component->getId()] = [
-                'product' => $component
-            ];
+            if ($component->getPrincingLevels() && in_array($this->level, $component->getPrincingLevels()))
+                $this->collection['components'][$type]['items'][$component->getId()] = [
+                    'product' => $component
+                ];
         }
     }
 
