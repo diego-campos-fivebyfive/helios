@@ -256,11 +256,16 @@
                                     <td class="text-center">
                                         <h5>
                                             <span class="label label-status status-{{ order.statusName }}">
-                                                <i class="fa fa-circle"></i> {{ order.statusName|capitalize|trans }}
+                                                <i class="fa fa-circle"></i> {{ order.statusName|capitalize|trans }}:
+                                                {% if order.statusAt %}
+                                                    {{ order.statusAt|date('d/m/Y') }}
+                                                {% endif %}
                                             </span>
                                         </h5>
-                                        {% if order.statusAt %}
-                                            <small> {{ order.statusAt|format_date }} </small>
+                                        {% if order.deliveryAt %}
+                                            <small>
+                                                Disponível: {{ order.deliveryAt|date('d/m/Y') }}
+                                            </small>
                                         {% endif %}
                                     </td>
 
