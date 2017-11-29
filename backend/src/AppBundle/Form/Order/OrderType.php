@@ -127,11 +127,13 @@ class OrderType extends AbstractType
                 ])
                 ->add('deliveryAt', DateType::class, [
                     'widget' => 'single_text',
-                    'format' => 'dd/MM/yyyy'
+                    'format' => 'dd/MM/yyyy',
+                    'required' => false
                 ])
                 ->add('deadline')
                 ->add('note')
                 ->add('deliveryDelay')
+                ->add('expireDays')
             ;
 
         }

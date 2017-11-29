@@ -8,8 +8,12 @@ use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\Order\Element;
 use AppBundle\Entity\Order\Order;
+use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Form\Order\OrderType;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints\DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
@@ -178,6 +182,94 @@ class OrderController extends AbstractController
         $this->manager('order')->save($order);
 
         return $this->json([]);
+    }
+
+    /**
+     * @Route("/{id}/deliveryAt", name="delivery_at_order")
+     */
+    public function deliveryAtAction(Request $request, Order $order)
+    {
+        $date = $request->get('delivery');
+
+        $formatDate = function($date){
+            return implode('-', array_reverse(explode('/', $date)));
+        };
+
+        $deliveryAt = new \DateTime($formatDate($date));
+
+        $order->setDeliveryAt($deliveryAt);
+
+        $this->manager('order')->save($order);
+
+        return $this->json([
+            'deliveryAt' => $order->getDeliveryAt()
+        ]);
+    }
+
+    /**
+     * @Route("/{filename}/import", name="import_csv")
+     */
+    public function importAction(Request $request, $filename)
+    {
+        $kernel = $this->get('kernel')->getCacheDir();
+
+        if (!$filename) {
+            /** @var File $file */
+            $file = $request->files->get('file');
+
+            if (!$file instanceof UploadedFile) {
+                return $this->render('admin/orders/upload_csv.html.twig');
+            }
+
+            $filename = md5(uniqid(time())) . '.csv';
+
+            $file->move($kernel, $filename);
+
+            return $this->json(['name' => $filename]);
+        } else {
+            $file = $kernel . '/' . $filename;
+            $content = file_get_contents($file);
+            $data = explode("\n", $content);
+            array_shift($data);
+
+            $mapping = [];
+
+            foreach ($data as $key => $line) {
+
+                $info = explode(';', $line);
+
+                if(array_key_exists(7, $info)) {
+                    $reference = $info[4];
+
+                    if (is_numeric($reference)) {
+
+                        $nf = $info[7];
+
+                        $mapping[$reference] = $nf;
+                    }
+                }
+            }
+
+            $manager = $this->manager('order');
+
+            $qb = $manager->createQueryBuilder();
+
+            $orders = [];
+
+            if ($mapping)
+                $orders = $qb->where($qb->expr()->in('o.reference',array_keys($mapping)))->getQuery()->getResult();
+
+            $importations = 0;
+
+            /** @var OrderInterface $order */
+            foreach ($orders as $order) {
+                $order->setInvoiceNumber($mapping[$order->getReference()]);
+                $manager->save($order);
+                $importations++;
+            }
+
+            return $this->json(['importations' => $importations]);
+        }
     }
 
     /**

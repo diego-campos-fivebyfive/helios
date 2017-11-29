@@ -94,6 +94,10 @@
         }
     </style>
 
+    <script type="text/javascript" src="{{ asset('assets/fullcalendar/lib/moment.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/daterangepicker/daterangepicker.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/daterangepicker/daterangepicker.css') }}" />
+
     {% set orders = order.childrens %}
     {% set isPlatform = app.user.isPlatform %}
     <div class="wrapper wrapper-content  animated fadeInRight">
@@ -447,7 +451,11 @@
                                         </div>
                                         <div class="col-md-4 spacing">
                                             <label class="row-total">Disponibilidade para coleta (data)</label>
-                                            {% if order.deliveryAt %}{{ order.deliveryAt.date|date('d/m/Y') }}{% endif %}
+                                            {% if member.PlatformAfterSales %}
+                                                <input class="form-control" id="delivery_at_order" type="text">
+                                            {% else %}
+                                                {% if order.deliveryAt %}{{ order.deliveryAt.date|date('d/m/Y') }}{% endif %}
+                                            {% endif %}
                                         </div>
                                         <div class="col-md-4 spacing">
                                             <label class="row-total">Disponibilidade para coleta (dias após pagamento)</label>
@@ -458,6 +466,10 @@
                                             {% if order.deadline %}
                                                 {{ order.deadline }} DIAS
                                             {% endif %}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Validade da proposta (dias)</label>
+                                            {% if order.expireDays %} {{ order.expireDays }} {% endif %}
                                         </div>
                                         <div class="col-md-4 spacing">
                                             <label class="row-total">Observações</label>
@@ -819,5 +831,48 @@
                 data: {invoice_number: $('#invoice-number').val()}
             });
         });
+
+        var delivery_at_order = $('#delivery_at_order');
+
+        delivery_at_order.daterangepicker({
+            startDate: '{{ order.deliveryAt ? order.deliveryAt|date('d/m/Y') : order.createdAt|date('d/m/Y') }}',
+            singleDatePicker: true,
+            minDate: '{{ order.createdAt|date('d/m/Y') }}',
+            locale: {
+                format: 'DD/MM/YYYY',
+                daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+                monthNames: [
+                    "Janeiro",
+                    "Fevereiro",
+                    "Março",
+                    "Abril",
+                    "Maio",
+                    "Junho",
+                    "Julho",
+                    "Agosto",
+                    "Setembro",
+                    "Outubro",
+                    "Novembro",
+                    "Dezembro"
+                ]
+            }
+        }).on('change', function(){
+            var date_at = $(this).val();
+            $.ajax({
+                url:'{{ path('delivery_at_order', {id:order.id}) }}',
+                method: 'post',
+                data: {delivery: date_at},
+                complete: function (xhr) {
+                    $('#delivery_at_order').html(xhr['deliveryAt']);
+                }
+            });
+            
+        });
+
+        {% if not order.deliveryAt %}
+            delivery_at_order.val(' ');
+        {% else %}
+            delivery_at_order.val('{{ order.deliveryAt|date('d/m/Y') }}');
+        {% endif %}
     </script>
 {% endblock %}

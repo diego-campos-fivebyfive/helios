@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Component\Project;
+use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Entity\Pricing\MemorialInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -62,6 +64,41 @@ class CatalogController extends AbstractController
     }
 
     /**
+     * @Route("/project-precify", name="project_precify")
+     */
+    public function precifierProjectAction(Request $request)
+    {
+        if ($request->get('memorial') && ($this->member()->isPlatformAdmin() or $this->member()->isPlatformMaster())) {
+            $memorial = $this->manager('memorial')->find($request->get('memorial'));
+        } else {
+            $memorial = $this->container->get('memorial_loader')->load();
+        }
+
+        $manager = $this->manager('project');
+
+        /** @var ProjectInterface $project */
+        $project = $manager->find($request->get('project'));
+
+        if ($request->get('level') && ($this->member()->isPlatformAdmin() or $this->member()->isPlatformMaster())) {
+            $level = $request->get('level');
+        } else {
+            $level = $this->member()->getAccount()->getLevel();
+        }
+
+        $project->setLevel($level);
+
+        $this->getPrecifier()->priceCost($project, $memorial);
+
+        $manager->save($project);
+
+        return $this->json([
+            'project' => [
+                'id' => $project->getId()
+            ]
+        ]);
+    }
+
+    /**
      * @return \Doctrine\ORM\QueryBuilder
      */
     private function getCatalogQueryBuilder()
@@ -100,5 +137,11 @@ class CatalogController extends AbstractController
         return $maxQuantity;
     }
 
-
+    /**
+     * @return \AppBundle\Service\ProjectGenerator\Precifier
+     */
+    private function getPrecifier()
+    {
+        return $this->get('project_precifier');
+    }
 }

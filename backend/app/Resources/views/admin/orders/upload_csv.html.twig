@@ -1,0 +1,102 @@
+<style>
+    #uploader {
+        cursor: pointer;
+        height: 100px;
+        border: 3px dotted #787890;
+    }
+    #uploader .dz-preview {
+        display: none;
+    }
+    #uploader .dz-message {
+        text-align: center;
+    }
+    #uploader_spinner {
+        margin-top: 10px;
+        min-height: 30px;
+        display: none;
+    }
+    #has_info{
+        color: #333;
+        margin-top: 10px;
+    }
+</style>
+
+<div class="row">
+    <div id="uploader" class="col-md-12">
+        <div class="dz-message needsclick">
+            Arraste o arquivo aqui ou clique para selecionar <br>
+            <span class="note needsclick">
+            (Apenas arquivos com extensão CSV)
+        </span>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+
+    <div id="uploader_spinner" class="col-md-12 text-center">
+        <div id="loader">
+            {% include view('helper.spinner') %} Enviando arquivo (<span id="percent"></span>%)
+        </div>
+        <div id="upload_info">
+            <i class="fa fa-info-circle"></i> Arquivo enviado com sucesso! <br>
+            <button type="button" id="btn_init" data-style="zoom-in" class="btn btn-success ladda-button">Atualizar Informações</button>
+        </div>
+        <div>
+            <strong id="import_info"></strong>
+        </div>
+    </div>
+</div>
+
+<script>
+    var spinner = $('#uploader_spinner');
+    var loader = spinner.find('#loader');
+    var percent = spinner.find('#percent');
+    var info = spinner.find('#upload_info');
+    var import_info = $('#import_info');
+    var btn_init = $('#btn_init');
+
+    var appUploader = new Dropzone('div#uploader', {
+        url: '{{ path('import_csv', {filename:0}) }}',
+        createImageThumbnails: false,
+        uploadMultiple: false,
+        maxFiles: 1,
+        acceptedFiles: '.csv',
+        init: function () {
+            this.on('addedfile', function (file) {
+                info.hide();
+                loader.show();
+                spinner.show();
+            });
+            this.on('uploadprogress', function (file, progress, sent) {
+                percent.html(progress);
+            });
+        },
+        complete: function (file) {
+            percent.hide();
+            loader.hide();
+            info.show();
+            btn_init.data('filename', JSON.parse(file.xhr.response)['name']);
+            appUploader.removeAllFiles();
+        }
+    });
+
+    btn_init.on('click', function () {
+
+        btn_init.ladda();
+        btn_init.ladda('start');
+        var filename = $(this).data('filename');
+        $.ajax({
+            url: '{{ path('import_csv', {filename:'_filename_'}) }}'.replace('_filename_', filename),
+            success: function (response) {
+                import_info.html(response['importations'] + ' importações realizadas');
+                btn_init.ladda('stop');
+            }
+        });
+    });
+
+    $('#file_link').on('click', function(){
+        $('#modal_upload').modal('close');
+    });
+
+</script>

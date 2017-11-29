@@ -1,0 +1,37 @@
+<script>
+    Levels = {
+        pricingLevels: $('[id*="_princingLevels"]'),
+        generatorLavels: $('[id*="_generatorLevels"]'),
+        init: function () {
+
+            this.pricingLevels.chosen();
+            this.generatorLavels.chosen();
+
+            this.updateChosen();
+
+            this.pricingLevels.on('change', function () {
+                Levels.updateChosen();
+            });
+        },
+        updateChosen: function () {
+
+            var levels = this.pricingLevels.val();
+
+            this.generatorLavels.find('option').each(function () {
+                if (!levels || levels && levels.indexOf($(this).val()) == -1) {
+                    $(this).hide();
+                    $(this).prop('selected', false);
+                }
+            });
+
+            if(levels)
+                levels.forEach(function (val) {
+                    $(Levels.generatorLavels).find('option[value='+val+']').show();
+                });
+
+            this.generatorLavels.trigger("chosen:updated");
+        }
+    };
+
+    Levels.init();
+</script>

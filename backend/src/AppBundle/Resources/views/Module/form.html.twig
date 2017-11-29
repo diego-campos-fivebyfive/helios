@@ -43,6 +43,35 @@
 
                                 {{ form_start(form,{attr:{enctype:'multipart/form-data'}}) }}
 
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        &nbsp; Regras de Negócio
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group col-md-6">
+                                            {{ form_label(form.princingLevels, 'Disponível nos níveis de desconto') }}
+                                            {{ form_widget(form.princingLevels, {attr:{class:'form-control'}}) }}
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            {{ form_label(form.generatorLevels, 'Disponível no gerador') }}
+                                            {{ form_widget(form.generatorLevels, {attr:{class:'form-control'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_widget(form.status) }}
+                                            {{ form_label(form.status, 'Ativo', {label_attr:{class:'check-label'}}) }}
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            {{ form_widget(form.available) }}
+                                            {{ form_label(form.available, 'Disponível para venda', {label_attr:{class:'check-label'}}) }}
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            {{ form_widget(form.promotional) }}
+                                            {{ form_label(form.promotional, 'Produto Promocional', {label_attr:{class:'check-label'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="panel panel-primary">
                                     <div class="panel-heading">
                                         &nbsp; Dados gerais
@@ -116,21 +145,6 @@
                                         <div class="form-group col-md-3">
                                             {{ form_label(form.position, 'Posição') }}
                                             {{ form_widget(form.position, {attr:{class:'form-control'}}) }}
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            {{ form_widget(form.status) }}
-                                            {{ form_label(form.status, 'Ativo', {label_attr:{class:'check-label'}}) }}
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            {{ form_widget(form.available)}}
-                                            {{ form_label(form.available, 'Disponível para venda', {label_attr:{class:'check-label'}}) }}
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            {{ form_widget(form.promotional)}}
-                                            {{ form_label(form.promotional, 'Produto Promocional', {label_attr:{class:'check-label'}}) }}
                                         </div>
                                     </div>
                                 </div>
@@ -280,13 +294,14 @@
 
 {% block scripts %}
 
+    {% include view('helper.chosen_levels') %}
+
     {% if module.id %}
         {% include view('helper.plugins_js') %}
         <script>
             $('#dependency_container').load('{{ path('component_dependency_panel',{family:'module', component:module.id}) }}');
         </script>
     {% endif %}
-
     <script>
         var sanitize = function (element) {
             function clear(v) {

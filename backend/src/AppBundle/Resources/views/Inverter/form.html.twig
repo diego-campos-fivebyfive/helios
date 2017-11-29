@@ -40,6 +40,40 @@
 
                                 {{ form_start(form,{attr:{enctype:'multipart/form-data'}}) }}
 
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        &nbsp; Regras de Negócio
+                                    </div>
+                                    <div class="panel-body">
+
+                                        <div class="form-group col-md-6">
+                                            {{ form_label(form.princingLevels, 'Disponível nos níveis de desconto') }}
+                                            {{ form_widget(form.princingLevels, {attr:{class:'form-control'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                            {{ form_label(form.generatorLevels, 'Disponível no gerador') }}
+                                            {{ form_widget(form.generatorLevels, {attr:{class:'form-control'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_widget(form.status) }}
+                                            {{ form_label(form.status, 'Ativo', {label_attr:{class:'check-label'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_widget(form.available)}}
+                                            {{ form_label(form.available, 'Disponível para venda', {label_attr:{class:'check-label'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_widget(form.promotional)}}
+                                            {{ form_label(form.promotional, 'Produto Promocional', {label_attr:{class:'check-label'}}) }}
+                                        </div>
+
+                                    </div>
+                                </div>
+
                                 <div class="panel panel-primary">
                                     <div class="panel-heading">
                                         &nbsp; Dados gerais
@@ -59,7 +93,7 @@
                                             {{ form_row(form.model,{attr:{class:'form-control'}}) }}
                                         </div>
 
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
                                             <label> Datasheet (PDF) </label>
                                             <input type="file" name="dataSheet" accept="application/pdf">
                                             {% if inverter.datasheet %}
@@ -69,7 +103,7 @@
                                             {% endif %}
                                         </div>
 
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
                                             <label> Imagem (JPG) </label>
                                             <input type="file" name="image" accept="image/jpeg">
                                             {% if inverter.image %}
@@ -77,21 +111,6 @@
                                                     Este componente já possui imagem
                                                 </span>
                                             {% endif %}
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            {{ form_widget(form.status) }}
-                                            {{ form_label(form.status, 'Ativo', {label_attr:{class:'check-label'}}) }}
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            {{ form_widget(form.available)}}
-                                            {{ form_label(form.available, 'Disponível para venda', {label_attr:{class:'check-label'}}) }}
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            {{ form_widget(form.promotional)}}
-                                            {{ form_label(form.promotional, 'Produto Promocional', {label_attr:{class:'check-label'}}) }}
                                         </div>
 
                                         <div class="form-group col-md-4">
@@ -256,6 +275,8 @@
 
 {% block scripts %}
 
+    {% include view('helper.chosen_levels') %}
+
     {% if inverter.id %}
         {% include view('helper.plugins_js') %}
         <script>
@@ -264,6 +285,7 @@
     {% endif %}
 
     <script>
+
         var sanitize = function(element){
             function clear(v){ return v.replace(/\D+/g,''); }
             var value = element.val();

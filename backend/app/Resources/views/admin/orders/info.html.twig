@@ -7,6 +7,16 @@
         border-color: transparent;
         width: 100%;
     }
+    .clear-date-input {
+        width: 80%;
+        float: left;
+    }
+    .clear-date-btn {
+        width: 20%;
+    }
+    .clear-date-group {
+        width: 100%;
+    }
 </style>
 
 <script type="text/javascript" src="{{ asset('assets/fullcalendar/lib/moment.min.js') }}"></script>
@@ -182,28 +192,46 @@
 
     <div class="form-group col-md-12">
 
-        <div class="col-md-9">
-            {{ form_label(form.note, 'Observações a serem inseridas na pró-forma') }}
-            {{ form_widget(form.note, {attr:{class:'form-control', readonly: 'readonly'}}) }}
-        </div>
-
-        <div class="col-md-3">
+        <div class="col-md-12">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-3">
                     <label for="delivery_at">Disp. para Coleta (data)</label>
-                    <input class="form-control" id="delivery_at" type="text" readonly="readonly">
                 </div>
-                <div class="col-md-12" style="margin-top: 30px;">
+                <div class="col-md-3">
                     {{ form_label(form.deliveryDelay, 'Disp. para Coleta (dias após pagamento)') }}
+                </div>
+                <div class="col-md-3 order_deadline_block">
+                    {{ form_label(form.deadline, 'Prazo de Entrega (dias)') }}
+                </div>
+                <div class="col-md-3">
+                    {{ form_label(form.expireDays, 'Validade da proposta (dias)') }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3" style="margin-top: 5px;">
+                    <div class="btn-group clear-date-group">
+                        <input class="form-control clear-date-input" id="delivery_at" type="text" readonly="readonly">
+                        <button type="button" id="clear_date" class="btn btn-primary clear-date-btn">
+                            <i class="fa fa-eraser"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-3" style="margin-top: 5px;">
                     {{ form_widget(form.deliveryDelay, {attr:{class:'form-control', readonly: 'readonly'}}) }}
                 </div>
-                <div class="col-md-12" id="order_deadline_block" style="margin-top: 30px;">
-                    {{ form_label(form.deadline, 'Prazo de Entrega (dias)') }}
+                <div class="col-md-3 order_deadline_block" style="margin-top: 5px;">
                     {{ form_widget(form.deadline, {attr:{class:'form-control', readonly: 'readonly'}}) }}
+                </div>
+                <div class="col-md-3" style="margin-top: 5px;">
+                    {{ form_widget(form.expireDays, {attr:{class:'form-control', readonly: 'readonly'}}) }}
                 </div>
             </div>
         </div>
 
+        <div class="col-md-12" style="margin-top: 5px;">
+            {{ form_label(form.note, 'Observações a serem inseridas na pró-forma') }}
+            {{ form_widget(form.note, {attr:{class:'form-control', readonly: 'readonly'}}) }}
+        </div>
     </div>
 
     <div class="form-group col-md-12">
@@ -244,7 +272,7 @@
         clickByPayment: false,
         accountSelector: $('#order_account'),
         shippingSelector: null,
-        deadlineBlock: $('#order_deadline_block'),
+        deadlineBlock: $('.order_deadline_block'),
         deliveryAt: $('#order_deliveryAt'),
         date_delivery: $('#date_range'),
         getAccount: function () {
@@ -336,9 +364,11 @@
 
                 $('#order_note').removeAttr('readonly');
                 $('#delivery_at').removeAttr('readonly disabled');
+                $('#clear_date').removeAttr('disabled');
                 $('#order_deliveryDelay').removeAttr('readonly disabled');
                 $('#order_deadline').removeAttr('readonly disabled');
                 $('#order_paymentMethod').removeAttr('readonly disabled');
+                $('#order_expireDays').removeAttr('readonly');
 
                 $('.billing').removeAttr('readonly');
 
@@ -350,9 +380,11 @@
 
                 $('#order_note').attr('readonly', 'readonly');
                 $('#delivery_at').attr('readonly', 'readonly');
+                $('#clear_date').attr('disable', 'disable');
                 $('#order_deliveryDelay').attr('readonly', 'readonly');
                 $('#order_deadline').attr('readonly', 'readonly');
                 $('#order_paymentMethod').attr('readonly', 'readonly');
+                $('#order_expireDays').attr('readonly', 'readonly');
 
                 $('.billing').attr('readonly', 'readonly');
 
@@ -390,6 +422,7 @@
 
                 $('#order_paymentMethod').attr('disabled', 'disabled');
                 $('#delivery_at').attr('disabled', 'disabled');
+                $('#clear_date').attr('disabled', 'disabled');
                 $('#order_deliveryDelay').attr('disabled', 'disabled');
                 $('#order_deadline').attr('disabled','disabled');
             }
@@ -437,6 +470,7 @@
     sourceDeliveryAt.daterangepicker({
         startDate: '{{ order.deliveryAt ? order.deliveryAt|date('d/m/Y') : 'now'|date_modify("+3 day")|date('d/m/Y') }}',
         singleDatePicker: true,
+
         minDate: moment(),
         locale: {
             format: 'DD/MM/YYYY',
@@ -456,9 +490,17 @@
                 "Dezembro"
             ]
         }
-    }).on('apply.daterangepicker', function(event, picker){
+    }).on('change', function(event, picker){
         InfoManager.setDeliveryAt(sourceDeliveryAt.val());
     });
 
-    InfoManager.setDeliveryAt(sourceDeliveryAt.val());
+    {% if not order.deliveryAt %}
+    sourceDeliveryAt.val('');
+    {% endif %}
+
+
+    $('#clear_date').on('click', function () {
+        sourceDeliveryAt.val('');
+        InfoManager.setDeliveryAt(sourceDeliveryAt.val());
+    });
 </script>
