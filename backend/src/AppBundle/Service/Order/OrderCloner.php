@@ -119,37 +119,11 @@ class OrderCloner
         for ($i=0; $i<$number; $i++) {
 
             /** @var OrderInterface $newOrder */
-            $newOrder = new Order();//$this->manager->create();
+            $newOrder = new Order();
 
-
-            if ($source->isMaster()) {
-
-                $newOrder->setStatus(OrderInterface::STATUS_BUILDING);
-
-                if ($source->getAgent())
-                    $newOrder->setAgent($source->getAgent());
-                if ($source->getAccount())
-                    $newOrder->setAccount($source->getAccount());
-
-                /** @var OrderInterface $children */
-                foreach ($source->getChildrens() as $children)
-                    $newOrder->addChildren($this->cloneOrder($children, 1, true));
-
-                foreach ($this->orderProperties as $property) {
-
-                    $value = $this->accessor->getValue($source, $property);
-
-                    $this->accessor->setValue($newOrder, $property, $value);
-                }
-
-                foreach ($this->orderMasterProperties as $property) {
-
-                    $value = $this->accessor->getValue($source, $property);
-
-                    $this->accessor->setValue($newOrder, $property, $value);
-                }
-
-            } else {
+            if ($source->isMaster())
+                $newOrder = $this->cloneMaster($newOrder, $source);
+            else {
 
                 $newOrder = $this->cloneElements($source, $newOrder);
 
@@ -175,6 +149,41 @@ class OrderCloner
             $this->manager->save($source->getParent());
 
         return $orders;
+    }
+
+    /**
+     * @param OrderInterface $newOrder
+     * @param OrderInterface $source
+     * @return OrderInterface
+     */
+    private function cloneMaster(OrderInterface $newOrder, OrderInterface $source)
+    {
+        $newOrder->setStatus(OrderInterface::STATUS_BUILDING);
+
+        if ($source->getAgent())
+            $newOrder->setAgent($source->getAgent());
+        if ($source->getAccount())
+            $newOrder->setAccount($source->getAccount());
+
+        /** @var OrderInterface $children */
+        foreach ($source->getChildrens() as $children)
+            $newOrder->addChildren($this->cloneOrder($children, 1, true));
+
+        foreach ($this->orderProperties as $property) {
+
+            $value = $this->accessor->getValue($source, $property);
+
+            $this->accessor->setValue($newOrder, $property, $value);
+        }
+
+        foreach ($this->orderMasterProperties as $property) {
+
+            $value = $this->accessor->getValue($source, $property);
+
+            $this->accessor->setValue($newOrder, $property, $value);
+        }
+
+        return $newOrder;
     }
 
     /**
