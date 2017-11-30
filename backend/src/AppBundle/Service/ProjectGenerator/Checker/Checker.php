@@ -74,7 +74,7 @@ class Checker
      */
     public function checkDefaults(array $defaults)
     {
-        $this->promotional = $defaults['is_promotional'];
+        $this->promotional = $defaults['is_promotional'] ? 'promotional' : $defaults['level'];
 
         $this->checkModules();
         $this->checkInverterMakers();
@@ -93,13 +93,8 @@ class Checker
     {
         $filter = $this->createFilter(Module::class);
 
-        if($this->promotional){
-            $filter->equals('promotional', true);
-        }
-
-        $filter->equals('available', true);
-        $filter->equals('status', true);
         $filter->order('position');
+        $filter->like('generatorLevels', $this->promotional);
 
         $modules = $filter->get();
 
@@ -115,12 +110,7 @@ class Checker
     {
         $filter = $this->createFilter(Inverter::class);
 
-        if($this->promotional){
-            $filter->equals('promotional', true);
-        }
-
-        $filter->equals('available', true);
-        $filter->equals('status', true);
+        $filter->like('generatorLevels', $this->promotional);
 
         $filter->group('maker');
 
@@ -138,12 +128,7 @@ class Checker
     {
         $filter = $this->createFilter(StringBox::class);
 
-        if($this->promotional){
-            $filter->equals('promotional', true);
-        }
-
-        $filter->equals('available', true);
-        $filter->equals('status', true);
+        $filter->like('generatorLevels', $this->promotional);
 
         $filter->group('maker');
 
@@ -161,12 +146,7 @@ class Checker
     {
         $filter = $this->createFilter(Structure::class);
 
-        if($this->promotional){
-            $filter->equals('promotional', true);
-        }
-
-        $filter->equals('available', true);
-        $filter->equals('status', true);
+        $filter->like('generatorLevels', $this->promotional);
 
         $filter->group('maker');
 
