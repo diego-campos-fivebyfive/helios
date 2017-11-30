@@ -1,12 +1,14 @@
 27/11/2017 - Seguros, Componentes e Finame
 
-#### SEGUROS - 3 PONTOS PENDENTES ####
+#### SEGUROS - 4 PONTOS PENDENTES ####
 Propriedades: 
 - type(insurance), 
 - name, 
 - description, 
 - value, 
 - target (fixo ou percentual do sistema)
+- requiredLevels (níveis em que o seguro é obrigatório)
+- status (status do seguro: ativo/inativo)
 
 Em cada um deve ter a opção de forçar (requirido) conforme o nível (exibe os níveis e marca).
 Comportamento similar ao seguro all risk atual (este será cadastrado futuramente).
@@ -21,9 +23,10 @@ Pró-forma (listado)
 
 1. 998 Mapear entidade.
 2. 1000, 1005 CRUD + Menu.
-3. Serviço de cálculo e atualização
-4. Integração com geradores
-5. Atualizaçãoe interfaces
+3. Mapear associações
+4. Serviço de cálculo e atualização
+5. Integração com geradores
+6. Atualizaçãoe interfaces
 
 #### COMPONENTES - 3 PONTOS PENDENTES ####
 Inclusão de uma nova propriedade (json) nos componentes, onde o administrador irá selecionar os níveis de desconto em que o componente estará ativo.
