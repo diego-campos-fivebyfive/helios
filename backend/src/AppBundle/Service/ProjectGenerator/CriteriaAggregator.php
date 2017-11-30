@@ -6,11 +6,7 @@ use Doctrine\ORM\QueryBuilder;
 
 class CriteriaAggregator
 {
-    private static $arguments = [
-        'promotional' => false,
-        'status' => true,
-        'available' => true
-    ];
+    private static $level = null;
 
     /**
      * @param array $criteria
@@ -18,38 +14,26 @@ class CriteriaAggregator
      */
     public static function finish(array &$criteria = [], QueryBuilder $queryBuilder = null)
     {
-        self::normalize();
-
         if($queryBuilder){
 
             $alias = self::alias($queryBuilder);
 
-            foreach (self::$arguments as $argument => $value) {
-                $queryBuilder->andWhere(sprintf('%s.%s = :%s', $alias, $argument, $argument));
-            }
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->like(sprintf('%s.generatorLevels', $alias),
+                    $queryBuilder->expr()->literal('%"'.self::$level.'"%')
+                )
+            );
 
             $queryBuilder->addOrderBy(sprintf('%s.position', $alias), 'asc');
         }
-
-        $criteria = array_merge($criteria, self::$arguments);
     }
 
     /**
-     * @param bool $promotional
+     * @param $level
      */
-    public static function promotional($promotional)
+    public static function level($level)
     {
-        self::$arguments['promotional'] = (bool) $promotional;
-    }
-
-    /**
-     * Normalize promotional argument for prevent inverted strict load
-     */
-    private static function normalize()
-    {
-        if(array_key_exists('promotional', self::$arguments) && !self::$arguments['promotional']){
-            unset(self::$arguments['promotional']);
-        }
+        self::$level = (string) $level;
     }
 
     /**
