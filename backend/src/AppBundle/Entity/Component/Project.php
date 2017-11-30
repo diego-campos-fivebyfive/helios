@@ -1393,6 +1393,8 @@ class Project implements ProjectInterface, InsurableInterface
 
         $this->level = $member->getAccount()->getLevel();
 
+        $this->defaults['level'] = $this->level;
+
         return $this;
     }
 
@@ -1887,6 +1889,8 @@ class Project implements ProjectInterface, InsurableInterface
     public function setLevel($level)
     {
         $this->level = $level;
+
+        $this->defaults['level'] = $this->level;
 
         return $this;
     }
