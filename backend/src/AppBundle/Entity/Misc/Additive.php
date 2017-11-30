@@ -7,8 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Additive
  *
- * @ORM\Table(name="misc_additive")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\Misc\AdditiveRepository")
+ * @ORM\Table(name="app_additive")
+ * @ORM\Entity
  */
 class Additive implements AdditiveInterface
 {
