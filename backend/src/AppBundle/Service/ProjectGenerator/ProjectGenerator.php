@@ -124,7 +124,7 @@ class ProjectGenerator
         $multiPower = $roundPower * $powerModule;
         $defaults['power'] = $multiPower;
 
-        CriteriaAggregator::promotional($defaults['is_promotional']);
+        CriteriaAggregator::level($defaults['level']);
 
         $defaults['errors'] = [];
         $this->project->setDefaults($defaults);
