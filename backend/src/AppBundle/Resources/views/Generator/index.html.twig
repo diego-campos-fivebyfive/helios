@@ -293,10 +293,11 @@
                 $(blocks[1]).addClass('col-md-12');
             },
             getForm: function () {
+                var level = '{{ level }}'
                 var id = this.getProject().id;
                 Request.send({
                     url: '{{ path('generator',{project:'_id_'}) }}'.replace(/_id_/g, id),
-                    data: {source: 1},
+                    data: {source: 1, level: level},
                     callback: function (xhr) {
                         $('#generator_form').html(xhr.responseText);
                         FormGenerator.field('source').find('option[value="power"]').attr('selected', 'selected').trigger('change');

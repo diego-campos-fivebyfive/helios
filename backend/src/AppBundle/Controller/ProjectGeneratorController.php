@@ -47,6 +47,8 @@ class ProjectGeneratorController extends AbstractController
         /** @var Order $order */
         $order = $this->manager('order')->find($id);
 
+        $accountLevel = $order->getAccount()->getLevel();
+
         $this->denyAccessUnlessGranted('edit', $order);
 
         if($order->isChildren())
@@ -63,7 +65,8 @@ class ProjectGeneratorController extends AbstractController
 
         return $this->render('generator.index', [
             'order' => $order,
-            'member' => $this->member()
+            'member' => $this->member(),
+            'level' => $accountLevel
         ]);
     }
 
