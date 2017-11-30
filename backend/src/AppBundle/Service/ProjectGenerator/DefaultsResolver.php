@@ -87,7 +87,7 @@ class DefaultsResolver
             ->orderBy('m.position', 'asc')
             ->andWhere(
                 $qb->expr()->like(
-                    'm.princingLevels',
+                    'm.generatorLevels',
                     $qb->expr()->literal('%"'.$this->defaults['level'].'"%')
             )
         )->setMaxResults(1);
@@ -161,7 +161,7 @@ class DefaultsResolver
             ->orderBy('c.position', 'asc')
             ->andWhere(
                 $qb->expr()->like(
-                    'c.princingLevels',
+                    'c.generatorLevels',
                     $qb->expr()->literal('%"'.$this->defaults['level'].'"%')
                 )
             )->setMaxResults(1);
