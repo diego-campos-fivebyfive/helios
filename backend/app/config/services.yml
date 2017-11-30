@@ -41,6 +41,10 @@ services:
         class: AppBundle\Manager\ExtraManager
         arguments: ['AppBundle\Entity\Component\Extra', '@doctrine']
 
+    additive_manager:
+        class: AppBundle\Manager\AdditiveManager
+        arguments: ['AppBundle\Entity\Misc\Additive', '@doctrine']
+
     level_manager:
         class: AppBundle\Manager\Pricing\LevelManager
         arguments: ['AppBundle\Entity\Pricing\Level', '@doctrine']
