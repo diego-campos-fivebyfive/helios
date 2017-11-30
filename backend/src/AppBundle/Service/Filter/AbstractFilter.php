@@ -215,6 +215,22 @@ use Doctrine\ORM\EntityManagerInterface;
 
     /**
      * @param $field
+     * @param $value
+     * @return $this
+     */
+    public function like($field, $value)
+    {
+        $this->qb->andWhere(
+            $this->qb->expr()->like(self::field($field),
+                $this->qb->expr()->literal('%"'.$value.'"%')
+            )
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param $field
      * @return $this
      */
     public function group($field)
