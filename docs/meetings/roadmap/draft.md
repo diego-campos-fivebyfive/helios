@@ -58,10 +58,14 @@ Aguardando conclusão de "COMPONENTES"
 3. Dias úteis para cancelamento (Configurado nos parâmetros)
 4. Link dias úteis: http://www.dias-uteis.com/
 
+:: Validade de Orçamentos ::
 |   Status  | Dias úteis |
 |-----------|------------|
 | APPROVED  |      3     |
 | VALIDATED |      4     |
+
+5. Criar mecanismo que calcula a data de expiração
+6. Liberar front para edição/cancelamento da data (comercial)
 
 #### ESTOQUE ####
 1. Regras coletadas em 23/11/2017 - Controle de estoque +
