@@ -78,4 +78,14 @@ interface AdditiveInterface
      * @return float
      */
     public function getValue();
+
+    /**
+     * @return array
+     */
+    public static function getTypes();
+
+    /**
+     * @return array
+     */
+    public static function getTargets();
 }
