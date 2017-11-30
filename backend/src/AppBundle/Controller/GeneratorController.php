@@ -32,7 +32,6 @@ class GeneratorController extends AbstractController
         $generator = $this->getGenerator();
 
         $defaults = $generator->loadDefaults($project->getDefaults());
-
         $form = $this->createForm(GeneratorType::class, $defaults, [
             'action' => $action
         ]);
@@ -121,6 +120,8 @@ class GeneratorController extends AbstractController
      */
     private function resolveProject(Request $request)
     {
+        $level = $request->get('level');
+
         $manager = $this->manager('project');
 
         $project = $manager->create();
@@ -131,6 +132,8 @@ class GeneratorController extends AbstractController
         if(!$project->getMember()){
             $project->setMember($this->member());
         }
+
+        $project->setLevel($level);
 
         return $project;
     }
