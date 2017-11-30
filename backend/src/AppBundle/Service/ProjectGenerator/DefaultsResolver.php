@@ -12,6 +12,7 @@
 namespace AppBundle\Service\ProjectGenerator;
 
 use AppBundle\Entity\Component\Module;
+use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Parameter;
 use AppBundle\Service\Filter\EntityFilter;
 use Doctrine\Common\Inflector\Inflector;
@@ -80,19 +81,20 @@ class DefaultsResolver
      */
     public function module()
     {
-        $id = $this->defaults['module'];
+        $qb = $this->filter->fromClass(Module::class)->qb();
 
-        $getModule = function ($id = null) {
-            return $this->resolveArgs(Module::class, $id ? ['id' => $id] : [], ['position' => 'asc']);
-        };
+        $qb
+            ->orderBy('m.position', 'asc')
+            ->andWhere(
+                $qb->expr()->like(
+                    'm.princingLevels',
+                    $qb->expr()->literal('%"'.$this->defaults['level'].'"%')
+            )
+        )->setMaxResults(1);
 
-        if (null == $module = $getModule($id)) {
-            $module = $getModule();
-        }
+        $module = $qb->getQuery()->getOneOrNullResult();
 
-        if($module instanceof Module){
-            $id = $module->getId();
-        }
+        $id = $module->getId();
 
         $this->resolveDefault('module', $id);
     }
@@ -151,34 +153,24 @@ class DefaultsResolver
         $tag = sprintf('%s_maker', $type);
         $class = str_replace('Module', Inflector::classify($type), Module::class);
 
-        $id = null;
-        $entity = $this->resolveArgs($class, ['maker' => $this->defaults[$tag]]);
+        $qb = $this->filter->fromClass($class)->qb();
 
-        if($entity){
-            $id =  $entity->getMaker()->getId();
-        }
+        $qb
+            ->select('c')
+            ->from($class, 'c')
+            ->orderBy('c.position', 'asc')
+            ->andWhere(
+                $qb->expr()->like(
+                    'c.princingLevels',
+                    $qb->expr()->literal('%"'.$this->defaults['level'].'"%')
+                )
+            )->setMaxResults(1);
+
+        $component = $qb->getQuery()->getOneOrNullResult();
+
+        $id = $component->getMaker()->getId();
 
         $this->resolveDefault($tag, $id);
-    }
-
-    /**
-     * @param $class
-     * @param array $arguments
-     * @return null|object Entity instance
-     */
-    private function resolveArgs($class, array $arguments, array $orderBy = [], $forceStrictArgs = true)
-    {
-        $strictArgs = ['available' => true, 'status' => true];
-
-        $parameters = array_merge($arguments, $strictArgs);
-
-        $entity = $this->resolveParameters($class, $parameters, $orderBy);
-
-        if(!$entity && $forceStrictArgs){
-            $entity = $this->resolveArgs($class, [], $orderBy, false);
-        }
-
-        return $entity;
     }
 
     /**
@@ -290,6 +282,7 @@ class DefaultsResolver
             'promo_background' => null,
             'fdi_min' => null,
             'fdi_max' => null,
+            'level' => null,
             'errors' => []
         ];
     }
