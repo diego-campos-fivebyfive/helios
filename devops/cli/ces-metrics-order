@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+readonly YESTERDAY_US=$(date +'%Y-%m-%d' -d 'yesterday')
+readonly YESTERDAY_PT=$(date +'%d-%m-%Y' -d 'yesterday')
+
+readonly ORDER_QUERY="
+  SELECT COUNT(id) FROM app_order \
+  WHERE created_at LIKE '${YESTERDAY_US}%' \
+  AND parent_id IS NULL
+"
+
+readonly PROJECT_QUERY="
+  SELECT COUNT(id) FROM app_order \
+  WHERE created_at LIKE '${YESTERDAY_US}%' \
+  AND parent_id IS NOT NULL
+"
+
+exec_query()
+{
+  local query=$1; shift
+
+  local h=$CES_SICES_DATABASE_HOST
+  local P=$CES_SICES_DATABASE_PORT
+  local u=$CES_SICES_DATABASE_USER
+  local p=$CES_SICES_DATABASE_PASS
+  local n=$CES_SICES_DATABASE_NAME
+
+  mysql -h $h -P $P -u $u -p"$p" $n -e "${query}"
+}
+
+main()
+{
+  local order_number=$(exec_query "${ORDER_QUERY}" | tail -n1)
+  local order_detail="Orçamentos gerados: *${order_number}*"
+
+  local project_number=$(exec_query "${PROJECT_QUERY}" | tail -n1)
+  local project_detail="Projetos vínculados a Orçamentos: *${project_number}*"
+
+  local title="*[${YESTERDAY_PT}] Estatísticas de Produção*:"
+  local slack_message="${title}\n${order_detail}\n${project_detail}"
+
+  $CLI_PATH/ces-slack-notify --tester "${slack_message}"
+}
+
+main
