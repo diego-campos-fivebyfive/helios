@@ -52,8 +52,20 @@ Labels
 #### FINAME ####
 Aguardando conclusão de "COMPONENTES"
 
+#### VALIDADE DE UM ORÇAMENTO ####
+1. Cron rodando as 18:00hrs (horário de brasília)
+2. Orçamento deve ter uma atributo (expireDate - DATE apenas)
+3. Dias úteis para cancelamento (Configurado nos parâmetros)
+4. Link dias úteis: http://www.dias-uteis.com/
+
+|   Status  | Dias úteis |
+|-----------|------------|
+| APPROVED  |      3     |
+| VALIDATED |      4     |
+
 #### ESTOQUE ####
-Regras coletadas em 23/11/2017 - Controle de estoque
+1. Regras coletadas em 23/11/2017 - Controle de estoque +
+2. Liberar menu para comercial (opção + Operação bloqueada)
 
 #### NOVA ROLE - FINANCIAMENTO ####
 Nova propriedade em condições de pagamento (financiamento : booleana)
@@ -96,10 +108,11 @@ Status afetados: `PENDING`, `VALIDATED`
 
 #### Tráfego de exemplo (50) ####
 ```
-BUILDING >> PENDING: PENDING: 50
-VALIDATED >> PENDING: PENDING: 50, VALIDATED: 0
-PENDING >> VALIDATED: PENDING: 0, VALIDATED: 50
-PENDING >> REJECTED: PENDING: 0
+1. BUILDING >> PENDING: PENDING: 50 (Soma em PENDING)
+2. VALIDATED >> PENDING: PENDING: 50, VALIDATED: 0 (Subtrai em VALIDATED e soma em PENDING)
+3. PENDING >> VALIDATED: PENDING: 0, VALIDATED: 50 (Subtrai em PENDING e soma em VALIDATED)
+4. PENDING >> REJECTED: PENDING: 0 (Subtrai em PENDING)
+5. BUILDING >> VALIDATED : VALIDATED: 50 (Soma em VALIDATED)
 ```
 > OBS.: Este mecanismo está em fase de análise.
 
