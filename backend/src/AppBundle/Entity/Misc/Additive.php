@@ -186,5 +186,26 @@ class Additive implements AdditiveInterface
     {
         return $this->value;
     }
+
+    /**
+     * @return array
+     */
+    public static function getTypes()
+    {
+        return [
+            self::TYPE_INSURANCE => 'insurance'
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getTargets()
+    {
+        return [
+            self::TARGET_FIXED => 'fixed value',
+            self::TARGET_PERCENT => 'system percentage'
+        ];
+    }
 }
 
