@@ -12,7 +12,7 @@ use AppBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Security("has_role('ROLE_PLATFORM_ADMIN')")
+ * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
  *
  * @Route("stock")
  * @Breadcrumb("Gestão de estoque")

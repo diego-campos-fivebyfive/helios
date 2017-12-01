@@ -24,7 +24,7 @@ trait MenuAdmin
             'Memorials' => [$master, $admin],
             'Orders' => '*',
             'Components' => [$master, $admin, $commercial, $expanse],
-            'Stock' => [$master, $admin],
+            'Stock' => [$master, $admin, $commercial],
             'Users' => [$master, $admin],
             'PaymentMethods' => [$master, $admin],
             'Insurance' => [$master, $admin],
