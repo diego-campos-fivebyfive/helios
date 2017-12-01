@@ -80,6 +80,13 @@ class Order implements OrderInterface, InsurableInterface
     private $status;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="previous_status", type="smallint", nullable=true)
+     */
+    private $previousStatus;
+
+    /**
      * @var DateTime
      *
      * @ORM\Column(name="status_at", type="datetime", nullable=true)
@@ -576,6 +583,8 @@ class Order implements OrderInterface, InsurableInterface
      */
     public function setStatus($status)
     {
+        $this->previousStatus = $this->status;
+
         $this->status = $status;
 
         $this->statusAt = new \DateTime();
@@ -591,6 +600,14 @@ class Order implements OrderInterface, InsurableInterface
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPreviousStatus()
+    {
+        return $this->previousStatus;
     }
 
     /**
