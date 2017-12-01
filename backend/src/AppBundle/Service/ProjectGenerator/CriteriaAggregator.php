@@ -18,6 +18,12 @@ class CriteriaAggregator
 
             $alias = self::alias($queryBuilder);
 
+            foreach ($criteria as $argument => $value) {
+                $queryBuilder->andWhere(sprintf('%s.%s = :%s', $alias, $argument, $argument));
+                $queryBuilder->setParameter($argument, $value);
+                unset($criteria[$argument]);
+            }
+
             $queryBuilder->andWhere(
                 $queryBuilder->expr()->like(sprintf('%s.generatorLevels', $alias),
                     $queryBuilder->expr()->literal('%"'.self::$level.'"%')

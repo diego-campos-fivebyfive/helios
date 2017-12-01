@@ -288,7 +288,7 @@ class InverterLoader
             'maker' => $maker
         ];
 
-        $this->finishCriteria($qb, $parameters);
+        $this->finishCriteria($qb);
 
         $qb->setParameters($parameters);
 
@@ -331,7 +331,7 @@ class InverterLoader
             'phaseVoltage' => 220
         ];
 
-        $this->finishCriteria($qb, $parameters);
+        $this->finishCriteria($qb);
 
         $qb->setParameters($parameters);
 

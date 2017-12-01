@@ -402,7 +402,6 @@ class StructureCalculator
 
         if ($single) {
             $qb->setMaxResults(1);
-            //dump($qb->getQuery()->getOneOrNullResult());die;
             return $qb->getQuery()->getOneOrNullResult();
         } else {
             return $qb->getQuery()->getResult();

@@ -61,7 +61,8 @@ class StringBoxLoader
             ;
         }
 
-        CriteriaAggregator::finish($parameters, $qb);
+        $fakeParameters = [];
+        CriteriaAggregator::finish($fakeParameters, $qb);
 
         $qb->setParameters($parameters);
 
