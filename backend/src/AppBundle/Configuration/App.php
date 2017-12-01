@@ -34,6 +34,7 @@ class App
             'default' => 'fa fa-info',
             'extras' => 'fa fa-plus-square',
             'globe' => 'fa fa-globe',
+            'insurance' => 'fa fa-shield',
             'inverters' => 'fa fa-exchange',
             'kits' => 'fa fa-cubes',
             'modules' => 'fa fa-th',
