@@ -73,7 +73,6 @@ class VarietyCalculator
         $blackCable = $this->findVariety('cabo', 'preto');
         $redCable = $this->findVariety('cabo', 'vermelho');
 
-
         if($blackCable instanceof VarietyInterface)
             $this->addVariety($project, $blackCable, $cables);
 
@@ -114,8 +113,14 @@ class VarietyCalculator
      */
     public function findByCriteria(array $criteria)
     {
-        CriteriaAggregator::finish($criteria);
+        $qb = $this->manager->createQueryBuilder();
 
-        return $this->manager->findOneBy($criteria);
+        CriteriaAggregator::finish($criteria, $qb);
+
+        $qb->setMaxResults(1);
+
+        dump($qb->getQuery()->getResult());
+
+        return $qb->getQuery()->getOneOrNullResult();
     }
 }

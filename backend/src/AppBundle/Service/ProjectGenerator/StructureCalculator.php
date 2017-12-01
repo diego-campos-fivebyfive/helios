@@ -6,6 +6,7 @@ use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectStructure;
 use AppBundle\Entity\Component\Structure;
 use AppBundle\Manager\StructureManager;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Class StructureCalculator
@@ -394,11 +395,17 @@ class StructureCalculator
      */
     public function findStructure(array $criteria, $single = true)
     {
-        $method = $single ? 'findOneBy' : 'findBy';
+        /** @var QueryBuilder $qb */
+        $qb = $this->manager->createQueryBuilder();
 
-        CriteriaAggregator::finish($criteria);
+        CriteriaAggregator::finish($criteria, $qb);
 
-        return $this->manager->$method($criteria, ['position' => 'asc']);
+        if ($single) {
+            $qb->setMaxResults(1);
+            return $qb->getQuery()->getOneOrNullResult();
+        } else {
+            return $qb->getQuery()->getResult();
+        }
     }
 
     /**

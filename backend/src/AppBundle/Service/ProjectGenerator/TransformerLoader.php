@@ -48,8 +48,6 @@ class TransformerLoader
 
         CriteriaAggregator::finish($parameters, $qb);
 
-        $qb->setParameters($parameters);
-
         return $qb->getQuery()->getOneOrNullResult();
     }
 }
