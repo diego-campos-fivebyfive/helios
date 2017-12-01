@@ -202,7 +202,7 @@ class InverterLoader
             'maker' => $maker
         ];
 
-        $this->finishCriteria($qb, $parameters);
+        $this->finishCriteria($qb);
 
         $qb->setParameters($parameters);
 
