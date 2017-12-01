@@ -59,6 +59,7 @@ Aguardando conclusão de "COMPONENTES"
 4. Link dias úteis: http://www.dias-uteis.com/
 
 :: Validade de Orçamentos ::
+
 |   Status  | Dias úteis |
 |-----------|------------|
 | APPROVED  |      3     |
@@ -70,6 +71,26 @@ Aguardando conclusão de "COMPONENTES"
 #### ESTOQUE ####
 1. Regras coletadas em 23/11/2017 - Controle de estoque +
 2. Liberar menu para comercial (opção + Operação bloqueada)
+
+==========================================
+Status afetados: `PENDING`, `VALIDATED`
+
+#### Tráfego de exemplo (50) ####
+```
+1. BUILDING >> PENDING: PENDING: 50 (Soma em PENDING)
+2. BUILDING >> VALIDATED : VALIDATED: 50 (Soma em VALIDATED)
+3. PENDING >> VALIDATED: PENDING: 0, VALIDATED: 50 (Subtrai em PENDING e soma em VALIDATED)
+4. PENDING >> REJECTED: PENDING: 0 (Subtrai em PENDING)
+5. VALIDATED >> PENDING: PENDING: 50, VALIDATED: 0 (Subtrai em VALIDATED e soma em PENDING)
+```
+> OBS.: Este mecanismo está em fase de análise.
+
+Etapas: 1014, 1015, 1016, 1017, 1018.
+1. Nova propriedade previousStatus em Order
+2. Nova propriedade orderInventory em Componentes
+3. Atualização do processo de estoque para orçamento/componente
+4. Atualização de chamadas intermediárias
+5. Atualização da interface de listagem
 
 #### NOVA ROLE - FINANCIAMENTO ####
 Nova propriedade em condições de pagamento (financiamento : booleana)
@@ -103,22 +124,6 @@ Nova role de usuário e filtros de orçamento
 - Disponibilidade para coleta
 
 7. 984 . Mecanismo de clonagem de suborder
-
------------------------------------------
-
-23/11/2017 - Controle de estoque
-==========================================
-Status afetados: `PENDING`, `VALIDATED`
-
-#### Tráfego de exemplo (50) ####
-```
-1. BUILDING >> PENDING: PENDING: 50 (Soma em PENDING)
-2. VALIDATED >> PENDING: PENDING: 50, VALIDATED: 0 (Subtrai em VALIDATED e soma em PENDING)
-3. PENDING >> VALIDATED: PENDING: 0, VALIDATED: 50 (Subtrai em PENDING e soma em VALIDATED)
-4. PENDING >> REJECTED: PENDING: 0 (Subtrai em PENDING)
-5. BUILDING >> VALIDATED : VALIDATED: 50 (Soma em VALIDATED)
-```
-> OBS.: Este mecanismo está em fase de análise.
 
 20/11/2017 - Gerardor de lista de sistemas
 ==========================================
