@@ -2,6 +2,7 @@
 namespace AdminBundle\Form\Misc;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use AppBundle\Entity\Misc\Additive;
@@ -17,14 +18,13 @@ class InsuranceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('type', ChoiceType::class, [
-                'required' => true,
-                'choices' => Additive::getTypes()
+            ->add('type', TextType::class, [
+                'required' => false
             ])
             ->add( 'name', TextType::class, [
                 'required' => true
             ])
-            ->add('description', TextType::class, [
+            ->add('description', TextareaType::class, [
                 'required' => false,
             ])
             ->add('target', ChoiceType::class, [

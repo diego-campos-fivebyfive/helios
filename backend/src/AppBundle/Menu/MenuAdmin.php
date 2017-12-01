@@ -27,6 +27,7 @@ trait MenuAdmin
             'Stock' => [$master, $admin],
             'Users' => [$master, $admin],
             'PaymentMethods' => [$master, $admin],
+            'Insurance' => [$master, $admin],
             'Settings' => '*'
         ];
 
@@ -112,6 +113,17 @@ trait MenuAdmin
         $menu->addChild('Cond. Pagamento', [
             'route' => 'payment_methods',
             'extras' => ['icon' => self::icon('signature')]
+        ]);
+    }
+
+    /**
+     * @param ItemInterface $menu
+     */
+    private function addInsurance(ItemInterface $menu)
+    {
+        $menu->addChild('Seguros', [
+            'route' => 'insurance_index',
+            'extras' => ['icon' => self::icon('insurance')]
         ]);
     }
 
