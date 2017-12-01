@@ -15,7 +15,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 /**
  * @Security("has_role('ROLE_PLATFORM_ADMIN')")
  *
- * @Breadcrumb("Seguro")
+ * @Breadcrumb("Seguros")
  *
  * @Route("/insurance")
  */
@@ -28,7 +28,18 @@ class InsuranceController extends AbstractController
     {
         $manager = $this->manager('additive');
 
+        $qb = $manager->getEntityManager()->createQueryBuilder();
+
+        $qb->select('i')
+            ->from(Additive::class, 'i')
+            ->orderBy('i.id', 'desc');
+
+        $pagination = $this->getPaginator()->paginate(
+            $qb->getQuery(),
+            $request->query->getInt('page', 1), 10);
+
         return $this->render('admin/insurance/index.html.twig', [
+            'insurances' => $pagination
         ]);
     }
 
@@ -44,7 +55,11 @@ class InsuranceController extends AbstractController
 
         $form = $this->createForm(InsuranceType::class, $insurance);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $insurance->setValue(str_replace(',','.',$insurance->getValue()));
+            $insurance->setType(AdditiveInterface::TYPE_INSURANCE);
 
             $manager->save($insurance);
 
@@ -61,10 +76,17 @@ class InsuranceController extends AbstractController
      */
     public function updateAction(Request $request, Additive $insurance)
     {
+        $insurance->setValue(str_replace('.',',',$insurance->getValue()));
+
         $form = $this->createForm(InsuranceType::class, $insurance);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $insurance->setValue(str_replace(',','.',$insurance->getValue()));
+
+            if (!$insurance->getType())
+                $insurance->setType(AdditiveInterface::TYPE_INSURANCE);
 
             $this->manager('additive')->save($insurance);
 
