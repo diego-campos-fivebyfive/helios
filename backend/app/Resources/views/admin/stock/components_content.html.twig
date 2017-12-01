@@ -13,16 +13,12 @@
         </td>
         <td>
             {% if component.orderInventory %}
-                {% for orderInventory in component.orderInventory %}
-                    {{ orderInventory.pending }}
-                {% endfor %}
+                    {{ component.orderInventory('array').pending }}
             {% endif %}
         </td>
         <td>
             {% if component.orderInventory %}
-                {% for orderInventory in component.orderInventory %}
-                    {{ orderInventory.validated }}
-                {% endfor %}
+                    {{ component.orderInventory('array').validated }}
             {% endif %}
         </td>
     </tr>
