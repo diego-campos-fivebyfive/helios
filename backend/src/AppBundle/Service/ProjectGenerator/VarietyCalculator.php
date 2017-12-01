@@ -119,8 +119,6 @@ class VarietyCalculator
 
         $qb->setMaxResults(1);
 
-        dump($qb->getQuery()->getResult());
-
         return $qb->getQuery()->getOneOrNullResult();
     }
 }
