@@ -13,12 +13,12 @@
 
         </div>
 
-        <div class="row" {#id="real-content"#}>
+        <div class="row">
             <div class="col-md-12">
                 <div class="ibox-title flow-h" style="">
                     <span class="pull-left">
                         <h4>
-                        <i class="fa fa-files-o"> </i> Seguros
+                        <i class="fa fa-shield"> </i> Seguros
                         </h4>
                     </span>
 
@@ -35,141 +35,51 @@
                         <table class="table table-stripped">
                             <thead>
                             <tr>
-                                <th class="text-center col-md-2"> Número</th>
-                                <th class="text-center col-md-2"> Integrador</th>
-                                <th class="text-center col-md-1"> Atendente</th>
-                                <th class="text-center col-md-2"> Sistemas</th>
-                                <th class="text-center"> Status</th>
-                                <th class="text-center col-md-3"> Arquivos</th>
-                                <th class="text-center"> &nbsp; </th>
+                                <th class="col-md-3"> Nome</th>
+                                <th class="col-md-2 text-right"> Valor</th>
+                                <th class="col-md-5"> Descrição</th>
+                                <th class="col-md-1"></th>
                             </tr>
                             </thead>
                             <tbody>
 
-                            {#{% for order in orders %}#}
+                            {% for insurance in insurances %}
 
-                                {#<tr>#}
-                                    {#<td class="text-center">#}
-                                        {#<h4> {{ order.reference }} </h4>#}
-                                        {#{% if order.createdAt %}#}
-                                            {#<small>#}
-                                                {#{{ order.createdAt|format_date }}#}
-                                            {#</small>#}
-                                        {#{% endif %}#}
-                                    {#</td>#}
+                                <tr>
+                                    <td>{{ insurance.name }}</td>
 
-                                    {#<td class="text-center">#}
-                                        {#<h4>{{ order.account ? order.account.firstname : 'Não definido' }}</h4>#}
-                                        {#<small>#}
-                                            {#{{ order.cnpj }}#}
-                                        {#</small>#}
-                                    {#</td>#}
+                                    <td class="text-right">
+                                        {{ constant('AppBundle\\Entity\\Misc\\AdditiveInterface::TARGET_FIXED') == insurance.target ? insurance.value|currency : insurance.value ~ '%' }}
+                                    </td>
 
-                                    {#<td class="text-center">#}
-                                        {#{% set notLevel = 'Sem Nivel' %}#}
-                                        {#<h4>#}
-                                            {#<div class="label label-level label-size level-{{ order.account ? order.account.level : notLevel }}">#}
-                                            {#</div>#}
-                                        {#</h4>#}
-                                        {#<small style="margin-top: 4px;">{{ order.agent }}</small>#}
+                                    <td>{{ insurance.description }}</td>
 
-                                    {#</td>#}
+                                    <td>
+                                        <div class="btn-group">
+                                            <a class="btn btn-default col-md-" data-form="{{ path('insurance_update',{id:insurance.id}) }}">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a class="btn btn-danger" data-delete="{{ path('insurance_delete',{id:insurance.id}) }}">
+                                                <i class="fa fa-remove"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
 
-                                    {#<td class="text-center">#}
-                                        {#<h4>#}
-                                            {#{% if order.childrens.count %}#}
-                                                {#{% for children in order.childrens %}#}
-                                                    {#{{ children.power }} kWp,#}
-                                                {#{% endfor %}#}
-                                            {#{% else %}#}
-                                                {#Sem sistemas#}
-                                            {#{% endif %}#}
-                                        {#</h4>#}
-                                        {#<small> {{ order.total|currency }} </small>#}
-                                    {#</td>#}
-
-                                    {#<td class="text-center">#}
-                                        {#<h5>#}
-                                            {#<span class="label label-status status-{{ order.statusName }}">#}
-                                                {#<i class="fa fa-circle"></i> {{ order.statusName|capitalize|trans }}:#}
-                                                {#{% if order.statusAt %}#}
-                                                    {#{{ order.statusAt|date('d/m/Y') }}#}
-                                                {#{% endif %}#}
-                                            {#</span>#}
-                                        {#</h5>#}
-                                        {#{% if order.deliveryAt %}#}
-                                            {#<small>#}
-                                                {#Disponível: {{ order.deliveryAt|date('d/m/Y') }}#}
-                                            {#</small>#}
-                                        {#{% endif %}#}
-                                    {#</td>#}
-
-                                    {#<td class="text-center">#}
-                                        {#<div class="btn-group btn-group-sm col-md-12 btn-group-justified">#}
-                                            {#{% if order.hasProforma %}#}
-                                                {#<a class="btn btn-default {{ order.proforma ? 'validated' }}"#}
-                                                   {#href="{{ path('order_file',{id:order.id, type:'proforma'}) }}"#}
-                                                   {#target="_blank"> <i class="fa fa-file-pdf-o"></i>#}
-                                                    {#<br>#}
-                                                    {#<small>Prof.</small>#}
-                                                {#</a>#}
-                                            {#{% else %}#}
-                                                {#<i class="btn btn-default fa fa-file-pdf-o">#}
-                                                    {#<br>#}
-                                                    {#<small>Prof.</small>#}
-                                                {#</i>#}
-                                            {#{% endif %}#}
-
-                                            {#{% set shippingRules = order.shippingRules %}#}
-
-                                            {#{% if attribute(shippingRules, 'type') is defined and 'self' == shippingRules.type %}#}
-                                                {#<a class="btn btn-default {{ order.deliveryAddress ? 'validated' }}"#}
-                                                   {#data-toggle="modal" data-target="#modal_shipping"#}
-                                                   {#data-url="{{ path('order_shipping', {id:order.id}) }}"#}
-                                                   {#data-shipping="self">#}
-                                                    {#<i class="fa fa-truck"></i><br><small>Transport.</small>#}
-                                                {#</a>#}
-                                            {#{% else %}#}
-                                                {#<a class="btn btn-default {{ order.deliveryAddress ? 'validated' }}"#}
-                                                   {#data-toggle="modal" data-target="#modal_shipping"#}
-                                                   {#data-shipping="sices"#}
-                                                   {#data-url="{{ path('order_shipping', {id:order.id}) }}">#}
-                                                    {#<i class="fa fa-truck"></i><br><small>Frete Sices</small>#}
-                                                {#</a>#}
-                                            {#{% endif %}#}
-
-                                            {#{% if order.hasFilePayment %}#}
-                                                {#<a class="btn btn-default {{ order.FilePayment ? 'validated' }}"#}
-                                                   {#href="{{ path('order_file',{id:order.id, type:'filePayment'}) }}"#}
-                                                   {#target="_blank"> <i class="fa fa-file-text"></i> <br>#}
-                                                    {#<small>Comprov.</small>#}
-                                                {#</a>#}
-                                            {#{% else %}#}
-                                                {#<i class="btn btn-default fa fa fa-file-text">#}
-                                                    {#<br>#}
-                                                    {#<small>Comprov.</small>#}
-                                                {#</i>#}
-                                            {#{% endif %}#}
-
-                                        {#</div>#}
-                                    {#</td>#}
-                                    {#<td>#}
-                                        {#<a href="{{ path('order_show', {id: order.id}) }}" class="btn btn-default">#}
-                                            {#<i class="fa fa-eye"></i>#}
-                                        {#</a>#}
-                                    {#</td>#}
-
-                                {#</tr>#}
-
-                            {#{% endfor %}#}
+                            {% endfor %}
 
                             </tbody>
                         </table>
+
+                        <div class="row text-center">
+                            <div class="btn-group bt-xs">
+                                {{ knp_pagination_render(insurances) }}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 
 {% endblock %}
@@ -182,6 +92,7 @@
             blockForm: $('#block_form'),
             init: function () {
                 this.loadForm();
+                this.listenerDelete();
             },
             loadForm: function () {
 
@@ -192,6 +103,43 @@
                         complete: function (xhr) {
                             Insurance.blockForm.html(xhr.responseText);
                         }
+                    });
+                });
+            },
+            listenerDelete: function () {
+                $('[data-delete]').on('click', function () {
+
+                    var url = $(this).data('delete');
+
+                    swal({
+                        title: "Confirmar exclusão?",
+                        text: null,
+                        type: "info",
+                        showCancelButton: true,
+                        cancelButtonText: "Cancelar",
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Excluir",
+                        closeOnConfirm: false
+                    }, function () {
+                        $.ajax({
+                            url: url,
+                            method: 'delete',
+                            complete: function (xhr) {
+                                swal("Exclusão efetuada com sucesso!", "", "success");
+                                window.setTimeout(function () {
+                                    window.location.reload();
+                                    swal.close();
+                                }, 500);
+                            },
+                            beforeSend: function () {
+                                swal({
+                                    title: "Excluindo...",
+                                    text: "Aguarde!",
+                                    type: "info",
+                                    showConfirmButton: false
+                                });
+                            }
+                        });
                     });
                 });
             }
