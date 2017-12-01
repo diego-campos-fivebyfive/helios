@@ -22,8 +22,9 @@ Visualização (soma dos valores de seguros)
 Pró-forma (listado)
 
 1. 998 Mapear entidade.
-2. 1000, 1005 CRUD + Menu.
-3. Mapear associações
+2. 1000, 1005 . CRUD + Menu.
+3. 1020, 1021 . Mapear associações Project::Additive e Order::Additive
+4. Serviço de sincronização (verifica e normaliza referências entre additivo e projeto/orçamentos)
 4. Serviço de cálculo e atualização
 5. Integração com geradores
 6. Atualizaçãoe interfaces
