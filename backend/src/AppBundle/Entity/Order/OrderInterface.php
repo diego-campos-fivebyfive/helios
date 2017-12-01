@@ -118,6 +118,11 @@ interface OrderInterface
     public function getStatus();
 
     /**
+     * @return int
+     */
+    public function getPreviousStatus();
+
+    /**
      * @return \DateTime
      */
     public function getStatusAt();
