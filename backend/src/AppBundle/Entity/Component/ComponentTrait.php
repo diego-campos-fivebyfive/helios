@@ -138,6 +138,13 @@ trait ComponentTrait
     protected $generatorLevels;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(name="order_inventory", type="json", nullable=true)
+     */
+    private $orderInventory;
+
+    /**
      * @inheritDoc
      */
     public function __construct()
@@ -494,5 +501,23 @@ trait ComponentTrait
     public function getGeneratorLevels()
     {
         return $this->generatorLevels;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setOrderInventory($orderInventory)
+    {
+        $this->orderInventory = $orderInventory;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getOrderInventory()
+    {
+        return $this->orderInventory;
     }
 }
