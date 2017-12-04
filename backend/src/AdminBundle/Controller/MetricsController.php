@@ -49,14 +49,25 @@ class MetricsController extends AdminController
         ];
 
         $curl = curl_init();
+
         curl_setopt($curl, CURLOPT_URL, $options['url']);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_USERPWD, $options['login']);
         curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         curl_setopt($curl, CURLOPT_USERAGENT, $options['agent']);
-        $response = curl_exec($curl);
+
+        $milestones = json_decode(curl_exec($curl), true);
+
         curl_close($curl);
 
-        return $this->json(json_decode($response));
+        $modules = array_map(function($milestone) {
+            return [
+                "title" => $milestone['title'],
+                "open" => $milestone['open_issues'],
+                "closed" => $milestone['closed_issues']
+            ];
+        }, $milestones);
+
+        return $this->json($modules);
     }
 }
