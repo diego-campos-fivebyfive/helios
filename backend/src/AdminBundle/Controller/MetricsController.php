@@ -32,13 +32,20 @@ class MetricsController extends AdminController
      */
     public function getModules()
     {
-        $user = '';
-        $token = '';
+        $root = $this->get('kernel')->getRootDir() . "/../..";
+        $temp = "${root}/devops/cli/stash/temp";
+
+        $file = fopen("${temp}/.ces-credentials", "r");
+        $size = filesize("${temp}/.ces-credentials");
+
+        $credentials = explode("\n", fread($file, $size));
+
+        fclose($file);
 
         $options = [
             'url' => $this->getParameter('github_repository') . "/milestones",
             'agent' => 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)',
-            'login' => "${user}:${token}"
+            'login' => "${credentials[0]}:${credentials[1]}"
         ];
 
         $curl = curl_init();
