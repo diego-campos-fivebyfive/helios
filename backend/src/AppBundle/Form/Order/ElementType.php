@@ -22,9 +22,8 @@ class ElementType extends AbstractType
         $element = $options['data'];
         $order = $element->getOrder();
         $manager = $options['manager'];
-        $promotional = $options['promocional'];
         $member = $options['member'];
-        $elements = $this->findElements($manager, $promotional, $order, $element->getCode(), $member);
+        $elements = $this->findElements($manager, $order, $element->getCode(), $member);
 
         $builder
             ->add('code', ChoiceType::class, [
@@ -52,10 +51,13 @@ class ElementType extends AbstractType
     }
 
     /**
-     * @param \AppBundle\Manager\AbstractManager $manager
+     * @param $manager
      * @param Order $order
+     * @param null $code
+     * @param $member
+     * @return array
      */
-    private function findElements($manager, $promotional, Order $order, $code = null, $member)
+    private function findElements($manager, Order $order, $code = null, $member)
     {
         $level = $order->getLevel();
 
