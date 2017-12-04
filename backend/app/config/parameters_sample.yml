@@ -11,4 +11,4 @@ parameters:
     mailer_password: ${SICES_MAILER_PASS}
     secret: ${SICES_MAILER_KEY}
     ambience: ${CES_AMBIENCE}
-    github: ${GITHUB_REPOSITORY}
+    github_repository: ${GITHUB_REPOSITORY}
