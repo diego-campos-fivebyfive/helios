@@ -7,7 +7,7 @@ use AdminBundle\Form\MemberType;
 use AppBundle\Entity\UserInterface;
 use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\AccountInterface;
-use AppBundle\Controller\AbstractController;;
+use AppBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\FormError;
