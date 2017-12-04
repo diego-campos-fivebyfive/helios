@@ -8,6 +8,19 @@
 
     {% include view('helper.style-wizard') %}
 
+    <div class="modal inmodal fade" id="cloner_modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInLeft">
+                <div class="modal-body" id="cloner_sub_order"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal inmodal fade" id="wizard_modal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog width-modal">
             <div class="modal-content animated bounceInLeft">
@@ -474,6 +487,17 @@
                     });
                 });
             }
+        });
+
+        $('#cloner_modal').on('show.bs.modal', function (event) {
+            var target = $(event.relatedTarget);
+            var url = target.data('href');
+            $.ajax({
+                url: url,
+                complete: function(xhr) {
+                    $('#cloner_sub_order').html(xhr.responseText);
+                }
+            });
         });
 
         $(document).ready(function () {

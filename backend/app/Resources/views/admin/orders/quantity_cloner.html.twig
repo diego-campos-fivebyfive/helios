@@ -1,10 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<div class="row">
+    <label class="form-group">Digite a quantidade de cópias desejada</label>
+    <div class="input-group m-b">
+        <input type="text" class="form-control" id="quantity-cloner">
+        <span class="input-group-btn">
+            <button type="button" class="btn btn-primary" id="request-copy">Copiar</button>
+        </span>
+    </div>
+</div>
+
+<script>
+    $('#request-copy').on('click', function (event) {
+        event.preventDefault();
+        var quantity = $('#quantity-cloner').val();
+        var url = '{{ path('sub_order_copy', {id:order.id}) }}';
+        Request.send({
+            url: url,
+            data: {quantity: quantity},
+            callback: function () {
+                GeneratorHandler.getOrders();
+            }
+        });
+    });
+
+    $('#quantity-cloner').TouchSpin({
+        min: 1,
+        max: 10,
+
+    });
+</script>
