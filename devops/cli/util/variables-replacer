@@ -20,6 +20,7 @@ sed " \
   s/\${SICES_MAILER_USER}/$SICES_MAILER_USER/g; \
   s/\${SICES_MAILER_PASS}/$SICES_MAILER_PASS/g; \
   s/\${SICES_MAILER_KEY}/$SICES_MAILER_KEY/g; \
+  s|\${GITHUB_REPOSITORY}|$GITHUB_REPOSITORY|g; \
   s/\${CES_AMBIENCE}/$CES_AMBIENCE/g; \
 " < $sample > $parameters
 
