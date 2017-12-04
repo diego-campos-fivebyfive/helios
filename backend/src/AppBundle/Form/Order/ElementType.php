@@ -74,19 +74,13 @@ class ElementType extends AbstractType
 
         $qb->where($qb->expr()->notIn(sprintf('%s.code', $aliases[0]), $codes));
 
-        if ($member->isPlatformUser()) {
-            $qb->andWhere(
-                $qb->expr()->like(sprintf('%s.princingLevels', $aliases),
-                    $qb->expr()->literal('%"'.$level.'"%')
-                )
-            );
-        } else {
-            $qb->andWhere(
-                $qb->expr()->like(sprintf('%s.generatorLevels', $aliases),
-                    $qb->expr()->literal('%"'.$level.'"%')
-                )
-            );
-        }
+        $fieldLevels = $member->isPlatformUser() ? 'princingLevels' : 'generatorLevels';
+
+        $qb->andWhere(
+            $qb->expr()->like(sprintf('%s.'.$fieldLevels, $aliases),
+                $qb->expr()->literal('%"'.$level.'"%')
+            )
+        );
 
         $qb->orderBy(sprintf('%s.position', $aliases), 'asc');
 
