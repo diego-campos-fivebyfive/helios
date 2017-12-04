@@ -57,6 +57,8 @@ class ElementType extends AbstractType
      */
     private function findElements($manager, $promotional, Order $order, $code = null, $member)
     {
+        $level = $order->getLevel();
+
         $codes = $order->getElements()->map(function (Element $element){
             return $element->getCode();
         })->toArray();
@@ -68,34 +70,26 @@ class ElementType extends AbstractType
 
         $qb = $manager->createQueryBuilder();
 
-        $aliases = $qb->getRootAliases();
-
-        $parameters = [
-            'available' => 1
-        ];
-
-        if (!$member->isPlatformUser()) {
-            $parameters = [
-                'status' => 1,
-                'available' => 1
-            ];
-        }
-
+        $aliases = $this->alias($qb);
 
         $qb->where($qb->expr()->notIn(sprintf('%s.code', $aliases[0]), $codes));
-        $qb->andWhere($aliases[0].'.available = :available');
 
-        if (!$member->isPlatformUser()) {
-            $qb->andWhere($aliases[0].'.status = :status');
+        if ($member->isPlatformUser()) {
+            $qb->andWhere(
+                $qb->expr()->like(sprintf('%s.princingLevels', $aliases),
+                    $qb->expr()->literal('%"'.$level.'"%')
+                )
+            );
+        } else {
+            $qb->andWhere(
+                $qb->expr()->like(sprintf('%s.generatorLevels', $aliases),
+                    $qb->expr()->literal('%"'.$level.'"%')
+                )
+            );
         }
 
-        if ($promotional) {
-            $qb->andWhere($aliases[0].'.promotional = :promotional');
-            $parameters['promotional'] = 1;
-        }
+        $qb->orderBy(sprintf('%s.position', $aliases), 'asc');
 
-        $qb->setParameters($parameters);
-        
         $components = $qb->getQuery()->getResult();
 
         $data = [];
@@ -110,9 +104,21 @@ class ElementType extends AbstractType
 
             $data[$group][$code] = (string) $component;
 
-            if(!$component->getStatus()) $this->disabledCodes[] = $code;
+            $generatorLevels = $component->getGeneratorLevels();
+            if(!in_array($level, $generatorLevels)) $this->disabledCodes[] = $code;
         }
 
          return $data;
+    }
+
+    /**
+     * @param $qb
+     * @return mixed
+     */
+    private function alias($qb)
+    {
+        $aliases = $qb->getRootAliases();
+
+        return $aliases[0];
     }
 }
