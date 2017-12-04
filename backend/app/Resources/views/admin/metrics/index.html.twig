@@ -1,0 +1,50 @@
+{% extends view('layout') %}
+
+{% block body %}
+{% verbatim %}
+
+  <script src="https://unpkg.com/vue"></script>
+
+  <div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+      <div class="ibox">
+        <div class="ibox-title">
+          <h2>Métricas de tarefas</h2>
+        </div>
+        <div class="ibox-content">
+          <div class="tab-content">
+            <div class="tab-pane active">
+              <table id="table-metric-modules" class="table table-striped table-hover">
+                <thead>
+                  <tr>
+                    <th class="col-md-3">Aplicação</th>
+                    <th class="col-md-3">Módulos</th>
+                    <th class="col-md-3 text-center">Ativas</th>
+                    <th class="col-md-3 text-center">Finalizadas</th>
+                  </tr>
+                </thead>
+                <tbody> 
+                  <tr v-for="module in modules">
+                    <td>{{ module.type }}</td>
+                    <td>{{ module.name }}</td>
+                    <td class="text-center">{{ module.closed }}</td>
+                    <td class="text-center">{{ module.open }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const api = 'http://localhost:8000/admin/metrics/api/v1';
+    const el = '#table-metric-modules';
+
+    fetch(`${api}/modules`)
+      .then(response => response.json())
+      .then(modules => new Vue({ el, data: { modules } }));
+  </script>
+{% endverbatim %}
+{% endblock %}
