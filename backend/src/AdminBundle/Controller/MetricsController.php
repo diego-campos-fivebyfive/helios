@@ -32,15 +32,24 @@ class MetricsController extends AdminController
      */
     public function getModules()
     {
-        $mock = [
-            0 => [
-                "name" => "Orçamento",
-                "type" => "Plataforma",
-                "closed" => 100,
-                "open" => 5
-            ]
+        $user = '';
+        $token = '';
+
+        $options = [
+            'url' => $this->getParameter('github_repository') . "/milestones",
+            'agent' => 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)',
+            'login' => "${user}:${token}"
         ];
 
-        return $this->json($mock);
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $options['url']);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_USERPWD, $options['login']);
+        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($curl, CURLOPT_USERAGENT, $options['agent']);
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        return $this->json(json_decode($response));
     }
 }
