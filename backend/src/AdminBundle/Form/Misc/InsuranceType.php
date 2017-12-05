@@ -1,7 +1,9 @@
 <?php
 namespace AdminBundle\Form\Misc;
 
+use AppBundle\Entity\Pricing\Memorial;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -33,6 +35,14 @@ class InsuranceType extends AbstractType
             ])
             ->add('value', TextType::class, [
                 'required' => true
+            ])
+            ->add('requiredLevels', ChoiceType::class, [
+                'choices' => Memorial::getDefaultLevels(),
+                'required' => false,
+                'multiple' => true
+            ])
+            ->add('enable', CheckboxType::class, [
+                'required' => false
             ]);
     }
 

@@ -80,6 +80,28 @@ interface AdditiveInterface
     public function getValue();
 
     /**
+     * @param $requiredLevels
+     * @return AdditiveInterface
+     */
+    public function setRequiredLevels($requiredLevels);
+
+    /**
+     * @return array
+     */
+    public function getRequiredLevels();
+
+    /**
+     * @param $enable
+     * @return AdditiveInterface
+     */
+    public function setEnable($enable);
+
+    /**
+     * @return bool
+     */
+    public function isEnable();
+
+    /**
      * @return array
      */
     public static function getTypes();
