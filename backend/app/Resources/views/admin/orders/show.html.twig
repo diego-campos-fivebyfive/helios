@@ -244,16 +244,17 @@
                                                     {% endif %}
                                                 {% endif %}
                                             </div>
-                                            {% if not member.isPlatformExpanse and not expired %}
-                                                <div class="pull-right btn-group">
-                                                    {% if app.user.platformMaster or app.user.platformAdmin %}
-                                                        <a data-target="#master_cloner_modal"
-                                                           data-href="{{ path('show_order_cloner', {id:order.id}) }}"
-                                                           data-toggle="modal"
-                                                           class="btn btn-sm btn-warning">
-                                                            <i class="fa fa-recycle"></i> Clonar Orçamento
-                                                        </a>
-                                                    {% endif %}
+
+                                            <div class="pull-right btn-group">
+                                                {% if app.user.platformMaster or app.user.platformAdmin %}
+                                                    <a data-target="#master_cloner_modal"
+                                                       data-href="{{ path('show_order_cloner', {id:order.id}) }}"
+                                                       data-toggle="modal"
+                                                       class="btn btn-sm btn-warning">
+                                                        <i class="fa fa-recycle"></i> Clonar Orçamento
+                                                    </a>
+                                                {% endif %}
+                                                {% if not member.isPlatformExpanse and not expired %}
                                                     {% if not (order.isDone or order.isApproved or order.isRejected)
                                                     and (order.isBuilding or (order.isPending and member.isPlatformUser) or (order.isValidated and not member.isPlatformUser)) %}
                                                         <a class="btn btn-sm btn-success pull-right"
@@ -261,8 +262,8 @@
                                                             <i class="fa fa-pencil"></i> Editar Orçamento
                                                         </a>
                                                     {% endif %}
-                                                </div>
-                                            {% endif %}
+                                                {% endif %}
+                                            </div>
                                         </div>
                                         <div class="col-md-12 {% if order.billingDirect %}border-bottom{% endif %}">
                                             <h2>
