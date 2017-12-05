@@ -2,127 +2,110 @@
 
 namespace Tests\AppBundle\Service\Order;
 
+use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Order\Element;
 use AppBundle\Entity\Order\ElementInterface;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
+use AppBundle\Service\Order\ComponentCollector;
 use Tests\AppBundle\AppTestCase;
 
 /**
  * Class OrderClonerTest
- * @group order_cloner
+ * @group component_inventory
  */
-class OrderClonerTest extends AppTestCase
+class OrderInventoryTest extends AppTestCase
 {
 
     public $code = 0;
 
-    public function testClonerMaster()
+    public function testReturnTypes()
     {
-        $orderCloner = $this->getContainer()->get('order_cloner');
+        $module = $this->getFixture('module');
+        $this->assertInstanceOf(ComponentInterface::class, $module);
 
-        /** @var OrderInterface $master */
-        $master = $this->createOrder(3, 10);
+        $this->assertTrue(is_array($module->getOrderInventory()));
 
-        $number = 2;
+        $this->assertEquals(0, $module->getOrderInventory(11));
 
-        $clone = $orderCloner->cloneOrder($master, $number);
+        $module->setOrderInventory(OrderInterface::STATUS_PENDING, 25);
 
-
-        for ($i=0;$i<$number;$i++) {
-            /** @var OrderInterface $masterClone */
-            $masterClone = $clone[$i];
-
-            self::assertEquals($master->getTotal(), $masterClone->getTotal());
-
-            self::assertEquals(count($master->getChildrens()), count($masterClone->getChildrens()));
-
-            for ($x=0;$x<count($master->getChildrens());$x++) {
-                /** @var OrderInterface $childrenMaster */
-                $childrenMaster = $master->getChildrens()[$x];
-                /** @var OrderInterface $childrenClone */
-                $childrenClone = $masterClone->getChildrens()[$x];
-
-                self::assertEquals(count($childrenMaster->getElements()), count($childrenClone->getElements()));
-                self::assertEquals($childrenMaster->getTotal(), $childrenClone->getTotal());
-                self::assertEquals($childrenMaster->getDescription(), $childrenClone->getDescription());
-                self::assertEquals($childrenMaster->getPower(), $childrenClone->getPower());
-
-
-                for ($y=0;$y<count($childrenMaster->getElements());$y++) {
-                    /** @var ElementInterface $elementMaster */
-                    $elementMaster = $childrenMaster->getElements()[$y];
-                    /** @var ElementInterface $elementClone */
-                    $elementClone = $childrenClone->getElements()[$y];
-
-                    self::assertEquals($elementMaster->getTotal(), $elementClone->getTotal());
-                    self::assertEquals($elementMaster->getUnitPrice(), $elementClone->getUnitPrice());
-                    self::assertEquals($elementMaster->getDiscount(), $elementClone->getDiscount());
-                    self::assertEquals($elementMaster->getMetadata(), $elementClone->getMetadata());
-                    self::assertEquals($elementMaster->getCode(), $elementClone->getCode());
-                    self::assertEquals($elementMaster->getCmv(), $elementClone->getCmv());
-                    self::assertEquals($elementMaster->getDescription(), $elementClone->getDescription());
-                    self::assertEquals($elementMaster->getFamily(), $elementClone->getFamily());
-                    self::assertEquals($elementMaster->getMarkup(), $elementClone->getMarkup());
-                    self::assertEquals($elementMaster->getQuantity(), $elementClone->getQuantity());
-                    self::assertEquals($elementMaster->getTax(), $elementClone->getTax());
-                    self::assertEquals($elementMaster->getTotalCmv(), $elementClone->getTotalCmv());
-                    self::assertNotEquals($elementMaster->getOrder(), $elementClone->getOrder());
-                }
-            }
-        }
+        $this->assertEquals(25, $module->getOrderInventory(OrderInterface::STATUS_PENDING));
     }
 
-    public function testClonerSub()
+    public function testInventory()
     {
-        $orderCloner = $this->getContainer()->get('order_cloner');
+        $componentInventory = $this->getContainer()->get('component_inventory');
 
-        $nChildrens = 3;
         /** @var OrderInterface $master */
-        $master = $this->createOrder($nChildrens, 10);
+        $master = $this->createOrder(2, 2);
 
-        self::assertEquals(count($master->getChildrens()), $nChildrens);
-
-        $number = 2;
-
-        $clone = $orderCloner->cloneOrder($master->getChildrens()[0], $number);
-
-        self::assertEquals(count($master->getChildrens()), $nChildrens + $number);
-
-        /** @var OrderInterface $childrenMaster */
-        $childrenMaster = $master->getChildrens()[0];
-        /** @var OrderInterface $childrenClone */
-        $childrenClone = $clone[0];
-
-        self::assertEquals($childrenMaster->getParent(), $childrenClone->getParent());
-
-        self::assertEquals(count($childrenMaster->getElements()), count($childrenClone->getElements()));
-        self::assertEquals($childrenMaster->getTotal(), $childrenClone->getTotal());
-        self::assertEquals($childrenMaster->getDescription(), $childrenClone->getDescription());
-        self::assertEquals($childrenMaster->getPower(), $childrenClone->getPower());
+        /** @var ElementInterface $element */
+        $element = $master->getChildrens()[0]->getElements()[0];
+        /** @var ComponentInterface $component */
+        $component = $this->manager($element->getFamily())->findOneBy(['code'=>$element->getCode()]);
 
 
-        for ($y=0;$y<count($childrenMaster->getElements());$y++) {
-            /** @var ElementInterface $elementMaster */
-            $elementMaster = $childrenMaster->getElements()[$y];
-            /** @var ElementInterface $elementClone */
-            $elementClone = $childrenClone->getElements()[$y];
+        $master->setStatus(1);
 
-            self::assertEquals($elementMaster->getTotal(), $elementClone->getTotal());
-            self::assertEquals($elementMaster->getUnitPrice(), $elementClone->getUnitPrice());
-            self::assertEquals($elementMaster->getDiscount(), $elementClone->getDiscount());
-            self::assertEquals($elementMaster->getMetadata(), $elementClone->getMetadata());
-            self::assertEquals($elementMaster->getCode(), $elementClone->getCode());
-            self::assertEquals($elementMaster->getCmv(), $elementClone->getCmv());
-            self::assertEquals($elementMaster->getDescription(), $elementClone->getDescription());
-            self::assertEquals($elementMaster->getFamily(), $elementClone->getFamily());
-            self::assertEquals($elementMaster->getMarkup(), $elementClone->getMarkup());
-            self::assertEquals($elementMaster->getQuantity(), $elementClone->getQuantity());
-            self::assertEquals($elementMaster->getTax(), $elementClone->getTax());
-            self::assertEquals($elementMaster->getTotalCmv(), $elementClone->getTotalCmv());
-            self::assertNotEquals($elementMaster->getOrder(), $elementClone->getOrder());
-        }
+        self::assertNotNull($componentInventory->update($master));
+
+        self::assertEquals(4, $component->getOrderInventory(1));
+
+        self::assertNotNull($componentInventory->update($master));
+
+        self::assertEquals(8, $component->getOrderInventory(1));
+
+        $master->setStatus(2);
+
+        self::assertNotNull($componentInventory->update($master));
+
+        self::assertEquals(4, $component->getOrderInventory(1));
+        self::assertEquals(4, $component->getOrderInventory(2));
+
+
+        $master->setStatus(0);
+        $master->setStatus(2);
+
+        self::assertNotNull($componentInventory->update($master));
+
+        self::assertEquals(4, $component->getOrderInventory(1));
+        self::assertEquals(8, $component->getOrderInventory(2));
+
+
+        $master->setStatus(1);
+
+        self::assertNotNull($componentInventory->update($master));
+
+        self::assertEquals(8, $component->getOrderInventory(1));
+        self::assertEquals(4, $component->getOrderInventory(2));
+
+        $master->setStatus(2);
+
+        self::assertNotNull($componentInventory->update($master));
+
+        self::assertEquals(4, $component->getOrderInventory(1));
+        self::assertEquals(8, $component->getOrderInventory(2));
+
+        $master->setStatus(1);
+        $master->setStatus(4);
+
+        self::assertNotNull($componentInventory->update($master));
+
+        self::assertEquals(0, $component->getOrderInventory(1));
+        self::assertEquals(8, $component->getOrderInventory(2));
+
+        $master->setStatus(2);
+        $master->setStatus(4);
+
+        self::assertNotNull($componentInventory->update($master));
+
+        self::assertEquals(0, $component->getOrderInventory(1));
+        self::assertEquals(8, $component->getOrderInventory(2));
+
     }
+
+
 
     private function createOrder($numberChildrens, $numberElements)
     {
@@ -131,11 +114,17 @@ class OrderClonerTest extends AppTestCase
         $order = new Order();
 
         for($i = 0; $i < $numberChildrens; $i++){
+            $this->code = 0;
             $children = new Order();
-
+            $repetCode = false;
             for($x = 0; $x < $numberElements; $x++){
-                $element = $this->createElement();
+                if ($x == $numberElements/2)
+                    $repetCode = true;
+                $element = $this->createElement($repetCode, ElementInterface::FAMILY_INVERTER);
                 $children->addElement($element);
+                $element = $this->createElement($repetCode, ElementInterface::FAMILY_MODULE);
+                $children->addElement($element);
+
             }
 
             $order->addChildren($children);
@@ -149,13 +138,23 @@ class OrderClonerTest extends AppTestCase
     /**
      * @return Element|ElementInterface
      */
-    public function createElement()
+    public function createElement($repetCode, $family)
     {
+        /** @var ComponentCollector $collector */
+        $collector = $this->getContainer()->get('component_collector');
+        $manager = $collector->getManager($family);
+
+        $comp = $manager->create();
+        $comp->setCode('ABC123-'.$this->code);
+        $comp->setStatus(1);
+
+        $manager->save($comp);
+
         $element = new Element();
-        $element->setCode('ABC123-'.$this->code);
+        $element->setCode($comp->getCode());
         $element->setDescription('Descrição '.$this->code);
-        $this->code++;
-        $element->setFamily(ElementInterface::FAMILY_INVERTER);
+            $this->code++;
+        $element->setFamily($family);
         $element->setMetadata(['a'=>"metadata"]);
         $element->setMarkup(0.02);
         $element->setCmv(2);
