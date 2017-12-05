@@ -161,6 +161,10 @@ services:
         class: AppBundle\Service\Order\ComponentCollector
         arguments: ['@service_container']
 
+    component_inventory:
+        class: AppBundle\Service\Order\ComponentInventory
+        arguments: ['@service_container']
+
     inverter_combinator:
         class: AppBundle\Service\InverterCombinator\InverterCombinator
         arguments: ['@inverter_manager']
