@@ -1,18 +1,24 @@
 <?php
 
-include 'WorkingDays.php';
+namespace Tests\AppBundle\Util;
 
-class WorkingDaysTest extends PHPUnit\Framework\TestCase
+use AppBundle\Util\WorkingDays;
+use Tests\AppBundle\AppTestCase;
+
+/**
+ * Class WorkingDaysTest
+ * @group util_working_days
+ */
+class WorkingDaysTest extends AppTestCase
 {
     public function testSingleYearWorkingDay()
     {
-        //$date = new DateTime('2018-01-01');
         $workingDay = WorkingDays::create();
 
         $this->assertInstanceOf(WorkingDays::class, $workingDay);
 
         $next = $workingDay->next(5);
 
-        $this->assertInstanceOf(DateTime::class, $next);
+        $this->assertInstanceOf(\DateTime::class, $next);
     }
 }

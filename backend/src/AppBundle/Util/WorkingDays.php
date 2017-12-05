@@ -1,5 +1,7 @@
 <?php
 
+namespace AppBundle\Util;
+
 /**
  * Class WorkingDays
  * @property $easter (Páscoa)
@@ -64,7 +66,7 @@ class WorkingDays{
 
     /**
      * WorkingDays constructor.
-     * @param DateTime|null $date
+     * @param \DateTime|null $date
      */
     private function __construct(\DateTime $date = null)
     {
@@ -72,7 +74,7 @@ class WorkingDays{
     }
 
     /**
-     * @param DateTime|null $date
+     * @param \DateTime|null $date
      */
     public static function create(\DateTime $date = null)
     {
@@ -81,7 +83,7 @@ class WorkingDays{
 
     /**
      * @param int $days
-     * @return DateTime
+     * @return \DateTime
      */
     public function next($days)
     {
