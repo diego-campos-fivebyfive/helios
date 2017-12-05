@@ -1,7 +1,5 @@
 {% extends view('layout') %}
-
 {% block body %}
-
     <style>
         .collapse {
             display: none;
@@ -94,12 +92,27 @@
         }
     </style>
 
+    <script type="text/javascript" src="{{ asset('assets/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/fullcalendar/lib/moment.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/daterangepicker/daterangepicker.js') }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/daterangepicker/daterangepicker.css') }}" />
 
     {% set orders = order.childrens %}
     {% set isPlatform = app.user.isPlatform %}
+
+    <div class="modal inmodal fade" id="master_cloner_modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInLeft">
+                <div class="modal-body" id="cloner_master_order"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" id="master_close" data-dismiss="modal">
+                        {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="wrapper wrapper-content  animated fadeInRight">
         <div class="row">
             <div class="col-md-8">
@@ -232,7 +245,15 @@
                                                 {% endif %}
                                             </div>
                                             {% if not member.isPlatformExpanse and not expired %}
-                                                <div class="pull-right">
+                                                <div class="pull-right btn-group">
+                                                    {% if app.user.platformMaster or app.user.platformAdmin %}
+                                                        <a data-target="#master_cloner_modal"
+                                                           data-href="{{ path('show_order_cloner', {id:order.id}) }}"
+                                                           data-toggle="modal"
+                                                           class="btn btn-sm btn-warning">
+                                                            <i class="fa fa-recycle"></i> Clonar Orçamento
+                                                        </a>
+                                                    {% endif %}
                                                     {% if not (order.isDone or order.isApproved or order.isRejected)
                                                     and (order.isBuilding or (order.isPending and member.isPlatformUser) or (order.isValidated and not member.isPlatformUser)) %}
                                                         <a class="btn btn-sm btn-success pull-right"
@@ -771,7 +792,6 @@
     {% include view('order.status_handler') %}
 
     <script>
-
         $('[data-delete]').on('click', function () {
 
             var url = $(this).data('delete');
@@ -874,5 +894,17 @@
         {% else %}
             delivery_at_order.val('{{ order.deliveryAt|date('d/m/Y') }}');
         {% endif %}
+
+        $('#master_cloner_modal').on('show.bs.modal', function (event) {
+            var target = $(event.relatedTarget);
+            var url = target.data('href');
+            $.ajax({
+                url: url,
+                data: {source:'master'},
+                complete: function(xhr) {
+                    $('#cloner_master_order').html(xhr.responseText);
+                }
+            });
+        });
     </script>
 {% endblock %}
