@@ -58,6 +58,11 @@ Aguardando conclusão de "COMPONENTES"
 2. Orçamento deve ter uma atributo (expireDate - DATE apenas)
 3. Dias úteis para cancelamento (Configurado nos parâmetros)
 4. Link dias úteis: http://www.dias-uteis.com/
+5. Criar mecanismo que calcula a data de expiração
+6. Liberar front para edição/cancelamento da data (comercial)
+7. Exibir a frase + a data de expiração na tela de visualização (Linha da referência - lado direito).
+8. Configurar serviço para cron
+9. Configurar processo de edição da data por usuário comercial.
 
 :: Validade de Orçamentos ::
 
@@ -66,8 +71,6 @@ Aguardando conclusão de "COMPONENTES"
 | APPROVED  |      3     |
 | VALIDATED |      4     |
 
-5. Criar mecanismo que calcula a data de expiração
-6. Liberar front para edição/cancelamento da data (comercial)
 
 #### ESTOQUE ####
 1. Regras coletadas em 23/11/2017 - Controle de estoque +
