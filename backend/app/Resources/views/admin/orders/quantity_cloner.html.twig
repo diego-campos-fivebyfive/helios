@@ -1,38 +1,60 @@
 <div class="row">
     <label class="form-group">Digite a quantidade de cópias desejada</label>
     <div class="input-group m-b">
-        <input type="text" class="form-control quantity-cloner">
+        <input type="text" class="form-control" id="quantity-cloner">
         <span class="input-group-btn">
-            <button type="button" class="btn btn-primary request-copy">Copiar</button>
+            <button type="button" class="btn btn-primary" id="request-copy">Copiar</button>
         </span>
     </div>
 </div>
 
 <script>
-    $('.request-copy').on('click', function (event) {
+    $('#request-copy').on('click', function (event) {
         event.preventDefault();
-        var quantity = $('.quantity-cloner').val();
+        var quantity = $('#quantity-cloner').val();
         var url = '{{ path('sub_order_copy', {id:order.id}) }}';
         var source = '{{ source }}';
 
-        $.ajax({
-            url: url,
-            data: {quantity: quantity},
-            complete: function () {
+        swal({
+            title: 'Atenção',
+            text: 'Confirma a(s) cópia(s) deste orçamento?',
+            type: "info",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: '{{ 'Confirmar'|trans }}',
+            cancelButtonText: '{{ 'Cancelar'|trans }}',
+            closeOnConfirm: false
+        }, function () {
 
-                if (source == 'children') {
-                    GeneratorHandler.getOrders();
-                } else {
-                    $('#master_close').on('click', function () {
-                       window.location = '{{ path('orders') }}';
-                    });
+            sweetAlert({
+                title: "Copiando...",
+                text: "Aguarde!",
+                type: "info",
+                showConfirmButton: false
+            });
+
+            $.ajax({
+                url: url,
+                data: {quantity: quantity},
+                complete: function (xhr) {
+                    if (xhr.status != 200) {
+                        swal('Atenção', 'Falha ao executar a operação', 'error');
+                    } else {
+                        if (source == 'children') {
+                            GeneratorHandler.getOrders();
+                        } else {
+                            $('#master_close').on('click', function () {
+                                window.location = '{{ path('orders') }}';
+                            });
+                        }
+                        swal.close();
+                    }
                 }
-
-            }
+            });
         });
     });
 
-    $('.quantity-cloner').TouchSpin({
+    $('#quantity-cloner').TouchSpin({
         min: 1,
         max: 10
     });
