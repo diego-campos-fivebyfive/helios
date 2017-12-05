@@ -19,8 +19,8 @@
                   <tr>
                     <th class="col-md-3">Aplicação</th>
                     <th class="col-md-3">Módulos</th>
-                    <th class="col-md-3 text-center">Ativas</th>
                     <th class="col-md-3 text-center">Finalizadas</th>
+                    <th class="col-md-3 text-center">Ativas</th>
                   </tr>
                 </thead>
                 <tbody> 
@@ -44,6 +44,7 @@
 
     fetch(`${api}/modules`)
       .then(response => response.json())
+      .then(modules => modules.sort((x, y) => y.open-x.open))
       .then(modules => new Vue({ el, data: { modules } }));
   </script>
 {% endverbatim %}
