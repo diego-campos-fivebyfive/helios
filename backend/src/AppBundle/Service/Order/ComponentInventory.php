@@ -10,11 +10,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ComponentInventory
 {
     /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
      * @var ComponentCollector
      */
     private $collector;
@@ -30,7 +25,6 @@ class ComponentInventory
      */
     function __construct(ContainerInterface $container)
     {
-        $this->container = $container;
         $this->collector = $container->get('component_collector');
         $this->elements = [];
     }
