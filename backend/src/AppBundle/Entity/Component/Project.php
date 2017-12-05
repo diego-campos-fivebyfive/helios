@@ -12,6 +12,7 @@
 namespace AppBundle\Entity\Component;
 
 use AppBundle\Entity\CategoryInterface;
+use AppBundle\Entity\Misc\AdditiveInterface;
 use AppBundle\Entity\Pricing\InsurableTrait;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\CustomerInterface;
@@ -20,6 +21,9 @@ use AppBundle\Service\Pricing\InsurableInterface;
 use AppBundle\Service\ProjectGenerator\StructureCalculator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinTable;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\JoinColumns;
 use AppBundle\Entity\TokenizerTrait;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
@@ -328,6 +332,16 @@ class Project implements ProjectInterface, InsurableInterface
     /**
      * @var ArrayCollection
      *
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Misc\Additive")
+     * @JoinTable(name="app_project_additive",
+     *     joinColumns={@JoinColumn(name="project_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@JoinColumn(name="additive_id", referencedColumnName="id", unique=true)})
+     */
+    private $additives;
+
+    /**
+     * @var ArrayCollection
+     *
      * @ORM\OneToMany(targetEntity="ProjectTax", mappedBy="project", indexBy="project", cascade={"persist", "remove"})
      */
     private $projectTaxes;
@@ -364,6 +378,7 @@ class Project implements ProjectInterface, InsurableInterface
         $this->projectInverters = new ArrayCollection();
         $this->projectStructures = new ArrayCollection();
         $this->projectVarieties = new ArrayCollection();
+        $this->additives = new ArrayCollection();
         $this->projectExtras = new ArrayCollection();
         $this->projectStringBoxes = new ArrayCollection();
         $this->projectTaxes = new ArrayCollection();
@@ -1674,6 +1689,39 @@ class Project implements ProjectInterface, InsurableInterface
             return VarietyInterface::TYPE_TRANSFORMER != $projectVariety->getVariety()->getType();
         });
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function addAdditive(AdditiveInterface $additive)
+    {
+        if(!$this->additives->contains($additive)){
+            $this->additives->add($additive);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeAdditive(AdditiveInterface $additive)
+    {
+        if ($this->additives->contains($additive)) {
+            $this->additives->removeElement($additive);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAdditives()
+    {
+        return $this->additives;
+    }
+
 
     /**
      * @inheritDoc
