@@ -1,44 +1,40 @@
 {% extends view('layout') %}
 
-{% block styles %}
-
-
-{% endblock %}
-
 {% block body %}
 
     <div class="wrapper wrapper-content animated fadeInRight">
-
         <div class="row" id="block_form">
-
         </div>
 
         <div class="row">
             <div class="col-md-12">
-                <div class="ibox-title flow-h" style="">
-                    <span class="pull-left">
-                        <h4>
-                        <i class="fa fa-shield"> </i> Seguros
-                        </h4>
-                    </span>
-
-                    <span class="pull-right small text-muted">
-                        <a data-form="{{ path('insurance_create') }}"
-                           class="btn btn-success pull-right">
-                            <i class="fa fa-plus"></i> Seguro
-                        </a>
-                    </span>
-                </div>
                 <div class="ibox flow-h">
+
+                    <div class="ibox-title flow-h" style="">
+                        <span class="pull-left">
+                            <h4>
+                            <i class="fa fa-shield"> </i> Seguros
+                            </h4>
+                        </span>
+
+                            <span class="pull-right small text-muted">
+                            <a data-form="{{ path('insurance_create') }}"
+                               class="btn btn-success pull-right">
+                                <i class="fa fa-plus"></i> Seguro
+                            </a>
+                        </span>
+                    </div>
+
                     <div class="ibox-content flow-lg">
 
-                        <table class="table table-stripped">
+                        <table class="table table-bordered table-stripped">
                             <thead>
                             <tr>
                                 <th class="col-md-3"> Nome</th>
-                                <th class="col-md-2 text-right"> Valor</th>
-                                <th class="col-md-5 text-center"> Descrição</th>
-                                <th class="col-md-1"></th>
+                                <th class="col-md-2 text-center"> Valor</th>
+                                <th class="col-md-4 text-center"> Descrição</th>
+                                <th class="col-md-1 text-center"> Status</th>
+                                <th class="col-md-1 text-center"> Ações</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -47,19 +43,23 @@
 
                                 <tr>
                                     <td>{{ insurance.name }}</td>
-
                                     <td class="text-right">
                                         {{ constant('AppBundle\\Entity\\Misc\\AdditiveInterface::TARGET_FIXED') == insurance.target ? insurance.value|currency : insurance.value ~ '%' }}
                                     </td>
-
                                     <td>{{ insurance.description }}</td>
-
-                                    <td>
+                                    <td class="text-center">
+                                        {% if(insurance.enable == 1) %}
+                                            {{'Enabled'|trans}}
+                                        {% else %}
+                                            {{'Disabled'|trans}}
+                                        {% endif%}
+                                    </td>
+                                    <td class="text-center">
                                         <div class="btn-group">
-                                            <a class="btn btn-default col-md-" data-form="{{ path('insurance_update',{id:insurance.id}) }}">
+                                            <a class="btn btn-default btn-sm" data-form="{{ path('insurance_update',{id:insurance.id}) }}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                            <a class="btn btn-danger" data-delete="{{ path('insurance_delete',{id:insurance.id}) }}">
+                                            <a class="btn btn-danger btn-sm" data-delete="{{ path('insurance_delete',{id:insurance.id}) }}">
                                                 <i class="fa fa-remove"></i>
                                             </a>
                                         </div>
