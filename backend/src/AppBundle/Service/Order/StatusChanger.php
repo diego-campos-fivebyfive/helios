@@ -93,7 +93,8 @@ class StatusChanger
      */
     private function finishStatusChanged(Order $order)
     {
-        $this->updateExpireAt($order);
+        // TODO: Liberar linha após execução da tarefa 1037
+        //$this->updateExpireAt($order);
         $this->createTimeline($order);
         $this->sendEmail($order);
 
@@ -155,14 +156,15 @@ class StatusChanger
 
         if(array_key_exists($order->getStatus(), $expirationDays)){
 
-            $days = (int) $expirationDays[$order->getStatus()];
+            $days = (int) $expirationDays[$order->getStatus()]['days'];
+            $note = $expirationDays[$order->getStatus()]['note'];
 
             if($days > 0){
 
                 $expireAt = WorkingDays::create(new \DateTime())->next($days);
 
-                // TODO: Liberar esta chamada após a criação do método na classe
-                //$order->setExpireAt($expireAt);
+                $order->setExpireAt($expireAt);
+                $order->setExpireNote($note);
             }
         }
     }

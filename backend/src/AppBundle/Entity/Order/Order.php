@@ -485,6 +485,20 @@ class Order implements OrderInterface, InsurableInterface
     private $childrens;
 
     /**
+     * @var DateTime
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $expireAt;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="expire_note", type="text", nullable=true)
+     */
+    private $expireNote;
+
+    /**
      * Order constructor.
      */
     public function __construct()
@@ -2142,6 +2156,40 @@ class Order implements OrderInterface, InsurableInterface
         return $this->expireDays;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function setExpireAt(\DateTime $expireAt)
+    {
+        $this->expireAt = $expireAt;
 
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getExpireAt()
+    {
+        return $this->expireAt;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setExpireNote($expireNote)
+    {
+        $this->expireNote = $expireNote;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getExpireNote()
+    {
+        return $this->expireNote;
+    }
 }
 

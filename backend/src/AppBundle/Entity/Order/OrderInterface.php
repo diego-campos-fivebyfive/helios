@@ -916,4 +916,26 @@ interface OrderInterface
      * @return int
      */
     public function getExpireDays();
+
+    /**
+     * @param \DateTime $expireAt
+     * @return OrderInterface
+     */
+    public function setExpireAt(\DateTime $expireAt);
+
+    /**
+     * @return \DateTime
+     */
+    public function getExpireAt();
+
+    /**
+     * @param string $expireNote
+     * @return OrderInterface
+     */
+    public function setExpireNote($expireNote);
+
+    /**
+     * @return string
+     */
+    public function getExpireNote();
 }
