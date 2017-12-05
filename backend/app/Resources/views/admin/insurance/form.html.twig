@@ -8,6 +8,7 @@
 </style>
 <div class="col-md-12 animated fadeInRight">
     <div class="ibox flow-h">
+        {{ form_start(form, {attr:{id:'form_insurance', action: app.request.uri }}) }}
         <div class="ibox-title flow-h">
             <span class="pull-left">
                 <h4><i class="fa fa-shield"> </i> Configuração de Seguro</h4>
@@ -19,7 +20,6 @@
             </span>
         </div>
         <div class="ibox-content">
-            {{ form_start(form, {attr:{id:'form_insurance', action: app.request.uri }}) }}
                 <div class="row">
                     <div class="form-group col-md-6">
                         {{ form_label(form.name, 'Nome do Seguro') }}
@@ -54,10 +54,10 @@
                 <div class="hide">
                     {{ form_rest(form) }}
                 </div>
-            {{ form_end(form) }}
         </div>
         <div class="ibox-footer">
         </div>
+        {{ form_end(form) }}
     </div>
 </div>
 <script src="{{ asset('assets/iCheck/icheck.js') }}"></script>
