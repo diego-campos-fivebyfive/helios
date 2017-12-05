@@ -63,11 +63,12 @@ class MetricsController extends AdminController
         $modules = array_map(function($milestone) {
 
             $title = str_replace(" ", "", $milestone['title']);
-            $labels = explode(":", $title);
+
+            list($type, $name) = explode(":", $title);
 
             return [
-                "type" => $labels[0],
-                "name" => $labels[1],
+                "type" => $type,
+                "name" => $name,
                 "open" => $milestone['open_issues'],
                 "closed" => $milestone['closed_issues']
             ];
