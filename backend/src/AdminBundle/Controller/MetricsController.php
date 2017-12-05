@@ -61,12 +61,26 @@ class MetricsController extends AdminController
         curl_close($curl);
 
         $modules = array_map(function($milestone) {
+
+            $title = str_replace(" ", "", $milestone['title']);
+            $labels = explode(":", $title);
+
             return [
-                "title" => $milestone['title'],
+                "type" => $labels[0],
+                "name" => $labels[1],
                 "open" => $milestone['open_issues'],
                 "closed" => $milestone['closed_issues']
             ];
+
         }, $milestones);
+
+        usort($modules, function($a, $b) {
+
+            $byTypes = strcmp($b["type"], $a["type"]);
+            $byOpens = strcmp($b['open'], $a['open']);
+
+            return ($byTypes != 0) ? $byTypes : $byOpens;
+        });
 
         return $this->json($modules);
     }

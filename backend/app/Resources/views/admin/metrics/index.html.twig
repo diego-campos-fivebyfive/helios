@@ -44,7 +44,6 @@
 
     fetch(`${api}/modules`)
       .then(response => response.json())
-      .then(modules => modules.sort((x, y) => y.open-x.open))
       .then(modules => new Vue({ el, data: { modules } }));
   </script>
 {% endverbatim %}
