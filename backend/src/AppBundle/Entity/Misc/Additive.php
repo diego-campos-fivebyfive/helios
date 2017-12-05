@@ -56,6 +56,20 @@ class Additive implements AdditiveInterface
      */
     private $value;
 
+    /**
+     * @var array
+     *
+     * @ORM\Column(name="required_levels", type="json", nullable=true)
+     */
+    private $requiredLevels;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="enable", type="boolean", nullable=true)
+     */
+    private $enanble;
+
 
     /**
      * Get id
@@ -186,6 +200,43 @@ class Additive implements AdditiveInterface
     {
         return $this->value;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setRequiredLevels($requiredLevels)
+    {
+        $this->requiredLevels = $requiredLevels;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getRequiredLevels()
+    {
+        return $this->requiredLevels;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setEnable($enable)
+    {
+        $this->enanble = $enable;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isEnable()
+    {
+        return $this->enanble;
+    }
+
 
     /**
      * @return array
