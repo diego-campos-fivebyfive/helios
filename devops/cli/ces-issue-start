@@ -98,10 +98,6 @@ if [[ $LAST_STAGE == 'Testing-tech' ]]; then
   fi
 fi
 
-if [[ $LAST_STAGE == 'Testing-product' ]]; then
-  $CLI_PATH/ces-issue-close $LAST_ISSUE
-fi
-
 if [[ $LAST_STAGE == 'Closed' ]]; then
   $CLI_PATH/ces-branch-clear $LAST_ISSUE
 fi
