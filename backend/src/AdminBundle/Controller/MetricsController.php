@@ -70,7 +70,12 @@ class MetricsController extends AdminController
                 "type" => $type,
                 "name" => $name,
                 "open" => $milestone['open_issues'],
-                "closed" => $milestone['closed_issues']
+                "closed" => $milestone['closed_issues'],
+                "created" =>
+                    $milestone['open_issues'] + $milestone['closed_issues'],
+                "average" =>
+                    intval($milestone['closed_issues'] * 100 /
+                    ($milestone['open_issues'] + $milestone['closed_issues']))
             ];
 
         }, $milestones);
