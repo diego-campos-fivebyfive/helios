@@ -151,6 +151,7 @@ trait ComponentTrait
     {
         $this->princingLevels = [];
         $this->generatorLevels = [];
+        $this->orderInventory = [];
     }
 
     /**
@@ -506,9 +507,9 @@ trait ComponentTrait
     /**
      * @inheritDoc
      */
-    public function setOrderInventory($orderInventory)
+    public function setOrderInventory($status, $quantity)
     {
-        $this->orderInventory = $orderInventory;
+        $this->orderInventory[$status] = $quantity;
 
         return $this;
     }
@@ -516,8 +517,16 @@ trait ComponentTrait
     /**
      * @inheritDoc
      */
-    public function getOrderInventory()
+    public function getOrderInventory($status = null)
     {
-        return $this->orderInventory;
+        $inventory = (array) $this->orderInventory;
+
+        if(is_null($status))
+            return $inventory;
+
+        if (array_key_exists($status, $inventory))
+            return $inventory[$status];
+
+        return 0;
     }
 }

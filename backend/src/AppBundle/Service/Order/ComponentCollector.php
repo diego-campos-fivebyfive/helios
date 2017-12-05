@@ -22,6 +22,7 @@ class ComponentCollector
         'variety' => null,
         'structure' => null
     ];
+
     /**
      * @var ContainerInterface
      */
