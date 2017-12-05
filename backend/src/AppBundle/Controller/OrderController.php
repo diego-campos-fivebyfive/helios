@@ -85,60 +85,12 @@ class OrderController extends AbstractController
 
         $status = (int) $request->get('status');
 
-        $manipulator = $this->get('order_manipulator');
+        /** @var \AppBundle\Service\Order\StatusChanger $changer */
+        $changer = $this->get('order_status_changer');
 
-        if($manipulator->acceptStatus($order, $status, $this->user()) or $this->user()->isPlatformMaster()) {
+        if($changer->accept($order, $status, $this->user()) or $this->user()->isPlatformMaster()) {
 
-            $currentStatus = $order->getStatus();
-
-            $order->setStatus($status);
-
-            $this->manager('order')->save($order);
-
-            $tagTimeline = TimelineInterface::TAG_STATUS;
-
-            switch ($order->getStatus()){
-                case OrderInterface::STATUS_PENDING:
-
-                    if($currentStatus == OrderInterface::STATUS_VALIDATED)
-                        $tagTimeline = TimelineInterface::TAG_RETURNING_STATUS;
-
-                    break;
-
-                case OrderInterface::STATUS_VALIDATED:
-
-                    if($this->member()->isPlatformUser())
-                        $this->get('order_reference')->generate($order);
-
-                    break;
-
-                case OrderInterface::STATUS_APPROVED:
-
-                    if($currentStatus != OrderInterface::STATUS_DONE) {
-
-                        $this->generatorProformaAction($order);
-                        $this->getStock()->debit($order);
-                        $this->getExporter()->export($order);
-                    } else {
-                        $tagTimeline = TimelineInterface::TAG_RETURNING_STATUS;
-                    }
-
-                    break;
-
-                case OrderInterface::STATUS_REJECTED:
-
-                    if($currentStatus == OrderInterface::STATUS_APPROVED)
-                        $this->getStock()->credit($order);
-
-                    break;
-            }
-
-            $this->get('order_timeline')->create($order, $tagTimeline);
-
-            // TODO - Assim que possível, favor mover esta checagem para o switch acima
-            if (!($currentStatus == OrderInterface::STATUS_DONE && $order->isApproved()) &&
-                !($currentStatus == OrderInterface::STATUS_VALIDATED && $order->isPending()))
-                $this->sendOrderEmail($order);
+            $changer->change($order, $status);
 
             return $this->json();
         }
@@ -158,15 +110,7 @@ class OrderController extends AbstractController
         /** @var Order $order */
         $order = $manager->find($request->get('orderId'));
 
-        $order->setSendAt(new \DateTime('now'));
-        $order->setMetadata($order->getChildrens()->first()->getMetadata());
-        $order->setStatus(Order::STATUS_PENDING);
-
-        $this->get('order_reference')->generate($order);
-
-        $this->get('order_timeline')->create($order);
-
-        $this->sendOrderEmail($order);
+        $this->get('order_status_changer')->change($order, Order::STATUS_PENDING);
 
         return $this->json([
             'order' => [

@@ -2068,7 +2068,7 @@ class Order implements OrderInterface, InsurableInterface
     {
         $data = $this->getPaymentMethod('array');
 
-        if ($this->status == self::STATUS_APPROVED) {
+        if ($this->status == self::STATUS_APPROVED && is_array($data)) {
             $accumulation = 0;
             foreach ($data['quotas'] as $key => $quota) {
                 $percent = (float)$quota['percent'] / 100;
