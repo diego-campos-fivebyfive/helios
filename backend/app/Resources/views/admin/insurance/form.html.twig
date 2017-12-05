@@ -18,10 +18,8 @@
                 </button>
             </span>
         </div>
-
         <div class="ibox-content">
             {{ form_start(form, {attr:{id:'form_insurance', action: app.request.uri }}) }}
-
                 <div class="row">
                     <div class="form-group col-md-6">
                         {{ form_label(form.name, 'Nome do Seguro') }}
@@ -32,7 +30,6 @@
                         {{ form_widget(form.requiredLevels,{attr:{class:'form-control', placeholder: 'Niveis'}}) }}
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="form-group col-md-1">
                         {{ form_label(form.enable, 'Ativo', {label_attr:{class:'check-label'}}) }}
@@ -54,7 +51,6 @@
                         {{ form_widget(form.description,{attr:{class:'form-control', placeholder: 'Descrição'}}) }}
                     </div>
                 </div>
-
                 <div class="hide">
                     {{ form_rest(form) }}
                 </div>
