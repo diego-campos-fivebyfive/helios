@@ -427,6 +427,30 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/show-cloner/", name="show_order_cloner")
+     */
+    public function orderShowClonerAction(Order $order)
+    {
+        return $this->render('admin/orders/quantity_cloner.html.twig', [
+            'order' => $order
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/cloner/", name="sub_order_copy")
+     */
+    public function orderClonerAction(Request $request, Order $order)
+    {
+        $quantity = $request->get('quantity');
+
+        $cloner = $this->getCloner();
+
+        $cloner->cloneOrder($order, (int)$quantity);
+
+        return $this->json([]);
+    }
+
+    /**
      * @param Order $order
      */
     private function sendOrderEmail(Order $order)
@@ -499,6 +523,14 @@ class OrderController extends AbstractController
     private function getExporter()
     {
         return $this->get('order_exporter');
+    }
+
+    /**
+     * @return \AppBundle\Service\Order\OrderCloner
+     */
+    private function getCloner()
+    {
+        return $this->get('order_cloner');
     }
 
     /**
