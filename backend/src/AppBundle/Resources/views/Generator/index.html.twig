@@ -494,6 +494,7 @@
             var url = target.data('href');
             $.ajax({
                 url: url,
+                data: {source:'children'},
                 complete: function(xhr) {
                     $('#cloner_sub_order').html(xhr.responseText);
                 }

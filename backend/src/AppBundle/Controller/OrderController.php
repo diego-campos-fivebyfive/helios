@@ -429,10 +429,13 @@ class OrderController extends AbstractController
     /**
      * @Route("/{id}/show-cloner/", name="show_order_cloner")
      */
-    public function orderShowClonerAction(Order $order)
+    public function orderShowClonerAction(Request $request, Order $order)
     {
+        $source = $request->get('source');
+
         return $this->render('admin/orders/quantity_cloner.html.twig', [
-            'order' => $order
+            'order' => $order,
+            'source' => $source
         ]);
     }
 
