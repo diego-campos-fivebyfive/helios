@@ -1,0 +1,24 @@
+<?php
+
+namespace AppBundle\Service\Order;
+
+use AppBundle\Manager\ComManager;
+
+class ComponentInventory
+{
+    /**
+     * @var array
+     */
+    private $managers = [
+        'inverter' => null,
+        'module' => null,
+        'string_box' => null,
+        'variety' => null,
+        'structure' => null
+    ];
+
+    public function update(OrderInterface $order)
+    {
+        		
+    }	
+}
