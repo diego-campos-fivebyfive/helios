@@ -9,9 +9,6 @@
             {{ component.description }}
         </td>
         <td>
-            {{ component.stock }}
-        </td>
-        <td>
             {% if component.orderInventory %}
                     {{ component.orderInventory('array').pending }}
             {% endif %}
@@ -20,6 +17,9 @@
             {% if component.orderInventory %}
                     {{ component.orderInventory('array').validated }}
             {% endif %}
+        </td>
+        <td>
+            {{ component.stock }}
         </td>
     </tr>
 {% endfor %}
