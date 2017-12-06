@@ -38,7 +38,7 @@ class SynchronizerTest extends AppTestCase
             /** @var Additive $additive */
             $additive = $additives[$i];
 
-            $additive->setEnable(false);
+            $additive->setEnabled(false);
 
             $additiveManager->save($additive);
         }
@@ -64,7 +64,7 @@ class SynchronizerTest extends AppTestCase
             $additive
                 ->setName('Additive ' . ($i+1))
                 ->setDescription('This is a test additive ' . ($i+1))
-                ->setEnable(true)
+                ->setEnabled(true)
                 ->setTarget(Additive::TARGET_FIXED)
                 ->setType(Additive::TYPE_INSURANCE)
                 ->setValue(100);
