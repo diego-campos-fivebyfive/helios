@@ -12,6 +12,7 @@ namespace AppBundle\Entity\Order;
 
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\Misc\OrderAdditiveInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -938,4 +939,21 @@ interface OrderInterface
      * @return string
      */
     public function getExpireNote();
+
+    /**
+     * @param OrderAdditiveInterface $orderAdditive
+     * @return OrderInterface
+     */
+    public function addOrderAdditive(OrderAdditiveInterface $orderAdditive);
+
+    /**
+     * @param OrderAdditiveInterface $orderAdditive
+     * @return OrderInterface
+     */
+    public function removeOrderAdditive(OrderAdditiveInterface $orderAdditive);
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getOrderAdditives();
 }
