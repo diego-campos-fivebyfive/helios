@@ -63,19 +63,18 @@ class MetricsController extends AdminController
         $modules = array_map(function($milestone) {
 
             $title = str_replace(" ", "", $milestone['title']);
-
             list($type, $name) = explode(":", $title);
+
+            $created = $milestone['open_issues'] + $milestone['closed_issues'];
+            $average = intval($milestone['closed_issues'] / $created * 100);
 
             return [
                 "type" => $type,
                 "name" => $name,
                 "open" => $milestone['open_issues'],
                 "closed" => $milestone['closed_issues'],
-                "created" =>
-                    $milestone['open_issues'] + $milestone['closed_issues'],
-                "average" =>
-                    intval($milestone['closed_issues'] * 100 /
-                    ($milestone['open_issues'] + $milestone['closed_issues']))
+                "created" => $created,
+                "average" => $average
             ];
 
         }, $milestones);
@@ -83,9 +82,16 @@ class MetricsController extends AdminController
         usort($modules, function($a, $b) {
 
             $byTypes = strcmp($b["type"], $a["type"]);
+
+            if ($byTypes != 0) {
+
+              return $byTypes;
+
+            }
+
             $byOpens = strcmp($b['open'], $a['open']);
 
-            return ($byTypes != 0) ? $byTypes : $byOpens;
+            return $byOpens;
         });
 
         return $this->json($modules);
