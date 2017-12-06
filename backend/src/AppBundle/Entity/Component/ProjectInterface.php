@@ -745,13 +745,30 @@ interface ProjectInterface
     public function getProjectVarieties();
 
     /**
-     * @param ProjectStructureInterface $projectTax
+     * @param ProjectAdditiveInterface $additive
+     * @return ProjectInterface
+     */
+    public function addProjectAdditive(ProjectAdditiveInterface $additive);
+
+    /**
+     * @param ProjectAdditiveInterface $additive
+     * @return ProjectInterface
+     */
+    public function removeProjectAdditive(ProjectAdditiveInterface $additive);
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getProjectAdditives();
+
+    /**
+     * @param ProjectTaxInterface $projectTax
      * @return ProjectInterface
      */
     public function addProjectTax(ProjectTaxInterface $projectTax);
 
     /**
-     * @param ProjectStructureInterface $projectTax
+     * @param ProjectTaxInterface $projectTax
      * @return ProjectInterface
      */
     public function removeProjectTax(ProjectTaxInterface $projectTax);

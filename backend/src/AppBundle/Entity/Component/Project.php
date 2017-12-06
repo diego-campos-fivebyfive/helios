@@ -328,6 +328,14 @@ class Project implements ProjectInterface, InsurableInterface
     /**
      * @var ArrayCollection
      *
+     * @ORM\OneToMany(targetEntity="ProjectAdditive", mappedBy="project", cascade={"persist", "remove"})
+     *
+     */
+    private $projectAdditives;
+
+    /**
+     * @var ArrayCollection
+     *
      * @ORM\OneToMany(targetEntity="ProjectTax", mappedBy="project", indexBy="project", cascade={"persist", "remove"})
      */
     private $projectTaxes;
@@ -364,6 +372,7 @@ class Project implements ProjectInterface, InsurableInterface
         $this->projectInverters = new ArrayCollection();
         $this->projectStructures = new ArrayCollection();
         $this->projectVarieties = new ArrayCollection();
+        $this->projectAdditives = new ArrayCollection();
         $this->projectExtras = new ArrayCollection();
         $this->projectStringBoxes = new ArrayCollection();
         $this->projectTaxes = new ArrayCollection();
@@ -1674,6 +1683,43 @@ class Project implements ProjectInterface, InsurableInterface
             return VarietyInterface::TYPE_TRANSFORMER != $projectVariety->getVariety()->getType();
         });
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function addProjectAdditive(ProjectAdditiveInterface $additive)
+    {
+        if (!$this->projectAdditives->contains($additive)) {
+            $this->projectAdditives->add($additive);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeProjectAdditive(ProjectAdditiveInterface $additive)
+    {
+        if ($this->projectAdditives->contains($additive)) {
+            $this->projectAdditives->removeElement($additive);
+        }
+
+        if (!$additive->getProject()) {
+            $additive->setProject($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getProjectAdditives()
+    {
+        return $this->projectAdditives;
+    }
+
 
     /**
      * @inheritDoc
