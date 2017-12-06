@@ -9,17 +9,19 @@
     <div class="row">
       <div class="ibox">
         <div class="ibox-title">
-          <h2>Métricas de tarefas</h2>
+          <h2>Progresso de tarefas técnicas</h2>
         </div>
         <div class="ibox-content">
           <div class="tab-content">
             <div class="tab-pane active">
-              <table id="table-metric-modules" class="table table-striped table-hover">
+              <table
+                id="table-metric-modules"
+                class="table table-striped table-hover">
                 <thead>
                   <tr>
-                    <th class="col-md-3">Categoria</th>
-                    <th class="col-md-2">Módulos</th>
-                    <th class="col-md-4 text-center">
+                    <th class="col-md-1">Categorias</th>
+                    <th class="col-md-2 text-center">Módulos</th>
+                    <th class="col-md-3 text-center">
                       Concluídas / Cadastradas (%)
                     </th>
                     <th class="col-md-1 text-center">Abertas</th>
@@ -30,8 +32,14 @@
                 <tbody> 
                   <tr v-for="module in modules">
                     <td>{{ module.type }}</td>
-                    <td>{{ module.name }}</td>
-                    <td class="text-center">{{ module.average }}%</td>
+                    <td class="text-center">{{ module.name }}</td>
+                    <td class="text-center">
+                      <progress-bar
+                        :data="module.average">
+                      </progress-bar>
+                      <b>{{ module.average }}%</b>
+                      Concluído
+                    </td>
                     <td class="text-center">{{ module.open }}</td>
                     <td class="text-center">{{ module.closed }}</td>
                     <td class="text-center">{{ module.created }}</td>
@@ -45,6 +53,34 @@
     </div>
   </div>
   <script>
+    Vue.component('progress-bar', {
+      props: ['data'],
+      data: () => {
+        return {
+          container: {
+            width: '100%',
+            'background-color': '#eaecef',
+            'border-radius': '3px',
+            overflow: 'hidden',
+            height: '9px',
+            position: 'relative',
+            margin: '5px'
+          },
+          bar: {
+            'background-color': '#2cbe4e',
+            position: 'absolute',
+            height: '100%',
+            left: 0,
+            top: 0
+          }
+        }
+      },
+      template: `
+        <div :style="container">
+          <div :style="[bar, { width: data + '%' }]"></div>
+        </div>`
+    });
+
     const api = 'http://localhost:8000/admin/metrics/api/v1';
     const el = '#table-metric-modules';
 
