@@ -117,6 +117,10 @@ services:
         class: AppBundle\Manager\ProjectVarietyManager
         arguments: ['AppBundle\Entity\Component\ProjectVariety', '@doctrine']
 
+    project_additive_manager:
+        class: AppBundle\Manager\ProjectAdditiveManager
+        arguments: ['AppBundle\Entity\Component\ProjectAdditive', '@doctrine']
+
     range_manager:
         class: AppBundle\Manager\Pricing\RangeManager
         arguments: ['AppBundle\Entity\Pricing\Range', '@doctrine']
