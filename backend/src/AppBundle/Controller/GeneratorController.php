@@ -120,8 +120,6 @@ class GeneratorController extends AbstractController
      */
     private function resolveProject(Request $request)
     {
-        $level = $request->get('level');
-
         $manager = $this->manager('project');
 
         $project = $manager->create();
@@ -133,7 +131,8 @@ class GeneratorController extends AbstractController
             $project->setMember($this->member());
         }
 
-        $project->setLevel($level);
+        if (null != $level = $request->get('level'))
+            $project->setLevel($level);
 
         return $project;
     }
