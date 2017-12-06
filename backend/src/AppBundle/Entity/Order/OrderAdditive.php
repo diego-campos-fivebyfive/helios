@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Order;
 
 use AppBundle\Entity\Misc\AdditiveInterface;
+use AppBundle\Entity\Misc\AdditiveRelationTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -13,6 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class OrderAdditive implements OrderAdditiveInterface
 {
+    use AdditiveRelationTrait;
+
     /**
      * @var int
      *
@@ -80,6 +83,14 @@ class OrderAdditive implements OrderAdditiveInterface
     public function getAdditive()
     {
         return $this->additive;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAdditiveQuota()
+    {
+        return $this->order->getSubTotal();
     }
 }
 

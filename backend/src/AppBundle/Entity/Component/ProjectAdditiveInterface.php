@@ -24,5 +24,8 @@ interface ProjectAdditiveInterface
      */
     public function getProject();
 
-
+    /**
+     * @return float
+     */
+    public function getAdditiveQuota();
 }

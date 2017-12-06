@@ -12,7 +12,7 @@ use Tests\AppBundle\AppTestCase;
  */
 class OrderAdditiveTest extends AppTestCase
 {
-    public function testChildrenAndParentCheck()
+    public function testRelation()
     {
         $orderManager = $this->getContainer()->get('order_manager');
 

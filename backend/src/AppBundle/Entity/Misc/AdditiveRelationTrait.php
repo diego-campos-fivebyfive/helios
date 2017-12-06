@@ -98,7 +98,10 @@ trait AdditiveRelationTrait
      */
     public function getTotal()
     {
-        return $this->total;
+        if ($this->additive->getTarget() == AdditiveInterface::TARGET_FIXED)
+            return $this->additive->getValue();
+        else
+            return ($this->additive->getValue()/100) * $this->getAdditiveQuota();
     }
 
     /**
