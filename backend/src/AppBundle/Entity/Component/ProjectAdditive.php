@@ -52,4 +52,12 @@ class ProjectAdditive implements ProjectAdditiveInterface
     {
         return $this->project;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAdditiveQuota()
+    {
+        return $this->project->getCostPriceComponents();
+    }
 }

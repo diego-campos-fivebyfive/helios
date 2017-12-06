@@ -40,4 +40,9 @@ interface OrderAdditiveInterface
      * @return AdditiveInterface
      */
     public function getAdditive();
+
+    /**
+     * @return float
+     */
+    public function getAdditiveQuota();
 }
