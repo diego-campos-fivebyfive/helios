@@ -82,9 +82,16 @@ class MetricsController extends AdminController
         usort($modules, function($a, $b) {
 
             $byTypes = strcmp($b["type"], $a["type"]);
+
+            if ($byTypes != 0) {
+
+              return $byTypes;
+
+            }
+
             $byOpens = strcmp($b['open'], $a['open']);
 
-            return ($byTypes != 0) ? $byTypes : $byOpens;
+            return $byOpens;
         });
 
         return $this->json($modules);
