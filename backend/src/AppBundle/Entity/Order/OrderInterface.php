@@ -12,7 +12,6 @@ namespace AppBundle\Entity\Order;
 
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\MemberInterface;
-use AppBundle\Entity\Misc\OrderAdditiveInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

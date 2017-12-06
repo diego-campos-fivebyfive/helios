@@ -12,8 +12,6 @@
 namespace AppBundle\Entity\Order;
 
 use AppBundle\Entity\MemberInterface;
-use AppBundle\Entity\Misc\OrderAdditive;
-use AppBundle\Entity\Misc\OrderAdditiveInterface;
 use AppBundle\Entity\Pricing\MemorialInterface;
 use AppBundle\Entity\Pricing\RangeInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -503,7 +501,7 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Misc\OrderAdditive", mappedBy="order", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="OrderAdditive", mappedBy="order", cascade={"persist", "remove"})
      */
     private $orderAdditives;
 

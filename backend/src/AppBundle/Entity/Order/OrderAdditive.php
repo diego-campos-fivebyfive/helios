@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Entity\Misc;
+namespace AppBundle\Entity\Order;
 
-use AppBundle\Entity\Order\OrderInterface;
+use AppBundle\Entity\Misc\AdditiveInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -25,14 +25,14 @@ class OrderAdditive implements OrderAdditiveInterface
     /**
      * @var OrderInterface
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Order\Order", inversedBy="orderAdditives")
+     * @ORM\ManyToOne(targetEntity="Order", inversedBy="orderAdditives")
      */
     private $order;
 
     /**
      * @var AdditiveInterface
      *
-     * @ORM\ManyToOne(targetEntity="Additive")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Misc\Additive")
      */
     private $additive;
 

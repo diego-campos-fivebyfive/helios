@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace AppBundle\Entity\Misc;
+namespace AppBundle\Entity\Order;
 
-use AppBundle\Entity\Order\OrderInterface;
+use AppBundle\Entity\Misc\AdditiveInterface;
 
 interface OrderAdditiveInterface
 {
