@@ -499,6 +499,13 @@ class Order implements OrderInterface, InsurableInterface
     private $expireNote;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="OrderAdditive", mappedBy="order", cascade={"persist", "remove"})
+     */
+    private $orderAdditives;
+
+    /**
      * Order constructor.
      */
     public function __construct()
@@ -509,6 +516,7 @@ class Order implements OrderInterface, InsurableInterface
         $this->shippingRules = [];
         $this->setStatus(self::STATUS_BUILDING);
         $this->source = self::SOURCE_ACCOUNT;
+        $this->orderAdditives = new ArrayCollection();
     }
 
     /**
@@ -2190,6 +2198,42 @@ class Order implements OrderInterface, InsurableInterface
     public function getExpireNote()
     {
         return $this->expireNote;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function addOrderAdditive(OrderAdditiveInterface $orderAdditive)
+    {
+        if(!$this->orderAdditives->contains($orderAdditive)){
+
+            $this->orderAdditives->add($orderAdditive);
+
+            if(!$orderAdditive->getOrder())
+                $orderAdditive->setOrder($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeOrderAdditive(OrderAdditiveInterface $orderAdditive)
+    {
+        if($this->orderAdditives->contains($orderAdditive)){
+            $this->orderAdditives->removeElement($orderAdditive);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getOrderAdditives()
+    {
+        return $this->orderAdditives;
     }
 }
 

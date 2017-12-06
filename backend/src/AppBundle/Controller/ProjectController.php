@@ -224,7 +224,7 @@ class ProjectController extends AbstractController
         }
 
         $generator = $this->getGenerator();
-        $defaults = $generator->loadDefaults();
+        $defaults = $generator->loadDefaults(['level'=>$member->getAccount()->getLevel()]);
 
         $this->checkCustomerReference($defaults, $request);
 
