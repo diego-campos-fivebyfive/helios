@@ -12,7 +12,6 @@
 namespace AppBundle\Entity\Component;
 
 use AppBundle\Entity\CategoryInterface;
-use AppBundle\Entity\Misc\AdditiveInterface;
 use AppBundle\Entity\Pricing\InsurableTrait;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\CustomerInterface;
@@ -332,12 +331,10 @@ class Project implements ProjectInterface, InsurableInterface
     /**
      * @var ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Misc\Additive")
-     * @JoinTable(name="app_project_additive",
-     *     joinColumns={@JoinColumn(name="project_id", referencedColumnName="id")},
-     *     inverseJoinColumns={@JoinColumn(name="additive_id", referencedColumnName="id", unique=true)})
+     * @ORM\OneToMany(targetEntity="ProjectAdditive", mappedBy="project", cascade={"persist", "remove"})
+     *
      */
-    private $additives;
+    private $projectAdditives;
 
     /**
      * @var ArrayCollection
@@ -378,7 +375,7 @@ class Project implements ProjectInterface, InsurableInterface
         $this->projectInverters = new ArrayCollection();
         $this->projectStructures = new ArrayCollection();
         $this->projectVarieties = new ArrayCollection();
-        $this->additives = new ArrayCollection();
+        $this->projectAdditives = new ArrayCollection();
         $this->projectExtras = new ArrayCollection();
         $this->projectStringBoxes = new ArrayCollection();
         $this->projectTaxes = new ArrayCollection();
@@ -1693,10 +1690,10 @@ class Project implements ProjectInterface, InsurableInterface
     /**
      * @inheritDoc
      */
-    public function addAdditive(AdditiveInterface $additive)
+    public function addProjectAdditive(ProjectAdditiveInterface $additive)
     {
-        if(!$this->additives->contains($additive)){
-            $this->additives->add($additive);
+        if (!$this->projectAdditives->contains($additive)) {
+            $this->projectAdditives->add($additive);
         }
 
         return $this;
@@ -1705,10 +1702,14 @@ class Project implements ProjectInterface, InsurableInterface
     /**
      * @inheritDoc
      */
-    public function removeAdditive(AdditiveInterface $additive)
+    public function removeProjectAdditive(ProjectAdditiveInterface $additive)
     {
-        if ($this->additives->contains($additive)) {
-            $this->additives->removeElement($additive);
+        if ($this->projectAdditives->contains($additive)) {
+            $this->projectAdditives->removeElement($additive);
+        }
+
+        if (!$additive->getProject()) {
+            $additive->setProject($this);
         }
 
         return $this;
@@ -1717,9 +1718,9 @@ class Project implements ProjectInterface, InsurableInterface
     /**
      * @inheritDoc
      */
-    public function getAdditives()
+    public function getProjectAdditives()
     {
-        return $this->additives;
+        return $this->projectAdditives;
     }
 
 

@@ -14,7 +14,6 @@ namespace AppBundle\Entity\Component;
 use AppBundle\Entity\CategoryInterface;
 use AppBundle\Entity\CustomerInterface;
 use AppBundle\Entity\MemberInterface;
-use AppBundle\Entity\Misc\AdditiveInterface;
 use AppBundle\Entity\Order\OrderInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -746,30 +745,30 @@ interface ProjectInterface
     public function getProjectVarieties();
 
     /**
-     * @param AdditiveInterface $additive
+     * @param ProjectAdditiveInterface $additive
      * @return ProjectInterface
      */
-    public function addAdditive(AdditiveInterface $additive);
+    public function addProjectAdditive(ProjectAdditiveInterface $additive);
 
     /**
-     * @param AdditiveInterface $additive
+     * @param ProjectAdditiveInterface $additive
      * @return ProjectInterface
      */
-    public function removeAdditive(AdditiveInterface $additive);
+    public function removeProjectAdditive(ProjectAdditiveInterface $additive);
 
     /**
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getAdditives();
+    public function getProjectAdditives();
 
     /**
-     * @param ProjectStructureInterface $projectTax
+     * @param ProjectTaxInterface $projectTax
      * @return ProjectInterface
      */
     public function addProjectTax(ProjectTaxInterface $projectTax);
 
     /**
-     * @param ProjectStructureInterface $projectTax
+     * @param ProjectTaxInterface $projectTax
      * @return ProjectInterface
      */
     public function removeProjectTax(ProjectTaxInterface $projectTax);
