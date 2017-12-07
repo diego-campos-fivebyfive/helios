@@ -704,9 +704,9 @@ class ProjectController extends AbstractController
      */
     public function insurancesAction(Project $project)
     {
+        // TODO: Se preciso, adequar a consulta para trazer apenas vinculados e nao ativos ou ativos, isso esta ocorrendo na twig
         $insurances = $this->manager('additive')->findBy([
-            'type' => Additive::TYPE_INSURANCE,
-            'enabled' => true
+            'type' => Additive::TYPE_INSURANCE
         ]);
 
         return $this->render('admin/projects/insurances_list.html.twig', [

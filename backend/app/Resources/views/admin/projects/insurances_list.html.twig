@@ -3,6 +3,7 @@
 
 {% for insurance in insurances %}
     {% set hasAdditive = project.hasAdditive(insurance) %}
+    {% if hasAdditive or insurance.enabled %}
 
     <div class="row">
         <div class="form-group col-md-8">
@@ -28,7 +29,7 @@
 
     </div>
     <hr class="hr-line-dashed">
-
+    {% endif %}
 {% endfor %}
 <script src="{{ asset('assets/iCheck/icheck.js') }}"></script>
 <script>
