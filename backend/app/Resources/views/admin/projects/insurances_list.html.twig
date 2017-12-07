@@ -23,7 +23,7 @@
 
         <div class="form-group col-md-2 text-center">
             <label> Valor do Seguro </label>
-            <h2> {{ hasAdditive ? hasAdditive.total : '--' }} </h2>
+            <h2> {{ hasAdditive ? hasAdditive.total|currency : 0|currency }} </h2>
         </div>
 
     </div>
