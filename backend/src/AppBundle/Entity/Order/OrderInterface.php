@@ -178,6 +178,11 @@ interface OrderInterface
     /**
      * @return float
      */
+    public function getInsurance();
+
+    /**
+     * @return float
+     */
     public function getTotalInsurance();
 
     /**

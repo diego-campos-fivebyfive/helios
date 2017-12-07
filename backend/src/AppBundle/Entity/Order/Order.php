@@ -30,10 +30,9 @@ use Symfony\Component\Validator\Constraints\DateTime;
  * @ORM\Table(name="app_order")
  * @ORM\Entity
  */
-class Order implements OrderInterface, InsurableInterface
+class Order implements OrderInterface
 {
     use MetadataTrait;
-    use InsurableTrait;
     use ORMBehaviors\Timestampable\Timestampable;
 
     /**
@@ -1311,9 +1310,13 @@ class Order implements OrderInterface, InsurableInterface
     /**
      * @inheritDoc
      */
-    public function getInsuranceQuota()
+    public function getInsurance()
     {
-        return $this->getSubTotal();
+        $insurance = 0;
+        foreach ($this->getOrderAdditives() as $additive) {
+            $insurance += $additive->getTotal();
+        }
+        return $insurance;
     }
 
     /**
