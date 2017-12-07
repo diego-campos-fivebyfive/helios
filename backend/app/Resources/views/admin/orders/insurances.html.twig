@@ -1,15 +1,35 @@
-
+<link href="{{ asset('assets/iCheck/custom.css') }}" rel="stylesheet">
+<link href="{{ asset('assets/iCheck/skins/all.css') }}" rel="stylesheet">
 <div class="row">
-    {% for additive in additives %}
-            <div class="col-md-8">
-                {{ additive.description }}
-                {{ additive.name }}
-                <label> Associado </label>
-                <input type="checkbox" {% if order.hasAdditive(additive) %}checked="checked"{% endif %}>
-                {% if order.hasAdditive(additive) %}
-                    {{ order.insurance|currency }}
-                {% endif %}
+    <div class="col-md-12">
+        {% for additive in additives %}
+            <div class="row">
+                <div class="col-md-8 text-justify">{{ additive.description }}</div>
+                <div class="col-md-2 text-center">
+                    <h4><strong> {{ additive.name }} </strong></h4>
+                    <div class="i-checks">
+                        <input type="checkbox" name="additive" {% if order.hasAdditive(additive) %}checked="checked"{% endif %}>
+                    </div>
+                </div>
+                <div class="col-md-2 text-right">
+                    <h4><strong> Valor do Seguro </strong></h4>
+                    {% if order.hasAdditive(additive) %}
+                        <h2> {{ order.insurance|currency }} </h2>
+                    {% endif %}
+                </div>
             </div>
-
-    {% endfor %}
+            <hr class="hr-line-dashed">
+        {% endfor %}
+    </div>
 </div>
+<script src="{{ asset('assets/iCheck/icheck.js') }}"></script>
+<script>
+
+    $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+    });
+
+    $('.i-checks').on('ifChanged', function(){
+        $('input[name="additive"]').trigger('change');
+    });
+</script>
