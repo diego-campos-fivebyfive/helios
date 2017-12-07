@@ -6,6 +6,8 @@ use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Category;
 use AppBundle\Entity\Component\MakerInterface;
 use AppBundle\Entity\Component\Project;
+use AppBundle\Entity\Component\ProjectAdditive;
+use AppBundle\Entity\Component\ProjectAdditiveInterface;
 use AppBundle\Entity\Component\ProjectArea;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverter;
@@ -711,6 +713,43 @@ class ProjectController extends AbstractController
             'insurances' => $insurances,
             'project' => $project
         ]);
+    }
+
+    /**
+     * @param Project $project
+     * @param Additive $additive
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     *
+     * @Route("/{project}/{additive}/additive/", name="create_project_additive")
+     */
+    public function createProjectAdditiveAction(Project $project, Additive $additive)
+    {
+        $manager = $this->manager('project_additive');
+
+        /** @var ProjectAdditiveInterface $projectAdditive */
+        $projectAdditive = $manager->create();
+
+        $projectAdditive->setAdditive($additive);
+        $projectAdditive->setProject($project);
+
+        $manager->save($projectAdditive);
+
+        return $this->json([]);
+    }
+
+    /**
+     * @param ProjectAdditive $projectAdditive
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     *
+     * @Route("/additive/{projectAdditive}/delete/", name="delete_project_additive")
+     */
+    public function deleteProjectAdditiveAction(ProjectAdditive $projectAdditive)
+    {
+        $manager = $this->manager('project_additive');
+
+        $manager->delete($projectAdditive);
+
+        return $this->json([]);
     }
 
     /**
