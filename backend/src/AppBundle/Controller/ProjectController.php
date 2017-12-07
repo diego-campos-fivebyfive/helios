@@ -12,6 +12,7 @@ use AppBundle\Entity\Component\ProjectInverter;
 use AppBundle\Entity\Component\ProjectModule;
 use AppBundle\Entity\ContactInterface;
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\Misc\Additive;
 use AppBundle\Entity\Project\NasaCatalog;
 use AppBundle\Form\Component\ProjectAreaType;
 use AppBundle\Form\Component\GeneratorType;
@@ -694,6 +695,22 @@ class ProjectController extends AbstractController
             'errors' => $errors,
             'url' => $url
         ], empty($errors) ? Response::HTTP_ACCEPTED : Response::HTTP_IM_USED);
+    }
+
+    /**
+     * @Route("/{project}/insurances", name="project_insurances")
+     */
+    public function insurancesAction(Project $project)
+    {
+        $insurances = $this->manager('additive')->findBy([
+            'type' => Additive::TYPE_INSURANCE,
+            'enabled' => true
+        ]);
+
+        return $this->render('admin/projects/insurances.html.twig', [
+            'insurances' => $insurances,
+            'project' => $project
+        ]);
     }
 
     /**
