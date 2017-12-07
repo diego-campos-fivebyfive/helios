@@ -2,10 +2,13 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Misc\Additive;
 use AppBundle\Entity\Order\Element;
 use AppBundle\Entity\Order\Message;
 use AppBundle\Entity\Order\MessageInterface;
 use AppBundle\Entity\Order\Order;
+use AppBundle\Entity\Order\OrderAdditive;
+use AppBundle\Entity\Order\OrderAdditiveInterface;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Entity\TimelineInterface;
 use AppBundle\Form\Order\FilterType;
@@ -393,6 +396,43 @@ class OrderController extends AbstractController
         $cloner = $this->getCloner();
 
         $cloner->cloneOrder($order, (int)$quantity);
+
+        return $this->json([]);
+    }
+
+    /**
+     * @param Order $order
+     * @param Additive $additive
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     *
+     * @Route("/{order}/{additive}/additive/", name="create_order_additive")
+     */
+    public function createOrderAdditiveAction(Order $order, Additive $additive)
+    {
+        $manager = $this->manager('order_additive');
+
+        /** @var OrderAdditiveInterface $orderAdditive */
+        $orderAdditive = $manager->create();
+
+        $orderAdditive->setAdditive($additive);
+        $orderAdditive->setOrder($order);
+
+        $manager->save($orderAdditive);
+
+        return $this->json([]);
+    }
+
+    /**
+     * @param OrderAdditive $orderAdditive
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     *
+     * @Route("/additive/{orderAdditive}/delete/", name="delete_order_additive")
+     */
+    public function deleteOrderAdditiveAction(OrderAdditive $orderAdditive)
+    {
+        $manager = $this->manager('order_additive');
+
+        $manager->delete($orderAdditive);
 
         return $this->json([]);
     }
