@@ -56,11 +56,13 @@ class Synchronizer
             /** @var Additive $additive */
             $additive = $association->getAdditive();
 
-            if(!$additive->isEnabled()){
+            if(!$additive->isEnable()){
                 $source->$removeMethod($association);
                 $this->manager->remove($association);
             }
         }
+
+        $this->manager->flush();
     }
 
     /**
