@@ -16,14 +16,6 @@ class OrderAdditive implements OrderAdditiveInterface
 {
     use AdditiveRelationTrait;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
 
     /**
      * @var OrderInterface
@@ -32,20 +24,6 @@ class OrderAdditive implements OrderAdditiveInterface
      */
     private $order;
 
-    /**
-     * @var AdditiveInterface
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Misc\Additive")
-     */
-    private $additive;
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * @inheritDoc
@@ -65,24 +43,6 @@ class OrderAdditive implements OrderAdditiveInterface
     public function getOrder()
     {
         return $this->order;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setAdditive(AdditiveInterface $additive)
-    {
-        $this->additive = $additive;
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAdditive()
-    {
-        return $this->additive;
     }
 
     /**
