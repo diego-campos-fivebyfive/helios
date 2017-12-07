@@ -39,6 +39,8 @@
     $('.i-checks').on('ifChanged', function(){
         var url = $(this).data('url');
 
+        $(this).attr('disabled', 'disabled');
+
         $.ajax({
             url: url,
             complete: function () {
