@@ -3,22 +3,23 @@
 <div class="row">
     <div class="col-md-12">
         {% for additive in additives %}
-            <div class="row">
-                <div class="col-md-8 text-justify">{{ additive.description }}</div>
-                <div class="col-md-2 text-center">
-                    <h4><strong> {{ additive.name }} </strong></h4>
-                    <div class="i-checks">
-                        <input type="checkbox" name="additive" {% if order.hasAdditive(additive) %}checked="checked"{% endif %}>
+            {% if additive.enabled or order.hasAdditive(additive) %}
+            {% set hasAdditive = order.hasAdditive(additive) %}
+                <div class="row">
+                    <div class="col-md-8 text-justify">{{ additive.description }}</div>
+                    <div class="col-md-2 text-center">
+                        <h4><strong> {{ additive.name }} </strong></h4>
+                            <input class="i-checks" type="checkbox"
+                            data-url="{{ hasAdditive ? path('delete_order_additive', {orderAdditive: hasAdditive.id})
+                            : path('create_order_additive', {order:order.id, additive:additive.id})}}" {{ hasAdditive ? 'checked="checked"' }} />
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <h4><strong> Valor do Seguro </strong></h4>
+                        <h2> {{ hasAdditive ? hasAdditive.total|currency : 0|currency }} </h2>
                     </div>
                 </div>
-                <div class="col-md-2 text-center">
-                    <h4><strong> Valor do Seguro </strong></h4>
-                    {% if order.hasAdditive(additive) %}
-                        <h2> {{ order.insurance|currency }} </h2>
-                    {% endif %}
-                </div>
-            </div>
-            <hr class="hr-line-dashed">
+                <hr class="hr-line-dashed">
+            {% endif %}
         {% endfor %}
     </div>
 </div>
@@ -30,6 +31,13 @@
     });
 
     $('.i-checks').on('ifChanged', function(){
-        $('input[name="additive"]').trigger('change');
+        var url = $(this).data('url');
+        $(this).attr('disabled', 'disabled');
+        $.ajax({
+            url: url,
+            complete: function () {
+                OrderManager.renderAdditives();
+            }
+        });
     });
 </script>

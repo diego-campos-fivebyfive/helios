@@ -226,9 +226,9 @@ class OrderController extends AbstractController
      */
     public function additivesListsAction(Request $request, Order $order)
     {
+        //TODO: Esta consulta será otimizada no futuro SE necessário for.
         $additives = $this->manager('additive')->findBy([
-            'type' => Additive::TYPE_INSURANCE,
-            'enabled' => true
+            'type' => Additive::TYPE_INSURANCE
         ]);
 
         return $this->render('admin/orders/insurances.html.twig', [
