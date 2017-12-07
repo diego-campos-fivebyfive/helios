@@ -1,15 +1,24 @@
 <link href="{{ asset('assets/iCheck/custom.css') }}" rel="stylesheet">
 <link href="{{ asset('assets/iCheck/skins/all.css') }}" rel="stylesheet">
+
 <div class="row">
     <div class="col-md-12">
         {% for additive in additives %}
             {% if additive.enabled or order.hasAdditive(additive) %}
-            {% set hasAdditive = order.hasAdditive(additive) %}
+
+                {% set hasAdditive = order.hasAdditive(additive) %}
                 <div class="row">
-                    <div class="col-md-8 text-justify">{{ additive.description }}</div>
+                    <div class="col-md-8 text-justify">
+                        {{ hasAdditive ? hasAdditive.description : additive.description }}
+                    </div>
                     <div class="col-md-2 text-center">
-                        <h4><strong> {{ additive.name }} </strong></h4>
-                            <input class="i-checks" type="checkbox"
+                        <h4>
+                            <strong>
+                                {{ hasAdditive ? hasAdditive.name : additive.name }}
+                            </strong>
+                        </h4>
+
+                        <input class="i-checks" type="checkbox"
                             data-url="{{ hasAdditive ? path('delete_order_additive', {orderAdditive: hasAdditive.id})
                             : path('create_order_additive', {order:order.id, additive:additive.id})}}" {{ hasAdditive ? 'checked="checked"' }} />
                     </div>
@@ -19,6 +28,7 @@
                     </div>
                 </div>
                 <hr class="hr-line-dashed">
+
             {% endif %}
         {% endfor %}
     </div>
