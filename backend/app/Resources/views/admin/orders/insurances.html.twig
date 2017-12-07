@@ -14,7 +14,7 @@
                 </div>
                 <div class="col-md-2 text-center">
                     <h4><strong> Valor do Seguro </strong></h4>
-                    <h2> {{ hasAdditive ? hasAdditive.total|currency : '--'}} </h2>
+                    <h2> {{ hasAdditive ? hasAdditive.total|currency : 'R$ 0,00'}} </h2>
                 </div>
             </div>
             <hr class="hr-line-dashed">
@@ -30,7 +30,7 @@
 
     $('.i-checks').on('ifChanged', function(){
         var url = $(this).data('url');
-        
+        $(this).attr('disabled', 'disabled');
         $.ajax({
             url: url,
             complete: function () {
