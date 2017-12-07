@@ -28,9 +28,9 @@
                             <thead>
                             <tr>
                                 <th class="col-md-3"> Nome</th>
-                                <th class="col-md-2 text-center"> Valor</th>
-                                <th class="col-md-4 text-center"> Descrição</th>
-                                <th class="col-md-1 text-center"> Status</th>
+                                <th class="col-md-1 text-center"> Valor</th>
+                                <th class="text-center"> Descrição</th>
+                                <th class="text-center"> Status</th>
                                 <th class="col-md-1 text-center"> Ações</th>
                             </tr>
                             </thead>
@@ -45,7 +45,7 @@
                                     </td>
                                     <td>{{ insurance.description }}</td>
                                     <td class="text-center">
-                                        {% if(insurance.enable == 1) %}
+                                        {% if(insurance.enabled == 1) %}
                                             {{'Enabled'|trans}}
                                         {% else %}
                                             {{'Disabled'|trans}}

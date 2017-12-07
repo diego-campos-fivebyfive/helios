@@ -12,6 +12,7 @@
 namespace AppBundle\Entity\Component;
 
 use AppBundle\Entity\CategoryInterface;
+use AppBundle\Entity\Misc\AdditiveInterface;
 use AppBundle\Entity\Pricing\InsurableTrait;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\CustomerInterface;
@@ -1720,6 +1721,15 @@ class Project implements ProjectInterface, InsurableInterface
         return $this->projectAdditives;
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function hasAdditive(AdditiveInterface $additive)
+    {
+        return $this->projectAdditives->filter(function(ProjectAdditive $projectAdditive) use($additive){
+            return $projectAdditive->getAdditive() == $additive;
+        })->first();
+    }
 
     /**
      * @inheritDoc

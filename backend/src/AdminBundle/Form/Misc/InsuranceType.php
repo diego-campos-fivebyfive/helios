@@ -41,7 +41,7 @@ class InsuranceType extends AbstractType
                 'required' => false,
                 'multiple' => true
             ])
-            ->add('enable', CheckboxType::class, [
+            ->add('enabled', CheckboxType::class, [
                 'required' => false
             ]);
     }

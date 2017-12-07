@@ -6,6 +6,7 @@ use AdminBundle\Form\Stock\TransactionType;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Component\PricingManager;
+use AppBundle\Entity\Component\ProjectAdditiveInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\Misc\Additive;
@@ -988,6 +989,26 @@ class DebugController extends AbstractController
         dump($order);
         dump($orderAdditive);die;
         return $orderAdditive;
+    }
+
+    /**
+     * @Route("/{project}/projectRelation/{additive}/", name="project_additive")
+     */
+    public function projectrelationAdditiveAction(Project $project, Additive $additive)
+    {
+        $additiveRelation = $this->manager('project_additive');
+
+        /** @var ProjectAdditiveInterface $projectAdditive */
+        $projectAdditive = $additiveRelation->create();
+
+        $projectAdditive
+            ->setAdditive($additive)
+            ->setProject($project);
+
+        $additiveRelation->save($projectAdditive);
+
+        dump($project->getId());
+        dump($projectAdditive);die;
     }
 
     /**

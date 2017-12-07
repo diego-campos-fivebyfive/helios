@@ -32,9 +32,9 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-md-1">
-                        {{ form_label(form.enable, 'Ativo', {label_attr:{class:'check-label'}}) }}
+                        {{ form_label(form.enabled, 'Ativo', {label_attr:{class:'check-label'}}) }}
                         <div class="i-checks">
-                        {{ form_widget(form.enable,{attr:{class:'form-contol'}}) }}
+                        {{ form_widget(form.enabled,{attr:{class:'form-contol'}}) }}
                         </div>
                     </div>
                     <div class="form-group col-md-3">
@@ -68,7 +68,7 @@
     });
 
     $('.i-checks').on('ifChanged', function(){
-        $('input[name="insurance[enable]"]').trigger('change');
+        $('input[name="insurance[enabled]"]').trigger('change');
     });
 
     var btnSubmit = $('button[type="submit"]');
