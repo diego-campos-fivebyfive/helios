@@ -700,7 +700,7 @@ class ProjectController extends AbstractController
     }
 
     /**
-     * @Route("/{project}/insurances", name="project_insurances")
+     * @Route("/{id}/insurances", name="project_insurances")
      */
     public function insurancesAction(Project $project)
     {
@@ -709,7 +709,7 @@ class ProjectController extends AbstractController
             'enabled' => true
         ]);
 
-        return $this->render('admin/projects/insurances.html.twig', [
+        return $this->render('admin/projects/insurances_list.html.twig', [
             'insurances' => $insurances,
             'project' => $project
         ]);
