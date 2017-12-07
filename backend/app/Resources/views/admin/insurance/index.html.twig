@@ -27,10 +27,10 @@
                         <table class="table table-bordered table-stripped">
                             <thead>
                             <tr>
-                                <th class="col-md-3"> Nome</th>
+                                <th class="col-md-2"> Nome</th>
                                 <th class="col-md-1 text-center"> Valor</th>
-                                <th class="text-center"> Descrição</th>
-                                <th class="text-center"> Status</th>
+                                <th class="col-md-5 text-center"> Descrição</th>
+                                <th class="col-md-1 text-center"> Status</th>
                                 <th class="col-md-1 text-center"> Ações</th>
                             </tr>
                             </thead>
@@ -43,7 +43,9 @@
                                     <td class="text-right">
                                         {{ constant('AppBundle\\Entity\\Misc\\AdditiveInterface::TARGET_FIXED') == insurance.target ? insurance.value|currency : insurance.value ~ '%' }}
                                     </td>
-                                    <td>{{ insurance.description }}</td>
+                                    <td class="text-justify">
+                                        {{ insurance.description }}
+                                    </td>
                                     <td class="text-center">
                                         {% if(insurance.enabled == 1) %}
                                             {{'Enabled'|trans}}
