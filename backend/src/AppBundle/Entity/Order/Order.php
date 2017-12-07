@@ -30,10 +30,9 @@ use Symfony\Component\Validator\Constraints\DateTime;
  * @ORM\Table(name="app_order")
  * @ORM\Entity
  */
-class Order implements OrderInterface, InsurableInterface
+class Order implements OrderInterface
 {
     use MetadataTrait;
-    use InsurableTrait;
     use ORMBehaviors\Timestampable\Timestampable;
 
     /**
