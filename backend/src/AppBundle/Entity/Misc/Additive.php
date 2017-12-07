@@ -66,9 +66,9 @@ class Additive implements AdditiveInterface
     /**
      * @var bool
      *
-     * @ORM\Column(name="enable", type="boolean", nullable=true)
+     * @ORM\Column(name="enabled", type="boolean", nullable=true)
      */
-    private $enanble;
+    private $enabled;
 
 
     /**
@@ -222,9 +222,9 @@ class Additive implements AdditiveInterface
     /**
      * @inheritDoc
      */
-    public function setEnable($enable)
+    public function setEnabled($enabled)
     {
-        $this->enanble = $enable;
+        $this->enabled = $enabled;
 
         return $this;
     }
@@ -232,9 +232,9 @@ class Additive implements AdditiveInterface
     /**
      * @inheritDoc
      */
-    public function isEnable()
+    public function isEnabled()
     {
-        return $this->enanble;
+        return $this->enabled;
     }
 
 

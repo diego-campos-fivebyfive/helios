@@ -8,7 +8,9 @@ use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Component\PricingManager;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\Misc\Additive;
 use AppBundle\Entity\Order\Order;
+use AppBundle\Entity\Order\OrderAdditiveInterface;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Stock\ProductInterface;
@@ -965,6 +967,27 @@ class DebugController extends AbstractController
             'message' => $message,
             'order' => $order
         ));*/
+    }
+
+    /**
+     * @Route("/{order}/testAdditive/{additive}/", name="additive_test")
+     */
+    public function testRelationAdditiveAction(Order $order, Additive $additive)
+    {
+        $additiveRelation = $this->manager('order_additive');
+
+        /** @var OrderAdditiveInterface $orderAdditive */
+        $orderAdditive = $additiveRelation->create();
+
+        $orderAdditive
+            ->setAdditive($additive)
+            ->setOrder($order);
+
+        $additiveRelation->save($orderAdditive);
+
+        dump($order);
+        dump($orderAdditive);die;
+        return $orderAdditive;
     }
 
     /**

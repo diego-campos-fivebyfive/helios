@@ -12,6 +12,7 @@
 namespace AppBundle\Entity\Order;
 
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\Misc\AdditiveInterface;
 use AppBundle\Entity\Pricing\MemorialInterface;
 use AppBundle\Entity\Pricing\RangeInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -2234,6 +2235,16 @@ class Order implements OrderInterface, InsurableInterface
     public function getOrderAdditives()
     {
         return $this->orderAdditives;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasAdditive(AdditiveInterface $additive)
+    {
+        return $this->orderAdditives->filter(function(OrderAdditive $orderAdditive) use($additive){
+            return $orderAdditive->getAdditive() == $additive;
+        })->first();
     }
 }
 

@@ -91,15 +91,15 @@ interface AdditiveInterface
     public function getRequiredLevels();
 
     /**
-     * @param $enable
+     * @param $enabled
      * @return AdditiveInterface
      */
-    public function setEnable($enable);
+    public function setEnabled($enabled);
 
     /**
      * @return bool
      */
-    public function isEnable();
+    public function isEnabled();
 
     /**
      * @return array

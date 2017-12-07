@@ -14,10 +14,6 @@ use AppBundle\Entity\Misc\AdditiveInterface;
 
 interface OrderAdditiveInterface
 {
-    /**
-     * @return int
-     */
-    public function getId();
 
     /**
      * @param OrderInterface $order
@@ -29,17 +25,6 @@ interface OrderAdditiveInterface
      * @return OrderInterface
      */
     public function getOrder();
-
-    /**
-     * @param AdditiveInterface $additive
-     * @return OrderAdditiveInterface
-     */
-    public function setAdditive(AdditiveInterface $additive);
-
-    /**
-     * @return AdditiveInterface
-     */
-    public function getAdditive();
 
     /**
      * @return float

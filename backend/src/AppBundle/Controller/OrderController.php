@@ -222,6 +222,22 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/{order}/additive-list/", name="additive_lists")
+     */
+    public function additivesListsAction(Request $request, Order $order)
+    {
+        $additives = $this->manager('additive')->findBy([
+            'type' => Additive::TYPE_INSURANCE,
+            'enabled' => true
+        ]);
+
+        return $this->render('admin/orders/insurances.html.twig', [
+            'additives' => $additives,
+            'order' => $order
+        ]);
+    }
+
+    /**
      * @Route("/{id}/file/{type}", name="order_file")
      */
     public function fileAction(Order $order, $type)
