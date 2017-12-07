@@ -35,7 +35,6 @@ class OrderCloner
         'state',
         'cnpj',
         'ie',
-        'source',
         'level',
         'deliveryAt',
         'deadline',
@@ -76,8 +75,6 @@ class OrderCloner
         'description',
         'note',
         'metadata',
-        'insurance',
-        'source',
         'level',
         'message',
         'power',
@@ -120,6 +117,7 @@ class OrderCloner
 
             /** @var OrderInterface $newOrder */
             $newOrder = new Order();
+            $newOrder->setSource(OrderInterface::SOURCE_PLATFORM);
 
             if ($source->isMaster())
                 $newOrder = $this->cloneMaster($newOrder, $source);

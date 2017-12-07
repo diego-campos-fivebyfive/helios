@@ -435,7 +435,9 @@ class OrderController extends AbstractController
 
         $manager->save($orderAdditive);
 
-        return $this->json([]);
+        return $this->json([
+                'total' => $order->getTotal()
+        ]);
     }
 
     /**
@@ -446,11 +448,14 @@ class OrderController extends AbstractController
      */
     public function deleteOrderAdditiveAction(OrderAdditive $orderAdditive)
     {
+        $order = $orderAdditive->getOrder();
         $manager = $this->manager('order_additive');
 
         $manager->delete($orderAdditive);
 
-        return $this->json([]);
+        return $this->json([
+                'total' => $order->getTotal()
+        ]);
     }
 
     /**
