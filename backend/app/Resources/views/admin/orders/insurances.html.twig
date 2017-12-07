@@ -35,8 +35,11 @@
         $(this).attr('disabled', 'disabled');
         $.ajax({
             url: url,
-            complete: function () {
+            complete: function (xhr) {
+                var total = xhr.responseJSON['total'];
                 OrderManager.renderAdditives();
+                OrderManager.renderTotal(total);
+                GeneratorHandler.getOrders();
             }
         });
     });
