@@ -571,6 +571,8 @@ class ProjectGenerator
 
         $this->resetStructures($project);
 
+        CriteriaAggregator::level($defaults['level']);
+
         /** @var \AppBundle\Manager\StructureManager $manager */
         $manager = $this->manager('structure');
         $calculator = new StructureCalculator($manager);

@@ -81,6 +81,8 @@ class DefaultsResolver
      */
     public function module()
     {
+        if($this->hasDefault('module')) return;
+
         $qb = $this->filter->fromClass(Module::class)->qb();
 
         $qb
@@ -151,6 +153,9 @@ class DefaultsResolver
     private function maker($type)
     {
         $tag = sprintf('%s_maker', $type);
+
+        if($this->hasDefault($tag)) return;
+
         $class = str_replace('Module', Inflector::classify($type), Module::class);
 
         $qb = $this->filter->fromClass($class)->qb();
@@ -254,6 +259,15 @@ class DefaultsResolver
     }
 
     /**
+     * @param $default
+     * @return bool
+     */
+    private function hasDefault($default)
+    {
+        return array_key_exists($default, $this->defaults) && !is_null($this->defaults[$default]);
+    }
+
+    /**
      * @return array
      */
     private static function defaults()
@@ -273,9 +287,9 @@ class DefaultsResolver
             'grid_voltage' => '127/220',
             'grid_phase_number' => 'Biphasic',
             'module' => null,
-            'inverter_maker' => 60627,
-            'structure_maker' => 61211,
-            'string_box_maker' => 61209,
+            'inverter_maker' => null,
+            'structure_maker' => null,
+            'string_box_maker' => null,
             'is_promotional' => false,
             'shipping_included' => false,
             'promo_notice' => null,
