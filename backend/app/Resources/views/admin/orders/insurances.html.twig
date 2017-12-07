@@ -11,7 +11,7 @@
                         <input type="checkbox" name="additive" {% if order.hasAdditive(additive) %}checked="checked"{% endif %}>
                     </div>
                 </div>
-                <div class="col-md-2 text-right">
+                <div class="col-md-2 text-center">
                     <h4><strong> Valor do Seguro </strong></h4>
                     {% if order.hasAdditive(additive) %}
                         <h2> {{ order.insurance|currency }} </h2>
