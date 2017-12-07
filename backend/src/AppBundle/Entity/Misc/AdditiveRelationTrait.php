@@ -52,6 +52,41 @@ trait AdditiveRelationTrait
     private $additive;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="type", type="smallint", nullable=true)
+     */
+    private $type;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255, nullable=true)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="target", type="smallint", nullable=true)
+     */
+    private $target;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="value", type="float", nullable=true)
+     */
+    private $value;
+
+    /**
      * @inheritDoc
      */
     public function __construct()
@@ -98,10 +133,10 @@ trait AdditiveRelationTrait
      */
     public function getTotal()
     {
-        if ($this->additive->getTarget() == AdditiveInterface::TARGET_FIXED)
-            return round($this->additive->getValue(), 2);
+        if ($this->target == AdditiveInterface::TARGET_FIXED)
+            return round($this->value, 2);
         else
-            return round(($this->additive->getValue()/100) * $this->getAdditiveQuota(), 2);
+            return round(($this->value/100) * $this->getAdditiveQuota(), 2);
     }
 
     /**
@@ -110,6 +145,8 @@ trait AdditiveRelationTrait
     public function setAdditive(AdditiveInterface $additive)
     {
         $this->additive = $additive;
+
+        $this->updateInfo();
 
         return $this;
     }
@@ -120,5 +157,107 @@ trait AdditiveRelationTrait
     public function getAdditive()
     {
         return $this->additive;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setTarget($target)
+    {
+        $this->target = $target;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTarget()
+    {
+        return $this->target;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    private function updateInfo()
+    {
+        $this->type = $this->additive->getType();
+        $this->name = $this->additive->getName();
+        $this->description = $this->additive->getDescription();
+        $this->target = $this->additive->getTarget();
+        $this->value = $this->additive->getValue();
     }
 }
