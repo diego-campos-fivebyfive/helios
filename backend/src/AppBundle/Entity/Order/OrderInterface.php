@@ -12,6 +12,7 @@ namespace AppBundle\Entity\Order;
 
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\Misc\AdditiveInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -955,4 +956,10 @@ interface OrderInterface
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getOrderAdditives();
+
+    /**
+     * @param AdditiveInterface $additive
+     * @return bool
+     */
+    public function hasAdditive(AdditiveInterface $additive);
 }
