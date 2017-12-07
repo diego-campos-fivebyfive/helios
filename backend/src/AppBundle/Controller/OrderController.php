@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Misc\Additive;
 use AppBundle\Entity\Order\Element;
 use AppBundle\Entity\Order\Message;
 use AppBundle\Entity\Order\MessageInterface;
@@ -216,6 +217,22 @@ class OrderController extends AbstractController
         $this->get('order_timeline')->create($order, TimelineInterface::TAG_FILE_PAYMENT);
 
         return $this->json([ 'name' => $filename ]);
+    }
+
+    /**
+     * @Route("/{order}/additive-list/", name="additive_lists")
+     */
+    public function additivesListsAction(Request $request, Order $order)
+    {
+        $additives = $this->manager('additive')->findBy([
+            'type' => Additive::TYPE_INSURANCE,
+            'enabled' => true
+        ]);
+
+        return $this->render('admin/orders/insurances.html.twig', [
+            'additives' => $additives,
+            'order' => $order
+        ]);
     }
 
     /**
