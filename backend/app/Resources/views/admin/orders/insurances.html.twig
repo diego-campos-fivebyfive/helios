@@ -7,7 +7,7 @@
                 <label> Associado </label>
                 <input type="checkbox" {% if order.hasAdditive(additive) %}checked="checked"{% endif %}>
                 {% if order.hasAdditive(additive) %}
-                    {{ order.hasAdditive(additive).total }}
+                    {{ order.insurance|currency }}
                 {% endif %}
             </div>
 
