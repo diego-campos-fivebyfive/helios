@@ -5,11 +5,23 @@
 
   <script src="https://unpkg.com/vue"></script>
 
+  <style>
+    .metric-panel {
+      width: 50%;
+      height: 420px;
+      overflow: hidden;
+    }
+    .metric-progress-info {
+      margin-left: 10px;
+    }
+  </style>
+
   <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-      <div class="ibox">
+    <div class="row" style="min-height: 100vh">
+      <div class="ibox metric-panel">
         <div class="ibox-title">
           <h2>Progresso de tarefas técnicas</h2>
+          <i>Label: Modules</i>
         </div>
         <div class="ibox-content">
           <div class="tab-content">
@@ -19,30 +31,28 @@
                 class="table table-striped table-hover">
                 <thead>
                   <tr>
-                    <th class="col-md-1">Categorias</th>
-                    <th class="col-md-2 text-center">Módulos</th>
-                    <th class="col-md-3 text-center">
+                    <th class="col-md-2">Categorias</th>
+                    <th class="col-md-3 text-center">Módulos</th>
+                    <th class="col-md-6 text-right">
                       Concluídas / Cadastradas (%)
                     </th>
-                    <th class="col-md-1 text-center">Abertas</th>
-                    <th class="col-md-1 text-center">Concluídas</th>
-                    <th class="col-md-1 text-center">Cadastradas</th>
                   </tr>
                 </thead>
                 <tbody> 
                   <tr v-for="module in modules">
                     <td>{{ module.type }}</td>
                     <td class="text-center">{{ module.name }}</td>
-                    <td class="text-center">
-                      <progress-bar
-                        :data="module.average">
-                      </progress-bar>
-                      <b>{{ module.average }}%</b>
-                      Concluído
+                    <td class="text-right">
+                      <progress-bar :data="module.average"></progress-bar>
+                      <span class="metric-progress-info">
+                        <b>{{ module.closed }}</b>/<b>{{ module.created }}</b>
+                        Issues
+                      </span>
+                      <span class="metric-progress-info">
+                        <b>{{ module.average }}%</b>
+                        Concluído
+                      </span>
                     </td>
-                    <td class="text-center">{{ module.open }}</td>
-                    <td class="text-center">{{ module.closed }}</td>
-                    <td class="text-center">{{ module.created }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -70,7 +80,7 @@
             'background-color': '#2cbe4e',
             position: 'absolute',
             height: '100%',
-            left: 0,
+            right: 0,
             top: 0
           }
         }
