@@ -346,3 +346,7 @@ services:
     component_query:
         class: AppBundle\Service\Component\Query
         arguments: ['@service_container']
+
+    additive_synchronizer:
+        class: AppBundle\Service\Additive\Synchronizer
+        arguments: ['@doctrine.orm.entity_manager']
