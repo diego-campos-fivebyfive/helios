@@ -2,11 +2,12 @@
 <div class="row">
     <div class="form-group col-md-8">
         <label style="font-size: small; text-align: justify; font-weight: lighter;">
-            A contratação do SEGURO SICES SOLAR ALL RISKS é simples e rápida, será disponibilizada ao cliente final
-            a apólice do SEGURO SICES SOLAR ALL RISKS, constando todas as coberturas previstas no prêmio de risco
-            contratado na aquisição dos Equipamentos SICES SOLAR. Cobertura do Sistema Fotovoltaico limitada em 50%
-            a mais do valor de Nota Fiscal dos equipamentos SICES Solar. O produto e solução é uma exclusividade da
-            SICES Solar com a ARGO SEGUROS em parceria com a UMBRIA PRIVATE CORRETORA.
+            View a ser removida. Generator.safe
+            {#A contratação do SEGURO SICES SOLAR ALL RISKS é simples e rápida, será disponibilizada ao cliente final#}
+            {#a apólice do SEGURO SICES SOLAR ALL RISKS, constando todas as coberturas previstas no prêmio de risco#}
+            {#contratado na aquisição dos Equipamentos SICES SOLAR. Cobertura do Sistema Fotovoltaico limitada em 50%#}
+            {#a mais do valor de Nota Fiscal dos equipamentos SICES Solar. O produto e solução é uma exclusividade da#}
+            {#SICES Solar com a ARGO SEGUROS em parceria com a UMBRIA PRIVATE CORRETORA.#}
         </label>
     </div>
 
@@ -31,6 +32,7 @@
         checker: $('#financial_insurance'),
         output: $('#safe_output'),
         apply: function(){
+            alert('remover essa chamada "InsuranceHandler.apply"');
             var insure = this.checker.is(':checked')?1:0;
             $.post('{{ path( project is defined ? 'financial_insure' : 'order_insure' ,{id:target.id}) }}',{insure:insure}, function(response){
                 var value = 0;

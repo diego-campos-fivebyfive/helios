@@ -97,18 +97,16 @@
         <div class="panel panel-info">
             <div class="panel-heading">
                 <i class="fa fa-shield"></i>
-                Seguro
+                Seguros
             </div>
-            <div class="panel-body" id="financial_safe">
-                {% include view('generator.safe') %}
+            <div class="panel-body">
+                {% include 'admin/projects/insurances.html.twig' %}
             </div>
         </div>
 
     {% endif %}
 
 <script>
-
-    InsuranceHandler.apply();
 
     GeneratorHandler.setPower({{ project.power }});
 

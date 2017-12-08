@@ -31,6 +31,17 @@
     <hr class="hr-line-dashed">
     {% endif %}
 {% endfor %}
+
+<div class="row">
+    <div class="form-group col-md-10">
+        <h2>Total dos Seguros</h2>
+    </div>
+
+    <div class="form-group col-md-2 text-center">
+        <h2> {{ project.insurance|currency }} </h2>
+    </div>
+</div>
+
 <script src="{{ asset('assets/iCheck/icheck.js') }}"></script>
 <script>
     $('.i-checks').iCheck({
