@@ -13,11 +13,14 @@ namespace AppBundle\Service\Order;
 
 use AppBundle\Entity\Component\MakerInterface;
 use AppBundle\Entity\Component\ModuleInterface;
+use AppBundle\Entity\Component\ProjectAdditive;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Order\Element;
+use AppBundle\Entity\Order\OrderAdditive;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Entity\Pricing\MemorialInterface;
 use AppBundle\Manager\OrderManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Transform project data into a new order
@@ -32,12 +35,19 @@ class OrderTransformer
     private $manager;
 
     /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    /**
      * OrderTransformer constructor.
      * @param OrderManager $manager
+     * @param ContainerInterface $container
      */
-    function __construct(OrderManager $manager)
+    function __construct(OrderManager $manager, ContainerInterface $container)
     {
         $this->manager = $manager;
+        $this->container = $container;
     }
 
     /**
@@ -52,22 +62,23 @@ class OrderTransformer
 
         $collection = ComponentExtractor::fromProject($project);
 
-        foreach ($collection as $data){
+        foreach ($collection as $data) {
             $element = ElementResolver::create($data);
             $order->addElement($element);
         }
 
         $order->setDescription(sprintf('Sistema de %skWp', $project->getPower()));
         $order->setShippingRules($project->getShippingRules());
-        $order->setInsurance($project->getInsurance());
 
-        if($project->isPromotional()){
+        if($project->isPromotional())
             $order
                 ->setDescription($order->getDescription() . ' [promo]')
                 ->setLevel(MemorialInterface::LEVEL_PROMOTIONAL);
-        }
 
-        if($persist) $this->manager->save($order);
+        $this->additiveTransfer($order, $project);
+
+        if ($persist)
+            $this->manager->save($order);
 
         return $order;
     }
@@ -131,6 +142,30 @@ class OrderTransformer
             if(is_numeric($children)){
                 $childrens[$key] = $this->manager->find($children);
             }
+        }
+    }
+
+    /**
+     * @param OrderInterface $order
+     * @param ProjectInterface $project
+     */
+    private function additiveTransfer(OrderInterface $order, ProjectInterface $project)
+    {
+        $manager = $this->container->get('order_additive_manager');
+
+        /** @var ProjectAdditive $projectAdditive */
+        foreach ($project->getProjectAdditives() as $projectAdditive) {
+            /** @var OrderAdditive $orderAdditive */
+            $orderAdditive = $manager->create();
+
+            $orderAdditive->setOrder($order);
+            $orderAdditive->setAdditive($projectAdditive->getAdditive());
+            $orderAdditive->setQuantity($projectAdditive->getQuantity());
+            $orderAdditive->setType($projectAdditive->getType());
+            $orderAdditive->setName($projectAdditive->getName());
+            $orderAdditive->setDescription($projectAdditive->getDescription());
+            $orderAdditive->setTarget($projectAdditive->getTarget());
+            $orderAdditive->setValue($projectAdditive->getValue());
         }
     }
 }
