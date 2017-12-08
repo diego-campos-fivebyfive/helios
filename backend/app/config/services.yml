@@ -220,7 +220,7 @@ services:
 
     order_transformer:
             class: AppBundle\Service\Order\OrderTransformer
-            arguments: ['@order_manager', '@service_container']
+            arguments: ['@order_manager']
 
     order_timeline:
         class: AppBundle\Service\Order\OrderTimeline

@@ -35,19 +35,12 @@ class OrderTransformer
     private $manager;
 
     /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
      * OrderTransformer constructor.
      * @param OrderManager $manager
-     * @param ContainerInterface $container
      */
-    function __construct(OrderManager $manager, ContainerInterface $container)
+    function __construct(OrderManager $manager)
     {
         $this->manager = $manager;
-        $this->container = $container;
     }
 
     /**
@@ -151,12 +144,10 @@ class OrderTransformer
      */
     private function additiveTransfer(OrderInterface $order, ProjectInterface $project)
     {
-        $manager = $this->container->get('order_additive_manager');
-
         /** @var ProjectAdditive $projectAdditive */
         foreach ($project->getProjectAdditives() as $projectAdditive) {
             /** @var OrderAdditive $orderAdditive */
-            $orderAdditive = $manager->create();
+            $orderAdditive = new OrderAdditive();
 
             $orderAdditive->setOrder($order);
             $orderAdditive->setAdditive($projectAdditive->getAdditive());

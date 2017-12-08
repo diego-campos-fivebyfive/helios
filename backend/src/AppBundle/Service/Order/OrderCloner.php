@@ -4,6 +4,7 @@ namespace AppBundle\Service\Order;
 
 use AppBundle\Entity\Order\Element;
 use AppBundle\Entity\Order\Order;
+use AppBundle\Entity\Order\OrderAdditive;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Manager\OrderManager;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -120,10 +121,12 @@ class OrderCloner
             $newOrder->setSource(OrderInterface::SOURCE_PLATFORM);
 
             if ($source->isMaster())
-                $newOrder = $this->cloneMaster($newOrder, $source);
+                $this->cloneMaster($newOrder, $source);
             else {
 
-                $newOrder = $this->cloneElements($source, $newOrder);
+                $this->cloneAdditives($source, $newOrder);
+
+                $this->cloneElements($source, $newOrder);
 
                 foreach ($this->orderProperties as $property) {
 
@@ -152,7 +155,6 @@ class OrderCloner
     /**
      * @param OrderInterface $newOrder
      * @param OrderInterface $source
-     * @return OrderInterface
      */
     private function cloneMaster(OrderInterface $newOrder, OrderInterface $source)
     {
@@ -180,14 +182,11 @@ class OrderCloner
 
             $this->accessor->setValue($newOrder, $property, $value);
         }
-
-        return $newOrder;
     }
 
     /**
      * @param OrderInterface $source
      * @param OrderInterface $newOrder
-     * @return OrderInterface
      */
     private function cloneElements(OrderInterface $source, OrderInterface $newOrder)
     {
@@ -206,7 +205,27 @@ class OrderCloner
 
             $newOrder->addElement($newElement);
         }
+    }
 
-        return $newOrder;
+    /**
+     * @param OrderInterface $source
+     * @param OrderInterface $newOrder
+     */
+    private function cloneAdditives(OrderInterface $source, OrderInterface $newOrder)
+    {
+        /** @var OrderAdditive $sourceOrderAdditive */
+        foreach ($source->getOrderAdditives() as $sourceOrderAdditive) {
+            /** @var OrderAdditive $orderAdditive */
+            $orderAdditive = new OrderAdditive();
+
+            $orderAdditive->setOrder($newOrder);
+            $orderAdditive->setAdditive($sourceOrderAdditive->getAdditive());
+            $orderAdditive->setQuantity($sourceOrderAdditive->getQuantity());
+            $orderAdditive->setType($sourceOrderAdditive->getType());
+            $orderAdditive->setName($sourceOrderAdditive->getName());
+            $orderAdditive->setDescription($sourceOrderAdditive->getDescription());
+            $orderAdditive->setTarget($sourceOrderAdditive->getTarget());
+            $orderAdditive->setValue($sourceOrderAdditive->getValue());
+        }
     }
 }
