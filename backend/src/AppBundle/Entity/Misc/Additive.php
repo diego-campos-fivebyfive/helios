@@ -264,17 +264,19 @@ class Additive implements AdditiveInterface
     }
 
     /**
-     * @inheritDoc
+     * @param $level
+     * @return bool
      */
-    public function isRequiredByLevels($level = null)
+    public function isRequiredByLevel($level)
     {
         return in_array($level, $this->requiredLevels);
     }
 
     /**
-     * @inheritDoc
+     * @param $level
+     * @return bool
      */
-    public function isAvailableByLevels($level = null)
+    public function isAvailableByLevel($level)
     {
         return in_array($level, $this->availableLevels);
     }

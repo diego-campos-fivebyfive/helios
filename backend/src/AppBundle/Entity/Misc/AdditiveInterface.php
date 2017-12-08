@@ -113,14 +113,16 @@ interface AdditiveInterface
     public function isEnabled();
 
     /**
+     * @param $level
      * @return bool
      */
-    public function isRequiredByLevels();
+    public function isRequiredByLevel($level);
 
     /**
+     * @param $level
      * @return bool
      */
-    public function isAvailableByLevels();
+    public function isAvailableByLevel($level);
 
     /**
      * @return array
