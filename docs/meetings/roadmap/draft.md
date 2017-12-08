@@ -29,6 +29,13 @@ Pró-forma (listado)
 5. Integração com geradores
 6. Atualizaçãoe interfaces
 
+7. Adicionar propriedade de disponibilidade (availableLevels).
+8. Atualizar buscas para exibição de seguros (conforme a propriedade).
+9. Ajustar pontos de checagem para obrigatório
+9.1. Gerador
+9.2. Conversão (project/order)
+9.3. Suborder (edição)
+
 #### COMPONENTES - 3 PONTOS PENDENTES ####
 Inclusão de uma nova propriedade (json) nos componentes, onde o administrador irá selecionar os níveis de desconto em que o componente estará ativo.
 
