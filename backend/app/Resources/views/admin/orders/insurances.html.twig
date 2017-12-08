@@ -58,6 +58,7 @@
                 var total = xhr.responseJSON['total'];
                 OrderManager.renderAdditives();
                 OrderManager.renderTotal(total);
+                GeneratorHandler.getOrders();
             }
         });
     });

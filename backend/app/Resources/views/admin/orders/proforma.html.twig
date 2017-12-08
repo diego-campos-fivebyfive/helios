@@ -260,33 +260,31 @@
                         </table>
 
                         {% if item.insurance %}
-                        <table class="spacing width-total">
-                            <thead>
-                            <tr>
-                                <th>
-                                    SEGURO ALL RISK
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td class="text-justify orders-font">
-                                    A contratação do SEGURO SICES SOLAR ALL RISKS é simples e rápida,
-                                    será disponibilizada ao cliente final a apólice do SEGURO SICES
-                                    SOLAR ALL RISKS, constando todas as coberturas previstas no prêmio
-                                    de risco contratado na aquisição dos Equipamentos SICES SOLAR. Cobertura
-                                    do Sistema Fotovoltaico limitada em 50% a mais do valor de Nota Fiscal
-                                    dos equipamentos SICES Solar. O produto e solução é uma exclusividade
-                                    da SICES Solar com a ARGO SEGUROS em parceria com a UMBRIA PRIVATE CORRETORA.
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label class="pull-right">Valor do seguro: {{ item.insurance|currency }}</label>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                            <table class="spacing width-total">
+                                {% for additive in item.orderAdditives %}
+                                    <thead>
+                                    <tr>
+                                        <th>
+                                            {{ additive.name }}
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-justify orders-font">
+                                                {{ additive.description }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="pull-right">Valor do seguro: {{ additive.total|currency }}</label>
+                                            </td>
+                                        </tr>
+                                        <hr class="hr-line-dashed">
+
+                                {% endfor %}
+                                </tbody>
+                            </table>
                         {% endif %}
 
                         <label class="pull-right spacing"><h3>Valor do Sistema: {{ item.total|currency }}</h3></label>
