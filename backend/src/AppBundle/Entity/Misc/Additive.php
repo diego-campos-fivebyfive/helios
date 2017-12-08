@@ -263,6 +263,21 @@ class Additive implements AdditiveInterface
         return $this->enabled;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function isRequiredByLevels($level = null)
+    {
+        return in_array($level, $this->requiredLevels);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isAvailableByLevels($level = null)
+    {
+        return in_array($level, $this->availableLevels);
+    }
 
     /**
      * @return array

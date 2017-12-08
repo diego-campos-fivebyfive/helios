@@ -113,6 +113,16 @@ interface AdditiveInterface
     public function isEnabled();
 
     /**
+     * @return bool
+     */
+    public function isRequiredByLevels();
+
+    /**
+     * @return bool
+     */
+    public function isAvailableByLevels();
+
+    /**
      * @return array
      */
     public static function getTypes();
