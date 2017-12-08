@@ -91,6 +91,17 @@ interface AdditiveInterface
     public function getRequiredLevels();
 
     /**
+     * @param $availableLevels
+     * @return AdditiveInterface
+     */
+    public function setAvailableLevels($availableLevels);
+
+    /**
+     * @return array
+     */
+    public function getAvailableLevels();
+
+    /**
      * @param $enabled
      * @return AdditiveInterface
      */
