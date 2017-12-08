@@ -32,10 +32,9 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks
  */
-class Project implements ProjectInterface, InsurableInterface
+class Project implements ProjectInterface
 {
     use TokenizerTrait;
-    use InsurableTrait;
     use ORMBehaviors\Timestampable\Timestampable;
 
     /**
@@ -361,6 +360,13 @@ class Project implements ProjectInterface, InsurableInterface
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Category")
      */
     private $stage;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="float", nullable=true)
+     */
+    protected $insurance;
 
     /**
      * @inheritDoc
@@ -1932,9 +1938,14 @@ class Project implements ProjectInterface, InsurableInterface
     /**
      * @inheritDoc
      */
-    public function getInsuranceQuota()
+    public function getInsurance()
     {
-        return $this->getCostPriceComponents();
+        $insurance = 0;
+
+        foreach ($this->projectAdditives as $projectAdditive)
+            $insurance += $projectAdditive->getTotal();
+
+        return $insurance;
     }
 
     /**
