@@ -41,6 +41,11 @@ class InsuranceType extends AbstractType
                 'required' => false,
                 'multiple' => true
             ])
+            ->add('availableLevels', ChoiceType::class, [
+                'choices' => Memorial::getDefaultLevels(),
+                'required' => false,
+                'multiple' => true
+            ])
             ->add('enabled', CheckboxType::class, [
                 'required' => false
             ]);
