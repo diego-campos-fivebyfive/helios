@@ -8,6 +8,9 @@
                 url: '{{ path('project_insurances', {id:project.id}) }}',
                 complete: function (xhr) {
                     $('#insurances_list').html(xhr.responseText);
+                    {% if isProject is defined %}
+                    Financial.get_taxes();
+                    {% endif %}
                 }
             });
         },
