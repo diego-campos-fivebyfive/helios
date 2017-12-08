@@ -54,6 +54,8 @@ class ProjectGeneratorController extends AbstractController
         if($order->isChildren())
             throw $this->createAccessDeniedException('Only master order can be edited');
 
+        $this->synchronizerOrder($order);
+
         $expired = $this->checkMemorial()->getPublishedAt() > $order->getCreatedAt();
 
         if(!$this->checkOrderStatus($order) || $expired) {
@@ -623,5 +625,15 @@ class ProjectGeneratorController extends AbstractController
         }
 
         return $memorial;
+    }
+
+    /**
+     * @param OrderInterface $order
+     */
+    private function synchronizerOrder(OrderInterface $order)
+    {
+        foreach ($order->getChildrens() as $children) {
+            $this->get('additive_synchronizer')->synchronize($children);
+        }
     }
 }

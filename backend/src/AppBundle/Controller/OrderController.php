@@ -224,8 +224,10 @@ class OrderController extends AbstractController
     /**
      * @Route("/{order}/additive-list/", name="additive_lists")
      */
-    public function additivesListsAction(Request $request, Order $order)
+    public function additivesListsAction(Order $order)
     {
+        $this->get('additive_synchronizer')->synchronize($order);
+
         //TODO: Esta consulta será otimizada no futuro SE necessário for.
         $additives = $this->manager('additive')->findBy([
             'type' => Additive::TYPE_INSURANCE
