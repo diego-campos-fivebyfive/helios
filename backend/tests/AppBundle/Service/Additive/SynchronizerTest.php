@@ -5,6 +5,7 @@ namespace Tests\AppBundle\Service\Additive;
 use AppBundle\Entity\Misc\Additive;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderAdditive;
+use AppBundle\Entity\Pricing\Memorial;
 use Tests\AppBundle\AppTestCase;
 
 /**
@@ -13,50 +14,65 @@ use Tests\AppBundle\AppTestCase;
  */
 class SynchronizerTest extends AppTestCase
 {
+
+    public function testGetUnlinkedAdditivesByRequiredLevels()
+    {
+        $manager = $this->manager('order');
+        $synchronizer = $this->getSynchronizer();
+
+        $partnerAdditives = $this->createAdditives(5, [
+            'requiredLevels' => ['partner']
+        ]);
+
+        $order = $manager->create();
+        $order->setLevel(Memorial::LEVEL_PARTNER);
+
+        $addPartnerAdditives = array_slice($partnerAdditives, 0, 3);
+        $this->assertCount(3, $addPartnerAdditives);
+
+        $this->associateAdditives($order, $addPartnerAdditives);
+
+        $partnerAdditivesLoaded = $synchronizer->getUnlinkedAdditivesByRequiredLevels($order);
+
+        $this->assertCount(2, $partnerAdditivesLoaded);
+    }
+
     public function testDefaultSynchronization()
     {
         $manager = $this->manager('order');
 
         /** @var Order $order */
         $order = $manager->create();
+        $order->setLevel(Memorial::LEVEL_PREMIUM);
 
-        $additives = $this->createAdditives();
+        $additives = $this->createAdditives(10, [
+            'requiredLevels' => [Memorial::LEVEL_PREMIUM]
+        ]);
 
-        $this->associateAdditives($order, $additives);
+        $this->associateAdditives($order, array_slice($additives, 0, 5));
 
-        $synchronizer = $this->service('additive_synchronizer');
+        $synchronizer = $this->getSynchronizer();
 
         $manager->save($order);
+
+        $this->assertCount(5, $order->getOrderAdditives()->toArray());
 
         $synchronizer->synchronize($order);
 
         $this->assertCount(10, $order->getOrderAdditives()->toArray());
 
-        // Disable additives
-        $additiveManager = $this->manager('additive');
-        for($i=0; $i < 3; $i++){
-            /** @var Additive $additive */
-            $additive = $additives[$i];
-
-            $additive->setEnabled(false);
-
-            $additiveManager->save($additive);
-        }
-
-        $synchronizer->synchronize($order);
-
-        $this->assertCount(7, $order->getOrderAdditives()->toArray());
+        $this->testProject($additives);
     }
 
     /**
      * @return array
      */
-    private function createAdditives()
+    private function createAdditives($count = 10, array $definitions = [])
     {
         $manager = $this->manager('additive');
 
         $additives = [];
-        for($i=0; $i < 10; $i++){
+        for($i=0; $i < $count; $i++){
 
             /** @var Additive $additive */
             $additive = $manager->create();
@@ -68,6 +84,10 @@ class SynchronizerTest extends AppTestCase
                 ->setTarget(Additive::TARGET_FIXED)
                 ->setType(Additive::TYPE_INSURANCE)
                 ->setValue(100);
+
+            foreach ($definitions as $definition => $value){
+                $this->accessor->setValue($additive, $definition, $value);
+            }
 
             $manager->save($additive);
 
@@ -92,5 +112,31 @@ class SynchronizerTest extends AppTestCase
                 ->setOrder($order)
             ;
         }
+    }
+
+    /**
+     * @return object|\AppBundle\Service\Additive\Synchronizer
+     */
+    private function getSynchronizer()
+    {
+        return $this->service('additive_synchronizer');
+    }
+
+    /**
+     * Test Project additives sync functionality
+     * @param array $additives
+     */
+    private function testProject(array $additives)
+    {
+        $project = $this->manager('project')->create();
+        $project->setLevel(Memorial::LEVEL_PREMIUM);
+
+        $this->assertCount(0, $project->getProjectAdditives()->toArray());
+
+        $synchronizer = $this->getSynchronizer();
+
+        $synchronizer->synchronize($project);
+
+        $this->assertCount(10, $project->getProjectAdditives()->toArray());
     }
 }
