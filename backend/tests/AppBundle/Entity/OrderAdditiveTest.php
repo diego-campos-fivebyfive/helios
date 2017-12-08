@@ -4,6 +4,7 @@ namespace Tests\AppBundle\Entity;
 
 use AppBundle\Entity\Misc\AdditiveInterface;
 use AppBundle\Entity\Order\OrderAdditiveInterface;
+use AppBundle\Entity\Pricing\Memorial;
 use Tests\AppBundle\AppTestCase;
 
 /**
@@ -23,12 +24,15 @@ class OrderAdditiveTest extends AppTestCase
 
         $additiveManager = $this->getContainer()->get('additive_manager');
 
+        $levels = ['premium', 'partner', 'black'];
         /** @var AdditiveInterface $additive */
         $additive = $additiveManager->create();
         $additive->setName('add');
         $additive->setType(4);
         $additive->setTarget(3);
         $additive->setValue(3.5);
+        $additive->setRequiredLevels($levels);
+        $additive->setAvailableLevels($levels);
 
         $additiveManager->save($additive);
 
@@ -46,6 +50,8 @@ class OrderAdditiveTest extends AppTestCase
 
         self::assertNotNull($orderAdditive);
 
+        self::assertEquals(1,$additive->isRequiredByLevel(Memorial::LEVEL_PARTNER));
+        self::assertEquals(1, $additive->isAvailableByLevel(Memorial::LEVEL_PREMIUM));
         self::assertEquals(1,$orderAdditive->getOrder()->getId());
         self::assertEquals(1,$orderAdditive->getAdditive()->getId());
     }
