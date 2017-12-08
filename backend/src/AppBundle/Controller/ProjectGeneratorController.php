@@ -324,10 +324,6 @@ class ProjectGeneratorController extends AbstractController
 
         $this->get('order_precifier')->precify($order);
 
-        $projectAdditiveManager = $this->manager('project_additive');
-        foreach ($project->getProjectAdditives() as $projectAdditive)
-            $projectAdditiveManager->delete($projectAdditive);
-
         $this->manager('project')->delete($project);
 
         return $this->json([
