@@ -64,6 +64,13 @@ class Additive implements AdditiveInterface
     private $requiredLevels;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(name="available_levels", type="json", nullable=true)
+     */
+    private $availableLevels;
+
+    /**
      * @var bool
      *
      * @ORM\Column(name="enabled", type="boolean", nullable=true)
@@ -218,6 +225,25 @@ class Additive implements AdditiveInterface
     {
         return $this->requiredLevels;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setAvailableLevels($availableLevels)
+    {
+        $this->availableLevels = $availableLevels;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAvailableLevels()
+    {
+        return $this->availableLevels;
+    }
+
 
     /**
      * @inheritDoc
