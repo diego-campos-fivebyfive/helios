@@ -102,7 +102,7 @@ class Synchronizer
             $qb->expr()->like('a.requiredLevels',
                 $qb->expr()->literal('%"' . $level . '"%')
             )
-        );
+        )->andWhere('a.enabled = 1');
 
         if(!empty($associationsAdditiveIds)){
             $qb->andWhere(
