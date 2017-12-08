@@ -50,8 +50,8 @@ class OrderAdditiveTest extends AppTestCase
 
         self::assertNotNull($orderAdditive);
 
-        self::assertEquals(1,$additive->isRequiredByLevels(Memorial::LEVEL_PARTNER));
-        self::assertEquals(1, $additive->isAvailableByLevels(Memorial::LEVEL_PREMIUM));
+        self::assertEquals(1,$additive->isRequiredByLevel(Memorial::LEVEL_PARTNER));
+        self::assertEquals(1, $additive->isAvailableByLevel(Memorial::LEVEL_PREMIUM));
         self::assertEquals(1,$orderAdditive->getOrder()->getId());
         self::assertEquals(1,$orderAdditive->getAdditive()->getId());
     }
