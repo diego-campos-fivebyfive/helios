@@ -1,25 +1,19 @@
 <style>
-    .card{
-        position: relative;
-        display: -webkit-box;
-        display: -webkit-flex;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: normal;
-        -webkit-flex-direction: column;
-        -ms-flex-direction: column;
-        flex-direction: column;
-        background-color: #fff;
-        border: 1px solid rgba(0,0,0,.125);
-        border-radius: .25rem;
-        margin-bottom: .35rem;
+
+    .collapse {
+        display: none;
     }
-    .card-header {
-        padding: .75rem 1.25rem;
-        margin-bottom: 0;
-        background-color: #f7f7f9;
-        border-bottom: 1px solid rgba(0,0,0,.125);
+
+    .color-rows {
+        color: #676a6c;
+    }
+
+    .table-components {
+        border: solid 1px #d3d3d3;
+    }
+
+    .minimize {
+        background-color: #EEE;
     }
 
     .card-header h4 {
@@ -51,69 +45,108 @@
 {% set orders = order.childrens %}
 {% set isPlatform = app.user.isPlatform %}
 
-<table class="table table-striped" id="thead">
+<table class="table table-striped table-hover">
     <thead>
-        <tr>
-            <th class="col-md-4"> Descrição </th>
-            <th class="col-md-2 text-center"> Data </th>
-            <th class="col-md-2"> Qtde Itens </th>
-            <th class="col-md-2 text-center"> Vr. Equipamentos </th>
-            <th class="col-md-2 text-center"> Vr. Seguro </th>
-
-        </tr>
+    <tr>
+        <th class="col-md-3"> Descrição</th>
+        <th class="col-md-2 text-center"> Data</th>
+        <th class="col-md-2 text-center"> Qtde Itens</th>
+        <th class="col-md-3"><span class="pull-right">Valor dos equipamentos</span></th>
+        <th class="col-md-2"><span class="pull-right">Valor do seguro</span></th>
+    </tr>
     </thead>
-</table>
-<div id="accordion" role="tablist" aria-multiselectable="true">
-
-    {% for order in orders %}
-    <div class="card">
-        <div class="card-header" role="tab" id="{{ loop.index }}">
-                <h4>
-                    <a data-toggle="collapse" data-parent="#accordion" href="#{{ order.id }}" aria-expanded="false" aria-controls="collapseOne">
-                        <span class="col-md-4 order"> {{ order.description }} </span>
-                        <span class="col-md-2 order"> {{ order.createdAt|date('d/m/Y') }} </span>
-                        <span class="col-md-2 order"> {{ order.elements.count }} Itens</span>
-                        <span class="col-md-2 order text-right"> {{ order.subTotal|currency }} </span>
-                        <span class="col-md-2 order text-right"> {{ order.insurance|currency }} </span>
-                    </a>
-                </h4>
-        </div>
-
-        <div id="{{ order.id }}" class="collapse" role="tabpanel" aria-labelledby="headingOne">
-            <div class="card-block">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <td><b>ITEM</b></td>
-                        <td><b>CÓDIGO</b></td>
-                        <td><b>PRODUTO</b></td>
-                        <td class="col-md-1 text-center"><b>QTD</b></td>
-                        {% if not order.isPromotional or isPlatform %}
-                        <td class="col-md-2 text-center"><b>VALOR UNIT</b></td>
-                        <td class="col-md-2 text-center"><b>VALOR TOTAL</b></td>
+    <tbody>
+    {% for order in orders if not order.budget %}
+        <tr>
+            <td colspan="5">
+                <div>
+                    <h4>
+                        <a data-toggle="collapse" href="#{{ order.id }}">
+                            <span class="col-md-3 color-rows"> {{ order.description }} </span>
+                            <span class="col-md-2 color-rows text-center"> {{ order.createdAt|date('d/m/Y') }} </span>
+                            <span class="col-md-2 color-rows text-center"> {{ order.elements.count }} Itens</span>
+                            <span class="col-md-3 color-rows">
+                                <span class="pull-right">{{ order.subTotal|currency }}</span>
+                            </span>
+                            <span class="col-md-2 color-rows">
+                                <span class="pull-right">{{ order.insurance|currency }}</span>
+                            </span>
+                        </a>
+                    </h4>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="5" style="padding: 0;">
+                <div id="{{ order.id }}" class="collapse">
+                    <div>
+                        <table class="table table-striped table-components">
+                            <thead>
+                            <tr>
+                                <td><b>ITEM</b></td>
+                                <td><b>CÓDIGO</b></td>
+                                <td><b>PRODUTO</b></td>
+                                <td class="col-md-1 text-center"><b>QTD</b></td>
+                                {% if not order.isPromotional or isPlatform %}
+                                    <td class="col-md-2 text-center"><b>VALOR UNIT</b></td>
+                                    <td class="col-md-2 text-center"><b>VALOR TOTAL</b></td>
+                                {% endif %}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for element in order.elements %}
+                                <tr>
+                                    <td class="text-center"><b>{{ loop.index }}</b></td>
+                                    <td>{{ element.code }}</td>
+                                    <td>{{ element.description }}</td>
+                                    <td class="text-center">{{ element.quantity }}</td>
+                                    {% if not order.isPromotional or isPlatform %}
+                                        <td class="text-center">{{ element.unitPrice|currency }}</td>
+                                        <td class="text-center">{{ element.total|currency }}</td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {% if order.insurance %}
+                            <table class="table table-striped table-components">
+                                <thead>
+                                <tr>
+                                    <th>Seguros</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for additive in order.orderAdditives %}
+                                    <tr>
+                                        <td class="col-md-1"> {{ loop.index }} </td>
+                                        <td class="col-md-9"> {{ additive.name }} </td>
+                                        <td class="col-md-2"> {{ additive.total|currency }} </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th class="text-right">Valor Total:</th>
+                                    <th>{{ order.insurance|currency }}</th>
+                                </tr>
+                                </tfoot>
+                            </table>
                         {% endif %}
-                    </tr>
-                    </thead>
-                    {% for element in order.elements %}
-                        <tbody>
-                        <tr>
-                            <td class="text-center"><b>{{ loop.index }}</b></td>
-                            <td>{{ element.code }}</td>
-                            <td>{{ element.description }}</td>
-                            <td class="text-center">{{ element.quantity }}</td>
-                            {% if not order.isPromotional or isPlatform %}
-                            <td class="text-center">{{ element.unitPrice|currency }}</td>
-                            <td class="text-center">{{ element.total|currency }}</td>
-                            {% endif %}
-                        </tr>
-                        </tbody>
-                    {% endfor %}
-                </table>
-            </div>
-        </div>
-    </div>
+                        <a data-toggle="collapse" href="#{{ order.id }}" class="color-rows">
+                            <div class="col-md-12 text-center minimize">
+                                <i class="fa fa-chevron-up"></i>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </td>
+        </tr>
     {% endfor %}
-</div>
+    </tbody>
+</table>
 <table class="table table-striped" id="tfoot">
     <tfoot>
         <tr>

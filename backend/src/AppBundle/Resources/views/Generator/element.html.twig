@@ -37,9 +37,10 @@
             method: $(this).attr('method'),
             data: $(this).serialize(),
             callback: function (xhr) {
-                InsuranceHandler.apply();
+                OrderManager.renderAdditives();
                 GeneratorHandler.refreshWizardModal();
                 GeneratorHandler.resetBudgetButton();
+                GeneratorHandler.getOrders();
             }
         });
     });
