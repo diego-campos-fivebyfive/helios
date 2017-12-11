@@ -37,7 +37,7 @@
             method: $(this).attr('method'),
             data: $(this).serialize(),
             callback: function (xhr) {
-                OrderManager.renderAdditives();
+                OrderInsurances.loadInsurances();
                 GeneratorHandler.refreshWizardModal();
                 GeneratorHandler.resetBudgetButton();
                 GeneratorHandler.getOrders();

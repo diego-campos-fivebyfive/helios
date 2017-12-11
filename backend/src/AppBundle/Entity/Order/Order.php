@@ -1373,6 +1373,8 @@ class Order implements OrderInterface
      */
     public function getAccount()
     {
+        if ($this->isChildren())
+            return $this->parent->getAccount();
         return $this->account;
     }
 

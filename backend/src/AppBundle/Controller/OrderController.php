@@ -209,7 +209,7 @@ class OrderController extends AbstractController
             'type' => Additive::TYPE_INSURANCE
         ]);
 
-        return $this->render('admin/orders/insurances.html.twig', [
+        return $this->render('admin/orders/insurances_list.html.twig', [
             'additives' => $additives,
             'order' => $order
         ]);
