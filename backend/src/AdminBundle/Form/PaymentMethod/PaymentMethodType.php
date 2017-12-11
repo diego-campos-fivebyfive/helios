@@ -19,6 +19,9 @@ class PaymentMethodType extends AbstractType
             ->add('enabled', CheckboxType::class, [
                 'required' => false
             ])
+            ->add('financing', CheckboxType::class, [
+                'required' => false
+            ])
             ->add('quotas', CollectionType::class, [
                 'entry_type' => PaymentQuotaType::class,
                 'allow_add' => true,
