@@ -355,7 +355,31 @@ Esclarecimentos gerais relacionados a documentação:
       - `Infra`: Utilizada para issues de infraestrutura.
       - `Random`: Utilizada para issues de âmbito geral que não se enquadrão nas anteriores.
 
-    - ##### 5.2.4. **Colunas e estágios (stage)**:
+    - ##### 5.2.4. **Etiquetas de módulos (modules)**:
+
+      - Plataforma
+        - `An. Financeira`: Corresponde ao módulo de análise financeira.
+        - `Application`: Corresponde a contextos mais genéricos voltados a aplicação, como por exemplo mecanismos de autenticação, menu, etc.
+        - `Componentes`: Corresponde a componentes sices, como inversores, estruturas, string-boxes, etc.
+        - `Configuração`: Corresponde a parte de "settings" do usuário da plataforma. Dados climaticos e configurações como a de dados climaticos correspondem ao milleston de configuração.
+        - `Conta`: Corresponde aos contextos: conta sices, integradores e contatos, com suas respectivas sub divisões: como conta sices: agent, admin, master; como integradores: user, member, account ...; e como contato.
+        - `Dashboard`: Corresponde a dashboard inicial do sistema.
+        - `Dimensionamento`: Corresponde ao módulo de dimensionamento.
+        - `Empresarial`: Corresponde a dados relacionados ao integrador e seu formato de trabalho, sendo eles: tarefas, meus itens e preço de venda.
+        - `Memorial`: Corresponde ao módulo de memorial.
+        - `Orçamento`: Corresponde ao módulo de orçamento.
+        - `Projeto`: Corresponde ao módulo de projeto.
+        - `Proposta`: Corresponde ao módulo de proposta.
+
+      - Devops
+        - `Ambiences`: Corresponde a contexto genérios de ambientes, locais e remotos.
+        - `Deploy`: Corresponde a scripts e configurações de deploy.
+        - `Developers`: Corresponde a suporte e melhorias para desenvolvedores.
+        - `Issues`: Corresponde ao módulo de automação de issues.
+        - `Metrics`: Corresponde a métricas geral, de aplicação, produtividade, hardware, etc.
+        - `Mirrors`:  Corresponde a scripts e configurações de mirrors de aplicações remotas para local.
+
+    - ##### 5.2.5. **Colunas e estágios (stage)**:
 
       - `Backlog General`: Utilizada para issues fora da sprint de contexto geral.
       - `Backlog Devops`: Utilizada para issues fora da sprint de contexto devops.
