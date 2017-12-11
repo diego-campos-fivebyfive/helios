@@ -2,11 +2,11 @@
 ## 11/12 ##
 
 #### FINAME ####
-1. 1127. Em "Condições de Pagamento":
+1. (1127) Em "Condições de Pagamento":
 - 1.1. Novo campo para determinar se o mesmo é ou não Financiamento (checkbox).
 - 1.2. Atualizar a listagem para exibir um ícone (check) caso o mesmo seja Financiamento.
 
-2. 1128. Nova ROLE.
+2. (1128) Nova ROLE.
 - 2.1 FINANCING : Financiamento
 - 2.2 Comportamentos iguais ao do FINANCIAL
 - 2.2.1 FINANCIAL
@@ -14,13 +14,13 @@
 - 2.2.2 FINANCING
 - 2.2.2.1 Vê todos na regra de FINANCIAL com Financiamento.
 
-3. 1130. Finame
+3. (1130) Finame
 - 3.1 Novo nível "finame" : "Finame"
 - 3.2 Assim como "promotional" este nível não é selecionável como nível de conta.
 - 3.3 Novo memorial para este nível.
 - 3.4 Este nível deve aparecer nas opções de utilização na gestão "Componentes" e "Seguro" (com as outras opções).
 
-4. 1131. Gestão de Parâmetros (Idêntico ao painel de Promocional)
+4. (1131) Gestão de Parâmetros (Idêntico ao painel de Promocional)
 
 ## 27/11 ##
 
