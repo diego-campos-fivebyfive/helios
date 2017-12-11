@@ -1,8 +1,8 @@
 
 #### FINAME ####
 1. Em "Condições de Pagamento":
-1.1 Novo campo para determinar se o mesmo é ou não Financiamento (checkbox).
-1.2 Atualizar a listagem para exibir um ícone (check) caso o mesmo seja Financiamento.
+1.1. Novo campo para determinar se o mesmo é ou não Financiamento (checkbox).
+1.2. Atualizar a listagem para exibir um ícone (check) caso o mesmo seja Financiamento.
 
 2. Nova ROLE.
 2.1 FINANCING : Financiamento
