@@ -32,30 +32,20 @@ class ShippingType extends AbstractType
 
         $maxPowerValid = $shippingIncludedMaxPower >= $order->getPower();
 
-        $choices = [];
+        $isFullyPromotional = $isProject ? false : $order->isFullyPromotional();
+        $allowShippingIncluded = !$isProject && $isFullyPromotional && $enablePromo && $shippingIncluded && $maxPowerValid;
 
-        $isFullyPromotional = false;
-        if (!$isProject)
-            $isFullyPromotional = $order->isFullyPromotional();
+        $choices = [
+            'included' => 'Frete Incluso',
+            'sices' => 'Frete Sices',
+            'self' => 'Meu Frete'
+        ];
 
-        if (!$isProject && $isFullyPromotional && $enablePromo && $shippingIncluded && $maxPowerValid)
-            $choices = [
-                'included' => 'Frete Incluso',
-                'self' => 'Meu Frete'
-            ];
+        if(!$allowShippingIncluded)
+            unset($choices['included']);
 
-        elseif (!$isProject && $member->isPlatformUser() && $shippingIncluded)
-            $choices = [
-                'included' => 'Frete Incluso',
-                'sices' => 'Frete Sices',
-                'self' => 'Meu Frete'
-            ];
-
-         else
-             $choices = [
-                 'sices' => 'Frete Sices',
-                 'self' => 'Meu Frete'
-             ];
+        if(!$member->isPlatformUser() && $allowShippingIncluded)
+            unset($choices['sices']);
 
         $builder
             ->add('type', ChoiceType::class, [
