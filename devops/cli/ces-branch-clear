@@ -24,6 +24,10 @@ fi
 
 echo "Closing current local and remote branch $BRANCH..."
 
+if [[ $BRANCH == $(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,') ]]; then
+  git checkout master
+fi
+
 git branch -D $BRANCH
 git push origin --delete $BRANCH > /dev/null 2>&1
 
