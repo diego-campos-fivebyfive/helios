@@ -270,6 +270,13 @@ class Project implements ProjectInterface
     private $level;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $financing;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="issued_at", type="datetime", nullable=true)
@@ -524,6 +531,22 @@ class Project implements ProjectInterface
         $this->infPower = $infPower;
 
         return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setFinancing($financing)
+    {
+        $this->financing = $financing;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isFinancing()
+    {
+        return $this->financing;
     }
 
     /**
@@ -1983,6 +2006,8 @@ class Project implements ProjectInterface
     {
         return array_key_exists('is_promotional', $this->defaults) && $this->defaults['is_promotional'];
     }
+
+
 
     /**
      * @inheritDoc
