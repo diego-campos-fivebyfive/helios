@@ -1,10 +1,12 @@
 
+## 11/12 ##
+
 #### FINAME ####
-1. Em "Condições de Pagamento":
+1. 1127. Em "Condições de Pagamento":
 - 1.1. Novo campo para determinar se o mesmo é ou não Financiamento (checkbox).
 - 1.2. Atualizar a listagem para exibir um ícone (check) caso o mesmo seja Financiamento.
 
-2. Nova ROLE.
+2. 1128. Nova ROLE.
 - 2.1 FINANCING : Financiamento
 - 2.2 Comportamentos iguais ao do FINANCIAL
 - 2.2.1 FINANCIAL
@@ -12,73 +14,18 @@
 - 2.2.2 FINANCING
 - 2.2.2.1 Vê todos na regra de FINANCIAL com Financiamento.
 
-3. Finame
+3. 1130. Finame
 - 3.1 Novo nível "finame" : "Finame"
 - 3.2 Assim como "promotional" este nível não é selecionável como nível de conta.
 - 3.3 Novo memorial para este nível.
 - 3.4 Este nível deve aparecer nas opções de utilização na gestão "Componentes" e "Seguro" (com as outras opções).
 
-4. Gestão de Parâmetros (Idêntico ao painel de Promocional)
+4. 1131. Gestão de Parâmetros (Idêntico ao painel de Promocional)
 
--------------
-27/11/2017 - Seguros, Componentes e Finame
+## 27/11 ##
 
-#### SEGUROS - 1 PONTO PENDENTE ####
-Propriedades: 
-- type(insurance), 
-- name, 
-- description, 
-- value, 
-- target (fixo ou percentual do sistema)
-- requiredLevels (níveis em que o seguro é obrigatório)
-- status (status do seguro: ativo/inativo)
-
-Em cada um deve ter a opção de forçar (requirido) conforme o nível (exibe os níveis e marca).
-Comportamento similar ao seguro all risk atual (este será cadastrado futuramente).
-
-Menu: Seguros
-listagem, adição, edição, exclusão.
-Aparece em:
-Gerador de projetos
-Edição de orçamento
-Visualização (soma dos valores de seguros)
-Pró-forma (listado)
-
-1. 998 Mapear entidade.
-2. 1000, 1005 . CRUD + Menu.
-3. 1020, 1021 . Mapear associações Project::Additive e Order::Additive
-4. Serviço de sincronização (verifica e normaliza referências entre additivo e projeto/orçamentos)
-4. Serviço de cálculo e atualização
-5. Integração com geradores
-6. Atualizaçãoe interfaces
-
-7. Adicionar propriedade de disponibilidade (availableLevels).
-8. Atualizar buscas para exibição de seguros (conforme a propriedade).
-9. Ajustar pontos de checagem para obrigatório
-9.1. Gerador
-9.2. Conversão (project/order)
-9.3. Suborder (edição)
-
-#### COMPONENTES - 3 PONTOS PENDENTES ####
-Inclusão de uma nova propriedade (json) nos componentes, onde o administrador irá selecionar os níveis de desconto em que o componente estará ativo.
-
-1. Configuração de propriedades novas (Novo paine "Regras de negócio", em cima) . 950, 962, 963, 964, 965, 966
-2. Ajustes no memorial (carregamento para configuração de preços) . 967
-3. Ajustes no gerador (defaults resolver e loaders) . 980, 993, 995
-4. Ajustes no precificador (memorial e ranges)
-5. Inserção massiva de níveis em componentes (quando liberada)
-6. Ajustes nos forms de componentes (remoção de campos sem uso)
-
-Nomes dos novos campos
-Disponíveis para precificação: 
-Níveis cujos componentes que aparecem no memorial para configuração de preço
-Ativos no gerador: 
-Níveis cujos componentes serão disponibilizados 
-As opções são somente as selecionadas no anterior
-Garante que não sejam selecionados níveis sem preços definidos
-Labels
-- Para memorial: Disponível nos níveis de desconto
-- Para gerador: Disponível no gerador
+#### COMPONENTES ####
+Ajustes nos forms de componentes (remoção de campos sem uso)
 
 #### VALIDADE DE UM ORÇAMENTO ####
 1. Cron rodando as 18:00hrs (horário de brasília)
