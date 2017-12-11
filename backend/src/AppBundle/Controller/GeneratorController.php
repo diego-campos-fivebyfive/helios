@@ -52,7 +52,6 @@ class GeneratorController extends AbstractController
 
             }else{
 
-
                 $project->setDefaults($form->getData());
 
                 $generator->reset($project);
@@ -81,8 +80,6 @@ class GeneratorController extends AbstractController
                 ]);
             }
         }
-
-
 
         return $this->render('generator.form', [
             'form' => $form->createView(),
@@ -135,17 +132,14 @@ class GeneratorController extends AbstractController
         $manager = $this->manager('project');
 
         $project = $manager->create();
-        if(0 != $id = $request->query->getInt('project', 0)){
+        if(0 != $id = $request->query->getInt('project', 0))
             $project = $manager->find($id);
-        }
 
-        if(!$project->getMember()){
+        if(!$project->getMember())
             $project->setMember($this->member());
-        }
 
-        if (null != $level = $request->get('level')){
+        if (null != $level = $request->get('level'))
             $project->setLevel($level);
-        }
 
         return $project;
     }
