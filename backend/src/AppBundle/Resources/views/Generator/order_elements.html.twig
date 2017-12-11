@@ -177,7 +177,8 @@
                     swal.close();
                     OrderManager.getElements();
                     $('#add_order_element').trigger('change');
-                    OrderManager.renderAdditives();
+                    //OrderManager.renderAdditives();
+                    OrderInsurances.loadInsurances();
                     GeneratorHandler.getOrders();
                 }
             });
@@ -212,7 +213,8 @@
                 timeOut: 1000
             });
 
-            OrderManager.renderAdditives();
+            //OrderManager.renderAdditives();
+            OrderInsurances.loadInsurances();
             GeneratorHandler.refreshWizardModal();
             GeneratorHandler.resetBudgetButton();
             GeneratorHandler.getOrders();

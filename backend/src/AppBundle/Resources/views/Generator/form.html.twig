@@ -24,7 +24,7 @@
             <div class="col-md-12 text-center" style="margin-bottom: 10px;">
                 <div class="alert alert-success" id="promo_background">
                     <div class="box-promotional">
-                        <div class="i-checks">
+                        <div class="i-checks check-promotional">
                             {{ form_widget(form.is_promotional) }}
                         </div>
                     </div>
@@ -120,11 +120,11 @@
     $('#promo_notice').html(promo_phrase);
     $('#promo_background').css('background-color', promo_back);
 
-    $('.i-checks').iCheck({
+    $('.check-promotional').iCheck({
         checkboxClass: 'icheckbox_square-green',
     });
 
-    $('.i-checks').on('ifChanged', function(){
+    $('.check-promotional').on('ifChanged', function(){
         $('input[name="generator[is_promotional]"]').trigger('change');
     });
     
