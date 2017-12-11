@@ -16,7 +16,7 @@ Sistema de suporte para empresas do setor de energia solar fotovoltaíca.
   1. [Gerenciamento de Arquivos](#gerenciamento-de-arquivos)
   1. [Status](#status)
   1. [Estrutura](#estrutura)
-  1. [Links Uteis](#links-uteis)
+  1. [Links Úteis](#links-Úteis)
   1. [Sobre](#sobre)
 
 ## Guia Geral
@@ -766,7 +766,7 @@ Esclarecimentos gerais relacionados a documentação:
 
 **[⬆ Voltar ao Topo](#sumário)**
 
-## Links Uteis
+## Links Úteis
 
   <a name="links--doc"></a><a name="10.1"></a>
   - [10.1](#links--doc) **Links de documentação**:
@@ -774,7 +774,7 @@ Esclarecimentos gerais relacionados a documentação:
     - [Integração - Protheus](docs/integrations/protheus)
     - [Roadmap - Draft Semanal](docs/meetings/roadmap/draft.md)
     - [Diagramas - UML](docs/uml/diagrams.md)
-    - [Tasks - Millestons](https://github.com/sices/sices/milestones)
+    - [Issue tracker (github) - Milestones](https://github.com/sices/sices/milestones)
 
 
 **[⬆ Voltar ao Topo](#sumário)**
