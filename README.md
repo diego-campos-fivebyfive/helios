@@ -361,7 +361,7 @@ Esclarecimentos gerais relacionados a documentação:
         - `An. Financeira`: Corresponde ao módulo de análise financeira.
         - `Application`: Corresponde a contextos mais genéricos voltados a aplicação, como por exemplo mecanismos de autenticação, menu, etc.
         - `Componentes`: Corresponde a componentes sices, como inversores, estruturas, string-boxes, etc.
-        - `Configuração`: Corresponde a parte de "settings" do usuário da plataforma. Dados climaticos e configurações como a de dados climaticos correspondem ao milleston de configuração.
+        - `Configuração`: Corresponde ao módulo de configuração a parte de "settings" do usuário da plataforma como dados climáticos e suas configurações.
         - `Conta`: Corresponde aos contextos: conta sices, integradores e contatos, com suas respectivas sub divisões: como conta sices: agent, admin, master; como integradores: user, member, account ...; e como contato.
         - `Dashboard`: Corresponde a dashboard inicial do sistema.
         - `Dimensionamento`: Corresponde ao módulo de dimensionamento.
