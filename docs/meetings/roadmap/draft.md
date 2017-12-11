@@ -5,18 +5,18 @@
 - 1.2. Atualizar a listagem para exibir um ícone (check) caso o mesmo seja Financiamento.
 
 2. Nova ROLE.
-2.1 FINANCING : Financiamento
-2.2 Comportamentos iguais ao do FINANCIAL
-2.2.1 FINANCIAL
-2.2.1.1 Vê todos na regra existente exceto financiamento.
-2.2.2 FINANCING
-2.2.2.1 Vê todos na regra de FINANCIAL com Financiamento.
+- 2.1 FINANCING : Financiamento
+- 2.2 Comportamentos iguais ao do FINANCIAL
+- 2.2.1 FINANCIAL
+- 2.2.1.1 Vê todos na regra existente exceto financiamento.
+- 2.2.2 FINANCING
+- 2.2.2.1 Vê todos na regra de FINANCIAL com Financiamento.
 
 3. Finame
-3.1 Novo nível "finame" : "Finame"
-3.2 Assim como "promotional" este nível não é selecionável como nível de conta.
-3.3 Novo memorial para este nível.
-3.4 Este nível deve aparecer nas opções de utilização na gestão "Componentes" e "Seguro" (com as outras opções).
+- 3.1 Novo nível "finame" : "Finame"
+- 3.2 Assim como "promotional" este nível não é selecionável como nível de conta.
+- 3.3 Novo memorial para este nível.
+- 3.4 Este nível deve aparecer nas opções de utilização na gestão "Componentes" e "Seguro" (com as outras opções).
 
 4. Gestão de Parâmetros (Idêntico ao painel de Promocional)
 
