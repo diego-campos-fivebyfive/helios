@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Component\Project;
+use AppBundle\Entity\Pricing\MemorialInterface;
 use AppBundle\Form\Component\GeneratorType;
 use AppBundle\Service\ProjectGenerator\ShippingRuler;
 use AppBundle\Form\Financial\ShippingType;
@@ -44,6 +45,7 @@ class GeneratorController extends AbstractController
             if('save' != $option){
 
                 $generator->reset($project);
+
                 $form = $this->createForm(GeneratorType::class, $form->getData(), [
                     'action' => $action
                 ]);
@@ -53,9 +55,16 @@ class GeneratorController extends AbstractController
                 $project->setDefaults($form->getData());
 
                 $generator->reset($project);
+
                 $generator->generate($project);
 
                 $errors = self::loadDefaultErrors($project);
+
+                if( $request->request->has('generator')
+                    && array_key_exists('is_promotional', $request->request->get('generator'))) {
+                    $project->setLevel(MemorialInterface::LEVEL_PROMOTIONAL);
+                    $this->manager('project')->save($project);
+                }
 
                 if(count($errors)) {
                     return $this->json([
@@ -123,13 +132,11 @@ class GeneratorController extends AbstractController
         $manager = $this->manager('project');
 
         $project = $manager->create();
-        if(0 != $id = $request->query->getInt('project', 0)){
+        if(0 != $id = $request->query->getInt('project', 0))
             $project = $manager->find($id);
-        }
 
-        if(!$project->getMember()){
+        if(!$project->getMember())
             $project->setMember($this->member());
-        }
 
         if (null != $level = $request->get('level'))
             $project->setLevel($level);

@@ -76,7 +76,7 @@ class ProjectGeneratorController extends AbstractController
      */
     public function componentsAction(Project $project, Request $request)
     {
-        if(null != $level = $request->query->get('level')){
+        if(null != $level = $request->query->get('level') && Project::SOURCE_CATALOG == $project->getSource()){
             $project->setLevel($level);
         }
 
