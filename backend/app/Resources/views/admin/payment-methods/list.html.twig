@@ -9,6 +9,9 @@
                 {{ paymentMethod.enabled ? 'Ativo' : 'Inativo' }}
             </span>
         </td>
+        <td class="text-center">
+            <h3><i class="fa {{ paymentMethod.financing ? 'fa-check' : '' }}"></i></h3>
+        </td>
         <td class="text-center"> {{ paymentMethod.quotas|length }} </td>
         <td>
             <div class="btn-group btn-group-md btn-group-justified">
