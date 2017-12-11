@@ -12,7 +12,6 @@ use AppBundle\Entity\Order\OrderAdditiveInterface;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Entity\TimelineInterface;
 use AppBundle\Form\Order\FilterType;
-use AppBundle\Service\Pricing\Insurance;
 use AppBundle\Service\ProjectGenerator\ShippingRuler;
 use function PHPSTORM_META\type;
 use Symfony\Component\HttpFoundation\Request;
@@ -157,29 +156,6 @@ class OrderController extends AbstractController
         return $this->render('order.shipping_info', array(
             'order' => $order
         ));
-    }
-
-    /**
-     * @Route("/{id}/insure", name="order_insure")
-     * @Method("post")
-     */
-    public function insureAction(Order $order, Request $request)
-    {
-        $insure = $order->getLevel() == 'promotional' ? true : $request->get('insure');
-
-        Insurance::apply($order, (bool) $insure);
-
-        $this->manager('order')->save($order);
-
-        $this->get('order_manipulator')->normalizeInfo($order);
-
-        return $this->json([
-            'order' => [
-                'id' => $order->getId(),
-                'insurance' => $order->getInsurance(),
-                'total' => $order->getTotal()
-            ]
-        ]);
     }
 
     /**

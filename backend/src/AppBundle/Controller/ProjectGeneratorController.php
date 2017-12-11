@@ -15,7 +15,6 @@ use AppBundle\Form\Order\DeliveryType;
 use AppBundle\Form\Order\ElementType;
 use AppBundle\Form\Order\OrderType;
 use AppBundle\Service\Order\OrderFinder;
-use AppBundle\Service\Pricing\Insurance;
 use AppBundle\Service\ProjectGenerator\ShippingRuler;
 use AppBundle\Form\Financial\ShippingType;
 use AppBundle\Service\Order\ElementResolver;
@@ -351,8 +350,6 @@ class ProjectGeneratorController extends AbstractController
            $this->manager('order')->save($order);
 
             $this->get('order_precifier')->precify($order);
-
-            Insurance::apply($order,$order->getInsurance() > 0);
 
            return $this->json([]);
         }
