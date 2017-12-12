@@ -73,6 +73,48 @@ class Synchronizer
         $this->manager->flush();
     }
 
+    public function findBySource($source, $type)
+    {
+        $metadata = $this->getMetadata($source);
+
+        $level = $metadata['level'];
+        $related = $metadata['related'];
+        $target = $metadata['target'];
+        $targetProperty = strtolower($target);
+
+        $qb = $this->manager->createQueryBuilder();
+
+        $qb2 = $this->manager->createQueryBuilder();
+        $qb2
+            ->select('a2.id')
+            ->from($related, 'r')
+            ->join('r.additive', 'a2', 'WITH')
+            ->where(sprintf('r.%s = :%s', $targetProperty, $targetProperty))
+            ->setParameter($targetProperty, $source)
+        ;
+
+        $relatedIds = array_map('current', $qb2->getQuery()->getResult());
+        $exprRelated = empty($relatedIds) ? null : $qb->expr()->in('a.id', $relatedIds);
+
+        $qb->select('a')->from(Additive::class, 'a');
+
+        $qb
+            ->innerJoin($related, 'r', 'WITH')
+            ->where(
+                $qb->expr()->orX(
+                    $qb->where('a.enabled = 1')
+                        ->expr()->like('a.availableLevels', $qb->expr()->literal('%"'.$level.'"%')),
+                    $exprRelated
+                )
+            )
+        ;
+
+        $qb->andWhere('a.type = :type')
+            ->setParameter('type', $type);
+
+        return $qb->getQuery()->getResult();
+    }
+
     /**
      * @param $source
      * @return array
@@ -154,6 +196,7 @@ class Synchronizer
         $getter = sprintf('get%ss', $property);
         $remover = sprintf('remove%s', $property);
         $adder = sprintf('add%s', $property);
+        $level = $source->getLevel();
 
         return [
             'class' => $class,
@@ -162,7 +205,8 @@ class Synchronizer
             'property' => $property,
             'adder' => $adder,
             'getter' => $getter,
-            'remover' => $remover
+            'remover' => $remover,
+            'level' => $level
         ];
     }
 }

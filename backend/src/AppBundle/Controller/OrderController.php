@@ -202,15 +202,13 @@ class OrderController extends AbstractController
      */
     public function additivesListsAction(Order $order)
     {
-        $this->get('additive_synchronizer')->synchronize($order);
+        $synchronizer = $this->get('additive_synchronizer');
+        $synchronizer->synchronize($order);
 
-        //TODO: Esta consulta será otimizada no futuro SE necessário for.
-        $additives = $this->manager('additive')->findBy([
-            'type' => Additive::TYPE_INSURANCE
-        ]);
+        $insurances = $synchronizer->findBySource($order, Additive::TYPE_INSURANCE);
 
         return $this->render('admin/orders/insurances_list.html.twig', [
-            'additives' => $additives,
+            'additives' => $insurances,
             'order' => $order
         ]);
     }
