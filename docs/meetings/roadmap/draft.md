@@ -30,11 +30,11 @@
 5.5 Ajustar views e proforma
 
 6. Atualização "finame" em componentes
-1. Módulos - não aplicar
-2. Inversores - todos
-3. Estruturas - Apenas fabricante Sices
-4. StringBox - Apenas fabricante Abb
-5. Variedades - todos
+6.1. Módulos - não aplicar
+6.2. Inversores - todos
+6.3. Estruturas - Apenas fabricante Sices
+6.4. StringBox - Apenas fabricante Abb
+6.5. Variedades - todos
 
 ## 27/11 ##
 
