@@ -6,7 +6,7 @@ if [[ $1 = '--help' ]] || [[ $1 = '-h' ]]; then
   ces-issue-create \n
   Usage (create and start):
   ces-issue-create --start \n"
-  exit 0;
+  exit 0
 fi
 
 # colors pallet
@@ -16,13 +16,32 @@ CE='\033[0;31m'
 CD='\033[0;00m'
 CM='\033[0;00m'
 
-LOGIN=$($CLI_PATH/util/github-credentials --login)
-USER=$($CLI_PATH/util/github-credentials --user)
-NICK=$($CLI_PATH/util/user-credentials $USER --slack)
-USERS_FILE=$(cat $CLI_PATH/stash/users.csv)
+readonly LOGIN=$($CLI_PATH/util/github-credentials --login)
+readonly USER=$($CLI_PATH/util/github-credentials --user)
+readonly NICK=$($CLI_PATH/util/user-credentials $USER --slack)
+readonly USERS_FILE=$(cat $CLI_PATH/stash/users.csv)
+
+# contains all paginated labels
+request_page_labels()
+{
+  local page=$1; shift
+  local labels=$1; shift
+
+  local emptyJSON=$(printf "[\n\n]")
+  local response=$(curl -s -X GET -u $LOGIN $GITHUB_REPOSITORY/labels?page=$page)
+
+  labels="${labels}${response}"
+
+  if [[ "${response}" != "${emptyJSON}" ]]; then
+    request_page_labels $[page+1] "${labels}"
+    return 1
+  fi
+
+  echo "${labels}"
+}
 
 # contains labels formatted by: prefix:value
-LABELS=$(curl -s -X GET -u $LOGIN $GITHUB_REPOSITORY/labels \
+readonly LABELS=$(request_page_labels 1 \
   | grep \"name\" \
   | grep -v Stage \
   | sed 's/"//g;s/,//g' \
@@ -30,7 +49,7 @@ LABELS=$(curl -s -X GET -u $LOGIN $GITHUB_REPOSITORY/labels \
 )
 
 # contains milestones formatted by: id:prefix:value
-MILESTONES=$(curl -s -X GET -u $LOGIN $GITHUB_REPOSITORY/milestones \
+readonly MILESTONES=$(curl -s -X GET -u $LOGIN $GITHUB_REPOSITORY/milestones \
   | grep -E 'number|title' \
   | tr -d '[:space:]' \
   | sed 's/"//g;s/,//g;s/number:/\n/g;s/title//g;' \
@@ -38,19 +57,19 @@ MILESTONES=$(curl -s -X GET -u $LOGIN $GITHUB_REPOSITORY/milestones \
 )
 
 # contains all Github users
-ASSIGNEES=$(printf "${USERS_FILE}" | awk -F$';' '{print $2}' | sed '1d')
+readonly ASSIGNEES=$(printf "${USERS_FILE}" | awk -F$';' '{print $2}' | sed '1d')
 
 # contains Stage prefix name
-STAGE_PREFIX=Stage
+readonly STAGE_PREFIX=Stage
 
 # contains labels prefixes names without repetition
-GENERAL_PREFIXES=$(printf "${LABELS}" \
+readonly GENERAL_PREFIXES=$(printf "${LABELS}" \
   | awk -F$':' '{print $1}' \
   | awk '!a[$0]++'
 )
 
 # contains selection titles
-declare -A HEADERS=(
+declare -rA HEADERS=(
   [Category]='Select at least one category:\nUsage: enter 0 for multiple choose'
   [Module]='Select at least one module:\nUsage: enter 0 for multiple choose'
   [Feature]='Select a feature to this issue:\nUsage: enter 0 to no feature choose'
