@@ -10,11 +10,11 @@
         #settings_parameters_enabled_roof_types label {
             width: 95%;
         }
-        .promo_phrase {
+        .editor-config {
             border: 1px solid rgba(10, 10, 10, 0.2) ;
             border-radius: 2px;
         }
-        .promo_phrase_div {
+        .editor-container {
             padding-top: 10px;
             padding-bottom: 10px;
         }
@@ -169,13 +169,13 @@
                                                                            {{ form_label(form_params.enable_promo, 'Ativar orçamentos promocionais') }}
                                                                        </div>
 
-                                                                       <div class="promo_phrase_div">
+                                                                       <div class="editor-container" id="promo-phrase-container">
                                                                            <label>Frase para Orçamentos Promocionais</label>
-                                                                           <div class="promo_phrase" id="promo_phrase">
+                                                                           <div class="editor-config" id="promo_phrase">
                                                                            </div>
                                                                        </div>
 
-                                                                       <div class="color-alert">
+                                                                       <div class="color-alert" id="promo-color">
                                                                            <button class="jscolor {valueElement:'valueInput', styleElement:'styleInput'}">
                                                                                Cor de fundo da mensagem
                                                                            </button>
@@ -200,6 +200,43 @@
                                                                    </div>
                                                                </div>
 
+                                                           </div>
+                                                       </div>
+
+                                                       <div class="col-lg-6">
+                                                           <div class="panel panel-primary">
+                                                               <div class="panel-heading">
+                                                                   <i class="fa fa-briefcase"></i> Finame
+                                                               </div>
+                                                               <div class="panel-body">
+                                                                   <div class="col-md-12">
+                                                                       <div>
+                                                                           {{ form_widget(form_params.enable_finame) }}
+                                                                           {{ form_label(form_params.enable_finame, 'Ativar Finame') }}
+                                                                       </div>
+
+                                                                       <div class="editor-container" id="finame-phrase-container">
+                                                                           <label>Frase para Finame</label>
+                                                                           <div class="editor-config" id="finame-phrase">
+                                                                           </div>
+                                                                       </div>
+
+                                                                       <div class="color-alert" id="finame-color">
+                                                                           <button class="jscolor {valueElement:'valueInput', styleElement:'styleInputFiname'}">
+                                                                               Cor de fundo da mensagem
+                                                                           </button>
+                                                                       </div>
+
+                                                                       <div hidden id="styleInputFiname"></div>
+
+
+                                                                       <div class="alert alert-success" id="show-back-finame-phrase">
+                                                                           <span class="font-promotional" id="show-finame-phrase">
+                                                                           </span>
+                                                                       </div>
+
+                                                                   </div>
+                                                               </div>
                                                            </div>
                                                        </div>
 
@@ -257,16 +294,22 @@
             '#settings_parameters_max_order_discount,' +
             '#settings_parameters_fdi_min,' + '#settings_parameters_fdi_max').mask('##,00',{reverse: true});
 
-        var color = $('#settings_parameters_promo_background').val();
-        var phrase = $('#settings_parameters_promo_notice').val();
+        var colorPromo = $('#settings_parameters_promo_background').val();
+        var phrasePromo = $('#settings_parameters_promo_notice').val();
 
-        $('#show-back-phrase').css('background-color', color);
-        $('#show_promo_phrase').html(phrase);
-        $('#promo_phrase').html(phrase);
+        $('#show-back-phrase').css('background-color', colorPromo);
+        $('#show_promo_phrase').html(phrasePromo);
+        $('#promo_phrase').html(phrasePromo);
+
+        var colorFiname = $('#settings_parameters_finame_background').val();
+        var phraseFiname = $('#settings_parameters_finame_notice').val();
+
+        $('#show-back-finame-phrase').css('background-color', colorFiname);
+        $('#show-finame-phrase').html(phraseFiname);
+        $('#finame-phrase').html(phraseFiname);
 
         $('#promo_phrase').summernote({
             toolbar: [
-                // [groupName, [list of button]]
                 ['style', ['bold', 'italic', 'underline']],
                 ['fontsize', ['fontsize']],
                 ['color', ['color']],
@@ -279,7 +322,7 @@
 
         $('.note-editor').css('min-height', 150)
 
-        $('.jscolor').on('blur', function () {
+        $('#promo-color .jscolor').on('blur', function () {
             var color = $('#styleInput').css('background-color')
             var promo_color = $('#settings_parameters_promo_background');
             promo_color.val(color);
@@ -287,7 +330,7 @@
             formSettings.trigger('submit');
         });
 
-        promo_text_area =  $('div[contenteditable]');
+        promo_text_area =  $('#promo-phrase-container div[contenteditable]');
         function phrase_promo_editable() {
             $('#show_promo_phrase').html(promo_text_area.html());
 
@@ -308,7 +351,51 @@
         promo_text_area.on("focus", function () {
             window.addEventListener("scroll", phrase_scrolling_page);
         });
-        
+
+        $('#finame-phrase').summernote({
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['paragraph']]
+            ],
+            height: 150,
+            disableDragAndDrop: false,
+            disableResizeEditor: true
+        });
+
+        $('.note-editor').css('min-height', 150)
+
+        $('#finame-color .jscolor').on('blur', function () {
+         var color = $('#styleInputFiname').css('background-color')
+         var finame_color = $('#settings_parameters_finame_background');
+         finame_color.val(color);
+
+         formSettings.trigger('submit');
+         });
+
+        finame_text_area =  $('#finame-phrase-container div[contenteditable]');
+        function phrase_finame_editable() {
+            $('#show-finame-phrase').html(finame_text_area.html());
+
+            $('#settings_parameters_finame_notice').val(finame_text_area.html());
+
+            formSettings.trigger('submit');
+        }
+
+        phrase_scrolling_finame_page = function () {
+            phrase_finame_editable();
+            window.removeEventListener("scroll", phrase_scrolling_finame_page);
+        }
+
+        finame_text_area.on("blur", function () {
+            phrase_finame_editable();
+        });
+
+        finame_text_area.on("focus", function () {
+            window.addEventListener("scroll", phrase_scrolling_finame_page);
+        });
+
         var spinnerSettings = $('#spinner_settings');
         var spinnerLoader = spinnerSettings.html();
 
@@ -334,8 +421,10 @@
                 complete: function (xhr) {
                     if (200 == xhr.status) {
                         changeSpinner(false);
-                        color = $('#settings_parameters_promo_background').val();
-                        $('#show-back-phrase').css('background-color', color);
+                        color_promo = $('#settings_parameters_promo_background').val();
+                        $('#show-back-phrase').css('background-color', color_promo);
+                        color_finame = $('#settings_parameters_finame_background').val();
+                        $('#show-back-finame-phrase').css('background-color', color_finame).val();
                     } else {
                         swal('Ooops', 'Houve uma falha ao processar as configurações', 'error');
                     }
