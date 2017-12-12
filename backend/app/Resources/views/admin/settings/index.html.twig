@@ -171,7 +171,7 @@
 
                                                                        <div class="editor-container" id="promo-phrase-container">
                                                                            <label>Frase para Orçamentos Promocionais</label>
-                                                                           <div class="editor-config" id="promo_phrase">
+                                                                           <div class="editor-config" id="promo-phrase">
                                                                            </div>
                                                                        </div>
 
@@ -185,7 +185,7 @@
 
 
                                                                        <div class="alert alert-success" id="show-back-phrase">
-                                                                           <span class="font-promotional" id="show_promo_phrase">
+                                                                           <span class="font-promotional" id="show-promo-phrase">
                                                                            </span>
                                                                        </div>
 
@@ -298,8 +298,8 @@
         var phrasePromo = $('#settings_parameters_promo_notice').val();
 
         $('#show-back-phrase').css('background-color', colorPromo);
-        $('#show_promo_phrase').html(phrasePromo);
-        $('#promo_phrase').html(phrasePromo);
+        $('#show-promo-phrase').html(phrasePromo);
+        $('#promo-phrase').html(phrasePromo);
 
         var colorFiname = $('#settings_parameters_finame_background').val();
         var phraseFiname = $('#settings_parameters_finame_notice').val();
@@ -308,7 +308,7 @@
         $('#show-finame-phrase').html(phraseFiname);
         $('#finame-phrase').html(phraseFiname);
 
-        $('#promo_phrase').summernote({
+        $('#promo-phrase').summernote({
             toolbar: [
                 ['style', ['bold', 'italic', 'underline']],
                 ['fontsize', ['fontsize']],
@@ -332,7 +332,7 @@
 
         promo_text_area =  $('#promo-phrase-container div[contenteditable]');
         function phrase_promo_editable() {
-            $('#show_promo_phrase').html(promo_text_area.html());
+            $('#show-promo-phrase').html(promo_text_area.html());
 
             $('#settings_parameters_promo_notice').val(promo_text_area.html());
 
