@@ -10,8 +10,7 @@
                     $('#insurances_list').html(xhr.responseText);
                     {% if isProject is defined %}
                     Financial.get_taxes();
-                    Financial.unlock_form();
-                    Financial.form_analysis.submit();
+                    Financial.force_calculations();
                     {% endif %}
                 }
             });
