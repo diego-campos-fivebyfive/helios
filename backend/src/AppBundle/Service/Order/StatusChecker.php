@@ -140,6 +140,11 @@ class StatusChecker
                         UserInterface::ROLE_PLATFORM_FINANCIAL
                     ]
                 ],
+                OrderInterface::STATUS_DONE => [
+                    UserInterface::TYPE_PLATFORM => [
+                        UserInterface::ROLE_PLATFORM_FINANCING
+                    ]
+                ]
             ],
             OrderInterface::STATUS_DONE => [
                 OrderInterface::STATUS_INSERTED => [
@@ -150,6 +155,11 @@ class StatusChecker
                 OrderInterface::STATUS_APPROVED => [
                     UserInterface::TYPE_PLATFORM => [
                         UserInterface::ROLE_PLATFORM_FINANCIAL
+                    ]
+                ],
+                OrderInterface::STATUS_APPROVED => [
+                    UserInterface::TYPE_PLATFORM => [
+                        UserInterface::ROLE_PLATFORM_FINANCING
                     ]
                 ]
             ],
