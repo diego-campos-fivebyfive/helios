@@ -14,6 +14,7 @@ interface MemorialInterface
     const LEVEL_PLATINUM = 'platinum';
     const LEVEL_PREMIUM = 'premium';
     const LEVEL_PROMOTIONAL = 'promotional';
+    const LEVEL_FINAME = 'finame';
 
     /**
      * @return int
