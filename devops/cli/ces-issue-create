@@ -23,7 +23,7 @@ USERS_FILE=$(cat $CLI_PATH/stash/users.csv)
 
 # contains labels formatted by: prefix:value
 LABELS=$(curl -s -X GET -u $LOGIN $GITHUB_REPOSITORY/labels \
-  | grep name \
+  | grep \"name\" \
   | grep -v Stage \
   | sed 's/"//g;s/,//g' \
   | awk '{print $2 $3}'
@@ -52,11 +52,13 @@ GENERAL_PREFIXES=$(printf "${LABELS}" \
 # contains selection titles
 declare -A HEADERS=(
   [Category]='Select at least one category:\nUsage: enter 0 for multiple choose'
-  [Milestone]='Select the milestone:'
+  [Module]='Select at least one module:\nUsage: enter 0 for multiple choose'
+  [Feature]='Select a feature to this issue:\nUsage: enter 0 to no feature choose'
+  [Milestone]='Select the milestone:\nUsage: enter 0 to no milestone choose'
   [Priority]='Select the priority:'
   [Stage]='Select the stage:'
   [Type]='Select the type:'
-  [Assignee]='Assign a github user to this issue\nUsage: enter 0 to no assign:'
+  [Assignee]='Assign a github user to this issue:\nUsage: enter 0 to no assign'
   [Description]='Enter issue description:\nUsage: enter /end when it was done\n'
   [Title]='Enter the issue title:'
 )
@@ -147,8 +149,11 @@ select_label()
     if [[ -n $label ]]; then
       set_issue_label $prefix $label
       break
-    elif [[ $prefix == 'Category' ]]; then
+    elif [[ $prefix == 'Category' || $prefix == 'Module' ]]; then
       set_issue_multiple_labels $prefix "${options}"
+      break
+    elif [[ $prefix == 'Feature' ]]; then
+      echo -e "${CI}> Any feature selected${CM}"
       break
     else
       echo -e "${CE}${error_message}${CM}"
@@ -161,23 +166,17 @@ select_label()
 # requests the user to select a milestone, based on Category chosen
 select_milestone()
 {
-  local prefix_general='Plataforma'
-  local grep_type=''
-
-  for label in ${ISSUE_LABELS[@]}; do
-    [[ $label == *'Devops'* ]] && grep_type='-v'
-  done
-
-  local options=$(printf "$MILESTONES" \
-    | grep $grep_type $prefix_general \
-    | awk -F$':' '{print $3}'
-  )
+  local options=$(awk -F$':' '{print $2}' <<< "$MILESTONES")
 
   echo -e "${CT}${HEADERS[Milestone]}${CM}"
 
   select milestone in $options; do
-    echo -e "${CI}> Selected milestone: ${milestone}${CM}"
-    ISSUE_MILESTONE=$(printf "$MILESTONES" | grep $milestone)
+    if [[ -n $milestone ]]; then
+      echo -e "${CI}> Selected milestone: ${milestone}${CM}"
+      ISSUE_MILESTONE=$(printf "$MILESTONES" | grep $milestone)
+    else
+      echo -e "${CI}> Any milestone selected${CM}"
+    fi
     break
   done
 }
@@ -191,6 +190,8 @@ select_assignee()
     if [[ -n $assignee ]]; then
       echo -e "${CI}> Selected assignee: ${assignee}${CM}"
       ISSUE_ASSIGNEE=$assignee
+    else
+      echo -e "${CI}> Empty assignee${2}${CM}"
     fi
     break
   done
@@ -215,9 +216,17 @@ format_github_issue()
   local title="\"title\":\"${ISSUE_TITLE}\""
   local description="\"body\":\"${ISSUE_DESCRIPTION}\""
   local assignee="\"assignees\":[\"${ISSUE_ASSIGNEE}\"]"
-  local milestone="\"milestone\":$(echo $ISSUE_MILESTONE | awk -F':' '{print $1}')"
-  local labels="\"labels\":[$(printf '"%s %s",' ${ISSUE_LABELS[@]} | sed 's/\(.*\),/\1/')]"
-  echo "{$title,$description,$assignee,$milestone,$labels}"
+  local labels=$(printf '"%s %s",' ${ISSUE_LABELS[@]} | sed 's/\(.*\),/\1/')
+  labels="\"labels\":[${labels}]"
+
+  if [[ -n $ISSUE_MILESTONE ]]; then
+    local milestone=$(echo $ISSUE_MILESTONE | awk -F':' '{print $1}')
+    milestone="\"milestone\":${milestone}"
+
+    echo "{$title,$description,$assignee,$milestone,$labels}"
+  else
+    echo "{$title,$description,$assignee,$labels}"
+  fi
 }
 
 # returns slack notification json attachment format
@@ -228,7 +237,7 @@ format_slack_notification()
   local pretext="\"pretext\":\"${message}\""
   local text="\"text\":\"Título: ${ISSUE_TITLE}\""
 
-  local milestone="$(echo $ISSUE_MILESTONE | awk -F$':' '{print $3}')"
+  local milestone="$(echo $ISSUE_MILESTONE | awk -F$':' '{print $2}')"
   local assignee=$ISSUE_ASSIGNEE
   [[ -z assignee ]] && assignee='No Assignee'
 
@@ -258,6 +267,7 @@ select_assignee
 describe_issue
 
 issue=$(format_github_issue)
+
 ISSUE_NUMBER=$(curl -s -X POST -u $LOGIN -d "$issue" $GITHUB_REPOSITORY/issues \
   | grep -m 1 number \
   | awk '{print $2}' \
