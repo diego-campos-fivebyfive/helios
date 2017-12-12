@@ -9,7 +9,6 @@ use AppBundle\Form\Component\ProjectExtraType;
 use AppBundle\Form\Financial\FinancialType;
 use AppBundle\Form\Financial\ShippingType;
 use AppBundle\Form\Financial\TaxType;
-use AppBundle\Service\Pricing\Insurance;
 use AppBundle\Service\ProjectGenerator\ShippingRuler;
 use AppBundle\Service\Support\Project\FinancialAnalyzer;
 use Symfony\Component\HttpFoundation\Request;
@@ -235,26 +234,6 @@ class ProjectFinancialController extends AbstractController
         $this->manager('project_extra')->delete($projectExtra);
 
         return $this->json([]);
-    }
-
-    /**
-     * @Route("/{id}/insure", name="financial_insure")
-     * @Method("post")
-     */
-    public function insureAction(Project $project, Request $request)
-    {
-        $insure = $project->getDefaults()['is_promotional']? true : $request->get('insure');
-
-        Insurance::apply($project, (bool) $insure);
-
-        $this->manager('project')->save($project);
-
-        return $this->json([
-            'project' => [
-                'id' => $project->getId(),
-                'insurance' => $project->getInsurance()
-            ]
-        ]);
     }
 
     /**
