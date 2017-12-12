@@ -117,8 +117,6 @@ class OrderFinder
             ->setParameters($this->parameters)
             ;
 
-        //dump($qb->getQuery()->getSQL());die;
-
         return $qb;
     }
 
