@@ -22,6 +22,7 @@ interface UserInterface extends BaseUserInterface
     const ROLE_PLATFORM_AFTER_SALES = 'ROLE_PLATFORM_AFTER_SALES';
     const ROLE_PLATFORM_EXPANSE = 'ROLE_PLATFORM_EXPANSE';
     const ROLE_PLATFORM_LOGISTIC = 'ROLE_PLATFORM_LOGISTIC';
+    const ROLE_PLATFORM_FINANCING = 'ROLE_PLATFORM_FINANCING';
 
     /**
      * @return int
@@ -84,6 +85,11 @@ interface UserInterface extends BaseUserInterface
      * @return bool
      */
     public function isPlatformLogistic();
+
+    /**
+     * @return bool
+     */
+    public function isPlatformFinancing();
 
     /**
      * @return bool
