@@ -139,6 +139,13 @@ class User extends AbstractUser implements UserInterface
         return $this->hasRole(self::ROLE_PLATFORM_LOGISTIC);
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function isPlatformFinancing()
+    {
+        return $this->hasRole(self::ROLE_PLATFORM_FINANCING);
+    }
 
     /**
      * @inheritDoc
@@ -294,7 +301,8 @@ class User extends AbstractUser implements UserInterface
             self::ROLE_PLATFORM_FINANCIAL => 'Financeiro',
             self::ROLE_PLATFORM_AFTER_SALES => 'Pós-Venda',
             self::ROLE_PLATFORM_EXPANSE => 'Expansão',
-            self::ROLE_PLATFORM_LOGISTIC => 'Logística'
+            self::ROLE_PLATFORM_LOGISTIC => 'Logística',
+            self::ROLE_PLATFORM_FINANCING => 'Financiamento'
         ];
     }
 
@@ -310,7 +318,8 @@ class User extends AbstractUser implements UserInterface
             self::ROLE_PLATFORM_FINANCIAL,
             self::ROLE_PLATFORM_AFTER_SALES,
             self::ROLE_PLATFORM_EXPANSE,
-            self::ROLE_PLATFORM_LOGISTIC
+            self::ROLE_PLATFORM_LOGISTIC,
+            self::ROLE_PLATFORM_FINANCING
         ];
     }
 }

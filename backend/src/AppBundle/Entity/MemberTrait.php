@@ -76,6 +76,14 @@ trait MemberTrait
     }
 
     /**
+     * @inheritdoc
+     */
+    public function isPlatformFinancing()
+    {
+        return $this->checkUserRole(UserInterface::ROLE_PLATFORM_FINANCING);
+    }
+
+    /**
      * @inheritDoc
      */
     public function getUserType()
@@ -90,7 +98,8 @@ trait MemberTrait
             UserInterface::ROLE_PLATFORM_FINANCIAL => 'Financial',
             UserInterface::ROLE_PLATFORM_AFTER_SALES => 'Pós-Venda',
             UserInterface::ROLE_PLATFORM_EXPANSE => 'Expansão',
-            UserInterface::ROLE_PLATFORM_LOGISTIC => 'Logística'
+            UserInterface::ROLE_PLATFORM_LOGISTIC => 'Logística',
+            UserInterface::ROLE_PLATFORM_FINANCING => 'Financiamento'
         );
 
         if (!$this->user instanceof UserInterface || !$this->user->getRoles()) {
