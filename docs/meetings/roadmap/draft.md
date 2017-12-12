@@ -23,18 +23,18 @@
 4. (1131) Gestão de Parâmetros (Idêntico ao painel de Promocional)
 
 5. Ativar finame
-5.1 Abaixo do painel de "Promocional"
-5.2 Recarrega o gerador filtrando pelo nível finame ao marcar + Reseta o projeto.
-5.3 Não é permitido marcar ambos ao mesmo tempo.
-5.4 Verificar ao converter se a precificação OK
-5.5 Ajustar views e proforma
+- 5.1 Abaixo do painel de "Promocional"
+- 5.2 Recarrega o gerador filtrando pelo nível finame ao marcar + Reseta o projeto.
+- 5.3 Não é permitido marcar ambos ao mesmo tempo.
+- 5.4 Verificar ao converter se a precificação OK
+- 5.5 Ajustar views e proforma
 
 6. Atualização "finame" em componentes
-6.1. Módulos - não aplicar
-6.2. Inversores - todos
-6.3. Estruturas - Apenas fabricante Sices
-6.4. StringBox - Apenas fabricante Abb
-6.5. Variedades - todos
+- 6.1. Módulos - não aplicar
+- 6.2. Inversores - todos
+- 6.3. Estruturas - Apenas fabricante Sices
+- 6.4. StringBox - Apenas fabricante Abb
+- 6.5. Variedades - todos
 
 ## 27/11 ##
 
