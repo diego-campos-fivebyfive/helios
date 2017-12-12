@@ -6,7 +6,7 @@
 - 1.1. Novo campo para determinar se o mesmo é ou não Financiamento (checkbox).
 - 1.2. Atualizar a listagem para exibir um ícone (check) caso o mesmo seja Financiamento.
 
-2. (1128) Nova ROLE.
+2. (1128, 1144, 1147) Nova ROLE.
 - 2.1 FINANCING : Financiamento
 - 2.2 Comportamentos iguais ao do FINANCIAL
 - 2.2.1 FINANCIAL
@@ -21,6 +21,20 @@
 - 3.4 Este nível deve aparecer nas opções de utilização na gestão "Componentes" e "Seguro" (com as outras opções).
 
 4. (1131) Gestão de Parâmetros (Idêntico ao painel de Promocional)
+
+5. Ativar finame
+5.1 Abaixo do painel de "Promocional"
+5.2 Recarrega o gerador filtrando pelo nível finame ao marcar + Reseta o projeto.
+5.3 Não é permitido marcar ambos ao mesmo tempo.
+5.4 Verificar ao converter se a precificação OK
+5.5 Ajustar views e proforma
+
+6. Atualização "finame" em componentes
+1. Módulos - não aplicar
+2. Inversores - todos
+3. Estruturas - Apenas fabricante Sices
+4. StringBox - Apenas fabricante Abb
+5. Variedades - todos
 
 ## 27/11 ##
 
