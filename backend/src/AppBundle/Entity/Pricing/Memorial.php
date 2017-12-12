@@ -318,7 +318,8 @@ class Memorial implements MemorialInterface
             self::LEVEL_PLATINUM => 'Platinum',
             self::LEVEL_PREMIUM => 'Premium',
             self::LEVEL_PARTNER => 'Partner',
-            self::LEVEL_PROMOTIONAL => 'Promotional'
+            self::LEVEL_PROMOTIONAL => 'Promotional',
+            self::LEVEL_FINAME => 'Finame'
         ];
 
         return $keys ? array_keys($levels) : $levels ;

@@ -31,6 +31,7 @@ class AccountType extends AbstractType
         $levels = Memorial::getDefaultLevels();
 
         unset($levels[Memorial::LEVEL_PROMOTIONAL]);
+        unset($levels[Memorial::LEVEL_FINAME]);
 
         $builder->add('document',TextType::class, array(
                 'constraints' => new ContainsCnpj() ));
