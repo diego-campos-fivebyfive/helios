@@ -164,6 +164,13 @@ class Order implements OrderInterface
     private $contact;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $financing;
+
+    /**
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
@@ -1426,6 +1433,22 @@ class Order implements OrderInterface
     public function isParent()
     {
         return $this->hasChildren();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setFinancing($financing)
+    {
+        $this->financing = $financing;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isFinancing()
+    {
+        return $this->financing;
     }
 
     /**

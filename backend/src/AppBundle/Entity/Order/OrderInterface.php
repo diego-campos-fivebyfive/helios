@@ -11,6 +11,7 @@
 namespace AppBundle\Entity\Order;
 
 use AppBundle\Entity\AccountInterface;
+use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\Misc\AdditiveInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -242,6 +243,17 @@ interface OrderInterface
      * @return OrderInterface|null
      */
     public function getParent();
+
+    /**
+     * @param $financing
+     * @return ProjectInterface
+     */
+    public function setFinancing($financing);
+
+    /**
+     * @return bool
+     */
+    public function isFinancing();
 
     /**
      * @return bool

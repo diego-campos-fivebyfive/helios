@@ -833,6 +833,17 @@ interface ProjectInterface
     public function isPromotional();
 
     /**
+     * @param $financing
+     * @return ProjectInterface
+     */
+    public function setFinancing($financing);
+
+    /**
+     * @return bool
+     */
+    public function isFinancing();
+
+    /**
      * @param $source
      * @return ProjectInterface
      */
