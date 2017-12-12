@@ -117,6 +117,8 @@ class OrderFinder
             ->setParameters($this->parameters)
             ;
 
+        //dump($qb->getQuery()->getSQL());die;
+
         return $qb;
     }
 
@@ -168,8 +170,15 @@ class OrderFinder
             $qb->andWhere($qb->expr()->in('o.state', $agent->getAttributes()['states']));
 
         $excludeStatus = [];
-        if($agent->isPlatformFinancial())
+        if($agent->isPlatformFinancial()) {
+            $qb->andWhere('o.financing=0');
             $excludeStatus = [Order::STATUS_BUILDING, Order::STATUS_PENDING, Order::STATUS_VALIDATED];
+        }
+
+        if ($agent->isPlatformFinancing()) {
+            $qb->andWhere('o.financing=1');
+            $excludeStatus = [Order::STATUS_BUILDING, Order::STATUS_PENDING, Order::STATUS_VALIDATED];
+        }
 
         if($agent->isPlatformLogistic() || $agent->isPlatformAfterSales())
             $excludeStatus = [Order::STATUS_BUILDING, Order::STATUS_PENDING, Order::STATUS_VALIDATED, Order::STATUS_APPROVED];
@@ -186,7 +195,6 @@ class OrderFinder
         else
             unset($this->parameters['agent']);
 
-
         $qb
             ->andWhere(
                 $qb->expr()->orX(
@@ -202,6 +210,7 @@ class OrderFinder
                 )
             )
         ;
+
     }
 
     /**
