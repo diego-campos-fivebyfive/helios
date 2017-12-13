@@ -72,6 +72,8 @@ class DefaultsResolver
         $this->fdi('max');
         $this->promoNotice();
         $this->promoBackground();
+        $this->finameNotice();
+        $this->finameBackground();
 
         return $this->defaults;
     }
@@ -129,6 +131,26 @@ class DefaultsResolver
         $parameter = $this->resolveParameters(Parameter::class, ['id' => 'platform_settings']);
         if($parameter instanceof Parameter && $parameter->get('promo_background'))
             $this->resolveDefault('promo_background', $parameter->get('promo_background'));
+    }
+
+    /**
+     * Resolve default finameNotice
+     */
+    public function finameNotice()
+    {
+        $parameter = $this->resolveParameters(Parameter::class, ['id' => 'platform_settings']);
+        if ($parameter instanceof Parameter && $parameter->get('finame_notice'))
+            $this->resolveDefault('finame_notice', $parameter->get('finame_notice'));
+    }
+
+    /**
+     * Resolve default finameBackground
+     */
+    public function finameBackground()
+    {
+        $parameter = $this->resolveParameters(Parameter::class, ['id' => 'platform_settings']);
+        if ($parameter instanceof Parameter && $parameter->get('finame_background'))
+            $this->resolveDefault('finame_background', $parameter->get('finame_background'));
     }
 
     /**
@@ -294,6 +316,9 @@ class DefaultsResolver
             'shipping_included' => false,
             'promo_notice' => null,
             'promo_background' => null,
+            'finame' => null,
+            'finame_notice' => null,
+            'finame_background' => null,
             'fdi_min' => null,
             'fdi_max' => null,
             'level' => null,

@@ -144,6 +144,7 @@ class GeneratorType extends AbstractType
         ;
 
         $this->addPromotionalSelector($builder);
+        $this->addFinameSelector($builder);
     }
 
     /**
@@ -176,6 +177,21 @@ class GeneratorType extends AbstractType
         }
     }
 
+    private function addFinameSelector(FormBuilderInterface $builder)
+    {
+        $parameter = $this->checker->getEntityManager()->getRepository(Parameter::class)->find('platform_settings');
+
+        if ($parameter instanceof Parameter && $parameter->get('enable_finame')) {
+
+            $builder->add('finame', CheckboxType::class, [
+                'required' => false
+            ]);
+
+            $builder->add('finame_notice');
+            $builder->add('finame_background');
+        }
+    }
+
     /**
      * @param AccountInterface $account
      * @return array
@@ -194,6 +210,7 @@ class GeneratorType extends AbstractType
 
     /**
      * @param array $data
+     * @return array
      */
     private function createChoices(array $data = [])
     {
