@@ -146,6 +146,47 @@
                                                             </div>
                                                         </div>
 
+                                                        <div class="col-lg-12">
+                                                            <div class="panel panel-success">
+                                                                <div class="panel-heading">
+                                                                    <i class="fa fa-briefcase"></i> Validade de Orçamentos
+                                                                </div>
+                                                                <div class="panel-body">
+
+                                                                    {% set form_order_expiration = form_params.order_expiration_days.vars.prototype %}
+
+                                                                    <div id="inputs_order_expiration"></div>
+
+                                                                    <div>
+                                                                        <span data-prototype="{{ form_widget(form_order_expiration.status, {attr:{class:'hide', 'data-status':''}})|e('html_attr') }}"></span>
+                                                                        <span data-prototype="<div class='col-md-2 text-center'>{{ form_label(form_order_expiration.days, 'Número de dias')|e('html_attr') }}
+                                                                                {{ form_widget(form_order_expiration.days, {attr:{class:'form-control form-input-number'}})|e('html_attr') }}</div>"></span>
+                                                                        <span data-prototype="<div class='col-md-7 text-center'>{{ form_label(form_order_expiration.note, 'Frase exibida ao usuário')|e('html_attr') }}
+                                                                                {{ form_widget(form_order_expiration.note, {attr:{class:'form-control'}})|e('html_attr') }}</div>"></span>
+                                                                    </div>
+
+                                                                    <div class="col-md-12 text-right border-bottom" style="padding-bottom: 10px">
+                                                                        <button id="add_expiration" class="btn btn-primary" type="button">Nova validade</button>
+                                                                    </div>
+
+                                                                    <div class="col-md-12" style="padding-top: 10px">
+                                                                        <div class="col-md-2 text-right"><label>Status</label></div>
+                                                                        <div class="col-md-2 text-center"><label>Números de dias</label></div>
+                                                                        <div class="col-md-8 text-center"><label>Frase exibida ao usuário</label></div>
+                                                                        {% for key, validate in form_params.order_expiration_days %}
+                                                                        <div id="{{ key }}">
+                                                                            <div style="float: left; width: 100%; margin-bottom: 10px"></div>
+                                                                            <div class="col-md-2 text-right"><label>{{ statusNames[validate.status.vars.value]|trans }}</label></div>
+                                                                            <div class="col-md-2">{{ form_widget(validate.days, {attr:{class:'form-control input-number'}}) }}</div>
+                                                                            <div class="col-md-7">{{ form_widget(validate.note, {attr:{class:'form-control'}}) }}</div>
+                                                                            <div class="col-md-1"><button class="btn btn-danger" data-remove="{{ key }}" type="button"><i class="fa fa-remove"></i></button></div>
+                                                                        </div>
+                                                                        {% endfor %}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -253,6 +294,110 @@
 
     <script>
 
+        OrderExpitations = {
+            refresh: false,
+            content: $('#inputs_order_expiration'),
+            add_expiration: $('#add_expiration'),
+            inputs_prototype: $('[data-prototype]'),
+            select_status_html: (
+                '<div class="col-md-2 text-center">' +
+                '<label for="select_status">Status</label>' +
+                '<select class="form-control" id="select_status">' +
+                {% for key, status in statusList %}
+                '<option value="{{ key }}">{{ status|trans }}</option>' +
+                {% endfor %}
+                '</select>' +
+                '</div>'
+            ),
+            remove_and_save_button_html: ('<br><div class="btn-group">' +
+                '<button class="btn btn-success" id="save_btn" type="button">' +
+                '<i class="fa fa-save"></i>' +
+                '</button>' +
+                '<button class="btn btn-primary" id="cancel_btn" type="button">' +
+                '<i class="fa fa-remove"></i>' +
+                '</button>' +
+                '</div>'
+            ),
+            newKey: function () {
+                return Math.ceil(Math.random()*1000);
+            },
+            addFormExpiration: function () {
+                this.add_expiration.addClass('hide');
+
+                var key = this.newKey();
+
+                this.content.append(this.select_status_html);
+
+                for (i = 0; i < this.inputs_prototype.length; i++) {
+                    var str = eval('/__name__/g');
+                    var input = $(this.inputs_prototype[i]).data('prototype').replace(str, key);
+
+                    this.content.append(input);
+                }
+
+                this.content.append(this.remove_and_save_button_html);
+
+                $('#save_btn').on('click', function () {
+                    OrderExpitations.refresh = true;
+                    formSettings.submit();
+                });
+
+                $('#cancel_btn').on('click', function () {
+                    OrderExpitations.content.html('');
+                    OrderExpitations.add_expiration.removeClass('hide');
+                });
+
+                $('.form-input-number').on('keyup', function () {
+                    $(this).val($(this).val().replace(/\D/g,""))
+                });
+
+                $('#select_status').on('change', function () {
+                    $('[data-status]').val($(this).val());
+                });
+            },
+            listener: function () {
+                this.add_expiration.on('click', function () {
+                    OrderExpitations.addFormExpiration();
+                });
+                $('[data-remove]').on('click', function () {
+                    OrderExpitations.remove($(this));
+                });
+                $('.input-number').on('keyup', function () {
+                    $(this).val($(this).val().replace(/\D/g,""))
+                });
+            },
+            init: function () {
+                this.listener();
+            },
+            remove: function (element) {
+                swal({
+                    title: 'Atenção',
+                    text: 'Confirma a remoção dessa validade de orçamento?',
+                    type: "info",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: '{{ 'Confirmar'|trans }}',
+                    cancelButtonText: '{{ 'Cancelar'|trans }}',
+                    closeOnConfirm: false
+                }, function () {
+
+                    sweetAlert({
+                        title: "Removendo...",
+                        text: "Aguarde!",
+                        type: "info",
+                        showConfirmButton: false
+                    });
+
+                    $('#' + element.data('remove')).remove();
+
+                    OrderExpitations.refresh = true;
+                    formSettings.submit();
+                });
+            }
+        };
+
+        OrderExpitations.init();
+
         $('#settings_parameters_shipping_included_max_power,' +
             '#settings_parameters_max_order_discount,' +
             '#settings_parameters_fdi_min,' + '#settings_parameters_fdi_max').mask('##,00',{reverse: true});
@@ -336,6 +481,10 @@
                         changeSpinner(false);
                         color = $('#settings_parameters_promo_background').val();
                         $('#show-back-phrase').css('background-color', color);
+                        if (OrderExpitations.refresh) {
+                            window.location.reload();
+                            // refresh = false;
+                        }
                     } else {
                         swal('Ooops', 'Houve uma falha ao processar as configurações', 'error');
                     }
@@ -385,5 +534,6 @@
                 ]
             }
         });
+
     </script>
 {% endblock %}
