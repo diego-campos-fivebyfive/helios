@@ -2,11 +2,13 @@
 
 namespace AdminBundle\Form;
 
+use AdminBundle\Form\Settings\Orders\ExpirationType;
 use AppBundle\Entity\Component\Project;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -68,6 +70,16 @@ class SettingsType extends AbstractType
                 ->add('fdi_max', TextType::class)
                 ->add('promo_end_at', TextType::class)
                 ->add('max_order_discount', TextType::class)
+                ->add(
+                    $builder->create('order_expiration_days', CollectionType::class, [
+                        'entry_type' => ExpirationType::class,
+                        'allow_add' => true,
+                        'entry_options' => [
+                            'label' => false
+                        ],
+                        'allow_delete' => true
+                    ])
+                )
         );
         $builder->get('parameters')
             ->get('promo_end_at')
