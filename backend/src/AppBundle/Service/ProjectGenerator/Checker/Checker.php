@@ -74,7 +74,11 @@ class Checker
      */
     public function checkDefaults(array $defaults)
     {
-        $this->promotional = $defaults['is_promotional'] ? 'promotional' : $defaults['level'];
+        if ($defaults['is_promotional'] or $defaults['finame']) {
+            $this->promotional = $defaults['is_promotional'] ? 'promotional' : 'finame';
+        } else {
+            $this->promotional = $defaults['level'];
+        }
 
         $this->checkModules();
         $this->checkInverterMakers();
