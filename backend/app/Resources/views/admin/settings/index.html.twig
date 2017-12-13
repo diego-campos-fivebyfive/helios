@@ -303,6 +303,7 @@
                 '<div class="col-md-2 text-center">' +
                 '<label for="select_status">Status</label>' +
                 '<select class="form-control" id="select_status">' +
+                '<option value="">Status</option>' +
                 {% for key, status in statusList %}
                 '<option value="{{ key }}">{{ status|trans }}</option>' +
                 {% endfor %}
