@@ -531,7 +531,7 @@ class Order implements OrderInterface
         $this->setStatus(self::STATUS_BUILDING);
         $this->source = self::SOURCE_ACCOUNT;
         $this->orderAdditives = new ArrayCollection();
-        $this->financing = 0;
+        $this->financing = false;
     }
 
     /**
@@ -2137,6 +2137,9 @@ class Order implements OrderInterface
             }
 
             $this->statusAt = new \DateTime('now');
+
+            if (array_key_exists('financing', $data))
+                $this->financing = $data['financing'] ? true : false;
         }
 
         $this->addMetadata('payment_method', $data);
