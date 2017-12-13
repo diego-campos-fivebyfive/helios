@@ -445,6 +445,7 @@
                     var url = this.createUrl('{{ path('generator',{project:'_id_'}) }}', {id: this.project.id});
                     this.requestContent(url, '#generator_form', function(){
                         $('#block_promo_selector').remove();
+                        $('#block_finame_selector').remove();
                     });
                 }
             },
