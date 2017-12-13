@@ -531,7 +531,7 @@ class Order implements OrderInterface
         $this->setStatus(self::STATUS_BUILDING);
         $this->source = self::SOURCE_ACCOUNT;
         $this->orderAdditives = new ArrayCollection();
-        $this->financing = 0;
+        $this->financing = false;
     }
 
     /**
