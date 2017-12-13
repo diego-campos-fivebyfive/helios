@@ -294,7 +294,7 @@
 
     <script>
 
-        OrderExpitations = {
+        OrderExpirations = {
             refresh: false,
             content: $('#inputs_order_expiration'),
             add_expiration: $('#add_expiration'),
@@ -338,13 +338,13 @@
                 this.content.append(this.remove_and_save_button_html);
 
                 $('#save_btn').on('click', function () {
-                    OrderExpitations.refresh = true;
+                    OrderExpirations.refresh = true;
                     formSettings.submit();
                 });
 
                 $('#cancel_btn').on('click', function () {
-                    OrderExpitations.content.html('');
-                    OrderExpitations.add_expiration.removeClass('hide');
+                    OrderExpirations.content.html('');
+                    OrderExpirations.add_expiration.removeClass('hide');
                 });
 
                 $('.form-input-number').on('keyup', function () {
@@ -357,10 +357,10 @@
             },
             listener: function () {
                 this.add_expiration.on('click', function () {
-                    OrderExpitations.addFormExpiration();
+                    OrderExpirations.addFormExpiration();
                 });
                 $('[data-remove]').on('click', function () {
-                    OrderExpitations.remove($(this));
+                    OrderExpirations.remove($(this));
                 });
                 $('.input-number').on('keyup', function () {
                     $(this).val($(this).val().replace(/\D/g,""))
@@ -390,13 +390,13 @@
 
                     $('#' + element.data('remove')).remove();
 
-                    OrderExpitations.refresh = true;
+                    OrderExpirations.refresh = true;
                     formSettings.submit();
                 });
             }
         };
 
-        OrderExpitations.init();
+        OrderExpirations.init();
 
         $('#settings_parameters_shipping_included_max_power,' +
             '#settings_parameters_max_order_discount,' +
@@ -481,7 +481,7 @@
                         changeSpinner(false);
                         color = $('#settings_parameters_promo_background').val();
                         $('#show-back-phrase').css('background-color', color);
-                        if (OrderExpitations.refresh) {
+                        if (OrderExpirations.refresh) {
                             window.location.reload();
                             // refresh = false;
                         }
