@@ -202,6 +202,28 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/expireAt", name="expire_at_order")
+     */
+    public function expireAtAction(Request $request, Order $order)
+    {
+        $date = $request->get('expire');
+
+        $formatDate = function($date){
+            return implode('-', array_reverse(explode('/', $date)));
+        };
+
+        $expireAt = new \DateTime($formatDate($date));
+
+        $order->setExpireAt($expireAt);
+
+        $this->manager('order')->save($order);
+
+        return $this->json([
+            'expireAt' => $order->getExpireAt()
+        ]);
+    }
+
+    /**
      * @Route("/{filename}/import", name="import_csv")
      */
     public function importAction(Request $request, $filename)

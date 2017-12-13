@@ -1,4 +1,5 @@
 {% set enablePromotional = attribute(form, 'is_promotional') is defined %}
+{% set enableFiname = attribute(form, 'finame') is defined %}
 
 {{ form_start(form,{attr:{id:'form_generator'}}) }}
 <link href="{{ asset('assets/iCheck/custom.css') }}" rel="stylesheet">
@@ -10,7 +11,7 @@
     .font-promotional {
         font-size: 15px;
     }
-    .box-promotional {
+    .box-check {
         height: 25px;
     }
     #pre-form-area {
@@ -19,11 +20,27 @@
 </style>
 <div class="row">
 
+    {% if enableFiname %}
+        <div class="form-group">
+            <div class="col-md-12 text-center" style="margin-bottom: 10px;">
+                <div class="alert alert-success" id="finame-background">
+                    <div class="box-check">
+                        <div class="i-checks check-finame">
+                            {{ form_widget(form.finame) }}
+                        </div>
+                    </div>
+                    <div id="finame-notice">
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
     {% if enablePromotional %}
         <div class="form-group" id="block_promo_selector">
             <div class="col-md-12 text-center" style="margin-bottom: 10px;">
                 <div class="alert alert-success" id="promo_background">
-                    <div class="box-promotional">
+                    <div class="box-check">
                         <div class="i-checks check-promotional">
                             {{ form_widget(form.is_promotional) }}
                         </div>
@@ -119,6 +136,19 @@
     var promo_back = $('#generator_promo_background').val();
     $('#promo_notice').html(promo_phrase);
     $('#promo_background').css('background-color', promo_back);
+
+    var finame_back = $('#generator_finame_background').val();
+    var finame_notice = $('#generator_finame_notice').val();
+    $('#finame-background').css('background-color', finame_back);
+    $('#finame-notice').html(finame_notice);
+
+    $('.check-finame').iCheck({
+        checkboxClass: 'icheckbox_square-red'
+    });
+
+    $('.check-finame').on('ifChanged', function () {
+        $('input[name="generator[finame]"]').trigger('change');
+    });
 
     $('.check-promotional').iCheck({
         checkboxClass: 'icheckbox_square-green',

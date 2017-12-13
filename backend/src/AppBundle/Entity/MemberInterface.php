@@ -77,6 +77,11 @@ interface MemberInterface
     /**
      * @return bool
      */
+    public function isPlatformFinancing();
+
+    /**
+     * @return bool
+     */
     public function isPlatformUser();
 
     /**
