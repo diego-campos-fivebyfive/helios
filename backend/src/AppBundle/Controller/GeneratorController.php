@@ -56,15 +56,22 @@ class GeneratorController extends AbstractController
 
                 $generator->reset($project);
 
+                if( $request->request->has('generator')) {
+                    if (array_key_exists('is_promotional', $request->request->get('generator'))) {
+                        $project->setLevel(MemorialInterface::LEVEL_PROMOTIONAL);
+                        $this->manager('project')->save($project);
+                    }
+
+                    if (array_key_exists('finame', $request->request->get('generator'))) {
+                        $project->setLevel(MemorialInterface::LEVEL_FINAME);
+                        $this->manager('project')->save($project);
+                    }
+                }
+
                 $generator->generate($project);
 
                 $errors = self::loadDefaultErrors($project);
 
-                if( $request->request->has('generator')
-                    && array_key_exists('is_promotional', $request->request->get('generator'))) {
-                    $project->setLevel(MemorialInterface::LEVEL_PROMOTIONAL);
-                    $this->manager('project')->save($project);
-                }
 
                 if(count($errors)) {
                     return $this->json([
@@ -80,6 +87,7 @@ class GeneratorController extends AbstractController
                 ]);
             }
         }
+
 
         return $this->render('generator.form', [
             'form' => $form->createView(),
