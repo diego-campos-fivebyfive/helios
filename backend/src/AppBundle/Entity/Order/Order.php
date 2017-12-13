@@ -2137,9 +2137,10 @@ class Order implements OrderInterface
             }
 
             $this->statusAt = new \DateTime('now');
-        }
 
-        $this->financing = $data['financing'] ? true : false;
+            if (array_key_exists('financing', $data))
+                $this->financing = $data['financing'] ? true : false;
+        }
 
         $this->addMetadata('payment_method', $data);
 
