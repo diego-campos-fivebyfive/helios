@@ -1657,6 +1657,14 @@ class Order implements OrderInterface
     /**
      * @inheritDoc
      */
+    public function isFiname()
+    {
+        return MemorialInterface::LEVEL_FINAME == $this->level;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setDeliveryDelay($deliveryDelay)
     {
         $this->deliveryDelay = $deliveryDelay;

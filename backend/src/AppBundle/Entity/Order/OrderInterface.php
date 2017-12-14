@@ -718,6 +718,11 @@ interface OrderInterface
     /**
      * @return bool
      */
+    public function isFiname();
+
+    /**
+     * @return bool
+     */
     public function isFullyPromotional();
 
     /**
