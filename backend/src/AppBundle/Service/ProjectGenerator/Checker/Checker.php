@@ -47,9 +47,9 @@ class Checker
     private $em;
 
     /**
-     * @var bool
+     * @var string
      */
-    private $promotional = false;
+    private $level;
 
     /**
      * @param ContainerInterface $container
@@ -74,8 +74,7 @@ class Checker
      */
     public function checkDefaults(array $defaults)
     {
-        $this->promotional = $defaults['is_promotional'] ? 'promotional' : $defaults['level'];
-
+        $this->levelDetect($defaults);
         $this->checkModules();
         $this->checkInverterMakers();
         $this->checkStringBoxMakers();
@@ -94,7 +93,7 @@ class Checker
         $filter = $this->createFilter(Module::class);
 
         $filter->order('position');
-        $filter->like('generatorLevels', $this->promotional);
+        $filter->like('generatorLevels', $this->level);
 
         $modules = $filter->get();
 
@@ -110,7 +109,7 @@ class Checker
     {
         $filter = $this->createFilter(Inverter::class);
 
-        $filter->like('generatorLevels', $this->promotional);
+        $filter->like('generatorLevels', $this->level);
 
         $filter->group('maker');
 
@@ -128,7 +127,7 @@ class Checker
     {
         $filter = $this->createFilter(StringBox::class);
 
-        $filter->like('generatorLevels', $this->promotional);
+        $filter->like('generatorLevels', $this->level);
 
         $filter->group('maker');
 
@@ -146,7 +145,7 @@ class Checker
     {
         $filter = $this->createFilter(Structure::class);
 
-        $filter->like('generatorLevels', $this->promotional);
+        $filter->like('generatorLevels', $this->level);
 
         $filter->group('maker');
 
@@ -190,6 +189,19 @@ class Checker
         $roofType = $parameter->get('enabled_roof_types');
 
         return array_combine($roofType, $roofType);
+    }
+
+    /**
+     * @param array $defaults
+     */
+    private function levelDetect(array $defaults)
+    {
+        if ($defaults['finame'])
+            $this->level = 'finame';
+        if ($defaults['is_promotional'])
+            $this->level = 'promotional';
+        else
+            $this->level = $defaults['level'];
     }
 
     /**
