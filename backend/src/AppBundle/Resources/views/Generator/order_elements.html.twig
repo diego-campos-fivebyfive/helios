@@ -1,6 +1,6 @@
 {% set isPlatform = app.user.isPlatform %}
 {% set isPromo = order.isPromotional %}
-{% set showPrices = not isPromo or app.user.isPlatform %}
+{% set showPrices = (not isPromo and not order.isFiname) or app.user.isPlatform %}
 <table class="table table-bordered table-hover">
     <thead>
     <tr>

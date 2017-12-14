@@ -833,6 +833,11 @@ interface ProjectInterface
     public function isPromotional();
 
     /**
+     * @return bool
+     */
+    public function isFiname();
+
+    /**
      * @param $financing
      * @return ProjectInterface
      */
