@@ -1,11 +1,12 @@
 {% set isPromo = project.defaults.is_promotional %}
+{% set isFiname = project.defaults.finame %}
 
 <style>
     .line-padding {
         padding-top: 4rem !important;
     }
 
-    {% if isPromo %}
+    {% if isPromo or isFiname %}
     .cost-col {
         display: none;
     }
@@ -305,10 +306,10 @@
 
 <script>
 
-    {% if isPromo %}
-    var promoLabel = '<span class="label label-primary"> Promocional </span>';
+    {% if isPromo or isFiname %}
+    var label = '<span class="label label-primary"> {{ isPromo ? "Promocional" : "Finame" }} </span>';
     $.each($('.promotional'), function (i, row) {
-        $(this).html(promoLabel);
+        $(this).html(label);
     });
     {% endif %}
 

@@ -1,4 +1,5 @@
 {% set isPromo = project.defaults.is_promotional %}
+{% set isFiname = project.defaults.finame %}
 
     {% set projectModule = project.projectModules.first %}
 
@@ -110,10 +111,10 @@
 
     GeneratorHandler.setPower({{ project.power }});
 
-    {% if isPromo %}
-    var promoLabel = '<span class="label label-primary"> Promocional </span>';
+    {% if isPromo or isFiname %}
+    var label = '<span class="label label-primary"> {{ isPromo ? "Promocional" : "Finame" }} </span>';
     $.each($('.promotional'), function (i, row) {
-        $(this).html(promoLabel);
+        $(this).html(label);
     });
     {% endif %}
 
