@@ -2007,7 +2007,13 @@ class Project implements ProjectInterface
         return array_key_exists('is_promotional', $this->defaults) && $this->defaults['is_promotional'];
     }
 
-
+    /**
+     * @inheritDoc
+     */
+    public function isFiname()
+    {
+        return array_key_exists('finame', $this->defaults) && $this->defaults['finame'];
+    }
 
     /**
      * @inheritDoc
