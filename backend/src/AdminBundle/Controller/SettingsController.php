@@ -3,6 +3,7 @@
 namespace AdminBundle\Controller;
 
 use AdminBundle\Form\SettingsType;
+use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Parameter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,6 +33,14 @@ class SettingsController extends AdminController
 
         if($form->isSubmitted() && $form->isValid()){
 
+            $parameters = $parameter->getParameters();
+
+            foreach ($parameters['order_expiration_days'] as $key => $expiration)
+                if (is_null($expiration['status']) || is_null($expiration['days']))
+                    unset($parameters['order_expiration_days'][$key]);
+
+            $parameter->setParameters($parameters);
+
             $parameter = $this->formatValues($parameter, true);
 
             $this->manager('parameter')->save($parameter);
@@ -47,8 +56,16 @@ class SettingsController extends AdminController
             ], Response::HTTP_BAD_REQUEST);
         }
 
+        $statusList = Order::getStatusNames();
+
+        if ($form->getData()->has('order_expiration_days'))
+            foreach ($form->getData()->get('order_expiration_days') as $expiration)
+                unset($statusList[$expiration['status']]);
+
         return $this->render('admin/settings/index.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'statusList' => $statusList,
+            'statusNames' => Order::getStatusNames()
         ]);
     }
 

@@ -319,62 +319,6 @@ class ProjectGenerator
         return $this;
     }
 
-    /**
-     * @param ProjectInterface $project
-     * @return $this
-     */
-    public function generateAreas(ProjectInterface $project)
-    {
-        $defaults = $project->getDefaults();
-
-        if(count($defaults['errors']))
-            return $this;
-
-        $this->resetAreas($project);
-
-        $latitude = $defaults['latitude'];
-        $inclination = abs($latitude) < 10 ? 10 : (int) abs($latitude);
-        $orientation = $latitude < 0 ? 0 : 180;
-        $projectModule = $project->getProjectModules()->first();
-        $projectInverters = $project->getProjectInverters();
-
-        $totalInvertersPower = 0;
-        foreach ($projectInverters as $projectInverter){
-
-            $projectInverter->getProjectAreas()->clear();
-
-            /** @var \AppBundle\Entity\Component\InverterInterface $inverter */
-            $inverter = $projectInverter->getInverter();
-            $mppt = $inverter->getMpptNumber();
-
-            $mppts = explode('.', $projectInverter->getOperation());
-
-            foreach ($mppts as $item) {
-                for ($i = 0; $i < $projectInverter->getQuantity(); $i++) {
-
-                    $totalInvertersPower += $projectInverter->getInverter()->getNominalPower();
-
-                    $this->createArea(
-                        $projectInverter,
-                        $projectModule,
-                        $inclination,
-                        $orientation,
-                        $projectInverter->getParallel(),
-                        $projectInverter->getSerial()
-                    );
-                }
-            }
-
-            $projectInverter
-                ->setLoss(15)
-                ->setOperation($mppt);
-        }
-
-        $this->save($project);
-
-        return $this;
-    }
-
     public function generateGroups(ProjectInterface $project)
     {
         $defaults = $project->getDefaults();
@@ -419,6 +363,70 @@ class ProjectGenerator
             ->setGroups($groups)
             ->setQuantity($quantity)
         ;
+
+        $this->save($project);
+
+        return $this;
+    }
+
+    /**
+     * @param ProjectInterface $project
+     * @return $this
+     */
+    public function generateAreas(ProjectInterface $project)
+    {
+        $defaults = $project->getDefaults();
+
+        if(count($defaults['errors']))
+            return $this;
+
+        $this->resetAreas($project);
+
+        $latitude = $defaults['latitude'];
+        $inclination = abs($latitude) < 10 ? 10 : (int) abs($latitude);
+        $orientation = $latitude < 0 ? 0 : 180;
+        $projectModule = $project->getProjectModules()->first();
+        $projectInverters = $project->getProjectInverters();
+
+        foreach ($projectInverters as $projectInverter){
+
+            $projectInverter->getProjectAreas()->clear();
+
+            /** @var \AppBundle\Entity\Component\InverterInterface $inverter */
+            $inverter = $projectInverter->getInverter();
+
+            $operation = 0 == $inverter->getMpptParallel() ?  $inverter->getMpptNumber() : 1 ;
+
+            $mppts = array_fill(0, $operation, 1);
+            $serial = $projectInverter->getSerial();
+            $parallel = $projectInverter->getParallel();
+
+            foreach ($mppts as $item) {
+
+                $moduleString = 1 == $parallel ? ceil($serial / count($mppts)) : $serial ;
+                $stringNumber = floor($parallel / count($mppts));
+
+                if($stringNumber <= 0){
+                    $stringNumber = 1;
+                }
+
+                for ($i = 0; $i < $projectInverter->getQuantity(); $i++) {
+
+                    $this->createArea(
+                        $projectInverter,
+                        $projectModule,
+                        $inclination,
+                        $orientation,
+                        $stringNumber,
+                        $moduleString
+                    );
+                }
+            }
+
+            $projectInverter
+                ->setLoss(15)
+                ->setOperation(0 == $inverter->getMpptParallel() ? implode('.', $mppts) : $inverter->getMpptNumber());
+        }
 
         $this->save($project);
 
@@ -612,6 +620,8 @@ class ProjectGenerator
         $defaults = $project->getDefaults();
         if(count($defaults['errors']))
             return $this;
+
+        CriteriaAggregator::level($defaults['level']);
 
         $this->resetStringBoxes($project);
 

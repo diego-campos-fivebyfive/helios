@@ -58,12 +58,17 @@ class GeneratorController extends AbstractController
 
                 if( $request->request->has('generator')) {
                     if (array_key_exists('is_promotional', $request->request->get('generator'))) {
-                        $project->setLevel(MemorialInterface::LEVEL_PROMOTIONAL);
-                        $this->manager('project')->save($project);
+                        $level = MemorialInterface::LEVEL_PROMOTIONAL;
+                    }
+                    else if (array_key_exists('finame', $request->request->get('generator'))) {
+                        $level = MemorialInterface::LEVEL_FINAME;
+                    }
+                    else {
+                        $level = $project->getLevel();
                     }
 
-                    if (array_key_exists('finame', $request->request->get('generator'))) {
-                        $project->setLevel(MemorialInterface::LEVEL_FINAME);
+                    if ($level) {
+                        $project->setLevel($level);
                         $this->manager('project')->save($project);
                     }
                 }
