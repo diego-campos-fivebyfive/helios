@@ -145,29 +145,25 @@
     $('#finame-background').css('background-color', finame_back);
     $('#finame-notice').html(finame_notice);
 
+    var option_events = 'ifCreated ifClicked ifChanged ifChecked ifUnchecked ifDisabled ifEnabled ifDestroyed';
+
     $('#check-finame, #check-promotional').iCheck({
         checkboxClass: 'icheckbox_square-green',
     });
 
-    $('#check-finame').on('ifCreated ifClicked ifChanged ifChecked ifUnchecked ifDisabled ifEnabled ifDestroyed', function () {
+    $('#check-finame').on(option_events, function () {
         FormGenerator.switchLevels()
         unchekOption('finame');
     });
 
-    $('#check-promotional').on('ifCreated ifClicked ifChanged ifChecked ifUnchecked ifDisabled ifEnabled ifDestroyed', function(){
+    $('#check-promotional').on(option_events, function(){
         FormGenerator.switchLevels();
         unchekOption('promo');
     });
 
     function unchekOption(id) {
-        switch(id){
-            case "finame":
-                $('#check-promotional').iCheck('uncheck');
-            break;
-            case "promo":
-                $('#check-finame').iCheck('uncheck');
-            break;
-        }
+        elCheck = id == 'promo' ? '#check-finame' : '#check-promotional';
+        $(elCheck).iCheck('uncheck');
     }
 
     var FormGenerator = {
