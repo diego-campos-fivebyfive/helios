@@ -51,16 +51,18 @@ class GeneratorController extends AbstractController
                 ]);
 
             }else{
-
                 $project->setDefaults($form->getData());
 
                 $generator->reset($project);
 
-                if( $request->request->has('generator')) {
-                    if (array_key_exists('is_promotional', $request->request->get('generator'))) {
+                if($request->request->has('generator')) {
+
+                    $generatorDefaults = $request->request->get('generator');
+
+                    if (array_key_exists('is_promotional', $generatorDefaults)) {
                         $level = MemorialInterface::LEVEL_PROMOTIONAL;
                     }
-                    else if (array_key_exists('finame', $request->request->get('generator'))) {
+                    else if (array_key_exists('finame', $generatorDefaults)) {
                         $level = MemorialInterface::LEVEL_FINAME;
                     }
                     else {
