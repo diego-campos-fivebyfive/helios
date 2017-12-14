@@ -1,6 +1,11 @@
+## 14/12 ##
+#### TESTES ####
+1. ROLE FINANCING 
+- 1.1 Liberar acesso às Contas (regras iguais ao FINANCIAL)
+- 1.2 Liberar botão de "Confirmar Pagamento"
+- 1.3 Alterar método de checagem na alteração de status de orçamento: de isPlatformMaster() para isPlatform()
 
 ## 11/12 ##
-
 #### FINAME ####
 1. (1127) Em "Condições de Pagamento":
 - 1.1. Novo campo para determinar se o mesmo é ou não Financiamento (checkbox).
