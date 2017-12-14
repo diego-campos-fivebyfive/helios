@@ -231,11 +231,11 @@
                             <tr>
                                 <th>Código</th>
                                 <th style="min-width: 50%;">Produto</th>
-                                {% if not item.isPromotional %}
+                                {% if not item.isPromotional and not item.isFiname %}
                                 <th>Custo Un.</th>
                                 {% endif %}
                                 <th>QTD</th>
-                                {% if not item.isPromotional %}
+                                {% if not item.isPromotional and not item.isFiname %}
                                 <th>Custo T.</th>
                                 {% endif %}
                             </tr>
@@ -246,11 +246,11 @@
                             <tr>
                                 <td>{{ element.code }}</td>
                                 <td class="text-left">{{ element.description }}</td>
-                                {% if not item.isPromotional %}
+                                {% if not item.isPromotional and not item.isFiname %}
                                 <td>{{ element.unitPrice|currency }}</td>
                                 {% endif %}
                                 <td class="text-center">{{ element.quantity }}</td>
-                                {% if not item.isPromotional %}
+                                {% if not item.isPromotional and not item.isFiname %}
                                 <td>{{ element.total|currency }}</td>
                                 {% endif %}
                             </tr>
