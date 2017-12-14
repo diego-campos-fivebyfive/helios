@@ -64,11 +64,13 @@ class OrderTransformer
         $order->setShippingRules($project->getShippingRules());
 
         if($project->isPromotional())
-            $order
-                ->setDescription($order->getDescription() . ' [promo]')
-                ->setLevel(MemorialInterface::LEVEL_PROMOTIONAL);
+            $order->setLevel(MemorialInterface::LEVEL_PROMOTIONAL);
+
+        if ($project->isFiname())
+            $order->setLevel(MemorialInterface::LEVEL_FINAME);
 
         $this->additiveTransfer($order, $project);
+        OrderManipulator::updateDescription($order);
 
         if ($persist)
             $this->manager->save($order);
