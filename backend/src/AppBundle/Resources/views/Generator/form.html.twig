@@ -145,24 +145,31 @@
     $('#finame-background').css('background-color', finame_back);
     $('#finame-notice').html(finame_notice);
 
-    var option_events = 'ifCreated ifClicked ifChanged ifChecked ifUnchecked ifDisabled ifEnabled ifDestroyed';
-
     $('#check-finame, #check-promotional').iCheck({
-        checkboxClass: 'icheckbox_square-green',
+        checkboxClass: 'icheckbox_square-green'
     });
 
-    $('#check-finame').on(option_events, function () {
-        FormGenerator.switchLevels()
-        unchekOption('finame');
+    var isChanged = true;
+
+    $('#check-finame').on('ifChanged', function () {
+        if ($('#generator_is_promotional').attr('checked'))
+            unchekOption('promo');
+        if (isChanged)
+            FormGenerator.switchLevels();
+        isChanged = true;
     });
 
-    $('#check-promotional').on(option_events, function(){
-        FormGenerator.switchLevels();
-        unchekOption('promo');
+    $('#check-promotional').on('ifChanged', function(){
+        if ($('#generator_finame').attr('checked'))
+            unchekOption('finame');
+        if (isChanged)
+            FormGenerator.switchLevels();
+        isChanged = true;
     });
 
     function unchekOption(id) {
-        elCheck = id == 'promo' ? '#check-finame' : '#check-promotional';
+        var elCheck = id == 'promo' ? '#check-promotional' : '#check-finame';
+        isChanged = false;
         $(elCheck).iCheck('uncheck');
     }
 
