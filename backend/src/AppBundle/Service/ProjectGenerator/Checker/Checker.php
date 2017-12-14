@@ -74,8 +74,10 @@ class Checker
      */
     public function checkDefaults(array $defaults)
     {
-        if ($defaults['is_promotional'] or $defaults['finame']) {
-            $this->promotional = $defaults['is_promotional'] ? 'promotional' : 'finame';
+        if ($defaults['is_promotional']) {
+            $this->promotional = 'promotional';
+        } elseif ($defaults['finame']) {
+            $this->promotional = 'finame';
         } else {
             $this->promotional = $defaults['level'];
         }
