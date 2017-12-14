@@ -124,7 +124,7 @@ class ProjectGenerator
         $multiPower = $roundPower * $powerModule;
         $defaults['power'] = $multiPower;
 
-        $level = $defaults['is_promotional'] ? 'promotional' : $defaults['level'];
+        $level = $this->getLevel($defaults);
 
         CriteriaAggregator::level($level);
 
@@ -579,7 +579,9 @@ class ProjectGenerator
 
         $this->resetStructures($project);
 
-        CriteriaAggregator::level($defaults['level']);
+        $level = $this->getLevel($defaults);
+
+        CriteriaAggregator::level($level);
 
         /** @var \AppBundle\Manager\StructureManager $manager */
         $manager = $this->manager('structure');
@@ -621,7 +623,9 @@ class ProjectGenerator
         if(count($defaults['errors']))
             return $this;
 
-        CriteriaAggregator::level($defaults['level']);
+        $level = $this->getLevel($defaults);
+
+        CriteriaAggregator::level($level);
 
         $this->resetStringBoxes($project);
 
@@ -862,6 +866,25 @@ class ProjectGenerator
         }
 
         return $this->services[$id];
+    }
+
+    /**
+     * @param $defaults
+     * @return string
+     */
+    private function getLevel($defaults)
+    {
+        if ($defaults['finame']) {
+            $level = 'finame';
+        }
+        elseif ($defaults['is_promotional']) {
+            $level = 'promotional';
+        }
+        else{
+            $level = $defaults['level'];
+        }
+
+        return $level;
     }
 
     /**
