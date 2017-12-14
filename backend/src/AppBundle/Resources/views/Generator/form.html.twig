@@ -11,7 +11,10 @@
     .font-promotional {
         font-size: 15px;
     }
-    .box-check {
+    .box-check-promotional {
+        height: 25px;
+    }
+    .box-check-finame {
         height: 25px;
     }
     #pre-form-area {
@@ -21,11 +24,11 @@
 <div class="row">
 
     {% if enableFiname %}
-        <div class="form-group">
+        <div class="form-group" id="block_finame_selector">
             <div class="col-md-12 text-center" style="margin-bottom: 10px;">
                 <div class="alert alert-success" id="finame-background">
-                    <div class="box-check">
-                        <div class="i-checks check-finame">
+                    <div class="box-check-promotional">
+                        <div class="i-checks check-finame" id="check-finame">
                             {{ form_widget(form.finame) }}
                         </div>
                     </div>
@@ -40,8 +43,8 @@
         <div class="form-group" id="block_promo_selector">
             <div class="col-md-12 text-center" style="margin-bottom: 10px;">
                 <div class="alert alert-success" id="promo_background">
-                    <div class="box-check">
-                        <div class="i-checks check-promotional">
+                    <div class="box-check-finame">
+                        <div class="i-checks check-promotional" id="check-promotional">
                             {{ form_widget(form.is_promotional) }}
                         </div>
                     </div>
@@ -142,22 +145,27 @@
     $('#finame-background').css('background-color', finame_back);
     $('#finame-notice').html(finame_notice);
 
-    $('.check-finame').iCheck({
-        checkboxClass: 'icheckbox_square-red'
-    });
+    var option_events = 'ifCreated ifClicked ifChanged ifChecked ifUnchecked ifDisabled ifEnabled ifDestroyed';
 
-    $('.check-finame').on('ifChanged', function () {
-        $('input[name="generator[finame]"]').trigger('change');
-    });
-
-    $('.check-promotional').iCheck({
+    $('#check-finame, #check-promotional').iCheck({
         checkboxClass: 'icheckbox_square-green',
     });
 
-    $('.check-promotional').on('ifChanged', function(){
-        $('input[name="generator[is_promotional]"]').trigger('change');
+    $('#check-finame').on(option_events, function () {
+        FormGenerator.switchLevels()
+        unchekOption('finame');
     });
-    
+
+    $('#check-promotional').on(option_events, function(){
+        FormGenerator.switchLevels();
+        unchekOption('promo');
+    });
+
+    function unchekOption(id) {
+        elCheck = id == 'promo' ? '#check-finame' : '#check-promotional';
+        $(elCheck).iCheck('uncheck');
+    }
+
     var FormGenerator = {
         form: $('#form_generator'),
         container: null,
@@ -286,12 +294,11 @@
                 checkOption();
             });
         },
-        listen: function(){
-
-            this.field('is_promotional').on('change', function(){
+        switchLevels: function () {
                 FormGenerator.field('option').val('config');
                 FormGenerator.process();
-            });
+        },
+        listen: function(){
 
             this.field('source').on('change', function(){
                 FormGenerator.checkSource();

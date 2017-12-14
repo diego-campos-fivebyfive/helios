@@ -51,20 +51,34 @@ class GeneratorController extends AbstractController
                 ]);
 
             }else{
-
                 $project->setDefaults($form->getData());
 
                 $generator->reset($project);
+
+                if($request->request->has('generator')) {
+
+                    $generatorDefaults = $request->request->get('generator');
+
+                    if (array_key_exists('is_promotional', $generatorDefaults)) {
+                        $level = MemorialInterface::LEVEL_PROMOTIONAL;
+                    }
+                    else if (array_key_exists('finame', $generatorDefaults)) {
+                        $level = MemorialInterface::LEVEL_FINAME;
+                    }
+                    else {
+                        $level = $project->getLevel();
+                    }
+
+                    if ($level) {
+                        $project->setLevel($level);
+                        $this->manager('project')->save($project);
+                    }
+                }
 
                 $generator->generate($project);
 
                 $errors = self::loadDefaultErrors($project);
 
-                if( $request->request->has('generator')
-                    && array_key_exists('is_promotional', $request->request->get('generator'))) {
-                    $project->setLevel(MemorialInterface::LEVEL_PROMOTIONAL);
-                    $this->manager('project')->save($project);
-                }
 
                 if(count($errors)) {
                     return $this->json([
@@ -80,6 +94,7 @@ class GeneratorController extends AbstractController
                 ]);
             }
         }
+
 
         return $this->render('generator.form', [
             'form' => $form->createView(),
