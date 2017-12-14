@@ -36,6 +36,19 @@
 - 6.4. StringBox - Apenas fabricante Abb
 - 6.5. Variedades - todos
 
+7. Atualização de regras para visual
+- 7.1 Para usuário integrador
+- 7.1.1 No gerador, ocultar custo unit. e custo total. (igual promocional)
+- 7.1.2 Nome do sistema com [finame - xxxxx] 
+-- parecido com o que ocorre com o promocional
+-- o código deve ser verificado na hora da geração do nome
+- Verificar estes casos na edição do orçamento também.
+- 7.2 Proforma
+-- Nome e regras de visualização de preço.
+
+8. BUG
+8.1 Mover definição de telefone (phone) na Order para pegar da conta e não do dono.
+
 ## 27/11 ##
 
 #### COMPONENTES ####
