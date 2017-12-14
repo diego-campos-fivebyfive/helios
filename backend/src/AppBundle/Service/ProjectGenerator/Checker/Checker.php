@@ -196,12 +196,15 @@ class Checker
      */
     private function levelDetect(array $defaults)
     {
-        if ($defaults['finame'])
+        if ($defaults['finame']) {
             $this->level = 'finame';
-        if ($defaults['is_promotional'])
+        }
+        elseif ($defaults['is_promotional']) {
             $this->level = 'promotional';
-        else
+        }
+        else{
             $this->level = $defaults['level'];
+        }
     }
 
     /**
