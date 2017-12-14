@@ -579,9 +579,7 @@ class ProjectGenerator
 
         $this->resetStructures($project);
 
-        $level = $this->getLevel($defaults);
-
-        CriteriaAggregator::level($level);
+        CriteriaAggregator::level($defaults['level']);
 
         /** @var \AppBundle\Manager\StructureManager $manager */
         $manager = $this->manager('structure');
@@ -623,9 +621,7 @@ class ProjectGenerator
         if(count($defaults['errors']))
             return $this;
 
-        $level = $this->getLevel($defaults);
-
-        CriteriaAggregator::level($level);
+        CriteriaAggregator::level($defaults['level']);
 
         $this->resetStringBoxes($project);
 
