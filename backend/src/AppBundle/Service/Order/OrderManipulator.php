@@ -73,8 +73,9 @@ class OrderManipulator
 
         $order
             ->setPower($power)
-            ->setDescription(sprintf('Sistema de %skWp%s', $power, ($order->isPromotional() ? ' [promo]': '')))
         ;
+
+        self::updateDescription($order);
     }
 
     /**
@@ -86,5 +87,33 @@ class OrderManipulator
         return $order->getElements()->map(function (ElementInterface $element) {
             return $element->getCode();
         })->toArray();
+    }
+
+    public static function updateDescription(OrderInterface $order)
+    {
+        $power = $order->getPower();
+
+        if ($order->isPromotional()) {
+            $result = ' [promo]';
+        }
+        else if ($order->isFiname()) {
+            if ($power >= 375) {
+                $cod = '03453899';
+            }
+            else if ($power >= 75) {
+                $cod = '03454175';
+            }
+            else {
+                $cod = '03454168';
+            }
+
+            $result = " [finame - ${cod}]";
+        }
+        else {
+            $result = '';
+        }
+
+        $description = sprintf('Sistema de %skWp%s', $power, $result);
+        $order->setDescription($description);
     }
 }
