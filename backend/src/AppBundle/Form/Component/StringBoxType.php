@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form\Component;
 
+use AppBundle\Entity\Component\MakerInterface;
 use AppBundle\Entity\Pricing\Memorial;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -23,7 +24,6 @@ class StringBoxType extends AbstractType
             ->add('inputs', null, ['required' => true])
             ->add('outputs', null, ['required' => true])
             ->add('fuses', null, ['required' => true])
-            ->add('maker', null, ['required' => true])
             ->add('position', NumberType::class, [
                 'required' => false
             ])
@@ -36,7 +36,27 @@ class StringBoxType extends AbstractType
                 'choices' => Memorial::getDefaultLevels(),
                 'multiple' => true,
                 'required' => false
-            ]);
+            ])
+            ->add('maker', 'entity', array(
+                    'required' => true,
+                    'multiple' => false,
+                    'property' => 'name',
+                    'class' => 'AppBundle\Entity\Component\Maker',
+                    'query_builder' => function (\Doctrine\ORM\EntityRepository $er){
+
+                        $parameters = ['context' => MakerInterface::CONTEXT_STRING_BOX];
+
+                        $qb = $er
+                            ->createQueryBuilder('m')
+                            ->where('m.context = :context')
+                            ->orderBy('m.name', 'ASC');
+
+                        $qb->setParameters($parameters);
+
+                        return $qb;
+                    }
+                )
+            );
     }
     
     /**
