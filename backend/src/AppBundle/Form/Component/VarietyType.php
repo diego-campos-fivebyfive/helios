@@ -18,27 +18,6 @@ class VarietyType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
-        $builder->add('maker', 'entity', array(
-                'required' => true,
-                'multiple' => false,
-                'property' => 'name',
-                'class' => 'AppBundle\Entity\Component\Maker',
-                'query_builder' => function (\Doctrine\ORM\EntityRepository $er){
-
-                    $parameters = ['context' => MakerInterface::CONTEXT_VARIETY];
-
-                    $qb = $er
-                        ->createQueryBuilder('m')
-                        ->where('m.context = :context')
-                        ->orderBy('m.name', 'ASC');
-
-                    $qb->setParameters($parameters);
-
-                    return $qb;
-                }
-            )
-        );
         $builder
             ->add('type', null, ['required' => false])
             ->add('required', null, ['required' => false])
@@ -58,7 +37,27 @@ class VarietyType extends AbstractType
                 'choices' => Memorial::getDefaultLevels(),
                 'multiple' => true,
                 'required' => false
-            ]);
+            ])
+            ->add('maker', 'entity', array(
+                    'required' => true,
+                    'multiple' => false,
+                    'property' => 'name',
+                    'class' => 'AppBundle\Entity\Component\Maker',
+                    'query_builder' => function (\Doctrine\ORM\EntityRepository $er){
+
+                        $parameters = ['context' => MakerInterface::CONTEXT_VARIETY];
+
+                        $qb = $er
+                            ->createQueryBuilder('m')
+                            ->where('m.context = :context')
+                            ->orderBy('m.name', 'ASC');
+
+                        $qb->setParameters($parameters);
+
+                        return $qb;
+                    }
+                )
+            );
     }
     
     /**
