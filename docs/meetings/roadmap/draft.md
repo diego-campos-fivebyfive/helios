@@ -1,9 +1,20 @@
 ## 14/12 ##
 #### TESTES ####
-1. ROLE FINANCING 
+1. (787) ROLE FINANCING 
 - 1.1 Liberar acesso às Contas (regras iguais ao FINANCIAL)
 - 1.2 Liberar botão de "Confirmar Pagamento"
 - 1.3 Alterar método de checagem na alteração de status de orçamento: de isPlatformMaster() para isPlatform()
+
+2. (1175) FRETE
+2.1 Opção "Frete Sices", apenas para usuário SICES, habilitar a edição do campo de valor.
+2.2 Ao selecionar outro estado, o valor pode mudar, não tem problema.
+
+3. (1176, 1177, 1178, 1179, 1180) COMPONENTES
+3.1 Remover o quadro de Taxas (todos)
+3.2 Remover os campos "Ativo", "Disponível para venda" e "Produto promocional" (todos)
+3.3 Habilitar seletor de fabricante (estrutura)
+3.4 Habilitar campo "posição" (inversores, string box, variedades)
+3.5 ComponentTrait - Atualizar o método 'isPromotional' para considerar o nível e não a propriedade.
 
 ## 11/12 ##
 #### FINAME ####
