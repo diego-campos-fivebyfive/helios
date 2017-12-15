@@ -91,27 +91,6 @@ class ModuleType extends AbstractType
             'scale' => 3,
             'required' => true
         ]);
-        $builder->add('status', CheckboxType::class, [
-            'label'  => 'Ativo',
-            'required' => false
-        ]);
-        $builder->add('available', CheckboxType::class, [
-            'label' => 'Disponivel',
-            'required' => false,
-            //'disabled' => true
-        ]);
-        $builder->add('ncm', null, [
-            'required' => false
-        ]);
-        $builder->add('cmvProtheus', null, [
-            'required' => false
-        ]);
-        $builder->add('cmvApplied', null, [
-            'required' => false
-        ]);
-        $builder->add('promotional', null, [
-            'required' => false
-        ]);
         $builder->add('code', TextType::class, [
             'label' => false
         ]);
