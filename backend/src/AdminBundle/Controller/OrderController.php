@@ -129,6 +129,22 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/shippingValue", name="shipping_value")
+     */
+    public function shippingValueAction(Request $request, Order $order)
+    {
+        $shipping = $request->get('shipping');
+        $order->setShipping(str_ireplace(['.',','], ['','.'],$shipping));
+
+        $this->manager('order')->save($order);
+
+        return $this->json([
+            'value' => $order->getShipping(),
+            'total' => $order->getTotal()
+        ]);
+    }
+
+    /**
      * @Route("/{id}/info", name="orders_info")
      */
     public function infoAction(Request $request, Order $order)
