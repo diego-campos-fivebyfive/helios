@@ -1035,7 +1035,7 @@ class Order implements OrderInterface
     {
         $this->shippingRules = $shippingRules;
 
-        $this->setShipping($this->getShipping());
+        $this->setShipping($this->getRuleShipping());
 
         return $this;
     }
@@ -1053,8 +1053,7 @@ class Order implements OrderInterface
      */
     public function getShipping()
     {
-        return  is_array($this->shippingRules) && array_key_exists('shipping', $this->shippingRules)
-            ? $this->shippingRules['shipping'] : 0 ;
+        return $this->shipping;
     }
 
     /**
@@ -2292,6 +2291,15 @@ class Order implements OrderInterface
         return $this->orderAdditives->filter(function(OrderAdditive $orderAdditive) use($additive){
             return $orderAdditive->getAdditive() == $additive;
         })->first();
+    }
+
+    /**
+     * @return int|mixed
+     */
+    private function getRuleShipping()
+    {
+        return  is_array($this->shippingRules) && array_key_exists('shipping', $this->shippingRules)
+            ? $this->shippingRules['shipping'] : 0 ;
     }
 }
 
