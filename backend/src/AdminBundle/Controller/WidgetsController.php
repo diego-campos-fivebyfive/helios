@@ -257,7 +257,7 @@ class WidgetsController extends AdminController
     /**
      * @return QueryBuilder
      */
-    private function    getOrders()
+    private function getOrders()
     {
         $member = $this->member();
 
