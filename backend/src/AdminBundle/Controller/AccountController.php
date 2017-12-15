@@ -101,6 +101,7 @@ class AccountController extends AdminController
         $levels = Memorial::getDefaultLevels();
 
         unset($levels[Memorial::LEVEL_PROMOTIONAL]);
+        unset($levels[Memorial::LEVEL_FINAME]);
 
         $states = $this->getStates($expanseStates);
 
