@@ -2,7 +2,7 @@
 
 {% block body %}
 
-    {% set showActions = not app.user.isPlatformFinancial and not app.user.isPlatformAfterSales  and not app.user.isPlatformExpanse %}
+    {% set showActions = not app.user.isPlatformFinancial and not app.user.isPlatformAfterSales and not app.user.isPlatformExpanse and not app.user.isPlatformFinancing %}
 
     <div class="wrapper wrapper-content">
         <div class="row animated fadeInRight">

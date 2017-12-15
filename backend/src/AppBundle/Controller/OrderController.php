@@ -90,7 +90,7 @@ class OrderController extends AbstractController
         /** @var \AppBundle\Service\Order\StatusChanger $changer */
         $changer = $this->get('order_status_changer');
 
-        if($changer->accept($order, $status, $this->user()) or $this->user()->isPlatformMaster()) {
+        if($changer->accept($order, $status, $this->user()) or $this->user()->isPlatform()) {
 
             $changer->change($order, $status);
 
