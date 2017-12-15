@@ -80,9 +80,17 @@
         </button>
     </div>
 
-    <div class="form-group output col-md-4 text-center">
+    <div class="im-group output col-md-4 text-center">
         <label> Valor do Frete </label>
-        <h2 id="shipping_output"> {{ order.shipping|currency }} </h2>
+        {% if app.user.isPlatform %}
+            <div class="input-group">
+                <span class="input-group-addon">R$</span>
+                <input type="text" id="shipping-value" placeholder="Valor do frete"
+                value="{{ order.shipping|number_format(2, ',', '.') }}" class="form-control">
+            </div>
+        {% else %}
+            <h2 id="shipping_output"> {{ order.shipping|currency }} </h2>
+        {% endif %}
     </div>
 
     <div class="form-group included col-md-6 text-center">
@@ -122,6 +130,7 @@
         state: $('#shipping_state'),
         percent: $('#shipping_percent'),
         kind: $('#shipping_kind'),
+        value_shipping: $('#shipping-value'),
         output: $('#shipping_output'),
         submitShipping: function(){
             $('#submit_shipping').trigger('click');
@@ -145,7 +154,7 @@
                     $('.included').hide();
                     $('#form-company').hide();
                     $('#info_shipping').show();
-                    ShippingManager.calculate();
+                    //ShippingManager.calculate();
 
                     if (GeneratorHandler.enableValidate > 1)
                         GeneratorHandler.enableValidate -= 2;
@@ -200,12 +209,26 @@
                     button.ladda('stop');
                     var response = xhr.responseJSON;
                     if (response.shipping)
-                        ShippingManager.output.html(
-                                numeral(response.shipping).format('$0,0.00')
-                        );
-                    $('#order-totalExcDiscount').html(numeral(response.totalExcDiscount).format('$0,0.00'));
-                    $('#order-total').html(numeral(response.total).format('$0,0.00'));
+                        ShippingManager.output.html(numeral(response.shipping).format('$0,0.00'));
+                        $('#shipping-value').val(numeral(response.shipping).format('0,0.00'));
+                        $('#order-totalExcDiscount').html(numeral(response.totalExcDiscount).format('$0,0.00'));
+                        $('#order-total').html(numeral(response.total).format('$0,0.00'));
                 }
+            });
+        },
+        shippingValue: function () {
+            ShippingManager.value_shipping.on('change', function () {
+                $.ajax({
+                    url: '{{ path('shipping_value',{id: order.id}) }}',
+                    data: {shipping:ShippingManager.value_shipping.val()},
+                    method: 'post',
+                    complete: function (xhr) {
+                        var response = xhr.responseJSON;
+                        ShippingManager.output.html(numeral(response.value).format('$0,0.00'));
+                        $('#shipping-value').html(numeral(response.value).format('0,0.00'));
+                        $('#order-total').html(numeral(response.total).format('$0,0.00'));
+                    }
+                });
             });
         },
         company: function () {
@@ -238,6 +261,8 @@
             });
 
             ShippingManager.deliveryAddress();
+
+            ShippingManager.shippingValue();
 
             Numbers.mask(ShippingManager.percent);
 
