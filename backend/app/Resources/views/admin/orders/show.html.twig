@@ -225,18 +225,14 @@
                                                         </a>
                                                     {% endif %}
 
-                                                    {% if member.isPlatformFinancial and order.isApproved %}
+                                                    {% if (member.isPlatformFinancial or member.isPlatformFinancing) and order.isApproved %}
                                                         <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
                                                            data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DONE') }}">
-                                                            <i class="fa fa-check-square-o"></i> Pagamento confirmado
-                                                        </a>
-                                                        <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
-                                                           data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_REJECTED') }}">
-                                                            <i class="fa fa-warning"></i> Pagamento não confirmado
+                                                            <i class="fa fa-check-square-o"></i> {{ member.isPlatformFinancial ? 'Pagamento' : 'Financiamento' }} confirmado
                                                         </a>
                                                     {% endif %}
 
-                                                    {% if member.isPlatformFinancial and order.isDone %}
+                                                    {% if (member.isPlatformFinancial or member.isPlatformFinancing) and order.isDone %}
                                                         <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
                                                            data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') }}">
                                                             <i class="fa fa-stop"></i> Cancelar Confirmação
