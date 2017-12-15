@@ -23,20 +23,20 @@ class StringBoxType extends AbstractType
             ->add('inputs', null, ['required' => true])
             ->add('outputs', null, ['required' => true])
             ->add('fuses', null, ['required' => true])
-            ->add('maker', null, ['required' => true]);
-        $builder->add('position', NumberType::class, [
-            'required' => false
-        ]);
-        $builder->add('princingLevels', ChoiceType::class, [
-            'choices' => Memorial::getDefaultLevels(),
-            'multiple' => true,
-            'required' => false
-        ]);
-        $builder->add('generatorLevels', ChoiceType::class, [
-            'choices' => Memorial::getDefaultLevels(),
-            'multiple' => true,
-            'required' => false
-        ]);
+            ->add('maker', null, ['required' => true])
+            ->add('position', NumberType::class, [
+                'required' => false
+            ])
+            ->add('princingLevels', ChoiceType::class, [
+                'choices' => Memorial::getDefaultLevels(),
+                'multiple' => true,
+                'required' => false
+            ])
+            ->add('generatorLevels', ChoiceType::class, [
+                'choices' => Memorial::getDefaultLevels(),
+                'multiple' => true,
+                'required' => false
+            ]);
     }
     
     /**
