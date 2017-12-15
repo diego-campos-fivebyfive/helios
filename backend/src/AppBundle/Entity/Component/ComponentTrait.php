@@ -281,7 +281,7 @@ trait ComponentTrait
      */
     public function isPromotional()
     {
-        return $this->promotional;
+        return in_array('promotional', $this->generatorLevels);
     }
 
     /**
