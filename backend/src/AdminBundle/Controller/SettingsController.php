@@ -88,7 +88,8 @@ class SettingsController extends AdminController
             'max_order_discount',
             'fdi_max',
             'fdi_min',
-            'shipping_included_max_power'
+            'shipping_included_max_power',
+            'finame_shipping_included_max_power'
             ];
 
         foreach ($fields as $field)

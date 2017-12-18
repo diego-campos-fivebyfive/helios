@@ -195,112 +195,119 @@
 
                                             <div id="tab-2" class="tab-pane {{ not isMaster ? 'active' }}">
                                                 <div class="panel-body">
-                                                   <div class="row">
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="panel panel-primary">
+                                                                <div class="panel-heading">
+                                                                    <i class="fa fa-briefcase"></i> Status de Recursos
+                                                                </div>
+                                                                <div class="panel-body">
 
-                                                       <div class="col-lg-6">
-                                                           <div class="panel panel-primary">
-                                                               <div class="panel-heading">
-                                                                   <i class="fa fa-briefcase"></i> Status de Recursos
-                                                               </div>
-                                                               <div class="panel-body">
+                                                                    <div class="col-md-12">
+                                                                        <div>
+                                                                            {{ form_widget(form_params.enable_promo) }} &nbsp;
+                                                                            {{ form_label(form_params.enable_promo, 'Ativar orçamentos promocionais') }}
+                                                                        </div>
 
-                                                                   <div class="col-md-12">
-                                                                       <div>
-                                                                           {{ form_widget(form_params.enable_promo) }} &nbsp;
-                                                                           {{ form_label(form_params.enable_promo, 'Ativar orçamentos promocionais') }}
-                                                                       </div>
+                                                                        <div class="editor-container" id="promo-phrase-container">
+                                                                            <label>Frase para Orçamentos Promocionais</label>
+                                                                            <div class="editor-config" id="promo-phrase">
+                                                                            </div>
+                                                                        </div>
 
-                                                                       <div class="editor-container" id="promo-phrase-container">
-                                                                           <label>Frase para Orçamentos Promocionais</label>
-                                                                           <div class="editor-config" id="promo-phrase">
-                                                                           </div>
-                                                                       </div>
+                                                                        <div class="color-alert" id="promo-color">
+                                                                            <button class="jscolor {valueElement:'valueInput', styleElement:'styleInput'}">
+                                                                                Cor de fundo da mensagem
+                                                                            </button>
+                                                                        </div>
 
-                                                                       <div class="color-alert" id="promo-color">
-                                                                           <button class="jscolor {valueElement:'valueInput', styleElement:'styleInput'}">
-                                                                               Cor de fundo da mensagem
-                                                                           </button>
-                                                                       </div>
-
-                                                                       <div class="alert alert-success" hidden id="styleInput"></div>
+                                                                        <div class="alert alert-success" hidden id="styleInput"></div>
 
 
-                                                                       <div class="alert alert-success" id="show-back-phrase">
+                                                                        <div class="alert alert-success" id="show-back-phrase">
                                                                            <span class="font-promotional" id="show-promo-phrase">
                                                                            </span>
-                                                                       </div>
+                                                                        </div>
 
-                                                                       <div class="col-md-6">
-                                                                           {{ form_label(form_params.shipping_included, 'Habilitar frete INCLUSO') }}
-                                                                           {{ form_widget(form_params.shipping_included) }} &nbsp;
-                                                                       </div>
-                                                                       <div class="col-md-6">
-                                                                           {{ form_label(form_params.shipping_included_max_power, 'Potência limite para frete INCLUSO') }}
-                                                                           {{ form_widget(form_params.shipping_included_max_power, {attr:{class:'form-control'}}) }}
-                                                                       </div>
-                                                                   </div>
-                                                               </div>
+                                                                        <div class="col-md-6">
+                                                                            {{ form_label(form_params.shipping_included, 'Habilitar frete INCLUSO') }}
+                                                                            {{ form_widget(form_params.shipping_included) }} &nbsp;
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            {{ form_label(form_params.shipping_included_max_power, 'Potência limite para frete INCLUSO') }}
+                                                                            {{ form_widget(form_params.shipping_included_max_power, {attr:{class:'form-control'}}) }}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
 
-                                                           </div>
-                                                       </div>
+                                                            </div>
+                                                        </div>
 
-                                                       <div class="col-lg-6">
-                                                           <div class="panel panel-primary">
-                                                               <div class="panel-heading">
-                                                                   <i class="fa fa-briefcase"></i> Finame
-                                                               </div>
-                                                               <div class="panel-body">
-                                                                   <div class="col-md-12">
-                                                                       <div>
-                                                                           {{ form_widget(form_params.enable_finame) }}
-                                                                           {{ form_label(form_params.enable_finame, 'Ativar Finame') }}
-                                                                       </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="panel panel-primary">
+                                                                <div class="panel-heading">
+                                                                    <i class="fa fa-briefcase"></i> Finame
+                                                                </div>
+                                                                <div class="panel-body">
+                                                                    <div class="col-md-12">
+                                                                        <div>
+                                                                            {{ form_widget(form_params.enable_finame) }}
+                                                                            {{ form_label(form_params.enable_finame, 'Ativar Finame') }}
+                                                                        </div>
 
-                                                                       <div class="editor-container" id="finame-phrase-container">
-                                                                           <label>Frase para Finame</label>
-                                                                           <div class="editor-config" id="finame-phrase">
-                                                                           </div>
-                                                                       </div>
+                                                                        <div class="editor-container" id="finame-phrase-container">
+                                                                            <label>Frase para Finame</label>
+                                                                            <div class="editor-config" id="finame-phrase">
+                                                                            </div>
+                                                                        </div>
 
-                                                                       <div class="color-alert" id="finame-color">
-                                                                           <button class="jscolor {valueElement:'valueInput', styleElement:'styleInputFiname'}">
-                                                                               Cor de fundo da mensagem
-                                                                           </button>
-                                                                       </div>
+                                                                        <div class="color-alert" id="finame-color">
+                                                                            <button class="jscolor {valueElement:'valueInput', styleElement:'styleInputFiname'}">
+                                                                                Cor de fundo da mensagem
+                                                                            </button>
+                                                                        </div>
 
-                                                                       <div hidden id="styleInputFiname"></div>
+                                                                        <div hidden id="styleInputFiname"></div>
 
 
-                                                                       <div class="alert alert-success" id="show-back-finame-phrase">
+                                                                        <div class="alert alert-success" id="show-back-finame-phrase">
                                                                            <span class="font-promotional" id="show-finame-phrase">
                                                                            </span>
-                                                                       </div>
+                                                                        </div>
 
-                                                                   </div>
-                                                               </div>
-                                                           </div>
-                                                       </div>
+                                                                        <div class="col-md-6">
+                                                                            {{ form_label(form_params.finame_shipping_included, 'Habilitar frete INCLUSO') }}
+                                                                            {{ form_widget(form_params.finame_shipping_included) }}
+                                                                        </div>
 
-                                                       <div class="col-lg-6">
-                                                           <div class="panel panel-primary">
-                                                               <div class="panel-heading">
-                                                                   <i class="fa fa-briefcase"></i> Configurações Comerciais
-                                                               </div>
-                                                               <div class="panel-body">
+                                                                        <div class="col-md-6">
+                                                                            {{ form_label(form_params.finame_shipping_included_max_power, 'Potência limite para frete INCLUSO') }}
+                                                                            {{ form_widget(form_params.finame_shipping_included_max_power, {attr:{class:'form-control'}}) }}
+                                                                        </div>
 
-                                                                   <div class="col-md-6">
-                                                                       <div>
-                                                                           {{ form_label(form_params.max_order_discount, 'Desconto máximo permitido') }} &nbsp;
-                                                                           {{ form_widget(form_params.max_order_discount, {attr:{class:'form-control', placeholder:"Desconto máximo"}}) }}
-                                                                       </div>
-                                                                   </div>
-
-                                                               </div>
-
-                                                           </div>
-                                                       </div>
-
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="panel panel-primary">
+                                                                <div class="panel-heading">
+                                                                    <i class="fa fa-briefcase"></i> Configurações Comerciais
+                                                                </div>
+                                                                <div class="panel-body">
+                                                                    <div class="col-md-6">
+                                                                        <div>
+                                                                            {{ form_label(form_params.max_order_discount, 'Desconto máximo permitido') }} &nbsp;
+                                                                            {{ form_widget(form_params.max_order_discount, {attr:{class:'form-control', placeholder:"Desconto máximo"}}) }}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -585,6 +592,9 @@
         if($('#settings_parameters_enable_promo').attr('checked') != 'checked')
             $('#settings_parameters_shipping_included').attr('disabled' , 'disabled');
 
+        if($('#settings_parameters_enable_finame').attr('checked') != 'checked')
+            $('#settings_parameters_finame_shipping_included').attr('disabled', 'disabled');
+
         formSettings.find('input').on('change', function () {
             if (this.id == 'settings_parameters_enable_promo') {
                 var shipping_included = $('#settings_parameters_shipping_included');
@@ -594,6 +604,17 @@
                 else {
                     shipping_included.attr('checked', false);
                     shipping_included.attr('disabled' , 'disabled');
+                }
+            }
+
+            if (this.id == 'settings_parameters_enable_finame') {
+                var finame_included = $('#settings_parameters_finame_shipping_included');
+
+                if (this.checked)
+                    finame_included.removeAttr('disabled');
+                else {
+                    finame_included.attr('checked', false);
+                    finame_included.attr('disabled', 'disabled');
                 }
             }
 

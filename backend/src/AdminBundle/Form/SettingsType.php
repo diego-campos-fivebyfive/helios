@@ -64,6 +64,8 @@ class SettingsType extends AbstractType
                 ->add('finame_background', null, [
                     'required' => false
                 ])
+                ->add('finame_shipping_included', CheckboxType::class)
+                ->add('finame_shipping_included_max_power', TextType::class)
                 ->add('shipping_included', CheckboxType::class)
                 ->add('shipping_included_max_power', TextType::class)
                 ->add('enabled_roof_types', ChoiceType::class, [
