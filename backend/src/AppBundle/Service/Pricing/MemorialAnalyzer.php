@@ -96,15 +96,19 @@ class MemorialAnalyzer
         $types = $config['components'];
         $codes = [];
 
-        if(Memorial::LEVEL_PROMOTIONAL == $this->level){
-            $this->criteria['promotional'] = true;
-        }
-
-        foreach ($types as $type){
+        foreach ($types as $type) {
 
             $this->collection['components'][$type]['enabled'] = true;
 
-            $components = $this->manager($type)->findBy($this->criteria);
+            $manager = $this->manager($type);
+            $qb = $manager->createQueryBuilder();
+
+            $qb->andWhere(
+                $qb->expr()->like(sprintf('%s.princingLevels', $manager->alias()),
+                    $qb->expr()->literal('%"' . $config['level'] . '"%'))
+            );
+
+            $components = $qb->getQuery()->getResult();
 
             $this->updateItems($type, $components);
 
@@ -129,7 +133,7 @@ class MemorialAnalyzer
 
         foreach ($this->collection['components'] as $componentType => $componentConfig) {
 
-            if(!$componentConfig['enabled']){
+            if (!$componentConfig['enabled']) {
                 unset($this->collection['components'][$componentType]);
                 continue;
             }
@@ -148,7 +152,7 @@ class MemorialAnalyzer
 
                     $cacheKey = $this->normalizer->createCacheKey($initialPower, $finalPower);
 
-                    if(array_key_exists($product->getCode(), $cache[$cacheKey][$this->level])) {
+                    if (array_key_exists($product->getCode(), $cache[$cacheKey][$this->level])) {
 
                         /** @var Range $range */
                         $range = $cache[$cacheKey][$this->level][$product->getCode()];
@@ -169,11 +173,10 @@ class MemorialAnalyzer
      */
     private function updateItems($type, array $components)
     {
-        foreach ($components as $component){
-            if ($component->getPrincingLevels() && in_array($this->level, $component->getPrincingLevels()))
-                $this->collection['components'][$type]['items'][$component->getId()] = [
-                    'product' => $component
-                ];
+        foreach ($components as $component) {
+            $this->collection['components'][$type]['items'][$component->getId()] = [
+                'product' => $component
+            ];
         }
     }
 
@@ -206,7 +209,7 @@ class MemorialAnalyzer
      */
     private function manager($id)
     {
-        if(!$this->managers[$id]){
+        if (!$this->managers[$id]) {
             $this->managers[$id] = $this->container->get(sprintf('%s_manager', $id));
         }
 
