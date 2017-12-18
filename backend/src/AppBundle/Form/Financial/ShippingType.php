@@ -30,10 +30,17 @@ class ShippingType extends AbstractType
         $shippingIncluded = $parameters->get('shipping_included');
         $shippingIncludedMaxPower = $parameters->get('shipping_included_max_power');
 
-        $maxPowerValid = $shippingIncludedMaxPower >= $order->getPower();
+        $enableFiname = $parameters->get('enable_finame');
+        $finameShippingIncluded = $parameters->get('finame_shipping_included');
+        $finameShippingIncludedMaxPower = $parameters->get('finame_shipping_included_max_power');
+
+        $maxPowerValid = $shippingIncludedMaxPower ? $shippingIncludedMaxPower >= $order->getPower() : $finameShippingIncludedMaxPower >= $order->getPower();
 
         $isFullyPromotional = $isProject ? false : $order->isFullyPromotional();
         $allowShippingIncluded = !$isProject && $isFullyPromotional && $enablePromo && $shippingIncluded && $maxPowerValid;
+
+        $isFullyFiname = $isProject ? false : $order->isFullyFiname();
+        $allowFinameShippingIncluded = !$isProject && $isFullyFiname && $enableFiname && $finameShippingIncluded && $maxPowerValid;
 
         $choices = [
             'included' => 'Frete Incluso',
@@ -41,10 +48,10 @@ class ShippingType extends AbstractType
             'self' => 'Meu Frete'
         ];
 
-        if(!$allowShippingIncluded)
+        if(!$allowShippingIncluded && !$allowFinameShippingIncluded)
             unset($choices['included']);
 
-        if(!$member->isPlatformUser() && $allowShippingIncluded)
+        if(!$member->isPlatformUser() && ($allowShippingIncluded || $allowFinameShippingIncluded))
             unset($choices['sices']);
 
         $builder

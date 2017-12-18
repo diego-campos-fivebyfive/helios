@@ -726,6 +726,11 @@ interface OrderInterface
     public function isFullyPromotional();
 
     /**
+     * @return bool
+     */
+    public function isFullyFiname();
+
+    /**
      * @param $deliveryDelay
      * @return OrderInterface
      */
