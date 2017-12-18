@@ -1982,6 +1982,19 @@ class Order implements OrderInterface
     /**
      * @inheritDoc
      */
+    public function isFullyFiname()
+    {
+        if (!$this->getChildrens()->count())
+            return false;
+        foreach ($this->getChildrens() as $order)
+            if (!$order->isFiname())
+                return false;
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function isBuilding()
     {
         return self::STATUS_BUILDING == $this->status;
