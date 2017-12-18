@@ -49,6 +49,13 @@ class OrderController extends AbstractController
             ->set('filter', $filter)
         ;
 
+        $qbTotals = $finder->queryBuilder();
+        $qbTotals->select('sum(o.total) as total, sum(o.power) as power');
+        $totals = current($qbTotals->getQuery()->getResult());
+
+        foreach ($totals as $key => $total)
+            $totals[$key] = round($total,2);
+
         $pagination = $this->getPaginator()->paginate(
             $finder->query(),
             $request->query->getInt('page', 1),
@@ -57,7 +64,8 @@ class OrderController extends AbstractController
 
         return $this->render('order.index', array(
             'orders' => $pagination,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'totals' => $totals
         ));
     }
 

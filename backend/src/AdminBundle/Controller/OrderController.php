@@ -64,6 +64,13 @@ class OrderController extends AbstractController
             ->set('filter', $data)
         ;
 
+        $qbTotals = $finder->queryBuilder();
+        $qbTotals->select('sum(o.total) as total, sum(o.power) as power');
+        $totals = current($qbTotals->getQuery()->getResult());
+
+        foreach ($totals as $key => $total)
+            $totals[$key] = round($total,2);
+
         $qb = $finder->queryBuilder();
 
         if ($dateStatus)
@@ -81,7 +88,8 @@ class OrderController extends AbstractController
         return $this->render('admin/orders/index.html.twig', array(
             'orders' => $pagination,
             'member' => $member,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'totals' => $totals
         ));
     }
 
