@@ -1,3 +1,8 @@
+## 18/12 ##
+1. Testar o comportamento, deixar um componente apenas como "finame" e ver se aparece no memorial (foi testado com módulo e não funcionou).
+2. (1190, 1191) Incluir comportamento de frete incluso no "finame", com mesmo comportamento no finame.
+3. (1192) Na listagem de orçamentos, exibir ao lado da quantidade total, o valor total e a potência total.
+
 ## 14/12 ##
 #### TESTES ####
 1. (787) ROLE FINANCING 
