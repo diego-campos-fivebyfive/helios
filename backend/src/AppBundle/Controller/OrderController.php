@@ -49,12 +49,12 @@ class OrderController extends AbstractController
             ->set('filter', $filter)
         ;
 
-        $qbTotals = $finder->queryBuilder();
+        $qb = $finder->queryBuilder();
+
+        $qbTotals = clone $qb;
+        $qbTotals->resetDQLPart('join');
         $qbTotals->select('sum(o.total) as total, sum(o.power) as power');
         $totals = current($qbTotals->getQuery()->getResult());
-
-        foreach ($totals as $key => $total)
-            $totals[$key] = round($total,2);
 
         $pagination = $this->getPaginator()->paginate(
             $finder->query(),
