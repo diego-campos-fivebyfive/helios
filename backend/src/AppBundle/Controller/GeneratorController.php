@@ -32,7 +32,25 @@ class GeneratorController extends AbstractController
 
         $generator = $this->getGenerator();
 
-        $defaults = $generator->loadDefaults($project->getDefaults());
+        $baseDefaults = $project->getDefaults();
+
+        if($request->request->has('generator')) {
+
+            $generatorDefaults = $request->request->get('generator');
+
+            if (array_key_exists('is_promotional', $generatorDefaults)) {
+                $baseDefaults['level'] = MemorialInterface::LEVEL_PROMOTIONAL;
+                $baseDefaults['module'] = null;
+            } else if (array_key_exists('finame', $generatorDefaults)) {
+                $baseDefaults['level'] = MemorialInterface::LEVEL_FINAME;
+                $baseDefaults['module'] = null;
+            }
+        }else{
+            $baseDefaults['level'] = $project->getLevel();
+        }
+
+        $defaults = $generator->loadDefaults($baseDefaults);
+
         $form = $this->createForm(GeneratorType::class, $defaults, [
             'action' => $action
         ]);
@@ -51,34 +69,13 @@ class GeneratorController extends AbstractController
                 ]);
 
             }else{
+
                 $project->setDefaults($form->getData());
 
                 $generator->reset($project);
-
-                if($request->request->has('generator')) {
-
-                    $generatorDefaults = $request->request->get('generator');
-
-                    if (array_key_exists('is_promotional', $generatorDefaults)) {
-                        $level = MemorialInterface::LEVEL_PROMOTIONAL;
-                    }
-                    else if (array_key_exists('finame', $generatorDefaults)) {
-                        $level = MemorialInterface::LEVEL_FINAME;
-                    }
-                    else {
-                        $level = $project->getLevel();
-                    }
-
-                    if ($level) {
-                        $project->setLevel($level);
-                        $this->manager('project')->save($project);
-                    }
-                }
-
                 $generator->generate($project);
 
                 $errors = self::loadDefaultErrors($project);
-
 
                 if(count($errors)) {
                     return $this->json([

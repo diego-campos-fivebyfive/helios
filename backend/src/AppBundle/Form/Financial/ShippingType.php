@@ -48,11 +48,12 @@ class ShippingType extends AbstractType
             'self' => 'Meu Frete'
         ];
 
-        if(!$allowShippingIncluded && !$allowFinameShippingIncluded)
-            unset($choices['included']);
-
-        if(!$member->isPlatformUser() && ($allowShippingIncluded || $allowFinameShippingIncluded))
-            unset($choices['sices']);
+        if(!$member->isPlatformUser()){
+            if(!$allowShippingIncluded && !$allowFinameShippingIncluded)
+                unset($choices['included']);
+            else
+                unset($choices['sices']);
+        }
 
         $builder
             ->add('type', ChoiceType::class, [

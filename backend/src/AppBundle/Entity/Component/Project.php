@@ -440,6 +440,7 @@ class Project implements ProjectInterface
 
         $this->latitude = $defaults['latitude'];
         $this->longitude = $defaults['longitude'];
+        $this->level = $defaults['level'];
 
         $this->defaults = $defaults;
 
