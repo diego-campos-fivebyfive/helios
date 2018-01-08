@@ -934,7 +934,7 @@ class DebugController extends AbstractController
      */
     public function messageOrderAction(Order $order)
     {
-        $account = $order->getAccount();
+        /*$account = $order->getAccount();
         $state = $account->getState();
 
         $qb = $this->manager('member')->createQueryBuilder();
@@ -950,24 +950,24 @@ class DebugController extends AbstractController
 
         $qb->setParameters([
             'member' => 'member'
-        ]);
+        ]);*/
 
         //dump($qb->getQuery()->getResult()); die;
 
-        $members = $qb->getQuery()->getResult();
+        /*$members = $qb->getQuery()->getResult();
 
         dump($members);
         foreach ($members as  $member) {
             if($member->isPlatformExpanse()) {
                 dump($member);die;
             }
-        }
+        }*/
 
 
-        /*return $this->render('orders/emails/message.html.twig', array(
-            'message' => $message,
+        return $this->render('orders/emails/validated.html.twig', array(
+            /*'message' => $message,*/
             'order' => $order
-        ));*/
+        ));
     }
 
     /**

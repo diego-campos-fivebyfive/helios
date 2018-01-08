@@ -1,11 +1,12 @@
+{% set showPrices = not item.ispromotional and not item.isFiname %}
 <table class="width-total orders" cellspacing="0">
     <thead>
     <tr class="th">
         <th>Código</th>
         <th style="min-width: 45%;">Produto</th>
-        {% if not item.ispromotional %}<th>Custo Un.</th>{% endif %}
+        {% if showPrices %}<th>Custo Un.</th>{% endif %}
         <th>QTD</th>
-        {% if not item.ispromotional %}<th>Custo T.</th>{% endif %}
+        {% if showPrices %}<th>Custo T.</th>{% endif %}
     </tr>
     </thead>
     <tbody>
@@ -14,9 +15,9 @@
         <tr class="td">
             <td>{{ element.code }}</td>
             <td class="text-left">{{ element.description }}</td>
-            {% if not item.ispromotional %}<td>{{ element.unitPrice|currency }}</td>{% endif %}
+            {% if showPrices %}<td>{{ element.unitPrice|currency }}</td>{% endif %}
             <td class="text-center">{{ element.quantity }}</td>
-            {% if not item.ispromotional %}<td>{{ element.total|currency }}</td>{% endif %}
+            {% if showPrices %}<td>{{ element.total|currency }}</td>{% endif %}
         </tr>
     {% endfor %}
 
