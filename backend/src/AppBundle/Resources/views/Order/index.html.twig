@@ -209,11 +209,18 @@
 
                                             {% endif %}
 
-                                            <a class="btn btn-default {{ order.FilePayment ? 'validated' }}" data-target="#modal_upload" data-toggle="modal"
-                                               data-href="{{ path('order_upload',{id:item.id}) }}">
-                                                <i class="fa fa-file-text"></i>
-                                                <br><small>Comprovante</small>
-                                            </a>
+                                            {% if not order.isBuilding and not order.isPending and not order.isValidated and not order.isRejected %}
+                                                <a class="btn btn-default {{ order.FilePayment ? 'validated' }}" data-target="#modal_upload" data-toggle="modal"
+                                                   data-href="{{ path('order_upload',{id:item.id}) }}">
+                                                    <i class="fa fa-file-text"></i>
+                                                    <br><small>Comprovante</small>
+                                                </a>
+                                            {% else %}
+                                                <i class="btn btn-default fa fa fa-file-text">
+                                                    <br>
+                                                    <small>Comprov.</small>
+                                                </i>
+                                            {% endif %}
 
                                         </div>
                                     </td>
