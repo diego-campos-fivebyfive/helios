@@ -3,7 +3,7 @@
 if [[ -z $1 ]] || [ $1 = '--help' ] || [ $1 = '-h' ]; then
   printf "ces-issue-assign - help:
   Usage:
-  ces-issue-assign [ISSUE_NUMBER] [GITHUB_USER_NAME]\n
+  ces-issue-assign [ISSUE_NUMBER] [ASSIGN/UNASSIGN]\n
   Exemple:
   ces-issue-assign 100 rafaelkendrik \n"
   exit 0;
