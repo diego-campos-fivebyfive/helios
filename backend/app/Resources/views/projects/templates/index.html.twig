@@ -2,6 +2,26 @@
 
 {% block body %}
 
+    <style>
+
+        a.span-oculted span {
+            display: none;
+        }
+        a.span-oculted:hover span {
+            display: block;
+            position: absolute;
+            width: 60px;
+            top: 0em;
+            text-align: justify;
+            left: 6em;
+            font: 10px Verdana, arial, helvetica, sans-serif;
+            padding: 5px 10px;
+            border: 1px solid #999;
+            background: #E8EBF2;
+            color: #000;
+        }
+
+    </style>
     <div class="modal inmodal" id="modal_upload_template" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content animated bounceInRight">
@@ -55,7 +75,7 @@
 
                     <div class="ibox-content">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-5">
 
                                 <div class="panel panel-success">
                                     <div class="panel-heading">
@@ -65,9 +85,9 @@
                                         <table class="table table-bordered table-hover">
                                             <thead>
                                             <tr>
-                                                <th class="col-md-3"><i class="fa fa-sort-desc"></i> Nro </th>
-                                                <th class="col-md-4"><i class="fa fa-sort-desc"></i> Nome </th>
-                                                <th class="col-md-5"><i class="fa fa-sort-desc"></i> Ações </th>
+                                                <th class="col-md-2"><i class="fa fa-sort-desc"></i> Nro </th>
+                                                <th class="col-md-6"><i class="fa fa-sort-desc"></i> Nome </th>
+                                                <th class="col-md-4"><i class="fa fa-sort-desc"></i> Ações </th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -76,16 +96,16 @@
                                                 <td>um</td>
                                                 <td>
                                                     <div class="btn-group">
-                                                        <a href="" class="btn btn-danger btn-sm">
-                                                            <i class="fa fa-trash"> </i>
+                                                        <a href="" class="btn btn-danger btn-sm span-oculted">
+                                                            <i class="fa fa-trash"> </i><span>Excluir</span>
                                                         </a>
 
-                                                        <a href="" class="btn btn-info btn-sm">
-                                                            <i class="fa fa-eye"> </i>
+                                                        <a href="" class="btn btn-info btn-sm span-oculted">
+                                                            <i class="fa fa-eye"> </i><span>Visualizar</span>
                                                         </a>
 
-                                                        <a href="" class="btn btn-success btn-sm">
-                                                            <i class="fa fa-cogs"> </i>
+                                                        <a href="" class="btn btn-success btn-sm span-oculted">
+                                                            <i class="fa fa-cogs"> </i><span>Gerar</span>
                                                         </a>
                                                     </div>
                                                 </td>
@@ -95,16 +115,16 @@
                                                 <td>dois</td>
                                                 <td>
                                                     <div class="btn-group">
-                                                        <a href="" class="btn btn-danger btn-sm">
-                                                            <i class="fa fa-trash"> </i>
+                                                        <a href="" class="btn btn-danger btn-sm span-oculted">
+                                                            <i class="fa fa-trash"> </i><span>Excluir</span>
                                                         </a>
 
-                                                        <a href="" class="btn btn-info btn-sm">
-                                                            <i class="fa fa-eye"> </i>
+                                                        <a href="" class="btn btn-info btn-sm span-oculted">
+                                                            <i class="fa fa-eye"> </i><span>Visualizar</span>
                                                         </a>
 
-                                                        <a href="" class="btn btn-success btn-sm">
-                                                            <i class="fa fa-cogs"> </i>
+                                                        <a href="" class="btn btn-success btn-sm span-oculted">
+                                                            <i class="fa fa-cogs"> </i><span>Gerar</span>
                                                         </a>
                                                     </div>
                                                 </td>
@@ -114,16 +134,16 @@
                                                 <td>tres</td>
                                                 <td>
                                                     <div class="btn-group">
-                                                        <a href="" class="btn btn-danger btn-sm">
-                                                            <i class="fa fa-trash"> </i>
+                                                        <a href="" class="btn btn-danger btn-sm span-oculted">
+                                                            <i class="fa fa-trash"> </i><span>Excluir</span>
                                                         </a>
 
-                                                        <a href="" class="btn btn-info btn-sm">
-                                                            <i class="fa fa-eye"> </i>
+                                                        <a href="" class="btn btn-info btn-sm span-oculted">
+                                                            <i class="fa fa-eye"> </i><span>Visualizar</span>
                                                         </a>
 
-                                                        <a href="" class="btn btn-success btn-sm">
-                                                            <i class="fa fa-cogs"> </i>
+                                                        <a href="" class="btn btn-success btn-sm span-oculted">
+                                                            <i class="fa fa-cogs"> </i><span>Gerar</span>
                                                         </a>
                                                     </div>
                                                 </td>
@@ -133,16 +153,16 @@
                                                 <td>quatro</td>
                                                 <td>
                                                     <div class="btn-group">
-                                                        <a href="" class="btn btn-danger btn-sm">
-                                                            <i class="fa fa-trash"> </i>
+                                                        <a href="" class="btn btn-danger btn-sm span-oculted">
+                                                            <i class="fa fa-trash"> </i><span>Excluir</span>
                                                         </a>
 
-                                                        <a href="" class="btn btn-info btn-sm">
-                                                            <i class="fa fa-eye"> </i>
+                                                        <a href="" class="btn btn-info btn-sm span-oculted">
+                                                            <i class="fa fa-eye"> </i><span>Visualizar</span>
                                                         </a>
 
-                                                        <a href="" class="btn btn-success btn-sm">
-                                                            <i class="fa fa-cogs"> </i>
+                                                        <a href="" class="btn btn-success btn-sm span-oculted">
+                                                            <i class="fa fa-cogs"> </i><span>Gerar</span>
                                                         </a>
                                                     </div>
                                                 </td>
@@ -153,7 +173,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-8">
+                            <div class="col-md-7">
                                 <div class="panel panel-success">
                                     <div class="panel-heading">
                                         <h5>DOCUMENTAÇÃO DAS TAGS</h5>
