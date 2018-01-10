@@ -43,6 +43,35 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 class DebugController extends AbstractController
 {
     /**
+     * @Route("/template/upload", name="template_upload")
+     */
+    public function templateUploadAction(Request $request)
+    {
+        $file = $request->files->get('file');
+
+        if (!$file instanceof UploadedFile) {
+            return $this->render('proposal.upload');
+        }
+
+        $filename = md5(uniqid(time())) . '.docx';
+
+        $options = [
+            'filename' => $filename,
+            'root' => 'proposal',
+            'type' => 'template',
+            'access' => 'private'
+        ];
+
+        $location = $this->container->get('app_storage')->location($options);
+
+        $path = str_replace($filename, '', $location);
+
+        $file->move($path, $filename);
+
+        return $this->json([ 'name' => $filename ]);
+    }
+
+    /**
      * @Route("/csv-import", name="csv-import")
      */
     public function importCsvAction(Request $request)
