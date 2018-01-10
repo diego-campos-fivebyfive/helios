@@ -989,4 +989,37 @@ interface OrderInterface
      * @return bool
      */
     public function hasAdditive(AdditiveInterface $additive);
+
+    /**
+     * @param $type
+     * @param $file
+     * @return OrderInterface
+     */
+    public function addFile($type, $file);
+
+    /**
+     * @param $type
+     * @param $file
+     * @return OrderInterface
+     */
+    public function removeFile($type, $file);
+
+    /**
+     * @param $type
+     * @return bool
+     */
+    public function hasFile($type);
+
+    /**
+     * @param $type
+     * @param $index
+     * @return string Filename
+     */
+    public function getFile($type, $index);
+
+    /**
+     * @param string|null $type
+     * @return array
+     */
+    public function getFiles($type = null);
 }
