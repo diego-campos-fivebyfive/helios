@@ -28,7 +28,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
- * @Security("has_role('ROLE_OWNER') or has_role('ROLE_PLATFORM_AFTER_SALES')")
+ * @Security("has_role('ROLE_OWNER') or has_role('ROLE_PLATFORM_AFTER_SALES') or has_role('ROLE_PLATFORM_EXPANSE')")
  * @Route("project/generator")
  * @Breadcrumb("Orçamentos")
  */
