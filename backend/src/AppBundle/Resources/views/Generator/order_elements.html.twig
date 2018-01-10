@@ -36,7 +36,7 @@
                            id="input{{ element.id }}"
                            name="markup"
                            readonly="readonly"
-                            {{ not (app.user.isPlatformMaster or app.user.isPlatformAdmin) ? 'disabled="disabled"' }}
+                            {{ not (app.user.isPlatformMaster or app.user.isPlatformAdmin or app.user.platformExpanse) ? 'disabled="disabled"' }}
                            value="{{ element.markup|round(2) }}">
                 </td>
                 <td width="10%">
