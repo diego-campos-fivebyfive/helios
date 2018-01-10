@@ -9,6 +9,10 @@ Tabelas
 - Será fornecido um template padrão para cada conta
 - Listar os templates da conta com as ações de: Excluir, Visualizar Template (download do template), Gerar Proposta (aplica tags e download).
 
+3. Tarefas
+3.1 - Configurar processo de tags (mapeamento e replaces)
+3.2 - Configurar processo de upload (integração de uploader)
+
 ### COMPROVANTES ###
 1. Configurar o processo de upload de comprovantes para envio de mais de um arquivo por orçamento.
 2. Ajustar o processo de download, exibir a modal com a listagem de arquivos e o link de download.
