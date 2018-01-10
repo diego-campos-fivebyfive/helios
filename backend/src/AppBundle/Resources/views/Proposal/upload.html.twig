@@ -41,11 +41,7 @@
         <div id="loader">
         {% include view('helper.spinner') %} Enviando arquivo (<span id="percent"></span>%)
         </div>
-        <div id="upload_success">
-            <i class="fa fa-info-circle"></i> Arquivo enviado com sucesso!
-        </div>
-        <div id="upload_error">
-            <i class="fa fa-info-circle"></i> Esse tipo de arquivo não pode ser enviado!
+        <div id="upload_info">
         </div>
     </div>
 </div>
@@ -60,8 +56,7 @@
         var spinner = $('#uploader_spinner');
         var loader = spinner.find('#loader');
         var percent = spinner.find('#percent');
-        var success = spinner.find('#upload_success');
-        var error = spinner.find('#upload_error');
+        var info = spinner.find('#upload_info');
 
         var appUploader = new Dropzone('div#uploader', {
             url: '{{ app.request.uri }}',
@@ -70,8 +65,7 @@
             acceptedMimeTypes: '.doc, .docx',
             init: function () {
                 this.on('addedfile', function (file) {
-                    success.hide();
-                    error.hide();
+                    $(info).html('');
                     loader.show();
                     spinner.show();
                 });
@@ -82,9 +76,9 @@
                     percent.hide();
                     loader.hide();
                     if (file.accepted)
-                        success.show();
+                        $(info).html('<i class="fa fa-info-circle"></i> Arquivo enviado com sucesso!');
                     else
-                        error.show();
+                        $(info).html('<i class="fa fa-info-circle"></i> Esse tipo de arquivo não pode ser enviado!');
                 });
             }
         });
