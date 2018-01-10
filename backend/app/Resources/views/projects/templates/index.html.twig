@@ -1,0 +1,231 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+    <style>
+
+        a.span-oculted span {
+            display: none;
+        }
+        a.span-oculted:hover span {
+            display: block;
+            position: absolute;
+            width: 60px;
+            top: 0em;
+            text-align: justify;
+            left: 6em;
+            font: 10px Verdana, arial, helvetica, sans-serif;
+            padding: 5px 10px;
+            border: 1px solid #999;
+            background: #E8EBF2;
+            color: #000;
+        }
+
+    </style>
+    <div class="modal inmodal" id="modal_upload_template" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <i class="fa fa-upload"></i> Fazer upload de template
+                    </h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa fa-close"></i> {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="btn-group btn-group-sm btn-group-justified">
+                    <a data-step="project_update" class="btn btn-default nav-link">
+                        <i class="fa fa-sliders"></i>
+                        <span class="mobile-hidden"> DIMENSIONAMENTO </span>
+                    </a>
+
+                    <a data-step="project_financial" class="btn btn-default nav-link">
+                        <i class="fa fa-line-chart"></i>
+                        <span class="mobile-hidden"> ANÁLISE FINANCEIRA </span>
+                    </a>
+
+                    <a data-step="proposal_editor" class="btn btn-default nav-link active">
+                        <i class="fa fa-file-text-o"></i>
+                        <span class="mobile-hidden"> PROPOSTA </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <a class="btn btn-success btn-sm" data-target="#modal_upload_template" data-toggle="modal"
+                           data-href="">
+                            <i class="fa fa-upload"> </i> Fazer upload de template
+                        </a>
+                    </div>
+
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-md-5">
+
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <h5>LISTA DE TEMPLATES</h5>
+                                    </div>
+                                    <div class="panel-boby">
+                                        <table class="table table-bordered table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th class="col-md-2"><i class="fa fa-sort-desc"></i> Nro </th>
+                                                <th class="col-md-6"><i class="fa fa-sort-desc"></i> Nome </th>
+                                                <th class="col-md-4"><i class="fa fa-sort-desc"></i> Ações </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>um</td>
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <a href="" class="btn btn-danger btn-sm span-oculted">
+                                                            <i class="fa fa-trash"> </i><span>Excluir</span>
+                                                        </a>
+
+                                                        <a href="" class="btn btn-info btn-sm span-oculted">
+                                                            <i class="fa fa-eye"> </i><span>Visualizar</span>
+                                                        </a>
+
+                                                        <a href="" class="btn btn-success btn-sm span-oculted">
+                                                            <i class="fa fa-cogs"> </i><span>Gerar</span>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>2</td>
+                                                <td>dois</td>
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <a href="" class="btn btn-danger btn-sm span-oculted">
+                                                            <i class="fa fa-trash"> </i><span>Excluir</span>
+                                                        </a>
+
+                                                        <a href="" class="btn btn-info btn-sm span-oculted">
+                                                            <i class="fa fa-eye"> </i><span>Visualizar</span>
+                                                        </a>
+
+                                                        <a href="" class="btn btn-success btn-sm span-oculted">
+                                                            <i class="fa fa-cogs"> </i><span>Gerar</span>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>3</td>
+                                                <td>tres</td>
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <a href="" class="btn btn-danger btn-sm span-oculted">
+                                                            <i class="fa fa-trash"> </i><span>Excluir</span>
+                                                        </a>
+
+                                                        <a href="" class="btn btn-info btn-sm span-oculted">
+                                                            <i class="fa fa-eye"> </i><span>Visualizar</span>
+                                                        </a>
+
+                                                        <a href="" class="btn btn-success btn-sm span-oculted">
+                                                            <i class="fa fa-cogs"> </i><span>Gerar</span>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>4</td>
+                                                <td>quatro</td>
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <a href="" class="btn btn-danger btn-sm span-oculted">
+                                                            <i class="fa fa-trash"> </i><span>Excluir</span>
+                                                        </a>
+
+                                                        <a href="" class="btn btn-info btn-sm span-oculted">
+                                                            <i class="fa fa-eye"> </i><span>Visualizar</span>
+                                                        </a>
+
+                                                        <a href="" class="btn btn-success btn-sm span-oculted">
+                                                            <i class="fa fa-cogs"> </i><span>Gerar</span>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-7">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <h5>DOCUMENTAÇÃO DAS TAGS</h5>
+                                    </div>
+                                    <div class="panel-body">
+                                        <table class="table table-bordered table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th class="col-md-4"><i class="fa fa-sort-desc"></i> Nome da Tag </th>
+                                                <th class="col-md-8"><i class="fa fa-sort-desc"></i> Descrição da Tag </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td>${tagName} Siginificado da Tag</td>
+                                                <td>Explicação detalhada sobre a tag...</td>
+                                            </tr>
+                                            <tr>
+                                                <td>${tagName} Siginificado da Tag</td>
+                                                <td>Explicação detalhada sobre a tag...</td>
+                                            </tr>
+                                            <tr>
+                                                <td>${tagName} Siginificado da Tag</td>
+                                                <td>Explicação detalhada sobre a tag...</td>
+                                            </tr>
+                                            <tr>
+                                                <td>${tagName} Siginificado da Tag</td>
+                                                <td>Explicação detalhada sobre a tag...</td>
+                                            </tr>
+                                            <tr>
+                                                <td>${tagName} Siginificado da Tag</td>
+                                                <td>Explicação detalhada sobre a tag...</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var modalUpload = $('#modal_upload_template');
+
+        modalUpload.on('show.bs.modal', function (event) {
+            var target = $(event.relatedTarget);
+            var url = target.data('href');
+        });
+    </script>
+{% endblock %}

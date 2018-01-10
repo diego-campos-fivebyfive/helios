@@ -157,6 +157,13 @@ class Order implements OrderInterface
     private $filePayment;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $files;
+
+    /**
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
@@ -532,6 +539,7 @@ class Order implements OrderInterface
         $this->source = self::SOURCE_ACCOUNT;
         $this->orderAdditives = new ArrayCollection();
         $this->financing = false;
+        $this->normalizeFiles();
     }
 
     /**
@@ -2307,12 +2315,112 @@ class Order implements OrderInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function addFile($type, $file)
+    {
+        $types = ['payment', 'proforma'];
+
+        if(!in_array($type, $types))
+            throw new \InvalidArgumentException(sprintf('Invalid [%s] file type. Accept: %s', $type, implode(',', $types)));
+
+        if(is_array($this->files[$type]))
+            $this->files[$type][] = $file;
+        else
+            $this->files[$type] = $file;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeFile($type, $file)
+    {
+        if(!is_array($this->files[$type]))
+            $this->files[$type] = null;
+        else
+
+            foreach ($this->files[$type] as $index => $item)
+                if($file === $index || $file === $item)
+                    unset($this->files[$type][$index]);
+
+            $this->files[$type] = array_values($this->files[$type]);
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasFile($type, $file = null)
+    {
+        if(!$this->files[$type])
+            return false;
+
+        if(is_array($this->files[$type]) && $file)
+            return in_array($file, $this->files[$type])
+                || array_key_exists($file, $this->files[$type]);
+
+        return !empty($this->files[$type]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getFile($type, $index = null)
+    {
+        $this->normalizeFiles();
+
+        if(!is_array($this->files[$type]))
+            return $this->files[$type];
+        else
+            if(array_key_exists($index, $this->files[$type]))
+                return $this->files[$type][$index];
+
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getFiles($type = null)
+    {
+        $this->normalizeFiles();
+
+        return $type ? $this->files[$type] : $this->files ;
+    }
+
+    /**
      * @return int|mixed
      */
     private function getRuleShipping()
     {
         return  is_array($this->shippingRules) && array_key_exists('shipping', $this->shippingRules)
             ? $this->shippingRules['shipping'] : 0 ;
+    }
+
+    /**
+     * @deprecated Remove this method and internal calling after $files functionality is released
+     */
+    private function normalizeFiles()
+    {
+        if(!is_array($this->files))
+            $this->files = [];
+
+        if(!array_key_exists('payment', $this->files))
+            $this->files = [
+                'payment' => [],
+                'proforma' => null
+            ];
+
+        if($this->filePayment && !$this->hasFile('payment', $this->filePayment)){
+            $this->files['payment'][] = $this->filePayment;
+        }
+
+        if($this->proforma && !$this->hasFile('proforma')){
+            $this->files['proforma'] = $this->proforma;
+        }
     }
 }
 

@@ -1,3 +1,22 @@
+## 10/01 ##
+### WORD ###
+Tabelas
+- Equipamentos : Item, Quantidade
+- Geração: Mês, Geração
+- Caixa acumulado: Ano, Valor
+
+2. Gerenciamento
+- Será fornecido um template padrão para cada conta
+- Listar os templates da conta com as ações de: Excluir, Visualizar Template (download do template), Gerar Proposta (aplica tags e download).
+
+3. Tarefas
+3.1 - Configurar processo de tags (mapeamento e replaces)
+3.2 - Configurar processo de upload (integração de uploader)
+
+### COMPROVANTES ###
+1. Configurar o processo de upload de comprovantes para envio de mais de um arquivo por orçamento.
+2. Ajustar o processo de download, exibir a modal com a listagem de arquivos e o link de download.
+
 ## 18/12 ##
 1. Testar o comportamento, deixar um componente apenas como "finame" e ver se aparece no memorial (foi testado com módulo e não funcionou).
 2. (1190, 1191) Incluir comportamento de frete incluso no "finame", com mesmo comportamento no finame.

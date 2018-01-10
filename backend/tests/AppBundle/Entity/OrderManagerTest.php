@@ -174,6 +174,67 @@ class OrderManagerTest extends AppTestCase
     }
 
     /**
+     * Normalize order files
+     * Resolve legacy order files
+     */
+    public function testFilesManagement()
+    {
+        $manager = $this->manager('order');
+
+        /** @var Order $order */
+        $order = $manager->create();
+
+        // Test default
+        $this->assertFalse($order->hasFile('payment'));
+        $this->assertFalse($order->hasFile('proforma'));
+
+        // Test property normalization
+        $this->assertNotEmpty($order->getFiles());
+        $this->assertArrayHasKey('payment', $order->getFiles());
+
+        // Add file
+        $order->addFile('payment', 'filename.jpg');
+        $this->assertNotEmpty($order->getFiles('payment'));
+        $this->assertTrue($order->hasFile('payment'));
+        $this->assertTrue($order->hasFile('payment', 'filename.jpg'));
+        $this->assertFalse($order->hasFile('payment', 'filename2.jpg'));
+
+        // Remove file via index
+        $order->removeFile('payment', 0);
+        $this->assertEmpty($order->getFiles('payment'));
+
+        $order->addFile('payment', 'filename.png');
+        $this->assertNotEmpty($order->getFiles('payment'));
+        $this->assertArrayHasKey(0, $order->getFiles('payment')); // Insure first item is key '0'
+
+        // Remove file via name
+        $order->removeFile('payment', 'filename.png');
+        $this->assertEmpty($order->getFiles('payment'));
+
+        // Add file
+        $order->addFile('payment', 'filename1.png');
+        $order->addFile('payment', 'filename2.png');
+        $order->addFile('payment', 'filename3.png');
+
+        $this->assertTrue($order->hasFile('payment'));
+        $this->assertFalse($order->hasFile('proforma'));
+        $this->assertEquals('filename3.png', $order->getFile('payment', 2));
+
+        // Add file
+        $order->addFile('proforma', 'proforma.pdf');
+        $this->assertEquals('proforma.pdf', $order->getFile('proforma'));
+
+        // Test normalizations
+        /** @var Order $order2 */
+        $order2 = $manager->create();
+        $order2->setFilePayment('payment.png');
+        $order2->setProforma('proforma.pdf');
+
+        $this->assertNotEmpty($order2->getFiles('payment'));
+        $this->assertEquals('proforma.pdf', $order2->getFile('proforma'));
+    }
+
+    /**
      * @return \AppBundle\Manager\OrderManager|object
      */
     private function getOrderManager()
