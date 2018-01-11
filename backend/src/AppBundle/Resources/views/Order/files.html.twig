@@ -1,8 +1,8 @@
 <table class="table table-bordered table-hover">
     <thead>
     <tr>
-        <th> Arquivo </th>
-        <th class="text-center"> Ações </th>
+        <th> Arquivo</th>
+        <th class="text-center"> Ações</th>
     </tr>
     </thead>
     <tbody>
@@ -11,18 +11,23 @@
 
         <tr>
             <td>
-                <a target="_blank" href="{{ path('order_file', {id:order.id, type:'filePayment', file: file}) }}" title="Visualizar">
+                <a target="_blank" href="{{ path('order_file', {id:order.id, type:'filePayment', file: file}) }}"
+                   title="Visualizar">
                     {{ file }}
                 </a>
             </td>
             <td width="25%">
                 <div class="btn-group btn-group-justified">
-                    <a target="_blank" href="{{ path('order_file', {id:order.id, type:'filePayment', file: file}) }}" class="btn btn-default btn-sm" title="Visualizar">
+                    <a target="_blank" href="{{ path('order_file', {id:order.id, type:'filePayment', file: file}) }}"
+                       class="btn btn-default btn-sm" title="Visualizar">
                         <i class="fa fa-eye"> </i>
                     </a>
-                    <a data-delete="{{ path('order_delete_file', {id:order.id, type:type, file:file}) }}" title="Excluir" class="btn btn-default btn-sm">
-                        <i class="fa fa-trash"> </i>
-                    </a>
+                    {% if not isPlatform %}
+                        <a data-delete="{{ path('order_delete_file', {id:order.id, type:type, file:file}) }}"
+                           title="Excluir" class="btn btn-default btn-sm">
+                            <i class="fa fa-trash"> </i>
+                        </a>
+                    {% endif %}
                 </div>
             </td>
         </tr>
@@ -32,58 +37,62 @@
     </tbody>
 </table>
 
-<script>
-    $('[data-delete]').on('click', function(){
+{% if not isPlatform %}
 
-        var url = $(this).data('delete');
+    <script>
+        $('[data-delete]').on('click', function () {
 
-        swal({
-            title: "Excluir arquivo de pagamento.",
-            text: "Confirma exclusão do arquivo?",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: '{{ 'Confirmar'|trans }}',
-            cancelButtonText: '{{ 'Cancelar'|trans }}',
-            closeOnConfirm: false
-        }, function () {
+            var url = $(this).data('delete');
 
-            $.ajax({
-                url: url,
-                method: 'post',
-                data: {_method:'delete'},
-                complete: function (xhr) {
+            swal({
+                title: "Excluir arquivo de pagamento.",
+                text: "Confirma exclusão do arquivo?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: '{{ 'Confirmar'|trans }}',
+                cancelButtonText: '{{ 'Cancelar'|trans }}',
+                closeOnConfirm: false
+            }, function () {
 
-                    if (200 == xhr.status) {
+                $.ajax({
+                    url: url,
+                    method: 'post',
+                    data: {_method: 'delete'},
+                    complete: function (xhr) {
 
+                        if (200 == xhr.status) {
+
+                            swal({
+                                title: "Concluído.",
+                                text: "Operação realizada com sucesso.",
+                                type: "success",
+                                showConfirmButton: false
+                            });
+
+                            window.setTimeout(function () {
+                                swal.close();
+                                FileManager.all();
+                            }, 500);
+
+                        } else {
+                            var response = xhr.responseJSON;
+                            swal('Ooops', response.hasOwnProperty('error') ? response.error : 'Falha ao executar a operação', 'error');
+                        }
+                    },
+                    beforeSend: function () {
                         swal({
-                            title: "Concluído.",
-                            text: "Operação realizada com sucesso.",
-                            type: "success",
+                            title: "Processando...",
+                            text: "Aguarde.",
+                            type: "info",
                             showConfirmButton: false
                         });
-
-                        window.setTimeout(function () {
-                            swal.close();
-                            FileManager.all();
-                        }, 500);
-
-                    } else {
-                        var response = xhr.responseJSON;
-                        swal('Ooops', response.hasOwnProperty('error') ? response.error : 'Falha ao executar a operação', 'error');
                     }
-                },
-                beforeSend: function () {
-                    swal({
-                        title: "Processando...",
-                        text: "Aguarde.",
-                        type: "info",
-                        showConfirmButton: false
-                    });
-                }
+                });
+
             });
 
         });
+    </script>
 
-    });
-</script>
+{% endif %}
