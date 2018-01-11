@@ -196,13 +196,45 @@ class OrderController extends AbstractController
         $path = str_replace($filename, '', $location);
         $file->move($path, $filename);
 
-        $order->setFilePayment($filename);
+        $order->addFile('payment', $filename);
 
         $this->manager('order')->save($order);
 
         $this->get('order_timeline')->create($order, TimelineInterface::TAG_FILE_PAYMENT);
 
         return $this->json([ 'name' => $filename ]);
+    }
+
+    /**
+     * @Route("/{id}/files/{type}", name="order_files")
+     */
+    public function getFilesAction(Order $order, $type)
+    {
+        return $this->render('order.files', [
+            'order' => $order,
+            'type' => $type
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/files/delete/{type}/{file}", name="order_delete_file")
+     * @Method("delete")
+     */
+    public function deleteFileAction(Order $order, $type, $file)
+    {
+        $this->denyAccessUnlessGranted('edit', $order);
+
+        $order->removeFile($type, $file);
+
+        if($file === $order->getFilePayment()){
+            $order->setFilePayment(null);
+        }
+
+        $this->manager('order')->save($order);
+
+        // TODO: IMPLEMENT S3 REMOVE FILE HERE!
+
+        return $this->json([]);
     }
 
     /**
@@ -224,7 +256,7 @@ class OrderController extends AbstractController
     /**
      * @Route("/{id}/file/{type}", name="order_file")
      */
-    public function fileAction(Order $order, $type)
+    public function fileAction(Request $request, Order $order, $type)
     {
         $this->denyAccessUnlessGranted('edit', $order);
 
@@ -235,7 +267,7 @@ class OrderController extends AbstractController
             throw $this->createNotFoundException(sprintf($message, get_class($order), $type));
         }
 
-        $filename = $order->$method();
+        $filename = $request->get('file') ? $request->get('file') : $order->$method();
 
         if (!$filename) {
             $message = 'File %s not found';
