@@ -835,7 +835,7 @@ class Order implements OrderInterface
      */
     public function hasFilePayment()
     {
-        return strlen($this->filePayment);
+        return $this->hasFile('payment');
     }
 
     /**
@@ -2324,10 +2324,14 @@ class Order implements OrderInterface
         if(!in_array($type, $types))
             throw new \InvalidArgumentException(sprintf('Invalid [%s] file type. Accept: %s', $type, implode(',', $types)));
 
-        if(is_array($this->files[$type]))
-            $this->files[$type][] = $file;
-        else
-            $this->files[$type] = $file;
+        switch ($type){
+            case 'proforma':
+                $this->files[$type] = $file;
+                break;
+            case 'payment':
+                $this->files[$type][] = $file;
+                break;
+        }
 
         return $this;
     }
@@ -2346,6 +2350,10 @@ class Order implements OrderInterface
                     unset($this->files[$type][$index]);
 
             $this->files[$type] = array_values($this->files[$type]);
+
+        // TODO: Temporary handle
+        if($file === $this->filePayment)
+            $this->filePayment = null;
 
         return $this;
     }
@@ -2410,9 +2418,12 @@ class Order implements OrderInterface
 
         if(!array_key_exists('payment', $this->files))
             $this->files = [
-                'payment' => [],
-                'proforma' => null
+                'payment' => []
             ];
+
+        if(!array_key_exists('proforma', $this->files)){
+            $this->files['proforma'] = null;
+        }
 
         if($this->filePayment && !$this->hasFile('payment', $this->filePayment)){
             $this->files['payment'][] = $this->filePayment;
