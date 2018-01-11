@@ -344,7 +344,7 @@
                                                 <a data-toggle="modal"
                                                    data-target="#modal_files"
                                                    data-url="{{ path('order_files',{id:order.id, type: 'payment'}) }}"
-                                                   class="btn btn-default {{ order.hasFilePayment ? 'validated' }}">
+                                                   class="btn btn-default {{ order.hasFile('payment') ? 'validated' }}">
                                                     <i class="fa fa-file-text"></i> <br>
                                                     <small>Comprov. </small>
                                                 </a>
