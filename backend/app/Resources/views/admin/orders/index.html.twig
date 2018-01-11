@@ -113,6 +113,26 @@
         </div>
     </div>
 
+    <div class="modal inmodal" id="modal_files" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <i class="fa fa-file-text"></i> Comprovantes de Pagamento
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    {% include view('helper.spinner') %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa fa-close"></i> {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="wrapper wrapper-content animated fadeInRight">
 
         <div class="row">
@@ -320,11 +340,13 @@
                                                 </a>
                                             {% endif %}
 
-                                            {% if order.hasFilePayment %}
-                                                <a class="btn btn-default {{ order.FilePayment ? 'validated' }}"
-                                                   href="{{ path('order_file',{id:order.id, type:'filePayment'}) }}"
-                                                   target="_blank"> <i class="fa fa-file-text"></i> <br>
-                                                    <small>Comprov.</small>
+                                            {% if order.hasFile('payment') %}
+                                                <a data-toggle="modal"
+                                                   data-target="#modal_files"
+                                                   data-url="{{ path('order_files',{id:order.id, type: 'payment'}) }}"
+                                                   class="btn btn-default {{ order.hasFilePayment ? 'validated' }}">
+                                                    <i class="fa fa-file-text"></i> <br>
+                                                    <small>Comprov. </small>
                                                 </a>
                                             {% else %}
                                                 <i class="btn btn-default fa fa fa-file-text">
@@ -481,6 +503,14 @@
                     modalUploadBody.html(response);
                 }
             });
+        });
+
+        var modalFiles = $('#modal_files');
+
+        modalFiles.on('show.bs.modal', function(event){
+            var target = $(event.relatedTarget);
+            var url = target.data('url');
+            modalFiles.find('.modal-body').load(url);
         });
 
     </script>
