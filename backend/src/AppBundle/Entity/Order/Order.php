@@ -835,7 +835,7 @@ class Order implements OrderInterface
      */
     public function hasFilePayment()
     {
-        return strlen($this->filePayment);
+        return $this->hasFile('payment');
     }
 
     /**
@@ -2350,6 +2350,10 @@ class Order implements OrderInterface
                     unset($this->files[$type][$index]);
 
             $this->files[$type] = array_values($this->files[$type]);
+
+        // TODO: Temporary handle
+        if($file === $this->filePayment)
+            $this->filePayment = null;
 
         return $this;
     }

@@ -212,7 +212,8 @@ class OrderController extends AbstractController
     {
         return $this->render('order.files', [
             'order' => $order,
-            'type' => $type
+            'type' => $type,
+            'isPlatform' => $this->user()->isPlatform()
         ]);
     }
 
@@ -225,10 +226,6 @@ class OrderController extends AbstractController
         $this->denyAccessUnlessGranted('edit', $order);
 
         $order->removeFile($type, $file);
-
-        if($file === $order->getFilePayment()){
-            $order->setFilePayment(null);
-        }
 
         $this->manager('order')->save($order);
 
