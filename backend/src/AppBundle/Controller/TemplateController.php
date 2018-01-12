@@ -34,41 +34,40 @@ class TemplateController extends AbstractController
         $project = $this->manager('project')->find(2253);
 
         $components = ComponentExtractor::fromProject($project);
-        //dump($components[0]['quantity']);die;
 
         $path = $this->container->get('kernel')->getRootDir();
         $file = $path . '/cache/template.docx';
 
-        $templateProcessor = new TemplateProcessor($file);
+        $this->templateProcessor = new TemplateProcessor($file);
 
-        $templateProcessor->setValue('ProjetoNumero', $project->getNumber());
-        $templateProcessor->setValue([
+        $this->templateProcessor->setValue('ProjetoNumero', $project->getNumber());
+        $this->templateProcessor->setValue([
             'ProjetoPotencia', 'PropostaValor', 'ClienteNome', 'ClienteDocumento',
             'ClienteTelefone', 'ClienteEmail', 'GeracaoAnual', 'GeracaoMediaMensal',
             'TempoDeVida', 'Inflacao', 'PerdaEficiencia', 'CustoAnualOperacao',
             'PrecoKwhImpostos', 'CaixaAcumulado', 'ValorPresenteLiquido', 'TaxaRetorno',
             'PaybackSimples', 'PaybackDescontado', 'Descricao', 'Quantidade',
-            ],
-            array(
-                $project->getPower() . ' Kwp',
-                self::formatCurrency($project->getSalePrice()),
-                $project->getCustomer()->getName(),
-                $project->getCustomer()->getDocument(),
-                $project->getCustomer()->getPhone(),
-                $project->getCustomer()->getEmail(),
-                round($project->getMetadata()['total']['kwh_year']) . ' kWh',
-                round(($project->getMetadata()['total']['kwh_year'] / 12)). ' Kwp',
-                $project->getLifetime(). ' anos',
-                $project->getInflation().' %',
-                $project->getEfficiencyLoss().' %',
-                self::formatCurrency($project->getAnnualCostOperation()),
-                self::formatCurrency($project->getEnergyPrice()),
-                self::formatCurrency($project->getAccumulatedCash(true)),
-                self::formatCurrency($project->getNetPresentValue()),
-                $project->getInternalRateOfReturn().' %',
-                self::formatPayback($project->getPaybackYears(), $project->getPaybackMonths()),
-                self::formatPayback($project->getPaybackYearsDisc(), $project->getPaybackMonthsDisc())
-            ));
+        ],
+        array(
+            $project->getPower() . ' Kwp',
+            self::formatCurrency($project->getSalePrice()),
+            $project->getCustomer()->getName(),
+            $project->getCustomer()->getDocument(),
+            $project->getCustomer()->getPhone(),
+            $project->getCustomer()->getEmail(),
+            round($project->getMetadata()['total']['kwh_year']) . ' kWh',
+            round(($project->getMetadata()['total']['kwh_year'] / 12)). ' Kwp',
+            $project->getLifetime(). ' anos',
+            $project->getInflation().' %',
+            $project->getEfficiencyLoss().' %',
+            self::formatCurrency($project->getAnnualCostOperation()),
+            self::formatCurrency($project->getEnergyPrice()),
+            self::formatCurrency($project->getAccumulatedCash(true)),
+            self::formatCurrency($project->getNetPresentValue()),
+            $project->getInternalRateOfReturn().' %',
+            self::formatPayback($project->getPaybackYears(), $project->getPaybackMonths()),
+            self::formatPayback($project->getPaybackYearsDisc(), $project->getPaybackMonthsDisc())
+        ));
 
         $groupByFamily = function($acc, $component) {
             $item = [
@@ -90,23 +89,35 @@ class TemplateController extends AbstractController
 
         $familiesOfComponents = array_reduce($components, $groupByFamily, []);
 
-        echo '<pre>';
-        print_r($familiesOfComponents); die;
+        $cloneLines = count($components) + count($familiesOfComponents);
 
-/*        $componentCount = count($components);
+        $this->templateProcessor->cloneRow('descricao', $cloneLines);
 
-        $templateProcessor->cloneRow('descricao', $componentCount);
+        $familiesTranslations = [
+            'module' => 'MÓDULOS',
+            'inverter' => 'INVERSORES',
+            'string_box' => 'STRING BOX',
+            'structure' => 'ESTRUTURAS',
+            'variety' => 'VARIEDADES'
+        ];
 
-        for ($i = 0; $i < $componentCount; $i++) {
-            $templateProcessor->setValue('descricao#' . ($i + 1), $components[$i]['description']);
-            $templateProcessor->setValue('quantidade#' . ($i + 1), $components[$i]['quantity']);
+        $currentLine = 1;
+
+        foreach ($familiesOfComponents as $keyFamily => $family) {
+            self::writeLineTitle($currentLine, $familiesTranslations[$keyFamily]);
+            $currentLine++;
+
+            foreach ($family as $component) {
+                self::writeLineComponent($currentLine, $component);
+                $currentLine++;
+            }
         }
 
         $outputFile = $path . '/cache/test_docx.docx';
 
-        $templateProcessor->saveAs($outputFile);
+        $this->templateProcessor->saveAs($outputFile);
 
-        dump($templateProcessor);die;*/
+        dump($this->templateProcessor);die;
     }
 
     /**
@@ -139,5 +150,37 @@ class TemplateController extends AbstractController
         }
 
         return $formatted;
+    }
+
+    /**
+     * @param $line
+     * @param $key
+     * @param string $content
+     */
+    private function writeLineContent($line, $key, $content='')
+    {
+        $this->templateProcessor->setValue("${key}#${line}", $content);
+    }
+
+    /**
+     * @param $line
+     * @param $title
+     */
+    private function writeLineTitle($line, $title)
+    {
+        self::writeLineContent($line, 'title', $title);
+        self::writeLineContent($line, 'descricao');
+        self::writeLineContent($line,'quantidade');
+    }
+
+    /**
+     * @param $line
+     * @param $component
+     */
+    private function writeLineComponent($line, $component)
+    {
+       self::writeLineContent($line, 'title');
+       self::writeLineContent($line, 'descricao', $component['description']);
+       self::writeLineContent($line, 'quantidade', $component['quantity']);
     }
 }
