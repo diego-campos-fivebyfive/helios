@@ -23,6 +23,28 @@ interface ThemeInterface
     public function getAccountId();
 
     /**
+     * @param $name
+     * @return ThemeInterface
+     */
+    public function setName($name);
+
+    /**
+     * @return string
+     */
+    public function getName();
+
+    /**
+     * @param $filename
+     * @return ThemeInterface
+     */
+    public function setFilename($filename);
+
+    /**
+     * @return string
+     */
+    public function getFilename();
+
+    /**
      * @param $theme
      * @return ThemeInterface
      */
