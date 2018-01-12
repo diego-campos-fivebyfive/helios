@@ -273,7 +273,11 @@ class TemplateController extends AbstractController
         }
     }
 
-    private function saveTheme($filename, $originalName)
+    /**
+     * @param string $filename
+     * @param string $originalName
+     */
+    private function saveTheme(string $filename, string $originalName)
     {
         $manager = $this->manager('theme');
 
