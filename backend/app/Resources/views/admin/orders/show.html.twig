@@ -95,7 +95,7 @@
     <script type="text/javascript" src="{{ asset('assets/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/fullcalendar/lib/moment.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/daterangepicker/daterangepicker.js') }}"></script>
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/daterangepicker/daterangepicker.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/daterangepicker/daterangepicker.css') }}"/>
 
     {% set orders = order.childrens %}
     {% set isPlatform = app.user.isPlatform %}
@@ -194,11 +194,13 @@
                                                     </a>
                                                 {% endif %}
 
-                                                {% if order.isBuilding or (order.isRejected and (member.isPlatformMaster or member.isPlatformAdmin or member.isPlatformExpanse)) %}
-                                                    <a class="btn btn-sm btn-danger"
-                                                       data-delete="{{ path('order_delete', {id:order.id}) }}">
-                                                        <i class="fa fa-close"></i> Excluir
-                                                    </a>
+                                                {% if not member.isPlatformExpanse %}
+                                                    {% if order.isBuilding or (order.isRejected and (member.isPlatformMaster or member.isPlatformAdmin)) %}
+                                                        <a class="btn btn-sm btn-danger"
+                                                           data-delete="{{ path('order_delete', {id:order.id}) }}">
+                                                            <i class="fa fa-close"></i> Excluir
+                                                        </a>
+                                                    {% endif %}
                                                 {% endif %}
 
                                                 {% if not member.isPlatformUser and order.isValidated and not expired %}
@@ -208,13 +210,15 @@
                                                     </a>
                                                 {% endif %}
 
-                                                {% if (not member.isPlatformUser and order.isValidated)
-                                                or (member.isPlatformUser and (order.isValidated or order.isPending or order.isApproved))
-                                                or (member.isPlatformMaster and not order.isBuilding and not order.isRejected) %}
-                                                    <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_REJECTED') }}">
-                                                        <i class="fa fa-thumbs-o-down"></i> Cancelar este orçamento
-                                                    </a>
+                                                {% if not member.isPlatformExpanse %}
+                                                    {% if (not member.isPlatformUser and order.isValidated)
+                                                    or (member.isPlatformUser and (order.isValidated or order.isPending or order.isApproved))
+                                                    or (member.isPlatformMaster and not order.isBuilding and not order.isRejected) %}
+                                                        <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
+                                                           data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_REJECTED') }}">
+                                                            <i class="fa fa-thumbs-o-down"></i> Cancelar este orçamento
+                                                        </a>
+                                                    {% endif %}
                                                 {% endif %}
 
                                                 {% if member.isPlatformUser and order.isValidated %}
@@ -227,7 +231,8 @@
                                                 {% if (member.isPlatformFinancial or member.isPlatformFinancing) and order.isApproved %}
                                                     <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
                                                        data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DONE') }}">
-                                                        <i class="fa fa-check-square-o"></i> {{ member.isPlatformFinancial ? 'Pagamento' : 'Financiamento' }} confirmado
+                                                        <i class="fa fa-check-square-o"></i> {{ member.isPlatformFinancial ? 'Pagamento' : 'Financiamento' }}
+                                                        confirmado
                                                     </a>
                                                 {% endif %}
 
@@ -240,7 +245,7 @@
                                             </div>
 
                                             <div class="pull-right btn-group">
-                                                {% if app.user.platformMaster or app.user.platformAdmin or member.isPlatformExpanse %}
+                                                {% if app.user.platformMaster or app.user.platformAdmin %}
                                                     <a data-target="#master_cloner_modal"
                                                        data-href="{{ path('show_order_cloner', {id:order.id}) }}"
                                                        data-toggle="modal"
@@ -263,7 +268,7 @@
                                             <h2>
                                                 Orçamento {{ order.reference }}
                                                 {% if order.fileExtract and
-                                                (member.isPlatformAdmin or member.isPlatformMaster or member.isPlatformAfterSales or member.isPlatformExpanse) %}
+                                                (member.isPlatformAdmin or member.isPlatformMaster or member.isPlatformAfterSales) %}
                                                     <a class="pull-right" target="_blank"
                                                        href="{{ path('order_file',{id:order.id, type:'fileExtract'}) }}">
                                                         <i class="fa fa-download"></i> CSV
@@ -369,13 +374,16 @@
                                                 </li>
                                                 {% if member.isPlatformLogistic %}
                                                     <div class="pull-right" style="padding-bottom: 10px;">
-                                                        <label style="padding-right: 10px;">Número da Nota Fiscal: </label>
-                                                        <input id="invoice-number" value="{{ order.invoiceNumber }}" type="text">
+                                                        <label style="padding-right: 10px;">Número da Nota
+                                                            Fiscal: </label>
+                                                        <input id="invoice-number" value="{{ order.invoiceNumber }}"
+                                                               type="text">
                                                     </div>
                                                 {% endif %}
                                                 {% if not member.isPlatformLogistic %}
                                                     <div class="pull-right" style="padding-bottom: 10px;">
-                                                        <label style="padding-right: 10px;">Número da Nota Fiscal: </label>
+                                                        <label style="padding-right: 10px;">Número da Nota
+                                                            Fiscal: </label>
                                                         {{ order.invoiceNumber }}
                                                     </div>
                                                 {% endif %}
@@ -485,8 +493,10 @@
                                             {% endif %}
                                         </div>
                                         <div class="col-md-4 spacing">
-                                            <label class="row-total">Disponibilidade para coleta (dias após pagamento)</label>
-                                            {% if order.deliveryDelay %} {{ order.deliveryDelay }} dia(s) após a identificação do pagamento.{% endif %}<br/>
+                                            <label class="row-total">Disponibilidade para coleta (dias após
+                                                pagamento)</label>
+                                            {% if order.deliveryDelay %} {{ order.deliveryDelay }} dia(s) após a identificação do pagamento.{% endif %}
+                                            <br/>
                                         </div>
                                         <div class="col-md-4 spacing">
                                             <label class="row-total">Prazo de entrega</label>
@@ -654,7 +664,8 @@
                                                         <a data-toggle="collapse" href="#{{ order.id }}">
                                                             <span class="col-md-3 color-rows"> {{ order.description }} </span>
                                                             <span class="col-md-2 color-rows text-center"> {{ order.createdAt|date('d/m/Y') }} </span>
-                                                            <span class="col-md-2 color-rows text-center"> {{ order.elements.count }} Itens</span>
+                                                            <span class="col-md-2 color-rows text-center"> {{ order.elements.count }}
+                                                                Itens</span>
                                                             <span class="col-md-3 color-rows">
                                                                 <span class="pull-right">{{ order.subTotal|currency }}</span>
                                                             </span>
@@ -678,8 +689,10 @@
                                                                 <td><b>PRODUTO</b></td>
                                                                 <td class="col-md-1 text-center"><b>QTD</b></td>
                                                                 {% if (not order.isPromotional and not order.isFiname) or isPlatform %}
-                                                                    <td class="col-md-2 text-center"><b>VALOR UNIT</b></td>
-                                                                    <td class="col-md-2 text-center"><b>VALOR TOTAL</b></td>
+                                                                    <td class="col-md-2 text-center"><b>VALOR UNIT</b>
+                                                                    </td>
+                                                                    <td class="col-md-2 text-center"><b>VALOR TOTAL</b>
+                                                                    </td>
                                                                 {% endif %}
                                                             </tr>
                                                             </thead>
@@ -701,11 +714,11 @@
                                                         {% if order.insurance %}
                                                             <table class="table table-striped table-components">
                                                                 <thead>
-                                                                    <tr>
-                                                                        <th>Seguros</th>
-                                                                        <th></th>
-                                                                        <th></th>
-                                                                    </tr>
+                                                                <tr>
+                                                                    <th>Seguros</th>
+                                                                    <th></th>
+                                                                    <th></th>
+                                                                </tr>
                                                                 </thead>
                                                                 <tbody>
                                                                 {% for additive in order.orderAdditives %}
@@ -717,15 +730,16 @@
                                                                 {% endfor %}
                                                                 </tbody>
                                                                 <tfoot>
-                                                                    <tr>
-                                                                        <th></th>
-                                                                        <th class="text-right">Valor Total:</th>
-                                                                        <th>{{ order.insurance|currency }}</th>
-                                                                    </tr>
+                                                                <tr>
+                                                                    <th></th>
+                                                                    <th class="text-right">Valor Total:</th>
+                                                                    <th>{{ order.insurance|currency }}</th>
+                                                                </tr>
                                                                 </tfoot>
                                                             </table>
                                                         {% endif %}
-                                                        <a data-toggle="collapse" href="#{{ order.id }}" class="color-rows">
+                                                        <a data-toggle="collapse" href="#{{ order.id }}"
+                                                           class="color-rows">
                                                             <div class="col-md-12 text-center minimize">
                                                                 <i class="fa fa-chevron-up"></i>
                                                             </div>
@@ -751,10 +765,12 @@
                                     </tr>
                                     {% if order.total != order.totalExcDiscount and order.discount > 0 %}
                                         <tr>
-                                            <th colspan="6" class="text-right"> Total sem desconto: {{ order.totalExcDiscount|currency }} </th>
+                                            <th colspan="6" class="text-right"> Total sem
+                                                desconto: {{ order.totalExcDiscount|currency }} </th>
                                         </tr>
                                         <tr>
-                                            <th colspan="6" class="text-right"> Desconto: -{{ order.discount|currency }} </th>
+                                            <th colspan="6" class="text-right"> Desconto:
+                                                -{{ order.discount|currency }} </th>
                                         </tr>
                                     {% endif %}
                                     <tr>
@@ -903,23 +919,23 @@
                     "Dezembro"
                 ]
             }
-        }).on('change', function(){
+        }).on('change', function () {
             var date_at = $(this).val();
             $.ajax({
-                url:'{{ path('delivery_at_order', {id:order.id}) }}',
+                url: '{{ path('delivery_at_order', {id:order.id}) }}',
                 method: 'post',
                 data: {delivery: date_at},
                 complete: function (xhr) {
                     $('#delivery_at_order').html(xhr['deliveryAt']);
                 }
             });
-            
+
         });
 
         {% if not order.deliveryAt %}
-            delivery_at_order.val(' ');
+        delivery_at_order.val(' ');
         {% else %}
-            delivery_at_order.val('{{ order.deliveryAt|date('d/m/Y') }}');
+        delivery_at_order.val('{{ order.deliveryAt|date('d/m/Y') }}');
         {% endif %}
 
         $('#master_cloner_modal').on('show.bs.modal', function (event) {
@@ -927,8 +943,8 @@
             var url = target.data('href');
             $.ajax({
                 url: url,
-                data: {source:'master'},
-                complete: function(xhr) {
+                data: {source: 'master'},
+                complete: function (xhr) {
                     $('#cloner_master_order').html(xhr.responseText);
                 }
             });
@@ -938,44 +954,44 @@
         {#var sourceExpireAt = $('#expire_at');#}
 
         {#sourceExpireAt.daterangepicker({#}
-            {#startDate: '{{ order.expireAt ? order.expireAt|date('d/m/Y') : 'now' }}',#}
-            {#singleDatePicker: true,#}
-            {#minDate: '{{ order.expireAt ? order.expireAt|date('d/m/Y') : 'now' }}',#}
-            {#locale: {#}
-                {#format: 'DD/MM/YYYY',#}
-                {#daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],#}
-                {#monthNames: [#}
-                    {#"Janeiro",#}
-                    {#"Fevereiro",#}
-                    {#"Março",#}
-                    {#"Abril",#}
-                    {#"Maio",#}
-                    {#"Junho",#}
-                    {#"Julho",#}
-                    {#"Agosto",#}
-                    {#"Setembro",#}
-                    {#"Outubro",#}
-                    {#"Novembro",#}
-                    {#"Dezembro"#}
-                {#]#}
-            {#}#}
+        {#startDate: '{{ order.expireAt ? order.expireAt|date('d/m/Y') : 'now' }}',#}
+        {#singleDatePicker: true,#}
+        {#minDate: '{{ order.expireAt ? order.expireAt|date('d/m/Y') : 'now' }}',#}
+        {#locale: {#}
+        {#format: 'DD/MM/YYYY',#}
+        {#daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],#}
+        {#monthNames: [#}
+        {#"Janeiro",#}
+        {#"Fevereiro",#}
+        {#"Março",#}
+        {#"Abril",#}
+        {#"Maio",#}
+        {#"Junho",#}
+        {#"Julho",#}
+        {#"Agosto",#}
+        {#"Setembro",#}
+        {#"Outubro",#}
+        {#"Novembro",#}
+        {#"Dezembro"#}
+        {#]#}
+        {#}#}
         {#}).on('change', function(event, picker){#}
-            {#var date_at = $(this).val();#}
-            {#$.ajax({#}
-                {#url:'{{ path('expire_at_order', {id:order.id}) }}',#}
-                {#method: 'post',#}
-                {#data: {expire: date_at},#}
-                {#complete: function (xhr) {#}
-                    {#$('#expire_at').html(xhr['expireAt']);#}
-                {#}#}
-            {#});#}
+        {#var date_at = $(this).val();#}
+        {#$.ajax({#}
+        {#url:'{{ path('expire_at_order', {id:order.id}) }}',#}
+        {#method: 'post',#}
+        {#data: {expire: date_at},#}
+        {#complete: function (xhr) {#}
+        {#$('#expire_at').html(xhr['expireAt']);#}
+        {#}#}
+        {#});#}
         {#});#}
 
 
         {#{% if not order.expireyAt %}#}
-            {#sourceExpireAt.val(' ');#}
+        {#sourceExpireAt.val(' ');#}
         {#{% else %}#}
-            {#sourceExpireAt.val('{{ order.expireAt|date('d/m/Y') }}');#}
+        {#sourceExpireAt.val('{{ order.expireAt|date('d/m/Y') }}');#}
         {#{% endif %}#}
 
     </script>
