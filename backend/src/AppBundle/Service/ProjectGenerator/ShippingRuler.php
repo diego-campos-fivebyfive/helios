@@ -93,9 +93,9 @@ abstract class ShippingRuler
     private static function definitions(array &$rule)
     {
         $rule['company'] = 'ctb';
-        if($rule['price'] <= 60000 && in_array($rule['region'], [self::REGION_NORTH, self::REGION_NORTHEAST, self::REGION_MIDWEST])){
+        /*if($rule['price'] <= 60000 && in_array($rule['region'], [self::REGION_NORTH, self::REGION_NORTHEAST, self::REGION_MIDWEST])){
             $rule['company'] = 'mlt';
-        }
+        }*/
     }
 
     /**
@@ -121,16 +121,17 @@ abstract class ShippingRuler
      */
     private static function percentLevel(array &$rule)
     {
-        $percentLevel = 50000;
-        if($rule['price'] > 50000){
+        $percentLevel = 800000;
+        if($rule['price'] <= 400000)
+            $percentLevel = 400000;
+        if ($rule['price'] <= 200000)
+            $percentLevel = 200000;
+        if ($rule['price'] <= 100000)
+            $percentLevel = 100000;
+        if ($rule['price'] <= 60000)
             $percentLevel = 60000;
-            if($rule['price'] > 60000){
-                $percentLevel = 100000;
-                if($rule['price'] > 100000){
-                    $percentLevel = 200000;
-                }
-            }
-        }
+        if ($rule['price'] <= 50000)
+            $percentLevel = 50000;
 
         $rule['percent_level'] = $percentLevel;
     }
@@ -179,36 +180,64 @@ abstract class ShippingRuler
             ],
             'ctb' => [
                 50000 => [
+                    self::REGION_NORTH => 5,
+                    self::REGION_NORTHEAST => 5,
+                    self::REGION_MIDWEST => 4.5,
                     self::REGION_SOUTH => 4.5,
                     self::REGION_SOUTHEAST => [
-                        'interior' => 3.8,
-                        'sp-capital' => 2,
-                        'rj-capital' => 2.7,
-                        'mg-capital' => 2.7
+                        'interior' => 3.5,
+                        'sp-capital' => 1.84,
+                        'rj-capital' => 2.48,
+                        'mg-capital' => 2.48
                     ]
                 ],
                 100000 => [
                     self::REGION_NORTH => 4.7,
                     self::REGION_NORTHEAST => 4.7,
                     self::REGION_MIDWEST => 4.3,
-                    self::REGION_SOUTH => 3.6,
+                    self::REGION_SOUTH => 3.42,
                     self::REGION_SOUTHEAST => [
-                        'interior' => 3.5,
-                        'sp-capital' => 1.9,
-                        'rj-capital' => 2.1,
-                        'mg-capital' => 2.3
+                        'interior' => 3.22,
+                        'sp-capital' => 1.75,
+                        'rj-capital' => 1.93,
+                        'mg-capital' => 1.93
                     ]
                 ],
                 200000 => [
                     self::REGION_NORTH => 4.2,
                     self::REGION_NORTHEAST => 4.2,
                     self::REGION_MIDWEST => 4,
-                    self::REGION_SOUTH => 3.2,
+                    self::REGION_SOUTH => 3.05,
                     self::REGION_SOUTHEAST => [
-                        'interior' => 3,
-                        'sp-capital' => 1.55,
-                        'rj-capital' => 1.6,
-                        'mg-capital' => 2.1
+                        'interior' => 2.76,
+                        'sp-capital' => 1.43,
+                        'rj-capital' => 1.47,
+                        'mg-capital' => 1.47
+                    ]
+                ],
+                400000 => [
+                    self::REGION_NORTH => 3.4,
+                    self::REGION_NORTHEAST => 3.4,
+                    self::REGION_MIDWEST => 2.8,
+                    self::REGION_SOUTH => 1.9,
+                    self::REGION_SOUTHEAST => [
+                        'interior' => 2.58,
+                        'sp-capital' => 1.1,
+                        'rj-capital' => 1.38,
+                        'mg-capital' => 1.38
+                    ]
+                ],
+                // TODO: Faixa para qualquer valor acima de 400000
+                800000 => [
+                    self::REGION_NORTH => 3.3,
+                    self::REGION_NORTHEAST => 3.3,
+                    self::REGION_MIDWEST => 2.2,
+                    self::REGION_SOUTH => 1.6,
+                    self::REGION_SOUTHEAST => [
+                        'interior' => 1.85,
+                        'sp-capital' => 0.8,
+                        'rj-capital' => 1.2,
+                        'mg-capital' => 1.2
                     ]
                 ]
             ],

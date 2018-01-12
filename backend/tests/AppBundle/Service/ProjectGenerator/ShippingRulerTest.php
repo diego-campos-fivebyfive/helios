@@ -15,11 +15,12 @@ class ShippingRulerTest extends WebTestCase
         $rule = [
             'type' => 'sices',
             'price' => 39000,
-            'region' => ShippingRuler::REGION_NORTH
+            'region' => ShippingRuler::REGION_NORTH,
+            'power' => 10
         ];
 
         ShippingRuler::apply($rule);
-        $this->assertEquals('mlt', $rule['company']);
+        $this->assertEquals('ctb', $rule['company']);
 
         $rule['price'] = 61000;
         ShippingRuler::apply($rule);
@@ -32,18 +33,19 @@ class ShippingRulerTest extends WebTestCase
 
     public function testPercentDetection()
     {
+
         $rule = [
             'type' => 'sices',
             'price' => 75000,
             'region' => ShippingRuler::REGION_SOUTHEAST,
-            'kind' => 'interior'
+            'kind' => 'interior',
+            'power' => 10
         ];
 
         ShippingRuler::apply($rule);
 
-        $this->assertEquals('ctb', $rule['company']);
         $this->assertEquals(100000, $rule['percent_level']);
-        $this->assertEquals(3.5, $rule['percent']);
+        $this->assertEquals(3.2, $rule['percent'], '', 1);
     }
 
     /**
@@ -51,19 +53,17 @@ class ShippingRulerTest extends WebTestCase
      */
     public function testDefaultRulerHandling()
     {
-        /*$rule = [
+        $rule = [
             'type' => 'sices',
-            'price' => 39390,
-            'region' => ShippingRuler::REGION_SOUTHEAST,
+            'price' => 600000,
+            'region' => ShippingRuler::REGION_NORTHEAST,
             'kind' => 'interior',
             'power' => 10.45
         ];
 
-        ShippingRuler::apply($rule);*/
+        ShippingRuler::apply($rule);
 
-        /*$this->assertEquals('ctb', $rule['company']);
-        $this->assertEquals(.041, $rule['percent']);
-        $this->assertEquals(.20, $rule['markup']);
-        $this->assertEquals(1937.98, $rule['shipping'], '', 0.2);*/
+        $this->assertEquals(800000, $rule['percent_level']);
+        $this->assertEquals(3.3, $rule['percent']);
     }
 }
