@@ -151,33 +151,33 @@ class TemplateController extends AbstractController
     }
 
     /**
-     * @param $line
-     * @param $key
+     * @param int $line
+     * @param string $key
      * @param string $content
      */
-    private function writeLineContent($line, $key, $content='')
+    private function writeLineContent(int $line, string $key, string $content='')
     {
         $this->templateProcessor->setValue("${key}#${line}", $content);
     }
 
     /**
-     * @param $line
-     * @param $title
+     * @param int $line
+     * @param string $title
      */
-    private function writeLineTitle($line, $title)
+    private function writeLineTitle(int $line, string $title)
     {
-        self::writeLineContent($line, 'title', $title);
+        self::writeLineContent($line, 'titulo', $title);
         self::writeLineContent($line, 'descricao');
         self::writeLineContent($line,'quantidade');
     }
 
     /**
-     * @param $line
-     * @param $component
+     * @param int $line
+     * @param array $component
      */
-    private function writeLineComponent($line, $component)
+    private function writeLineComponent(int $line, array $component)
     {
-       self::writeLineContent($line, 'title');
+       self::writeLineContent($line, 'titulo');
        self::writeLineContent($line, 'descricao', $component['description']);
        self::writeLineContent($line, 'quantidade', $component['quantity']);
     }
