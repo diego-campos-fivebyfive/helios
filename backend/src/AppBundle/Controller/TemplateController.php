@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Component\Project;
+use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Service\Order\ComponentExtractor;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -47,22 +49,22 @@ class TemplateController extends AbstractController
             'PaybackSimples', 'PaybackDescontado', 'Descricao', 'Quantidade',
         ],
         array(
-            $project->getPower() . ' Kwp',
+            str_replace('.', ',', $project->getPower()),
             self::formatCurrency($project->getSalePrice()),
             $project->getCustomer()->getName(),
             $project->getCustomer()->getDocument(),
             $project->getCustomer()->getPhone(),
             $project->getCustomer()->getEmail(),
-            round($project->getMetadata()['total']['kwh_year']) . ' kWh',
-            round(($project->getMetadata()['total']['kwh_year'] / 12)). ' Kwp',
-            $project->getLifetime(). ' anos',
-            $project->getInflation().' %',
-            $project->getEfficiencyLoss().' %',
+            round($project->getMetadata()['total']['kwh_year']),
+            round(($project->getMetadata()['total']['kwh_year'] / 12)),
+            $project->getLifetime(),
+            $project->getInflation(),
+            $project->getEfficiencyLoss(),
             self::formatCurrency($project->getAnnualCostOperation()),
             self::formatCurrency($project->getEnergyPrice()),
             self::formatCurrency($project->getAccumulatedCash(true)),
             self::formatCurrency($project->getNetPresentValue()),
-            $project->getInternalRateOfReturn().' %',
+            str_replace('.', ',', $project->getInternalRateOfReturn()),
             self::formatPayback($project->getPaybackYears(), $project->getPaybackMonths()),
             self::formatPayback($project->getPaybackYearsDisc(), $project->getPaybackMonthsDisc())
         ));
@@ -111,6 +113,16 @@ class TemplateController extends AbstractController
             }
         }
 
+        $this->templateProcessor->cloneRow('mes', 12);
+
+        self::writeMonthlyGenerate($project);
+
+        $totalYears = count($project->getAccumulatedCash());
+
+        $this->templateProcessor->cloneRow('ano', $totalYears);
+
+        self::writeAccumulatedCash($project, $totalYears);
+
         $outputFile = $path . '/cache/test_docx.docx';
 
         $this->templateProcessor->saveAs($outputFile);
@@ -124,7 +136,7 @@ class TemplateController extends AbstractController
      */
     private static function formatCurrency($number)
     {
-        return sprintf('%s %s',  'R$ ', number_format($number, 2, ',', '.'));
+        return sprintf('%s%s', '', number_format($number, 2, ',', '.'));
     }
 
     /**
@@ -151,34 +163,63 @@ class TemplateController extends AbstractController
     }
 
     /**
-     * @param $line
-     * @param $key
+     * @param int $line
+     * @param string $key
      * @param string $content
      */
-    private function writeLineContent($line, $key, $content='')
+    private function writeLineContent(int $line, string $key, string $content='')
     {
         $this->templateProcessor->setValue("${key}#${line}", $content);
     }
 
     /**
-     * @param $line
-     * @param $title
+     * @param int $line
+     * @param string $title
      */
-    private function writeLineTitle($line, $title)
+    private function writeLineTitle(int $line, string $title)
     {
-        self::writeLineContent($line, 'title', $title);
+        self::writeLineContent($line, 'titulo', $title);
         self::writeLineContent($line, 'descricao');
         self::writeLineContent($line,'quantidade');
     }
 
     /**
-     * @param $line
-     * @param $component
+     * @param int $line
+     * @param array $component
      */
-    private function writeLineComponent($line, $component)
+    private function writeLineComponent(int $line, array $component)
     {
-       self::writeLineContent($line, 'title');
+       self::writeLineContent($line, 'titulo');
        self::writeLineContent($line, 'descricao', $component['description']);
        self::writeLineContent($line, 'quantidade', $component['quantity']);
+    }
+
+    /**
+     * @param Project $project
+     */
+    private function writeMonthlyGenerate(Project $project)
+    {
+        $months = [
+            'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+            'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+        ];
+
+        for ($i = 0; $i < 12; $i++) {
+            $this->templateProcessor->setValue('mes#'.($i + 1), $months[$i]);
+            $this->templateProcessor->setValue('geracao#'.($i + 1), $project->getMonthlyProduction()[$i]);
+        }
+    }
+
+    /**
+     * @param Project $project
+     * @param int $totalYears
+     */
+    private function writeAccumulatedCash(Project $project, int $totalYears)
+    {
+        for ($i = 0; $i < $totalYears; $i++) {
+            $this->templateProcessor->setValue('ano#'.($i +1), $i);
+            $this->templateProcessor
+                ->setValue('valor#'.($i + 1), self::formatCurrency($project->getAccumulatedCash()[$i]));
+        }
     }
 }
