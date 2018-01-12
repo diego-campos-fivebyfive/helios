@@ -95,18 +95,14 @@ class OrderManipulator
 
         if ($order->isPromotional()) {
             $result = ' [promo]';
-        }
-        else if ($order->isFiname()) {
+        } else if ($order->isFiname()) {
             if ($power >= 375) {
-                $cod = '03453899';
+                $cod = '3453899';
+            } else if ($power >= 75) {
+                $cod = '3454175';
+            } else {
+                $cod = '3454168';
             }
-            else if ($power >= 75) {
-                $cod = '03454175';
-            }
-            else {
-                $cod = '03454168';
-            }
-
             $result = " [finame - ${cod}]";
         }
         else {
