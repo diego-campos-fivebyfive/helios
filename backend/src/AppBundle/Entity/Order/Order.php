@@ -18,8 +18,6 @@ use AppBundle\Entity\Pricing\RangeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\MetadataTrait;
-use AppBundle\Entity\Pricing\InsurableTrait;
-use AppBundle\Service\Pricing\InsurableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use Symfony\Component\Validator\Constraints\DateTime;
@@ -2363,6 +2361,8 @@ class Order implements OrderInterface
      */
     public function hasFile($type, $file = null)
     {
+        $this->normalizeFiles();
+
         if(!$this->files[$type])
             return false;
 
@@ -2425,11 +2425,11 @@ class Order implements OrderInterface
             $this->files['proforma'] = null;
         }
 
-        if($this->filePayment && !$this->hasFile('payment', $this->filePayment)){
+        if($this->filePayment && !in_array($this->filePayment, $this->files['payment'])){
             $this->files['payment'][] = $this->filePayment;
         }
 
-        if($this->proforma && !$this->hasFile('proforma')){
+        if($this->proforma && !$this->files['proforma']){
             $this->files['proforma'] = $this->proforma;
         }
     }
