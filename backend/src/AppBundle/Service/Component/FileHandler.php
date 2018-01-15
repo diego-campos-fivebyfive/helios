@@ -141,6 +141,17 @@ class FileHandler
 
     /**
      * @param $options
+     */
+    public function remove(array $options)
+    {
+        $this->s3->deleteObject([
+            'Bucket' => "pss-{$this->bucketAmbience}-{$options['access']}",
+            'Key' => "{$options['root']}/{$options['type']}/{$options['filename']}"
+        ]);
+    }
+
+    /**
+     * @param $options
      * @param $file
      */
     public function download(array $options, $file)
