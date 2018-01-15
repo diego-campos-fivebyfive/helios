@@ -34,17 +34,6 @@ interface RankingInterface
     public function getDescription();
 
     /**
-     * @param $createdAt
-     * @return RankingInterface
-     */
-    public function setCreatedAt($createdAt);
-
-    /**
-     * @return \DateTime
-     */
-    public function getCreatedAt();
-
-    /**
      * @param $amount
      * @return RankingInterface
      */

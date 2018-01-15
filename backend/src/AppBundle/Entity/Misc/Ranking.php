@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Misc;
 
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * Ranking
@@ -12,6 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Ranking implements RankingInterface
 {
+    use ORMBehaviors\Timestampable\Timestampable;
+
     /**
      * @var int
      *
@@ -34,13 +37,6 @@ class Ranking implements RankingInterface
      * @ORM\Column(name="description", type="text")
      */
     private $description;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="createdAt", type="datetime")
-     */
-    private $createdAt;
 
     /**
      * @var int
@@ -92,24 +88,6 @@ class Ranking implements RankingInterface
     public function getDescription()
     {
         return $this->description;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setCreatedAt($createdAt)
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
     }
 
     /**
