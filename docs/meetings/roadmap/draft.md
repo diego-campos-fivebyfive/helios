@@ -15,10 +15,12 @@
 ### 4 - NEW - PROGRAMA FIDELIDADE ###
 1. A pontuação ocorre quando o orçamento estiver no status "Coleta Disponível"
 2. Regras de pontuação por nível de conta
-| Black     |  3pts/kwp
-| Platinum  |  2pts/kwp
-| Premium   |  1pts/kwp
-| Parceiro  |  0,5pts/kwp
+|-----------|-------------|
+| Black     |  3pts/kwp   |
+| Platinum  |  2pts/kwp   |
+| Premium   |  1pts/kwp   |
+| Parceiro  |  0,5pts/kwp |
+
 3. Gerar entidade para armazenar as "transações" de pontos
 3.1 Data/hora, Descrição (vide: estoque), Nro pontos
 4. Implementar mecanismo de gerenciamento
