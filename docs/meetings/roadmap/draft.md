@@ -1,3 +1,31 @@
+## 15/01 ##
+### 1 - ORÇAMENTOS ###
+1. Liberar desconto para COMMERCIAL e EXPANSE no wizard
+
+### 2 - CONTAS ###
+1. Liberar edição de conta para usuário EXPANSE (Mesmas regras de ADMIN)
+
+### 3 - INVERSORES ###
+1. Nova propriedade na entidade Inversor.
+1.1 Novo campo no form.
+2. Na geração:
+2.1 Caso não haja valor configurado (0 ou null),seleciona.
+2.2 Caso haja, seleciona apenas quando a potência informada for maior ou igual à configurada.
+
+### 4 - NEW - PROGRAMA FIDELIDADE ###
+1. A pontuação ocorre quando o orçamento estiver no status "Coleta Disponível"
+2. Regras de pontuação por nível de conta
+| Black     |  3pts/kwp
+| Platinum  |  2pts/kwp
+| Premium   |  1pts/kwp
+| Parceiro  |  0,5pts/kwp
+3. Gerar entidade para armazenar as "transações" de pontos
+3.1 Data/hora, Descrição (vide: estoque), Nro pontos
+4. Implementar mecanismo de gerenciamento
+4.1 Replicar a interface de estoque, listando contas e suas transações.
+4.2 Habilitar para ADMIN e MASTER, as operações de inserção/exclusão de transações de pontos.
+5. Desenvolver normalizador para contabilizar os que já estão processados (levantar requisitos).
+
 ## 12/01 ##
 ### ESTOQUE ###
 1. NÃO deve dar baixa apenas quando o status for: BUILDING, PENDING e VALIDATED.
