@@ -2,8 +2,6 @@
 
 namespace AppBundle\Service\Business;
 
-use AppBundle\Entity\Customer;
-use AppBundle\Entity\Misc\Ranking;
 use AppBundle\Entity\Misc\RankingInterface;
 use AppBundle\Service\Stock\Identity;
 use Symfony\Component\DependencyInjection\ContainerInterface;
