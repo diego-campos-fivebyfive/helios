@@ -74,6 +74,12 @@ class MakerDetector
                     (float) $power
                 )
             )
+            ->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->lte('i.minPowerSelection', $power),
+                    $qb->expr()->isNull('i.minPowerSelection')
+                )
+            )
             ->getQuery()
             ->getResult()
         ;
