@@ -30,6 +30,7 @@
 4.1 Replicar a interface de estoque, listando contas e suas transações.
 4.2 Habilitar para ADMIN e MASTER, as operações de inserção/exclusão de transações de pontos.
 5. Desenvolver normalizador para contabilizar os que já estão processados (levantar requisitos).
+6. O disparo de pontuação deve ocorrer quando o orçamento for para o status "STATUS_AVAILABLE"
 
 ## 12/01 ##
 ### ESTOQUE ###
