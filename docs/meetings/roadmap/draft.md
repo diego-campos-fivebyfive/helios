@@ -12,7 +12,7 @@
 2.1 Caso não haja valor configurado (0 ou null),seleciona.
 2.2 Caso haja, seleciona apenas quando a potência informada for maior ou igual à configurada.
 
-### 4 - NEW - PROGRAMA FIDELIDADE ###
+### 4 - NEW FEATURE - PROGRAMA FIDELIDADE ###
 1. A pontuação ocorre quando o orçamento estiver no status "Coleta Disponível"
 2. Regras de pontuação por nível de conta
 
