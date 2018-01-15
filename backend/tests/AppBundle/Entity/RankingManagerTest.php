@@ -28,12 +28,9 @@ class RankingManagerTest extends AppTestCase
         /** @var RankingInterface $ranking */
         $ranking = $manager->create();
 
-        $date = new \DateTime('now');
-
         $ranking
             ->setTarget('Teste um')
             ->setDescription('Descrição do Teste de entidade Ranking')
-            ->setCreatedAt($date)
             ->setAmount(5)
         ;
 
