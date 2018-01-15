@@ -2,17 +2,17 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\ThemeInterface;
-use AppBundle\Service\Order\ComponentExtractor;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use PhpOffice\PhpWord\TemplateProcessor;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
  * @Route("/template")
@@ -83,194 +83,33 @@ class TemplateController extends AbstractController
         /** @var ProjectInterface $project */
         $project = $this->manager('project')->find(2253);
 
-        $components = ComponentExtractor::fromProject($project);
-
         $path = $this->container->get('kernel')->getRootDir();
-        $file = $path . '/cache/template.docx';
+        $templatPath = $path . '/cache/template.docx';
 
-        $this->templateProcessor = new TemplateProcessor($file);
+        $template = $this->getTemplateProcessor()->process($project, $templatPath);
 
-        $this->templateProcessor->setValue('ProjetoNumero', $project->getNumber());
-        $this->templateProcessor->setValue([
-            'ProjetoPotencia', 'PropostaValor', 'ClienteNome', 'ClienteDocumento',
-            'ClienteTelefone', 'ClienteEmail', 'GeracaoAnual', 'GeracaoMediaMensal',
-            'TempoDeVida', 'Inflacao', 'PerdaEficiencia', 'CustoAnualOperacao',
-            'PrecoKwhImpostos', 'CaixaAcumulado', 'ValorPresenteLiquido', 'TaxaRetorno',
-            'PaybackSimples', 'PaybackDescontado', 'Descricao', 'Quantidade',
-        ],
-        array(
-            str_replace('.', ',', $project->getPower()),
-            self::formatCurrency($project->getSalePrice()),
-            $project->getCustomer()->getName(),
-            $project->getCustomer()->getDocument(),
-            $project->getCustomer()->getPhone(),
-            $project->getCustomer()->getEmail(),
-            round($project->getMetadata()['total']['kwh_year']),
-            round(($project->getMetadata()['total']['kwh_year'] / 12)),
-            $project->getLifetime(),
-            $project->getInflation(),
-            $project->getEfficiencyLoss(),
-            self::formatCurrency($project->getAnnualCostOperation()),
-            self::formatCurrency($project->getEnergyPrice()),
-            self::formatCurrency($project->getAccumulatedCash(true)),
-            self::formatCurrency($project->getNetPresentValue()),
-            str_replace('.', ',', $project->getInternalRateOfReturn()),
-            self::formatPayback($project->getPaybackYears(), $project->getPaybackMonths()),
-            self::formatPayback($project->getPaybackYearsDisc(), $project->getPaybackMonthsDisc())
-        ));
+        $encodeTemplate = base64_encode($template);
 
-        $groupByFamily = function($acc, $component) {
-            $item = [
-                "description" => $component['description'],
-                "quantity" => $component['quantity']
-            ];
-
-            $acc = (is_array($acc)) ? $acc : [];
-
-            if (!array_key_exists($component['family'], $acc)) {
-                $acc[$component['family']] = [$item];
-            }
-            else {
-                $acc[$component['family']][] = $item;
-            }
-
-            return $acc;
-        };
-
-        $familiesOfComponents = array_reduce($components, $groupByFamily, []);
-
-        $cloneLines = count($components) + count($familiesOfComponents);
-
-        $this->templateProcessor->cloneRow('descricao', $cloneLines);
-
-        $familiesTranslations = [
-            'module' => 'MÓDULOS',
-            'inverter' => 'INVERSORES',
-            'string_box' => 'STRING BOX',
-            'structure' => 'ESTRUTURAS',
-            'variety' => 'VARIEDADES'
-        ];
-
-        $currentLine = 1;
-
-        foreach ($familiesOfComponents as $keyFamily => $family) {
-            self::writeLineTitle($currentLine, $familiesTranslations[$keyFamily]);
-            $currentLine++;
-
-            foreach ($family as $component) {
-                self::writeLineComponent($currentLine, $component);
-                $currentLine++;
-            }
-        }
-
-        $this->templateProcessor->cloneRow('mes', 12);
-
-        self::writeMonthlyGenerate($project);
-
-        $totalYears = count($project->getAccumulatedCash());
-
-        $this->templateProcessor->cloneRow('ano', $totalYears);
-
-        self::writeAccumulatedCash($project, $totalYears);
-
-        $outputFile = $path . '/cache/test_docx.docx';
-
-        $this->templateProcessor->saveAs($outputFile);
-
-        dump($this->templateProcessor);die;
+        //dump($template);die;
+        return $this->redirectToRoute('download_template', [
+            'template' => $encodeTemplate
+        ]);
     }
 
     /**
-     * @param $number
-     * @return string
+     * @Route("/download/{template}/", name="download_template")
      */
-    private static function formatCurrency($number)
+    public function downloadTemplateAction($template)
     {
-        return sprintf('%s%s', '', number_format($number, 2, ',', '.'));
-    }
+        $template = base64_decode($template);
 
-    /**
-     * @param $years
-     * @param $months
-     * @return string
-     */
-    private static function formatPayback($years, $months)
-    {
-        $formatted = '';
+        $header = ResponseHeaderBag::DISPOSITION_ATTACHMENT;
 
-        if($years > 0){
-            $formatted .= $years;
-            $formatted .= $years > 1 ? ' anos' : ' ano';
-        }
+        $response = new BinaryFileResponse($template, Response::HTTP_OK, [], true, $header);
 
-        if($months > 0){
-            if($formatted) $formatted .= ' e ';
-            $formatted .= $months;
-            $formatted .= $months > 1 ? ' meses' : ' mês';
-        }
+        $response->deleteFileAfterSend(true);
 
-        return $formatted;
-    }
-
-    /**
-     * @param int $line
-     * @param string $key
-     * @param string $content
-     */
-    private function writeLineContent(int $line, string $key, string $content='')
-    {
-        $this->templateProcessor->setValue("${key}#${line}", $content);
-    }
-
-    /**
-     * @param int $line
-     * @param string $title
-     */
-    private function writeLineTitle(int $line, string $title)
-    {
-        self::writeLineContent($line, 'titulo', $title);
-        self::writeLineContent($line, 'descricao');
-        self::writeLineContent($line,'quantidade');
-    }
-
-    /**
-     * @param int $line
-     * @param array $component
-     */
-    private function writeLineComponent(int $line, array $component)
-    {
-       self::writeLineContent($line, 'titulo');
-       self::writeLineContent($line, 'descricao', $component['description']);
-       self::writeLineContent($line, 'quantidade', $component['quantity']);
-    }
-
-    /**
-     * @param Project $project
-     */
-    private function writeMonthlyGenerate(Project $project)
-    {
-        $months = [
-            'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-            'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-        ];
-
-        for ($i = 0; $i < 12; $i++) {
-            $this->templateProcessor->setValue('mes#'.($i + 1), $months[$i]);
-            $this->templateProcessor->setValue('geracao#'.($i + 1), $project->getMonthlyProduction()[$i]);
-        }
-    }
-
-    /**
-     * @param Project $project
-     * @param int $totalYears
-     */
-    private function writeAccumulatedCash(Project $project, int $totalYears)
-    {
-        for ($i = 0; $i < $totalYears; $i++) {
-            $this->templateProcessor->setValue('ano#'.($i +1), $i);
-            $this->templateProcessor
-                ->setValue('valor#'.($i + 1), self::formatCurrency($project->getAccumulatedCash()[$i]));
-        }
+        return $response;
     }
 
     /**
@@ -299,5 +138,14 @@ class TemplateController extends AbstractController
     protected function account()
     {
         return $this->member()->getAccount();
+    }
+
+
+    /**
+     * @return \AppBundle\Service\Proposal\WordProcessor
+     */
+    private function getTemplateProcessor()
+    {
+        return $this->get('word_processor');
     }
 }
