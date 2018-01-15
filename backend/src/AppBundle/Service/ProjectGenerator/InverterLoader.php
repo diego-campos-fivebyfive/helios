@@ -59,7 +59,8 @@ class InverterLoader
                 'voltage' => $phaseVoltage,
                 'maker' => $maker,
                 'order' => 'asc',
-                'cache' => $this->cache['enabled']
+                'cache' => $this->cache['enabled'],
+                'power' => $power
             ];
 
             if(!$config['cache']) {
@@ -386,6 +387,11 @@ class InverterLoader
         }
 
         $filtered = array_filter($inverters, function (Inverter $inverter) use($config){
+            $minPowerSelection = $inverter->getMinPowerSelection();
+            if (!is_null($minPowerSelection))
+                if ($config['power'] < $minPowerSelection)
+                    return false;
+
             $nominalPower = $inverter->getNominalPower();
             return $nominalPower >= $config['min'] && $nominalPower <= $config['max'];
         });
