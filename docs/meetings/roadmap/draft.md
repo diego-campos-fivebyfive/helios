@@ -1,13 +1,13 @@
 ## 15/01 ##
-### 1 - ORÇAMENTOS ###
+### 1 - ORÇAMENTOS . 1238 ###
 1. Liberar desconto para COMMERCIAL e EXPANSE no wizard
 
-### 2 - CONTAS ###
+### 2 - CONTAS . 1239 ###
 1. Liberar edição de conta para usuário EXPANSE (Mesmas regras de ADMIN)
 
-### 3 - INVERSORES ###
+### 3 - INVERSORES . 1242, ... ###
 1. Nova propriedade na entidade Inversor.
-1.1 Novo campo no form.
+1.1 Novo campo no form "Potência mínima para seleção".
 2. Na geração:
 2.1 Caso não haja valor configurado (0 ou null),seleciona.
 2.2 Caso haja, seleciona apenas quando a potência informada for maior ou igual à configurada.
