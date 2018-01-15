@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AdminBundle\Form\Stock\TransactionType;
+use AppBundle\AppBundle;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Component\PricingManager;
@@ -18,8 +19,10 @@ use AppBundle\Entity\Stock\ProductInterface;
 use AppBundle\Entity\Stock\Transaction;
 use AppBundle\Manager\OrderManager;
 use AppBundle\Model\KitPricing;
+use AppBundle\Service\Business\RankingGenerator;
 use AppBundle\Service\Mailer;
 use AppBundle\Service\ProjectGenerator\Checker\Checker;
+use AppBundle\Service\Stock\Identity;
 use AppBundle\Service\Stock\Operation;
 use Aws\S3\S3Client;
 use Doctrine\Common\Inflector\Inflector;
@@ -1041,10 +1044,34 @@ class DebugController extends AbstractController
     }
 
     /**
+     * @Route("/ranking_generator", name="ranking_generator")
+     */
+    public function testRankingGeneratorAction()
+    {
+        $target = $this->manager('customer')->find(19);
+        /*$description = 'Teste de Descrição';
+        $amount = 10;
+
+        $ranking = $this->rankingGenerator()->create($target, $description, $amount);*/
+
+        $ranking = $this->rankingGenerator()->load($target);
+
+        dump($ranking);die;
+    }
+
+    /**
      * @return \Sonata\ClassificationBundle\Model\ContextInterface
      */
     private function getMemberContext()
     {
         return $this->getContextManager()->find(BusinessInterface::CONTEXT_MEMBER);
+    }
+
+    /**
+     * @return \AppBundle\Service\Business\RankingGenerator
+     */
+    private function rankingGenerator()
+    {
+        return $this->container->get('ranking_generator');;
     }
 }
