@@ -167,6 +167,13 @@ class Inverter implements InverterInterface, ComponentInterface
     private $currentPrice;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $minPowerSelection;
+
+    /**
      * @var int
      *
      * @ORM\Column(type="smallint", nullable=true)
@@ -516,6 +523,24 @@ class Inverter implements InverterInterface, ComponentInterface
     public function getCurrentPrice()
     {
         return (float) $this->currentPrice;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setMinPowerSelection($minPowerSelection)
+    {
+        $this->minPowerSelection = $minPowerSelection;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMinPowerSelection()
+    {
+        return $this->minPowerSelection;
     }
 
     /**
