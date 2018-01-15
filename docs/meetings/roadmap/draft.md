@@ -1,3 +1,14 @@
+## 12/01 ##
+### ESTOQUE ###
+1. NÃO deve dar baixa apenas quando o status for: BUILDING, PENDING e VALIDATED.
+
+### FRETE ###
+1. Desativar a empresa Melhor Logística Transportes (MLT), deixar apenas a CT Botelho (CTB).
+2. Configurações CTB por região
+2.1 Até 50.000
+2.1.1 Centro-Oeste - 4.5, Norte - 5 , Nordeste - 5, Sudeste
+2.1.2 
+
 ## 10/01 ##
 ### WORD ###
 Tabelas

@@ -1,6 +1,8 @@
 {% set isPlatform = app.user.isPlatform %}
 {% set isPromo = order.isPromotional %}
 {% set showPrices = (not isPromo and not order.isFiname) or app.user.isPlatform %}
+{% set editPrices =  app.user.isPlatformMaster or app.user.isPlatformAdmin %}
+
 <table class="table table-bordered table-hover">
     <thead>
     <tr>
@@ -36,7 +38,7 @@
                            id="input{{ element.id }}"
                            name="markup"
                            readonly="readonly"
-                            {{ not (app.user.isPlatformMaster or app.user.isPlatformAdmin) ? 'disabled="disabled"' }}
+                            {{ not editPrices ? 'disabled="disabled"' }}
                            value="{{ element.markup|round(2) }}">
                 </td>
                 <td width="10%">
@@ -47,6 +49,7 @@
                            id="discount_input_{{ element.id }}"
                            name="discount"
                            readonly="readonly"
+                            {{ not editPrices ? 'disabled="disabled"' }}
                            value="{{ element.discount|round(2) }}">
                 </td>
             {% endif %}
@@ -60,6 +63,7 @@
                        placeholder="Qtde"
                        value="{{ element.quantity }}"
                        readonly="readonly"
+                        {{ not editPrices ? 'disabled="disabled"' }}
                        min="1"
                        class="form-control">
             </td>

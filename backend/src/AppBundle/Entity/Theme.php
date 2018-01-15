@@ -29,6 +29,20 @@ class Theme implements ThemeInterface
     private $accountId;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", nullable=true)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="filename", type="string", nullable=true)
+     */
+    private $filename;
+
+    /**
      * @var bool
      *
      * @ORM\Column(name="theme", type="boolean")
@@ -75,6 +89,42 @@ class Theme implements ThemeInterface
     public function getAccountId()
     {
         return $this->accountId;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setFilename($filename)
+    {
+        $this->filename = $filename;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getFilename()
+    {
+        return $this->filename;
     }
 
     /**

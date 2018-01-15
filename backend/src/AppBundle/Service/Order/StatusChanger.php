@@ -142,7 +142,7 @@ class StatusChanger
      */
     private function onChangeToRejected(Order $order)
     {
-        if(Order::STATUS_APPROVED == $order->getPreviousStatus())
+        if(!in_array($order->getPreviousStatus(), [Order::STATUS_BUILDING, Order::STATUS_PENDING, Order::STATUS_VALIDATED]))
             $this->get('order_stock')->credit($order);
     }
 

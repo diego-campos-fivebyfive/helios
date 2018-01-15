@@ -33,7 +33,7 @@
                 <div class="modal-body">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="modal-close">
                         <i class="fa fa-close"></i> {{ 'Close'|trans }}
                     </button>
                 </div>
@@ -68,7 +68,7 @@
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
                         <a class="btn btn-success btn-sm" data-target="#modal_upload_template" data-toggle="modal"
-                           data-href="">
+                           data-href="{{ path('template_upload') }}">
                             <i class="fa fa-upload"> </i> Fazer upload de template
                         </a>
                     </div>
@@ -81,94 +81,8 @@
                                     <div class="panel-heading">
                                         <h5>LISTA DE TEMPLATES</h5>
                                     </div>
-                                    <div class="panel-boby">
-                                        <table class="table table-bordered table-hover">
-                                            <thead>
-                                            <tr>
-                                                <th class="col-md-2"><i class="fa fa-sort-desc"></i> Nro </th>
-                                                <th class="col-md-6"><i class="fa fa-sort-desc"></i> Nome </th>
-                                                <th class="col-md-4"><i class="fa fa-sort-desc"></i> Ações </th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>um</td>
-                                                <td>
-                                                    <div class="btn-group">
-                                                        <a href="" class="btn btn-danger btn-sm span-oculted">
-                                                            <i class="fa fa-trash"> </i><span>Excluir</span>
-                                                        </a>
+                                    <div class="panel-boby" id="template-list">
 
-                                                        <a href="" class="btn btn-info btn-sm span-oculted">
-                                                            <i class="fa fa-eye"> </i><span>Visualizar</span>
-                                                        </a>
-
-                                                        <a href="" class="btn btn-success btn-sm span-oculted">
-                                                            <i class="fa fa-cogs"> </i><span>Gerar</span>
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>dois</td>
-                                                <td>
-                                                    <div class="btn-group">
-                                                        <a href="" class="btn btn-danger btn-sm span-oculted">
-                                                            <i class="fa fa-trash"> </i><span>Excluir</span>
-                                                        </a>
-
-                                                        <a href="" class="btn btn-info btn-sm span-oculted">
-                                                            <i class="fa fa-eye"> </i><span>Visualizar</span>
-                                                        </a>
-
-                                                        <a href="" class="btn btn-success btn-sm span-oculted">
-                                                            <i class="fa fa-cogs"> </i><span>Gerar</span>
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>tres</td>
-                                                <td>
-                                                    <div class="btn-group">
-                                                        <a href="" class="btn btn-danger btn-sm span-oculted">
-                                                            <i class="fa fa-trash"> </i><span>Excluir</span>
-                                                        </a>
-
-                                                        <a href="" class="btn btn-info btn-sm span-oculted">
-                                                            <i class="fa fa-eye"> </i><span>Visualizar</span>
-                                                        </a>
-
-                                                        <a href="" class="btn btn-success btn-sm span-oculted">
-                                                            <i class="fa fa-cogs"> </i><span>Gerar</span>
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>4</td>
-                                                <td>quatro</td>
-                                                <td>
-                                                    <div class="btn-group">
-                                                        <a href="" class="btn btn-danger btn-sm span-oculted">
-                                                            <i class="fa fa-trash"> </i><span>Excluir</span>
-                                                        </a>
-
-                                                        <a href="" class="btn btn-info btn-sm span-oculted">
-                                                            <i class="fa fa-eye"> </i><span>Visualizar</span>
-                                                        </a>
-
-                                                        <a href="" class="btn btn-success btn-sm span-oculted">
-                                                            <i class="fa fa-cogs"> </i><span>Gerar</span>
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -226,6 +140,28 @@
         modalUpload.on('show.bs.modal', function (event) {
             var target = $(event.relatedTarget);
             var url = target.data('href');
+            modalUpload.find('.modal-body').load(url);
         });
+
+        TemplateHandler = {
+            getTemplates: function () {
+               $.ajax({
+                    url: '{{ path('templates_list') }}',
+                    complete: function (xhr) {
+                        $('#template-list').html(xhr.responseText);
+                    }
+                });
+            },
+            init: function () {
+                this.getTemplates()
+            }
+        };
+
+        TemplateHandler.init();
+
+        $('#modal-close').on('click', function () {
+            TemplateHandler.getTemplates();
+        });
+
     </script>
 {% endblock %}
