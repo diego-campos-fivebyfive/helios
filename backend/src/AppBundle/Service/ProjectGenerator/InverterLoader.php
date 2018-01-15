@@ -2,16 +2,21 @@
 
 namespace AppBundle\Service\ProjectGenerator;
 
+use AppBundle\Entity\Component\Inverter;
 use AppBundle\Manager\InverterManager;
 use Doctrine\ORM\QueryBuilder;
 
 class InverterLoader
 {
-
     /**
-     * @var bool
+     * @var array
      */
-    private $promotional = false;
+    private $cache = [
+        'enabled' => true,
+        'sorted' => false,
+        'queries' => 0,
+        'time' => 0
+    ];
 
     /**
      * @inheritDoc
@@ -29,16 +34,14 @@ class InverterLoader
     {
         $method = self::method($defaults);
 
-        $this->promotional = $defaults['is_promotional'];
-
         $phaseNumber = $defaults['phases'];
         $phaseVoltage = $defaults['voltage'];
-
         $power = (float) $defaults['power'];
         $maker = $defaults['inverter_maker'];
 
         $attempts = 1;
         $increments = 0;
+        $start = microtime(true);
 
         do {
 
@@ -47,7 +50,28 @@ class InverterLoader
             $max = ($power * (float) $defaults['fdi_max']);
             $attemptCycle = 0;
 
-            $inverters = $this->$method($min, $max, $phaseNumber, $phaseVoltage, $maker, 'asc');
+            $collection = [];
+
+            $config = [
+                'min' => $min,
+                'max' => $max,
+                'phases' => $phaseNumber,
+                'voltage' => $phaseVoltage,
+                'maker' => $maker,
+                'order' => 'asc',
+                'cache' => $this->cache['enabled']
+            ];
+
+            if(!$config['cache']) {
+
+                $inverters = $this->$method($config);
+
+            }else {
+
+                $collection = $this->$method($config);
+
+                $inverters = $this->filterInverters($collection, $config);
+            }
 
             if (!count($inverters)) {
                 for ($i = 300; $i >= 0; $i -= 15) {
@@ -55,7 +79,26 @@ class InverterLoader
                     $attempts++;
                     $attemptCycle++;
 
-                    $inverters = $this->$method(($min * ($i / 1000)), $max, $phaseNumber, $phaseVoltage, $maker, 'desc');
+                    if(!$config['cache']) {
+
+                        $inverters = $this->$method([
+                            'min' => ($min * ($i / 1000)),
+                            'max' => $max,
+                            'phases' => $phaseNumber,
+                            'voltage' => $phaseVoltage,
+                            'maker' => $maker,
+                            'order' => 'desc',
+                            'cache' => $this->cache['enabled']
+                        ]);
+
+                    }else {
+
+                        $inverters = $this->filterInverters($collection, [
+                            'min' => ($min * ($i / 1000)),
+                            'max' => $max,
+                            'order' => 'desc'
+                        ]);
+                    }
 
                     if (count($inverters) >= 2) {
                         $combine = true;
@@ -75,6 +118,7 @@ class InverterLoader
             }
 
             if ($combine) {
+                $inverters = array_values($inverters);
                 if(!InverterCombiner::combine($inverters, $min)){
                     $defaults['errors'][] = 'exhausted_inverters';
                 }
@@ -85,6 +129,10 @@ class InverterLoader
         $defaults['power'] = $power;
         $defaults['power_increments'] = $increments;
 
+        $this->cache['time'] = microtime(true) - $start;
+
+        $defaults['cache']['inverters'] = $this->cache;
+
         return $inverters;
     }
 
@@ -92,49 +140,34 @@ class InverterLoader
      * Configurations
      * 127/220 Monophasic
      *
-     * @param $min
-     * @param $max
-     * @param $phaseNumber
-     * @param $phaseVoltage
-     * @param $maker
-     * @param string $order
+     * @param array $config
      * @return array
      */
-    private function find127220Monophasic($min, $max, $phaseNumber, $phaseVoltage, $maker, $order = 'asc')
+    private function find127220Monophasic(array $config)
     {
-        return $this->findSharedPhasesAndVoltagesAware($min, $max, $phaseNumber, $phaseVoltage, $maker, $order);
+        return $this->findSharedPhasesAndVoltagesAware($config);
     }
 
     /**
      * Configurations
      * 127/220 Biphasic
      *
-     * @param $min
-     * @param $max
-     * @param $phaseNumber
-     * @param $phaseVoltage
-     * @param $maker
-     * @param string $order
+     * @param array $config
      * @return array
      */
-    private function find127220Biphasic($min, $max, $phaseNumber, $phaseVoltage, $maker, $order = 'asc')
+    private function find127220Biphasic(array $config)
     {
-        return $this->findSharedPhasesAndVoltagesAware($min, $max, $phaseNumber, $phaseVoltage, $maker, $order);
+        return $this->findSharedPhasesAndVoltagesAware($config);
     }
 
     /**
      * Configurations
      * 127/220 Triphasic
      *
-     * @param $min
-     * @param $max
-     * @param $phaseNumber
-     * @param $phaseVoltage
-     * @param $maker
-     * @param string $order
+     * @param array $config
      * @return array
      */
-    private function find127220Triphasic($min, $max, $phaseNumber, $phaseVoltage, $maker, $order = 'asc')
+    private function find127220Triphasic(array $config)
     {
         $class = $this->manager->getClass();
 
@@ -155,11 +188,9 @@ class InverterLoader
                                 $qb2->expr()->orX(
                                     $qb2->expr()->andX(
                                         $qb2->expr()->eq('i2.phases', ':phases')
-                                        //$qb2->expr()->eq('i2.phaseVoltage', ':phaseVoltage')
                                     ),
                                     $qb2->expr()->andX(
                                         $qb2->expr()->lt('i2.phases', ':phases')
-                                        //$qb2->expr()->eq('i2.phaseVoltage', ':phaseVoltage')
                                     )
                                 ),
 
@@ -190,21 +221,27 @@ class InverterLoader
                 )
             )
             ->andWhere('i.maker = :maker')
-            ->andWhere($qb->expr()->between('i.nominalPower', ':min', ':max'))
-            ->orderBy('i.nominalPower', $order)
-        ;
+            ->orderBy('i.nominalPower', $config['order']);
 
         $parameters = [
-            'min' => $min,
-            'max' => $max,
-            'phases' => $phaseNumber,
-            'phaseVoltage' => $phaseVoltage,
-            'maker' => $maker
+            'phases' => $config['phases'],
+            'phaseVoltage' => $config['voltage'],
+            'maker' => $config['maker']
         ];
+
+        if(!$config['cache']){
+
+            $qb->andWhere($qb->expr()->between('i.nominalPower', ':min', ':max'));
+
+            $parameters['min'] = $config['min'];
+            $parameters['max'] = $config['max'];
+        }
 
         $this->finishCriteria($qb);
 
         $qb->setParameters($parameters);
+
+        $this->cache['queries'] += 1;
 
         return $qb->getQuery()->getResult();
     }
@@ -213,56 +250,40 @@ class InverterLoader
      * Configurations
      * 220/380 Monophasic
      *
-     * @param $min
-     * @param $max
-     * @param $phaseNumber
-     * @param $phaseVoltage
-     * @param $maker
-     * @param string $order
+     * @param array $config
      * @return array
      */
-    private function find220380Monophasic($min, $max, $phaseNumber, $phaseVoltage, $maker, $order = 'asc')
+    private function find220380Monophasic(array $config)
     {
-        return $this->findSharedPhasesAndVoltagesAware($min, $max, $phaseNumber, $phaseVoltage, $maker, $order);
+        return $this->findSharedPhasesAndVoltagesAware($config);
     }
 
     /**
      * Configurations
      * 220/380 Biphasic
      *
-     * @param $min
-     * @param $max
-     * @param $phaseNumber
-     * @param $phaseVoltage
-     * @param $maker
-     * @param string $order
+     * @param array $config
      * @return array
      */
-    private function find220380Biphasic($min, $max, $phaseNumber, $phaseVoltage, $maker, $order = 'asc')
+    private function find220380Biphasic(array $config)
     {
-        return $this->findSharedPhasesAndVoltagesAware($min, $max, $phaseNumber, $phaseVoltage, $maker, $order);
+        return $this->findSharedPhasesAndVoltagesAware($config);
     }
 
     /**
      * Configurations
      * 220/380 Triphasic
      *
-     * @param $min
-     * @param $max
-     * @param $phaseNumber
-     * @param $phaseVoltage
-     * @param $maker
-     * @param string $order
+     * @param array $config
      * @return array
      */
-    private function find220380Triphasic($min, $max, $phaseNumber, $phaseVoltage, $maker, $order = 'asc')
+    private function find220380Triphasic(array $config)
     {
         $qb = $this->createQueryBuilder();
 
         $qb
             ->select('i')
             ->from($this->manager->getClass(), 'i')
-            ->where($qb->expr()->between('i.nominalPower', ':min', ':max'))
             ->andWhere('i.maker = :maker')
             ->andWhere(
                 $qb->expr()->orX(
@@ -276,21 +297,29 @@ class InverterLoader
                     )
                 )
             )
-            ->orderBy('i.nominalPower', $order)
+            ->orderBy('i.nominalPower', $config['order'])
         ;
 
         $parameters = [
-            'min' => $min,
-            'max' => $max,
-            'phases' => $phaseNumber,
+            'phases' => $config['phases'],
             'phaseVoltage380' => 380,
             'phaseVoltage220' => 220,
-            'maker' => $maker
+            'maker' => $config['maker']
         ];
+
+        if(!$config['cache']){
+
+            $qb->andWhere($qb->expr()->between('i.nominalPower', ':min', ':max'));
+
+            $parameters['min'] = $config['min'];
+            $parameters['max'] = $config['max'];
+        }
 
         $this->finishCriteria($qb);
 
         $qb->setParameters($parameters);
+
+        $this->cache['queries'] += 1;
 
         return $qb->getQuery()->getResult();
     }
@@ -301,41 +330,67 @@ class InverterLoader
      * 220/380 Biphasic
      * 127/220 Biphasic
      *
-     * @param $min
-     * @param $max
-     * @param $phaseNumber
-     * @param $phaseVoltage
-     * @param $maker
-     * @param string $order
+     * @param array $config
      * @return array
      */
-    private function findSharedPhasesAndVoltagesAware($min, $max, $phaseNumber, $phaseVoltage, $maker, $order = 'asc')
+    private function findSharedPhasesAndVoltagesAware(array $config)
     {
         $qb = $this->createQueryBuilder();
 
         $qb
             ->select('i')
             ->from($this->manager->getClass(), 'i')
-            ->where($qb->expr()->between('i.nominalPower', ':min', ':max'))
             ->andWhere('i.maker = :maker')
             ->andWhere('i.phases < :phaseNumber')
             ->andWhere('i.phaseVoltage = :phaseVoltage')
-            ->orderBy('i.nominalPower', $order)
+            ->orderBy('i.nominalPower', $config['order'])
         ;
 
         $parameters = [
-            'min' => $min,
-            'max' => $max,
-            'maker' => $maker,
+            'maker' => $config['maker'],
             'phaseNumber' => 3,
             'phaseVoltage' => 220
         ];
+
+        if(!$config['cache']){
+
+            $qb->andWhere($qb->expr()->between('i.nominalPower', ':min', ':max'));
+
+            $parameters['min'] = $config['min'];
+            $parameters['max'] = $config['max'];
+        }
 
         $this->finishCriteria($qb);
 
         $qb->setParameters($parameters);
 
+        $this->cache['queries'] += 1;
+
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param array $inverters
+     * @param array $config
+     * @return array
+     */
+    private function filterInverters(array &$inverters, array $config)
+    {
+        if('desc' == $config['order'] && !$this->cache['sorted']){
+
+            usort($inverters, function (Inverter $a, Inverter $b){
+                return $b->getNominalPower() > $a->getNominalPower();
+            });
+
+            $this->cache['sorted'] = true;
+        }
+
+        $filtered = array_filter($inverters, function (Inverter $inverter) use($config){
+            $nominalPower = $inverter->getNominalPower();
+            return $nominalPower >= $config['min'] && $nominalPower <= $config['max'];
+        });
+
+        return $filtered;
     }
 
     /**
