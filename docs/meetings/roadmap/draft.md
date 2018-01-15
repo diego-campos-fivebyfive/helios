@@ -5,7 +5,7 @@
 ### 2 - CONTAS . 1239 ###
 1. Liberar edição de conta para usuário EXPANSE (Mesmas regras de ADMIN)
 
-### 3 - INVERSORES . 1242, ... ###
+### 3 - INVERSORES . 1242, 1253 ###
 1. Nova propriedade na entidade Inversor.
 1.1 Novo campo no form "Potência mínima para seleção".
 2. Na geração:
