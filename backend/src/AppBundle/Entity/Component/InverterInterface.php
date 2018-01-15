@@ -256,6 +256,17 @@ interface InverterInterface
     public function getStatus();
 
     /**
+     * @param $minPowerSelection
+     * @return InverterInterface
+     */
+    public function setMinPowerSelection($minPowerSelection);
+
+    /**
+     * @return float
+     */
+    public function getMinPowerSelection();
+
+    /**
      * @param $compatibility
      * @return InverterInterface
      */
