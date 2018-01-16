@@ -222,6 +222,12 @@ class InverterLoader
                 )
             )
             ->andWhere('i.maker = :maker')
+            ->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->isNull('i.minPowerSelection'),
+                    $qb->expr()->lte('i.minPowerSelection', $config['power'])
+                )
+            )
             ->orderBy('i.nominalPower', $config['order']);
 
         $parameters = [
@@ -298,6 +304,12 @@ class InverterLoader
                     )
                 )
             )
+            ->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->isNull('i.minPowerSelection'),
+                    $qb->expr()->lte('i.minPowerSelection', $config['power'])
+                )
+            )
             ->orderBy('i.nominalPower', $config['order'])
         ;
 
@@ -344,6 +356,12 @@ class InverterLoader
             ->andWhere('i.maker = :maker')
             ->andWhere('i.phases < :phaseNumber')
             ->andWhere('i.phaseVoltage = :phaseVoltage')
+            ->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->isNull('i.minPowerSelection'),
+                    $qb->expr()->lte('i.minPowerSelection', $config['power'])
+                )
+            )
             ->orderBy('i.nominalPower', $config['order'])
         ;
 
@@ -387,12 +405,9 @@ class InverterLoader
         }
 
         $filtered = array_filter($inverters, function (Inverter $inverter) use($config){
-            $minPowerSelection = $inverter->getMinPowerSelection();
-            if (!is_null($minPowerSelection))
-                if ($config['power'] < $minPowerSelection)
-                    return false;
 
             $nominalPower = $inverter->getNominalPower();
+
             return $nominalPower >= $config['min'] && $nominalPower <= $config['max'];
         });
 
