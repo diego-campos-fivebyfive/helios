@@ -4,20 +4,20 @@
     }
 </style>
 
-{#<div class="modal inmodal" id="modal_transaction" tabindex="-1" role="dialog" aria-hidden="true">#}
-    {#<div class="modal-dialog">#}
-        {#<div class="modal-content animated bounceInRight">#}
-            {#<div class="modal-body">#}
-                {#{% include view('helper.spinner') %}#}
-            {#</div>#}
-            {#<div class="modal-footer">#}
-                {#<button type="button" class="btn btn-primary" data-dismiss="modal" id="bt_save_transaction">#}
-                    {#<i class="fa fa-check-square-o"></i> {{ 'Save'|trans }}#}
-                {#</button>#}
-            {#</div>#}
-        {#</div>#}
-    {#</div>#}
-{#</div>#}
+<div class="modal inmodal" id="modal_transaction" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-body">
+                {% include view('helper.spinner') %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="bt_save_transaction">
+                    <i class="fa fa-check-square-o"></i> {{ 'Save'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% set isPlatform = app.user.isPlatform %}
 
@@ -29,7 +29,7 @@
                 {% if isPlatform %}
                     {{ account.lastname }}
                 {% else %}
-                    Transações
+                    Pontuações
                 {% endif %}
 
             </h2>
@@ -51,9 +51,11 @@
                 {#</div>#}
                 {#{% if app.user.PlatformAdmin or app.user.PlatformMaster %}#}
                 {#<div class="col-md-3 filters spacing-top pull-right">#}
-                    {#<button class="btn btn-success pull-right" data-toggle="modal" data-target="#modal_transaction">#}
-                        {#<i class="fa fa-plus-square"></i> Operação#}
-                    {#</button>#}
+                {% if isPlatform %}
+                    <button class="btn btn-success pull-right" data-toggle="modal" data-target="#modal_transaction">
+                        <i class="fa fa-plus-square"></i> Pontuação
+                    </button>
+                {% endif %}
                 {#</div>#}
                 {#{% endif %}#}
             {#</form>#}
@@ -61,13 +63,13 @@
     </tr>
     <tr class="m-table-header">
         <th colspan="">
-            Data
-        </th>
-        <th colspan="">
             Descrição
         </th>
         <th colspan="">
             Quantidade
+        </th>
+        <th colspan="">
+            Data
         </th>
     </tr>
     </thead>
@@ -77,13 +79,13 @@
 
 <script>
 
-    // $('#bt_save_transaction').click(function () {
-    //     $('#btn_transaction').trigger('click');
-    // });
+    $('#bt_save_transaction').click(function () {
+        $('#btn_transaction').trigger('click');
+    });
 
     TransactionRanking = {
        // form: $('#transactions_filter'),
-       // modalTransaction: $('#modal_transaction'),
+        modalTransaction: $('#modal_transaction'),
         tableTransaction: $('#table_transaction'),
         transactionContent: $('#transaction_content'),
         loadTransactions: function () {
@@ -94,18 +96,18 @@
                 }
             });
         },
-        {#formTransaction: function () {#}
-            {#this.modalTransaction.on('show.bs.modal', function (event) {#}
-                {#var target = $(event.relatedTarget);#}
-                {#var url = target.data('url');#}
-                {#$.ajax({#}
-                    {#url: '{{ path('transactions', {type:component.family, id:component.id}) }}',#}
-                    {#success: function (response) {#}
-                        {#TransactionRanking.modalTransaction.find('.modal-body').html(response);#}
-                    {#}#}
-                {#});#}
-            {#})#}
-        {#},#}
+        formTransaction: function () {
+            this.modalTransaction.on('show.bs.modal', function (event) {
+                {% if isPlatform %}
+                $.ajax({
+                    url: '{{ path('create_ranking', {id:account.id}) }}',
+                    success: function (response) {
+                        TransactionRanking.modalTransaction.find('.modal-body').html(response);
+                    }
+                });
+                {% endif %}
+            })
+        },
         {#datePicker: function (element) {#}
             {#element.daterangepicker({#}
                 {#locale: {#}
@@ -149,7 +151,7 @@
            // this.filter();
             this.loadTransactions();
             // this.datePicker($('#date'));
-          //  this.formTransaction();
+            this.formTransaction();
           //   $('#clear').on('click', function () {
           //       TransactionRanking.clear();
           //   })
