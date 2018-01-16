@@ -1,0 +1,60 @@
+{% set components = pagination.items %}
+
+{% for component in components %}
+    <tr data-url-component="{{ route('transaction_stock', {id:component.id, family:component.family}) }}">
+        <td>
+            {{ component.code }}
+        </td>
+        <td>
+            {{ component.description }}
+        </td>
+        <td>
+            {% if component.orderInventory %}
+                    {{ component.orderInventory('array').pending }}
+            {% endif %}
+        </td>
+        <td>
+            {% if component.orderInventory %}
+                    {{ component.orderInventory('array').validated }}
+            {% endif %}
+        </td>
+        <td>
+            {{ component.stock }}
+        </td>
+    </tr>
+{% endfor %}
+
+<tr>
+    <td colspan="5">
+        <div class="row text-center">
+            <div id="pagination_components" class="btn-group bt-xs">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </td>
+</tr>
+
+<script>
+    $(' #pagination_components ul[class="pagination"] li a ').toArray().forEach(function (el) {
+        rout = $(el).attr('href');
+        $(el).removeAttr('href');
+        $(el).attr('data-page-component', rout);
+    });
+
+    $(' [data-page-component] ').on( 'click', function () {
+        var url = $(this).data('page-component');
+        ComponentsStock.setUrl(url);
+        $.ajax({
+            url: url,
+            method: 'get',
+            complete: function (xhr) {
+                ComponentsStock.componentsContent.html(xhr.responseText);
+            }
+        });
+    });
+
+    $(' [data-url-component] ').on( 'click', function () {
+        var urlComponent = $(this).data('url-component');
+        Stock.loadTransaction(urlComponent);
+    });
+</script>
