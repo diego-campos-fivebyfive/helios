@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Component\ProjectInterface;
+use AppBundle\Entity\Theme;
 use AppBundle\Entity\ThemeInterface;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -64,7 +65,7 @@ class TemplateController extends AbstractController
     /**
      * @Route("/templatesList", name="templates_list")
      */
-    public function templatesList()
+    public function templatesListAction()
     {
         $themes = $this->manager('theme')->findBy([
             'accountId' => $this->account()->getId()
@@ -76,21 +77,26 @@ class TemplateController extends AbstractController
     }
 
     /**
-     * @Route("/processor", name="template_processor")
+     * @Route("/processor/{theme}/", name="template_processor")
      */
-    public function replaceTemplateAction()
+    public function replaceTemplateAction(Theme $theme)
     {
         /** @var ProjectInterface $project */
         $project = $this->manager('project')->find(2253);
 
-        $path = $this->container->get('kernel')->getRootDir();
-        $templatPath = $path . '/cache/template.docx';
+        $options = array(
+            'filename' => $theme->getFilename(),
+            'root' => 'proposal',
+            'type' => 'template',
+            'access' => 'private'
+        );
 
-        $template = $this->getTemplateProcessor()->process($project, $templatPath);
+        $templatePath = $this->get('app_storage')->location($options);
+
+        $template = $this->getTemplateProcessor()->process($project, $templatePath);
 
         $encodeTemplate = base64_encode($template);
 
-        //dump($template);die;
         return $this->redirectToRoute('download_template', [
             'template' => $encodeTemplate
         ]);
@@ -110,6 +116,18 @@ class TemplateController extends AbstractController
         $response->deleteFileAfterSend(true);
 
         return $response;
+    }
+
+    /**
+     * @Route("/tags", name="tags_list")
+     */
+    public function tagsListAction()
+    {
+        $tags = $this->getTags();
+
+        return $this->render('projects/templates/tags_list.html.twig', [
+            'tagsList' => $tags
+        ]);
     }
 
     /**
@@ -147,5 +165,40 @@ class TemplateController extends AbstractController
     private function getTemplateProcessor()
     {
         return $this->get('word_processor');
+    }
+
+    /**
+     * @return array
+     */
+    private function getTags()
+    {
+        return $tags = array(
+            ['tag' => '${ProjetoNumero}', 'description' =>'Nº do Projeto'],
+            ['tag' => '${ProjetoPotencia}', 'description' =>'Potência do Projeto'],
+            ['tag' => '${PropostaValor}', 'description' =>'Valor da Proposta'],
+            ['tag' => '${ClienteNome}', 'description' =>'Nome do Cliente'],
+            ['tag' => '${ClienteDocumento}', 'description' =>'Cpf do Cliente'],
+            ['tag' => '${ClienteTelefone}', 'description' =>'Telefone'],
+            ['tag' => '${ClienteEmail}', 'description' =>'E-mail'],
+            ['tag' => '${GeracaoAnual}', 'description' =>'Geração Anual'],
+            ['tag' => '${GeracaoMediaMensal}', 'description' =>'Geração Média Mensal'],
+            ['tag' => '${TempoDeVida}', 'description' =>'Tempo de Vida'],
+            ['tag' => '${Inflacao}', 'description' =>'Inflação'],
+            ['tag' => '${PerdaEficiencia}', 'description' =>'Perda de Eficiência'],
+            ['tag' => '${CustoAnualOperacao}', 'description' =>'Custo Anual de Operacão'],
+            ['tag' => '${PrecoKwhImpostos}', 'description' =>'Preco Kwh + Impostos'],
+            ['tag' => '${CaixaAcumulado}', 'description' =>'Caixa Acumulado'],
+            ['tag' => '${ValorPresenteLiquido}', 'description'  => 'Valor Presente Liquido'],
+            ['tag' => '${TaxaRetorno}', 'description' =>'Taxa de Retorno'],
+            ['tag' => '${PaybackSimples}', 'description' =>'Payback Simples'],
+            ['tag' => '${PaybackDescontado}', 'description' =>'Payback Descontado'],
+            ['tag' => '${titulo}', 'description' =>'Nome da Familia do Equipamento'],
+            ['tag' => '${descricao}', 'description' =>'Descrição do Equipamento'],
+            ['tag' => '${quantidade}', 'description' =>'Quantidade de Produtos'],
+            ['tag' => '${mes}', 'description' =>'Mês referente a Geração'],
+            ['tag' => '${geracao}', 'description' =>'Valor Gerado'],
+            ['tag' => '${ano}', 'description' =>'Ano referente ao acumulo de caixa'],
+            ['tag' => '${valor}', 'description' =>'Valor referente a cada ano do acumulo de caixa']
+        );
     }
 }

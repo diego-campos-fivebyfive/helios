@@ -214,7 +214,7 @@ class AccountController extends AdminController
     }
 
     /**
-     * @Security("has_role('ROLE_PLATFORM_COMMERCIAL')")
+     * @Security("has_role('ROLE_PLATFORM_COMMERCIAL') or has_role('ROLE_PLATFORM_EXPANSE')")
      *
      * @Breadcrumb("update.account")
      * @Route("/{id}/update", name="account_update")
@@ -498,7 +498,7 @@ class AccountController extends AdminController
 
             $this->processAndPersist($entity->getAccount());
         }
-        
+
         $this->manager('customer')->save($entity);
     }
 

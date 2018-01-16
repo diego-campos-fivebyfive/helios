@@ -7,6 +7,7 @@
 {% block body %}
 
     {% include view('helper.style-wizard') %}
+    {% set accessDiscount = app.user.isPlatformAdmin or app.user.isPlatformMaster or app.user.isPlatformCommercial or app.user.isPlatformExpanse %}
 
     <div class="modal inmodal fade" id="cloner_modal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
@@ -160,7 +161,7 @@
                                                 Total
                                             </div>
                                             <div class="panel-body">
-                                                {% if app.user.isPlatformAdmin or app.user.isPlatformMaster %}
+                                                {% if  accessDiscount %}
                                                 <div class="col-md-12 border-bottom">
                                                     <div class="col-md-9"><h2>Desconto comercial:</h2></div>
                                                     <div class="col-md-3 input-group">

@@ -229,7 +229,14 @@ class OrderController extends AbstractController
 
         $this->manager('order')->save($order);
 
-        // TODO: IMPLEMENT S3 REMOVE FILE HERE!
+        $options = [
+            'filename' => $file,
+            'root' => 'order',
+            'type' => 'payment',
+            'access' => 'private'
+        ];
+
+        $this->get('app_storage')->remove($options);
 
         return $this->json([]);
     }

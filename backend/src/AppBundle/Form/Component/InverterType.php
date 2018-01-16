@@ -71,6 +71,9 @@ class InverterType extends AbstractType
         $builder->add('mpptNumber', null, [
             'required' => true
         ]);
+        $builder->add('minPowerSelection', null, [
+            'required' => false
+        ]);
         $builder->add('connection_type', null,[
             'required' => false
         ]);
