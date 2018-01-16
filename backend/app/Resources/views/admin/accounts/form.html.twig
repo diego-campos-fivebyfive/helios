@@ -112,7 +112,7 @@
                             {{ form_widget(form.number,{attr:{class:'form-control', 'placeholder':'Número'}}) }}
                         </div>
 
-                        {% set isPlatform = app.user.isPlatformAdmin or app.user.isPlatformMaster %}
+                        {% set isPlatform = app.user.isPlatformAdmin or app.user.isPlatformMaster or app.user.isPlatformExpanse %}
                         {% if isPlatform %}
                         <div class="col-md-4">
                             {{ form_label(form.level, 'Nivel de Conta *') }}
