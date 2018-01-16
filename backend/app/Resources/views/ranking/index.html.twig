@@ -1,0 +1,59 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+    <style>
+        .filters {
+            padding-right: 3px;
+            padding-left: 3px;
+        }
+    </style>
+
+    {% set isPlatform = app.user.isPlatform %}
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="ibox flow-h">
+                    <div class="ibox-content flow-lg">
+                        <div class="row">
+                            {% if isPlatform %}
+                            <div class="col-md-6">
+                                {% include view('ranking/accounts.html.twig') %}
+                            </div>
+                            {% endif %}
+                            <div id="transactions_block" class="{{ isPlatform ? 'col-md-6' : 'col-md-12' }}">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(' body ').toggleClass('mini-navbar');
+
+        Ranking = {
+            transactionsBlock: $('#transactions_block'),
+            loadTransaction: function (urlTrans) {
+                $.ajax({
+                    url: urlTrans,
+                    complete: function (xhr) {
+                        Ranking.transactionsBlock.html(xhr.responseText);
+                    }
+                });
+            },
+            // reloadContent: function () {
+            //     ComponentsStock.loadComponents();
+            //     TransactionStock.loadTransactions();
+            // }
+        };
+
+        {% if not isPlatform %}
+            Ranking.loadTransaction("{{ route('transaction_ranking', {id:app.user.info.account.id}) }}");
+        {% endif %}
+
+    </script>
+{% endblock %}

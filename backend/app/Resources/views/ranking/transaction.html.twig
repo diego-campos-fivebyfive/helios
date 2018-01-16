@@ -1,0 +1,160 @@
+<style>
+    .spacing-top {
+        margin-top: 10px;
+    }
+</style>
+
+{#<div class="modal inmodal" id="modal_transaction" tabindex="-1" role="dialog" aria-hidden="true">#}
+    {#<div class="modal-dialog">#}
+        {#<div class="modal-content animated bounceInRight">#}
+            {#<div class="modal-body">#}
+                {#{% include view('helper.spinner') %}#}
+            {#</div>#}
+            {#<div class="modal-footer">#}
+                {#<button type="button" class="btn btn-primary" data-dismiss="modal" id="bt_save_transaction">#}
+                    {#<i class="fa fa-check-square-o"></i> {{ 'Save'|trans }}#}
+                {#</button>#}
+            {#</div>#}
+        {#</div>#}
+    {#</div>#}
+{#</div>#}
+
+{% set isPlatform = app.user.isPlatform %}
+
+<table id="table_transaction" data-transactions="{{ route('list_transactions_ranking', {id:account.id}) }}" class="table table-bordered">
+    <thead>
+    <tr class="m-table-header">
+        <th colspan="3">
+            <h2 class="text-center">
+                {% if isPlatform %}
+                    {{ account.lastname }}
+                {% else %}
+                    Transações
+                {% endif %}
+
+            </h2>
+
+            {#<form id="transactions_filter" action="{{ route('list_transactions_ranking', {id:component.id, family:component.family}) }}">#}
+                {#<div class="col-md-1 filters">#}
+                    {#<button type="button" id="clear" class="btn btn-primary pull-right"><i class="fa fa-eraser"></i></button>#}
+                {#</div>#}
+                {#<div class="col-md-5 filters">#}
+                    {#<input id="date" name="date" class="form-control" placeholder="Filtrar por data">#}
+                {#</div>#}
+                {#<div class="col-md-6 filters">#}
+                    {#<input type="hidden" value="t.description" name="filter_name">#}
+                    {#<input id="filter_value" name="filter_value" class="form-control" placeholder="Pesquisar">#}
+                {#</div>#}
+
+                {#<div class="col-md-2 filters spacing-top pull-right">#}
+                    {#<button type="submit" class="btn btn-primary pull-right"><i class="fa fa-search"></i> Filtrar</button>#}
+                {#</div>#}
+                {#{% if app.user.PlatformAdmin or app.user.PlatformMaster %}#}
+                {#<div class="col-md-3 filters spacing-top pull-right">#}
+                    {#<button class="btn btn-success pull-right" data-toggle="modal" data-target="#modal_transaction">#}
+                        {#<i class="fa fa-plus-square"></i> Operação#}
+                    {#</button>#}
+                {#</div>#}
+                {#{% endif %}#}
+            {#</form>#}
+        </th>
+    </tr>
+    <tr class="m-table-header">
+        <th colspan="">
+            Data
+        </th>
+        <th colspan="">
+            Descrição
+        </th>
+        <th colspan="">
+            Quantidade
+        </th>
+    </tr>
+    </thead>
+    <tbody id="transaction_content">
+    </tbody>
+</table>
+
+<script>
+
+    // $('#bt_save_transaction').click(function () {
+    //     $('#btn_transaction').trigger('click');
+    // });
+
+    TransactionRanking = {
+       // form: $('#transactions_filter'),
+       // modalTransaction: $('#modal_transaction'),
+        tableTransaction: $('#table_transaction'),
+        transactionContent: $('#transaction_content'),
+        loadTransactions: function () {
+            $.ajax({
+                url: TransactionRanking.tableTransaction.data('transactions'),
+                complete: function (xhr) {
+                    TransactionRanking.transactionContent.html(xhr.responseText);
+                }
+            });
+        },
+        {#formTransaction: function () {#}
+            {#this.modalTransaction.on('show.bs.modal', function (event) {#}
+                {#var target = $(event.relatedTarget);#}
+                {#var url = target.data('url');#}
+                {#$.ajax({#}
+                    {#url: '{{ path('transactions', {type:component.family, id:component.id}) }}',#}
+                    {#success: function (response) {#}
+                        {#TransactionRanking.modalTransaction.find('.modal-body').html(response);#}
+                    {#}#}
+                {#});#}
+            {#})#}
+        {#},#}
+        {#datePicker: function (element) {#}
+            {#element.daterangepicker({#}
+                {#locale: {#}
+                    {#format: 'DD/MM/YYYY',#}
+                    {#daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],#}
+                    {#monthNames: [#}
+                        {#"Janeiro",#}
+                        {#"Fevereiro",#}
+                        {#"Março",#}
+                        {#"Abril",#}
+                        {#"Maio",#}
+                        {#"Junho",#}
+                        {#"Julho",#}
+                        {#"Agosto",#}
+                        {#"Setembro",#}
+                        {#"Outubro",#}
+                        {#"Novembro",#}
+                        {#"Dezembro"#}
+                    {#]#}
+                {#}#}
+            {#});#}
+            {#element.val('');#}
+        {#},#}
+        {#clear: function () {#}
+            {#$('#date').val('');#}
+            {#$('#filter_value').val('');#}
+        {#},#}
+        {#filter: function () {#}
+            {#this.form.on('submit', function (event) {#}
+                {#event.preventDefault();#}
+                {#$.ajax({#}
+                    {#url: this.action,#}
+                    {#data: TransactionRanking.form.serialize(),#}
+                    {#complete: function (xhr) {#}
+                        {#TransactionRanking.transactionContent.html(xhr.responseText);#}
+                    {#}#}
+                {#});#}
+            {#});#}
+        {#},#}
+        init: function () {
+           // this.filter();
+            this.loadTransactions();
+            // this.datePicker($('#date'));
+          //  this.formTransaction();
+          //   $('#clear').on('click', function () {
+          //       TransactionRanking.clear();
+          //   })
+        }
+    };
+
+    TransactionRanking.init();
+</script>

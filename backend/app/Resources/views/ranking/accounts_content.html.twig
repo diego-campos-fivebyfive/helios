@@ -1,0 +1,49 @@
+{% set accounts = pagination.items %}
+
+{% for account in accounts %}
+    <tr data-url-account="{{ route('transaction_ranking', {id:account.id}) }}">
+        <td>
+            {{ account.firstname }}
+        </td>
+        <td>
+            {{ account.document }}
+        </td>
+        <td>
+            {{ account.email }}
+        </td>
+    </tr>
+{% endfor %}
+
+<tr>
+    <td colspan="5">
+        <div class="row text-center">
+            <div id="pagination_accounts" class="btn-group bt-xs">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </td>
+</tr>
+
+<script>
+    $(' #pagination_accounts ul[class="pagination"] li a ').toArray().forEach(function (el) {
+        $(el).attr('data-page-account', $(el).attr('href'));
+        $(el).removeAttr('href');
+    });
+
+    $(' [data-page-account] ').on( 'click', function () {
+        var url = $(this).data('page-account');
+        AccountsRanking.setUrl(url);
+        $.ajax({
+            url: url,
+            method: 'get',
+            complete: function (xhr) {
+                AccountsRanking.accountsContent.html(xhr.responseText);
+            }
+        });
+    });
+
+    $(' [data-url-account] ').on( 'click', function () {
+       var urlAccount = $(this).data('url-account');
+       Ranking.loadTransaction(urlAccount);
+    });
+</script>
