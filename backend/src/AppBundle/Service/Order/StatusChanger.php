@@ -69,6 +69,10 @@ class StatusChanger
                 case Order::STATUS_REJECTED:
                     $this->onChangeToRejected($order);
                     break;
+
+                case Order::STATUS_AVAILABLE:
+                    $this->onChangeToAvailable($order);
+                    break;
             }
 
             $this->finishStatusChanged($order);
@@ -144,6 +148,14 @@ class StatusChanger
     {
         if(!in_array($order->getPreviousStatus(), [Order::STATUS_BUILDING, Order::STATUS_PENDING, Order::STATUS_VALIDATED]))
             $this->get('order_stock')->credit($order);
+    }
+
+    /**
+     * @param Order $order
+     */
+    private function onChangeToAvailable(Order $order)
+    {
+        $this->get('order_ranking')->generate($order);
     }
 
     /**

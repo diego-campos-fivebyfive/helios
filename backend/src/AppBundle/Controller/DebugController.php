@@ -1073,6 +1073,34 @@ class DebugController extends AbstractController
     }
 
     /**
+     * @Route("/scores_normalizer", name="scores_normalizer")
+     */
+    public function scoresNormalizerAction()
+    {
+        $manager = $this->manager('order');
+
+        $qb = $manager->getEntityManager()->createQueryBuilder();
+        $qb->select('o')
+            ->from(Order::class, 'o')
+            ->where('o.parent is null')
+            ->andWhere('o.status >= 7')
+            ->andWhere('o.power is not null');
+
+        $orders = $qb->getQuery()->getResult();
+
+        if ($orders) {
+
+            foreach ($orders as $order) {
+                $this->orderRankingGenerator()->generate($order);
+            }
+
+            print_r(count($orders) . ' orçamentos rankeados');die;
+        }
+
+        print_r('Não há orçamentos para rankear');die;
+    }
+
+    /**
      * @return \Sonata\ClassificationBundle\Model\ContextInterface
      */
     private function getMemberContext()

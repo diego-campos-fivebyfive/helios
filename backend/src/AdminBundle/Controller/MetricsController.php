@@ -13,6 +13,20 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
  */
 class MetricsController extends AdminController
 {
+
+    /**
+     * @var userAgent
+     */
+    private $userAgent;
+
+    /**
+     * MetricsController constructor
+     */
+    function __construct()
+    {
+        $this->userAgent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)';
+    }
+
     /**
      * GET Github Metrics View
      *
@@ -25,12 +39,9 @@ class MetricsController extends AdminController
     }
 
     /**
-     * GET Github Metrics
-     *
-     * @Route("/api/v1/modules", name="metrics_module")
-     * @Method("GET")
+     * @return mixed
      */
-    public function getModules()
+    private function getRepositoryCredentials()
     {
         $root = $this->get('kernel')->getRootDir() . "/../..";
         $temp = "${root}/devops/cli/stash/temp";
@@ -42,19 +53,26 @@ class MetricsController extends AdminController
 
         fclose($file);
 
-        $options = [
-            'url' => $this->getParameter('github_repository') . "/milestones",
-            'agent' => 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)',
-            'login' => "${credentials[0]}:${credentials[1]}"
-        ];
+        return "${credentials[0]}:${credentials[1]}";
+    }
+
+    /**
+     * GET Github Milestones
+     *
+     * @Route("/api/v1/metrics/milestones", name="metrics_milestones")
+     * @Method("GET")
+     */
+    public function getMilestones()
+    {
+        $uri = $this->getParameter('github_repository') . "/milestones";
 
         $curl = curl_init();
 
-        curl_setopt($curl, CURLOPT_URL, $options['url']);
+        curl_setopt($curl, CURLOPT_URL, $uri);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_USERPWD, $options['login']);
+        curl_setopt($curl, CURLOPT_USERPWD, self::getRepositoryCredentials());
         curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($curl, CURLOPT_USERAGENT, $options['agent']);
+        curl_setopt($curl, CURLOPT_USERAGENT, $this->userAgent);
 
         $milestones = json_decode(curl_exec($curl), true);
 
@@ -91,5 +109,53 @@ class MetricsController extends AdminController
         });
 
         return $this->json($modules);
+    }
+
+    /**
+     * GET Github Issues by Milestone
+     *
+     * @Route("/api/v1/metrics/milestones/{id}/issues", name="metrics_milestone")
+     * @Method("GET")
+     */
+    public function getMilestone($id)
+    {
+        $query = [
+          'query' => " query {
+            repository(owner:\"sices\", name:\"sices\") {
+              milestone(number: ${id}) {
+                issues(first: 100) {
+                  edges {
+                    node {
+                      title
+                    }
+                  }
+                }
+              }
+            }
+          }"
+        ];
+
+        $uri = 'https://api.github.com/graphql';
+        $curl = curl_init();
+
+        curl_setopt($curl, CURLOPT_URL, $uri);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_USERPWD, self::getRepositoryCredentials());
+        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($curl, CURLOPT_USERAGENT, $this->userAgent);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($query));
+
+        $response = json_decode(curl_exec($curl), true);
+        $milestone = $response['data']['repository']['milestone'];
+        $issuesNode = $milestone['issues']['edges'];
+
+        $issues = array_map(function($issue) {
+            return $issue['node'];
+        }, $issuesNode);
+
+        curl_close($curl);
+
+        return $this->json($issues);
     }
 }
