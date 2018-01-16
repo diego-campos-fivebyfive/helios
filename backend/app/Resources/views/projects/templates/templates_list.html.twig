@@ -3,17 +3,33 @@
     <tr>
         <th class="col-md-2"><i class="fa fa-sort-desc"></i> Nro </th>
         <th class="col-md-6"><i class="fa fa-sort-desc"></i> Nome </th>
-        <th class="col-md-4"><i class="fa fa-sort-desc"></i> Ações </th>
+        <th class="col-md-3"><i class="fa fa-sort-desc"></i> Ações </th>
     </tr>
     </thead>
     <tbody>
+
+    <tr class="success">
+        <td class="text-center"> # </td>
+        <td> Template Padrão </td>
+        <td>
+            <div class="btn-group btn-group-justified">
+                <a href="" class="btn btn-info btn-sm span-oculted">
+                    <i class="fa fa-eye"> </i><span>Visualizar</span>
+                </a>
+                <a href="{{ path('template_processor', {project: project.id, theme: default}) }}" class="btn btn-success btn-sm span-oculted">
+                    <i class="fa fa-cogs"> </i><span>Gerar</span>
+                </a>
+            </div>
+        </td>
+    </tr>
+
 
     {% for theme in themes %}
         <tr>
             <td class="text-center">{{ loop.index }}</td>
             <td>{{ theme.name }}</td>
             <td>
-                <div class="btn-group">
+                <div class="btn-group btn-group-justified">
                     <a href="" class="btn btn-danger btn-sm span-oculted">
                         <i class="fa fa-trash"> </i><span>Excluir</span>
                     </a>
@@ -22,7 +38,7 @@
                         <i class="fa fa-eye"> </i><span>Visualizar</span>
                     </a>
 
-                    <a href="{{ path('template_processor', {theme: theme.id}) }}" class="btn btn-success btn-sm span-oculted">
+                    <a href="{{ path('template_processor', {project: project.id, theme: theme.id}) }}" class="btn btn-success btn-sm span-oculted">
                         <i class="fa fa-cogs"> </i><span>Gerar</span>
                     </a>
                 </div>
