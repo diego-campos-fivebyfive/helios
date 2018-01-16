@@ -22,9 +22,9 @@
                                 {% include view('ranking/accounts.html.twig') %}
                             </div>
                             {% endif %}
+
                             <div id="transactions_block" class="{{ isPlatform ? 'col-md-6' : 'col-md-12' }}">
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -45,10 +45,10 @@
                     }
                 });
             },
-            // reloadContent: function () {
-            //     ComponentsStock.loadComponents();
-            //     TransactionStock.loadTransactions();
-            // }
+            reloadContent: function () {
+                AccountsRanking.loadAccounts();
+                TransactionRanking.loadTransactions();
+            }
         };
 
         {% if not isPlatform %}
