@@ -58,11 +58,7 @@ class TemplateController extends AbstractController
 
         $this->saveTheme($filename, $originalFilename);
 
-        $location = $this->container->get('app_storage')->location($options);
-
-        $path = str_replace($filename, '', $location);
-
-        $file->move($path, $filename);
+        $this->container->get('app_storage')->push($options, $file);
 
         return $this->json([ 'name' => $filename ]);
     }
@@ -73,7 +69,8 @@ class TemplateController extends AbstractController
     public function templatesListAction(Project $project)
     {
         $themes = $this->manager('theme')->findBy([
-            'accountId' => $this->account()->getId()
+            'accountId' => $this->account()->getId(),
+            'theme' => false
         ]);
 
         return $this->render('projects/templates/templates_list.html.twig', [
@@ -102,7 +99,7 @@ class TemplateController extends AbstractController
             'access' => 'private'
         );
 
-        $templatePath = $this->get('app_storage')->location($options);
+        $templatePath = $this->get('app_storage')->display($options);
 
         $template = $this->getTemplateProcessor()->process($project, $templatePath);
 
@@ -131,6 +128,36 @@ class TemplateController extends AbstractController
     }
 
     /**
+     * @Route("/view/{theme}/", name="view_theme")
+     */
+    public function viewTemplateAction($theme)
+    {
+        $options = $this->optionsTheme($theme);
+
+        $templatePath = $this->get('app_storage')->display($options);
+
+        $header = ResponseHeaderBag::DISPOSITION_ATTACHMENT;
+
+        $response = new BinaryFileResponse($templatePath, Response::HTTP_OK, [], true, $header);
+
+        return $response;
+    }
+
+    /**
+     * @Route("/{theme}/delete", name="delete_theme")
+     */
+    public function deleteTemplateAction(Theme $theme)
+    {
+        $options = $this->optionsTheme($theme);
+
+        $this->get('app_storage')->remove($options);
+
+        $this->manager('theme')->delete($theme);
+
+        return $this->json([]);
+    }
+
+    /**
      * @Route("/tags", name="tags_list")
      */
     public function tagsListAction()
@@ -154,7 +181,7 @@ class TemplateController extends AbstractController
         $theme = $manager->create();
         $theme
             ->setAccountId($this->account()->getId())
-            ->setTheme(1)
+            ->setTheme(false)
             ->setContent('')
             ->setName($originalName)
             ->setFilename($filename);
@@ -169,7 +196,6 @@ class TemplateController extends AbstractController
     {
         return $this->member()->getAccount();
     }
-
 
     /**
      * @return \AppBundle\Service\Proposal\WordProcessor
@@ -212,5 +238,28 @@ class TemplateController extends AbstractController
             ['tag' => '${ano}', 'description' =>'Ano referente ao acumulo de caixa'],
             ['tag' => '${valor}', 'description' =>'Valor referente a cada ano do acumulo de caixa']
         );
+    }
+
+    /**
+     * @param $theme
+     * @return array
+     */
+    private function optionsTheme($theme)
+    {
+        if($this->defaultTheme !== $theme){
+            /** @var Theme $theme */
+            $theme = $this->manager('theme')->find($theme);
+        }
+
+        $filename = $theme instanceof Theme ? $theme->getFilename() : $theme ;
+
+        $options = array(
+            'filename' => $filename,
+            'root' => 'proposal',
+            'type' => 'theme',
+            'access' => 'private'
+        );
+
+        return $options;
     }
 }
