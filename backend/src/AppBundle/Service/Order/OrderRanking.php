@@ -32,8 +32,8 @@ class OrderRanking
     ];
 
     /**
-     * @param $order
-     * @return array
+     * @param Order $order
+     * @return mixed
      */
     public function generate(Order $order)
     {
@@ -55,7 +55,6 @@ class OrderRanking
         }
 
         return;
-
     }
 
     /**
@@ -63,6 +62,6 @@ class OrderRanking
      */
     private function rankingGenerator()
     {
-        return $this->container->get('ranking_generator');;
+        return $this->container->get('ranking_generator');
     }
 }
