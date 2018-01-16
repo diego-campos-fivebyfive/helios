@@ -64,64 +64,44 @@ class WordProcessor
                 self::formatPayback($project->getPaybackYearsDisc(), $project->getPaybackMonthsDisc())
             ));
 
-        $groupByFamily = function($acc, $component) {
-            $item = [
-                "description" => $component['description'],
-                "quantity" => $component['quantity']
-            ];
+        try {
 
-            $acc = (is_array($acc)) ? $acc : [];
+            $familiesOfComponents = $this->getFamilyComponents($components);
 
-            if (!array_key_exists($component['family'], $acc)) {
-                $acc[$component['family']] = [$item];
-            }
-            else {
-                $acc[$component['family']][] = $item;
-            }
+            $cloneLines = count($components) + count($familiesOfComponents);
 
-            return $acc;
-        };
+            $this->templateProcessor->cloneRow('descricao', $cloneLines);
 
-        $familiesOfComponents = array_reduce($components, $groupByFamily, []);
+            $this->replaceComponents($familiesOfComponents);
 
-        $cloneLines = count($components) + count($familiesOfComponents);
+        } catch (\Exception $exception) {
 
-        $this->templateProcessor->cloneRow('descricao', $cloneLines);
-
-        $familiesTranslations = [
-            'module' => 'MÓDULOS',
-            'inverter' => 'INVERSORES',
-            'string_box' => 'STRING BOX',
-            'structure' => 'ESTRUTURAS',
-            'variety' => 'VARIEDADES'
-        ];
-
-        $currentLine = 1;
-
-        foreach ($familiesOfComponents as $keyFamily => $family) {
-            self::writeLineTitle($currentLine, $familiesTranslations[$keyFamily]);
-            $currentLine++;
-
-            foreach ($family as $component) {
-                self::writeLineComponent($currentLine, $component);
-                $currentLine++;
-            }
         }
 
-        $this->templateProcessor->cloneRow('mes', 12);
+        try {
+            $this->templateProcessor->cloneRow('mes', 12);
 
-        self::writeMonthlyGenerate($project);
+            self::writeMonthlyGenerate($project);
 
-        $totalYears = count($project->getAccumulatedCash());
+        } catch (\Exception $exception) {
 
-        $this->templateProcessor->cloneRow('ano', $totalYears);
+        }
 
-        self::writeAccumulatedCash($project, $totalYears);
+        try {
+            $totalYears = count($project->getAccumulatedCash());
+
+            $this->templateProcessor->cloneRow('ano', $totalYears);
+
+            self::writeAccumulatedCash($project, $totalYears);
+
+        } catch (\Exception $exception) {
+
+        }
 
         $options = [
             'filename' => substr(md5(uniqid(rand(1,6))), 0, 8)  . '.docx',
             'root' => 'proposal',
-            'type' => 'template',
+            'type' => 'theme',
             'access' => 'private'
         ];
 
@@ -222,6 +202,61 @@ class WordProcessor
             $this->templateProcessor->setValue('ano#'.($i +1), $i);
             $this->templateProcessor
                 ->setValue('valor#'.($i + 1), self::formatCurrency($project->getAccumulatedCash()[$i]));
+        }
+    }
+
+    /**
+     * @param $components
+     * @return mixed
+     */
+    private function getFamilyComponents($components)
+    {
+        $groupByFamily = function($acc, $component) {
+            $item = [
+                "description" => $component['description'],
+                "quantity" => $component['quantity']
+            ];
+
+            $acc = (is_array($acc)) ? $acc : [];
+
+            if (!array_key_exists($component['family'], $acc)) {
+                $acc[$component['family']] = [$item];
+            }
+            else {
+                $acc[$component['family']][] = $item;
+            }
+
+            return $acc;
+        };
+
+        $familiesOfComponents = array_reduce($components, $groupByFamily, []);
+
+        return $familiesOfComponents;
+    }
+
+    /**
+     * @param $familiesOfComponents
+     */
+    private function replaceComponents($familiesOfComponents)
+    {
+        $familiesTranslations = [
+            'module' => 'MÓDULOS',
+            'inverter' => 'INVERSORES',
+            'string_box' => 'STRING BOX',
+            'structure' => 'ESTRUTURAS',
+            'variety' => 'VARIEDADES'
+        ];
+
+        $currentLine = 1;
+
+        foreach ($familiesOfComponents as $keyFamily => $family) {
+            self::writeLineTitle($currentLine, $familiesTranslations[$keyFamily]);
+            $currentLine++;
+
+            foreach ($family as $component) {
+                self::writeLineComponent($currentLine, $component);
+                $currentLine++;
+            }
         }
     }
 }
