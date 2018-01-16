@@ -48,9 +48,10 @@ class OrderRanking
                 $deliveryInfo
             );
 
-            $amount = ($order->getPower() * $this->mapping[$order->getLevel()]);
+            $amount = ceil($order->getPower() * $this->mapping[$order->getLevel()]);
+            $target = $order->getAccount();
 
-            return $this->rankingGenerator()->create($order, $description, $amount);
+            return $this->rankingGenerator()->create($target, $description, $amount);
         }
 
         return;
