@@ -1060,6 +1060,19 @@ class DebugController extends AbstractController
     }
 
     /**
+     * @Route("/order_ranking", name="order_ranking")
+     */
+    public function testOrderRanking()
+    {
+        /** @var OrderInterface $order */
+        $order = $this->manager('order')->find(302);
+
+        $ranking = $this->orderRankingGenerator()->generate($order);
+
+        dump($ranking);die;
+    }
+
+    /**
      * @return \Sonata\ClassificationBundle\Model\ContextInterface
      */
     private function getMemberContext()
@@ -1073,5 +1086,13 @@ class DebugController extends AbstractController
     private function rankingGenerator()
     {
         return $this->container->get('ranking_generator');;
+    }
+
+    /**
+     * @return \AppBundle\Service\Business\RankingGenerator
+     */
+    private function orderRankingGenerator()
+    {
+        return $this->container->get('order_ranking');;
     }
 }
