@@ -146,8 +146,13 @@ class MetricsController extends AdminController
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($query));
 
-        $milestone = json_decode(curl_exec($curl), true);
-        $issues = $milestone['data']['repository']['milestone']['issues']['edges'][0]['node'];
+        $response = json_decode(curl_exec($curl), true);
+        $milestone = $response['data']['repository']['milestone'];
+        $issuesNode = $milestone['issues']['edges'];
+
+        $issues = array_map(function($issue) {
+            return $issue['node'];
+        }, $issuesNode);
 
         curl_close($curl);
 
