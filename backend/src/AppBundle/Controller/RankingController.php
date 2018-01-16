@@ -2,8 +2,11 @@
 
 namespace AppBundle\Controller;
 
+use AdminBundle\Form\Misc\RankingType;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
+use AppBundle\Entity\Misc\Ranking;
+use AppBundle\Service\Stock\Identity;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -16,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @Security("has_role('ROLE_OWNER') or has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_PLATFORM_MASTER')")
  *
  * @Route("/ranking")
- * @Breadcrumb("Ranking")
+ * @Breadcrumb("Pontuações")
  */
 class RankingController extends AbstractController
 {
@@ -25,11 +28,7 @@ class RankingController extends AbstractController
      */
     public function indexAction()
     {
-        //$families = Maker::getContextList();
-
-        return $this->render('ranking/index.html.twig', [
-          //  'families' => $families
-        ]);
+        return $this->render('ranking/index.html.twig');
     }
 
     /**
@@ -127,13 +126,32 @@ class RankingController extends AbstractController
     }
 
     /**
-     * @Route("/transaction/{id}/list", name="list_transactions_ranking")
+     * @Route("/transactions/{id}/list", name="list_transactions_ranking")
      */
     public function listTransactionAction(Request $request, Customer $account)
     {
-        return $this->render('ranking/transaction_content.html.twig',[
+        $target = Identity::create($account);
 
+        $manager = $this->manager('ranking');
+
+        $qb = $manager->getEntityManager()->createQueryBuilder();
+
+        $qb->select('r')
+            ->from(Ranking::class, 'r')
+            ->where('r.target = :target')
+            ->orderBy('r.createdAt', 'desc')
+            ->setParameter('target', $target);
+
+        $pagination = $this->getPaginator()->paginate(
+            $qb->getQuery(),
+            $request->query->getInt('page', 1), 10
+        );
+
+        return $this->render('ranking/transaction_content.html.twig',[
+            'pagination' => $pagination
         ]);
+
+
 
 //        $date = $request->query->get('date',null);
 //
@@ -149,25 +167,40 @@ class RankingController extends AbstractController
 //            $startAt = new \DateTime($formatDate($date[0]));
 //            $endAt = new \DateTime($formatDate($date[1]));
 //        }
-//
-//        $component = $this->manager($family)->find($id);
-//
-//        $products = $this->get('stock_converter')->transform([$component]);
-//
-//        $this->overrideGetFilters();
-//
-//        $stockQuery = $this->get('stock_query');
-//
+
+
+
 //        if ($startAt and $endAt)
 //            $stockQuery->between($startAt, $endAt);
-//
+
 //        $product = $stockQuery->product($products[0]);
 //
 //        $page = $request->query->getInt('page',1);
-//
-//        return $this->render('admin/stock/transaction_content.html.twig',[
-//            'pagination' => $product->pagination($page)
-//        ]);
+
+    }
+
+    /**
+     * @Route("/transactions/{id}/create", name="create_ranking")
+     */
+    public function transactionsAction(Request $request, Customer $account)
+    {
+        $form = $this->createForm(RankingType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+
+            $data = $form->getData();
+
+            $rankingGenerator = $this->get('ranking_generator');
+
+            $rankingGenerator->create($account, $data['description'], $data['amount']);
+
+            return $this->json([]);
+        }
+
+        return $this->render('ranking/form.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
