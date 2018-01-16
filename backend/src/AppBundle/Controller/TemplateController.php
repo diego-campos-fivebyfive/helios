@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Theme;
 use AppBundle\Entity\ThemeInterface;
@@ -20,13 +21,17 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
  */
 class TemplateController extends AbstractController
 {
+    private $defaultTheme = 'template_default.docx';
+
     /**
      * @Breadcrumb("Templates")
-     * @Route("/", name="template")
+     * @Route("/{project}/manage", name="template")
      */
-    public function indexAction()
+    public function indexAction(Project $project)
     {
-        return $this->render('projects/templates/index.html.twig');
+        return $this->render('projects/templates/index.html.twig', [
+            'project' => $project
+        ]);
     }
 
     /**
@@ -45,7 +50,7 @@ class TemplateController extends AbstractController
         $options = [
             'filename' => $filename,
             'root' => 'proposal',
-            'type' => 'template',
+            'type' => 'theme',
             'access' => 'private'
         ];
 
@@ -63,31 +68,37 @@ class TemplateController extends AbstractController
     }
 
     /**
-     * @Route("/templatesList", name="templates_list")
+     * @Route("/{project}/list", name="templates_list")
      */
-    public function templatesListAction()
+    public function templatesListAction(Project $project)
     {
         $themes = $this->manager('theme')->findBy([
             'accountId' => $this->account()->getId()
         ]);
 
         return $this->render('projects/templates/templates_list.html.twig', [
-            'themes' => $themes
+            'themes' => $themes,
+            'project' => $project,
+            'default' => $this->defaultTheme,
         ]);
     }
 
     /**
-     * @Route("/processor/{theme}/", name="template_processor")
+     * @Route("/{project}/processor/{theme}", name="template_processor")
      */
-    public function replaceTemplateAction(Theme $theme)
+    public function replaceTemplateAction(Project $project, $theme)
     {
-        /** @var ProjectInterface $project */
-        $project = $this->manager('project')->find(2253);
+        if($this->defaultTheme !== $theme){
+            /** @var Theme $theme */
+            $theme = $this->manager('theme')->find($theme);
+        }
+
+        $filename = $theme instanceof Theme ? $theme->getFilename() : $theme ;
 
         $options = array(
-            'filename' => $theme->getFilename(),
+            'filename' => $filename,
             'root' => 'proposal',
-            'type' => 'template',
+            'type' => 'theme',
             'access' => 'private'
         );
 
@@ -98,6 +109,7 @@ class TemplateController extends AbstractController
         $encodeTemplate = base64_encode($template);
 
         return $this->redirectToRoute('download_template', [
+            'project' => $project->getId(),
             'template' => $encodeTemplate
         ]);
     }
