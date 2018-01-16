@@ -26,6 +26,7 @@ else
   mkdir .uploads/order/payment
   mkdir .uploads/order/order
   mkdir .uploads/proposal/proposal
+  mkdir .uploads/proposal/theme
   mkdir .uploads/component/image
   mkdir .uploads/component/datasheet
 

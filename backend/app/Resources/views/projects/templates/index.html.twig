@@ -116,7 +116,7 @@
         TemplateHandler = {
             getTemplates: function () {
                $.ajax({
-                    url: '{{ path('templates_list') }}',
+                    url: '{{ path('templates_list', {project:project.id}) }}',
                     complete: function (xhr) {
                         $('#template-list').html(xhr.responseText);
                     }

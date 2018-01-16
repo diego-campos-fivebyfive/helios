@@ -283,9 +283,17 @@ services:
         class: AppBundle\Service\Order\OrderMailer
         arguments: ['@service_container']
 
+    order_ranking:
+        class: AppBundle\Service\Order\OrderRanking
+        arguments: ['@service_container']
+
     range_normalizer:
         class: AppBundle\Service\Pricing\RangeNormalizer
         arguments: ['@range_manager']
+
+    ranking_generator:
+        class: AppBundle\Service\Business\RankingGenerator
+        arguments: ['@service_container']
 
     memorial_cloner:
         class: AppBundle\Service\Pricing\MemorialCloner

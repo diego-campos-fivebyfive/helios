@@ -62,15 +62,11 @@ class MetricsController extends AdminController
 
         $modules = array_map(function($milestone) {
 
-            $title = str_replace(" ", "", $milestone['title']);
-            list($type, $name) = explode(":", $title);
-
             $created = $milestone['open_issues'] + $milestone['closed_issues'];
             $average = intval($milestone['closed_issues'] / $created * 100);
 
             return [
-                "type" => $type,
-                "name" => $name,
+                "title" => $milestone['title'],
                 "open" => $milestone['open_issues'],
                 "closed" => $milestone['closed_issues'],
                 "created" => $created,
