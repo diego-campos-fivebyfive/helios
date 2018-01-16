@@ -31,8 +31,7 @@
                 class="table table-striped table-hover">
                 <thead>
                   <tr>
-                    <th class="col-md-2">Categorias</th>
-                    <th class="col-md-3 text-center">Módulos</th>
+                    <th class="col-md-2">Título</th>
                     <th class="col-md-6 text-right">
                       Concluídas / Cadastradas (%)
                     </th>
@@ -40,8 +39,7 @@
                 </thead>
                 <tbody> 
                   <tr v-for="module in modules">
-                    <td>{{ module.type }}</td>
-                    <td class="text-center">{{ module.name }}</td>
+                    <td>{{ module.title }}</td>
                     <td class="text-right">
                       <progress-bar :data="module.average"></progress-bar>
                       <span class="metric-progress-info">
