@@ -6,12 +6,15 @@ use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 //use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 
 /**
+ * @Security("has_role('ROLE_OWNER') or has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_PLATFORM_MASTER')")
+ *
  * @Route("/ranking")
  * @Breadcrumb("Ranking")
  */
