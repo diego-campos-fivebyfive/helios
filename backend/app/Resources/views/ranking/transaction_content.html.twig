@@ -1,24 +1,24 @@
-{% set transactions = pagination.items %}
+{#{% set transactions = pagination.items %}#}
 
-{% for transaction in transactions %}
+{#{% for transaction in transactions %}#}
     <tr>
         <td>
-            {{ transaction.createdAt|date('d/m/Y H:i') }}
+            {#{{ transaction.createdAt|date('d/m/Y H:i') }}#}
         </td>
         <td>
-            {{ transaction.description }}
+            {#{{ transaction.description }}#}
         </td>
         <td>
-            {{ transaction.amount }}
+            {#{{ transaction.amount }}#}
         </td>
     </tr>
-{% endfor %}
+{#{% endfor %}#}
 
 <tr>
     <td colspan="3">
         <div class="row text-center">
             <div id="pagination_transaction" class="btn-group bt-xs">
-                {{ knp_pagination_render(pagination) }}
+                {#{{ knp_pagination_render(pagination) }}#}
             </div>
         </div>
     </td>
@@ -37,7 +37,7 @@
             url: url,
             method: 'get',
             complete: function (xhr) {
-                TransactionStock.transactionContent.html(xhr.responseText);
+                TransactionRanking.transactionContent.html(xhr.responseText);
             }
         });
     });
