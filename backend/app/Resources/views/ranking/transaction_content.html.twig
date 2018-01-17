@@ -13,10 +13,11 @@
         </td>
         <td class="text-center">
             <span class="btn-group">
-                <button class="btn btn-success" href="{{ path('transaction_edit', {id: transaction.id}) }}" id="edit-ranking" data-toggle="modal" data-target="#modal_transaction">
+                <button class="btn btn-success" data-url="{{ path('transaction_edit', {id: transaction.id}) }}" data-toggle="modal" data-target="#modal_transaction">
                     <i class="fa fa-pencil"></i>
                 </button>
-                <button class="btn btn-danger" data-toggle="modal" data-target="#modal_transaction">
+
+                <button class="btn btn-danger" data-delete="{{ route('delete_ranking', {id:transaction.id}) }}">
                     <i class="fa fa-trash"></i>
                 </button>
             </span>
@@ -52,7 +53,48 @@
         });
     });
 
-    $('#edit-ranking').on('click', function () {
-    })
+    $('[data-update]').on('click', function () {
+
+        alert('oi');
+    });
+
+    $(' [data-delete] ').on( 'click', function () {
+        var url = $(this).data('delete');
+
+        swal({
+            title: "Confirma exclusão desta pontuação?",
+            text: null,
+            type: "info",
+            showCancelButton: true,
+            cancelButtonText: "{{ 'Cancel'|trans }}",
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "{{ 'Confirm'|trans }}",
+            closeOnConfirm: false
+        }, function () {
+            $.ajax({
+                url: url,
+                method: 'delete',
+                complete: function (xhr) {
+                    if (200 == xhr.status) {
+                        swal("{{ 'Success'|trans }}", "Exclusão efetuada com sucesso!", "success");
+                        Ranking.reloadContent();
+                        window.setTimeout(function(){
+                            swal.close();
+                        }, 1000);
+                    } else {
+                        swal("{{ 'Error'|trans }}!", 'Falha ao excluir', "error");
+                    }
+                },
+                beforeSend: function () {
+                    swal({
+                        title: "Excluindo...",
+                        text: "Aguarde",
+                        type: "info",
+                        showConfirmButton: false
+                    });
+                }
+            });
+        });
+    });
 </script>
 
