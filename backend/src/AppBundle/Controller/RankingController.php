@@ -8,11 +8,10 @@ use AppBundle\Entity\Customer;
 use AppBundle\Entity\Misc\Ranking;
 use AppBundle\Service\Stock\Identity;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-
-//use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 
 /**
@@ -48,34 +47,6 @@ class RankingController extends AbstractController
                 'context' => $this->getAccountContext()
             ]);
 
-//        if(-1 != $state = $request->get('state', -1)){
-//            $qb->andWhere('a.state = :state');
-//            $qb->setParameter('state', $state);
-//        }
-//
-//        if(-1 != $bond = $request->get('bond', -1)){
-//            $qb->andWhere('a.agent = :bond');
-//            $qb->setParameter('bond', $bond);
-//        }
-//
-//        if(-1 != $status = $request->get('status', -1)){
-//            $qb->andWhere('a.status = :status');
-//            $qb->setParameter('status', $status);
-//        }
-//
-//        if(-1 != $level = $request->get('level', -1)) {
-//            $qb->andWhere('a.level = :level');
-//            $qb->setParameter('level', $level);
-//        }
-//
-//        $expanseStates = [];
-//        if ($this->member()->isPlatformExpanse()) {
-//
-//            $expanseStates = $this->member()->getAttributes()['states'];
-//
-//            $qb->andWhere($qb->expr()->in('a.state', $expanseStates));
-//        }
-
         $this->overrideGetFilters();
 
         $pagination = $paginator->paginate(
@@ -83,34 +54,7 @@ class RankingController extends AbstractController
             $request->query->getInt('page', 1), 10
         );
 
-//        /** @var MemberInterface $member */
-//        $members = $manager->findBy([
-//            'context' => MemberInterface::CONTEXT,
-//            'account' => $this->account()
-//        ]);
-//
-//        $membersSices = [];
-//        foreach ($members as $i => $member) {
-//            if($member->getUser()->isEnabled() && $member->isPlatformCommercial()) {
-//                $membersSices[$i] = $member;
-//            }
-//        }
-
-//        $levels = Memorial::getDefaultLevels();
-//
-//        unset($levels[Memorial::LEVEL_PROMOTIONAL], $levels[Memorial::LEVEL_FINAME]);
-//
-//        $states = $this->getStates($expanseStates);
-
         return $this->render('ranking/accounts_content.html.twig', array(
-//            'current_state' => $state,
-//            'current_status' => $status,
-//            'allStatus' =>Customer::getStatusList(),
-//            'current_level' => $level,
-//            'allLevels' => $levels,
-//            'current_bond' => $bond,
-//            'members' => $membersSices,
-//            'states' => $states,
             'pagination' => $pagination
         ));
     }
@@ -150,33 +94,6 @@ class RankingController extends AbstractController
         return $this->render('ranking/transaction_content.html.twig',[
             'pagination' => $pagination
         ]);
-
-
-
-//        $date = $request->query->get('date',null);
-//
-//        $startAt = null;
-//        $endAt = null;
-//
-//        $formatDate = function($date){
-//            return implode('-', array_reverse(explode('/', $date)));
-//        };
-//
-//        if ($date) {
-//            $date = explode(' - ',$date);
-//            $startAt = new \DateTime($formatDate($date[0]));
-//            $endAt = new \DateTime($formatDate($date[1]));
-//        }
-
-
-
-//        if ($startAt and $endAt)
-//            $stockQuery->between($startAt, $endAt);
-
-//        $product = $stockQuery->product($products[0]);
-//
-//        $page = $request->query->getInt('page',1);
-
     }
 
     /**
@@ -201,6 +118,20 @@ class RankingController extends AbstractController
         return $this->render('ranking/form.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/transaction/{id}/delete", name="delete_ranking")
+     *
+     * @Method("delete")
+     */
+    public function transactionDeleteAction(Ranking $ranking)
+    {
+        $manager = $this->manager('ranking');
+
+        $manager->delete($ranking);
+
+        return $this->json([]);
     }
 
     /**
