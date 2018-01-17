@@ -16,7 +16,7 @@ class InverterCombiner
         }
 
         $limit = AbstractConfig::$maxInverters;
-        $comb = 2;
+        $comb = 1 == count($inverters) ? 1 : 2;
         $cont = [];
         for ($j = $comb; $j <= $limit; $j++) {
 
@@ -35,6 +35,10 @@ class InverterCombiner
                     }
 
                     if ($result < $min) {
+                        break 2;
+                    }
+
+                    if(count($inverters) < 2){
                         break 2;
                     }
 
