@@ -1,3 +1,22 @@
+## 17/01 ##
+### REVISÃO TEMPLATES ###
+1. Coluna da Direita
+1.1 Organizar conforme o modelo fornecido no PDF.
+
+2. Coluna da direita
+2.1 Incluir texto "Visualizar Template" (remover ícone)
+2.2 Incluir texto "Gerar Proposta" (remover ícone)
+
+3. Abaixo da lista de tags
+3.1 Incluir o link "Ir para o editor de propostas antigo"
+
+4. No editor antigo
+4.1 Em cima, incluir a frase em um painel "danger"
+AVISO: Este modo de edição será descontinuado, recomendamos alternar para o novo método de geração de propostas
+Abaixo do aviso, centralizado, incluir um botão "Alternar para o novo método"
+
+5. Efetuar upload do novo modelo de template
+
 ## 15/01 ##
 ### 1 - ORÇAMENTOS . 1238 ###
 1. Liberar desconto para COMMERCIAL e EXPANSE no wizard
