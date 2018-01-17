@@ -101,7 +101,7 @@ class InverterLoader
                         ]);
                     }
 
-                    if (count($inverters) >= 2) {
+                    if (count($inverters) >= 2 || 0 == $i) {
                         $combine = true;
                         break;
                     }
@@ -111,14 +111,15 @@ class InverterLoader
                 $inverters[0]->quantity = 1;
             }
 
-            $forceNext = (!count($inverters) || (count($inverters) <= 1 && $attemptCycle > 0));
+            $forceNext = (!count($inverters) && $attemptCycle > 0);
 
-            if ($forceNext) {
+            if ($forceNext || !count($inverters)) {
                 $power += 0.2;
                 $increments += 1;
+                $forceNext = true;
             }
 
-            if ($combine) {
+            if ($combine && count($inverters)) {
                 $inverters = array_values($inverters);
                 if(!InverterCombiner::combine($inverters, $min)){
                     $defaults['errors'][] = 'exhausted_inverters';
