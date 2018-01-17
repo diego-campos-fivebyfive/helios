@@ -204,6 +204,26 @@ class RankingController extends AbstractController
     }
 
     /**
+     * @Route("transactions/{id}/edit", name="transaction_edit")
+     */
+    public function transactionEditAction(Request $request, Ranking $ranking)
+    {
+        $form = $this->createForm(RankingType::class, $ranking);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $this->manager('ranking')->save($ranking);
+
+            return $this->json([]);
+        }
+
+        return $this->render('ranking/form.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
      * @return \Sonata\ClassificationBundle\Model\ContextInterface
      */
     private function getAccountContext()
