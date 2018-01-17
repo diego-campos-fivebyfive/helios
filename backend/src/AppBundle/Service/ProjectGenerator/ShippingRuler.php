@@ -128,8 +128,8 @@ abstract class ShippingRuler
             $percentLevel = 200000;
         if ($rule['price'] <= 100000)
             $percentLevel = 100000;
-        if ($rule['price'] <= 60000)
-            $percentLevel = 60000;
+        //if ($rule['price'] <= 60000)
+            //$percentLevel = 60000;
         if ($rule['price'] <= 50000)
             $percentLevel = 50000;
 
