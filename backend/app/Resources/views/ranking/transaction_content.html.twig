@@ -11,11 +11,18 @@
         <td>
             {{ transaction.createdAt|date('d/m/Y H:i') }}
         </td>
+        <td class="text-center">
+            <span class="btn-group">
+                <button class="btn btn-danger" data-delete="{{ route('delete_ranking', {id:transaction.id}) }}">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </span>
+        </td>
     </tr>
 {% endfor %}
 
 <tr>
-    <td colspan="3">
+    <td colspan="4">
         <div class="row text-center">
             <div id="pagination_transaction" class="btn-group bt-xs">
                 {{ knp_pagination_render(pagination) }}
@@ -39,6 +46,45 @@
             complete: function (xhr) {
                 TransactionRanking.transactionContent.html(xhr.responseText);
             }
+        });
+    });
+
+    $(' [data-delete] ').on( 'click', function () {
+        var url = $(this).data('delete');
+
+        swal({
+            title: "Confirma exclusão desta pontuação?",
+            text: null,
+            type: "info",
+            showCancelButton: true,
+            cancelButtonText: "{{ 'Cancel'|trans }}",
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "{{ 'Confirm'|trans }}",
+            closeOnConfirm: false
+        }, function () {
+            $.ajax({
+                url: url,
+                method: 'delete',
+                complete: function (xhr) {
+                    if (200 == xhr.status) {
+                        swal("{{ 'Success'|trans }}", "Exclusão efetuada com sucesso!", "success");
+                        Ranking.reloadContent();
+                        window.setTimeout(function(){
+                            swal.close();
+                        }, 1000);
+                    } else {
+                        swal("{{ 'Error'|trans }}!", 'Falha ao excluir', "error");
+                    }
+                },
+                beforeSend: function () {
+                    swal({
+                        title: "Excluindo...",
+                        text: "Aguarde",
+                        type: "info",
+                        showConfirmButton: false
+                    });
+                }
+            });
         });
     });
 </script>
