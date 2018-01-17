@@ -59,7 +59,7 @@ class MetricsController extends AdminController
     /**
      * GET Github Milestones
      *
-     * @Route("/api/v1/metrics/milestones", name="metrics_milestones")
+     * @Route("/api/v1/milestones", name="metrics_milestones")
      * @Method("GET")
      */
     public function getMilestones()
@@ -78,22 +78,23 @@ class MetricsController extends AdminController
 
         curl_close($curl);
 
-        $modules = array_map(function($milestone) {
+        $milestones = array_map(function($milestone) {
 
-            $created = $milestone['open_issues'] + $milestone['closed_issues'];
-            $average = intval($milestone['closed_issues'] / $created * 100);
+            $total = $milestone['open_issues'] + $milestone['closed_issues'];
+            $average = intval($milestone['closed_issues'] / $total * 100);
 
             return [
+                "id" => $milestone['number'],
                 "title" => $milestone['title'],
                 "open" => $milestone['open_issues'],
                 "closed" => $milestone['closed_issues'],
-                "created" => $created,
+                "total" => $total,
                 "average" => $average
             ];
 
         }, $milestones);
 
-        usort($modules, function($a, $b) {
+        usort($milestones, function($a, $b) {
 
             $byTypes = strcmp($b["type"], $a["type"]);
 
@@ -108,13 +109,13 @@ class MetricsController extends AdminController
             return $byOpens;
         });
 
-        return $this->json($modules);
+        return $this->json($milestones);
     }
 
     /**
      * GET Github Issues by Milestone
      *
-     * @Route("/api/v1/metrics/milestones/{id}/issues", name="metrics_milestone")
+     * @Route("/api/v1/milestones/{id}/issues", name="metrics_milestone")
      * @Method("GET")
      */
     public function getMilestone($id)
