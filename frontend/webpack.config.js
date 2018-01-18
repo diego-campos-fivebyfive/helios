@@ -11,17 +11,7 @@ module.exports = {
         options: {
           loaders: {
             js: {
-              loader: 'babel-loader',
-              options: {
-                babelrc: false,
-                presets: [
-                  ['es2015', {
-                    targets: {
-                      browsers: ['> 1%', 'last 2 versions', 'not ie <= 8']
-                    }
-                  }]
-                ]
-              }
+              loader: 'babel-loader'
             },
             scss: 'vue-style-loader!css-loader!sass-loader'
           }
@@ -30,17 +20,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        exclude: /node_modules/,
-        options: {
-          babelrc: false,
-          presets: [
-            ['es2015', {
-              targets: {
-                browsers: ['> 1%', 'last 2 versions', 'not ie <= 8']
-              }
-            }]
-          ]
-        }
+        exclude: /node_modules/
       },
       {
         test: /\.css$/,
