@@ -14,7 +14,33 @@
     .metric-progress-info {
       margin-left: 10px;
     }
+    .milestone:hover {
+      cursor: pointer;
+    }
   </style>
+
+<div id="metric-milestones">
+  <div class="modal inmodal" ref="vuemodal" id="milestoneModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content animated bounceInRight">
+        <h2 class="text-center">{{ modalData.milestone }}</h2>
+        <div class="modal-body ibox-title">
+          <ul>
+            <li v-for="issue in modalData.issues">
+              <h4 class="">
+                {{ issue.title }}
+              </h4>
+            </li>
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">
+            Fechar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row" style="min-height: 100vh">
@@ -26,9 +52,7 @@
         <div class="ibox-content">
           <div class="tab-content">
             <div class="tab-pane active">
-              <table
-                id="table-metric-milestones"
-                class="table table-striped table-hover">
+              <table class="table table-striped table-hover">
                 <thead>
                   <tr>
                     <th class="col-md-4">Título</th>
@@ -37,10 +61,10 @@
                     </th>
                   </tr>
                 </thead>
-                <tbody> 
-                  <tr
-                    v-for="milestone in milestones"
-                    v-on:click="getIssues(milestone)">
+                <tbody>
+                  <tr class="milestone"
+                    v-for="milestone in milestones" @click="getIssues(milestone)"
+                    data-toggle="modal" data-target="#milestoneModal">
                     <td>{{ milestone.title }}</td>
                     <td class="text-right">
                       <progress-bar :data="milestone.average"></progress-bar>
@@ -62,6 +86,8 @@
       </div>
     </div>
   </div>
+</div>
+
   <script>
     Vue.component('progress-bar', {
       props: ['data'],
@@ -94,21 +120,34 @@
     const uri = 'http://localhost:8000/admin/metrics/api/v1';
 
     const vm = new Vue({
-      el: '#table-metric-milestones',
+      el: '#metric-milestones',
       data: {
-        milestones: []
+        milestones: [],
+        modalData: {
+            milestone: '',
+            issues: []
+        }
       },
       methods: {
-        getIssues: milestone => {
+        getIssues(milestone) {
           fetch(`${uri}/milestones/${milestone.id}/issues`)
             .then(response => response.json())
             .then(issues => {
               milestone['issues'] = issues
+              this.modalData.milestone = milestone.title
+              this.modalData.issues = issues
             })
           return milestone
+        },
+        clearModal() {
+          this.modalData.milestone = ''
+          this.modalData.issues = []
         }
+      },
+      mounted() {
+        $(this.$refs.vuemodal).on("hidden.bs.modal", this.clearModal)
       }
-    });
+    })
 
     fetch(`${uri}/milestones`)
       .then(response => response.json())
