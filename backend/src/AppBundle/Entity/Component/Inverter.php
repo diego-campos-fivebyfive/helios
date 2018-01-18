@@ -191,7 +191,7 @@ class Inverter implements InverterInterface, ComponentInterface
      *
      * @ORM\Column(type="integer", nullable=true)
      */
-    public $alternative;
+    private $alternative;
 
     /**
      * @inheritDoc

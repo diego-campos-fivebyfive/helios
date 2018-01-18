@@ -2,19 +2,32 @@
 
 namespace AppBundle\Form\Component;
 
+use AppBundle\Entity\Component\Maker;
 use AppBundle\Entity\Pricing\Memorial;
+use AppBundle\Service\Component\Query;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use AppBundle\Entity\Component\MakerInterface;
-use AppBundle\Entity\Component\Inverter;
 
 class InverterType extends AbstractType
 {
+    /**
+     * @var Query
+     */
+    private $query;
+
+    /**
+     * @param Query $query
+     */
+    public function __construct(Query $query)
+    {
+        $this->query = $query;
+    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -105,6 +118,11 @@ class InverterType extends AbstractType
             'multiple' => true,
             'required' => false
         ]);
+        $builder->add('alternative', ChoiceType::class, [
+            'multiple' => false,
+            'required' => false,
+            'choices' => $this->getInverters($options)
+        ]);
     }
 
     /**
@@ -118,4 +136,34 @@ class InverterType extends AbstractType
         ));
     }
 
+    /**
+     * @param $options
+     * @return array
+     */
+    private function getInverters($options)
+    {
+        $updateInverter = $options['data'];
+
+        $manager = $this->query->manager('inverter');
+
+        $qb = $manager->createQueryBuilder();
+
+        $qb->select('i.id, i.model, m.name')
+            ->join(Maker::class, 'm', 'WITH', 'i.maker = m.id')
+            ->orderBy('m.name');
+
+        if($updateInverter->getId())
+            $qb->where($qb->expr()->neq('i.id',$updateInverter->getId()));
+
+        $inverters = $qb->getQuery()->getResult();
+
+        $data = [];
+        foreach ($inverters as $inverter) {
+            if(!key_exists($inverter['name'], $data))
+                $data[$inverter['name']] = [];
+            $data[$inverter['name']][$inverter['id']] = $inverter['model'];
+        }
+
+        return $data;
+    }
 }
