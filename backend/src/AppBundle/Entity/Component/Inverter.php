@@ -187,6 +187,13 @@ class Inverter implements InverterInterface, ComponentInterface
     public $viewMode = false;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    public $alternative;
+
+    /**
      * @inheritDoc
      */
     public function __construct()
@@ -567,5 +574,23 @@ class Inverter implements InverterInterface, ComponentInterface
     public function getCompatibility()
     {
         return $this->compatibility;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setAlternative($id)
+    {
+        $this->alternative = $id;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getAlternative()
+    {
+        return $this->alternative;
     }
 }

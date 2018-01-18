@@ -297,4 +297,15 @@ interface InverterInterface
      * @return MakerInterface
      */
     public function getMaker();
+
+    /**
+     * @param $id
+     * @return InverterInterface
+     */
+    public function setAlternative($id);
+
+    /**
+     * @return int
+     */
+    public function getAlternative();
 }
