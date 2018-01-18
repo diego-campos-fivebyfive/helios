@@ -4,17 +4,17 @@
     project_create: 'scaling_',
     project_update: 'scaling_',
     project_financial: 'financial_',
-    project_proposal: 'proposal_'
+    project_template: 'template_'
 } %}
 
 {% set has_project = project.token is not null %}
 {% set is_manage = _route in ['project_create', 'project_update'] %}
 {% set is_analysis = 'project_financial' == _route %}
-{% set is_budget = 'project_proposal' == _route %}
+{% set is_budget = 'project_template' == _route %}
 
 {% set link_project = not is_manage and has_project ? path('project_update', {id:project.id}) : '#' %}
 {% set link_analysis = not is_analysis and has_project ?  path('project_financial', {id:project.id}) : '#'  %}
-{% set link_budget = not is_budget and has_project ?  path('project_proposal', {token:project.token}) : '#'  %}
+{% set link_budget = not is_budget and has_project ?  path('project_template', {id:project.id}) : '#'  %}
 
 {% set _source = attribute(sources, _route) %}
 
@@ -34,7 +34,7 @@
                 {{ 'project.financial'|trans|upper }}
             </a>
 
-            <a data-nav="proposal" data-source="{{ _source }}" class="btn {{ is_budget ? 'btn-primary' : 'btn-default' }} btn-proposal"
+            <a data-nav="template" data-source="{{ _source }}" class="btn {{ is_budget ? 'btn-primary' : 'btn-default' }} btn-proposal"
                data-href="{{ link_budget }}">
                 <i class="fa fa-file-text-o"></i>
                 {{ 'project.proposal'|trans|upper }}

@@ -42,26 +42,8 @@
     </div>
 
     <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="btn-group btn-group-sm btn-group-justified">
-                    <a data-step="project_update" class="btn btn-default nav-link">
-                        <i class="fa fa-sliders"></i>
-                        <span class="mobile-hidden"> DIMENSIONAMENTO </span>
-                    </a>
 
-                    <a data-step="project_financial" class="btn btn-default nav-link">
-                        <i class="fa fa-line-chart"></i>
-                        <span class="mobile-hidden"> ANÁLISE FINANCEIRA </span>
-                    </a>
-
-                    <a data-step="proposal_editor" class="btn btn-default nav-link active">
-                        <i class="fa fa-file-text-o"></i>
-                        <span class="mobile-hidden"> PROPOSTA </span>
-                    </a>
-                </div>
-            </div>
-        </div>
+        {% include view('project.navbar') %}
 
         <div class="row">
             <div class="col-md-12">
@@ -93,18 +75,28 @@
                                         <h5>DOCUMENTAÇÃO DAS TAGS</h5>
                                     </div>
                                     <div class="panel-body" id="tags-list">
+
                                     </div>
                                 </div>
 
+                            </div>
+                            <div class="col-md-5"></div>
+                            <div class="col-md-7">
+                                <a data-step="proposal_editor" href="{{ path('proposal_editor', {id:project.id}) }}">Ir para o editor de propostas antigo</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        {% include view('project.navbar') %}
+
     </div>
+    {% include view('helper.request') %}
 
     <script>
+
         var modalUpload = $('#modal_upload_template');
 
         modalUpload.on('show.bs.modal', function (event) {
@@ -136,11 +128,20 @@
             }
         };
 
+        var Project = {
+            id: {{ project.id }}
+        };
+
+        Navbar.project = Project;
+
         TemplateHandler.init();
+
+        Navbar.init();
 
         $('#modal-close').on('click', function () {
             TemplateHandler.getTemplates();
         });
+
 
     </script>
 {% endblock %}
