@@ -95,18 +95,7 @@ class MetricsController extends AdminController
         }, $milestones);
 
         usort($milestones, function($a, $b) {
-
-            $byTypes = strcmp($b["type"], $a["type"]);
-
-            if ($byTypes != 0) {
-
-              return $byTypes;
-
-            }
-
-            $byOpens = strcmp($b['open'], $a['open']);
-
-            return $byOpens;
+            return strcmp($b['open'], $a['open']);
         });
 
         return $this->json($milestones);
