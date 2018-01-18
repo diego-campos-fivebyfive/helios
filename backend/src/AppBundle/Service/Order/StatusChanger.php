@@ -97,8 +97,7 @@ class StatusChanger
      */
     private function finishStatusChanged(Order $order)
     {
-        // TODO: Liberar essa chamada depois de revisar e ajustar as regras no serviço de inventario
-        //$this->get('component_inventory')->update($order);
+        $this->get('component_inventory')->update($order);
 
         $this->updateExpireAt($order);
         $this->createTimeline($order);

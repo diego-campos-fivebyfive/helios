@@ -9,14 +9,10 @@
             {{ component.description }}
         </td>
         <td>
-            {% if component.orderInventory %}
-                    {{ component.orderInventory('array').pending }}
-            {% endif %}
+            {{ component.orderInventory(constant('AppBundle\\Entity\\Order\\Order::STATUS_PENDING')) }}
         </td>
         <td>
-            {% if component.orderInventory %}
-                    {{ component.orderInventory('array').validated }}
-            {% endif %}
+            {{ component.orderInventory(constant('AppBundle\\Entity\\Order\\Order::STATUS_VALIDATED')) }}
         </td>
         <td>
             {{ component.stock }}
