@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
- * @Route("/template")
+ * @Route("/project")
  */
 class TemplateController extends AbstractController
 {
@@ -25,10 +25,12 @@ class TemplateController extends AbstractController
 
     /**
      * @Breadcrumb("Templates")
-     * @Route("/{project}/manage", name="template")
+     * @Route("/{id}/manage", name="project_template")
      */
     public function indexAction(Project $project)
     {
+        $this->checkAccess($project);
+
         return $this->render('projects/templates/index.html.twig', [
             'project' => $project
         ]);
@@ -261,5 +263,14 @@ class TemplateController extends AbstractController
         );
 
         return $options;
+    }
+
+    /**
+     * Check all authorizations levels
+     * @param $target
+     */
+    private function checkAccess($target)
+    {
+        $this->get('app.project_authorization')->isAuthorized($target);
     }
 }
