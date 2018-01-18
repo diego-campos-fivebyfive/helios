@@ -15,7 +15,7 @@
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   $ui-space: 15px;
 
   .main {

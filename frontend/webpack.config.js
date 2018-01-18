@@ -17,6 +17,7 @@ module.exports = {
                 presets: ['es2015']
               }
             },
+            scss: 'vue-style-loader!css-loader!sass-loader'
           }
         }
       },
@@ -28,6 +29,21 @@ module.exports = {
           babelrc: false,
           presets: ['es2015']
         }
+      },
+      {
+        test: /\.css$/,
+        use: [
+          'vue-style-loader',
+          'css-loader'
+        ],
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+          'sass-loader'
+        ]
       }
     ]
   },
