@@ -1,0 +1,19 @@
+{
+  "name": "sices-frontend-client",
+  "description": "Sices Platform - Web Frontend Client",
+  "author": "Kolina Labs",
+  "private": true,
+  "scripts": {
+    "start-dev": "webpack-dev-server"
+  },
+  "devDependencies": {
+    "css-loader": "^0.28.9",
+    "vue-loader": "^13.7.0",
+    "vue-template-compiler": "^2.5.13",
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.11.0"
+  },
+  "dependencies": {
+    "vue": "^2.5.13"
+  }
+}
