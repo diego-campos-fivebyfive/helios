@@ -301,7 +301,7 @@ class DefaultsResolver
             'customer' => null,
             'stage' => null,
             'roof_type' => 'ROOF_CEMENT',
-            'source' => 'consumption',
+            'source' => 'power',
             'power' => 0,
             'consumption' => 0,
             'use_transformer' => true,

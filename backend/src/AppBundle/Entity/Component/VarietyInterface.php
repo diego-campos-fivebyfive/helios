@@ -23,6 +23,8 @@ interface VarietyInterface
     const TYPE_TRANSFORMER = 'transformer';
     const TYPE_MONITOR = 'monitor';
     const TYPE_FUSE = 'fuse';
+    const TYPE_STRING_BOX = 'string_box';
+    const TYPE_ABB_EXTRA = 'abb-extra';
 
     /**
      * @return int
