@@ -222,41 +222,41 @@ class TemplateController extends AbstractController
             'Dados do Cliente' => [
                 'itens' => [
                     ['tag' => '${ClienteNome}', 'description' =>'Nome do Cliente'],
-                    ['tag' => '${ClienteDocumento}', 'description' =>'Cpf do Cliente'],
-                    ['tag' => '${ClienteTelefone}', 'description' =>'Telefone'],
-                    ['tag' => '${ClienteEmail}', 'description' =>'E-mail']
+                    ['tag' => '${ClienteDocumento}', 'description' =>'CPF/CNPJ do Cliente'],
+                    ['tag' => '${ClienteTelefone}', 'description' =>'Telefone do Cliente'],
+                    ['tag' => '${ClienteEmail}', 'description' =>'E-mail do Cliente']
                 ]
             ],
             'Dados de Geracão' => [
                 'itens' => [
                     ['tag' => '${GeracaoAnual}', 'description' =>'Geração Anual'],
                     ['tag' => '${GeracaoMediaMensal}', 'description' =>'Geração Média Mensal'],
-                    ['tag' => '${mes}', 'description' =>'Mês referente a Geração'],
-                    ['tag' => '${geracao}', 'description' =>'Valor Gerado']
+                    ['tag' => '${mes}', 'description' =>'Mês referente a Geração (necessário inserir em tabela)'],
+                    ['tag' => '${geracao}', 'description' =>'kWh Gerado no mês (necessário inserir em tabela)']
                 ]
             ],
             'Análise Financeira' => [
                 'itens' => [
                     ['tag' => '${PropostaValor}', 'description' =>'Valor da Proposta'],
-                    ['tag' => '${TempoDeVida}', 'description' =>'Tempo de Vida'],
-                    ['tag' => '${Inflacao}', 'description' =>'Inflação'],
-                    ['tag' => '${PerdaEficiencia}', 'description' =>'Perda de Eficiência'],
+                    ['tag' => '${TempoDeVida}', 'description' =>'Tempo de Vida do projeto'],
+                    ['tag' => '${Inflacao}', 'description' =>'Inflação anual'],
+                    ['tag' => '${PerdaEficiencia}', 'description' =>'Perda de Eficiência ao longo da vida'],
                     ['tag' => '${CustoAnualOperacao}', 'description' =>'Custo Anual de Operacão'],
-                    ['tag' => '${PrecoKwhImpostos}', 'description' =>'Preco Kwh + Impostos'],
+                    ['tag' => '${PrecoKwhImpostos}', 'description' =>'Preço atual Kwh + Impostos'],
                     ['tag' => '${CaixaAcumulado}', 'description' =>'Caixa Acumulado'],
                     ['tag' => '${ValorPresenteLiquido}', 'description'  => 'Valor Presente Liquido'],
                     ['tag' => '${TaxaRetorno}', 'description' =>'Taxa de Retorno'],
                     ['tag' => '${PaybackSimples}', 'description' =>'Payback Simples'],
                     ['tag' => '${PaybackDescontado}', 'description' =>'Payback Descontado'],
-                    ['tag' => '${ano}', 'description' =>'Ano referente ao acumulo de caixa'],
-                    ['tag' => '${valor}', 'description' =>'Valor referente a cada ano do acumulo de caixa']
+                    ['tag' => '${ano}', 'description' =>'Ano do caixa acumulado (necessário inserir em tabela)'],
+                    ['tag' => '${valor}', 'description' =>'Valor anual do caixa acumulado (necessário inserir em tabela)']
                 ]
             ],
             'Equipamentos' => [
                 'itens' => [
-                    ['tag' => '${titulo}', 'description' =>'Nome da Familia do Equipamento'],
-                    ['tag' => '${descricao}', 'description' =>'Descrição do Equipamento'],
-                    ['tag' => '${quantidade}', 'description' =>'Quantidade de Produtos']
+                    ['tag' => '${titulo}', 'description' =>'Tipo do equipamento (necessário inserir em tabela)'],
+                    ['tag' => '${descricao}', 'description' =>'Descrição do Equipamento (necessário inserir em tabela)'],
+                    ['tag' => '${quantidade}', 'description' =>'Quantidade de Produtos (necessário inserir em tabela)']
                 ]
             ]
         ];
