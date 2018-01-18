@@ -685,7 +685,7 @@ class ProjectController extends AbstractController
                 $toFinancial();
                 break;
 
-            case 'proposal_editor':
+            case 'project_template':
                 $toFinancial();
                 $toProposal();
                 break;
