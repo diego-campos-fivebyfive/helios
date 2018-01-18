@@ -19,6 +19,6 @@
   $ui-space: 15px;
 
   .main {
-    padding: 0px $ui-space;
+    padding: 0 $ui-space;
   }
 </style>

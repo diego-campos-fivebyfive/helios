@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "start:dev": "NODE_ENV=development webpack-dev-server --hot",
-    "lint": "eslint --ext .js,.vue ./src"
+    "lint:css": "stylelint '**/*.vue' --syntax scss",
+    "lint:js": "eslint --ext .js,.vue ./src"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -20,6 +21,9 @@
     "eslint-plugin-vue": "^4.2.0",
     "node-sass": "^4.7.2",
     "sass-loader": "^6.0.6",
+    "stylelint": "^8.4.0",
+    "stylelint-config-standard": "^18.0.0",
+    "stylelint-processor-html": "^1.0.0",
     "vue-loader": "^13.7.0",
     "vue-style-loader": "^3.0.3",
     "vue-template-compiler": "^2.5.13",
