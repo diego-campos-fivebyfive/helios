@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Init from './components/Init.vue'
+import Init from './components/Init'
 
 export default {
   name: 'app',
