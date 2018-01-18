@@ -96,7 +96,7 @@ class Query
      * @param $family
      * @return object|\AppBundle\Manager\AbstractManager
      */
-    private function manager($family)
+    public function manager($family)
     {
         if(!array_key_exists($family, $this->managers))
             $this->managers[$family] = $this->container->get(sprintf('%s_manager', $family));
