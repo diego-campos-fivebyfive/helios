@@ -1,23 +1,21 @@
 <table class="table table-bordered table-hover">
     <thead>
     <tr>
-        <th class="col-md-2"><i class="fa fa-sort-desc"></i> Nro </th>
-        <th class="col-md-6"><i class="fa fa-sort-desc"></i> Nome </th>
-        <th class="col-md-3"><i class="fa fa-sort-desc"></i> Ações </th>
+        <th width="38%"><i class="fa fa-sort-desc"></i> Nome </th>
+        <th width="62%"><i class="fa fa-sort-desc"></i> Ações </th>
     </tr>
     </thead>
     <tbody>
 
     <tr class="success">
-        <td class="text-center"> # </td>
         <td> Template Padrão </td>
-        <td>
-            <div class="btn-group btn-group-justified">
+        <td class="text-center">
+            <div class="btn-group">
                 <a href="{{ path('view_theme', {theme: default}) }}" class="btn btn-info btn-sm span-oculted">
-                    <i class="fa fa-eye"> </i><span>Visualizar</span>
+                    <span>Visualizar Template</span>
                 </a>
                 <a href="{{ path('template_processor', {project: project.id, theme: default}) }}" class="btn btn-success btn-sm span-oculted">
-                    <i class="fa fa-cogs"> </i><span>Gerar</span>
+                    <span>Gerar Proposta</span>
                 </a>
             </div>
         </td>
@@ -26,20 +24,19 @@
 
     {% for theme in themes %}
         <tr>
-            <td class="text-center">{{ loop.index }}</td>
             <td>{{ theme.name }}</td>
-            <td>
-                <div class="btn-group btn-group-justified">
+            <td class="text-center">
+                <div class="btn-group">
                     <a data-delete="{{ path('delete_theme', {theme: theme.id}) }}" id="delete-theme" class="btn btn-danger btn-sm span-oculted">
-                        <i class="fa fa-trash"> </i><span>Excluir</span>
+                        <i class="fa fa-trash"> </i>
                     </a>
 
                     <a href="{{ path('view_theme', {theme: theme.id}) }}" class="btn btn-info btn-sm span-oculted">
-                        <i class="fa fa-eye"> </i><span>Visualizar</span>
+                        <span>Visualizar Template</span>
                     </a>
 
                     <a href="{{ path('template_processor', {project: project.id, theme: theme.id}) }}" class="btn btn-success btn-sm span-oculted">
-                        <i class="fa fa-cogs"> </i><span>Gerar</span>
+                        <span>Gerar Proposta</span>
                     </a>
                 </div>
             </td>
