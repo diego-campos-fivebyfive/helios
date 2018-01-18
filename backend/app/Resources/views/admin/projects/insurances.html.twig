@@ -9,8 +9,8 @@
                 complete: function (xhr) {
                     $('#insurances_list').html(xhr.responseText);
                     {% if isProject is defined %}
-                    Financial.get_taxes();
-                    Financial.force_calculations();
+                        Financial.get_taxes();
+                        Financial.force_calculations();
                     {% endif %}
                 }
             });
