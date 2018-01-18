@@ -14,7 +14,7 @@
                 <span class="mobile-hidden"> {{ 'project.financial'|trans|upper }} </span>
             </a>
 
-            <a data-step="proposal_editor" class="btn btn-default nav-link project_proposal {% if _step=='proposal_editor' %}active{% endif %}">
+            <a data-step="project_template" class="btn btn-default nav-link project_template {% if _step=='project_template' %}active{% endif %}">
                 <i class="fa fa-file-text-o"></i>
                 <span class="mobile-hidden"> {{ 'project.proposal'|trans|upper }} </span>
             </a>
@@ -39,7 +39,7 @@
                     if('all' != id) {
                         return $('.project_' + id);
                     }else{
-                        return $('.project_scaling, .project_financial, .project_proposal');
+                        return $('.project_scaling, .project_financial, .project_template');
                     }
                 },
                 init: function(){
