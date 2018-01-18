@@ -21,6 +21,7 @@ use AppBundle\Manager\OrderManager;
 use AppBundle\Model\KitPricing;
 use AppBundle\Service\Business\RankingGenerator;
 use AppBundle\Service\Mailer;
+use AppBundle\Service\Order\OrderFinder;
 use AppBundle\Service\ProjectGenerator\Checker\Checker;
 use AppBundle\Service\Stock\Identity;
 use AppBundle\Service\Stock\Operation;
@@ -45,6 +46,41 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
  */
 class DebugController extends AbstractController
 {
+    /**
+     * @Route("/fix-component-inventory")
+     */
+    public function fixComponentInventoryAction(Request $request)
+    {
+        /** @var OrderFinder $orderFinder */
+        $orderFinder = $this->get('order_finder');
+
+        /** @var \AppBundle\Service\Order\ComponentInventory $componentInventory */
+        $componentInventory = $this->get('component_inventory');
+
+        $statusAt = new \DateTime();
+
+        $qb = $orderFinder->queryBuilder();
+
+        $qb
+            ->andWhere('o.statusAt < :statusAt')
+            ->andWhere(
+                $qb->expr()->in('o.status', [Order::STATUS_PENDING, Order::STATUS_AVAILABLE])
+            )
+            ->setParameter('statusAt', $statusAt->format('Y-m-d H:i:s'))
+        ;
+
+        $orders = $qb->getQuery()->getResult();
+
+        /** @var Order $order */
+        foreach ($orders as $order){
+            // TODO: Esta funcionalidade deve ser liberada via terminal
+            //$componentInventory->update($order);
+        }
+
+        print_r(sprintf('%s orders normalized.', count($orders))); die;
+    }
+
+
     /**
      * @Route("/template/upload", name="template_upload")
      */
