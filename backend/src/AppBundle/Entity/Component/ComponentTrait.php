@@ -525,7 +525,7 @@ trait ComponentTrait
             return $inventory;
 
         if (array_key_exists($status, $inventory))
-            return $inventory[$status];
+            return (int) $inventory[$status];
 
         return 0;
     }
