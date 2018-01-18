@@ -77,17 +77,21 @@
                                             {{ form_row(form.model,{attr:{class:'form-control'}}) }}
                                         </div>
 
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-3">
                                             {{ form_label(form.connection_type, 'Tipo de Conexão') }}
                                             {{ form_widget(form.connection_type,{attr:{class:'form-control'}}) }}
                                         </div>
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-2">
                                             {{ form_label(form.position, 'Posição') }}
                                             {{ form_widget(form.position,{attr:{class:'form-control'}}) }}
                                         </div>
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-3">
                                             {{ form_label(form.minPowerSelection, 'Potência mínima para seleção') }}
                                             {{ form_widget(form.minPowerSelection,{attr:{class:'form-control'}}) }}
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            {{ form_label(form.alternative, 'Inversor alternativo') }}
+                                            {{ form_widget(form.alternative,{attr:{class:'form-control'}}) }}
                                         </div>
 
                                         <div class="form-group col-md-6">
@@ -254,6 +258,7 @@
     {% endif %}
 
     <script>
+        $('#inverter_alternative').chosen();
 
         var sanitize = function(element){
             function clear(v){ return v.replace(/\D+/g,''); }
