@@ -1,3 +1,9 @@
+## 18/01 ##
+### ALTERNATIVA PARA INVERSORES ###
+Este campo armazenará uma relação do inversor com outro inversor, que será utilizado caso o primeiro não esteja disponível.
+1. Mapear a propriedade/relacionamento
+2. Ajustar consulta em InverterLoader *
+
 ## 17/01 ##
 ### REVISÃO TEMPLATES ###
 1. Coluna da Direita
