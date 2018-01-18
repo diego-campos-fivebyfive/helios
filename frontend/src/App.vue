@@ -5,14 +5,14 @@
 </template>
 
 <script>
-import Init from './components/Init'
+  import Init from './components/Init'
 
-export default {
-  name: 'app',
-  components: {
-    Init
+  export default {
+    name: 'App',
+    components: {
+      Init
+    }
   }
-}
 </script>
 
 <style scoped>

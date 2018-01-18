@@ -5,13 +5,15 @@
 </template>
 
 <script>
-  const phrase = new Promise((resolve, reject) => resolve("Mocked Fetch Request"))
+  const phrase = new Promise(resolve => {
+    resolve('Mocked Fetch Request')
+  })
 
   export default {
     data: () => ({
       phrase: ''
     }),
-    mounted () {
+    mounted() {
       phrase.then(data => {
         this.phrase = data
       })
