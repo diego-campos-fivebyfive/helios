@@ -1,0 +1,27 @@
+{
+  "extends": [
+    "plugin:vue/essential",
+    "airbnb-base"
+  ],
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "parserOptions": {
+    "parser": "babel-eslint"
+  },
+  "plugins": [
+    "vue"
+  ],
+  "rules": {
+    "semi": ["error", "never"],
+    "max-len": ["error", 80],
+    "strict": ["error", "global"],
+    "comma-dangle": ["error", "never"],
+    "arrow-parens": ["error", "as-needed"],
+    "consistent-return": ["off", "always"],
+    "no-useless-escape": ["off", "always"],
+    "quote-props": ["error", "consistent-as-needed"]
+  }
+}
+

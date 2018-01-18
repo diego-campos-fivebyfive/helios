@@ -22,4 +22,3 @@ export default {
     padding: 0px $ui-space;
   }
 </style>
-
