@@ -133,10 +133,10 @@ interface StructureInterface
     /**
      * @return array
      */
-    public function getTypes();
+    public static function getTypes();
 
     /**
      * @return array
      */
-    public function getSubtypes();
+    public static function getSubtypes();
 }

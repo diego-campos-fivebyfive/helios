@@ -258,7 +258,6 @@
     {% endif %}
 
     <script>
-        $('#inverter_alternative').chosen();
 
         var sanitize = function(element){
             function clear(v){ return v.replace(/\D+/g,''); }
@@ -308,7 +307,7 @@
     </script>
 
     {% include view('helper.chosen') with({
-    element: '#inverter_maker',
+    element: '#inverter_maker, #inverter_alternative',
     path: path('maker_fast_create')
     }) %}
 
