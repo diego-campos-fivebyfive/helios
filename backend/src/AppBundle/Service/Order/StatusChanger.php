@@ -97,7 +97,7 @@ class StatusChanger
      */
     private function finishStatusChanged(Order $order)
     {
-        $this->get('component_inventory')->update($order);
+        /*$this->get('component_inventory')->update($order);*/
 
         $this->updateExpireAt($order);
         $this->createTimeline($order);
@@ -154,7 +154,7 @@ class StatusChanger
      */
     private function onChangeToAvailable(Order $order)
     {
-        $this->get('order_ranking')->generate($order);
+        /*$this->get('order_ranking')->generate($order);*/
     }
 
     /**

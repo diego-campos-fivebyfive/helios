@@ -221,14 +221,15 @@ class Variety implements VarietyInterface, ComponentInterface
      */
     public static function getTypes()
     {
-        return [
-            self::TYPE_STRING_BOX,
-            self::TYPE_ABB_EXTRA,
-            self::TYPE_CABLE,
-            self::TYPE_CONNECTOR,
-            self::TYPE_TRANSFORMER,
-            self::TYPE_MONITOR,
-            self::TYPE_FUSE
+        return  [
+            self::TYPE_STRING_BOX => 'StringBox',
+            self::TYPE_ABB_EXTRA => 'ABB Extra',
+            self::TYPE_CABLE => 'Cabo',
+            self::TYPE_CONNECTOR => 'Conector',
+            self::TYPE_TRANSFORMER => 'Transformador',
+            self::TYPE_MONITOR => 'Monitor',
+            self::TYPE_FUSE => 'Fusível'
         ];
+
     }
 }
