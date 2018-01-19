@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service\Business;
 
+use AppBundle\Entity\Misc\Ranking;
 use AppBundle\Entity\Misc\RankingInterface;
 use AppBundle\Service\Stock\Identity;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -72,5 +73,17 @@ class RankingGenerator
         if (is_object($target)) {
             return $target = Identity::create($target);
         }
+    }
+
+    public function total($target)
+    {
+        $rankings = $this->load($target);
+
+        $amount = null;
+        foreach ($rankings as $ranking) {
+            $amount += $ranking->getAmount();
+        }
+
+        return $amount;
     }
 }
