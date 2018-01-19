@@ -213,17 +213,4 @@ interface ComponentInterface
      * @return array
      */
     public function getGeneratorLevels();
-
-    /**
-     * @param $status
-     * @param $quantity
-     * @return ComponentInterface
-     */
-    public function setOrderInventory($status, $quantity);
-
-    /**
-     * @param $status
-     * @return array
-     */
-    public function getOrderInventory($status = null);
 }

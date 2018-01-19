@@ -138,20 +138,12 @@ trait ComponentTrait
     protected $generatorLevels;
 
     /**
-     * @var array
-     *
-     * @ORM\Column(name="order_inventory", type="json", nullable=true)
-     */
-    private $orderInventory;
-
-    /**
      * @inheritDoc
      */
     public function __construct()
     {
         $this->princingLevels = [];
         $this->generatorLevels = [];
-        $this->orderInventory = [];
     }
 
     /**
@@ -502,31 +494,5 @@ trait ComponentTrait
     public function getGeneratorLevels()
     {
         return $this->generatorLevels;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setOrderInventory($status, $quantity)
-    {
-        $this->orderInventory[$status] = $quantity;
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getOrderInventory($status = null)
-    {
-        $inventory = (array) $this->orderInventory;
-
-        if(is_null($status))
-            return $inventory;
-
-        if (array_key_exists($status, $inventory))
-            return (int) $inventory[$status];
-
-        return 0;
     }
 }
