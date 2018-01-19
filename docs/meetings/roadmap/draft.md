@@ -1,19 +1,19 @@
 ## 19/01 ##
 ### REVISAR REGRAS DE ORDERINVENTORY ###
 1. Quando status anterior é Pendente (PENDING), transição para:
-1.1 Cancelado (REJECTED) - Subtrai em Pendente.
-1.2 Validado (VALIDATED) - Subtrai em Pendente e soma em Validado.
-1.3 Editando (BUILDING) - Subtrai em Pendente.
+- 1.1 Cancelado (REJECTED) - Subtrai em Pendente.
+- 1.2 Validado (VALIDATED) - Subtrai em Pendente e soma em Validado.
+- 1.3 Editando (BUILDING) - Subtrai em Pendente.
 
 2. Quando status anterior é Validado (VALIDATED), transição para:
-2.1 Cancelado (REJECTED) - Subtrai em Validado.
-2.2 Pendente (PENDING) - Subtrai em Validado e soma em Pedente.
-2.3 Aprovado (APPROVED) - Subtrai em Validado.
-2.4 Editando (BUILDING) - Subrai em Validado.
+- 2.1 Cancelado (REJECTED) - Subtrai em Validado.
+- 2.2 Pendente (PENDING) - Subtrai em Validado e soma em Pedente.
+- 2.3 Aprovado (APPROVED) - Subtrai em Validado.
+- 2.4 Editando (BUILDING) - Subrai em Validado.
 
 3. Quando o status anterior é (Editando) BUILDING, transição para:
-3.1 Pendente (PENDING) - Soma em Pendente.
-3.2 Validado (VALIDATED) - Soma em Validado.
+- 3.1 Pendente (PENDING) - Soma em Pendente.
+- 3.2 Validado (VALIDATED) - Soma em Validado.
 
 ### RANKING ###
 1. | Adicionar filtro de texto na listagem de contas.
