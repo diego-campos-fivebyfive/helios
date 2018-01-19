@@ -9,10 +9,12 @@
             {{ component.description }}
         </td>
         <td>
-            {{ component.orderInventory(constant('AppBundle\\Entity\\Order\\Order::STATUS_PENDING')) }}
+            {{ inventory[constant('AppBundle\\Entity\\Order\\Order::STATUS_PENDING')][component.code] is defined ?
+            inventory[constant('AppBundle\\Entity\\Order\\Order::STATUS_PENDING')][component.code] : 0 }}
         </td>
         <td>
-            {{ component.orderInventory(constant('AppBundle\\Entity\\Order\\Order::STATUS_VALIDATED')) }}
+            {{ inventory[constant('AppBundle\\Entity\\Order\\Order::STATUS_VALIDATED')][component.code] is defined ?
+            inventory[constant('AppBundle\\Entity\\Order\\Order::STATUS_VALIDATED')][component.code] : 0 }}
         </td>
         <td>
             {{ component.stock }}

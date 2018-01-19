@@ -4,7 +4,7 @@ namespace AdminBundle\Controller;
 
 use AppBundle\Entity\Component\Maker;
 use AdminBundle\Form\Stock\TransactionType;
-use AppBundle\Entity\Component\Structure;
+use AppBundle\Entity\Order\OrderInterface;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -43,7 +43,8 @@ class StockController extends AbstractController
         ]);
 
         return $this->render('admin/stock/components_content.html.twig',[
-            'pagination' => $componentsPaginator
+            'pagination' => $componentsPaginator,
+            'inventory' => $this->getInventory()
         ]);
     }
 
@@ -128,5 +129,32 @@ class StockController extends AbstractController
         return $this->render('admin/stock/form.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @return array
+     */
+    private function getInventory()
+    {
+        $manager = $this->manager('order_element');
+
+        $qb = $manager->createQueryBuilder();
+
+        $qb->select('e.code, e.family, p.status, SUM(e.quantity) as quantity')
+            ->innerJoin('e.order', 'o')
+            ->innerJoin('o.parent', 'p')
+            ->groupBy('p.status, e.code')
+            ->where($qb->expr()->orX(
+                $qb->expr()->eq('p.status', OrderInterface::STATUS_PENDING),
+                $qb->expr()->eq('p.status', OrderInterface::STATUS_VALIDATED)
+            ));
+
+        $data = [];
+
+        foreach ($qb->getQuery()->getResult() as $item) {
+            $data[$item['status']][$item['code']] =  $item['quantity'];
+        }
+
+        return $data;
     }
 }
