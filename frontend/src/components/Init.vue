@@ -21,8 +21,11 @@
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+  @import "~styles/elements.scss";
+
   .phrase {
-    font-size: 0.95em;
+    @extend %e-title;
+    font-size: 1em;
   }
 </style>
