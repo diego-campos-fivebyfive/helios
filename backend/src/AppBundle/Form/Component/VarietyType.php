@@ -3,6 +3,7 @@
 namespace AppBundle\Form\Component;
 
 use AppBundle\Entity\Component\MakerInterface;
+use AppBundle\Entity\Component\Variety;
 use AppBundle\Entity\Pricing\Memorial;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -19,7 +20,12 @@ class VarietyType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('type', null, ['required' => false])
+            ->add('type', ChoiceType::class, [
+                'choices' => Variety::getTypes(),
+                'placeholder' => false,
+                'multiple' => false,
+                'required' => true
+            ])
             ->add('required', null, ['required' => false])
             ->add('subtype', null, ['required' => false])
             ->add('code', null, ['required' => true])
