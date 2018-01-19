@@ -33,7 +33,9 @@
     </div>
 
     <script>
+        {% if isPlatform %}
         $(' body ').toggleClass('mini-navbar');
+        {% endif %}
 
         Ranking = {
             transactionsBlock: $('#transactions_block'),

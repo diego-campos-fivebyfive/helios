@@ -1,4 +1,5 @@
 {% set transactions = pagination.items %}
+{% set isPlatform = app.user.isPlatform %}
 
 {% for transaction in transactions %}
     <tr>
@@ -11,6 +12,7 @@
         <td>
             {{ transaction.createdAt|date('d/m/Y H:i') }}
         </td>
+        {% if isPlatform %}
         <td class="text-center">
             <span class="btn-group">
                 <button class="btn btn-success" data-url="{{ path('transaction_edit', {id: transaction.id}) }}" data-toggle="modal" data-target="#modal_transaction">
@@ -22,11 +24,12 @@
                 </button>
             </span>
         </td>
+        {% endif %}
     </tr>
 {% endfor %}
 
 <tr>
-    <td colspan="4">
+    <td colspan="{{ isPlatform ? '4' : '3' }}">
         <div class="row text-center">
             <div id="pagination_transaction" class="btn-group bt-xs">
                 {{ knp_pagination_render(pagination) }}
