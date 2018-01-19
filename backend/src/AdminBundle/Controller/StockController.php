@@ -27,7 +27,8 @@ class StockController extends AbstractController
         $families = Maker::getContextList();
 
         return $this->render('admin/stock/index.html.twig', [
-            'families' => $families
+            'families' => $families,
+            'inventory' => $this->getInventory()
         ]);
     }
 
@@ -43,8 +44,7 @@ class StockController extends AbstractController
         ]);
 
         return $this->render('admin/stock/components_content.html.twig',[
-            'pagination' => $componentsPaginator,
-            'inventory' => $this->getInventory()
+            'pagination' => $componentsPaginator
         ]);
     }
 

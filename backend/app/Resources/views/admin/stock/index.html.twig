@@ -33,6 +33,7 @@
         $(' body ').toggleClass('mini-navbar');
 
         Stock = {
+            inventory: {{ inventory|json_encode|raw }},
             transactionsBlock: $('#transations_block'),
             loadTransaction: function (urlComponent) {
                 $.ajax({
@@ -45,6 +46,14 @@
             reloadContent: function () {
                 ComponentsStock.loadComponents();
                 TransactionStock.loadTransactions();
+            },
+            loadInventory: function () {
+                var components = $('[data-code]');
+
+                for (i = 0; i < components.length; i++) {
+                    $(components[i]).find('td.pending').html(Stock.inventory[1][$(components[i]).data('code')]);
+                    $(components[i]).find('td.validated').html(Stock.inventory[2][$(components[i]).data('code')]);
+                }
             }
         }
     </script>
