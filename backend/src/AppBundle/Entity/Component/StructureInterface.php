@@ -4,6 +4,28 @@ namespace AppBundle\Entity\Component;
 
 interface StructureInterface
 {
+    /* Types */
+    const TYPE_PROFILE = 'perfil';
+    const TYPE_JUNCTION = 'juncao';
+    const TYPE_TERMINAL = 'terminal';
+    const TYPE_FIXER = 'fixador';
+    const TYPE_BASE = 'base';
+
+    /* Subtypes */
+    const ST_ROMAN = 'roman';
+    const ST_INDUSTRIAL = 'industrial';
+    const ST_FINAL = 'final';
+    const ST_MIDDLE = 'intermediario';
+    const ST_SCREW = 'parafuso';
+    const ST_NUT = 'porca';
+    const ST_HOOK = 'gancho';
+    const ST_SCREW_STR = 'parafuso_estrutural';
+    const ST_TRIANGLE_V = 'triangulo_vertical';
+    const ST_TRIANGLE_H = 'triangulo_horizontal';
+    const ST_SCREW_AUTO = 'parafuso_autoperfurante';
+    const ST_TAPE = 'fita';
+    const ST_HALF_METER = 'meio_metro';
+    const ST_SPEEDCLIP = 'speedclip';
 
     /**
      * @return int
@@ -107,4 +129,14 @@ interface StructureInterface
      * @return MakerInterface
      */
     public function getMaker();
+
+    /**
+     * @return array
+     */
+    public function getTypes();
+
+    /**
+     * @return array
+     */
+    public function getSubtypes();
 }
