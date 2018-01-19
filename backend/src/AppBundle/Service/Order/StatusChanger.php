@@ -97,8 +97,6 @@ class StatusChanger
      */
     private function finishStatusChanged(Order $order)
     {
-        /*$this->get('component_inventory')->update($order);*/
-
         $this->updateExpireAt($order);
         $this->createTimeline($order);
         $this->sendEmail($order);

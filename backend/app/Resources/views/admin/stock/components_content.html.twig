@@ -1,18 +1,19 @@
 {% set components = pagination.items %}
 
 {% for component in components %}
-    <tr data-url-component="{{ route('transaction_stock', {id:component.id, family:component.family}) }}">
+    <tr data-url-component="{{ route('transaction_stock', {id:component.id, family:component.family}) }}"
+        data-code="{{ component.code }}">
         <td>
             {{ component.code }}
         </td>
         <td>
             {{ component.description }}
         </td>
-        <td>
-            {{ component.orderInventory(constant('AppBundle\\Entity\\Order\\Order::STATUS_PENDING')) }}
+        <td class="pending">
+            0
         </td>
-        <td>
-            {{ component.orderInventory(constant('AppBundle\\Entity\\Order\\Order::STATUS_VALIDATED')) }}
+        <td class="validated">
+            0
         </td>
         <td>
             {{ component.stock }}
@@ -53,4 +54,6 @@
         var urlComponent = $(this).data('url-component');
         Stock.loadTransaction(urlComponent);
     });
+
+    Stock.loadInventory();
 </script>
