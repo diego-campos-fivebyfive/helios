@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+    <router-view/>
     <Init/>
   </div>
 </template>
