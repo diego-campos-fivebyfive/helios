@@ -194,4 +194,41 @@ class Structure implements StructureInterface, ComponentInterface
     {
         return $this->size;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function getTypes()
+    {
+        return [
+            self::TYPE_PROFILE,
+            self::TYPE_JUNCTION,
+            self::TYPE_TERMINAL,
+            self::TYPE_FIXER,
+            self::TYPE_BASE
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getSubtypes()
+    {
+        return [
+            self::ST_ROMAN,
+            self::ST_INDUSTRIAL,
+            self::ST_FINAL,
+            self::ST_MIDDLE,
+            self::ST_SCREW,
+            self::ST_NUT,
+            self::ST_HOOK,
+            self::ST_SCREW_STR,
+            self::ST_TRIANGLE_V,
+            self::ST_TRIANGLE_H,
+            self::ST_SCREW_AUTO,
+            self::ST_TAPE,
+            self::ST_HALF_METER,
+            self::ST_SPEEDCLIP
+        ];
+    }
 }
