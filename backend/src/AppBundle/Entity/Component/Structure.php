@@ -198,37 +198,37 @@ class Structure implements StructureInterface, ComponentInterface
     /**
      * @inheritdoc
      */
-    public function getTypes()
+    public static function getTypes()
     {
         return [
-            self::TYPE_PROFILE,
-            self::TYPE_JUNCTION,
-            self::TYPE_TERMINAL,
-            self::TYPE_FIXER,
-            self::TYPE_BASE
+            self::TYPE_PROFILE => 'Perfil',
+            self::TYPE_JUNCTION => 'Junção',
+            self::TYPE_TERMINAL => 'Terminal',
+            self::TYPE_FIXER => 'Fixador',
+            self::TYPE_BASE => 'Base'
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function getSubtypes()
+    public static function getSubtypes()
     {
         return [
-            self::ST_ROMAN,
-            self::ST_INDUSTRIAL,
-            self::ST_FINAL,
-            self::ST_MIDDLE,
-            self::ST_SCREW,
-            self::ST_NUT,
-            self::ST_HOOK,
-            self::ST_SCREW_STR,
-            self::ST_TRIANGLE_V,
-            self::ST_TRIANGLE_H,
-            self::ST_SCREW_AUTO,
-            self::ST_TAPE,
-            self::ST_HALF_METER,
-            self::ST_SPEEDCLIP
+            self::ST_ROMAN => 'Roman',
+            self::ST_INDUSTRIAL => 'Industrial',
+            self::ST_FINAL => 'Final',
+            self::ST_MIDDLE => 'Intermediário',
+            self::ST_SCREW => 'Parafuso',
+            self::ST_NUT => 'Porca',
+            self::ST_HOOK => 'Gancho',
+            self::ST_SCREW_STR => 'Parafuso estrutural',
+            self::ST_TRIANGLE_V => 'Triangulo vertical',
+            self::ST_TRIANGLE_H => 'Triangulo horizontal',
+            self::ST_SCREW_AUTO => 'Parafuso autoperfurante',
+            self::ST_TAPE => 'Fita',
+            self::ST_HALF_METER => 'Meio metro',
+            self::ST_SPEEDCLIP => 'Speedclip'
         ];
     }
 }
