@@ -6,6 +6,7 @@ use AdminBundle\Form\Misc\RankingType;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\Misc\Ranking;
+use AppBundle\Service\Business\RankingGenerator;
 use AppBundle\Service\Stock\Identity;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -23,6 +24,11 @@ use Symfony\Component\HttpFoundation\Request;
 class RankingController extends AbstractController
 {
     /**
+     * @var array
+     */
+    private $likes = ['a.firstname', 'a.lastname', 'a.document', 'a.email'];
+
+    /**
      * @Route("/")
      */
     public function indexAction()
@@ -35,6 +41,8 @@ class RankingController extends AbstractController
      */
     public function accountsAction(Request $request)
     {
+        $filter = $request->get('filter');
+
         $paginator = $this->getPaginator();
 
         $manager = $this->manager('customer');
@@ -46,6 +54,16 @@ class RankingController extends AbstractController
             ->setParameters([
                 'context' => $this->getAccountContext()
             ]);
+
+        if($filter){
+
+            $expressions = [];
+            foreach ($this->likes as $field) {
+                $expressions[] = $qb->expr()->like($field, $qb->expr()->literal('%' . $filter . '%'));
+            }
+
+            $qb->andWhere($qb->expr()->orX()->addMultiple($expressions));
+        }
 
         $this->overrideGetFilters();
 
@@ -64,8 +82,11 @@ class RankingController extends AbstractController
      */
     public function transactionAction(Customer $account)
     {
+        $amount = $this->currentAmount($account);
+
         return $this->render('ranking/transaction.html.twig',[
-            'account' => $account
+            'account' => $account,
+            'amount' => $amount
         ]);
     }
 
@@ -152,6 +173,20 @@ class RankingController extends AbstractController
         $manager->delete($ranking);
 
         return $this->json([]);
+    }
+
+    private function currentAmount($account)
+    {
+        $rankingGenerator = $this->get('ranking_generator');
+
+        $transactions = $rankingGenerator->load($account);
+
+        $amount = null;
+        foreach ($transactions as $transaction) {
+            $amount += $transaction->getAmount();
+        }
+
+        return $amount;
     }
 
     /**
