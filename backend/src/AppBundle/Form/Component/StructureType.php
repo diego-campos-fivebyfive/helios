@@ -43,14 +43,22 @@ class StructureType extends AbstractType
         );
 
         $builder->add('code', null, ['required' => false])
-            ->add('type', null, ['required' => false])
-            ->add('subtype', null, ['required' => false])
             ->add('description', null, ['required' => false])
             ->add('size', null, ['required' => false])
             ->add('position', NumberType::class, [
                 'required' => false
             ])
             ->add('code', TextType::class);
+        $builder->add('type', ChoiceType::class, [
+            'required' => false,
+            'multiple' => false,
+            'choices' => Structure::getTypes()
+        ]);
+        $builder->add('subtype', ChoiceType::class, [
+            'required' => false,
+            'multiple' => false,
+            'choices' => Structure::getSubtypes()
+        ]);
         $builder->add('princingLevels', ChoiceType::class, [
             'choices' => Memorial::getDefaultLevels(),
             'multiple' => true,
