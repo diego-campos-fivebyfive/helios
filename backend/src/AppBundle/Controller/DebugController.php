@@ -1101,7 +1101,7 @@ class DebugController extends AbstractController
     public function testOrderRanking()
     {
         /** @var OrderInterface $order */
-        $order = $this->manager('order')->find(302);
+        $order = $this->manager('order')->find(480);
 
         $ranking = $this->orderRankingGenerator()->generate($order);
 
