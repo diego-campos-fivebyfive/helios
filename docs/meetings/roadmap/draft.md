@@ -1,3 +1,29 @@
+## 19/01 ##
+### REVISAR REGRAS DE ORDERINVENTORY ###
+1. Quando status anterior é Pendente (PENDING), transição para:
+1.1 Cancelado (REJECTED) - Subtrai em Pendente.
+1.2 Validado (VALIDATED) - Subtrai em Pendente e soma em Validado.
+1.3 Editando (BUILDING) - Subtrai em Pendente.
+
+2. Quando status anterior é Validado (VALIDATED), transição para:
+2.1 Cancelado (REJECTED) - Subtrai em Validado.
+2.2 Pendente (PENDING) - Subtrai em Validado e soma em Pedente.
+2.3 Aprovado (APPROVED) - Subtrai em Validado.
+2.4 Editando (BUILDING) - Subrai em Validado.
+
+3. Quando o status anterior é (Editando) BUILDING, transição para:
+3.1 Pendente (PENDING) - Soma em Pendente.
+3.2 Validado (VALIDATED) - Soma em Validado.
+
+### RANKING ###
+1. | Adicionar filtro de texto na listagem de contas.
+2. | Remover operações de edição/remoção (coluna de ações) na visão do integrador.
+3. | Possibilitar ao administrador, adicionar ponto "negativos".
+4. ! Embaixo do nome da conta, exibir "Saldo atual: n pontos" (Atualizar attributo da conta).
+5. | Sidebar esquerda (colapsar apenas para SICES), manter expandido para integrador.
+6. | Na visão Integrador, onde está "Pontuações", deixa "Saldo atual: n pontos".
+7. Menu (Aguardando definição)
+
 ## 18/01 ##
 ### ALTERNATIVA PARA INVERSORES ###
 Este campo armazenará uma relação do inversor com outro inversor, que será utilizado caso o primeiro não esteja disponível.
