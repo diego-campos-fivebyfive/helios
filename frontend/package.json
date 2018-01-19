@@ -4,6 +4,7 @@
   "author": "Kolina Labs",
   "private": true,
   "scripts": {
+    "build": "NODE_ENV=production webpack --progress --hide-modules",
     "start:dev": "NODE_ENV=development webpack-dev-server --hot",
     "lint:css": "stylelint '**/*.vue' --syntax scss",
     "lint:js": "eslint --ext .js,.vue ./src"
