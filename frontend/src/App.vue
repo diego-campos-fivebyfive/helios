@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+    <img src="@/assets/media/logo.png">
     <router-view/>
     <Init/>
   </div>
