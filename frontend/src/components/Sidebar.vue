@@ -1,18 +1,23 @@
 <template lang="pug">
   div.sidebar
-    icon(name='beer')
     img(src='@/assets/media/logo.png')
     span {{ user.name }}
     span {{ user.company }}
     nav.menu
       ul
         li(v-for='item in menu')
+          a(v-if='!item.dropdown')
+            icon(:name='item.icon')
+            | {{ item.name }}
           div(v-if='item.dropdown')
-            button {{ item.name }}
+            button
+              icon(:name='item.icon')
+              | {{ item.name }}
             ul
               li(v-for='subitem in item.subitems')
-                a {{ subitem.name }}
-          a(v-if='!item.dropdown') {{ item.name }}
+                a
+                  icon(:name='subitem.icon')
+                  | {{ subitem.name }}
 </template>
 
 <script>
@@ -27,20 +32,20 @@
     resolve([
       {
         name: 'Dashboard',
-        icon: 'fa-dashboard'
+        icon: 'dashboard'
       },
       {
         name: 'Componentes',
-        icon: 'fa-cube',
+        icon: 'cube',
         dropdown: true,
         subitems: [
           {
             name: 'Módulos',
-            icon: 'fa-th'
+            icon: 'th'
           },
           {
             name: 'Inversores',
-            icon: 'fa-exchange'
+            icon: 'exchange'
           }
         ]
       }
@@ -75,9 +80,13 @@
     a,
     button {
       color: $menu-color;
+      display: block;
       font-weight: 600;
+      text-align: left;
+      width: 100%;
 
       &:hover {
+        background-color: $menu-bgcolor_;
         color: $menu-color_;
       }
     }
