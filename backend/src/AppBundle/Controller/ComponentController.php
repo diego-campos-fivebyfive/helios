@@ -183,8 +183,32 @@ class ComponentController extends AbstractController
 
         return $this->render('inverter.relationship', [
             'modules' => $qb->getQuery()->getResult(),
-            'relationship' => $inverter->getModules()
+            'inverter' => $inverter
         ]);
+    }
+
+    /**
+     * @Security("has_role('ROLE_PLATFORM_MASTER')")
+     *
+     * @Route("/{id}/{module}/modules_association", name="modules_association")
+     */
+    public function modulesAssociationAction(Inverter $inverter, Module $module)
+    {
+        $modules = $inverter->getModules();
+
+        if (is_null($modules))
+            $modules = [];
+
+        if (in_array($module->getId(), $modules))
+            unset($modules[array_search($module->getId(), $modules)]);
+        else
+            array_push($modules, $module->getId());
+
+        $inverter->setModules($modules);
+
+        $this->manager('inverter')->save($inverter);
+
+        return $this->json([]);
     }
 
     /**

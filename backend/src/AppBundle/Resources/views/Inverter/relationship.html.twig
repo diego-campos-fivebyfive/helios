@@ -12,7 +12,7 @@
         <tr>
             <td>{{ module.model }}</td>
             <td>
-                <input data-module="{{ module.id }}" type="checkbox" {{ module.id in relationship ? 'checked="checked"' }}>
+                <input data-module="{{ path('modules_association', {type:'inverter', id:inverter.id, module:module.id}) }}" type="checkbox" {{ module.id in inverter.modules ? 'checked="checked"' }}>
             </td>
         </tr>
         {% endfor %}
@@ -22,10 +22,27 @@
 
 <script>
     $('[data-module]').on('click', function () {
-        var msg = 'Módulo vinculado';
-        toastr.success(msg, '{{ 'Success'|trans }}', {
-            positionClass: 'toast-top-center',
-            progressBar: true
+        var el = $(this);
+        var url = el.data('module');
+        var checked = el.attr('checked');
+        var msg = '';
+
+        if(checked) {
+            msg = 'Módulo desvinculado';
+            el.removeAttr('checked');
+        } else {
+            msg = 'Módulo vinculado';
+            el.attr('checked','checked');
+        }
+
+        $.ajax({
+            url: url,
+            complete: function () {
+                toastr.success(msg, '{{ 'Success'|trans }}', {
+                    positionClass: 'toast-top-center',
+                    progressBar: true
+                });
+            }
         });
     })
 </script>
