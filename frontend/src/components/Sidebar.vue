@@ -1,5 +1,6 @@
 <template lang="pug">
   div.sidebar
+    icon(name='beer')
     img(src='@/assets/media/logo.png')
     span {{ user.name }}
     span {{ user.company }}

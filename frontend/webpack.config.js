@@ -24,7 +24,10 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
+        include: [
+          path.resolve('node_modules/vue-awesome')
+        ]
       },
       {
         test: /\.css$/,
