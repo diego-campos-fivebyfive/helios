@@ -24,10 +24,4 @@
     font-family: "open sans","Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 13px;
   }
-
-  $ui-space: 15px;
-
-  .main {
-    padding: 0 $ui-space;
-  }
 </style>

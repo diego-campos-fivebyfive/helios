@@ -6,18 +6,25 @@
     nav.menu
       ul
         li(v-for='item in menu')
-          a(v-if='!item.dropdown')
+          a(
+            :href='item.link',
+            v-if='!item.dropdown'
+            )
             icon(:name='item.icon')
             | {{ item.name }}
-          div(v-if='item.dropdown')
+            icon(class='arrow', name='angle-right')
+          div.active(v-if='item.dropdown')
             button
               icon(:name='item.icon')
               | {{ item.name }}
+              icon(v-if='item.open', class='arrow', name='angle-down')
+              icon(v-if='!item.open', class='arrow', name='angle-left')
             ul
               li(v-for='subitem in item.subitems')
-                a
+                a(:href='subitem.link')
                   icon(:name='subitem.icon')
                   | {{ subitem.name }}
+                  icon(class='arrow', name='angle-right')
 </template>
 
 <script>
@@ -32,6 +39,7 @@
     resolve([
       {
         name: 'Dashboard',
+        link: 'link1',
         icon: 'dashboard'
       },
       {
@@ -41,10 +49,12 @@
         subitems: [
           {
             name: 'Módulos',
+            link: 'sublink1',
             icon: 'th'
           },
           {
             name: 'Inversores',
+            link: 'sublink2',
             icon: 'exchange'
           }
         ]
@@ -69,30 +79,69 @@
 </script>
 
 <style lang="scss" scoped>
-  $menu-bgcolor: #080c17;
-  $menu-bgcolor_: #293846;
+  $menu-bgColor: #080c17;
+  $menu-bgColor_: #293846;
+  $menu-bColor_: #00a7ec;
   $menu-color: #a7b1c2;
   $menu-color_: #ffffff;
+  $sidebar-maxWidth: 220px;
+  $sidebar-padX: 25px;
+  $sidebar-padY: 15px;
+
+  .sidebar {
+    max-width: $sidebar-maxWidth;
+  }
 
   .menu {
-    background-color: $menu-bgcolor;
+    background-color: $menu-bgColor;
 
     a,
     button {
       color: $menu-color;
       display: block;
       font-weight: 600;
+      padding: $sidebar-padY $sidebar-padX/3 $sidebar-padY $sidebar-padX;
       text-align: left;
       width: 100%;
 
+      svg {
+        margin-right: 10px;
+        vertical-align: bottom;
+        width: 1rem;
+
+        &.arrow {
+          float: right;
+        }
+      }
+
       &:hover {
-        background-color: $menu-bgcolor_;
+        background-color: $menu-bgColor_;
         color: $menu-color_;
       }
     }
 
     ul {
       list-style: none;
+
+      ul {
+        padding-left: $sidebar-padX;
+
+        a {
+          padding-top: $sidebar-padY/2;
+          padding-bottom: $sidebar-padY/2;
+        }
+      }
+    }
+
+    .active {
+      border-left: 5px solid $menu-bColor_;
+      background-color: $menu-bgColor_;
+      color: $menu-color_;
+
+      > a,
+      > button {
+        color: $menu-color_;
+      }
     }
   }
 </style>
