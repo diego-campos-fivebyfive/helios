@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "build": "NODE_ENV=production webpack --progress --hide-modules",
+    "start": "npm run start:dev",
     "start:dev": "NODE_ENV=development webpack-dev-server --hot",
     "lint:style": "stylelint '**/*.vue' --syntax scss",
     "lint:script": "eslint --ext .js,.vue ./src"
