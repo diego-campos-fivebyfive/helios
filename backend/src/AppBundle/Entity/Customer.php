@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Misc\RankingInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\UserInterface as FOSUser;
@@ -66,6 +67,13 @@ class Customer extends AbstractCustomer
      * @ORM\Column(name="type", type="smallint", nullable=true)
      */
     private $type;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ranking", type="integer", nullable=true)
+     */
+    private $ranking;
 
     /**
      * @var boolean
@@ -1457,6 +1465,34 @@ class Customer extends AbstractCustomer
     public function setLevel($level)
     {
         $this->level = $level;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setRanking($ranking)
+    {
+        $this->ranking = $ranking;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getRanking()
+    {
+        return $this->ranking;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function addRanking($ranking)
+    {
+        $this->ranking += $ranking;
 
         return $this;
     }

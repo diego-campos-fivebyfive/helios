@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Misc\RankingInterface;
 use Kolina\CustomerBundle\Entity\CustomerInterface;
 
 /**
@@ -126,6 +127,23 @@ interface AccountInterface extends CustomerInterface
      * @return string
      */
     public function getLevel();
+
+    /**
+     * @param $ranking
+     * @return AccountInterface
+     */
+    public function setRanking($ranking);
+
+    /**
+     * @return int
+     */
+    public function getRanking();
+
+    /**
+     * @param $ranking
+     * @return mixed
+     */
+    public function addRanking($ranking);
 
     /**
      * @param $isquik_id

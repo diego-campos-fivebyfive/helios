@@ -2,12 +2,19 @@
 
 namespace AppBundle\Service\Order;
 
+use AppBundle\Entity\AccountInterface;
+use AppBundle\Entity\Customer;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Pricing\Memorial;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class OrderRanking
 {
+    /**
+     * @var Customer
+     */
+    private $manager;
+
     /**
      * @var ContainerInterface
      */
@@ -50,6 +57,15 @@ class OrderRanking
 
             $amount = ceil($order->getPower() * $this->mapping[$order->getLevel()]);
             $target = $order->getAccount();
+
+            $total = $this->rankingGenerator()->total($target);
+
+            $manager = $this->container->get('account_manager');
+
+            $account = $manager->find($target);
+            $account->setRanking($total);
+
+            $manager->save($account);
 
             return $this->rankingGenerator()->create($target, $description, $amount);
         }
