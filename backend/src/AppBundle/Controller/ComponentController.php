@@ -167,6 +167,32 @@ class ComponentController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/{module}/modules_association", name="modules_association")
+     */
+    public function modulesAssociationAction($type, $id, $module)
+    {
+        $component = $this->findComponent($type, $id);
+
+        $modules = $component->getModules();
+
+        if (in_array($module, $modules)){
+
+            $key = array_search($module, $modules);
+            unset($modules[$key]);
+
+        } else {
+            array_push($modules, $module);
+        }
+
+        $component->setModules($modules);
+
+        $this->manager($type)->save($component);
+
+        return $this->json([]);
+
+    }
+
+    /**
      * @param ModuleInterface|InverterInterface|object $component
      * @param Request $request
      * @return RedirectResponse
