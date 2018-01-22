@@ -1,7 +1,6 @@
-<template>
-  <div>
-    <q class="phrase">{{ phrase }}</q>
-  </div>
+<template lang="pug">
+  div
+    q.phrase {{ phrase }}
 </template>
 
 <script>

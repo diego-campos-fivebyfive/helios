@@ -1,9 +1,8 @@
-<template>
-  <div class="main">
-    <img src="@/assets/media/logo.png">
-    <router-view/>
-    <Init/>
-  </div>
+<template lang="pug">
+  .main
+    img(src='@/assets/media/logo.png')
+    router-view
+    Init
 </template>
 
 <script>
