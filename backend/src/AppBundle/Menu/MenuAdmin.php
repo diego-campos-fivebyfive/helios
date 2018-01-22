@@ -70,7 +70,7 @@ trait MenuAdmin
     {
         $menu->addChild('Fidelidade SICES', [
             'route' => 'ranking_index',
-            'extras' => ['icon' => self::icon('handshake')]
+            'extras' => ['icon' => self::icon('trophy')]
         ]);
     }
 
