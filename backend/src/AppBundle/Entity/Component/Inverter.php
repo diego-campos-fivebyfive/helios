@@ -167,6 +167,13 @@ class Inverter implements InverterInterface, ComponentInterface
     private $currentPrice;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(type="json", name="modules", nullable=true)
+     */
+    private $modules;
+
+    /**
      * @var float
      *
      * @ORM\Column(type="float", nullable=true)
@@ -593,4 +600,24 @@ class Inverter implements InverterInterface, ComponentInterface
     {
         return $this->alternative;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setModules($modules)
+    {
+        $this->modules = $modules;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getModules()
+    {
+        return $this->modules;
+    }
+
+
 }
