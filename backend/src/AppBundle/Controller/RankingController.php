@@ -113,7 +113,8 @@ class RankingController extends AbstractController
         );
 
         return $this->render('ranking/transaction_content.html.twig',[
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'account' => $account
         ]);
     }
 
