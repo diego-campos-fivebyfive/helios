@@ -22,6 +22,7 @@ trait MenuAdmin
 
         $config = [
             'Accounts' => [$master, $admin, $commercial, $financial, $afterSales, $expanse, $financing],
+            'Ranking' => '*',
             'Memorials' => [$master, $admin],
             'Orders' => '*',
             'Components' => [$master, $admin, $commercial, $expanse],
@@ -59,6 +60,17 @@ trait MenuAdmin
         $menu->addChild('Accounts', [
             'route' => 'account_index',
             'extras' => ['icon' => self::icon('accounts')]
+        ]);
+    }
+
+    /**
+     * @param ItemInterface $menu
+     */
+    private function addRanking(ItemInterface $menu)
+    {
+        $menu->addChild('Fidelidade SICES', [
+            'route' => 'ranking_index',
+            'extras' => ['icon' => self::icon('trophy')]
         ]);
     }
 
