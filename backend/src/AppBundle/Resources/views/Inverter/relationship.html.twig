@@ -1,0 +1,48 @@
+<div class="table-responsive">
+    <table class="table table-stripped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th colspan="2" class="text-center">
+                Módulos
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for module in modules %}
+        <tr>
+            <td>{{ module.model }}</td>
+            <td>
+                <input data-module="{{ path('modules_association', {type:'inverter', id:inverter.id, module:module.id}) }}" type="checkbox" {{ module.id in inverter.modules ? 'checked="checked"' }}>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $('[data-module]').on('click', function () {
+        var el = $(this);
+        var url = el.data('module');
+        var checked = el.attr('checked');
+        var msg = '';
+
+        if(checked) {
+            msg = 'Módulo desvinculado';
+            el.removeAttr('checked');
+        } else {
+            msg = 'Módulo vinculado';
+            el.attr('checked','checked');
+        }
+
+        $.ajax({
+            url: url,
+            complete: function () {
+                toastr.success(msg, '{{ 'Success'|trans }}', {
+                    positionClass: 'toast-top-center',
+                    progressBar: true
+                });
+            }
+        });
+    })
+</script>

@@ -2,7 +2,9 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Component\Inverter;
 use AppBundle\Entity\Component\InverterInterface;
+use AppBundle\Entity\Component\Module;
 use AppBundle\Entity\Component\ModuleInterface;
 use AppBundle\Form\Component\InverterType;
 use AppBundle\Form\Component\ModuleType;
@@ -167,29 +169,46 @@ class ComponentController extends AbstractController
     }
 
     /**
+     * @Security("has_role('ROLE_PLATFORM_MASTER')")
+     *
+     * @Route("/{id}/relationship/", name="component_relationship")
+     */
+    public function loadRelationshipAction(Inverter $inverter)
+    {
+        $manager = $this->manager('module');
+        $qb = $manager->getEntityManager()->createQueryBuilder();
+        $qb->select('m')
+            ->from(Module::class, 'm')
+            ->orderBy('m.model', 'asc');
+
+        return $this->render('inverter.relationship', [
+            'modules' => $qb->getQuery()->getResult(),
+            'inverter' => $inverter
+        ]);
+    }
+
+    /**
+     * @Security("has_role('ROLE_PLATFORM_MASTER')")
+     *
      * @Route("/{id}/{module}/modules_association", name="modules_association")
      */
-    public function modulesAssociationAction($type, $id, $module)
+    public function modulesAssociationAction(Inverter $inverter, Module $module)
     {
-        $component = $this->findComponent($type, $id);
+        $modules = $inverter->getModules();
 
-        $modules = $component->getModules();
+        if (is_null($modules))
+            $modules = [];
 
-        if (in_array($module, $modules)){
+        if (in_array($module->getId(), $modules))
+            unset($modules[array_search($module->getId(), $modules)]);
+        else
+            array_push($modules, $module->getId());
 
-            $key = array_search($module, $modules);
-            unset($modules[$key]);
+        $inverter->setModules($modules);
 
-        } else {
-            array_push($modules, $module);
-        }
-
-        $component->setModules($modules);
-
-        $this->manager($type)->save($component);
+        $this->manager('inverter')->save($inverter);
 
         return $this->json([]);
-
     }
 
     /**
