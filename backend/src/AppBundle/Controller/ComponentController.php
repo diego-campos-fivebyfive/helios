@@ -2,7 +2,9 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Component\Inverter;
 use AppBundle\Entity\Component\InverterInterface;
+use AppBundle\Entity\Component\Module;
 use AppBundle\Entity\Component\ModuleInterface;
 use AppBundle\Form\Component\InverterType;
 use AppBundle\Form\Component\ModuleType;
@@ -164,6 +166,25 @@ class ComponentController extends AbstractController
         $this->manager($type)->delete($component);
 
         return $this->json([]);
+    }
+
+    /**
+     * @Security("has_role('ROLE_PLATFORM_MASTER')")
+     *
+     * @Route("/{id}/relationship/", name="component_relationship")
+     */
+    public function loadRelationshipAction(Inverter $inverter)
+    {
+        $manager = $this->manager('module');
+        $qb = $manager->getEntityManager()->createQueryBuilder();
+        $qb->select('m')
+            ->from(Module::class, 'm')
+            ->orderBy('m.model', 'asc');
+
+        return $this->render('inverter.relationship', [
+            'modules' => $qb->getQuery()->getResult(),
+            'relationship' => $inverter->getModules()
+        ]);
     }
 
     /**
