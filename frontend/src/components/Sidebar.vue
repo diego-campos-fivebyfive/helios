@@ -1,9 +1,10 @@
 <template lang="pug">
   div.sidebar
-    img(src='@/assets/media/logo.png')
-    span {{ user.name }}
-    span {{ user.company }}
     nav.menu
+      header.header
+        img(src='@/assets/media/logo-small.png')
+        span.title {{ user.name }}
+        span {{ user.company }}
       ul
         li(v-for='item in menu')
           a(
@@ -90,6 +91,22 @@
 
   .sidebar {
     max-width: $sidebar-maxWidth;
+  }
+
+  .header {
+    background: url('~@/assets/media/logo-cover.png');
+    color: #ffffff;
+    text-align: center;
+    padding: $sidebar-padY/2 $sidebar-padX;
+
+    .title {
+      font-weight: 600;
+    }
+
+    span {
+      display: block;
+      padding: 2px;
+    }
   }
 
   .menu {
