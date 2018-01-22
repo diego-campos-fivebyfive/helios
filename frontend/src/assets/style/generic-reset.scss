@@ -1,0 +1,51 @@
+/*! Resets CSS Kolinalabs v1.0.0 */
+
+body,
+h1, h2, h3, h4, h5, h6,
+p, blockquote, pre,
+ol, ul,
+form, fieldset, legend,
+figure, img,
+table, th, td, caption,
+hr {
+  margin: 0;
+  padding: 0;
+}
+
+fieldset,
+img {
+  border: none;
+  outline: none;
+}
+
+a,
+input[type=button] {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+button {
+  font-family: inherit;
+  padding: 0;
+}
+
+input[type="button"], 
+input[type="submit"], 
+input[type="reset"],
+input[type="file"]::-webkit-file-upload-button {
+  padding: 0;
+}
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}
