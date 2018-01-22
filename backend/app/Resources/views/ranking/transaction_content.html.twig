@@ -79,6 +79,7 @@
                         Ranking.reloadContent();
                         window.setTimeout(function(){
                             swal.close();
+                            Ranking.loadTransaction("{{ route('transaction_ranking', {id:account.id}) }}");
                         }, 1000);
                     } else {
                         swal("{{ 'Error'|trans }}!", 'Falha ao excluir', "error");

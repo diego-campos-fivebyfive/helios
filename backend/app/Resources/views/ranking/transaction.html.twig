@@ -109,7 +109,12 @@
                     }
                 });
                 {% endif %}
-            })
+            });
+
+            this.modalTransaction.on('hidden.bs.modal', function (event) {
+                event.preventDefault();
+                Ranking.loadTransaction("{{ route('transaction_ranking', {id:account.id}) }}");
+            });
         },
         {#datePicker: function (element) {#}
             {#element.daterangepicker({#}
