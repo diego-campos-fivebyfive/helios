@@ -1,3 +1,7 @@
+## 22/01 ##
+### RANKING ###
+1. Atualizar informação de pontuações em tempo real após operação de adição/remoção/edição.
+
 ## 19/01 ##
 ### REVISAR REGRAS DE ORDERINVENTORY ###
 1. Quando status anterior é Pendente (PENDING), transição para:
