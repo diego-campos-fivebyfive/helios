@@ -1,5 +1,6 @@
 {% set transactions = pagination.items %}
 {% set isPlatform = app.user.isPlatform %}
+{% set showActions = (app.user.isPlatformAdmin or app.user.isPlatformMaster) %}
 
 {% for transaction in transactions %}
     <tr>
@@ -12,7 +13,7 @@
         <td>
             {{ transaction.createdAt|date('d/m/Y H:i') }}
         </td>
-        {% if isPlatform %}
+        {% if showActions %}
         <td class="text-center">
             <span class="btn-group">
                 <button class="btn btn-success" data-url="{{ path('transaction_edit', {id: transaction.id}) }}" data-toggle="modal" data-target="#modal_transaction">
