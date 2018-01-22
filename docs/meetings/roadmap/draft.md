@@ -2,6 +2,19 @@
 ### RANKING ###
 1. Atualizar informação de pontuações em tempo real após operação de adição/remoção/edição.
 
+### MÓDULOS RELACIONADOS ###
+Funcionalidade que permite configurar nos inversores, os ids de módulos cujo inversor poderá ser elencado para o projeto.
+- Exemplo:
+Se no inversor A forem configurados os módulos 1, 2 e 3, ao gerar o sistema, o mecanismo deve analisar se o módulo é um dos configurados para, somente caso seja carregue tal inversor.
+Caso este campo não possua valores (nulo) deve elencar de forma geral.
+
+- 1 Mapear propriedade
+- 1.1 modules
+- 2 Configurar formulário.
+- 2.1 Com modal, lista os módulos e marca (checkbox)
+- 3 Integrar funcionalidade ao gerador.
+- 3.1 Adequar consultas internas do inverter loader.
+
 ## 19/01 ##
 ### REVISAR REGRAS DE ORDERINVENTORY ###
 1. Quando status anterior é Pendente (PENDING), transição para:
