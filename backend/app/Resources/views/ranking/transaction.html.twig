@@ -96,6 +96,9 @@
                 }
             });
         },
+        reloadBlock: function () {
+            Ranking.loadTransaction("{{ route('transaction_ranking', {id:account.id}) }}");
+        },
         formTransaction: function () {
             this.modalTransaction.on('show.bs.modal', function (event) {
                 {% if isPlatform %}
