@@ -1,11 +1,11 @@
 <template lang="pug">
   div
-    button.item
+    button.item(v-on:click='itemPress')
       icon.icon-ui(:name='item.icon')
       | {{ item.name }}
-      icon.icon-arrow(v-if='item.open', name='angle-down')
+      icon.icon-arrow(v-if='open', name='angle-down')
       icon.icon-arrow(v-else, name='angle-left')
-    ul
+    ul(v-show='open')
       li(v-for='subitem in item.subitems')
         Item(:item='subitem' :subitem='true')
 </template>
@@ -15,8 +15,16 @@
 
   export default {
     props: ['item'],
+    data: () => ({
+      open: false
+    }),
     components: {
       Item
+    },
+    methods: {
+      itemPress() {
+        this.open = !this.open
+      }
     }
   }
 </script>
@@ -51,5 +59,6 @@
 
   ul {
     list-style: none;
+    padding-bottom: $ui-space-y/2;
   }
 </style>

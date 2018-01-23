@@ -39,6 +39,14 @@ button {
   padding: 0;
 }
 
+a,
+button {
+
+  &:focus {
+    outline: none;
+  }
+}
+
 input[type="button"], 
 input[type="submit"], 
 input[type="reset"],

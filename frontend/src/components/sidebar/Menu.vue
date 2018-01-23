@@ -32,6 +32,23 @@
             icon: 'exchange'
           }
         ]
+      },
+      {
+        name: 'Configurações',
+        icon: 'cube',
+        dropdown: true,
+        subitems: [
+          {
+            name: 'Dados da Empresa',
+            link: 'sublink1',
+            icon: 'th'
+          },
+          {
+            name: 'Parâmetros',
+            link: 'sublink2',
+            icon: 'exchange'
+          }
+        ]
       }
     ])
   })
