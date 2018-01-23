@@ -2,7 +2,9 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Component\Inverter;
 use AppBundle\Entity\Component\InverterInterface;
+use AppBundle\Entity\Component\Module;
 use AppBundle\Entity\Component\ModuleInterface;
 use AppBundle\Form\Component\InverterType;
 use AppBundle\Form\Component\ModuleType;
@@ -162,6 +164,49 @@ class ComponentController extends AbstractController
         if(is_file($dataSheet)) unlink($dataSheet);
 
         $this->manager($type)->delete($component);
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Security("has_role('ROLE_PLATFORM_MASTER')")
+     *
+     * @Route("/{id}/relationship/", name="component_relationship")
+     */
+    public function loadRelationshipAction(Inverter $inverter)
+    {
+        $manager = $this->manager('module');
+        $qb = $manager->getEntityManager()->createQueryBuilder();
+        $qb->select('m')
+            ->from(Module::class, 'm')
+            ->orderBy('m.model', 'asc');
+
+        return $this->render('inverter.relationship', [
+            'modules' => $qb->getQuery()->getResult(),
+            'inverter' => $inverter
+        ]);
+    }
+
+    /**
+     * @Security("has_role('ROLE_PLATFORM_MASTER')")
+     *
+     * @Route("/{id}/{module}/modules_association", name="modules_association")
+     */
+    public function modulesAssociationAction(Inverter $inverter, Module $module)
+    {
+        $modules = $inverter->getModules();
+
+        if (is_null($modules))
+            $modules = [];
+
+        if (in_array($module->getId(), $modules))
+            unset($modules[array_search($module->getId(), $modules)]);
+        else
+            array_push($modules, $module->getId());
+
+        $inverter->setModules($modules);
+
+        $this->manager('inverter')->save($inverter);
 
         return $this->json([]);
     }

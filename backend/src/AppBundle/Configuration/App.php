@@ -54,6 +54,7 @@ class App
             'summary' => 'fa fa-list-alt',
             'sun' => 'fa fa-sun-o',
             'tasks' => 'fa fa-check-square',
+            'trophy' => 'fa fa-trophy',
             'unpublished' => 'fa fa-ban',
             'users' => 'fa fa-users',
             'signature' => 'fa fa-credit-card',

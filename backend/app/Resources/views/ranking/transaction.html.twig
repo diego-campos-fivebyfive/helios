@@ -20,6 +20,7 @@
 </div>
 
 {% set isPlatform = app.user.isPlatform %}
+{% set showActions = (app.user.isPlatformAdmin or app.user.isPlatformMaster) %}
 
 <table id="table_transaction" data-transactions="{{ route('list_transactions_ranking', {id:account.id}) }}" class="table table-bordered">
     <thead>
@@ -28,11 +29,8 @@
             <h2 class="text-center">
                 {% if isPlatform %}
                     {{ account.lastname }} <br>
-                    Saldo atual: <strong>{{ amount }} Pontos</strong>
-                {% else %}
-                    Saldo atual: <strong>{{ amount }} Pontos</strong>
                 {% endif %}
-
+                Saldo atual: <strong>{{ amount ? amount : 0 }} Pontos</strong>
             </h2>
 
             {#<form id="transactions_filter" action="{{ route('list_transactions_ranking', {id:component.id, family:component.family}) }}">#}
@@ -66,7 +64,7 @@
         <th class="col-md-3">
             Data
         </th>
-        {% if isPlatform %}
+        {% if showActions %}
         <th>
             <button class="btn btn-success pull-right" data-url="{{ path('create_ranking', {id:account.id}) }}" data-toggle="modal" data-target="#modal_transaction">
                 <i class="fa fa-plus-square"></i> Pontuação
@@ -98,6 +96,9 @@
                 }
             });
         },
+        reloadBlock: function () {
+            Ranking.loadTransaction("{{ route('transaction_ranking', {id:account.id}) }}");
+        },
         formTransaction: function () {
             this.modalTransaction.on('show.bs.modal', function (event) {
                 {% if isPlatform %}
@@ -111,7 +112,12 @@
                     }
                 });
                 {% endif %}
-            })
+            });
+
+            this.modalTransaction.on('hidden.bs.modal', function (event) {
+                event.preventDefault();
+                Ranking.loadTransaction("{{ route('transaction_ranking', {id:account.id}) }}");
+            });
         },
         {#datePicker: function (element) {#}
             {#element.daterangepicker({#}

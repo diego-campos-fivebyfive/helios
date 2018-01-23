@@ -16,8 +16,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 
 /**
- * @Security("has_role('ROLE_OWNER') or has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_PLATFORM_MASTER')")
- *
  * @Route("/ranking")
  * @Breadcrumb("Pontuações")
  */
@@ -29,7 +27,7 @@ class RankingController extends AbstractController
     private $likes = ['a.firstname', 'a.lastname', 'a.document', 'a.email'];
 
     /**
-     * @Route("/")
+     * @Route("/", name="ranking_index")
      */
     public function indexAction()
     {
@@ -113,11 +111,14 @@ class RankingController extends AbstractController
         );
 
         return $this->render('ranking/transaction_content.html.twig',[
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'account' => $account
         ]);
     }
 
     /**
+     * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_PLATFORM_MASTER')")
+     *
      * @Route("/transactions/{id}/create", name="create_ranking")
      */
     public function transactionsAction(Request $request, Customer $account)
@@ -142,6 +143,8 @@ class RankingController extends AbstractController
     }
 
     /**
+     * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_PLATFORM_MASTER')")
+     *
      * @Route("transactions/{id}/edit", name="transaction_edit")
      */
     public function transactionEditAction(Request $request, Ranking $ranking)
@@ -162,6 +165,8 @@ class RankingController extends AbstractController
     }
 
     /**
+     * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_PLATFORM_MASTER')")
+     *
      * @Route("/transaction/{id}/delete", name="delete_ranking")
      *
      * @Method("delete")

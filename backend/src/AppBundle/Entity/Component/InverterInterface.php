@@ -308,4 +308,15 @@ interface InverterInterface
      * @return int
      */
     public function getAlternative();
+
+    /**
+     * @param $modules
+     * @return mixed
+     */
+    public function setModules($modules);
+
+    /**
+     * @return array
+     */
+    public function getModules();
 }
