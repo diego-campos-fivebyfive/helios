@@ -20,6 +20,9 @@
             vertical-align: middle;
             padding-right: 5px;
         }
+        .btn-relationship {
+            margin-top: 5px;
+        }
     </style>
 
     <div class="modal inmodal" id="modal_relationship" tabindex="-1" role="dialog" aria-hidden="true">
@@ -109,15 +112,17 @@
                                             {{ form_widget(form.alternative,{attr:{class:'form-control'}}) }}
                                         </div>
 
-                                        <div class="form-group col-md-12 text-center">
-                                            <button type="button" class="btn btn-default pull-right"
+                                        {% if inverter.id %}
+                                        <div class="form-group col-md-4">
+                                            <button type="button" class="btn btn-warning btn-block btn-relationship"
                                                     data-url="{{ path('component_relationship', {type:'inverter', id:inverter.id}) }}"
                                                     data-toggle="modal" data-target="#modal_relationship">
-                                                <i class="fa fa-exchange"></i> Módulos relacionados
+                                                <i class="fa fa-th"></i> Módulos relacionados
                                             </button>
                                         </div>
+                                        {% endif %}
 
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
                                             <label> Datasheet (PDF) </label>
                                             <input type="file" name="dataSheet" accept="application/pdf">
                                             {% if inverter.datasheet %}
@@ -127,7 +132,7 @@
                                             {% endif %}
                                         </div>
 
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
                                             <label> Imagem (JPG) </label>
                                             <input type="file" name="image" accept="image/jpeg">
                                             {% if inverter.image %}
