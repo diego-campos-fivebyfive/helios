@@ -169,7 +169,7 @@ class Inverter implements InverterInterface, ComponentInterface
     /**
      * @var array
      *
-     * @ORM\Column(type="json", name="modules", nullable=true)
+     * @ORM\Column(type="array", name="modules", nullable=true)
      */
     private $modules;
 
