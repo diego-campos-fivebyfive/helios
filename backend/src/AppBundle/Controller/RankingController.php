@@ -35,12 +35,10 @@ class RankingController extends AbstractController
     }
 
     /**
-     * @Route("/accounts", name="accounts_ranking")
+     * @Route("/list_accounts", name="list_accounts")
      */
-    public function accountsAction(Request $request)
+    public function accountsListAction(Request $request)
     {
-        $filter = $request->get('filter');
-
         $paginator = $this->getPaginator();
 
         $manager = $this->manager('customer');
@@ -53,16 +51,6 @@ class RankingController extends AbstractController
                 'context' => $this->getAccountContext()
             ]);
 
-        if($filter){
-
-            $expressions = [];
-            foreach ($this->likes as $field) {
-                $expressions[] = $qb->expr()->like($field, $qb->expr()->literal('%' . $filter . '%'));
-            }
-
-            $qb->andWhere($qb->expr()->orX()->addMultiple($expressions));
-        }
-
         $this->overrideGetFilters();
 
         $pagination = $paginator->paginate(
@@ -70,7 +58,7 @@ class RankingController extends AbstractController
             $request->query->getInt('page', 1), 10
         );
 
-        return $this->render('ranking/accounts_content.html.twig', array(
+        return $this->render('ranking/account.html.twig', array(
             'pagination' => $pagination
         ));
     }
