@@ -136,6 +136,9 @@ class StockController extends AbstractController
      */
     private function getInventory()
     {
+        /** @var \AppBundle\Entity\Pricing\Memorial $memorial */
+        $memorial = $this->container->get('memorial_loader')->load();
+
         $manager = $this->manager('order_element');
 
         $qb = $manager->createQueryBuilder();
@@ -147,7 +150,10 @@ class StockController extends AbstractController
             ->where($qb->expr()->orX(
                 $qb->expr()->eq('p.status', OrderInterface::STATUS_PENDING),
                 $qb->expr()->eq('p.status', OrderInterface::STATUS_VALIDATED)
-            ));
+            ))
+            ->andWhere('p.createdAt >= :publishedAt')
+            ->setParameter('publishedAt', $memorial->getPublishedAt()->format('Y-m-d H:i'))
+        ;
 
         $data = [];
 
