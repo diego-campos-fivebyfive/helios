@@ -58,15 +58,6 @@ class OrderRanking
             $amount = ceil($order->getPower() * $this->mapping[$order->getLevel()]);
             $target = $order->getAccount();
 
-            $total = $this->rankingGenerator()->total($target);
-
-            $manager = $this->container->get('account_manager');
-
-            $account = $manager->find($target);
-            $account->setRanking($total);
-
-            $manager->save($account);
-
             return $this->rankingGenerator()->create($target, $description, $amount);
         }
 

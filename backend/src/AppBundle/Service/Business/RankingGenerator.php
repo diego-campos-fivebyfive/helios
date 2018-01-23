@@ -15,6 +15,11 @@ class RankingGenerator
     private $container;
 
     /**
+     * @var \Doctrine\ORM\EntityManagerInterface
+     */
+    private $manager;
+
+    /**
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -32,17 +37,19 @@ class RankingGenerator
     {
         $manager = $this->container->get('ranking_manager');
 
-        $target = $this->resolveTarget($target);
+        $targetMutate = $this->resolveTarget($target);
 
         /** @var RankingInterface $ranking */
         $ranking = $manager->create();
         $ranking
-            ->setTarget($target)
+            ->setTarget($targetMutate)
             ->setDescription($description)
             ->setAmount($amount)
         ;
 
         $manager->save($ranking);
+
+        $this->refreshRanking($target);
 
         return $ranking;
     }
@@ -71,11 +78,13 @@ class RankingGenerator
     private function resolveTarget($target)
     {
         if (is_object($target)) {
-            return $target = Identity::create($target);
+            $target = Identity::create($target);
         }
+
+        return $target;
     }
 
-    public function total($target)
+    private function total($target)
     {
         $rankings = $this->load($target);
 
@@ -85,5 +94,65 @@ class RankingGenerator
         }
 
         return $amount;
+    }
+
+    /**
+     * @param $target
+     */
+    public function refreshRanking($target)
+    {
+        $ranking = $this->total($target);
+
+        $entity = $this->reverseTarget($target);
+
+        if(method_exists($entity, 'setRanking')){
+
+            $entity->setRanking($ranking);
+
+            $manager = $this->getManager();
+
+            $manager->persist($entity);
+            $manager->flush();
+        }
+    }
+
+    /**
+     * @param $target
+     * @return object
+     */
+    private function reverseTarget($target)
+    {
+        if($target instanceof Ranking)
+            $target = $target->getTarget();
+
+        if(!is_object($target)){
+
+            list($class, $id) = explode('::', $target);
+
+            /** @var \Doctrine\Bundle\DoctrineBundle\Registry $doctrine */
+            $doctrine = $this->container->get('doctrine');
+
+            $manager = $doctrine->getManager();
+
+            $target = $manager->find($class, $id);
+        }
+
+        return $target;
+    }
+
+    /**
+     * @return \Doctrine\Common\Persistence\ObjectManager|\Doctrine\ORM\EntityManagerInterface|object
+     */
+    private function getManager()
+    {
+        if(!$this->manager){
+
+            /** @var \Doctrine\Bundle\DoctrineBundle\Registry $doctrine */
+            $doctrine = $this->container->get('doctrine');
+
+            $this->manager = $doctrine->getManager();
+        }
+
+        return $this->manager;
     }
 }
