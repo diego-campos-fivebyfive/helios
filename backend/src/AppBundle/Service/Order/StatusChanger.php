@@ -111,7 +111,7 @@ class StatusChanger
     {
         $order->setSendAt(new \DateTime('now'));
 
-        if(!$order->getChildrens()->isEmpty())
+        if(!$order->getChildrens()->isEmpty() && !count($order->getPaymentMethod('array')))
             $order->setMetadata($order->getChildrens()->first()->getMetadata());
 
         $this->get('order_reference')->generate($order);
@@ -152,7 +152,7 @@ class StatusChanger
      */
     private function onChangeToAvailable(Order $order)
     {
-        /*$this->get('order_ranking')->generate($order);*/
+        $this->get('order_ranking')->generate($order);
     }
 
     /**
