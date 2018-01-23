@@ -1,6 +1,6 @@
 <template lang="pug">
   div
-    button.item(v-on:click='itemPress')
+    button.item(type='button', v-on:click='itemPress')
       icon.icon-ui(:name='item.icon')
       | {{ item.name }}
       icon.icon-arrow(v-if='open', name='angle-down')
