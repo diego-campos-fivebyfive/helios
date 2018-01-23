@@ -51,8 +51,10 @@
                 var components = $('[data-code]');
 
                 for (i = 0; i < components.length; i++) {
-                    $(components[i]).find('td.pending').html(Stock.inventory[1][$(components[i]).data('code')]);
-                    $(components[i]).find('td.validated').html(Stock.inventory[2][$(components[i]).data('code')]);
+                    if(Stock.inventory[1])
+                        $(components[i]).find('td.pending').html(Stock.inventory[1][$(components[i]).data('code')]);
+                    if(Stock.inventory[2])
+                        $(components[i]).find('td.validated').html(Stock.inventory[2][$(components[i]).data('code')]);
                 }
             }
         }
