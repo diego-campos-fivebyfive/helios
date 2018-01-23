@@ -12,7 +12,7 @@
  * - Generator\Common\Math::factorial()
  * - Generator\Common\Math::combination()
  * - Generator\Inverter\Helper::adjustPower()
- * -
+ * - Generator\Inverter\Helper::mpptOperations()
  */
 
 // TODO: Generator\Common\Math::factorial() - TEST OK
@@ -376,7 +376,7 @@ function inv_power_balance($all_inv, $desire_power){
 
 }
 
-// TODO: Generator\Inverter\Helper::mpptOperation() - WAITING
+// TODO: Generator\Inverter\Helper::mpptOperations() - TEST OK
 function inv_get_mppt_op ($all_inv){
 
     //$inv = $all_inv;

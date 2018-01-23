@@ -44,6 +44,7 @@ class HelperTest extends GeneratorTest
      * 11. Testar novamente.
      * 12. Caso o resultado do teste seja positivo, o processo está concluído
      * 13. Remover a função privada interna (Aqui foi mantido e comentado apenas para exemplo)
+     * 14. No arquivo de origem: Marcar a função com TEST OK e colocar seu nome na lista do topo
      */
     public function testMpptOperations()
     {
