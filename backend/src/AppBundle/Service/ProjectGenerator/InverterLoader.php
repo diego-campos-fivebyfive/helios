@@ -38,6 +38,7 @@ class InverterLoader
         $phaseVoltage = $defaults['voltage'];
         $power = (float) $defaults['power'];
         $maker = $defaults['inverter_maker'];
+        $module = $defaults['module'];
 
         $attempts = 1;
         $increments = 0;
@@ -60,7 +61,8 @@ class InverterLoader
                 'maker' => $maker,
                 'order' => 'asc',
                 'cache' => $this->cache['enabled'],
-                'power' => $power
+                'power' => $power,
+                'module' => $module
             ];
 
             if(!$config['cache']) {
@@ -229,6 +231,13 @@ class InverterLoader
                     $qb->expr()->lte('i.minPowerSelection', $config['power'])
                 )
             )
+            ->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->isNull('i.modules'),
+                    $qb->expr()->eq('i.modules', $qb->expr()->literal('a:0:{}')),
+                    $qb->expr()->like('i.modules', $qb->expr()->literal('%:'.$config['module'].';%'))
+                )
+            )
             ->orderBy('i.nominalPower', $config['order']);
 
         $parameters = [
@@ -311,6 +320,13 @@ class InverterLoader
                     $qb->expr()->lte('i.minPowerSelection', $config['power'])
                 )
             )
+            ->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->isNull('i.modules'),
+                    $qb->expr()->eq('i.modules', $qb->expr()->literal('a:0:{}')),
+                    $qb->expr()->like('i.modules', $qb->expr()->literal('%:'.$config['module'].';%'))
+                )
+            )
             ->orderBy('i.nominalPower', $config['order'])
         ;
 
@@ -361,6 +377,13 @@ class InverterLoader
                 $qb->expr()->orX(
                     $qb->expr()->isNull('i.minPowerSelection'),
                     $qb->expr()->lte('i.minPowerSelection', $config['power'])
+                )
+            )
+            ->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->isNull('i.modules'),
+                    $qb->expr()->eq('i.modules', $qb->expr()->literal('a:0:{}')),
+                    $qb->expr()->like('i.modules', $qb->expr()->literal('%:'.$config['module'].';%'))
                 )
             )
             ->orderBy('i.nominalPower', $config['order'])
