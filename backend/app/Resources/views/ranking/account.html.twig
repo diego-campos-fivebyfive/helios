@@ -1,0 +1,104 @@
+<style>
+    input[name="filter_value"] {
+        width: 250px !important;
+    }
+    .table-accounts a[title] {
+        color: #676a6c;
+        text-decoration: none;
+    }
+</style>
+<table class="table table-bordered">
+    <thead>
+        <tr class="m-table-header">
+            <th colspan="4">
+                <h2 class="text-center">Contas</h2>
+                {{ knp_pagination_filter(pagination, {'a.lastname, a.firstname, a.document, a.email':''}) }}
+            </th>
+        </tr>
+        <tr class="m-table-header table-accounts">
+            <th width="30%">
+                Nome Fantasia
+            </th>
+            <th width="25%"> CNPJ </th>
+            <th width="25%"> E-mail </th>
+            <th width="20%" {% if pagination.isSorted('a.ranking') %} class="sorted" {%  endif %}>
+                <i {% if pagination.isSorted('a.ranking') %} class="fa fa-sort-numeric-{{ pagination.direction}}"
+                {% else %} class="fa fa-sort" {% endif %}></i>
+                {{ knp_pagination_sortable(pagination, 'Pontos', 'a.ranking') }} </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for account in pagination.items %}
+        <tr data-url-account="{{ route('transaction_ranking', {id:account.id}) }}">
+            <td><small>{{ account.lastname }}</small></td>
+            <td><small>{{ account.document }}</small></td>
+            <td><small>{{ account.email }}</small></td>
+            <td><small>{{ account.ranking }}</small></td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td class="text-center" colspan="4">
+                <div class="row text-center">
+                    <div id="pagination_accounts_list" class="btn-group bt-xs">
+                        {{ knp_pagination_render(pagination) }}
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<script>
+
+    var form = $('#form_filtration');
+
+    form.on('submit', function (event) {
+        event.preventDefault();
+        $.ajax({
+            url: form.attr('action'),
+            method: 'get',
+            data: form.serialize(),
+            complete: function (xhr) {
+                Ranking.accountsBlock.html(xhr.responseText);
+            }
+        });
+    });
+
+    var sortable = $('[title]');
+
+    sortable.on('click', function (event) {
+        event.preventDefault();
+
+        $.ajax({
+            url: sortable.attr('href'),
+            method: 'get',
+            data: sortable.serialize(),
+            complete: function (xhr) {
+                Ranking.accountsBlock.html(xhr.responseText);
+            }
+        });
+    });
+
+    $(' #pagination_accounts_list ul[class="pagination"] li a ').toArray().forEach(function (el) {
+        $(el).attr('data-page-account', $(el).attr('href'));
+        $(el).removeAttr('href');
+    });
+
+    $(' [data-page-account] ').on( 'click', function () {
+        var url = $(this).data('page-account');
+        Ranking.setUrl(url);
+        $.ajax({
+            url: url,
+            method: 'get',
+            complete: function (xhr) {
+                Ranking.accountsBlock.html(xhr.responseText);
+            }
+        });
+    });
+
+    $(' [data-url-account] ').on( 'click', function () {
+        var urlAccount = $(this).data('url-account');
+        Ranking.loadTransaction(urlAccount);
+    });
+
+</script>
