@@ -21,11 +21,11 @@
             </th>
         </tr>
         <tr class="m-table-header table-accounts">
-            <th width="50%">
+            <th width="54%">
                 Nome Fantasia
             </th>
             <th width="30%"> CNPJ </th>
-            <th width="20%" {% if pagination.isSorted('a.ranking') %} class="sorted" {%  endif %}>
+            <th width="16%" {% if pagination.isSorted('a.ranking') %} class="sorted" {%  endif %}>
                 <i {% if pagination.isSorted('a.ranking') %} class="fa fa-sort-numeric-{{ pagination.direction}}"
                 {% else %} class="fa fa-sort" {% endif %}></i>
                 {{ knp_pagination_sortable(pagination, 'Pontos', 'a.ranking') }} </th>
