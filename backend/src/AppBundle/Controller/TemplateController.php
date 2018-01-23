@@ -105,6 +105,11 @@ class TemplateController extends AbstractController
 
         $template = $this->getTemplateProcessor()->process($project, $templatePath);
 
+        if ($template) {
+            $project->setIssuedAt(new \DateTime('now'));
+            $this->manager('project')->save($project);
+        }
+
         $encodeTemplate = base64_encode($template);
 
         return $this->redirectToRoute('download_template', [
