@@ -6,6 +6,11 @@
         color: #676a6c;
         text-decoration: none;
     }
+
+    tr[data-url-account]:hover{
+        background-color: #F3F3F3;
+        cursor: pointer;
+    }
 </style>
 <table class="table table-bordered">
     <thead>
@@ -16,12 +21,11 @@
             </th>
         </tr>
         <tr class="m-table-header table-accounts">
-            <th width="30%">
+            <th width="54%">
                 Nome Fantasia
             </th>
-            <th width="25%"> CNPJ </th>
-            <th width="25%"> E-mail </th>
-            <th width="20%" {% if pagination.isSorted('a.ranking') %} class="sorted" {%  endif %}>
+            <th width="30%"> CNPJ </th>
+            <th width="16%" {% if pagination.isSorted('a.ranking') %} class="sorted" {%  endif %}>
                 <i {% if pagination.isSorted('a.ranking') %} class="fa fa-sort-numeric-{{ pagination.direction}}"
                 {% else %} class="fa fa-sort" {% endif %}></i>
                 {{ knp_pagination_sortable(pagination, 'Pontos', 'a.ranking') }} </th>
@@ -30,19 +34,16 @@
     <tbody>
         {% for account in pagination.items %}
         <tr data-url-account="{{ route('transaction_ranking', {id:account.id}) }}">
-            <td><small>{{ account.lastname }}</small></td>
-            <td><small>{{ account.document }}</small></td>
-            <td><small>{{ account.email }}</small></td>
-            <td><small>{{ account.ranking }}</small></td>
+            <td>{{ account.lastname }}</td>
+            <td>{{ account.document }}</td>
+            <td>{{ account.ranking }}</td>
         </tr>
         {% endfor %}
         <tr>
             <td class="text-center" colspan="5">
                 <div class="row text-center">
                     <div id="pagination_accounts_list" class="btn-group bt-xs">
-                        <small>
                             {{ knp_pagination_render(pagination) }}
-                        </small>
                     </div>
                 </div>
             </td>
