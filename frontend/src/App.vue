@@ -1,25 +1,28 @@
 <template lang="pug">
-  .main
-    img(src='@/assets/media/logo.png')
+  main.main
+    Sidebar
     router-view
-    Init
 </template>
 
 <script>
-  import Init from './components/Init'
+  import Sidebar from '@/components/sidebar'
 
   export default {
     name: 'App',
     components: {
-      Init
+      Sidebar
     }
   }
 </script>
 
-<style lang="scss" scoped>
-  $ui-space: 15px;
+<style lang="scss">
+  @import "~styles/setting-font.scss";
+  @import "~styles/generic-normalize.scss";
+  @import "~styles/generic-reset.scss";
 
-  .main {
-    padding: 0 $ui-space;
+  body,
+  html {
+    font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 13px;
   }
 </style>
