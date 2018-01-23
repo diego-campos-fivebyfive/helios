@@ -41,6 +41,21 @@ function comb_rep($a, $b)
     return $numerador / fatorial($b);
 }
 
+// TODO: Generator\Inverter\Helper::adjustPower() - TEST OK
+function adjust_desire_power($all_inv, $desire_power, $fdi_max)
+{
+
+    $new_desire_power = $desire_power;
+    if (count($all_inv) > 0) {
+        $reference = $all_inv[0]["nominal_power"] / $fdi_max;
+        if ($desire_power < $reference) {
+            $new_desire_power = $reference;
+        }
+    }
+
+    return $new_desire_power;
+}
+
 // TODO: Generator\Inverter\Helper::allCombinations() - WAITING
 function all_combination($n_elements, $max_elements)
 {
@@ -86,7 +101,7 @@ function all_combination($n_elements, $max_elements)
 
 }
 
-// TODO: Generator\Inverter\Helper::allCombinationsOptions() - WAITING
+// TODO: Generator\Inverter\Helper::allCombinationsOptimized() - WAITING
 function all_combination_opt($n_elements, $max_elements)
 {
     $n_possibilities = comb_rep($n_elements, $max_elements);
@@ -263,21 +278,6 @@ function inv_phase_filter($all_inv, $phase_voltage, $n_phase)
 
     return $inv;
 
-}
-
-// TODO: Generator\Inverter\Helper::adjustPower() - TEST OK
-function adjust_desire_power($all_inv, $desire_power, $fdi_max)
-{
-
-    $new_desire_power = $desire_power;
-    if (count($all_inv) > 0) {
-        $reference = $all_inv[0]["nominal_power"] / $fdi_max;
-        if ($desire_power < $reference) {
-            $new_desire_power = $reference;
-        }
-    }
-
-    return $new_desire_power;
 }
 
 // TODO: Generator\Inverter\Helper::filterPower() - WAITING
