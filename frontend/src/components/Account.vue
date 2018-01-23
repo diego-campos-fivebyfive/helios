@@ -50,3 +50,7 @@
     }
   }
 </script>
+
+<style lang="scss" scoped>
+  /* Account Style */
+</style>
