@@ -23,7 +23,7 @@
     transition: all 300ms;
     width: 100%;
 
-    &.subitem { 
+    &.subitem {
       padding: $ui-space-y/2 $ui-space-x/1.5 $ui-space-y/2 $ui-space-x*2;
     }
 

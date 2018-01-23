@@ -95,7 +95,7 @@
     "selector-descendant-combinator-no-non-space": true,
     "selector-list-comma-newline-after": "always",
     "selector-list-comma-newline-before": "never-multi-line",
-    "selector-max-class": 1,
+    "selector-max-class": 2,
     "selector-max-combinators": 1,
     "selector-max-compound-selectors": 1,
     "selector-max-empty-lines": 0,

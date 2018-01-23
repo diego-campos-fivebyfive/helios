@@ -7,7 +7,7 @@
       icon.icon-arrow(v-else, name='angle-left')
     ul(v-show='open')
       li(v-for='subitem in item.subitems')
-        Item(:item='subitem' :subitem='true')
+        Item(:item='subitem', :subitem='true')
 </template>
 
 <script>

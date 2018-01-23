@@ -22,7 +22,7 @@
 
   body,
   html {
-    font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: "Open Sans", "Helvetica Neue", sans-serif;
     font-size: 13px;
   }
 </style>
