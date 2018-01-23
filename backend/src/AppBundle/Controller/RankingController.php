@@ -144,6 +144,10 @@ class RankingController extends AbstractController
 
             $this->manager('ranking')->save($ranking);
 
+            $rankingGenerator = $this->get('ranking_generator');
+
+            $rankingGenerator->refreshRanking($ranking);
+
             return $this->json([]);
         }
 
@@ -164,6 +168,10 @@ class RankingController extends AbstractController
         $manager = $this->manager('ranking');
 
         $manager->delete($ranking);
+
+        $rankingGenerator = $this->get('ranking_generator');
+
+        $rankingGenerator->refreshRanking($ranking);
 
         return $this->json([]);
     }
