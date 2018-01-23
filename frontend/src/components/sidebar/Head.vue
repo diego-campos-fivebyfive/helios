@@ -31,19 +31,19 @@
   $ui-space-y: 15px;
 
   .header {
-    background: url('~@/assets/media/logo-cover.png');
+    background: url("~@/assets/media/logo-cover.png");
     color: $ui-color;
     display: block;
     text-align: center;
     padding: $ui-space-y/2 $ui-space-x;
+  }
 
-    .title {
-      font-weight: 600;
-    }
+  .title {
+    font-weight: 600;
+  }
 
-    span {
-      display: block;
-      padding: 2px;
-    }
+  span {
+    display: block;
+    padding: 2px;
   }
 </style>
