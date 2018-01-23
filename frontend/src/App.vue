@@ -16,12 +16,13 @@
 </script>
 
 <style lang="scss">
+  @import "~styles/setting-font.scss";
   @import "~styles/generic-normalize.scss";
   @import "~styles/generic-reset.scss";
 
   body,
   html {
-    font-family: "open sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
     font-size: 13px;
   }
 </style>
