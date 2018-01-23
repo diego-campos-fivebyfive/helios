@@ -1,15 +1,28 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: claudinei
- * Date: 23/01/18
- * Time: 15:26
- */
 
 namespace App\Generator\Inverter;
 
-
+/**
+ * Class Helper
+ */
 class Helper
 {
+    /**
+     * @param array $inverters
+     * @param $desired
+     * @param $fdi
+     * @return float|int
+     */
+    public static function adjustPower(array $inverters, $desired, $fdi)
+    {
+        $newPower = $desired;
+        foreach ($inverters as $inverter){
+            $reference = $inverter["nominal_power"] / $fdi;
+            if ($desired < $reference) {
+                $newPower = $reference;
+            }
+        }
 
+        return $newPower;
+    }
 }

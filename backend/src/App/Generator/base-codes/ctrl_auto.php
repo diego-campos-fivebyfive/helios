@@ -33,7 +33,6 @@ $power_balance = inv_power_balance($all_inv, $desire_power);
 $mppt_op = inv_get_mppt_op($all_inv);
 $in_protection = inv_get_in_protections($all_inv);
 
-
 $arrangements = array();
 $string_box = array();
 for ($i=0; $i<count($all_inv); $i++){

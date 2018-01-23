@@ -5,8 +5,17 @@
  * Date: 08/01/18
  * Time: 10:17
  */
-require "conex.php";
+//require "conex.php";
 
+/**
+ * TESTED
+ * - Generator\Common\Math::factorial()
+ * - Generator\Common\Math::combination()
+ * - Generator\Inverter\Helper::adjustPower()
+ * -
+ */
+
+// TODO: Generator\Common\Math::factorial() - TEST OK
 function fatorial($num)
 {
     $acu = $num;
@@ -20,6 +29,7 @@ function fatorial($num)
     }
 }
 
+// TODO: Generator\Common\Math::combination() - TEST OK
 function comb_rep($a, $b)
 {
     $numerador = $a + $b - 1;
@@ -31,9 +41,9 @@ function comb_rep($a, $b)
     return $numerador / fatorial($b);
 }
 
+// TODO: Generator\Inverter\Helper::allCombinations() - WAITING
 function all_combination($n_elements, $max_elements)
 {
-
     $n_possibilities = comb_rep($n_elements, $max_elements);
     $combination = array();
 
@@ -76,9 +86,9 @@ function all_combination($n_elements, $max_elements)
 
 }
 
+// TODO: Generator\Inverter\Helper::allCombinationsOptions() - WAITING
 function all_combination_opt($n_elements, $max_elements)
 {
-
     $n_possibilities = comb_rep($n_elements, $max_elements);
     $combination = array();
 
@@ -133,9 +143,9 @@ function all_combination_opt($n_elements, $max_elements)
 
 }
 
+// TODO: Generator\Inverter\Helper::filterActives() - WAITING
 function inv_active_alternative_filter($all_inv, $all_alternatives)
 {
-
     //ao invés de checar se o status é ACTIVE deve-se verificar se o nível de desconto está presente
 
     $inv = $all_inv;
@@ -204,6 +214,7 @@ function inv_active_alternative_filter($all_inv, $all_alternatives)
     return $inv;
 }
 
+// TODO: Generator\Inverter\Helper::filterPhases() - WAITING
 function inv_phase_filter($all_inv, $phase_voltage, $n_phase)
 {
 
@@ -254,6 +265,7 @@ function inv_phase_filter($all_inv, $phase_voltage, $n_phase)
 
 }
 
+// TODO: Generator\Inverter\Helper::adjustPower() - TEST OK
 function adjust_desire_power($all_inv, $desire_power, $fdi_max)
 {
 
@@ -268,6 +280,7 @@ function adjust_desire_power($all_inv, $desire_power, $fdi_max)
     return $new_desire_power;
 }
 
+// TODO: Generator\Inverter\Helper::filterPower() - WAITING
 function inv_power_filter($all_inv, $desire_power)
 {
 
@@ -310,6 +323,7 @@ function inv_power_filter($all_inv, $desire_power)
 
 }
 
+// TODO: Generator\Inverter\Helper::inverterChoices() - WAITING
 function inv_choice($all_inv, $desire_power, $fdi_min, $fdi_max)
 {
 
@@ -343,6 +357,7 @@ function inv_choice($all_inv, $desire_power, $fdi_min, $fdi_max)
     return $selection;
 }
 
+// TODO: Generator\Inverter\Helper::powerBalance() - WAITING
 function inv_power_balance($all_inv, $desire_power){
 
     $power_balance = array();
@@ -361,6 +376,7 @@ function inv_power_balance($all_inv, $desire_power){
 
 }
 
+// TODO: Generator\Inverter\Helper::mpptOperation() - WAITING
 function inv_get_mppt_op ($all_inv){
 
     //$inv = $all_inv;
@@ -383,6 +399,7 @@ function inv_get_mppt_op ($all_inv){
 
 }
 
+// TODO: Generator\Inverter\Helper::hasProtection() - WAITING
 function inv_get_in_protections($all_inv){
 
     $in_protection = array();
@@ -392,6 +409,7 @@ function inv_get_in_protections($all_inv){
     return $in_protection;
 }
 
+// TODO: Generator\Inverter\Helper::allArrangements() - WAITING
 function all_arrangements($inv_selected, $inv_mppt_op, $mod_selected)
 {
 
@@ -441,6 +459,7 @@ function all_arrangements($inv_selected, $inv_mppt_op, $mod_selected)
     return $combinations;
 }
 
+// TODO: Generator\Inverter\Helper::autoArrangement() - WAITING
 function auto_arrangement_choice($all_arrangements, $desired_power, $inv_mppt_op)
 {
 
@@ -472,6 +491,7 @@ function auto_arrangement_choice($all_arrangements, $desired_power, $inv_mppt_op
 
 }
 
+// TODO: Generator\StringBox\Helper::getParameters() - WAITING
 function stringbox_parameters($arrangement_choice)
 {
 
@@ -489,6 +509,7 @@ function stringbox_parameters($arrangement_choice)
     return $parameters;
 }
 
+// TODO: Generator\StringBox\Helper::getChoices() - WAITING
 function stringbox_choice($stringbox_parameters, $all_stringbox)
 {
 
