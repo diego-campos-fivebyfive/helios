@@ -151,7 +151,8 @@ class TemplateController extends AbstractController
     }
 
     /**
-     * @Route("/{theme}/delete", name="delete_theme")
+     * @Route("/theme/{theme}/delete", name="delete_theme")
+     * @Method("delete")
      */
     public function deleteTemplateAction(Theme $theme)
     {
