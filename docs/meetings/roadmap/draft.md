@@ -1,8 +1,9 @@
 ## 22/01 ##
-### RANKING ###
-1. OK. Atualizar informação de pontuações em tempo real após operação de adição/remoção/edição.
-2. 1329. Adicionar coluna de pontos da conta.
-3. 1329. Adicionar ordenação por pontuação, asc e desc.
+### RANKING ##
+
+## 23/01 ##
+### ORDER ###
+1. 1339. BUG: Após um processo de "Validação" >> "Edição (integrador)" >> "Envio para SICES", está perdendo a ref de cond. de pagamento.
 
 ### MÓDULOS RELACIONADOS ###
 Funcionalidade que permite configurar nos inversores, os ids de módulos cujo inversor poderá ser elencado para o projeto.
@@ -15,7 +16,7 @@ Caso este campo não possua valores (nulo) deve elencar de forma geral.
 - 2 Configurar formulário.
 - 2.1 Com modal, lista os módulos e marca (checkbox)
 - 3 Integrar funcionalidade ao gerador.
-- 3.1 Adequar consultas internas do inverter loader.
+- 3.1 Adequar consultas internas do inverter loader (PENDENTE!).
 
 ### GERADOR DE PROPOSTAS ###
 1. 1333. Definir data de emissão (issuedAt) ao gerar a proposta.
