@@ -12,10 +12,6 @@
 </script>
 
 <style lang="scss" scoped>
-  $ui-space-x: 25px;
-  $ui-space-y: 15px;
-  $ui-white-n: #ffffff;
-
   .item {
     color: inherit;
     display: block;
@@ -28,7 +24,7 @@
     }
 
     &:hover {
-      color: $ui-white-n;
+      color: $ui-white-regular;
     }
   }
 

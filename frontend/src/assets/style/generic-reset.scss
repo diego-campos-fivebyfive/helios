@@ -41,10 +41,7 @@ button {
 
 a,
 button {
-
-  &:focus {
-    outline: none;
-  }
+  outline: none !important;
 }
 
 input[type="button"], 

@@ -13,23 +13,16 @@
 </script>
 
 <style lang="scss" scoped>
-  $ui-main-text: #676a6c;
-  $ui-main-split: #e7eaec;
-
-  $ui-white-n: #ffffff;
-  $ui-space-y: 15px;
-  $ui-space-x: 25px;
-
   .panel {
-    background-color: $ui-white-n;
+    background-color: $ui-white-regular;
     display: block;
     margin: $ui-space-y $ui-space-x/2;
     max-width: 100%;
   }
 
   header {
-    border-top: $ui-space-y/5 solid $ui-main-split;
-    color: $ui-main-text;
+    border-top: $ui-space-y/5 solid $ui-divider-color;
+    color: $ui-text-main;
     padding: $ui-space-y $ui-space-x/2;
     text-align: right;
 

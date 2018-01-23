@@ -30,10 +30,6 @@
 </script>
 
 <style lang="scss" scoped>
-  $ui-space-y: 15px;
-  $ui-space-x: 25px;
-  $ui-white-n: #ffffff;
-
   .item {
     color: inherit;
     font-weight: inherit;
@@ -43,7 +39,7 @@
     width: 100%;
 
     &:hover {
-      color: $ui-white-n;
+      color: $ui-white-regular;
     }
   }
 

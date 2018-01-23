@@ -26,13 +26,9 @@
 </script>
 
 <style lang="scss" scoped>
-  $ui-color: #ffffff;
-  $ui-space-x: 25px;
-  $ui-space-y: 15px;
-
   .header {
     background: url("~@/assets/media/logo-cover.png");
-    color: $ui-color;
+    color: $ui-white-regular;
     display: block;
     text-align: center;
     padding: $ui-space-y/2 $ui-space-x;

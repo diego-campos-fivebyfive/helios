@@ -70,29 +70,24 @@
 </script>
 
 <style lang="scss" scoped>
-  $ui-gray-n: #a7b1c2;
-  $ui-gray-l: #293846;
-  $ui-blue-n: #00a7ec;
-  $ui-white-n: #ffffff;
-
   ul {
     list-style: none;
   }
 
   li {
-    color: $ui-gray-n;
+    color: $ui-sidebar-color;
     display: block;
     font-weight: 600;
     text-align: left;
     width: 100%;
 
     &:hover {
-      background-color: $ui-gray-l;
+      background-color: $ui-gray-regular;
     }
   }
 
   .active {
-    background-color: $ui-gray-l;
-    border-left: 5px solid $ui-blue-n;
+    background-color: $ui-gray-regular;
+    border-left: 5px solid $ui-blue-light;
   }
  </style>
