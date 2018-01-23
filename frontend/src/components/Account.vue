@@ -3,18 +3,20 @@
     div(slot='header')
       h1.title {{ page.title }}
       h2.info
-        | {{ account.info.total }} Contas encontradas
+        | Contas encontradas: {{ account.info.total }}
       nav.menu
-        button button
-        button btn
-        //Button(:text='Nova Conta')
-        //  Icon(name='beer')
-        //Button
-        //  Icon(name='beer')
+        Button(
+          type='primary-normal',
+          icon='plus-square',
+          link='#linkB',
+          label='Nova Conta',
+          pos='first')
+        Button(type='primary-dark', icon='random', pos='last')
 </template>
 
 <script>
   import Panel from '@/components/collection/Panel'
+  import Button from '@/components/collection/Button'
 
   /* Mocked Data */
   const page = {
@@ -30,11 +32,14 @@
 
   export default {
     components: {
-      Panel
+      Panel,
+      Button
     },
     data: () => ({
       page: '',
-      account: {}
+      account: {
+        info: {}
+      }
     }),
     mounted() {
       this.page = page

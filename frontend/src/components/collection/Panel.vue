@@ -33,8 +33,11 @@
     padding: $ui-space-y $ui-space-x/2;
     text-align: right;
 
+    @include clearfix;
+
     * {
       display: inline;
+      vertical-align: middle;
     }
   }
 
@@ -42,12 +45,12 @@
     float: left;
     font-size: 1.75rem;
     font-weight: 300;
-    @include clearfix;
   }
 
   .info {
     font-size: 1.25rem;
-    font-weight: 600;
+    font-weight: 400;
+    margin: 0 $ui-space-x;
     opacity: 0.8;
   }
 </style>
