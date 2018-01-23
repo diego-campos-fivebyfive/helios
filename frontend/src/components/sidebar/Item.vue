@@ -33,7 +33,7 @@
   }
 
   .icon-ui {
-    margin-right: $ui-space-x/2;
+    margin-right: $ui-space-x/3;
     vertical-align: bottom;
     width: 1rem;
   }

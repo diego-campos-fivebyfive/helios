@@ -22,7 +22,7 @@
   "validateAttributeQuoteMarks": "'",
   "validateAttributeSeparator": {
     "separator": ", ",
-    "multiLineSeparator": "\n"
+    "multiLineSeparator": ",\n  "
   },
   "validateDivTags": true,
   "validateIndentation": 2,

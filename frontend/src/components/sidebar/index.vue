@@ -18,11 +18,17 @@
 </script>
 
 <style lang="scss" scoped>
-  $ui-bgcolor: #080c17;
+  $ui-gray-d: #080c17;
   $ui-size-x: 220px;
 
   .sidebar {
-    background-color: $ui-bgcolor;
+    background-color: $ui-gray-d;
+    display: block;
+    left: 0;
     max-width: $ui-size-x;
+    min-height: 100%;
+    position: absolute;
+    top: 0;
+    width: 100%;
   }
 </style>

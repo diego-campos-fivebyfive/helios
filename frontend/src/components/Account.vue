@@ -1,0 +1,56 @@
+<template lang="pug">
+  Panel
+    div(slot='header')
+      h1.title {{ page.title }}
+      h2.info
+        | Contas encontradas: {{ account.info.total }}
+      nav.menu
+        Button(
+          type='primary-normal',
+          icon='plus-square',
+          link='#linkB',
+          label='Nova Conta',
+          pos='first')
+        Button(type='primary-dark', icon='random', pos='last')
+</template>
+
+<script>
+  import Panel from '@/components/collection/Panel'
+  import Button from '@/components/collection/Button'
+
+  /* Mocked Data */
+  const page = {
+    title: 'Contas'
+  }
+
+  const account = new Promise(resolve => resolve({
+    info: {
+      total: 753
+    }
+  }))
+  /* End Mocked Data */
+
+  export default {
+    components: {
+      Panel,
+      Button
+    },
+    data: () => ({
+      page: '',
+      account: {
+        info: {}
+      }
+    }),
+    mounted() {
+      this.page = page
+
+      account.then(data => {
+        this.account = data
+      })
+    }
+  }
+</script>
+
+<style lang="scss" scoped>
+  /* Account Style */
+</style>

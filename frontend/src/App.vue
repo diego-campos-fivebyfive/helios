@@ -1,7 +1,8 @@
 <template lang="pug">
-  main.main
+  .page
     Sidebar
-    router-view
+    main.main
+      router-view
 </template>
 
 <script>
@@ -20,9 +21,17 @@
   @import "~styles/generic-normalize.scss";
   @import "~styles/generic-reset.scss";
 
+  $ui-white-d: #f3f3f4;
+  $ui-sidebar-x: 220px;
+
   body,
   html {
+    background-color: $ui-white-d;
     font-family: "Open Sans", "Helvetica Neue", sans-serif;
     font-size: 13px;
+  }
+
+  .main {
+    padding-left: $ui-sidebar-x;
   }
 </style>
