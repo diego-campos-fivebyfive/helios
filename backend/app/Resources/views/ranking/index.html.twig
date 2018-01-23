@@ -18,9 +18,7 @@
                     <div class="ibox-content flow-lg">
                         <div class="row">
                             {% if isPlatform %}
-                            <div class="col-md-6">
-                                {% include view('ranking/accounts.html.twig') %}
-                            </div>
+                            <div class="col-md-6" id="accounts-list"></div>
                             {% endif %}
 
                             <div id="transactions_block" class="{{ isPlatform ? 'col-md-6' : 'col-md-12' }}">
@@ -38,7 +36,24 @@
         {% endif %}
 
         Ranking = {
+            url: null,
+            accountsBlock: $('#accounts-list'),
             transactionsBlock: $('#transactions_block'),
+            listAccounts: function () {
+                var url = '{{ path('list_accounts') }}';
+                if (this.url)
+                    url = this.url;
+                $.ajax({
+                    url: url,
+                    method: 'get',
+                    complete: function (xhr) {
+                        Ranking.accountsBlock.html(xhr.responseText);
+                    }
+                });
+            },
+            setUrl: function (url) {
+                this.url = url;
+            },
             loadTransaction: function (urlTrans) {
                 $.ajax({
                     url: urlTrans,
@@ -48,10 +63,15 @@
                 });
             },
             reloadContent: function () {
-                AccountsRanking.loadAccounts();
+                Ranking.listAccounts();
                 TransactionRanking.reloadBlock();
+            },
+            init: function () {
+                this.listAccounts();
             }
         };
+
+        Ranking.init();
 
         {% if not isPlatform %}
             Ranking.loadTransaction("{{ route('transaction_ranking', {id:app.user.info.account.id}) }}");
