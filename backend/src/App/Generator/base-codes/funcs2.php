@@ -13,6 +13,8 @@
  * - Generator\Common\Math::combination()
  * - Generator\Inverter\Helper::adjustPower()
  * - Generator\Inverter\Helper::mpptOperations()
+ * - Generator\Inverter\Helper::allCombinations()
+ * - Generator\Inverter\Helper::allCombinationsOptimized()
  */
 
 // TODO: Generator\Common\Math::factorial() - TEST OK
@@ -56,7 +58,7 @@ function adjust_desire_power($all_inv, $desire_power, $fdi_max)
     return $new_desire_power;
 }
 
-// TODO: Generator\Inverter\Helper::allCombinations() - WAITING
+// TODO: Generator\Inverter\Helper::allCombinations() - TEST OK
 function all_combination($n_elements, $max_elements)
 {
     $n_possibilities = comb_rep($n_elements, $max_elements);
@@ -101,7 +103,7 @@ function all_combination($n_elements, $max_elements)
 
 }
 
-// TODO: Generator\Inverter\Helper::allCombinationsOptimized() - WAITING
+// TODO: Generator\Inverter\Helper::allCombinationsOptimized() - TEST OK
 function all_combination_opt($n_elements, $max_elements)
 {
     $n_possibilities = comb_rep($n_elements, $max_elements);
