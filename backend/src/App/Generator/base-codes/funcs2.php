@@ -15,6 +15,10 @@
  * - Generator\Inverter\Helper::mpptOperations()
  * - Generator\Inverter\Helper::allCombinations()
  * - Generator\Inverter\Helper::allCombinationsOptimized()
+ * - Generator\Inverter\Helper::filterActives()
+ * - Generator\Inverter\Helper::filterPhases()
+ * - Generator\Inverter\Helper::filterPower()
+ * - Generator\Inverter\Helper::inverterChoices()
  */
 
 // TODO: Generator\Common\Math::factorial() - TEST OK
@@ -160,7 +164,7 @@ function all_combination_opt($n_elements, $max_elements)
 
 }
 
-// TODO: Generator\Inverter\Helper::filterActives() - WAITING
+// TODO: Generator\Inverter\Helper::filterActives() - TEST OK
 function inv_active_alternative_filter($all_inv, $all_alternatives)
 {
     //ao invés de checar se o status é ACTIVE deve-se verificar se o nível de desconto está presente
@@ -231,7 +235,7 @@ function inv_active_alternative_filter($all_inv, $all_alternatives)
     return $inv;
 }
 
-// TODO: Generator\Inverter\Helper::filterPhases() - WAITING
+// TODO: Generator\Inverter\Helper::filterPhases() - TEST OK
 function inv_phase_filter($all_inv, $phase_voltage, $n_phase)
 {
 
@@ -282,7 +286,7 @@ function inv_phase_filter($all_inv, $phase_voltage, $n_phase)
 
 }
 
-// TODO: Generator\Inverter\Helper::filterPower() - WAITING
+// TODO: Generator\Inverter\Helper::filterPower() - TEST OK
 function inv_power_filter($all_inv, $desire_power)
 {
 
@@ -325,7 +329,7 @@ function inv_power_filter($all_inv, $desire_power)
 
 }
 
-// TODO: Generator\Inverter\Helper::inverterChoices() - WAITING
+// TODO: Generator\Inverter\Helper::inverterChoices() - TEST OK
 function inv_choice($all_inv, $desire_power, $fdi_min, $fdi_max)
 {
 
