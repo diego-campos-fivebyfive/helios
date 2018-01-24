@@ -1,10 +1,10 @@
 <template lang="pug">
   div
     button.item(type='button', v-on:click='itemPress')
-      icon.icon-ui(:name='item.icon')
+      Icon.icon-ui(:name='item.icon')
       | {{ item.name }}
-      icon.icon-arrow(v-if='open', name='angle-down')
-      icon.icon-arrow(v-else, name='angle-left')
+      Icon.icon-arrow(v-if='open', name='angle-down')
+      Icon.icon-arrow(v-else, name='angle-left')
     ul(v-show='open')
       li(v-for='subitem in item.subitems')
         Item(:item='subitem', :subitem='true')
@@ -30,10 +30,6 @@
 </script>
 
 <style lang="scss" scoped>
-  $ui-space-y: 15px;
-  $ui-space-x: 25px;
-  $ui-white-n: #ffffff;
-
   .item {
     color: inherit;
     font-weight: inherit;
@@ -43,7 +39,7 @@
     width: 100%;
 
     &:hover {
-      color: $ui-white-n;
+      color: $ui-white-regular;
     }
   }
 

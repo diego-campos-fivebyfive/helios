@@ -1,9 +1,9 @@
 <template lang="pug">
   a(v-if='link', :href='link', :class='[type, pos, { labeled: label }]')
-    icon(:name='icon')
+    Icon(:name='icon')
     | {{ label }}
   button(v-else, :class='[type, pos, { labeled: label }]')
-    icon(:name='icon')
+    Icon(:name='icon')
     | {{ label }}
 </template>
 
@@ -14,13 +14,6 @@
 </script>
 
 <style lang="scss" scoped>
-  $ui-white-n: #ffffff;
-  $ui-blue-l: #00a7ec;
-  $ui-blue-d: #1c84c6;
-  $ui-space-x: 25px;
-  $ui-space-y: 15px;
-  $ui-corner: 3px;
-
   a,
   button {
     display: inline-block;
@@ -33,14 +26,14 @@
     vertical-align: sub;
   }
 
-  .primary-normal {
-    background-color: $ui-blue-l;
-    color: $ui-white-n;
+  .primary-common {
+    background-color: $ui-blue-light;
+    color: $ui-white-regular;
   }
 
-  .primary-dark {
-    background-color: $ui-blue-d;
-    color: $ui-white-n;
+  .primary-strong {
+    background-color: $ui-blue-dark;
+    color: $ui-white-regular;
   }
 
   .labeled {
@@ -61,5 +54,9 @@
   .last {
     border-top-right-radius: $ui-corner;
     border-bottom-right-radius: $ui-corner;
+  }
+
+  .single {
+    border-radius: $ui-corner;
   }
 </style>

@@ -6,18 +6,15 @@
         | Contas encontradas: {{ account.info.total }}
       nav.menu
         Button(
-          type='primary-normal',
+          type='primary-common',
           icon='plus-square',
           link='#linkB',
           label='Nova Conta',
           pos='first')
-        Button(type='primary-dark', icon='random', pos='last')
+        Button(type='primary-strong', icon='random', pos='last')
 </template>
 
 <script>
-  import Panel from '@/components/collection/Panel'
-  import Button from '@/components/collection/Button'
-
   /* Mocked Data */
   const page = {
     title: 'Contas'
@@ -31,10 +28,6 @@
   /* End Mocked Data */
 
   export default {
-    components: {
-      Panel,
-      Button
-    },
     data: () => ({
       page: '',
       account: {
