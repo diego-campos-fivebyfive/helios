@@ -23,11 +23,11 @@ Para bloqueio a busca deve ser:
 Para cada nível:
 - UPDATE Contas que tenham Somatório(orçamentos no status(>=7) and created_at(“hoje - $DIAS”)) >= $VALOR
 
-## ETAPAS ##
+## ETAPAS - EM ANDAMENTO ##
 1. Configurar consultas SQL . 1371
-2. Configurar gestão e parâmetros
-3. Adequar recurso de "jobs"
-4. Ativar cron
+2. Configurar gestão e parâmetros . 1372
+3. Adequar recurso de "jobs" . ...
+4. Ativar cron . ...
 
 ### DESCONTO COMERCIAL - PENDENTE ###
 1. Opções de Valor fixo ou Percentual
@@ -43,7 +43,7 @@ Para cada nível:
 ### RESGATE DE PONTOS ###
 1. Ainda em análise.
 
-### SEGURO SOLAR RISCO ENGENHARIA PROJETO E INSTALAÇÃO ###
+### SEGURO SOLAR RISCO ENGENHARIA PROJETO E INSTALAÇÃO . 1373 ###
 1. Remover a linha que é exibida na listagem de itens
 1.1 Wizard (modal da suborder e gerador)
 
