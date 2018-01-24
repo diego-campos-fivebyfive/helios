@@ -43,6 +43,12 @@ Para cada nível:
 ### RESGATE DE PONTOS ###
 1. Ainda em análise.
 
+### SEGURO SOLAR RISCO ENGENHARIA PROJETO E INSTALAÇÃO ###
+1. Remover a linha que é exibida na listagem de itens
+1.1 Wizard (modal da suborder e gerador)
+
+---------------
+
 ## 23/01 ##
 ### ORDER ###
 1. 1339. BUG: Após um processo de "Validação" >> "Edição (integrador)" >> "Envio para SICES", está perdendo a ref de cond. de pagamento.
