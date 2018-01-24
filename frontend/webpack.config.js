@@ -83,6 +83,10 @@ module.exports = {
     },
     extensions: ['*', '.js', '.vue', '.json']
   },
+  devServer: {
+    historyApiFallback: true,
+    inline: true
+  },
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'index.html',
