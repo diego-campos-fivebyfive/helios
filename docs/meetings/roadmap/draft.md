@@ -1,5 +1,5 @@
 ## 24/01 ##
-### RANKING - PENDENTE ##
+### RANKING . 1369 ##
 1. Alterar os fatores de pontuação para:
 - 1.1 LEVEL_BLACK = 5
 - 1.2 LEVEL_PLATINUM = 3
@@ -23,8 +23,25 @@ Para bloqueio a busca deve ser:
 Para cada nível:
 - UPDATE Contas que tenham Somatório(orçamentos no status(>=7) and created_at(“hoje - $DIAS”)) >= $VALOR
 
+## ETAPAS ##
+1. Configurar consultas SQL
+2. Configurar gestão e parâmetros
+3. Adequar recurso de "jobs"
+4. Ativar cron
 
+### DESCONTO COMERCIAL - PENDENTE ###
+1. Opções de Valor fixo ou Percentual
+2. As duas opções devem aparecer para ADMIN / MASTER (escolhe) - default (%)
+3. Para usuário EXPANSE somente a opção "Percentual" - (oculta o seletor)
+4. Quando não for ADMIN ou MASTER, o desconto em Percentual é limitado conforme o parâmetro configurado (nova configuração)
 
+## ETAPAS ##
+1. Adequar entidade Order para tratamento da nova regra (unit tests)
+2. Insrerir nova configuração em Parâmetros
+3. Adequar formulário/interface no Wizard, conforme a regra em "parâmetros"
+
+### RESGATE DE PONTOS ###
+1. Ainda em análise.
 
 ## 23/01 ##
 ### ORDER ###
