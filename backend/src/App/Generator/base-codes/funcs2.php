@@ -19,6 +19,8 @@
  * - Generator\Inverter\Helper::filterPhases()
  * - Generator\Inverter\Helper::filterPower()
  * - Generator\Inverter\Helper::inverterChoices()
+ * - Generator\StringBox\Helper::getParameters()
+ * - Generator\StringBox\Helper::getChoices()
  */
 
 // TODO: Generator\Common\Math::factorial() - TEST OK
@@ -497,7 +499,7 @@ function auto_arrangement_choice($all_arrangements, $desired_power, $inv_mppt_op
 
 }
 
-// TODO: Generator\StringBox\Helper::getParameters() - WAITING
+// TODO: Generator\StringBox\Helper::getParameters() - TEST OK
 function stringbox_parameters($arrangement_choice)
 {
 
@@ -515,7 +517,7 @@ function stringbox_parameters($arrangement_choice)
     return $parameters;
 }
 
-// TODO: Generator\StringBox\Helper::getChoices() - WAITING
+// TODO: Generator\StringBox\Helper::getChoices() - TEST OK
 function stringbox_choice($stringbox_parameters, $all_stringbox)
 {
 

@@ -1,5 +1,53 @@
-## 22/01 ##
-### RANKING ##
+## 24/01 ##
+### RANKING . 1369 ##
+1. Alterar os fatores de pontuação para:
+- 1.1 LEVEL_BLACK = 5
+- 1.2 LEVEL_PLATINUM = 3
+- 1.3 LEVEL_PREMIUM = 2
+- 1.4 LEVEL_PARTNER = 1
+
+2. Após o deploy desta modificação, o processo de normalização deve rodar novamente.
+
+### ALTERAÇÃO AUTOMÁTICA DE NÍVEL DE CONTA - PENDENTE ###
+1. Carência para bloqueio: Últimos X dias em relação a data de ativação.
+2. Exemplo de configuração.
+- Parceiro: 0 / Últimos 90 dias
+- Premium: 500.000 / Últimos 90 dias
+- Platinum: 1.000.000 / Últimos 90 dias
+- Black: 2.000.000 / Últimos 90 dias
+- Nível: $VALOR / $DIAS
+3. Se a conta não se adequar a nenhuma configuração - a conta é bloqueada
+Integrador: ativo 60 dias atrás
+Para bloqueio a busca deve ser:
+- Contas que tenham data de ativação < que “hoje - X dias” AND somatório(R$ orçamentos no status[>=7] < que Y)
+Para cada nível:
+- UPDATE Contas que tenham Somatório(orçamentos no status(>=7) and created_at(“hoje - $DIAS”)) >= $VALOR
+
+## ETAPAS - EM ANDAMENTO ##
+1. Configurar consultas SQL . 1371
+2. Configurar gestão e parâmetros . 1372
+3. Adequar recurso de "jobs" . ...
+4. Ativar cron . ...
+
+### DESCONTO COMERCIAL - PENDENTE ###
+1. Opções de Valor fixo ou Percentual
+2. As duas opções devem aparecer para ADMIN / MASTER (escolhe) - default (%)
+3. Para usuário EXPANSE somente a opção "Percentual" - (oculta o seletor)
+4. Quando não for ADMIN ou MASTER, o desconto em Percentual é limitado conforme o parâmetro configurado (nova configuração)
+
+## ETAPAS ##
+1. Adequar entidade Order para tratamento da nova regra (unit tests)
+2. Insrerir nova configuração em Parâmetros
+3. Adequar formulário/interface no Wizard, conforme a regra em "parâmetros"
+
+### RESGATE DE PONTOS ###
+1. Ainda em análise.
+
+### SEGURO SOLAR RISCO ENGENHARIA PROJETO E INSTALAÇÃO . 1373 ###
+1. Remover a linha que é exibida na listagem de itens
+1.1 Wizard (modal da suborder e gerador)
+
+---------------
 
 ## 23/01 ##
 ### ORDER ###

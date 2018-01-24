@@ -34,14 +34,10 @@ class Resolver
      */
     private $loader;
 
-    /**
-     * @var bool
-     */
-    private $strictPromotional = true;
 
     /**
      * Resolver constructor.
-     * @param Loader $loader
+     * @param ContainerInterface $container
      */
     function __construct(ContainerInterface $container)
     {
@@ -55,7 +51,7 @@ class Resolver
     {
         $dependencies = Extractor::create()->fromProject($project);
         $collection = $this->loader->load(self::normalize($dependencies));
-        $checkPromotional = $project->isPromotional() && $this->strictPromotional;
+        $projectLevel = $project->getLevel();
 
         $accessor = PropertyAccess::createPropertyAccessor();
 
@@ -64,7 +60,7 @@ class Resolver
             /** @var ComponentInterface $component */
             foreach ($components as $component) {
 
-                if($checkPromotional && !$component->isPromotional()) continue;
+                if(in_array($projectLevel, $component->getGeneratorLevels())) continue;
 
                 $quantity = $dependencies[$type][$component->getId()];
 
