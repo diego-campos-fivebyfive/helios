@@ -67,6 +67,26 @@ class HelperTest extends GeneratorTest
         $this->assertCount(3, $mppts[2]);
     }
 
+    public function testAllCombination()
+    {
+        //$combinations = $this->all_combination(3,3);
+        $combinations = Helper::allCombinations(3,3);
+        //print_r($combinations); die;
+
+        self::assertCount(10, $combinations);
+        self::assertCount(3, $combinations[9]);
+    }
+
+    public function testAllCombinationOpt()
+    {
+        //$combinations = $this->all_combination_opt(3,3);
+        $combinations = Helper::allCombinationsOptimized(3,3);
+        //print_r($combinations); die;
+
+        self::assertCount(10, $combinations);
+        self::assertCount(3, $combinations[9]);
+    }
+
     /*
     private function inv_get_mppt_op ($all_inv){
 
