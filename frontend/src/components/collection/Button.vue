@@ -26,12 +26,12 @@
     vertical-align: sub;
   }
 
-  .primary-normal {
+  .primary-common {
     background-color: $ui-blue-light;
     color: $ui-white-regular;
   }
 
-  .primary-dark {
+  .primary-strong {
     background-color: $ui-blue-dark;
     color: $ui-white-regular;
   }

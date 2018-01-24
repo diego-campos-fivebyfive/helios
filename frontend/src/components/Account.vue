@@ -6,12 +6,12 @@
         | Contas encontradas: {{ account.info.total }}
       nav.menu
         Button(
-          type='primary-normal',
+          type='primary-common',
           icon='plus-square',
           link='#linkB',
           label='Nova Conta',
           pos='first')
-        Button(type='primary-dark', icon='random', pos='last')
+        Button(type='primary-strong', icon='random', pos='last')
 </template>
 
 <script>
