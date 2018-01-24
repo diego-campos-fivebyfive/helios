@@ -32,10 +32,10 @@ class OrderRanking
      * @var array
      */
     private $mapping = [
-        Memorial::LEVEL_BLACK => 3,
-        Memorial::LEVEL_PLATINUM => 2,
-        Memorial::LEVEL_PREMIUM => 1,
-        Memorial::LEVEL_PARTNER => 0.5
+        Memorial::LEVEL_BLACK => 5,
+        Memorial::LEVEL_PLATINUM => 3,
+        Memorial::LEVEL_PREMIUM => 2,
+        Memorial::LEVEL_PARTNER => 1
     ];
 
     /**
@@ -56,6 +56,7 @@ class OrderRanking
             );
 
             $amount = ceil($order->getPower() * $this->mapping[$order->getLevel()]);
+
             $target = $order->getAccount();
 
             return $this->rankingGenerator()->create($target, $description, $amount);
