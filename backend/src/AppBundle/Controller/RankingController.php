@@ -146,7 +146,7 @@ class RankingController extends AbstractController
 
             $rankingGenerator = $this->get('ranking_generator');
 
-            $rankingGenerator->refreshRanking($ranking);
+            $rankingGenerator->refreshRanking($ranking->getTarget());
 
             return $this->json([]);
         }
@@ -171,7 +171,7 @@ class RankingController extends AbstractController
 
         $rankingGenerator = $this->get('ranking_generator');
 
-        $rankingGenerator->refreshRanking($ranking);
+        $rankingGenerator->refreshRanking($ranking->getTarget());
 
         return $this->json([]);
     }
