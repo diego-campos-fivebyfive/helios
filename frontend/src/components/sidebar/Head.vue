@@ -1,5 +1,5 @@
 <template lang="pug">
-  a.header(href='/')
+  router-link.header(to='/')
     img(src='@/assets/media/logo-small.png')
     span.title {{ user.name }}
     span {{ user.company }}
