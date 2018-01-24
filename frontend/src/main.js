@@ -22,5 +22,6 @@ new Vue({
     Button,
     Panel
   },
-  template: '<App/>'
+  template: '<App/>',
+  render: h => h(App)
 })

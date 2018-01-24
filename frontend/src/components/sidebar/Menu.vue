@@ -17,6 +17,11 @@
         icon: 'dashboard'
       },
       {
+        name: 'Conta',
+        link: '/account',
+        icon: 'bookmark'
+      },
+      {
         name: 'Componentes',
         icon: 'cube',
         dropdown: true,

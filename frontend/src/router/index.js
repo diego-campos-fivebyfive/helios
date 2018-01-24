@@ -5,6 +5,7 @@ import Account from '@/components/Account'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/account',

@@ -1,8 +1,15 @@
 <template lang="pug">
-  a(v-if='link', :href='link', :class='[type, pos, { labeled: label }]')
+  router-link(
+    v-if='link',
+    :to='link',
+    :class='[type, pos, { labeled: label }]'
+    )
     Icon(:name='icon')
     | {{ label }}
-  button(v-else, :class='[type, pos, { labeled: label }]')
+  button(
+    v-else,
+    :class='[type, pos, { labeled: label }]'
+    )
     Icon(:name='icon')
     | {{ label }}
 </template>
