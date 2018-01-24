@@ -1,5 +1,30 @@
-## 22/01 ##
-### RANKING ##
+## 24/01 ##
+### RANKING - PENDENTE ##
+1. Alterar os fatores de pontuação para:
+- 1.1 LEVEL_BLACK = 5
+- 1.2 LEVEL_PLATINUM = 3
+- 1.3 LEVEL_PREMIUM = 2
+- 1.4 LEVEL_PARTNER = 1
+
+2. Após o deploy desta modificação, o processo de normalização deve rodar novamente.
+
+### ALTERAÇÃO AUTOMÁTICA DE NÍVEL DE CONTA - PENDENTE ###
+1. Carência para bloqueio: Últimos X dias em relação a data de ativação.
+2. Exemplo de configuração.
+- Parceiro: 0 / Últimos 90 dias
+- Premium: 500.000 / Últimos 90 dias
+- Platinum: 1.000.000 / Últimos 90 dias
+- Black: 2.000.000 / Últimos 90 dias
+- Nível: $VALOR / $DIAS
+3. Se a conta não se adequar a nenhuma configuração - a conta é bloqueada
+Integrador: ativo 60 dias atrás
+Para bloqueio a busca deve ser:
+- Contas que tenham data de ativação < que “hoje - X dias” AND somatório(R$ orçamentos no status[>=7] < que Y)
+Para cada nível:
+- UPDATE Contas que tenham Somatório(orçamentos no status(>=7) and created_at(“hoje - $DIAS”)) >= $VALOR
+
+
+
 
 ## 23/01 ##
 ### ORDER ###
