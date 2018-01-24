@@ -24,7 +24,7 @@ Para cada nível:
 - UPDATE Contas que tenham Somatório(orçamentos no status(>=7) and created_at(“hoje - $DIAS”)) >= $VALOR
 
 ## ETAPAS ##
-1. Configurar consultas SQL
+1. Configurar consultas SQL . 1371
 2. Configurar gestão e parâmetros
 3. Adequar recurso de "jobs"
 4. Ativar cron
