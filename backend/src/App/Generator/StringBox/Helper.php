@@ -28,6 +28,11 @@ class Helper
         return $parameters;
     }
 
+    /**
+     * @param $stringboxParameters
+     * @param $allStringbox
+     * @return array
+     */
     public static function getChoices($stringboxParameters, $allStringbox)
     {
         $inputs = $stringboxParameters["inputs"];
