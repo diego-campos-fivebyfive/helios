@@ -13,7 +13,7 @@
     resolve([
       {
         name: 'Dashboard',
-        link: 'link1',
+        link: '#link1',
         icon: 'dashboard'
       },
       {
@@ -23,12 +23,12 @@
         subitems: [
           {
             name: 'Módulos',
-            link: 'sublink1',
+            link: '#sublink1',
             icon: 'th'
           },
           {
             name: 'Inversores',
-            link: 'sublink2',
+            link: '#sublink2',
             icon: 'exchange'
           }
         ]
@@ -40,12 +40,12 @@
         subitems: [
           {
             name: 'Dados da Empresa',
-            link: 'sublink1',
+            link: '#sublink1',
             icon: 'th'
           },
           {
             name: 'Parâmetros',
-            link: 'sublink2',
+            link: '#sublink2',
             icon: 'exchange'
           }
         ]

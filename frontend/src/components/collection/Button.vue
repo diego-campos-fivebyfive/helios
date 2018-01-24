@@ -1,9 +1,9 @@
 <template lang="pug">
   a(v-if='link', :href='link', :class='[type, pos, { labeled: label }]')
-    icon(:name='icon')
+    Icon(:name='icon')
     | {{ label }}
   button(v-else, :class='[type, pos, { labeled: label }]')
-    icon(:name='icon')
+    Icon(:name='icon')
     | {{ label }}
 </template>
 

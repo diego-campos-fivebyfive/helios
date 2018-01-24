@@ -15,9 +15,6 @@
 </template>
 
 <script>
-  import Panel from '@/components/collection/Panel'
-  import Button from '@/components/collection/Button'
-
   /* Mocked Data */
   const page = {
     title: 'Contas'
@@ -31,10 +28,6 @@
   /* End Mocked Data */
 
   export default {
-    components: {
-      Panel,
-      Button
-    },
     data: () => ({
       page: '',
       account: {

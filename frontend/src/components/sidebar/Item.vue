@@ -1,8 +1,8 @@
 <template lang="pug">
   a.item(:href='item.link', :class='{ subitem: subitem }')
-    icon.icon-ui(:name='item.icon')
+    Icon.icon-ui(:name='item.icon')
     | {{ item.name }}
-    icon.icon-arrow(name='angle-right')
+    Icon.icon-arrow(name='angle-right')
 </template>
 
 <script>
