@@ -29,14 +29,14 @@ Para cada nível:
 3. Adequar recurso de "jobs" . ...
 4. Ativar cron . ...
 
-### DESCONTO COMERCIAL - PENDENTE ###
+### DESCONTO COMERCIAL - EM ANDAMENTO ###
 1. Opções de Valor fixo ou Percentual
 2. As duas opções devem aparecer para ADMIN / MASTER (escolhe) - default (%)
 3. Para usuário EXPANSE somente a opção "Percentual" - (oculta o seletor)
 4. Quando não for ADMIN ou MASTER, o desconto em Percentual é limitado conforme o parâmetro configurado (nova configuração)
 
 ## ETAPAS ##
-1. Adequar entidade Order para tratamento da nova regra (unit tests)
+1. Adequar entidade Order para tratamento da nova regra (unit tests) . 1377
 2. Insrerir nova configuração em Parâmetros
 3. Adequar formulário/interface no Wizard, conforme a regra em "parâmetros"
 
