@@ -118,8 +118,16 @@ class FileController extends AbstractController
      */
     public function proformaAction(Order $order)
     {
-        return $this->render('admin/orders/proforma.html.twig', array(
-            'order' => $order
+        $initialPages = 0;
+        foreach ($order->getChildrens() as $children){
+            $initialPages++;
+            if ($children->getInsurance())
+                $initialPages++;
+        }
+
+        return $this->render('admin/orders/proforma/index.html.twig', array(
+            'order' => $order,
+            'initialPages' => $initialPages
         ));
     }
 
