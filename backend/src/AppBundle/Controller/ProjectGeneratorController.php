@@ -46,6 +46,10 @@ class ProjectGeneratorController extends AbstractController
         /** @var Order $order */
         $order = $this->manager('order')->find($id);
 
+        if (!in_array($order->getStatus(), [Order::STATUS_BUILDING, Order::STATUS_PENDING, Order::STATUS_VALIDATED])) {
+            throw $this->createAccessDeniedException('Order with this status can not be edited');
+        }
+
         $accountLevel = $order->getAccount()->getLevel();
 
         $this->denyAccessUnlessGranted('edit', $order);
