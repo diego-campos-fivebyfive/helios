@@ -7,7 +7,6 @@
   "disallowHtmlText": true,
   "disallowIdLiterals": true,
   "disallowMultipleLineBreaks": true,
-  "disallowMultipleLineBreaks": true,
   "disallowSpacesInsideAttributeBrackets": true,
   "disallowStringConcatenation": true,
   "disallowStringInterpolation": true,
