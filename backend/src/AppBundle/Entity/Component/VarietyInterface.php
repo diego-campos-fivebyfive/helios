@@ -20,9 +20,9 @@ interface VarietyInterface
 {
     const TYPE_CABLE = 'cabo';
     const TYPE_CONNECTOR = 'conector';
-    const TYPE_TRANSFORMER = 'transformer';
+    const TYPE_TRANSFORMER = 'transformador';
     const TYPE_MONITOR = 'monitor';
-    const TYPE_FUSE = 'fuse';
+    const TYPE_FUSE = 'fusível';
     const TYPE_STRING_BOX = 'string_box';
     const TYPE_ABB_EXTRA = 'abb-extra';
 
