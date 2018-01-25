@@ -2,7 +2,7 @@
 
 cd $SICES_PATH
 
-echo 'Fixing KNP Bugs...'
+echo 'Fixing KNP Bug...'
 
 path=backend/vendor/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Filtration/Doctrine/ORM/Query
 
@@ -10,3 +10,8 @@ initial='$alias = reset($parts);'
 final='$alias = trim(reset($parts));'
 
 sed -i "s/$initial/$final/g" $path/WhereWalker.php
+
+echo 'Fixing eslint-plugin-vue Bug...'
+
+cat $CLI_PATH/util/src/eslint-plugin-vue.js \
+  > $SICES_PATH/frontend/node_modules/eslint-plugin-vue/lib/utils/indent-common.js
