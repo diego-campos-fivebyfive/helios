@@ -43,10 +43,12 @@ class ProjectGeneratorController extends AbstractController
             return $this->resolveOrderReference($request);
         }
 
-        $this->statusCheckerRequest($id);
-
         /** @var Order $order */
         $order = $this->manager('order')->find($id);
+
+        if (!in_array($order->getStatus(), [Order::STATUS_BUILDING, Order::STATUS_PENDING, Order::STATUS_VALIDATED])) {
+            throw $this->createAccessDeniedException('Order with this status can not be edited');
+        }
 
         $accountLevel = $order->getAccount()->getLevel();
 
@@ -624,22 +626,6 @@ class ProjectGeneratorController extends AbstractController
         }
 
         return $memorial;
-    }
-
-    /**
-     * @param $id
-     * @return bool
-     */
-    private function statusCheckerRequest($id)
-    {
-        /** @var Order $order */
-        $order = $this->manager('order')->find($id);
-
-        if (in_array($order->getStatus(), [Order::STATUS_BUILDING, Order::STATUS_PENDING, Order::STATUS_VALIDATED])) {
-            return true;
-        }
-
-        throw $this->createAccessDeniedException('Order with this status can not be edited');
     }
 
     /**
