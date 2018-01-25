@@ -629,7 +629,6 @@ class ProjectGeneratorController extends AbstractController
     /**
      * @param $id
      * @return bool
-     * @throws \ApiBundle\Exception\AccessDeniedException
      */
     private function statusCheckerRequest($id)
     {
@@ -640,7 +639,7 @@ class ProjectGeneratorController extends AbstractController
             return true;
         }
 
-        throw new \ApiBundle\Exception\AccessDeniedException;
+        throw $this->createAccessDeniedException('Order with this status can not be edited');
     }
 
     /**
