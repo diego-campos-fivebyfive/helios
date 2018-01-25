@@ -2,14 +2,12 @@
   router-link(
     v-if='link',
     :to='link',
-    :class='[type, pos, { labeled: label }]'
-    )
+    :class='[type, pos, { labeled: label }]')
     Icon(:name='icon')
     | {{ label }}
   button(
     v-else,
-    :class='[type, pos, { labeled: label }]'
-    )
+    :class='[type, pos, { labeled: label }]')
     Icon(:name='icon')
     | {{ label }}
 </template>
