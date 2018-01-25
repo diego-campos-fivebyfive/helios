@@ -245,7 +245,7 @@
                                             </div>
 
                                             <div class="pull-right btn-group">
-                                                {% if app.user.platformMaster or app.user.platformAdmin %}
+                                                {% if app.user.platformMaster or app.user.platformAdmin or app.user.platformCommercial %}
                                                     <a data-target="#master_cloner_modal"
                                                        data-href="{{ path('show_order_cloner', {id:order.id}) }}"
                                                        data-toggle="modal"
