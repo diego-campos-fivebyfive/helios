@@ -14,6 +14,7 @@
           v-for='milestone in milestones')
           td {{ milestone.title }}
           td
+            Progress(:percent='milestone.average')
             span
               b {{ milestone.closed }}
               |/
@@ -36,7 +37,7 @@
       }
     }),
     mounted() {
-      this.milestones = JSON.parse('[{"id":2,"title":"Seguro","open":0,"closed":1,"total":1,"average":100},{"id":1,"title":"Finame","open":0,"closed":2,"total":2,"average":100}]')
+      this.milestones = JSON.parse('[{"id":2,"title":"Seguro","open":0,"closed":1,"total":1,"average":100},{"id":1,"title":"Finame","open":1,"closed":1,"total":2,"average":50}]')
     }
   }
 </script>
