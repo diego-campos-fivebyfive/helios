@@ -38,6 +38,15 @@
     float: left;
     font-size: 1.75rem;
     font-weight: 300;
+    text-align: left;
+
+    .sub {
+      display: block;
+      font-size: 1rem;
+      font-style: italic;
+      font-weight: 400;
+      padding-top: $ui-space-y/1.5;
+    }
   }
 
   .info {
@@ -45,5 +54,9 @@
     font-weight: 400;
     margin: 0 $ui-space-x;
     opacity: 0.8;
+  }
+
+  section {
+    border-top: $ui-space-y/10 solid $ui-divider-color;
   }
 </style>
