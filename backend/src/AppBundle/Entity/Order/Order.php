@@ -99,6 +99,13 @@ class Order implements OrderInterface
     private $statusAt;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(name="discount_config", type="json", nullable=true)
+     */
+    private $discountConfig;
+
+    /**
      * @var float
      *
      * @ORM\Column(name="discount", type="float", nullable=true)
@@ -711,6 +718,29 @@ class Order implements OrderInterface
         if(is_null($this->status)) $this->status = self::STATUS_BUILDING;
 
         return $statusNames[$this->status];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setDiscountConfig(array $config)
+    {
+        if (array_key_exists('target', $config) && array_key_exists('value', $config)) {
+            $this->discountConfig = $config;
+
+            if ($config['target'] == self::DISCOUNT_FIXED)
+                $this->discount = round($config['value'], 2);
+            elseif ($config['target'] == self::DISCOUNT_PERCENT)
+                $this->discount = round(($config['value'] / 100) * $this->getSubTotal(), 2);
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDiscountConfig()
+    {
+        return $this->discountConfig;
     }
 
     /**

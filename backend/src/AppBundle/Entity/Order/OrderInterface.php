@@ -37,6 +37,9 @@ interface OrderInterface
     const SOURCE_ACCOUNT = 0;
     const SOURCE_PLATFORM = 1;
 
+    const DISCOUNT_FIXED = 0;
+    const DISCOUNT_PERCENT = 1;
+
     /**
      * @return int
      */
@@ -128,6 +131,17 @@ interface OrderInterface
      * @return \DateTime
      */
     public function getStatusAt();
+
+    /**
+     * @param array $config
+     * @return OrderInterface
+     */
+    public function setDiscountConfig(array $config);
+
+    /**
+     * @return array
+     */
+    public function getDiscountConfig();
 
     /**
      * @param $discount
