@@ -35,7 +35,7 @@
                     <a data-delete="{{ path('generator_orders_delete',{id:order.id}) }}" class="btn btn-danger">
                         <i class="fa fa-trash"></i>
                     </a>
-                    {% if app.user.platformMaster or app.user.platformAdmin %}
+                    {% if app.user.platformMaster or app.user.platformAdmin or app.user.platformCommercial %}
                         <a data-target="#cloner_modal"
                            data-href="{{ path('show_order_cloner', {id:order.id}) }}"
                            data-toggle="modal"
