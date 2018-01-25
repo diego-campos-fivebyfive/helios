@@ -98,15 +98,14 @@ class Synchronizer
 
         $qb->select('a')->from(Additive::class, 'a');
 
-        $qb
-            ->innerJoin($related, 'r', 'WITH')
-            ->where(
+        $qb->where(
                 $qb->expr()->orX(
                     $qb->where('a.enabled = 1')
                         ->expr()->like('a.availableLevels', $qb->expr()->literal('%"'.$level.'"%')),
                     $exprRelated
                 )
             )
+            ->groupBy('a.id')
         ;
 
         $qb->andWhere('a.type = :type')
