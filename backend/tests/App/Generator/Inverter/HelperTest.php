@@ -87,6 +87,199 @@ class HelperTest extends GeneratorTest
         self::assertCount(3, $combinations[9]);
     }
 
+    public function testFilterActives()
+    {
+        $data = [
+            [
+                'id' => 100,
+                'nominal_power' => 1.1,
+                'active' => false,
+                'alternative' => 1000,
+            ],
+            [
+                'id' => 200,
+                'nominal_power' => 1.2,
+                'active' => true,
+                'alternative' => 400
+            ]
+        ];
+
+        $alternatives = [
+            [
+                'id' => 1000,
+                'nominal_power' => 1.3,
+                'active' => false,
+                'alternative' => 3000
+            ],
+            [
+                'id' => 3000,
+                'nominal_power' => 1.4,
+                'active' => false,
+                'alternative' => 4000
+            ],
+            [
+                'id' => 4000,
+                'nominal_power' => 1.5,
+                'active' => true,
+                'alternative' => 3000
+            ]
+        ];
+
+        $data = Helper::filterActives($data,$alternatives);
+
+//        $data = $this->inv_active_alternative_filter($data,$alternatives);
+//        print_r($data);die;
+
+        self::assertCount(2, $data);
+        self::assertTrue(4000 == $data[0]["id"] or 4000 == $data[1]["id"]);
+        self::assertTrue(200 == $data[1]["id"] or 200 == $data[0]["id"]);
+    }
+
+    public function testFilterPhases()
+    {
+        $data = [
+            [
+                'id' => 100,
+                'phase_number' => 1,
+                'phase_voltage' => 220,
+                'compatibility' => 0,
+            ],
+            [
+                'id' => 101,
+                'phase_number' => 2,
+                'phase_voltage' => 220,
+                'compatibility' => 0
+            ],
+            [
+                'id' => 102,
+                'phase_number' => 3,
+                'phase_voltage' => 220,
+                'compatibility' => 0
+            ],
+            [
+                'id' => 103,
+                'phase_number' => 2,
+                'phase_voltage' => 380,
+                'compatibility' => 1
+            ],
+            [
+                'id' => 104,
+                'phase_number' => 3,
+                'phase_voltage' => 380,
+                'compatibility' => 1
+            ],
+            [
+                'id' => 105,
+                'phase_number' => 3,
+                'phase_voltage' => 220,
+                'compatibility' => 1
+            ]
+        ];
+
+        $data = Helper::filterPhases($data,220,2);
+
+//        $data = $this->inv_phase_filter($data,220,2);
+//        print_r($data);die;
+
+        self::assertCount(3, $data);
+        self::assertEquals(100 , $data[0]["id"]);
+        self::assertEquals(101 , $data[1]["id"]);
+        self::assertEquals(103 , $data[2]["id"]);
+    }
+
+    public function testFilterPower()
+    {
+        $data = [
+            [
+                'id' => 100,
+                'phase_number' => 1,
+                'pow_max_show' => 15,
+                'pow_min_show' => 1,
+            ],
+            [
+                'id' => 101,
+                'phase_number' => 1,
+                'pow_max_show' => 74,
+                'pow_min_show' => 15
+            ],
+            [
+                'id' => 102,
+                'phase_number' => 3,
+                'pow_max_show' => 200,
+                'pow_min_show' => 30
+            ],
+            [
+                'id' => 103,
+                'phase_number' => 3,
+                'pow_max_show' => 600,
+                'pow_min_show' => 75
+            ],
+            [
+                'id' => 104,
+                'phase_number' => 2,
+                'pow_max_show' => 74,
+                'pow_min_show' => 15
+            ],
+            [
+                'id' => 105,
+                'phase_number' => 2,
+                'pow_max_show' => 600,
+                'pow_min_show' => 15
+            ]
+        ];
+
+        $data = Helper::filterPower($data, 50);
+
+//        $data = $this->inv_power_filter($data,50);
+//        print_r($data);die;
+
+        self::assertCount(4, $data);
+        self::assertEquals(101 , $data[0]["id"]);
+        self::assertEquals(102 , $data[1]["id"]);
+        self::assertEquals(104 , $data[2]["id"]);
+        self::assertEquals(105 , $data[3]["id"]);
+    }
+
+    public function testInverterChoices()
+    {
+        $data = [
+            [
+                'id' => 100,
+                'nominal_power' => 5
+            ],
+            [
+                'id' => 101,
+                'nominal_power' => 8
+            ],
+            [
+                'id' => 102,
+                'nominal_power' => 12
+            ],
+            [
+                'id' => 103,
+                'nominal_power' => 18
+            ],
+            [
+                'id' => 104,
+                'nominal_power' => 25
+            ],
+            [
+                'id' => 105,
+                'nominal_power' => 32
+            ]
+        ];
+
+        $data = Helper::inverterChoices($data,70, 1,4);
+
+//       $data = $this->inv_choice($data,70, 1,4);
+//        print_r($data);die;
+
+        self::assertCount(3, $data);
+        self::assertEquals(104 , $data[0]["id"]);
+        self::assertEquals(104 , $data[1]["id"]);
+        self::assertEquals(104 , $data[2]["id"]);
+    }
+
     /*
     private function inv_get_mppt_op ($all_inv){
 
