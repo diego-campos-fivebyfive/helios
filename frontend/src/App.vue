@@ -24,7 +24,13 @@
     font-size: 13px;
   }
 
+  .page {
+    min-height: 100vh;
+    position: relative;
+  }
+
   .main {
     padding-left: $ui-sidebar-x;
+    @include clearfix;
   }
 </style>

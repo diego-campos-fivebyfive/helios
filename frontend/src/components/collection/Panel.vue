@@ -15,14 +15,15 @@
 <style lang="scss" scoped>
   .panel {
     background-color: $ui-white-regular;
+    color: $ui-text-main;
     display: block;
+    float: left;
     margin: $ui-space-y $ui-space-x/2;
-    max-width: 100%;
+    width: 100%;
   }
 
   header {
     border-top: $ui-space-y/5 solid $ui-divider-color;
-    color: $ui-text-main;
     padding: $ui-space-y $ui-space-x/2;
     text-align: right;
 
@@ -58,5 +59,6 @@
 
   section {
     border-top: $ui-space-y/10 solid $ui-divider-color;
+    padding: $ui-space-y $ui-space-x;
   }
 </style>
