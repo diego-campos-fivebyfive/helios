@@ -1,0 +1,45 @@
+1. Premium
+
+update
+UPDATE app_customer as A INNER JOIN (
+  SELECT sum(o.total), o.account_id FROM app_order o  WHERE o.parent_id IS NULL AND o.status >= 7
+  AND o.created_at >= date('2017-10-27') GROUP BY o.account_id HAVING sum(o.total) > 500000
+  ) AS O on A.id = O.account_id SET A.level = 'premium';
+
+select
+SELECT sum(o.total), o.account_id FROM app_order o  WHERE o.parent_id IS NULL
+ AND o.created_at >= date('2017-11-24') GROUP BY o.account_id HAVING sum(o.total) > 500000;
+
+2. Platinum
+
+update
+UPDATE app_customer as A INNER JOIN (
+  SELECT sum(o.total), o.account_id FROM app_order o  WHERE o.parent_id IS NULL AND o.status >= 7
+  AND o.created_at >= date('2017-10-27') GROUP BY o.account_id HAVING sum(o.total) > 1000000
+  ) AS O on A.id = O.account_id SET A.level = 'platinum';
+
+select
+SELECT sum(o.total), o.account_id FROM app_order o  WHERE o.parent_id IS NULL
+ AND o.created_at >= date('2017-11-24') GROUP BY o.account_id HAVING sum(o.total) > 1000000;
+
+3. Black
+
+update
+UPDATE app_customer as A INNER JOIN (
+  SELECT sum(o.total), o.account_id FROM app_order o  WHERE o.parent_id IS NULL AND o.status >= 7
+  AND o.created_at >= date('2017-10-27') GROUP BY o.account_id HAVING sum(o.total) > 2000000
+  ) AS O on A.id = O.account_id SET A.level = 'black';
+
+select
+SELECT sum(o.total), o.account_id FROM app_order o  WHERE o.parent_id IS NULL
+ AND o.created_at >= date('2017-11-24') GROUP BY o.account_id HAVING sum(o.total) > 2000000;
+
+
+
+update para bloqueio
+UPDATE app_customer as A INNER JOIN (
+  SELECT sum(o.total), o.account_id FROM app_order o  WHERE o.parent_id IS NULL AND o.status >= 7
+  AND o.created_at >= date('2017-10-27') GROUP BY o.account_id HAVING sum(o.total) < 500000
+  ) AS O on A.id = O.account_id SET A.status = '4' WHERE A.updated_at < date('2018-01-24');
+
+SELECT A.updated_at, A.id FROM app_customer A WHERE A.updated_at < (now() - date('27-10-27'));
