@@ -1,3 +1,20 @@
+## 25/01 ##
+### AJUSTES ##
+1. PROFORMA . 1385
+1.1 Alterar a data (que fica ao lado da referência) para data do status.
+1.2 Se a suborder não possuir seguro, ocupa apenas uma página, se tiver seguros ocupa duas páginas, sendo a primeira com o sistema e a segunda com os seguros (Estão ocorrendo sobreposições, devido ao tamanho das descrições dos seguros)
+1.2.1 Ajustar o título de cada suborder, abaixo do nome da mesma, incluir em fonte menor "Equipamentos". Na página em que serão exibidos os seguros, incluir também o título e abaixo em fonte menor "Seguros".
+1.3 "Valor do Sistema", quando não houver seguro, exibe após a tabela de "Equipamentos", quando houver, exibe após a tabela de "Seguros".
+
+2. PROPOSTA . 1387
+2.1 Permitir o processamento de arquivos ".doc", atualmente permite apenas "docx".
+
+3. EMAILS DE ORÇAMENTO . 1388
+3.1 No campo "para" (não nos CC), além de enviar para o dono da conta, deve enviar também para os administradores.
+
+4. CLONADOR DE ORÇAMENTOS . 1389
+4.1 Na tela de visualização e no wizard (etapa 2), liberar essa funcionalidade para usuário comercial.
+
 ## 24/01 ##
 ### RANKING . 1369 ##
 1. Alterar os fatores de pontuação para:
