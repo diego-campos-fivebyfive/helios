@@ -1,7 +1,7 @@
 <template lang="pug">
   div
-    div.bar
-      div.progress(:style="{ width: percent + '%' }")
+    .bar
+      .progress(:style='{ width: `${percent}%` }')
     slot
 </template>
 

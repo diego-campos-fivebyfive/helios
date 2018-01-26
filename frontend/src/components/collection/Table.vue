@@ -28,13 +28,16 @@
       tr {
         &:hover {
           background-color: $table-striped-bg_;
-          cursor: pointer;
         }
 
         &:nth-child(odd) {
           background-color: $table-striped-bg;
         }
       }
+    }
+
+    td {
+      border-top: $ui-space-y/10 solid $ui-divider-color;
     }
 
     td,
@@ -50,10 +53,6 @@
       &:nth-child(2) {
         text-align: right;
       }
-    }
-
-    td {
-      border-top: $ui-space-y/10 solid $ui-divider-color;
     }
   }
 </style>

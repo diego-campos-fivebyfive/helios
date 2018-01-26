@@ -3,7 +3,7 @@
     tr(slot='head')
       th Título
       th Concluídas / Cadastradas (%)
-    tr(slot='rows', v-for='milestone in milestones')
+    tr.rows(slot='rows', v-for='milestone in milestones')
       td {{ milestone.title }}
       td
         Progress(:percent='milestone.average')
@@ -24,5 +24,7 @@
 </script>
 
 <style lang="scss" scoped>
-
+  .rows {
+    cursor: pointer;
+  }
 </style>

@@ -30,7 +30,7 @@
   }
 
   .main {
-    padding-left: $ui-sidebar-x;
     @include clearfix;
+    padding-left: $ui-sidebar-x;
   }
 </style>
