@@ -81,6 +81,7 @@ class SettingsType extends AbstractType
                 ->add('fdi_max', TextType::class)
                 ->add('promo_end_at', TextType::class)
                 ->add('max_order_discount', TextType::class)
+                ->add('max_commercial_discount', TextType::class)
                 ->add(
                     $builder->create('order_expiration_days', CollectionType::class, [
                         'entry_type' => ExpirationType::class,
