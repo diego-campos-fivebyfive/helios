@@ -86,6 +86,7 @@ class SettingsController extends AdminController
     {
         $fields = [
             'max_order_discount',
+            'max_commercial_discount',
             'fdi_max',
             'fdi_min',
             'shipping_included_max_power',
