@@ -12,6 +12,7 @@ use AppBundle\Entity\TimelineInterface;
 use AppBundle\Form\Component\GeneratorType;
 use AppBundle\Form\Financial\CompanyType;
 use AppBundle\Form\Order\DeliveryType;
+use AppBundle\Form\Order\DiscountType;
 use AppBundle\Form\Order\ElementType;
 use AppBundle\Form\Order\OrderType;
 use AppBundle\Service\Order\OrderFinder;
@@ -179,20 +180,37 @@ class ProjectGeneratorController extends AbstractController
 
     /**
      * @Route("/{id}/discount", name="generator_order_discount")
-     *
-     * @Method("post")
      */
     public function discountAction(Request $request, Order $order)
     {
-        $order->setDiscount(floatval($request->get('discount')));
+        $discount = $order->getDiscountConfig();
 
-        $this->manager('order')->save($order);
+        $maxCommercialDiscount = $this->findSettings()->get('max_commercial_discount');
 
-        $this->get('order_manipulator')->normalizeInfo($order);
+        $form = $this->createForm(DiscountType::class, $discount, [
+            'member' => $this->member()
+        ]);
 
-        return $this->json([
-            'total' => $order->getTotal(),
-            'orderDiscount' => $order->getDiscount()
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $discount = $form->getData();
+
+            $order->setDiscountConfig($discount);
+            $this->manager('order')->save($order);
+
+            $this->get('order_manipulator')->normalizeInfo($order);
+
+            return $this->json([
+                'total' => $order->getTotal(),
+                'orderDiscount' => $order->getDiscount()
+            ]);
+        }
+
+        return $this->render('admin/orders/form_discount.html.twig',[
+            'order' => $order,
+            'maxDiscount' => $maxCommercialDiscount,
+            'form' => $form->createView()
         ]);
     }
 
