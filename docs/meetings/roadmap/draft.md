@@ -54,8 +54,8 @@ Para cada nível:
 
 ## ETAPAS ##
 1. Adequar entidade Order para tratamento da nova regra (unit tests) . 1377
-2. Insrerir nova configuração em Parâmetros
-3. Adequar formulário/interface no Wizard, conforme a regra em "parâmetros"
+2. Insrerir nova configuração em Parâmetros . 1390
+3. Adequar formulário/interface no Wizard, conforme a regra em "parâmetros" . 1393
 
 ### RESGATE DE PONTOS ###
 1. Ainda em análise.
