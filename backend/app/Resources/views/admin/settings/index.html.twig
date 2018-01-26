@@ -300,8 +300,14 @@
                                                                 <div class="panel-body">
                                                                     <div class="col-md-6">
                                                                         <div>
-                                                                            {{ form_label(form_params.max_order_discount, 'Desconto máximo permitido') }} &nbsp;
-                                                                            {{ form_widget(form_params.max_order_discount, {attr:{class:'form-control', placeholder:"Desconto máximo"}}) }}
+                                                                            {{ form_label(form_params.max_order_discount, 'Desconto máximo em margens') }} &nbsp;
+                                                                            {{ form_widget(form_params.max_order_discount, {attr:{class:'form-control', placeholder:"Desconto máximo em margens"}}) }}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div>
+                                                                            {{ form_label(form_params.max_commercial_discount, 'Desconto máximo comercial') }} &nbsp;
+                                                                            {{ form_widget(form_params.max_commercial_discount, {attr:{class:'form-control', placeholder:"Desconto máximo comercial"}}) }}
                                                                         </div>
                                                                     </div>
                                                                 </div>
