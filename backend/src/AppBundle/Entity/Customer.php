@@ -147,6 +147,13 @@ class Customer extends AbstractCustomer
     private $expireAt;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $activatedAt;
+
+    /**
      * @var UserInterface
      *
      * @ORM\OneToOne(targetEntity="User", inversedBy="info", cascade={"persist"})
@@ -1395,6 +1402,24 @@ class Customer extends AbstractCustomer
         }
 
         return $this->expireAt;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setActivatedAt(\DateTime $activatedAt)
+    {
+        $this->activatedAt = $activatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getActivatedAt()
+    {
+        return $this->activatedAt;
     }
 
     /**
