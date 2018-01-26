@@ -732,7 +732,7 @@ class Order implements OrderInterface
             if ($config['target'] == self::DISCOUNT_FIXED)
                 $this->discount = round((float)$value, 2);
             elseif ($config['target'] == self::DISCOUNT_PERCENT)
-                $this->discount = round(((float)$value / 100) * $this->getSubTotal(), 2);
+                $this->discount = round(((float)$value / 100) * $this->getTotalExcDiscount(), 2);
         }
     }
 
