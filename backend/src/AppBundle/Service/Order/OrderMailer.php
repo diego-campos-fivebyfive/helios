@@ -11,8 +11,7 @@
 
 namespace AppBundle\Service\Order;
 
-use AppBundle\Entity\Customer;
-use AppBundle\Entity\MemberInterface;
+
 use AppBundle\Service\AbstractMailer;
 use AppBundle\Entity\Order\OrderInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;

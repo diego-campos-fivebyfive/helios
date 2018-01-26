@@ -12,7 +12,6 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\AccountInterface;
-use AppBundle\Entity\Customer;
 use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\Order\OrderInterface;
 use Fos\UserBundle\Model\UserInterface;
