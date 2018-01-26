@@ -1,3 +1,13 @@
+## 26/01 ##
+### LISTAGEM DE ORÇAMENTOS . 1402 ##
+1. Verificar o botão de limpeza de datas (o primeiro não funciona, o segundo apaga os dois)
+2. Alterar disposição dos campos de busca
+2.1 O campo de usuário fica no lugar do campo de status atual
+2.2 O campo de status vai para linha de baixo, ocupando meia página. Este campo deverá aceitar múltiplos valores (filtrar por mais de um status por vez) - Utilizar chosen (similar ao existente na dashboad).
+
+### SEGUROS DE ORÇAMENTOS . 1403 ##
+1. Para exibição do seguro, na tela de visualização e na proforma, está sendo checado com order.insurance, que retorna false caso o valor total do seguro seja zero, o ideal é que verifique apenas se existe algum seguro vinculado e não se o valor é maior que zero, pois podem haver seguros sem valor, que devem ser exibidos mesmo assim.
+
 ## 25/01 ##
 ### AJUSTES ##
 1. PROFORMA . 1385

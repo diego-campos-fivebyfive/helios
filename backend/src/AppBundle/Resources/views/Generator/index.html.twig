@@ -7,7 +7,7 @@
 {% block body %}
 
     {% include view('helper.style-wizard') %}
-    {% set accessDiscount = app.user.isPlatformAdmin or app.user.isPlatformMaster %}
+    {% set accessDiscount = app.user.isPlatformAdmin or app.user.isPlatformMaster or app.user.isPlatformExpanse %}
 
     <div class="modal inmodal fade" id="cloner_modal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
@@ -162,14 +162,8 @@
                                             </div>
                                             <div class="panel-body">
                                                 {% if  accessDiscount %}
-                                                <div class="col-md-12 border-bottom">
-                                                    <div class="col-md-9"><h2>Desconto comercial:</h2></div>
-                                                    <div class="col-md-3 input-group">
-                                                        <span class="input-group-addon">R$</span>
-                                                        <input type="text" id="discount" placeholder="Valor do desconto"
-                                                               value="{{ order.discount }}" class="form-control">
+                                                    <div class="col-md-12" id="discount">
                                                     </div>
-                                                </div>
                                                 {% endif %}
                                                 <div id="discount_info" {% if not order.discount > 0 %}class="hide"{% endif %}>
                                                     <div class="col-md-9"><h2>Total sem desconto:</h2></div>
@@ -420,24 +414,12 @@
                 element.html(content);
             },
             orderDiscount: function () {
-                setTimeout(function () {
-                    Numbers.mask(GeneratorHandler.discount);
-                },1200);
-                GeneratorHandler.discount.on('change', function () {
-                    $.ajax({
-                        url: '{{ path('generator_order_discount', {id:order.id}) }}',
-                        data: {discount:GeneratorHandler.discount.val().replace(',','.')},
-                        method: 'post',
-                        complete: function (xhr) {
-                            var response = xhr.responseJSON;
-                            if (response.orderDiscount > 0)
-                                $('#discount_info').removeClass('hide');
-                            else
-                                $('#discount_info').addClass('hide');
-                            $('#order-discount').html('-'+numeral(response.orderDiscount).format('$0,0.00'));
-                            $('#order-total').html(numeral(response.total).format('$0,0.00'));
-                        }
-                    });
+                $.ajax({
+                    url: '{{ path('generator_order_discount', {id:order.id}) }}',
+                    method: 'GET',
+                    complete: function (xhr) {
+                        GeneratorHandler.discount.html(xhr.responseText);
+                    }
                 });
             },
             init: function () {
