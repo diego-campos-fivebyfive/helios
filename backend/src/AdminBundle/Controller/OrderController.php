@@ -33,7 +33,6 @@ class OrderController extends AbstractController
      */
     public function orderAction(Request $request)
     {
-
         $member = $this->member();
 
         $form = $this->createForm(FilterType::class, null, [
@@ -51,7 +50,6 @@ class OrderController extends AbstractController
         $formatDateDelivery  = function($dateDelivery ){
             return implode('-', array_reverse(explode('/', $dateDelivery )));
         };
-
 
         if(is_array($data) && !array_key_exists('agent',$data) || !$data['agent'])
             $data['agent'] = $member;
