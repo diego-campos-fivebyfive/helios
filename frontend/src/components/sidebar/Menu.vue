@@ -54,6 +54,11 @@
             icon: 'exchange'
           }
         ]
+      },
+      {
+        name: 'Metricas',
+        link: '/metric',
+        icon: 'area-chart'
       }
     ])
   })

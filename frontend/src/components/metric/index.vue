@@ -1,34 +1,21 @@
 <template lang="pug">
-  Panel
+  Panel.panel
     div(slot='header')
       h2.title Progresso de tarefas técnicas
         span.sub Github - Milestones
-    table(slot='section')
-      thead
-        tr
-          th Título
-          th Concluídas / Cadastradas (%)
-      thead
-      tbody
-        tr.milestone(
-          v-for='milestone in milestones')
-          td {{ milestone.title }}
-          td
-            Progress(:percent='milestone.average')
-            span
-              b {{ milestone.closed }}
-              |/
-              b {{ milestone.total }}
-              | Tarefas
-            span
-              b {{ milestone.average }}
-              |% Concluído
+    div(slot='section')
+      Content(:milestones='milestones')
 </template>
 
 <script>
+  import Content from '@/components/metric/Content'
+
   const uri = 'http://localhost:8000/admin/metrics/api/v1'
 
   export default {
+    components: {
+      Content
+    },
     data: () => ({
       milestones: [],
       modal: {
@@ -42,6 +29,8 @@
   }
 </script>
 
-</style lang="scss" scoped>
-  /* Metrics Style */
+<style lang="scss" scoped>
+  .panel {
+    max-width: calc(50% - #{$ui-space-x});
+  }
 </style>

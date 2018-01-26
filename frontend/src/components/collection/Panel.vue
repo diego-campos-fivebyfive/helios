@@ -19,7 +19,7 @@
     display: block;
     float: left;
     margin: $ui-space-y $ui-space-x/2;
-    width: 100%;
+    width: calc(100% - #{$ui-space-x});
   }
 
   header {
@@ -59,6 +59,6 @@
 
   section {
     border-top: $ui-space-y/10 solid $ui-divider-color;
-    padding: $ui-space-y $ui-space-x;
+    padding: $ui-space-y $ui-space-x/2;
   }
 </style>

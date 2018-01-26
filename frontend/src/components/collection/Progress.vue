@@ -1,6 +1,8 @@
 <template lang="pug">
-  div.bar
-    div.progress(:style="{ width: percent + '%' }")
+  div
+    div.bar
+      div.progress(:style="{ width: percent + '%' }")
+    slot
 </template>
 
 <script>
@@ -15,9 +17,10 @@
     background-color: $ui-gray-light;
     border-radius: $ui-corner;
     overflow: hidden;
-    height: $ui-space-y/2;
+    height: $ui-space-y/1.8;
+    margin: $ui-space-y/3 0;
+    margin-right: $ui-space-x/5;
     position: relative;
-    margin: $ui-space-y/3 $ui-space-x/5;
   }
 
   .progress {
@@ -26,5 +29,11 @@
     height: 100%;
     right: 0;
     top: 0;
+  }
+
+  .caption {
+    display: inline-block;
+    margin-top: $ui-space-y/3;
+    margin-left: $ui-space-x/3;
   }
 </style>
