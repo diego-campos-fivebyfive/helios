@@ -97,7 +97,7 @@
     "selector-list-comma-newline-before": "never-multi-line",
     "selector-max-class": 2,
     "selector-max-combinators": 2,
-    "selector-max-compound-selectors": 2,
+    "selector-max-compound-selectors": 3,
     "selector-max-empty-lines": 0,
     "selector-pseudo-class-case": "lower",
     "selector-pseudo-class-no-unknown": true,

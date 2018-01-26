@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Account from '@/components/Account'
+import Metric from '@/components/metric'
 
 Vue.use(Router)
 
@@ -11,6 +12,11 @@ export default new Router({
       path: '/account',
       name: 'account',
       component: Account
+    },
+    {
+      path: '/metric',
+      name: 'metric',
+      component: Metric
     }
   ]
 })

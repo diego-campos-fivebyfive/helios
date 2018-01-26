@@ -15,14 +15,15 @@
 <style lang="scss" scoped>
   .panel {
     background-color: $ui-white-regular;
+    color: $ui-text-main;
     display: block;
+    float: left;
     margin: $ui-space-y $ui-space-x/2;
-    max-width: 100%;
+    width: calc(100% - #{$ui-space-x});
   }
 
   header {
     border-top: $ui-space-y/5 solid $ui-divider-color;
-    color: $ui-text-main;
     padding: $ui-space-y $ui-space-x/2;
     text-align: right;
 
@@ -38,6 +39,15 @@
     float: left;
     font-size: 1.75rem;
     font-weight: 300;
+    text-align: left;
+
+    .sub {
+      display: block;
+      font-size: 1rem;
+      font-style: italic;
+      font-weight: 400;
+      padding-top: $ui-space-y/1.5;
+    }
   }
 
   .info {
@@ -45,5 +55,10 @@
     font-weight: 400;
     margin: 0 $ui-space-x;
     opacity: 0.8;
+  }
+
+  section {
+    border-top: $ui-space-y/10 solid $ui-divider-color;
+    padding: $ui-space-y $ui-space-x/2;
   }
 </style>
