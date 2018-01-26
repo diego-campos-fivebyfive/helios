@@ -1,5 +1,20 @@
 <?php
 
+/**
+ * Este script efetua o procedimento de geração dos registros de pontuação
+ * para contas com base nos orçamentos dentro dos parâmetros definidos.
+ *
+ * Processo:
+ * 1. Excluir todos os registros de ranking
+ * 2. Efetuar a busca por orçamentos com base nos parâmetros de status e potência
+ * 3. Percorrer os orçamentos encontrados
+ * 3.1 Para cada orçamento, gerar um registro de ranking com pontuação calculada.
+ * 4. Persistir os registros de ranking
+ * 5. TRIGGERS: Quando executada qualquer operação (insert/update/delete) na tabela de ranking
+ *              a base de dados através do recurso de TRIGGER, atualiza instantânemente a propriedade
+ *              'ranking' da conta vinculada à operação.
+ */
+
 use AppBundle\Service\Order\OrderRanking;
 
 require_once dirname(__FILE__) . '/db/connection.php';
@@ -62,7 +77,7 @@ foreach ($orders as $order){
 // Store rankings
 R::storeAll($rankings);
 
-/*** TRIGGERS
+/*** TRIGGERS QUE DEVEM SER ARMAZENADAS NA BASE DE DADOS (tabela app_ranking)
 
 DELIMITER //
 
