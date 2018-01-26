@@ -26,7 +26,9 @@ class DiscountType extends AbstractType
         $builder->add('target', ChoiceType::class, [
             'choices' => $choices
             ]);
-        $builder->add('value', TextType::class);
+        $builder->add('value', TextType::class, [
+            'required' => false
+        ]);
 
 
     }
