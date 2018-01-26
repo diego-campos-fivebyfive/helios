@@ -23,6 +23,7 @@ class FilterType extends AbstractType
                 'required' => false,
                 'placeholder' => 'Status',
                 'choices' => $statusNames,
+                'multiple' => true
             ])
         ;
     }

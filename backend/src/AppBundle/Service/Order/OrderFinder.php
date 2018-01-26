@@ -247,7 +247,6 @@ class OrderFinder
     private function addFilterParameter(QueryBuilder $qb)
     {
         if(null != $filter = $this->parameters['filter']) {
-
             if (array_key_exists('like', $filter) && null != $filter['like']) {
 
                 $expressions = [];
@@ -258,10 +257,8 @@ class OrderFinder
                 $qb->andWhere($qb->expr()->orX()->addMultiple($expressions));
             }
 
-            if (array_key_exists('status', $filter) && is_int($filter['status'])) {
-                $qb->andWhere('o.status = :status');
-                $this->parameters['status'] = $filter['status'];
-            }
+            if (array_key_exists('status', $filter) && is_array($filter['status']) && $filter['status'])
+                $qb->andWhere($qb->expr()->in('o.status', $filter['status']));
         }
 
         unset($this->parameters['filter']);

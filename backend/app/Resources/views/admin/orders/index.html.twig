@@ -52,6 +52,18 @@
         .validated {
             color: #0a6aa1;
         }
+        .group-input input {
+            float: left;
+            width: 85%;
+        }
+        .group-input button {
+            width: 15%;
+            border-radius: 0  2px 2px 0;
+        }
+        .chosen-choices {
+            border-radius: 1px;
+            padding: 2px !important;
+        }
     </style>
 
 {% endblock %}
@@ -139,65 +151,67 @@
 
                 <div class="col-md-9">
                     {{ form_start(form) }}
-
                     <div class="row">
-                        {% set hasAgent = attribute(form, 'agent') is defined %}
-
-                        <div class="form-group col-md-{{ hasAgent ? '4' : '6' }}">
+                        <div class="form-group col-md-4">
                             {{ form_widget(form.like,{attr:{class:'form-control', placeholder: 'nome, razão social, cnpj, número...'}}) }}
                         </div>
 
-                        <div class="form-group col-md-{{ hasAgent ? '3' : '4' }}">
-                            {{ form_widget(form.status,{attr:{class:'form-control'}}) }}
+                        <div class="group-input col-md-4">
+                            {{ form_widget(form.statusAt,{attr:{class:'form-control', placeholder:'Filtrar p/ data de status' }}) }}
+                            <button type="button" id="clear-date-status" class="btn btn-primary ">
+                                <i class="fa fa-eraser"></i>
+                            </button>
                         </div>
 
+                        <div class="group-input col-md-4">
+                            {{ form_widget(form.deliveryAt,{attr:{class:'form-control', placeholder:'Filtrar p/ data de disponibilidade para coleta' }}) }}
+                            <button type="button" id="clear-date-delivery" class="btn btn-primary">
+                                <i class="fa fa-eraser"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        {% set hasAgent = attribute(form, 'agent') is defined %}
                         {% if hasAgent %}
-                            <div class="form-group col-md-3">
+                            <div class="col-md-3">
                                 {{ form_widget(form.agent,{attr:{class:'form-control'}}) }}
                             </div>
                         {% endif %}
 
+                        <div class="col-md-{{ hasAgent ? '7' : '10' }}">
+                            {{ form_widget(form.status,{attr:{class:'form-control', 'data-placeholder':'Status'}}) }}
+                        </div>
 
-                        <div class="form-group col-md-2">
-                        <button type="submit" class="btn btn-primary btn-md btn-block">
-                            <i class="fa fa-search"></i> Pesquisar
-                        </button>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-md-3">
-                            {{ form_widget(form.statusAt,{attr:{class:'form-control', placeholder:'Filtrar p/ data de status' }}) }}
-                        </div>
-                        <div class="col-md-1">
-                            <button type="button" id="clear-date-status" class="btn btn-primary pull-right"><i class="fa fa-eraser"></i></button>
-                        </div>
-                        <div class="form-group col-md-3">
-                            {{ form_widget(form.deliveryAt,{attr:{class:'form-control', placeholder:'Filtrar p/ data de disponibilidade para coleta' }}) }}
-                        </div>
-                        <div class="col-md-1">
-                            <button type="button" id="clear-date-delivery" class="btn btn-primary pull-right"><i class="fa fa-eraser"></i></button>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary btn-md btn-block">
+                                <i class="fa fa-search"></i> Pesquisar
+                            </button>
                         </div>
                     </div>
                     {{ form_end(form) }}
 
                 </div>
 
-                <div class="col-md-3">
-                    {% if allowAdd %}
-                        <a data-url="{{ path('accounts_list') }}"
-                           data-toggle="modal"
-                           data-target="#modal_accounts"
-                           class="btn btn-success pull-right">
-                            <i class="fa fa-plus"></i> Orçamento
-                        </a>
-                    {% endif %}
-                    {% if member.PlatformMaster or member.PlatformAdmin %}
-                        <a class="btn btn-success" data-target="#modal_upload_csv" data-toggle="modal"
-                           data-href="{{ path('import_csv', {filename:0}) }}">
-                            <i class="fa fa-file-text"> </i> <small>Importar CSV</small>
-                        </a>
-                    {% endif %}
+                <div class="col-md-3 text-right">
+                    <div class="row form-group">
+                        {% if allowAdd %}
+                            <a data-url="{{ path('accounts_list') }}"
+                               data-toggle="modal"
+                               data-target="#modal_accounts"
+                               class="btn btn-success">
+                                <i class="fa fa-plus"></i> Orçamento
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div class="row form-group">
+                        {% if member.PlatformMaster or member.PlatformAdmin %}
+                            <a class="btn btn-success" data-target="#modal_upload_csv" data-toggle="modal"
+                               data-href="{{ path('import_csv', {filename:0}) }}">
+                                <i class="fa fa-file-text"> </i> <small>Importar CSV</small>
+                            </a>
+                        {% endif %}
+                    </div>
                 </div>
 
         </div>
@@ -458,7 +472,7 @@
 
         dateStatus.val('');
 
-        $('#clear-date-delivery').on('click', function () {
+        $('#clear-date-status').on('click', function () {
             dateStatus.val('');
         });
 
@@ -512,6 +526,8 @@
             var url = target.data('url');
             modalFiles.find('.modal-body').load(url);
         });
+
+        $('#filter_status').chosen({});
 
     </script>
 
