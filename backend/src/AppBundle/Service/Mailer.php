@@ -12,6 +12,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\AccountInterface;
+use AppBundle\Entity\Customer;
 use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\Order\OrderInterface;
 use Fos\UserBundle\Model\UserInterface;
@@ -127,14 +128,13 @@ class Mailer extends AbstractMailer
     private function createMessageOrder(OrderInterface $order)
     {
         $account = $order->getAccount();
-        $owner = $account->getOwner();
         $parameters  = $this->getMessageParameters($order);
 
         $message = $this->createMessage($parameters);
 
         $this->resolvePlatformEmails($message);
 
-        $message->setTo($owner->getEmail(), $owner->getName());
+        $this->resolveAccountEmails($message, $account);
 
         if(null != $agent = $account->getAgent()) {
 
@@ -191,6 +191,17 @@ class Mailer extends AbstractMailer
         $addIfDefined('master', true);
     }
 
+    /**
+     * @param \Swift_Message $message
+     * @param $account
+     */
+    private function resolveAccountEmails(\Swift_Message $message, Customer $account)
+    {
+        foreach ($account->getOwners() as $owner) {
+            $message->addTo($owner->getEmail(), $owner->getName());
+        }
+    }
+
     private function addExpanseCc($account, $message)
     {
         $state = $account->getState();
@@ -218,8 +229,7 @@ class Mailer extends AbstractMailer
                 $expanseEmail = $member->getEmail();
                 $expanseName = $member->getName();
                 $message
-                    ->addCc($expanseEmail, $expanseName)
-                    ->setReplyTo($expanseEmail, $expanseName);
+                    ->addCc($expanseEmail, $expanseName);
             }
         }
     }
