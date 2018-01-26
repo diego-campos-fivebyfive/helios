@@ -60,7 +60,7 @@ class Resolver
             /** @var ComponentInterface $component */
             foreach ($components as $component) {
 
-                if(in_array($projectLevel, $component->getGeneratorLevels())) continue;
+                if(!in_array($projectLevel, $component->getGeneratorLevels())) continue;
 
                 $quantity = $dependencies[$type][$component->getId()];
 

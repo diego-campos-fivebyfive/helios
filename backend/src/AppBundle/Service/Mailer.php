@@ -127,14 +127,13 @@ class Mailer extends AbstractMailer
     private function createMessageOrder(OrderInterface $order)
     {
         $account = $order->getAccount();
-        $owner = $account->getOwner();
         $parameters  = $this->getMessageParameters($order);
 
         $message = $this->createMessage($parameters);
 
         $this->resolvePlatformEmails($message);
 
-        $message->setTo($owner->getEmail(), $owner->getName());
+        $this->resolveAccountEmails($message, $account);
 
         if(null != $agent = $account->getAgent()) {
 
@@ -168,72 +167,6 @@ class Mailer extends AbstractMailer
         ];
 
         return $parameters;
-    }
-
-    /**
-     * @param \Swift_Message $message
-     */
-    private function resolvePlatformEmails(\Swift_Message $message)
-    {
-        $settings = $this->getPlatformSettings();
-
-        $addIfDefined = function($target, $bcc = false) use($settings, $message){
-            if(array_key_exists($target, $settings) && !empty($settings[$target]['email'])){
-                if($bcc){
-                    $message->addBcc($settings[$target]['email'], $settings[$target]['name']);
-                }else {
-                    $message->addCc($settings[$target]['email'], $settings[$target]['name']);
-                }
-            }
-        };
-
-        $addIfDefined('admin');
-        $addIfDefined('master', true);
-    }
-
-    private function addExpanseCc($account, $message)
-    {
-        $state = $account->getState();
-
-        $qb = $this->manager('member')->createQueryBuilder();
-
-        $qb->where(
-            $qb->expr()->andX(
-                $qb->expr()->eq('c.context', ':member'),
-                $qb->expr()->like('c.attributes',
-                    $qb->expr()->literal('%"'.$state.'"%')
-                )
-            )
-        );
-
-        $qb->setParameters([
-            'member' => 'member'
-        ]);
-
-        $members = $qb->getQuery()->getResult();
-
-        /** @var MemberInterface $member */
-        foreach ($members as  $member) {
-            if($member->isPlatformExpanse()) {
-                $expanseEmail = $member->getEmail();
-                $expanseName = $member->getName();
-                $message
-                    ->addCc($expanseEmail, $expanseName)
-                    ->setReplyTo($expanseEmail, $expanseName);
-            }
-        }
-    }
-
-    /**
-     * @return array
-     */
-    private function getPlatformSettings()
-    {
-        $manager = $this->manager('parameter');
-
-        $settings = $manager->findOrCreate('platform_settings')->all();
-
-        return $settings;
     }
 
     /**
