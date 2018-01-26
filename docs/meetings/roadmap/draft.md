@@ -1,3 +1,10 @@
+## 26/01 ##
+### LISTAGEM DE ORÇAMENTOS . 1402 ##
+1. Verificar o botão de limpeza de datas (o primeiro não funciona, o segundo apaga os dois)
+2. Alterar disposição dos campos de busca
+2.1 O campo de usuário fica no lugar do campo de status atual
+2.2 O campo de status vai para linha de baixo, ocupando meia página. Este campo deverá aceitar múltiplos valores (filtrar por mais de um status por vez) - Utilizar chosen (similar ao existente na dashboad).
+
 ## 25/01 ##
 ### AJUSTES ##
 1. PROFORMA . 1385
