@@ -589,6 +589,17 @@ interface BusinessInterface extends BaseCustomerInterface
     public function getExpireAt();
 
     /**
+     * @param \DateTime $activatedAt
+     * @return BusinessInterface
+     */
+    public function setActivatedAt(\DateTime $activatedAt);
+
+    /**
+     * @return \DateTime
+     */
+    public function getActivatedAt();
+
+    /**
      * @return bool
      * @see context:account
      */
