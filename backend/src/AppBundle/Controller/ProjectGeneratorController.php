@@ -185,7 +185,7 @@ class ProjectGeneratorController extends AbstractController
     {
         $discount = $order->getDiscountConfig();
 
-        $maxCommercialDiscount = $this->findSettings()->get('max_commercial_discount');
+        $maxCommercialDiscount = $this->findSettings()->get('max_commercial_discount', 0);
 
         $form = $this->createForm(DiscountType::class, $discount, [
             'member' => $this->member()
