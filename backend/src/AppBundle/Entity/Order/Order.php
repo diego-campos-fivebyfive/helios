@@ -728,10 +728,11 @@ class Order implements OrderInterface
         if (array_key_exists('target', $config) && array_key_exists('value', $config)) {
             $this->discountConfig = $config;
 
+            $value = str_replace(',','.',$config['value']);
             if ($config['target'] == self::DISCOUNT_FIXED)
-                $this->discount = round($config['value'], 2);
+                $this->discount = round((float)$value, 2);
             elseif ($config['target'] == self::DISCOUNT_PERCENT)
-                $this->discount = round(($config['value'] / 100) * $this->getSubTotal(), 2);
+                $this->discount = round(((float)$value / 100) * $this->getSubTotal(), 2);
         }
     }
 
