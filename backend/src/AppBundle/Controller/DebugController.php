@@ -82,14 +82,14 @@ class DebugController extends AbstractController
 
 
     /**
-     * @Route("/template/upload", name="template_upload")
+     * @Route("/template/upload", name="debug_template_upload")
      */
     public function templateUploadAction(Request $request)
     {
         $file = $request->files->get('file');
 
         if (!$file instanceof UploadedFile) {
-            return $this->render('proposal.upload');
+            return $this->render('proposal._upload');
         }
 
         $filename = md5(uniqid(time())) . '.docx';

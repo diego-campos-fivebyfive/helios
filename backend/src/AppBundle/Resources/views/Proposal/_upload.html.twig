@@ -30,7 +30,7 @@
         <div class="dz-message needsclick">
             Arraste o arquivo aqui ou clique para selecionar <br>
             <span class="note needsclick">
-            (Apenas arquivos com extensão .doc ou .docx)
+            (Apenas arquivos com extensão .docx)
         </span>
         </div>
     </div>
@@ -62,7 +62,7 @@
             url: '{{ app.request.uri }}',
             createImageThumbnails: false,
             uploadMultiple: false,
-            acceptedMimeTypes: '.doc, .docx',
+            acceptedMimeTypes: '.docx',
             init: function () {
                 this.on('addedfile', function (file) {
                     $(info).html('');
