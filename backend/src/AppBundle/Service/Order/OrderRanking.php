@@ -31,12 +31,20 @@ class OrderRanking
     /**
      * @var array
      */
-    private $mapping = [
+    private static $mapping = [
         Memorial::LEVEL_BLACK => 5,
         Memorial::LEVEL_PLATINUM => 3,
         Memorial::LEVEL_PREMIUM => 2,
         Memorial::LEVEL_PARTNER => 1
     ];
+
+    /**
+     * @return array
+     */
+    public static function getMapping()
+    {
+        return self::$mapping;
+    }
 
     /**
      * @param Order $order
@@ -55,7 +63,7 @@ class OrderRanking
                 $deliveryInfo
             );
 
-            $amount = ceil($order->getPower() * $this->mapping[$order->getLevel()]);
+            $amount = ceil($order->getPower() * self::$mapping[$order->getLevel()]);
 
             $target = $order->getAccount();
 

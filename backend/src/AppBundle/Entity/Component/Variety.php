@@ -221,15 +221,16 @@ class Variety implements VarietyInterface, ComponentInterface
      */
     public static function getTypes()
     {
-        return  [
-            self::TYPE_STRING_BOX => 'string_box',
-            self::TYPE_ABB_EXTRA => 'abb-extra',
-            self::TYPE_CABLE => 'cabo',
-            self::TYPE_CONNECTOR => 'conector',
-            self::TYPE_TRANSFORMER => 'transformador',
-            self::TYPE_MONITOR => 'monitor',
-            self::TYPE_FUSE => 'fusível'
+        $types = [
+            self::TYPE_STRING_BOX,
+            self::TYPE_ABB_EXTRA,
+            self::TYPE_CABLE,
+            self::TYPE_CONNECTOR,
+            self::TYPE_TRANSFORMER,
+            self::TYPE_MONITOR,
+            self::TYPE_FUSE
         ];
 
+        return array_combine($types, $types);
     }
 }
