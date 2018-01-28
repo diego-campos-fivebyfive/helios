@@ -58,13 +58,10 @@ module.exports = {
                 },
                 {
                   loader: 'sass-loader',
-                  options: { sourceMap: true }
-                },
-                {
-                  loader: 'sass-resources-loader',
                   options: {
                     sourceMap: true,
-                    resources: path.resolve(__dirname, './src/assets/style/main.scss')
+                    includePaths: ['./src/assets/style'],
+                    data: '@import "main.scss";'
                   }
                 }
               ],
@@ -173,7 +170,7 @@ module.exports = {
   },
   plugins: [
     new ExtractTextPlugin({
-      filename: '[name].[contenthash].css',
+      filename: '[name].css',
       allChunks: true
     }),
     new HtmlWebpackPlugin({
