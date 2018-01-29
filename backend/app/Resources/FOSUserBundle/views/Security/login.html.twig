@@ -47,5 +47,14 @@
     {% if error is defined and error %}
         {% set message = 'Invalid credentials.' == error.messageKey ? 'Login ou senha inválidos' : error.messageKey|trans(error.messageData, 'security') %}
         <script>display_error('{{ message }}');</script>
+    {% else %}
+
+        {% set login_failure = app.request.query.get('login_failure') %}
+
+        {% if login_failure %}
+            <script>display_error('Conta bloqueada!');</script>
+        {% endif %}
+
     {% endif %}
+
 {% endblock %}
