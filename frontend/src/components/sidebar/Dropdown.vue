@@ -3,8 +3,8 @@
     button.item(type='button', v-on:click='itemPress')
       Icon.icon-ui(:name='item.icon')
       | {{ item.name }}
-      Icon.icon-arrow(v-if='open', name='angle-down')
-      Icon.icon-arrow(v-else, name='angle-left')
+      Icon.icon-arrow(v-show='open', name='angle-down')
+      Icon.icon-arrow(v-show='!open', name='angle-left')
     ul(v-show='open')
       li(v-for='subitem in item.subitems')
         Item(:item='subitem', :subitem='true')
