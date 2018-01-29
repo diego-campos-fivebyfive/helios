@@ -581,6 +581,9 @@ class Customer extends AbstractCustomer
     {
         $this->status = $status;
 
+        if(self::ACTIVATED == $status)
+            $this->activatedAt = new \DateTime;
+
         return $this;
     }
 

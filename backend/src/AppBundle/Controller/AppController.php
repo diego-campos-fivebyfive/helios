@@ -9,6 +9,7 @@ use AppBundle\Service\WidgetGenerator;
 use Symfony\Component\HttpFoundation\Request;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
 class AppController extends AbstractController
 {
@@ -19,7 +20,12 @@ class AppController extends AbstractController
     public function indexAction(Request $request)
     {
         if(!$this->account()->isActivated()){
-            return $this->redirectToRoute('fos_user_security_logout');
+
+            $this->getSession()->invalidate();
+
+            return $this->redirectToRoute('fos_user_security_login', [
+                'login_failure' => 'account_locked'
+            ]);
         }
 
         $this->getTopbarAction('app_index');
