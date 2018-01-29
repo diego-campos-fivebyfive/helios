@@ -7,6 +7,10 @@
 2.2 Configurar apenas o mínimo ou o máximo de qualquer um.
 2.2.1 Neste caso ignora o início ou final e considera apenas o outro valor.
 
+### REMOÇÃO DO STATUS "FATURADO" BILLED ##
+1. Ajustar para que o usuário "Logística" passe diretamente de "em produção" para faturado.
+2. Remover o status dos filtros na Dashboard e na listagem.
+
 ## 26/01 ##
 ### LISTAGEM DE ORÇAMENTOS . 1402 ##
 1. Verificar o botão de limpeza de datas (o primeiro não funciona, o segundo apaga os dois)
