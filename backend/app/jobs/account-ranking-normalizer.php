@@ -77,6 +77,8 @@ foreach ($orders as $order){
 // Store rankings
 R::storeAll($rankings);
 
+echo sprintf("%s rankings normalized!\n", count($rankings));
+
 /*** TRIGGERS QUE DEVEM SER ARMAZENADAS NA BASE DE DADOS (tabela app_ranking)
 
 DELIMITER //
