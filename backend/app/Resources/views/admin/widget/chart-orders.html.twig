@@ -6,6 +6,7 @@
 {% set currentYear = 'now'|date('Y') %}
 {% set currentMonth = 'now'|date('m') %}
 
+{#TODO: incluir esta chave no array de status assim que solicitado {'9':'Faturado'}#}
 {% set months = {
 '01':'Janeiro',
 '02':'Fevereiro',
@@ -30,7 +31,6 @@
 '6':'Em Produção',
 '7':'Coleta disponível',
 '8':'Coletado',
-'9':'Faturado',
 '10':'Entregue'
 } %}
 
