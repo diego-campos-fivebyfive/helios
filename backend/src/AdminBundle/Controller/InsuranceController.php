@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * @Security("has_role('ROLE_PLATFORM_ADMIN')")
@@ -58,7 +59,7 @@ class InsuranceController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $insurance->setValue(str_replace(',','.',$insurance->getValue()));
+            $this->setReplace($insurance);
             $insurance->setType(AdditiveInterface::TYPE_INSURANCE);
 
             $manager->save($insurance);
@@ -76,14 +77,14 @@ class InsuranceController extends AbstractController
      */
     public function updateAction(Request $request, Additive $insurance)
     {
-        $insurance->setValue(str_replace('.',',',$insurance->getValue()));
+        $this->getReplace($insurance);
 
         $form = $this->createForm(InsuranceType::class, $insurance);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $insurance->setValue(str_replace(',','.',$insurance->getValue()));
+            $this->setReplace($insurance);
 
             if (!$insurance->getType())
                 $insurance->setType(AdditiveInterface::TYPE_INSURANCE);
@@ -107,5 +108,47 @@ class InsuranceController extends AbstractController
         $this->manager('additive')->delete($insurance);
 
         return $this->json([]);
+    }
+
+    /**
+     * @param $value
+     * @return mixed
+     */
+    private function replaceValues($value)
+    {
+        return str_replace(',','.', $value);
+    }
+
+    /**
+     * @param $value
+     * @return mixed
+     */
+    private function reverseReplaceValues($value)
+    {
+        return str_replace('.',',', $value);
+    }
+
+    /**
+     * @param Additive $insurance
+     */
+    private function getReplace(Additive $insurance)
+    {
+        $insurance->setValue($this->reverseReplaceValues($insurance->getValue()));
+        $insurance->setMinPower($this->reverseReplaceValues($insurance->getMinPower()));
+        $insurance->setMaxPower($this->reverseReplaceValues($insurance->getMaxPower()));
+        $insurance->setMinPrice($this->reverseReplaceValues($insurance->getMinPrice()));
+        $insurance->setMaxPrice($this->reverseReplaceValues($insurance->getMaxPrice()));
+    }
+
+    /**
+     * @param Additive $insurance
+     */
+    private function setReplace(Additive $insurance)
+    {
+        $insurance->setValue($this->replaceValues($insurance->getValue()));
+        $insurance->setMinPower($this->replaceValues($insurance->getMinPower()));
+        $insurance->setMaxPower($this->replaceValues($insurance->getMaxPower()));
+        $insurance->setMinPrice($this->replaceValues($insurance->getMinPrice()));
+        $insurance->setMaxPrice($this->replaceValues($insurance->getMaxPrice()));
     }
 }

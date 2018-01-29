@@ -370,7 +370,7 @@ class Additive implements AdditiveInterface
      */
     public function setMinPrice($price)
     {
-        $this->minPower = $price;
+        $this->minPrice = $price;
 
         return $this;
     }

@@ -48,7 +48,20 @@ class InsuranceType extends AbstractType
             ])
             ->add('enabled', CheckboxType::class, [
                 'required' => false
-            ]);
+            ])
+            ->add('minPower', TextType::class, [
+                'required' => false
+            ])
+            ->add('maxPower', TextType::class, [
+                'required' => false
+            ])
+            ->add('minPrice', TextType::class, [
+                'required' => false
+            ])
+            ->add('maxPrice', TextType::class, [
+                'required' => false
+            ])
+        ;
     }
 
     /**

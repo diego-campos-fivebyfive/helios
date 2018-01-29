@@ -52,6 +52,24 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="form-group col-md-3">
+                        {{ form_label(form.minPower, 'Potência Mínima') }}
+                        {{ form_widget(form.minPower, {attr:{class:'form-control', placeholder:'Potência Mínima'}}) }}
+                    </div>
+                    <div class="form-group col-md-3">
+                        {{ form_label(form.maxPower, 'Potência Máxima') }}
+                        {{ form_widget(form.maxPower, {attr:{class:'form-control', placeholder:'Potência Máxima'}}) }}
+                    </div>
+                    <div class="form-group col-md-3">
+                        {{ form_label(form.minPrice, 'Valor Mínimo') }}
+                        {{ form_widget(form.minPrice, {attr:{class:'form-control', placeholder:'Valor Mínimo'}}) }}
+                    </div>
+                    <div class="form-group col-md-3">
+                        {{ form_label(form.maxPrice, 'Valor Máximo') }}
+                        {{ form_widget(form.maxPrice, {attr:{class:'form-control', placeholder:'Valor Máximo'}}) }}
+                    </div>
+                </div>
+                <div class="row">
                     <div class="form-group col-md-12">
                         {{ form_label(form.description, 'Descrição') }}
                         {{ form_widget(form.description,{attr:{class:'form-control', placeholder: 'Descrição'}}) }}
@@ -127,7 +145,11 @@
 
     var common_mask = {pattern: '##,##', reverse: true};
     var targets = {
-        'insurance_value': common_mask
+        'insurance_value': common_mask,
+        'insurance_minPower': common_mask,
+        'insurance_maxPower': common_mask,
+        'insurance_minPrice': common_mask,
+        'insurance_maxPrice': common_mask
     };
 
     $.each(targets, function (id, options) {
