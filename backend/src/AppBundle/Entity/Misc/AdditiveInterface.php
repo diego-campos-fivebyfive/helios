@@ -133,4 +133,50 @@ interface AdditiveInterface
      * @return array
      */
     public static function getTargets();
+
+    /**
+     * @param $power
+     * @return AdditiveInterface
+     */
+    public function setMinPower($power);
+
+    /**
+     * @return float
+     */
+    public function getMinPower();
+
+    /**
+     * @param $power
+     * @return AdditiveInterface
+     */
+    public function setMaxPower($power);
+
+    /**
+     * @return float
+     */
+    public function getMaxPower();
+
+    /**
+     * @param $price
+     * @return AdditiveInterface
+     */
+    public function setMinPrice($price);
+
+    /**
+     * @return float
+     */
+    public function getMinPrice();
+
+    /**
+     * @param $price
+     * @return AdditiveInterface
+     */
+    public function setMaxPrice($price);
+
+    /**
+     * @return float
+     */
+    public function getMaxPrice();
+
+
 }

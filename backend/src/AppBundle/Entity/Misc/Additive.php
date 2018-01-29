@@ -77,6 +77,33 @@ class Additive implements AdditiveInterface
      */
     private $enabled;
 
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="min_power", type="float", nullable=true)
+     */
+    private $minPower;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="max_power", type="float", nullable=true)
+     */
+    private $maxPower;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="min_price", type="float", nullable=true)
+     */
+    private $minPrice;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="max_price", type="float", nullable=true)
+     */
+    private $maxPrice;
 
     /**
      * Get id
@@ -300,6 +327,78 @@ class Additive implements AdditiveInterface
             self::TARGET_FIXED => 'fixed value',
             self::TARGET_PERCENT => 'system percentage'
         ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setMinPower($power)
+    {
+        $this->minPower = $power;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMinPower()
+    {
+        return $this->minPower;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setMaxPower($power)
+    {
+        $this->maxPower = $power;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMaxPower()
+    {
+        return $this->maxPower;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setMinPrice($price)
+    {
+        $this->minPower = $price;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMinPrice()
+    {
+        return $this->minPrice;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setMaxPrice($price)
+    {
+        $this->maxPrice = $price;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMaxPrice()
+    {
+        return $this->maxPrice;
     }
 }
 
