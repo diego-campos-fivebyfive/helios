@@ -29,7 +29,7 @@
             {% set pageNumber = pageNumber + 1 %}
         </div>
 
-        {% if item.insurance %}
+        {% if item.hasInsurance %}
         <div class="p-leaf leaf-style">
             {% include view('admin/orders/proforma/header.html.twig') %}
             {% include view('admin/orders/proforma/insurance.html.twig') %}
