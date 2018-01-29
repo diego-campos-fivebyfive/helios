@@ -290,6 +290,11 @@ interface OrderInterface
     public function hasChildren();
 
     /**
+     * @return bool
+     */
+    public function hasInsurance();
+
+    /**
      * @param OrderInterface $children
      * @return OrderInterface
      */

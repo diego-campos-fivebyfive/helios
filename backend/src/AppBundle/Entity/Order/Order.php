@@ -2346,6 +2346,18 @@ class Order implements OrderInterface
     /**
      * @inheritDoc
      */
+    public function hasInsurance()
+    {
+        return $this->orderAdditives->filter(function(OrderAdditive $orderAdditive){
+            return $orderAdditive->getType() == 1 ? true : false;
+        })->first();
+
+    }
+
+
+    /**
+     * @inheritDoc
+     */
     public function addFile($type, $file)
     {
         $types = ['payment', 'proforma'];
