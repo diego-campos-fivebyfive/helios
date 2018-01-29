@@ -2349,7 +2349,7 @@ class Order implements OrderInterface
     public function hasInsurance()
     {
         return $this->orderAdditives->filter(function(OrderAdditive $orderAdditive){
-            return $orderAdditive->getType() == 1 ? true : false;
+            return $orderAdditive->getType() == 1;
         })->first();
 
     }
