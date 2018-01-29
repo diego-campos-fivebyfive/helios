@@ -50,6 +50,31 @@
 
     {% endmacro %}
 
+    {% macro formLevel(form) %}
+
+        <div class="row">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label> {{ form.vars.name|capitalize|trans }} </label>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group m-b">
+                            <span class="input-group-addon" title="Valor">
+                                <i class="fa fa-usd"></i>
+                            </span>
+                        {{ form_widget(form.amount, {attr:{class:'form-control', placeholder: 'Valor'}}) }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group m-b">
+                        {{ form_widget(form.days, {attr:{class:'form-control', placeholder: 'Dias'}}) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endmacro %}
+
     {% import _self as this %}
 
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -86,6 +111,14 @@
                                                     <i class="fa fa-briefcase"></i> Parâmetros de Negócio
                                                 </a>
                                             </li>
+
+                                            {% if isMaster %}
+                                                <li>
+                                                    <a data-toggle="tab" href="#tab-3">
+                                                        <i class="fa fa-bar-chart"></i> Parâmetros de Níveis
+                                                    </a>
+                                                </li>
+                                            {% endif %}
                                         </ul>
                                         <div class="tab-content">
 
@@ -316,6 +349,44 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            {% if isMaster %}
+
+                                                <div id="tab-3" class="tab-pane">
+                                                    <div class="panel-body">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <div class="panel panel-success">
+                                                                    <div class="panel-heading">
+                                                                        <i class="fa fa-briefcase"></i> Troca de Nível
+                                                                    </div>
+                                                                    <div class="panel-body">
+                                                                        {% set form_partner = form_params.account_level_handler.levels.partner %}
+                                                                        {% set form_premium = form_params.account_level_handler.levels.premium %}
+                                                                        {% set form_platinum = form_params.account_level_handler.levels.platinum %}
+                                                                        {% set form_black = form_params.account_level_handler.levels.black %}
+
+                                                                        {{ this.formLevel(form_partner) }}
+                                                                        {{ this.formLevel(form_premium) }}
+                                                                        {{ this.formLevel(form_platinum) }}
+                                                                        {{ this.formLevel(form_black) }}
+
+                                                                        <div class="row">
+                                                                            <div class="form-group">
+                                                                                <div class="col-md-6">
+                                                                                    {{ form_label(form_params.account_level_handler.grace_period, 'Carência para bloqueio') }}
+                                                                                    {{ form_widget(form_params.account_level_handler.grace_period, {attr:{class:'form-control', placeholder: 'Carência em dias'}}) }}
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            {% endif %}
                                         </div>
 
                                     </div>
@@ -341,6 +412,7 @@
 {% block scripts %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.js"></script>
     <script src="{{ asset('assets/proposal2/jscolor.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
 
     <script>
 
@@ -449,9 +521,28 @@
 
         OrderExpirations.init();
 
-        $('#settings_parameters_shipping_included_max_power,' +
+        $(
+            '#settings_parameters_shipping_included_max_power,' +
             '#settings_parameters_max_order_discount,' +
-            '#settings_parameters_fdi_min,' + '#settings_parameters_fdi_max').mask('##,00',{reverse: true});
+            '#settings_parameters_fdi_min,' +
+            '#settings_parameters_fdi_max,' +
+            '#settings_parameters_account_level_handler_levels_partner_amount,' +
+            '#settings_parameters_account_level_handler_levels_premium_amount,' +
+            '#settings_parameters_account_level_handler_levels_platinum_amount,' +
+            '#settings_parameters_account_level_handler_levels_black_amount'
+        ).mask('##,00',{reverse: true});
+
+        var daysTouchSpin = [
+            '#settings_parameters_account_level_handler_levels_partner_days',
+            '#settings_parameters_account_level_handler_levels_premium_days',
+            '#settings_parameters_account_level_handler_levels_platinum_days',
+            '#settings_parameters_account_level_handler_levels_black_days',
+            '#settings_parameters_account_level_handler_grace_period'
+        ];
+        for (i = 0; i < daysTouchSpin.length; i++)
+            $(daysTouchSpin[i]).TouchSpin({
+                min: 0
+            });
 
         var colorPromo = $('#settings_parameters_promo_background').val();
         var phrasePromo = $('#settings_parameters_promo_notice').val();

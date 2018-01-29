@@ -4,6 +4,7 @@ namespace AdminBundle\Form;
 
 use AdminBundle\Form\Settings\Orders\ExpirationType;
 use AppBundle\Entity\Component\Project;
+use AppBundle\Entity\Pricing\MemorialInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -12,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -91,6 +93,38 @@ class SettingsType extends AbstractType
                         ],
                         'allow_delete' => true
                     ])
+                )
+                ->add(
+                    $builder
+                        ->create('account_level_handler', FormType::class)
+                        ->add($builder
+                            ->create('levels', FormType::class)
+                            ->add(
+                                $builder
+                                    ->create(MemorialInterface::LEVEL_PARTNER, FormType::class)
+                                    ->add('amount', TextType::class)
+                                    ->add('days', TextType::class)
+                            )
+                            ->add(
+                                $builder
+                                    ->create(MemorialInterface::LEVEL_PREMIUM, FormType::class)
+                                    ->add('amount', TextType::class)
+                                    ->add('days', TextType::class)
+                            )
+                            ->add(
+                                $builder
+                                    ->create(MemorialInterface::LEVEL_PLATINUM, FormType::class)
+                                    ->add('amount', TextType::class)
+                                    ->add('days', TextType::class)
+                            )
+                            ->add(
+                                $builder
+                                    ->create(MemorialInterface::LEVEL_BLACK, FormType::class)
+                                    ->add('amount', TextType::class)
+                                    ->add('days', TextType::class)
+                            )
+                        )
+                        ->add('grace_period', TextType::class)
                 )
         );
         $builder->get('parameters')
