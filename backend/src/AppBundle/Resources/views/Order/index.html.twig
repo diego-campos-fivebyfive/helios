@@ -20,6 +20,19 @@
         .label.status-inserted i {  color: #1aa10f;  }
 
         .validated {  color: #0a6aa1;  }
+
+        .group-input input {
+            float: left;
+            width: 85%;
+        }
+        .group-input button {
+            width: 15%;
+            border-radius: 0  2px 2px 0;
+        }
+        .chosen-choices {
+            border-radius: 1px;
+            padding: 2px !important;
+        }
     </style>
 
 {% endblock %}
@@ -76,11 +89,11 @@
 
                         {{ form_start(form) }}
 
-                        <div class="form-group col-md-3">
+                        <div class="group-input col-md-6">
                             {{ form_widget(form.status,{attr:{class:'form-control'}}) }}
                         </div>
 
-                        <button type="submit" class="btn btn-primary btn-md">
+                        <button type="submit" class="btn btn-primary group-input">
                             <i class="fa fa-search"></i> Pesquisar
                         </button>
 
@@ -326,6 +339,8 @@
                 }
             });
         });
+
+        $('#filter_status').chosen({});
 
     </script>
 {% endblock %}
