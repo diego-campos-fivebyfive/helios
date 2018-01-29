@@ -159,14 +159,15 @@
                                                     <i class="fa fa-circle status-{{ order.statusName }}"></i> {{ order.statusName|capitalize|trans }}
                                                 </span>
 
-                                                {% if order.isInserted and member.isPlatformLogistic %}
+                                                {#TODO: Está funcionalidade ficará comentada temporariamente#}
+                                                {#{% if order.isInserted and member.isPlatformLogistic %}
                                                     <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
                                                        data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_BILLED') }}">
                                                         <i class="fa fa-money"></i> Faturar
                                                     </a>
-                                                {% endif %}
+                                                {% endif %}#}
 
-                                                {% if order.isBilled and member.isPlatformLogistic %}
+                                                {% if order.isInserted and member.isPlatformLogistic %}
                                                     <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
                                                        data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_AVAILABLE') }}">
                                                         <i class="fa fa-archive"></i> Coleta disponível
