@@ -4,6 +4,7 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = {
   entry: './src/main.js',
@@ -170,6 +171,15 @@ module.exports = {
     inline: true
   },
   plugins: [
+    new UglifyJsPlugin({
+      uglifyOptions: {
+        compress: {
+          warnings: false
+        }
+      },
+      sourceMap: true,
+      parallel: true
+    }),
     new ExtractTextPlugin({
       filename: '[name].css',
       allChunks: true
@@ -184,7 +194,12 @@ module.exports = {
       filename: 'index.html',
       template: 'index.html',
       inject: true,
-      hash: true
+      hash: true,
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true
+      }
     })
   ]
 }
