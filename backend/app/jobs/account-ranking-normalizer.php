@@ -83,26 +83,40 @@ DELIMITER //
 
 DROP TRIGGER IF EXISTS onInsertRanking;
 CREATE TRIGGER onInsertRanking
-AFTER INSERT ON app_ranking FOR EACH ROW
+AFTER INSERT ON app_ranking
+FOR EACH ROW
 BEGIN
-UPDATE app_customer c SET c.ranking = (SELECT sum(r.amount) FROM app_ranking r WHERE r.target = NEW.target);
+UPDATE app_customer c
+SET c.ranking = (SELECT sum(r.amount)
+FROM app_ranking r
+WHERE r.target = NEW.target)
+WHERE c.id = REPLACE(NEW.target, 'AppBundle\\Entity\\Customer::', '');
 END//
-
 
 DROP TRIGGER IF EXISTS onUpdateRanking;
 CREATE TRIGGER onUpdateRanking
-AFTER UPDATE ON app_ranking FOR EACH ROW
+AFTER UPDATE ON app_ranking
+FOR EACH ROW
 BEGIN
-UPDATE app_customer c SET c.ranking = (SELECT sum(r.amount) FROM app_ranking r WHERE r.target = NEW.target);
+UPDATE app_customer c
+SET c.ranking = (SELECT sum(r.amount)
+FROM app_ranking r
+WHERE r.target = NEW.target)
+WHERE c.id = REPLACE(NEW.target, 'AppBundle\\Entity\\Customer::', '');
 END//
 
 DROP TRIGGER IF EXISTS onDeleteRanking;
 CREATE TRIGGER onDeleteRanking
-AFTER DELETE ON app_ranking FOR EACH ROW
+AFTER DELETE ON app_ranking
+FOR EACH ROW
 BEGIN
-UPDATE app_customer c SET c.ranking = (SELECT sum(r.amount) FROM app_ranking r WHERE r.target = OLD.target);
+UPDATE app_customer c
+SET c.ranking = (SELECT sum(r.amount)
+FROM app_ranking r
+WHERE r.target = OLD.target)
+WHERE c.id = REPLACE(OLD.target, 'AppBundle\\Entity\\Customer::', '');
 END//
 
 DELIMITER ;
 
-***/
+ ***/
