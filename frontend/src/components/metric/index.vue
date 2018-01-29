@@ -10,8 +10,6 @@
 <script>
   import Content from '@/components/metric/Content'
 
-  const uri = 'http://localhost:8000/admin/metrics/api/v1'
-
   export default {
     components: {
       Content
@@ -24,7 +22,9 @@
       }
     }),
     mounted() {
-      this.milestones = JSON.parse('[{"id":2,"title":"Seguro","open":0,"closed":1,"total":1,"average":100},{"id":1,"title":"Finame","open":1,"closed":1,"total":2,"average":50}]')
+      this.axios.get(`admin/metrics/api/v1/milestones`).then(response => {
+        this.milestones = response.data
+      })
     }
   }
 </script>
