@@ -7,11 +7,11 @@
  * Processo:
  * 1. Efetuar o carregamento dos parâmetros de configuração
  * 2. Percorrer os níveis configurados
- * 2.1 Para cada nível, gerar a SQL corresponte a atualização, com base na configuração associada ao nível.
+ * 2.1 Para cada nível, gerar a SQL correspondente a atualização, com base na configuração associada ao nível.
  * 2.2. Executar a SQL gerada
  * 3. Para bloqueio
  * 3.1 Executa uma operação de alteração para o status "LOCKED" em contas que possuam:
- * - Data de ativação < a (hoje - "grace_period"),
+ * - Data de ativação < (hoje - "grace_period"),
  * - Cuja soma de orçamentos criados em data >= (hoje - "grace_period") seja inferior ao valor mais baixo configurado
  * na lista de níveis.
  */
