@@ -76,7 +76,7 @@
 
                         {{ form_start(form) }}
 
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-6">
                             {{ form_widget(form.status,{attr:{class:'form-control'}}) }}
                         </div>
 
@@ -326,6 +326,8 @@
                 }
             });
         });
+
+        $('#filter_status').chosen({});
 
     </script>
 {% endblock %}
