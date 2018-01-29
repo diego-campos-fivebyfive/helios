@@ -1,10 +1,9 @@
 <template lang="pug">
   Panel.panel
-    div(slot='header')
-      h2.title Progresso de tarefas técnicas
-        span.sub Github - Milestones
-    div(slot='section')
-      Content(:milestones='milestones')
+    h2.title(slot='header')
+      | Progresso de tarefas técnicas
+      span.sub Github - Milestones
+    Content(slot='section', :milestones='milestones')
 </template>
 
 <script>
@@ -15,14 +14,10 @@
       Content
     },
     data: () => ({
-      milestones: [],
-      modal: {
-        milestone: '',
-        issues: []
-      }
+      milestones: []
     }),
     mounted() {
-      this.axios.get(`admin/metrics/api/v1/milestones`).then(response => {
+      this.axios.get('admin/metrics/api/v1/milestones').then(response => {
         this.milestones = response.data
       })
     }
