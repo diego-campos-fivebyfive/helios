@@ -1,3 +1,12 @@
+## 29/01 ##
+### SEGUROS COM FAIXA DE POTÊNCIA E DE PREÇO ##
+1. Fazer com que alguns seguros sejam carregados apenas quando a potência/valor do projeto esteja entre os valores mínimo e máximo configurados.
+2. Podem ocorrer variações de configuração:
+2.1 Configurar potência mas não preço, e vice-versa.
+2.1.1 Neste caso, ignora o preço e verifica a potência.
+2.2 Configurar apenas o mínimo ou o máximo de qualquer um.
+2.2.1 Neste caso ignora o início ou final e considera apenas o outro valor.
+
 ## 26/01 ##
 ### LISTAGEM DE ORÇAMENTOS . 1402 ##
 1. Verificar o botão de limpeza de datas (o primeiro não funciona, o segundo apaga os dois)
