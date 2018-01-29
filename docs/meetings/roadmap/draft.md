@@ -1,13 +1,13 @@
 ## 29/01 ##
-### SEGUROS COM FAIXA DE POTÊNCIA E DE PREÇO ##
-1. Fazer com que alguns seguros sejam carregados apenas quando a potência/valor do projeto esteja entre os valores mínimo e máximo configurados.
+### SEGUROS COM FAIXA DE POTÊNCIA E DE PREÇO . 1411, 1412, 1413 ##
+1. Fazer com que alguns seguros sejam carrega dos apenas quando a potência/valor do projeto esteja entre os valores mínimo e máximo configurados.
 2. Podem ocorrer variações de configuração:
 2.1 Configurar potência mas não preço, e vice-versa.
 2.1.1 Neste caso, ignora o preço e verifica a potência.
 2.2 Configurar apenas o mínimo ou o máximo de qualquer um.
 2.2.1 Neste caso ignora o início ou final e considera apenas o outro valor.
 
-### REMOÇÃO DO STATUS "FATURADO" BILLED ##
+### REMOÇÃO DO STATUS "FATURADO" BILLED . 1414 ##
 1. Ajustar para que o usuário "Logística" passe diretamente de "em produção" para faturado.
 2. Remover o status dos filtros na Dashboard e na listagem.
 
