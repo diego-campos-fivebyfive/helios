@@ -57,7 +57,7 @@ class OrderController extends AbstractController
         $totals = current($qbTotals->getQuery()->getResult());
 
         $pagination = $this->getPaginator()->paginate(
-            $finder->query(),
+            $qb->getQuery(),
             $request->query->getInt('page', 1),
             10
         );
