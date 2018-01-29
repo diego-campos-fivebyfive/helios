@@ -3,6 +3,7 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 
 module.exports = {
   entry: './src/main.js',
@@ -172,6 +173,12 @@ module.exports = {
     new ExtractTextPlugin({
       filename: '[name].css',
       allChunks: true
+    }),
+    new OptimizeCSSPlugin({
+      assetNameRegExp: /\.css$/g,
+      cssProcessor: require('cssnano'),
+      cssProcessorOptions: { discardComments: { removeAll: true } },
+      canPrint: true
     }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
