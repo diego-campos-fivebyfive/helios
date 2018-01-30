@@ -3,6 +3,7 @@ import 'vue-awesome/icons'
 
 import Button from '@/components/collection/Button'
 import Panel from '@/components/collection/Panel'
+import Modal from '@/components/collection/Modal'
 import Progress from '@/components/collection/Progress'
 import Table from '@/components/collection/Table'
 
@@ -12,6 +13,7 @@ import router from './router'
 
 Vue.component('Icon', Icon)
 Vue.component('Button', Button)
+Vue.component('Modal', Modal)
 Vue.component('Panel', Panel)
 Vue.component('Progress', Progress)
 Vue.component('Table', Table)
@@ -24,6 +26,7 @@ new Vue({
     App,
     Icon,
     Button,
+    Modal,
     Panel,
     Progress,
     Table

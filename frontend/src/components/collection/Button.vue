@@ -3,12 +3,12 @@
     v-if='link',
     :to='link',
     :class='[type, pos, { labeled: label }]')
-    Icon(:name='icon')
+    Icon(v-if='icon', :name='icon')
     | {{ label }}
   button(
     v-else,
     :class='[type, pos, { labeled: label }]')
-    Icon(:name='icon')
+    Icon(v-if='icon', :name='icon')
     | {{ label }}
 </template>
 
