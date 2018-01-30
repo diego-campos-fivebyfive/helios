@@ -258,6 +258,121 @@ class Helper
     }
 
     /**
+     * @param $inverters
+     * @param $desiredPower
+     * @return array
+     */
+    public static function powerBalance($inverters, $desiredPower)
+    {
+        $nominalPowers = array_map(function ($inverter){
+            return $inverter["nominal_power"];
+        }, $inverters);
+
+        $inverterTotalPower = array_sum($nominalPowers);
+
+        return array_map(function ($powerBalance) use($inverterTotalPower, $desiredPower) {
+            return $powerBalance / $inverterTotalPower * $desiredPower;
+        }, $nominalPowers);
+    }
+
+    /**
+     * @param $inverters
+     * @return array
+     */
+    public static function hasProtection($inverters)
+    {
+        return array_map(function ($inverter) {
+            return $inverter["in_protection"];
+        }, $inverters);
+    }
+
+    /**
+     * @param $inverter
+     * @param $invMpptOperation
+     * @param $module
+     * @return array
+     */
+    public static function allArrangements($inverter, $invMpptOperation, $module)
+    {
+        $invMaxDcVoltage = $inverter["max_dc_voltage"];
+        $invMpptMin = $inverter["mppt_min"];
+        $invMpptMaxDcCurrent = $inverter["mppt_max_dc_current"];
+        $invMpptNumber = $inverter["mppt_number"];
+
+        $tnoct = 45;
+        $tcMin = 10;
+        $tcMax = 70;
+
+        $modMaxPower = $module["max_power"];
+        $modOpenCircuitVoltage = $module["open_circuit_voltage"];
+        $modVoltageMaxPower = $module["voltage_max_power"];
+        $modTempCoefficientVoc = $module["temp_coefficient_voc"];
+        $modShortCircuitCurrent = $module["short_circuit_current"];
+
+        $modVoltageMax = $modOpenCircuitVoltage;
+        $modVoltageMin = $modVoltageMaxPower * ((1 + (($tcMax - $tnoct) * ($modTempCoefficientVoc / 100))));
+
+        $qtyMaxModSerial = floor($invMaxDcVoltage / $modVoltageMax);
+        $qtyMinModSerial = ceil($invMpptMin / $modVoltageMin);
+
+        $conterMpptArea = count($invMpptOperation);
+
+        $combinations = [];
+        for ($i = 0; $i < $conterMpptArea; $i++) {
+            $index = 0;
+            $qtyMaxModParallel = ($invMpptMaxDcCurrent  * $invMpptOperation[$i]) / $modShortCircuitCurrent;
+
+            for ($parallel = 1; $parallel <= $qtyMaxModParallel; $parallel++) {
+                for ($serial = $qtyMinModSerial; $serial <= $qtyMaxModSerial; $serial++) {
+                    $power = $parallel * $serial * $modMaxPower / 1000;
+                    $combinations[$i][$index] = [
+                        "par" => $parallel,
+                        "ser" => $serial,
+                        "power" => $power
+                    ];
+                    $index += 1;
+                }
+            }
+        }
+        return $combinations;
+    }
+
+    /**
+     * @param $allArragements
+     * @param $desiredPower
+     * @param $invMpptOperation
+     * @return array
+     */
+    public static function autoArrangement($allArragements, $desiredPower, $invMpptOperation)
+    {
+        $power = $desiredPower;
+        $mpptNumber = array_sum($invMpptOperation);
+
+        $choice = array();
+        $accumulatorPower = 0;
+        for ($i = 0; $i < count($allArragements); $i++) {
+
+            $powerRef = (($power - $accumulatorPower) / $mpptNumber) * $invMpptOperation[$i];
+            $diferenceMemPower = $powerRef;
+
+            for ($index = 0; $index < count($allArragements[$i]); $index++) {
+                $actualPower = $allArragements[$i][$index]["power"];
+                $diferenceResult = abs($powerRef - $actualPower);
+
+                if ($diferenceResult < $diferenceMemPower) {
+                    $choice[$i] = $allArragements[$i][$index];
+                    $diferenceMemPower = $diferenceResult;
+
+                }
+            }
+            $accumulatorPower += $choice[$i]["power"];
+            $mpptNumber -= $invMpptOperation[$i];
+        }
+        return $choice;
+
+    }
+
+    /**
      * @param $item
      * @param array $alternatives
      * @return null

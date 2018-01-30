@@ -19,6 +19,10 @@
  * - Generator\Inverter\Helper::filterPhases()
  * - Generator\Inverter\Helper::filterPower()
  * - Generator\Inverter\Helper::inverterChoices()
+ * - Generator\Inverter\Helper::powerBalance()
+ * - Generator\Inverter\Helper::hasProtection()
+ * - Generator\Inverter\Helper::allArrangements()
+ * - Generator\Inverter\Helper::autoArrangement()
  * - Generator\StringBox\Helper::getParameters()
  * - Generator\StringBox\Helper::getChoices()
  */
@@ -365,7 +369,7 @@ function inv_choice($all_inv, $desire_power, $fdi_min, $fdi_max)
     return $selection;
 }
 
-// TODO: Generator\Inverter\Helper::powerBalance() - WAITING
+// TODO: Generator\Inverter\Helper::powerBalance() - TEST OK
 function inv_power_balance($all_inv, $desire_power){
 
     $power_balance = array();
@@ -407,7 +411,7 @@ function inv_get_mppt_op ($all_inv){
 
 }
 
-// TODO: Generator\Inverter\Helper::hasProtection() - WAITING
+// TODO: Generator\Inverter\Helper::hasProtection() - TEST OK
 function inv_get_in_protections($all_inv){
 
     $in_protection = array();
@@ -417,7 +421,7 @@ function inv_get_in_protections($all_inv){
     return $in_protection;
 }
 
-// TODO: Generator\Inverter\Helper::allArrangements() - WAITING
+// TODO: Generator\Inverter\Helper::allArrangements() - TEST OK
 function all_arrangements($inv_selected, $inv_mppt_op, $mod_selected)
 {
 
@@ -467,7 +471,7 @@ function all_arrangements($inv_selected, $inv_mppt_op, $mod_selected)
     return $combinations;
 }
 
-// TODO: Generator\Inverter\Helper::autoArrangement() - WAITING
+// TODO: Generator\Inverter\Helper::autoArrangement() - TEST OK
 function auto_arrangement_choice($all_arrangements, $desired_power, $inv_mppt_op)
 {
 
