@@ -29,7 +29,7 @@
     min-height: 100vh;
     position: relative;
 
-    .common {
+    &.common {
       padding-left: $ui-sidebar-x;
     }
   }
