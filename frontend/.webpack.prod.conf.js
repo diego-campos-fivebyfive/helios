@@ -1,6 +1,7 @@
 'use strict'
 
 const path = require('path')
+const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
@@ -9,7 +10,8 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 module.exports = {
   entry: './src/main.js',
   output: {
-    path: path.resolve(__dirname, './dist'),
+    path: path.resolve(__dirname, '../backend/web/app'),
+    publicPath: './app',
     filename: '[name].js'
   },
   module: {
@@ -137,7 +139,7 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: './static/[name].[hash:7].[ext]'
+          name: '/static/[name].[hash:7].[ext]'
         }
       },
       {
@@ -145,7 +147,7 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: './static/[name].[hash:7].[ext]'
+          name: '/static/[name].[hash:7].[ext]'
         }
       },
       {
@@ -153,7 +155,7 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: './static/[name].[hash:7].[ext]'
+          name: '/static/[name].[hash:7].[ext]'
         }
       }
     ]
@@ -171,6 +173,11 @@ module.exports = {
     inline: true
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        'API_URL': JSON.stringify('http://localhost:8000')
+      }
+    }),
     new UglifyJsPlugin({
       uglifyOptions: {
         compress: {

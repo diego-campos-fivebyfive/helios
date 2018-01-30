@@ -7,6 +7,7 @@ backend/app/sessions/
 backend/app/config/parameters.yml
 backend/app/bootstrap.php.cache
 backend/storage
+backend/web/app
 backend/web/public
 backend/web/uploads
 
