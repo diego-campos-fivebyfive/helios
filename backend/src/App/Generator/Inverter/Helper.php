@@ -264,19 +264,15 @@ class Helper
      */
     public static function powerBalance($inverters, $desiredPower)
     {
-        $powerBalance = [];
+        $nominalPowers = array_map(function ($inverter){
+            return $inverter["nominal_power"];
+        }, $inverters);
 
-        for ($i = 0; $i < count($inverters); $i++){
-            $powerBalance[$i] = $inverters[$i]["nominal_power"];
-        }
+        $inverterTotalPower = array_sum($nominalPowers);
 
-        $inverterTotalPower = array_sum($powerBalance);
-
-        for ($i = 0; $i < count($powerBalance); $i++){
-            $powerBalance[$i] = ($powerBalance[$i] / $inverterTotalPower) * $desiredPower;
-        }
-
-        return $powerBalance;
+        return array_map(function ($powerBalance) use($inverterTotalPower, $desiredPower) {
+            return $powerBalance / $inverterTotalPower * $desiredPower;
+        }, $nominalPowers);
     }
 
     /**
@@ -285,11 +281,9 @@ class Helper
      */
     public static function hasProtection($inverters)
     {
-        $inProtection = [];
-        for ($i=0; $i<count($inverters); $i++){
-            $inProtection[$i] = $inverters[$i]["in_protection"];
-        }
-        return $inProtection;
+        return array_map(function ($inverter) {
+            return $inverter["in_protection"];
+        }, $inverters);
     }
 
     /**
