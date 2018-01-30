@@ -1,5 +1,5 @@
 <template lang="pug">
-  Page(sidebar='true')
+  Page(sidebar='common')
     Panel
       div(slot='header')
         h1.title {{ page.title }}

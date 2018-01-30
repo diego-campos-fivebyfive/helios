@@ -1,6 +1,6 @@
 <template lang="pug">
-  .page
-    Sidebar(v-if='sidebar')
+  .page(:class='sidebar')
+    Sidebar(v-if='showSidebar')
     main.main
       slot
 </template>
@@ -14,6 +14,11 @@
     ],
     components: {
       Sidebar
+    },
+    computed: {
+      showSidebar() {
+        return (this.sidebar != 'none')
+      }
     }
   }
 </script>
@@ -22,10 +27,13 @@
   .page {
     min-height: 100vh;
     position: relative;
+
+    .common {
+      padding-left: $ui-sidebar-x; 
+    }
   }
 
   .main {
     @include clearfix;
-    padding-left: $ui-sidebar-x;
   }
 </style>
