@@ -30,7 +30,6 @@
     @include clearfix;
 
     * {
-      display: inline;
       vertical-align: middle;
     }
   }
@@ -51,10 +50,15 @@
   }
 
   .info {
+    display: inline;
     font-size: 1.25rem;
     font-weight: 400;
     margin: 0 $ui-space-x;
     opacity: 0.8;
+  }
+
+  .menu {
+    display: inline;
   }
 
   section {

@@ -1,11 +1,11 @@
 <template lang="pug">
-  router-link(
+  router-link.button(
     v-if='link',
     :to='link',
     :class='[type, pos, { labeled: label }]')
     Icon(v-if='icon', :name='icon')
     | {{ label }}
-  button(
+  button.button(
     v-else,
     :class='[type, pos, { labeled: label }]')
     Icon(v-if='icon', :name='icon')
@@ -19,8 +19,7 @@
 </script>
 
 <style lang="scss" scoped>
-  a,
-  button {
+  .button {
     display: inline-block;
     font-size: 1.1rem;
     padding: $ui-space-y/2 $ui-space-x/2;
