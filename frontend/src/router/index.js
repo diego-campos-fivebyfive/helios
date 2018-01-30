@@ -5,6 +5,7 @@ import Router from 'vue-router'
 
 import Account from '@/components/Account'
 import Metric from '@/components/metric'
+import NotFound from '@/components/NotFound'
 
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 axios.defaults.headers.common['Content-Type'] = 'application/json'
@@ -26,6 +27,11 @@ export default new Router({
       path: '/metric',
       name: 'metric',
       component: Metric
+    },
+    {
+      path: '*',
+      name: 'not-found',
+      component: NotFound
     }
   ]
 })
