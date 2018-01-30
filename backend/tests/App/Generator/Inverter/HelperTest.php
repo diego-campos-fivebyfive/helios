@@ -280,26 +280,142 @@ class HelperTest extends GeneratorTest
         self::assertEquals(104 , $data[2]["id"]);
     }
 
-    /*
-    private function inv_get_mppt_op ($all_inv){
+    public function testInverterPowerBalace()
+    {
+        $data = [
+            [
+                'id' => 100,
+                'nominal_power' => 5
+            ],
+            [
+                'id' => 101,
+                'nominal_power' => 8
+            ],
+            [
+                'id' => 102,
+                'nominal_power' => 12
+            ],
+            [
+                'id' => 103,
+                'nominal_power' => 18
+            ],
+            [
+                'id' => 104,
+                'nominal_power' => 25
+            ],
+            [
+                'id' => 105,
+                'nominal_power' => 32
+            ]
+        ];
 
-        //$inv = $all_inv;
+        $data = Helper::powerBalance($data, 70);
 
-        $mppt_op = array();
-        for ($i=0; $i<count($all_inv); $i++){
-            $mppt_parallel = $all_inv[$i]["mppt_parallel"];
-            $mppt_number = $all_inv[$i]["mppt_number"];
+        //print_r($data);die;
 
-            if ($mppt_parallel == 1){
-                $mppt_op[$i][0] = $mppt_number;
-            }else{
-                for ($m=0; $m<$mppt_number; $m++){
-                    $mppt_op[$i][$m] = 1;
-                }
-            }
-
-        }
-        return $mppt_op;
+        self::assertCount(6, $data);
+        self::assertEquals(12.6 , $data[3]);
     }
-    */
+
+    public function testInverterGetInProtection()
+    {
+        $data = [
+            [
+                'id' => 100,
+                'nominal_power' => 5,
+                'in_protection' => 0
+            ],
+            [
+                'id' => 101,
+                'nominal_power' => 8,
+                'in_protection' => 1
+            ],
+            [
+                'id' => 102,
+                'nominal_power' => 12,
+                'in_protection' => 0
+            ],
+            [
+                'id' => 103,
+                'nominal_power' => 18,
+                'in_protection' => 0
+            ],
+            [
+                'id' => 104,
+                'nominal_power' => 12,
+                'in_protection' => 1
+            ]
+        ];
+
+        $data = Helper::hasProtection($data);
+
+        //$data = $this->inv_get_in_protections($data);
+        //print_r($data);die;
+
+        self::assertCount(5, $data);
+        self::assertEquals(0 , $data[3]);
+        self::assertEquals(1 , $data[1]);
+    }
+
+    public function testAllarrangements()
+    {
+        $inverter = [
+            'id' => 6431,
+            'max_dc_voltage' => 600,
+            'mppt_min' => 180,
+            'mppt_max_dc_current' => 12.5,
+            'mppt_number' => 1
+        ];
+
+        $invMpptOperation = [6,3,2,2,1];
+
+        $module = [
+            'id' => 46131,
+            'max_power' => 270,
+            'open_circuit_voltage' => 37.9,
+            'voltage_max_power' => 30.8,
+            'temp_coefficient_voc' => -0.41,
+            'short_circuit_current' => 9.32
+        ];
+
+        $data = Helper::allArrangements($inverter, $invMpptOperation, $module);
+
+        //print_r($data);die;
+
+        self::assertNotNull($data);
+        self::assertCount(5, $data);
+    }
+
+    public function testAutoArrangementChoice()
+    {
+        $inverter = [
+            'id' => 6431,
+            'max_dc_voltage' => 600,
+            'mppt_min' => 180,
+            'mppt_max_dc_current' => 12.5,
+            'mppt_number' => 1
+        ];
+
+        $invMpptOperation = [6,3,2,2,1];
+
+        $module = [
+            'id' => 46131,
+            'max_power' => 270,
+            'open_circuit_voltage' => 37.9,
+            'voltage_max_power' => 30.8,
+            'temp_coefficient_voc' => -0.41,
+            'short_circuit_current' => 9.32
+        ];
+
+        $allArragements = Helper::allArrangements($inverter, $invMpptOperation, $module);
+
+        $data = Helper::autoArrangement($allArragements, 60, $invMpptOperation);
+
+        //print_r($data);die;
+
+        self::assertCount(5, $data);
+        self::assertCount(3, $data[0]);
+        self::assertArrayHasKey('par', $data[0]);
+
+    }
 }

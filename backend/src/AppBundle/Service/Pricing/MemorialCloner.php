@@ -46,6 +46,8 @@ class MemorialCloner
      */
     function __construct(MemorialManager $manager)
     {
+        ini_set('memory_limit', $this->memory);
+
         $this->accessor = PropertyAccess::createPropertyAccessor();
         $this->manager = $manager;
     }
@@ -56,8 +58,6 @@ class MemorialCloner
      */
     public function execute(MemorialInterface $source)
     {
-        ini_set('memory_limit', $this->memory);
-
         $memorial = new Memorial();
 
         $memorial
