@@ -1,17 +1,18 @@
 <template lang="pug">
-  Panel
-    div(slot='header')
-      h1.title {{ page.title }}
-      h2.info
-        | Contas encontradas: {{ account.info.total }}
-      nav.menu
-        Button(
-          type='primary-common',
-          icon='plus-square',
-          link='#linkB',
-          label='Nova Conta',
-          pos='first')
-        Button(type='primary-strong', icon='random', pos='last')
+  Page(sidebar='common')
+    Panel
+      div(slot='header')
+        h1.title {{ page.title }}
+        h2.info
+          | Contas encontradas: {{ account.info.total }}
+        nav.menu
+          Button(
+            type='primary-common',
+            icon='plus-square',
+            link='#linkB',
+            label='Nova Conta',
+            pos='first')
+          Button(type='primary-strong', icon='random', pos='last')
 </template>
 
 <script>

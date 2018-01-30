@@ -1,6 +1,6 @@
 <template lang="pug">
   router-link.header(to='/')
-    img(src='@/assets/media/logo-small.png')
+    img(src='@/assets/media/logo-small.png', alt='Sices Solar Logo')
     span.title {{ user.name }}
     span {{ user.company }}
 </template>
