@@ -12,6 +12,7 @@
 namespace AppBundle\Entity\Order;
 
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\Misc\Additive;
 use AppBundle\Entity\Misc\AdditiveInterface;
 use AppBundle\Entity\Pricing\MemorialInterface;
 use AppBundle\Entity\Pricing\RangeInterface;
@@ -2350,12 +2351,21 @@ class Order implements OrderInterface
      */
     public function hasInsurance()
     {
-        return $this->orderAdditives->filter(function(OrderAdditive $orderAdditive){
-            return $orderAdditive->getType() == 1;
-        })->first();
+        if ($this->isMaster()) {
+            foreach ($this->childrens as $children) {
+                foreach ($children->getOrderAdditives() as $additive) {
+                    if ($additive->getType() == Additive::TYPE_INSURANCE)
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        return array_reduce($this->orderAdditives->toArray(), function($carry, $orderAdditive) {
+            return ($carry || $orderAdditive->getType() === 1);
+        }, false);
 
     }
-
 
     /**
      * @inheritDoc
