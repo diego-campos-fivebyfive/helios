@@ -13,8 +13,10 @@ namespace AppBundle\Service\Additive;
 
 use AppBundle\Entity\Misc\Additive;
 use AppBundle\Entity\Misc\AdditiveRelationTrait;
+use AppBundle\Manager\ProjectAdditiveManager;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class Synchronizer
@@ -31,6 +33,11 @@ class Synchronizer
     private $manager;
 
     /**
+     * @var mixed
+     */
+    private $container;
+
+    /**
      * @var array
      */
     private $metadata;
@@ -38,13 +45,16 @@ class Synchronizer
     /**
      * Synchronizer constructor.
      * @param EntityManagerInterface $manager
+     * @param ContainerInterface $container
      */
-    function __construct(EntityManagerInterface $manager)
+    function __construct(EntityManagerInterface $manager, ContainerInterface $container)
     {
         $this->manager = $manager;
+        $this->container = $container;
     }
 
     /**
+     * @deprecated
      * @param $source
      */
     public function synchronize(&$source)
@@ -73,6 +83,12 @@ class Synchronizer
         $this->manager->flush();
     }
 
+    /**
+     * @deprecated
+     * @param $source
+     * @param $type
+     * @return array
+     */
     public function findBySource($source, $type)
     {
         $metadata = $this->getMetadata($source);
@@ -154,6 +170,134 @@ class Synchronizer
         $additives = $qb->getQuery()->getResult();
 
         return $additives;
+    }
+
+    /**
+     * @param $source
+     * @return array
+     */
+    public function normalizeInsurances($source)
+    {
+        $this->validate($source);
+
+        $metadata = $this->getMetadata($source);
+
+        $collectionGetter = $metadata['getter'];
+
+        /** @var \Doctrine\Common\Collections\ArrayCollection $associations */
+        $associations = $source->$collectionGetter();
+
+        $associationsAdditiveIds = $associations->map(function($association){
+            return $association->getAdditive()->getId();
+        })->toArray();
+
+        $qb = $this->queryAvailableInsurances($source, $metadata['target']);
+
+        $availableInsurances = $qb->getQuery()->getResult();
+
+        $insurancesRequiredId = array_map(function ($insurance){
+            return $insurance->getId();
+        },$qb->andWhere(
+                $qb->expr()->like('a.requiredLevels',
+                    $qb->expr()->literal('%"' . $metadata['level'] . '"%')
+                )
+            )->getQuery()->getResult()
+        );
+
+        $related = $metadata['related'];
+        $sourceSetter = sprintf('set%s', $metadata['target']);
+
+        foreach ($availableInsurances as $insurance) {
+            if (in_array($insurance->getId(), $insurancesRequiredId)) {
+                if (!in_array($insurance->getId(), $associationsAdditiveIds)) {
+                    /** @var AdditiveRelationTrait $association */
+                    $association = new $related();
+
+                    $association
+                        ->setAdditive($insurance)
+                        ->$sourceSetter($source)
+                    ;
+                }
+            }
+
+            if (in_array($insurance->getId(), $associationsAdditiveIds))
+                unset($associationsAdditiveIds[array_search($insurance->getId(), $associationsAdditiveIds)]);
+        }
+
+        $this->manager->persist($source);
+        $this->manager->flush();
+
+        $this->removeDeprecatedAssociation($source, $metadata, $associationsAdditiveIds);
+
+        return $availableInsurances;
+    }
+
+    /**
+     * @param $source
+     * @param $metadata
+     * @param $associationsAdditiveIds
+     */
+    private function removeDeprecatedAssociation($source, $metadata, $associationsAdditiveIds)
+    {
+        $sourceAdditiveManager = $this->container->get($metadata['property'].'Manager');
+
+        $propertySourceId = strtolower($metadata['target']);
+        foreach (array_values($associationsAdditiveIds) as $id) {
+            $association = $sourceAdditiveManager->findOneBy([
+                $propertySourceId => $source->getId(),
+                'additive' => $id
+            ]);
+
+            $sourceAdditiveManager->delete($association);
+        }
+    }
+
+    /**
+     * @param $source
+     * @param $target
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function queryAvailableInsurances(&$source, $target)
+    {
+        $qb = $this->manager->createQueryBuilder();
+
+        $qb->select('a.id')->from(Additive::class, 'a');
+
+        $power = $source->getPower();
+        // TODO: rever metodo de projeto e order
+        if ($target == 'Project')
+            $price = $source->getCostPrice();
+        else
+            $price = $source->getSubTotal();
+
+        $level = $source->getLevel();
+
+        $offTheRule = array_map('current',
+            $qb->where(
+                $qb->expr()->orX(
+                    $qb->expr()->gt('a.minPower', $power),
+                    $qb->expr()->lt('a.maxPower', $power),
+                    $qb->expr()->gt('a.minPrice', $price),
+                    $qb->expr()->lt('a.maxPrice', $price)
+                )
+            )->getQuery()->getResult()
+        );
+
+        $qb->select('a')
+            ->where(
+                $qb->expr()->andX(
+                    $qb->expr()->eq('a.enabled', 1),
+                    $qb->expr()->like('a.availableLevels', $qb->expr()->literal('%"'.$level.'"%'))
+                )
+            );
+
+        $qb->andWhere('a.type = :type')
+            ->setParameter('type', Additive::TYPE_INSURANCE);
+
+        if ($offTheRule)
+            $qb->andWhere($qb->expr()->notIn('a.id', $offTheRule));
+
+        return $qb;
     }
 
     /**
