@@ -77,9 +77,14 @@
             Não Incluso
         {% endif %}
         <br/>
-        <label class="no-margins">&#10004; Seguro:</label> {{ order.hasInsurance ? order.TotalInsurance|currency : 'Sem seguro' }}<br/>
+        <label class="no-margins">&#10004; Seguro:</label>
+        {{ order.hasInsurance ? order.totalInsurance|currency : 'Sem seguro' }}<br/>
         <label class="no-margins">&#10004; Serviço de Start-up:</label> NÃO INCLUSO<br/>
-        <label class="no-margins">&#10004; Endereço de entrega:</label> {{ order.deliveryAddress }}{% if order.shippingRules.state %}, <label class="no-margins">{{ order.shippingRules.state }}</label>{% endif %}.<br/>
+        <label class="no-margins">&#10004; Endereço de entrega:</label>
+        {{ order.deliveryAddress }}
+        {% if order.shippingRules.state %}
+            ,<label class="no-margins">{{ order.shippingRules.state }}</label>
+        {% endif %}.<br/>
         <label class="no-margins">&#10004; Observações:</label> {{ order.note }}
     </div>
 </div>
