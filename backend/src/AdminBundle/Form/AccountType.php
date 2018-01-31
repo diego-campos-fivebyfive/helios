@@ -10,6 +10,7 @@ use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Util\Validator\Constraints\ContainsCnpj;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -51,6 +52,9 @@ class AccountType extends AbstractType
         $builder->add('level', ChoiceType::class, [
                 'choices' => $levels
             ]);
+        $builder->add('persistent', CheckboxType::class, [
+                'required' => false
+        ]);
 
         if ($isAdmin) {
 
