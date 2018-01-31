@@ -6,7 +6,7 @@
       h1.title
         | Oops.
         span.sub Tente novamente mais tarde.
-      router-link.link(to='/') Voltar
+      a.link(href='/') Voltar
     footer
       p.description
         | A plataforma pensada exclusivamente em quem trabalha com Energia Solar

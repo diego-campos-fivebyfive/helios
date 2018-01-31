@@ -5,9 +5,11 @@ namespace AdminBundle\Controller;
 use AdminBundle\Controller\AdminController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
- *
+ * @Security("has_role('ROLE_PLATFORM_MASTER')")
+ * 
  * @Route("metrics")
  *
  */
@@ -25,17 +27,6 @@ class MetricsController extends AdminController
     function __construct()
     {
         $this->userAgent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)';
-    }
-
-    /**
-     * GET Github Metrics View
-     *
-     * @Route("/", name="metrics_index")
-     * @Method("GET")
-     */
-    public function indexAction()
-    {
-        return $this->render('admin/metrics/index.html.twig', []);
     }
 
     /**
