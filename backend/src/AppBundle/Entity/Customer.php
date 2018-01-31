@@ -76,6 +76,13 @@ class Customer extends AbstractCustomer
     private $ranking;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="persistent", type="boolean", nullable=true)
+     */
+    private $persistent;
+
+    /**
      * @var boolean
      *
      * @ORM\Column(name="is_leader", type="boolean", nullable=true)
@@ -1524,6 +1531,25 @@ class Customer extends AbstractCustomer
 
         return $this;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setPersistent($persistent)
+    {
+        $this->persistent = $persistent;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isPersistent()
+    {
+        return $this->persistent;
+    }
+
 
     /**
      * @inheritDoc

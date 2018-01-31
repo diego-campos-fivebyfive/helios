@@ -2,9 +2,18 @@
 
 {% block body %}
 
+    <link href="{{ asset('assets/iCheck/custom.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/iCheck/skins/all.css') }}" rel="stylesheet">
     <style>
         .col-md-12 {
             margin-top: 10px;
+        }
+
+        .check-persistent {
+            margin-top: 15px;
+        }
+        .box-check-persistent {
+            height: 25px;
         }
     </style>
 
@@ -126,9 +135,23 @@
                                 {{ form_widget(form.agent,{attr:{class:'form-control', 'placeholder':'Status'}}) }}
                             </div>
                         {% endif %}
-
                     </div>
                     <div class="col-md-12">
+                        {% if app.user.isPlatformAdmin or app.user.isPlatformMaster %}
+                        <div class="col-md-6 check-persistent">
+                                <div class="col-md-1">
+                                    <div class="box-check-persistent">
+                                        <div class="i-checks" id="check-persistent">
+                                            {{ form_widget(form.persistent) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    {{ form_label(form.persistent, 'Esta conta não será bloqueada nem sofrerá alteração
+                                de nível automaticamente', {'label_attr':{class:'check-label'}}) }}
+                                </div>
+                        </div>
+                        {% endif %}
                         <div class="form-group col-md-2 pull-right" style="margin-top: 20px;">
                             <button class="btn btn-md btn-primary ladda-button btn-block" data-style="zoom-in"
                                     id="btn-pre-submit">
@@ -148,7 +171,18 @@
 
 {% block scripts %}
 
+    <script src="{{ asset('assets/iCheck/icheck.js') }}"></script>
+
     <script>
+        $('#check-persistent').iCheck({
+            checkboxClass: 'icheckbox_square-blue'
+        });
+
+        $('#check-persistent').on('ifChanged', function () {
+            $('#account_persistent').trigger('change');
+        });
+
+
         function display_error(message){
             toastr.error(message, '', {
                 positionClass: 'toast-top-center',
