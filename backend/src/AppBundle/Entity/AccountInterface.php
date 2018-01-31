@@ -146,6 +146,17 @@ interface AccountInterface extends CustomerInterface
     public function addRanking($ranking);
 
     /**
+     * @param $persistent
+     * @return AccountInterface
+     */
+    public function setPersistent($persistent);
+
+    /**
+     * @return bool
+     */
+    public function isPersistent();
+
+    /**
      * @param $isquik_id
      * @return AccountInterface
      */
