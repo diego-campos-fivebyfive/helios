@@ -13,7 +13,6 @@ namespace AppBundle\Service\Additive;
 
 use AppBundle\Entity\Misc\Additive;
 use AppBundle\Entity\Misc\AdditiveRelationTrait;
-use AppBundle\Manager\ProjectAdditiveManager;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
