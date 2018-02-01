@@ -1,3 +1,21 @@
+## 01/02 ##
+### CONTAS ##
+1. Filtro "chosen" por estado das contas
+1.1 Aparece para todos os usuários SICES
+2. Ajustar labels do combo (select) de status das contas conforme as labels da coluna na listagem
+3. Incluir novo status de conta "Conta Recusada"
+3.1 Este status representa contas que ficaram no status "Email verificado" e que não foram para ativado.
+3.2 Na tela de visualização da conta, nos status "Pendente" e "Email verificado" incluir ao lado do botão "Aprovar" um botão "Recusar Conta".
+
+### ORÇAMENTOS ###
+1 Filtro "chosen" por estado do Orçamento (Estado da conta Integrador) na listagem de orçamentos
+
+### PONTUAÇÕES ###
+1 Filtro "chosen" de estado do integrador em  "Pontuações"
+
+### Memorial ###
+1. Na listagem, na coluna "Data de expiração" está aparecendo a data de criação.
+
 ## 29/01 ##
 ### SEGUROS COM FAIXA DE POTÊNCIA E DE PREÇO . 1411, 1412, 1413 ##
 1. Fazer com que alguns seguros sejam carrega dos apenas quando a potência/valor do projeto esteja entre os valores mínimo e máximo configurados.
