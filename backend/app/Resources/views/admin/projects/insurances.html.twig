@@ -18,7 +18,9 @@
             });
         },
         init: function(){
+            {% if isProject is not defined %}
             this.loadInsurances();
+            {% endif %}
         }
     };
 
