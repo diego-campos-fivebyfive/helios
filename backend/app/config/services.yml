@@ -363,7 +363,7 @@ services:
 
     additive_synchronizer:
         class: AppBundle\Service\Additive\Synchronizer
-        arguments: ['@doctrine.orm.entity_manager']
+        arguments: ['@doctrine.orm.entity_manager', '@service_container']
 
     session.handler.pdo:
         class: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
