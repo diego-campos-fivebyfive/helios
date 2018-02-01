@@ -143,22 +143,11 @@ WHERE c.id %s (
   HAVING (SUM(o.total)) >= %f_FSQL_
 )", $level, $expr, $createdAt, $amount);
 
-        if (0 == $index)
-            $updateSQL = str_replace('_ASQL_', sprintf("AND c.activated_at >= '%s'", $activatedAt), $updateSQL);
-        else
-            $updateSQL = str_replace('_ASQL_', '', $updateSQL);
+        $updateSQL = str_replace('_ASQL_', (0 == $index) ? sprintf("AND c.activated_at >= '%s'", $activatedAt) : '' , $updateSQL);
 
         $index++;
 
-        if ($index < count($levels)) {
-
-            $nextAmount = $levels[$levelKeys[$index]]['amount'];
-
-            $updateSQL = str_replace('_FSQL_', sprintf(' AND SUM(o.total) < %f', $nextAmount), $updateSQL);
-
-        } else {
-            $updateSQL = str_replace('_FSQL_', '', $updateSQL);
-        }
+        $updateSQL = str_replace('_FSQL_', $index < count($levels) ? sprintf(' AND SUM(o.total) < %f', $levels[$levelKeys[$index]]['amount']) : '', $updateSQL);
 
         executeSQL($updateSQL);
     }
