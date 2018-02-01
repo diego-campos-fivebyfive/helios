@@ -181,6 +181,23 @@ class Synchronizer
 
         $metadata = $this->getMetadata($source);
 
+        $qb = $this->queryAvailableInsurances($source, $metadata['target']);
+
+        $availableInsurances = $qb->getQuery()->getResult();
+
+        $this->resolveAssociations($source, $qb, $metadata, $availableInsurances);
+
+        return $availableInsurances;
+    }
+
+    /**
+     * @param $source
+     * @param $qb
+     * @param $metadata
+     * @param $availableInsurances
+     */
+    private function resolveAssociations(&$source, $qb, $metadata, $availableInsurances)
+    {
         $collectionGetter = $metadata['getter'];
 
         /** @var \Doctrine\Common\Collections\ArrayCollection $associations */
@@ -190,17 +207,13 @@ class Synchronizer
             return $association->getAdditive()->getId();
         })->toArray();
 
-        $qb = $this->queryAvailableInsurances($source, $metadata['target']);
-
-        $availableInsurances = $qb->getQuery()->getResult();
-
         $insurancesRequiredId = array_map(function ($insurance){
             return $insurance->getId();
         },$qb->andWhere(
-                $qb->expr()->like('a.requiredLevels',
-                    $qb->expr()->literal('%"' . $metadata['level'] . '"%')
-                )
-            )->getQuery()->getResult()
+            $qb->expr()->like('a.requiredLevels',
+                $qb->expr()->literal('%"' . $metadata['level'] . '"%')
+            )
+        )->getQuery()->getResult()
         );
 
         $related = $metadata['related'];
@@ -227,21 +240,19 @@ class Synchronizer
         $this->manager->flush();
 
         $this->removeDeprecatedAssociation($source, $metadata, $associationsAdditiveIds);
-
-        return $availableInsurances;
     }
 
     /**
      * @param $source
      * @param $metadata
-     * @param $associationsAdditiveIds
+     * @param $deprecatedAssociations
      */
-    private function removeDeprecatedAssociation($source, $metadata, $associationsAdditiveIds)
+    private function removeDeprecatedAssociation($source, $metadata, $deprecatedAssociations)
     {
         $sourceAdditiveManager = $this->container->get($metadata['property'].'Manager');
 
         $propertySourceId = strtolower($metadata['target']);
-        foreach (array_values($associationsAdditiveIds) as $id) {
+        foreach (array_values($deprecatedAssociations) as $id) {
             $association = $sourceAdditiveManager->findOneBy([
                 $propertySourceId => $source->getId(),
                 'additive' => $id
