@@ -59,7 +59,7 @@ class InsuranceController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $this->formatValues($insurance);
+            $this->formatValues($insurance, true);
 
             $insurance->setType(AdditiveInterface::TYPE_INSURANCE);
 
