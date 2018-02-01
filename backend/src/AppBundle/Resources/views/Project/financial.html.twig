@@ -489,6 +489,7 @@
                 }).trigger('change');
             },
             onLoadComponents: function(){
+                InsurancesHandler.loadInsurances();
                 Financial.isLoading.components = false;
                 Financial.isPromotional.removeAttr('disabled');
             },
