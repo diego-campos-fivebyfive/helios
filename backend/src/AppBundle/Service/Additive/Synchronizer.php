@@ -274,9 +274,9 @@ class Synchronizer
         $qb->select('a.id')->from(Additive::class, 'a');
 
         $power = $source->getPower();
-        // TODO: rever metodo de projeto e order
+
         if ($target == 'Project')
-            $price = $source->getCostPrice();
+            $price = $source->getCostPriceComponents();
         else
             $price = $source->getSubTotal();
 
