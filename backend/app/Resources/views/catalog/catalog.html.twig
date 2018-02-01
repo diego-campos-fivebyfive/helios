@@ -137,11 +137,6 @@
                             <td> {{ (projectVariety.unitCostPrice * projectVariety.quantity)|currency }} </td>
                         </tr>
                     {% endfor %}
-
-                    {# INSURE LINE #}
-                    {% set insureOrigin = 'generator' %}
-                    {% include view('helper.insure_line') %}
-
                     </tbody>
                     </table>
                 </div>
