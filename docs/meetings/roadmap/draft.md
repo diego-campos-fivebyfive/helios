@@ -1,9 +1,9 @@
 ## 01/02 ##
-### RESGATE DE PONTOS ###
+### ??? RESGATE DE PONTOS ###
 1. O resgate será uma opção de no seletor de tipo de desconto (Etapa 3 do wizard)
 2. Entidade (Cupom) - gerada durante o processo de resgate de pontos.
 
-### MECANISMO DE PROCESSAMENTO DE OCORRÊNCIAS DE ENTREGA (PROCEDA) ###
+### ??? MECANISMO DE PROCESSAMENTO DE OCORRÊNCIAS DE ENTREGA (PROCEDA) ###
 1. Arquivo base "txt"
 2. O mecanismo deve efetuar o carregamento do conteúdo do arquivo txt e, com base no prefixo do evento (atualmente 542), identificar o orçamento e gerar o evento vinculado ao código relacionado.
 3. Manual PDF: Páginas 3 (Ocorrência) e 6 (Tabela de códigos de ocorrência).
