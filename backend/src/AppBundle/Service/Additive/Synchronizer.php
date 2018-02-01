@@ -32,7 +32,7 @@ class Synchronizer
     private $manager;
 
     /**
-     * @var mixed
+     * @var ContainerInterface
      */
     private $container;
 
