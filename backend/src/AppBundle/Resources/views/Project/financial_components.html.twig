@@ -123,11 +123,7 @@
             <td> {{ projectVariety.totalSalePrice|currency }} </td>
         </tr>
     {% endfor %}
-
-    {# INSURE LINE #}
-    {% set insureOrigin = 'financial' %}
-    {% include view('helper.insure_line') %}
-
+    
     </tbody>
     <tfoot>
     <tr>
