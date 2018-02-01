@@ -86,7 +86,7 @@
                             <ul class="dropdown-menu"  style="max-height: 250px; overflow: auto">
                                 {% for key, state in states %}
                                     <li>
-                                        <a href="#" class="small" data-value="option1" tabIndex="-1">
+                                        <a href="#" class="small" data-value="{{ key }}" tabIndex="-1">
                                             <input value="{{ key }}" type="checkbox">
                                             {{ state }}
                                         </a>
@@ -224,31 +224,58 @@
       var filter_bond = $('#filter-bond');
       var filter_level = $('#filter-level');
       if(form_filtration.length){
-        form_filtration.append($('<input type="hidden" name="state"/>').val(current_state));
         form_filtration.append($('<input type="hidden" name="status"/>').val(current_status));
         form_filtration.append($('<input type="hidden" name="bond"/>').val(current_bond));
         form_filtration.append($('<input type="hidden" name="level"/>').val(current_level));
-        filter_state.on('change', function(ev, params){
-          console.log(ev);
-          console.log(params);
-          $('input[name="state"]').val($(this).val());
-          //form_filtration.trigger('submit');
+
+        function getStates() {
+          var options = $('.button-group .dropdown-menu a');
+          var states = [];
+
+          Array
+            .from(options)
+            .forEach(function (option) {
+              var key = option.getAttribute('data-value');
+              var checked = option.querySelector('input').checked;
+
+              if (checked) {
+                states.push(key);
+              }
+            });
+
+          return states;
+        }
+
+        function filterStates() {
+          $('.dropdown-menu').on('click', function(event) {
+            event.stopPropagation();
+          });
+
+          $(document).one('click', function(event) {
+            document.removeEventListener('click', filterStates);
+            form_filtration.append(getStates());
+            form_filtration.trigger('submit');
+          });
+        }
+
+        filter_state.on('click', function() {
+          document.addEventListener('click', filterStates);
         });
-        filter_status.on('change', function(){
+        filter_status.on('change', function() {
           $('input[name="status"]').val($(this).val());
           form_filtration.trigger('submit');
         });
-        filter_bond.on('change', function(){
+        filter_bond.on('change', function() {
           $('input[name="bond"]').val($(this).val());
           form_filtration.trigger('submit');
         });
-        filter_level.on('change', function(){
+        filter_level.on('change', function() {
           $('input[name="level"]').val($(this).val());
           form_filtration.trigger('submit');
         });
       }
 
-      $('#email_modal').on('show.bs.modal', function(event){
+      $('#email_modal').on('show.bs.modal', function(event) {
         var modal = $(this), body = modal.find('.modal-body'), target = $(event.relatedTarget);
         var url = target.data('url');
         if(url){
