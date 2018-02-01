@@ -1,19 +1,19 @@
 ## 01/02 ##
-### CONTAS ##
+### CONTAS . 1449, 1450 ##
 1. Filtro "chosen" por estado das contas
-1.1 Aparece para todos os usuários SICES
+1.1. Aparece para todos os usuários SICES
 2. Ajustar labels do combo (select) de status das contas conforme as labels da coluna na listagem
 3. Incluir novo status de conta "Conta Recusada"
 3.1 Este status representa contas que ficaram no status "Email verificado" e que não foram para ativado.
 3.2 Na tela de visualização da conta, nos status "Pendente" e "Email verificado" incluir ao lado do botão "Aprovar" um botão "Recusar Conta".
 
-### ORÇAMENTOS ###
+### ORÇAMENTOS . 1451 ###
 1 Filtro "chosen" por estado do Orçamento (Estado da conta Integrador) na listagem de orçamentos
 
-### PONTUAÇÕES ###
+### PONTUAÇÕES . 1453 ###
 1 Filtro "chosen" de estado do integrador em  "Pontuações"
 
-### Memorial ###
+### Memorial . 1454 ###
 1. Na listagem, na coluna "Data de expiração" está aparecendo a data de criação.
 
 ## 29/01 ##
