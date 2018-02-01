@@ -1,5 +1,8 @@
 <?php
 
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 /**
  * Este script efetua o procedimento de alteração de nível das contas
  * com base nos orçamentos dentro dos parâmetros definidos.
@@ -17,10 +20,11 @@
  */
 
 require_once dirname(__FILE__) . '/db/connection.php';
+require_once dirname(__DIR__) . '/../vendor/autoload.php';
 
 $data = R::findOne('app_parameter', 'id = ?', ['platform_settings']);
 
-if (!$data)  return;
+if (!$data) return;
 
 $arrayParameters = json_decode($data->parameters, true);
 
@@ -39,58 +43,114 @@ function normalizeConfig(array &$config)
 }
 
 /**
+ * Log string SQL with type, year and month identity
+ */
+function logSQL($sql){
+
+    $filename = dirname(__FILE__) . sprintf('/logs/cron-%s.log', date('Y-m'));
+
+    $log = new Logger('account-level-handler');
+    $log->pushHandler(new StreamHandler($filename, Logger::INFO));
+
+    $log->info($sql);
+}
+
+/**
+ * Execute SQL
+ * @param $sql
+ */
+function executeSQL($sql)
+{
+    $sql .= " AND c.context = 'account' AND c.persistent = 0;";
+
+    $sql = preg_replace('/( )+/', ' ', str_replace(["\n", "\t"], ' ', $sql));
+
+    R::exec($sql);
+
+    logSQL($sql);
+}
+
+/**
  * @param array $config
  */
 function normalizeLevels(array $config)
 {
     normalizeConfig($config);
 
-    // UPGRADE / DOWNGRADE
+    $levels = $config['levels'];
+    $levelKeys = array_keys($levels);
+    $firstLevel = $levelKeys[0];
+    $gracePeriod = (int)$config['grace_period'];
+    $activatedAt = (new \DateTime(sprintf('%d days ago', $gracePeriod)))->format('Y-m-d');
+    $lockedStatus = 4;
+    $firstAmount = (float)$config['levels'][$levelKeys[0]]['amount'];
+    $firstCreatedAt = (new \DateTime(sprintf('%d days ago', $levels[$levelKeys[0]]['days'])))->format('Y-m-d');
 
-    foreach ($config['levels'] as $level => $parameter) {
-
-        $days = (int)$parameter['days'];
-        $amount = (float)$parameter['amount'];
-
-        $createdAt = (new \DateTime(sprintf('%d days ago', $days)))->format('Y-m-d');
-
-        $updateSQL = sprintf(<<<SQL
+    $firstSQL = sprintf(<<<SQL
 UPDATE app_customer c
 SET c.level = '%s'
-WHERE (
-  SELECT SUM(o.total) total
+WHERE c.id NOT IN (
+  SELECT o.account_id
   FROM app_order o
   WHERE o.parent_id IS NULL
-  AND o.status >= 7
-  AND DATE(o.created_at) >= '%s'
-  AND o.account_id = c.id) > ROUND(%f, 2)
+        AND o.status >= 7
+        AND DATE(o.created_at) >= '%s'
+  GROUP BY account_id
+  HAVING (SUM(o.total)) >= %f
+)
+AND c.activated_at >= '%s'
 SQL
-, $level, $createdAt, $amount);
+, $firstLevel, $firstCreatedAt, $firstAmount, $activatedAt);
 
-        R::exec($updateSQL);
-    }
+    $lockSQL = sprintf(<<<SQL
+UPDATE app_customer c
+    SET c.status = %d, c.level = '%s'
+    WHERE id NOT IN (
+    SELECT o.account_id
+    FROM app_order o
+    WHERE o.parent_id IS NULL
+    AND o.status >= 7
+    AND DATE(o.created_at) >= '%s'
+    GROUP BY account_id
+    HAVING (SUM(o.total)) >= %f
+    )
+    AND c.activated_at < '%s'
+SQL
+, $lockedStatus, $firstLevel, $firstCreatedAt, $firstAmount, $activatedAt);
 
-    // LOCK
+    executeSQL($firstSQL);
+    executeSQL($lockSQL);
 
-    $levelKeys = array_keys($config['levels']);
-    $lockedStatus = 4;
-    $gracePeriod = (int) $config['grace_period'];
-    $firstAmount = (float) $config['levels'][$levelKeys[0]]['amount'];
-    $compareAt = (new \DateTime(sprintf('%d days ago', $gracePeriod)))->format('Y-m-d');
+    // UPGRADE / DOWNGRADE
+    $index = 0;
+    foreach ($levels as $level => $params) {
 
-    $lockSQL = sprintf("UPDATE app_customer c
-SET c.status = %d
-WHERE (
-    SELECT SUM(o.total) total
+        $days = (int)$params['days'];
+        $amount = (float)$params['amount'];
+        $createdAt = (new \DateTime(sprintf('%d days ago', $days)))->format('Y-m-d');
+
+        $expr = 0 == $index ? 'IN' : 'IN';
+
+        $updateSQL = sprintf("UPDATE app_customer c
+SET c.level = '%s'
+WHERE c.id %s (
+  SELECT o.account_id
   FROM app_order o
   WHERE o.parent_id IS NULL
-AND o.status >= 7
-AND DATE(o.created_at) >= '%s'
-AND o.account_id = c.id
-) < ROUND(%f, 2)
-AND DATE(c.activated_at) < '%s'", $lockedStatus, $compareAt, $firstAmount, $compareAt);
+        AND o.status >= 7
+        AND DATE(o.created_at) >= '%s'
+  GROUP BY account_id
+  HAVING (SUM(o.total)) >= %f_FSQL_
+)", $level, $expr, $createdAt, $amount);
 
-    R::exec($lockSQL);
+        $updateSQL = str_replace('_ASQL_', (0 == $index) ? sprintf("AND c.activated_at >= '%s'", $activatedAt) : '' , $updateSQL);
+
+        $index++;
+
+        $updateSQL = str_replace('_FSQL_', $index < count($levels) ? sprintf(' AND SUM(o.total) < %f', $levels[$levelKeys[$index]]['amount']) : '', $updateSQL);
+
+        executeSQL($updateSQL);
+    }
 }
 
 normalizeLevels($config);
