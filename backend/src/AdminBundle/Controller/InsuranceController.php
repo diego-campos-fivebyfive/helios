@@ -59,7 +59,8 @@ class InsuranceController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $this->setReplace($insurance);
+            $this->formatValues($insurance);
+
             $insurance->setType(AdditiveInterface::TYPE_INSURANCE);
 
             $manager->save($insurance);
@@ -77,14 +78,14 @@ class InsuranceController extends AbstractController
      */
     public function updateAction(Request $request, Additive $insurance)
     {
-        $this->getReplace($insurance);
+        $this->formatValues($insurance);
 
         $form = $this->createForm(InsuranceType::class, $insurance);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $this->setReplace($insurance);
+            $this->formatValues($insurance, true);
 
             if (!$insurance->getType())
                 $insurance->setType(AdditiveInterface::TYPE_INSURANCE);
@@ -111,44 +112,30 @@ class InsuranceController extends AbstractController
     }
 
     /**
-     * @param $value
-     * @return mixed
-     */
-    private function replaceValues($value)
-    {
-        return str_replace(',','.', $value);
-    }
-
-    /**
-     * @param $value
-     * @return mixed
-     */
-    private function reverseReplaceValues($value)
-    {
-        return str_replace('.',',', $value);
-    }
-
-    /**
      * @param Additive $insurance
+     * @param bool $toDb
      */
-    private function getReplace(Additive $insurance)
+    private function formatValues(Additive $insurance, $toDb = false)
     {
-        $insurance->setValue($this->reverseReplaceValues($insurance->getValue()));
-        $insurance->setMinPower($this->reverseReplaceValues($insurance->getMinPower()));
-        $insurance->setMaxPower($this->reverseReplaceValues($insurance->getMaxPower()));
-        $insurance->setMinPrice($this->reverseReplaceValues($insurance->getMinPrice()));
-        $insurance->setMaxPrice($this->reverseReplaceValues($insurance->getMaxPrice()));
-    }
+        $properties = [
+            'Value',
+            'MinPower',
+            'MaxPower',
+            'MinPrice',
+            'MaxPrice'
+        ];
 
-    /**
-     * @param Additive $insurance
-     */
-    private function setReplace(Additive $insurance)
-    {
-        $insurance->setValue($this->replaceValues($insurance->getValue()));
-        $insurance->setMinPower($this->replaceValues($insurance->getMinPower()));
-        $insurance->setMaxPower($this->replaceValues($insurance->getMaxPower()));
-        $insurance->setMinPrice($this->replaceValues($insurance->getMinPrice()));
-        $insurance->setMaxPrice($this->replaceValues($insurance->getMaxPrice()));
+        foreach ($properties as $property){
+            $getValue = 'get'.$property;
+            $setValue = 'set'.$property;
+
+            if ($insurance->$getValue()){
+                if ($toDb)
+                    $insurance->$setValue(str_replace(',','.', $insurance->$getValue()));
+                else
+                    $insurance->$setValue(str_replace('.',',', $insurance->$getValue()));
+            }
+
+        }
     }
 }
