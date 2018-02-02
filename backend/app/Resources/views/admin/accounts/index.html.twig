@@ -87,8 +87,8 @@
                                 {% for key, state in states %}
                                     <li>
                                         <a href="#" class="small" data-value="{{ key }}" tabIndex="-1">
-                                            <input value="{{ key }}" type="checkbox">
-                                            {{ state }}
+                                            <input value="{{ key }}" type="checkbox" {% if state.checked %}checked{% endif %}>
+                                            {{ state.name }}
                                         </a>
                                     </li>
                                 {% endfor %}
@@ -215,7 +215,7 @@
       });
 
       var form_filtration = $('#form_filtration');
-      var current_state = '{{ current_state }}';
+      {#var current_state = '{{ current_state }}';#}
       var current_status = '{{ current_status }}';
       var current_bond = '{{ current_bond }}';
       var current_level = '{{ current_level }}';
@@ -227,6 +227,7 @@
         form_filtration.append($('<input type="hidden" name="status"/>').val(current_status));
         form_filtration.append($('<input type="hidden" name="bond"/>').val(current_bond));
         form_filtration.append($('<input type="hidden" name="level"/>').val(current_level));
+        form_filtration.append($('<input type="hidden" name="states"/>').val(getStates()));
 
         function getStates() {
           var options = $('.button-group .dropdown-menu a');
@@ -253,7 +254,7 @@
 
           $(document).one('click', function(event) {
             document.removeEventListener('click', filterStates);
-            form_filtration.append(getStates());
+            $('input[name="states"]').val(getStates());
             form_filtration.trigger('submit');
           });
         }
