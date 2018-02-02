@@ -50,9 +50,11 @@ class AccountController extends AdminController
                 'context' => $this->getAccountContext()
             ]);
 
-        if(-1 != $state = $request->get('state', -1)){
-            $qb->andWhere('a.state = :state');
-            $qb->setParameter('state', $state);
+        if(-1 != $states = $request->get('states')){
+            $arrayStates = array_filter(explode(',', $states));
+            if (!empty($arrayStates)) {
+                $qb->andWhere($qb->expr()->in('a.state', $arrayStates));
+            };
         }
 
         if(-1 != $bond = $request->get('bond', -1)){
@@ -102,17 +104,28 @@ class AccountController extends AdminController
 
         unset($levels[Memorial::LEVEL_PROMOTIONAL], $levels[Memorial::LEVEL_FINAME]);
 
-        $states = $this->getStates($expanseStates);
+        $getStates = function($states, $statesSelected) {
+            $finalStates = [];
+
+            foreach ($states as $key => $state) {
+                $finalStates[$key] = [
+                    'name' => $state,
+                    'checked' => in_array($key, $statesSelected)
+                ];
+            }
+
+            return $finalStates;
+        };
 
         return $this->render('admin/accounts/index.html.twig', array(
-            'current_state' => $state,
+            'current_state' => $states,
             'current_status' => $status,
             'allStatus' =>Customer::getStatusList(),
             'current_level' => $level,
             'allLevels' => $levels,
             'current_bond' => $bond,
             'members' => $membersSices,
-            'states' => $states,
+            'states' => $getStates($this->getStates($expanseStates), $arrayStates),
             'pagination' => $pagination
         ));
     }
