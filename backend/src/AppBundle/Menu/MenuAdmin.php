@@ -93,35 +93,57 @@ trait MenuAdmin
                     'admin',
                     'master'
                 ]
-            ]/*,
+            ],
            'Settings' => [
                 'name' => 'Settings',
                 'uri' => '#',
                 'class' => 'nav nav-second-level collapse',
                 'icon' => 'settings',
                 'access' => '*',
-                'dropdown' => 'true',
-                'items' => [
-                    'My data' => [
+                'sub_items' => [
+                    'MyData' => [
+                        'name' => 'Meus Dados',
                         'route' => 'member_profile',
                         'icon' => 'profile',
+                        'access_groups' => '*'
                     ],
-                    'Parâmetros', [
+                    'Parameters', [
+                        'name' => 'Parâmetros',
                         'route' => 'platform_settings',
                         'icon' => 'sliders',
+                        'access_groups' => [
+                            'admin',
+                            'master'
+                        ]
                     ]
                 ]
-            ]*/
+            ]
         ];
     }
 
     /**
      * @param ItemInterface $menu
      */
-    private function addMenuItem(ItemInterface $menu, $item)
+    private function addMenuItem($parent, $item)
     {
-        $menu->addChild($item['name'], [
+        $parent->addChild($item['name'], [
             'route' => $item['route'],
+            'extras' => [
+                'icon' => self::icon($item['icon'])
+            ]
+        ]);
+    }
+
+    /**
+     * @param ItemInterface $menu
+     */
+    private function addDropdownItem($parent, $item)
+    {
+        return $parent->addChild($item['name'], [
+            'uri' => $item['uri'],
+            'childrenAttributes' => [
+                'class' => $item['class']
+            ],
             'extras' => [
                 'icon' => self::icon($item['icon'])
             ]
@@ -159,36 +181,23 @@ trait MenuAdmin
         $user = $this->getUser();
         $userRoles = $user->getRoles();
 
-        foreach ($this->menuMap as $menuItem) {
-            if(self::hasGroupAccess($menuItem['access_groups'], $userRoles)) {
-                self::addMenuItem($menu, $menuItem);
+        foreach ($this->menuMap as $item) {
+            if(self::hasGroupAccess($item['access_groups'], $userRoles)) {
+                if (!$item['sub_items'] {
+                    self::addMenuItem($menu, $item);
+                }
+                else {
+                    $dropdown = self::addDropdownItem($menu, $item);
+
+                    foreach($item as $subItem) {
+                        if(self::hasGroupAccess($subItem['access_groups'], $userRoles)) {
+                            self::addMenuItem($dropdown, $subItem);
+                        }
+                    }
+                }
             }
         }
 
         return $menu;
-    }
-
-    /**
-     * @param ItemInterface $menu
-     */
-    private function addSettings(ItemInterface $menu)
-    {
-        $settings = $menu->addChild('Settings', [
-            'uri' => '#',
-            'childrenAttributes' => ['class' => 'nav nav-second-level collapse'],
-            'extras' => ['icon' => self::icon('settings')]
-        ]);
-
-        $settings->addChild('My data', [
-            'route' => 'member_profile',
-            'extras' => ['icon' => self::icon('profile')]
-        ]);
-
-        if($this->user->isPlatformMaster() || $this->user->isPlatformAdmin()){
-            $settings->addChild('Parâmetros', [
-                'route' => 'platform_settings',
-                'extras' => ['icon' => self::icon('sliders')]
-            ]);
-        }
     }
 }
