@@ -1,5 +1,7 @@
 {% set user = app.user %}
-<div id="info-status" class="pull-right">
+{% set showRefuse = app.user.isPlatformCommercial or app.user.isPlatformAdmin or app.user.isPlatformMaster %}
+
+<div id="info-status" class="pull-right btn-group">
     {% if account.status == 0 %}
         <a class="btn btn-danger"
            data-status="{{ path('account_change_status',{'token':account.token}) }}">
@@ -24,6 +26,13 @@
         <a class="btn btn-danger"
            data-status="{{ path('account_change_status',{'token':account.token}) }}">
             Ativar conta
+        </a>
+    {% endif %}
+
+    {% if showRefuse and (account.status == 0 or account.status == 1) %}
+        <a class="btn btn-warning"
+           data-status="{{ path('account_refuse_status',{'token':account.token}) }}">
+            Recusar conta
         </a>
     {% endif %}
 </div>
