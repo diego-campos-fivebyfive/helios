@@ -18,9 +18,13 @@
     </ul>
 </div>
 <script>
-    var filter_state = $('#filter-state');
 
     function StateFilter(form_filtration) {
+
+      var filter_state = $('#filter-state');
+
+      form_filtration.append($('<input type="hidden" name="states"/>').val(getStates()));
+
       $filterStatesHasChanges = false;
 
       function getStates() {
