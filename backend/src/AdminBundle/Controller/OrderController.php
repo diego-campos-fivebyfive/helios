@@ -4,6 +4,7 @@ namespace AdminBundle\Controller;
 
 use AdminBundle\Form\Order\FilterType;
 use AppBundle\Controller\AbstractController;
+use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\Order\Element;
@@ -98,7 +99,7 @@ class OrderController extends AbstractController
 
         $parameters = [
             'context' => BusinessInterface::CONTEXT_ACCOUNT,
-            'status' => BusinessInterface::ACTIVATED
+            'status' => AccountInterface::ACTIVATED
         ];
 
         $manager = $this->manager('customer');

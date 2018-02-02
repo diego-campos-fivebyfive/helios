@@ -39,15 +39,6 @@ interface BusinessInterface extends BaseCustomerInterface
     const CATEGORY_CONTACT = 'contact_category';
 
     /**
-     * Account status
-     */
-    const PENDING = 0;
-    const STANDING = 1;
-    const APROVED = 2;
-    const ACTIVATED = 3;
-    const LOCKED = 4;
-
-    /**
      * Token support
      */
     const TOKEN_ENTROPY = 200;
@@ -177,31 +168,6 @@ interface BusinessInterface extends BaseCustomerInterface
      * @return string | null
      */
     public function getConfirmationToken();
-
-    /**
-     * @return bool
-     */
-    public function isPending();
-
-    /**
-     * @return bool
-     */
-    public function isStanding();
-
-    /**
-     * @return bool
-     */
-    public function isAproved();
-
-    /**
-     * @return bool
-     */
-    public function isActivated();
-
-    /**
-     * @return bool
-     */
-    public function isLocked();
 
     /**
      * @param //MediaInterface $media

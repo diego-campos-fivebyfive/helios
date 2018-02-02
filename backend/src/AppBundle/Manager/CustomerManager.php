@@ -2,6 +2,7 @@
 
 namespace AppBundle\Manager;
 
+use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 
@@ -15,7 +16,7 @@ class CustomerManager extends AbstractManager
         if($entity instanceof BusinessInterface){
 
             if($entity->isMember() && $entity->getUser()){
-                $entity->setStatus(BusinessInterface::LOCKED);
+                $entity->setStatus(AccountInterface::LOCKED);
                 $entity->getUser()->setEnabled(false);
             }
 
@@ -27,7 +28,7 @@ class CustomerManager extends AbstractManager
                     ->isLeader(false)
                     ->setAttributes([])
                     ->setConfirmationToken(null)
-                    ->setStatus(BusinessInterface::LOCKED)
+                    ->setStatus(AccountInterface::LOCKED)
                     ->setEmail(null);
             }
 
