@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AdminBundle\Form\Misc\RankingType;
+use AppBundle\Configuration\Brazil;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\Misc\Ranking;
@@ -51,7 +52,27 @@ class RankingController extends AbstractController
                 'context' => $this->getAccountContext()
             ]);
 
+        if(-1 != $states = $request->get('states')){
+            $arrayStates = array_filter(explode(',', $states));
+            if (!empty($arrayStates)) {
+                $qb->andWhere($qb->expr()->in('a.state', $arrayStates));
+            };
+        }
+
         $this->overrideGetFilters();
+
+        $getStates = function($states, $statesSelected) {
+            $finalStates = [];
+
+            foreach ($states as $key => $state) {
+                $finalStates[$key] = [
+                    'name' => $state,
+                    'checked' => in_array($key, $statesSelected)
+                ];
+            }
+
+            return $finalStates;
+        };
 
         $pagination = $paginator->paginate(
             $qb->getQuery(),
@@ -59,7 +80,8 @@ class RankingController extends AbstractController
         );
 
         return $this->render('ranking/account.html.twig', array(
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'states' => $getStates(Brazil::states(), $arrayStates)
         ));
     }
 
@@ -176,6 +198,10 @@ class RankingController extends AbstractController
         return $this->json([]);
     }
 
+    /**
+     * @param $account
+     * @return mixed
+     */
     private function currentAmount($account)
     {
         $rankingGenerator = $this->get('ranking_generator');
