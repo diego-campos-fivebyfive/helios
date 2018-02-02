@@ -1083,12 +1083,12 @@ class Customer extends AbstractCustomer
     public static function getStatusList()
     {
         return [
-            self::PENDING => 'Pending',
-            self::STANDING => 'Standing',
-            self::APPROVED => 'Approved',
-            self::ACTIVATED => 'Actived',
-            self::LOCKED => 'Locked',
-            self::REFUSED => 'Refused'
+            self::PENDING => 'Pendente',
+            self::STANDING => 'Email verificado',
+            self::APPROVED => 'Conta confirmada',
+            self::ACTIVATED => 'Ativo',
+            self::LOCKED => 'Bloqueado',
+            self::REFUSED => 'Recusado'
         ];
     }
 

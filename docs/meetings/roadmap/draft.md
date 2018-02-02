@@ -1,4 +1,13 @@
 ## 01/02 ##
+### ??? RESGATE DE PONTOS ###
+1. O resgate será uma opção de no seletor de tipo de desconto (Etapa 3 do wizard)
+2. Entidade (Cupom) - gerada durante o processo de resgate de pontos.
+
+### ??? MECANISMO DE PROCESSAMENTO DE OCORRÊNCIAS DE ENTREGA (PROCEDA) ###
+1. Arquivo base "txt"
+2. O mecanismo deve efetuar o carregamento do conteúdo do arquivo txt e, com base no prefixo do evento (atualmente 542), identificar o orçamento e gerar o evento vinculado ao código relacionado.
+3. Manual PDF: Páginas 3 (Ocorrência) e 6 (Tabela de códigos de ocorrência).
+
 ### CONTAS . 1449, 1450 ##
 1. Filtro "chosen" por estado das contas
 1.1. Aparece para todos os usuários SICES
@@ -7,8 +16,11 @@
 3.1 Este status representa contas que ficaram no status "Email verificado" e que não foram para ativado.
 3.2 Na tela de visualização da conta, nos status "Pendente" e "Email verificado" incluir ao lado do botão "Aprovar" um botão "Recusar Conta".
 
-### ORÇAMENTOS . 1451 ###
-1 Filtro "chosen" por estado do Orçamento (Estado da conta Integrador) na listagem de orçamentos
+### ORÇAMENTOS . 1451, 1455 ###
+1. Filtro "chosen" por estado do Orçamento (Estado da conta Integrador) na listagem de orçamentos
+2. Adicionar "Data de Faturamento" + Normalizar datas antigas + Adequar método "isBilled" 
+2.1. Na modal de "Importar CSV", incluir datepicker (Apenas data) para seleção da data de faturamento (Obrigatória).
+2.2. Ao processar o CSV, cada orçamento encontrado deverá ter essa data definida em "billedAt", além do número de NF.
 
 ### PONTUAÇÕES . 1453 ###
 1 Filtro "chosen" de estado do integrador em  "Pontuações"
