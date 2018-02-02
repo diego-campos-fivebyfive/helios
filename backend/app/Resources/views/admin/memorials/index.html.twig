@@ -51,7 +51,7 @@
                                                 <td class="text-center">
                                                     {% if memorial.isExpired %}
                                                         {% set label = 'danger' %}
-                                                        {{ memorial.createdAt|date('d/m/Y') }}
+                                                        {{ memorial.expiredAt|date('d/m/Y') }}
                                                     {% endif %}
                                                 </td>
                                                 <td class="text-center">
