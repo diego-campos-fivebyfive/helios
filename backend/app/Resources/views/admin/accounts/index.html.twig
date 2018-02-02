@@ -75,25 +75,7 @@
                     {{ knp_pagination_filter(pagination, {'a.lastname, a.document, a.email':''}) }}
 
                     <div class="col-md-2">
-                        <div class="button-group" title="Estado" id="filter-state">
-                            <button
-                                type="button"
-                                class="form-control selected dropdown-toggle"
-                                data-toggle="dropdown">
-                                Estado
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu"  style="max-height: 250px; overflow: auto">
-                                {% for key, state in states %}
-                                    <li>
-                                        <a href="#" class="small" data-value="{{ key }}" tabIndex="-1">
-                                            <input value="{{ key }}" type="checkbox" {% if state.checked %}checked{% endif %}>
-                                            {{ state.name }}
-                                        </a>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
+                        {% include view('admin/helper/states_filter.html.twig') %}
                     </div>
 
                     <div class="col-md-2">
@@ -218,7 +200,6 @@
       var current_status = '{{ current_status }}';
       var current_bond = '{{ current_bond }}';
       var current_level = '{{ current_level }}';
-      var filter_state = $('#filter-state');
       var filter_status = $('#filter-status');
       var filter_bond = $('#filter-bond');
       var filter_level = $('#filter-level');
@@ -226,48 +207,9 @@
         form_filtration.append($('<input type="hidden" name="status"/>').val(current_status));
         form_filtration.append($('<input type="hidden" name="bond"/>').val(current_bond));
         form_filtration.append($('<input type="hidden" name="level"/>').val(current_level));
-        form_filtration.append($('<input type="hidden" name="states"/>').val(getStates()));
 
-        $filterStatesHasChanges = false;
+        StateFilter(form_filtration);
 
-        function getStates() {
-          var options = $('.button-group .dropdown-menu a');
-          var states = [];
-
-          Array
-            .from(options)
-            .forEach(function (option) {
-              var key = option.getAttribute('data-value');
-              var checked = option.querySelector('input').checked;
-
-              if (checked) {
-                states.push(key);
-              }
-            });
-
-          return states;
-        }
-
-        function filterStates() {
-          $('.dropdown-menu').on('click', function(event) {
-            $filterStatesHasChanges = true;
-            event.stopPropagation();
-          });
-
-          $(document).one('click', function(event) {
-            document.removeEventListener('click', filterStates);
-
-            if ($filterStatesHasChanges) {
-              $('input[name="states"]').val(getStates());
-              form_filtration.trigger('submit');
-              $filterStatesHasChanges = false;
-            }
-          });
-        }
-
-        filter_state.on('click', function() {
-          document.addEventListener('click', filterStates);
-        });
         filter_status.on('change', function() {
           $('input[name="status"]').val($(this).val());
           form_filtration.trigger('submit');
