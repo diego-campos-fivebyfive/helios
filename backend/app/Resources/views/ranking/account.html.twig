@@ -17,6 +17,10 @@
         <tr class="m-table-header">
             <th colspan="4">
                 <h2 class="text-center">Contas</h2>
+                <div class="col-md-3" style="margin-bottom: 10px">
+                    {% include view('admin/helper/states_filter.html.twig') %}
+                </div>
+
                 {{ knp_pagination_filter(pagination, {'a.lastname, a.firstname, a.document, a.email':''}) }}
             </th>
         </tr>
@@ -54,6 +58,8 @@
 <script>
 
     var form = $('#form_filtration');
+
+    StateFilter(form);
 
     form.on('submit', function (event) {
         event.preventDefault();
