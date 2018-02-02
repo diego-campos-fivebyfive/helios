@@ -127,7 +127,7 @@ class RegisterController extends AbstractController
 
         $message = 'Conta não identificada!';
 
-        if ($account->isAproved()) {
+        if ($account->isApproved()) {
 
             $owner = $account->getOwner();
             $user = $owner->getUser();
@@ -164,8 +164,8 @@ class RegisterController extends AbstractController
             if($account->isPending()) {
                 $member = $account->getOwner();
 
-                $member->setStatus(BusinessInterface::STANDING);
-                $account->setStatus(BusinessInterface::STANDING);
+                $member->setStatus(AccountInterface::STANDING);
+                $account->setStatus(AccountInterface::STANDING);
 
                 $newToken = self::getTokenGenerator()->generateToken();
                 $account->setConfirmationToken($newToken);
@@ -230,8 +230,8 @@ class RegisterController extends AbstractController
 
                 $member = $account->getOwner();
 
-                $member->setStatus(BusinessInterface::ACTIVATED);
-                $account->setStatus(BusinessInterface::ACTIVATED);
+                $member->setStatus(AccountInterface::ACTIVATED);
+                $account->setStatus(AccountInterface::ACTIVATED);
 
                 $manager->save($account);
             }

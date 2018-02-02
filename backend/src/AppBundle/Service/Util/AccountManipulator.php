@@ -3,6 +3,7 @@
 namespace AppBundle\Service\Util;
 
 use AppBundle\Configuration\App;
+use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -48,20 +49,6 @@ class AccountManipulator
     /**
      * @param $account BusinessInterface|string
      */
-    public function activate($account)
-    {
-        $account = $this->checkAccount($account);
-
-        $account
-            ->setExpireAt(null)
-            ->setStatus(BusinessInterface::CONFIRMED);
-
-        $this->getAccountManager()->save($account);
-    }
-
-    /**
-     * @param $account BusinessInterface|string
-     */
     public function deactivate($account)
     {
         /** @var BusinessInterface $account */
@@ -76,7 +63,7 @@ class AccountManipulator
 
         $account
             //->setExpireAt(null)
-            ->setStatus(BusinessInterface::LOCKED);
+            ->setStatus(AccountInterface::LOCKED);
 
         $manager->delete($account);
 
@@ -112,41 +99,6 @@ class AccountManipulator
         $date->add($interval);
 
         $account->setExpireAt($date);
-
-        $this->getAccountManager()->save($account);
-    }
-
-    /**
-     * @param \ $account
-     * @param $invoice
-     */
-    public function paymentConfirmed($account, $invoice)
-    {
-        /** @var BusinessInterface $account */
-        $account = $this->checkAccount($account);
-
-        // Upgrade
-        if(null != $invoice->code){
-
-            $metadata = $invoice->metadata;
-
-            $countUsers = $metadata->count_users;
-
-            $this->getVindiHelper()->getProductItemService()->update($metadata->extra_id, [
-                'quantity' => ($metadata->count_users - 1)
-            ]);
-
-        // Create
-        }else{
-
-            $item = $invoice->bill_items[1];
-            $countUsers = ($item->quantity+1);
-        }
-
-        $account
-            ->setExpireAt(null)
-            ->setStatus(BusinessInterface::CONFIRMED)
-            ->setMaxMember($countUsers);
 
         $this->getAccountManager()->save($account);
     }

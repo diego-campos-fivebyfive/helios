@@ -1085,9 +1085,10 @@ class Customer extends AbstractCustomer
         return [
             self::PENDING => 'Pendente',
             self::STANDING => 'Email verificado',
-            self::APROVED => 'Conta confirmada',
+            self::APPROVED => 'Conta confirmada',
             self::ACTIVATED => 'Ativo',
             self::LOCKED => 'Bloqueado',
+            self::REFUSED => 'Recusado'
         ];
     }
 

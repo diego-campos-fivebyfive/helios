@@ -165,9 +165,9 @@ trait AccountTrait
     /**
      * @return bool
      */
-    public function isAproved()
+    public function isApproved()
     {
-        return self::APROVED == $this->status;
+        return self::APPROVED == $this->status;
     }
 
     /**
@@ -184,6 +184,14 @@ trait AccountTrait
     public function isLocked()
     {
         return self::LOCKED == $this->status;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRefused()
+    {
+        return self::REFUSED == $this->status;
     }
 
     /**

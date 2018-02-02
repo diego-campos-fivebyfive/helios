@@ -200,13 +200,13 @@ class AccountController extends AdminController
 
                 $member->setUser($user);
 
-                $account->setStatus(Customer::APROVED);
+                $account->setStatus(Customer::APPROVED);
 
                 $accountManager->save($account);
 
                 $this->setNotice("Conta criada com sucesso !");
 
-                if ($account->isAproved()) {
+                if ($account->isApproved()) {
                     $this->getMailer()->sendAccountConfirmationMessage($account);
                 }
 
@@ -329,29 +329,48 @@ class AccountController extends AdminController
     {
         try {
             switch ($account->getStatus()) {
-                case BusinessInterface::PENDING:
+                case AccountInterface::PENDING:
                     $this->getMailer()->sendAccountVerifyMessage($account);
                     break;
-                case BusinessInterface::STANDING:
-                    $account = $this->changeStatus($account, BusinessInterface::APROVED);
+                case AccountInterface::STANDING:
+                    $account = $this->changeStatus($account, AccountInterface::APPROVED);
                     $account->setAgent($this->member());
                     $this->getMailer()->sendAccountConfirmationMessage($account);
                     break;
-                case BusinessInterface::APROVED:
+                case AccountInterface::APPROVED:
                     $this->getMailer()->sendAccountConfirmationMessage($account);
                     break;
-                case BusinessInterface::ACTIVATED:
-                    $this->changeStatus($account, BusinessInterface::LOCKED);
+                case AccountInterface::ACTIVATED:
+                    $this->changeStatus($account, AccountInterface::LOCKED);
                     break;
-                case BusinessInterface::LOCKED:
+                case AccountInterface::LOCKED:
                     foreach ($account->getMembers() as $member){
                         $member->getUser()->setEnabled(1);
                     }
-                    $this->changeStatus($account, BusinessInterface::ACTIVATED);
+                    $this->changeStatus($account, AccountInterface::ACTIVATED);
                     break;
             }
 
             $this->manager('customer')->save($account);
+
+            $status = Response::HTTP_OK;
+        } catch (\Exception $exception) {
+            $status = Response::HTTP_NOT_FOUND;
+        }
+
+        return $this->json([
+            'info_status' => $this->renderView('admin/accounts/info_status.html.twig', ['account' => $account])
+        ], $status);
+    }
+
+    /**
+     * @Route("/{token}/refuse", name="account_refuse_status")
+     * @Method("post")
+     */
+    public function refuseAction(Customer $account)
+    {
+        try {
+            $this->changeStatus($account, AccountInterface::REFUSED);
 
             $status = Response::HTTP_OK;
         } catch (\Exception $exception) {

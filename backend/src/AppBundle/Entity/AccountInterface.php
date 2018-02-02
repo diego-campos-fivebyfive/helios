@@ -21,6 +21,16 @@ interface AccountInterface extends CustomerInterface
     const PROJECTS_QUOTA = 4;
 
     const MAX_MEMBERS = 5;
+
+    /**
+     * Account status
+     */
+    const PENDING = 0;
+    const STANDING = 1;
+    const APPROVED = 2;
+    const ACTIVATED = 3;
+    const LOCKED = 4;
+    const REFUSED = 5;
     
     /**
      * @return int
@@ -40,7 +50,7 @@ interface AccountInterface extends CustomerInterface
     /**
      * @return bool
      */
-    public function isAproved();
+    public function isApproved();
 
     /**
      * @return bool
@@ -51,6 +61,11 @@ interface AccountInterface extends CustomerInterface
      * @return bool
      */
     public function isLocked();
+
+    /**
+     * @return bool
+     */
+    public function isRefused();
 
     /**
      * @return MemberInterface

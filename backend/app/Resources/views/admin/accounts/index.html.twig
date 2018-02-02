@@ -166,6 +166,8 @@
                                                     <span class="label label-success">Ativo</span>
                                                 {% elseif account.status == 4 %}
                                                     <span class="label label-danger">Bloqueado</span>
+                                                {% elseif account.status == 5 %}
+                                                    <span class="label label-defaut">Conta recusada</span>
                                                 {% endif %}
                                             </td>
                                             <td>
