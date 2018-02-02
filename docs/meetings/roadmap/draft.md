@@ -1,5 +1,5 @@
 ## 01/02 ##
-### ??? RESGATE DE PONTOS ###
+### RESGATE DE PONTOS . 1463 ###
 1. O resgate será uma opção de no seletor de tipo de desconto (Etapa 3 do wizard)
 2. Entidade (Cupom) - gerada durante o processo de resgate de pontos.
 
