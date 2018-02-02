@@ -150,7 +150,7 @@
         <div class="row">
 
                 <div class="col-md-9">
-                    {{ form_start(form) }}
+                    {{ form_start(form, {attr:{id:'form-filter'}}) }}
                     <div class="row">
                         <div class="form-group col-md-4">
                             {{ form_widget(form.like,{attr:{class:'form-control', placeholder: 'nome, razão social, cnpj, número...'}}) }}
@@ -179,7 +179,11 @@
                             </div>
                         {% endif %}
 
-                        <div class="col-md-{{ hasAgent ? '7' : '10' }}">
+                        <div class="col-md-{{ hasAgent ? '2' : '3' }}">
+                            {% include view('admin/helper/states_filter.html.twig') %}
+                        </div>
+
+                        <div class="col-md-{{ hasAgent ? '5' : '7' }}">
                             {{ form_widget(form.status,{attr:{class:'form-control', 'data-placeholder':'Status'}}) }}
                         </div>
 
@@ -526,6 +530,12 @@
             var url = target.data('url');
             modalFiles.find('.modal-body').load(url);
         });
+
+        var form_filtration = $("#form-filter");
+
+        if(form_filtration.length){
+          StateFilter(form_filtration);
+        }
 
         $('#filter_status').chosen({});
 

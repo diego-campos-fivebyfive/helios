@@ -8,6 +8,7 @@ use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\Order\Element;
+use AppBundle\Configuration\Brazil;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Form\Order\OrderType;
@@ -65,6 +66,19 @@ class OrderController extends AbstractController
 
         $qb = $finder->queryBuilder();
 
+        if(-1 != $states = $request->get('states')){
+            $arrayStates = array_filter(explode(',', $states));
+            if (!empty($arrayStates)) {
+                $qb->andWhere($qb->expr()->in('o.state', $arrayStates));
+            };
+        }
+
+        $expanseStates = [];
+        if ($this->member()->isPlatformExpanse()) {
+            $expanseStates = $this->member()->getAttributes()['states'];
+            $qb->andWhere($qb->expr()->in('o.state', $expanseStates));
+        }
+
         if ($dateStatus)
             $this->filterDateStatusAt($qb, $dateStatus, $formatDateStatus);
 
@@ -82,11 +96,25 @@ class OrderController extends AbstractController
             10
         );
 
+        $getStates = function($states, $statesSelected) {
+            $finalStates = [];
+
+            foreach ($states as $key => $state) {
+                $finalStates[$key] = [
+                    'name' => $state,
+                    'checked' => in_array($key, $statesSelected)
+                ];
+            }
+
+            return $finalStates;
+        };
+
         return $this->render('admin/orders/index.html.twig', array(
             'orders' => $pagination,
             'member' => $member,
             'form' => $form->createView(),
-            'totals' => $totals
+            'totals' => $totals,
+            'states' => $getStates($this->getStates($expanseStates), $arrayStates)
         ));
     }
 
@@ -371,5 +399,23 @@ class OrderController extends AbstractController
         $qb->setParameter('endAt', $endAt->format('Y-m-d 23:59:59'));
 
         return $qb;
+    }
+
+    /**
+     * @return array
+     */
+    private function getStates($filterStates)
+    {
+        $allStates = Brazil::states();
+
+        if (!$this->member()->isPlatformExpanse())
+            return $allStates;
+
+        $states = [];
+        foreach ($filterStates as $state)
+            $states[$state] = $allStates[$state];
+
+        asort($states);
+        return $states;
     }
 }
