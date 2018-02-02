@@ -1085,9 +1085,10 @@ class Customer extends AbstractCustomer
         return [
             self::PENDING => 'Pending',
             self::STANDING => 'Standing',
-            self::APROVED => 'Aproved',
+            self::APPROVED => 'Approved',
             self::ACTIVATED => 'Actived',
             self::LOCKED => 'Locked',
+            self::REFUSED => 'Refused'
         ];
     }
 
