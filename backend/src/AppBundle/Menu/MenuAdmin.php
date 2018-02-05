@@ -7,160 +7,194 @@ use AppBundle\Entity\UserInterface;
 
 trait MenuAdmin
 {
+    /**
+     * @var menuMap
+     */
+    private $menuMap;
+
+    /**
+     * MenuAdmin constructor
+     */
+    function __construct()
+    {
+        $this->menuMap = [
+            'Accounts' => [
+                'name' => 'Accounts',
+                'route' => 'account_index',
+                'icon' => 'accounts',
+                'allowed_groups' => '*'
+            ],
+            'Ranking' => [
+                'name' => 'Fidelidade SICES',
+                'route' => 'ranking_index',
+                'icon' => 'trophy',
+                'allowed_groups' => '*'
+            ],
+            'Memorials' => [
+                'name' => 'Memoriais',
+                'route' => 'memorials',
+                'icon' => 'bars',
+                'allowed_groups' => [
+                    'admin',
+                    'master'
+                ]
+            ],
+            'Orders' => [
+                'name' => 'Orçamentos',
+                'route' => 'orders',
+                'icon' => 'orders',
+                'allowed_groups' => '*'
+            ],
+            'Components' => [
+                'name' => 'Componentes',
+                'route' => 'stock',
+                'icon' => 'beer',
+                'allowed_groups' => [
+                    'admin',
+                    'commercial',
+                    'expanse',
+                    'master'
+                ]
+            ],
+            'Stock' => [
+                'name' => 'Estoque',
+                'route' => 'stock',
+                'icon' => 'kits',
+                'allowed_groups' => [
+                    'admin',
+                    'commercial',
+                    'expanse',
+                    'master'
+                ]
+            ],
+            'Users' => [
+                'name' => 'Usuários Sices',
+                'route' => 'user_index',
+                'icon' => 'users',
+                'allowed_groups' => [
+                    'admin',
+                    'master'
+                ]
+            ],
+            'PaymentMethods' => [
+                'name' => 'Cond. Pagamento',
+                'route' => 'payment_methods',
+                'icon' => 'signature',
+                'allowed_groups' => [
+                    'admin',
+                    'master'
+                ]
+            ],
+           'Insurance' => [
+                'name' => 'Seguros',
+                'route' => 'insurance_index',
+                'icon' => 'insurance',
+                'allowed_groups' => [
+                    'admin',
+                    'master'
+                ]
+            ],
+           'Settings' => [
+                'name' => 'Settings',
+                'uri' => '#',
+                'class' => 'nav nav-second-level collapse',
+                'icon' => 'settings',
+                'allowed_groups' => '*',
+                'sub_items' => [
+                    'MyData' => [
+                        'name' => 'Meus Dados',
+                        'route' => 'member_profile',
+                        'icon' => 'profile',
+                        'allowed_groups' => '*'
+                    ],
+                    'Parameters' => [
+                        'name' => 'Parâmetros',
+                        'route' => 'platform_settings',
+                        'icon' => 'sliders',
+                        'allowed_groups' => [
+                            'admin',
+                            'master'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+    }
+
+    private function addMenuItem($parent, $item)
+    {
+        $parent->addChild($item['name'], [
+            'route' => $item['route'],
+            'extras' => [
+                'icon' => self::icon($item['icon'])
+            ]
+        ]);
+    }
+
+    private function addDropdownItem($parent, $item)
+    {
+        return $parent->addChild($item['name'], [
+            'uri' => $item['uri'],
+            'childrenAttributes' => [
+                'class' => $item['class']
+            ],
+            'extras' => [
+                'icon' => self::icon($item['icon'])
+            ]
+        ]);
+    }
+
+    private function hasGroupAccess($allowedGroups, $userRoles)
+    {
+        $platformRoles = [
+            'admin' => UserInterface::ROLE_PLATFORM_ADMIN,
+            'after_sales' => UserInterface::ROLE_PLATFORM_AFTER_SALES,
+            'commercial' => UserInterface::ROLE_PLATFORM_COMMERCIAL,
+            'expanse' => UserInterface::ROLE_PLATFORM_EXPANSE,
+            'financial' => UserInterface::ROLE_PLATFORM_FINANCIAL,
+            'financing' => UserInterface::ROLE_PLATFORM_FINANCING,
+            'master' => UserInterface::ROLE_PLATFORM_MASTER
+        ];
+
+        if ($allowedGroups === '*') {
+            return true;
+        }
+
+        foreach ($allowedGroups as $groupName) {
+            if (in_array($platformRoles[$groupName], $userRoles)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function admin(ItemInterface $menu)
     {
         /** @var UserInterface $user */
         $user = $this->getUser();
 
-        $master = UserInterface::ROLE_PLATFORM_MASTER;
-        $admin = UserInterface::ROLE_PLATFORM_ADMIN;
-        $commercial = UserInterface::ROLE_PLATFORM_COMMERCIAL;
-        $financial = UserInterface::ROLE_PLATFORM_FINANCIAL;
-        $afterSales = UserInterface::ROLE_PLATFORM_AFTER_SALES;
-        $expanse = UserInterface::ROLE_PLATFORM_EXPANSE;
-        $financing = UserInterface::ROLE_PLATFORM_FINANCING;
+        $userRoles = $user->getRoles();
 
-        $config = [
-            'Accounts' => [$master, $admin, $commercial, $financial, $afterSales, $expanse, $financing],
-            'Ranking' => '*',
-            'Memorials' => [$master, $admin],
-            'Orders' => '*',
-            'Components' => [$master, $admin, $commercial, $expanse],
-            'Stock' => [$master, $admin, $commercial, $expanse],
-            'Users' => [$master, $admin],
-            'PaymentMethods' => [$master, $admin],
-            'Insurance' => [$master, $admin],
-            'Settings' => '*'
-        ];
-
-        $roles = $user->getRoles();
-
-        foreach ($config as $item => $access){
-            $method = 'add' . $item;
-
-            if('*' === $access){
-                self::$method($menu);
+        foreach ($this->menuMap as $item) {
+            if (!self::hasGroupAccess($item['allowed_groups'], $userRoles)) {
                 continue;
             }
-            foreach ($access as $role){
-                if(in_array($role, $roles)){
-                    $this->$method($menu);
+
+            if (!array_key_exists('sub_items', $item)) {
+                self::addMenuItem($menu, $item);
+                continue;
+            }
+
+            $dropdown = self::addDropdownItem($menu, $item);
+
+            foreach($item['sub_items'] as $subItem) {
+                if (self::hasGroupAccess($subItem['allowed_groups'], $userRoles)) {
+                    self::addMenuItem($dropdown, $subItem);
                 }
             }
         }
 
         return $menu;
-    }
-
-    /**
-     * @param ItemInterface $menu
-     */
-    private function addAccounts(ItemInterface $menu)
-    {
-        $menu->addChild('Accounts', [
-            'route' => 'account_index',
-            'extras' => ['icon' => self::icon('accounts')]
-        ]);
-    }
-
-    /**
-     * @param ItemInterface $menu
-     */
-    private function addRanking(ItemInterface $menu)
-    {
-        $menu->addChild('Fidelidade SICES', [
-            'route' => 'ranking_index',
-            'extras' => ['icon' => self::icon('trophy')]
-        ]);
-    }
-
-    /**
-     * @param ItemInterface $menu
-     */
-    private function addMemorials(ItemInterface $menu)
-    {
-        $menu->addChild('Memoriais', [
-            'route' => 'memorials',
-            'extras' => ['icon' => self::icon('bars')]
-        ]);
-    }
-
-    /**
-     * @param ItemInterface $menu
-     */
-    private function addOrders(ItemInterface $menu)
-    {
-        $menu->addChild('Orçamentos', [
-            'route' => 'orders',
-            'extras' => ['icon' => self::icon('orders')]
-        ]);
-    }
-
-    /**
-     * @param ItemInterface $menu
-     */
-    private function addStock(ItemInterface $menu)
-    {
-        $menu->addChild('Estoque', [
-            'route' => 'stock',
-            'extras' => ['icon' => self::icon('kits')]
-        ]);
-    }
-
-    /**
-     * @param ItemInterface $menu
-     */
-    private function addUsers(ItemInterface $menu)
-    {
-        $menu->addChild('Usuários Sices', [
-            'route' => 'user_index',
-            'extras' => ['icon' => self::icon('users')]
-        ]);
-    }
-
-    /**
-     * @param ItemInterface $menu
-     */
-    private function addPaymentMethods(ItemInterface $menu)
-    {
-        $menu->addChild('Cond. Pagamento', [
-            'route' => 'payment_methods',
-            'extras' => ['icon' => self::icon('signature')]
-        ]);
-    }
-
-    /**
-     * @param ItemInterface $menu
-     */
-    private function addInsurance(ItemInterface $menu)
-    {
-        $menu->addChild('Seguros', [
-            'route' => 'insurance_index',
-            'extras' => ['icon' => self::icon('insurance')]
-        ]);
-    }
-
-    /**
-     * @param ItemInterface $menu
-     */
-    private function addSettings(ItemInterface $menu)
-    {
-        $settings = $menu->addChild('Settings', [
-            'uri' => '#',
-            'childrenAttributes' => ['class' => 'nav nav-second-level collapse'],
-            'extras' => ['icon' => self::icon('settings')]
-        ]);
-
-        $settings->addChild('My data', [
-            'route' => 'member_profile',
-            'extras' => ['icon' => self::icon('profile')]
-        ]);
-
-        if($this->user->isPlatformMaster() || $this->user->isPlatformAdmin()){
-            $settings->addChild('Parâmetros', [
-                'route' => 'platform_settings',
-                'extras' => ['icon' => self::icon('sliders')]
-            ]);
-        }
     }
 }
