@@ -100,6 +100,13 @@ class Order implements OrderInterface
     private $statusAt;
 
     /**
+     * @var DateTime
+     *
+     * @ORM\Column(name="billed_at", type="datetime", nullable=true)
+     */
+    private $billedAt;
+
+    /**
      * @var array
      *
      * @ORM\Column(name="discount_config", type="json", nullable=true)
@@ -2107,14 +2114,6 @@ class Order implements OrderInterface
     /**
      * @inheritDoc
      */
-    public function isBilled()
-    {
-        return self::STATUS_BILLED == $this->status;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function isDelivered()
     {
         return self::STATUS_DELIVERED == $this->status;
@@ -2487,6 +2486,32 @@ class Order implements OrderInterface
         if($this->proforma && !$this->files['proforma']){
             $this->files['proforma'] = $this->proforma;
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setBilledAt($billedAt)
+    {
+        $this->billedAt = $billedAt;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBilledAt()
+    {
+        return $this->billedAt;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isBilled()
+    {
+        return !is_null($this->billedAt);
     }
 }
 
