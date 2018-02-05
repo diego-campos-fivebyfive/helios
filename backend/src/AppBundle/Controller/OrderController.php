@@ -51,10 +51,30 @@ class OrderController extends AbstractController
 
         $qb = $finder->queryBuilder();
 
+        if (-1 != $status = $request->get('status')) {
+            $status = explode(',', $status);
+            $arrayStatus = array_filter($status, 'strlen');
+            if (!empty($arrayStatus)) {
+                $qb->andWhere($qb->expr()->in('o.status', $arrayStatus));
+            }
+        }
+
         $qbTotals = clone $qb;
         $qbTotals->resetDQLPart('join');
         $qbTotals->select('sum(o.total) as total, sum(o.power) as power');
         $totals = current($qbTotals->getQuery()->getResult());
+
+        $getStates = function ($statusList, $arrayStatus) {
+            $finalOptions = [];
+            foreach ($statusList as $key => $status) {
+                $finalOptions[$key] = [
+                    'name' => $status,
+                    'checked' => in_array($key, $arrayStatus)
+                ];
+            }
+
+            return $finalOptions;
+        };
 
         $pagination = $this->getPaginator()->paginate(
             $qb->getQuery(),
@@ -65,7 +85,8 @@ class OrderController extends AbstractController
         return $this->render('order.index', array(
             'orders' => $pagination,
             'form' => $form->createView(),
-            'totals' => $totals
+            'totals' => $totals,
+            'statusList' => $getStates(Order::getStatusNames(), $arrayStatus)
         ));
     }
 
