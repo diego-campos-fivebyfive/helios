@@ -3,7 +3,7 @@
 namespace AppBundle\Menu;
 
 use Knp\Menu\ItemInterface;
-use AppBundle\Entity\UserInterface;
+use AppBundle\Entity\User;
 
 trait MenuAdmin
 {
@@ -18,100 +18,141 @@ trait MenuAdmin
     function __construct()
     {
         $this->menuMap = [
-            'Accounts' => [
+            'accounts' => [
                 'name' => 'Accounts',
                 'route' => 'account_index',
                 'icon' => 'accounts',
-                'allowed_groups' => '*'
+                'allowedGroups' => [
+                    'admin',
+                    'afterSales',
+                    'commercial',
+                    'expanse',
+                    'financial',
+                    'financing',
+                    'master'
+                ]
             ],
-            'Ranking' => [
+            'ranking' => [
                 'name' => 'Fidelidade SICES',
                 'route' => 'ranking_index',
                 'icon' => 'trophy',
-                'allowed_groups' => '*'
+                'allowedGroups' => '*'
             ],
-            'Memorials' => [
+            'memorials' => [
                 'name' => 'Memoriais',
                 'route' => 'memorials',
                 'icon' => 'bars',
-                'allowed_groups' => [
+                'allowedGroups' => [
                     'admin',
                     'master'
                 ]
             ],
-            'Orders' => [
+            'orders' => [
                 'name' => 'Orçamentos',
                 'route' => 'orders',
                 'icon' => 'orders',
-                'allowed_groups' => '*'
+                'allowedGroups' => '*'
             ],
-            'Components' => [
-                'name' => 'Componentes',
-                'route' => 'stock',
-                'icon' => 'beer',
-                'allowed_groups' => [
+            'components' => [
+                'name' => 'Components',
+                'uri' => '#',
+                'icon' => 'components',
+                'allowedGroups' => [
                     'admin',
                     'commercial',
                     'expanse',
                     'master'
+                ],
+                'subItems' => [
+                    'modules' => [
+                        'name' => 'Módulos',
+                        'route' => 'components',
+                        'type' => 'module',
+                        'icon' => 'modules',
+                        'allowedGroups' => '*'
+                    ],
+                    'inverters' => [
+                        'name' => 'Inversores',
+                        'route' => 'components',
+                        'type' => 'inverter',
+                        'icon' => 'inverters',
+                        'allowedGroups' => '*'
+                    ],
+                    'structures' => [
+                        'name' => 'Estruturas',
+                        'route' => 'structure_index',
+                        'icon' => 'structure',
+                        'allowedGroups' => '*'
+                    ],
+                    'stringBox' => [
+                        'name' => 'String Box',
+                        'route' => 'stringbox_index',
+                        'icon' => 'stringbox',
+                        'allowedGroups' => '*'
+                    ],
+                    'varieties' => [
+                        'name' => 'Variedades',
+                        'route' => 'variety_index',
+                        'icon' => 'variety',
+                        'allowedGroups' => '*'
+                    ]
                 ]
             ],
-            'Stock' => [
+            'stock' => [
                 'name' => 'Estoque',
                 'route' => 'stock',
                 'icon' => 'kits',
-                'allowed_groups' => [
+                'allowedGroups' => [
                     'admin',
                     'commercial',
                     'expanse',
                     'master'
                 ]
             ],
-            'Users' => [
+            'users' => [
                 'name' => 'Usuários Sices',
                 'route' => 'user_index',
                 'icon' => 'users',
-                'allowed_groups' => [
+                'allowedGroups' => [
                     'admin',
                     'master'
                 ]
             ],
-            'PaymentMethods' => [
+            'paymentMethods' => [
                 'name' => 'Cond. Pagamento',
                 'route' => 'payment_methods',
                 'icon' => 'signature',
-                'allowed_groups' => [
+                'allowedGroups' => [
                     'admin',
                     'master'
                 ]
             ],
-           'Insurance' => [
+           'insurance' => [
                 'name' => 'Seguros',
                 'route' => 'insurance_index',
                 'icon' => 'insurance',
-                'allowed_groups' => [
+                'allowedGroups' => [
                     'admin',
                     'master'
                 ]
             ],
-           'Settings' => [
+           'settings' => [
                 'name' => 'Settings',
                 'uri' => '#',
-                'class' => 'nav nav-second-level collapse',
                 'icon' => 'settings',
-                'allowed_groups' => '*',
-                'sub_items' => [
-                    'MyData' => [
+                'allowedGroups' => '*',
+                'subItems' => [
+                    'myData' => [
                         'name' => 'Meus Dados',
                         'route' => 'member_profile',
                         'icon' => 'profile',
-                        'allowed_groups' => '*'
+                        'allowedGroups' => '*'
                     ],
-                    'Parameters' => [
+                    'parameters' => [
                         'name' => 'Parâmetros',
                         'route' => 'platform_settings',
                         'icon' => 'sliders',
-                        'allowed_groups' => [
+                        'allowedGroups' => [
                             'admin',
                             'master'
                         ]
@@ -123,12 +164,20 @@ trait MenuAdmin
 
     private function addMenuItem($parent, $item)
     {
-        $parent->addChild($item['name'], [
+        $params = [
             'route' => $item['route'],
             'extras' => [
                 'icon' => self::icon($item['icon'])
             ]
-        ]);
+        ];
+
+        if (array_key_exists('type', $item)) {
+            $params['routeParameters'] = [
+                'type' => $item['type']
+	        ];
+        }
+
+        $parent->addChild($item['name'], $params);
     }
 
     private function addDropdownItem($parent, $item)
@@ -136,7 +185,7 @@ trait MenuAdmin
         return $parent->addChild($item['name'], [
             'uri' => $item['uri'],
             'childrenAttributes' => [
-                'class' => $item['class']
+                'class' => 'nav nav-second-level collapse'
             ],
             'extras' => [
                 'icon' => self::icon($item['icon'])
@@ -146,15 +195,7 @@ trait MenuAdmin
 
     private function hasGroupAccess($allowedGroups, $userRoles)
     {
-        $platformRoles = [
-            'admin' => UserInterface::ROLE_PLATFORM_ADMIN,
-            'after_sales' => UserInterface::ROLE_PLATFORM_AFTER_SALES,
-            'commercial' => UserInterface::ROLE_PLATFORM_COMMERCIAL,
-            'expanse' => UserInterface::ROLE_PLATFORM_EXPANSE,
-            'financial' => UserInterface::ROLE_PLATFORM_FINANCIAL,
-            'financing' => UserInterface::ROLE_PLATFORM_FINANCING,
-            'master' => UserInterface::ROLE_PLATFORM_MASTER
-        ];
+        $platformRoles = User::getPlatformRoleGroups();
 
         if ($allowedGroups === '*') {
             return true;
@@ -171,25 +212,25 @@ trait MenuAdmin
 
     public function admin(ItemInterface $menu)
     {
-        /** @var UserInterface $user */
+        /** @var User $user */
         $user = $this->getUser();
 
         $userRoles = $user->getRoles();
 
         foreach ($this->menuMap as $item) {
-            if (!self::hasGroupAccess($item['allowed_groups'], $userRoles)) {
+            if (!self::hasGroupAccess($item['allowedGroups'], $userRoles)) {
                 continue;
             }
 
-            if (!array_key_exists('sub_items', $item)) {
+            if (!array_key_exists('subItems', $item)) {
                 self::addMenuItem($menu, $item);
                 continue;
             }
 
             $dropdown = self::addDropdownItem($menu, $item);
 
-            foreach($item['sub_items'] as $subItem) {
-                if (self::hasGroupAccess($subItem['allowed_groups'], $userRoles)) {
+            foreach($item['subItems'] as $subItem) {
+                if (self::hasGroupAccess($subItem['allowedGroups'], $userRoles)) {
                     self::addMenuItem($dropdown, $subItem);
                 }
             }
