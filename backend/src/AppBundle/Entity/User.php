@@ -322,4 +322,18 @@ class User extends AbstractUser implements UserInterface
             self::ROLE_PLATFORM_FINANCING
         ];
     }
+
+    public static function getPlatformRoleGroups()
+    {
+        return [
+            'admin' => self::ROLE_PLATFORM_ADMIN,
+            'afterSales' => self::ROLE_PLATFORM_AFTER_SALES,
+            'commercial' => self::ROLE_PLATFORM_COMMERCIAL,
+            'expanse' => self::ROLE_PLATFORM_EXPANSE,
+            'financial' => self::ROLE_PLATFORM_FINANCIAL,
+            'financing' => self::ROLE_PLATFORM_FINANCING,
+            'logistic' => self::ROLE_PLATFORM_LOGISTIC,
+            'master' => self::ROLE_PLATFORM_MASTER
+        ];
+    }
 }

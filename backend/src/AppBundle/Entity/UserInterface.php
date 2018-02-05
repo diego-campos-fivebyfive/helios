@@ -164,4 +164,9 @@ interface UserInterface extends BaseUserInterface
      * @return array
      */
     public static function getPlatformRoles();
+
+    /**
+     * @return array
+     */
+    public static function getPlatformRoleGroups();
 }
