@@ -87,15 +87,15 @@
                 <div class="col-md-8">
                     <div class="row">
 
-                        {{ form_start(form) }}
+                        {{ form_start(form, {attr:{id:'form-filter-status'}}) }}
 
-                        <div class="group-input col-md-6">
-                            {{ form_widget(form.status,{attr:{class:'form-control'}}) }}
+                        <div class="col-md-3">
+                            {% include view('admin/helper/status_filter.html.twig') %}
                         </div>
 
-                        <button type="submit" class="btn btn-primary group-input">
-                            <i class="fa fa-search"></i> Pesquisar
-                        </button>
+                        <div class="hide">
+                            {{ form_rest(form) }}
+                        </div>
 
                         {{ form_end(form) }}
 
@@ -340,7 +340,11 @@
             });
         });
 
-        $('#filter_status').chosen({});
+        var form_filtration = $("#form-filter-status");
+
+        if(form_filtration.length){
+          StatusFilter(form_filtration);
+        }
 
     </script>
 {% endblock %}
