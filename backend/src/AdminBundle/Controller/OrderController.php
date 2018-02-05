@@ -327,8 +327,16 @@ class OrderController extends AbstractController
 
             $importations = 0;
 
+            $dateBilled = $request->get('billed');
+            $formatDate = function($dateBilled){
+                return implode('-', array_reverse(explode('/', $dateBilled)));
+            };
+
+            $billedAt = new \DateTime($formatDate($dateBilled));
+
             /** @var OrderInterface $order */
             foreach ($orders as $order) {
+                $order->setBilledAt($billedAt);
                 $order->setInvoiceNumber($mapping[$order->getReference()]);
                 $manager->save($order);
                 $importations++;
