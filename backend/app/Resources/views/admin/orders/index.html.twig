@@ -183,14 +183,18 @@
                             {% include view('admin/helper/states_filter.html.twig') %}
                         </div>
 
-                        <div class="col-md-{{ hasAgent ? '5' : '7' }}">
-                            {{ form_widget(form.status,{attr:{class:'form-control', 'data-placeholder':'Status'}}) }}
+                        <div class="col-md-{{ hasAgent ? '3' : '7' }}">
+                            {% include view('admin/helper/status_filter.html.twig') %}
                         </div>
 
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-primary btn-md btn-block">
                                 <i class="fa fa-search"></i> Pesquisar
                             </button>
+                        </div>
+
+                        <div class="hide">
+                            {{ form_rest(form) }}
                         </div>
                     </div>
                     {{ form_end(form) }}
@@ -535,10 +539,9 @@
 
         if(form_filtration.length){
           StateFilter(form_filtration);
+          StatusFilter(form_filtration);
         }
-
-        $('#filter_status').chosen({});
-
+        
     </script>
 
 {% endblock %}

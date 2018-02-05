@@ -73,6 +73,14 @@ class OrderController extends AbstractController
             };
         }
 
+        if (-1 != $status = $request->get('status')) {
+            $status = explode(',', $status);
+            $arrayStatus = array_filter($status, 'strlen');
+            if (!empty($arrayStatus)) {
+                $qb->andWhere($qb->expr()->in('o.status', $arrayStatus));
+            }
+        }
+
         $expanseStates = [];
         if ($this->member()->isPlatformExpanse()) {
             $expanseStates = $this->member()->getAttributes()['states'];
@@ -96,25 +104,13 @@ class OrderController extends AbstractController
             10
         );
 
-        $getStates = function($states, $statesSelected) {
-            $finalStates = [];
-
-            foreach ($states as $key => $state) {
-                $finalStates[$key] = [
-                    'name' => $state,
-                    'checked' => in_array($key, $statesSelected)
-                ];
-            }
-
-            return $finalStates;
-        };
-
         return $this->render('admin/orders/index.html.twig', array(
             'orders' => $pagination,
             'member' => $member,
             'form' => $form->createView(),
             'totals' => $totals,
-            'states' => $getStates($this->getStates($expanseStates), $arrayStates)
+            'states' => $this->resolveFilters($this->getStates($expanseStates), $arrayStates),
+            'statusList' => $this->resolveFilters(Order::getStatusNames(), $arrayStatus)
         ));
     }
 
@@ -425,5 +421,24 @@ class OrderController extends AbstractController
 
         asort($states);
         return $states;
+    }
+
+    /**
+     * @param array $options
+     * @param array $selected
+     * @return array
+     */
+    private function resolveFilters(array $options, array $selected)
+    {
+        $finalOptions = [];
+
+        foreach ($options as $key => $option) {
+            $finalOptions[$key] = [
+                'name' => $option,
+                'checked' => in_array($key, $selected)
+            ];
+        }
+
+        return $finalOptions;
     }
 }
