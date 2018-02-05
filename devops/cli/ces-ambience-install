@@ -11,6 +11,7 @@ if [[ $1 = '--installation-list' ]]; then
       * php-xml
       * php-mysql
       * php-intl
+      * php-sqlite
     * Nodejs
     * Curl
     * Yarn
@@ -29,7 +30,7 @@ if [[ $1 = '--installation-list' ]]; then
 
     pacotes do PHP:
 
-      $ sudo apt install php-mbstring php-xml php-mysql php-intl php-common php-curl
+      $ sudo apt install php-mbstring php-xml php-mysql php-intl php-common php-curl php-sqlite
 
     Nodejs:
 
