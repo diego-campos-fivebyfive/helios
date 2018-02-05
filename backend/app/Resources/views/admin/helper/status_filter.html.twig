@@ -1,0 +1,75 @@
+<div class="button-group" id="filter-status">
+    <button
+            type="button"
+            class="form-control selected dropdown-toggle"
+            data-toggle="dropdown">
+        Lista de Status
+        <span id="quantityStatus"></span>
+        <span class="caret"></span>
+    </button>
+    {% set quantity = 0 %}
+    <ul class="dropdown-menu"  style="max-height: 250px; overflow: auto">
+        {% for key, status in statusList %}
+            <li>
+                <a href="#" class="small" data-value="{{ key }}" tabIndex="-1">
+                    <input value="{{ key }}" type="checkbox" {% if status.checked %}checked{% set quantity = quantity + 1 %}{% endif %}>
+                    {{ status.name|trans }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+<script>
+
+  var quantity = {{ quantity }};
+  if (quantity)
+    $('#quantityStatus').html('('+quantity+')');
+
+  function StatusFilter(form_filtration) {
+
+    var filter_status = $('#filter-status');
+
+    form_filtration.append($('<input type="hidden" name="status"/>').val(getStatus()));
+
+    $filterStatusHasChanges = false;
+
+    function getStatus() {
+      var options = $('#filter-status .dropdown-menu a');
+      var status = [];
+
+      Array
+        .from(options)
+        .forEach(function (option) {
+          var key = option.getAttribute('data-value');
+          var checked = option.querySelector('input').checked;
+
+          if (checked) {
+            status.push(key);
+          }
+        });
+
+      return status;
+    }
+
+    function filterStatus() {
+      $('#filter-status .dropdown-menu').on('click', function(event) {
+        $filterStatusHasChanges = true;
+        event.stopPropagation();
+      });
+
+      $(document).one('click', function(event) {
+        document.removeEventListener('click', filterStatus);
+
+        if ($filterStatusHasChanges) {
+          $('input[name="status"]').val(getStatus());
+          form_filtration.trigger('submit');
+          $filterStatusHasChanges = false;
+        }
+      });
+    }
+
+    filter_status.on('click', function() {
+      document.addEventListener('click', filterStatus);
+    });
+  }
+</script>

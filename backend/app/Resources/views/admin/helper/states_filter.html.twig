@@ -34,7 +34,7 @@
       $filterStatesHasChanges = false;
 
       function getStates() {
-        var options = $('.button-group .dropdown-menu a');
+        var options = $('#filter-state .dropdown-menu a');
         var states = [];
 
         Array
@@ -52,7 +52,7 @@
       }
 
       function filterStates() {
-        $('.dropdown-menu').on('click', function(event) {
+        $('#filter-state .dropdown-menu').on('click', function(event) {
           $filterStatesHasChanges = true;
           event.stopPropagation();
         });
