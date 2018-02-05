@@ -2,19 +2,17 @@
 
 namespace AppBundle\Entity\Misc;
 
+use AppBundle\Entity\AccountInterface;
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
- * Ranking
+ * Coupon
  *
- * @ORM\Table(name="app_ranking")
+ * @ORM\Table(name="app_coupon")
  * @ORM\Entity
  */
-class Ranking implements RankingInterface
+class Coupon implements CouponInterface
 {
-    use ORMBehaviors\Timestampable\Timestampable;
-
     /**
      * @var int
      *
@@ -27,24 +25,44 @@ class Ranking implements RankingInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="target", type="string", length=255)
+     * @ORM\Column(name="code", type="string")
      */
-    private $target;
+    private $code;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="text")
+     * @ORM\Column(name="name", type="string")
      */
-    private $description;
+    private $name;
 
     /**
-     * @var int
+     * @var float
      *
-     * @ORM\Column(name="amount", type="integer")
+     * @ORM\Column(name="amount", type="float")
      */
     private $amount;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="target", type="string", nullable=true)
+     */
+    private $target;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="applied_at", type="datetime", nullable=true)
+     */
+    private $appliedAt;
+
+    /**
+     * @var AccountInterface
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer")
+     */
+    private $account;
 
     /**
      * @inheritdoc
@@ -57,10 +75,51 @@ class Ranking implements RankingInterface
     /**
      * @inheritdoc
      */
-    public function setTarget($target)
+    public function getCode()
     {
-        $this->target = $target;
+        return $this->code;
+    }
 
+    /**
+     * @inheritdoc
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setAmount($amount)
+    {
+        $this->amount = $amount;
         return $this;
     }
 
@@ -75,9 +134,11 @@ class Ranking implements RankingInterface
     /**
      * @inheritdoc
      */
-    public function setDescription($description)
+    public function setTarget($target)
     {
-        $this->description = $description;
+        $this->target = $target;
+
+        $this->appliedAt = new \DateTime();
 
         return $this;
     }
@@ -85,27 +146,43 @@ class Ranking implements RankingInterface
     /**
      * @inheritdoc
      */
-    public function getDescription()
+    public function getAppliedAt()
     {
-        return $this->description;
+        return $this->appliedAt;
     }
 
     /**
      * @inheritdoc
      */
-    public function setAmount($amount)
+    public function setAppliedAt($appliedAt)
     {
-        $this->amount = $amount;
-
+        $this->appliedAt = $appliedAt;
         return $this;
     }
 
     /**
      * @inheritdoc
      */
-    public function getAmount()
+    public function getAccount()
     {
-        return $this->amount;
+        return $this->account;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setAccount($account)
+    {
+        $this->account = $account;
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isApplied()
+    {
+        return !is_null($this->target);
     }
 }
 

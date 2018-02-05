@@ -3,7 +3,9 @@
 namespace AppBundle\Entity\Misc;
 
 
-interface RankingInterface
+use AppBundle\Entity\AccountInterface;
+
+interface CouponInterface
 {
 
     /**
@@ -12,10 +14,37 @@ interface RankingInterface
     public function getId();
 
     /**
-     * @param $target
-     * @return RankingInterface
+     * @return string
      */
-    public function setTarget($target);
+    public function getCode();
+
+    /**
+     * @param $code
+     * @return CouponInterface
+     */
+    public function setCode($code);
+
+    /**
+     * @return string
+     */
+    public function getName();
+
+    /**
+     * @param $name
+     * @return CouponInterface
+     */
+    public function setName($name);
+
+    /**
+     * @return float
+     */
+    public function getAmount();
+
+    /**
+     * @param $amount
+     * @return CouponInterface
+     */
+    public function setAmount($amount);
 
     /**
      * @return string
@@ -23,24 +52,35 @@ interface RankingInterface
     public function getTarget();
 
     /**
-     * @param $description
-     * @return RankingInterface
+     * @param $target
+     * @return CouponInterface
      */
-    public function setDescription($description);
+    public function setTarget($target);
 
     /**
-     * @return string
+     * @return \DateTime
      */
-    public function getDescription();
+    public function getAppliedAt();
 
     /**
-     * @param $amount
-     * @return RankingInterface
+     * @param $appliedAt
+     * @return CouponInterface
      */
-    public function setAmount($amount);
+    public function setAppliedAt($appliedAt);
 
     /**
-     * @return int
+     * @return AccountInterface
      */
-    public function getAmount();
+    public function getAccount();
+
+    /**
+     * @param $account
+     * @return CouponInterface
+     */
+    public function setAccount($account);
+
+    /**
+     * @return boolean
+     */
+    public function isApplied();
 }
