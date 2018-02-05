@@ -32,14 +32,14 @@ class CouponManagerTest extends AppTestCase
         /** @var CouponManager $manager */
         $manager = $this->getContainer()->get('coupon_manager');
 
-        $couponTerget = $manager->findByTarget('terget::1');
+        $couponTarget = $manager->findByTarget('terget::1');
         $couponAccount = $manager->findByAccount($account);
 
-        self::assertEquals($couponTerget[0]->getId(), $couponAccount[0]->getId());
-        self::assertEquals($couponTerget[0]->getTarget(), $couponAccount[0]->getTarget());
-        self::assertEquals($couponTerget[0]->getAmount(), $couponAccount[0]->getAmount());
-        self::assertEquals($couponTerget[0]->getAppliedAt(), $couponAccount[0]->getAppliedAt());
-        self::assertEquals($couponTerget[0]->getAccount(), $couponAccount[0]->getAccount());
+        self::assertEquals($couponTarget[0]->getId(), $couponAccount[0]->getId());
+        self::assertEquals($couponTarget[0]->getTarget(), $couponAccount[0]->getTarget());
+        self::assertEquals($couponTarget[0]->getAmount(), $couponAccount[0]->getAmount());
+        self::assertEquals($couponTarget[0]->getAppliedAt(), $couponAccount[0]->getAppliedAt());
+        self::assertEquals($couponTarget[0]->getAccount(), $couponAccount[0]->getAccount());
 
     }
 
@@ -63,7 +63,7 @@ class CouponManagerTest extends AppTestCase
         return $coupon;
     }
 
-    public function createAccount()
+    private function createAccount()
     {
         /** @var AccountManager $accountManager */
         $accountManager = $this->getContainer()->get('customer_manager');
