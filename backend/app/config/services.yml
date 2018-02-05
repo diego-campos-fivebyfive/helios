@@ -37,6 +37,10 @@ services:
         class: AppBundle\Manager\CustomerManager
         arguments: ['AppBundle\Entity\Customer', '@doctrine']
 
+    coupon_manager:
+        class: AppBundle\Manager\CouponManager
+        arguments: ['AppBundle\Entity\Misc\Coupon', '@doctrine']
+
     extra_manager:
         class: AppBundle\Manager\ExtraManager
         arguments: ['AppBundle\Entity\Component\Extra', '@doctrine']
