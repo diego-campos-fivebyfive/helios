@@ -26,10 +26,12 @@
         <div class="dz-message needsclick">
             Arraste o arquivo aqui ou clique para selecionar <br>
             <span class="note needsclick">
-            (Apenas arquivos com extensão CSV)
-        </span>
+                (Apenas arquivos com extensão CSV)
+            </span>
         </div>
     </div>
+    <label for="delivery_at">Data de Faturamento</label>
+    <input class="form-control col-md-4" id="billed_at" type="text">
 </div>
 
 <div class="row">
@@ -86,8 +88,10 @@
         btn_init.ladda();
         btn_init.ladda('start');
         var filename = $(this).data('filename');
+        var billedAt = sourceBilledAt.val();
         $.ajax({
             url: '{{ path('import_csv', {filename:'_filename_'}) }}'.replace('_filename_', filename),
+            data: {billed: billedAt},
             success: function (response) {
                 import_info.html(response['importations'] + ' importações realizadas');
                 btn_init.ladda('stop');
@@ -97,6 +101,33 @@
 
     $('#file_link').on('click', function(){
         $('#modal_upload').modal('close');
+    });
+
+    var sourceBilledAt = $('#billed_at');
+
+    sourceBilledAt.daterangepicker({
+      startDate: new Date(),
+      singleDatePicker: true,
+
+      minDate: moment(),
+      locale: {
+        format: 'DD/MM/YYYY',
+        daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+        monthNames: [
+          "Janeiro",
+          "Fevereiro",
+          "Março",
+          "Abril",
+          "Maio",
+          "Junho",
+          "Julho",
+          "Agosto",
+          "Setembro",
+          "Outubro",
+          "Novembro",
+          "Dezembro"
+        ]
+      }
     });
 
 </script>
