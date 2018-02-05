@@ -1,10 +1,10 @@
 <div class="button-group" id="filter-status">
     <button
-            type="button"
-            class="form-control selected dropdown-toggle"
-            data-toggle="dropdown">
+        type="button"
+        class="form-control selected dropdown-toggle"
+        data-toggle="dropdown">
         Lista de Status
-        <span id="quantityStatus"></span>
+        <span id="quantity-status"></span>
         <span class="caret"></span>
     </button>
     {% set quantity = 0 %}
@@ -21,55 +21,55 @@
 </div>
 <script>
 
-  var quantity = {{ quantity }};
-  if (quantity)
-    $('#quantityStatus').html('('+quantity+')');
+    var quantity = {{ quantity }};
+    if (quantity)
+        $('#quantity-status').html('('+quantity+')');
 
-  function StatusFilter(form_filtration) {
+    function StatusFilter(form_filtration) {
 
-    var filter_status = $('#filter-status');
+        var filter_status = $('#filter-status');
 
-    form_filtration.append($('<input type="hidden" name="status"/>').val(getStatus()));
+        form_filtration.append($('<input type="hidden" name="status"/>').val(getStatus()));
 
-    $filterStatusHasChanges = false;
+        $filterStatusHasChanges = false;
 
-    function getStatus() {
-      var options = $('#filter-status .dropdown-menu a');
-      var status = [];
+        function getStatus() {
+            var options = $('#filter-status .dropdown-menu a');
+            var status = [];
 
-      Array
-        .from(options)
-        .forEach(function (option) {
-          var key = option.getAttribute('data-value');
-          var checked = option.querySelector('input').checked;
+            Array
+                .from(options)
+                .forEach(function (option) {
+                    var key = option.getAttribute('data-value');
+                    var checked = option.querySelector('input').checked;
 
-          if (checked) {
-            status.push(key);
-          }
-        });
+                    if (checked) {
+                        status.push(key);
+                    }
+                });
 
-      return status;
-    }
-
-    function filterStatus() {
-      $('#filter-status .dropdown-menu').on('click', function(event) {
-        $filterStatusHasChanges = true;
-        event.stopPropagation();
-      });
-
-      $(document).one('click', function(event) {
-        document.removeEventListener('click', filterStatus);
-
-        if ($filterStatusHasChanges) {
-          $('input[name="status"]').val(getStatus());
-          form_filtration.trigger('submit');
-          $filterStatusHasChanges = false;
+            return status;
         }
-      });
-    }
 
-    filter_status.on('click', function() {
-      document.addEventListener('click', filterStatus);
-    });
-  }
+        function filterStatus() {
+            $('#filter-status .dropdown-menu').on('click', function(event) {
+                $filterStatusHasChanges = true;
+                event.stopPropagation();
+            });
+
+            $(document).one('click', function(event) {
+                document.removeEventListener('click', filterStatus);
+
+                if ($filterStatusHasChanges) {
+                    $('input[name="status"]').val(getStatus());
+                    form_filtration.trigger('submit');
+                    $filterStatusHasChanges = false;
+                }
+            });
+        }
+
+        filter_status.on('click', function() {
+            document.addEventListener('click', filterStatus);
+        });
+    }
 </script>
