@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\BusinessInterface;
+use AppBundle\Entity\Misc\Coupon;
 use AppBundle\Entity\Misc\CouponInterface;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -50,6 +51,33 @@ class CouponController extends AbstractController
             $coupon->setAccount($account);
 
         $couponManager->save($coupon);
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/{id}/update", name="update_coupon")
+     *
+     * @Method("put")
+     */
+    public function updateAction(Request $request, Coupon $coupon)
+    {
+        $name = $request->request->get('name');
+        $amount = $request->request->get('amount');
+        $accountId = $request->request->get('account');
+
+        $accountManager = $this->manager('account');
+        $account = $accountManager->findOneBy([
+            'id' => $accountId,
+            'context' => BusinessInterface::CONTEXT_ACCOUNT
+        ]);
+
+        $coupon->setName($name);
+        $coupon->setAmount($amount);
+        if ($account)
+            $coupon->setAccount($account);
+
+        $this->manager('coupon')->save($coupon);
 
         return $this->json([]);
     }
