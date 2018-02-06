@@ -54,7 +54,7 @@ trait MenuAdmin
                 'allowedGroups' => '*'
             ],
             'components' => [
-                'name' => 'Components',
+                'name' => 'Componentes',
                 'uri' => '#',
                 'icon' => 'components',
                 'allowedGroups' => [

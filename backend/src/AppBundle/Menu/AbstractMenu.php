@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 abstract class AbstractMenu implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
-    use MenuAccount;
+//    use MenuAccount;
     use MenuAdmin;
 
     /**

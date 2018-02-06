@@ -306,6 +306,15 @@ class User extends AbstractUser implements UserInterface
         ];
     }
 
+    public static function getAccountGroupRoles()
+    {
+        return [
+            'admin' => self::ROLE_ADMIN,
+            'owner' => self::ROLE_OWNER,
+            'ownerMaster' => self::ROLE_OWNER_MASTER
+       ];
+    }
+
     /**
      * @inheritDoc
      */
@@ -323,7 +332,7 @@ class User extends AbstractUser implements UserInterface
         ];
     }
 
-    public static function getPlatformRoleGroups()
+    public static function getPlatformGroupRoles()
     {
         return [
             'admin' => self::ROLE_PLATFORM_ADMIN,
