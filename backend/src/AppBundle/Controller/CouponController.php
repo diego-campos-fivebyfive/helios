@@ -87,7 +87,7 @@ class CouponController extends AbstractController
      *
      * @Method("delete")
      */
-    public function transactionDeleteAction(Coupon $coupon)
+    public function deleteAction(Coupon $coupon)
     {
         $manager = $this->manager('coupon');
 
