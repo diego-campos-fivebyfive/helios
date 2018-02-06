@@ -1,12 +1,21 @@
 <template lang="pug">
   Page(sidebar='common')
     Panel.panel
-      h2.title(slot='header')
-        | Gerenciamento de Cupons
+      div(slot='header')
+        h2.title
+          | Gerenciamento de Cupons
+        nav.menu
+          Button(
+            type='primary-common',
+            icon='plus-square',
+            link='#linkB',
+            label='Novo Cupom',
+            pos='single')
       Content(slot='section', :coupons='coupons')
 </template>
 
 <script>
+  import Action from '@/components/coupon/Action'
   import Content from '@/components/coupon/Content'
 
   /* Mocked Data */
@@ -44,6 +53,7 @@
 
   export default {
     components: {
+      Action,
       Content
     },
     data: () => ({

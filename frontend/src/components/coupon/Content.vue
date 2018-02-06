@@ -10,9 +10,11 @@
       tr.rows(slot='rows', v-for='coupon in coupons')
         td {{ coupon.name }}
         td {{ coupon.amount }}
-        td.center {{ coupon.account }}
-        td.center {{ coupon.status }}
-        td.center
+        td(style='text-align: center')
+          | {{ coupon.account }}
+        td(style='text-align: center')
+          | {{ coupon.status }}
+        td(style='text-align: center')
           Button(
             type='primary-common',
             icon='pencil',
@@ -31,18 +33,12 @@
   export default {
     props: [
       'coupons'
-    ],
-    mounted() {
-    }
+    ]
   }
 </script>
 
 <style lang="scss" scoped>
   .rows {
     cursor: pointer;
-  }
-
-  .center {
-    text-align: center;
   }
 </style>
