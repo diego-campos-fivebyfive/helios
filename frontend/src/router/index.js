@@ -4,6 +4,7 @@ import axios from 'axios'
 import Router from 'vue-router'
 
 import Account from '@/components/Account'
+import Coupon from '@/components/coupon'
 import Metric from '@/components/metric'
 import NotFound from '@/components/NotFound'
 
@@ -22,6 +23,11 @@ export default new Router({
       path: '/account',
       name: 'account',
       component: Account
+    },
+    {
+      path: '/coupon',
+      name: 'coupon',
+      component: Coupon
     },
     {
       path: '/metric',
