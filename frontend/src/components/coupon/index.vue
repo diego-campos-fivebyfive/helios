@@ -58,7 +58,5 @@
 </script>
 
 <style lang="scss" scoped>
-  .panel {
-    max-width: calc(100% - #{$ui-space-x});
-  }
+  /* Coupon Style */
 </style>
