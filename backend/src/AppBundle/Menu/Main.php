@@ -98,22 +98,8 @@ class Main extends AbstractMenu
             ]
         ];
 
-        if (array_key_exists('type', $item)) {
-            $params['routeParameters'] = [
-                'type' => $item['type']
-	        ];
-        }
-
-        if (array_key_exists('context', $item)) {
-            $params['routeParameters'] = [
-                'context' => $item['context']
-	        ];
-        }
-
-        if (array_key_exists('id', $item)) {
-            $params['attributes'] = [
-                'id' => 'idPedidos'
-	        ];
+        if (array_key_exists('custom', $item)) {
+            $params = array_merge($params, $item['custom']);
         }
 
         $parent->addChild($item['name'], $params);
@@ -121,7 +107,7 @@ class Main extends AbstractMenu
 
     private function addDropdownItem($parent, $item)
     {
-        return $parent->addChild($item['name'], [
+        $params = [
             'uri' => $item['uri'],
             'childrenAttributes' => [
                 'class' => 'nav nav-second-level collapse'
@@ -129,11 +115,23 @@ class Main extends AbstractMenu
             'extras' => [
                 'icon' => self::icon($item['icon'])
             ]
-        ]);
+        ];
+
+        return $parent->addChild($item['name'], $params);
     }
 
-    private function hasGroupAccess($allowedRoles, $userRoles, $groupRoles)
+    private function hasGroupAccess($allowedRoles)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $userRoles = $user->getRoles();
+
+        if ($user->isPlatform()) {
+            $groupRoles = User::getPlatformGroupRoles();
+        } else {
+            $groupRoles = User::getAccountGroupRoles();
+        }
+
         if ($allowedRoles === '*') {
             return true;
         }
@@ -149,22 +147,8 @@ class Main extends AbstractMenu
 
     public function account(ItemInterface $menu)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $userRoles = $user->getRoles();
-
-        if ($user->isPlatform()) {
-            $groupRoles = User::getPlatformGroupRoles();
-        } else {
-            $groupRoles = User::getAccountGroupRoles();
-        }
-
         foreach (MenuAccount::getMenuMap() as $item) {
-            if (!self::hasGroupAccess(
-                $item['allowedRoles'],
-                $userRoles,
-                $groupRoles
-            )) {
+            if (!self::hasGroupAccess($item['allowedRoles'])) {
                 continue;
             }
 
@@ -175,12 +159,8 @@ class Main extends AbstractMenu
 
             $dropdown = self::addDropdownItem($menu, $item);
 
-            foreach($item['subItems'] as $subItem) {
-                if (self::hasGroupAccess(
-                    $subItem['allowedRoles'],
-                    $userRoles,
-                    $groupRoles
-                )) {
+            foreach ($item['subItems'] as $subItem) {
+                if (self::hasGroupAccess($subItem['allowedRoles'])) {
                     self::addMenuItem($dropdown, $subItem);
                 }
             }

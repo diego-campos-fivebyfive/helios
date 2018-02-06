@@ -11,8 +11,12 @@ class MenuAccount
         'contacts' => [
             'name' => 'Contatos',
             'route' => 'contact_index',
-            'context' => 'person',
-            'icon' => 'contacts',
+            'custom' => [
+                'routeParameters' => [
+                    'context' => 'person'
+                ]
+            ],
+             'icon' => 'contacts',
             'allowedRoles' => '*'
         ],
         'tasks' => [
@@ -54,15 +58,23 @@ class MenuAccount
                 'modules' => [
                     'name' => 'Módulos',
                     'route' => 'components',
-                    'type' => 'module',
                     'icon' => 'modules',
+                    'custom' => [
+                        'routeParameters' => [
+                            'type' => 'module'
+                        ]
+                    ],
                     'allowedRoles' => '*'
                 ],
                 'inverters' => [
                     'name' => 'Inversores',
                     'route' => 'components',
-                    'type' => 'inverter',
                     'icon' => 'inverters',
+                    'custom' => [
+                        'routeParameters' => [
+                            'type' => 'inverter'
+                        ]
+                    ],
                     'allowedRoles' => '*'
                 ],
                 'structures' => [
@@ -108,6 +120,11 @@ class MenuAccount
             'route' => 'index_order',
             'id' => 'idPedidos',
             'icon' => 'my-requests',
+            'custom' => [
+                'attributes' => [
+                    'id' => 'idPedidos'
+                ]
+            ],
             'allowedRoles' => [
                 'owner'
             ]
@@ -122,6 +139,11 @@ class MenuAccount
                     'name' => 'Fuso Horário',
                     'route' => 'member_timezone',
                     'icon' => 'globe',
+                    'custom' => [
+                        'routeParameters' => [
+                            'type' => 'module'
+                        ]
+                    ],
                     'allowedRoles' => '*'
                 ],
                 'myData' => [
@@ -142,7 +164,11 @@ class MenuAccount
                     'name' => 'Categorias',
                     'route' => 'categories',
                     'icon' => 'categories',
-                    'context' => 'contact_category',
+                    'custom' => [
+                        'routeParameters' => [
+                            'context' => 'contact_category'
+                        ]
+                    ],
                     'allowedRoles' => [
                         'owner'
                     ]
@@ -151,7 +177,11 @@ class MenuAccount
                     'name' => 'Etapas de Venda',
                     'route' => 'categories',
                     'icon' => 'sale_stages',
-                    'context' => 'sale_stage',
+                    'custom' => [
+                        'routeParameters' => [
+                            'context' => 'sale_stage'
+                        ]
+                    ],
                     'allowedRoles' => [
                         'owner'
                     ]

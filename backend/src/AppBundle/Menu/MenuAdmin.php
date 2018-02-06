@@ -195,7 +195,7 @@ trait MenuAdmin
 
     private function hasGroupAccess($allowedGroups, $userRoles)
     {
-        $platformRoles = User::getPlatformRoleGroups();
+        $platformRoles = User::getPlatformGroupRoles();
 
         if ($allowedGroups === '*') {
             return true;
