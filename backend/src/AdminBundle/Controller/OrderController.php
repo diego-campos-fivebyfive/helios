@@ -225,6 +225,27 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/billed", name="billed_at")
+     */
+    public function billedAtAction(Request $request, Order $order)
+    {
+        $dateBilled = $request->get('billed_at');
+        $formatDate = function($dateBilled){
+            return implode('-', array_reverse(explode('/', $dateBilled)));
+        };
+
+        $billedAt = new \DateTime($formatDate($dateBilled));
+
+        $order->setBilledAt($billedAt);
+
+        $this->manager('order')->save($order);
+
+        return $this->json([
+            'billedAt' => $order->getBilledAt()
+        ]);
+    }
+
+    /**
      * @Route("/{id}/deliveryAt", name="delivery_at_order")
      */
     public function deliveryAtAction(Request $request, Order $order)
