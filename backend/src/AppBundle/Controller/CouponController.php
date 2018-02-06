@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 class CouponController extends AbstractController
 {
     /**
-     * @Route("/create", name="create_coupon")
+     * @Route("/", name="create_coupon")
      *
      * @Method("post")
      */
@@ -56,7 +56,7 @@ class CouponController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/update", name="update_coupon")
+     * @Route("/{id}", name="update_coupon")
      *
      * @Method("put")
      */
@@ -78,6 +78,20 @@ class CouponController extends AbstractController
             $coupon->setAccount($account);
 
         $this->manager('coupon')->save($coupon);
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/{id}", name="delete_coupon")
+     *
+     * @Method("delete")
+     */
+    public function transactionDeleteAction(Coupon $coupon)
+    {
+        $manager = $this->manager('coupon');
+
+        $manager->delete($coupon);
 
         return $this->json([]);
     }
