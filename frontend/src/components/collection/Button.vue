@@ -40,6 +40,11 @@
     color: $ui-white-regular;
   }
 
+  .danger-common {
+    background-color: $ui-red-lighter;
+    color: $ui-white-regular;
+  }
+
   .labeled {
     svg {
       margin-right: $ui-space-x/3;
