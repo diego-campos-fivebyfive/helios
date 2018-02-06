@@ -56,6 +56,11 @@
         ]
       },
       {
+        name: 'Cupons',
+        link: '/coupon',
+        icon: 'ticket'
+      },
+      {
         name: 'Metricas',
         link: '/metric',
         icon: 'area-chart'
