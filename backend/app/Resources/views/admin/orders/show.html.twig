@@ -370,22 +370,36 @@
                                     <div class="row wrapper">
                                         <div class="col-lg-12 border-bottom">
                                             <ol class="breadcrumb">
-                                                <li>
+                                                <div class="col-md-4">
                                                     <label>Dados do integrador</label>
-                                                </li>
-                                                {% if member.isPlatformLogistic %}
-                                                    <div class="pull-right" style="padding-bottom: 10px;">
-                                                        <label style="padding-right: 10px;">Número da Nota
-                                                            Fiscal: </label>
-                                                        <input id="invoice-number" value="{{ order.invoiceNumber }}"
-                                                               type="text">
+                                                </div>
+                                                {% if member.isPlatformMaster %}
+                                                    <div class="col-md-8" style="padding-bottom: 10px;">
+                                                        <div class="pull-right">
+                                                            <label style="padding-right: 10px;">
+                                                                Nº da Nota Fiscal:
+                                                            </label>
+                                                            <input id="invoice-number" value="{{ order.invoiceNumber }}"
+                                                                   type="text">
+                                                        </div>
+                                                        <div class="pull-right">
+                                                            <label style="padding-right: 10px;">
+                                                                Data de Faturamento:
+                                                            </label>
+                                                            <input id="up_billed_at" type="text">
+                                                        </div>
                                                     </div>
                                                 {% endif %}
-                                                {% if not member.isPlatformLogistic %}
+                                                {% if not member.isPlatformMaster %}
                                                     <div class="pull-right" style="padding-bottom: 10px;">
-                                                        <label style="padding-right: 10px;">Número da Nota
-                                                            Fiscal: </label>
+                                                        <label style="padding-right: 10px;">
+                                                            Nº da Nota Fiscal:
+                                                        </label>
                                                         {{ order.invoiceNumber }}
+                                                        <label style="padding-left: 10px;">
+                                                            Data de Faturamento:
+                                                        </label>
+                                                        {{ order.billedAt ? order.billedAt|date('d/m/Y') : '' }}
                                                     </div>
                                                 {% endif %}
                                             </ol>
@@ -930,7 +944,6 @@
                     $('#delivery_at_order').html(xhr['deliveryAt']);
                 }
             });
-
         });
 
         {% if not order.deliveryAt %}
@@ -950,6 +963,47 @@
                 }
             });
         });
+
+        var sourceBilledAt = $('#up_billed_at');
+
+        sourceBilledAt.daterangepicker({
+          startDate: {{ order.billedAt ? order.billedAt|date('d/m/Y') : ('now')|date('d/m/Y') }},
+          singleDatePicker: true,
+          locale: {
+            format: 'DD/MM/YYYY',
+            daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+            monthNames: [
+              "Janeiro",
+              "Fevereiro",
+              "Março",
+              "Abril",
+              "Maio",
+              "Junho",
+              "Julho",
+              "Agosto",
+              "Setembro",
+              "Outubro",
+              "Novembro",
+              "Dezembro"
+            ]
+          }
+        }).on('change', function () {
+          var billed_at = $(this).val();
+          $.ajax({
+            url: '{{ path('billed_at', {id:order.id}) }}',
+            method: 'post',
+            data: {billed_at: billed_at},
+            complete: function (xhr) {
+              $('#up_billed_at').html(xhr['billedAt']);
+            }
+          });
+        });
+
+        {% if not order.billedAt %}
+            sourceBilledAt.val(' ');
+        {% else %}
+            sourceBilledAt.val('{{ order.billedAt|date('d/m/Y') }}');
+        {% endif %}
 
         {#TODO: Está funcionalidade já está ok, esta apenas aguardando outras propriedades#}
         {#var sourceExpireAt = $('#expire_at');#}
