@@ -22,34 +22,19 @@ class Main extends AbstractMenu
         $user = $this->getUser();
 
         $menu = $factory->createItem('root', [
-            'childrenAttributes' => ['id' => 'side-menu', 'class' => 'nav metismenu']
+            'childrenAttributes' => [
+                'id' => 'side-menu',
+                'class' => 'nav metismenu'
+            ]
         ]);
 
-        $menu->addChild('Dashboard', [
-            'route' => 'app_index',
-            'extras' => ['icon' => App::icons('dashboard')]
-        ]);
-
-        if($user->isPlatform()) {
-
-            // MENU EXCLUSIVO DA PLATAFORMA (Admin) - MenuAdmin
-            $this->admin($menu);
-
-            $this->resolveActiveMenu($menu);
-
-            return $menu;
-        }
-
-	//$menuAccount = new MenuAccount();
-        //$menuAccount->account($menu);
-	$this->account($menu);
-
+        $this->includeMenuItems($menu);
 
         if ($user->isSuperAdmin()) {
             $this->menuSuperAdmin($menu);
         }
 
-        $this->resolveActiveMenu($menu);
+        $this->setActiveMenu($menu);
 
         return $menu;
     }
@@ -145,23 +130,37 @@ class Main extends AbstractMenu
         return false;
     }
 
-    public function account(ItemInterface $menu)
+    private function getMenuMap()
     {
-        foreach (MenuAccount::getMenuMap() as $item) {
-            if (!self::hasGroupAccess($item['allowedRoles'])) {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if ($user->isPlatform()) {
+            return MenuAdmin::getMenuMap();
+        } else {
+            return MenuAccount::getMenuMap();
+        }
+    }
+
+    public function includeMenuItems(ItemInterface $menu)
+    {
+        $menuMap = $this->getMenuMap();
+
+        foreach ($menuMap as $item) {
+            if (!$this->hasGroupAccess($item['allowedRoles'])) {
                 continue;
             }
 
             if (!array_key_exists('subItems', $item)) {
-                self::addMenuItem($menu, $item);
+                $this->addMenuItem($menu, $item);
                 continue;
             }
 
-            $dropdown = self::addDropdownItem($menu, $item);
+            $dropdown = $this->addDropdownItem($menu, $item);
 
             foreach ($item['subItems'] as $subItem) {
-                if (self::hasGroupAccess($subItem['allowedRoles'])) {
-                    self::addMenuItem($dropdown, $subItem);
+                if ($this->hasGroupAccess($subItem['allowedRoles'])) {
+                    $this->addMenuItem($dropdown, $subItem);
                 }
             }
         }

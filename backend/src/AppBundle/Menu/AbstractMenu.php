@@ -12,7 +12,7 @@ abstract class AbstractMenu implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
 //    use MenuAccount;
-    use MenuAdmin;
+//    use MenuAdmin;
 
     /**
      * @var UserInterface $user
@@ -55,26 +55,28 @@ abstract class AbstractMenu implements ContainerAwareInterface
     }
 
     /**
-     * Resolve active menu based request pathInfo
      * @param ItemInterface $menu
      */
-    protected function resolveActiveMenu(ItemInterface &$menu)
+    protected function setActiveMenu(ItemInterface &$menu)
     {
+        if ($menu->hasChildren()) {
+            foreach ($menu->getChildren() as $child) {
+                $this->setActiveMenu($child);
+            }
+        }
+
         $uri = $this->getRequest()->getPathInfo();
 
-        if($uri == $menu->getUri()){
-            if($menu->getParent() && !$menu->getParent()->isRoot()){
-                $menu->getParent()->setAttribute('class', 'active');
-            }
-            $menu->setAttribute('class', 'active');
+        if ($uri !== $menu->getUri()) {
+            return;
         }
 
-        if($menu->hasChildren()){
-            foreach($menu->getChildren() as $child){
-                $this->resolveActiveMenu($child);
-            }
+        $menu->setAttribute('class', 'active');
+
+        if ($menu->getParent() && !$menu->getParent()->isRoot()) {
+            $menu->getParent()->setAttribute('class', 'active');
         }
-    }
+   }
 
     /**
      * @param $icon
