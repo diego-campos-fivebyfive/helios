@@ -133,7 +133,6 @@ class OrderTimeline
             OrderInterface::STATUS_INSERTED => ': início da produção',
             OrderInterface::STATUS_AVAILABLE => ': disponível para coleta.',
             OrderInterface::STATUS_COLLECTED => ': coleta realizada.',
-            OrderInterface::STATUS_BILLED => ': pedido faturado.',
             OrderInterface::STATUS_DELIVERED => ': entrega realizada.'
         ];
 

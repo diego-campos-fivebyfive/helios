@@ -164,14 +164,7 @@ class StatusChecker
                 ]
             ],
             OrderInterface::STATUS_INSERTED => [
-                OrderInterface::STATUS_BILLED => [
-                    UserInterface::TYPE_PLATFORM => [
-                        UserInterface::ROLE_PLATFORM_LOGISTIC
-                    ]
-                ]
-            ],
-            OrderInterface::STATUS_BILLED => [
-                OrderInterface::STATUS_AVAILABLE => [
+                OrderInterface::STATUS_AVAILABLE=> [
                     UserInterface::TYPE_PLATFORM => [
                         UserInterface::ROLE_PLATFORM_LOGISTIC
                     ]
