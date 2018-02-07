@@ -5,9 +5,10 @@ $ui-blue-dark: #1c84c6;
 $ui-green-regular: #2cbe4e;
 $ui-red-lighter: #ed5565;
 $ui-gray-lighter: #f3f3f4;
-$ui-gray-light: #eaecef;
-$ui-gray-regular: #293846;
-$ui-gray-dark: #080c17;
+$ui-gray-light: #d7d7d8;
+$ui-gray-regular: #919396;
+$ui-gray-dark: #293846;
+$ui-gray-darken: #080c17;
 $ui-white-regular: #ffffff;
 
 /* Globals Exports */
@@ -16,6 +17,7 @@ $ui-space-x: 25px;
 $ui-space-y: 15px;
 
 /* Elements Exports */
+$ui-action-y: 35px;
 $ui-divider-color: #e7eaec;
 $ui-sidebar-color: #a7b1c2;
 $ui-sidebar-x: 220px;

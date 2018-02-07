@@ -1,12 +1,23 @@
 <template lang="pug">
   Page(sidebar='common')
+    Modal(:open='modal.open', v-on:close='modal.open = false')
+      Action(slot='section')
     Panel.panel
-      h2.title(slot='header')
-        | Gerenciamento de Cupons
+      div(slot='header')
+        h2.title
+          | Gerenciamento de Cupons
+        nav.menu
+          Button(
+            type='primary-common',
+            icon='plus-square',
+            label='Novo Cupom',
+            pos='single',
+            v-on:click.native='showActionModal')
       Content(slot='section', :coupons='coupons')
 </template>
 
 <script>
+  import Action from '@/components/coupon/Action'
   import Content from '@/components/coupon/Content'
 
   /* Mocked Data */
@@ -44,15 +55,24 @@
 
   export default {
     components: {
+      Action,
       Content
     },
     data: () => ({
-      coupons: []
+      coupons: [],
+      modal: {
+        open: false
+      }
     }),
     mounted() {
       Mock.coupon.then(response => {
         this.coupons = response.data
       })
+    },
+    methods: {
+      showActionModal() {
+        this.modal.open = true
+      }
     }
   }
 </script>

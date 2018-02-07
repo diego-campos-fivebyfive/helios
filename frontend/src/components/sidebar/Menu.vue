@@ -97,12 +97,12 @@
     width: 100%;
 
     &:hover {
-      background-color: $ui-gray-regular;
+      background-color: $ui-gray-dark;
     }
   }
 
   .active {
-    background-color: $ui-gray-regular;
+    background-color: $ui-gray-dark;
     border-left: 5px solid $ui-blue-light;
   }
  </style>

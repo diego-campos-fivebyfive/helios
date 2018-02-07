@@ -1,29 +1,27 @@
 <template lang="pug">
   div
-    Table(type='striped')
+    Table.table(type='striped')
       tr(slot='head')
         th Nome
-        th Valor
         th Conta
         th Status
+        th Valor
         th Ações
       tr.rows(slot='rows', v-for='coupon in coupons')
         td {{ coupon.name }}
+        td {{ coupon.account }}
+        td {{ coupon.status }}
         td {{ coupon.amount }}
-        td.center {{ coupon.account }}
-        td.center {{ coupon.status }}
-        td.center
+        td
           Button(
             type='primary-common',
             icon='pencil',
             link='#linkB',
-            label='Editar',
             pos='first')
           Button(
             type='danger-common',
             icon='trash',
             link='#linkB',
-            label='Deletar',
             pos='last')
 </template>
 
@@ -31,9 +29,7 @@
   export default {
     props: [
       'coupons'
-    ],
-    mounted() {
-    }
+    ]
   }
 </script>
 
@@ -42,7 +38,30 @@
     cursor: pointer;
   }
 
-  .center {
-    text-align: center;
+  .table {
+    td,
+    th {
+      &:nth-child(1) {
+        text-align: left;
+        width: 25%;
+      }
+
+      &:nth-child(2) {
+        text-align: center;
+        width: 25%;
+      }
+
+      &:nth-child(3) {
+        text-align: center;
+      }
+
+      &:nth-child(4) {
+        text-align: right;
+      }
+
+      &:nth-child(5) {
+        text-align: right;
+      }
+    }
   }
 </style>

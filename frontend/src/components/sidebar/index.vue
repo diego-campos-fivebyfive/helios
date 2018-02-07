@@ -19,7 +19,7 @@
 
 <style lang="scss" scoped>
   .sidebar {
-    background-color: $ui-gray-dark;
+    background-color: $ui-gray-darken;
     display: block;
     left: 0;
     max-width: $ui-sidebar-x;
