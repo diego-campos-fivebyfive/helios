@@ -8,6 +8,12 @@ class MenuAccount
      * @var menuMap
      */
     private static $menuMap = [
+        'dashboard' => [
+            'name' => 'Dashboard',
+            'route' => 'app_index',
+            'icon' => 'dashboard',
+            'allowedRoles' => '*'
+        ],
         'contacts' => [
             'name' => 'Contatos',
             'route' => 'contact_index',
@@ -100,7 +106,7 @@ class MenuAccount
         'weather' => [
             'name' => 'Dados Climáticos',
             'route' => 'nasa',
-            'icon' => 'sum',
+            'icon' => 'sun',
             'allowedRoles' => [
                 'ownerMaster',
                 'owner'
@@ -193,12 +199,14 @@ class MenuAccount
             'name' => 'API Auth',
             'uri' => '#',
             'icon' => 'settings',
-            'allowedRoles' => '*',
+            'allowedRoles' => [
+                'superAdmin'
+            ],
             'subItems' => [
                 'clients' => [
                     'name' => 'Clientes',
                     'route' => 'api_clients',
-                    'icon' => 'users'
+                    'icon' => 'users',
                     'allowedRoles' => [
                         'superAdmin'
                     ]
