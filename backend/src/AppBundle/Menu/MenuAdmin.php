@@ -2,165 +2,171 @@
 
 namespace AppBundle\Menu;
 
-use Knp\Menu\ItemInterface;
-use AppBundle\Entity\UserInterface;
-
-trait MenuAdmin
+class MenuAdmin
 {
-    public function admin(ItemInterface $menu)
-    {
-        /** @var UserInterface $user */
-        $user = $this->getUser();
-
-        $master = UserInterface::ROLE_PLATFORM_MASTER;
-        $admin = UserInterface::ROLE_PLATFORM_ADMIN;
-        $commercial = UserInterface::ROLE_PLATFORM_COMMERCIAL;
-        $financial = UserInterface::ROLE_PLATFORM_FINANCIAL;
-        $afterSales = UserInterface::ROLE_PLATFORM_AFTER_SALES;
-        $expanse = UserInterface::ROLE_PLATFORM_EXPANSE;
-        $financing = UserInterface::ROLE_PLATFORM_FINANCING;
-
-        $config = [
-            'Accounts' => [$master, $admin, $commercial, $financial, $afterSales, $expanse, $financing],
-            'Ranking' => '*',
-            'Memorials' => [$master, $admin],
-            'Orders' => '*',
-            'Components' => [$master, $admin, $commercial, $expanse],
-            'Stock' => [$master, $admin, $commercial, $expanse],
-            'Users' => [$master, $admin],
-            'PaymentMethods' => [$master, $admin],
-            'Insurance' => [$master, $admin],
-            'Settings' => '*'
-        ];
-
-        $roles = $user->getRoles();
-
-        foreach ($config as $item => $access){
-            $method = 'add' . $item;
-
-            if('*' === $access){
-                self::$method($menu);
-                continue;
-            }
-            foreach ($access as $role){
-                if(in_array($role, $roles)){
-                    $this->$method($menu);
-                }
-            }
-        }
-
-        return $menu;
-    }
-
     /**
-     * @param ItemInterface $menu
+     * @var menuMap
      */
-    private function addAccounts(ItemInterface $menu)
-    {
-        $menu->addChild('Accounts', [
+    private static $menuMap = [
+        'dashboard' => [
+            'name' => 'Dashboard',
+            'route' => 'app_index',
+            'icon' => 'dashboard',
+            'allowedRoles' => '*'
+        ],
+        'accounts' => [
+            'name' => 'Accounts',
             'route' => 'account_index',
-            'extras' => ['icon' => self::icon('accounts')]
-        ]);
-    }
-
-    /**
-     * @param ItemInterface $menu
-     */
-    private function addRanking(ItemInterface $menu)
-    {
-        $menu->addChild('Fidelidade SICES', [
+            'icon' => 'accounts',
+            'allowedRoles' => [
+                'admin',
+                'afterSales',
+                'commercial',
+                'expanse',
+                'financial',
+                'financing',
+                'master'
+            ]
+        ],
+        'ranking' => [
+            'name' => 'Fidelidade SICES',
             'route' => 'ranking_index',
-            'extras' => ['icon' => self::icon('trophy')]
-        ]);
-    }
-
-    /**
-     * @param ItemInterface $menu
-     */
-    private function addMemorials(ItemInterface $menu)
-    {
-        $menu->addChild('Memoriais', [
+            'icon' => 'trophy',
+            'allowedRoles' => '*'
+        ],
+        'memorials' => [
+            'name' => 'Memoriais',
             'route' => 'memorials',
-            'extras' => ['icon' => self::icon('bars')]
-        ]);
-    }
-
-    /**
-     * @param ItemInterface $menu
-     */
-    private function addOrders(ItemInterface $menu)
-    {
-        $menu->addChild('Orçamentos', [
+            'icon' => 'bars',
+            'allowedRoles' => [
+                'admin',
+                'master'
+            ]
+        ],
+        'orders' => [
+            'name' => 'Orçamentos',
             'route' => 'orders',
-            'extras' => ['icon' => self::icon('orders')]
-        ]);
-    }
-
-    /**
-     * @param ItemInterface $menu
-     */
-    private function addStock(ItemInterface $menu)
-    {
-        $menu->addChild('Estoque', [
-            'route' => 'stock',
-            'extras' => ['icon' => self::icon('kits')]
-        ]);
-    }
-
-    /**
-     * @param ItemInterface $menu
-     */
-    private function addUsers(ItemInterface $menu)
-    {
-        $menu->addChild('Usuários Sices', [
-            'route' => 'user_index',
-            'extras' => ['icon' => self::icon('users')]
-        ]);
-    }
-
-    /**
-     * @param ItemInterface $menu
-     */
-    private function addPaymentMethods(ItemInterface $menu)
-    {
-        $menu->addChild('Cond. Pagamento', [
-            'route' => 'payment_methods',
-            'extras' => ['icon' => self::icon('signature')]
-        ]);
-    }
-
-    /**
-     * @param ItemInterface $menu
-     */
-    private function addInsurance(ItemInterface $menu)
-    {
-        $menu->addChild('Seguros', [
-            'route' => 'insurance_index',
-            'extras' => ['icon' => self::icon('insurance')]
-        ]);
-    }
-
-    /**
-     * @param ItemInterface $menu
-     */
-    private function addSettings(ItemInterface $menu)
-    {
-        $settings = $menu->addChild('Settings', [
+            'icon' => 'orders',
+            'allowedRoles' => '*'
+        ],
+        'components' => [
+            'name' => 'Componentes',
             'uri' => '#',
-            'childrenAttributes' => ['class' => 'nav nav-second-level collapse'],
-            'extras' => ['icon' => self::icon('settings')]
-        ]);
+            'icon' => 'components',
+            'allowedRoles' => [
+                'admin',
+                'commercial',
+                'expanse',
+                'master'
+            ],
+            'subItems' => [
+                'modules' => [
+                    'name' => 'Módulos',
+                    'route' => 'components',
+                    'icon' => 'modules',
+                    'custom' => [
+                        'routeParameters' => [
+                            'type' => 'module'
+                        ]
+                    ],
+                    'allowedRoles' => '*'
+                ],
+                'inverters' => [
+                    'name' => 'Inversores',
+                    'route' => 'components',
+                    'icon' => 'inverters',
+                    'custom' => [
+                        'routeParameters' => [
+                            'type' => 'inverter'
+                        ]
+                    ],
+                    'allowedRoles' => '*'
+                ],
+                'structures' => [
+                    'name' => 'Estruturas',
+                    'route' => 'structure_index',
+                    'icon' => 'structure',
+                    'allowedRoles' => '*'
+                ],
+                'stringBox' => [
+                    'name' => 'String Box',
+                    'route' => 'stringbox_index',
+                    'icon' => 'stringbox',
+                    'allowedRoles' => '*'
+                ],
+                'varieties' => [
+                    'name' => 'Variedades',
+                    'route' => 'variety_index',
+                    'icon' => 'variety',
+                    'allowedRoles' => '*'
+                ]
+            ]
+        ],
+        'stock' => [
+            'name' => 'Estoque',
+            'route' => 'stock',
+            'icon' => 'kits',
+            'allowedRoles' => [
+                'admin',
+                'commercial',
+                'expanse',
+                'master'
+            ]
+        ],
+        'users' => [
+            'name' => 'Usuários Sices',
+            'route' => 'user_index',
+            'icon' => 'users',
+            'allowedRoles' => [
+                'admin',
+                'master'
+            ]
+        ],
+        'paymentMethods' => [
+            'name' => 'Cond. Pagamento',
+            'route' => 'payment_methods',
+            'icon' => 'signature',
+            'allowedRoles' => [
+                'admin',
+                'master'
+            ]
+        ],
+       'insurance' => [
+            'name' => 'Seguros',
+            'route' => 'insurance_index',
+            'icon' => 'insurance',
+            'allowedRoles' => [
+                'admin',
+                'master'
+            ]
+        ],
+       'settings' => [
+            'name' => 'Settings',
+            'uri' => '#',
+            'icon' => 'settings',
+            'allowedRoles' => '*',
+            'subItems' => [
+                'myData' => [
+                    'name' => 'Meus Dados',
+                    'route' => 'member_profile',
+                    'icon' => 'profile',
+                    'allowedRoles' => '*'
+                ],
+                'parameters' => [
+                    'name' => 'Parâmetros',
+                    'route' => 'platform_settings',
+                    'icon' => 'sliders',
+                    'allowedRoles' => [
+                        'admin',
+                        'master'
+                    ]
+                ]
+            ]
+        ]
+    ];
 
-        $settings->addChild('My data', [
-            'route' => 'member_profile',
-            'extras' => ['icon' => self::icon('profile')]
-        ]);
-
-        if($this->user->isPlatformMaster() || $this->user->isPlatformAdmin()){
-            $settings->addChild('Parâmetros', [
-                'route' => 'platform_settings',
-                'extras' => ['icon' => self::icon('sliders')]
-            ]);
-        }
+    public static function getMenuMap()
+    {
+        return self::$menuMap;
     }
 }
