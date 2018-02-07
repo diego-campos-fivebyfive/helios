@@ -310,6 +310,7 @@ class User extends AbstractUser implements UserInterface
     {
         return [
             'admin' => self::ROLE_ADMIN,
+            'superAdmin' => self::ROLE_SUPER_ADMIN,
             'owner' => self::ROLE_OWNER,
             'ownerMaster' => self::ROLE_OWNER_MASTER
        ];

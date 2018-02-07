@@ -129,6 +129,7 @@ class MenuAccount
                 'owner'
             ]
         ],
+
         'settings' => [
             'name' => 'Configurações',
             'uri' => '#',
@@ -184,6 +185,22 @@ class MenuAccount
                     ],
                     'allowedRoles' => [
                         'owner'
+                    ]
+                ]
+            ]
+        ],
+        'apiAuth' => [
+            'name' => 'API Auth',
+            'uri' => '#',
+            'icon' => 'settings',
+            'allowedRoles' => '*',
+            'subItems' => [
+                'clients' => [
+                    'name' => 'Clientes',
+                    'route' => 'api_clients',
+                    'icon' => 'users'
+                    'allowedRoles' => [
+                        'superAdmin'
                     ]
                 ]
             ]

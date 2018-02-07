@@ -12,68 +12,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 class Main extends AbstractMenu
 {
-    /**
-     * @param FactoryInterface $factory
-     * @param array $options
-     * @return ItemInterface
-     */
-    public function sidebar(FactoryInterface $factory, array $options)
-    {
-        $user = $this->getUser();
-
-        $menu = $factory->createItem('root', [
-            'childrenAttributes' => [
-                'id' => 'side-menu',
-                'class' => 'nav metismenu'
-            ]
-        ]);
-
-        $this->includeMenuItems($menu);
-
-        if ($user->isSuperAdmin()) {
-            $this->menuSuperAdmin($menu);
-        }
-
-        $this->setActiveMenu($menu);
-
-        return $menu;
-    }
-
-    /**
-     * @param ItemInterface $menu
-     */
-    private function menuPlatform(ItemInterface &$menu)
-    {
-        $platform = $menu->addChild('Administração', [
-            'uri' => '#',
-            'childrenAttributes' => ['class' => 'nav nav-second-level collapse'],
-            'extras' => ['icon' => 'fa fa-th-large']
-        ]);
-
-        $this->admin($platform);
-    }
-
-    /**
-     * @param ItemInterface $menu
-     * @param UserInterface $user
-     */
-    private function menuSuperAdmin($menu, $user)
-    {
-        if($user->isSuperAdmin()){
-
-            $oauth = $menu->addChild('API Auth', [
-                'uri' => '#',
-                'childrenAttributes' => ['class' => 'nav nav-second-level collapse'],
-                'extras' => ['icon' => 'fa fa-refresh']
-            ]);
-
-            $oauth->addChild('Clients', [
-                'route' => 'api_clients',
-                'extras' => ['icon' => App::icons('users')]
-            ]);
-        }
-    }
-
     private function addMenuItem($parent, $item)
     {
         $params = [
@@ -141,8 +79,8 @@ class Main extends AbstractMenu
             return MenuAccount::getMenuMap();
         }
     }
-
-    public function includeMenuItems(ItemInterface $menu)
+ 
+    private function includeMenuItems(ItemInterface $menu)
     {
         $menuMap = $this->getMenuMap();
 
@@ -164,6 +102,26 @@ class Main extends AbstractMenu
                 }
             }
         }
+
+        return $menu;
+    }
+
+    /**
+     * @param FactoryInterface $factory
+     * @return ItemInterface
+     */
+    public function sidebar(FactoryInterface $factory)
+    {
+        $menu = $factory->createItem('root', [
+            'childrenAttributes' => [
+                'id' => 'side-menu',
+                'class' => 'nav metismenu'
+            ]
+        ]);
+
+        $this->includeMenuItems($menu);
+
+        $this->setActiveMenu($menu);
 
         return $menu;
     }
