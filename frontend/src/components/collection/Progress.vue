@@ -14,7 +14,7 @@
 <style lang="scss" scoped>
   .bar {
     width: 100%;
-    background-color: $ui-gray-light;
+    background-color: $ui-gray-lighter;
     border-radius: $ui-corner;
     overflow: hidden;
     height: $ui-space-y/1.8;

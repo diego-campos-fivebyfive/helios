@@ -51,7 +51,7 @@
   header,
   section {
     background-color: $ui-white-regular;
-    padding: $ui-space-y $ui-space-x;
+    padding: $ui-space-y $ui-space-x/2;
   }
 
   section {
