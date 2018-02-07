@@ -17,7 +17,7 @@
 
 use AppBundle\Service\Order\OrderRanking;
 
-require_once dirname(__FILE__) . '/db/connection.php';
+require_once dirname(__FILE__) . '/config/connection.php';
 require_once dirname(__DIR__) . '/../vendor/autoload.php';
 
 $mapping = OrderRanking::getMapping();
@@ -77,7 +77,8 @@ foreach ($orders as $order){
 // Store rankings
 R::storeAll($rankings);
 
-echo sprintf("%s rankings normalized!\n", count($rankings));
+echo sprintf("%s rankings normalized.", count($rankings));
+echo "\n";
 
 /*** TRIGGERS QUE DEVEM SER ARMAZENADAS NA BASE DE DADOS (tabela app_ranking)
 
