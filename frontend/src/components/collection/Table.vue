@@ -24,6 +24,10 @@
   .striped {
     border-spacing: 0;
 
+    thead {
+      text-align: left;
+    }
+
     tbody {
       tr {
         &:hover {
@@ -36,23 +40,14 @@
       }
     }
 
-    td {
-      border-top: $ui-space-y/10 solid $ui-divider-color;
-    }
-
     td,
     th {
       padding: $ui-space-y/2;
       vertical-align: top;
+    }
 
-      &:nth-child(1) {
-        text-align: left;
-        width: 40%;
-      }
-
-      &:nth-child(2) {
-        text-align: right;
-      }
+    td {
+      border-top: $ui-space-y/10 solid $ui-divider-color;
     }
   }
 </style>

@@ -6,7 +6,7 @@
         span.sub Tarefas relacionadas ao milestone
       ul.list(slot='section')
         li(v-for='issue in modal.issues') {{ issue.title }}
-    Table(type='striped')
+    Table.table(type='striped')
       tr(slot='head')
         th Título
         th Concluídas / Cadastradas (%)
@@ -55,5 +55,19 @@
 <style lang="scss" scoped>
   .rows {
     cursor: pointer;
+  }
+
+  .table {
+    td,
+    th {
+      &:nth-child(1) {
+        text-align: left;
+        width: 40%;
+      }
+
+      &:nth-child(2) {
+        text-align: right;
+      }
+    }
   }
 </style>
