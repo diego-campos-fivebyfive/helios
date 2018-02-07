@@ -2,10 +2,7 @@
 
 namespace AppBundle\Menu;
 
-use Knp\Menu\ItemInterface;
-use AppBundle\Entity\User;
-
-trait MenuAdmin
+class MenuAdmin
 {
     /**
      * @var menuMap

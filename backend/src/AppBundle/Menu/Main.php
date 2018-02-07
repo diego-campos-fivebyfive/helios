@@ -12,33 +12,23 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 class Main extends AbstractMenu
 {
-    private function getMenuItemParams($item)
+    private function setActiveMenu(&$menu)
     {
-        $params = [
-            'route' => $item['route'],
-            'extras' => [
-                'icon' => self::icon($item['icon'])
-            ]
-        ];
-
-        if (!array_key_exists('custom', $item)) {
-            return $params;
+        if ($menu->hasChildren()) {
+            foreach ($menu->getChildren() as $child) {
+                $this->setActiveMenu($child);
+            }
         }
 
-        return array_merge($params, $item['custom']);
-    }
+        if ($this->getCurrentPathRequest() !== $menu->getUri()) {
+            return;
+        }
 
-    private function getDropdownParams($item)
-    {
-        return [
-            'uri' => $item['uri'],
-            'childrenAttributes' => [
-                'class' => 'nav nav-second-level collapse'
-            ],
-            'extras' => [
-                'icon' => self::icon($item['icon'])
-            ]
-        ];
+        $menu->setAttribute('class', 'active');
+
+        if ($menu->getParent() && !$menu->getParent()->isRoot()) {
+            $menu->getParent()->setAttribute('class', 'active');
+        }
     }
 
     private function userHasGroupAccess($allowedRoles)
@@ -77,7 +67,36 @@ class Main extends AbstractMenu
             return MenuAccount::getMenuMap();
         }
     }
- 
+
+    private function getMenuItemParams($item)
+    {
+        $params = [
+            'route' => $item['route'],
+            'extras' => [
+                'icon' => App::icons($item['icon'])
+            ]
+        ];
+
+        if (!array_key_exists('custom', $item)) {
+            return $params;
+        }
+
+        return array_merge($params, $item['custom']);
+    }
+
+    private function getDropdownParams($item)
+    {
+        return [
+            'uri' => $item['uri'],
+            'childrenAttributes' => [
+                'class' => 'nav nav-second-level collapse'
+            ],
+            'extras' => [
+                'icon' => App::icons($item['icon'])
+            ]
+        ];
+    }
+
     private function includeMenuItems(ItemInterface $menu)
     {
         $menuMap = $this->getMenuMap();
