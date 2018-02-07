@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 class Main extends AbstractMenu
 {
-    private function addMenuItem($parent, $item)
+    private function getMenuItemParams($item)
     {
         $params = [
             'route' => $item['route'],
@@ -21,16 +21,16 @@ class Main extends AbstractMenu
             ]
         ];
 
-        if (array_key_exists('custom', $item)) {
-            $params = array_merge($params, $item['custom']);
+        if (!array_key_exists('custom', $item)) {
+            return $params;
         }
 
-        $parent->addChild($item['name'], $params);
+        return array_merge($params, $item['custom']);
     }
 
-    private function addDropdownItem($parent, $item)
+    private function getDropdownParams($item)
     {
-        $params = [
+        return [
             'uri' => $item['uri'],
             'childrenAttributes' => [
                 'class' => 'nav nav-second-level collapse'
@@ -39,11 +39,9 @@ class Main extends AbstractMenu
                 'icon' => self::icon($item['icon'])
             ]
         ];
-
-        return $parent->addChild($item['name'], $params);
     }
 
-    private function hasGroupAccess($allowedRoles)
+    private function userHasGroupAccess($allowedRoles)
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -85,20 +83,27 @@ class Main extends AbstractMenu
         $menuMap = $this->getMenuMap();
 
         foreach ($menuMap as $item) {
-            if (!$this->hasGroupAccess($item['allowedRoles'])) {
+            if (!$this->userHasGroupAccess($item['allowedRoles'])) {
                 continue;
             }
 
             if (!array_key_exists('subItems', $item)) {
-                $this->addMenuItem($menu, $item);
+                $menu->addChild(
+                    $item['name'],
+                    $this->getMenuItemParams($item));
+
                 continue;
             }
 
-            $dropdown = $this->addDropdownItem($menu, $item);
+            $dropdown = $menu->addChild(
+                $item['name'],
+                $this->getDropdownParams($item));
 
             foreach ($item['subItems'] as $subItem) {
-                if ($this->hasGroupAccess($subItem['allowedRoles'])) {
-                    $this->addMenuItem($dropdown, $subItem);
+                if ($this->userHasGroupAccess($subItem['allowedRoles'])) {
+                    $dropdown->addChild(
+                        $subItem['name'],
+                        $this->getMenuItemParams($subItem));
                 }
             }
         }
