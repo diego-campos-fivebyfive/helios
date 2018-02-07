@@ -2,7 +2,8 @@
 
 require_once 'rb.php';
 
-$parameters = explode("\n", file_get_contents(dirname(__DIR__) . '/../config/parameters.yml'));
+$backendDir = dirname(dirname(dirname(__DIR__)));
+$parameters = explode("\n", file_get_contents($backendDir . '/app/config/parameters.yml'));
 
 $config = [];
 foreach ($parameters as $parameter){

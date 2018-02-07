@@ -19,7 +19,7 @@ use Monolog\Handler\StreamHandler;
  * na lista de níveis.
  */
 
-require_once dirname(__FILE__) . '/db/connection.php';
+require_once dirname(__FILE__) . '/config/connection.php';
 require_once dirname(__DIR__) . '/../vendor/autoload.php';
 
 $data = R::findOne('app_parameter', 'id = ?', ['platform_settings']);
@@ -75,6 +75,10 @@ function executeSQL($sql)
  */
 function normalizeLevels(array $config)
 {
+    if(!array_key_exists('levels', $config)) {
+        return false;
+    }
+
     normalizeConfig($config);
 
     $levels = $config['levels'];
@@ -151,6 +155,14 @@ WHERE c.id %s (
 
         executeSQL($updateSQL);
     }
+
+    return true;
 }
 
-normalizeLevels($config);
+if(normalizeLevels($config)){
+    echo sprintf("Levels normalized: %s", implode(', ', array_keys($config['levels'])));
+}else{
+    echo "Unprocessed normalization.";
+}
+
+echo "\n";
