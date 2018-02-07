@@ -1,5 +1,7 @@
 <template lang="pug">
   Page(sidebar='common')
+    Modal(:open='modal.open', v-on:close='modal.open = false')
+      Action(slot='section')
     Panel.panel
       div(slot='header')
         h2.title
@@ -8,9 +10,9 @@
           Button(
             type='primary-common',
             icon='plus-square',
-            link='#linkB',
             label='Novo Cupom',
-            pos='single')
+            pos='single',
+            v-on:click.native='showActionModal')
       Content(slot='section', :coupons='coupons')
 </template>
 
@@ -57,12 +59,20 @@
       Content
     },
     data: () => ({
-      coupons: []
+      coupons: [],
+      modal: {
+        open: false
+      }
     }),
     mounted() {
       Mock.coupon.then(response => {
         this.coupons = response.data
       })
+    },
+    methods: {
+      showActionModal() {
+        this.modal.open = true
+      }
     }
   }
 </script>
