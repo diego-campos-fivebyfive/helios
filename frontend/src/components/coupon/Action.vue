@@ -14,7 +14,7 @@ form
 </template>
 
 <script>
-
+  /* Action Script */
 </script>
 
 <style lang="scss" scoped>
@@ -56,11 +56,11 @@ form
         color: $ui-gray-regular;
       }
     }
-  
+
     select {
       padding: 0 $ui-space-x/3;
     }
-  
+
     input {
       padding: 0 $ui-space-x/2;
     }

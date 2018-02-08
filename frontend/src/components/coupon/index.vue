@@ -47,7 +47,7 @@
           amount: '799,00',
           account: 'Luiz Antunes',
           status: 'aplicado'
-        },
+        }
       ]
     }))
   }
