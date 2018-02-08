@@ -1,5 +1,5 @@
 <template lang="pug">
-  router-link.item(:to='item.link', :class='{ subItem: subItem }')
+  router-link.item(:to='item.link', :class='{ subItem: sub-item }')
     Icon.icon-ui(:name='item.icon')
     | {{ item.name }}
     Icon.icon-arrow(name='angle-right')
@@ -7,7 +7,7 @@
 
 <script>
   export default {
-    props: ['item', 'subitem']
+    props: ['item', 'subItem']
   }
 </script>
 
@@ -19,7 +19,7 @@
     transition: all 300ms;
     width: 100%;
 
-    &.subitem {
+    &.sub-item {
       padding: $ui-space-y/2 $ui-space-x/1.5 $ui-space-y/2 $ui-space-x*2;
     }
 
