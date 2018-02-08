@@ -27,8 +27,20 @@ form
       color: $ui-gray-dark;
     }
 
+    select {
+      color: $ui-gray-regular;
+      padding: 0 $ui-space-x/3;
+    }
+
+    input {
+      padding: 0 $ui-space-x/2;
+
+      @include placeholder-color($ui-gray-regular);
+    }
+
     input,
     select {
+      background-color: $ui-white-regular;
       border: 1px solid $ui-gray-light;
       border-radius: 1px;
       color: $ui-gray-dark;
@@ -43,29 +55,9 @@ form
       &:focus {
         border-color: $ui-blue-light;
       }
+   }
 
-      &::-webkit-input-placeholder {
-        color: $ui-gray-regular;
-      }
-
-      &::-moz-placeholder {
-        color: $ui-gray-regular;
-      }
-
-      &:-ms-input-placeholder {
-        color: $ui-gray-regular;
-      }
-    }
-
-    select {
-      padding: 0 $ui-space-x/3;
-    }
-
-    input {
-      padding: 0 $ui-space-x/2;
-    }
-
-    .full {
+   .full {
       max-width: calc(100% - #{$ui-space-x});
     }
 
