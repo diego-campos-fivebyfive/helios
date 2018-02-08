@@ -5,13 +5,18 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Misc\Coupon;
 use AppBundle\Entity\Misc\CouponInterface;
+use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Serializer;
+
 
 /**
  * @Route("/coupon")
+ * @Breadcrumb("Cupom")
  *
  * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_PLATFORM_MASTER')")
  */
@@ -40,15 +45,15 @@ class CouponController extends AbstractController
             $status ? $qb->andWhere('c.target is not null') : $qb->andWhere('c.target is null');
         }
 
+        $itemsPerPage = 10;
         $pagination = $this->getPaginator()->paginate(
             $qb->getQuery(),
-            $request->query->getInt('page', 1),
-            10
+            $request->query->getInt('page', 1), $itemsPerPage
         );
 
         $data = $this->formatCollection($pagination);
 
-        return $this->json($data, 200);
+        return $this->json($data, Response::HTTP_OK);
     }
 
     /**
@@ -135,12 +140,14 @@ class CouponController extends AbstractController
     {
         $data = [];
         foreach ($couponCollection as $coupon) {
+            $account = $coupon->getAccount() ? $coupon->getAccount()->getFirstName() : null;
+
             $data [] = [
                 'id' => $coupon->getId(),
                 'name' => $coupon->getName(),
                 'amount' => $coupon->getAmount(),
                 'target' => $coupon->getTarget(),
-                'account' => $coupon->getAccount() ? $coupon->getAccount()->getFirstName() : null,
+                'account' => $account,
                 'applied' => $coupon->isApplied()
             ];
         }
@@ -148,12 +155,21 @@ class CouponController extends AbstractController
     }
 
     /**
-     * @param $pageNumber
+     * @param $pagination
+     * @param $position
      * @return bool|string
      */
-    private function getPaginationLinks($pageNumber)
+    private function getPaginationLinks($pagination, $position)
     {
-        return $pageNumber ? "/coupon/?page={$pageNumber}": false;
+        if ($position == 'previous') {
+            return $pagination['current'] > 1 ? "/coupon/?page={$pagination[$position]}" : false;
+        }
+
+        if ($position == 'next') {
+            return $pagination['current'] < $pagination['last'] ? "/coupon/?page={$pagination[$position]}" : false;
+        }
+
+        return "/coupon/?page={$pagination[$position]}";
     }
 
     /**
@@ -169,9 +185,9 @@ class CouponController extends AbstractController
                 'total' => $pagination['pageCount'],
                 'current'=> $pagination['current'],
                 'links' => [
-                    'prev' => $this->getPaginationLinks($pagination['previous']),
-                    'self' => $this->getPaginationLinks($pagination['current']),
-                    'next' => $this->getPaginationLinks($pagination['next'])
+                    'prev' => $this->getPaginationLinks($pagination, 'previous'),
+                    'self' => $this->getPaginationLinks($pagination, 'current'),
+                    'next' => $this->getPaginationLinks($pagination, 'next')
                 ]
             ],
             'size' => $pagination['totalCount'],
