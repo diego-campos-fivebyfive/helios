@@ -1,7 +1,13 @@
 <template lang="pug">
   router-link.button(
-    v-if='link',
+    v-if='link && !refresh',
     :to='link',
+    :class='[type, pos, { labeled: label }]')
+    Icon(v-if='icon', :name='icon')
+    | {{ label }}
+  a.button(
+    v-else-if='link && refresh',
+    :href='link',
     :class='[type, pos, { labeled: label }]')
     Icon(v-if='icon', :name='icon')
     | {{ label }}
@@ -14,7 +20,7 @@
 
 <script>
   export default {
-    props: ['type', 'icon', 'link', 'label', 'pos']
+    props: ['type', 'icon', 'link', 'refresh', 'label', 'pos']
   }
 </script>
 
@@ -43,6 +49,11 @@
   .danger-common {
     background-color: $ui-red-lighter;
     color: $ui-white-regular;
+  }
+
+  .default-common {
+    background-color: $ui-white-regular;
+    color: $ui-gray-regular;
   }
 
   .labeled {
