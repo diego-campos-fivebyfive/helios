@@ -6,8 +6,8 @@
       Icon.icon-arrow(v-show='open', name='angle-down')
       Icon.icon-arrow(v-show='!open', name='angle-left')
     ul(v-show='open')
-      li(v-for='subitem in item.subitems')
-        Item(:item='subitem', :subitem='true')
+      li(v-for='subItem in item.subItems')
+        Item(:item='subItem', :subItem='true')
 </template>
 
 <script>

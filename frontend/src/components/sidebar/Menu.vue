@@ -9,65 +9,6 @@
   import Item from './Item'
   import Dropdown from './Dropdown'
 
-  const menu = new Promise(resolve => {
-    resolve([
-      {
-        name: 'Dashboard',
-        link: '#link1',
-        icon: 'dashboard'
-      },
-      {
-        name: 'Conta',
-        link: '/account',
-        icon: 'bookmark'
-      },
-      {
-        name: 'Componentes',
-        icon: 'cube',
-        dropdown: true,
-        subitems: [
-          {
-            name: 'Módulos',
-            link: '#sublink1',
-            icon: 'th'
-          },
-          {
-            name: 'Inversores',
-            link: '#sublink2',
-            icon: 'exchange'
-          }
-        ]
-      },
-      {
-        name: 'Configurações',
-        icon: 'cube',
-        dropdown: true,
-        subitems: [
-          {
-            name: 'Dados da Empresa',
-            link: '#sublink1',
-            icon: 'th'
-          },
-          {
-            name: 'Parâmetros',
-            link: '#sublink2',
-            icon: 'exchange'
-          }
-        ]
-      },
-      {
-        name: 'Cupons',
-        link: '/coupon',
-        icon: 'ticket'
-      },
-      {
-        name: 'Metricas',
-        link: '/metric',
-        icon: 'area-chart'
-      }
-    ])
-  })
-
   export default {
     components: {
       Item,
@@ -77,8 +18,8 @@
       menu: []
     }),
     mounted() {
-      menu.then(data => {
-        this.menu = data
+      this.axios.get('application/menu').then(response => {
+        this.menu = response.data
       })
     }
   }
