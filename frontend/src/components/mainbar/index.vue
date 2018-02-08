@@ -8,15 +8,13 @@
         type='default-common',
         icon='sign-out',
         link='/logout',
+        refresh='true',
         label='Sair',
         pos='first')
 </template>
 
 <script>
-
-  export default {
-
-  }
+  /* Mainbar Script */
 </script>
 
 <style lang="scss" scoped>
