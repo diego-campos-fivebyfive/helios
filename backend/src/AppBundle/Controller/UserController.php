@@ -15,7 +15,7 @@ class UserController extends AbstractController
      *
      * @Method("get")
      */
-    public function userInfo()
+    public function infoAction()
     {
         $member = $this->member();
         $account = $member->getAccount();
