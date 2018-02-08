@@ -35,5 +35,11 @@ new Vue({
     Table
   },
   template: '<App/>',
-  render: h => h(App)
+  render: h => h(App),
+  mounted() {
+    if (process.env.AMBIENCE == 'development') {
+      this.$cookies.remove('PHPSESSID')
+      this.$cookies.set('PHPSESSID', process.env.PHPSESSID)
+    }
+  }
 })

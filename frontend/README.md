@@ -21,3 +21,12 @@ FRONTEND
 
       - **type**: Type of button, define colors and patterns:
         - Valid values: primary-common, primary-strong.
+
+
+2. Using Local Backend API
+
+  Before you start webpack's dev server you must sign in and export `PHPSESSID` Session ID:
+
+    ```
+    $ export SICES_PHPSESSID=3fhdfl9r6dgautom48ls4eg064
+    ```

@@ -2,8 +2,8 @@ nelmio_api_doc: ~
 
 nelmio_cors:
     defaults:
-        allow_credentials: false
-        allow_origin: []
+        allow_credentials: true
+        allow_origin: ['http://localhost:8080']
         allow_headers: []
         allow_methods: []
         expose_headers: []
