@@ -5,7 +5,8 @@ const webpack = require('webpack')
 module.exports = {
   entry: './src/main.js',
   output: {
-    path: path.resolve(__dirname, './dist'),
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: '/',
     filename: '[name].js'
   },
   module: {
@@ -55,7 +56,7 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: './static/[name].[hash:7].[ext]'
+          name: 'static/[name].[hash:7].[ext]'
         }
       },
       {
@@ -63,7 +64,7 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: './static/[name].[hash:7].[ext]'
+          name: 'static/[name].[hash:7].[ext]'
         }
       },
       {
@@ -71,7 +72,7 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: './static/[name].[hash:7].[ext]'
+          name: 'static/[name].[hash:7].[ext]'
         }
       }
     ]

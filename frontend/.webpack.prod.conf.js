@@ -11,7 +11,7 @@ module.exports = {
   entry: './src/main.js',
   output: {
     path: path.resolve(__dirname, '../backend/web/app'),
-    publicPath: './app',
+    publicPath: '/app/',
     filename: '[name].js'
   },
   module: {
@@ -139,7 +139,7 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: '/static/[name].[hash:7].[ext]'
+          name: 'static/[name].[hash:7].[ext]'
         }
       },
       {
@@ -147,7 +147,7 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: '/static/[name].[hash:7].[ext]'
+          name: 'static/[name].[hash:7].[ext]'
         }
       },
       {
@@ -155,7 +155,7 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: '/static/[name].[hash:7].[ext]'
+          name: 'static/[name].[hash:7].[ext]'
         }
       }
     ]
