@@ -55,9 +55,9 @@ form
       &:focus {
         border-color: $ui-blue-light;
       }
-   }
+    }
 
-   .full {
+    .full {
       max-width: calc(100% - #{$ui-space-x});
     }
 
