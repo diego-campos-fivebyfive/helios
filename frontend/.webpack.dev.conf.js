@@ -91,7 +91,9 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
-        'API_URL': JSON.stringify('http://localhost:8000')
+        'AMBIENCE': JSON.stringify('development'),
+        'API_URL': JSON.stringify('http://localhost:8000'),
+        'PHPSESSID': JSON.stringify(process.env.SICES_PHPSESSID)
       }
     }),
     new HtmlWebpackPlugin({
