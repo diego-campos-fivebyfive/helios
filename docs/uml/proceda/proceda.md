@@ -1,3 +1,21 @@
+## Regras de processamento ##
+
+## Regras de status ##
+
+DELIVERING  - 9
+
+CÓDIGOS:  000
+
+DELIVERED - 10 (Atual)
+
+CÓDIGOS: 001, 002, 031, 105
+
+## Mudanças em usuários SICES ##
+
+__Pós-Venda__:
+Atualmente executa: COLLECTED >> DELIVERED. Esta ação será removida.
+Quem execcutará este processo é o serviço PROCEDA.
+
 ## Parser ##
 
 Classe responsável pela extração/análise dos dados contidos em um arquivo PROCEDA (OCOREN).
