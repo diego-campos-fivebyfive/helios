@@ -1,5 +1,5 @@
 <template lang="pug">
-  Page(sidebar='common')
+  Page(sidebar='common', mainbar='common')
     Panel.panel
       h2.title(slot='header')
         | Progresso de tarefas técnicas
