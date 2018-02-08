@@ -13,13 +13,30 @@ class Skeleton extends AbstractMenu
         return str_replace(' -', '', $class);
     }
 
+    private function getRouteParameters($item)
+    {
+        if (!isset($item['custom'])) {
+            return [];
+        }
+
+        if (!isset($item['custom']['routeParameters'])) {
+            return [];
+        }
+
+        return $item['custom']['routeParameters'];
+    }
+
     private function formatMenuItem($item)
     {
         $router = $this->container->get('router');
-        dump($router); die;
+
+        $link = $router->generate(
+            $item['route'],
+            $this->getRouteParameters($item));
+
         return [
             'name' => $item['name'],
-            'link' => $item['route'],
+            'link' => $link,
             'icon' => $this->getIcon($item['icon'])
         ];
     }
@@ -43,7 +60,7 @@ class Skeleton extends AbstractMenu
                 continue;
             }
 
-            if (!array_key_exists('subItems', $item)) {
+            if (!isset($item['subItems'])) {
                 $menu[$itemKey] = $this->formatMenuItem($item);
                 continue;
             }
