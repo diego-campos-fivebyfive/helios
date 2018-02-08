@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/coupon")
- * @Breadcrumb("Cupom")
  *
  * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_PLATFORM_MASTER')")
  */
