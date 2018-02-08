@@ -1,5 +1,5 @@
 <template lang="pug">
-  router-link.item(:to='item.link', :class='{ subitem: subitem }')
+  router-link.item(:to='item.link', :class='{ subItem: subItem }')
     Icon.icon-ui(:name='item.icon')
     | {{ item.name }}
     Icon.icon-arrow(name='angle-right')

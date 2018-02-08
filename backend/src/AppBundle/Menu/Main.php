@@ -3,12 +3,9 @@
 namespace AppBundle\Menu;
 
 use AppBundle\Configuration\App;
-use AppBundle\Entity\User;
 use AppBundle\Entity\UserInterface;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 class Main extends AbstractMenu
 {
@@ -28,43 +25,6 @@ class Main extends AbstractMenu
 
         if ($menu->getParent() && !$menu->getParent()->isRoot()) {
             $menu->getParent()->setAttribute('class', 'active');
-        }
-    }
-
-    private function userHasGroupAccess($allowedRoles)
-    {
-        /** @var User $user */
-        $user = $this->getUser();
-        $userRoles = $user->getRoles();
-
-        if ($user->isPlatform()) {
-            $groupRoles = User::getPlatformGroupRoles();
-        } else {
-            $groupRoles = User::getAccountGroupRoles();
-        }
-
-        if ($allowedRoles === '*') {
-            return true;
-        }
-
-        foreach ($allowedRoles as $rolesName) {
-            if (in_array($groupRoles[$rolesName], $userRoles)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private function getMenuMap()
-    {
-        /** @var User $user */
-        $user = $this->getUser();
-
-        if ($user->isPlatform()) {
-            return MenuAdmin::getMenuMap();
-        } else {
-            return MenuAccount::getMenuMap();
         }
     }
 
@@ -96,6 +56,34 @@ class Main extends AbstractMenu
             ]
         ];
     }
+
+    public function getMenu()
+    {
+        $menuMap = $this->getMenuMap();
+        $menu = [];
+
+        foreach ($menuMap as $item) {
+            if (!$this->userHasGroupAccess($item['allowedRoles'])) {
+                continue;
+            }
+
+            if (!array_key_exists('subItems', $item)) {
+                $menu[] = $item;
+                continue;
+            }
+
+            $menu[] = $item;
+
+            foreach ($item['subItems'] as $subItem) {
+                if ($this->userHasGroupAccess($subItem['allowedRoles'])) {
+                    $menu[$item['name']][] = $subItem;
+                }
+            }
+        }
+
+        return $menu;
+    }
+
 
     private function includeMenuItems(ItemInterface $menu)
     {
