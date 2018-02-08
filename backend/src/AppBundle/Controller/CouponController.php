@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 
 /**
- * @Route("/coupon")
+ * @Route("/coupon/api")
  *
  * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_PLATFORM_MASTER')")
  */

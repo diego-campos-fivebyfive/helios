@@ -11,10 +11,25 @@ form
       | Conta
       select
         option Conta
+    Button(
+      type='primary-strong',
+      label='Salvar',
+      pos='single',
+      v-on:click.native='send')
 </template>
 
 <script>
-  /* Action Script */
+  export default {
+    methods: {
+      send() {
+        this.axios.post('/coupon/api/', {
+          name: 'a',
+          amount: 10,
+          account: 19
+        })
+      }
+    }
+  }
 </script>
 
 <style lang="scss" scoped>
