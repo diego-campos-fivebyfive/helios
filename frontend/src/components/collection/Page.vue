@@ -2,18 +2,21 @@
   .page(:class='sidebar')
     Sidebar(v-if='showSidebar')
     main.main
+      Mainbar
       slot
 </template>
 
 <script>
   import Sidebar from '@/components/sidebar'
+  import Mainbar from '@/components/mainbar'
 
   export default {
     props: [
       'sidebar'
     ],
     components: {
-      Sidebar
+      Sidebar,
+      Mainbar
     },
     computed: {
       showSidebar() {
