@@ -2,7 +2,7 @@
   .page(:class='sidebar')
     Sidebar(v-if='showSidebar')
     main.main
-      Mainbar
+      Mainbar(v-if='showMainbar')
       slot
 </template>
 
@@ -12,7 +12,8 @@
 
   export default {
     props: [
-      'sidebar'
+      'sidebar',
+      'mainbar'
     ],
     components: {
       Sidebar,
@@ -21,6 +22,9 @@
     computed: {
       showSidebar() {
         return (this.sidebar !== 'none')
+      },
+      showMainbar() {
+        return (this.mainbar !== 'none')
       }
     }
   }

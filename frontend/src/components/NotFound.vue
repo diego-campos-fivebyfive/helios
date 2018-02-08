@@ -1,5 +1,5 @@
 <template lang="pug">
-  Page.page(sidebar='none')
+  Page.page(sidebar='none', mainbar='none')
     header
       img.logo(src='@/assets/media/logo-ui.png', alt='Sices Solar - Logo')
     section.section

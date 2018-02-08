@@ -1,5 +1,5 @@
 <template lang="pug">
-  Page(sidebar='common')
+  Page(sidebar='common', mainbar='common')
     Modal(:open='modal.open', v-on:close='modal.open = false')
       Action(slot='section')
     Panel.panel
