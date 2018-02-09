@@ -26,17 +26,24 @@ class Skeleton extends AbstractMenu
         return $item['custom']['routeParameters'];
     }
 
-    private function formatMenuItem($item)
+    private function getMenuItemLink($item)
     {
+        if (isset($item['link'])) {
+            return $item['link'];
+        }
+
         $router = $this->container->get('router');
 
-        $link = $router->generate(
+        return $router->generate(
             $item['route'],
             $this->getRouteParameters($item));
+    }
 
+    private function formatMenuItem($item)
+    {
         return [
             'name' => $item['name'],
-            'link' => $link,
+            'link' => $this->getMenuItemLink($item),
             'icon' => $this->getIcon($item['icon'])
         ];
     }
