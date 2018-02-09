@@ -24,17 +24,17 @@ export default new Router({
   routes: [
     {
       path: '/account',
-      name: 'account',
+      name: 'Contas',
       component: Account
     },
     {
       path: '/coupon',
-      name: 'coupon',
+      name: 'Cupons',
       component: Coupon
     },
     {
       path: '/metric',
-      name: 'metric',
+      name: 'Métricas',
       component: Metric
     },
     {

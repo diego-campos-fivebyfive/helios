@@ -1,6 +1,6 @@
 <template lang="pug">
   header.bar
-    h1.title Inversores
+    h1.title {{ getPageTitle }}
     h2.info {{ date }}
     nav.menu
       Button(
@@ -57,6 +57,11 @@
     data: () => ({
       date: ''
     }),
+    computed: {
+      getPageTitle() {
+        return this.$router.history.current.name
+      }
+    },
     mounted() {
       getDate(this)
     }
