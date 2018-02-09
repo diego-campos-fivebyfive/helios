@@ -13,6 +13,7 @@
     | {{ label }}
   button.button(
     v-else,
+    type='button',
     :class='[type, pos, { labeled: label }]')
     Icon(v-if='icon', :name='icon')
     | {{ label }}

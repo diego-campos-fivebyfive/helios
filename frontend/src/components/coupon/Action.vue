@@ -3,32 +3,52 @@ form
   fieldset.fields
     label.half
       | Nome
-      input(placeholder='Nome')
+      input(
+        placeholder='Nome',
+        v-model='coupon.name')
     label.half
       | Valor
-      input(placeholder='Valor')
+      input(
+        placeholder='Valor',
+        v-model='coupon.amount')
     label.full
       | Conta
-      select
-        option Conta
+      select(v-model='coupon.account')
+        option(value='') Não vinculada
+    Button(
+      type='primary-strong',
+      label='Salvar',
+      pos='single',
+      v-on:click.native='send')
 </template>
 
 <script>
-  /* Action Script */
+  export default {
+    data: () => ({
+      coupon: {
+        name: '',
+        amount: '',
+        account: ''
+      }
+    }),
+    methods: {
+      send() {
+        this.axios.post('/coupon/api/', this.coupon)
+      }
+    }
+  }
 </script>
 
 <style lang="scss" scoped>
   .fields {
     label {
       float: left;
-      font-weight: bold;
+      font-weight: 600;
       margin: $ui-space-y/2 $ui-space-x/2;
       width: 100%;
-      color: $ui-gray-dark;
     }
 
     select {
-      color: $ui-gray-regular;
       padding: 0 $ui-space-x/3;
     }
 

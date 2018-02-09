@@ -26,6 +26,7 @@
 <style lang="scss" scoped>
   .modal {
     bottom: 0;
+    color: $ui-text-main;
     left: 0;
     margin: auto;
     max-height: 50%;
@@ -63,7 +64,6 @@
   .title {
     font-size: 1.75rem;
     font-weight: 300;
-    text-align: left;
 
     .sub {
       display: block;
