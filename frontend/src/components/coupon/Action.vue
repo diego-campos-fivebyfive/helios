@@ -3,14 +3,19 @@ form
   fieldset.fields
     label.half
       | Nome
-      input(placeholder='Nome')
+      input(
+        placeholder='Nome',
+        v-model='coupon.name')
     label.half
       | Valor
-      input(placeholder='Valor')
+      input(
+        placeholder='Valor',
+        v-model='coupon.amount')
     label.full
       | Conta
-      select
-        option Conta
+      select(v-model='coupon.account')
+        option(value='') Nenhuma
+        option(value='555') Conta 555
     Button(
       type='primary-strong',
       label='Salvar',
@@ -20,13 +25,16 @@ form
 
 <script>
   export default {
+    data: () => ({
+      coupon: {
+        name: '',
+        amount: '',
+        account: ''
+      }
+    }),
     methods: {
       send() {
-        this.axios.post('/coupon/api/', {
-          name: 'a',
-          amount: 10,
-          account: 19
-        })
+        this.axios.post('/coupon/api/', this.coupon)
       }
     }
   }
@@ -43,7 +51,6 @@ form
     }
 
     select {
-      color: $ui-gray-regular;
       padding: 0 $ui-space-x/3;
     }
 
