@@ -52,10 +52,17 @@
         .validated {
             color: #0a6aa1;
         }
+
+        .group-input select {
+            float: left;
+            width: 30%;
+        }
+
         .group-input input {
             float: left;
-            width: 85%;
+            width: 55%;
         }
+
         .group-input button {
             width: 15%;
             border-radius: 0  2px 2px 0;
@@ -138,16 +145,10 @@
                             {{ form_widget(form.like,{attr:{class:'form-control', placeholder: 'nome, razão social, cnpj, número...'}}) }}
                         </div>
 
-                        <div class="group-input col-md-4">
-                            {{ form_widget(form.statusAt,{attr:{class:'form-control', placeholder:'Filtrar p/ data de status' }}) }}
-                            <button type="button" id="clear-date-status" class="btn btn-primary ">
-                                <i class="fa fa-eraser"></i>
-                            </button>
-                        </div>
-
-                        <div class="group-input col-md-4">
-                            {{ form_widget(form.deliveryAt,{attr:{class:'form-control', placeholder:'Filtrar p/ data de disponibilidade para coleta' }}) }}
-                            <button type="button" id="clear-date-delivery" class="btn btn-primary">
+                        <div class="group-input col-md-6">
+                            {{ form_widget(form.optionsAt,{attr:{class:'form-control'}}) }}
+                            {{ form_widget(form.dateAt,{attr:{class:'form-control', placeholder:'Filtrar p/ data' }}) }}
+                            <button type="button" id="clear-dateAt" class="btn btn-primary ">
                                 <i class="fa fa-eraser"></i>
                             </button>
                         </div>
@@ -161,11 +162,11 @@
                             </div>
                         {% endif %}
 
-                        <div class="col-md-{{ hasAgent ? '2' : '3' }}">
+                        <div class="col-md-{{ hasAgent ? '2' : '4' }}">
                             {% include view('admin/helper/states_filter.html.twig') %}
                         </div>
 
-                        <div class="col-md-{{ hasAgent ? '3' : '7' }}">
+                        <div class="col-md-{{ hasAgent ? '3' : '4' }}">
                             {% include view('admin/helper/status_filter.html.twig') %}
                         </div>
 
@@ -400,9 +401,9 @@
             }
         });
 
-        var dateStatus = $('#filter_statusAt');
+        var dateAt = $('#filter_dateAt');
 
-        dateStatus.daterangepicker({
+        dateAt.daterangepicker({
             locale: {
                 format: 'DD/MM/YYYY',
                 daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
@@ -423,39 +424,10 @@
             }
         });
 
-        dateStatus.val('');
+        dateAt.val('');
 
-        $('#clear-date-status').on('click', function () {
-            dateStatus.val('');
-        });
-
-        var dateDelivery = $('#filter_deliveryAt');
-
-        dateDelivery.daterangepicker({
-            locale: {
-                format: 'DD/MM/YYYY',
-                daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
-                monthNames: [
-                    "Janeiro",
-                    "Fevereiro",
-                    "Março",
-                    "Abril",
-                    "Maio",
-                    "Junho",
-                    "Julho",
-                    "Agosto",
-                    "Setembro",
-                    "Outubro",
-                    "Novembro",
-                    "Dezembro"
-                ]
-            }
-        });
-
-        dateDelivery.val('');
-
-        $('#clear-date-delivery').on('click', function () {
-            dateDelivery.val('');
+        $('#clear-dateAt').on('click', function () {
+            dateAt.val('');
         });
 
         var modalUpload = $('#modal_upload_csv');
