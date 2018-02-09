@@ -1,0 +1,58 @@
+<div class="modal inmodal" id="modal_shipping" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <h4 class="modal-title" id="title">
+                </h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_save">
+                    <i class="fa fa-close"></i> {{ 'Close'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if attribute(shippingRules, 'type') is defined and 'self' == shippingRules.type %}
+    <a class="btn btn-default {{ order.deliveryAddress ? 'validated' }}"
+       data-toggle="modal" data-target="#modal_shipping"
+       data-url="{{ path('order_shipping', {id:order.id}) }}"
+       data-shipping="self">
+        <i class="fa fa-truck"></i><br><small>Transport.</small>
+    </a>
+{% else %}
+    <a class="btn btn-default {{ order.deliveryAddress ? 'validated' }}"
+       data-toggle="modal" data-target="#modal_shipping"
+       data-shipping="sices"
+       data-url="{{ path('order_shipping', {id:order.id}) }}">
+        <i class="fa fa-truck"></i><br><small>Frete Sices</small>
+    </a>
+{% endif %}
+
+<script>
+  var titleModal = $('#title');
+  var modalShipping = $('#modal_shipping');
+  var shipping = 'self';
+
+  $('[data-shipping]').on('click', function () {
+    shipping = $(this).data('shipping');
+  });
+
+  modalShipping.on('show.bs.modal', function (event) {
+    var target = $(event.relatedTarget);
+    var url = target.data('url');
+    $.ajax({
+      url: url,
+      success: function (response) {
+        var title = (shipping == "sices") ? ' Frete Sices' : ' Dados da Transportadora';
+        titleModal.html('<i class="fa fa-truck"> </i>'+ title);
+
+
+        modalShipping.find('.modal-body').html(response);
+      }
+    });
+  });
+</script>
