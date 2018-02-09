@@ -18,7 +18,7 @@
       milestones: []
     }),
     mounted() {
-      this.axios.get('admin/metrics/api/v1/milestones').then(response => {
+      this.axios.get('admin/api/v1/metrics/milestones').then(response => {
         this.milestones = response.data
       })
     }

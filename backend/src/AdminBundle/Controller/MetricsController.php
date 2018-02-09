@@ -10,7 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 /**
  * @Security("has_role('ROLE_PLATFORM_MASTER')")
  * 
- * @Route("metrics")
+ * @Route("api/v1/metrics")
  *
  */
 class MetricsController extends AdminController
@@ -50,7 +50,7 @@ class MetricsController extends AdminController
     /**
      * GET Github Milestones
      *
-     * @Route("/api/v1/milestones", name="metrics_milestones")
+     * @Route("/milestones", name="metrics_milestones")
      * @Method("GET")
      */
     public function getMilestones()
@@ -95,7 +95,7 @@ class MetricsController extends AdminController
     /**
      * GET Github Issues by Milestone
      *
-     * @Route("/api/v1/milestones/{id}/issues", name="metrics_milestone")
+     * @Route("/milestones/{id}/issues", name="metrics_milestone")
      * @Method("GET")
      */
     public function getMilestone($id)

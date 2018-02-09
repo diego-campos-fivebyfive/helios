@@ -11,7 +11,7 @@
       user: {}
     }),
     mounted() {
-      this.axios.get('user/api').then(response => {
+      this.axios.get('api/v1/user').then(response => {
         this.user = response.data
       })
     }

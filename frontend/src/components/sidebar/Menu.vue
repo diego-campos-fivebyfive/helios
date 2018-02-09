@@ -18,7 +18,7 @@
       menu: []
     }),
     mounted() {
-      this.axios.get('application/menu').then(response => {
+      this.axios.get('api/v1/application/menu').then(response => {
         this.menu = response.data
       })
     }
