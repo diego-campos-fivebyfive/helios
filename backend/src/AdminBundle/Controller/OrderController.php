@@ -43,14 +43,10 @@ class OrderController extends AbstractController
 
         $data = $form->handleRequest($request)->getData();
 
-        $dateStatus = $data['statusAt'];
-        $formatDateStatus = function($dateStatus){
-            return implode('-', array_reverse(explode('/', $dateStatus)));
-        };
-
-        $dateDelivery = $data['deliveryAt'];
-        $formatDateDelivery  = function($dateDelivery ){
-            return implode('-', array_reverse(explode('/', $dateDelivery )));
+        $dateAt = $data['dateAt'];
+        $optionDate = $data['optionsAt'];
+        $formatDateAt = function($dateAt){
+            return implode('-', array_reverse(explode('/', $dateAt)));
         };
 
         if(is_array($data) && !array_key_exists('agent',$data) || !$data['agent'])
@@ -65,6 +61,9 @@ class OrderController extends AbstractController
         ;
 
         $qb = $finder->queryBuilder();
+
+        if ($dateAt)
+            $this->filterDateAt($qb, $optionDate, $dateAt, $formatDateAt);
 
         if(-1 != $states = $request->get('states')){
             $arrayStates = array_filter(explode(',', $states));
@@ -86,12 +85,6 @@ class OrderController extends AbstractController
             $expanseStates = $this->member()->getAttributes()['states'];
             $qb->andWhere($qb->expr()->in('o.state', $expanseStates));
         }
-
-        if ($dateStatus)
-            $this->filterDateStatusAt($qb, $dateStatus, $formatDateStatus);
-
-        if ($dateDelivery)
-            $this->filterDateDeliveryAt($qb, $dateDelivery, $formatDateDelivery);
 
         $qbTotals = clone $qb;
         $qbTotals->resetDQLPart('join');
@@ -376,39 +369,19 @@ class OrderController extends AbstractController
 
     /**
      * @param $qb
-     * @param $dateStatus
-     * @param $formatDateStatus
+     * @param $option
+     * @param $dateAt
+     * @param $formatDateAt
      * @return mixed
      */
-    private function filterDateStatusAt($qb, $dateStatus, $formatDateStatus)
+    private function filterDateAt($qb, $option, $dateAt, $formatDateAt)
     {
-        $dateStatus = explode(' - ',$dateStatus);
-        $startAt = new \DateTime($formatDateStatus($dateStatus[0]));
-        $endAt = new \DateTime($formatDateStatus($dateStatus[1]));
+        $dateAt = explode(' - ',$dateAt);
+        $startAt = new \DateTime($formatDateAt($dateAt[0]));
+        $endAt = new \DateTime($formatDateAt($dateAt[1]));
 
-        $qb->andWhere('o.statusAt >= :startAt');
-        $qb->andWhere('o.statusAt <= :endAt');
-
-        $qb->setParameter('startAt', $startAt->format('Y-m-d 00:00:00'));
-        $qb->setParameter('endAt', $endAt->format('Y-m-d 23:59:59'));
-
-        return $qb;
-    }
-
-    /**
-     * @param $qb
-     * @param $dateDelivery
-     * @param $formatDateDelivery
-     * @return mixed
-     */
-    private function filterDateDeliveryAt($qb, $dateDelivery, $formatDateDelivery)
-    {
-        $dateDelivery = explode(' - ',$dateDelivery);
-        $startAt = new \DateTime($formatDateDelivery($dateDelivery[0]));
-        $endAt = new \DateTime($formatDateDelivery($dateDelivery[1]));
-
-        $qb->andWhere('o.deliveryAt >= :startAt');
-        $qb->andWhere('o.deliveryAt <= :endAt');
+        $qb->andWhere('o.'.$option.' >= :startAt');
+        $qb->andWhere('o.'.$option.' <= :endAt');
 
         $qb->setParameter('startAt', $startAt->format('Y-m-d 00:00:00'));
         $qb->setParameter('endAt', $endAt->format('Y-m-d 23:59:59'));
