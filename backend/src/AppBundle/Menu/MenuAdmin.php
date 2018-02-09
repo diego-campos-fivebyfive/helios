@@ -162,6 +162,22 @@ class MenuAdmin
                     ]
                 ]
             ]
+        ],
+        'metrics' => [
+            'name' => 'Métricas',
+            'uri' => '#',
+            'icon' => 'area-chart',
+            'allowedRoles' => [
+                'master'
+            ],
+            'subItems' => [
+                'product' => [
+                    'name' => 'Técnicas',
+                    'link' => '/metrics',
+                    'icon' => 'coffee',
+                    'allowedRoles' => '*'
+                ]
+            ]
         ]
     ];
 

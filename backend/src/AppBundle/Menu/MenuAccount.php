@@ -135,7 +135,6 @@ class MenuAccount
                 'owner'
             ]
         ],
-
         'settings' => [
             'name' => 'Configurações',
             'uri' => '#',

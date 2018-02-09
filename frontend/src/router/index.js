@@ -33,7 +33,7 @@ export default new Router({
       component: Coupon
     },
     {
-      path: '/metric',
+      path: '/metrics',
       name: 'Métricas',
       component: Metric
     },

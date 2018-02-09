@@ -6,7 +6,7 @@
       Action(slot='section')
       Button(
         slot='buttons',
-        icon='save'
+        icon='save',
         type='primary-strong',
         label='Salvar',
         pos='single',

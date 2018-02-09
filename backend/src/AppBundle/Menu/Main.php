@@ -28,16 +28,30 @@ class Main extends AbstractMenu
         }
     }
 
+    private function resolveLinkParam($item)
+    {
+        if (isset($item['route'])) {
+            return [
+                'route' => $item['route']
+            ];
+        }
+
+        return [
+            'uri' => $item['link']
+        ];
+     }
+
     private function getMenuItemParams($item)
     {
         $params = [
-            'route' => $item['route'],
             'extras' => [
                 'icon' => App::icons($item['icon'])
             ]
         ];
 
-        if (!array_key_exists('custom', $item)) {
+        $params[] = resolveLinkParam($item);
+
+        if (!isset($item['custom'])) {
             return $params;
         }
 
