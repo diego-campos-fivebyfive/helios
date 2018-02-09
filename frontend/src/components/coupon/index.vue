@@ -3,7 +3,7 @@
     Modal(:open='modal.open', v-on:close='modal.open = false')
       h1.title(slot='header')
         | Novo Cupom
-      Action(slot='section')
+      Action(slot='section', ref='action')
       Button(
         slot='buttons',
         icon='save',
@@ -81,6 +81,9 @@
     methods: {
       showActionModal() {
         this.modal.open = true
+      },
+      send() {
+        this.$refs.action.send()
       }
     }
   }
