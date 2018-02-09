@@ -7,7 +7,7 @@
     footer.footer
       Button.button(
         v-on:click.native='closeModal',
-        icon='times-circle-o'
+        icon='times-circle-o',
         type='default-bordered',
         label='Fechar',
         pos='single')
