@@ -43,13 +43,11 @@ class Main extends AbstractMenu
 
     private function getMenuItemParams($item)
     {
-        $params = [
-            'extras' => [
-                'icon' => App::icons($item['icon'])
-            ]
-        ];
+        $params = $this->resolveLinkParam($item);
 
-        $params[] = resolveLinkParam($item);
+        $params['extras'] = [
+            'icon' => App::icons($item['icon'])
+        ];
 
         if (!isset($item['custom'])) {
             return $params;
