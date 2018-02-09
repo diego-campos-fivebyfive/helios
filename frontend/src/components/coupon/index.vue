@@ -4,6 +4,13 @@
       h1.title(slot='header')
         | Novo Cupom
       Action(slot='section')
+      Button(
+        slot='buttons',
+        icon='save'
+        type='primary-strong',
+        label='Salvar',
+        pos='single',
+        v-on:click.native='send')
     Panel.panel
       div(slot='header')
         h2.title

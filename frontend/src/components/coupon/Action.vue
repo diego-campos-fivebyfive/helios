@@ -15,11 +15,6 @@ form
       | Conta
       select(v-model='coupon.account')
         option(value='') Não vinculada
-    Button(
-      type='primary-strong',
-      label='Salvar',
-      pos='single',
-      v-on:click.native='send')
 </template>
 
 <script>
