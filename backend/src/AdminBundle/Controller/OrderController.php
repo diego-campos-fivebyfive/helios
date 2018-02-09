@@ -49,8 +49,9 @@ class OrderController extends AbstractController
             return implode('-', array_reverse(explode('/', $dateAt)));
         };
 
-        if(is_array($data) && !array_key_exists('agent',$data) || !$data['agent'])
+        if(is_array($data) && !array_key_exists('agent',$data) || !$data['agent']) {
             $data['agent'] = $member;
+        }
 
         /** @var \AppBundle\Service\Order\OrderFinder $finder */
         $finder = $this->get('order_finder');
@@ -62,8 +63,9 @@ class OrderController extends AbstractController
 
         $qb = $finder->queryBuilder();
 
-        if ($dateAt)
+        if ($dateAt) {
             $this->filterDateAt($qb, $optionDate, $dateAt, $formatDateAt);
+        }
 
         if(-1 != $states = $request->get('states')){
             $arrayStates = array_filter(explode(',', $states));
@@ -322,8 +324,9 @@ class OrderController extends AbstractController
 
             $orders = [];
 
-            if ($mapping)
+            if ($mapping) {
                 $orders = $qb->where($qb->expr()->in('o.reference',array_keys($mapping)))->getQuery()->getResult();
+            }
 
             $importations = 0;
 
@@ -396,8 +399,9 @@ class OrderController extends AbstractController
     {
         $allStates = Brazil::states();
 
-        if (!$this->member()->isPlatformExpanse())
+        if (!$this->member()->isPlatformExpanse()) {
             return $allStates;
+        }
 
         $states = [];
         foreach ($filterStates as $state)
