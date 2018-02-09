@@ -23,7 +23,22 @@ class OrderEntityTest extends GeneratorTest
             'value' => 10.5
         ];
 
+        $invoices = [
+            '2151251612', '1020304050607080', '123123123',
+            '10243', '10243', '10241', '46357634857'
+        ];
+
+        $invoices2 = ['180207001', '10241'];
+
         $order = $this->createOrder();
+
+        $order->setInvoices($invoices);
+        $order->addInvoices($invoices2);
+
+        $order->removeInvoices(10241);
+
+        self::assertNotNull($order->getInvoices());
+
         self::assertEquals(1000, $order->getSubTotal());
 
         $order->setDiscount(200);
