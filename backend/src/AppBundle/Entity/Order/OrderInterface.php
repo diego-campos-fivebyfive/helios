@@ -1064,14 +1064,14 @@ interface OrderInterface
     public function getInvoices();
 
     /**
-     * @param $invoices
+     * @param $invoice
      * @return OrderInterface
      */
-    public function addInvoices($invoices);
+    public function addInvoice($invoice);
 
     /**
-     * @param $invoices
+     * @param $invoice
      * @return OrderInterface
      */
-    public function removeInvoices($invoices);
+    public function removeInvoice($invoice);
 }

@@ -2479,10 +2479,10 @@ class Order implements OrderInterface
     /**
      * @inheritDoc
      */
-    public function addInvoices($invoices)
+    public function addInvoice($invoice)
     {
-        if (!in_array($invoices, $this->invoices)) {
-            $this->invoices = array_merge($this->invoices, $invoices);
+        if (!in_array($invoice, $this->invoices)) {
+            $this->invoices[] = $invoice;
         }
 
         return $this;
@@ -2491,9 +2491,9 @@ class Order implements OrderInterface
     /**
      * @inheritDoc
      */
-    public function removeInvoices($invoices)
+    public function removeInvoice($invoice)
     {
-        $key = array_search($invoices, $this->invoices);
+        $key = array_search($invoice, $this->invoices);
 
         unset($this->invoices[$key]);
 
