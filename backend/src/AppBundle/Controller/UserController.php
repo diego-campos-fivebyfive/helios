@@ -6,12 +6,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
- * @Route("/user")
+ * @Route("/api/v1/user")
  */
 class UserController extends AbstractController
 {
     /**
-     * @Route("/info", name="user_info")
+     * @Route("/", name="user_data")
      *
      * @Method("get")
      */
@@ -19,14 +19,11 @@ class UserController extends AbstractController
     {
         $member = $this->member();
         $account = $member->getAccount();
+
         return $this->json([
-            'user' => [
-                'name' => $member->getFirstname()
-            ],
-            'account' => [
-                'name' => $account->getFirstname(),
-                'level' => $account->getLevel()
-            ]
+            'name' => $member->getFirstname(),
+            'company' => $account->getFirstname(),
+            'level' => $account->getLevel()
         ]);
     }
 }

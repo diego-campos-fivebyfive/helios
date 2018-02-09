@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
- * @Route("application")
+ * @Route("api/v1/application")
  */
 class ApplicationController extends AbstractController
 {

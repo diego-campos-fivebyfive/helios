@@ -28,7 +28,7 @@ form
     }),
     methods: {
       send() {
-        this.axios.post('/coupon/api/', this.coupon)
+        this.axios.post('api/v1/coupon/', this.coupon)
       }
     }
   }

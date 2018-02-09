@@ -39,7 +39,7 @@
     }),
     methods: {
       getIssues(milestone) {
-        const uri = `admin/metrics/api/v1/milestones/${milestone.id}/issues`
+        const uri = `admin/api/v1/metrics/milestones/${milestone.id}/issues`
         this.axios.get(uri).then(response => {
           this.modal = {
             open: true,
