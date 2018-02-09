@@ -7,6 +7,7 @@ use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\Order\Order;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use AppBundle\Form\Order\FilterType as AppFilterType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -44,11 +45,17 @@ class FilterType extends AppFilterType
             ]);
         }
 
-        $builder->add('statusAt', null, [
-            'required' => false
+        $optionsDateAtChoices = [
+            'statusAt' => 'Status',
+            'deliveryAt' => 'Disponibilidade',
+            'billedAt' => 'Faturamento'
+        ];
+
+        $builder->add('optionsAt', ChoiceType::class, [
+            'choices' => $optionsDateAtChoices
         ]);
 
-        $builder->add('deliveryAt', null,  [
+        $builder->add('dateAt', null, [
             'required' => false
         ]);
     }
