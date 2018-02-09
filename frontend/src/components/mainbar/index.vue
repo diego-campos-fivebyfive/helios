@@ -13,8 +13,7 @@
 </template>
 
 <script>
-  const getDate = (vm) => {
-
+  const getDate = () => {
     const months = [
       'janeiro',
       'fevereiro',
@@ -37,7 +36,7 @@
       'quarta-feira',
       'quinta-feira',
       'sexta-feira',
-      'sábado',
+      'sábado'
     ]
 
     const date = new Date()
@@ -46,11 +45,7 @@
     const day = date.getDate()
     const dayInTheWeek = daysInTheWeek[date.getDay()]
 
-    vm.date = `${dayInTheWeek}, ${day} de ${month} de ${year}`
-
-    setTimeout(() => {
-      getDate(vm)
-    }, 500)
+    return `${dayInTheWeek}, ${day} de ${month} de ${year}`
   }
 
   export default {
@@ -63,7 +58,9 @@
       }
     },
     mounted() {
-      getDate(this)
+      setInterval(() => {
+        this.date = getDate()
+      }, 500)
     }
   }
 </script>
