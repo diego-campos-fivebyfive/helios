@@ -200,25 +200,33 @@
 
                                             {% set shippingRules = order.shippingRules %}
 
-                                            {% if attribute(shippingRules, 'type') is defined and 'self' == shippingRules.type %}
+                                            {% set shippingInfo = order.isRejected or order.isDone or order.isAvailable or order.isCollected or order.isDelivered %}
 
-                                                <a class="btn btn-default {{ order.deliveryAddress ? 'validated' }}"
-                                                   data-url="{{ path('generator_company_shipping',{id: item.id}) }}"
-                                                   data-toggle="modal"
-                                                   data-delivery="{{ path('generator_delivery_address',{id: item.id}) }}"
-                                                   data-target="#modal_details"
-                                                   data-title="transportadora">
-                                                    <i class="fa fa-truck"></i>
-                                                    <br><small>Transportadora</small>
-                                                </a>
-
+                                            {% if order.isRejected or order.isDone or order.isInserted or order.isAvailable or order.isCollected or order.isDelivered %}
+                                                {% include view('admin/orders/shipping_info.html.twig') %}
                                             {% else %}
 
-                                                <a class="btn btn-default {{ order.deliveryAddress ? 'validated' }}" data-toggle="modal" data-target="#modal_details"
-                                                   data-url="{{ path('order_shipping_info', {id:order.id}) }}"
-                                                   data-title="sices">
-                                                    <i class="fa fa-truck"></i> <br><small>Frete Sices</small>
-                                                </a>
+                                                {% if attribute(shippingRules, 'type') is defined and 'self' == shippingRules.type %}
+
+                                                    <a class="btn btn-default {{ order.deliveryAddress ? 'validated' }}"
+                                                       data-url="{{ path('generator_company_shipping',{id: item.id}) }}"
+                                                       data-toggle="modal"
+                                                       data-delivery="{{ path('generator_delivery_address',{id: item.id}) }}"
+                                                       data-target="#modal_details"
+                                                       data-title="transportadora">
+                                                        <i class="fa fa-truck"></i>
+                                                        <br><small>Transportadora</small>
+                                                    </a>
+
+                                                {% else %}
+
+                                                    <a class="btn btn-default {{ order.deliveryAddress ? 'validated' }}" data-toggle="modal" data-target="#modal_details"
+                                                       data-url="{{ path('order_shipping_info', {id:order.id}) }}"
+                                                       data-title="sices">
+                                                        <i class="fa fa-truck"></i> <br><small>Frete Sices</small>
+                                                    </a>
+
+                                                {% endif %}
 
                                             {% endif %}
 
