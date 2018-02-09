@@ -16,20 +16,24 @@
           Button(
             type='primary-common',
             icon='pencil',
-            link='#linkB',
             pos='first')
           Button(
             type='danger-common',
             icon='trash',
-            link='#linkB',
-            pos='last')
+            pos='last',
+            v-on:click.native='remove(coupon.id)')
 </template>
 
 <script>
   export default {
     props: [
       'coupons'
-    ]
+    ],
+    methods: {
+      remove(id) {
+        this.axios.delete(`/api/v1/coupon/${id}`)
+      }
+    }
   }
 </script>
 
