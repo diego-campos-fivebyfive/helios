@@ -6,20 +6,13 @@
 </template>
 
 <script>
-  const user = new Promise(resolve => {
-    resolve({
-      name: 'Rafael Kendrik',
-      company: 'I9 Solar'
-    })
-  })
-
-  export default {
+ export default {
     data: () => ({
       user: {}
     }),
     mounted() {
-      user.then(data => {
-        this.user = data
+      this.axios.get('user/api').then(response => {
+        this.user = response.data
       })
     }
   }
