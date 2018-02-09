@@ -16,7 +16,6 @@ use AppBundle\Entity\Misc\Additive;
 use AppBundle\Entity\Misc\AdditiveInterface;
 use AppBundle\Entity\Pricing\MemorialInterface;
 use AppBundle\Entity\Pricing\RangeInterface;
-use Doctrine\DBAL\Types\SimpleArrayType;
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\MetadataTrait;
