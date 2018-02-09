@@ -1,6 +1,8 @@
 <template lang="pug">
   Page(sidebar='common', mainbar='common')
     Modal(:open='modal.open', v-on:close='modal.open = false')
+      h1.title(slot='header')
+        | Novo Cupom
       Action(slot='section')
     Panel.panel
       div(slot='header')
@@ -78,5 +80,7 @@
 </script>
 
 <style lang="scss" scoped>
-  /* Coupon Style */
+  .title {
+    text-align: center;
+  }
 </style>

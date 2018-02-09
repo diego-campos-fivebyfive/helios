@@ -70,4 +70,8 @@
       }
     }
   }
+
+  .title {
+    text-align: left;
+  }
 </style>

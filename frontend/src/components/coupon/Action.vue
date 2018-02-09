@@ -43,10 +43,9 @@ form
   .fields {
     label {
       float: left;
-      font-weight: bold;
+      font-weight: 600;
       margin: $ui-space-y/2 $ui-space-x/2;
       width: 100%;
-      color: $ui-gray-dark;
     }
 
     select {
