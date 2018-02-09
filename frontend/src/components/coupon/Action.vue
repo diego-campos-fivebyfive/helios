@@ -14,8 +14,7 @@ form
     label.full
       | Conta
       select(v-model='coupon.account')
-        option(value='') Nenhuma
-        option(value='555') Conta 555
+        option(value='') Não vinculada
     Button(
       type='primary-strong',
       label='Salvar',
