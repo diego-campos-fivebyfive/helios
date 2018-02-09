@@ -5,13 +5,13 @@
     section
       slot(name='section')
     footer.footer
-      Button.button(
+      Button(
         v-on:click.native='closeModal',
         icon='times-circle-o',
         type='default-bordered',
         label='Fechar',
         pos='single')
-      slot.button(name='buttons')
+      slot(name='buttons')
 </template>
 
 <script>
@@ -87,9 +87,5 @@
   .footer {
     display: flex;
     justify-content: space-between;
-  }
-
-  .button {
-    margin: 0 $ui-space-x/2;
   }
 </style>
