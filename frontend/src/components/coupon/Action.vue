@@ -18,7 +18,7 @@ form
         option(
           v-for='account in accounts',
           :value='account.id')
-            | {{ account.name }}
+          | {{ account.name }}
 </template>
 
 <script>
@@ -32,8 +32,7 @@ form
       accounts: []
     }),
     mounted() {
-      const uri = `api/v1/account/available`
-      this.axios.get(uri).then(response => {
+      this.axios.get('api/v1/account/available').then(response => {
         this.accounts = response.data
       })
     },

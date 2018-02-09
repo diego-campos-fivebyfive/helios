@@ -10,7 +10,7 @@
       tr.rows(slot='rows', v-for='coupon in coupons')
         td {{ coupon.name }}
         td {{ coupon.account }}
-        td {{ coupon.status }}
+        td {{ coupon.applied ? 'Aplicado' : 'Não Aplicado' }}
         td {{ coupon.amount }}
         td
           Button(
