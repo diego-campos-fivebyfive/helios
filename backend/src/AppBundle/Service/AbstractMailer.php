@@ -186,7 +186,9 @@ abstract class AbstractMailer
     protected function resolveAccountEmails(\Swift_Message $message, Customer $account)
     {
         foreach ($account->getOwners() as $owner) {
-            $message->addTo($owner->getEmail(), $owner->getName());
+            if ($owner->getUser()->isEnabled()) {
+                $message->addTo($owner->getEmail(), $owner->getName());
+            }
         }
     }
 
