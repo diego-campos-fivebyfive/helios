@@ -4,12 +4,14 @@
       slot(name='header')
     section
       slot(name='section')
-    footer
-      Button(
+    footer.footer
+      Button.button(
         v-on:click.native='closeModal',
-        type='primary-common',
+        icon='times-circle-o'
+        type='default-bordered',
         label='Fechar',
         pos='single')
+      slot.button(name='buttons')
 </template>
 
 <script>
@@ -80,5 +82,14 @@
     li {
       padding: $ui-space-y/5 0;
     }
+  }
+
+  .footer {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .button {
+    margin: 0 $ui-space-x/2;
   }
 </style>

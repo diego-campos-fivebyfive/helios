@@ -53,8 +53,14 @@
   }
 
   .default-common {
-    background-color: $ui-white-regular;
-    color: $ui-gray-regular;
+      background-color: $ui-white-regular;
+      color: $ui-gray-regular;
+  }
+
+  .default-bordered {
+      background-color: $ui-white-regular;
+      border: 1px solid $ui-gray-light;
+      color: $ui-text-main;
   }
 
   .labeled {
