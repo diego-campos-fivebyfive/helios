@@ -132,6 +132,16 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/shipping", name="order_shipping")
+     */
+    public function shippingAction(Order $order)
+    {
+        return $this->render('admin/orders/shipping.html.twig', array(
+            'order' => $order
+        ));
+    }
+
+    /**
      * @Route("/budgets/create", name="order_budget_create")
      */
     public function createBudgetAction(Request $request)
@@ -173,7 +183,7 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/shipping", name="order_shipping_info")
+     * @Route("/{id}/shipping_info", name="order_shipping_info")
      */
     public function shippingInfoAction(Request $request, Order $order)
     {

@@ -201,16 +201,6 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/shipping", name="order_shipping")
-     */
-    public function shippingAction(Order $order)
-    {
-        return $this->render('admin/orders/shipping.html.twig', array(
-            'order' => $order
-        ));
-    }
-
-    /**
      * @Route("/{id}/invoice", name="invoice_number")
      */
     public function invoiceNumberAction(Request $request, Order $order)
