@@ -33,9 +33,9 @@ class OrderEntityTest extends GeneratorTest
         $order = $this->createOrder();
 
         $order->setInvoices($invoices);
-        $order->addInvoices($invoices2);
+        $order->addInvoice($invoices2);
 
-        $order->removeInvoices(10241);
+        $order->removeInvoice(10241);
 
         self::assertNotNull($order->getInvoices());
 
