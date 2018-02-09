@@ -1,5 +1,5 @@
 <template lang="pug">
-  router-link.header(to='/')
+  a.header(href='/')
     img(src='@/assets/media/logo-small.png', alt='Sices Solar Logo')
     span.title {{ user.name }}
     span {{ user.company }}
