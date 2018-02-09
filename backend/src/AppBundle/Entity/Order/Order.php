@@ -16,6 +16,7 @@ use AppBundle\Entity\Misc\Additive;
 use AppBundle\Entity\Misc\AdditiveInterface;
 use AppBundle\Entity\Pricing\MemorialInterface;
 use AppBundle\Entity\Pricing\RangeInterface;
+use Doctrine\DBAL\Types\SimpleArrayType;
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\MetadataTrait;
@@ -273,6 +274,13 @@ class Order implements OrderInterface
      * @ORM\Column(type="json", nullable=true)
      */
     private $shippingRules;
+
+    /**
+     * @var array
+     *
+     * @ORM\Column(type="simple_array", name="invoices", nullable=true)
+     */
+    private $invoices;
 
     /**
      * @var float
@@ -551,6 +559,7 @@ class Order implements OrderInterface
         $this->setStatus(self::STATUS_BUILDING);
         $this->source = self::SOURCE_ACCOUNT;
         $this->orderAdditives = new ArrayCollection();
+        $this->invoices = [];
         $this->financing = false;
         $this->normalizeFiles();
     }
@@ -2447,6 +2456,48 @@ class Order implements OrderInterface
         $this->normalizeFiles();
 
         return $type ? $this->files[$type] : $this->files ;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setInvoices($invoices)
+    {
+        $this->invoices = $invoices;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getInvoices()
+    {
+        return $this->invoices;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function addInvoices($invoices)
+    {
+        if (!in_array($invoices, $this->invoices)) {
+            $this->invoices = array_merge($this->invoices, $invoices);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeInvoices($invoices)
+    {
+        $key = array_search($invoices, $this->invoices);
+
+        unset($this->invoices[$key]);
+
+        return $this;
     }
 
     /**

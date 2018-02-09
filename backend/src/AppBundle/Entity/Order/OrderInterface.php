@@ -1051,4 +1051,27 @@ interface OrderInterface
      * @return bool
      */
     public function isBilled();
+
+    /**
+     * @param $invoices
+     * @return OrderInterface
+     */
+    public function setInvoices($invoices);
+
+    /**
+     * @return array
+     */
+    public function getInvoices();
+
+    /**
+     * @param $invoices
+     * @return OrderInterface
+     */
+    public function addInvoices($invoices);
+
+    /**
+     * @param $invoices
+     * @return OrderInterface
+     */
+    public function removeInvoices($invoices);
 }
