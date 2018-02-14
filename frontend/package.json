@@ -4,7 +4,7 @@
   "author": "Kolina Labs",
   "private": true,
   "scripts": {
-    "build": "webpack --config .webpack.prod.conf.js",
+    "build": "node .webpack.prod.conf.js",
     "start": "npm run start:dev",
     "start:dev": "webpack-dev-server --hot --config .webpack.dev.conf.js",
     "lint": "npm run lint:template; npm run lint:style; npm run lint:script",

@@ -7,7 +7,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
-module.exports = {
+const config = {
   entry: './src/main.js',
   output: {
     path: path.resolve(__dirname, '../backend/web/app'),
@@ -211,3 +211,20 @@ module.exports = {
     })
   ]
 }
+
+webpack(config, (err, stats) => {
+  if (err) throw err
+
+  process.stdout.write(stats.toString({
+    colors: true,
+    modules: false,
+    children: false,
+    chunks: false,
+    chunkModules: false
+  }) + '\n\n')
+
+  if (stats.hasErrors()) {
+    console.log('Build failed with erros')
+    process.exit(1)
+  }
+})
