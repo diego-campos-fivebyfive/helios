@@ -1,12 +1,12 @@
-import Icon from 'vue-awesome/components/Icon'
-import 'vue-awesome/icons'
-
 import Button from '@/components/collection/Button'
 import Page from '@/components/collection/Page'
 import Panel from '@/components/collection/Panel'
 import Modal from '@/components/collection/Modal'
 import Progress from '@/components/collection/Progress'
 import Table from '@/components/collection/Table'
+
+import Icon from 'vue-awesome/components/Icon'
+import '@/assets/script/icons'
 
 import Vue from 'vue'
 import App from './App'
@@ -26,7 +26,6 @@ new Vue({
   router,
   components: {
     App,
-    Icon,
     Button,
     Modal,
     Page,
