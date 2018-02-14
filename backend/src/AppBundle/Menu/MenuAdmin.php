@@ -15,7 +15,7 @@ class MenuAdmin
             'allowedRoles' => '*'
         ],
         'accounts' => [
-            'name' => 'Accounts',
+            'name' => 'Contas',
             'route' => 'account_index',
             'icon' => 'accounts',
             'allowedRoles' => [
@@ -141,7 +141,7 @@ class MenuAdmin
             ]
         ],
        'settings' => [
-            'name' => 'Settings',
+            'name' => 'Configurações',
             'uri' => '#',
             'icon' => 'settings',
             'allowedRoles' => '*',
