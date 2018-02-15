@@ -707,7 +707,7 @@ class ProjectController extends AbstractController
     {
         $synchronizer = $this->get('additive_synchronizer');
 
-        $insurances = $synchronizer->normalizeInsurances($project);
+        $insurances = $synchronizer->normalizeInsurances($project, $this->member());
 
         return $this->render('admin/projects/insurances_list.html.twig', [
             'insurances' => $insurances,
