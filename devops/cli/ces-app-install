@@ -4,18 +4,17 @@ cd $SICES_PATH
 
 echo "Installing packages dependencies..."
 
-if [ $CES_AMBIENCE = 'development' ]; then
-  node_install='yarn install'
-else
-  node_install='npm install'
-fi
-
 cd backend
   composer install
-  $node_install
-  $CLI_PATH/util/bug-fix
+  yarn install
 cd ../
 
 cd devops/hook
-  $node_install
+  yarn install
 cd ../../
+
+cd frontend
+  yarn install
+cd ../
+
+$CLI_PATH/util/bug-fix --dependencies
