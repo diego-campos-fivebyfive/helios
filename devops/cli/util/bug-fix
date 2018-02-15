@@ -2,16 +2,23 @@
 
 cd $SICES_PATH
 
-echo 'Fixing KNP Bug...'
+include_knp_wherewalker_phptrim() {
+  local file=backend/vendor/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Filtration/Doctrine/ORM/Query/WhereWalker.php
 
-path=backend/vendor/knplabs/knp-components/src/Knp/Component/Pager/Event/Subscriber/Filtration/Doctrine/ORM/Query
+  sed -i 's/$alias = reset($parts);/$alias = trim(reset($parts));/g' $file
+}
 
-initial='$alias = reset($parts);'
-final='$alias = trim(reset($parts));'
+replace_eslintplugin_unmerged_indentcommon() {
+  local file_input=$CLI_PATH/util/src/eslint-plugin-vue.js
+  local file_output=$SICES_PATH/frontend/node_modules/eslint-plugin-vue/lib/utils/indent-common.js
 
-sed -i "s/$initial/$final/g" $path/WhereWalker.php
+  cat $file_input > $file_output
+}
 
-echo 'Fixing eslint-plugin-vue Bug...'
+if [[ $1 = '--dependencies' ]]; then
+  echo 'Fixing KNP Bug...'
+  $(include_knp_wherewalker_phptrim)
 
-cat $CLI_PATH/util/src/eslint-plugin-vue.js \
-  > $SICES_PATH/frontend/node_modules/eslint-plugin-vue/lib/utils/indent-common.js
+  echo 'Fixing eslint-plugin-vue Bug...'
+  $(replace_eslintplugin_unmerged_indentcommon)
+fi
