@@ -82,7 +82,7 @@ class CouponController extends AbstractController
 
         $errors = [];
         foreach ($violations as $violation) {
-            $errors[$violation->getPropertyPath()] = $violation->getMessage();
+            $errors[str_replace(['[',']'],'', $violation->getPropertyPath())] = $violation->getMessage();
         }
 
         if ($violations->count()) {
