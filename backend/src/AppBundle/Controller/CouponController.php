@@ -68,13 +68,11 @@ class CouponController extends AbstractController
         $validator = Validation::createValidator();
 
         $constraint = new Assert\Collection([
-            'name' => new Assert\Length(['max' => 255,
-                'maxMessage' => 'Nome de cupom muito extenso'
+            'name' => new Assert\NotBlank([
+                'message' => 'O campo nome deve estar preenchido'
             ]),
-            'amount' => new Assert\Range([
-                'min' => 0,
-                'minMessage' => 'O valor informado não é válido',
-                'invalidMessage' => 'O valor não está no formato correto'
+            'amount' => new Assert\NotBlank([
+                'message' => 'O campo valor deve estar preenchido'
             ])
         ]);
 
