@@ -227,18 +227,18 @@ class Synchronizer
         $related = $metadata['related'];
         $sourceSetter = sprintf('set%s', $metadata['target']);
 
-
         foreach ($availableInsurances as $insurance) {
-            if (in_array($insurance->getId(), $insurancesRequiredId)) {
-                if (!in_array($insurance->getId(), $associationsAdditiveIds) && !$associationReleased) {
-                    /** @var AdditiveRelationTrait $association */
-                    $association = new $related();
+            $isRequired = in_array($insurance->getId(), $insurancesRequiredId);
+            $inAdditives = in_array($insurance->getId(), $associationsAdditiveIds);
 
-                    $association
-                        ->setAdditive($insurance)
-                        ->$sourceSetter($source)
-                    ;
-                }
+            if ($isRequired && !$inAdditives && !$associationReleased) {
+
+                /** @var AdditiveRelationTrait $association */
+                $association = new $related();
+
+                $association
+                    ->setAdditive($insurance)
+                    ->$sourceSetter($source);
             }
 
             if (in_array($insurance->getId(), $associationsAdditiveIds)) {
