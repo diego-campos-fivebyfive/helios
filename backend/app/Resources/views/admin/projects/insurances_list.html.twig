@@ -4,6 +4,7 @@
 {% for insurance in insurances %}
     {% set hasAdditive = project.hasAdditive(insurance) %}
     {% if hasAdditive or insurance.enabled %}
+    {% set insuranceEdit = insurance.isRequiredByLevel(project.level) and not app.user.isPlatformAdmin or app.user.isPlatformMaster %}
 
     <div class="row">
         <div class="form-group col-md-8">
@@ -18,7 +19,7 @@
                 <input class="i-checks check-insurance" type="checkbox"
                        data-url="{{ hasAdditive ? path('delete_project_additive', {projectAdditive: hasAdditive.id})
                                     : path('create_project_additive', {project:project.id, additive: insurance.id }) }}"
-                        {{ hasAdditive ? 'checked="checked"' }} {{ insurance.isRequiredByLevel(project.level) ? 'disabled="disabled"'}}/> &nbsp;
+                        {{ hasAdditive ? 'checked="checked"' }} {{ insuranceEdit ? 'disabled="disabled"'}}/> &nbsp;
             </label>
         </div>
 

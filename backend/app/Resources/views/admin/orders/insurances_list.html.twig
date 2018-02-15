@@ -4,6 +4,8 @@
 {% for additive in additives %}
     {% set hasAdditive = order.hasAdditive(additive) %}
     {% if additive.enabled or hasAdditive %}
+    {% set insuranceEdit = additive.isRequiredByLevel(order.level) and not app.user.isPlatformAdmin or app.user.isPlatformMaster %}
+
 
         <div class="row">
             <div class="col-md-8 text-justify">
@@ -19,7 +21,7 @@
                 <input class="i-checks check-insurance" type="checkbox"
                        data-url="{{ hasAdditive ? path('delete_order_additive', {orderAdditive: hasAdditive.id})
                        : path('create_order_additive', {order:order.id, additive:additive.id})}}" {{ hasAdditive ? 'checked="checked"' }}
-                        {{ additive.isRequiredByLevel(order.level) ? 'disabled="disabled"'}}/>
+                        {{ insuranceEdit ? 'disabled="disabled"'}}/>
             </div>
             <div class="col-md-2 text-center">
                 <h4><strong> Valor do Seguro </strong></h4>
