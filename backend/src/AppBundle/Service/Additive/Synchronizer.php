@@ -154,6 +154,8 @@ class Synchronizer
 
         $qb->select('a')->from(Additive::class, 'a');
 
+        $offTheRule = $this->priceAndPowerVerification($qb, $source, $metadata['target']);
+
         $qb->where(
             $qb->expr()->like('a.requiredLevels',
                 $qb->expr()->literal('%"' . $level . '"%')
@@ -166,6 +168,10 @@ class Synchronizer
             );
         }
 
+        if ($offTheRule) {
+            $qb->andWhere($qb->expr()->notIn('a.id', $offTheRule));
+        }
+
         $additives = $qb->getQuery()->getResult();
 
         return $additives;
@@ -175,7 +181,7 @@ class Synchronizer
      * @param $source
      * @return array
      */
-    public function normalizeInsurances($source)
+    public function normalizeInsurances($source, $member)
     {
         $this->validate($source);
 
@@ -185,7 +191,7 @@ class Synchronizer
 
         $availableInsurances = $qb->getQuery()->getResult();
 
-        $this->resolveAssociations($source, $qb, $metadata, $availableInsurances);
+        $this->resolveAssociations($source, $qb, $metadata, $availableInsurances, $member);
 
         return $availableInsurances;
     }
@@ -196,8 +202,10 @@ class Synchronizer
      * @param $metadata
      * @param $availableInsurances
      */
-    private function resolveAssociations(&$source, $qb, $metadata, $availableInsurances)
+    private function resolveAssociations(&$source, $qb, $metadata, $availableInsurances, $member)
     {
+        $associationReleased = $member->isPlatformAdmin() or $member->isPlatformMaster();
+
         $collectionGetter = $metadata['getter'];
 
         /** @var \Doctrine\Common\Collections\ArrayCollection $associations */
@@ -219,9 +227,10 @@ class Synchronizer
         $related = $metadata['related'];
         $sourceSetter = sprintf('set%s', $metadata['target']);
 
+
         foreach ($availableInsurances as $insurance) {
             if (in_array($insurance->getId(), $insurancesRequiredId)) {
-                if (!in_array($insurance->getId(), $associationsAdditiveIds)) {
+                if (!in_array($insurance->getId(), $associationsAdditiveIds) && !$associationReleased) {
                     /** @var AdditiveRelationTrait $association */
                     $association = new $related();
 
@@ -232,8 +241,9 @@ class Synchronizer
                 }
             }
 
-            if (in_array($insurance->getId(), $associationsAdditiveIds))
+            if (in_array($insurance->getId(), $associationsAdditiveIds)) {
                 unset($associationsAdditiveIds[array_search($insurance->getId(), $associationsAdditiveIds)]);
+            }
         }
 
         $this->manager->persist($source);
@@ -273,25 +283,9 @@ class Synchronizer
 
         $qb->select('a.id')->from(Additive::class, 'a');
 
-        $power = $source->getPower();
-
-        if ($target == 'Project')
-            $price = $source->getCostPriceComponents();
-        else
-            $price = $source->getSubTotal();
-
         $level = $source->getLevel();
 
-        $offTheRule = array_map('current',
-            $qb->where(
-                $qb->expr()->orX(
-                    $qb->expr()->gt('a.minPower', $power),
-                    $qb->expr()->lt('a.maxPower', $power),
-                    $qb->expr()->gt('a.minPrice', $price),
-                    $qb->expr()->lt('a.maxPrice', $price)
-                )
-            )->getQuery()->getResult()
-        );
+        $offTheRule = $this->priceAndPowerVerification($qb, $source, $target);
 
         $qb->select('a')
             ->where(
@@ -304,8 +298,9 @@ class Synchronizer
         $qb->andWhere('a.type = :type')
             ->setParameter('type', Additive::TYPE_INSURANCE);
 
-        if ($offTheRule)
+        if ($offTheRule) {
             $qb->andWhere($qb->expr()->notIn('a.id', $offTheRule));
+        }
 
         return $qb;
     }
@@ -361,5 +356,32 @@ class Synchronizer
             'remover' => $remover,
             'level' => $level
         ];
+    }
+
+    /**
+     * @param $qb
+     * @param $source
+     * @param $target
+     * @return array
+     */
+    private function priceAndPowerVerification($qb, $source, $target)
+    {
+        $power = $source->getPower();
+
+        if ($target == 'Project')
+            $price = $source->getCostPriceComponents();
+        else
+            $price = $source->getSubTotal();
+
+        return array_map('current',
+            $qb->where(
+                $qb->expr()->orX(
+                    $qb->expr()->gt('a.minPower', $power),
+                    $qb->expr()->lt('a.maxPower', $power),
+                    $qb->expr()->gt('a.minPrice', $price),
+                    $qb->expr()->lt('a.maxPrice', $price)
+                )
+            )->getQuery()->getResult()
+        );
     }
 }
