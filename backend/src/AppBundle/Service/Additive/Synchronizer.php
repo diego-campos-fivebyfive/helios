@@ -310,14 +310,17 @@ class Synchronizer
      */
     private function validate($source)
     {
-        if(!is_object($source))
+        if(!is_object($source)) {
             $this->exception('Invalid source object');
+        }
 
-        if(!method_exists($source, 'getLevel'))
+        if(!method_exists($source, 'getLevel')) {
             $this->exception('The object does not have the getLevel');
+        }
 
-        if(!$source->getLevel())
+        if(!$source->getLevel()) {
             $this->exception('Object level is invalid');
+        }
     }
 
     /**
@@ -334,8 +337,9 @@ class Synchronizer
      */
     private function getMetadata($source)
     {
-        if($this->metadata)
+        if($this->metadata){
             return $this->metadata;
+        }
 
         $class = get_class($source);
         $related = sprintf('%sAdditive', $class);
@@ -368,10 +372,12 @@ class Synchronizer
     {
         $power = $source->getPower();
 
-        if ($target == 'Project')
+        if ($target == 'Project') {
             $price = $source->getCostPriceComponents();
-        else
+        }
+        else {
             $price = $source->getSubTotal();
+        }
 
         return array_map('current',
             $qb->where(
