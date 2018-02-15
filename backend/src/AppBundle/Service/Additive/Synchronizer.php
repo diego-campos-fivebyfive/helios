@@ -154,6 +154,8 @@ class Synchronizer
 
         $qb->select('a')->from(Additive::class, 'a');
 
+        $offTheRule = $this->priceAndPowerVerification($qb, $source, $metadata['target']);
+
         $qb->where(
             $qb->expr()->like('a.requiredLevels',
                 $qb->expr()->literal('%"' . $level . '"%')
@@ -166,6 +168,10 @@ class Synchronizer
             );
         }
 
+        if ($offTheRule) {
+            $qb->andWhere($qb->expr()->notIn('a.id', $offTheRule));
+        }
+
         $additives = $qb->getQuery()->getResult();
 
         return $additives;
@@ -175,7 +181,7 @@ class Synchronizer
      * @param $source
      * @return array
      */
-    public function normalizeInsurances($source)
+    public function normalizeInsurances($source, $member)
     {
         $this->validate($source);
 
@@ -185,7 +191,7 @@ class Synchronizer
 
         $availableInsurances = $qb->getQuery()->getResult();
 
-        $this->resolveAssociations($source, $qb, $metadata, $availableInsurances);
+        $this->resolveAssociations($source, $qb, $metadata, $availableInsurances, $member);
 
         return $availableInsurances;
     }
@@ -196,8 +202,10 @@ class Synchronizer
      * @param $metadata
      * @param $availableInsurances
      */
-    private function resolveAssociations(&$source, $qb, $metadata, $availableInsurances)
+    private function resolveAssociations(&$source, $qb, $metadata, $availableInsurances, $member)
     {
+        $associationReleased = $member->isPlatformAdmin() or $member->isPlatformMaster();
+
         $collectionGetter = $metadata['getter'];
 
         /** @var \Doctrine\Common\Collections\ArrayCollection $associations */
@@ -220,20 +228,22 @@ class Synchronizer
         $sourceSetter = sprintf('set%s', $metadata['target']);
 
         foreach ($availableInsurances as $insurance) {
-            if (in_array($insurance->getId(), $insurancesRequiredId)) {
-                if (!in_array($insurance->getId(), $associationsAdditiveIds)) {
-                    /** @var AdditiveRelationTrait $association */
-                    $association = new $related();
+            $isRequired = in_array($insurance->getId(), $insurancesRequiredId);
+            $inAdditives = in_array($insurance->getId(), $associationsAdditiveIds);
 
-                    $association
-                        ->setAdditive($insurance)
-                        ->$sourceSetter($source)
-                    ;
-                }
+            if ($isRequired && !$inAdditives && !$associationReleased) {
+
+                /** @var AdditiveRelationTrait $association */
+                $association = new $related();
+
+                $association
+                    ->setAdditive($insurance)
+                    ->$sourceSetter($source);
             }
 
-            if (in_array($insurance->getId(), $associationsAdditiveIds))
+            if (in_array($insurance->getId(), $associationsAdditiveIds)) {
                 unset($associationsAdditiveIds[array_search($insurance->getId(), $associationsAdditiveIds)]);
+            }
         }
 
         $this->manager->persist($source);
@@ -273,25 +283,9 @@ class Synchronizer
 
         $qb->select('a.id')->from(Additive::class, 'a');
 
-        $power = $source->getPower();
-
-        if ($target == 'Project')
-            $price = $source->getCostPriceComponents();
-        else
-            $price = $source->getSubTotal();
-
         $level = $source->getLevel();
 
-        $offTheRule = array_map('current',
-            $qb->where(
-                $qb->expr()->orX(
-                    $qb->expr()->gt('a.minPower', $power),
-                    $qb->expr()->lt('a.maxPower', $power),
-                    $qb->expr()->gt('a.minPrice', $price),
-                    $qb->expr()->lt('a.maxPrice', $price)
-                )
-            )->getQuery()->getResult()
-        );
+        $offTheRule = $this->priceAndPowerVerification($qb, $source, $target);
 
         $qb->select('a')
             ->where(
@@ -304,8 +298,9 @@ class Synchronizer
         $qb->andWhere('a.type = :type')
             ->setParameter('type', Additive::TYPE_INSURANCE);
 
-        if ($offTheRule)
+        if ($offTheRule) {
             $qb->andWhere($qb->expr()->notIn('a.id', $offTheRule));
+        }
 
         return $qb;
     }
@@ -315,14 +310,17 @@ class Synchronizer
      */
     private function validate($source)
     {
-        if(!is_object($source))
+        if(!is_object($source)) {
             $this->exception('Invalid source object');
+        }
 
-        if(!method_exists($source, 'getLevel'))
+        if(!method_exists($source, 'getLevel')) {
             $this->exception('The object does not have the getLevel');
+        }
 
-        if(!$source->getLevel())
+        if(!$source->getLevel()) {
             $this->exception('Object level is invalid');
+        }
     }
 
     /**
@@ -339,8 +337,9 @@ class Synchronizer
      */
     private function getMetadata($source)
     {
-        if($this->metadata)
+        if($this->metadata){
             return $this->metadata;
+        }
 
         $class = get_class($source);
         $related = sprintf('%sAdditive', $class);
@@ -361,5 +360,34 @@ class Synchronizer
             'remover' => $remover,
             'level' => $level
         ];
+    }
+
+    /**
+     * @param $qb
+     * @param $source
+     * @param $target
+     * @return array
+     */
+    private function priceAndPowerVerification($qb, $source, $target)
+    {
+        $power = $source->getPower();
+
+        if ($target == 'Project') {
+            $price = $source->getCostPriceComponents();
+        }
+        else {
+            $price = $source->getSubTotal();
+        }
+
+        return array_map('current',
+            $qb->where(
+                $qb->expr()->orX(
+                    $qb->expr()->gt('a.minPower', $power),
+                    $qb->expr()->lt('a.maxPower', $power),
+                    $qb->expr()->gt('a.minPrice', $price),
+                    $qb->expr()->lt('a.maxPrice', $price)
+                )
+            )->getQuery()->getResult()
+        );
     }
 }

@@ -279,7 +279,7 @@ class OrderController extends AbstractController
     {
         $synchronizer = $this->get('additive_synchronizer');
 
-        $insurances = $synchronizer->normalizeInsurances($order);
+        $insurances = $synchronizer->normalizeInsurances($order, $this->member());
 
         return $this->render('admin/orders/insurances_list.html.twig', [
             'additives' => $insurances,
