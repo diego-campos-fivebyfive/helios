@@ -10,26 +10,30 @@
       tr.rows(slot='rows', v-for='coupon in coupons')
         td {{ coupon.name }}
         td {{ coupon.account }}
-        td {{ coupon.status }}
+        td {{ coupon.applied ? 'Aplicado' : 'Não Aplicado' }}
         td {{ coupon.amount }}
         td
           Button(
             type='primary-common',
             icon='pencil',
-            link='#linkB',
             pos='first')
           Button(
             type='danger-common',
             icon='trash',
-            link='#linkB',
-            pos='last')
+            pos='last',
+            v-on:click.native='remove(coupon.id)')
 </template>
 
 <script>
   export default {
     props: [
       'coupons'
-    ]
+    ],
+    methods: {
+      remove(id) {
+        this.axios.delete(`/api/v1/coupon/${id}`)
+      }
+    }
   }
 </script>
 

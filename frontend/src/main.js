@@ -20,7 +20,7 @@ Vue.component('Panel', Panel)
 Vue.component('Progress', Progress)
 Vue.component('Table', Table)
 
-/* eslint-disable no-new */
+/* eslint-disable no-new, no-console */
 new Vue({
   el: '#app',
   router,
@@ -39,6 +39,7 @@ new Vue({
     if (process.env.AMBIENCE === 'development') {
       this.$cookies.remove('PHPSESSID')
       this.$cookies.set('PHPSESSID', process.env.PHPSESSID)
+      console.log(`PHPSESSID: ${this.$cookies.get('PHPSESSID')}`)
     }
   }
 })
