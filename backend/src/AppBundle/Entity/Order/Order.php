@@ -275,6 +275,13 @@ class Order implements OrderInterface
     private $shippingRules;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(type="simple_array", name="invoices", nullable=true)
+     */
+    private $invoices;
+
+    /**
      * @var float
      *
      * @ORM\Column(type="float", nullable=true)
@@ -551,6 +558,7 @@ class Order implements OrderInterface
         $this->setStatus(self::STATUS_BUILDING);
         $this->source = self::SOURCE_ACCOUNT;
         $this->orderAdditives = new ArrayCollection();
+        $this->invoices = [];
         $this->financing = false;
         $this->normalizeFiles();
     }
@@ -2447,6 +2455,48 @@ class Order implements OrderInterface
         $this->normalizeFiles();
 
         return $type ? $this->files[$type] : $this->files ;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setInvoices($invoices)
+    {
+        $this->invoices = $invoices;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getInvoices()
+    {
+        return $this->invoices;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function addInvoice($invoice)
+    {
+        if (!in_array($invoice, $this->invoices)) {
+            $this->invoices[] = $invoice;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeInvoice($invoice)
+    {
+        $key = array_search($invoice, $this->invoices);
+
+        unset($this->invoices[$key]);
+
+        return $this;
     }
 
     /**

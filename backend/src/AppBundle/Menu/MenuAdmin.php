@@ -15,7 +15,7 @@ class MenuAdmin
             'allowedRoles' => '*'
         ],
         'accounts' => [
-            'name' => 'Accounts',
+            'name' => 'Contas',
             'route' => 'account_index',
             'icon' => 'accounts',
             'allowedRoles' => [
@@ -141,7 +141,7 @@ class MenuAdmin
             ]
         ],
        'settings' => [
-            'name' => 'Settings',
+            'name' => 'Configurações',
             'uri' => '#',
             'icon' => 'settings',
             'allowedRoles' => '*',
@@ -160,6 +160,22 @@ class MenuAdmin
                         'admin',
                         'master'
                     ]
+                ]
+            ]
+        ],
+        'metrics' => [
+            'name' => 'Métricas',
+            'uri' => '#',
+            'icon' => 'area-chart',
+            'allowedRoles' => [
+                'master'
+            ],
+            'subItems' => [
+                'product' => [
+                    'name' => 'Técnicas',
+                    'link' => '/metrics',
+                    'icon' => 'coffee',
+                    'allowedRoles' => '*'
                 ]
             ]
         ]

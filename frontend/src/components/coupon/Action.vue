@@ -15,6 +15,10 @@ form
       | Conta
       select(v-model='coupon.account')
         option(value='') Não vinculada
+        option(
+          v-for='account in accounts',
+          :value='account.id')
+          | {{ account.name }}
 </template>
 
 <script>
@@ -24,8 +28,14 @@ form
         name: '',
         amount: '',
         account: ''
-      }
+      },
+      accounts: []
     }),
+    mounted() {
+      this.axios.get('api/v1/account/available').then(response => {
+        this.accounts = response.data
+      })
+    },
     methods: {
       send() {
         this.axios.post('api/v1/coupon/', this.coupon)

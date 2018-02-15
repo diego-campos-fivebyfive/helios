@@ -1,12 +1,12 @@
-import Icon from 'vue-awesome/components/Icon'
-import 'vue-awesome/icons'
-
 import Button from '@/components/collection/Button'
 import Page from '@/components/collection/Page'
 import Panel from '@/components/collection/Panel'
 import Modal from '@/components/collection/Modal'
 import Progress from '@/components/collection/Progress'
 import Table from '@/components/collection/Table'
+
+import Icon from 'vue-awesome/components/Icon'
+import '@/assets/script/icons'
 
 import Vue from 'vue'
 import App from './App'
@@ -20,13 +20,12 @@ Vue.component('Panel', Panel)
 Vue.component('Progress', Progress)
 Vue.component('Table', Table)
 
-/* eslint-disable no-new */
+/* eslint-disable no-new, no-console */
 new Vue({
   el: '#app',
   router,
   components: {
     App,
-    Icon,
     Button,
     Modal,
     Page,
@@ -40,6 +39,7 @@ new Vue({
     if (process.env.AMBIENCE === 'development') {
       this.$cookies.remove('PHPSESSID')
       this.$cookies.set('PHPSESSID', process.env.PHPSESSID)
+      console.log(`PHPSESSID: ${this.$cookies.get('PHPSESSID')}`)
     }
   }
 })
