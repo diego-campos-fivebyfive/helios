@@ -651,8 +651,11 @@ class ProjectGeneratorController extends AbstractController
      */
     private function synchronizerOrder(OrderInterface $order)
     {
-        foreach ($order->getChildrens() as $children) {
-            $this->get('additive_synchronizer')->synchronize($children);
+        if (!$this->user()->isPlatformAdmin() && !$this->user()->isPlatformMaster()) {
+            foreach ($order->getChildrens() as $children) {
+                $this->get('additive_synchronizer')->synchronize($children);
+            }
         }
+
     }
 }
