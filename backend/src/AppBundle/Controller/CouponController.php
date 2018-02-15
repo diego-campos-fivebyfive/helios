@@ -10,7 +10,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
+use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @Route("api/v1/coupon")
@@ -64,8 +65,31 @@ class CouponController extends AbstractController
         $amount = $request->request->get('amount');
         $accountId = $request->request->get('account');
 
-        $accountManager = $this->manager('account');
-        $account = $accountManager->findOneBy([
+        $validator = Validation::createValidator();
+
+        $constraint = new Assert\Collection([
+            'name' => new Assert\Length(['max' => 255,
+                'maxMessage' => 'Nome de cupom muito extenso'
+            ]),
+            'amount' => new Assert\Range([
+                'min' => 0,
+                'minMessage' => 'O valor informado não é válido',
+                'invalidMessage' => 'O valor não está no formato correto'
+            ])
+        ]);
+
+        $violations = $validator->validate(['name' => $name, 'amount'=> $amount], $constraint);
+
+        $errors = [];
+        foreach ($violations as $violation) {
+            $errors[$violation->getPropertyPath()] = $violation->getMessage();
+        }
+
+        if ($violations->count()) {
+            return $this->json($errors, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $account = $this->manager('account')->findOneBy([
             'id' => $accountId,
             'context' => BusinessInterface::CONTEXT_ACCOUNT
         ]);
