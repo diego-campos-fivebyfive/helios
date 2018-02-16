@@ -1,13 +1,32 @@
 <?php
 
+/*
+ * This file is part of the SicesSolar package.
+ *
+ * (c) SicesSolar <http://sicesbrasil.com.br/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Sices\Persistence;
 
+/**
+ * This class provides the independent basic connection for crud operations
+ *
+ * @author Claudinei Machado <cjchamado@gmail.com>
+ */
 class Connection
 {
     /**
      * @var \PDO
      */
     private $pdo;
+
+    /**
+     * @var Connection
+     */
+    private static $instance;
 
     /**
      * Connection constructor.
@@ -27,6 +46,25 @@ class Connection
 
         $this->pdo = new \PDO($dsn, $user, $pass);
         $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+
+        self::$instance = $this;
+    }
+
+    /**
+     * @param $table
+     * @param string|null $criteria
+     * @param array $params
+     * @return array
+     */
+    public function select($table, string $criteria = null, array $params = [])
+    {
+        $sql = SQLFormatter::select($table, $criteria);
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->execute($params);
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     /**
@@ -38,14 +76,7 @@ class Connection
     {
         $fields = array_keys($data);
 
-        //$sql = sprintf('INSERT INTO %s (%s) VALUES (%s)', $table, implode(', ', $fields), '%s');
-        $sql = SQLFormatter::formatInsert($table, $data);
-
-        array_walk($fields, function(&$field){
-            $field = ':' . $field;
-        });
-
-        $sql = sprintf($sql, implode(', ', $fields), '%s');
+        $sql = SQLFormatter::insert($table, $data);
 
         $stmt = $this->pdo->prepare($sql);
 
@@ -54,9 +85,57 @@ class Connection
         return $stmt->execute($params);
     }
 
-    public function update($table, array $data)
+    /**
+     * @param $table
+     * @param array $data
+     * @param int|null $id
+     * @return int
+     */
+    public function update($table, array $data, int $id = null)
     {
+        $params = [];
 
+        $setFields = SQLFormatter::bindEquals($data);
+        $setSQL = implode(', ', $setFields);
+
+        $updateSQL = sprintf('UPDATE %s SET %s', $table, $setSQL);
+
+        if($id) {
+            $updateSQL .= sprintf(' WHERE id = :id');
+            $params[':id'] = $id;
+        }
+
+        foreach ($data as $field => $value){
+            $params[":{$field}"] = $value;
+        }
+
+        $stmt = $this->pdo->prepare($updateSQL);
+
+        $stmt->execute($params);
+
+        return $stmt->rowCount();
+    }
+
+    /**
+     * @param $table
+     * @param $id
+     * @return bool
+     */
+    public function delete($table, $id)
+    {
+        $sql = "DELETE FROM {$table} WHERE id = :id";
+
+        $stmt = $this->pdo->prepare($sql);
+
+        return $stmt->execute(['id' => $id]);
+    }
+
+    /**
+     * @return string
+     */
+    public function lastInsertId()
+    {
+        return $this->pdo->lastInsertId();
     }
 
     /**
@@ -65,6 +144,6 @@ class Connection
      */
     public static function create(array $config = [])
     {
-        return new self($config);
+        return self::$instance ? self::$instance : new self($config);
     }
 }
