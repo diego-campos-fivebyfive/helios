@@ -13,7 +13,7 @@
   "disallowTagInterpolation": true,
   "disallowTrailingSpaces": true,
   "maximumLineLength": 80,
-  "maximumNumberOfLines": 30,
+  "maximumNumberOfLines": 40,
   "requireClassLiteralsBeforeAttributes": true,
   "requireSpacesInsideAttributeBrackets": true,
   "requireStrictEqualityOperators": true,

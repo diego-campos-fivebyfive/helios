@@ -1,14 +1,14 @@
 <template lang="pug">
-  .page(:class='sidebar')
+  .colletion-page(:class='sidebar')
     Sidebar(v-if='showSidebar')
-    main.main
+    main.colletion-page-main
       Mainbar(v-if='showMainbar')
       slot
 </template>
 
 <script>
-  import Sidebar from '@/components/sidebar'
-  import Mainbar from '@/components/mainbar'
+  import Sidebar from '@/components/template/sidebar'
+  import Mainbar from '@/components/template/mainbar'
 
   export default {
     props: [
@@ -30,8 +30,8 @@
   }
 </script>
 
-<style lang="scss" scoped>
-  .page {
+<style lang="scss">
+  .colletion-page {
     max-width: 100%;
     min-height: 100vh;
     position: relative;
@@ -41,7 +41,7 @@
     }
   }
 
-  .main {
+  .colletion-page-main {
     @include clearfix;
   }
 </style>

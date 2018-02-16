@@ -1,10 +1,10 @@
 <template lang="pug">
-  .modal(v-show='open')
-    header
+  .collection-modal(v-show='open')
+    header.collection-modal-header
       slot(name='header')
-    section
+    section.collection-modal-section
       slot(name='section')
-    footer.footer
+    footer.collection-modal-footer
       Button(
         v-on:click.native='closeModal',
         icon='times-circle-o',
@@ -25,8 +25,8 @@
   }
 </script>
 
-<style lang="scss" scoped>
-  .modal {
+<style lang="scss">
+  .collection-modal {
     bottom: 0;
     color: $ui-text-main;
     left: 0;
@@ -50,41 +50,43 @@
     }
   }
 
-  footer,
-  header,
-  section {
+  .collection-modal-footer,
+  .collection-modal-header,
+  .collection-modal-section {
     background-color: $ui-white-regular;
     padding: $ui-space-y $ui-space-x/2;
   }
 
-  section {
+  .collection-modal-header {
+    .title {
+      font-size: 1.75rem;
+      font-weight: 300;
+
+      .sub {
+        display: block;
+        font-size: 1rem;
+        font-style: italic;
+        font-weight: 400;
+        padding-top: $ui-space-y/1.5;
+      }
+    }
+  }
+
+  .collection-modal-section {
     background-color: #f8fafb;
     border-bottom: $ui-space-y/10 solid $ui-divider-color;
     border-top: $ui-space-y/10 solid $ui-divider-color;
-  }
 
-  .title {
-    font-size: 1.75rem;
-    font-weight: 300;
+    .list {
+      padding-left: $ui-space-x/2;
 
-    .sub {
-      display: block;
-      font-size: 1rem;
-      font-style: italic;
-      font-weight: 400;
-      padding-top: $ui-space-y/1.5;
+      li {
+        padding: $ui-space-y/5 0;
+      }
     }
   }
 
-  .list {
-    padding-left: $ui-space-x/2;
-
-    li {
-      padding: $ui-space-y/5 0;
-    }
-  }
-
-  .footer {
+  .collection-modal-footer {
     display: flex;
     justify-content: space-between;
   }

@@ -1,6 +1,9 @@
 <template lang="pug">
   div
-    Table.table(type='striped')
+    ModalConfirm(
+      ref='modalConfirm',
+      v-on:removeCoupon='removeCoupon')
+    Table.table(type='stripped')
       tr(slot='head')
         th Nome
         th Conta
@@ -21,19 +24,28 @@
             type='danger-common',
             icon='trash',
             pos='last',
-            v-on:click.native='remove(coupon.id)')
+            v-on:click.native='showModalConfirm(coupon)')
 </template>
 
 <script>
+  import ModalConfirm from './ModalConfirm'
+
   export default {
+    components: {
+      ModalConfirm
+    },
     props: [
       'coupons'
     ],
     methods: {
-      remove(id) {
+      showModalConfirm(coupon) {
+        this.$refs.modalConfirm.showActionModal(coupon)
+      },
+      removeCoupon(id) {
         this.axios.delete(`/api/v1/coupon/${id}`)
           .then(() => {
-            this.$emit('reload')
+            this.$emit('getCoupons')
+            this.$refs.modalConfirm.closeActionModal()
           })
       }
     }

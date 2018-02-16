@@ -1,45 +1,64 @@
 <template lang="pug">
-form
-  fieldset.fields
-    label.half
-      | Nome
-      input(
-        placeholder='Nome',
-        v-model='coupon.name')
-    label.half
-      | Valor
-      input(
-        placeholder='Valor',
-        v-model='coupon.amount')
-    label.full
-      | Conta
-      select(v-model='coupon.account')
-        option(value='') Não vinculada
-        option(
-          v-for='account in accounts',
-          :value='account.id')
-          | {{ account.name }}
+  Modal(:open='modal.open', v-on:close='modal.open = false')
+    h1.title(slot='header')
+    | Novo Cupom
+    form(slot='section', ref='send')
+      fieldset.fields
+        label.half
+          | Nome
+          input(
+            placeholder='Nome',
+            v-model='coupon.name')
+        label.half
+          | Valor
+          input(
+            placeholder='Valor',
+            v-model='coupon.amount')
+        label.full
+          | Conta
+          select(v-model='coupon.account')
+            option(value='') Não vinculada
+            option(
+              v-for='account in accounts',
+              :value='account.id')
+              | {{ account.name }}
+    Button(
+      slot='buttons',
+      icon='save',
+      type='primary-strong',
+      label='Salvar',
+      pos='single',
+      v-on:click.native='createCoupon')
 </template>
 
 <script>
   export default {
     data: () => ({
+      accounts: [],
       coupon: {
         name: '',
         amount: '',
         account: ''
       },
-      accounts: []
+      modal: {
+        open: false
+      }
     }),
+    methods: {
+      createCoupon() {
+        this.axios.post('api/v1/coupon/', this.coupon).then(() => {
+          this.$emit('getCoupons')
+          this.modal.open = false
+        })
+      },
+      showActionModal() {
+        this.modal.open = true
+      }
+    },
     mounted() {
       this.axios.get('api/v1/account/available').then(response => {
         this.accounts = response.data
       })
-    },
-    methods: {
-      send() {
-        this.axios.post('api/v1/coupon/', this.coupon)
-      }
     }
   }
 </script>

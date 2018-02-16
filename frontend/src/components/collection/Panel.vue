@@ -1,19 +1,19 @@
 <template lang="pug">
-  .panel
-    header
+  .collection-panel
+    header.collection-panel-header
       slot(name='header')
-    section
+    section.collection-panel-section
       slot(name='section')
     footer
       slot(name='footer')
 </template>
 
 <script>
-
+  /* Panel Script */
 </script>
 
-<style lang="scss" scoped>
-  .panel {
+<style lang="scss">
+  .collection-panel {
     background-color: $ui-white-regular;
     color: $ui-text-main;
     display: block;
@@ -22,7 +22,7 @@
     width: calc(100% - #{$ui-space-x});
   }
 
-  header {
+  .collection-panel-header {
     border-top: $ui-space-y/5 solid $ui-divider-color;
     padding: $ui-space-y $ui-space-x/2;
     text-align: right;
@@ -32,36 +32,36 @@
     * {
       vertical-align: middle;
     }
-  }
 
-  .title {
-    float: left;
-    font-size: 1.75rem;
-    font-weight: 300;
-    text-align: left;
+    .title {
+      float: left;
+      font-size: 1.75rem;
+      font-weight: 300;
+      text-align: left;
 
-    .sub {
-      display: block;
-      font-size: 1rem;
-      font-style: italic;
+      .sub {
+        display: block;
+        font-size: 1rem;
+        font-style: italic;
+        font-weight: 400;
+        padding-top: $ui-space-y/1.5;
+      }
+    }
+
+    .info {
+      display: inline;
+      font-size: 1.25rem;
       font-weight: 400;
-      padding-top: $ui-space-y/1.5;
+      margin: 0 $ui-space-x;
+      opacity: 0.8;
+    }
+
+    .menu {
+      display: inline;
     }
   }
 
-  .info {
-    display: inline;
-    font-size: 1.25rem;
-    font-weight: 400;
-    margin: 0 $ui-space-x;
-    opacity: 0.8;
-  }
-
-  .menu {
-    display: inline;
-  }
-
-  section {
+  .collection-panel-section {
     border-top: $ui-space-y/10 solid $ui-divider-color;
     padding: $ui-space-y $ui-space-x/2;
   }

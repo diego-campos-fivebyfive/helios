@@ -28,6 +28,7 @@ class CouponController extends AbstractController
     public function indexAction(Request $request)
     {
         $qb = $this->manager('coupon')->createQueryBuilder();
+        $qb->orderBy('c.id', 'DESC');
 
         if (!empty($accounts = $request->get('account'))) {
             $arrayAccounts = array_filter(explode(',', $accounts));
