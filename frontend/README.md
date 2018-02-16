@@ -30,3 +30,45 @@ FRONTEND
     ```
     $ export SICES_PHPSESSID=3fhdfl9r6dgautom48ls4eg064
     ```
+
+3. Codding style
+
+  Classes should define objects instead of functions:
+  ```
+  // Good
+  .title {
+    text-align: left;
+  }
+
+  // Bad
+  .left {
+    text-align: left;
+  }
+  ```
+
+4. Structure
+
+  Components
+  |- Collection
+  |- Template
+  |- Pages
+
+  - 4.1. Collection:
+
+    - Uses BEM nomenclatures to own elements classes
+    - All component's BEM element classes must be prefixed by `.collection-`
+    - Does not use BEM nomenclatures to default style to external elements classes
+    - Default styles to external elements classes must be placed inside own BEM classes
+    - Uses no scoped styles
+
+  - 4.2. Template:
+
+    - All parts that are not pages
+    - Uses scoped styles
+    - Does not use BEM nomenclatures
+
+  - 4.3. Pages:
+
+    - All routed components (`router-vue`)
+    - Uses scoped styles
+    - Does not use BEM nomenclatures
