@@ -32,6 +32,9 @@
     methods: {
       remove(id) {
         this.axios.delete(`/api/v1/coupon/${id}`)
+          .then(() => {
+            this.$emit('reload')
+          })
       }
     }
   }

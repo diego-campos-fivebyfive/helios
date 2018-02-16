@@ -22,7 +22,7 @@
             label='Novo Cupom',
             pos='single',
             v-on:click.native='showActionModal')
-      Content(slot='section', :coupons='coupons')
+      Content(slot='section', :coupons='coupons', v-on:reload='getCoupons')
 </template>
 
 <script>
@@ -40,18 +40,21 @@
         open: false
       }
     }),
-    mounted() {
-      this.axios.get('/api/v1/coupon/').then(response => {
-        this.coupons = response.data.results
-      })
-    },
     methods: {
       showActionModal() {
         this.modal.open = true
       },
       send() {
         this.$refs.action.send()
+      },
+      getCoupons() {
+        this.axios.get('/api/v1/coupon/').then(response => {
+          this.coupons = response.data.results
+        })
       }
+    },
+    mounted() {
+      this.getCoupons()
     }
   }
 </script>
