@@ -1,28 +1,28 @@
 <template lang="pug">
   Page(sidebar='common', mainbar='common')
-    ModalForm(ref='modalForm', v-on:reload='getCoupons')
+    ModalForm(
+      ref='modalForm',
+      v-on:getCoupons='getCoupons')
     Panel.panel
-      div(slot='header')
-        h2.title
-          | Gerenciamento de Cupons
-        nav.menu
-          Button(
-            type='primary-common',
-            icon='plus-square',
-            label='Novo Cupom',
-            pos='single',
-            v-on:click.native='showModalForm')
-      Content(slot='section', :coupons='coupons', v-on:reload='getCoupons')
+      Head(
+        slot='header',
+        v-on:showModalForm='showModalForm')
+      Content(
+        slot='section',
+        :coupons='coupons',
+        v-on:getCoupons='getCoupons')
 </template>
 
 <script>
-  import ModalForm from '@/components/coupon/ModalForm'
   import Content from '@/components/coupon/Content'
+  import Head from '@/components/coupon/Head'
+  import ModalForm from '@/components/coupon/ModalForm'
 
   export default {
     components: {
-      ModalForm,
-      Content
+      Content,
+      Head,
+      ModalForm
     },
     data: () => ({
       coupons: []
@@ -44,7 +44,5 @@
 </script>
 
 <style lang="scss" scoped>
-  .title {
-    text-align: center;
-  }
+  /* Coupon Style */
 </style>

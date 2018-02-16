@@ -28,7 +28,7 @@
       type='primary-strong',
       label='Salvar',
       pos='single',
-      v-on:click.native='send')
+      v-on:click.native='createCoupon')
 </template>
 
 <script>
@@ -45,9 +45,9 @@
       }
     }),
     methods: {
-      send() {
+      createCoupon() {
         this.axios.post('api/v1/coupon/', this.coupon).then(() => {
-          this.$emit('reload')
+          this.$emit('getCoupons')
           this.modal.open = false
         })
       },
