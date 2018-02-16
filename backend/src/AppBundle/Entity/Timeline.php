@@ -53,7 +53,7 @@ class Timeline implements TimelineInterface
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="createdAt", type="datetime", nullable=true)
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
      */
     private $createdAt;
 
