@@ -4,10 +4,10 @@ import axios from 'axios'
 import Router from 'vue-router'
 import VueCookies from 'vue-cookies'
 
-import Account from '@/components/pages/Account'
+import Account from '@/components/pages/account'
 import Coupon from '@/components/pages/coupon'
 import Metric from '@/components/pages/metric'
-import NotFound from '@/components/pages/NotFound'
+import NotFound from '@/components/pages/notfound'
 
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 axios.defaults.headers.common['Content-Type'] = 'application/json'

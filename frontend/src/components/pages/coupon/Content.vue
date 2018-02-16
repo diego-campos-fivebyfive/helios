@@ -19,7 +19,8 @@
           Button(
             type='primary-common',
             icon='pencil',
-            pos='first')
+            pos='first',
+            v-on:click.native='showModalForm(coupon)')
           Button(
             type='danger-common',
             icon='trash',
@@ -38,6 +39,9 @@
       'coupons'
     ],
     methods: {
+      showModalForm(coupon) {
+        this.$emit('showModalForm', 'edit', coupon)
+      },
       showModalConfirm(coupon) {
         this.$refs.modalConfirm.showActionModal(coupon)
       },

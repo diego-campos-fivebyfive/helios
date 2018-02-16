@@ -10,7 +10,8 @@
       Content(
         slot='section',
         :coupons='coupons',
-        v-on:getCoupons='getCoupons')
+        v-on:getCoupons='getCoupons',
+        v-on:showModalForm='showModalForm')
 </template>
 
 <script>
@@ -28,8 +29,8 @@
       coupons: []
     }),
     methods: {
-      showModalForm() {
-        this.$refs.modalForm.showActionModal()
+      showModalForm(action, coupon) {
+        this.$refs.modalForm.showActionModal(action, coupon)
       },
       getCoupons() {
         this.axios.get('/api/v1/coupon/').then(response => {
