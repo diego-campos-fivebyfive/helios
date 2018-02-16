@@ -4,7 +4,7 @@
 {% for additive in additives %}
     {% set hasAdditive = order.hasAdditive(additive) %}
     {% if additive.enabled or hasAdditive %}
-    {% set insuranceEdit = additive.isRequiredByLevel(order.level) and not app.user.isPlatformAdmin or app.user.isPlatformMaster %}
+    {% set insuranceEdit = additive.isRequiredByLevel(order.level) and not app.user.isPlatformAdmin and not app.user.isPlatformMaster %}
 
 
         <div class="row">

@@ -4,7 +4,7 @@
 {% for insurance in insurances %}
     {% set hasAdditive = project.hasAdditive(insurance) %}
     {% if hasAdditive or insurance.enabled %}
-    {% set insuranceEdit = insurance.isRequiredByLevel(project.level) and not app.user.isPlatformAdmin or app.user.isPlatformMaster %}
+    {% set insuranceEdit = insurance.isRequiredByLevel(project.level) and not app.user.isPlatformAdmin and not app.user.isPlatformMaster %}
 
     <div class="row">
         <div class="form-group col-md-8">
