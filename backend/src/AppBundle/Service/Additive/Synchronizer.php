@@ -204,7 +204,7 @@ class Synchronizer
      */
     private function resolveAssociations(&$source, $qb, $metadata, $availableInsurances, $member)
     {
-        $associationReleased = $member->isPlatformAdmin() or $member->isPlatformMaster();
+        $associationReleased = ($member->isPlatformAdmin() || $member->isPlatformMaster());
 
         $collectionGetter = $metadata['getter'];
 
