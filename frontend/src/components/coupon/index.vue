@@ -40,9 +40,6 @@
         open: false
       }
     }),
-    mounted() {
-      this.getCoupons()
-    },
     methods: {
       showActionModal() {
         this.modal.open = true
@@ -55,6 +52,9 @@
           this.coupons = response.data.results
         })
       }
+    },
+    mounted() {
+      this.getCoupons()
     }
   }
 </script>
