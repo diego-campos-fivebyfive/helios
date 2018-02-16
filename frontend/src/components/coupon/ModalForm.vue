@@ -47,6 +47,7 @@
     methods: {
       send() {
         this.axios.post('api/v1/coupon/', this.coupon).then(() => {
+          this.$emit('reload')
           this.modal.open = false
         })
       },

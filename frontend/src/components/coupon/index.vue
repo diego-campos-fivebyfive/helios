@@ -1,16 +1,6 @@
 <template lang="pug">
   Page(sidebar='common', mainbar='common')
-    Modal(:open='modal.open', v-on:close='modal.open = false')
-      h1.title(slot='header')
-        | Novo Cupom
-      Action(slot='section', ref='action')
-      Button(
-        slot='buttons',
-        icon='save',
-        type='primary-strong',
-        label='Salvar',
-        pos='single',
-        v-on:click.native='send')
+    ModalForm(ref='modalForm', v-on:reload='getCoupons')
     Panel.panel
       div(slot='header')
         h2.title
@@ -21,31 +11,25 @@
             icon='plus-square',
             label='Novo Cupom',
             pos='single',
-            v-on:click.native='showActionModal')
+            v-on:click.native='showModalForm')
       Content(slot='section', :coupons='coupons', v-on:reload='getCoupons')
 </template>
 
 <script>
-  import Action from '@/components/coupon/Action'
+  import ModalForm from '@/components/coupon/ModalForm'
   import Content from '@/components/coupon/Content'
 
   export default {
     components: {
-      Action,
+      ModalForm,
       Content
     },
     data: () => ({
-      coupons: [],
-      modal: {
-        open: false
-      }
+      coupons: []
     }),
     methods: {
-      showActionModal() {
-        this.modal.open = true
-      },
-      send() {
-        this.$refs.action.send()
+      showModalForm() {
+        this.$refs.modalForm.showActionModal()
       },
       getCoupons() {
         this.axios.get('/api/v1/coupon/').then(response => {
