@@ -1,17 +1,17 @@
 <template lang="pug">
-  router-link.button(
+  router-link.collection-button(
     v-if='link && !refresh',
     :to='link',
     :class='[type, pos, { labeled: label }]')
     Icon(v-if='icon', :name='icon')
     | {{ label }}
-  a.button(
+  a.collection-button(
     v-else-if='link && refresh',
     :href='link',
     :class='[type, pos, { labeled: label }]')
     Icon(v-if='icon', :name='icon')
     | {{ label }}
-  button.button(
+  button.collection-button(
     v-else,
     type='button',
     :class='[type, pos, { labeled: label }]')
@@ -25,65 +25,65 @@
   }
 </script>
 
-<style lang="scss" scoped>
-  .button {
+<style lang="scss">
+  .collection-button {
     display: inline-block;
     font-size: 1.1rem;
     padding: $ui-space-y/2 $ui-space-x/2;
     vertical-align: middle;
-  }
 
-  svg {
-    vertical-align: sub;
-  }
-
-  .primary-common {
-    background-color: $ui-blue-light;
-    color: $ui-white-regular;
-  }
-
-  .primary-strong {
-    background-color: $ui-blue-dark;
-    color: $ui-white-regular;
-  }
-
-  .danger-common {
-    background-color: $ui-red-lighter;
-    color: $ui-white-regular;
-  }
-
-  .default-common {
-    background-color: $ui-white-regular;
-    color: $ui-gray-regular;
-  }
-
-  .default-bordered {
-    background-color: $ui-white-regular;
-    border: 1px solid $ui-gray-light;
-    color: $ui-text-main;
-  }
-
-  .labeled {
     svg {
-      margin-right: $ui-space-x/3;
+      vertical-align: sub;
     }
-  }
 
-  .first {
-    border-top-left-radius: $ui-corner;
-    border-bottom-left-radius: $ui-corner;
-  }
+    &.primary-common {
+      background-color: $ui-blue-light;
+      color: $ui-white-regular;
+    }
 
-  .middle {
-    border-radius: 0;
-  }
+    &.primary-strong {
+      background-color: $ui-blue-dark;
+      color: $ui-white-regular;
+    }
 
-  .last {
-    border-top-right-radius: $ui-corner;
-    border-bottom-right-radius: $ui-corner;
-  }
+    &.danger-common {
+      background-color: $ui-red-lighter;
+      color: $ui-white-regular;
+    }
 
-  .single {
-    border-radius: $ui-corner;
+    &.default-common {
+      background-color: $ui-white-regular;
+      color: $ui-gray-regular;
+    }
+
+    &.default-bordered {
+      background-color: $ui-white-regular;
+      border: 1px solid $ui-gray-light;
+      color: $ui-text-main;
+    }
+
+    &.labeled {
+      svg {
+        margin-right: $ui-space-x/3;
+      }
+    }
+
+    &.first {
+      border-top-left-radius: $ui-corner;
+      border-bottom-left-radius: $ui-corner;
+    }
+
+    &.middle {
+      border-radius: 0;
+    }
+
+    &.last {
+      border-top-right-radius: $ui-corner;
+      border-bottom-right-radius: $ui-corner;
+    }
+
+    &.single {
+      border-radius: $ui-corner;
+    }
   }
 </style>
