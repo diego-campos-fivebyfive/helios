@@ -60,11 +60,7 @@ class Connection
     {
         $sql = SQLFormatter::select($table, $criteria);
 
-        $stmt = $this->pdo->prepare($sql);
-
-        $stmt->execute($params);
-
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $this->execute($sql, $params);
     }
 
     /**
@@ -78,11 +74,9 @@ class Connection
 
         $sql = SQLFormatter::insert($table, $data);
 
-        $stmt = $this->pdo->prepare($sql);
-
         $params = array_combine($fields, array_values($data));
 
-        return $stmt->execute($params);
+        return $this->execute($sql, $params);
     }
 
     /**
@@ -98,10 +92,10 @@ class Connection
         $setFields = SQLFormatter::bindEquals($data);
         $setSQL = implode(', ', $setFields);
 
-        $updateSQL = sprintf('UPDATE %s SET %s', $table, $setSQL);
+        $sql = sprintf('UPDATE %s SET %s', $table, $setSQL);
 
         if($id) {
-            $updateSQL .= sprintf(' WHERE id = :id');
+            $sql .= sprintf(' WHERE id = :id');
             $params[':id'] = $id;
         }
 
@@ -109,11 +103,7 @@ class Connection
             $params[":{$field}"] = $value;
         }
 
-        $stmt = $this->pdo->prepare($updateSQL);
-
-        $stmt->execute($params);
-
-        return $stmt->rowCount();
+        return $this->execute($sql, $params);
     }
 
     /**
@@ -125,9 +115,7 @@ class Connection
     {
         $sql = "DELETE FROM {$table} WHERE id = :id";
 
-        $stmt = $this->pdo->prepare($sql);
-
-        return $stmt->execute(['id' => $id]);
+        return $this->execute($sql, ['id' => $id]);
     }
 
     /**
@@ -145,5 +133,34 @@ class Connection
     public static function create(array $config = [])
     {
         return self::$instance ? self::$instance : new self($config);
+    }
+
+    /**
+     * @param $sql
+     * @param array $params
+     * @return array|bool|int
+     */
+    private function execute($sql, array $params = [])
+    {
+        $operation = trim(substr($sql, 0, strpos($sql, ' ')));
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $result = $stmt->execute($params);
+
+        switch ($operation){
+            case 'SELECT':
+                $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+                break;
+            case 'UPDATE':
+                $result = $stmt->rowCount();
+                break;
+            case 'INSERT':
+            case 'DELETE':
+                // Default result
+                break;
+        }
+
+        return $result;
     }
 }
