@@ -18,7 +18,7 @@ namespace App\Sices\Cache;
 class JsonCache
 {
     /** @var array */
-    private $data;
+    private $data = [];
 
     /** @var string */
     private $path;
@@ -30,8 +30,6 @@ class JsonCache
     function __construct($context)
     {
         $this->path = dirname(__FILE__).'/'.$context.'.cache';
-
-        $this->data = [];
 
         $this->load();
     }
