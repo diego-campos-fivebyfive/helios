@@ -55,11 +55,36 @@ FRONTEND
 
   - 4.1. Collection:
 
+    - Uses no scoped styles
     - Uses BEM nomenclatures to own elements classes
     - All component's BEM element classes must be prefixed by `.collection-`
+    - All BEM elements must not uses nesting
     - Does not use BEM nomenclatures to default style to external elements classes
     - Default styles to external elements classes must be placed inside own BEM classes
-    - Uses no scoped styles
+      - Default component's types that uses BEM elements inside, should be declared using placeholder
+      ```
+      // Bad
+      .collection-table {
+        .stripped {
+          .collection-table-header {
+            //some code
+          }
+        }
+      }
+
+      // Good
+      %stripped {
+        .collection-table-header {
+          //some code
+        }
+      }
+
+      .collection-table {
+        &.stripped {
+          @extend %stripped;
+        }
+      }
+      ```
 
   - 4.2. Template:
 
