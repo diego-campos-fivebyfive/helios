@@ -14,9 +14,9 @@
 </template>
 
 <script>
-  import Content from '@/components/coupon/Content'
-  import Head from '@/components/coupon/Head'
-  import ModalForm from '@/components/coupon/ModalForm'
+  import Content from './Content'
+  import Head from './Head'
+  import ModalForm from './ModalForm'
 
   export default {
     components: {

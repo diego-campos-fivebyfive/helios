@@ -28,7 +28,7 @@
 </template>
 
 <script>
-  import ModalConfirm from '@/components/coupon/ModalConfirm'
+  import ModalConfirm from './ModalConfirm'
 
   export default {
     components: {

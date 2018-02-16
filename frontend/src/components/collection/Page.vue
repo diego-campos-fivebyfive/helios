@@ -7,8 +7,8 @@
 </template>
 
 <script>
-  import Sidebar from '@/components/sidebar'
-  import Mainbar from '@/components/mainbar'
+  import Sidebar from '@/components/template/sidebar'
+  import Mainbar from '@/components/template/mainbar'
 
   export default {
     props: [

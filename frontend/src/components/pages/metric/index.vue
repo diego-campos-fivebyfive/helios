@@ -8,7 +8,7 @@
 </template>
 
 <script>
-  import Content from '@/components/metric/Content'
+  import Content from './Content'
 
   export default {
     components: {
