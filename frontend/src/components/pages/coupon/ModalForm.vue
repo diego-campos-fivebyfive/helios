@@ -28,30 +28,40 @@
       type='primary-strong',
       label='Salvar',
       pos='single',
-      v-on:click.native='createCoupon')
+      v-on:click.native='sendCoupon')
 </template>
 
 <script>
   export default {
     data: () => ({
       accounts: [],
-      coupon: {
-        name: '',
-        amount: '',
-        account: ''
-      },
+      coupon: {},
       modal: {
+        action: '',
         open: false
       }
     }),
     methods: {
       createCoupon() {
-        this.axios.post('api/v1/coupon/', this.coupon).then(() => {
+        return this.axios.post('api/v1/coupon/', this.coupon)
+      },
+      editCoupon() {
+        const uri = `api/v1/coupon/${this.coupon.id}`
+        return this.axios.put(uri, this.coupon)
+      },
+      sendCoupon() {
+        const send = (this.modal.action === 'create')
+          ? this.createCoupon
+          : this.editCoupon
+
+        send().then(() => {
           this.$emit('getCoupons')
           this.modal.open = false
         })
       },
-      showActionModal() {
+      showActionModal(action, coupon = {}) {
+        this.coupon = coupon
+        this.modal.action = action
         this.modal.open = true
       }
     },

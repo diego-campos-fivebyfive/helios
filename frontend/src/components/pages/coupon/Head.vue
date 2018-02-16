@@ -15,7 +15,7 @@
   export default {
     methods: {
       showModalForm() {
-        this.$emit('showModalForm')
+        this.$emit('showModalForm', 'create')
       }
     }
   }
