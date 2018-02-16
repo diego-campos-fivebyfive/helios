@@ -1,7 +1,9 @@
 <template lang="pug">
-  Modal(:open='modal.open', v-on:close='modal.open = false')
-    h2.title(slot='header')
-      | Confirma exclusão deste Cupom?
+  Modal.modal(:open='modal.open', v-on:close='modal.open = false')
+    div(slot='section')
+      Icon.icon(name='question-circle-o', scale='4')
+      h2.title
+        | Confirma exclusão deste Cupom?
     Button(
       slot='buttons',
       icon='trash',
@@ -35,10 +37,20 @@
 </script>
 
 <style lang="scss" scoped>
+  .modal {
+    max-width: $ui-size-xs;
+    text-align: center;
+  }
+
+  .icon {
+    margin-bottom: $ui-space-y/3;
+    opacity: 0.5;
+  }
+
   .title {
     color: $ui-text-main;
-    font-size: 2.25rem;
+    font-size: 1.75rem;
     font-weight: 600;
-    text-align: center;
+    line-height: 1.5;
   }
 </style>
