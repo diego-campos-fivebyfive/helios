@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [[ $1 = '--installation-list' ]]; then
+if [[ -z $1 || $1 = '--installation-list' ]]; then
   printf 'Dependencies - installation commands
 
   Required:
