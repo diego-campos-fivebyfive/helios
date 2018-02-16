@@ -1,7 +1,7 @@
 <template lang="pug">
-  .page(:class='sidebar')
+  .colletion-page(:class='sidebar')
     Sidebar(v-if='showSidebar')
-    main.main
+    main.colletion-page-main
       Mainbar(v-if='showMainbar')
       slot
 </template>
@@ -30,8 +30,8 @@
   }
 </script>
 
-<style lang="scss" scoped>
-  .page {
+<style lang="scss">
+  .colletion-page {
     max-width: 100%;
     min-height: 100vh;
     position: relative;
@@ -41,7 +41,7 @@
     }
   }
 
-  .main {
+  .colletion-page-main {
     @include clearfix;
   }
 </style>

@@ -1,8 +1,8 @@
 <template lang="pug">
-  table(:class='type')
-    thead
+  table.collection-table(:class='type')
+    thead.collection-table-header
       slot(name='head')
-    tbody
+    tbody.collection-table-section
       slot(name='rows')
 </template>
 
@@ -12,23 +12,18 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   $table-striped-bg: #f9f9f9;
   $table-striped-bg_: #f5f5f5;
 
-  table {
-    display: table;
-    width: 100%;
-  }
-
-  .striped {
+  %stripped {
     border-spacing: 0;
 
-    thead {
+    .collection-table-header {
       text-align: left;
     }
 
-    tbody {
+    .collection-table-section {
       tr {
         &:hover {
           background-color: $table-striped-bg_;
@@ -48,6 +43,15 @@
 
     td {
       border-top: $ui-space-y/10 solid $ui-divider-color;
+    }
+  }
+
+  .collection-table {
+    display: table;
+    width: 100%;
+
+    &.stripped {
+      @extend %stripped;
     }
   }
 </style>

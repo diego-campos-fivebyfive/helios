@@ -3,7 +3,7 @@
     ModalConfirm(
       ref='modalConfirm',
       v-on:removeCoupon='removeCoupon')
-    Table.table(type='striped')
+    Table.table(type='stripped')
       tr(slot='head')
         th Nome
         th Conta

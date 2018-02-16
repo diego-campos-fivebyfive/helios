@@ -1,7 +1,7 @@
 <template lang="pug">
-  div
-    .bar
-      .progress(:style='{ width: `${percent}%` }')
+  .collection-progress
+    .collection-progress-bar
+      .collection-progress-status(:style='{ width: `${percent}%` }')
     slot
 </template>
 
@@ -11,8 +11,16 @@
   }
 </script>
 
-<style lang="scss" scoped>
-  .bar {
+<style lang="scss">
+  .collection-progress {
+    .caption {
+      display: inline-block;
+      margin-top: $ui-space-y/3;
+      margin-left: $ui-space-x/3;
+    }
+  }
+
+  .collection-progress-bar {
     width: 100%;
     background-color: $ui-gray-lighter;
     border-radius: $ui-corner;
@@ -23,17 +31,11 @@
     position: relative;
   }
 
-  .progress {
+  .collection-progress-status {
     background-color: $ui-green-regular;
     position: absolute;
     height: 100%;
     right: 0;
     top: 0;
-  }
-
-  .caption {
-    display: inline-block;
-    margin-top: $ui-space-y/3;
-    margin-left: $ui-space-x/3;
   }
 </style>
