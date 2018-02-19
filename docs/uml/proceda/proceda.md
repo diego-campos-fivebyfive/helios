@@ -29,7 +29,7 @@ e gerar um registro de timeline - para cada registro de ocorrência encontrado.
 - 1 Efetuar a leitura de seu conteúdo.
 - 2 Extrair a identificação do cabeçalho de intercâmbio.
 - 3 Extrair os dados de cada evento cujo campo IDENTIFICADOR DE REGISTRO possua valor "542".
-- 4 Formatar os dados de cada evento conforme o padrão disponível na seção [Padrão de Evento](#padrao-de-evento).
+- 4 Formatar os dados de cada evento conforme o padrão disponível na seção [Padrão de Evento](#padrão-de-evento).
 
 O resultado deste processo é um array contendo uma chave __header__ - contendo aos dados do cabeçalho -
 e uma chave __events__ - contendo uma coleção de eventos.
