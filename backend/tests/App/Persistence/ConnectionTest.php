@@ -67,14 +67,14 @@ class ConnectionTest extends SicesTest
     {
         $connection = Connection::create();
 
-        $status = $connection->insert('app_timeline', [
+        $data = $connection->insert('app_timeline', [
             'target' => get_class($this),
             'message' => 'This is a timeline test',
             'attributes' => json_encode(['foo' => 'bar', 'baz' => 'too']),
             'created_at' => (new \DateTime())->format('Y-m-d H:i:s')
         ]);
 
-        $this->assertTrue($status);
+        $this->assertArrayHasKey('id', $data);
     }
 
     /**
@@ -140,26 +140,21 @@ class ConnectionTest extends SicesTest
      */
     public function testDelete()
     {
-        $id = $this->createRandom();
+        $data = $this->createRandom();
 
-        $this->assertGreaterThan(0, $id);
-
-        $this->assertTrue($this->conn->delete($this->table, $id));
-
+        $this->assertTrue($this->conn->delete($this->table, $data['id']));
     }
 
     /**
-     * @return string
+     * @return array
      */
     private function createRandom()
     {
-        $this->conn->insert('app_timeline', [
+        return $this->conn->insert('app_timeline', [
             'target' => get_class($this),
             'message' => 'This is a timeline test',
             'attributes' => json_encode(['foo' => 'bar', 'baz' => 'too']),
             'created_at' => (new \DateTime())->format('Y-m-d H:i:s')
         ]);
-
-        return $this->conn->lastInsertId();
     }
 }

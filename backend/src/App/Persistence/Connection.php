@@ -24,6 +24,11 @@ class Connection
     private $pdo;
 
     /**
+     * @var
+     */
+    private $lastInsertTable;
+
+    /**
      * @var Connection
      */
     private static $instance;
@@ -66,7 +71,7 @@ class Connection
     /**
      * @param $table
      * @param array $data
-     * @return bool
+     * @return array|bool
      */
     public function insert($table, array $data)
     {
@@ -75,6 +80,8 @@ class Connection
         $sql = SQLFormatter::insert($table, $data);
 
         $params = array_combine($fields, array_values($data));
+
+        $this->lastInsertTable = $table;
 
         return $this->execute($sql, $params);
     }
@@ -127,6 +134,14 @@ class Connection
     }
 
     /**
+     * @return mixed
+     */
+    public function lastInsertTable()
+    {
+        return $this->lastInsertTable;
+    }
+
+    /**
      * @param array $config
      * @return Connection
      */
@@ -156,8 +171,10 @@ class Connection
                 $result = $stmt->rowCount();
                 break;
             case 'INSERT':
+                $result = current($this->select($this->lastInsertTable, 'id = ?', [$this->lastInsertId()]));
+                break;
             case 'DELETE':
-                // Default result
+                //
                 break;
         }
 
