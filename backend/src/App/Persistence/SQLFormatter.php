@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Sices\Persistence;
+namespace App\Persistence;
 
 /**
  * Simple SQL formatter

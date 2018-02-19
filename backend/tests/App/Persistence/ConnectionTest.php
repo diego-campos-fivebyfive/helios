@@ -2,12 +2,11 @@
 
 namespace Tests\App\Persistence;
 
-use App\Sices\Persistence\Connection;
+use App\Persistence\Connection;
 use Tests\App\Sices\SicesTest;
 
 /**
- * Class ConnectionTest
- * @group sices_persistence
+ * @group persistence
  */
 class ConnectionTest extends SicesTest
 {
