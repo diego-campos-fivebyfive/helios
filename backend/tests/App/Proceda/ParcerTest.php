@@ -3,22 +3,22 @@
 use Tests\App\Sices\SicesTest;
 
 /**
- * @group parcer_ocoren
+ * @group parser_ocoren
  */
-class ParcerTest extends SicesTest
+class ParserTest extends SicesTest
 {
-    public function testParcer()
+    public function testParser()
     {
         // TODO: O arquivo de teste utilizado encontra-se em docs/uml/proceda/sample/base.TXT
         $filename = dirname(__FILE__) . '/base.TXT';
 
-        $array = \App\Proceda\Parcer::fromFile($filename);
+        $array = \App\Proceda\Parser::fromFile($filename);
 
         self::assertEquals(542, $array[0]['code']);
 
         $content = file_get_contents($filename);
 
-        $array2 = \App\Proceda\Parcer::fromContent($content);
+        $array2 = \App\Proceda\Parser::fromContent($content);
 
         self::assertEquals(542, $array2[0]['code']);
 
@@ -35,7 +35,7 @@ class ParcerTest extends SicesTest
 
         }, explode("\n", $content));
 
-        $array3 = \App\Proceda\Parcer::fromArray($data);
+        $array3 = \App\Proceda\Parser::fromArray($data);
 
         self::assertEquals(542, $array3[0]['code']);
     }

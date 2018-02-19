@@ -3,10 +3,10 @@
 namespace App\Proceda;
 
 /**
- * Class Parcer
+ * Class Parser
  * @author Fabio Dukievicz <fabiojd47@gmail.com>
  */
-class Parcer
+class Parser
 {
     /**
      * @param $filename
