@@ -45,8 +45,10 @@ class Parcer
      */
     public static function fromArray($data)
     {
-        return array_values(array_filter($data, function ($item) {
-            return $item['code'] == 542;
-        }));
+        return array_values(
+            array_filter($data, function ($item) {
+                return $item['code'] == 542;
+            })
+        );
     }
 }
