@@ -8,3 +8,6 @@ export SICES_PRODUCTION_DATABASE_USER=mysqlproducao
 export SICES_PRODUCTION_DATABASE_HOST='mysql-db-producao.crtwvzhue9fu.sa-east-1.rds.amazonaws.com'
 export SICES_PRODUCTION_DATABASE_PORT=3306
 export SICES_PRODUCTION_DATABASE_PASS='avCy8ZFhhg6rMnKstw'
+export SICES_PRODUCTION_FTP_HOST=ftp.sicesbrasil.institucional.ws
+export SICES_PRODUCTION_FTP_USER=sicesbrasil2
+export SICES_PRODUCTION_FTP_PASS='W5ZT172WcYn4'
