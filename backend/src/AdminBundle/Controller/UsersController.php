@@ -141,6 +141,7 @@ class UsersController extends AbstractController
             } else {
 
                 if($member->getUser()->isEnabled()){
+                    $member->setStatus(Customer::ACTIVATED);
                     $member->restore();
 
                     $member->getUser()->addRole(UserInterface::ROLE_PLATFORM_COMMERCIAL);
