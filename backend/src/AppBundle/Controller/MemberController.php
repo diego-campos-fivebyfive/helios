@@ -239,6 +239,7 @@ class MemberController extends AbstractController
 
         if($member->getId() != $this->getCurrentMember()->getId()) {
             if($member->isDeleted()){
+                $member->setStatus(Customer::ACTIVATED);
                 $this->manager('customer')->restore($member);
             }
         }
