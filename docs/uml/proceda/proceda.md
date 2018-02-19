@@ -2,40 +2,39 @@
 
 O processo de notificação de ocorrências entre as Transportadoras x Sices, gera um arquivo txt 
 cuja estrutura é explicada abaixo:
-- 1 - Cada arquivo é prefixado com a string "OCOREN".
-- 2 - O conteúdo de cada arquivo é uma coleção de eventos estrurados conforme o padrão de documentos
+- 1 Cada arquivo é prefixado com a string "OCOREN".
+- 2 O conteúdo de cada arquivo é uma coleção de eventos estrurados conforme o padrão de documentos
 PROCEDA/OCOREN, este padrão pode ser verificado na documentação "OCOREN-50.pdf".
-- 3 - No topo do arquivo ficam os cabeçalhos:
+- 3 No topo do arquivo ficam os cabeçalhos:
   - 3.1 Intercâmbio: Com informações de identificação textual do remetente(transportadora) e destinatário.
   - 3.2 Documento: Com informações sobre a utilidade do documento.
-- 4 - Após os blocos de cabeçalho, são listadas as ocorrências, cada ocorrência composta por dados
+- 4 Após os blocos de cabeçalho, são listadas as ocorrências, cada ocorrência composta por dados
 estruturados conforme o padrão presente na página 3 da documentação (última tabela).
 
-## Ciclo de Processamento ##
+### Ciclo de Processamento
 
 O objetivo principal do processamento das ocorrências de entrega é - alterar o status de um orçamento
 e gerar um registro de timeline - para cada registro de ocorrência encontrado.
 
-__Para o processamento das ocorrências de entrega, são necessários os seguintes passos:__
+#### Para o processamento das ocorrências de entrega, são necessários os seguintes passos:
 
-- 1 - Conectar o diretório correspondente via FTP.
-- 2 - Efetuar a leitura (listagem) de arquivos prefixados com "OCOREN".
-- 3 - Efetuar o parse de cada arquivo da lista [Parse de arquivo](#parse-de-arquivo). 
-- 4 - Processar o conteúdo de cada evento extraído [Processar Evento](#processar-evento).
-- 5 - Prefixar cada arquivo após o processamento [Prefixar Arquivo](#prefixar-arquivo).
+- 1 Conectar o diretório correspondente via FTP.
+- 2 Efetuar a leitura (listagem) de arquivos prefixados com "OCOREN".
+- 3 Efetuar o parse de cada arquivo da lista [Parse de arquivo](#parse-de-arquivo). 
+- 4 Processar o conteúdo de cada evento extraído [Processar Evento](#processar-evento).
+- 5 Prefixar cada arquivo após o processamento [Prefixar Arquivo](#prefixar-arquivo).
 
-__Parse de Arquivo__
+##### Parse de Arquivo
 
-- 1 - Efetuar a leitura de seu conteúdo.
-- 2 - Extrair a identificação do cabeçalho de intercâmbio.
-- 3 - Extrair os dados de cada evento cujo campo IDENTIFICADOR DE REGISTRO possua valor "542".
-- 4 - Formatar os dados de cada evento conforme o padrão disponível na seção [Padrão de Evento](#padrao-de-evento).
+- 1 Efetuar a leitura de seu conteúdo.
+- 2 Extrair a identificação do cabeçalho de intercâmbio.
+- 3 Extrair os dados de cada evento cujo campo IDENTIFICADOR DE REGISTRO possua valor "542".
+- 4 Formatar os dados de cada evento conforme o padrão disponível na seção [Padrão de Evento](#padrao-de-evento).
 
 O resultado deste processo é um array contendo uma chave __header__ - contendo aos dados do cabeçalho -
 e uma chave __events__ - contendo uma coleção de eventos.
 
-
-__Padrão de Evento__
+##### Padrão de Evento
 
 Cada ocorrência contida no arquivo deve gerar uma estrutura similar a esta.
 
@@ -52,16 +51,16 @@ Cada ocorrência contida no arquivo deve gerar uma estrutura similar a esta.
 
 ```
 
-__Processar Evento__
+##### Processar Evento
 
 O processamento de cada evento extraído, é composto pelas seguintes operações:
 
-1 - Alterar o status do orçamento
+- 1 Alterar o status do orçamento
 
-Regras de status conforme o código:
+   Regras de status conforme o código:
 
-- Código 000 - Status DELIVERING = 9
-- Códigos 001, 002, 031, 150 - Status DELIVERED - 10
+   - Código 000 - Status DELIVERING = 9
+   - Códigos 001, 002, 031, 150 - Status DELIVERED - 10
 
 2 - Gerar um registro de timeline
 
@@ -72,7 +71,7 @@ A operação de processamento do evento considera que o orçamento foi encontrad
 presente na estrutura do evento, caso o orçamento não seja encontrado, é necessário armazenar o evento
 em cache, para processamento posterior.
 
-__Prefixar Arquivo__
+##### Prefixar Arquivo
 
 Este procedimento consiste em alterar o nome do arquivo no diretório FTP, de forma a evitar que este seja
 reprocessado em operações futuras.
