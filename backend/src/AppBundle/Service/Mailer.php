@@ -12,6 +12,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\AccountInterface;
+use AppBundle\Entity\Customer;
 use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\Order\OrderInterface;
 use Fos\UserBundle\Model\UserInterface;
@@ -135,7 +136,10 @@ class Mailer extends AbstractMailer
 
         $this->resolveAccountEmails($message, $account);
 
-        if(null != $agent = $account->getAgent()) {
+        /** @var $agent \AppBundle\Entity\Customer */
+        $agent = $account->getAgent();
+
+        if ($agent instanceof Customer && $agent->isActivated()) {
 
             $agentEmail = $agent->getEmail();
             $agentName = $agent->getFirstname();

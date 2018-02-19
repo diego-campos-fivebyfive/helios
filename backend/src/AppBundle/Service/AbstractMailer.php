@@ -186,7 +186,7 @@ abstract class AbstractMailer
     protected function resolveAccountEmails(\Swift_Message $message, Customer $account)
     {
         foreach ($account->getOwners() as $owner) {
-            if ($owner->getUser()->isEnabled()) {
+            if ($owner->isActivated()) {
                 $message->addTo($owner->getEmail(), $owner->getName());
             }
         }
@@ -207,12 +207,14 @@ abstract class AbstractMailer
                 $qb->expr()->eq('c.context', ':member'),
                 $qb->expr()->like('c.attributes',
                     $qb->expr()->literal('%"'.$state.'"%')
-                )
+                ),
+                $qb->expr()->eq('c.status', ':status')
             )
         );
 
         $qb->setParameters([
-            'member' => 'member'
+            'member' => 'member',
+            'status' => Customer::ACTIVATED
         ]);
 
         $members = $qb->getQuery()->getResult();
@@ -220,10 +222,11 @@ abstract class AbstractMailer
         /** @var MemberInterface $member */
         foreach ($members as  $member) {
             if($member->isPlatformExpanse()) {
+
                 $expanseEmail = $member->getEmail();
                 $expanseName = $member->getName();
-                $message
-                    ->addCc($expanseEmail, $expanseName);
+
+                $message->addCc($expanseEmail, $expanseName);
             }
         }
     }

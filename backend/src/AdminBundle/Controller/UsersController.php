@@ -70,6 +70,7 @@ class UsersController extends AbstractController
 
         $member = $memberManager->create();
         $member
+            ->setStatus($user->isEnabled() ? Customer::ACTIVATED : Customer::LOCKED)
             ->setContext(Customer::CONTEXT_MEMBER)
             ->setAccount($account)
             ->setUser($user);

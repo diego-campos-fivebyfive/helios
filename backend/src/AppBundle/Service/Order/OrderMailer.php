@@ -12,6 +12,7 @@
 namespace AppBundle\Service\Order;
 
 
+use AppBundle\Entity\Customer;
 use AppBundle\Service\AbstractMailer;
 use AppBundle\Entity\Order\OrderInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
@@ -56,7 +57,7 @@ class OrderMailer extends AbstractMailer
      */
     public function sendOrderMessage(OrderInterface $order)
     {
-        if($this->ensureOrder($order)) {
+        if ($this->ensureOrder($order)) {
 
             $message = $this->createOrderMessage($order);
 
@@ -73,7 +74,7 @@ class OrderMailer extends AbstractMailer
     private function createOrderMessage(OrderInterface $order)
     {
         $account = $order->getAccount();
-        $parameters  = $this->getMessageParameters($order);
+        $parameters = $this->getMessageParameters($order);
 
         $message = $this->createMessage($parameters);
 
@@ -81,7 +82,10 @@ class OrderMailer extends AbstractMailer
 
         $this->resolveAccountEmails($message, $account);
 
-        if(null != $agent = $account->getAgent()) {
+        /** @var $agent \AppBundle\Entity\Customer */
+        $agent = $account->getAgent();
+
+        if ($agent instanceof Customer && $agent->isActivated()) {
 
             $agentEmail = $agent->getEmail();
             $agentName = $agent->getFirstname();
@@ -93,7 +97,7 @@ class OrderMailer extends AbstractMailer
 
         $this->addExpanseCc($account, $message);
 
-        if($order->isApproved() && $order->getProforma()){
+        if ($order->isApproved() && $order->getProforma()) {
             $message->attach($this->createOrderAttachment($order));
         }
 
@@ -152,10 +156,10 @@ class OrderMailer extends AbstractMailer
      */
     private function ensureOrder(OrderInterface $order)
     {
-        if(!$order->isBudget())
+        if (!$order->isBudget())
             self::exception('This order is not master');
 
-        if(array_key_exists($order->getStatus(), $this->mapping)){
+        if (array_key_exists($order->getStatus(), $this->mapping)) {
             return $this->mapping[$order->getStatus()]['enabled'];
         }
 
