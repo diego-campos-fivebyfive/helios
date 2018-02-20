@@ -11,7 +11,6 @@
 
 namespace App\Sices\Ftp;
 
-use Gaufrette\Adapter\Ftp as FtpAdapter;;
 use Gaufrette\Filesystem;
 
 /**
