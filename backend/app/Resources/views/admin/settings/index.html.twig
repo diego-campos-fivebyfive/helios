@@ -541,7 +541,8 @@
         ];
         for (i = 0; i < daysTouchSpin.length; i++)
             $(daysTouchSpin[i]).TouchSpin({
-                min: 0
+                min: 0,
+                max: 999999
             });
 
         var colorPromo = $('#settings_parameters_promo_background').val();
