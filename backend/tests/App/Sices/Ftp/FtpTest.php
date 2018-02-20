@@ -23,7 +23,7 @@ class FtpTest extends SicesTest
 
         $fileReader = new FileReader($fileSystem);
 
-        $sucess = $fileReader->prefixer('a3.TXT', '_PROCESSED');
+        $sucess = $fileReader->prefixer('a1.TXT', 'PROCESSED_');
 
         self::assertEquals(true,$sucess);
     }
