@@ -2,40 +2,29 @@
 
 namespace Tests\App\Sices\Utils;
 
+use App\Sices\Ftp\FileReader;
+use App\Sices\Ftp\FileSystemFactory;
 use App\Sices\Utils\Parser;
 use Tests\App\Sices\SicesTest;
 
 /**
- * @group sices_utils_parser
+ * @group sices_ftp_prefixer
  */
-class ParserTest extends SicesTest
+class FtpTest extends SicesTest
 {
-    /**
-     * Test parser strategies
-     */
-    public function testFromMapping()
+    public function testFtpPrefixer()
     {
-        $mapping = [
-            'foo' => 2,
-            'bar' => 5,
-            'baz' => 8
-        ];
+        $fileSystem = FileSystemFactory::create([
+            'host' => 'kolinalabs.com',
+            'directory' => '/PROCEDA-SICESSOLAR',
+            'username' => 'sicesbrasil@kolinalabs.com',
+            'password' => 'xVa0JZM}P4nf'
+        ]);
 
-        // Test with intantiator
-        $str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $fileReader = new FileReader($fileSystem);
 
-        $data = Parser::from($mapping)->parse($str);
+        $sucess = $fileReader->prefixer('a3.TXT', '_PROCESSED');
 
-        $this->assertEquals('AB', $data['foo']);
-        $this->assertEquals('CDEFG', $data['bar']);
-        $this->assertEquals('HIJKLMNO', $data['baz']);
-
-        // Test with definition
-        $numbers = '12345678910111213';
-        $data2 = Parser::from($mapping, $numbers);
-
-        $this->assertEquals('12', $data2['foo']);
-        $this->assertEquals('34567', $data2['bar']);
-        $this->assertEquals('89101112', $data2['baz']);
+        self::assertEquals(true,$sucess);
     }
 }
