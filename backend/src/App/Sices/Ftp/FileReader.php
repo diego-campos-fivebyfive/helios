@@ -11,6 +11,7 @@
 
 namespace App\Sices\Ftp;
 
+use Gaufrette\Adapter\Ftp as FtpAdapter;;
 use Gaufrette\Filesystem;
 
 /**
@@ -72,5 +73,21 @@ class FileReader
         fclose($handle);
 
         return $path;
+    }
+
+    /**
+     * @param $filename
+     * @param $prefix
+     * @return bool
+     */
+    public function prefixer($filename, $prefix)
+    {
+        if ($this->fileSystem->has($filename)) {
+            $newName = str_replace('.', $prefix.'.', $filename);
+
+            return $this->fileSystem->rename($filename, $newName);
+        }
+
+        return false;
     }
 }
