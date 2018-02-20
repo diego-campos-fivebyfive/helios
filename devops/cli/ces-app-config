@@ -19,15 +19,17 @@ else
   mkdir .mirror
   mkdir .backup
   mkdir .uploads
-  mkdir .uploads/order
-  mkdir .uploads/proposal
   mkdir .uploads/component
-  mkdir .uploads/order/proforma
-  mkdir .uploads/order/payment
+  mkdir .uploads/component/datasheet
+  mkdir .uploads/component/image
+  mkdir .uploads/fiscal
+  mkdir .uploads/fiscal/danfe
+  mkdir .uploads/order
   mkdir .uploads/order/order
+  mkdir .uploads/order/payment
+  mkdir .uploads/order/proforma
+  mkdir .uploads/proposal
   mkdir .uploads/proposal/proposal
   mkdir .uploads/proposal/theme
-  mkdir .uploads/component/image
-  mkdir .uploads/component/datasheet
 
 fi
