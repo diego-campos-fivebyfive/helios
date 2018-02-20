@@ -73,4 +73,18 @@ class FileReader
 
         return $path;
     }
+
+    /**
+     * @param string $filename
+     * @param string $prefix
+     * @return bool
+     */
+    public function prefixer($filename, $prefix)
+    {
+        if ($this->fileSystem->has($filename)) {
+            return $this->fileSystem->rename($filename, $prefix.$filename);
+        }
+
+        return false;
+    }
 }
