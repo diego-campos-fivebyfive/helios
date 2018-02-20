@@ -4,7 +4,6 @@ namespace Tests\App\Sices\Utils;
 
 use App\Sices\Ftp\FileReader;
 use App\Sices\Ftp\FileSystemFactory;
-use App\Sices\Utils\Parser;
 use Tests\App\Sices\SicesTest;
 
 /**
