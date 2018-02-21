@@ -333,6 +333,10 @@ services:
         class: AppBundle\Service\Util\PlatformCounter
         arguments: ['@parameter_manager']
 
+    proceda_processor:
+        class: App\Proceda\Processor
+        arguments: ['@order_manager']
+
     stock_provider:
         class: AppBundle\Service\Stock\Provider
         arguments: ['@service_container']
