@@ -12,6 +12,7 @@
 namespace App\Sices\Ftp;
 
 use Gaufrette\Filesystem;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class AdapterFactory
@@ -19,15 +20,25 @@ use Gaufrette\Filesystem;
  */
 class FileReader
 {
+    /**
+     * @var Filesystem
+     */
     private $fileSystem;
+
+    /**
+     * @var string
+     */
+    private $root;
 
     /**
      * FileReader constructor.
      * @param Filesystem $fileSystem
+     * @param ContainerInterface $container
      */
-    function __construct(Filesystem $fileSystem)
+    function __construct(Filesystem $fileSystem, ContainerInterface $container)
     {
         $this->fileSystem = $fileSystem;
+        $this->root = "{$container->get('kernel')->getRootDir()}/../..";
     }
 
     /**
@@ -58,13 +69,13 @@ class FileReader
 
     /**
      * @param $file
-     * @param bool $returnPath
      * @return string
      */
     public function download($file)
     {
         $content = $this->fileSystem->read($file);
-        $path = dirname(__FILE__) . '/storage/' . $file;
+
+        $path = "{$this->root}/.uploads/fiscal/danfe/{$file}";
 
         $handle = fopen($path, 'w+');
 
