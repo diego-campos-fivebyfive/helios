@@ -153,7 +153,7 @@ class FileController extends AbstractController
             $this->container->get('app_storage')->push($options, $file);
         }
 
-        return $this->json([],Response::HTTP_OK);
+        return $this->json([]);
     }
 
     /**
