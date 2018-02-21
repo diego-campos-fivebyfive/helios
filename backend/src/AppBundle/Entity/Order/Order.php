@@ -699,6 +699,7 @@ class Order implements OrderInterface
             self::STATUS_INSERTED => 'inserted',
             self::STATUS_AVAILABLE => 'available',
             self::STATUS_COLLECTED => 'collected',
+            self::STATUS_DELIVERING => 'delivering',
             self::STATUS_DELIVERED => 'delivered'
         ];
     }
@@ -718,6 +719,7 @@ class Order implements OrderInterface
             self::STATUS_INSERTED => self::STATUS_INSERTED,
             self::STATUS_AVAILABLE => self::STATUS_AVAILABLE,
             self::STATUS_COLLECTED => self::STATUS_COLLECTED,
+            self::STATUS_DELIVERING => self::STATUS_DELIVERING,
             self::STATUS_DELIVERED => self::STATUS_DELIVERED
         ];
     }
@@ -2113,6 +2115,14 @@ class Order implements OrderInterface
     public function isCollected()
     {
         return self::STATUS_COLLECTED == $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isDelivering()
+    {
+        return self::STATUS_DELIVERING == $this->status;
     }
 
     /**

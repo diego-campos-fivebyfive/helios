@@ -31,6 +31,7 @@ interface OrderInterface
     const STATUS_INSERTED = 6;      // Order inserted on CRM (Protheus),
     const STATUS_AVAILABLE = 7;     // Product available for delivery collect
     const STATUS_COLLECTED = 8;     // Product collected for delivery
+    const STATUS_DELIVERING = 9;    // Product in process of delivery
     const STATUS_DELIVERED = 10;    // Product delivered
 
     const SOURCE_ACCOUNT = 0;
