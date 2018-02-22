@@ -118,11 +118,11 @@ class ProjectGenerator
         $this->generateModules($this->project);
 
         /** @var ModuleInterface $module */
-        $module = $project->getProjectModules()->first()->getModule();
+        /*$module = $project->getProjectModules()->first()->getModule();
         $powerModule = $module->getMaxPower() / 1000;
         $roundPower = round($defaults['power'] / $powerModule);
         $multiPower = $roundPower * $powerModule;
-        $defaults['power'] = $multiPower;
+        $defaults['power'] = $multiPower;*/
 
         $level = $this->getLevel($defaults);
 
@@ -400,11 +400,15 @@ class ProjectGenerator
             $mppts = array_fill(0, $operation, 1);
             $serial = $projectInverter->getSerial();
             $parallel = $projectInverter->getParallel();
+            $countMppts = count($mppts);
 
             foreach ($mppts as $item) {
 
-                $moduleString = 1 == $parallel ? ceil($serial / count($mppts)) : $serial ;
-                $stringNumber = floor($parallel / count($mppts));
+                $moduleString = 1 == $parallel
+                    ? ceil($serial / $countMppts)
+                    : ( 0 == $parallel % 2 ? $serial : floor(($serial * $parallel) / $countMppts) );
+
+                $stringNumber = floor($parallel / $countMppts);
 
                 if($stringNumber <= 0){
                     $stringNumber = 1;
@@ -787,6 +791,12 @@ class ProjectGenerator
 
             $defaults = $project->getDefaults();
             if(array_key_exists('errors', $defaults) && count($defaults['errors'])) return;
+
+            // TODO: Override defaults only project does not reset
+            if($project->getPower() > 0) {
+                $defaults['power'] = $project->getPower();
+                $project->setDefaults($defaults);
+            }
 
             $this->manager->save($project);
         }
