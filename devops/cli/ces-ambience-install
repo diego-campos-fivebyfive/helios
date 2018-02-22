@@ -30,7 +30,7 @@ if [[ -z $1 || $1 = '--installation-list' ]]; then
 
     pacotes do PHP:
 
-      $ sudo apt install php-mbstring php-xml php-mysql php-intl php-common php-curl php-sqlite
+      $ sudo apt install php-mbstring php-xml php-mysql php-intl php-common php-curl
 
     Nodejs:
 
