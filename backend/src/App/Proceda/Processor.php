@@ -2,6 +2,7 @@
 
 namespace App\Proceda;
 
+use App\Sices\Cache\JsonCache;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Manager\OrderManager;
@@ -17,9 +18,13 @@ class Processor
      */
     private $manager;
 
+    private $cache;
+
     const DELIVERING = ['000'];
 
     const DELIVERED = ['001', '002', '031', '150'];
+
+    const PROCEDA_CACHE = 'OCOREN';
 
     /**
      * Processor constructor.
@@ -28,12 +33,12 @@ class Processor
     function __construct(OrderManager $manager)
     {
         $this->manager = $manager;
+
+        $this->cache = JsonCache::create(self::PROCEDA_CACHE);
     }
 
     public function processEvents($eventGroups)
     {
-        $cache = [];
-
         foreach ($eventGroups as $invoice => $group) {
 
             /** @var Order $order */
@@ -44,14 +49,12 @@ class Processor
             if ($order) {
                 foreach ($group as $event) {
                     $this->changeStatusByEvent($order, $event['event']);
+                    // TODO: chamar Timeline
                 }
-            } else {
-                // TODO: ajustar metodo de cache para adicionar todos de uma vez e salvar no final ou ir adicionando e salvar
-                $cache[$invoice] = $group;
+                // TODO: remover do cache
             }
-
-            // TODO: chamar Timeline
         }
+        // TODO: salvar cache
     }
 
     /**
@@ -71,5 +74,12 @@ class Processor
         $order->setStatus($status);
 
         $this->manager->save($order);
+    }
+
+    public function mergeEventsAndCache($events)
+    {
+        foreach ($events as $event) {
+            $this->cache->incrementInArrayPosition($event['invoice'], $event);
+        }
     }
 }

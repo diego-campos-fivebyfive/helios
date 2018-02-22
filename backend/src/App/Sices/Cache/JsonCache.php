@@ -47,7 +47,7 @@ class JsonCache
      * @param array $item
      * @return $this
      */
-    public function add($key, $item)
+    public function incrementInArrayPosition($key, $item)
     {
         if (!array_key_exists($key, $this->data)) {
             $this->data[$key] = [];
@@ -55,8 +55,6 @@ class JsonCache
         if (!in_array($item, $this->data[$key])) {
             $this->data[$key][] = $item;
         }
-
-        $this->store();
 
         return $this;
     }
@@ -70,8 +68,6 @@ class JsonCache
         if (is_array($this->data) && array_key_exists($key, $this->data)) {
             unset($this->data[$key]);
         }
-
-        $this->store();
 
         return $this;
     }

@@ -27,15 +27,6 @@ class ProcessorTest extends AppTestCase
                 "event" => '001',
                 "date" => '20022018',
                 "time" => '1345',
-            ],
-            2 => [
-                "code" => '542',
-                "document" => '17774501000128',
-                "serial" => '128',
-                "invoice" => '000002672',
-                "event" => '002',
-                "date" => '20022018',
-                "time" => '1345'
             ]
         ],
         //order2
@@ -66,37 +57,58 @@ class ProcessorTest extends AppTestCase
                 "document" => '17774501000128',
                 "serial" => '128',
                 "invoice" => '000012344',
-                "event" => '001',
-                "date" => '20022018',
-                "time" => '1345'
-            ],
-            2 => [
-                "code" => '542',
-                "document" => '17774501000128',
-                "serial" => '128',
-                "invoice" => '000012344',
-                "event" => '002',
-                "date" => '20022018',
-                "time" => '1345'
-            ],
-            3 => [
-                "code" => '542',
-                "document" => '17774501000128',
-                "serial" => '128',
-                "invoice" => '000012344',
                 "event" => '031',
-                "date" => '20022018',
-                "time" => '1219'
-            ],
-            4 => [
-                "code" => '542',
-                "document" => '17774501000128',
-                "serial" => '128',
-                "invoice" => '000012344',
-                "event" => '150',
                 "date" => '20022018',
                 "time" => '1345'
             ]
+        ]
+    ];
+
+    private $eventsOcoren = [
+        0 => [
+            'code' => '542',
+            'document' => '17774501000128',
+            'serial' => '128',
+            'invoice' => '000011544',
+            'event' => '000',
+            'date' => '30012018',
+            'time' => '1626'
+        ],
+        1 => [
+            'code' => '542',
+            'document' => '17774501000128',
+            'serial' => '128',
+            'invoice' => '000011544',
+            'event' => '001',
+            'date' => '30012018',
+            'time' => '1443'
+        ],
+        2 => [
+            'code' => '542',
+            'document' => '17774501000128',
+            'serial' => '128',
+            'invoice' => '000011655',
+            'event' => '000',
+            'date' => '30012018',
+            'time' => '1441'
+        ],
+        3 => [
+            'code' => '542',
+            'document' => '17774501000128',
+            'serial' => '128',
+            'invoice' => '000011655',
+            'event' => '002',
+            'date' => '30012018',
+            'time' => '0542'
+        ],
+        4 => [
+            'code' => '542',
+            'document' => '17774501000128',
+            'serial' => '128',
+            'invoice' => '000011633',
+            'event' => '001',
+            'date' => '30022018',
+            'time' => '1442'
         ]
     ];
 
@@ -121,6 +133,16 @@ class ProcessorTest extends AppTestCase
         self::assertEquals(9, $order2->getStatus());
         self::assertEquals(10, $order3->getStatus());
     }
+
+    public function testMergeEvents()
+    {
+        /** @var \App\Proceda\Processor $processor */
+        $processor = $this->getContainer()->get('proceda_processor');
+
+        $processor->mergeEventsAndCache($this->eventsOcoren);
+        // TODO: o teste depende do conteúdo ja presente no arquivo de cache OCOREN.cache
+    }
+
 
     private function createOrder($status, $invoiceNumber)
     {
