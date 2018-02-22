@@ -12,7 +12,7 @@ class ProcessorTest extends SicesTest
 
     public function testIndexer()
     {
-        $filesList = [
+        $files = [
             "PR180212345678000112AA123123456789C12345678B171010000013201802051",
             "PR180212345678000112AA123123456789C12345678B171010000013201802051.xml",
             "PR180212345678000112AA123123456789C12345678B171010000013201802052.pdf",
@@ -23,12 +23,12 @@ class ProcessorTest extends SicesTest
 
         $processor = new Processor();
 
-        $arrayIndexed = $processor->indexer($filesList);
+        $filesIndexed = $processor->indexer($files);
 
-        self::assertCount(3, $arrayIndexed);
+        self::assertCount(3, $filesIndexed);
         self::assertArrayHasKey(
             'PR180212345678000112AA123123456789C12345678B171010000013201802051',
-            $arrayIndexed
+            $filesIndexed
         );
         self::assertArrayNotHasKey('xml', $arrayIndexed);
     }
