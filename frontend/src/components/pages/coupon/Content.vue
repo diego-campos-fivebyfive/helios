@@ -1,5 +1,6 @@
 <template lang="pug">
   div
+    Notification(ref='notification')
     ModalConfirm(
       ref='modalConfirm',
       v-on:removeCoupon='removeCoupon')
@@ -50,6 +51,7 @@
           .then(() => {
             this.$emit('getCoupons')
             this.$refs.modalConfirm.closeActionModal()
+            this.$refs.notification.notify('Cupom removido com sucesso')
           })
       }
     }

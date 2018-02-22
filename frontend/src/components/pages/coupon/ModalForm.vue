@@ -1,34 +1,36 @@
 <template lang="pug">
-  Modal(:open='modal.open', v-on:close='modal.open = false')
-    h1.title(slot='header')
-    | Novo Cupom
-    form(slot='section', ref='send')
-      fieldset.fields
-        label.half
-          | Nome
-          input(
-            placeholder='Nome',
-            v-model='coupon.name')
-        label.half
-          | Valor
-          input(
-            placeholder='Valor',
-            v-model='coupon.amount')
-        label.full
-          | Conta
-          select(v-model='coupon.account')
-            option(value='') Não vinculada
-            option(
-              v-for='account in accounts',
-              :value='account.id')
-              | {{ account.name }}
-    Button(
-      slot='buttons',
-      icon='save',
-      type='primary-strong',
-      label='Salvar',
-      pos='single',
-      v-on:click.native='sendCoupon')
+  div
+    Notification(ref='notification')
+    Modal(:open='modal.open', v-on:close='modal.open = false')
+      h1.title(slot='header')
+      | Novo Cupom
+      form(slot='section', ref='send')
+        fieldset.fields
+          label.half
+            | Nome
+            input(
+              placeholder='Nome',
+              v-model='coupon.name')
+          label.half
+            | Valor
+            input(
+              placeholder='Valor',
+              v-model='coupon.amount')
+          label.full
+            | Conta
+            select(v-model='coupon.account')
+              option(value='') Não vinculada
+              option(
+                v-for='account in accounts',
+                :value='account.id')
+                | {{ account.name }}
+      Button(
+        slot='buttons',
+        icon='save',
+        type='primary-strong',
+        label='Salvar',
+        pos='single',
+        v-on:click.native='sendCoupon')
 </template>
 
 <script>
@@ -43,21 +45,35 @@
     }),
     methods: {
       createCoupon() {
-        return this.axios.post('api/v1/coupon/', this.coupon)
+        this.axios.post('api/v1/coupon/', this.coupon)
+          .then(() => {
+            this.$emit('getCoupons')
+            this.modal.open = false
+            this.$refs.notification.notify('Cupom cadastrado com sucesso')
+          })
+          .catch(() => {
+            this.$refs.notification.notify('Não foi possível cadastrar cupom')
+          })
       },
       editCoupon() {
         const uri = `api/v1/coupon/${this.coupon.id}`
-        return this.axios.put(uri, this.coupon)
+        this.axios.put(uri, this.coupon)
+          .then(() => {
+            this.$emit('getCoupons')
+            this.modal.open = false
+            this.$refs.notification.notify('Cupom editado com sucesso')
+          })
+          .catch(() => {
+            this.$refs.notification.notify('Não foi possível editar cupom')
+          })
       },
       sendCoupon() {
-        const send = (this.modal.action === 'create')
-          ? this.createCoupon
-          : this.editCoupon
+        if (this.modal.action === 'create') {
+          this.createCoupon()
+          return
+        }
 
-        send().then(() => {
-          this.$emit('getCoupons')
-          this.modal.open = false
-        })
+        this.editCoupon()
       },
       showActionModal(action, coupon = {}) {
         this.coupon = coupon
