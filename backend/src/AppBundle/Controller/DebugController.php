@@ -46,6 +46,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
  */
 class DebugController extends AbstractController
 {
+
     /**
      * @Route("/fix-component-inventory")
      */
