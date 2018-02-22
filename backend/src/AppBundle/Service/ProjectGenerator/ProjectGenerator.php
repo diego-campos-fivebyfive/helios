@@ -406,7 +406,7 @@ class ProjectGenerator
 
                 $moduleString = 1 == $parallel
                     ? ceil($serial / $countMppts)
-                    : ( 0 == $parallel % 2 ? $serial : floor(($serial * $parallel) / $countMppts) );
+                    : ( 0 == $parallel % $countMppts ? $serial : floor(($serial * $parallel) / $countMppts) );
 
                 $stringNumber = floor($parallel / $countMppts);
 
