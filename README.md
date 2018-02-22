@@ -206,12 +206,12 @@ Esclarecimentos gerais relacionados a documentação:
 
     - ##### Para visualizar as dependências a serem instaladas execute:
     ```
-    $ devops/cli/ces-ambience-install --installation-list
+    $ ces-ambience-install --installation-list
     ```
 
     - ##### Você pode instala-las manualmente (recomendado), ou executar o comando abaixo para instalação automatica:
     ```
-    $ devops/cli/ces-ambience-install --full
+    $ ces-ambience-install --full
     ```
 
   <a name="aplicacao--sices"></a><a name="3.4"></a>
