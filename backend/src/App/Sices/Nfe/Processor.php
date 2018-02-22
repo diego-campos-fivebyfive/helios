@@ -16,17 +16,19 @@ namespace App\Sices\Nfe;
 class Processor
 {
     /**
-     * @param array $filesList
-     * @return array
+     * @param array $files
+     * @return mixed
      */
-    public function indexer(array $filesList)
+    public function indexer(array $files)
     {
-        $arrayIndexed = [];
-        foreach ($filesList as $file) {
-            $file = explode('.', $file);
-            $arrayIndexed[$file[0]][] = $file[1];
-        }
+        return array_reduce($files, function ($carry, $file) {
+            if (!strpos($file, '.')) {
+                return $carry;
+            }
 
-        return $arrayIndexed;
+            list($name, $extension) = explode('.', $file);
+            $carry[$name][] = $extension;
+            return $carry;
+        }, []);
     }
 }
