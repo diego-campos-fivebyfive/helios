@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AdminBundle\Form\Stock\TransactionType;
+use App\Sices\Nfe\Processor;
 use AppBundle\AppBundle;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Component\ComponentInterface;
@@ -46,6 +47,27 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
  */
 class DebugController extends AbstractController
 {
+    /**
+     * @Route("/indexer")
+     */
+    public function indexerProcessorAction()
+    {
+        $filesList = [
+            "PR180212345678000112AA123123456789C12345678B171010000013201802051.pdf",
+            "PR180212345678000112AA123123456789C12345678B171010000013201802051.xml",
+            "PR180212345678000112AA123123456789C12345678B171010000013201802052.pdf",
+            "PR180212345678000112AA123123456789C12345678B171010000013201802052.xml",
+            "PR180212345678000112AA123123456789C12345678B171010000013201802053.pdf",
+            "PR180212345678000112AA123123456789C12345678B171010000013201802053.xml",
+        ];
+
+        $processor = new Processor();
+
+        $arrayIndexed = $processor->indexer($filesList);
+
+        dump($arrayIndexed);die;
+    }
+
     /**
      * @Route("/fix-component-inventory")
      */
