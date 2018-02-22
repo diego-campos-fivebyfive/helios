@@ -1,13 +1,13 @@
 <?php
 
 use App\Sices\Nfe\Processor;
-use Tests\App\Sices\SicesTest;
+use Tests\AppBundle\AppTestCase;
 
 /**
  * Class FileReaderTest
  * @group sices_nfe_processor
  */
-class ProcessorTest extends SicesTest
+class ProcessorNfeTest extends AppTestCase
 {
 
     public function testIndexer()
@@ -30,6 +30,6 @@ class ProcessorTest extends SicesTest
             'PR180212345678000112AA123123456789C12345678B171010000013201802051',
             $filesIndexed
         );
-        self::assertArrayNotHasKey('xml', $arrayIndexed);
+        self::assertArrayNotHasKey('xml', $filesIndexed);
     }
 }
