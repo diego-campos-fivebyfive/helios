@@ -400,16 +400,15 @@ class ProjectGenerator
             $mppts = array_fill(0, $operation, 1);
             $serial = $projectInverter->getSerial();
             $parallel = $projectInverter->getParallel();
+            $countMppts = count($mppts);
 
             foreach ($mppts as $item) {
-
-                $countMppts = count($mppts);
 
                 $moduleString = 1 == $parallel
                     ? ceil($serial / $countMppts)
                     : ( 0 == $parallel % 2 ? $serial : floor(($serial * $parallel) / $countMppts) );
 
-                $stringNumber = floor($parallel / count($mppts));
+                $stringNumber = floor($parallel / $countMppts);
 
                 if($stringNumber <= 0){
                     $stringNumber = 1;
