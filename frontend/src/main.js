@@ -1,7 +1,8 @@
 import Button from '@/components/collection/Button'
-import Page from '@/components/collection/Page'
-import Panel from '@/components/collection/Panel'
 import Modal from '@/components/collection/Modal'
+import Page from '@/components/collection/Page'
+import Paginator from '@/components/collection/Paginator'
+import Panel from '@/components/collection/Panel'
 import Progress from '@/components/collection/Progress'
 import Table from '@/components/collection/Table'
 
@@ -16,6 +17,7 @@ Vue.component('Icon', Icon)
 Vue.component('Button', Button)
 Vue.component('Modal', Modal)
 Vue.component('Page', Page)
+Vue.component('Paginator', Paginator)
 Vue.component('Panel', Panel)
 Vue.component('Progress', Progress)
 Vue.component('Table', Table)
@@ -29,6 +31,7 @@ new Vue({
     Button,
     Modal,
     Page,
+    Paginator,
     Panel,
     Progress,
     Table
