@@ -76,7 +76,7 @@ class Processor
         $this->manager->save($order);
     }
 
-    public function mergeEventsWithCache($events)
+    public function mergeEventsAndCache($events)
     {
         foreach ($events as $event) {
             $this->cache->incrementInArrayPosition($event['invoice'], $event);

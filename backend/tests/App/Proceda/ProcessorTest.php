@@ -139,7 +139,7 @@ class ProcessorTest extends AppTestCase
         /** @var \App\Proceda\Processor $processor */
         $processor = $this->getContainer()->get('proceda_processor');
 
-        $processor->mergeEventsWithCache($this->eventsOcoren);
+        $processor->mergeEventsAndCache($this->eventsOcoren);
         // TODO: o teste depende do conteúdo ja presente no arquivo de cache OCOREN.cache
     }
 
