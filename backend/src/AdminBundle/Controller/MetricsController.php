@@ -72,7 +72,7 @@ class MetricsController extends AdminController
         $milestones = array_map(function($milestone) {
 
             $total = $milestone['open_issues'] + $milestone['closed_issues'];
-            $average = intval($milestone['closed_issues'] / $total * 100);
+            $average = ($total > 0) ? intval($milestone['closed_issues'] / $total * 100) : $total;
 
             return [
                 "id" => $milestone['number'],
