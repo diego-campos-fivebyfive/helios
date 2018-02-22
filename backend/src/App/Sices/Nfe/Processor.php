@@ -15,10 +15,13 @@ namespace App\Sices\Nfe;
 
 class Processor
 {
+    /**
+     * @param array $filesList
+     * @return array
+     */
     public function indexer(array $filesList)
     {
         $arrayIndexed = [];
-
         foreach ($filesList as $file) {
             $file = explode('.', $file);
             $arrayIndexed[$file[0]][] = $file[1];
