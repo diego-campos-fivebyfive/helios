@@ -12,6 +12,7 @@
 
 namespace App\Sices\Nfe;
 
+use AppBundle\Entity\Order\Order;
 use AppBundle\Manager\OrderManager;
 
 class Processor
@@ -47,12 +48,64 @@ class Processor
         }, []);
     }
 
-
+    /**
+     * @param $danfe
+     * @return null|object
+     */
     public function matchReference($danfe)
     {
         return $this->manager->findOneBy([
-            'billedAt' => null,
             'reference' => $danfe['reference']
         ]);
+    }
+
+    /**
+     * @param Order $order
+     * @param $danfe
+     * @param $filename
+     * @param $extensions
+     */
+    public function setOrderDanfe(Order $order, $danfe, $filename, $extensions)
+    {
+        $order->addInvoice($danfe['invoice']);
+
+        foreach ($extensions as $extension) {
+            $file = "{$filename}.{$extension}";
+            $this->addFileName($order,$file,$extension);
+        }
+        if ($danfe['billing'] == 'S') {
+            $date = $this->formatBilledAt($danfe['billed_at']);
+            $order->setBilledAt($date);
+        }
+        $this->manager->save($order);
+    }
+
+    /**
+     * @param Order $order
+     * @param $filename
+     * @param $extension
+     */
+    private function addFileName(Order $order, $filename, $extension)
+    {
+            if ($extension == 'pdf') {
+                $order->addFile('nfe_pdf', $filename);
+            }
+
+            if ($extension == 'xml') {
+                $order->addFile('nfe_xml', $filename);
+            }
+    }
+
+    /**
+     * @param $billedAt
+     * @return \DateTime
+     */
+    private function formatBilledAt($billedAt)
+    {
+        $year = substr($billedAt, 0,-4);
+        $month = substr($billedAt, 4,-2);
+        $day = substr($billedAt, 6, 2);
+
+        return new \DateTime("${year}-${month}-${day}");
     }
 }

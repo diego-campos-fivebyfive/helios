@@ -285,6 +285,14 @@ services:
         class: AppBundle\Service\Mailer
         arguments: ['@service_container']
 
+    nfe_core:
+        class: App\Sices\Nfe\Core
+        arguments: ['@service_container']
+
+    nfe_processor:
+        class: App\Sices\Nfe\Processor
+        arguments: ['@order_manager']
+
     order_mailer:
         class: AppBundle\Service\Order\OrderMailer
         arguments: ['@service_container']
