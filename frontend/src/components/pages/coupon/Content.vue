@@ -13,7 +13,7 @@
         th Ações
       tr.rows(slot='rows', v-for='coupon in coupons')
         td {{ coupon.name }}
-        td {{ coupon.account }}
+        td {{ coupon.account.name }}
         td {{ coupon.applied ? 'Aplicado' : 'Não Aplicado' }}
         td {{ coupon.amount }}
         td

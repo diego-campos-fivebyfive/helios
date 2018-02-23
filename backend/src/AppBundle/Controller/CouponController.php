@@ -25,23 +25,29 @@ class CouponController extends AbstractController
      *
      * @Method("get")
      */
-    public function indexAction(Request $request)
+    public function getAction(Request $request)
     {
         $qb = $this->manager('coupon')->createQueryBuilder();
         $qb->orderBy('c.id', 'DESC');
 
-        if (!empty($accounts = $request->get('account'))) {
-            $arrayAccounts = array_filter(explode(',', $accounts));
-            $qb->andWhere($qb->expr()->in('c.account', $arrayAccounts));
+        $accounts = $request->get('account');
+        $name = $request->get('name');
+        $status = $request->get('status');
+
+        if (!empty($accounts)) {
+            $accounts = array_filter(explode(',', $accounts));
+            $qb->andWhere($qb->expr()->in('c.account', $accounts));
         }
 
-        if (!empty($name = $request->get('name'))) {
-            $arrayNames = array_filter(explode(',', $name));
-            $qb->andWhere($qb->expr()->in('c.name', $arrayNames));
+        if (!empty($name)) {
+            $names = array_filter(explode(',', $name));
+            $qb->andWhere($qb->expr()->in('c.name', $names));
         }
 
-        if (null != $status = $request->get('status')) {
-            $status ? $qb->andWhere('c.target is not null') : $qb->andWhere('c.target is null');
+        if ($status) {
+            $status
+                ? $qb->andWhere('c.target is not null')
+                : $qb->andWhere('c.target is null');
         }
 
         $itemsPerPage = 10;
@@ -158,11 +164,22 @@ class CouponController extends AbstractController
      */
     private function formatEntity($couponCollection)
     {
-        $data = [];
-        foreach ($couponCollection as $coupon) {
-            $account = $coupon->getAccount() ? $coupon->getAccount()->getFirstName() : null;
+        return array_map(function($coupon) {
+            $account = $coupon->getAccount();
 
-            $data [] = [
+            if ($account) {
+                $account = [
+                    'id' => $account->getId(),
+                    'name' => $account->getFirstName()
+                ];
+            } else {
+                $account = [
+                    'id' => '',
+                    'name' => ''
+                ];
+            }
+
+            return [
                 'id' => $coupon->getId(),
                 'name' => $coupon->getName(),
                 'amount' => $coupon->getAmount(),
@@ -170,8 +187,7 @@ class CouponController extends AbstractController
                 'account' => $account,
                 'applied' => $coupon->isApplied()
             ];
-        }
-        return $data;
+        }, $couponCollection);
     }
 
     /**
