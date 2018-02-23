@@ -1,6 +1,6 @@
 <template lang="pug">
   .collection-paginator
-    nav
+    nav(v-if='pagination.links')
       button.collection-paginator-prev(
         v-if='pagination.links.prev',
         v-on:click='paginate(pagination.current - 1)')
@@ -40,7 +40,7 @@
       border: 1px solid $ui-gray-light;
       border-radius: $ui-corner;
       display: inline-block;
-      margin: $ui-space-y 0;
+      margin-bottom: $ui-space-y;
     }
   }
 

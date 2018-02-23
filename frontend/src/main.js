@@ -1,5 +1,6 @@
 import Button from '@/components/collection/Button'
 import Modal from '@/components/collection/Modal'
+import Notification from '@/components/collection/Notification'
 import Page from '@/components/collection/Page'
 import Paginator from '@/components/collection/Paginator'
 import Panel from '@/components/collection/Panel'
@@ -16,6 +17,7 @@ import router from './router'
 Vue.component('Icon', Icon)
 Vue.component('Button', Button)
 Vue.component('Modal', Modal)
+Vue.component('Notification', Notification)
 Vue.component('Page', Page)
 Vue.component('Paginator', Paginator)
 Vue.component('Panel', Panel)
@@ -30,6 +32,7 @@ new Vue({
     App,
     Button,
     Modal,
+    Notification,
     Page,
     Paginator,
     Panel,
