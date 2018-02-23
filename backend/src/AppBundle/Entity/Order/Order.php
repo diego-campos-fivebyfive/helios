@@ -2394,13 +2394,7 @@ class Order implements OrderInterface
             case 'proforma':
                 $this->files[$type] = $file;
                 break;
-            case 'payment':
-                $this->files[$type][] = $file;
-                break;
-            case 'nfe_pdf':
-                $this->files[$type][] = $file;
-                break;
-            case 'nfe_xml':
+            case 'payment' || 'nfe_pdf' || 'nfe_xml':
                 $this->files[$type][] = $file;
                 break;
         }
