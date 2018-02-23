@@ -73,13 +73,10 @@ class Processor
             $file = "{$filename}.{$extension}";
             $this->addFileName($order,$file,$extension);
         }
-
-
         if ($danfe['billing'] == 'S') {
             $date = $this->formatBilledAt($danfe['billed_at']);
             $order->setBilledAt($date);
         }
-
         $this->manager->save($order);
     }
 
@@ -105,11 +102,10 @@ class Processor
      */
     private function formatBilledAt($billedAt)
     {
-        $date =
-            substr($billedAt, 0,-4) . "-"
-            . substr($billedAt, 4,-2) . "-"
-            . substr($billedAt, 6, 2);
+        $year = substr($billedAt, 0,-4);
+        $month = substr($billedAt, 4,-2);
+        $day = substr($billedAt, 6, 2);
 
-        return new \DateTime($date);
+        return new \DateTime("${year}-${month}-${day}");
     }
 }
