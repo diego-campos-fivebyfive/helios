@@ -1,7 +1,7 @@
 <template lang="pug">
   div
     Notification(ref='notification')
-    Modal(:open='modal.open', v-on:close='modal.open = false')
+    Modal(ref='modal')
       h1.title(slot='header')
       | Novo Cupom
       form(slot='section', ref='send')
@@ -39,8 +39,7 @@
       accounts: [],
       coupon: {},
       modal: {
-        action: '',
-        open: false
+        action: ''
       }
     }),
     methods: {
@@ -48,7 +47,7 @@
         this.axios.post('api/v1/coupon/', this.coupon)
           .then(() => {
             this.$emit('getCoupons')
-            this.modal.open = false
+            this.$refs.modal.hide()
             this.$refs.notification.notify('Cupom cadastrado com sucesso')
           })
           .catch(() => {
@@ -60,7 +59,7 @@
         this.axios.put(uri, this.coupon)
           .then(() => {
             this.$emit('getCoupons')
-            this.modal.open = false
+            this.$refs.modal.hide()
             this.$refs.notification.notify('Cupom editado com sucesso')
           })
           .catch(() => {
@@ -78,7 +77,7 @@
       showActionModal(action, coupon = {}) {
         this.coupon = coupon
         this.modal.action = action
-        this.modal.open = true
+        this.$refs.modal.show()
       }
     },
     mounted() {

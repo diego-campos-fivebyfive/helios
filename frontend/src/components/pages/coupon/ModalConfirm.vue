@@ -1,5 +1,5 @@
 <template lang="pug">
-  Modal.modal(:open='modal.open', v-on:close='modal.open = false')
+  Modal.modal(ref='modal')
     div(slot='section')
       Icon.icon(name='question-circle-o', scale='4')
       h2.title
@@ -16,18 +16,15 @@
 <script>
   export default {
     data: () => ({
-      modal: {
-        open: false
-      },
       coupon: {}
     }),
     methods: {
       closeActionModal() {
-        this.modal.open = false
+        this.$refs.modal.hide()
       },
       showActionModal(coupon) {
         this.coupon = coupon
-        this.modal.open = true
+        this.$refs.modal.show()
       },
       removeCoupon(id) {
         this.$emit('removeCoupon', id)
