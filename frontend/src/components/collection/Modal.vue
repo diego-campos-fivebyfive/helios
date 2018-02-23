@@ -6,7 +6,7 @@
       slot(name='section')
     footer.collection-modal-footer
       Button(
-        v-on:click.native='closeModal',
+        v-on:click.native='hide',
         icon='times-circle-o',
         type='default-bordered',
         label='Fechar',
@@ -16,10 +16,15 @@
 
 <script>
   export default {
-    props: ['open'],
+    data: () => ({
+      open: false
+    }),
     methods: {
-      closeModal() {
-        this.$emit('close')
+      show() {
+        this.open = true
+      },
+      hide() {
+        this.open = false
       }
     }
   }
