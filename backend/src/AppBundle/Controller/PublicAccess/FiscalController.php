@@ -8,8 +8,20 @@
 
 namespace AppBundle\Controller\PublicAccess;
 
+use AppBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-class FiscalController
+/**
+ * @Route("fiscal")
+ */
+class FiscalController extends AbstractController
 {
-
+    /**
+     * @Route("/danfe")
+     */
+    public function danfeAction()
+    {
+        $this->get('nfe_core')->core();
+    }
 }
