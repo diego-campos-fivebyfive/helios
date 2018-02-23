@@ -35,7 +35,12 @@ class Core
 
         $fileReader = new FileReader($fileSystem, $this->container);
 
-        $files = $processor->indexer($fileReader->files());
+        $filesList = array_filter($fileReader->files(), function ($file) {
+            $prefix = substr($file, 0, 9);
+            return $prefix != "PROCESSED";
+        });
+
+        $files = $processor->indexer($filesList);
 
         foreach ($files as $filename => $extensions) {
             $danfe = $parse::extract($filename);
@@ -46,6 +51,14 @@ class Core
             }
 
             $processor->setOrderDanfe($order, $danfe, $filename, $extensions);
+
+            $date = (new \DateTime('now'))->format('Ymd');
+            $prefix = "PROCESSED-${date}-";
+
+            foreach ($extensions as $extension) {
+                $file = "${filename}.${extension}";
+                $fileReader->prefixer($file, $prefix);
+            }
         }
     }
 }
