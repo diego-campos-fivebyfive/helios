@@ -30,12 +30,12 @@ class Processor
 
     /**
      * Processor constructor.
-     * @param OrderManager $manager
+     * @param ContainerInterface $container
      */
-    function __construct(OrderManager $manager, ContainerInterface $container)
+    function __construct(ContainerInterface $container)
     {
-        $this->manager = $manager;
         $this->container = $container;
+        $this->manager = $container->get('order_manger');
     }
 
     /**
