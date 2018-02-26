@@ -297,6 +297,9 @@ services:
         class: App\Sices\Nfe\Core
         arguments: ['@service_container']
 
+    nfe_parser:
+        class: App\Sices\Nfe\Core
+
     nfe_processor:
         class: App\Sices\Nfe\Processor
         arguments: ['@order_manager']
