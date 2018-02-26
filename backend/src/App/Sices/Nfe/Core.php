@@ -2,7 +2,6 @@
 
 namespace App\Sices\Nfe;
 
-use App\Sices\Ftp\FileReader;
 use App\Sices\Ftp\FileSystemFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -23,7 +22,7 @@ class Core
 
     public function core()
     {
-        $parse = new Parser();
+        $parse = $this->container->get('nfe_parser');
         $processor = $this->container->get('nfe_processor');
 
         $fileSystem = FileSystemFactory::create([
@@ -33,9 +32,16 @@ class Core
             'directory' => '/DANFE'
         ]);
 
-        $fileReader = new FileReader($fileSystem, $this->container);
+        /** @var FileReader $fileReader */
+        $fileReader = $this->container->get('file_Reader');
+        $fileReader->init($fileSystem);
 
-        $files = $processor->indexer($fileReader->files());
+        $filesList = array_filter($fileReader->files(), function ($file) {
+            $prefix = substr($file, 0, 9);
+            return $prefix != "PROCESSED";
+        });
+
+        $files = $processor->indexer($filesList);
 
         foreach ($files as $filename => $extensions) {
             $danfe = $parse::extract($filename);
@@ -46,6 +52,14 @@ class Core
             }
 
             $processor->setOrderDanfe($order, $danfe, $filename, $extensions);
+
+            $date = (new \DateTime('now'))->format('Ymd');
+            $prefix = "PROCESSED-${date}-";
+
+            foreach ($extensions as $extension) {
+                $file = "${filename}.${extension}";
+                $fileReader->prefixer($file, $prefix);
+            }
         }
     }
 }

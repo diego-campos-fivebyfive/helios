@@ -64,6 +64,7 @@ class Processor
      * @param $danfe
      * @param $filename
      * @param $extensions
+     * @return array
      */
     public function setOrderDanfe(Order $order, $danfe, $filename, $extensions)
     {
@@ -73,6 +74,7 @@ class Processor
             $file = "{$filename}.{$extension}";
             $this->addFileName($order,$file,$extension);
         }
+
         if ($danfe['billing'] == 'S') {
             $date = $this->formatBilledAt($danfe['billed_at']);
             $order->setBilledAt($date);
