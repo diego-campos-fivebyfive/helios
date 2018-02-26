@@ -26,20 +26,6 @@ class FileReader
     private $fileSystem;
 
     /**
-     * @var string
-     */
-    private $root;
-
-    /**
-     * FileReader constructor.
-     * @param ContainerInterface $container
-     */
-    function __construct(ContainerInterface $container)
-    {
-        $this->root = "{$container->get('kernel')->getRootDir()}/../..";
-    }
-
-    /**
      * @param $method
      * @param $arguments
      * @return mixed
@@ -74,21 +60,32 @@ class FileReader
     }
 
     /**
-     * @param $file
-     * @return string
+     * @param $files
+     * @param $path
+     * @param bool $single
      */
-    public function download($file)
+    public function download($files, $path, $single = false)
+    {
+        if ($single) {
+            $this->downloadFile($files, $path);
+        } else {
+            foreach ($files as $file) {
+                $this->downloadFile($file, $path);
+            }
+        }
+    }
+
+    /**
+     * @param $file
+     * @param $path
+     */
+    private function downloadFile($file, $path)
     {
         $content = $this->fileSystem->read($file);
-
-        $path = "{$this->root}/.uploads/fiscal/danfe/{$file}";
-
-        $handle = fopen($path, 'w+');
+        $handle = fopen("${path}/${file}", 'w+');
 
         fwrite($handle, $content);
         fclose($handle);
-
-        return $path;
     }
 
     /**
