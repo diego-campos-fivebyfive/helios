@@ -1,5 +1,5 @@
 <template lang="pug">
-  Page(sidebar='common', mainbar='common')
+  .wrapper
     ModalForm(
       ref='modalForm',
       v-on:getCoupons='getCoupons')

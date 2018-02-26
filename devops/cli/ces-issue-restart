@@ -28,4 +28,4 @@ $CLI_PATH/ces-issue-move $ISSUE --in-progress
 USER=$($CLI_PATH/util/github-credentials --user)
 NICK=$($CLI_PATH/util/user-credentials $USER --slack)
 
-$CLI_PATH/ces-slack-notify --devops "[issue-$ISSUE] _${NICK}_ stills working on it"
+$CLI_PATH/ces-slack-notify --devops "[issue-$ISSUE] _${NICK}_ still working on it"
