@@ -371,6 +371,10 @@ services:
         class: AppBundle\Service\Stock\Query
         arguments: ['@stock_provider']
 
+    timeline:
+        class: AppBundle\Service\Timeline\Resource
+        arguments: ['@timeline_manager']
+
     order_stock:
         class: AppBundle\Service\Order\OrderStock
         arguments: ['@component_collector', '@stock_component']
