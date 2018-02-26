@@ -1,6 +1,6 @@
 <template lang="pug">
   .collection-paginator
-    nav(v-if='pagination.links')
+    nav(v-if='pagination.links && pagination.total > 1')
       button.collection-paginator-prev(
         v-if='pagination.links.prev',
         v-on:click='paginate(pagination.current - 1)')
