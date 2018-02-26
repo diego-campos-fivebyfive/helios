@@ -32,12 +32,10 @@ class FileReader
 
     /**
      * FileReader constructor.
-     * @param Filesystem $fileSystem
      * @param ContainerInterface $container
      */
-    function __construct(Filesystem $fileSystem, ContainerInterface $container)
+    function __construct(ContainerInterface $container)
     {
-        $this->fileSystem = $fileSystem;
         $this->root = "{$container->get('kernel')->getRootDir()}/../..";
     }
 
@@ -53,6 +51,14 @@ class FileReader
         }
 
         throw new \BadMethodCallException(sprintf('The method %s does not exist', $method));
+    }
+
+    /**
+     * @param Filesystem $fileSystem
+     */
+    public function init(Filesystem $fileSystem)
+    {
+        $this->fileSystem = $fileSystem;
     }
 
     /**
