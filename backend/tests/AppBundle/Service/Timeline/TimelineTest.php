@@ -1,114 +1,70 @@
 <?php
 
-namespace Tests\AppBundle\Service\Order;
+namespace Tests\AppBundle\Service\Timeline;
 
-
-use AppBundle\Entity\BusinessInterface;
-use AppBundle\Entity\UserInterface;
-use Symfony\Component\BrowserKit\Cookie;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use AppBundle\Service\Timeline\Resource;
 use Tests\AppBundle\AppTestCase;
-use Tests\AppBundle\Helpers\ObjectHelperTest;
 
 /**
- * Class OrderTimelineTest
- * @group order_timeline
+ * Class TimelineTest
+ * @group timeline_service
  */
-class OrderTimelineTest extends AppTestCase
+class TimelineTest extends AppTestCase
 {
-    use ObjectHelperTest;
-
     public function testCreate()
+    {
+        $order = $this->createOrder();
+
+        self::assertNotNull($order);
+
+        $timeline = $this->service('timeline');
+
+        $target = Resource::getObjectTarget($order);
+
+        $attributes = ['status'=>2];
+
+        $newTimeline = $timeline->create($target, 'msg', $attributes);
+
+        self::assertEquals($target, $newTimeline->getTarget());
+        self::assertEquals('msg', $newTimeline->getMessage());
+        self::assertEquals($attributes, $newTimeline->getAttributes());
+
+
+        $date = new \DateTime('2015-08-21');
+
+        $timelines = [
+            [
+                'target' => 'AppBundle\Entity\Order\Order::1',
+                'message' => 'msg 1',
+                'attributes' => ['a'=>1]
+            ],
+            [
+                'target' => 'AppBundle\Entity\Order\Order::1',
+                'message' => 'msg 2',
+                'attributes' => ['b'=>2],
+                'createdAt' => $date],
+            [
+                'target' => 'AppBundle\Entity\Order\Order::1',
+                'message' => 'msg 3'
+            ]
+        ];
+
+        $timeline = $this->service('timeline');
+
+        $timeline->createByArray($timelines);
+
+        self::assertEquals($timeline->loadByTarget('AppBundle\Entity\Order\Order::1'), $timeline->loadByObject($order));
+
+        self::assertEquals(4, count($timeline->loadByObject($order)));
+    }
+
+    private function createOrder()
     {
         $manager = $this->manager('order');
 
-        $master = $manager->create();
-        $manager->save($master);
-
-        $this->createMember();
-
-        $orderTimeline = $this->getContainer()->get('order_timeline');
-
-        $timeline = $orderTimeline->create($master);
-
-        $this->assertNotNull($timeline);
-        $this->assertEquals('AppBundle\Entity\Order\Order::1',$timeline->getTarget());
-        $this->assertEquals(1,$timeline->getId());
-        $this->assertEquals(0,$timeline->getAttributes()['status']);
-
-        return [
-            'timeline' => $timeline,
-            'order' => $master
-        ];
-    }
-
-    public function testLoad()
-    {
-        $create = self::testCreate();
-
-        $timeline = $create['timeline'];
-        $order = $create['order'];
-
-        $this->assertNotNull($timeline);
-        $this->assertEquals('AppBundle\Entity\Order\Order::1',$timeline->getTarget());
-        $this->assertEquals(1,$timeline->getId());
-        $this->assertEquals(0,$timeline->getAttributes()['status']);
-
-        $orderTimeline = $this->getContainer()->get('order_timeline');
-
-        $loadTimeline = $orderTimeline->load($order);
-
-        $this->assertNotNull($loadTimeline);
-        $this->assertCount(1,$loadTimeline);
-        $this->assertArrayHasKey('status',$loadTimeline[0]->getAttributes());
-    }
-
-    private function createMember()
-    {
-        $user = $this->createUser();
-
-        $member = $this->getFixture('member');
-
-        $member->setFirstname('joao');
-        $member->setEmail($user->getEmail());
-        $member->setContext(BusinessInterface::CONTEXT_MEMBER);
-        $member->setUser($user);
-
-        $this->assertNotNull($member);
-
-        return $member;
-    }
-
-    private function createUser()
-    {
-        $manager = $this->getContainer()->get('fos_user.user_manager');
-
-        /** @var UserInterface $user */
-        $user = $manager->createUser();
-
-        $user->addRole(UserInterface::ROLE_OWNER)
-            ->setEmail(self::randomString(10))
-            ->setPlainPassword('123')
-            ->setEnabled(1);
-
-        $user->setUsername($user->getEmail());
-
-        $manager->updateUser($user);
-
-//        $client = static::createClient();
-//
-//        $session = $client->getContainer()->get('session');
-//
-//        $firewallContext = 'main';
-//
-//        $token = new UsernamePasswordToken('admin', null, $firewallContext, array(UserInterface::ROLE_OWNER));
-//        $session->set('_security_'.$firewallContext, serialize($token));
-//
-//        $session->save();
-//
-//        $cookie = new Cookie($user->getEmail(), $user->getId());
-//        $client->getCookieJar()->set($cookie);
-
-        return $user;
+        /** @var \AppBundle\Entity\Order\Order $order */
+        $order = $manager->create();
+        $manager->save($order);
+        return $order;
     }
 }
