@@ -183,7 +183,6 @@ services:
 
     file_Reader:
         class: App\Sices\Ftp\FileReader
-        arguments: ['@service_container']
 
     inverter_combinator:
         class: AppBundle\Service\InverterCombinator\InverterCombinator
@@ -302,7 +301,7 @@ services:
 
     nfe_processor:
         class: App\Sices\Nfe\Processor
-        arguments: ['@order_manager']
+        arguments: ['@order_manager', '@service_container']
 
     order_mailer:
         class: AppBundle\Service\Order\OrderMailer
