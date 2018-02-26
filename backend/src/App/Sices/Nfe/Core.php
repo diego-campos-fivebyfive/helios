@@ -14,16 +14,24 @@ class Core
     private $container;
 
     /**
+     * @var string
+     */
+    private $path;
+
+    /**
      * Core constructor.
      */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+        $this->path = "{$container->get('kernel')->getRootDir()}/../../.uploads/fiscal/danfe/";
     }
 
     public function core()
     {
         $parse = $this->container->get('nfe_parser');
+
+        /** @var Processor $processor */
         $processor = $this->container->get('nfe_processor');
 
         $fileSystem = FileSystemFactory::create([
@@ -41,6 +49,9 @@ class Core
             $prefix = substr($file, 0, 9);
             return $prefix != "PROCESSED";
         });
+
+        $fileReader->download($filesList, $this->path);
+        $processor->pushS3($filesList, $this->path);
 
         $files = $processor->indexer($filesList);
 
