@@ -50,7 +50,8 @@ class Core
             return $prefix != "PROCESSED";
         });
 
-        $fileReader->download($filesList, $this->path);
+        $fileReader->downloadList($filesList, $this->path);
+        
         $processor->pushS3($filesList, $this->path);
 
         $files = $processor->indexer($filesList);

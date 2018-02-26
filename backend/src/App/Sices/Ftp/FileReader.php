@@ -62,16 +62,11 @@ class FileReader
     /**
      * @param $files
      * @param $path
-     * @param bool $single
      */
-    public function download($files, $path, $single = false)
+    public function downloadList($files, $path)
     {
-        if ($single) {
-            $this->downloadFile($files, $path);
-        } else {
-            foreach ($files as $file) {
-                $this->downloadFile($file, $path);
-            }
+        foreach ($files as $file) {
+            $this->downloadFile($file, $path);
         }
     }
 
@@ -79,7 +74,7 @@ class FileReader
      * @param $file
      * @param $path
      */
-    private function downloadFile($file, $path)
+    public function downloadFile($file, $path)
     {
         $content = $this->fileSystem->read($file);
         $handle = fopen("${path}/${file}", 'w+');
