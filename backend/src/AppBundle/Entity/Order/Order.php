@@ -2391,10 +2391,12 @@ class Order implements OrderInterface
             throw new \InvalidArgumentException(sprintf('Invalid [%s] file type. Accept: %s', $type, implode(',', $types)));
 
         switch ($type){
+            case 'nfe_pdf':
+            case 'nfe_xml':
             case 'proforma':
                 $this->files[$type] = $file;
                 break;
-            case 'payment' || 'nfe_pdf' || 'nfe_xml':
+            case 'payment':
                 $this->files[$type][] = $file;
                 break;
         }

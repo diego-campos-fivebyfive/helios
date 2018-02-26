@@ -134,56 +134,6 @@ class FileController extends AbstractController
     }
 
     /**
-     * @Route("/push_s3_files", name="push_s3")
-     * @Method("POST")
-     */
-    public function pushS3Action(Request $request)
-    {
-        if (!$this->getAuth($request)) {
-            return $this->json([]);
-        }
-
-        $filesName = json_decode($request->getContent(), true);
-
-        $path = "{$this->container->get('kernel')->getRootDir()}/../../.uploads/fiscal/danfe";
-
-        foreach ($filesName['names'] as $fileName) {
-            $file = "{$path}/{$fileName}";
-            $options = $this->getS3Options($fileName);
-            $this->container->get('app_storage')->push($options, $file);
-        }
-
-        return $this->json([]);
-    }
-
-    /**
-     * @param $filename
-     * @return array
-     */
-    private function getS3Options($filename)
-    {
-        return [
-            'filename' => $filename,
-            'root' => 'fiscal',
-            'type' => 'danfe',
-            'access' => 'private'
-        ];
-    }
-
-    /**
-     * @param Request $request
-     * @return bool
-     */
-    private function getAuth(Request $request)
-    {
-        $auth = "OewkQ42mCxVyfk7cbKg5jORFTWdWMQhxIO2bjHQt";
-        $secret = "NXTh0oqmwed4PvK3HCysMJjMWEGGJ2Fw0hXDfyox";
-        $header = $request->server->getHeaders();
-
-        return $header['AUTHORIZATION'] === $auth && $header['SECRET'] === $secret;
-    }
-
-    /**
      * @param $id
      * @return array
      */

@@ -14,6 +14,7 @@ namespace App\Sices\Nfe;
 
 use AppBundle\Entity\Order\Order;
 use AppBundle\Manager\OrderManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Processor
 {
@@ -23,12 +24,18 @@ class Processor
     private $manager;
 
     /**
-     * Processor constructor.
-     * @param OrderManager $manager
+     * @var ContainerInterface
      */
-    function __construct(OrderManager $manager)
+    private $container;
+
+    /**
+     * Processor constructor.
+     * @param ContainerInterface $container
+     */
+    function __construct(ContainerInterface $container)
     {
-        $this->manager = $manager;
+        $this->container = $container;
+        $this->manager = $container->get('order_manger');
     }
 
     /**
@@ -60,11 +67,23 @@ class Processor
     }
 
     /**
+     * @param $filesList
+     * @param $path
+     */
+    public function pushS3($filesList, $path)
+    {
+        foreach ($filesList as $filname) {
+            $file = "{$path}/{$filname}";
+            $options = $this->getS3Options($filname);
+            $this->container->get('app_storage')->push($options, $file);
+        }
+    }
+
+    /**
      * @param Order $order
      * @param $danfe
      * @param $filename
      * @param $extensions
-     * @return array
      */
     public function setOrderDanfe(Order $order, $danfe, $filename, $extensions)
     {
@@ -89,11 +108,11 @@ class Processor
      */
     private function addFileName(Order $order, $filename, $extension)
     {
-            if ($extension == 'pdf') {
+            if ($extension == "PDF") {
                 $order->addFile('nfe_pdf', $filename);
             }
 
-            if ($extension == 'xml') {
+            if ($extension == "XML") {
                 $order->addFile('nfe_xml', $filename);
             }
     }
@@ -110,4 +129,19 @@ class Processor
 
         return new \DateTime("${year}-${month}-${day}");
     }
+
+    /**
+     * @param $filename
+     * @return array
+     */
+    private function getS3Options($filename)
+    {
+        return [
+            'filename' => $filename,
+            'root' => 'fiscal',
+            'type' => 'danfe',
+            'access' => 'private'
+        ];
+    }
+
 }
