@@ -2,6 +2,7 @@
 
 namespace App\Sices\Nfe;
 
+use App\Sices\Ftp\FileReader;
 use App\Sices\Ftp\FileSystemFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
