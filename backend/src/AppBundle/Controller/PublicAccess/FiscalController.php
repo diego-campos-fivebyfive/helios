@@ -17,5 +17,17 @@ class FiscalController extends AbstractController
     public function danfeAction()
     {
         $this->get('nfe_core')->core();
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/proceda")
+     */
+    public function procedaAction()
+    {
+        $this->get('proceda_processor')->resolve();
+
+        return $this->json([]);
     }
 }
