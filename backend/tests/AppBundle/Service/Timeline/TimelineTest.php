@@ -45,7 +45,8 @@ class TimelineTest extends AppTestCase
                 'createdAt' => $date],
             [
                 'target' => 'AppBundle\Entity\Order\Order::1',
-                'message' => 'msg 3'
+                'message' => 'msg 3',
+                'attributes' => null
             ]
         ];
 
@@ -56,6 +57,8 @@ class TimelineTest extends AppTestCase
         self::assertEquals($timeline->loadByTarget('AppBundle\Entity\Order\Order::1'), $timeline->loadByObject($order));
 
         self::assertEquals(4, count($timeline->loadByObject($order)));
+
+        self::assertEquals(2, $timeline->loadByObject($order)[3]->getAttributes()['status']);
     }
 
     private function createOrder()

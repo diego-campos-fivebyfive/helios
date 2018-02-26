@@ -48,8 +48,7 @@ class Resource
         foreach ($timelineCollection as $timeline) {
             $target = $timeline['target'];
             $message = $timeline['message'];
-            $attributes = array_key_exists('attributes', $timeline)
-                && $timeline['attributes'] ? $timeline['attributes'] : [];
+            $attributes = isset($timeline['createdAt']) ? $timeline['attributes'] : [];
             $createdAt = array_key_exists('createdAt', $timeline) ? $timeline['createdAt'] : null;
 
             $timelines[] = $this->create($target, $message, $attributes, $createdAt);
