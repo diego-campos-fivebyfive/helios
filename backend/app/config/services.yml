@@ -298,7 +298,7 @@ services:
         arguments: ['@service_container']
 
     nfe_parser:
-        class: App\Sices\Nfe\Core
+        class: App\Sices\Nfe\Parser
 
     nfe_processor:
         class: App\Sices\Nfe\Processor
