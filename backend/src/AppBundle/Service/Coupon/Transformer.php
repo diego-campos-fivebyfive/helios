@@ -32,6 +32,7 @@ class Transformer
 
     /**
      * @param AccountInterface $account
+     * @param $amount
      */
     public function fromAccount(AccountInterface $account, $amount)
     {
@@ -51,7 +52,7 @@ class Transformer
     }
 
     /**
-     * @param $coupon
+     * @param Coupon $coupon
      */
     private function addCodeCoupon(Coupon $coupon)
     {
