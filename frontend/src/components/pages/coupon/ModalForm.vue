@@ -47,7 +47,6 @@
         this.axios.post('api/v1/coupon/', this.coupon)
           .then(() => {
             this.$emit('getCoupons')
-            this.$refs.modal.hide()
             this.$refs.notification.notify('Cupom cadastrado com sucesso')
           })
           .catch(() => {
@@ -55,11 +54,9 @@
           })
       },
       editCoupon() {
-        const uri = `api/v1/coupon/${this.coupon.id}`
-        this.axios.put(uri, this.coupon)
+        this.axios.put(`api/v1/coupon/${this.coupon.id}`, this.coupon)
           .then(() => {
             this.$emit('getCoupons')
-            this.$refs.modal.hide()
             this.$refs.notification.notify('Cupom editado com sucesso')
           })
           .catch(() => {
@@ -67,6 +64,8 @@
           })
       },
       sendCoupon() {
+        this.$refs.modal.hide()
+
         if (this.modal.action === 'create') {
           this.createCoupon()
           return
@@ -81,9 +80,10 @@
       }
     },
     mounted() {
-      this.axios.get('api/v1/account/available').then(response => {
-        this.accounts = response.data
-      })
+      this.axios.get('api/v1/account/available')
+        .then(response => {
+          this.accounts = response.data
+        })
     }
   }
 </script>
