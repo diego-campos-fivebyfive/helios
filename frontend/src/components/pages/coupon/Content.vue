@@ -47,10 +47,11 @@
         this.$refs.modalConfirm.showActionModal(coupon)
       },
       removeCoupon(id) {
+        this.$refs.modalConfirm.closeActionModal()
+
         this.axios.delete(`/api/v1/coupon/${id}`)
           .then(() => {
             this.$emit('getCoupons')
-            this.$refs.modalConfirm.closeActionModal()
             this.$refs.notification.notify('Cupom removido com sucesso')
           })
       }
