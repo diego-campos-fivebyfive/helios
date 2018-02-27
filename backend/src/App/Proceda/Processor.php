@@ -218,9 +218,9 @@ class Processor
     private function connect()
     {
         return FileSystemFactory::create([
-            'host' => getenv('CES_SICES_FTP_HOST'),
-            'username' => getenv('CES_SICES_FTP_USER'),
-            'password' => getenv('CES_SICES_FTP_PASS'),
+            'host' => $this->container->getParameter('ftp_host'),
+            'username' => $this->container->getParameter('ftp_user'),
+            'password' => $this->container->getParameter('ftp_password'),
             'directory' => '/PROCEDA-SICESSOLAR'
         ]);
     }
