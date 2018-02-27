@@ -8,7 +8,7 @@ namespace App\Proceda;
  */
 class Parser
 {
-    const ACCEPTED_EVENTS = ['000', '001', '002', '031', '150'];
+    const ACCEPTED_EVENTS = ['000', '001', '002', '031', '105'];
 
     /**
      * @param $filename
