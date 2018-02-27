@@ -6,6 +6,7 @@ use AppBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("fiscal")
@@ -14,6 +15,7 @@ class FiscalController extends AbstractController
 {
     /**
      * @Route("/danfe")
+     * @Method("post")
      */
     public function danfeAction(Request $request)
     {
@@ -21,13 +23,21 @@ class FiscalController extends AbstractController
             return $this->json([]);
         }
 
-        $this->get('nfe_core')->core();
+        try {
+
+            $this->get('nfe_core')->core();
+
+        }catch (\Exception $e){
+
+            return $this->json(['error' => $e->getMessage()], Response::HTTP_CONFLICT);
+        }
 
         return $this->json([]);
     }
 
     /**
      * @Route("/proceda")
+     * @Method("post")
      */
     public function procedaAction(Request $request)
     {
@@ -35,7 +45,14 @@ class FiscalController extends AbstractController
             return $this->json([]);
         }
 
-        $this->get('proceda_processor')->resolve();
+        try{
+
+            $this->get('proceda_processor')->resolve();
+
+        }catch (\Exception $e){
+
+            return $this->json(['error' => $e->getMessage()], Response::HTTP_CONFLICT);
+        }
 
         return $this->json([]);
     }

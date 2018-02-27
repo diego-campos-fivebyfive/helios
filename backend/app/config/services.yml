@@ -375,7 +375,7 @@ services:
         class: AppBundle\Service\Stock\Query
         arguments: ['@stock_provider']
 
-    timeline:
+    timeline_resource:
         class: AppBundle\Service\Timeline\Resource
         arguments: ['@timeline_manager']
 
