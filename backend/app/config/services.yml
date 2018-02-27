@@ -181,6 +181,10 @@ services:
         class: AppBundle\Service\Order\ComponentCollector
         arguments: ['@service_container']
 
+    coupon_transformer:
+        class: AppBundle\Service\Coupon\Transformer
+        arguments: ['@service_container']
+
     file_Reader:
         class: App\Sices\Ftp\FileReader
 
