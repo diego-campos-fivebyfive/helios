@@ -12,13 +12,12 @@ require_once $currentDir . '/helpers/logger.php';
 
 if (3 == count($argv) && in_array($argv[2], ['proceda', 'danfe'])) {
 
+    $service = $argv[2];
     $host = getenv('CES_SICES_HOST');
+    $port = getenv('CES_SICES_PORT');
 
-    if (8000 == $port = getenv('CES_SICES_PORT')) {
-        $host .= ":{$port}";
-    }
-
-    $url = "{$host}/public/fiscal/{$argv[2]}";
+    $uri = (8000 == $port) ? "${host}:${port}" : $host;
+    $url = "{$uri}/public/fiscal/{$service}";
 
     $headers = [
         'AUTHORIZATION: OewkQ42mCxVyfk7cbKg5jORFTWdWMQhxIO2bjHQt',
@@ -38,12 +37,12 @@ if (3 == count($argv) && in_array($argv[2], ['proceda', 'danfe'])) {
     curl_close($curl);
 
     if (200 == $statusCode) {
-        createLog($argv[2], 'Processo executado com sucesso.');
+        createLog($service, 'Processo executado com sucesso.');
     } else {
-        createLog($argv[2], 'Falha ao executar processamento: ' . $result, \Monolog\Logger::ERROR);
+        createLog($service, 'Falha ao executar processamento: ' . $result, \Monolog\Logger::ERROR);
     }
 
-    die("Processo executado, verifique o status em {$currentDir}/logs/cron-{$argv[2]}.log\n");
+    die("Processo executado, verifique o status em {$currentDir}/logs/cron-{$service}.log\n");
 }
 
 die("Processo não executado, faltam argumentos na chamada.\n");
