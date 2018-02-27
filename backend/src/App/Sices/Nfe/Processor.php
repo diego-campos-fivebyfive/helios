@@ -35,7 +35,7 @@ class Processor
     function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $this->manager = $container->get('order_manger');
+        $this->manager = $container->get('order_manager');
     }
 
     /**
