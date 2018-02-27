@@ -51,6 +51,14 @@ class Processor
 
     const SEARCH_PREFIX = 'OCOREN';
 
+    const MESSAGES = [
+        '000' => 'Processo de Transporte já Iniciado',
+        '001' => 'Entrega Realizada Normalmente',
+        '002' => 'Entrega Fora da Data Programada',
+        '031' => 'Entrega com Indenização Efetuada',
+        '105' => 'Entrega efetuada no cliente pela Transportadora de Redespacho'
+    ];
+
     /**
      * Processor constructor.
      * @param ContainerInterface $container
@@ -120,7 +128,7 @@ class Processor
                 foreach ($group as $event) {
                     $this->changeStatusByEvent($order, $event['event']);
 
-                    $message = $this->loadMessageByEvent($event['event']);
+                    $message = self::MESSAGES[$event['event']];
                     $status = $order->getStatus();
 
                     $timelineList[] = [
@@ -173,23 +181,6 @@ class Processor
         $year = substr($date,4, 4);
 
         return "${year}${month}${day}";
-    }
-
-    /**
-     * @param $event
-     * @return mixed
-     */
-    private function loadMessageByEvent($event)
-    {
-        $messages = [
-            '000' => 'Processo de Transporte já Iniciado',
-            '001' => 'Entrega Realizada Normalmente',
-            '002' => 'Entrega Fora da Data Programada',
-            '031' => 'Entrega com Indenização Efetuada',
-            '105' => 'Entrega efetuada no cliente pela Transportadora de Redespacho'
-        ];
-
-        return $messages[$event];
     }
 
     /**
