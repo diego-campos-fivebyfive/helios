@@ -17,7 +17,7 @@ class TimelineTest extends AppTestCase
 
         self::assertNotNull($order);
 
-        $timeline = $this->service('timeline');
+        $timeline = $this->service('timeline_resource');
 
         $target = Resource::getObjectTarget($order);
 
@@ -28,7 +28,6 @@ class TimelineTest extends AppTestCase
         self::assertEquals($target, $newTimeline->getTarget());
         self::assertEquals('msg', $newTimeline->getMessage());
         self::assertEquals($attributes, $newTimeline->getAttributes());
-
 
         $date = new \DateTime('2015-08-21');
 
@@ -42,15 +41,14 @@ class TimelineTest extends AppTestCase
                 'target' => 'AppBundle\Entity\Order\Order::1',
                 'message' => 'msg 2',
                 'attributes' => ['b'=>2],
-                'createdAt' => $date],
+                'createdAt' => $date
+            ],
             [
                 'target' => 'AppBundle\Entity\Order\Order::1',
                 'message' => 'msg 3',
                 'attributes' => null
             ]
         ];
-
-        $timeline = $this->service('timeline');
 
         $timeline->createByArray($timelines);
 
