@@ -41,8 +41,6 @@ class Core
             'directory' => '/DANFE'
         ]);
 
-        //var_dump($this->container->getParameter('ftp_host')); die;
-
         /** @var FileReader $fileReader */
         $fileReader = $this->container->get('file_Reader');
         $fileReader->init($fileSystem);
