@@ -40,7 +40,6 @@ if (3 == count($argv) && in_array($argv[2], ['proceda', 'danfe'])) {
     if (200 == $statusCode) {
         createLog($argv[2], 'Processo executado com sucesso.');
     } else {
-        //$response = json_decode($result, true);
         createLog($argv[2], 'Falha ao executar processamento: ' . $result, \Monolog\Logger::ERROR);
     }
 
