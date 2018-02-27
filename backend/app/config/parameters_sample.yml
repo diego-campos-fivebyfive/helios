@@ -5,6 +5,9 @@ parameters:
     database_name: ${CES_SICES_DATABASE_NAME}
     database_user: ${CES_SICES_DATABASE_USER}
     database_password: ${CES_SICES_DATABASE_PASS}
+    ftp_host: ${CES_SICES_FTP_HOST}
+    ftp_user: ${CES_SICES_FTP_USER}
+    ftp_password: ${CES_SICES_FTP_PASS}
     mailer_transport: ${SICES_MAILER_TYPE}
     mailer_host: ${SICES_MAILER_HOST}
     mailer_user: ${SICES_MAILER_USER}

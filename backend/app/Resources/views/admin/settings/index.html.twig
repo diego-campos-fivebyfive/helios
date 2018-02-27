@@ -119,6 +119,12 @@
                                                     </a>
                                                 </li>
                                             {% endif %}
+
+                                            <li>
+                                                <a data-toggle="tab" href="#tab-4" aria-expanded="true">
+                                                    <i class="fa fa-ticket"></i> Parâmetros de Cupom
+                                                </a>
+                                            </li>
                                         </ul>
                                         <div class="tab-content">
 
@@ -387,6 +393,35 @@
                                                 </div>
 
                                             {% endif %}
+
+                                            <div id="tab-4" class="tab-pane">
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="panel panel-success">
+                                                                <div class="panel-heading">
+                                                                    <i class="fa fa-briefcase"></i> Opções de cupom
+                                                                </div>
+                                                                <div class="panel-body">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            {{ form_label(form_params.coupon_order_percent, 'Percentual máximo para cupom') }}
+                                                                            {{ form_widget(form_params.coupon_order_percent, {attr:{class:'form-control', placeholder: 'Percentual'}}) }}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            {{ form_label(form_params.coupon_step_options, 'Multiplicador/Passo') }}
+                                                                            {{ form_widget(form_params.coupon_step_options, {attr:{class:'form-control', placeholder: 'Intervalo'}}) }}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </div>
 
                                     </div>
@@ -529,20 +564,22 @@
             '#settings_parameters_account_level_handler_levels_partner_amount,' +
             '#settings_parameters_account_level_handler_levels_premium_amount,' +
             '#settings_parameters_account_level_handler_levels_platinum_amount,' +
-            '#settings_parameters_account_level_handler_levels_black_amount'
+            '#settings_parameters_account_level_handler_levels_black_amount,' +
+            '#settings_parameters_coupon_order_percent'
         ).mask('##,00',{reverse: true});
 
-        var daysTouchSpin = [
+        var inputsTouchSpin = [
             '#settings_parameters_account_level_handler_levels_partner_days',
             '#settings_parameters_account_level_handler_levels_premium_days',
             '#settings_parameters_account_level_handler_levels_platinum_days',
             '#settings_parameters_account_level_handler_levels_black_days',
-            '#settings_parameters_account_level_handler_grace_period'
+            '#settings_parameters_account_level_handler_grace_period,' +
+            '#settings_parameters_coupon_step_options'
         ];
-        for (i = 0; i < daysTouchSpin.length; i++)
-            $(daysTouchSpin[i]).TouchSpin({
+        for (i = 0; i < inputsTouchSpin.length; i++)
+            $(inputsTouchSpin[i]).TouchSpin({
                 min: 0,
-                max: 999999
+                max: 9999999
             });
 
         var colorPromo = $('#settings_parameters_promo_background').val();
