@@ -2,8 +2,11 @@
 
 namespace AppBundle\Service\Order;
 
+use AppBundle\Entity\Misc\Coupon;
 use AppBundle\Entity\Order\Order;
+use AppBundle\Manager\CouponManager;
 use AppBundle\Manager\ParameterManager;
+use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class OrderCoupon
@@ -47,5 +50,41 @@ class OrderCoupon
         $ranges = range($step, intval($discountLimit), $step);
 
         return $ranges;
+    }
+
+    /**
+     * @param Order $order
+     * @param $coupon
+     * @return bool
+     */
+    public function associateCoupon(Order $order, $coupon)
+    {
+        /** @var CouponManager $couponManager */
+        $couponManager = $this->container->get('coupon_manager');
+
+        if (!$coupon instanceof Coupon) {
+            $coupon = $couponManager->findOneBy(['code' => $coupon]);
+        }
+
+        if (!$coupon || $order->getAccount() !== $coupon->getAccount()) {
+            return false;
+        }
+
+        $coupon->setTarget($this->getTarget($order));
+        $couponManager->save($coupon);
+
+        $order->setCoupon($coupon);
+        $this->container->get('order_manager')->save($order);
+
+        return true;
+    }
+
+    /**
+     * @param Order $order
+     * @return string
+     */
+    private function getTarget(Order $order)
+    {
+        return sprintf('%s::%s', ClassUtils::getClass($order), $order->getId());
     }
 }
