@@ -122,7 +122,7 @@ class Processor
                     $qb->expr()
                         ->like('o.invoices', $qb->expr()->literal("%${invoice}%"))
                 )
-                ->getFirstResult();
+                ->setMaxResults(1);
 
             $order = $qb->getQuery()->getOneOrNullResult();
 
