@@ -109,14 +109,21 @@ class Processor
 
     /**
      * @param $eventGroups
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     private function processEvents($eventGroups)
     {
         foreach ($eventGroups as $invoice => $group) {
-            /** @var Order $order */
-            $order = $this->manager->findOneBy([
-                'invoiceNumber' => $invoice
-            ]);
+
+            $qb = $this->manager->createQueryBuilder();
+
+            $qb
+                ->where(
+                    $qb->expr()->like('o.invoices', $qb->expr()->literal("%${invoice}%"))
+                )
+                ->setMaxResults(1);
+
+            $order = $qb->getQuery()->getOneOrNullResult();
 
             if ($order) {
                 $timelineList = [];
