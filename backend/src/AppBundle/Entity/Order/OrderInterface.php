@@ -14,6 +14,7 @@ use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\Misc\AdditiveInterface;
+use AppBundle\Entity\Misc\CouponInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -1075,4 +1076,15 @@ interface OrderInterface
      * @return OrderInterface
      */
     public function removeInvoice($invoice);
+
+    /**
+     * @param $coupon
+     * @return OrderInterface
+     */
+    public function setCoupon($coupon);
+
+    /**
+     * @return CouponInterface
+     */
+    public function getCoupon();
 }
