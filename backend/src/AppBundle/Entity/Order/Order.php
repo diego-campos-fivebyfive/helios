@@ -14,6 +14,7 @@ namespace AppBundle\Entity\Order;
 use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\Misc\Additive;
 use AppBundle\Entity\Misc\AdditiveInterface;
+use AppBundle\Entity\Misc\CouponInterface;
 use AppBundle\Entity\Pricing\MemorialInterface;
 use AppBundle\Entity\Pricing\RangeInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -545,6 +546,12 @@ class Order implements OrderInterface
      * @ORM\OneToMany(targetEntity="OrderAdditive", mappedBy="order", cascade={"persist", "remove"})
      */
     private $orderAdditives;
+
+    /**
+     * @var CouponInterface
+     * @ORM\OneToOne(targetEntity="Coupon")
+     */
+    private $coupon;
 
     /**
      * Order constructor.
@@ -2570,6 +2577,24 @@ class Order implements OrderInterface
     public function isBilled()
     {
         return !is_null($this->billedAt);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setCoupon($coupon)
+    {
+        $this->coupon = $coupon;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCoupon()
+    {
+        return $this->coupon;
     }
 }
 
