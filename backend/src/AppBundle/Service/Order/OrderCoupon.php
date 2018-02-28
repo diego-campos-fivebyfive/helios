@@ -29,17 +29,17 @@ class OrderCoupon
     public function generateOptions(Order $order)
     {
         $account = $order->getAccount();
+        $accountRanking = $account->getRanking();
 
         /** @var ParameterManager $parameters */
         $parameters = $this->container->get('parameter_manager');
         $parameter = $parameters->findOrCreate('platform_settings')->getParameters();
         $step = $parameter['coupon_step_options'];
 
-        if ($account->getRanking() < $step) {
+        if ($accountRanking < $step) {
             return [];
         }
 
-        $accountRanking = $account->getRanking();
         $maxDiscountPercent = $parameter['coupon_order_percent'] / 100;
         $maxOrderDiscount = $order->getTotal() * $maxDiscountPercent;
         $discountLimit = $maxOrderDiscount < $accountRanking ? $maxOrderDiscount : $accountRanking;
