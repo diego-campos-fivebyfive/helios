@@ -113,10 +113,13 @@ class Processor
     private function processEvents($eventGroups)
     {
         foreach ($eventGroups as $invoice => $group) {
-            /** @var Order $order */
-            $order = $this->manager->findOneBy([
-                'invoiceNumber' => $invoice
-            ]);
+
+            $qb = $this->manager->createQueryBuilder();
+
+            $qb->where($qb->expr()->like('o.invoices', $qb->expr()->literal("%${invoice}%")))
+                ->getFirstResult();
+
+            $order = $qb->getQuery()->getResult()[0];
 
             if ($order) {
                 $timelineList = [];
