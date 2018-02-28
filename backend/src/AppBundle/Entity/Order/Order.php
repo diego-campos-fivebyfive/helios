@@ -549,7 +549,7 @@ class Order implements OrderInterface
 
     /**
      * @var CouponInterface
-     * @ORM\OneToOne(targetEntity="Coupon")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Misc\Coupon")
      */
     private $coupon;
 
