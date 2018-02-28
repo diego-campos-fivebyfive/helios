@@ -19,7 +19,6 @@
           label.full
             | Conta
             select(v-model='coupon.account')
-              option(value='') Não vinculada
               option(
                 v-for='account in accounts',
                 :value='account.id')
@@ -82,7 +81,13 @@
     mounted() {
       this.axios.get('api/v1/account/available')
         .then(response => {
+          const defaultOption = {
+            id: '',
+            name: 'Não vinculada'
+          }
+
           this.accounts = response.data
+          this.accounts.unshift(defaultOption)
         })
     }
   }
