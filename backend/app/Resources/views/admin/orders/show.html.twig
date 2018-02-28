@@ -169,7 +169,7 @@
                                                 {% if order.isAvailable and member.isPlatformLogistic %}
                                                     <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
                                                        data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_COLLECTED') }}">
-                                                        <i class="fa fa-check"></i> Coletado
+                                                        <i class="fa fa-check"></i> Coletado pelo cliente
                                                     </a>
                                                 {% endif %}
 
@@ -180,12 +180,13 @@
                                                     </a>
                                                 {% endif %}
 
-                                                {% if order.isCollected and member.isPlatformAfterSales %}
-                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DELIVERED') }}">
-                                                        <i class="fa fa-check"></i> Entregue
-                                                    </a>
-                                                {% endif %}
+                                                {# Todo: Funcionalidade retirada temporiamente, será re-utilizada em novas regras #}
+                                                {#{% if order.isCollected and member.isPlatformAfterSales %}#}
+                                                    {#<a class="btn btn-sm btn-green" data-id="{{ order.id }}"#}
+                                                       {#data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DELIVERED') }}">#}
+                                                        {#<i class="fa fa-check"></i> Entregue#}
+                                                    {#</a>#}
+                                                {#{% endif %}#}
 
                                                 {% if not member.isPlatformExpanse %}
                                                     {% if order.isBuilding or (order.isRejected and (member.isPlatformMaster or member.isPlatformAdmin)) %}
