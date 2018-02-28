@@ -2392,17 +2392,16 @@ class Order implements OrderInterface
      */
     public function addFile($type, $file)
     {
-        $types = ['payment', 'proforma', 'nfe_pdf', 'nfe_xml'];
+        $types = ['payment', 'proforma', 'nfe'];
 
         if(!in_array($type, $types))
             throw new \InvalidArgumentException(sprintf('Invalid [%s] file type. Accept: %s', $type, implode(',', $types)));
 
         switch ($type){
-            case 'nfe_pdf':
-            case 'nfe_xml':
             case 'proforma':
                 $this->files[$type] = $file;
                 break;
+            case 'nfe':
             case 'payment':
                 $this->files[$type][] = $file;
                 break;
