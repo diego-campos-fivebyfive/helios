@@ -2,16 +2,10 @@
 
 namespace Tests\AppBundle\Service\Order;
 
-
-use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Misc\Coupon;
 use AppBundle\Entity\Order\Order;
-use AppBundle\Entity\UserInterface;
 use AppBundle\Service\Order\OrderCoupon;
-use Symfony\Component\BrowserKit\Cookie;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Tests\AppBundle\AppTestCase;
-use Tests\AppBundle\Helpers\ObjectHelperTest;
 
 /**
  * Class OrderCouponTest
@@ -19,7 +13,7 @@ use Tests\AppBundle\Helpers\ObjectHelperTest;
  */
 class OrderCouponTest extends AppTestCase
 {
-    public function testCreate()
+    public function testAssociate()
     {
         $account = $this->getFixture('account');
 
