@@ -104,6 +104,8 @@ class OrderCoupon
             return null;
         }
 
+        $this->associateCoupon($order, $coupon);
+
         $this->debitRanking($account, $coupon, $amount);
 
         return $coupon;
