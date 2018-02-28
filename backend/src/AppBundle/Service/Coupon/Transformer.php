@@ -33,6 +33,7 @@ class Transformer
     /**
      * @param AccountInterface $account
      * @param $amount
+     * @return mixed|object
      */
     public function fromAccount(AccountInterface $account, $amount)
     {
@@ -48,6 +49,8 @@ class Transformer
             $this->manager->save($coupon);
 
             $this->addCodeCoupon($coupon);
+
+            return $coupon;
         }
     }
 
