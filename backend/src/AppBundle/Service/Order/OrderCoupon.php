@@ -56,7 +56,7 @@ class OrderCoupon
         $ranges = $this->generateOptions($order);
 
         if (!in_array($amount, $ranges)) {
-            return [];
+            return null;
         }
 
         $account = $order->getAccount();
@@ -66,10 +66,12 @@ class OrderCoupon
         $coupon = $transformer->fromAccount($account, $amount);
 
         if (!$coupon) {
-            return [];
+            return null;
         }
 
         $this->debitRanking($account,$coupon, $amount);
+
+        return $coupon;
     }
 
     private function debitRanking($account, $coupon, $amount)
