@@ -119,8 +119,7 @@ class Processor
 
             $qb
                 ->where(
-                    $qb->expr()
-                        ->like('o.invoices', $qb->expr()->literal("%${invoice}%"))
+                    $qb->expr()->like('o.invoices', $qb->expr()->literal("%${invoice}%"))
                 )
                 ->setMaxResults(1);
 
