@@ -109,6 +109,7 @@ class Processor
 
     /**
      * @param $eventGroups
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     private function processEvents($eventGroups)
     {
@@ -116,10 +117,14 @@ class Processor
 
             $qb = $this->manager->createQueryBuilder();
 
-            $qb->where($qb->expr()->like('o.invoices', $qb->expr()->literal("%${invoice}%")))
+            $qb
+                ->where(
+                    $qb->expr()
+                        ->like('o.invoices', $qb->expr()->literal("%${invoice}%"))
+                )
                 ->getFirstResult();
 
-            $order = $qb->getQuery()->getResult()[0];
+            $order = $qb->getQuery()->getOneOrNullResult();
 
             if ($order) {
                 $timelineList = [];
