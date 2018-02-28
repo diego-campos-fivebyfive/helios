@@ -30,27 +30,22 @@ class OrderCoupon
     {
         $account = $order->getAccount();
 
-        $options = [];
-
         /** @var ParameterManager $parameters */
         $parameters = $this->container->get('parameter_manager');
         $parameter = $parameters->findOrCreate('platform_settings')->getParameters();
-        $percent = $parameter['coupon_order_percent'] / 100;
+        $step = $parameter['coupon_step_options'];
 
-        if ($account->getRanking() < $parameter['coupon_step_options']) {
-            return $options;
+        if ($account->getRanking() < $step) {
+            return [];
         }
 
-        $limit = $order->getTotal() * $percent;
+        $accountRanking = $account->getRanking();
+        $maxDiscountPercent = $parameter['coupon_order_percent'] / 100;
+        $maxOrderDiscount = $order->getTotal() * $maxDiscountPercent;
+        $discountLimit = $maxOrderDiscount < $accountRanking ? $maxOrderDiscount : $accountRanking;
 
-        $stepLimit = $limit < $account->getRanking() ? $limit : $account->getRanking();
+        $ranges = range($step, intval($discountLimit), $step);
 
-        $steps = floor($stepLimit / $parameter['coupon_step_options']);
-
-        for ($i = 0; $i < $steps; $i++) {
-            $options[] = $parameter['coupon_step_options'] * ($i + 1);
-        }
-
-        return $options;
+        return $ranges;
     }
 }
