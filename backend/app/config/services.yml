@@ -307,6 +307,10 @@ services:
         class: App\Sices\Nfe\Processor
         arguments: ['@service_container']
 
+    order_coupon:
+        class: AppBundle\Service\Order\OrderCoupon
+        arguments: ['@service_container']
+
     order_mailer:
         class: AppBundle\Service\Order\OrderMailer
         arguments: ['@service_container']
