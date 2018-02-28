@@ -91,10 +91,9 @@ class Processor
 
         foreach ($extensions as $extension) {
             $file = "{$filename}.{$extension}";
-            if ($order->hasFile('nfe', $file)) {
-                continue;
+            if (!array_key_exists('nfe', $order->getFiles()) || !$order->hasFile('nfe', $file)) {
+                $order->addFile('nfe', $file);
             }
-            $order->addFile('nfe', $file);
         }
 
         if ($danfe['billing'] == 'S') {
