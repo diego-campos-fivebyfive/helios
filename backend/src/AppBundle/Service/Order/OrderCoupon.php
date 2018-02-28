@@ -69,9 +69,7 @@ class OrderCoupon
             return null;
         }
 
-        $this->debitRanking($account,$coupon, $amount);
-
-        return $coupon;
+        $this->debitRanking($account, $coupon, $amount);
     }
 
     private function debitRanking($account, $coupon, $amount)
