@@ -355,6 +355,56 @@
                     </div>
                 </div>
 
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <div class="row">
+                            <div class="row wrapper">
+                                <ol class="breadcrumb">
+                                <div class="col-md-10">
+                                    <label>Dados Fiscais</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-primary btn-sm">
+                                        <i class="fa fa-download"></i> Baixar NFe
+                                    </button>
+                                </div>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            {% if member.isPlatformMaster %}
+                                <div class="col-md-12">
+                                    <label style="padding-right: 4px;">
+                                        Nº da Nota fiscal:
+                                    </label>
+                                    <input id="invoice-number" value="{{ order.invoiceNumber }}"
+                                           type="text">
+                                    <label style="padding-right: 4px; padding-left: 8px;">
+                                        Data de Faturamento:
+                                    </label>
+                                    <input id="up_billed_at" type="text">
+                                </div>
+                            {% endif %}
+                            {% if not member.isPlatformMaster %}
+                                <div class="col-md-6" style="padding-bottom: 10px;">
+                                    <label style="padding-right: 10px;">
+                                        Nº da Nota Fiscal:
+                                    </label>
+                                    {{ order.invoiceNumber }}
+                                </div>
+                                <div class="col-md-6" style="padding-bottom: 10px;">
+                                    <label style="padding-left: 10px;">
+                                        Data de Faturamento:
+                                    </label>
+                                    {{ order.billedAt ? order.billedAt|date('d/m/Y') : '' }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
                 <div class="ibox border-bottom">
                     <div class="ibox-content">
                         <div class="tab-content">
@@ -363,38 +413,9 @@
                                     <div class="row wrapper">
                                         <div class="col-lg-12 border-bottom">
                                             <ol class="breadcrumb">
-                                                <div class="col-md-4">
+                                                <div class="col-md-12">
                                                     <label>Dados do integrador</label>
                                                 </div>
-                                                {% if member.isPlatformMaster %}
-                                                    <div class="col-md-8" style="padding-bottom: 10px;">
-                                                        <div class="pull-right">
-                                                            <label style="padding-right: 10px;">
-                                                                Nº da Nota Fiscal:
-                                                            </label>
-                                                            <input id="invoice-number" value="{{ order.invoiceNumber }}"
-                                                                   type="text">
-                                                        </div>
-                                                        <div class="pull-right">
-                                                            <label style="padding-right: 10px;">
-                                                                Data de Faturamento:
-                                                            </label>
-                                                            <input id="up_billed_at" type="text">
-                                                        </div>
-                                                    </div>
-                                                {% endif %}
-                                                {% if not member.isPlatformMaster %}
-                                                    <div class="pull-right" style="padding-bottom: 10px;">
-                                                        <label style="padding-right: 10px;">
-                                                            Nº da Nota Fiscal:
-                                                        </label>
-                                                        {{ order.invoiceNumber }}
-                                                        <label style="padding-left: 10px;">
-                                                            Data de Faturamento:
-                                                        </label>
-                                                        {{ order.billedAt ? order.billedAt|date('d/m/Y') : '' }}
-                                                    </div>
-                                                {% endif %}
                                             </ol>
                                         </div>
                                     </div>
