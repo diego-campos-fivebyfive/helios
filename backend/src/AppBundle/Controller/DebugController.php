@@ -59,8 +59,9 @@ class DebugController extends AbstractController
         $orderCoupon = $this->get('order_coupon');
 
         $order = $this->get('order_manager')->find(1095);
+        $amount = 1500;
 
-        $result = $orderCoupon->generateOptions($order);
+        $result = $orderCoupon->generateCoupon($order,$amount);
 
         dump($result);die;
     }

@@ -7,6 +7,8 @@ use AppBundle\Entity\Order\Order;
 use AppBundle\Manager\CouponManager;
 use AppBundle\Manager\ParameterManager;
 use Doctrine\Common\Util\ClassUtils;
+use AppBundle\Service\Business\RankingGenerator;
+use AppBundle\Service\Coupon\Transformer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class OrderCoupon
@@ -81,10 +83,51 @@ class OrderCoupon
 
     /**
      * @param Order $order
+     * @param $amount
+     * @return mixed|null|object
+     */
+    public function generateCoupon(Order $order, $amount)
+    {
+        $ranges = $this->generateOptions($order);
+
+        if (!in_array($amount, $ranges)) {
+            return null;
+        }
+
+        $account = $order->getAccount();
+
+        /** @var Transformer $transformer */
+        $transformer = $this->container->get('coupon_transformer');
+        $coupon = $transformer->fromAccount($account, $amount);
+
+        if (!$coupon) {
+            return null;
+        }
+
+        $this->debitRanking($account, $coupon, $amount);
+
+        return $coupon;
+    }
+
+    /**
+     * @param Order $order
      * @return string
      */
     private function getTarget(Order $order)
     {
         return sprintf('%s::%s', ClassUtils::getClass($order), $order->getId());
+    }
+
+    /**
+     * @param $account
+     * @param $coupon
+     * @param $amount
+     */
+    private function debitRanking($account, $coupon, $amount)
+    {
+        $debitAmount = - $amount;
+        /** @var RankingGenerator $rankingGenerator */
+        $rankingGenerator = $this->container->get('ranking_generator');
+        $rankingGenerator->create($account, $coupon->getName(), $debitAmount);
     }
 }
