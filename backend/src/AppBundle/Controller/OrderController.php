@@ -12,7 +12,6 @@ use AppBundle\Entity\Order\OrderAdditiveInterface;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Entity\TimelineInterface;
 use AppBundle\Form\Order\FilterType;
-use AppBundle\Service\Order\OrderCoupon;
 use AppBundle\Service\ProjectGenerator\ShippingRuler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -136,7 +135,7 @@ class OrderController extends AbstractController
 
         if (!$coupon) {
             return $this->json([
-                'message' => 'Operation Not Allowed'
+                'message' => 'Coupon could not be generated'
             ],
                 Response::HTTP_BAD_REQUEST);
         }
