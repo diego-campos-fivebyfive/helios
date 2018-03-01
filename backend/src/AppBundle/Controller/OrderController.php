@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Misc\Additive;
+use AppBundle\Entity\Misc\Coupon;
 use AppBundle\Entity\Order\Element;
 use AppBundle\Entity\Order\Message;
 use AppBundle\Entity\Order\MessageInterface;
@@ -12,6 +13,7 @@ use AppBundle\Entity\Order\OrderAdditiveInterface;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Entity\TimelineInterface;
 use AppBundle\Form\Order\FilterType;
+use AppBundle\Service\Order\OrderCoupon;
 use AppBundle\Service\ProjectGenerator\ShippingRuler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -119,9 +121,9 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/association_coupon", name="association_coupon")
+     * @Route("/generate_coupon", name="generate_coupon_from_order")
      */
-    public function associationCouponAction(Request $request)
+    public function generateCouponAction(Request $request)
     {
         $orderId = $request->get('order');
 
@@ -141,6 +143,21 @@ class OrderController extends AbstractController
         }
 
         return $this->json([]);
+    }
+
+    /**
+     * @Route("/{order}/{coupon}/associate_coupon", name="associate_coupon")
+     */
+    public function associateCouponAction(Order $order, Coupon $coupon)
+    {
+        /** @var OrderCoupon $orderCoupon */
+        $orderCoupon = $this->container->get("order_coupon");
+
+        $associated = $orderCoupon->associateCoupon($order, $coupon);
+
+        $status = $associated ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST;
+
+        return $this->json([], $status);
     }
 
     /**
