@@ -13,7 +13,6 @@ use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Entity\TimelineInterface;
 use AppBundle\Form\Order\FilterType;
 use AppBundle\Service\ProjectGenerator\ShippingRuler;
-use function PHPSTORM_META\type;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -117,6 +116,31 @@ class OrderController extends AbstractController
             'timeline' => $this->get('order_timeline')->load($order),
             'files' => $files
         ));
+    }
+
+    /**
+     * @Route("/association_coupon", name="association_coupon")
+     */
+    public function associationCouponAction(Request $request)
+    {
+        $orderId = $request->get('order');
+
+        $order = $this->manager('order')->find($orderId);
+        $step = $request->get('step');
+
+        /** @var OrderCoupon $orderCoupon */
+        $orderCoupon = $this->container->get('order_coupon');
+
+        $coupon = $orderCoupon->generateCoupon($order, $step);
+
+        if (!$coupon) {
+            return $this->json([
+                'message' => 'Coupon could not be generated'
+            ],
+                Response::HTTP_BAD_REQUEST);
+        }
+
+        return $this->json([]);
     }
 
     /**
