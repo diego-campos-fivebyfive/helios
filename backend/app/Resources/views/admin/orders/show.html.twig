@@ -122,7 +122,7 @@
                         {% for file in files %}
                             {% set _route = path('order_file',{id:order.id, type:'nfe'}) %}
                             <h5>
-                                <a target="_blank" href="{{ path('order_file', {id:order.id, type:'nfe', file:file.file}) }}">
+                                <a href="{{ path('order_file', {id:order.id, type:'nfe', file:file.file}) }}">
                                     {{ file.name }}
                                 </a>
                             </h5>
