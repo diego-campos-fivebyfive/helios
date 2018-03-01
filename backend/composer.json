@@ -25,6 +25,7 @@
         "friendsofsymfony/oauth-server-bundle": "dev-master",
         "friendsofsymfony/rest-bundle": "^2.2",
         "friendsofsymfony/user-bundle": "~2.0@dev",
+        "gaufrette/phpseclib-sftp-adapter": "^0.4.0",
         "incenteev/composer-parameter-handler": "~2.0",
         "jms/serializer-bundle": "^1.1",
         "knplabs/doctrine-behaviors": "~1.1",
