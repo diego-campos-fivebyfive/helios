@@ -55,6 +55,24 @@ class Transformer
     }
 
     /**
+     * @param $code
+     * @return array
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getCoupon($code)
+    {
+        $qb = $this->manager->createQueryBuilder();
+
+        $qb->where("c.code = :code")
+            ->setParameter(
+                "code" , $code
+            )
+            ->setMaxResults(1);
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    /**
      * @param Coupon $coupon
      */
     private function addCodeCoupon(Coupon $coupon)
