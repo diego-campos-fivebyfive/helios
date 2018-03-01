@@ -379,7 +379,7 @@
                                     <label style="padding-right: 4px;">
                                         Nº da Nota fiscal:
                                     </label>
-                                    <input id="invoice-number" value="{{ order.invoiceNumber }}"
+                                    <input id="invoice-number" value="{{ order.invoices|join(',') }}"
                                            type="text">
                                     <label style="padding-right: 4px; padding-left: 8px;">
                                         Data de Faturamento:
@@ -392,7 +392,7 @@
                                     <label style="padding-right: 10px;">
                                         Nº da Nota Fiscal:
                                     </label>
-                                    {{ order.invoiceNumber }}
+                                    {{ order.invoices|join(',') }}
                                 </div>
                                 <div class="col-md-6" style="padding-bottom: 10px;">
                                     <label style="padding-left: 10px;">
