@@ -155,7 +155,7 @@ class OrderController extends AbstractController
 
         $associated = $orderCoupon->associateCoupon($order, $coupon);
 
-        $status = $associated ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST;
+        $status = $associated ? Response::HTTP_OK : Response::HTTP_UNAUTHORIZED;
 
         return $this->json([], $status);
     }
