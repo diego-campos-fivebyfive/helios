@@ -816,6 +816,14 @@ Esclarecimentos gerais relacionados a documentação:
     E-mail: gian_bine@hotmail.com
     ```
 
+    - #### Gustavo Henrique Jacomel
+    ```
+    Backend developer
+    Slack: @gustavojacomel
+    Github: @Suxgotav
+    E-mail: gustavojacomel@hotmail.com
+    ```
+
     - #### João Zaqueu Chereta
     ```
     Full-stack developer
