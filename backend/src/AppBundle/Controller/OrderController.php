@@ -14,7 +14,6 @@ use AppBundle\Entity\TimelineInterface;
 use AppBundle\Form\Order\FilterType;
 use AppBundle\Service\Order\OrderCoupon;
 use AppBundle\Service\ProjectGenerator\ShippingRuler;
-use function PHPSTORM_META\type;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
