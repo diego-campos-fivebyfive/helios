@@ -99,10 +99,23 @@ class OrderController extends AbstractController
 
         $this->denyAccessUnlessGranted('view', $order);
 
+        $filesNfe = array_key_exists('nfe', $order->getFiles()) ? $order->getFiles()['nfe'] : [];
+
+        $files = [];
+        foreach ($filesNfe as $file) {
+            $invoice = substr($file,25,9);
+
+            $files[] = [
+                'name'=> $invoice.'.'.explode('.',$file)[1],
+                'file' => $file
+            ];
+        }
+
         return $this->render('admin/orders/show.html.twig', array(
             'order' => $order,
             'expired' => $expired,
-            'timeline' => $this->get('order_timeline')->load($order)
+            'timeline' => $this->get('order_timeline')->load($order),
+            'files' => $files
         ));
     }
 
@@ -296,27 +309,46 @@ class OrderController extends AbstractController
 
         $method = 'get' . ucfirst($type);
 
-        if (!method_exists($order, $method)) {
+        if ('nfe' != $type && !method_exists($order, $method)) {
             $message = 'The class %s does not have %s file';
             throw $this->createNotFoundException(sprintf($message, get_class($order), $type));
         }
 
-        $filename = $request->get('file') ? $request->get('file') : $order->$method();
+        if('nfe' != $type) {
+            $filename = $request->get('file') ? $request->get('file') : $order->$method();
+        } else {
+            $filename = $request->query->get('file');
+        }
 
         if (!$filename) {
             $message = 'File %s not found';
             throw $this->createNotFoundException(sprintf($message, $type));
         }
 
-        $header = ($type == 'fileExtract') ? ResponseHeaderBag::DISPOSITION_ATTACHMENT : ResponseHeaderBag::DISPOSITION_INLINE;
+        $header = ($type == 'fileExtract' || $type == 'nfe') ? ResponseHeaderBag::DISPOSITION_ATTACHMENT : ResponseHeaderBag::DISPOSITION_INLINE;
 
-        if ($type != 'proforma')
-            $type = ($type == 'fileExtract') ? 'order' : 'payment';
+        $root = 'order';
+
+        switch ($type){
+            case 'proforma':
+                $dir = 'proforma';
+                break;
+            case 'fileExtract':
+                $dir = 'order';
+                break;
+            case 'payment':
+                $dir = 'payment';
+                break;
+            case 'nfe':
+                $dir = 'danfe';
+                $root = 'fiscal';
+                break;
+        }
 
         $options = [
             'filename' => $filename,
-            'root' => 'order',
-            'type' => $type,
+            'root' => $root,
+            'type' => $dir,
             'access' => 'private'
         ];
 

@@ -113,6 +113,31 @@
         </div>
     </div>
 
+    <div class="modal inmodal fade" id="download_files" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInLeft">
+                <div class="modal-body">
+                    <h3 class="text-center">Arquivos NFe</h3>
+                    {% if files %}
+                        {% for file in files %}
+                            {% set _route = path('order_file',{id:order.id, type:'nfe'}) %}
+                            <h5>
+                                <a href="{{ path('order_file', {id:order.id, type:'nfe', file:file.file}) }}">
+                                    {{ file.name }}
+                                </a>
+                            </h5>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="wrapper wrapper-content  animated fadeInRight">
         <div class="row">
             <div class="col-md-8">
@@ -364,9 +389,12 @@
                                     <label>Dados Fiscais</label>
                                 </div>
                                 <div class="col-md-2">
-                                    <button class="btn btn-primary btn-sm">
+                                    {% if files %}
+                                    <button type="button" class="btn btn-primary btn-sm"
+                                            data-toggle="modal" data-target="#download_files">
                                         <i class="fa fa-download"></i> Baixar NFe
                                     </button>
+                                    {% endif %}
                                 </div>
                                 </ol>
                             </div>
@@ -416,6 +444,36 @@
                                                 <div class="col-md-12">
                                                     <label>Dados do integrador</label>
                                                 </div>
+
+                                                {% if member.isPlatformMaster %}
+                                                    <div class="col-md-8" style="padding-bottom: 10px;">
+                                                        <div class="pull-right">
+                                                            <label style="padding-right: 10px;">
+                                                                Nº da Nota Fiscal:
+                                                            </label>
+                                                            <input id="invoice-number" value="{{ order.invoiceNumber }}"
+                                                                   type="text">
+                                                        </div>
+                                                        <div class="pull-right">
+                                                            <label style="padding-right: 10px;">
+                                                                Data de Faturamento:
+                                                            </label>
+                                                            <input id="up_billed_at" type="text">
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                {% if not member.isPlatformMaster %}
+                                                    <div class="pull-right" style="padding-bottom: 10px;">
+                                                        <label style="padding-right: 10px;">
+                                                            Nº da Nota Fiscal:
+                                                        </label>
+                                                        {{ order.invoiceNumber }}
+                                                        <label style="padding-left: 10px;">
+                                                            Data de Faturamento:
+                                                        </label>
+                                                        {{ order.billedAt ? order.billedAt|date('d/m/Y') : '' }}
+                                                    </div>
+                                                {% endif %}
                                             </ol>
                                         </div>
                                     </div>
