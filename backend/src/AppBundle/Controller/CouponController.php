@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Misc\Coupon;
 use AppBundle\Entity\Misc\CouponInterface;
+use AppBundle\Service\Coupon\Transformer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -16,12 +17,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @Route("api/v1/coupon")
  *
- * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_PLATFORM_MASTER')")
  */
 class CouponController extends AbstractController
 {
     /**
      * @Route("/", name="list_coupon")
+     *
+     * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_PLATFORM_MASTER')")
      *
      * @Method("get")
      */
@@ -63,6 +65,8 @@ class CouponController extends AbstractController
 
     /**
      * @Route("/", name="create_coupon")
+     *
+     * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_PLATFORM_MASTER')")
      *
      * @Method("post")
      */
@@ -120,6 +124,8 @@ class CouponController extends AbstractController
     /**
      * @Route("/{id}", name="update_coupon")
      *
+     * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_PLATFORM_MASTER')")
+     *
      * @Method("put")
      */
     public function updateAction(Request $request, Coupon $coupon)
@@ -149,6 +155,8 @@ class CouponController extends AbstractController
     /**
      * @Route("/{id}", name="delete_coupon")
      *
+     * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_PLATFORM_MASTER')")
+     *
      * @Method("delete")
      */
     public function deleteAction(Coupon $coupon)
@@ -160,6 +168,41 @@ class CouponController extends AbstractController
         $manager->delete($coupon);
 
         return $this->json([]);
+    }
+
+    /**
+     * @Route("/code/{code}", name="get_coupon")
+     *
+     * @Method("get")
+     */
+    public function getCouponAction($code)
+    {
+        /** @var Transformer $couponTransformer */
+        $couponTransformer = $this->container->get("coupon_transformer");
+
+        $coupon = $couponTransformer->getCoupon($code);
+
+        if ($coupon) {
+            $couponArray = [
+                "id" => $coupon->getId(),
+                "code" => $coupon->getCode(),
+                "name" => $coupon->getName(),
+                "amount" => $coupon->getAmount(),
+                "applied" => $coupon->isApplied(),
+                "appliedAt" => $coupon->getAppliedAt()->format("Y-m-d"),
+                "target" => $coupon->getTarget()
+            ];
+
+            $user = $this->user();
+
+            if (!$user->isPlatform() && $coupon->getAccount() != $user->getInfo()->getAccount()) {
+                return $this->json([],Response::HTTP_UNAUTHORIZED);
+            }
+
+            return $this->json($couponArray);
+        }
+
+        return $this->json([], Response::HTTP_NOT_FOUND);
     }
 
     /**
