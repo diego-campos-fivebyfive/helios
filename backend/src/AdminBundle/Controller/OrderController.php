@@ -200,9 +200,9 @@ class OrderController extends AbstractController
      */
     public function invoiceNumberAction(Request $request, Order $order)
     {
-        $invoice = $request->request->get('invoice_number');
+        $invoices = explode(',', $request->request->get('invoice_number'));
 
-        $order->setInvoiceNumber($invoice);
+        $order->setInvoices($invoices);
 
         $this->manager('order')->save($order);
 
