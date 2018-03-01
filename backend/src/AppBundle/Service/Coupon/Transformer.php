@@ -55,6 +55,15 @@ class Transformer
     }
 
     /**
+     * @param $code
+     * @return null|object
+     */
+    public function getCoupon($code)
+    {
+        return $this->manager->findOneBy(["code" => $code]);
+    }
+
+    /**
      * @param Coupon $coupon
      */
     private function addCodeCoupon(Coupon $coupon)
