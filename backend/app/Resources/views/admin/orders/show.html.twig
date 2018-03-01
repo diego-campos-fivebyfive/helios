@@ -113,6 +113,38 @@
         </div>
     </div>
 
+    <div class="modal inmodal fade" id="download_files" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInLeft">
+                <div class="modal-body">
+                    <h3 class="text-center">Arquivos Fiscais</h3>
+                    {% if files %}
+                        {% for file in files %}
+                            {% set _route = path('order_file',{id:order.id, type:'nfe'}) %}
+                            <h5>
+                                <a target="_blank" href="{{ path('order_file', {id:order.id, type:'nfe', file:file.file}) }}">
+                                    {{ file.name }}
+                                </a>
+                            </h5>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<button type="button"
+   target="_blank"
+   data-toggle="modal"
+   data-target="#download_files">download
+</button>
+
+
     <div class="wrapper wrapper-content  animated fadeInRight">
         <div class="row">
             <div class="col-md-8">
@@ -366,6 +398,7 @@
                                                 <div class="col-md-4">
                                                     <label>Dados do integrador</label>
                                                 </div>
+
                                                 {% if member.isPlatformMaster %}
                                                     <div class="col-md-8" style="padding-bottom: 10px;">
                                                         <div class="pull-right">
