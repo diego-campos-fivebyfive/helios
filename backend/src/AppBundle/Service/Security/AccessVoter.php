@@ -21,6 +21,7 @@ use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\User;
 use AppBundle\Entity\UserInterface;
+use AppBundle\Entity\Misc\Coupon;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -63,13 +64,13 @@ class AccessVoter extends Voter
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
         $user = $token->getUser();
-        if(!$user instanceof UserInterface){
+        if (!$user instanceof UserInterface) {
             return false;
         }
 
         $method = $this->determineMethod($subject, $attribute);
 
-        if(method_exists($this, $method)){
+        if (method_exists($this, $method)) {
             return $this->$method($subject, $token);
         }
 
@@ -89,12 +90,12 @@ class AccessVoter extends Voter
         $member = $user->getInfo();
         $projectMember = $project->getMember();
 
-        if($projectMember != $member){
+        if ($projectMember != $member) {
 
             $account = $member->getAccount();
             $projectAccount = $projectMember->getAccount();
 
-            if($projectAccount == $account){
+            if ($projectAccount == $account) {
                 return $member->isOwner() || $member->isMasterOwner();
             }
 
@@ -114,11 +115,12 @@ class AccessVoter extends Voter
         $user = $token->getUser();
         $member = $user->getInfo();
 
-        if ($member instanceof MemberInterface){
+        if ($member instanceof MemberInterface) {
 
             // Via member
-            if ($member->getId() === $customer->getMember()->getId())
+            if ($member->getId() === $customer->getMember()->getId()) {
                 return true;
+            }
 
             // Via member is account owner
             if ($member->isOwner() && ($customer->getMember()->getAccount()->getId() === $member->getAccount()->getId())) {
@@ -126,8 +128,9 @@ class AccessVoter extends Voter
             }
 
             // Via accessors
-            if ($customer->getAccessors()->contains($member))
+            if ($customer->getAccessors()->contains($member)) {
                 return true;
+            }
         }
 
         return false;
@@ -135,7 +138,7 @@ class AccessVoter extends Voter
 
     /**
      * @param CategoryInterface $category
-     * @param User $user
+     * @param TokenInterface $token
      * @return bool
      */
     private function voteEditCategory(CategoryInterface $category, TokenInterface $token)
@@ -145,7 +148,7 @@ class AccessVoter extends Voter
         $member = $user->getInfo();
         $account = $member->getAccount();
 
-        if($account->getId() === $category->getAccount()->getId()){
+        if($account->getId() === $category->getAccount()->getId()) {
             return true;
         }
 
@@ -171,17 +174,47 @@ class AccessVoter extends Voter
     {
         $user = $token->getUser();
 
-        if($user->isPlatform())
+        if($user->isPlatform()) {
             return true;
+        }
 
         $account = $order->getAccount();
-        if(!$account instanceof AccountInterface)
+        if(!$account instanceof AccountInterface) {
             return false;
+        }
 
         /** @var MemberInterface $member */
         $member = $user->getInfo();
 
         return ($account === $member->getAccount());
+    }
+
+    /**
+     * @param Coupon $coupon
+     * @param TokenInterface $token
+     * @return bool
+     */
+    private function voteEditCoupon(Coupon $coupon, TokenInterface $token)
+    {
+        $user = $token->getUser();
+
+        /** @var MemberInterface $member */
+        $member = $user->getInfo();
+
+        if($user->isPlatform()) {
+            return true;
+        }
+
+        $account = $coupon->getAccount();
+        if (!$account instanceof AccountInterface) {
+            return false;
+        }
+
+        if (is_null($account) || $account === $member->getAccount()) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -191,10 +224,11 @@ class AccessVoter extends Voter
     private function isBearableInstance($object)
     {
         return in_array(get_class($object), [
-            Customer::class,
             Category::class,
-            Project::class,
-            Order::class
+            Customer::class,
+            Coupon::class,
+            Order::class,
+            Project::class
         ]);
     }
 
