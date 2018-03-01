@@ -182,27 +182,23 @@ class CouponController extends AbstractController
 
         $coupon = $couponTransformer->getCoupon($code);
 
-        if ($coupon) {
-            $couponArray = [
-                "id" => $coupon->getId(),
-                "code" => $coupon->getCode(),
-                "name" => $coupon->getName(),
-                "amount" => $coupon->getAmount(),
-                "applied" => $coupon->isApplied(),
-                "appliedAt" => $coupon->getAppliedAt()->format("Y-m-d"),
-                "target" => $coupon->getTarget()
-            ];
-
-            $user = $this->user();
-
-            if (!$user->isPlatform() && $coupon->getAccount() != $user->getInfo()->getAccount()) {
-                return $this->json([],Response::HTTP_UNAUTHORIZED);
-            }
-
-            return $this->json($couponArray);
+        if (!$coupon) {
+            return $this->json([], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json([], Response::HTTP_NOT_FOUND);
+        $this->denyAccessUnlessGranted('edit', $coupon);
+
+        $couponArray = [
+            "id" => $coupon->getId(),
+            "code" => $coupon->getCode(),
+            "name" => $coupon->getName(),
+            "amount" => $coupon->getAmount(),
+            "applied" => $coupon->isApplied(),
+            "appliedAt" => $coupon->getAppliedAt()->format("Y-m-d"),
+            "target" => $coupon->getTarget()
+        ];
+
+        return $this->json($couponArray);
     }
 
     /**
