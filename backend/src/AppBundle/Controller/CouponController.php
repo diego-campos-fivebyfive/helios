@@ -194,7 +194,7 @@ class CouponController extends AbstractController
             "name" => $coupon->getName(),
             "amount" => $coupon->getAmount(),
             "applied" => $coupon->isApplied(),
-            "appliedAt" => $coupon->getAppliedAt()->format("Y-m-d"),
+            "appliedAt" => $coupon->getAppliedAt() ? $coupon->getAppliedAt()->format("Y-m-d") : null,
             "target" => $coupon->getTarget()
         ];
 
