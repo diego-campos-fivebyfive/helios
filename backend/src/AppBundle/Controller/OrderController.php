@@ -150,8 +150,11 @@ class OrderController extends AbstractController
      */
     public function couponAction(Order $order)
     {
+        $options = $this->container->get('order_coupon')->generateOptions($order);
+
         return $this->render('admin/orders/coupon_form.html.twig', array(
-            'order' => $order
+            'order' => $order,
+            'options' => $options
         ));
     }
 
