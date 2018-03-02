@@ -1,14 +1,9 @@
 {% set accessDiscount = app.user.isPlatformAdmin or app.user.isPlatformMaster %}
 {% set userExpanse = app.user.isPlatformExpanse %}
 
-<div class="row" id="coupon_form">
-</div>
-
-<div class="hr-line-dashed col-md-12"></div>
-
 {{ form_start(form, {attr:{id:'form_discount', action: app.request.uri}}) }}
 <div class="row">
-    <fieldset class="col-md-12">
+    <fieldset class="">
         <h3>Desconto:</h3>
         {% if accessDiscount %}
             <div class="form-group col-md-3">
@@ -38,16 +33,6 @@
 
 {% include view('helper.request') %}
 <script>
-
-    var FormCoupon = $('#coupon_form');
-
-    $.ajax({
-      url: "{{ path('coupon_create', {id:order.id}) }}",
-      success: function (response) {
-        FormCoupon.html(response);
-      }
-    });
-
     var FormDiscount = $('#form_discount');
 
     FormDiscount.on('submit', function (event) {
