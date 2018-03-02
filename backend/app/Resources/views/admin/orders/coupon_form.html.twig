@@ -1,47 +1,46 @@
 {% if not order.coupon %}
 
-<fieldset class="col-md-12">
-    <h3>Aplicar cupom:</h3>
-    <div class="form-group col-md-3">
-        <label>Informar código: </label>
-        <div class="input-group">
-            <input type="text" id="coupon_code_input" class="form-control">
-            <span class="input-group-addon" id="coupon_code_search">
+    <fieldset class="col-md-12">
+        <h3>Aplicar cupom:</h3>
+        <div class="form-group col-md-3">
+            <label>Informar código: </label>
+            <div class="input-group">
+                <input type="text" id="coupon_code_input" class="form-control">
+                <span class="input-group-addon" id="coupon_code_search">
                 <i class="fa fa-search"></i>
             </span>
-        </div>
-    </div>
-
-    {% if not app.user.isPlatform  %}
-        <div class="form-group col-md-3">
-            <label>Selecionar opção: </label>
-            <div class="input-group col-md-12">
-                <select class="form-control" id="coupon_select" name="account">
-                    <option selected="selected" value="">Selecione uma das opções</option>
-                    <option value="500">500</option>
-                    <option value="1000">1000</option>
-                    <option value="1500">1500</option>
-                    <option value="2000">2000</option>
-                </select>
             </div>
         </div>
-    {% endif %}
 
-    <div class="form-group col-md-5 pull-right">
-        <label> &nbsp; </label>
-        <button class="btn btn-success btn-block ladda-button" disabled="disabled" id="submit_coupon" data-style="zoom-in" type="submit">
-            <i class="fa fa-check-circle-o"></i> Informe o código ou selecione uma opção
-        </button>
-    </div>
-</fieldset>
+        {% if not app.user.isPlatform  %}
+            <div class="form-group col-md-3">
+                <label>Selecionar opção: </label>
+                <div class="input-group col-md-12">
+                    <select class="form-control" id="coupon_select" name="account">
+                        <option selected="selected" value="">Selecione uma das opções</option>
+                        {% for step in options %}
+                            <option value="{{ step }}">{{ step }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="form-group col-md-5 pull-right">
+            <label> &nbsp; </label>
+            <button class="btn btn-success btn-block ladda-button" disabled="disabled" id="submit_coupon" data-style="zoom-in" type="submit">
+                <i class="fa fa-check-circle-o"></i> Informe o código ou selecione uma opção
+            </button>
+        </div>
+    </fieldset>
 
 {% else %}
 
-<div class="col-md-12">
-    <h3><b>Cupom de desconto aplicado:</b></h3>
-    <p><b>Código:</b> {{ order.coupon.code }}</p>
-    <p><b>Valor:</b> {{ order.coupon.amount|currency }}</p>
-</div>
+    <div class="col-md-12">
+        <h3><b>Cupom de desconto aplicado:</b></h3>
+        <p><b>Código:</b> {{ order.coupon.code }}</p>
+        <p><b>Valor:</b> {{ order.coupon.amount|currency }}</p>
+    </div>
 
 {% endif %}
 
@@ -59,77 +58,59 @@
         couponSelect: $('#coupon_select'),
         submitCoupon: $('#submit_coupon'),
         submitCouponDefaultText: "<i class=\"fa fa-check-circle-o\"></i> Informe o código ou selecione uma opção",
-        couponSelectDefault: "select_default",
+        couponSelectDefault: "",
         coupon: null,
         getCouponUrl: "{{ path('get_coupon', {code: '_code_'}) }}",
         associateCouponUrl: "{{ path('associate_coupon', {order: order.id, coupon: "_coupon_"}) }}",
+        source: null,
+        status: null,
         validateCoupon: function () {
             var url = this.getCouponUrl.replace('_code_', this.couponInput.val());
             $.ajax({
-               url: url,
-               method: 'get',
-               complete: function (response) {
-                   CouponHandler.coupon = response.responseJSON;
+                url: url,
+                method: 'get',
+                complete: function (response) {
+                    CouponHandler.resetCouponSelect();
+                    CouponHandler.coupon = response.responseJSON;
 
-                   if (!CouponHandler.coupon || CouponHandler.coupon.length <= 0) {
-                       toastr.error('Cupom não encontrado!', null, options);
-                       CouponHandler.resetSubmitCoupon();
-                   } else {
-                       CouponHandler.activateSubmitCoupon(CouponHandler.coupon.amount);
-                       CouponHandler.resetCouponSelect();
-                   }
-               }
+                    if (!CouponHandler.coupon || CouponHandler.coupon.length <= 0) {
+                        toastr.error('Cupom não encontrado!', null, options);
+                        CouponHandler.resetSubmitCoupon();
+                    } else {
+                        CouponHandler.source = "input";
+                        CouponHandler.activateSubmitCoupon(CouponHandler.coupon.amount);
+                    }
+                }
             });
+
         },
         associateCoupon: function () {
-            swal({
-                title: 'Confirma a associação do cupom?',
-                text: 'Após a associação do cupom a mesma não poderá ser desfeita!',
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: '{{ 'Confirmar'|trans }}',
-                cancelButtonText: '{{ 'Cancelar'|trans }}',
-                closeOnConfirm: false
-            }, function () {
-
-                sweetAlert({
-                    title: "Associando cupom...",
-                    text: "Aguarde!",
-                    type: "info",
-                    showConfirmButton: false
-                });
-
-                var url = CouponHandler.associateCouponUrl.replace('_coupon_', CouponHandler.coupon.id);
-                $.ajax({
-                    url: url,
-                    method: 'get',
-                    complete: function (response) {
-                        var title = "Concluído";
-                        var text = "Associação de cupom realizada com sucesso.";
-                        var type = "success";
-
-                        if (response.status !== 200) {
-                            title = "Falha";
-                            text = "Falha na associação do cupom.";
-                            type = "error";
-                        }
-                        swal({
-                            title: title,
-                            text: text,
-                            type: type,
-                            showConfirmButton: false
-                        });
-                        setTimeout(function () {
-                            getAssociatedCoupon();
-                            swal.close();
-                        }, 2000);
-                    }
-                });
+            var url = CouponHandler.associateCouponUrl.replace('_coupon_', CouponHandler.coupon.id);
+            $.ajax({
+                url: url,
+                method: 'get',
+                complete: function (response) {
+                    CouponHandler.status = response.status;
+                    closeSwal();
+                }
+            });
+        },
+        generateAndAssociateCoupon: function () {
+            $.ajax({
+                url: "{{ path('generate_coupon_from_order') }}",
+                method: 'get',
+                data: {
+                    "order": {{ order.id }},
+                    "step": CouponHandler.couponSelect.val()
+                },
+                complete: function (response) {
+                    CouponHandler.status = response.status;
+                    closeSwal();
+                }
             });
         },
         resetCouponSelect: function () {
-            this.submitCoupon.val(this.couponSelectDefault)
+            this.couponSelect.val(this.couponSelectDefault)
         },
         resetSubmitCoupon: function () {
             this.submitCoupon.attr('disabled', 'disabled');
@@ -146,10 +127,11 @@
         init: function () {
             this.submitCoupon.html(this.submitCouponDefaultText);
         }
-    }
+    };
     CouponHandler.init();
 
     $('#coupon_code_search').on('click', function () {
+        CouponHandler.resetCouponSelect();
         if (CouponHandler.couponInput.val().length > 0) {
             CouponHandler.validateCoupon();
         } else {
@@ -160,11 +142,66 @@
         if (CouponHandler.couponSelect.val() !== '') {
             CouponHandler.activateSubmitCoupon(CouponHandler.couponSelect.val());
             CouponHandler.resetCouponInput();
+            CouponHandler.source = "select";
         } else {
             CouponHandler.resetSubmitCoupon();
         }
     });
     $('#submit_coupon').on('click', function () {
-        CouponHandler.associateCoupon();
+
+        var title = 'Confirma a associação do cupom?';
+
+        if (CouponHandler.source === 'select') {
+            title = 'Confirma a criação e associação do cupom?';
+        }
+
+        swal({
+            title: title,
+            text: 'Após a associação do cupom a mesma não poderá ser desfeita!',
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: '{{ 'Confirmar'|trans }}',
+            cancelButtonText: '{{ 'Cancelar'|trans }}',
+            closeOnConfirm: false
+        }, function () {
+
+            sweetAlert({
+                title: "Associando cupom...",
+                text: "Aguarde!",
+                type: "info",
+                showConfirmButton: false
+            });
+
+            if (CouponHandler.source === "input") {
+                CouponHandler.associateCoupon();
+            } else {
+                CouponHandler.generateAndAssociateCoupon();
+            }
+        });
     })
+
+    function closeSwal() {
+        var title = "Concluído";
+        var text = "Associação de cupom realizada com sucesso.";
+        var type = "success";
+
+        if (CouponHandler.status !== 200) {
+            title = "Falha";
+            text = "Falha na associação do cupom.";
+            type = "error";
+        }
+        swal({
+            title: title,
+            text: text,
+            type: type,
+            showConfirmButton: false
+        });
+        setTimeout(function () {
+            getAssociatedCoupon();
+            swal.close();
+        }, 2000);
+    }
+
+    $('#order-total').html('{{  order.total|currency }}');
 </script>
