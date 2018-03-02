@@ -9,13 +9,13 @@
           label.half
             | Nome
             input(
-              placeholder='Nome',
-              v-model='form.name')
+              v-model='form.name',
+              placeholder='Nome')
           label.half
             | Valor
             input(
-              placeholder='Valor',
-              v-model='form.amount')
+              v-model='form.amount',
+              placeholder='Valor')
           label.full
             | Conta
             select(v-model='form.account')
@@ -35,7 +35,9 @@
 <script>
   export default {
     data: () => ({
-      accounts: [],
+      options: {
+        accounts: []
+      },
       form: {
         name: '',
         amount: null,
@@ -81,7 +83,6 @@
           this.form = coupon
         }
 
-        this.form.account = this.form.account.id || ''
         this.modal.action = action
         this.$refs.modal.show()
       }
@@ -94,8 +95,13 @@
             name: 'Não vinculada'
           }
 
-          this.accounts = response.data
-          this.accounts.unshift(defaultOption)
+          const accounts = response.data
+          accounts.unshift(defaultOption)
+
+          this.options.accounts = accounts.map(account => ({
+            value: account.id,
+            text: account.name
+          }))
         })
     }
   }
