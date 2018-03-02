@@ -18,11 +18,11 @@
               placeholder='Valor')
           label.full
             | Conta
-            select(v-model='form.account')
-              option(
-                v-for='account in form.accounts',
-                :value='account.id')
-                | {{ account.name }}
+            Select(
+              v-model='form.account',
+              :selected='form.account.id',
+              :options='options.accounts',
+              v-on:update='updateAccount')
       Button(
         slot='buttons',
         icon='save',
@@ -48,6 +48,12 @@
       }
     }),
     methods: {
+      updateAccount(account) {
+        this.form.account = {
+          id: account.value,
+          name: account.text
+        }
+      },
       createCoupon() {
         this.axios.post('api/v1/coupon/', this.form)
           .then(() => {
