@@ -226,6 +226,7 @@ class Processor
     {
         return FileSystemFactory::create([
             'host' => $this->container->getParameter('ftp_host'),
+            'port' => $this->container->getParameter('ftp_port'),
             'username' => $this->container->getParameter('ftp_user'),
             'password' => $this->container->getParameter('ftp_password'),
             'directory' => '/PROCEDA-SICESSOLAR'
