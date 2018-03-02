@@ -452,36 +452,6 @@
                                                 <div class="col-md-12">
                                                     <label>Dados do integrador</label>
                                                 </div>
-
-                                                {% if member.isPlatformMaster %}
-                                                    <div class="col-md-8" style="padding-bottom: 10px;">
-                                                        <div class="pull-right">
-                                                            <label style="padding-right: 10px;">
-                                                                Nº da Nota Fiscal:
-                                                            </label>
-                                                            <input id="invoice-number" value="{{ order.invoiceNumber }}"
-                                                                   type="text">
-                                                        </div>
-                                                        <div class="pull-right">
-                                                            <label style="padding-right: 10px;">
-                                                                Data de Faturamento:
-                                                            </label>
-                                                            <input id="up_billed_at" type="text">
-                                                        </div>
-                                                    </div>
-                                                {% endif %}
-                                                {% if not member.isPlatformMaster %}
-                                                    <div class="pull-right" style="padding-bottom: 10px;">
-                                                        <label style="padding-right: 10px;">
-                                                            Nº da Nota Fiscal:
-                                                        </label>
-                                                        {{ order.invoiceNumber }}
-                                                        <label style="padding-left: 10px;">
-                                                            Data de Faturamento:
-                                                        </label>
-                                                        {{ order.billedAt ? order.billedAt|date('d/m/Y') : '' }}
-                                                    </div>
-                                                {% endif %}
                                             </ol>
                                         </div>
                                     </div>
