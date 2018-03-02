@@ -229,7 +229,7 @@ class Processor
             'port' => $this->container->getParameter('ftp_port'),
             'username' => $this->container->getParameter('ftp_user'),
             'password' => $this->container->getParameter('ftp_password'),
-            'directory' => '/PROCEDA-SICESSOLAR'
+            'directory' => '/ftp/PROCEDA-SICESSOLAR'
         ]);
     }
 }
