@@ -224,6 +224,7 @@ class CouponController extends AbstractController
 
             return [
                 'id' => $coupon->getId(),
+                'code' => $coupon->getCode(),
                 'name' => $coupon->getName(),
                 'amount' => $coupon->getAmount(),
                 'target' => $coupon->getTarget(),
