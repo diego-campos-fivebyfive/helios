@@ -1,3 +1,4 @@
+{% set notAccess = app.user.isPlatform %}
 {% if not order.coupon %}
 
 <fieldset class="col-md-12">
@@ -12,18 +13,20 @@
         </div>
     </div>
 
-    <div class="form-group col-md-3">
-        <label>Selecionar opção: </label>
-        <div class="input-group col-md-12">
-            <select class="form-control" id="coupon_select" name="account">
-                <option selected="selected" value="">Selecione uma das opções</option>
-                <option value="500">500</option>
-                <option value="1000">1000</option>
-                <option value="1500">1500</option>
-                <option value="2000">2000</option>
-            </select>
+    {% if not notAccess  %}
+        <div class="form-group col-md-3">
+            <label>Selecionar opção: </label>
+            <div class="input-group col-md-12">
+                <select class="form-control" id="coupon_select" name="account">
+                    <option selected="selected" value="">Selecione uma das opções</option>
+                    <option value="500">500</option>
+                    <option value="1000">1000</option>
+                    <option value="1500">1500</option>
+                    <option value="2000">2000</option>
+                </select>
+            </div>
         </div>
-    </div>
+    {% endif %}
 
     <div class="form-group col-md-5 pull-right">
         <label> &nbsp; </label>
@@ -43,6 +46,7 @@
 
 {% endif %}
 
+<div class="hr-line-dashed col-md-12"></div>
 
 <script>
     CouponHandler = {
