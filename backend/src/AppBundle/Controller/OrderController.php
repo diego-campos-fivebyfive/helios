@@ -146,6 +146,16 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/coupon", name="coupon_create")
+     */
+    public function couponAction(Order $order)
+    {
+        return $this->render('admin/orders/coupon_form.html.twig', array(
+            'order' => $order
+        ));
+    }
+
+    /**
      * @Route("/{order}/{coupon}/associate_coupon", name="associate_coupon")
      */
     public function associateCouponAction(Order $order, Coupon $coupon)

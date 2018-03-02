@@ -161,9 +161,14 @@
                                                 Total
                                             </div>
                                             <div class="panel-body">
+                                                {% set accessCoupon = app.user.isPlatformAdmin or app.user.isPlatformMaster or app.user.isPlatformCommercial %}
+
+                                                {% if accessCoupon or not app.user.isPlatform %}
+                                                    <div class="row" id="coupon_form"></div>
+                                                {% endif %}
+
                                                 {% if  accessDiscount %}
-                                                    <div class="col-md-12" id="discount">
-                                                    </div>
+                                                    <div class="col-md-12" id="discount"></div>
                                                 {% endif %}
                                                 <div id="discount_info" {% if not order.discount > 0 %}class="hide"{% endif %}>
                                                     <div class="col-md-9"><h2>Total sem desconto:</h2></div>
@@ -260,6 +265,15 @@
     {% include view('order.status_handler') %}
 
     <script>
+
+        var FormCoupon = $('#coupon_form');
+
+        $.ajax({
+            url: "{{ path('coupon_create', {id:order.id}) }}",
+            success: function (response) {
+                FormCoupon.html(response);
+            }
+        });
 
         $('#conditions').on('change', function () {
             if ($(this).is(':checked')) {
