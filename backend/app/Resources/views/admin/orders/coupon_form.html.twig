@@ -1,4 +1,3 @@
-{% set notAccess = app.user.isPlatform %}
 {% if not order.coupon %}
 
 <fieldset class="col-md-12">
@@ -13,7 +12,7 @@
         </div>
     </div>
 
-    {% if not notAccess  %}
+    {% if not app.user.isPlatform  %}
         <div class="form-group col-md-3">
             <label>Selecionar opção: </label>
             <div class="input-group col-md-12">
