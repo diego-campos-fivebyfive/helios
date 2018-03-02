@@ -49,9 +49,11 @@ class OrderCoupon
         $maxOrderDiscount = $order->getTotal() * $maxDiscountPercent;
         $discountLimit = $maxOrderDiscount < $accountRanking ? $maxOrderDiscount : $accountRanking;
 
-        $ranges = range($step, intval($discountLimit), $step);
+        if ($discountLimit >= $step) {
+            return range($step, intval($discountLimit), $step);
+        }
 
-        return $ranges;
+        return [];
     }
 
     /**
