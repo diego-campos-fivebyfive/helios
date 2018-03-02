@@ -74,6 +74,7 @@
       },
       showActionModal(action, coupon = {}) {
         this.coupon = coupon
+        this.coupon.account = this.coupon.account.id || ''
         this.modal.action = action
         this.$refs.modal.show()
       }
