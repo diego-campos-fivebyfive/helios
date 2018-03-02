@@ -72,6 +72,10 @@ class OrderCoupon
             return false;
         }
 
+        if(!$coupon->getAccount()) {
+            $coupon->setAccount($order->getAccount());
+        }
+
         $coupon->setTarget($this->getTarget($order));
         $couponManager->save($coupon);
 
