@@ -4,23 +4,23 @@
     Modal(ref='modal')
       h1.title(slot='header')
       | Novo Cupom
-      form(slot='section', ref='send')
+      form(slot='section', ref='send', name='coupon')
         fieldset.fields
           label.half
             | Nome
             input(
               placeholder='Nome',
-              v-model='coupon.name')
+              v-model='form.name')
           label.half
             | Valor
             input(
               placeholder='Valor',
-              v-model='coupon.amount')
+              v-model='form.amount')
           label.full
             | Conta
-            select(v-model='coupon.account')
+            select(v-model='form.account')
               option(
-                v-for='account in accounts',
+                v-for='account in form.accounts',
                 :value='account.id')
                 | {{ account.name }}
       Button(
@@ -36,14 +36,18 @@
   export default {
     data: () => ({
       accounts: [],
-      coupon: {},
+      form: {
+        name: '',
+        amount: null,
+        account: {}
+      },
       modal: {
         action: ''
       }
     }),
     methods: {
       createCoupon() {
-        this.axios.post('api/v1/coupon/', this.coupon)
+        this.axios.post('api/v1/coupon/', this.form)
           .then(() => {
             this.$emit('getCoupons')
             this.$refs.notification.notify('Cupom cadastrado com sucesso')
@@ -53,7 +57,7 @@
           })
       },
       editCoupon() {
-        this.axios.put(`api/v1/coupon/${this.coupon.id}`, this.coupon)
+        this.axios.put(`api/v1/coupon/${this.form.id}`, this.form)
           .then(() => {
             this.$emit('getCoupons')
             this.$refs.notification.notify('Cupom editado com sucesso')
@@ -72,9 +76,12 @@
 
         this.editCoupon()
       },
-      showActionModal(action, coupon = {}) {
-        this.coupon = coupon
-        this.coupon.account = this.coupon.account.id || ''
+      showActionModal(action, coupon) {
+        if (coupon) {
+          this.form = coupon
+        }
+
+        this.form.account = this.form.account.id || ''
         this.modal.action = action
         this.$refs.modal.show()
       }
