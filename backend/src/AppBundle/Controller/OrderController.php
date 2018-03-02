@@ -387,7 +387,7 @@ class OrderController extends AbstractController
             case 'fileExtract':
                 $dir = 'order';
                 break;
-            case 'payment':
+            case 'filePayment':
                 $dir = 'payment';
                 break;
             case 'nfe':
