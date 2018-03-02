@@ -1346,6 +1346,9 @@ class Order implements OrderInterface
         return $total;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getCouponDiscount()
     {
         return $this->coupon ? $this->coupon->getAmount() : 0;
