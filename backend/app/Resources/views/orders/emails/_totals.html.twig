@@ -6,20 +6,20 @@
 
     {% if item.insurance %}
         <tr class="line-info">
-            <th align="left">
+            <th class="position">
                 Valor do Seguro
             </th>
-            <th align="left">
+            <th class="position">
                 {{ item.insurance|currency }}
             </th>
         </tr>
     {% endif %}
 
     <tr class="line-info">
-        <th width="40%" align="left">
+        <th class="item-size position">
             Valor Total do Sistema
         </th>
-        <th align="left">
+        <th class="position">
             {{ item.total|currency }}
         </th>
     </tr>
