@@ -1,6 +1,6 @@
 {% if not order.coupon %}
 
-<div class="col-md-12">
+<fieldset class="col-md-12">
     <h3>Aplicar cupom:</h3>
     <div class="form-group col-md-3">
         <label>Informar código: </label>
@@ -31,7 +31,7 @@
             <i class="fa fa-check-circle-o"></i> Informe o código ou selecione uma opção
         </button>
     </div>
-</div>
+</fieldset>
 
 {% else %}
 
@@ -46,56 +46,56 @@
 
 <script>
     CouponHandler = {
-      couponInput: $('#coupon_code_input'),
-      couponSelect: $('#coupon_select'),
-      submitCoupon: $('#submit_coupon'),
-      submitCouponDefaultText: "<i class=\"fa fa-check-circle-o\"></i> Informe o código ou selecione uma opção",
-      couponSelectDefault: "select_default",
-      responseData: null,
-      validateCoupon: function () {
-        this.responseData = {
-          code: "AAA123",
-          amount: 1000,
-        };
-      },
-      resetCouponSelect: function () {
-        this.submitCoupon.val(this.couponSelectDefault)
-      },
-      resetSubmitCoupon: function () {
-        this.submitCoupon.attr('disabled', 'disabled');
-        this.submitCoupon.html(this.submitCouponDefaultText);
-      },
-      resetCouponInput: function () {
-        this.couponInput.val('');
-      },
-      activateSubmitCoupon: function (amount) {
-        amount = Number(amount);
-        this.submitCoupon.removeAttr('disabled');
-        this.submitCoupon.html('Valor ' + numeral(amount).format('$0,0.00') + '| <i class="fa fa-check-circle-o"></i> Aplicar');
-      },
-      init: function () {
-        this.submitCoupon.html(this.submitCouponDefaultText);
-      }
+        couponInput: $('#coupon_code_input'),
+        couponSelect: $('#coupon_select'),
+        submitCoupon: $('#submit_coupon'),
+        submitCouponDefaultText: "<i class=\"fa fa-check-circle-o\"></i> Informe o código ou selecione uma opção",
+        couponSelectDefault: "select_default",
+        responseData: null,
+        validateCoupon: function () {
+            this.responseData = {
+                code: "AAA123",
+                amount: 1000,
+            };
+        },
+        resetCouponSelect: function () {
+            this.submitCoupon.val(this.couponSelectDefault)
+        },
+        resetSubmitCoupon: function () {
+            this.submitCoupon.attr('disabled', 'disabled');
+            this.submitCoupon.html(this.submitCouponDefaultText);
+        },
+        resetCouponInput: function () {
+            this.couponInput.val('');
+        },
+        activateSubmitCoupon: function (amount) {
+            amount = Number(amount);
+            this.submitCoupon.removeAttr('disabled');
+            this.submitCoupon.html('Valor ' + numeral(amount).format('$0,0.00') + '| <i class="fa fa-check-circle-o"></i> Aplicar');
+        },
+        init: function () {
+            this.submitCoupon.html(this.submitCouponDefaultText);
+        }
     }
     CouponHandler.init();
 
     $('#coupon_code_search').on('click', function () {
-      if (CouponHandler.couponInput.val().length > 0) {
-        CouponHandler.validateCoupon();
-        if (CouponHandler.responseData !== null) {
-          CouponHandler.activateSubmitCoupon(CouponHandler.responseData['amount']);
-          CouponHandler.resetCouponSelect();
+        if (CouponHandler.couponInput.val().length > 0) {
+            CouponHandler.validateCoupon();
+            if (CouponHandler.responseData !== null) {
+                CouponHandler.activateSubmitCoupon(CouponHandler.responseData['amount']);
+                CouponHandler.resetCouponSelect();
+            }
+        } else {
+            CouponHandler.resetSubmitCoupon();
         }
-      } else {
-        CouponHandler.resetSubmitCoupon();
-      }
     });
     $('#coupon_select').on('change', function () {
-      if (CouponHandler.couponSelect.val() !== '') {
-        CouponHandler.activateSubmitCoupon(CouponHandler.couponSelect.val());
-        CouponHandler.resetCouponInput();
-      } else {
-        CouponHandler.resetSubmitCoupon();
-      }
+        if (CouponHandler.couponSelect.val() !== '') {
+            CouponHandler.activateSubmitCoupon(CouponHandler.couponSelect.val());
+            CouponHandler.resetCouponInput();
+        } else {
+            CouponHandler.resetSubmitCoupon();
+        }
     });
 </script>
