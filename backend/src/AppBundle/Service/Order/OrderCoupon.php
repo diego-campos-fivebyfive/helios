@@ -68,7 +68,7 @@ class OrderCoupon
             $coupon = $couponManager->findOneBy(['code' => $coupon]);
         }
 
-        if (!$coupon || $order->getAccount() !== $coupon->getAccount()) {
+        if (!$coupon || ($coupon->getAccount() && $order->getAccount() !== $coupon->getAccount())) {
             return false;
         }
 
