@@ -268,12 +268,16 @@
 
         var FormCoupon = $('#coupon_form');
 
-        $.ajax({
-            url: "{{ path('coupon_create', {id:order.id}) }}",
-            success: function (response) {
-                FormCoupon.html(response);
-            }
-        });
+        function getAssociatedCoupon() {
+            $.ajax({
+                url: "{{ path('coupon_create', {id:order.id}) }}",
+                success: function (response) {
+                    FormCoupon.html(response);
+                }
+            });
+        }
+
+        getAssociatedCoupon();
 
         $('#conditions').on('change', function () {
             if ($(this).is(':checked')) {

@@ -48,18 +48,85 @@
 <div class="hr-line-dashed col-md-12"></div>
 
 <script>
+    var options = {
+        positionClass: "toast-top-center",
+        preventDuplicates: true,
+        progressBar: true
+    };
+
     CouponHandler = {
         couponInput: $('#coupon_code_input'),
         couponSelect: $('#coupon_select'),
         submitCoupon: $('#submit_coupon'),
         submitCouponDefaultText: "<i class=\"fa fa-check-circle-o\"></i> Informe o código ou selecione uma opção",
         couponSelectDefault: "select_default",
-        responseData: null,
+        coupon: null,
+        getCouponUrl: "{{ path('get_coupon', {code: '_code_'}) }}",
+        associateCouponUrl: "{{ path('associate_coupon', {order: order.id, coupon: "_coupon_"}) }}",
         validateCoupon: function () {
-            this.responseData = {
-                code: "AAA123",
-                amount: 1000,
-            };
+            var url = this.getCouponUrl.replace('_code_', this.couponInput.val());
+            $.ajax({
+               url: url,
+               method: 'get',
+               complete: function (response) {
+                   CouponHandler.coupon = response.responseJSON;
+
+                   if (!CouponHandler.coupon || CouponHandler.coupon.length <= 0) {
+                       toastr.error('Cupom não encontrado!', null, options);
+                       CouponHandler.resetSubmitCoupon();
+                   } else {
+                       CouponHandler.activateSubmitCoupon(CouponHandler.coupon.amount);
+                       CouponHandler.resetCouponSelect();
+                   }
+               }
+            });
+        },
+        associateCoupon: function () {
+            swal({
+                title: 'Confirma a associação do cupom?',
+                text: 'Após a associação do cupom a mesma não poderá ser desfeita!',
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: '{{ 'Confirmar'|trans }}',
+                cancelButtonText: '{{ 'Cancelar'|trans }}',
+                closeOnConfirm: false
+            }, function () {
+
+                sweetAlert({
+                    title: "Associando cupom...",
+                    text: "Aguarde!",
+                    type: "info",
+                    showConfirmButton: false
+                });
+
+                var url = CouponHandler.associateCouponUrl.replace('_coupon_', CouponHandler.coupon.id);
+                $.ajax({
+                    url: url,
+                    method: 'get',
+                    complete: function (response) {
+                        var title = "Concluído";
+                        var text = "Associação de cupom realizada com sucesso.";
+                        var type = "success";
+
+                        if (response.status !== 200) {
+                            title = "Falha";
+                            text = "Falha na associação do cupom.";
+                            type = "error";
+                        }
+                        swal({
+                            title: title,
+                            text: text,
+                            type: type,
+                            showConfirmButton: false
+                        });
+                        setTimeout(function () {
+                            getAssociatedCoupon();
+                            swal.close();
+                        }, 2000);
+                    }
+                });
+            });
         },
         resetCouponSelect: function () {
             this.submitCoupon.val(this.couponSelectDefault)
@@ -85,10 +152,6 @@
     $('#coupon_code_search').on('click', function () {
         if (CouponHandler.couponInput.val().length > 0) {
             CouponHandler.validateCoupon();
-            if (CouponHandler.responseData !== null) {
-                CouponHandler.activateSubmitCoupon(CouponHandler.responseData['amount']);
-                CouponHandler.resetCouponSelect();
-            }
         } else {
             CouponHandler.resetSubmitCoupon();
         }
@@ -101,4 +164,7 @@
             CouponHandler.resetSubmitCoupon();
         }
     });
+    $('#submit_coupon').on('click', function () {
+        CouponHandler.associateCoupon();
+    })
 </script>
