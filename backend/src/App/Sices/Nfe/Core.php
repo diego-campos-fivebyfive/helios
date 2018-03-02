@@ -39,7 +39,7 @@ class Core
             'port' => $this->container->getParameter('ftp_port'),
             'username' => $this->container->getParameter('ftp_user'),
             'password' => $this->container->getParameter('ftp_password'),
-            'directory' => '/DANFE'
+            'directory' => '/ftp/DANFE'
         ]);
 
         /** @var FileReader $fileReader */
