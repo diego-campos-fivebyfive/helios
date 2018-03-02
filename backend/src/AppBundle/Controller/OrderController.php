@@ -154,7 +154,7 @@ class OrderController extends AbstractController
             'order' => $order
         ));
     }
-    
+
     /**
      * @Route("/{order}/{coupon}/associate_coupon", name="associate_coupon")
      */
