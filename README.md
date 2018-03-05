@@ -206,12 +206,12 @@ Esclarecimentos gerais relacionados a documentação:
 
     - ##### Para visualizar as dependências a serem instaladas execute:
     ```
-    $ devops/cli/ces-ambience-install --installation-list
+    $ ces-ambience-install --installation-list
     ```
 
     - ##### Você pode instala-las manualmente (recomendado), ou executar o comando abaixo para instalação automatica:
     ```
-    $ devops/cli/ces-ambience-install --full
+    $ ces-ambience-install --full
     ```
 
   <a name="aplicacao--sices"></a><a name="3.4"></a>
@@ -244,11 +244,11 @@ Esclarecimentos gerais relacionados a documentação:
     - ##### 3.5.1. *Alias remote push*
       ```
       remote_push() {
-        if [[ $1 = '--pr' ]]; then
+        [[ $1 = '--pr' ]] && {
           ces-issue-request --review
-        else
+        } || {
           git push origin $(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
-        fi
+        }
       }
 
       alias remote-push="remote_push"
@@ -625,6 +625,16 @@ Esclarecimentos gerais relacionados a documentação:
       $ git push origin issue-[ISSUE_NUMBER]
       ```
 
+    - ##### Parar serviço de deploy
+      ```
+      $ /var/www/devops/hook/node_modules/.bin/pm2 stop 0
+      ```
+
+    - ##### Reiniciar serviço de deploy
+      ```
+      $ /var/www/devops/hook/node_modules/.bin/pm2 restart 0
+      ```
+
 
 **[⬆ Voltar ao Topo](#sumário)**
 
@@ -806,6 +816,22 @@ Esclarecimentos gerais relacionados a documentação:
     Slack: @fabiojd47
     Github: @kascat
     E-mail: fabiojd47@gmail.com
+    ```
+
+    - #### Gianluca Bine
+    ```
+    Backend developer
+    Slack: @gianlucabine
+    Github: @Pr3d4dor
+    E-mail: gian_bine@hotmail.com
+    ```
+
+    - #### Gustavo Henrique Jacomel
+    ```
+    Backend developer
+    Slack: @gustavojacomel
+    Github: @Suxgotav
+    E-mail: gustavojacomel@hotmail.com
     ```
 
     - #### João Zaqueu Chereta

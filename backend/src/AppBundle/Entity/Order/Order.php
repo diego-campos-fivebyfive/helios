@@ -14,6 +14,7 @@ namespace AppBundle\Entity\Order;
 use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\Misc\Additive;
 use AppBundle\Entity\Misc\AdditiveInterface;
+use AppBundle\Entity\Misc\CouponInterface;
 use AppBundle\Entity\Pricing\MemorialInterface;
 use AppBundle\Entity\Pricing\RangeInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -547,6 +548,12 @@ class Order implements OrderInterface
     private $orderAdditives;
 
     /**
+     * @var CouponInterface
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Misc\Coupon")
+     */
+    private $coupon;
+
+    /**
      * Order constructor.
      */
     public function __construct()
@@ -699,6 +706,7 @@ class Order implements OrderInterface
             self::STATUS_INSERTED => 'inserted',
             self::STATUS_AVAILABLE => 'available',
             self::STATUS_COLLECTED => 'collected',
+            self::STATUS_DELIVERING => 'delivering',
             self::STATUS_DELIVERED => 'delivered'
         ];
     }
@@ -718,6 +726,7 @@ class Order implements OrderInterface
             self::STATUS_INSERTED => self::STATUS_INSERTED,
             self::STATUS_AVAILABLE => self::STATUS_AVAILABLE,
             self::STATUS_COLLECTED => self::STATUS_COLLECTED,
+            self::STATUS_DELIVERING => self::STATUS_DELIVERING,
             self::STATUS_DELIVERED => self::STATUS_DELIVERED
         ];
     }
@@ -1332,9 +1341,17 @@ class Order implements OrderInterface
      */
     public function getTotal()
     {
-        $total = $this->getTotalExcDiscount() - $this->getDiscount();
+        $total = $this->getTotalExcDiscount() - $this->getDiscount() - $this->getCouponDiscount();
 
         return $total;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCouponDiscount()
+    {
+        return $this->coupon ? $this->coupon->getAmount() : 0;
     }
 
     /**
@@ -2118,6 +2135,14 @@ class Order implements OrderInterface
     /**
      * @inheritDoc
      */
+    public function isDelivering()
+    {
+        return self::STATUS_DELIVERING == $this->status;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function isDelivered()
     {
         return self::STATUS_DELIVERED == $this->status;
@@ -2375,7 +2400,7 @@ class Order implements OrderInterface
      */
     public function addFile($type, $file)
     {
-        $types = ['payment', 'proforma'];
+        $types = ['payment', 'proforma', 'nfe'];
 
         if(!in_array($type, $types))
             throw new \InvalidArgumentException(sprintf('Invalid [%s] file type. Accept: %s', $type, implode(',', $types)));
@@ -2384,6 +2409,7 @@ class Order implements OrderInterface
             case 'proforma':
                 $this->files[$type] = $file;
                 break;
+            case 'nfe':
             case 'payment':
                 $this->files[$type][] = $file;
                 break;
@@ -2558,6 +2584,24 @@ class Order implements OrderInterface
     public function isBilled()
     {
         return !is_null($this->billedAt);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setCoupon($coupon)
+    {
+        $this->coupon = $coupon;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCoupon()
+    {
+        return $this->coupon;
     }
 }
 

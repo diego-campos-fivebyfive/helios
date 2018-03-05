@@ -1,8 +1,10 @@
 import Button from '@/components/collection/Button'
-import Page from '@/components/collection/Page'
-import Panel from '@/components/collection/Panel'
 import Modal from '@/components/collection/Modal'
+import Notification from '@/components/collection/Notification'
+import Paginator from '@/components/collection/Paginator'
+import Panel from '@/components/collection/Panel'
 import Progress from '@/components/collection/Progress'
+import Select from '@/components/collection/Select'
 import Table from '@/components/collection/Table'
 
 import Icon from 'vue-awesome/components/Icon'
@@ -15,9 +17,11 @@ import router from './router'
 Vue.component('Icon', Icon)
 Vue.component('Button', Button)
 Vue.component('Modal', Modal)
-Vue.component('Page', Page)
+Vue.component('Notification', Notification)
+Vue.component('Paginator', Paginator)
 Vue.component('Panel', Panel)
 Vue.component('Progress', Progress)
+Vue.component('Select', Select)
 Vue.component('Table', Table)
 
 /* eslint-disable no-new, no-console */
@@ -28,9 +32,11 @@ new Vue({
     App,
     Button,
     Modal,
-    Page,
+    Notification,
+    Paginator,
     Panel,
     Progress,
+    Select,
     Table
   },
   template: '<App/>',

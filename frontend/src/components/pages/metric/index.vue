@@ -1,10 +1,9 @@
 <template lang="pug">
-  Page(sidebar='common', mainbar='common')
-    Panel.panel
-      h2.title(slot='header')
-        | Progresso de tarefas técnicas
-        span.sub Github - Milestones
-      Content(slot='section', :milestones='milestones')
+  Panel.panel
+    h2.title(slot='header')
+      | Progresso de tarefas técnicas
+      span.sub Github - Milestones
+    Content(slot='section', :milestones='milestones')
 </template>
 
 <script>

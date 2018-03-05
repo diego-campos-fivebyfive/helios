@@ -30,6 +30,10 @@ services:
         class: AppBundle\Manager\AccountManager
         arguments: ['AppBundle\Entity\Customer', '@doctrine']
 
+    additive_manager:
+        class: AppBundle\Manager\AdditiveManager
+        arguments: ['AppBundle\Entity\Misc\Additive', '@doctrine']
+
     category_manager:
         alias: sonata.classification.manager.category
 
@@ -45,13 +49,20 @@ services:
         class: AppBundle\Manager\ExtraManager
         arguments: ['AppBundle\Entity\Component\Extra', '@doctrine']
 
-    additive_manager:
-        class: AppBundle\Manager\AdditiveManager
-        arguments: ['AppBundle\Entity\Misc\Additive', '@doctrine']
+    inverter_manager:
+        class: AppBundle\Manager\InverterManager
+        arguments: ['AppBundle\Entity\Component\Inverter', '@doctrine']
 
     level_manager:
         class: AppBundle\Manager\Pricing\LevelManager
         arguments: ['AppBundle\Entity\Pricing\Level', '@doctrine']
+
+    maker_manager:
+        class: AppBundle\Manager\MakerManager
+        arguments: ['AppBundle\Entity\Component\Maker', '@doctrine']
+
+    member_manager:
+        alias: customer_manager
 
     memorial_manager:
         class: AppBundle\Manager\Pricing\MemorialManager
@@ -68,10 +79,6 @@ services:
     notification_manager:
         class: AppBundle\Manager\NotificationManager
         arguments: ['AppBundle\Entity\Notification', '@doctrine']
-
-    inverter_manager:
-        class: AppBundle\Manager\InverterManager
-        arguments: ['AppBundle\Entity\Component\Inverter', '@doctrine']
 
     order_manager:
         class: AppBundle\Manager\OrderManager
@@ -137,6 +144,10 @@ services:
         class: AppBundle\Manager\RankingManager
         arguments: ['AppBundle\Entity\Misc\Ranking', '@doctrine']
 
+    stock_product_manager:
+        class: AppBundle\Manager\Stock\ProductManager
+        arguments: ['AppBundle\Entity\Stock\Product', '@doctrine']
+
     string_box_manager:
         class: AppBundle\Manager\StringBoxManager
         arguments: ['AppBundle\Entity\Component\StringBox', '@doctrine']
@@ -144,14 +155,6 @@ services:
     structure_manager:
         class: AppBundle\Manager\StructureManager
         arguments: ['AppBundle\Entity\Component\Structure', '@doctrine']
-
-    maker_manager:
-        class: AppBundle\Manager\MakerManager
-        arguments: ['AppBundle\Entity\Component\Maker', '@doctrine']
-
-    variety_manager:
-        class: AppBundle\Manager\VarietyManager
-        arguments: ['AppBundle\Entity\Component\Variety', '@doctrine']
 
     task_manager:
         class: AppBundle\Manager\TaskManager
@@ -165,17 +168,25 @@ services:
         class: AppBundle\Manager\TimelineManager
         arguments: ['AppBundle\Entity\Timeline', '@doctrine']
 
-    member_manager:
-        alias: customer_manager
-
-    stock_product_manager:
-        class: AppBundle\Manager\Stock\ProductManager
-        arguments: ['AppBundle\Entity\Stock\Product', '@doctrine']
+    variety_manager:
+        class: AppBundle\Manager\VarietyManager
+        arguments: ['AppBundle\Entity\Component\Variety', '@doctrine']
 
     # Services
+    account_transfer:
+        class: AppBundle\Service\Util\AccountTransfer
+        arguments: ['@member_manager']
+
     component_collector:
         class: AppBundle\Service\Order\ComponentCollector
         arguments: ['@service_container']
+
+    coupon_transformer:
+        class: AppBundle\Service\Coupon\Transformer
+        arguments: ['@service_container']
+
+    file_Reader:
+        class: App\Sices\Ftp\FileReader
 
     inverter_combinator:
         class: AppBundle\Service\InverterCombinator\InverterCombinator
@@ -285,6 +296,21 @@ services:
         class: AppBundle\Service\Mailer
         arguments: ['@service_container']
 
+    nfe_core:
+        class: App\Sices\Nfe\Core
+        arguments: ['@service_container']
+
+    nfe_parser:
+        class: App\Sices\Nfe\Parser
+
+    nfe_processor:
+        class: App\Sices\Nfe\Processor
+        arguments: ['@service_container']
+
+    order_coupon:
+        class: AppBundle\Service\Order\OrderCoupon
+        arguments: ['@service_container']
+
     order_mailer:
         class: AppBundle\Service\Order\OrderMailer
         arguments: ['@service_container']
@@ -325,13 +351,13 @@ services:
         class: AppBundle\Service\Order\OrderReference
         arguments: ['@order_manager', '@platform_counter']
 
-    account_transfer:
-        class: AppBundle\Service\Util\AccountTransfer
-        arguments: ['@member_manager']
-
     platform_counter:
         class: AppBundle\Service\Util\PlatformCounter
         arguments: ['@parameter_manager']
+
+    proceda_processor:
+        class: App\Proceda\Processor
+        arguments: ['@service_container']
 
     stock_provider:
         class: AppBundle\Service\Stock\Provider
@@ -352,6 +378,10 @@ services:
     stock_query:
         class: AppBundle\Service\Stock\Query
         arguments: ['@stock_provider']
+
+    timeline_resource:
+        class: AppBundle\Service\Timeline\Resource
+        arguments: ['@timeline_manager']
 
     order_stock:
         class: AppBundle\Service\Order\OrderStock

@@ -3,11 +3,13 @@
 
 {{ form_start(form, {attr:{id:'form_discount', action: app.request.uri}}) }}
 <div class="row">
+    <fieldset class="">
+        <h3>Desconto:</h3>
         {% if accessDiscount %}
-        <div class="form-group col-md-3">
-            {{ form_label(form.target, 'Opção de Desconto') }}
-            {{ form_widget(form.target,{attr:{class:'form-control'}}) }}
-        </div>
+            <div class="form-group col-md-3">
+                {{ form_label(form.target, 'Opção de Desconto') }}
+                {{ form_widget(form.target,{attr:{class:'form-control'}}) }}
+            </div>
         {% endif %}
 
         <div class="form-group col-md-3">
@@ -25,12 +27,12 @@
         <div class="hide">
             {{ form_rest(form) }}
         </div>
+    </fieldset>
 </div>
 {{ form_end(form) }}
 
 {% include view('helper.request') %}
 <script>
-
     var FormDiscount = $('#form_discount');
 
     FormDiscount.on('submit', function (event) {

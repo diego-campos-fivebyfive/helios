@@ -1,5 +1,5 @@
 <template lang="pug">
-  Page(sidebar='common', mainbar='common')
+  .wrapper
     ModalForm(
       ref='modalForm',
       v-on:getCoupons='getCoupons')
@@ -12,6 +12,10 @@
         :coupons='coupons',
         v-on:getCoupons='getCoupons',
         v-on:showModalForm='showModalForm')
+      Paginator(
+        slot='footer',
+        :pagination='pagination',
+        v-on:paginate='getCoupons')
 </template>
 
 <script>
@@ -26,15 +30,18 @@
       ModalForm
     },
     data: () => ({
-      coupons: []
+      coupons: [],
+      pagination: {}
     }),
     methods: {
       showModalForm(action, coupon) {
         this.$refs.modalForm.showActionModal(action, coupon)
       },
-      getCoupons() {
-        this.axios.get('/api/v1/coupon/').then(response => {
+      getCoupons(pageNumber = 1) {
+        const uri = `/api/v1/coupon?page=${pageNumber}`
+        this.axios.get(uri).then(response => {
           this.coupons = response.data.results
+          this.pagination = response.data.page
         })
       }
     },

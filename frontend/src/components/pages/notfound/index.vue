@@ -1,5 +1,5 @@
 <template lang="pug">
-  Page.page(sidebar='none', mainbar='none')
+  .wrapper
     header
       img.logo(src='@/assets/media/logo-ui.png', alt='Sices Solar - Logo')
     section.section
@@ -26,12 +26,14 @@
   $notfound-logo-x: 150px;
   $notfound-description-x: 300px;
 
-  .page {
+  .wrapper {
+    align-items: center;
     background-color: $ui-white-regular;
     color: $ui-text-main;
     display: flex;
-    align-items: center;
+    flex-flow: column;
     justify-content: center;
+    min-height: 100vh;
     padding: $ui-space-y $ui-space-x;
     text-align: center;
   }

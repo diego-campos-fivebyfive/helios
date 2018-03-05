@@ -1,11 +1,11 @@
 <template lang="pug">
   div
-    Modal(:open='modal.open', v-on:close='modal.open = false')
+    Modal(ref='modal')
       h1.title(slot='header')
-        | {{ modal.milestone }}
+        | {{ metric.milestone }}
         span.sub Tarefas relacionadas ao milestone
       ul.list(slot='section')
-        li(v-for='issue in modal.issues') {{ issue.title }}
+        li(v-for='issue in metric.issues') {{ issue.title }}
     Table.table(type='stripped')
       tr(slot='head')
         th Título
@@ -31,8 +31,7 @@
       'milestones'
     ],
     data: () => ({
-      modal: {
-        open: false,
+      metric: {
         title: '',
         list: []
       }
@@ -41,11 +40,12 @@
       getIssues(milestone) {
         const uri = `admin/api/v1/metrics/milestones/${milestone.id}/issues`
         this.axios.get(uri).then(response => {
-          this.modal = {
-            open: true,
+          this.metric = {
             milestone: milestone.title,
             issues: response.data
           }
+
+          this.$refs.modal.show()
         })
       }
     }

@@ -236,6 +236,14 @@ class RegisterController extends AbstractController
                 $manager->save($account);
             }
 
+            $member = $user->getInfo();
+
+            if ($member->getStatus() != 3) {
+                $member->setStatus(AccountInterface::ACTIVATED);
+
+                $this->manager('member')->save($member);
+            }
+
             $event = new FormEvent($form, $request);
             $dispatcher->dispatch(FOSUserEvents::RESETTING_RESET_SUCCESS, $event);
 

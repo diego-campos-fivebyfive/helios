@@ -12,6 +12,7 @@
 namespace App\Sices\Ftp;
 
 use Gaufrette\Filesystem;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class AdapterFactory
@@ -19,16 +20,10 @@ use Gaufrette\Filesystem;
  */
 class FileReader
 {
-    private $fileSystem;
-
     /**
-     * FileReader constructor.
-     * @param Filesystem $fileSystem
+     * @var Filesystem
      */
-    function __construct(Filesystem $fileSystem)
-    {
-        $this->fileSystem = $fileSystem;
-    }
+    private $fileSystem;
 
     /**
      * @param $method
@@ -45,6 +40,14 @@ class FileReader
     }
 
     /**
+     * @param Filesystem $fileSystem
+     */
+    public function init(Filesystem $fileSystem)
+    {
+        $this->fileSystem = $fileSystem;
+    }
+
+    /**
      * @param string $prefix
      * @return mixed
      */
@@ -57,20 +60,40 @@ class FileReader
     }
 
     /**
-     * @param $file
-     * @param bool $returnPath
-     * @return string
+     * @param $files
+     * @param $path
      */
-    public function download($file)
+    public function downloadList($files, $path)
+    {
+        foreach ($files as $file) {
+            $this->downloadFile($file, $path);
+        }
+    }
+
+    /**
+     * @param $file
+     * @param $path
+     */
+    public function downloadFile($file, $path)
     {
         $content = $this->fileSystem->read($file);
-        $path = dirname(__FILE__) . '/storage/' . $file;
-
-        $handle = fopen($path, 'w+');
+        $handle = fopen("${path}/${file}", 'w+');
 
         fwrite($handle, $content);
         fclose($handle);
+    }
 
-        return $path;
+    /**
+     * @param string $filename
+     * @param string $prefix
+     * @return bool
+     */
+    public function prefixer($filename, $prefix)
+    {
+        if ($this->fileSystem->has($filename)) {
+            return $this->fileSystem->rename($filename, $prefix.$filename);
+        }
+
+        return false;
     }
 }

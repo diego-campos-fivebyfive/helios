@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Misc\Coupon;
 use AppBundle\Entity\Misc\CouponInterface;
+use AppBundle\Service\Coupon\Transformer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -16,32 +17,39 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @Route("api/v1/coupon")
  *
- * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_PLATFORM_MASTER')")
  */
 class CouponController extends AbstractController
 {
     /**
      * @Route("/", name="list_coupon")
      *
+     * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_PLATFORM_MASTER')")
+     *
      * @Method("get")
      */
-    public function indexAction(Request $request)
+    public function getAction(Request $request)
     {
         $qb = $this->manager('coupon')->createQueryBuilder();
         $qb->orderBy('c.id', 'DESC');
 
-        if (!empty($accounts = $request->get('account'))) {
-            $arrayAccounts = array_filter(explode(',', $accounts));
-            $qb->andWhere($qb->expr()->in('c.account', $arrayAccounts));
+        $accounts = $request->get('account');
+        $name = $request->get('name');
+        $status = $request->get('status');
+
+        if (!empty($accounts)) {
+            $accounts = array_filter(explode(',', $accounts));
+            $qb->andWhere($qb->expr()->in('c.account', $accounts));
         }
 
-        if (!empty($name = $request->get('name'))) {
-            $arrayNames = array_filter(explode(',', $name));
-            $qb->andWhere($qb->expr()->in('c.name', $arrayNames));
+        if (!empty($name)) {
+            $names = array_filter(explode(',', $name));
+            $qb->andWhere($qb->expr()->in('c.name', $names));
         }
 
-        if (null != $status = $request->get('status')) {
-            $status ? $qb->andWhere('c.target is not null') : $qb->andWhere('c.target is null');
+        if ($status) {
+            $status
+                ? $qb->andWhere('c.target is not null')
+                : $qb->andWhere('c.target is null');
         }
 
         $itemsPerPage = 10;
@@ -57,6 +65,8 @@ class CouponController extends AbstractController
 
     /**
      * @Route("/", name="create_coupon")
+     *
+     * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_PLATFORM_MASTER')")
      *
      * @Method("post")
      */
@@ -103,8 +113,10 @@ class CouponController extends AbstractController
 
         $coupon->setName($name);
         $coupon->setAmount($amount);
-        if ($account)
+
+        if ($account) {
             $coupon->setAccount($account);
+        }
 
         $couponManager->save($coupon);
 
@@ -114,24 +126,32 @@ class CouponController extends AbstractController
     /**
      * @Route("/{id}", name="update_coupon")
      *
+     * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_PLATFORM_MASTER')")
+     *
      * @Method("put")
      */
     public function updateAction(Request $request, Coupon $coupon)
     {
+        $this->denyAccessUnlessGranted('edit', $coupon);
+
         $name = $request->request->get('name');
         $amount = $request->request->get('amount');
         $accountId = $request->request->get('account');
 
-        $accountManager = $this->manager('account');
-        $account = $accountManager->findOneBy([
-            'id' => $accountId,
-            'context' => BusinessInterface::CONTEXT_ACCOUNT
-        ]);
+        $account = null;
+
+        if ($accountId) {
+            $accountManager = $this->manager('account');
+            $account = $accountManager->findOneBy([
+                'id' => $accountId,
+                'context' => BusinessInterface::CONTEXT_ACCOUNT
+            ]);
+        }
 
         $coupon->setName($name);
         $coupon->setAmount($amount);
-        if ($account)
-            $coupon->setAccount($account);
+
+        $coupon->setAccount($account);
 
         $this->manager('coupon')->save($coupon);
 
@@ -141,10 +161,14 @@ class CouponController extends AbstractController
     /**
      * @Route("/{id}", name="delete_coupon")
      *
+     * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_PLATFORM_MASTER')")
+     *
      * @Method("delete")
      */
     public function deleteAction(Coupon $coupon)
     {
+        $this->denyAccessUnlessGranted('edit', $coupon);
+
         $manager = $this->manager('coupon');
 
         $manager->delete($coupon);
@@ -153,25 +177,67 @@ class CouponController extends AbstractController
     }
 
     /**
+     * @Route("/code/{code}", name="get_coupon")
+     *
+     * @Method("get")
+     */
+    public function getCouponAction($code)
+    {
+        /** @var Transformer $couponTransformer */
+        $couponTransformer = $this->container->get("coupon_transformer");
+
+        $coupon = $couponTransformer->getCoupon($code);
+
+        if (!$coupon) {
+            return $this->json([], Response::HTTP_NOT_FOUND);
+        }
+
+        $this->denyAccessUnlessGranted('edit', $coupon);
+
+        $couponArray = [
+            "id" => $coupon->getId(),
+            "code" => $coupon->getCode(),
+            "name" => $coupon->getName(),
+            "amount" => $coupon->getAmount(),
+            "applied" => $coupon->isApplied(),
+            "appliedAt" => $coupon->getAppliedAt() ? $coupon->getAppliedAt()->format("Y-m-d") : null,
+            "target" => $coupon->getTarget()
+        ];
+
+        return $this->json($couponArray);
+    }
+
+    /**
      * @param $couponCollection
      * @return array
      */
     private function formatEntity($couponCollection)
     {
-        $data = [];
-        foreach ($couponCollection as $coupon) {
-            $account = $coupon->getAccount() ? $coupon->getAccount()->getFirstName() : null;
+        return array_map(function($coupon) {
+            $account = $coupon->getAccount();
 
-            $data [] = [
+            if ($account) {
+                $account = [
+                    'id' => $account->getId(),
+                    'name' => $account->getFirstName()
+                ];
+            } else {
+                $account = [
+                    'id' => '',
+                    'name' => ''
+                ];
+            }
+
+            return [
                 'id' => $coupon->getId(),
+                'code' => $coupon->getCode(),
                 'name' => $coupon->getName(),
                 'amount' => $coupon->getAmount(),
                 'target' => $coupon->getTarget(),
                 'account' => $account,
                 'applied' => $coupon->isApplied()
             ];
-        }
-        return $data;
+        }, $couponCollection);
     }
 
     /**

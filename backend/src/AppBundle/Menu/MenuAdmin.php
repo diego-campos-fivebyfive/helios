@@ -34,6 +34,15 @@ class MenuAdmin
             'icon' => 'trophy',
             'allowedRoles' => '*'
         ],
+        'coupon' => [
+            'name' => 'Cupom de Desconto',
+            'link' => '/coupon',
+            'icon' => 'ticket',
+            'allowedRoles' => [
+              'admin',
+              'master'
+            ]
+        ],
         'memorials' => [
             'name' => 'Memoriais',
             'route' => 'memorials',

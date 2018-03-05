@@ -3,6 +3,8 @@
 namespace AppBundle\Controller;
 
 use AdminBundle\Form\Stock\TransactionType;
+use App\Sices\Nfe\Parser;
+use App\Sices\Nfe\Processor;
 use AppBundle\AppBundle;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Component\ComponentInterface;
@@ -21,6 +23,7 @@ use AppBundle\Manager\OrderManager;
 use AppBundle\Model\KitPricing;
 use AppBundle\Service\Business\RankingGenerator;
 use AppBundle\Service\Mailer;
+use AppBundle\Service\Order\OrderCoupon;
 use AppBundle\Service\Order\OrderFinder;
 use AppBundle\Service\ProjectGenerator\Checker\Checker;
 use AppBundle\Service\Stock\Identity;
@@ -46,6 +49,23 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
  */
 class DebugController extends AbstractController
 {
+
+    /**
+     * @Route("/order_coupon")
+     */
+    public function orderCouponAction()
+    {
+        /** @var OrderCoupon $orderCoupon */
+        $orderCoupon = $this->get('order_coupon');
+
+        $order = $this->get('order_manager')->find(1095);
+        $amount = 1500;
+
+        $result = $orderCoupon->generateCoupon($order,$amount);
+
+        dump($result);die;
+    }
+
     /**
      * @Route("/fix-component-inventory")
      */

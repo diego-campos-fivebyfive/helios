@@ -30,7 +30,7 @@ class UtilsController extends AbstractController
             ]
         ]);
 
-        $response = $client->request('post');
+        $response = $client->request('get');
 
         return $this->json(json_decode($response->getBody()->getContents(), true));
     }

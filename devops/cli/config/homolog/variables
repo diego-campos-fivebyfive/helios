@@ -10,5 +10,6 @@ export SICES_HOMOLOG_DATABASE_HOST='mysql-dev-test.crtwvzhue9fu.sa-east-1.rds.am
 export SICES_HOMOLOG_DATABASE_PORT=3306
 export SICES_HOMOLOG_DATABASE_PASS='zvQdYaPB79muWbnpct'
 export SICES_HOMOLOG_FTP_HOST=kolinalabs.com
+export SICES_HOMOLOG_FTP_PORT=21
 export SICES_HOMOLOG_FTP_USER=sicesbrasil@kolinalabs.com
 export SICES_HOMOLOG_FTP_PASS='xVa0JZM}P4nf'

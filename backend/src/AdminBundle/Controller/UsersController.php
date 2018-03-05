@@ -54,6 +54,11 @@ class UsersController extends AbstractController
      */
     public function createAction(Request $request)
     {
+        $status = false;
+        if ($request->request->all()) {
+            $status = array_key_exists('enabled', $request->get('member')['user']);
+        }
+
         /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
         $userManager = $this->get('fos_user.user_manager');
 
@@ -67,6 +72,7 @@ class UsersController extends AbstractController
 
         $user = $userManager->createUser();
         $user->setCreatedAt(new \DateTime('now'));
+        $user->setEnabled($status);
 
         $member = $memberManager->create();
         $member
@@ -141,6 +147,7 @@ class UsersController extends AbstractController
             } else {
 
                 if($member->getUser()->isEnabled()){
+                    $member->setStatus(Customer::ACTIVATED);
                     $member->restore();
 
                     $member->getUser()->addRole(UserInterface::ROLE_PLATFORM_COMMERCIAL);

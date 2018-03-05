@@ -21,6 +21,11 @@ if [[ $CES_AMBIENCE == 'homolog' ]]; then
   $CLI_PATH/ces-database-update
   $CLI_PATH/ces-cache-clear
   $CLI_PATH/ces-frontend-compile
+
+  [ ! -d $PROJECT_ROOT/web/app ] && {
+    $CLI_PATH/ces-slack-notify --homolog "Frontend Build Failed!"
+  }
+
   $CLI_PATH/ces-slack-notify --homolog "Homolog Deploy Done!"
 
 elif [[ $CES_AMBIENCE == 'production' ]]; then

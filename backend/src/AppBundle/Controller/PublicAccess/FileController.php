@@ -6,11 +6,12 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Theme;
 use AppBundle\Entity\Order\Order;
-use Buzz\Message\Request;
 use Knp\Bundle\SnappyBundle\Snappy\LoggableGenerator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Process\Process;
 
@@ -19,6 +20,7 @@ use Symfony\Component\Process\Process;
  */
 class FileController extends AbstractController
 {
+
     /**
      * @Route("/{token}/proposal", name="file_proposal")
      */

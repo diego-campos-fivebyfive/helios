@@ -35,6 +35,15 @@ class JsonCache
     }
 
     /**
+     * @param $context
+     * @return JsonCache
+     */
+    public static function create($context)
+    {
+        return new self($context);
+    }
+
+    /**
      * @return array
      */
     public function all()
@@ -47,7 +56,7 @@ class JsonCache
      * @param array $item
      * @return $this
      */
-    public function add($key, $item)
+    public function incrementInArrayPosition($key, $item)
     {
         if (!array_key_exists($key, $this->data)) {
             $this->data[$key] = [];
@@ -55,8 +64,6 @@ class JsonCache
         if (!in_array($item, $this->data[$key])) {
             $this->data[$key][] = $item;
         }
-
-        $this->store();
 
         return $this;
     }
@@ -70,8 +77,6 @@ class JsonCache
         if (is_array($this->data) && array_key_exists($key, $this->data)) {
             unset($this->data[$key]);
         }
-
-        $this->store();
 
         return $this;
     }
@@ -98,12 +103,20 @@ class JsonCache
     }
 
     /**
-     * @param $context
-     * @return JsonCache
+     * persist data
      */
-    public static function create($context)
+    public function store()
     {
-        return new self($context);
+        $file = fopen($this->path, 'w');
+
+        $data = null;
+        if ($this->data != []) {
+            $data = json_encode($this->data);
+        }
+
+        fwrite($file, $data);
+
+        fclose($file);
     }
 
     /**
@@ -118,22 +131,5 @@ class JsonCache
         if ($content = file_get_contents($this->path)) {
             $this->data = json_decode($content, true);
         }
-    }
-
-    /**
-     * persist data
-     */
-    private function store()
-    {
-        $file = fopen($this->path, 'w');
-
-        $data = null;
-        if ($this->data != []) {
-            $data = json_encode($this->data);
-        }
-
-        fwrite($file, $data);
-
-        fclose($file);
     }
 }

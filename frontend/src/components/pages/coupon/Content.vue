@@ -1,18 +1,21 @@
 <template lang="pug">
   div
+    Notification(ref='notification')
     ModalConfirm(
       ref='modalConfirm',
       v-on:removeCoupon='removeCoupon')
     Table.table(type='stripped')
       tr(slot='head')
         th Nome
+        th Código
         th Conta
         th Status
         th Valor
         th Ações
       tr.rows(slot='rows', v-for='coupon in coupons')
         td {{ coupon.name }}
-        td {{ coupon.account }}
+        td {{ coupon.code }}
+        td {{ coupon.account.name || 'Não Vinculada' }}
         td {{ coupon.applied ? 'Aplicado' : 'Não Aplicado' }}
         td {{ coupon.amount }}
         td
@@ -46,10 +49,12 @@
         this.$refs.modalConfirm.showActionModal(coupon)
       },
       removeCoupon(id) {
+        this.$refs.modalConfirm.closeActionModal()
+
         this.axios.delete(`/api/v1/coupon/${id}`)
           .then(() => {
             this.$emit('getCoupons')
-            this.$refs.modalConfirm.closeActionModal()
+            this.$refs.notification.notify('Cupom removido com sucesso')
           })
       }
     }
@@ -71,18 +76,22 @@
 
       &:nth-child(2) {
         text-align: center;
-        width: 25%;
       }
 
       &:nth-child(3) {
         text-align: center;
+        width: 25%;
       }
 
       &:nth-child(4) {
-        text-align: right;
+        text-align: center;
       }
 
       &:nth-child(5) {
+        text-align: right;
+      }
+
+      &:nth-child(6) {
         text-align: right;
       }
     }
