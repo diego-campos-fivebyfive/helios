@@ -1,5 +1,8 @@
 <?php
 
+require_once dirname(__DIR__) . '/../vendor/autoload.php';
+require_once dirname(__FILE__) . '/config/functions.php';
+
 /**
  * Este arquivo é útil para execuções "cron" em nível de diretório.
  * O objetivo é que ao adicionar novas tarefas cron, ocorram apenas

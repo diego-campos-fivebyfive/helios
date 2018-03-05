@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Sices\Persistence;
+namespace App\Persistence;
 
 /**
  * This class provides the independent basic connection for crud operations
@@ -22,6 +22,11 @@ class Connection
      * @var \PDO
      */
     private $pdo;
+
+    /**
+     * @var
+     */
+    private $lastInsertTable;
 
     /**
      * @var Connection
@@ -66,7 +71,7 @@ class Connection
     /**
      * @param $table
      * @param array $data
-     * @return bool
+     * @return array|bool
      */
     public function insert($table, array $data)
     {
@@ -75,6 +80,8 @@ class Connection
         $sql = SQLFormatter::insert($table, $data);
 
         $params = array_combine($fields, array_values($data));
+
+        $this->lastInsertTable = $table;
 
         return $this->execute($sql, $params);
     }
@@ -127,6 +134,14 @@ class Connection
     }
 
     /**
+     * @return mixed
+     */
+    public function lastInsertTable()
+    {
+        return $this->lastInsertTable;
+    }
+
+    /**
      * @param array $config
      * @return Connection
      */
@@ -156,8 +171,10 @@ class Connection
                 $result = $stmt->rowCount();
                 break;
             case 'INSERT':
+                $result = current($this->select($this->lastInsertTable, 'id = ?', [$this->lastInsertId()]));
+                break;
             case 'DELETE':
-                // Default result
+                //
                 break;
         }
 

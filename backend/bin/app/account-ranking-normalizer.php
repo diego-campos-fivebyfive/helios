@@ -17,8 +17,7 @@
 
 use AppBundle\Service\Order\OrderRanking;
 
-require_once dirname(__FILE__) . '/config/connection.php';
-require_once dirname(__DIR__) . '/../vendor/autoload.php';
+connectDatabase();
 
 $mapping = OrderRanking::getMapping();
 

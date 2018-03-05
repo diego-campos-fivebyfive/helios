@@ -3,8 +3,6 @@
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
-require_once dirname(__DIR__) . '/../../vendor/autoload.php';
-
 /**
  * @param $context
  * @param $message

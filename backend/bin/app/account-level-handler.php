@@ -19,8 +19,7 @@ use Monolog\Handler\StreamHandler;
  * na lista de níveis.
  */
 
-require_once dirname(__FILE__) . '/config/connection.php';
-require_once dirname(__DIR__) . '/../vendor/autoload.php';
+connectDatabase();
 
 $data = R::findOne('app_parameter', 'id = ?', ['platform_settings']);
 
