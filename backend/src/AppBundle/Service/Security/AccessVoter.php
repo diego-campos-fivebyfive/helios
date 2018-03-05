@@ -206,9 +206,6 @@ class AccessVoter extends Voter
         }
 
         $account = $coupon->getAccount();
-        if (!$account instanceof AccountInterface) {
-            return false;
-        }
 
         if (is_null($account) || $account === $member->getAccount()) {
             return true;
