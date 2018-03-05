@@ -209,6 +209,7 @@
                 CouponHandler.associateCoupon();
             } else {
                 CouponHandler.generateAndAssociateCoupon();
+
             }
         });
     })
@@ -236,4 +237,7 @@
     }
 
     $('#order-total').html('{{  order.total|currency }}');
+    {% if order.coupon %}
+        $('#coupon-discount').html('<th colspan="6" class="text-right">Cupom de desconto: -{{  order.coupon.amount|currency }}</th>');
+    {% endif %}
 </script>
