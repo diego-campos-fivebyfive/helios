@@ -843,15 +843,11 @@
                                             </th>
                                         </tr>
                                     {% endif %}
-                                    {% if order.coupon %}
-                                        <tr>
-                                            <th colspan="6" class="text-right">
-                                                Cupom de desconto: -{{ order.coupon.amount|currency }}
-                                            </th>
-                                        </tr>
-                                    {% endif %}
+
+                                    <tr id="coupon-discount"></tr>
+
                                     <tr>
-                                        <th colspan="6" class="text-right"> Total: {{ order.total|currency }} </th>
+                                        <th colspan="6" class="text-right" id="order-total"> Total: {{ order.total|currency }} </th>
                                     </tr>
                                     </tfoot>
                                 </table>
