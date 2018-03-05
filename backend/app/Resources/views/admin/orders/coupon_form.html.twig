@@ -1,9 +1,17 @@
-{% if not order.coupon %}
+{% if not order.coupon and order.status < constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') %}
 
-    <fieldset class="col-md-12">
-        <h3>Aplicar cupom:</h3>
-        <div class="form-group col-md-3">
-            <label>Informar código: </label>
+    {% if isShow %}
+    <div class="ibox border-bottom">
+        <div class="ibox-content">
+            <div class="tab-content">
+                <div class="tab-pane active">
+                    <div class="row">
+    {% endif %}
+
+        <fieldset class="col-md-12">
+        <h3>{% if not app.user.isPlatform %} Resgate de pontos: {% else %} Aplicar cupom: {% endif %}</h3>
+        <div class="form-group {% if isShow %} col-md-6 {% else %} col-md-3 {% endif %}">
+            <label>Informar código:</label>
             <div class="input-group">
                 <input type="text" id="coupon_code_input" class="form-control">
                 <span class="input-group-addon" id="coupon_code_search">
@@ -12,8 +20,8 @@
             </div>
         </div>
 
-        {% if not app.user.isPlatform  %}
-            <div class="form-group col-md-3">
+        {% if not app.user.isPlatform and options %}
+            <div class="form-group {% if isShow %} col-md-6 {% else %} col-md-3 {% endif %}">
                 <label>Selecionar opção: </label>
                 <div class="input-group col-md-12">
                     <select class="form-control" id="coupon_select" name="account">
@@ -26,7 +34,7 @@
             </div>
         {% endif %}
 
-        <div class="form-group col-md-5 pull-right">
+        <div class="form-group {% if isShow %} col-md-8 {% else %} col-md-5 pull-right {% endif %}">
             <label> &nbsp; </label>
             <button class="btn btn-success btn-block ladda-button" disabled="disabled" id="submit_coupon" data-style="zoom-in" type="submit">
                 <i class="fa fa-check-circle-o"></i> Informe o código ou selecione uma opção
@@ -34,17 +42,41 @@
         </div>
     </fieldset>
 
-{% else %}
+    {% if isShow %}
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+    {% endif %}
 
+{% else  %}
+
+    {% if isShow and order.coupon and order.status >= constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') %}
+    <div class="ibox border-bottom">
+        <div class="ibox-content">
+            <div class="tab-content">
+                <div class="tab-pane active">
+                    <div class="row">
+    {% endif %}
+
+    {% if not isShow or order.status >= constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') %}
     <div class="col-md-12">
         <h3><b>Cupom de desconto aplicado:</b></h3>
         <p><b>Código:</b> {{ order.coupon.code }}</p>
         <p><b>Valor:</b> {{ order.coupon.amount|currency }}</p>
     </div>
+    {% endif %}
+
+    {% if isShow and order.coupon and order.status >= constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') %}
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+    {% endif %}
 
 {% endif %}
-
-<div class="hr-line-dashed col-md-12"></div>
 
 <script>
     var options = {

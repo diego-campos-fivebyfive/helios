@@ -1,4 +1,5 @@
 {% extends view('layout') %}
+
 {% block body %}
     <style>
         .collapse {
@@ -706,6 +707,9 @@
                     </div>
                 </div>
 
+                {% set isShow = 'Teste' %}
+                <div id="coupon_form"></div>
+
                 <div class="ibox border-bottom">
                     <div class="ibox-content">
                         <div class="tab-content">
@@ -906,9 +910,28 @@
         </div>
     </div>
 
+{% endblock %}
+
+{% block scripts %}
+
+    {% include view('helper.plugins_js') %}
     {% include view('order.status_handler') %}
 
     <script>
+
+      var FormCoupon = $('#coupon_form');
+
+      function getAssociatedCoupon() {
+        $.ajax({
+          url: "{{ path('coupon_create', {id:order.id, isShow: '1'}) }}",
+          success: function (response) {
+            FormCoupon.html(response);
+          }
+        });
+      }
+
+      getAssociatedCoupon();
+
         $('[data-delete]').on('click', function () {
 
             var url = $(this).data('delete');
@@ -1109,4 +1132,5 @@
         {#{% endif %}#}
 
     </script>
+
 {% endblock %}
