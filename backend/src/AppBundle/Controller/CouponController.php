@@ -113,8 +113,10 @@ class CouponController extends AbstractController
 
         $coupon->setName($name);
         $coupon->setAmount($amount);
-        if ($account)
+
+        if ($account) {
             $coupon->setAccount($account);
+        }
 
         $couponManager->save($coupon);
 
@@ -136,16 +138,20 @@ class CouponController extends AbstractController
         $amount = $request->request->get('amount');
         $accountId = $request->request->get('account');
 
-        $accountManager = $this->manager('account');
-        $account = $accountManager->findOneBy([
-            'id' => $accountId,
-            'context' => BusinessInterface::CONTEXT_ACCOUNT
-        ]);
+        $account = null;
+
+        if ($accountId) {
+            $accountManager = $this->manager('account');
+            $account = $accountManager->findOneBy([
+                'id' => $accountId,
+                'context' => BusinessInterface::CONTEXT_ACCOUNT
+            ]);
+        }
 
         $coupon->setName($name);
         $coupon->setAmount($amount);
-        if ($account)
-            $coupon->setAccount($account);
+
+        $coupon->setAccount($account);
 
         $this->manager('coupon')->save($coupon);
 
