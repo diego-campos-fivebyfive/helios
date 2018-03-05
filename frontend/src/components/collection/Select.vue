@@ -18,7 +18,6 @@
         const option = this.options.find(currentOption => (
           String(currentOption.value) === selectedOption
         ))
-
         this.$emit('update', option)
       }
     }
