@@ -96,6 +96,8 @@
         associateCouponUrl: "{{ path('associate_coupon', {order: order.id, coupon: "_coupon_"}) }}",
         source: null,
         status: null,
+        amount: null,
+        orderPrice: {{ order.total }},
         validateCoupon: function () {
             var url = this.getCouponUrl.replace('_code_', this.couponInput.val());
             $.ajax({
@@ -110,6 +112,7 @@
                         CouponHandler.resetSubmitCoupon();
                     } else {
                         CouponHandler.source = "input";
+                        CouponHandler.amount = Number(CouponHandler.coupon.amount);
                         CouponHandler.activateSubmitCoupon(CouponHandler.coupon.amount);
                     }
                 }
@@ -172,6 +175,7 @@
     });
     $('#coupon_select').on('change', function () {
         if (CouponHandler.couponSelect.val() !== '') {
+            CouponHandler.amount = CouponHandler.couponSelect.val();
             CouponHandler.activateSubmitCoupon(CouponHandler.couponSelect.val());
             CouponHandler.resetCouponInput();
             CouponHandler.source = "select";
@@ -185,6 +189,11 @@
 
         if (CouponHandler.source === 'select') {
             title = 'Confirma a criação e associação do cupom?';
+        }
+
+        if (CouponHandler.amount > CouponHandler.orderPrice) {
+            title = 'Você está usando um desconto superior ao orçamento.' +
+                ' Os pontos restantes serão perdidos. Deseja continuar?';
         }
 
         swal({
