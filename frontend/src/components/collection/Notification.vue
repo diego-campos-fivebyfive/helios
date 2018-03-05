@@ -10,8 +10,8 @@
 <script>
   export default {
     data: () => ({
-      open: true,
-      message: 'Teste'
+      open: false,
+      message: ''
     }),
     methods: {
       notify(message) {
