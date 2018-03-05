@@ -12,6 +12,8 @@ require_once dirname(__DIR__) . '/../../vendor/autoload.php';
  */
 function createLog($context, $message, $level = Logger::INFO){
 
+    exec("\$CLI_PATH/ces-slack-notify --production '$message'");
+
     $filename = dirname(__DIR__) . sprintf('/logs/cron-%s.log', $context);
 
     $log = new Logger($context);
