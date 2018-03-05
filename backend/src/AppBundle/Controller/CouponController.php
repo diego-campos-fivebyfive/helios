@@ -108,15 +108,22 @@ class CouponController extends AbstractController
         /** @var CouponInterface $coupon */
         $coupon = $couponManager->create();
 
-        //TODO: campo not null, verificar valor
-        $coupon->setCode(0);
-
         $coupon->setName($name);
+
         $coupon->setAmount($amount);
 
         if ($account) {
             $coupon->setAccount($account);
         }
+
+        $couponManager->save($coupon);
+
+        /** @var Transformer $couponTransformer */
+        $couponTransformer = $this->container->get("coupon_transformer");
+        
+        $code = $couponTransformer->generateCode($coupon);
+
+        $coupon->setCode($code);
 
         $couponManager->save($coupon);
 
