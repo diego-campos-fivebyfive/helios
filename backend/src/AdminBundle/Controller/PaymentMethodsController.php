@@ -27,12 +27,30 @@ class PaymentMethodsController extends AdminController
     /**
      * @Route("/list", name="payment_methods_list")
      */
-    public function listAction()
+    public function listAction(Request $request)
     {
         $parameter = $this->findParameter();
+        $results = $parameter->all();
+
+        if (null != $search = trim($request->get('filter_value'))) {
+            $results = array_filter($results, function ($result) use ($search){
+                $name = strtolower($result['name']);
+                if (strpos($name, $search) !== false) {
+                    return true;
+                }
+            });
+        }
+
+        $this->overrideGetFilters();
+
+        $itemsPerPage = 10;
+        $pagination = $this->getPaginator()->paginate(
+            $results,
+            $request->query->getInt('page', 1),
+            $itemsPerPage);
 
         return $this->render('admin/payment-methods/list.html.twig', [
-            'paymentMethods' => $parameter->all()
+            'paymentMethods' => $pagination
         ]);
     }
 

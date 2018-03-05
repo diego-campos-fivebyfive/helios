@@ -1,37 +1,78 @@
-{% for paymentMethod in paymentMethods %}
-
-    {% set id = loop.index0 %}
-
+<div class="row">
+    <fieldset style="margin-bottom: 1rem;">
+        {{ knp_pagination_filter(paymentMethods, {'name':''}) }}
+        <a data-href="{{ path('payment_methods_create') }}" data-toggle="modal" data-target="#modal_payment_method"
+           class="btn btn-md btn-success pull-right" style="margin-right: 1.75rem">
+            <i class="fa fa-plus"></i> Adicionar
+        </a>
+    </fieldset>
+</div>
+<table class="table table-bordered table-stripped">
+    <thead>
     <tr>
-        <td> {{ paymentMethod.name }} </td>
-        <td class="text-center">
-            <span class="label label-{{ paymentMethod.enabled ? 'success' }}">
-                {{ paymentMethod.enabled ? 'Ativo' : 'Inativo' }}
-            </span>
-        </td>
-        <td class="text-center">
-            <h3><i class="fa {{ paymentMethod.financing ? 'fa-check' : '' }}"></i></h3>
-        </td>
-        <td class="text-center"> {{ paymentMethod.quotas|length }} </td>
-        <td>
-            <div class="btn-group btn-group-md btn-group-justified">
-                <a data-toggle="modal" data-target="#modal_payment_method"
-                   data-href="{{ path('payment_methods_update',{id:id}) }}"
-                   class="btn btn-primary">
-                    <i class="fa fa-pencil"></i>
-                    Editar
-                </a>
-                <a data-delete="{{ path('payment_methods_delete',{id:id}) }}" class="btn btn-danger">
-                    <i class="fa fa-trash"></i>
-                    Excluir
-                </a>
-            </div>
-        </td>
+        <th class="text-center"> Nome</th>
+        <th class="text-center col-md-2"> Status</th>
+        <th class="text-center col-md-2"> Financiamento</th>
+        <th class="text-center col-md-2"> Parcelas</th>
+        <th class="col-md-2"> &nbsp; </th>
     </tr>
+    </thead>
+    <tbody {#id="payment_methods_list"#}>
+    {% for paymentMethod in paymentMethods %}
 
-{% endfor %}
+        {% set id = loop.index0 %}
 
+        <tr>
+            <td> {{ paymentMethod.name }} </td>
+            <td class="text-center">
+                <span class="label label-{{ paymentMethod.enabled ? 'success' }}">
+                    {{ paymentMethod.enabled ? 'Ativo' : 'Inativo' }}
+                </span>
+            </td>
+            <td class="text-center">
+                <h3><i class="fa {{ paymentMethod.financing is defined ? 'fa-check' : '' }}"></i></h3>
+            </td>
+            <td class="text-center"> {{ paymentMethod.quotas|length }} </td>
+            <td>
+                <div class="btn-group btn-group-md btn-group-justified">
+                    <a data-toggle="modal" data-target="#modal_payment_method"
+                       data-href="{{ path('payment_methods_update',{id:id}) }}"
+                       class="btn btn-primary">
+                        <i class="fa fa-pencil"></i>
+                        Editar
+                    </a>
+                    <a data-delete="{{ path('payment_methods_delete',{id:id}) }}" class="btn btn-danger">
+                        <i class="fa fa-trash"></i>
+                        Excluir
+                    </a>
+                </div>
+            </td>
+        </tr>
+
+    {% endfor %}
+    </tbody>
+</table>
+<div class="row text-center">
+    <div class="btn-group bt-xs">
+        {{ knp_pagination_render(paymentMethods) }}
+    </div>
+</div>
 <script>
+    var form = $('#form_filtration');
+
+    form.remove
+    form.on('submit', function (event) {
+        event.preventDefault();
+        $.ajax({
+            url: form.attr('action'),
+            method: 'get',
+            data: form.serialize(),
+            complete: function (xhr) {
+                $('#payment_methods_list').html(xhr.responseText);
+            }
+        });
+    });
+
     $('[data-delete]').on('click', function(){
         var url = $(this).data('delete');
         swal({
@@ -66,6 +107,22 @@
                     });
                 }
             })
+        });
+    });
+
+    $(' #payment_methods_list ul[class="pagination"] li a ').toArray().forEach(function (el) {
+        $(el).attr('data-page-payment', $(el).attr('href'));
+        $(el).removeAttr('href');
+    });
+
+    $(' [data-page-payment] ').on( 'click', function () {
+        var url = $(this).data('page-payment');
+        $.ajax({
+            url: url,
+            method: 'get',
+            complete: function (xhr) {
+                $('#payment_methods_list').html(xhr.responseText);
+            }
         });
     });
 </script>

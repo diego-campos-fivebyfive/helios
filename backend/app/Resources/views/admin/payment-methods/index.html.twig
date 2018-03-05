@@ -29,39 +29,15 @@
                     <div class="ibox flow-h">
                         <div class="ibox-content flow-lg" style="min-height: 650px;">
                             <div class="row">
-
-                                <div class="col-md-12" style="margin-bottom: 1rem;">
-                                    <a data-href="{{ path('payment_methods_create') }}" data-toggle="modal" data-target="#modal_payment_method" class="btn btn-md btn-success pull-right">
-                                        <i class="fa fa-plus"></i> Adicionar
-                                    </a>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <table class="table table-bordered table-stripped">
-                                        <thead>
-                                        <tr>
-                                            <th class="text-center"> Nome</th>
-                                            <th class="text-center col-md-2"> Status</th>
-                                            <th class="text-center col-md-2"> Financiamento</th>
-                                            <th class="text-center col-md-2"> Parcelas</th>
-                                            <th class="col-md-2"> &nbsp; </th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="payment_methods_list">
-                                        </tbody>
-                                    </table>
-                                </div>
-
+                                <div class="col-md-12" id="payment_methods_list"></div>
                             </div>
                         </div>
                     </div>
 
                 </div>
             </div>
-
         </div>
     </div>
-
 {% endblock %}
 
 {% block scripts %}
@@ -101,7 +77,6 @@
         $('#button_save').on('click', function(){
             $('#payment_method_save').trigger('click');
         });
-
     </script>
 
 {% endblock %}
