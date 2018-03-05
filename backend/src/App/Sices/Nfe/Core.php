@@ -35,10 +35,11 @@ class Core
         $processor = $this->container->get('nfe_processor');
 
         $fileSystem = FileSystemFactory::create([
-            'host' => getenv('CES_SICES_FTP_HOST'),
-            'username' => getenv('CES_SICES_FTP_USER'),
-            'password' => getenv('CES_SICES_FTP_PASS'),
-            'directory' => '/DANFE'
+            'host' => $this->container->getParameter('ftp_host'),
+            'port' => $this->container->getParameter('ftp_port'),
+            'username' => $this->container->getParameter('ftp_user'),
+            'password' => $this->container->getParameter('ftp_password'),
+            'directory' => '/ftp/DANFE'
         ]);
 
         /** @var FileReader $fileReader */

@@ -12,6 +12,8 @@
 namespace App\Sices\Ftp;
 
 use Gaufrette\Adapter\Ftp as FtpAdapter;
+use Gaufrette\Adapter\PhpseclibSftp as SftpAdapter;
+use phpseclib\Net\SFTP;
 
 /**
  * Class AdapterFactory
@@ -21,14 +23,12 @@ abstract class AdapterFactory
 {
     /**
      * @param array $config
-     * @return FtpAdapter
+     * @return \Gaufrette\Adapter
      */
     public static function create(array $config = [])
     {
         $host = $config['host'];
         $directory = $config['directory'];
-
-        unset($config['host'], $config['directory']);
 
         $options = array_merge([
             'port'     => 21,
@@ -38,6 +38,13 @@ abstract class AdapterFactory
             'ssl'      => false,
         ], $config);
 
-        return new FtpAdapter($directory, $host, $options);
+        if(21 == $options['port']){
+            return new FtpAdapter($directory, $host, $options);
+        }
+
+        $sftp = new SFTP($options['host'], $options['port']);
+        $sftp->login($options['username'], $options['password']);
+
+        return new SftpAdapter($sftp, $options['directory'], $options['create']);
     }
 }

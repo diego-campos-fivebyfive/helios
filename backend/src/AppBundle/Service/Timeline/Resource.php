@@ -48,7 +48,7 @@ class Resource
         foreach ($timelineCollection as $timeline) {
             $target = $timeline['target'];
             $message = $timeline['message'];
-            $attributes = isset($timeline['createdAt']) ? $timeline['attributes'] : [];
+            $attributes = isset($timeline['attributes']) ? $timeline['attributes'] : [];
             $createdAt = array_key_exists('createdAt', $timeline) ? $timeline['createdAt'] : null;
 
             $timelines[] = $this->create($target, $message, $attributes, $createdAt);
@@ -76,7 +76,7 @@ class Resource
         $timeline
             ->setTarget($target)
             ->setMessage($message)
-            ->setAttributes($attributes)
+            ->setAttributes($attributes ? $attributes : [])
             ->setCreatedAt($createdAt instanceof \DateTime ? $createdAt : new \DateTime());
 
         $this->manager->save($timeline, $this->flush);

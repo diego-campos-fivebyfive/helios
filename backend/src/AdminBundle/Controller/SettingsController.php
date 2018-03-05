@@ -90,22 +90,26 @@ class SettingsController extends AdminController
             'fdi_max',
             'fdi_min',
             'shipping_included_max_power',
-            'finame_shipping_included_max_power'
+            'finame_shipping_included_max_power',
+            'coupon_order_percent'
         ];
 
-        foreach ($fields as $field)
-            if ($toDb)
+        foreach ($fields as $field) {
+            if ($toDb) {
                 $parameter->set($field, str_replace( ',', '.', $parameter->get($field)));
-            else
+            } else {
                 $parameter->set($field, str_replace( '.', ',', $parameter->get($field)));
+            }
+        }
 
-            $account_level_handler = $parameter->get('account_level_handler');
+        $account_level_handler = $parameter->get('account_level_handler');
 
         foreach ($account_level_handler['levels'] as $key => $level) {
-            if ($toDb)
+            if ($toDb) {
                 $value = str_replace(',', '.', $level['amount']);
-            else
+            } else {
                 $value = str_replace('.', ',', $level['amount']);
+            }
 
             $account_level_handler['levels'][$key]['amount'] = $value;
         }

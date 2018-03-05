@@ -91,30 +91,17 @@ class Processor
 
         foreach ($extensions as $extension) {
             $file = "{$filename}.{$extension}";
-            $this->addFileName($order,$file,$extension);
+            if (!array_key_exists('nfe', $order->getFiles()) || !$order->hasFile('nfe', $file)) {
+                $order->addFile('nfe', $file);
+            }
         }
 
         if ($danfe['billing'] == 'S') {
             $date = $this->formatBilledAt($danfe['billed_at']);
             $order->setBilledAt($date);
         }
+
         $this->manager->save($order);
-    }
-
-    /**
-     * @param Order $order
-     * @param $filename
-     * @param $extension
-     */
-    private function addFileName(Order $order, $filename, $extension)
-    {
-            if ($extension == "PDF") {
-                $order->addFile('nfe_pdf', $filename);
-            }
-
-            if ($extension == "XML") {
-                $order->addFile('nfe_xml', $filename);
-            }
     }
 
     /**

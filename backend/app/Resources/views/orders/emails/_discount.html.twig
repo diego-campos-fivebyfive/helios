@@ -1,0 +1,22 @@
+<table class="width-total info">
+    {% if order.total != order.totalExcDiscount and order.discount %}
+        <tr class="line-info info-extra">
+            <th class="position item-size">
+                DESCONTO COMERCIAL
+            </th>
+            <th class="position">
+                -{{ order.discount|currency }}
+            </th>
+        </tr>
+    {% endif %}
+    {% if order.coupon %}
+        <tr class="line-info info-extra">
+            <th class="position item-size">
+                CUPOM DE DESCONTO
+            </th>
+            <th class="position">
+                -{{ order.coupon.amount|currency }}
+            </th>
+        </tr>
+    {% endif %}
+</table>

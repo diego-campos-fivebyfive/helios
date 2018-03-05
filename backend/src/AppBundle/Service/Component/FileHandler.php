@@ -61,7 +61,7 @@ class FileHandler
 
     /**
      * FileHandler constructor.
-     * @param $uploadDir
+     * @param ContainerInterface $container
      */
     function __construct(ContainerInterface $container)
     {
@@ -73,11 +73,10 @@ class FileHandler
     }
 
     /**
-     * @param \AppBundle\Entity\Component\StringBoxInterface $component
-     * @param \AppBundle\Entity\Component\ModuleInterface $component
-     * @param \AppBundle\Entity\Component\InverterInterface $component
-     * @param \AppBundle\Entity\Component\StructureInterface $component
+     * @param $component
      * @param FileBag $files
+     * @throws \Throwable
+     * @throws \TypeError
      */
     public function upload($component, FileBag $files)
     {
@@ -164,7 +163,8 @@ class FileHandler
     }
 
     /**
-     * @param $options
+     * @param array $options
+     * @return string
      */
     public function link(array $options)
     {
@@ -176,7 +176,8 @@ class FileHandler
     }
 
     /**
-     * @param $options
+     * @param array $options
+     * @return string
      */
     public function location(array $options)
     {
@@ -185,7 +186,8 @@ class FileHandler
     }
 
     /**
-     * @param $options
+     * @param array $options
+     * @return string
      */
     public function display(array $options)
     {

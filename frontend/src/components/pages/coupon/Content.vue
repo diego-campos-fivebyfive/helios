@@ -7,12 +7,14 @@
     Table.table(type='stripped')
       tr(slot='head')
         th Nome
+        th Código
         th Conta
         th Status
         th Valor
         th Ações
       tr.rows(slot='rows', v-for='coupon in coupons')
         td {{ coupon.name }}
+        td {{ coupon.code }}
         td {{ coupon.account.name || 'Não Vinculada' }}
         td {{ coupon.applied ? 'Aplicado' : 'Não Aplicado' }}
         td {{ coupon.amount }}
@@ -74,18 +76,22 @@
 
       &:nth-child(2) {
         text-align: center;
-        width: 25%;
       }
 
       &:nth-child(3) {
         text-align: center;
+        width: 25%;
       }
 
       &:nth-child(4) {
-        text-align: right;
+        text-align: center;
       }
 
       &:nth-child(5) {
+        text-align: right;
+      }
+
+      &:nth-child(6) {
         text-align: right;
       }
     }

@@ -33,3 +33,22 @@ A classe manager desta entidade estendem as funcionalidades padrão de **Abstrac
 
 * findByAccount(AccountInterface) - Recebe uma instância de conta e efetua a busca de cupons relacionados com a mesma.
 * findByTarget(target) - Recebe a string target e efetua a busca de cupons associados ao mesmo.
+
+
+## Processo de conversão ##
+- A conversão é efetuada "através de um orçamento"
+- Há um limite definido (percentual do valor do orçamento / parâmetros) que determina o valor máximo do cupom criado
+- Incluir em parâmetros de config, o valor que será utilizado como múltiplo
+- Para o integrador este é um processo de "Resgate de pontos"
+- Há um valor de múltiplo, que controla os valores aplicáveis
+- As opções de aplicação, são seletores e não campo de digitação
+- No wizard, fica acima de "Desconto comercial", inserir janela de alerta e confirmação
+- O recurso deve estar disponível também na tela de visualização
+- O desconto do cupom é efetua sobre o valor final (total) do orçamento, incluindo frete
+- Se houver desconto comercial, não pode resgatar pontos
+- Se houver desconto comercial, desativa o cupom
+- Habilitar a possibilidade de associar um cupom através do código
+- Código: 6 caracteres (numeros e letras) em maiúsculo (único)
+- Em caso de uso de código, cupons com valor maior que do orçamento, exibir mensagem de perda diferencial
+- Processo permitido apenas para orçamento com status menor que APPROVED (3)
+- Incluir na proforma e emails (Cupom de desconto) com informações
