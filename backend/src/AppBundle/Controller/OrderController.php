@@ -148,13 +148,16 @@ class OrderController extends AbstractController
     /**
      * @Route("/{id}/coupon", name="coupon_create")
      */
-    public function couponAction(Order $order)
+    public function couponAction(Request $request, Order $order)
     {
         $options = $this->container->get('order_coupon')->generateOptions($order);
 
+        $isShow = $request->get('isShow');
+
         return $this->render('admin/orders/coupon_form.html.twig', array(
             'order' => $order,
-            'options' => $options
+            'options' => $options,
+            'isShow' => $isShow
         ));
     }
 
