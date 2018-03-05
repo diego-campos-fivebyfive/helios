@@ -65,10 +65,19 @@ class Transformer
 
     /**
      * @param Coupon $coupon
+     * @return string
+     */
+    public function generateCode(Coupon $coupon)
+    {
+        return substr(strtoupper(md5(uniqid()) . $coupon->getId()), -6);
+    }
+
+    /**
+     * @param Coupon $coupon
      */
     private function addCodeCoupon(Coupon $coupon)
     {
-        $code = substr(strtoupper(md5(uniqid()) . $coupon->getId()), -6);
+        $code = $this->generateCode($coupon);
 
         $coupon->setCode($code);
 
