@@ -818,6 +818,22 @@ Esclarecimentos gerais relacionados a documentação:
     E-mail: fabiojd47@gmail.com
     ```
 
+    - #### Gianluca Bine
+    ```
+    Backend developer
+    Slack: @gianlucabine
+    Github: @Pr3d4dor
+    E-mail: gian_bine@hotmail.com
+    ```
+
+    - #### Gustavo Henrique Jacomel
+    ```
+    Backend developer
+    Slack: @gustavojacomel
+    Github: @Suxgotav
+    E-mail: gustavojacomel@hotmail.com
+    ```
+
     - #### João Zaqueu Chereta
     ```
     Full-stack developer

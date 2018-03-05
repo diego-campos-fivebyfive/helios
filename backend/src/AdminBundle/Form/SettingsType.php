@@ -126,6 +126,8 @@ class SettingsType extends AbstractType
                         )
                         ->add('grace_period', TextType::class)
                 )
+                ->add('coupon_order_percent', TextType::class)
+                ->add('coupon_step_options', TextType::class)
         );
         $builder->get('parameters')
             ->get('promo_end_at')

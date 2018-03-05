@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Misc\Additive;
+use AppBundle\Entity\Misc\Coupon;
 use AppBundle\Entity\Order\Element;
 use AppBundle\Entity\Order\Message;
 use AppBundle\Entity\Order\MessageInterface;
@@ -12,8 +13,8 @@ use AppBundle\Entity\Order\OrderAdditiveInterface;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Entity\TimelineInterface;
 use AppBundle\Form\Order\FilterType;
+use AppBundle\Service\Order\OrderCoupon;
 use AppBundle\Service\ProjectGenerator\ShippingRuler;
-use function PHPSTORM_META\type;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -99,11 +100,77 @@ class OrderController extends AbstractController
 
         $this->denyAccessUnlessGranted('view', $order);
 
+        $filesNfe = array_key_exists('nfe', $order->getFiles()) ? $order->getFiles()['nfe'] : [];
+
+        $files = [];
+        foreach ($filesNfe as $file) {
+            $invoice = substr($file,25,9);
+
+            $files[] = [
+                'name'=> $invoice.'.'.explode('.',$file)[1],
+                'file' => $file
+            ];
+        }
+
         return $this->render('admin/orders/show.html.twig', array(
             'order' => $order,
             'expired' => $expired,
-            'timeline' => $this->get('order_timeline')->load($order)
+            'timeline' => $this->get('order_timeline')->load($order),
+            'files' => $files
         ));
+    }
+
+    /**
+     * @Route("/generate_coupon", name="generate_coupon_from_order")
+     */
+    public function generateCouponAction(Request $request)
+    {
+        $orderId = $request->get('order');
+
+        $order = $this->manager('order')->find($orderId);
+        $step = $request->get('step');
+
+        /** @var OrderCoupon $orderCoupon */
+        $orderCoupon = $this->container->get('order_coupon');
+
+        $coupon = $orderCoupon->generateCoupon($order, $step);
+
+        if (!$coupon) {
+            return $this->json([
+                'message' => 'Coupon could not be generated'
+            ],
+                Response::HTTP_BAD_REQUEST);
+        }
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/{id}/coupon", name="coupon_create")
+     */
+    public function couponAction(Order $order)
+    {
+        $options = $this->container->get('order_coupon')->generateOptions($order);
+
+        return $this->render('admin/orders/coupon_form.html.twig', array(
+            'order' => $order,
+            'options' => $options
+        ));
+    }
+
+    /**
+     * @Route("/{order}/{coupon}/associate_coupon", name="associate_coupon")
+     */
+    public function associateCouponAction(Order $order, Coupon $coupon)
+    {
+        /** @var OrderCoupon $orderCoupon */
+        $orderCoupon = $this->container->get("order_coupon");
+
+        $associated = $orderCoupon->associateCoupon($order, $coupon);
+
+        $status = $associated ? Response::HTTP_OK : Response::HTTP_UNAUTHORIZED;
+
+        return $this->json([], $status);
     }
 
     /**
@@ -296,27 +363,46 @@ class OrderController extends AbstractController
 
         $method = 'get' . ucfirst($type);
 
-        if (!method_exists($order, $method)) {
+        if ('nfe' != $type && !method_exists($order, $method)) {
             $message = 'The class %s does not have %s file';
             throw $this->createNotFoundException(sprintf($message, get_class($order), $type));
         }
 
-        $filename = $request->get('file') ? $request->get('file') : $order->$method();
+        if('nfe' != $type) {
+            $filename = $request->get('file') ? $request->get('file') : $order->$method();
+        } else {
+            $filename = $request->query->get('file');
+        }
 
         if (!$filename) {
             $message = 'File %s not found';
             throw $this->createNotFoundException(sprintf($message, $type));
         }
 
-        $header = ($type == 'fileExtract') ? ResponseHeaderBag::DISPOSITION_ATTACHMENT : ResponseHeaderBag::DISPOSITION_INLINE;
+        $header = ($type == 'fileExtract' || $type == 'nfe') ? ResponseHeaderBag::DISPOSITION_ATTACHMENT : ResponseHeaderBag::DISPOSITION_INLINE;
 
-        if ($type != 'proforma')
-            $type = ($type == 'fileExtract') ? 'order' : 'payment';
+        $root = 'order';
+
+        switch ($type){
+            case 'proforma':
+                $dir = 'proforma';
+                break;
+            case 'fileExtract':
+                $dir = 'order';
+                break;
+            case 'filePayment':
+                $dir = 'payment';
+                break;
+            case 'nfe':
+                $dir = 'danfe';
+                $root = 'fiscal';
+                break;
+        }
 
         $options = [
             'filename' => $filename,
-            'root' => 'order',
-            'type' => $type,
+            'root' => $root,
+            'type' => $dir,
             'access' => 'private'
         ];
 

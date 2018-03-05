@@ -181,6 +181,10 @@ services:
         class: AppBundle\Service\Order\ComponentCollector
         arguments: ['@service_container']
 
+    coupon_transformer:
+        class: AppBundle\Service\Coupon\Transformer
+        arguments: ['@service_container']
+
     file_Reader:
         class: App\Sices\Ftp\FileReader
 
@@ -303,6 +307,10 @@ services:
         class: App\Sices\Nfe\Processor
         arguments: ['@service_container']
 
+    order_coupon:
+        class: AppBundle\Service\Order\OrderCoupon
+        arguments: ['@service_container']
+
     order_mailer:
         class: AppBundle\Service\Order\OrderMailer
         arguments: ['@service_container']
@@ -371,7 +379,7 @@ services:
         class: AppBundle\Service\Stock\Query
         arguments: ['@stock_provider']
 
-    timeline:
+    timeline_resource:
         class: AppBundle\Service\Timeline\Resource
         arguments: ['@timeline_manager']
 

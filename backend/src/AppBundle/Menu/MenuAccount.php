@@ -132,6 +132,7 @@ class MenuAccount
                 ]
             ],
             'allowedRoles' => [
+                'ownerMaster',
                 'owner'
             ]
         ],
