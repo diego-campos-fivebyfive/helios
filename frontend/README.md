@@ -97,3 +97,32 @@ FRONTEND
     - All routed components (`router-vue`)
     - Uses scoped styles
     - Does not use BEM nomenclatures
+
+5. Forms
+
+  `v-model` properties must be mapped inside a form data property:
+    ```
+    // Bad
+    data: () => ({
+      coupon: {}
+    })
+
+    // Bad
+    data: () => ({
+      coupon: {
+        name: null
+      }
+    })
+
+    // Bad
+    data: () => ({
+      form: {}
+    })
+
+    // Good
+    data: () => ({
+      form: {
+        name: null
+      }
+    })
+    ```

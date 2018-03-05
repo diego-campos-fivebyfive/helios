@@ -4,6 +4,7 @@ import Notification from '@/components/collection/Notification'
 import Paginator from '@/components/collection/Paginator'
 import Panel from '@/components/collection/Panel'
 import Progress from '@/components/collection/Progress'
+import Select from '@/components/collection/Select'
 import Table from '@/components/collection/Table'
 
 import Icon from 'vue-awesome/components/Icon'
@@ -20,6 +21,7 @@ Vue.component('Notification', Notification)
 Vue.component('Paginator', Paginator)
 Vue.component('Panel', Panel)
 Vue.component('Progress', Progress)
+Vue.component('Select', Select)
 Vue.component('Table', Table)
 
 /* eslint-disable no-new, no-console */
@@ -34,6 +36,7 @@ new Vue({
     Paginator,
     Panel,
     Progress,
+    Select,
     Table
   },
   template: '<App/>',

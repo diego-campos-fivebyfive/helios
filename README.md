@@ -244,11 +244,11 @@ Esclarecimentos gerais relacionados a documentação:
     - ##### 3.5.1. *Alias remote push*
       ```
       remote_push() {
-        if [[ $1 = '--pr' ]]; then
+        [[ $1 = '--pr' ]] && {
           ces-issue-request --review
-        else
+        } || {
           git push origin $(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
-        fi
+        }
       }
 
       alias remote-push="remote_push"
@@ -623,6 +623,16 @@ Esclarecimentos gerais relacionados a documentação:
       $ git add [FILE_OR_PATH]
       $ git commit -m "[WHAT_WERE_MADE]"
       $ git push origin issue-[ISSUE_NUMBER]
+      ```
+
+    - ##### Parar serviço de deploy
+      ```
+      $ /var/www/devops/hook/node_modules/.bin/pm2 stop 0
+      ```
+
+    - ##### Reiniciar serviço de deploy
+      ```
+      $ /var/www/devops/hook/node_modules/.bin/pm2 restart 0
       ```
 
 

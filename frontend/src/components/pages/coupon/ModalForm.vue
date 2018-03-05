@@ -4,26 +4,25 @@
     Modal(ref='modal')
       h1.title(slot='header')
       | Novo Cupom
-      form(slot='section', ref='send')
+      form(slot='section', ref='send', name='coupon')
         fieldset.fields
           label.half
             | Nome
             input(
-              placeholder='Nome',
-              v-model='coupon.name')
+              v-model='form.name',
+              placeholder='Nome')
           label.half
             | Valor
             input(
-              placeholder='Valor',
-              v-model='coupon.amount')
+              v-model='form.amount',
+              placeholder='Valor')
           label.full
             | Conta
-            select(v-model='coupon.account')
-              option(value='') Não vinculada
-              option(
-                v-for='account in accounts',
-                :value='account.id')
-                | {{ account.name }}
+            Select(
+              v-model='form.account',
+              :selected='form.account.id',
+              :options='options.accounts',
+              v-on:update='updateAccount')
       Button(
         slot='buttons',
         icon='save',
@@ -36,15 +35,27 @@
 <script>
   export default {
     data: () => ({
-      accounts: [],
-      coupon: {},
+      options: {
+        accounts: []
+      },
+      form: {
+        name: '',
+        amount: null,
+        account: {}
+      },
       modal: {
         action: ''
       }
     }),
     methods: {
+      updateAccount(account) {
+        this.form.account = {
+          id: account.value,
+          name: account.text
+        }
+      },
       createCoupon() {
-        this.axios.post('api/v1/coupon/', this.coupon)
+        this.axios.post('api/v1/coupon/', this.form)
           .then(() => {
             this.$emit('getCoupons')
             this.$refs.notification.notify('Cupom cadastrado com sucesso')
@@ -54,7 +65,7 @@
           })
       },
       editCoupon() {
-        this.axios.put(`api/v1/coupon/${this.coupon.id}`, this.coupon)
+        this.axios.put(`api/v1/coupon/${this.form.id}`, this.form)
           .then(() => {
             this.$emit('getCoupons')
             this.$refs.notification.notify('Cupom editado com sucesso')
@@ -73,8 +84,11 @@
 
         this.editCoupon()
       },
-      showActionModal(action, coupon = {}) {
-        this.coupon = coupon
+      showActionModal(action, coupon) {
+        if (coupon) {
+          this.form = coupon
+        }
+
         this.modal.action = action
         this.$refs.modal.show()
       }
@@ -82,7 +96,18 @@
     mounted() {
       this.axios.get('api/v1/account/available')
         .then(response => {
-          this.accounts = response.data
+          const defaultOption = {
+            id: '',
+            name: 'Não vinculada'
+          }
+
+          const accounts = response.data
+          accounts.unshift(defaultOption)
+
+          this.options.accounts = accounts.map(account => ({
+            value: account.id,
+            text: account.name
+          }))
         })
     }
   }
