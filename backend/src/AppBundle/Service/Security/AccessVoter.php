@@ -201,20 +201,9 @@ class AccessVoter extends Voter
         /** @var MemberInterface $member */
         $member = $user->getInfo();
 
-        if($user->isPlatform()) {
-            return true;
-        }
-
         $account = $coupon->getAccount();
-        if (!$account instanceof AccountInterface) {
-            return false;
-        }
 
-        if (is_null($account) || $account === $member->getAccount()) {
-            return true;
-        }
-
-        return false;
+        return ($user->isPlatform() || is_null($account) || $account === $member->getAccount());
     }
 
     /**
