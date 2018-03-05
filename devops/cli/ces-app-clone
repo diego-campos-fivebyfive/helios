@@ -41,6 +41,10 @@ elif [ $1 = '--production' ]; then
   echo "Deploying files from Temp..."
   rsync -avzh --delete $SICES_PATH/.temp/** $SICES_PATH
 
+  echo "Replacing Frontend homolog URI..."
+  sed -i "s/${SICES_HOMOLOG_URI}/${SICES_PRODUCTION_URI}/g;" \
+    backend/web/app/main.js
+
 else
   echo -e "\033[0;31mError: Invalid Ambience Argument:\033[0m $1"
   get_help
