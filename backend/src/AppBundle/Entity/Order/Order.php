@@ -1343,7 +1343,7 @@ class Order implements OrderInterface
     {
         $total = $this->getTotalExcDiscount() - $this->getDiscount() - $this->getCouponDiscount();
 
-        return $total;
+        return $total < 0 ? 0 : $total;
     }
 
     /**
