@@ -136,6 +136,18 @@ class MenuAccount
                 'owner'
             ]
         ],
+        'usefulLinks' => [
+            'name' => 'Links Úteis',
+            'link' => 'https://suporte.plataformasicessolar.com.br/faq/links-uteis',
+            'icon' => 'link',
+            'id' => 'idLinksUteis',
+            'custom' => [
+                'attributes' => [
+                    'id' => 'idLinksUteis'
+                ]
+            ],
+            'allowedRoles' => '*',
+        ],
         'settings' => [
             'name' => 'Configurações',
             'uri' => '#',
