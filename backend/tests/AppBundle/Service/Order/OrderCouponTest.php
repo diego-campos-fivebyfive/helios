@@ -2,7 +2,10 @@
 
 namespace Tests\AppBundle\Service\Order;
 
+use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\Misc\Coupon;
+use AppBundle\Entity\Misc\CouponInterface;
+use AppBundle\Entity\Order\Element;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Service\Order\OrderCoupon;
 use Tests\AppBundle\AppTestCase;
@@ -32,6 +35,7 @@ class OrderCouponTest extends AppTestCase
         $coupon->setCode('001AA');
         $coupon->setAccount($account);
         $coupon->setAmount(500);
+        $coupon->setAppliedBy(CouponInterface::SOURCE_CODE);
         $couponManager->save($coupon);
 
         self::assertNotNull($coupon);
@@ -48,5 +52,63 @@ class OrderCouponTest extends AppTestCase
         self::assertEquals($coupon, $order->getCoupon());
         self::assertNotNull($coupon->getTarget());
         self::assertNotNull($coupon->getAppliedAt());
+    }
+
+    public function testCheckAssociation()
+    {
+        /** @var AccountInterface $account */
+        $account = $this->getFixture('account');
+        $account->setRanking(10000);
+
+        $accountManager = $this->manager('account');
+        $accountManager->save($account);
+
+        $orderManager = $this->manager('order');
+        /** @var Order $order */
+        $order = $orderManager->create();
+        $order->setAccount($account);
+
+        $element = new Element();
+
+        $element->setQuantity(100);
+        $element->setUnitPrice(100);
+
+        $order->addElement($element);
+
+        self::assertNotNull($order);
+
+        $couponManager = $this->manager('coupon');
+        /** @var Coupon $coupon */
+        $coupon = $couponManager->create();
+        $coupon->setName('cupom');
+        $coupon->setCode('001AA');
+        $coupon->setAccount($account);
+        $coupon->setAmount(5000);
+        $coupon->setAppliedBy(CouponInterface::SOURCE_RANKING);
+        $coupon->setTarget(null);
+        $couponManager->save($coupon);
+
+        $order->setCoupon($coupon);
+
+        $orderManager->save($order);
+
+        dump("ranking antes da funcao: " . $order->getAccount()->getRanking());
+        dump("total antes: " . $order->getTotalWithoutCoupon());
+
+//        /** @var Element $element */
+//        foreach ($order->getElements() as $element) {
+//            $element->setUnitPrice(20);
+//        }
+
+        $coupon->setAmount(7000);
+        $couponManager->save($coupon);
+
+        /** @var OrderCoupon $orderCoupon */
+        $orderCoupon = $this->service('order_coupon');
+
+        $orderCoupon->checkCouponAssociation($order);
+
+        dump("ranking depois da funcao: " . $order->getAccount()->getRanking());
+        dump("total depois: " . $order->getTotalWithoutCoupon());
     }
 }
