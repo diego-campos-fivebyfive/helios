@@ -3,6 +3,8 @@
     span.collection-notification-message
       Icon(name='check', scale='1.5')
       | {{ message }}
+      slot
+      .collection-notification-status
 </template>
 
 <script>
@@ -15,7 +17,6 @@
       notify(message) {
         this.open = true
         this.message = message
-
         setTimeout(() => {
           this.open = false
         }, 5000)
@@ -46,5 +47,22 @@
       margin-right: $ui-space-x/2;
       vertical-align: middle;
     }
+  }
+
+  @keyframes lifetime {
+    from {
+      width: 100%;
+    }
+
+    to {
+      width: 0;
+    }
+  }
+
+  .collection-notification-status {
+    animation: lifetime 5s 1;
+    height: $ui-space-y/3;
+    background-color: $ui-blue-dark;
+    border-radius: $ui-corner;
   }
 </style>
