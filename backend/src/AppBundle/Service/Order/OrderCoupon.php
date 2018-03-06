@@ -93,34 +93,28 @@ class OrderCoupon
 
     /**
      * @param Order $order
-     * @param $coupon
      * @return bool
      */
-    public function dissociateCoupon(Order $order, $coupon)
-    {
-        /** @var CouponManager $couponManager */
-        $couponManager = $this->container->get('coupon_manager');
-
-        if (!$coupon instanceof Coupon) {
-            $coupon = $couponManager->findOneBy(['code' => $coupon]);
-        }
-
-        if (!$coupon) {
+    public function dissociateCoupon(Order $order)
+    {   
+        if (!$order->getCoupon()){
             return false;
         }
-        
+
+        $coupon = $order->getCoupon(); 
+
         $coupon->setTarget(null);
         $coupon->setApplliedAt(null);
         $order->setCoupon(null);
 
         try {
-            $couponManager->save($coupon);        
+            $this->container->get('coupon_manager')->save($coupon);        
             $this->container->get('order_manager')->save($order);
             
             return true;
         } catch (\Exception $exception) {
             return false;
-        }
+        } 
     }
 
     /**
