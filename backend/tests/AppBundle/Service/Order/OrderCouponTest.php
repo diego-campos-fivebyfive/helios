@@ -26,7 +26,7 @@ class OrderCouponTest extends AppTestCase
         $order->setAccount($account);
         $orderManager->save($order);
 
-        self::assertNotNull($order);
+      //  self::assertNotNull($order);
 
         $couponManager = $this->manager('coupon');
         /** @var Coupon $coupon */
@@ -60,8 +60,7 @@ class OrderCouponTest extends AppTestCase
         $account = $this->getFixture('account');
         $account->setRanking(10000);
 
-        $accountManager = $this->manager('account');
-        $accountManager->save($account);
+        $this->manager('account')->save($account);
 
         $orderManager = $this->manager('order');
         /** @var Order $order */
@@ -92,23 +91,30 @@ class OrderCouponTest extends AppTestCase
 
         $orderManager->save($order);
 
-        dump("ranking antes da funcao: " . $order->getAccount()->getRanking());
-        dump("total antes: " . $order->getTotalWithoutCoupon());
-
-//        /** @var Element $element */
-//        foreach ($order->getElements() as $element) {
-//            $element->setUnitPrice(20);
-//        }
-
-        $coupon->setAmount(7000);
-        $couponManager->save($coupon);
+        self::assertEquals(10000, $order->getAccount()->getRanking());
+        self::assertEquals(10000, $order->getTotalWithoutCoupon());
+        self::assertEquals(5000, $order->getTotal());
 
         /** @var OrderCoupon $orderCoupon */
         $orderCoupon = $this->service('order_coupon');
 
-        $orderCoupon->checkCouponAssociation($order);
+        $check = $orderCoupon->checkCouponAssociation($order);
 
-        dump("ranking depois da funcao: " . $order->getAccount()->getRanking());
-        dump("total depois: " . $order->getTotalWithoutCoupon());
+        self::assertEquals(true, $check);
+        self::assertNotNull($order->getCoupon());
+
+        /** @var Element $element */
+        foreach ($order->getElements() as $element) {
+            $element->setUnitPrice(90);
+        }
+
+        self::assertEquals(9000, $order->getTotalWithoutCoupon());
+
+        $orderManager->save($order);
+
+        $check = $orderCoupon->checkCouponAssociation($order);
+
+        self::assertEquals(false, $check);
+        self::assertNull($order->getCoupon());
     }
 }
