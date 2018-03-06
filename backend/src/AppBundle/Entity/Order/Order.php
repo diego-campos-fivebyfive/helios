@@ -1347,6 +1347,14 @@ class Order implements OrderInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getTotalWithoutCoupon()
+    {
+        return $this->getTotalExcDiscount() - $this->getDiscount();
+    }
+
+    /**
      * @inheritdoc
      */
     public function getCouponDiscount()
@@ -2431,7 +2439,7 @@ class Order implements OrderInterface
                 if($file === $index || $file === $item)
                     unset($this->files[$type][$index]);
 
-            $this->files[$type] = array_values($this->files[$type]);
+        $this->files[$type] = array_values($this->files[$type]);
 
         // TODO: Temporary handle
         if($file === $this->filePayment)

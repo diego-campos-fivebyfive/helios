@@ -181,6 +181,11 @@ interface OrderInterface
     public function getTotal();
 
     /**
+     * @return float
+     */
+    public function getTotalWithoutCoupon();
+
+    /**
      * @param $total
      * @return OrderInterface
      */
