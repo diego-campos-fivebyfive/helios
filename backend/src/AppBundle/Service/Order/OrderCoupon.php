@@ -101,14 +101,14 @@ class OrderCoupon
             return false;
         }
 
-        $coupon = $order->getCoupon(); 
+        $coupon = $order->getCoupon();
 
         $coupon->setTarget(null);
         $coupon->setApplliedAt(null);
         $order->setCoupon(null);
 
         try {
-            $this->container->get('coupon_manager')->save($coupon);        
+            $this->container->get('coupon_manager')->save($coupon);
             $this->container->get('order_manager')->save($order);
             
             return true;
