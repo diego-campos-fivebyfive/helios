@@ -114,7 +114,7 @@ class OrderCoupon
             return true;
         } catch (\Exception $exception) {
             return false;
-        } 
+        }
     }
 
     /**
