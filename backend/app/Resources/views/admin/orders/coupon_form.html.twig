@@ -192,8 +192,8 @@
         }
 
         if (CouponHandler.amount > CouponHandler.orderPrice) {
-            title = 'Você está usando um desconto superior ao orçamento.' +
-                ' Os pontos restantes serão perdidos. Deseja continuar?';
+            title = 'Você está usando um desconto com valor superior ao do orçamento.' +
+                ' Os pontos restantes ('+(CouponHandler.amount - CouponHandler.orderPrice)+') serão perdidos. Deseja continuar?';
         }
 
         swal({
