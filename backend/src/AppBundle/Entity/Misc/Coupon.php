@@ -58,6 +58,13 @@ class Coupon implements CouponInterface
     private $appliedAt;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="applied_by", type="integer")
+     */
+    private $appliedBy;
+
+    /**
      * @var AccountInterface
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer")
@@ -157,6 +164,7 @@ class Coupon implements CouponInterface
     public function setAppliedAt($appliedAt)
     {
         $this->appliedAt = $appliedAt;
+
         return $this;
     }
 
@@ -174,6 +182,7 @@ class Coupon implements CouponInterface
     public function setAccount($account)
     {
         $this->account = $account;
+
         return $this;
     }
 
@@ -183,6 +192,35 @@ class Coupon implements CouponInterface
     public function isApplied()
     {
         return !is_null($this->target);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getAppliedBy()
+    {
+        return $this->appliedBy;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setAppliedBy($appliedBy)
+    {
+        $this->appliedBy = $appliedBy;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSources()
+    {
+        return [
+            self::SOURCE_CODE,
+            self::SOURCE_RANKING
+        ];
     }
 }
 

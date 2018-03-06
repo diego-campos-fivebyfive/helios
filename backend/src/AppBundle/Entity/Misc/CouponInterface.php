@@ -7,6 +7,8 @@ use AppBundle\Entity\AccountInterface;
 
 interface CouponInterface
 {
+    const SOURCE_CODE = 1;
+    const SOURCE_RANKING = 2;
 
     /**
      * @return int
@@ -83,4 +85,20 @@ interface CouponInterface
      * @return boolean
      */
     public function isApplied();
+
+    /**
+     * @return int
+     */
+    public function getAppliedBy();
+
+    /**
+     * @param $appliedBy
+     * @return CouponInterface
+     */
+    public function setAppliedBy($appliedBy);
+
+    /**
+     * @return array
+     */
+    public function getSources();
 }
