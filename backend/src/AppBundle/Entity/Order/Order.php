@@ -1351,9 +1351,7 @@ class Order implements OrderInterface
      */
     public function getTotalWithoutCoupon()
     {
-        $total = $this->getTotalExcDiscount() - $this->getDiscount();
-
-        return $total;
+        return $this->getTotalExcDiscount() - $this->getDiscount();
     }
 
     /**
