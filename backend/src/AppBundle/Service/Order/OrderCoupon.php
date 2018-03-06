@@ -3,6 +3,7 @@
 namespace AppBundle\Service\Order;
 
 use AppBundle\Entity\Misc\Coupon;
+use AppBundle\Entity\Misc\CouponInterface;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Manager\CouponManager;
 use AppBundle\Manager\ParameterManager;
@@ -18,6 +19,9 @@ class OrderCoupon
      */
     private $container;
 
+    private $parameter;
+
+    private $maxDiscountPercent;
     /**
      * OrderCoupon constructor.
      * @param ContainerInterface $container
@@ -25,6 +29,13 @@ class OrderCoupon
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+
+        /** @var ParameterManager $parameters */
+        $parameters = $this->container->get('parameter_manager');
+
+        $this->parameter = $parameters->findOrCreate('platform_settings')->getParameters();
+
+        $this->maxDiscountPercent = 0.5;//$this->parameter['coupon_order_percent'] / 100;
     }
 
     /**
@@ -35,28 +46,21 @@ class OrderCoupon
     {
         $account = $order->getAccount();
         $accountRanking = $account->getRanking();
-
-        /** @var ParameterManager $parameters */
-        $parameters = $this->container->get('parameter_manager');
-        $parameter = $parameters->findOrCreate('platform_settings')->getParameters();
-        $step = $parameter['coupon_step_options'];
-
+        $step = $this->parameter['coupon_step_options'];
         if ($accountRanking < $step) {
             return [];
         }
 
-        $maxDiscountPercent = $parameter['coupon_order_percent'] / 100;
-        $maxOrderDiscount = $order->getTotal() * $maxDiscountPercent;
+        $maxOrderDiscount = $order->getTotal() * $this->maxDiscountPercent;
+
         $discountLimit = $maxOrderDiscount < $accountRanking ? $maxOrderDiscount : $accountRanking;
 
         if ($discountLimit >= $step) {
             if (intval($discountLimit / $step) == 1) {
                 return [$step];
             }
-
             return range($step, intval($discountLimit), $step);
         }
-
         return [];
     }
 
@@ -96,7 +100,7 @@ class OrderCoupon
      * @return bool
      */
     public function dissociateCoupon(Order $order)
-    {   
+    {
         if (!$order->getCoupon()){
             return false;
         }
@@ -104,13 +108,12 @@ class OrderCoupon
         $coupon = $order->getCoupon();
 
         $coupon->setTarget(null);
-        $coupon->setApplliedAt(null);
         $order->setCoupon(null);
 
         try {
             $this->container->get('coupon_manager')->save($coupon);
             $this->container->get('order_manager')->save($order);
-            
+
             return true;
         } catch (\Exception $exception) {
             return false;
@@ -147,6 +150,27 @@ class OrderCoupon
         return $coupon;
     }
 
+    public function checkCouponAssociation(Order $order)
+    {
+        $coupon = $order->getCoupon();
+        if (!$coupon || ($coupon->getAppliedBy() != CouponInterface::SOURCE_RANKING)){
+            return false;
+        }
+
+        $maxOrderDiscount = $order->getTotalWithoutCoupon() * $this->maxDiscountPercent;
+
+        if ($coupon->getAmount() > $maxOrderDiscount){
+
+            $this->dissociateCoupon($order);
+
+            $this->creditRanking($order->getAccount(), $coupon, $coupon->getAmount());
+
+            /** @var CouponManager $couponManager */
+            $couponManager = $this->container->get('coupon_manager');
+            $couponManager->delete($coupon);
+        }
+    }
+
     /**
      * @param Order $order
      * @return string
@@ -167,5 +191,18 @@ class OrderCoupon
         /** @var RankingGenerator $rankingGenerator */
         $rankingGenerator = $this->container->get('ranking_generator');
         $rankingGenerator->create($account, $coupon->getName(), $debitAmount);
+    }
+
+    /**
+     * @param $account
+     * @param $coupon
+     * @param $amount
+     */
+    private function creditRanking($account, $coupon, $amount)
+    {
+        $creditAmount = $amount;
+        /** @var RankingGenerator $rankingGenerator */
+        $rankingGenerator = $this->container->get('ranking_generator');
+        $rankingGenerator->create($account, $coupon->getName(), $creditAmount);
     }
 }
