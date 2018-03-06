@@ -150,7 +150,12 @@ class OrderController extends AbstractController
      */
     public function couponAction(Request $request, Order $order)
     {
-        $options = $this->container->get('order_coupon')->generateOptions($order);
+        /** @var OrderCoupon $orderCoupon */
+        $orderCoupon = $this->container->get('order_coupon');
+
+        $orderCoupon->checkCouponAssociation($order);
+
+        $options = $orderCoupon->generateOptions($order);
 
         $isShow = $request->get('isShow');
 
