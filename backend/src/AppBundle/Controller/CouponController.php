@@ -116,6 +116,8 @@ class CouponController extends AbstractController
             $coupon->setAccount($account);
         }
 
+        $coupon->setAppliedBy(CouponInterface::SOURCE_CODE);
+
         $couponManager->save($coupon);
 
         /** @var Transformer $couponTransformer */

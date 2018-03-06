@@ -4,6 +4,7 @@ namespace AppBundle\Service\Coupon;
 
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\Misc\Coupon;
+use AppBundle\Entity\Misc\CouponInterface;
 use AppBundle\Manager\CouponManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -45,7 +46,8 @@ class Transformer
             $coupon
                 ->setAmount($amount)
                 ->setName($name)
-                ->setAccount($account);
+                ->setAccount($account)
+                ->setAppliedBy(CouponInterface::SOURCE_RANKING);
             $this->manager->save($coupon);
 
             $this->addCodeCoupon($coupon);
