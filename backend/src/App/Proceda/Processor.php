@@ -91,6 +91,7 @@ class Processor
         $prefix = "PROCESSED-${date}-";
 
         if (count($files)) {
+            sort($files);
             foreach ($files as $filename) {
                 $content = $this->fileSystem->read($filename);
 
