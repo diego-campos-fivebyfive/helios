@@ -133,11 +133,10 @@ class OrderCoupon
             return null;
         }
 
-        $account = $order->getAccount();
 
         /** @var Transformer $transformer */
         $transformer = $this->container->get('coupon_transformer');
-        $coupon = $transformer->fromAccount($account, $amount);
+        $coupon = $transformer->fromAccount($order->getAccount(), $amount);
 
         if (!$coupon) {
             return null;
@@ -145,11 +144,16 @@ class OrderCoupon
 
         $this->associateCoupon($order, $coupon);
 
-        $this->debitRanking($account, $coupon, $amount);
+        $description = $order->getCoupon()->getName();
+        $this->createRanking($order, - $amount, $description);
 
         return $coupon;
     }
 
+    /**
+     * @param Order $order
+     * @return bool
+     */
     public function checkCouponAssociation(Order $order)
     {
         $coupon = $order->getCoupon();
@@ -163,7 +167,9 @@ class OrderCoupon
 
             $this->dissociateCoupon($order);
 
-            $this->creditRanking($order->getAccount(), $coupon, $coupon->getAmount());
+            $date = (new \DateTime())->format("d/m/Y");
+            $description = $date . " - Crédito de cupom " . $order->getCoupon()->getCode();
+            $this->createRanking($order, $coupon->getAmount(), $description);
 
             /** @var CouponManager $couponManager */
             $couponManager = $this->container->get('coupon_manager');
@@ -181,28 +187,14 @@ class OrderCoupon
     }
 
     /**
-     * @param $account
-     * @param $coupon
+     * @param Order $order
      * @param $amount
+     * @param $description
      */
-    private function debitRanking($account, $coupon, $amount)
+    private function createRanking(Order $order, $amount, $description)
     {
-        $debitAmount = - $amount;
         /** @var RankingGenerator $rankingGenerator */
         $rankingGenerator = $this->container->get('ranking_generator');
-        $rankingGenerator->create($account, $coupon->getName(), $debitAmount);
-    }
-
-    /**
-     * @param $account
-     * @param $coupon
-     * @param $amount
-     */
-    private function creditRanking($account, $coupon, $amount)
-    {
-        $creditAmount = $amount;
-        /** @var RankingGenerator $rankingGenerator */
-        $rankingGenerator = $this->container->get('ranking_generator');
-        $rankingGenerator->create($account, $coupon->getName(), $creditAmount);
+        $rankingGenerator->create($order->getAccount(), $description, $amount);
     }
 }
