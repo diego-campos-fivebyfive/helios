@@ -94,6 +94,15 @@
         background-color: #00A7EC !important;
         color: white !important;
     }
+
+    #idLinksUteis ul li a {
+        color: white;
+    }
+
+    #idLinksUteis, #idLinksUteis a, #idLinksUteis :hover {
+        background-color: #F4A21A !important;
+        color: white !important;
+    }
 </style>
 
 <body>
@@ -191,7 +200,7 @@
 {% endif %}
 
 <script>
-    $('.support_link a').attr('target', '_blank');
+    $('.support_link a, #idLinksUteis a').attr('target', '_blank');
 </script>
 
 </body>
