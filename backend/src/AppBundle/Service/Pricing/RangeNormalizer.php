@@ -101,8 +101,10 @@ class RangeNormalizer
     }
 
     /**
-     * @param $code
-     * @param $level
+     * @param Memorial $memorial
+     * @param array $codes
+     * @param array $levels
+     * @param array $definitions
      */
     public function normalize(Memorial $memorial, array $codes, array $levels, array $definitions = [])
     {
