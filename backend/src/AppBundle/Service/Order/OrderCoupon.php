@@ -35,7 +35,7 @@ class OrderCoupon
 
         $this->parameter = $parameters->findOrCreate('platform_settings')->getParameters();
 
-        $this->maxDiscountPercent = 0.5;//$this->parameter['coupon_order_percent'] / 100;
+        $this->maxDiscountPercent = $this->parameter['coupon_order_percent'] / 100;
     }
 
     /**
