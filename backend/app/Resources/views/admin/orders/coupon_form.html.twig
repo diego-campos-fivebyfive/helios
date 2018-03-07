@@ -9,9 +9,16 @@
     {% endif %}
 
         <fieldset class="col-md-12">
-        <h3>{% if not app.user.isPlatform %} Resgate de pontos: {% else %} Aplicar cupom: {% endif %}</h3>
+            <div class="col-md-3">
+                <h3>Descontos</h3>
+            </div>
+            <div class="col-md-9">
+                <h3>Saldo atual: <strong>{{ order.account.ranking }}</strong> pts</h3>
+            </div>
+        </fieldset>
+        <fieldset class="col-md-12">
         <div class="form-group {% if isShow %} col-md-6 {% else %} col-md-3 {% endif %}">
-            <label>Informar código:</label>
+            <label>Código do cupom</label>
             <div class="input-group">
                 <input type="text" id="coupon_code_input" class="form-control">
                 <span class="input-group-addon" id="coupon_code_search">
@@ -21,11 +28,11 @@
         </div>
 
         {% if not app.user.isPlatform and options %}
-            <div class="form-group {% if isShow %} col-md-6 {% else %} col-md-3 {% endif %}">
-                <label>Selecionar opção: </label>
+            <div class="form-group {% if isShow %} col-md-6 {% else %} col-md-4 {% endif %}">
+                <label>Resgate de pontos </label>
                 <div class="input-group col-md-12">
                     <select class="form-control" id="coupon_select" name="account">
-                        <option selected="selected" value="">Selecione uma das opções</option>
+                        <option selected="selected" value="">Quantos pontos deseja trocar?</option>
                         {% for step in options %}
                             <option value="{{ step }}">{{ step }}</option>
                         {% endfor %}
@@ -34,7 +41,7 @@
             </div>
         {% endif %}
 
-        <div class="form-group {% if isShow %} col-md-8 {% else %} col-md-5 pull-right {% endif %}">
+        <div class="form-group {% if isShow %} col-md-6 {% else %} col-md-5 pull-right {% endif %}">
             <label> &nbsp; </label>
             <button class="btn btn-success btn-block ladda-button" disabled="disabled" id="submit_coupon" data-style="zoom-in" type="submit">
                 <i class="fa fa-check-circle-o"></i> Informe o código ou selecione uma opção
@@ -185,10 +192,10 @@
     });
     $('#submit_coupon').on('click', function () {
 
-        var title = 'Confirma a associação do cupom?';
+        var title = 'Confirma a aplicação do desconto?';
 
         if (CouponHandler.source === 'select') {
-            title = 'Confirma a criação e associação do cupom?';
+            title = 'Confirma a aplicação do desconto?';
         }
 
         if (CouponHandler.amount > CouponHandler.orderPrice) {
@@ -198,7 +205,6 @@
 
         swal({
             title: title,
-            text: 'Após a associação do cupom a mesma não poderá ser desfeita!',
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
@@ -208,7 +214,7 @@
         }, function () {
 
             sweetAlert({
-                title: "Associando cupom...",
+                title: "Aplicando desconto",
                 text: "Aguarde!",
                 type: "info",
                 showConfirmButton: false
@@ -223,18 +229,15 @@
     })
 
     function closeSwal() {
-        var title = "Concluído";
-        var text = "Associação de cupom realizada com sucesso.";
+        var title = "Desconto aplicado";
         var type = "success";
 
         if (CouponHandler.status !== 200) {
-            title = "Falha";
-            text = "Falha na associação do cupom.";
+            title = "Falha ao aplicar desconto";
             type = "error";
         }
         swal({
             title: title,
-            text: text,
             type: type,
             showConfirmButton: false
         });
