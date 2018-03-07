@@ -22,6 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Class Processor
  * @author Fabio Dukievicz <fabiojd47@gmail.com>
+ * @author Claudinei Machado <cjchamado@gmail.com>
  */
 class Processor
 {
