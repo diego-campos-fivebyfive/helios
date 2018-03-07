@@ -1,6 +1,23 @@
 <?php
 
 /**
+ * Autoload file
+ */
+function getAutoload(){
+    require_once dirname(dirname(dirname(__DIR__))) . '/vendor/autoload.php';
+}
+
+/**
+ * @return string
+ */
+function getEnvironment(){
+
+    $parameters = getParameters();
+
+    return 'development' == $parameters['ambience'] ? 'devops' : $parameters['ambience'] ;
+}
+
+/**
  * @return array
  */
 function getParameters(){

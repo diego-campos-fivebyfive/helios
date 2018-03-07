@@ -10,7 +10,9 @@ use Monolog\Handler\StreamHandler;
  */
 function createLog($context, $message, $level = Logger::INFO){
 
-    exec("\$CLI_PATH/ces-slack-notify --production '$message'");
+    $env = getEnvironment();
+
+    exec("\$CLI_PATH/ces-slack-notify --$env '$message'");
 
     $filename = dirname(__DIR__) . sprintf('/logs/cron-%s.log', $context);
 
