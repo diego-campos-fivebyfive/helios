@@ -46,6 +46,7 @@
                     } else {
                         ShippingManager.calculate();
                         GeneratorHandler.onSaveOrder();
+                        getAssociatedCoupon();
                         swal.close();
                     }
                 }
