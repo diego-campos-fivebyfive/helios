@@ -11,7 +11,6 @@
 
 namespace App\Proceda;
 
-use App\Sices\Cache\JsonCache;
 use App\Sices\Ftp\FileReader;
 use App\Sices\Ftp\FileSystemFactory;
 use AppBundle\Entity\Order\Order;
@@ -23,13 +22,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Class Processor
  * @author Fabio Dukievicz <fabiojd47@gmail.com>
+ * @author Claudinei Machado <cjchamado@gmail.com>
  */
 class Processor
 {
     /** @var OrderManager */
     private $manager;
 
-    /** @var JsonCache */
+    /** @var string */
     private $cache;
 
     /** @var ContainerInterface */
@@ -60,6 +60,11 @@ class Processor
     ];
 
     /**
+     * @var array
+     */
+    private $timelineList = [];
+
+    /**
      * Processor constructor.
      * @param ContainerInterface $container
      */
@@ -77,14 +82,180 @@ class Processor
 
         $this->fileReader->init($this->fileSystem);
 
-        $this->cache = JsonCache::create(self::PROCEDA_CACHE);
+        $this->cache =  dirname(__FILE__) . '/ocoren.json';
+
+        $this->insureCache();
+    }
+
+    /**
+     * Resolve events
+     */
+    public function resolve()
+    {
+        $this->refreshCache();
+
+        $this->processCache();
+    }
+
+    /**
+     * Create or merge cached events
+     */
+    public function refreshCache()
+    {
+        $groups = $this->loadCache();
+
+        $files = $this->fileReader->files(self::SEARCH_PREFIX);
+
+        $contents = $this->loadContents($files);
+
+        $collection = $this->loadCollection($contents);
+
+        $this->mergeGroups($collection, $groups);
+
+        $this->persistCache($groups);
+
+        $this->prefixFiles($files);
+    }
+
+    /**
+     * Process cached events
+     */
+    public function processCache()
+    {
+        $groups = $this->loadCache();
+
+        $this->processGroups($groups);
+
+        $this->persistCache($groups);
+
+        $this->processTimelineList();
+
+        $this->manager->flush();
+    }
+
+    /**
+     * @param array $files
+     * @return array
+     */
+    private function loadContents(array $files)
+    {
+        sort($files);
+        return array_map(function($file){
+            return $this->fileReader->read($file);
+        }, $files);
+    }
+
+    /**
+     * @param array $contents
+     * @return array
+     */
+    private function loadCollection(array $contents)
+    {
+        return array_map(function($content){
+            return Parser::fromContent($content);
+        }, $contents);
+    }
+
+    /**
+     * @param array $collection
+     * @param array $events
+     */
+    private function mergeGroups(array $collection, array &$events)
+    {
+        foreach ($collection as $data){
+            foreach ($data as $event){
+
+                $invoice = $event['invoice'];
+
+                $events[$invoice] = $events[$invoice] ?? [];
+
+                if(!in_array($event, $events[$invoice])) {
+                    $events[$invoice][] = $event;
+                }
+            }
+        }
+    }
+
+    /**
+     * @param array $groups
+     */
+    private function processGroups(array &$groups = [])
+    {
+        foreach ($groups as $invoice => $events){
+
+            $this->processGroupEvents($invoice, $events);
+
+            unset($groups[$invoice]);
+        }
+    }
+
+    /**
+     * @param string $invoice
+     * @param array $events
+     */
+    private function processGroupEvents(string $invoice, array $events = [])
+    {
+        $order = $this->findOrder($invoice);
+
+        if($order instanceof OrderInterface) {
+
+            foreach ($events as $event) {
+
+                $this->changeStatusByEvent($order, $event['event']);
+
+                $this->prepareTimelineEvent($order, $event);
+            }
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @param array $event
+     */
+    private function prepareTimelineEvent(Order $order, array $event)
+    {
+        $status = $order->getStatus();
+
+        $this->timelineList[] = [
+            'target' => Resource::getObjectTarget($order),
+            'message' => self::MESSAGES[$event['event']],
+            'attributes' => [
+                'status' => $status,
+                'statusLabel' =>  Order::getStatusNames()[$status]
+            ]
+        ];
+    }
+
+    /**
+     * @param $invoice
+     * @return Order | null
+     */
+    private function findOrder($invoice)
+    {
+        $qb = $this->manager->createQueryBuilder();
+
+        $qb
+            ->where($qb->expr()->like('o.invoices', $qb->expr()->literal("%${invoice}%")))
+            ->setMaxResults(1);
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * Persist timeline list
+     */
+    private function processTimelineList()
+    {
+        $this->timeline->createByArray($this->timelineList);
     }
 
     /**
      * event resolver
+     * @deprecated
      */
-    public function resolve()
+    public function legacyResolve()
     {
+        /*
         $files = $this->fileReader->files(self::SEARCH_PREFIX);
 
         $date = (new \DateTime())->format('Ymd');
@@ -106,14 +277,17 @@ class Processor
         } else {
             $this->processEvents($this->cache->all());
         }
+        */
     }
 
     /**
      * @param $eventGroups
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @deprecated
      */
     private function processEvents($eventGroups)
     {
+        /*
         foreach ($eventGroups as $invoice => $group) {
 
             $qb = $this->manager->createQueryBuilder();
@@ -156,10 +330,12 @@ class Processor
         }
 
         $this->cache->store();
+        */
     }
 
     /**
      * @param $group
+     * @deprecated
      */
     private function sortEventsByDate(&$group)
     {
@@ -181,6 +357,7 @@ class Processor
     /**
      * @param $date
      * @return string
+     * @deprecated
      */
     private function formatDate($date)
     {
@@ -193,31 +370,73 @@ class Processor
 
     /**
      * @param Order $order
-     * @param $event
+     * @param int $event
      */
-    private function changeStatusByEvent($order, $event)
+    private function changeStatusByEvent(Order $order, $event)
     {
         $status = $order->getStatus();
 
         if ($status != OrderInterface::STATUS_DELIVERED
             && in_array($event, self::DELIVERING)) {
             $order->setStatus(OrderInterface::STATUS_DELIVERING);
-            $this->manager->save($order);
         } elseif ($status != OrderInterface::STATUS_DELIVERED
             && in_array($event, self::DELIVERED)) {
             $order->setStatus(OrderInterface::STATUS_DELIVERED);
-            $this->manager->save($order);
+        }
+
+        $this->manager->save($order, false);
+    }
+
+    /**
+     * @param array $files
+     */
+    private function prefixFiles(array $files)
+    {
+        $date = (new \DateTime())->format('Ymd');
+        $prefix = "PROCESSED-${date}-";
+
+        foreach ($files as $filename) {
+            $this->fileReader->prefixer($filename, $prefix);
         }
     }
 
     /**
      * @param $events
+     * @deprecated
      */
     private function mergeEventsAndCache($events)
     {
-        foreach ($events as $event) {
+        /*foreach ($events as $event) {
             $this->cache->incrementInArrayPosition($event['invoice'], $event);
+        }*/
+    }
+
+    /**
+     * Insure cache exists
+     */
+    private function insureCache()
+    {
+        if(!file_exists($this->cache)){
+            $this->persistCache([]);
         }
+    }
+
+    /**
+     * @return array
+     */
+    private function loadCache()
+    {
+        return json_decode(file_get_contents($this->cache), true) ?? [];
+    }
+
+    /**
+     * @param array $data
+     */
+    private function persistCache(array $data)
+    {
+        $handle = fopen($this->cache, 'w+');
+        fwrite($handle, json_encode($data));
+        fclose($handle);
     }
 
     /**
