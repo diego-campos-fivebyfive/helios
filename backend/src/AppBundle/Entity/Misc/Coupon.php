@@ -145,7 +145,7 @@ class Coupon implements CouponInterface
     {
         $this->target = $target;
 
-        $this->appliedAt = new \DateTime();
+        $this->appliedAt = is_null($target) ? null : new \DateTime();
 
         return $this;
     }

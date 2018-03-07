@@ -481,6 +481,7 @@
                             ShippingManager.calculate();
                             GeneratorHandler.onSaveOrder();
                             GeneratorHandler.resetGenerator();
+                            getAssociatedCoupon();
                             $('#next').trigger('click');
                             swal.close();
                         }

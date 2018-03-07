@@ -42,6 +42,7 @@
                     } else {
                         if (source == 'children') {
                             GeneratorHandler.getOrders();
+                            getAssociatedCoupon();
                         } else {
                             $('#master_close').on('click', function () {
                                 window.location = '{{ path('orders') }}';

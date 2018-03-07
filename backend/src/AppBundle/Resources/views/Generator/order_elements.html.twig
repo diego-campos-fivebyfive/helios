@@ -164,6 +164,7 @@
                     $('#add_order_element').trigger('change');
                     OrderInsurances.loadInsurances();
                     GeneratorHandler.getOrders();
+                    getAssociatedCoupon();
                 }
             });
         });
@@ -201,6 +202,7 @@
             GeneratorHandler.refreshWizardModal();
             GeneratorHandler.resetBudgetButton();
             GeneratorHandler.getOrders();
+            getAssociatedCoupon();
         });
     }
 

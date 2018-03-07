@@ -49,8 +49,6 @@ class RankingGenerator
 
         $manager->save($ranking);
 
-        //$this->refreshRanking($target);
-
         return $ranking;
     }
 

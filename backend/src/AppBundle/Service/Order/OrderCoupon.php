@@ -168,13 +168,17 @@ class OrderCoupon
             $this->dissociateCoupon($order);
 
             $date = (new \DateTime())->format("d/m/Y");
-            $description = $date . " - Crédito de cupom " . $order->getCoupon()->getCode();
+            $description = $date . " - Crédito de cupom " . $coupon->getCode();
             $this->createRanking($order, $coupon->getAmount(), $description);
 
             /** @var CouponManager $couponManager */
             $couponManager = $this->container->get('coupon_manager');
             $couponManager->delete($coupon);
+
+            return false;
         }
+
+        return true;
     }
 
     /**
