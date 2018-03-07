@@ -194,10 +194,6 @@
 
         var title = 'Confirma a aplicação do desconto?';
 
-        if (CouponHandler.source === 'select') {
-            title = 'Confirma a aplicação do desconto?';
-        }
-
         if (CouponHandler.amount > CouponHandler.orderPrice) {
             title = 'Você está usando um desconto com valor superior ao do orçamento.' +
                 ' Os pontos restantes (' + numeral(CouponHandler.amount - CouponHandler.orderPrice).format('$0,0.00') + ') serão perdidos. Deseja continuar?';
