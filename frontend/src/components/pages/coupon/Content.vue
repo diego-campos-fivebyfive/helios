@@ -20,11 +20,13 @@
         td {{ coupon.amount }}
         td
           Button(
+            v-if='!coupon.applied',
             type='primary-common',
             icon='pencil',
             pos='first',
             v-on:click.native='showModalForm(coupon)')
           Button(
+            v-if='!coupon.applied',
             type='danger-common',
             icon='trash',
             pos='last',
