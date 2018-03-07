@@ -102,6 +102,7 @@ class Processor
     public function refreshCache()
     {
         $groups = $this->loadCache();
+
         $files = $this->fileReader->files(self::SEARCH_PREFIX);
 
         $contents = $this->loadContents($files);
