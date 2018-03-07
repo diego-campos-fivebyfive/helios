@@ -140,12 +140,9 @@ class Processor
     private function loadContents(array $files)
     {
         sort($files);
-        $contents = [];
-        foreach ($files as $file){
-            $contents[] = $this->fileReader->read($file);
-        }
-
-        return $contents;
+        return array_map(function($file){
+            return $this->fileReader->read($file);
+        }, $files);
     }
 
     /**
@@ -154,13 +151,9 @@ class Processor
      */
     private function loadCollection(array $contents)
     {
-        sort($contents);
-        $collection = [];
-        foreach ($contents as $content){
-            $collection[] = Parser::fromContent($content);
-        }
-
-        return $collection;
+        return array_map(function($content){
+            return Parser::fromContent($content);
+        }, $contents);
     }
 
     /**
