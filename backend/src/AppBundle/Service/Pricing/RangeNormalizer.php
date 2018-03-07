@@ -64,12 +64,20 @@ class RangeNormalizer
     private $accessor;
 
     /**
+     * @var string
+     */
+    private $memory = '512M';
+
+    /**
      * RangeNormalizer constructor.
      * @param RangeManager $manager
      */
     function __construct(RangeManager $manager)
     {
+        ini_set('memory_limit', $this->memory);
+
         $this->manager = $manager;
+
         $this->strategy = self::FILTER_CACHE;
     }
 
