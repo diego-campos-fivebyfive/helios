@@ -144,6 +144,10 @@ class CouponController extends AbstractController
     {
         $this->denyAccessUnlessGranted('edit', $coupon);
 
+        if ($coupon->isApplied()) {
+          return $this->json([], Response::HTTP_FORBIDDEN);
+        }
+
         $name = $request->request->get('name');
         $amount = $request->request->get('amount');
         $accountId = $request->request->get('account');
@@ -178,6 +182,10 @@ class CouponController extends AbstractController
     public function deleteAction(Coupon $coupon)
     {
         $this->denyAccessUnlessGranted('edit', $coupon);
+
+        if ($coupon->isApplied()) {
+          return $this->json([], Response::HTTP_FORBIDDEN);
+        }
 
         $manager = $this->manager('coupon');
 
