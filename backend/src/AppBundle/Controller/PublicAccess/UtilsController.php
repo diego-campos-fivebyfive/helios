@@ -19,6 +19,15 @@ class UtilsController extends AbstractController
      */
     public function postcodeAction(Request $request)
     {
+        return $this->json([
+            'resultado' => 0,
+            'uf' => '',
+            'cidade' => '',
+            'bairro' => '',
+            'logradouro' => '',
+            'tipo_logradouro' => ''
+        ]);
+
         $postcode = $request->request->get('postcode');
 
         $uri = sprintf('//cep.republicavirtual.com.br/web_cep.php?cep=%s&formato=json', $postcode);
