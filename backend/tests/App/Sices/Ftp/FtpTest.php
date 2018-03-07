@@ -2,6 +2,7 @@
 
 namespace Tests\App\Sices\Utils;
 
+use App\Proceda\Parser;
 use App\Sices\Ftp\FileSystemFactory;
 use Tests\App\Sices\SicesTest;
 
@@ -44,8 +45,6 @@ class FtpTest extends SicesTest
         $fileSystem = FileSystemFactory::create($this->config['sftp']);
 
         $this->assertInstanceOf(\Gaufrette\Filesystem::class, $fileSystem);
-
-        $this->assertTrue(is_array($fileSystem->keys()));
     }
 
     /**
