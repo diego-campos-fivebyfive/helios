@@ -31,6 +31,7 @@ class CouponController extends AbstractController
     {
         $qb = $this->manager('coupon')->createQueryBuilder();
         $qb->orderBy('c.appliedAt', 'ASC');
+        $qb->addorderBy('c.id', 'DESC');
 
         $accounts = $request->get('account');
         $name = $request->get('name');
