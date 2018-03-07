@@ -121,6 +121,15 @@ class MenuAccount
                 'owner'
             ]
         ],
+        'ranking' => [
+            'name' => 'Fidelidade SICES',
+            'route' => 'ranking_index',
+            'icon' => 'trophy',
+            'allowedRoles' => [
+                'ownerMaster',
+                'owner'
+            ]
+        ],
         'order' => [
             'name' => 'Orçamento SICES',
             'route' => 'index_order',
