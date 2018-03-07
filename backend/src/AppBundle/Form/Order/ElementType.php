@@ -100,7 +100,7 @@ class ElementType extends AbstractType
 
             $data[$group][$code] = (string) $component;
 
-            $generatorLevels = $component->getGeneratorLevels();
+            $generatorLevels = (array) $component->getGeneratorLevels();
             if(!in_array($level, $generatorLevels)) $this->disabledCodes[] = $code;
         }
 
