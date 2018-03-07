@@ -75,11 +75,18 @@ class MemorialAnalyzer
     private $level;
 
     /**
+     * @var string
+     */
+    private $memory = '512M';
+
+    /**
      * MemorialAnalyzer constructor.
      * @param ContainerInterface $container
      */
     function __construct(ContainerInterface $container)
     {
+        ini_set('memory_limit', $this->memory);
+
         $this->container = $container;
 
         $this->initNormalizer();
@@ -87,6 +94,7 @@ class MemorialAnalyzer
 
     /**
      * @param array $config
+     * @return array
      */
     public function analyze(array $config)
     {

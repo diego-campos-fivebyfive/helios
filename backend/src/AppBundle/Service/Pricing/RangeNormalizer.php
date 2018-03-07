@@ -64,12 +64,20 @@ class RangeNormalizer
     private $accessor;
 
     /**
+     * @var string
+     */
+    private $memory = '512M';
+
+    /**
      * RangeNormalizer constructor.
      * @param RangeManager $manager
      */
     function __construct(RangeManager $manager)
     {
+        ini_set('memory_limit', $this->memory);
+
         $this->manager = $manager;
+
         $this->strategy = self::FILTER_CACHE;
     }
 
@@ -101,8 +109,10 @@ class RangeNormalizer
     }
 
     /**
-     * @param $code
-     * @param $level
+     * @param Memorial $memorial
+     * @param array $codes
+     * @param array $levels
+     * @param array $definitions
      */
     public function normalize(Memorial $memorial, array $codes, array $levels, array $definitions = [])
     {
