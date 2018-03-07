@@ -23,7 +23,7 @@ class StringBoxLoader
     /**
      * @inheritDoc
      */
-    public function load(&$inputs = null, &$outputs, $maker)
+    public function load(&$inputs = null, &$outputs, &$quantity, $maker)
     {
         $fields = 's';
 
@@ -34,14 +34,18 @@ class StringBoxLoader
             ->from($this->manager->getClass(), 's')
         ;
 
-        $parameters = [
-            'outputs' => $outputs,
-            'maker' => $maker
-        ];
+        do{
 
-        if($inputs && $outputs) {
+            $quantity += 1;
 
-            $parameters['inputs'] = $inputs;
+            $muttableInputs = (int) ceil($inputs / $quantity);
+            $muttableOutputs = (int) ceil($outputs / $quantity);
+
+            $parameters = [
+                'maker' => $maker,
+                'outputs' => $muttableOutputs,
+                'inputs' => $muttableInputs
+            ];
 
             $qb
                 ->where('s.inputs >= :inputs')
@@ -51,27 +55,14 @@ class StringBoxLoader
                 ->addOrderBy('s.outputs', 'asc')
             ;
 
-        }else{
+            $qb->setParameters($parameters);
 
-            $qb
-                ->andWhere('s.outputs >= :outputs')
-                ->andWhere('s.maker = :maker')
-                ->orderBy('s.inputs', 'desc')
-                ->addOrderBy('s.outputs', 'asc')
-            ;
-        }
+            $fakeParameters = [];
+            CriteriaAggregator::finish($fakeParameters, $qb);
 
-        $fakeParameters = [];
-        CriteriaAggregator::finish($fakeParameters, $qb);
+            $stringBoxes = $qb->getQuery()->getResult();
 
-        $qb->setParameters($parameters);
-
-        $stringBoxes = $qb->getQuery()->getResult();
-
-        if(empty($stringBoxes)){
-            $inputs = null;
-            return $this->load($inputs, $outputs, $maker);
-        }
+        }while(empty($stringBoxes));
 
         return $stringBoxes;
     }

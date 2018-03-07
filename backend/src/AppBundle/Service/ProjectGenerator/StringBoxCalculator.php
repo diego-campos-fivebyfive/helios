@@ -41,17 +41,17 @@ class StringBoxCalculator
             if (!$projectInverter->getInverter()->hasInProtection() || $includeProtected) {
 
                 $strings = 0;
-                foreach($projectInverter->getProjectAreas() as $projectArea){
+                foreach ($projectInverter->getProjectAreas() as $projectArea) {
                     $strings += $projectArea->getStringNumber();
                 }
 
-                $quantity = 1;
+                $quantity = 0;
                 $mpptNumber = $projectInverter->getProjectAreas()->count();
-                $inputs = $strings;
+                $inputs = (int)$strings;
 
-                $stringBoxes = $this->loader->load($inputs, $mpptNumber, $maker);
+                $stringBoxes = $this->loader->load($inputs, $mpptNumber, $quantity, $maker);
 
-                if (!is_null($inputs)) {
+                if(count($stringBoxes)) {
 
                     /** @var \AppBundle\Entity\Component\StringBoxInterface $stringBox */
                     $stringBox = $stringBoxes[0];
@@ -64,60 +64,6 @@ class StringBoxCalculator
 
                     if (!array_key_exists($stringBox->getId(), $entities)) {
                         $entities[$stringBox->getId()] = $stringBox;
-                    }
-
-                } else {
-
-                    $count = count($stringBoxes);
-
-                    /** @var \AppBundle\Entity\Component\StringBoxInterface $firstStringBox */
-                    /** @var \AppBundle\Entity\Component\StringBoxInterface $lastStringBox */
-                    for ($j = 1; $j <= 50; $j++) {
-                        for ($i = 0; $i < $count; $i++) {
-
-                            $index = $count - 1 - $i;
-                            $firstStringBox = $stringBoxes[0];
-                            $lastStringBox = $stringBoxes[$index];
-
-                            $total = ($firstStringBox->getInputs() * $j) + $lastStringBox->getInputs();
-
-                            if ($total >= $strings) {
-
-                                $firstQuantity = $j * $quantity;
-                                $lastQuantity = 1 * $quantity;
-                                $stringEquals = $firstStringBox == $lastStringBox;
-
-                                if (!array_key_exists($firstStringBox->getId(), $collection)) {
-
-                                    $collection[$firstStringBox->getId()] = $firstQuantity;
-                                    $entities[$firstStringBox->getId()] = $firstStringBox;
-
-                                } else {
-
-                                    $collection[$firstStringBox->getId()] += $firstQuantity;
-                                }
-
-                                if ($stringEquals) {
-
-                                    $collection[$firstStringBox->getId()] += $quantity;
-
-                                } else {
-
-                                    if (!array_key_exists($lastStringBox->getId(), $collection)) {
-
-                                        $collection[$lastStringBox->getId()] = $lastQuantity;
-                                        $entities[$lastStringBox->getId()] = $lastStringBox;
-
-                                    }else{
-
-                                        $collection[$lastStringBox->getId()] += $lastQuantity;
-                                    }
-                                }
-
-                                break 2;
-                            }
-
-                        }
                     }
                 }
             }
