@@ -3,7 +3,9 @@
 namespace AdminBundle\Form;
 
 use AdminBundle\Form\Settings\Orders\ExpirationType;
+use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\Component\Project;
+use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Entity\Pricing\MemorialInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
@@ -24,6 +26,9 @@ class SettingsType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $levels = Memorial::getDefaultLevels();
+        unset($levels[MemorialInterface::LEVEL_FINAME], $levels[MemorialInterface::LEVEL_PROMOTIONAL]);
+
         $builder->add(
             $builder
                 ->create('parameters', FormType::class)
@@ -51,6 +56,14 @@ class SettingsType extends AbstractType
                         ->add('email', EmailType::class)
                 )
                 ->add('enable_promo', CheckboxType::class)
+                ->add('promo_enabled_levels', ChoiceType::class, [
+                        'multiple' => true,
+                        'expanded' => true,
+                        'choices' => $levels,
+                        'choice_attr' => function() {
+                            return ['class' => 'choices-promo-levels'];
+                        }
+                ])
                 ->add('promo_notice', TextType::class, [
                     'required' => false
                 ])
