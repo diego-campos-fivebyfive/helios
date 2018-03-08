@@ -144,7 +144,7 @@ class OrderCoupon
         $this->associateCoupon($order, $coupon);
 
         $date = (new \DateTime())->format("d/m/Y");
-        $description = $order->getReference() . " - " . $date . " - Resgate de pontos";
+        $description = $order->getReference() . " - Resgate de pontos";
         $this->createRanking($order, - $amount, $description);
 
         return $coupon;
@@ -167,8 +167,7 @@ class OrderCoupon
 
             $this->dissociateCoupon($order);
 
-            $date = (new \DateTime())->format("d/m/Y");
-            $description = $order->getReference() . " - " . $date . " - Crédito de pontos " . $coupon->getCode();
+            $description = $order->getReference() . " - Crédito de pontos " . $coupon->getCode();
             $this->createRanking($order, $coupon->getAmount(), $description);
 
             /** @var CouponManager $couponManager */
