@@ -10,6 +10,12 @@
         #settings_parameters_enabled_roof_types label {
             width: 95%;
         }
+        .choices-promo-levels {
+            width: 5%;
+        }
+        #settings_parameters_promo_enabled_levels label {
+            width: 95%;
+        }
         .editor-config {
             border: 1px solid rgba(10, 10, 10, 0.2) ;
             border-radius: 2px;
@@ -170,15 +176,15 @@
                                                                     {{ form_widget(form_params.enabled_roof_types) }} &nbsp;
 
                                                                     <div class="col-md-12">
-                                                                    <div class="col-md-6">
-                                                                        {{ form_label(form_params.fdi_min, 'FDI mínimo') }}
-                                                                        {{ form_widget(form_params.fdi_min, {attr:{class:'form-control', 'data-mask':'0,00', placeholder:"FDI mínimo"}}) }}
-                                                                    </div>
+                                                                        <div class="col-md-6">
+                                                                            {{ form_label(form_params.fdi_min, 'FDI mínimo') }}
+                                                                            {{ form_widget(form_params.fdi_min, {attr:{class:'form-control', 'data-mask':'0,00', placeholder:"FDI mínimo"}}) }}
+                                                                        </div>
 
-                                                                    <div class="col-md-6">
-                                                                        {{ form_label(form_params.fdi_max, 'FDI máximo') }}
-                                                                        {{ form_widget(form_params.fdi_max, {attr:{class:'form-control', 'data-mask':'0,00', placeholder:"FDI máximo"}}) }}
-                                                                    </div>
+                                                                        <div class="col-md-6">
+                                                                            {{ form_label(form_params.fdi_max, 'FDI máximo') }}
+                                                                            {{ form_widget(form_params.fdi_max, {attr:{class:'form-control', 'data-mask':'0,00', placeholder:"FDI máximo"}}) }}
+                                                                        </div>
                                                                     </div>
                                                                 </div>
 
@@ -246,6 +252,11 @@
                                                                         <div>
                                                                             {{ form_widget(form_params.enable_promo) }} &nbsp;
                                                                             {{ form_label(form_params.enable_promo, 'Ativar orçamentos promocionais') }}
+                                                                        </div>
+                                                                            {{ form_label(form_params.promo_enabled_levels, 'Níveis com disponibilidade de orçamentos promocionais', {label_attr:{id:'promo_enabled_levels_label'}})}}
+                                                                            {{ form_widget(form_params.promo_enabled_levels) }}
+                                                                        <div>
+
                                                                         </div>
 
                                                                         <div class="editor-container" id="promo-phrase-container">
@@ -728,21 +739,29 @@
             });
         });
 
-        if($('#settings_parameters_enable_promo').attr('checked') != 'checked')
-            $('#settings_parameters_shipping_included').attr('disabled' , 'disabled');
+        if($('#settings_parameters_enable_promo').attr('checked') != 'checked') {
+            $('#settings_parameters_shipping_included').attr('disabled', 'disabled');
+            $('#settings_parameters_promo_enabled_levels').hide();
+            $('#promo_enabled_levels_label').hide();
+        }
 
-        if($('#settings_parameters_enable_finame').attr('checked') != 'checked')
+        if($('#settings_parameters_enable_finame').attr('checked') != 'checked') {
             $('#settings_parameters_finame_shipping_included').attr('disabled', 'disabled');
+        }
 
         formSettings.find('input').on('change', function () {
             if (this.id == 'settings_parameters_enable_promo') {
                 var shipping_included = $('#settings_parameters_shipping_included');
 
-                if (this.checked)
+                if (this.checked) {
                     shipping_included.removeAttr('disabled');
-                else {
+                    $('#settings_parameters_promo_enabled_levels').show();
+                    $('#promo_enabled_levels_label').show();
+                } else {
                     shipping_included.attr('checked', false);
                     shipping_included.attr('disabled' , 'disabled');
+                    $('#settings_parameters_promo_enabled_levels').hide();
+                    $('#promo_enabled_levels_label').hide();
                 }
             }
 
