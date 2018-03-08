@@ -32,10 +32,11 @@ class OrderRanking
      * @var array
      */
     private static $mapping = [
-        Memorial::LEVEL_BLACK => 5,
-        Memorial::LEVEL_PLATINUM => 3,
-        Memorial::LEVEL_PREMIUM => 2,
-        Memorial::LEVEL_PARTNER => 1
+        Memorial::LEVEL_TITANIUM => 20,
+        Memorial::LEVEL_BLACK => 10,
+        Memorial::LEVEL_PLATINUM => 7,
+        Memorial::LEVEL_PREMIUM => 5,
+        Memorial::LEVEL_PARTNER => 3
     ];
 
     /**
