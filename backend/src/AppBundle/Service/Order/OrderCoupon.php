@@ -142,8 +142,15 @@ class OrderCoupon
         }
 
         $this->associateCoupon($order, $coupon);
-        
-        $description = $order->getReference() . " - Resgate de pontos";
+
+        $reference = "";
+
+        if ($order->getReference()) {
+            $reference = $order->getReference()  . " - ";
+        }
+
+        $description = $reference . "Resgate de pontos";
+
         $this->createRanking($order, - $amount, $description);
 
         return $coupon;
@@ -166,7 +173,13 @@ class OrderCoupon
 
             $this->dissociateCoupon($order);
 
-            $description = $order->getReference() . " - Crédito de pontos " . $coupon->getCode();
+            $reference = "";
+
+            if ($order->getReference()) {
+                $reference = $order->getReference()  . " - ";
+            }
+
+            $description = $reference . "Crédito de pontos " . $coupon->getCode();
             $this->createRanking($order, $coupon->getAmount(), $description);
 
             /** @var CouponManager $couponManager */
