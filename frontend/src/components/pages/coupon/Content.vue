@@ -17,7 +17,7 @@
         td {{ coupon.code }}
         td {{ coupon.account.name || 'Não Vinculada' }}
         td {{ coupon.applied ? 'Aplicado' : 'Não Aplicado' }}
-        td {{ formatPrice(coupon.amount) }}
+        td R$ {{ coupon.amount }}
         td
           Button(
             type='primary-common',
@@ -42,10 +42,6 @@
       'coupons'
     ],
     methods: {
-      formatPrice(value) {
-          const val = (value/1).toFixed(2).replace('.', ',')
-          return 'R$ ' + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-      },
       showModalForm(coupon) {
         this.$emit('showModalForm', 'edit', coupon)
       },
