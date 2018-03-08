@@ -123,6 +123,12 @@ class SettingsType extends AbstractType
                                     ->add('amount', TextType::class)
                                     ->add('days', TextType::class)
                             )
+                            ->add(
+                                $builder
+                                    ->create(MemorialInterface::LEVEL_TITANIUM, FormType::class)
+                                    ->add('amount', TextType::class)
+                                    ->add('days', TextType::class)
+                            )
                         )
                         ->add('grace_period', TextType::class)
                 )

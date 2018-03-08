@@ -314,6 +314,7 @@ class Memorial implements MemorialInterface
     public static function getDefaultLevels($keys = false)
     {
         $levels = [
+            self::LEVEL_TITANIUM => 'Titanium',
             self::LEVEL_BLACK => 'Black',
             self::LEVEL_PLATINUM => 'Platinum',
             self::LEVEL_PREMIUM => 'Premium',

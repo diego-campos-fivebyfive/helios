@@ -8,7 +8,7 @@ interface MemorialInterface
     const STATUS_PUBLISHED = 1;
     const STATUS_EXPIRED = 2;
 
-    const LEVEL_TITANIUM ='titanium';
+    const LEVEL_TITANIUM = 'titanium';
     const LEVEL_BLACK = 'black';
     const LEVEL_GOLD = 'gold';
     const LEVEL_PARTNER = 'partner';
