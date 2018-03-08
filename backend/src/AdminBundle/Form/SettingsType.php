@@ -3,7 +3,6 @@
 namespace AdminBundle\Form;
 
 use AdminBundle\Form\Settings\Orders\ExpirationType;
-use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Entity\Pricing\MemorialInterface;
@@ -15,7 +14,6 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
