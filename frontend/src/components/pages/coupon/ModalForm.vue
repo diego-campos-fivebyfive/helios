@@ -75,6 +75,11 @@
           })
       },
       sendCoupon() {
+        if (!/^(\d{1,3}(\.\d{3})*|\d+)(\,\d{2})?$/.test(this.form.amount)) {
+          this.$refs.notification.notify('Formato de moeda em Real invalido')
+          return
+        }
+
         this.$refs.modal.hide()
 
         if (this.modal.action === 'create') {

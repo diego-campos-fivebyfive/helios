@@ -17,7 +17,7 @@
         td {{ coupon.code }}
         td {{ coupon.account.name || 'Não Vinculada' }}
         td {{ coupon.applied ? 'Aplicado' : 'Não Aplicado' }}
-        td {{ coupon.amount }}
+        td R$ {{ coupon.amount }}
         td
           Button(
             v-if='!coupon.applied',

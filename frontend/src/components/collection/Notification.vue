@@ -33,6 +33,7 @@
     right: 0;
     text-align: center;
     top: 0;
+    z-index: 5;
   }
 
   .collection-notification-message {
