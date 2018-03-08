@@ -163,11 +163,12 @@
                                             <div class="panel-body">
                                                 {% set accessCoupon = app.user.isPlatformAdmin or app.user.isPlatformMaster or app.user.isPlatformCommercial %}
 
+                                                {# TODO: Tirar classes hidden quando ocorrer o lançamento do cupom#}
                                                 {% if accessCoupon or not app.user.isPlatform %}
-                                                    <div class="row" id="coupon_form"></div>
+                                                    <div class="row hidden" id="coupon_form"></div>
                                                 {% endif %}
 
-                                                <div class="hr-line-dashed col-md-12"></div>
+                                                <div class="hr-line-dashed col-md-12 hidden"></div>
 
                                                 {% if  accessDiscount %}
                                                     <div class="col-md-12" id="discount"></div>
