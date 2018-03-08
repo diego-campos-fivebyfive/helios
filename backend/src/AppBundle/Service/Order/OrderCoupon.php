@@ -142,8 +142,7 @@ class OrderCoupon
         }
 
         $this->associateCoupon($order, $coupon);
-
-        $date = (new \DateTime())->format("d/m/Y");
+        
         $description = $order->getReference() . " - Resgate de pontos";
         $this->createRanking($order, - $amount, $description);
 
