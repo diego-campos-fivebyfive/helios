@@ -2,6 +2,8 @@
 
 namespace Tests\AppBundle\Entity;
 
+use AppBundle\Entity\AccountInterface;
+use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\User;
 use AppBundle\Entity\UserInterface;
@@ -12,6 +14,61 @@ use Tests\AppBundle\AppTestCase;
  */
 class AccountManagerTest extends AppTestCase
 {
+    /**
+     * Default test association
+     */
+    public function testAccountAssociation()
+    {
+        $manager = $this->manager('account');
+
+        $accountA = $manager->create();
+        $accountA->setContext(BusinessInterface::CONTEXT_ACCOUNT);
+
+        $accountB = $manager->create();
+        $accountB->setContext(BusinessInterface::CONTEXT_ACCOUNT);
+
+        $manager->save($accountA);
+        $manager->save($accountB);
+
+        // ADD
+        $accountA->addChildAccount($accountB);
+
+        $this->assertTrue($accountB->isChildAccount());
+        $this->assertTrue($accountA->isParentAccount());
+        $this->assertCount(1, $accountA->getChildAccounts()->toArray());
+        $this->assertNotNull($accountB->getParentAccount());
+
+        // REMOVE
+        $accountA->removeChildAccount($accountB);
+        $this->assertNull($accountB->getParentAccount());
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testAccountAssociationException()
+    {
+        $manager = $this->manager('account');
+
+        $accountA = $manager->create();
+        $accountA->setContext(BusinessInterface::CONTEXT_ACCOUNT);
+
+        $accountB = $manager->create();
+        $accountB->setContext(BusinessInterface::CONTEXT_ACCOUNT);
+
+        $accountC = $manager->create();
+        $accountC->setContext(BusinessInterface::CONTEXT_ACCOUNT);
+
+        $manager->save($accountA);
+        $manager->save($accountB);
+        $manager->save($accountC);
+
+        $accountA->addChildAccount($accountB);
+        $this->assertTrue($accountB->isChildAccount());
+
+        $accountB->addChildAccount($accountC);
+    }
+
     /**
      * @expectedException \InvalidArgumentException
      */
@@ -59,10 +116,6 @@ class AccountManagerTest extends AppTestCase
 
         $agent = $this->createMember();
         $agent->getUser()->addRole(User::ROLE_PLATFORM_COMMERCIAL);
-
-        $account->setAgent($agent);
-
-        $this->assertNotNull($account->getAgent());
     }
 
     private function createMember()
