@@ -367,15 +367,17 @@
                                                                         <i class="fa fa-briefcase"></i> Troca de Nível
                                                                     </div>
                                                                     <div class="panel-body">
-                                                                        {% set form_partner = form_params.account_level_handler.levels.partner %}
-                                                                        {% set form_premium = form_params.account_level_handler.levels.premium %}
-                                                                        {% set form_platinum = form_params.account_level_handler.levels.platinum %}
+                                                                        {% set form_titanium = form_params.account_level_handler.levels.titanium %}
                                                                         {% set form_black = form_params.account_level_handler.levels.black %}
+                                                                        {% set form_partner = form_params.account_level_handler.levels.partner %}
+                                                                        {% set form_platinum = form_params.account_level_handler.levels.platinum %}
+                                                                        {% set form_premium = form_params.account_level_handler.levels.premium %}
 
-                                                                        {{ this.formLevel(form_partner) }}
-                                                                        {{ this.formLevel(form_premium) }}
-                                                                        {{ this.formLevel(form_platinum) }}
+                                                                        {{ this.formLevel(form_titanium) }}
                                                                         {{ this.formLevel(form_black) }}
+                                                                        {{ this.formLevel(form_partner) }}
+                                                                        {{ this.formLevel(form_platinum) }}
+                                                                        {{ this.formLevel(form_premium) }}
 
                                                                         <div class="row">
                                                                             <div class="form-group">
@@ -565,6 +567,7 @@
             '#settings_parameters_account_level_handler_levels_premium_amount,' +
             '#settings_parameters_account_level_handler_levels_platinum_amount,' +
             '#settings_parameters_account_level_handler_levels_black_amount,' +
+            '#settings_parameters_account_level_handler_levels_titanium_amount,' +
             '#settings_parameters_coupon_order_percent'
         ).mask('##,00',{reverse: true});
 
@@ -573,6 +576,7 @@
             '#settings_parameters_account_level_handler_levels_premium_days',
             '#settings_parameters_account_level_handler_levels_platinum_days',
             '#settings_parameters_account_level_handler_levels_black_days',
+            '#settings_parameters_account_level_handler_levels_titanium_days',
             '#settings_parameters_account_level_handler_grace_period,' +
             '#settings_parameters_coupon_step_options'
         ];
