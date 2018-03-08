@@ -43,8 +43,13 @@ class OrderController extends AbstractController
 
         $data = $form->handleRequest($request)->getData();
 
+        $optionVal = $data['optionsVal'];
+        $valueMin = $data['valueMin'] ? str_replace(',', '.', $data['valueMin']) : null;
+        $valueMax = $data['valueMax'] ? str_replace(',', '.', $data['valueMax']) : null;
+
         $dateAt = $data['dateAt'];
         $optionDate = $data['optionsAt'];
+
         $formatDateAt = function($dateAt){
             return implode('-', array_reverse(explode('/', $dateAt)));
         };
@@ -65,6 +70,18 @@ class OrderController extends AbstractController
 
         if ($dateAt) {
             $this->filterDateAt($qb, $optionDate, $dateAt, $formatDateAt);
+        }
+
+        if ($valueMin) {
+            $qb->andWhere('o.'.$optionVal.' >= :valMin');
+
+            $qb->setParameter('valMin', $valueMin);
+        }
+
+        if ($valueMax) {
+            $qb->andWhere('o.'.$optionVal.' <= :valMax');
+
+            $qb->setParameter('valMax', $valueMax);
         }
 
         if(-1 != $states = $request->get('states')){
