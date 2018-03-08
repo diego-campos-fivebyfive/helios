@@ -1,168 +1,82 @@
 <?php
 
+use App\Sices\Ftp\FileSystemFactory;
 use Tests\AppBundle\AppTestCase;
 
 /**
- * @group processor_events
+ * @group proceda_processor
  */
 class ProcessorTest extends AppTestCase
 {
-    private $events = [
-        //order1
-        '000002672' => [
-            0 => [
-                "code" => '542',
-                "document" => '17302990000115',
-                "serial" => '115',
-                "invoice" => '000002672',
-                "event" => '000',
-                "date" => '20022018',
-                "time" => '1330'
-            ],
-            1 => [
-                "code" => '542',
-                "document" => '17774501000128',
-                "serial" => '128',
-                "invoice" => '000002672',
-                "event" => '001',
-                "date" => '20022018',
-                "time" => '1345',
-            ]
-        ],
-        //order2
-        "000012330" => [
-            0 => [
-                "code" => '542',
-                "document" => '17774501000128',
-                "serial" => '128',
-                "invoice" => '000012330',
-                "event" => '000',
-                "date" => '20022018',
-                "time" => '1345'
-            ]
-        ],
-        //order3
-        "000012344" => [
-            0 => [
-                "code" => '542',
-                "document" => '17774501000128',
-                "serial" => '128',
-                "invoice" => '000012344',
-                "event" => '000',
-                "date" => '20022018',
-                "time" => '1345'
-            ],
-            1 => [
-                "code" => '542',
-                "document" => '17774501000128',
-                "serial" => '128',
-                "invoice" => '000012344',
-                "event" => '031',
-                "date" => '20022018',
-                "time" => '1345'
-            ]
-        ]
-    ];
+    /** @var  \App\Proceda\Processor */
+    private $processor;
 
-    private $eventsOcoren = [
-        0 => [
-            'code' => '542',
-            'document' => '17774501000128',
-            'serial' => '128',
-            'invoice' => '000011544',
-            'event' => '000',
-            'date' => '30012018',
-            'time' => '1626'
-        ],
-        1 => [
-            'code' => '542',
-            'document' => '17774501000128',
-            'serial' => '128',
-            'invoice' => '000011544',
-            'event' => '001',
-            'date' => '30012018',
-            'time' => '1443'
-        ],
-        2 => [
-            'code' => '542',
-            'document' => '17774501000128',
-            'serial' => '128',
-            'invoice' => '000011655',
-            'event' => '000',
-            'date' => '30012018',
-            'time' => '1441'
-        ],
-        3 => [
-            'code' => '542',
-            'document' => '17774501000128',
-            'serial' => '128',
-            'invoice' => '000011655',
-            'event' => '002',
-            'date' => '30012018',
-            'time' => '0542'
-        ],
-        4 => [
-            'code' => '542',
-            'document' => '17774501000128',
-            'serial' => '128',
-            'invoice' => '000011633',
-            'event' => '001',
-            'date' => '30022018',
-            'time' => '1442'
-        ]
-    ];
+    /** @var  \App\Sices\Ftp\FileReader */
+    private $fileReader;
 
-    public function testProcessEvents()
+    /**
+     * Before tests
+     * @inheritDoc
+     */
+    public function setUp()
     {
-//        $order1 = $this->createOrder(8, '000002672');
-//        $order2 = $this->createOrder(8, '000012330');
-//        $order3 = $this->createOrder(8, '000012344');
-//
-//        self::assertEquals('000002672', $order1->getInvoiceNumber());
-//        self::assertEquals(8, $order1->getStatus());
-//
-//        self::assertEquals(1, $order1->getId());
-//        self::assertEquals(2, $order2->getId());
-//        self::assertEquals(3, $order3->getId());
-//
-//        /** @var \App\Proceda\Processor $processor */
-//        $processor = $this->getContainer()->get('proceda_processor');
-//
-//        // TODO: metodo privado, mudar para public para teste
-//        $processor->processEvents($this->events);
-//
-//        self::assertEquals(10, $order1->getStatus());
-//        self::assertEquals(9, $order2->getStatus());
-//        self::assertEquals(10, $order3->getStatus());
+        $this->processor = $this->service('proceda_processor');
+
+        $this->initializeScenario();
     }
 
-    public function testMergeEvents()
+    /**
+     * Test file manipulation before and after resolve
+     */
+    public function testMoveFilesProcess()
     {
-        /** @var \App\Proceda\Processor $processor */
-        $processor = $this->getContainer()->get('proceda_processor');
+        $this->assertCount(3, $this->fileReader->files(\App\Proceda\Processor::SEARCH_PREFIX));
+        $this->assertCount(3, $this->fileReader->files(\App\Proceda\Processor::PROCESSED_DIR));
 
-        // TODO: metodo privado, mudar para public para teste
-        //$processor->mergeEventsAndCache($this->eventsOcoren);
-        // TODO: o teste depende do conteúdo ja presente no arquivo de cache OCOREN.cache
+        $this->processor->resolve();
+
+        $this->assertCount(1, $this->fileReader->files(\App\Proceda\Processor::SEARCH_PREFIX));
+        $this->assertCount(5, $this->fileReader->files(\App\Proceda\Processor::PROCESSED_DIR));
     }
 
-    public function testProcess()
+    /**
+     * - Create FileReader instance
+     * - Remove all files
+     * - Create new files
+     */
+    private function initializeScenario()
     {
-        /** @var \App\Proceda\Processor $processor */
-        $processor = $this->getContainer()->get('proceda_processor');
+        $fileSystem = FileSystemFactory::create([
+            'host' => $this->getContainer()->getParameter('ftp_host'),
+            'port' => $this->getContainer()->getParameter('ftp_port'),
+            'username' => $this->getContainer()->getParameter('ftp_user'),
+            'password' => $this->getContainer()->getParameter('ftp_password'),
+            'directory' => '/ftp/PROCEDA-SICESSOLAR'
+        ]);
 
-        $processor->resolve();
-    }
+        $this->fileReader = new \App\Sices\Ftp\FileReader();
+        $this->fileReader->init($fileSystem);
 
-    private function createOrder($status, $invoiceNumber)
-    {
-        $manager = $this->manager('order');
+        $currentFiles = $this->fileReader->files();
 
-        /** @var \AppBundle\Entity\Order\Order $order */
-        $order = $manager->create();
-        $order->setStatus($status);
-        $order->setInvoiceNumber($invoiceNumber);
-        $manager->save($order);
-        return $order;
+        foreach ($currentFiles as $currentFile){
+            if(!$this->fileReader->isDirectory($currentFile)) {
+                $this->fileReader->delete($currentFile);
+            }
+        }
+
+        $files = [
+            'OCOREN-ONE.TXT',
+            'OCOREN-TWO.TXT',
+            'OCOREN-THREE.TXT',
+            'OTHER-FILE-TYPE.TXT',          // non-standard - will not be handled
+            'PROCESSED/OCOREN-ONE.TXT',     // duplicate - will not be handled
+            'PROCESSED/OCOREN-FOUR.TXT',
+            'PROCESSED/OCOREN-FIVE.TXT'
+        ];
+
+        foreach ($files as $file){
+            $this->fileReader->write($file, $file);
+        }
     }
 }

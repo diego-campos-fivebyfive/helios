@@ -51,6 +51,8 @@ class Processor
 
     const SEARCH_PREFIX = 'OCOREN';
 
+    const PROCESSED_DIR = 'PROCESSED/';
+
     const MESSAGES = [
         '000' => 'Processo de Transporte já Iniciado',
         '001' => 'Entrega Realizada Normalmente',
@@ -104,7 +106,7 @@ class Processor
     {
         $groups = $this->loadCache();
 
-        $files = $this->fileReader->files(self::SEARCH_PREFIX);
+        $files = $this->loadAndFilterFiles();
 
         $contents = $this->loadContents($files);
 
@@ -114,7 +116,7 @@ class Processor
 
         $this->persistCache($groups);
 
-        $this->prefixFiles($files);
+        $this->moveProcessedFiles($files);
     }
 
     /**
@@ -131,6 +133,19 @@ class Processor
         $this->processTimelineList();
 
         $this->manager->flush();
+    }
+
+    /**
+     * @return array
+     */
+    private function loadAndFilterFiles()
+    {
+        $current = $this->fileReader->files(self::SEARCH_PREFIX);
+        $processed = $this->fileReader->files(self::PROCESSED_DIR);
+
+        return array_diff($current, array_map(function($path){
+            return explode('/', $path)[1];
+        }, $processed));
     }
 
     /**
@@ -250,125 +265,6 @@ class Processor
     }
 
     /**
-     * event resolver
-     * @deprecated
-     */
-    public function legacyResolve()
-    {
-        /*
-        $files = $this->fileReader->files(self::SEARCH_PREFIX);
-
-        $date = (new \DateTime())->format('Ymd');
-        $prefix = "PROCESSED-${date}-";
-
-        if (count($files)) {
-            sort($files);
-            foreach ($files as $filename) {
-                $content = $this->fileSystem->read($filename);
-
-                $events = Parser::fromContent($content);
-
-                $this->mergeEventsAndCache($events);
-
-                $this->processEvents($this->cache->all());
-
-                $this->fileReader->prefixer($filename, $prefix);
-            }
-        } else {
-            $this->processEvents($this->cache->all());
-        }
-        */
-    }
-
-    /**
-     * @param $eventGroups
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @deprecated
-     */
-    private function processEvents($eventGroups)
-    {
-        /*
-        foreach ($eventGroups as $invoice => $group) {
-
-            $qb = $this->manager->createQueryBuilder();
-
-            $qb
-                ->where(
-                    $qb->expr()->like('o.invoices', $qb->expr()->literal("%${invoice}%"))
-                )
-                ->setMaxResults(1);
-
-            $order = $qb->getQuery()->getOneOrNullResult();
-
-            if ($order) {
-                $timelineList = [];
-
-                $target = Resource::getObjectTarget($order);
-
-                $this->sortEventsByDate($group);
-
-                foreach ($group as $event) {
-                    $this->changeStatusByEvent($order, $event['event']);
-
-                    $message = self::MESSAGES[$event['event']];
-                    $status = $order->getStatus();
-
-                    $timelineList[] = [
-                        'target' => $target,
-                        'message' => $message,
-                        'attributes' => [
-                            'status' => $status,
-                            'statusLabel' => Order::getStatusNames()[$status]
-                        ]
-                    ];
-                }
-
-                $this->timeline->createByArray($timelineList);
-
-                $this->cache->remove($invoice);
-            }
-        }
-
-        $this->cache->store();
-        */
-    }
-
-    /**
-     * @param $group
-     * @deprecated
-     */
-    private function sortEventsByDate(&$group)
-    {
-        usort($group, function ($event1, $event2) {
-            $date1 = $this->formatDate($event1['date']);
-            $date2 = $this->formatDate($event2['date']);
-
-            $dateTime1 = "${date1}${event1['time']}";
-            $dateTime2 = "${date2}${event2['time']}";
-
-            if ($dateTime1 == $dateTime2) {
-                return 0;
-            }
-
-            return ($dateTime1 < $dateTime2) ? -1 : 1;
-        });
-    }
-
-    /**
-     * @param $date
-     * @return string
-     * @deprecated
-     */
-    private function formatDate($date)
-    {
-        $day = substr($date,0, 2);
-        $month = substr($date,2, 2);
-        $year = substr($date,4, 4);
-
-        return "${year}${month}${day}";
-    }
-
-    /**
      * @param Order $order
      * @param int $event
      */
@@ -390,25 +286,11 @@ class Processor
     /**
      * @param array $files
      */
-    private function prefixFiles(array $files)
+    private function moveProcessedFiles(array $files)
     {
-        $date = (new \DateTime())->format('Ymd');
-        $prefix = "PROCESSED-${date}-";
-
         foreach ($files as $filename) {
-            $this->fileReader->prefixer($filename, $prefix);
+            $this->fileReader->prefixer($filename, 'PROCESSED/');
         }
-    }
-
-    /**
-     * @param $events
-     * @deprecated
-     */
-    private function mergeEventsAndCache($events)
-    {
-        /*foreach ($events as $event) {
-            $this->cache->incrementInArrayPosition($event['invoice'], $event);
-        }*/
     }
 
     /**
