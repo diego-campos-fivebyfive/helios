@@ -74,7 +74,8 @@ class CouponController extends AbstractController
     public function createAction(Request $request)
     {
         $name = $request->request->get('name');
-        $amount = $request->request->get('amount');
+        $amount = str_replace('.', '', $request->request->get('amount'));
+        $amount = (float) str_replace(',', '.', $amount);
         $accountId = $request->request->get('account');
 
         $validator = Validation::createValidator();
@@ -145,7 +146,8 @@ class CouponController extends AbstractController
         $this->denyAccessUnlessGranted('edit', $coupon);
 
         $name = $request->request->get('name');
-        $amount = $request->request->get('amount');
+        $amount = str_replace('.', '', $request->request->get('amount'));
+        $amount = (float) str_replace(',', '.', $amount);
         $accountId = $request->request->get('account');
 
         $account = null;
@@ -238,11 +240,13 @@ class CouponController extends AbstractController
                 ];
             }
 
+            $amount = number_format($coupon->getAmount(), 2, ',', '.');
+
             return [
                 'id' => $coupon->getId(),
                 'code' => $coupon->getCode(),
                 'name' => $coupon->getName(),
-                'amount' => $coupon->getAmount(),
+                'amount' => $amount,
                 'target' => $coupon->getTarget(),
                 'account' => $account,
                 'applied' => $coupon->isApplied()
