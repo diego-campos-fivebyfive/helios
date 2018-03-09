@@ -51,7 +51,7 @@ documento devem ser interpretadas da seguinte forma:
 
 ### 1. Visão Geral:
 
-- Nomes de classes DEVEM ser declaradas em `StudlyCaps`.
+- Nomes de classes DEVEM ser declaradas em `PascalCase`.
 
 - Constantes de classes DEVEM ser declaradas totalmente com letras maiúsculas e
 separadas por underscores.
@@ -64,9 +64,7 @@ separadas por underscores.
 - Chaves de abertura para classes DEVEM ser colocadas na linha seguinte e chaves
   de fechamento DEVEM ser colocadas na linha após o corpo da classe.
   
-- Visibilidade DEVE ser declarada em todas as propriedades e métodos; `abstract`
-  e `final` DEVEM ser declarados antes da visibilidade; `static` DEVE ser
-  declarado depois da visibilidade.
+- Visibilidade DEVE ser declarada em todas as propriedades e métodos.
 
 - Palavras-chave de estruturas de controle DEVEM ter um espaço depois delas;
   chamadas de métodos e funções NÃO DEVEM.
@@ -162,7 +160,7 @@ com letras maiúsculas separadas pelo underscore. Por exemplo:
 
 - NÃO DEVE haver mais de uma propriedade declarada por linha.
 
-- Nomes de propriedades NÃO DEVERIAM ser prefixadas com `_` para indicar
+- Nomes de propriedades NÃO DEVEM ser prefixados com `_` para indicar
   visibilidades `protected` ou `private`.
   
 - Exemplo:
@@ -186,15 +184,12 @@ com letras maiúsculas separadas pelo underscore. Por exemplo:
 - Assinaturas de métodos NÃO DEVEM ser declaradas com um espaço após o nome do
   método. 
   
- - A chave de abertura DEVE ser colocada em sua própria linha e a chave de
-  fechamento DEVE ser colocada na linha após o corpo do método. 
+- A chave de abertura DEVE ser colocada uma linha abaixo da assinatura e nomenclatura do Método e a chave de fechamento DEVE ser colocada na linha após o corpo do método. 
   
 - NÃO DEVE haver um espaço depois do parenteses de abertura e NÃO DEVE haver um espaço antes do
   parenteses de fechamento.
   
 - Exemplo:
-
-
     ```php
     <?php
     namespace Vendor\Package;
@@ -216,12 +211,12 @@ com letras maiúsculas separadas pelo underscore. Por exemplo:
 - Exemplo:
     ```php
     <?php
-    bar();
+    bar();  
     $foo->bar($arg1);
     Foo::bar($arg2, $arg3);
     ``` 
 - Listas de argumentos PODEM ser divididas em múltiplas linhas, onde cada linha
-  subsequente é indentada uma vez. Quando fazendo isto, o primeiro item da lista
+  subsequente é identada uma vez. Quando fazendo isto, o primeiro item da lista
   DEVE estar na linha seguinte e DEVE haver somente um argumento por linha.
 
 - Exemplo:
@@ -243,14 +238,13 @@ com letras maiúsculas separadas pelo underscore. Por exemplo:
   argumentos.
   
 - Exemplo:
-
     ```php
     <?php
     namespace Vendor\Package;
     
     class ClassName
     {
-        public function foo($arg1, &$arg2, $arg3 = [])
+        public function foo($arg1, $arg2, $arg3 = [])
         {
             // corpo do método
         }
@@ -270,7 +264,7 @@ com letras maiúsculas separadas pelo underscore. Por exemplo:
     {
         public function aVeryLongMethodName(
             ClassTypeHint $arg1,
-            &$arg2,
+            $arg2,
             array $arg3 = []
         ) {
             // corpo do método
@@ -344,6 +338,46 @@ Regras gerais:
 
 - A palavra-chave `elseif` DEVERIA ser utilizada ao invés de `else if` para que
 todas as palavras-chave de controle se pareçam com uma só palavra.
+	- Nota: É preferível usar funções puras com return para resolver regras de if ao invés do uso exagerado else /elseif.
+	- Exemplo:
+		```php
+		// Ruim
+		public function menu()
+		{
+		  if ($user['name'] === 'foo') {
+		    $hasAccess = true;
+		  } elseif ($user['role'] === 'bar') {
+		    $hasAccess = true;
+		  } else {
+		    $hasAccess = false;
+		  }
+		
+		  if ($hasAccess) {
+		    // do something
+		  }
+		}
+		
+		// Bom
+		private function hasAccess($user)
+		{
+		  if ($user['name'] === 'foo') {
+		    return true;
+		  }
+		
+		  if ($user['role'] === 'bar') {
+		    return true;
+		  }
+		
+		  return false;
+		}
+		
+		public function menu()
+		{
+		  if (self::hasAccess($user)) {
+		    // do something
+		  }
+		}
+	```
 
 #### 9.2 `switch`, `case`
 
@@ -396,6 +430,19 @@ todas as palavras-chave de controle se pareçam com uma só palavra.
 - DEVE haver
   um comentário como `//sem break` quando a passagem próximo case é intencional
   em um corpo de `case` que não está vazio.
+
+- Nota: É preferível o uso de object literals ao uso de switch cases.
+
+- Exemplo:
+	```php
+	$expressions = [
+	    0 => 'Primeiro valor',
+	    1 => 'Segundo valor',
+  	    2 => 'Terceiro valor'
+	];
+
+	$expression = $expressions[$expr] ?? 'Valor default';
+	```
 
 #### 9.3 `while`, `do while`
 
@@ -490,7 +537,7 @@ de argumentos.
         // corpo
     };
     
-    $closureWithArgsAndVars = function ($arg1, $arg2) use ($var1, $var2) {
+    $closureWithArgsAndVars = function ($arg1, $arg2 = true) use ($var1, $var) {
         // corpo
     };
     ``` 
@@ -509,7 +556,7 @@ que se dividem por múltiplas linhas.
 
     ```php
     <?php
-    $longArgs_noVars = function (
+    $longArgsNoVars = function (
         $longArgument,
         $longerArgument,
         $muchLongerArgument
@@ -517,7 +564,7 @@ que se dividem por múltiplas linhas.
        // corpo
     };
     
-    $noArgs_longVars = function () use (
+    $noArgsLongVars = function () use (
         $longVar1,
         $longerVar2,
         $muchLongerVar3
@@ -525,7 +572,7 @@ que se dividem por múltiplas linhas.
        // corpo
     };
     
-    $longArgs_longVars = function (
+    $longArgsLongVars = function (
         $longArgument,
         $longerArgument,
         $muchLongerArgument
@@ -537,7 +584,7 @@ que se dividem por múltiplas linhas.
        // corpo
     };
     
-    $longArgs_shortVars = function (
+    $longArgsShortVars = function (
         $longArgument,
         $longerArgument,
         $muchLongerArgument
@@ -545,7 +592,7 @@ que se dividem por múltiplas linhas.
        // corpo
     };
     
-    $shortArgs_longVars = function ($arg) use (
+    $shortArgsLongVars = function ($arg) use (
         $longVar1,
         $longerVar2,
         $muchLongerVar3
@@ -567,6 +614,8 @@ $foo->bar(
     $arg3
 );
 ```
+
+- Nota: É aconselhavel retirar argumentos multiline de closures em variáveis para clarificar a leitura.
 
 ## Twig
 
@@ -688,7 +737,22 @@ retornar valores `void`.
 
 - DEVEM ser declarados as propriedades(atributos) de uma classe antes dos métodos.
 
-- Os métodos DEVEM ser declarados na ordem: `public`, `protected` e `private`
+- Os métodos DEVEM ser declarados na ordem: `public`, `protected` e `private`.
+    - Nota 1: Métodos mágicos(ex: __call, __construct), são independentes e DEVEM ficar no topo após a declaração de propriedades(atributos) de classe.
+    - Nota 2: Os métodos (menos os métodos mágicos) DEVEM ser declarados na ordem:
+        - Métodos abstratos {visibilidade}.
+        - Métodos {visibilidade}.
+        - Métodos estáticos {visibilidade}.
+        - Métodos finais {visibilidade}.
+
+- Resumindo a ordem padrão de declaração em classes é:
+    - Propriedades(atributos)
+    - Métodos mágicos
+    - Métodos abstratos {visibilidade}
+    - Métodos {visibilidade}
+    - Métodos estáticos {visibilidade}
+    - Métodos finais {visibilidade}
+
 
 - Os argumentos de um método DEVEM ser declarados na mesma linha de declaração do nome do método independente do número de argumentos. 
 
