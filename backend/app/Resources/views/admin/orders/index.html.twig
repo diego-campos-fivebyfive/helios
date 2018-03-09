@@ -75,6 +75,12 @@
             border-radius: 1px;
             padding: 2px !important;
         }
+        #filter_optionsVal {
+            width: 40%;
+        }
+        #filter_valueMin , #filter_valueMax {
+            width: 30%;
+        }
     </style>
 
 {% endblock %}
@@ -142,7 +148,7 @@
 
         <div class="row">
 
-                <div class="col-md-9">
+                <div class="col-md-10">
                     {{ form_start(form, {attr:{id:'form-filter'}}) }}
                     <div class="row">
                         <div class="form-group col-md-4">
@@ -161,17 +167,23 @@
                     <div class="row form-group">
                         {% set hasAgent = attribute(form, 'agent') is defined %}
                         {% if hasAgent %}
-                            <div class="col-md-3">
+                            <div class="col-md-2 ">
                                 {{ form_widget(form.agent,{attr:{class:'form-control'}}) }}
                             </div>
                         {% endif %}
 
-                        <div class="col-md-{{ hasAgent ? '2' : '4' }}">
+                        <div class="col-md-2">
                             {% include view('admin/helper/states_filter.html.twig') %}
                         </div>
 
-                        <div class="col-md-{{ hasAgent ? '3' : '4' }}">
+                        <div class="col-md-2">
                             {% include view('admin/helper/status_filter.html.twig') %}
+                        </div>
+
+                        <div class="group-input col-md-4">
+                            {{ form_widget(form.optionsVal,{attr:{class:'form-control'}}) }}
+                            {{ form_widget(form.valueMin,{attr:{class:'form-control', placeholder:'Mínimo' }}) }}
+                            {{ form_widget(form.valueMax,{attr:{class:'form-control', placeholder:'Máximo' }}) }}
                         </div>
 
                         <div class="col-md-2">
@@ -188,7 +200,7 @@
 
                 </div>
 
-                <div class="col-md-3 text-right">
+                <div class="col-md-2 text-right">
                     <div class="row form-group">
                         {% if allowAdd %}
                             <a data-url="{{ path('accounts_list') }}"
@@ -462,7 +474,66 @@
           StateFilter(form_filtration);
           StatusFilter(form_filtration);
         }
-        
+
+        $('#filter_valueMin').on('change', function () {
+            if ($('#filter_valueMax').val()) {
+                var thisValue = Number($(this).val().replace(',','.'));
+                var value = Number($('#filter_valueMax').val().replace(',','.'));
+
+                if (thisValue > value) {
+                    $(this).val((value.toString()).replace('.',','));
+                    $('#filter_valueMax').val((thisValue.toString()).replace('.',','));
+                }
+            }
+        });
+
+        $('#filter_valueMax').on('change', function () {
+            if ($('#filter_valueMin').val()) {
+                var thisValue = Number($(this).val().replace(',','.'));
+                var value = Number($('#filter_valueMin').val().replace(',','.'));
+
+                if (thisValue < value) {
+                    $(this).val((value.toString()).replace('.',','));
+                    $('#filter_valueMin').val((thisValue.toString()).replace('.',','));
+                }
+            }
+        });
+
+        var sanitize = function(element){
+          function clear(v){ return v.replace(/\D+/g,''); }
+          var value = element.val();
+          var backup = value.replace(/\./g,',');
+          value = clear(value);
+          if(backup.indexOf(',') > 0){
+            var commas = backup.split(',');
+            value = clear(commas[0])+',';
+            if(commas[1].length){
+              value += clear(commas[1]);
+            }
+          }
+          if(0 == backup.indexOf('-')){
+            if(2 == backup.split('-').length){
+              value = '-' + value;
+            }
+          }
+          element.val(value);
+        };
+
+        var custom_mask = function(element){
+          element.on('keyup', function(){
+            sanitize(element);
+          });
+        };
+
+        var common_mask = {pattern: '##,##', reverse: true};
+        var targets = {
+          'filter_valueMin': common_mask,
+          'filter_valueMax': common_mask
+        };
+
+        $.each(targets, function (id, options) {
+          custom_mask($('#'+id));
+        });
     </script>
 
 {% endblock %}

@@ -58,6 +58,23 @@ class FilterType extends AppFilterType
         $builder->add('dateAt', null, [
             'required' => false
         ]);
+
+        $optionsValues = [
+            'power' => 'Potência',
+            'total' => 'Valor'
+        ];
+
+        $builder->add('optionsVal', ChoiceType::class, [
+            'choices' => $optionsValues
+        ]);
+
+        $builder->add('valueMin', null, [
+            'required' => false
+        ]);
+
+        $builder->add('valueMax', null, [
+            'required' => false
+        ]);
     }
 
     /**
