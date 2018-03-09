@@ -31,6 +31,12 @@ get_current_stage() {
   echo 'Backlog-general'
 }
 
+get_current_category() {
+  echo $(echo $INFO | python -m json.tool | grep -oP '(?<="Category: ).*(?=",)' | tail -n1)
+}
+
 if [[ $2 == '--stage' ]]; then
   get_current_stage
+elif [[ $2 == '--category' ]]; then
+  get_current_category
 fi
