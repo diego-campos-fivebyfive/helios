@@ -32,6 +32,7 @@ LAST_BRANCH=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
 LAST_ISSUE=${LAST_BRANCH/issue-/}
 LAST_STAGE=$($CLI_PATH/ces-issue-info $LAST_ISSUE --stage)
 LAST_MODIF=$(git log origin/master..HEAD)
+LAST_CATEGORY=$($CLI_PATH/ces-issue-info $ISSUE --category)
 
 USER=$($CLI_PATH/util/github-credentials --user)
 NICK=$($CLI_PATH/util/user-credentials $USER --slack)
@@ -68,11 +69,11 @@ if [[ $STAGE == 'Blocked' ]]; then
 fi
 
 if [[ $LAST_STAGE == 'In-progress' ]] && [[ -z $LAST_MODIF ]]; then
-  read -p "You have not made any modifications. This script is going to delete local branch, move issue back to to-do column and unassign it. Do you agree? [Y/n]: " accept > /dev/tty
+  read -p "You have not made any modifications. This script is going to delete local branch, move issue back to to-do-${LAST_CATEGORY,,} column and unassign it. Do you agree? (n for block) [Y/n]: " accept > /dev/tty
 
   if [[ $accept == 'y' ]]; then
     $CLI_PATH/ces-slack-notify --devops "[$LAST_BRANCH] _${NICK}_ undid and canceled his progress on this issue"
-    $CLI_PATH/ces-issue-move $LAST_ISSUE --to-do
+    $CLI_PATH/ces-issue-move $LAST_ISSUE --to-do-${LAST_CATEGORY,,}
     $CLI_PATH/ces-issue-assign $LAST_ISSUE --unassign
     git branch -D $LAST_BRANCH
   else
