@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Entity\Misc\RankingInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 use Kolina\CustomerBundle\Entity\CustomerInterface;
 
 /**
@@ -242,4 +243,42 @@ interface AccountInterface extends CustomerInterface
      * @return MemberInterface|null
      */
     public function getAgent();
+
+    /**
+     * @param AccountInterface|null $account
+     * @return AccountInterface
+     */
+    public function setParentAccount(AccountInterface $account = null);
+
+    /**
+     * @return AccountInterface|null
+     */
+    public function getParentAccount();
+
+    /**
+     * @param AccountInterface $account
+     * @return AccountInterface
+     */
+    public function addChildAccount(AccountInterface $account);
+
+    /**
+     * @param AccountInterface $account
+     * @return AccountInterface
+     */
+    public function removeChildAccount(AccountInterface $account);
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getChildAccounts();
+
+    /**
+     * @return bool
+     */
+    public function isChildAccount();
+
+    /**
+     * @return bool
+     */
+    public function isParentAccount();
 }

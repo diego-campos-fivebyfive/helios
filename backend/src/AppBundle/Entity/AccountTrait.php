@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,11 +24,24 @@ trait AccountTrait
     protected $agent;
 
     /**
+     * @var AccountInterface|null
+     * @ORM\ManyToOne(targetEntity="Customer")
+     */
+    protected $parent;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\OneToMany(targetEntity="Customer", mappedBy="account", cascade={"persist", "remove"})
      */
     protected $members;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Customer", mappedBy="parent", cascade={"persist", "remove"})
+     */
+    protected $childAccounts;
 
     /**
      * @param $level
@@ -281,6 +295,86 @@ trait AccountTrait
         return $this->agent;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function setParentAccount(AccountInterface $parent = null)
+    {
+        $this->parent = $parent;
+
+        if($parent instanceof AccountInterface) {
+
+            if($parent->isChildAccount()){
+                throw new \InvalidArgumentException('The parent instance is child');
+            }
+
+            $this->parent->addChildAccount($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getParentAccount()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isChildAccount()
+    {
+        return !is_null($this->parent);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function addChildAccount(AccountInterface $account)
+    {
+        if(!$this->childAccounts->contains($account)){
+
+            $this->childAccounts->add($account);
+
+            $account->setParentAccount($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeChildAccount(AccountInterface $account)
+    {
+        if($this->childAccounts->contains($account)){
+
+            $this->childAccounts->removeElement($account);
+
+            $account->setParentAccount(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getChildAccounts()
+    {
+        return $this->childAccounts;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isParentAccount()
+    {
+        return !$this->childAccounts->isEmpty();
+    }
 
     /**
      * Ensure called context is account instance

@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Misc\RankingInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\UserInterface as FOSUser;
@@ -282,16 +281,17 @@ class Customer extends AbstractCustomer
      */
     public function __construct()
     {
-        $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->members = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->employees = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->authoredTasks = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->contactTasks = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->categories = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->assignedTasks = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->accessors = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->alloweds = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->orders = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->contacts = new ArrayCollection();
+        $this->members = new ArrayCollection();
+        $this->employees = new ArrayCollection();
+        $this->authoredTasks = new ArrayCollection();
+        $this->contactTasks = new ArrayCollection();
+        $this->categories = new ArrayCollection();
+        $this->assignedTasks = new ArrayCollection();
+        $this->accessors = new ArrayCollection();
+        $this->alloweds = new ArrayCollection();
+        $this->orders = new ArrayCollection();
+        $this->childAccounts = new ArrayCollection();
 
         $this->coordinates = [];
         $this->attributes = [];
