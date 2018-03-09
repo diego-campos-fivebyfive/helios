@@ -753,18 +753,6 @@ retornar valores `void`.
     - Métodos {visibilidade}
     - Métodos estáticos {visibilidade}
     - Métodos finais {visibilidade}
-    - Levar em consideração o fator instância/uso, onde ao ser solicitado a execução de um método, o mesmo já deve estar previamente carregado, exemplo:
-        ```php
-        // Nice
-        const plusOne = value => value + 1
-        // ...
-        const plusTwo = value => plusOne * 2 + value // right, i must use plusOne now
-
-        // So-so
-        const plusTwo = value => plusOne * 2 + value // So, where is plusOne?
-        //...
-        const plusOne = value => value + 1 // i finally found you, lets go back and run it
-        ```
 
 - Os argumentos de um método DEVEM ser declarados na mesma linha de declaração do nome do método independente do número de argumentos. 
 
