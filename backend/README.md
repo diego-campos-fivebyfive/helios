@@ -120,7 +120,7 @@ separadas por underscores.
 - Arquivos PHP DEVEM utilizar 4 espaços para indentação.
 
 - NÃO existe um limite absoluto no comprimento da linha; 
-O limite relativo DEVE ser de 120 caracteres; As linhas DEVERIAM ter 80 caracteres ou menos.
+O limite relativo DEVE ser de 120 caracteres.
 
 - Arquivos PHP DEVEM utilizar o padrão Unix LF (linefeed) de terminação
   de linhas.
@@ -216,7 +216,7 @@ com letras maiúsculas separadas pelo underscore. Por exemplo:
     Foo::bar($arg2, $arg3);
     ``` 
 - Listas de argumentos PODEM ser divididas em múltiplas linhas, onde cada linha
-  subsequente é identada uma vez. Quando fazendo isto, o primeiro item da lista
+  subsequente é identada uma vez. Quando for utilizado este formato, o primeiro item da lista
   DEVE estar na linha seguinte e DEVE haver somente um argumento por linha.
 
 - Exemplo:
@@ -336,7 +336,7 @@ Regras gerais:
   parenteses, espaços e chaves; e que `else` e `elseif` estão na mesma linha que
   a chave de fechamento do corpo da estrutura anterior.
 
-- A palavra-chave `elseif` DEVERIA ser utilizada ao invés de `else if` para que
+- A palavra-chave `elseif` DEVE ser utilizada ao invés de `else if` para que
 todas as palavras-chave de controle se pareçam com uma só palavra.
 	- Nota: É preferível usar funções puras com return para resolver regras de if ao invés do uso exagerado else /elseif.
 	- Exemplo:
@@ -543,7 +543,7 @@ de argumentos.
     ``` 
     
 - Listas de argumentos e variáveis PODEM ser dividas em múltiplas linhas, onde
-cada linha subsequente  é indentada uma vez. Quando fazendo isto, o primeiro
+cada linha subsequente  é indentada uma vez. Quando for utilizado este formato, o primeiro
 item da lista DEVE estar na próxima linha e DEVE haver somente um argumento ou
 variável por linha.
 
@@ -746,13 +746,25 @@ retornar valores `void`.
         - Métodos finais {visibilidade}.
 
 - Resumindo a ordem padrão de declaração em classes é:
+    - Constantes
     - Propriedades(atributos)
     - Métodos mágicos
     - Métodos abstratos {visibilidade}
     - Métodos {visibilidade}
     - Métodos estáticos {visibilidade}
     - Métodos finais {visibilidade}
+    - Levar em consideração o fator instância/uso, onde ao ser solicitado a execução de um método, o mesmo já deve estar previamente carregado, exemplo:
+        ```php
+        // Nice
+        const plusOne = value => value + 1
+        // ...
+        const plusTwo = value => plusOne * 2 + value // right, i must use plusOne now
 
+        // So-so
+        const plusTwo = value => plusOne * 2 + value // So, where is plusOne?
+        //...
+        const plusOne = value => value + 1 // i finally found you, lets go back and run it
+        ```
 
 - Os argumentos de um método DEVEM ser declarados na mesma linha de declaração do nome do método independente do número de argumentos. 
 
