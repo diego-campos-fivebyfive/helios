@@ -4,7 +4,7 @@
     ModalConfirm(ref='modalConfirm', v-on:removeItem='removeCoupon')
       div(slot='content')
         Icon.icon(name='question-circle-o', scale='4')
-        h2.text
+        h2
         | Confirma exclusão deste Cupom?
     Table.table(type='stripped')
       tr(slot='head')
@@ -32,7 +32,7 @@
             type='danger-common',
             icon='trash',
             pos='last',
-            v-on:click.native='showModalConfirm(coupon)')
+            v-on:click.native='showModalConfirm(coupon.id)')
 </template>
 
 <script>

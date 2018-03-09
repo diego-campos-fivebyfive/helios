@@ -12,7 +12,7 @@
         label='Fechar',
         pos='single')
       Button(
-        v-on:click.native='removeItem(item.id)',
+        v-on:click.native='removeItem',
         icon='trash',
         type='danger-common',
         label='Confirmar',
@@ -23,18 +23,18 @@
   export default {
     data: () => ({
       open: false,
-      item: {}
+      id: Number
     }),
     methods: {
       hide() {
         this.open = false
       },
-      show(item) {
-        this.item = item
+      show(id) {
+        this.id = id
         this.open = true
       },
-      removeItem(id) {
-        this.$emit('removeItem', id)
+      removeItem() {
+        this.$emit('removeItem', this.id)
       }
     }
   }
