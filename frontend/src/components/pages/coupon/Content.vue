@@ -1,9 +1,11 @@
 <template lang="pug">
   div
     Notification(ref='notification')
-    ModalConfirm(
-      ref='modalConfirm',
-      v-on:removeCoupon='removeCoupon')
+    ModalConfirm(ref='modalConfirm', v-on:removeItem='removeCoupon')
+      div(slot='content')
+        Icon.icon(name='question-circle-o', scale='4')
+        h2
+        | Confirma exclusão deste Cupom?
     Table.table(type='stripped')
       tr(slot='head')
         th Nome
@@ -30,16 +32,11 @@
             type='danger-common',
             icon='trash',
             pos='last',
-            v-on:click.native='showModalConfirm(coupon)')
+            v-on:click.native='showModalConfirm(coupon.id)')
 </template>
 
 <script>
-  import ModalConfirm from './ModalConfirm'
-
   export default {
-    components: {
-      ModalConfirm
-    },
     props: [
       'coupons'
     ],
@@ -48,10 +45,10 @@
         this.$emit('showModalForm', 'edit', coupon)
       },
       showModalConfirm(coupon) {
-        this.$refs.modalConfirm.showActionModal(coupon)
+        this.$refs.modalConfirm.show(coupon)
       },
       removeCoupon(id) {
-        this.$refs.modalConfirm.closeActionModal()
+        this.$refs.modalConfirm.hide()
 
         this.axios.delete(`/api/v1/coupon/${id}`)
           .then(() => {
