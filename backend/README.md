@@ -111,7 +111,7 @@ separadas por underscores.
 
 ### 2. Arquivos
 
-- Arquivos DEVEM usar somente as tags `<?php` e `<?=`.
+- Arquivos DEVEM usar somente a tag `<?php`.
 
 - Arquivos PHP DEVEM utilizar as tags 
    longas <?php ?> ou as tags de short-echo <?= ?>; 
