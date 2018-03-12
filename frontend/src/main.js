@@ -1,6 +1,7 @@
 import Button from '@/components/collection/Button'
 import Modal from '@/components/collection/Modal'
 import ModalConfirm from '@/components/collection/ModalConfirm'
+import ModalForm from '@/components/collection/ModalForm'
 import Notification from '@/components/collection/Notification'
 import Paginator from '@/components/collection/Paginator'
 import Panel from '@/components/collection/Panel'
@@ -19,6 +20,7 @@ Vue.component('Icon', Icon)
 Vue.component('Button', Button)
 Vue.component('Modal', Modal)
 Vue.component('ModalConfirm', ModalConfirm)
+Vue.component('ModalForm', ModalForm)
 Vue.component('Notification', Notification)
 Vue.component('Paginator', Paginator)
 Vue.component('Panel', Panel)
@@ -35,6 +37,7 @@ new Vue({
     Button,
     Modal,
     ModalConfirm,
+    ModalForm,
     Notification,
     Paginator,
     Panel,

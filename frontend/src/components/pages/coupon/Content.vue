@@ -42,7 +42,7 @@
     ],
     methods: {
       showModalForm(coupon) {
-        this.$emit('showModalForm', 'edit', coupon)
+        this.$emit('showModalForm', coupon)
       },
       showModalConfirm(coupon) {
         this.$refs.modalConfirm.show(coupon)
