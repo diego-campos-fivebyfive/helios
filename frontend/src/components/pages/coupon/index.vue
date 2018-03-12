@@ -3,6 +3,14 @@
     ModalForm(
       ref='modalForm',
       v-on:getCoupons='getCoupons')
+      ContentForm(slot='section')
+      Button(
+        slot='buttons',
+        v-on:click.native='send',
+        icon='save',
+        type='primary-strong',
+        label='Salvar',
+        pos='single')
     Panel.panel
       Head(
         slot='header',
@@ -20,14 +28,16 @@
 
 <script>
   import Content from './Content'
+  import ContentForm from './ContentForm'
   import Head from './Head'
-  import ModalForm from './ModalForm'
+  /*import ModalForm from './ModalForm'*/
 
   export default {
     components: {
       Content,
+      ContentForm,
       Head,
-      ModalForm
+      /*ModalForm*/
     },
     data: () => ({
       coupons: [],
@@ -35,7 +45,7 @@
     }),
     methods: {
       showModalForm(action, coupon) {
-        this.$refs.modalForm.showActionModal(action, coupon)
+        this.$refs.modalForm.show()
       },
       getCoupons(pageNumber = 1) {
         const uri = `/api/v1/coupon?page=${pageNumber}`
