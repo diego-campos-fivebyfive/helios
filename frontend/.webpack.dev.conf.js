@@ -9,12 +9,12 @@ const host = 'http://localhost:8000'
 const sessid = process.env.SICES_PHPSESSID
 
 ;(() => {
-  const testURL = `${host}/api/v1/coupon`
-
   if (!sessid) {
     console.error('ERROR: PHPSESSID env variable not exported')
     process.exit(1)
   }
+
+  const testURL = `${host}/api/v1/coupon`
 
   axios.get(testURL, {
     headers: {

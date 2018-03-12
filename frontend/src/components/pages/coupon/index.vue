@@ -1,7 +1,7 @@
 <template lang="pug">
   .wrapper
-    ModalForm(
-      ref='modalForm',
+    ContentForm(
+      ref='contentForm',
       v-on:getCoupons='getCoupons')
     Panel.panel
       Head(
@@ -20,22 +20,22 @@
 
 <script>
   import Content from './Content'
+  import ContentForm from './ContentForm'
   import Head from './Head'
-  import ModalForm from './ModalForm'
 
   export default {
     components: {
       Content,
-      Head,
-      ModalForm
+      ContentForm,
+      Head
     },
     data: () => ({
       coupons: [],
       pagination: {}
     }),
     methods: {
-      showModalForm(action, coupon) {
-        this.$refs.modalForm.showActionModal(action, coupon)
+      showModalForm(coupon) {
+        this.$refs.contentForm.showModalForm(coupon)
       },
       getCoupons(pageNumber = 1) {
         const uri = `/api/v1/coupon?page=${pageNumber}`
