@@ -84,13 +84,12 @@ Esclarecimentos gerais relacionados a documentação:
       ##### Execução de tarefas em fluxo normal:
 
         ```
-        1. Iniciada em Backlogs (general, devops)
-        2. Incluida em Sprint Semanal (to do)
-        3. Executada pelo Desenvolvedor (in progress)
-        4. Enviada para Revisão de código pela equipe (review)
-        5. Disponibilizada para teste em Homolog pelo desenvolvedor (testing I)
-        6. Revisada pela equipe de produto, caso necessário (testing II)
-        7. Marcada como concluída (done)
+        1. Iniciada nas colunas TO DO: (General, Backend, Frontend, Devops)
+        2. Executada pelo Desenvolvedor (in progress)
+        3. Enviada para Revisão de código pela equipe (review)
+        4. Disponibilizada para teste em Homolog pelo desenvolvedor (testing I)
+        5. Revisada pela equipe de produto, caso necessário (testing II)
+        6. Marcada como concluída (done)
         ```
 
       ##### Execução de tarefas por fluxo reiniciado:
@@ -128,11 +127,12 @@ Esclarecimentos gerais relacionados a documentação:
   <a name="workflow--flags"></a><a name="2.5"></a>
   - [2.5](#workflow--flags) **Solicitações no Slack**: utilizamos por padrão flags de classificações no início de cada solicitação.
 
-    - **HELP**: para solicitar ajuda/pair (chat [tech](https://kolinalabs-si.slack.com/messages/C65HXPEQM))
-    - **REVIEW**: para solicitar review (chat [devops](https://kolinalabs-si.slack.com/messages/C64ACCF2M))
-    - **TEST**: para solicitar test (chat [devops](https://kolinalabs-si.slack.com/messages/C64ACCF2M))
+    - **REVIEW**: a notificação de REVIEW, é direcionada para o channel correto, de acordo com a categoria (chat [devops](https://kolinalabs-si.slack.com/messages/C64ACCF2M))
+    - **TEST**: a notificação de TEST, é direcionada para o channel correto, e também direcionada para o slackboot do Product_Tester (chat [devops](https://kolinalabs-si.slack.com/messages/C64ACCF2M))
 
-    `Ex.: @here, REVIEW: https://github.com/sices/sices/pull/0000`
+    `Ex.: @here: _joaozaqueuchereta_ needs a *REVIEW*: https://github.com/sices/sices/pull/1863/files`
+    
+    > **Nota**: Para o Product_Tester é direcionada a notificação + possiveis descrições referentes ao TEST
 
     Para responder uma solicitação utilizamos por padrão o nome de usuário junto a resposta.
 
@@ -349,6 +349,7 @@ Esclarecimentos gerais relacionados a documentação:
     - ##### 5.2.3. **Etiquetas de categorias (category)**
 
       - `Backend`: Utilizada para issues server side.
+      - `Backend (+Twig)`: Utilizada para issues server side, com alterações na twig.
       - `Devops`: Utilizada para issues relacionadas ao devops.
       - `Docs`: Utilizada para issues de documentação.
       - `Frontend`: Utilizada para issues client side.
@@ -381,9 +382,11 @@ Esclarecimentos gerais relacionados a documentação:
 
     - ##### 5.2.5. **Colunas e estágios (stage)**:
 
-      - `Backlog General`: Utilizada para issues fora da sprint de contexto geral.
-      - `Backlog Devops`: Utilizada para issues fora da sprint de contexto devops.
-      - `To Do`: Utilizada para indicar issues da sprint atual para execução.
+      - `To do`:
+        - `General`: Utilizada para issues de contexto geral.
+        - `Backend`: Utilizada para issues de contexto backend
+        - `Frontend`: Utilizada para issues de contexto Frontend (tarefas que utilizam VueJs).
+        - `Devops`: Utilizada para issues de contexto Devops.
       - `Blocked`: Utilizada para indicar issues bloqueadas ou pausadas.
       - `In Progress`: Utilizada para issues em progresso.
       - `Review`: Utilizada para issues em revisão.
@@ -418,7 +421,7 @@ Esclarecimentos gerais relacionados a documentação:
   <a name="tarefas--start"></a><a name="5.4"></a>
   - [5.4](#tarefas--start) **Processos executados pelo comando ces-issue-start**:
 
-    | Stage From  | BG\|BD\|TD | B                | IP     | IP   | R   | TI     | TI     | TII\|D |
+    | Stage From  | TD's       | B                | IP     | IP   | R   | TI     | TI     | TII\|D |
     | :---        | :---:      | :---:            | :---:  | :--: | :-: | :---:  | :---:  | :---:  |
     | Conditional | --         | --               | [N]    | [Y]  | --  | [Y]    | [N]    | --     |
     | Branch      | Create     | Create \| Update | Remove | Keep | X   | Delete | Delete | --     |
@@ -429,11 +432,11 @@ Esclarecimentos gerais relacionados a documentação:
 
     - #### Legenda:
     ```
-    BG: Backlog General       IP: In progress
-    BD: Backlog Devops        B: Blocked
-    TD: To do                 R: Review
-    TI: Testing I             D: Done
-    TII: Testing II
+    TD's: General, Backend, Frontend, Devops
+    
+    IP: In progress           B: Blocked
+    TI: Testing I             R: Review
+    TII: Testing II           D: Done
 
     [N]: Decline          --: Not exist
     [Y]: Accept           X: Not permited
@@ -824,15 +827,6 @@ Esclarecimentos gerais relacionados a documentação:
     Slack: @gianlucabine
     Github: @Pr3d4dor
     E-mail: gian_bine@hotmail.com
-    ```
-
-    - #### Gustavo Henrique Jacomel
-    ```
-    Backend developer
-    Slack: @gustavojacomel
-    Github: @Suxgotav
-    E-mail: gustavojacomel@hotmail.com
-    ```
 
     - #### João Zaqueu Chereta
     ```
