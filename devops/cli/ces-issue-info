@@ -35,8 +35,26 @@ get_current_category() {
   echo $(echo $INFO | python -m json.tool | grep -oP '(?<="Category: ).*(?=",)' | tail -n1)
 }
 
+get_category_channel() {
+  local category=$(get_current_category $1)
+
+  case $category in
+    Frontend )
+      echo ${category,,}
+      ;;
+    Backend* )
+      echo 'backend'
+      ;;
+    * )
+      echo 'developers'
+      ;;
+  esac
+}
+
 if [[ $2 == '--stage' ]]; then
   get_current_stage
 elif [[ $2 == '--category' ]]; then
   get_current_category
+elif [[ $2 == '--category-channel' ]]; then
+  get_category_channel
 fi
