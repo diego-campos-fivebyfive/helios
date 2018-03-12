@@ -14,7 +14,7 @@ BRANCH_CURRENT=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
 BRANCH=$([[ $2 ]] && echo "issue-$2" || echo $BRANCH_CURRENT)
 ISSUE=${BRANCH/issue-/}
 ISSUE_CATEGORY=$($CLI_PATH/ces-issue-info $ISSUE --category)
-LOGS_CHANNEL=$($CLI_PATH/ces-issue-info $1 --category-channel)
+LOGS_CHANNEL=$($CLI_PATH/ces-issue-info $ISSUE --category-channel)
 
 USER=$($CLI_PATH/util/github-credentials --user)
 NICK=$($CLI_PATH/util/user-credentials $USER --slack)
