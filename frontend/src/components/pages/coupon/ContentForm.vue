@@ -90,7 +90,7 @@
 
         if (coupon) {
           this.modal.action = 'edit'
-          this.form = coupon
+          this.form.payload = Object.assign({}, coupon)
         } else {
           this.modal.action = 'create'
         }
