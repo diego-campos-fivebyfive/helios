@@ -11,6 +11,7 @@ cd $SICES_PATH
 
 BRANCH=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
 ISSUE=${BRANCH/issue-/}
+LOGS_CHANNEL=$($CLI_PATH/ces-issue-info $ISSUE --category-channel)
 
 if [[ -n $1 ]]; then
   echo "Note: only current branch could be restarted. You can just run ces-issue-restart next time, without $1 argument."
@@ -28,4 +29,4 @@ $CLI_PATH/ces-issue-move $ISSUE --in-progress
 USER=$($CLI_PATH/util/github-credentials --user)
 NICK=$($CLI_PATH/util/user-credentials $USER --slack)
 
-$CLI_PATH/ces-slack-notify --devops "[issue-$ISSUE] _${NICK}_ still working on it"
+$CLI_PATH/ces-slack-notify "--${LOGS_CHANNEL}" "[issue-$ISSUE] _${NICK}_ still working on it"

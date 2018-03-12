@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+readonly LOGS_CHANNEL=$($CLI_PATH/ces-issue-info $1 --category-channel)
+
 if [[ $1 == 'undefined' ]]; then
   if [[ $2 == 'true' ]]; then
     message='*<https://github.com/sices/sices/blob/master/docs/meetings/roadmap/draft.md|Draft updated>*'
@@ -7,7 +9,7 @@ if [[ $1 == 'undefined' ]]; then
     message='*"someone committed on master..."*'
   fi
 
-  $CLI_PATH/ces-slack-notify --devops "$message"
+  $CLI_PATH/ces-slack-notify "--${LOGS_CHANNEL}" "$message"
   exit 0
 fi
 
@@ -19,4 +21,4 @@ if [[ $stage == 'Review' ]]; then
 fi
 
 $CLI_PATH/ces-app-deploy --$CES_AMBIENCE
-$CLI_PATH/ces-slack-notify --devops "$message"
+$CLI_PATH/ces-slack-notify "--${LOGS_CHANNEL}" "$message"

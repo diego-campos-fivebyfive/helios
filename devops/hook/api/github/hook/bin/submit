@@ -13,6 +13,9 @@ reviewer=$($CLI_PATH/util/user-credentials $(arg '3') --slack)
 state=$(arg '4')
 link=$(arg '5')
 
+ISSUE=${title/issue-/}
+LOGS_CHANNEL=$($CLI_PATH/ces-issue-info $ISSUE --category-channel)
+
 [[ $ACTION == '--answer' ]] && {
   message="[${title}] _${developer}_ had answered a pull-request comment ${link}"
 }
@@ -22,4 +25,4 @@ link=$(arg '5')
   message="[${title}] @${nickname}: _${reviewer}_ ${state} pull-request ${link}"
 }
 
-$CLI_PATH/ces-slack-notify --devops "${message}"
+$CLI_PATH/ces-slack-notify "--${LOGS_CHANNEL}" "${message}"
