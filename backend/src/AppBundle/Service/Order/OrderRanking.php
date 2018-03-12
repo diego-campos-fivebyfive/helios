@@ -66,7 +66,9 @@ class OrderRanking
 
             $amount = ceil($order->getPower() * self::$mapping[$order->getLevel()]);
 
-            $target = $order->getAccount();
+            $account = $order->getAccount();
+
+            $target = $account->isChildAccount() ? $account->getParentAccount() : $account;
 
             return $this->rankingGenerator()->create($target, $description, $amount);
         }
