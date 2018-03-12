@@ -5,39 +5,42 @@
         label.half
           | Nome
           input(
-            v-model='form.name',
+            v-model='form.payload.name',
             placeholder='Nome')
         label.half
           | Valor
           input(
-            v-model='form.amount',
+            v-model='form.payload.amount',
             placeholder='Valor')
         label.full
           | Conta
           Select(
-            v-model='form.account',
-            :selected='form.account.id',
-            :options='options.accounts',
+            v-model='form.payload.account',
+            :selected='form.payload.account.id',
+            :options='form.options.accounts',
             v-on:update='updateAccount')
     Button(
       slot='buttons',
-      v-on:click.native='send',
       icon='save',
       type='primary-strong',
       label='Salvar',
-      pos='single')
+      pos='single',
+      v-on:click.native='send')
 </template>
 
 <script>
   export default {
     data: () => ({
-      options: {
-        accounts: []
-      },
       form: {
-        name: '',
-        amount: null,
-        account: {}
+        default: {
+          name: '',
+          amount: null,
+          account: {}
+        },
+        payload: {},
+        options: {
+          accounts: []
+        }
       },
       modal: {
         action: ''
@@ -45,13 +48,13 @@
     }),
     methods: {
       updateAccount(account) {
-        this.form.account = {
+        this.form.payload.account = {
           id: account.value,
           name: account.text
         }
       },
       createCoupon() {
-        this.axios.post('api/v1/coupon/', this.form)
+        this.axios.post('api/v1/coupon/', this.form.payload)
           .then(() => {
             this.$emit('getCoupons')
             this.$refs.modalForm.notify('Cupom cadastrado com sucesso')
@@ -61,7 +64,7 @@
           })
       },
       editCoupon() {
-        this.axios.put(`api/v1/coupon/${this.form.id}`, this.form)
+        this.axios.put(`api/v1/coupon/${this.form.id}`, this.form.payload)
           .then(() => {
             this.$emit('getCoupons')
             this.$refs.modalForm.notify('Cupom editado com sucesso')
@@ -71,7 +74,7 @@
           })
       },
       send() {
-        if (!/^(\d{1,3}(\.\d{3})*|\d+)(\,\d{2})?$/.test(this.form.amount)) {
+        if (!/^(\d{1,3}(\.\d{3})*|\d+)(\,\d{2})?$/.test(this.form.payload.amount)) {
           this.$refs.modalForm.notify('Formato de moeda em Real invalido')
           return
         }
@@ -86,14 +89,14 @@
         this.editCoupon()
       },
       showModalForm(coupon) {
-        this.$refs.modalForm.show()
-
         if (coupon) {
           this.modal.action = 'edit'
           this.form.payload = Object.assign({}, coupon)
         } else {
           this.modal.action = 'create'
         }
+
+        this.$refs.modalForm.show()
       }
     },
     mounted() {
@@ -107,7 +110,7 @@
           const accounts = response.data
           accounts.unshift(defaultOption)
 
-          this.options.accounts = accounts.map(account => ({
+          this.form.options.accounts = accounts.map(account => ({
             value: account.id,
             text: account.name
           }))
