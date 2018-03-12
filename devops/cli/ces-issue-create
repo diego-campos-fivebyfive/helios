@@ -9,6 +9,9 @@ if [[ $1 = '--help' ]] || [[ $1 = '-h' ]]; then
   exit 0
 fi
 
+echo 'Command Temporary Deprecated, Issue: #1853'
+exit 0
+
 # colors pallet
 CT='\033[0;33m'
 CI='\033[0;32m'
