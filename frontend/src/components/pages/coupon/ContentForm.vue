@@ -94,6 +94,7 @@
           this.form.payload = Object.assign({}, coupon)
         } else {
           this.modal.action = 'create'
+          this.from.payload = this.from.default
         }
 
         this.$refs.modalForm.show()
