@@ -378,17 +378,17 @@
                                                                         <i class="fa fa-briefcase"></i> Troca de Nível
                                                                     </div>
                                                                     <div class="panel-body">
-                                                                        {% set form_titanium = form_params.account_level_handler.levels.titanium %}
-                                                                        {% set form_black = form_params.account_level_handler.levels.black %}
                                                                         {% set form_partner = form_params.account_level_handler.levels.partner %}
-                                                                        {% set form_platinum = form_params.account_level_handler.levels.platinum %}
                                                                         {% set form_premium = form_params.account_level_handler.levels.premium %}
+                                                                        {% set form_platinum = form_params.account_level_handler.levels.platinum %}
+                                                                        {% set form_black = form_params.account_level_handler.levels.black %}
+                                                                        {% set form_titanium = form_params.account_level_handler.levels.titanium %}
 
-                                                                        {{ this.formLevel(form_titanium) }}
-                                                                        {{ this.formLevel(form_black) }}
                                                                         {{ this.formLevel(form_partner) }}
-                                                                        {{ this.formLevel(form_platinum) }}
                                                                         {{ this.formLevel(form_premium) }}
+                                                                        {{ this.formLevel(form_platinum) }}
+                                                                        {{ this.formLevel(form_black) }}
+                                                                        {{ this.formLevel(form_titanium) }}
 
                                                                         <div class="row">
                                                                             <div class="form-group">

@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use AppBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
  * @Security("has_role('ROLE_PLATFORM_COMMERCIAL') or has_role('ROLE_PLATFORM_EXPANSE')")
@@ -129,6 +130,25 @@ class StockController extends AbstractController
         return $this->render('admin/stock/form.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/families", name="families_stock")
+     * @Method("POST")
+     */
+    public function familiesAction(Request $request)
+    {
+        $manager = $this->manager('parameter');
+
+        /** @var Parameter $parameter */
+        $parameter = $manager->findOrCreate('platform_settings');
+
+        $families = $request->request->get('stock_control_families');
+
+        $parameter->set('stock_control_families', $families ?? []);
+        $manager->save($parameter);
+
+        return $this->json([]);
     }
 
     /**

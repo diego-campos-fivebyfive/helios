@@ -33,9 +33,11 @@ LAST_ISSUE=${LAST_BRANCH/issue-/}
 LAST_STAGE=$($CLI_PATH/ces-issue-info $LAST_ISSUE --stage)
 LAST_MODIF=$(git log origin/master..HEAD)
 LAST_CATEGORY=$($CLI_PATH/ces-issue-info $LAST_ISSUE --category)
+LAST_CHANNEL=$($CLI_PATH/ces-issue-info $LAST_ISSUE --category-channel)
 
 USER=$($CLI_PATH/util/github-credentials --user)
 NICK=$($CLI_PATH/util/user-credentials $USER --slack)
+LOGS_CHANNEL=$($CLI_PATH/ces-issue-info $1 --category-channel)
 
 if [[ $LAST_STAGE == 'Review' ]]; then
   echo "Forbidden: You must stand $LAST_BRANCH reviews and merge to be able to start a new one."
@@ -72,7 +74,7 @@ if [[ $LAST_STAGE == 'In-progress' ]] && [[ -z $LAST_MODIF ]]; then
   read -p "You have not made any modifications. This script is going to delete local branch, move issue back to to-do-${LAST_CATEGORY,,} column and unassign it. Do you agree? (n for block) [Y/n]: " accept > /dev/tty
 
   if [[ $accept == 'y' ]]; then
-    $CLI_PATH/ces-slack-notify --devops "[$LAST_BRANCH] _${NICK}_ undid and canceled his progress on this issue"
+    $CLI_PATH/ces-slack-notify "--${LAST_CHANNEL}" "[$LAST_BRANCH] _${NICK}_ undid and canceled his progress on this issue"
     $CLI_PATH/ces-issue-move $LAST_ISSUE --to-do-${LAST_CATEGORY,,}
     $CLI_PATH/ces-issue-assign $LAST_ISSUE --unassign
     git branch -D $LAST_BRANCH
@@ -108,6 +110,6 @@ fi
 $CLI_PATH/ces-issue-assign $1
 $CLI_PATH/ces-issue-move $1 --in-progress
 
-$CLI_PATH/ces-slack-notify --devops "[issue-$1] _${NICK}_ has been working on it"
+$CLI_PATH/ces-slack-notify "--${LOGS_CHANNEL}" "[issue-$1] _${NICK}_ has been working on it"
 $CLI_PATH/util/user-notify 'Branch created' "now on issue-$1"
 echo "Everything done, now on Branch: issue-$1"

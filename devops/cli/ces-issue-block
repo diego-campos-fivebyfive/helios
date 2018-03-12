@@ -21,6 +21,7 @@ else
   ISSUE=$1
 fi
 
+
 get_issue_description() {
   echo $(curl -s -X GET -u $LOGIN $GITHUB_REPOSITORY/issues/$ISSUE |
     grep -oP '(?<="body": ").*(?=",)')
@@ -41,4 +42,6 @@ curl -s -X PATCH -u $LOGIN -d "$json" $GITHUB_REPOSITORY/issues/$ISSUE > /dev/nu
 git push origin $BRANCH
 
 $CLI_PATH/ces-issue-move $ISSUE --blocked
-$CLI_PATH/ces-slack-notify --devops "[$BRANCH] has been blocked by _${NICK}_"
+
+LOGS_CHANNEL=$($CLI_PATH/ces-issue-info $ISSUE --category-channel)
+$CLI_PATH/ces-slack-notify "--${LOGS_CHANNEL}" "[$BRANCH] has been blocked by _${NICK}_"

@@ -14,6 +14,7 @@ BRANCH_CURRENT=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
 BRANCH=$([[ $2 ]] && echo "issue-$2" || echo $BRANCH_CURRENT)
 ISSUE=${BRANCH/issue-/}
 ISSUE_CATEGORY=$($CLI_PATH/ces-issue-info $ISSUE --category)
+LOGS_CHANNEL=$($CLI_PATH/ces-issue-info $ISSUE --category-channel)
 
 USER=$($CLI_PATH/util/github-credentials --user)
 NICK=$($CLI_PATH/util/user-credentials $USER --slack)
@@ -51,22 +52,6 @@ get_pull_request_current() {
   fi
 }
 
-get_review_channel() {
-  local category=$1
-
-  case $category in
-    Frontend )
-      echo ${category,,}
-      ;;
-    Backend* )
-      echo 'backend'
-      ;;
-    * )
-      echo 'developers'
-      ;;
-  esac
-}
-
 PR_FILE=$CLI_PATH/stash/temp/.ces-pull-request
 [[ -f $PR_FILE ]] && PR_CURRENT=$(get_pull_request_current)
 
@@ -98,16 +83,15 @@ if [[ $1 == '--review' ]]; then
 
   url="https://github.com/sices/sices/pull/$pr/files"
   message="[$BRANCH] @here: _${NICK}_ needs a *REVIEW*: $url"
-  channel=$(get_review_channel $ISSUE_CATEGORY)
 
-  $CLI_PATH/ces-slack-notify "--${channel}" "$message"
+  $CLI_PATH/ces-slack-notify "--${LOGS_CHANNEL}" "$message"
   $CLI_PATH/ces-issue-move $ISSUE --review
 
 elif [[ $1 == '--testing' ]]; then
   read -p 'Enter some additional testing information and/or press ENTER to go: ' additional > /dev/tty
 
   message="[$BRANCH] _${NICK}_ has requested a use *TEST*"
-  $CLI_PATH/ces-slack-notify --devops "$message"
+  $CLI_PATH/ces-slack-notify "--${LOGS_CHANNEL}" "$message"
 
   [[ -n $additional ]] && message="${message}: _${additional}_"
   $CLI_PATH/ces-slack-notify --tester "$message"
