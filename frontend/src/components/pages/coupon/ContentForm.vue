@@ -1,33 +1,31 @@
 <template lang="pug">
-  div
-    Notification(ref='notification')
-    ModalForm(ref='modalForm')
-      form(slot='section', name='coupon')
-        fieldset.fields
-          label.half
-            | Nome
-            input(
+  ModalForm(ref='modalForm')
+    form(slot='section', name='coupon')
+      fieldset.fields
+        label.half
+          | Nome
+          input(
             v-model='form.name',
             placeholder='Nome')
-          label.half
-            | Valor
-            input(
+        label.half
+          | Valor
+          input(
             v-model='form.amount',
             placeholder='Valor')
-          label.full
-            | Conta
-            Select(
-              v-model='form.account',
-              :selected='form.account.id',
-              :options='options.accounts',
-              v-on:update='updateAccount')
-      Button(
-        slot='buttons',
-        v-on:click.native='send',
-        icon='save',
-        type='primary-strong',
-        label='Salvar',
-        pos='single')
+        label.full
+          | Conta
+          Select(
+            v-model='form.account',
+            :selected='form.account.id',
+            :options='options.accounts',
+            v-on:update='updateAccount')
+    Button(
+      slot='buttons',
+      v-on:click.native='send',
+      icon='save',
+      type='primary-strong',
+      label='Salvar',
+      pos='single')
 </template>
 
 <script>
@@ -56,25 +54,25 @@
         this.axios.post('api/v1/coupon/', this.form)
           .then(() => {
             this.$emit('getCoupons')
-            this.$refs.notification.notify('Cupom cadastrado com sucesso')
+            this.$refs.modalForm.notify('Cupom cadastrado com sucesso')
           })
           .catch(() => {
-            this.$refs.notification.notify('Não foi possível cadastrar cupom')
+            this.$refs.modalForm.notify('Não foi possível cadastrar cupom')
           })
       },
       editCoupon() {
         this.axios.put(`api/v1/coupon/${this.form.id}`, this.form)
           .then(() => {
             this.$emit('getCoupons')
-            this.$refs.notification.notify('Cupom editado com sucesso')
+            this.$refs.modalForm.notify('Cupom editado com sucesso')
           })
           .catch(() => {
-            this.$refs.notification.notify('Não foi possível editar cupom')
+            this.$refs.modalForm.notify('Não foi possível editar cupom')
           })
       },
       send() {
         if (!/^(\d{1,3}(\.\d{3})*|\d+)(\,\d{2})?$/.test(this.form.amount)) {
-          this.$refs.notification.notify('Formato de moeda em Real invalido')
+          this.$refs.modalForm.notify('Formato de moeda em Real invalido')
           return
         }
 
@@ -96,10 +94,6 @@
         } else {
           this.modal.action = 'create'
         }
-      },
-      setForm(action, coupon) {
-        this.modal.action = action
-
       }
     },
     mounted() {

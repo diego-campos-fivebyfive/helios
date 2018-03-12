@@ -2,7 +2,7 @@
   .wrapper
     ContentForm(
       ref='contentForm',
-      v-on:getCoupons='getCoupons',)
+      v-on:getCoupons='getCoupons')
     Panel.panel
       Head(
         slot='header',
@@ -27,7 +27,7 @@
     components: {
       Content,
       ContentForm,
-      Head,
+      Head
     },
     data: () => ({
       coupons: [],

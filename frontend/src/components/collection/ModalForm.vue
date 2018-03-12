@@ -1,5 +1,6 @@
 <template lang="pug">
   .collection-modal-form
+    Notification(ref='notification')
     Modal(ref='modal')
       slot(name='header', slot='header')
       slot(name='section', slot='section')
@@ -14,6 +15,9 @@
       },
       show() {
         this.$refs.modal.show()
+      },
+      notify(message) {
+        this.$refs.notification.notify(message)
       }
     }
   }
@@ -50,8 +54,8 @@
         margin-top: $ui-space-y/2;
         width: 100%;
         transition:
-                border-color 150ms ease-in-out 0s,
-                box-shadow 150ms ease-in-out 0s;
+          border-color 150ms ease-in-out 0s,
+          box-shadow 150ms ease-in-out 0s;
 
         &:focus {
           border-color: $ui-blue-light;
