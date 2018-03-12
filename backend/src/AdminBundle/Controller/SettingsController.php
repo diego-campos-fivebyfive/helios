@@ -35,9 +35,11 @@ class SettingsController extends AdminController
 
             $parameters = $parameter->getParameters();
 
-            foreach ($parameters['order_expiration_days'] as $key => $expiration)
-                if (is_null($expiration['status']) || is_null($expiration['days']))
+            foreach ($parameters['order_expiration_days'] as $key => $expiration) {
+                if (is_null($expiration['status']) || is_null($expiration['days'])) {
                     unset($parameters['order_expiration_days'][$key]);
+                }
+            }
 
             $parameter->setParameters($parameters);
 
