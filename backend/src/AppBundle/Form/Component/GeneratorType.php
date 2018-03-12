@@ -143,7 +143,7 @@ class GeneratorType extends AbstractType
             ])
         ;
 
-        $this->addPromotionalSelector($builder, $defaults['level']);
+        $this->addPromotionalSelector($builder, $defaults['account_level']);
         $this->addFinameSelector($builder);
     }
 
@@ -164,9 +164,11 @@ class GeneratorType extends AbstractType
      */
     private function addPromotionalSelector(FormBuilderInterface $builder, $level)
     {
+        /** @var Parameter $parameter */
         $parameter = $this->checker->getEntityManager()->getRepository(Parameter::class)->find('platform_settings');
+        $levels = (array) $parameter->get('promo_enabled_levels');
 
-        if($parameter instanceof Parameter && $parameter->get('enable_promo') && in_array($level, $parameter->get('promo_enabled_levels'))){
+        if($parameter->get('enable_promo') && in_array($level, $levels)){
 
             $builder->add('is_promotional', CheckboxType::class, [
                 'required' => false
