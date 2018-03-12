@@ -1,18 +1,8 @@
 <template lang="pug">
   .wrapper
-    ModalForm(
-      ref='modalForm',
-      v-on:getCoupons='getCoupons')
-      ContentForm(
-        slot='section',
-        ref='contentForm')
-      Button(
-        slot='buttons',
-        v-on:click.native='send',
-        icon='save',
-        type='primary-strong',
-        label='Salvar',
-        pos='single')
+    ContentForm(
+      ref='contentForm',
+      v-on:getCoupons='getCoupons',)
     Panel.panel
       Head(
         slot='header',
@@ -32,14 +22,12 @@
   import Content from './Content'
   import ContentForm from './ContentForm'
   import Head from './Head'
-  /*import ModalForm from './ModalForm'*/
 
   export default {
     components: {
       Content,
       ContentForm,
       Head,
-      /*ModalForm*/
     },
     data: () => ({
       coupons: [],
@@ -47,13 +35,7 @@
     }),
     methods: {
       showModalForm(coupon) {
-        this.$refs.modalForm.show()
-
-        if (coupon) {
-          this.$refs.contentForm.setForm('edit', coupon)
-        } else {
-          this.$refs.contentForm.setForm('create', { account: {} })
-        }
+        this.$refs.contentForm.showModalForm(coupon)
       },
       getCoupons(pageNumber = 1) {
         const uri = `/api/v1/coupon?page=${pageNumber}`

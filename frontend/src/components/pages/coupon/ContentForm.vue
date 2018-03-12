@@ -1,24 +1,33 @@
 <template lang="pug">
   div
-    form(ref='send', name='coupon')
-      fieldset.fields
-        label.half
-          | Nome
-          input(
-          v-model='form.name',
-          placeholder='Nome')
-        label.half
-          | Valor
-          input(
-          v-model='form.amount',
-          placeholder='Valor')
-        label.full
-          | Conta
-          Select(
-            v-model='form.account',
-            :selected='form.account.id',
-            :options='options.accounts',
-            v-on:update='updateAccount')
+    Notification(ref='notification')
+    ModalForm(ref='modalForm')
+      form(slot='section', name='coupon')
+        fieldset.fields
+          label.half
+            | Nome
+            input(
+            v-model='form.name',
+            placeholder='Nome')
+          label.half
+            | Valor
+            input(
+            v-model='form.amount',
+            placeholder='Valor')
+          label.full
+            | Conta
+            Select(
+              v-model='form.account',
+              :selected='form.account.id',
+              :options='options.accounts',
+              v-on:update='updateAccount')
+      Button(
+        slot='buttons',
+        v-on:click.native='send',
+        icon='save',
+        type='primary-strong',
+        label='Salvar',
+        pos='single')
 </template>
 
 <script>
@@ -78,9 +87,19 @@
 
         this.editCoupon()
       },
+      showModalForm(coupon) {
+        this.$refs.modalForm.show()
+
+        if (coupon) {
+          this.modal.action = 'edit'
+          this.form = coupon
+        } else {
+          this.modal.action = 'create'
+        }
+      },
       setForm(action, coupon) {
         this.modal.action = action
-        this.form = coupon
+
       }
     },
     mounted() {
