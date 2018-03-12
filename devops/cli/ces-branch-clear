@@ -16,6 +16,7 @@ BRANCH="issue-$1"
 STAGE=$($CLI_PATH/ces-issue-info $ISSUE --stage)
 USER=$($CLI_PATH/util/github-credentials --user)
 NICK=$($CLI_PATH/util/user-credentials $USER --slack)
+LOGS_CHANNEL=$($CLI_PATH/ces-issue-info $ISSUE --category-channel)
 
 if [ "$2" != '-f' ] && [[ ( $STAGE != 'Testing-tech' && $STAGE != 'Testing-product' && $STAGE != 'Closed' ) ]]; then
   read -p "Note: issue-$1 is not on testing column, if there is any opened Pull Request related to this branch, you'll must delete it manually using ces-issue-close after it be tested. Press ENTER to continue."
@@ -31,4 +32,4 @@ fi
 git branch -D $BRANCH
 git push origin --delete $BRANCH > /dev/null 2>&1
 
-$CLI_PATH/ces-slack-notify --devops "[$BRANCH] _${NICK}_ closed these issue local and remote branch"
+$CLI_PATH/ces-slack-notify "--${LOGS_CHANNEL}" "[$BRANCH] _${NICK}_ closed these issue local and remote branch"

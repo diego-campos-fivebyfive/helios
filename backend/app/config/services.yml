@@ -409,3 +409,7 @@ services:
     word_processor:
         class: AppBundle\Service\Proposal\WordProcessor
         arguments: ['@service_container']
+
+    order_stock_checker:
+        class: AppBundle\Service\Order\StockChecker
+        arguments: ['@service_container']

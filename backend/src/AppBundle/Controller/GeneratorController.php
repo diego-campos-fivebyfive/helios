@@ -49,11 +49,14 @@ class GeneratorController extends AbstractController
             $baseDefaults['level'] = $project->getLevel();
         }
 
+        $baseDefaults['account_level'] = $project->getLevel();
+
         $defaults = $generator->loadDefaults($baseDefaults);
 
         $form = $this->createForm(GeneratorType::class, $defaults, [
             'action' => $action
         ]);
+
         $project->setSource($request->get('source'));
 
         $form->handleRequest($request);
