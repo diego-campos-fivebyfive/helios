@@ -78,13 +78,9 @@
 
         this.editCoupon()
       },
-      showActionModal(action, coupon) {
-        if (coupon) {
-          this.form = coupon
-        }
-
+      setForm(action, coupon) {
         this.modal.action = action
-        this.$refs.modalForm.show()
+        this.form = coupon
       }
     },
     mounted() {

@@ -3,7 +3,9 @@
     ModalForm(
       ref='modalForm',
       v-on:getCoupons='getCoupons')
-      ContentForm(slot='section')
+      ContentForm(
+        slot='section',
+        ref='contentForm')
       Button(
         slot='buttons',
         v-on:click.native='send',
@@ -44,8 +46,14 @@
       pagination: {}
     }),
     methods: {
-      showModalForm(action, coupon) {
+      showModalForm(coupon) {
         this.$refs.modalForm.show()
+
+        if (coupon) {
+          this.$refs.contentForm.setForm('edit', coupon)
+        } else {
+          this.$refs.contentForm.setForm('create', { account: {} })
+        }
       },
       getCoupons(pageNumber = 1) {
         const uri = `/api/v1/coupon?page=${pageNumber}`
