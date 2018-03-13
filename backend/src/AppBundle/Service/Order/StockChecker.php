@@ -32,9 +32,7 @@ class StockChecker
 
         $this->loadStockComponents($groups);
 
-        $componentsOutOfStock = $this->filterOutOfStock($groups);
-
-        return $componentsOutOfStock;
+        return $this->filterOutOfStock($groups);
     }
 
     /**
