@@ -4,7 +4,6 @@ namespace AppBundle\Service\Order;
 
 use AppBundle\Entity\Order\Element;
 use AppBundle\Entity\Order\Order;
-use AppBundle\Manager\Stock\ProductManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class StockChecker
