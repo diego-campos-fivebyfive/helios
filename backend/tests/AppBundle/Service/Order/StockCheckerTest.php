@@ -46,65 +46,18 @@ class StockCheckerTest extends AppTestCase
 
         $order = $this->createOrder();
 
-        $this->testGroupComponents($order);
-
-        $this->testLoadStockComponents($order);
-
-        $this->testFilterOutOfStock($order);
+        $this->testCheckOutOfStock($order);
     }
 
     /**
      * @param Order $order
      */
-    private function testGroupComponents(Order $order)
+    private function testCheckOutOfStock(Order $order)
     {
-        $groups = $this->stockChecker->groupComponents($order);
+        $componentsOutOfStock = $this->stockChecker->checkOutOfStock($order);
 
-        foreach ($this->families as $family) {
-            $this->assertArrayHasKey($family, $groups);
-            foreach ($groups as $family => $items){
-                foreach ($items as $code => $config){
-                    $this->assertEquals(10, $config['quantity']);
-                }
-            }
-        }
-    }
-
-    /**
-     * @param Order $order
-     */
-    private function testLoadStockComponents(Order $order)
-    {
-        $groups = $this->stockChecker->groupComponents($order);
-
-        $this->stockChecker->loadStockComponents($groups);
-
-        foreach ($groups as $family => $items) {
-            foreach ($items as $code => $config) {
-                if ($config['stock'] == 50) {
-                    $this->assertEquals(50, $config['stock']);
-                } else {
-                    $this->assertEquals(0, $config['stock']);
-                }
-            }
-        }
-    }
-
-    /**
-     * @param Order $order
-     */
-    private function testFilterOutOfStock(Order $order)
-    {
-        $groups = $this->stockChecker->groupComponents($order);
-
-        $this->stockChecker->loadStockComponents($groups);
-
-        $componentsOutOfStock = $this->stockChecker->filterOutOfStock($groups);
-
-        foreach ($componentsOutOfStock as $family => $items) {
-            foreach ($items as $code => $config) {
-                $this->assertLessThan($config['quantity'], $config['stock']);
-            }
+        foreach ($componentsOutOfStock as $componentOutOfStock) {
+            $this->assertLessThan($componentOutOfStock['quantity'], $componentOutOfStock['stock']);
         }
     }
 

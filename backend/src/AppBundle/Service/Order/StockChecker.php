@@ -26,7 +26,20 @@ class StockChecker
      * @param Order $order
      * @return array
      */
-    public function groupComponents(Order $order)
+    public function checkOutOfStock(Order $order)
+    {
+        $groups = $this->groupComponents($order);
+
+        $this->loadStockComponents($groups);
+
+        return $this->filterOutOfStock($groups);
+    }
+
+    /**
+     * @param Order $order
+     * @return array
+     */
+    private function groupComponents(Order $order)
     {
         $group = [];
 
@@ -44,7 +57,7 @@ class StockChecker
     /**
      * @param array $groups
      */
-    public function loadStockComponents(array &$groups)
+    private function loadStockComponents(array &$groups)
     {
         foreach ($groups as $family => $group) {
 
@@ -65,14 +78,19 @@ class StockChecker
     /**
      * @param array $groups
      */
-    public function filterOutOfStock(array $groups)
+    private function filterOutOfStock(array $groups)
     {
         $componentsOutOfStock = [];
 
         foreach ($groups as $family => $group) {
             foreach ($group as $code => $item) {
                 if ($item['quantity'] > $item['stock']) {
-                    $componentsOutOfStock[$family][$code] = $item;
+                    $componentsOutOfStock[] = [
+                        'code' => $code,
+                        'description' => $item['description'],
+                        'quantity' => $item['quantity'],
+                        'stock' => $item['stock']
+                    ];
                 }
             }
         }
