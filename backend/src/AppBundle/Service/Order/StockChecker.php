@@ -42,6 +42,27 @@ class StockChecker
     }
 
     /**
+     * @param array $components
+     */
+    public function loadStockComponents(array &$groups)
+    {
+        foreach ($groups as $family => $group) {
+
+            $manager = $this->container->get($family . '_manager');
+
+            foreach ($group as $code => $item) {
+                $element = $manager->findOneBy([
+                    'code' => $code
+                ]);
+
+                if ($element) {
+                    $groups[$family][$code]['stock'] = (int) $element->getStock();
+                }
+            }
+        }
+    }
+
+    /**
      * @param Order $suborder
      * @param array $group
      */
@@ -74,26 +95,5 @@ class StockChecker
         }
 
         $group[$family][$code]['quantity'] += $element->getQuantity();
-    }
-
-    /**
-     * @param array $components
-     */
-    public function loadStockComponents(array &$groups)
-    {
-        foreach ($groups as $family => $group) {
-
-            $manager = $this->container->get($family . '_manager');
-
-            foreach ($group as $code => $item) {
-                $element = $manager->findOneBy([
-                   'code' => $code
-                ]);
-
-                if ($element) {
-                    $groups[$family][$code]['stock'] = (int) $element->getStock();
-                }
-            }
-        }
     }
 }
