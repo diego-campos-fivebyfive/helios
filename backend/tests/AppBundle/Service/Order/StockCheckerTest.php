@@ -60,6 +60,7 @@ class StockCheckerTest extends AppTestCase
 
         foreach ($componentsOutOfStock as $componentOutOfStock) {
             $this->assertLessThan($componentOutOfStock['quantity'], $componentOutOfStock['stock']);
+            $this->assertNotEquals($componentOutOfStock['family'], 'variety');
         }
     }
 
