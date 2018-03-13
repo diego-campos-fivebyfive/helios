@@ -44,6 +44,8 @@ class StockCheckerTest extends AppTestCase
     {
         $this->createComponents();
 
+        $this->createParameters();
+
         $order = $this->createOrder();
 
         $this->testCheckOutOfStock($order);
@@ -175,5 +177,21 @@ class StockCheckerTest extends AppTestCase
                 $this->manager($family)->delete($component);
             }
         }
+    }
+
+    private function createParameters()
+    {
+        $parameterManager = $this->getContainer()->get('parameter_manager');
+
+        $parameters = $parameterManager->findOrCreate('platform_settings');
+
+        $parameters->set('stock_control_families',[
+            "module",
+            "inverter",
+            "structure",
+            "string_box"
+        ]);
+
+        $parameterManager->save($parameters);
     }
 }
