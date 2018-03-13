@@ -50,7 +50,7 @@ class StockChecker
 
         $parameters = $parameterManager->findOrCreate('platform_settings');
 
-        $this->families = $parameters->get('stock_control_families');
+        $this->families = (array) $parameters->get('stock_control_families');
     }
 
     /**
@@ -107,7 +107,8 @@ class StockChecker
                         'code' => $code,
                         'description' => $item['description'],
                         'quantity' => $item['quantity'],
-                        'stock' => $item['stock']
+                        'stock' => $item['stock'],
+                        'family' => $family
                     ];
                 }
             }
