@@ -22,7 +22,8 @@
       slot='buttons',
       :action='form.action',
       :disabled='form.disabled',
-      :payload='form.payload')
+      :payload='form.payload',
+      v-on:done='done')
 </template>
 
 <script>
@@ -56,19 +57,7 @@
         this.$refs.modalForm.notify('Formato de moeda em Real invalido')
         this.disabled = true
       },
-      closeModalForm(response) {
-        this.$refs.modalForm.hide()
-
-        response
-          .then(message => {
-            this.$emit('getCoupons')
-            this.$refs.modalForm.notify(message)
-          })
-          .catch(message => {
-            this.$refs.modalForm.notify(message)
-          })
-      },
-      showModalForm(coupon) {
+      show(coupon) {
         this.$refs.modalForm.show()
 
         if (coupon) {
@@ -79,6 +68,18 @@
 
         this.form.action = 'create'
         this.form.payload = Object.assign({}, this.form.default)
+      },
+      done(response) {
+        this.$refs.modalForm.hide()
+
+        response
+          .then(message => {
+            this.$emit('getCoupons')
+            this.$refs.modalForm.notify(message)
+          })
+          .catch(message => {
+            this.$refs.modalForm.notify(message)
+          })
       }
     }
   }

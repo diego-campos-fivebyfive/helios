@@ -8,14 +8,14 @@
         icon='plus-square',
         label='Novo Cupom',
         pos='single',
-        v-on:click.native='showModalForm')
+        v-on:click.native='show')
 </template>
 
 <script>
   export default {
     methods: {
-      showModalForm() {
-        this.$emit('showModalForm')
+      show() {
+        this.$emit('show')
       }
     }
   }

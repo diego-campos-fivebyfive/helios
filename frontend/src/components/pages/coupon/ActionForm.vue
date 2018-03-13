@@ -36,20 +36,20 @@
           .then(() => 'Cupom editado com sucesso')
           .catch(() => 'Não foi possível editar cupom')
 
-        this.$emit('closeModalForm', response)
+        this.$emit('done', response)
       },
       createCoupon() {
         if (this.disabled) {
           return
         }
 
-        const uri = 'api/v1/coupon'
+        const uri = 'api/v1/coupon/'
 
         const response = this.axios.post(uri, this.payload)
           .then(() => 'Cupom cadastrado com sucesso')
           .catch(() => 'Não foi possível cadastrar cupom')
 
-        this.$emit('closeModalForm', response)
+        this.$emit('done', response)
       }
     }
   }
