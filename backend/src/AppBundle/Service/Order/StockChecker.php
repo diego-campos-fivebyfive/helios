@@ -14,12 +14,18 @@ class StockChecker
     private $container;
 
     /**
+     * @var array
+     */
+    private $families;
+
+    /**
      * StockChecker constructor.
      * @param ContainerInterface $container
      */
     function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+        $this->loadStockControlFamilies();
     }
 
     /**
@@ -33,6 +39,18 @@ class StockChecker
         $this->loadStockComponents($groups);
 
         return $this->filterOutOfStock($groups);
+    }
+
+    /**
+     * Load parameters from platform
+     */
+    public function loadStockControlFamilies()
+    {
+        $parameterManager = $this->container->get('parameter_manager');
+
+        $parameters = $parameterManager->findOrCreate('platform_settings');
+
+        $this->families = (array) $parameters->get('stock_control_families');
     }
 
     /**
@@ -105,7 +123,9 @@ class StockChecker
     private function addSuborderElementsOnGroup(Order $suborder, array &$group = [])
     {
         foreach ($suborder->getElements() as $element) {
-            $this->addSuborderElementOnGroup($element, $group);
+            if (in_array($element->getFamily(), $this->families)) {
+                $this->addSuborderElementOnGroup($element, $group);
+            }
         }
     }
 
