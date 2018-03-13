@@ -21,8 +21,8 @@
     ActionForm(
       slot='buttons',
       :action='form.action',
-      :disabled='form.disabled',
       :payload='form.payload',
+      :resolved='form.resolved',
       v-on:done='done')
 </template>
 
@@ -38,13 +38,13 @@
     data: () => ({
       form: {
         action: '',
-        disabled: false,
         default: {
           name: '',
           amount: null,
           account: {}
         },
-        payload: {}
+        payload: {},
+        resolved: false
       }
     }),
     methods: {
@@ -52,12 +52,12 @@
         if (
           /^(\d{1,3}(\.\d{3})*|\d+)(\,\d{2})?$/.test(this.form.payload.amount)
         ) {
-          this.disabled = false
+          this.form.resolved = false
           return
         }
 
         this.$refs.modalForm.notify('Formato de moeda em Real invalido')
-        this.disabled = true
+        this.form.resolved = true
       },
       show(coupon) {
         this.$refs.modalForm.show()

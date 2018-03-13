@@ -22,11 +22,11 @@
     props: [
       'action',
       'payload',
-      'disabled'
+      'resolved'
     ],
     methods: {
       editCoupon() {
-        if (this.disabled) {
+        if (this.resolved) {
           return
         }
 
@@ -39,7 +39,7 @@
         this.$emit('done', response)
       },
       createCoupon() {
-        if (this.disabled) {
+        if (this.resolved) {
           return
         }
 
