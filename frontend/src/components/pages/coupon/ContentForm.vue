@@ -5,113 +5,84 @@
         label.half
           | Nome
           input(
-            v-model='form.name',
+            v-model='form.payload.name',
             placeholder='Nome')
         label.half
           | Valor
           input(
-            v-model='form.amount',
-            placeholder='Valor')
+            v-model='form.payload.amount',
+            placeholder='Valor',
+            v-on:blur='isValidAmount')
         label.full
           | Conta
-          Select(
-            v-model='form.account',
-            :selected='form.account.id',
-            :options='options.accounts',
-            v-on:update='updateAccount')
-    Button(
+          SelectAccountForm(
+            v-model.sync='form.payload.account',
+            :currentAccount='form.payload.account')
+    ActionForm(
       slot='buttons',
-      v-on:click.native='send',
-      icon='save',
-      type='primary-strong',
-      label='Salvar',
-      pos='single')
+      :action='form.action',
+      :disabled='form.disabled',
+      :payload='form.payload',
+      v-on:done='done')
 </template>
 
 <script>
+  import ActionForm from './ActionForm'
+  import SelectAccountForm from './SelectAccountForm'
+
   export default {
+    components: {
+      ActionForm,
+      SelectAccountForm
+    },
     data: () => ({
-      options: {
-        accounts: []
-      },
       form: {
-        name: '',
-        amount: null,
-        account: {}
-      },
-      modal: {
-        action: ''
+        action: '',
+        disabled: false,
+        default: {
+          name: '',
+          amount: null,
+          account: {}
+        },
+        payload: {}
       }
     }),
     methods: {
-      updateAccount(account) {
-        this.form.account = {
-          id: account.value,
-          name: account.text
-        }
-      },
-      createCoupon() {
-        this.axios.post('api/v1/coupon/', this.form)
-          .then(() => {
-            this.$emit('getCoupons')
-            this.$refs.modalForm.notify('Cupom cadastrado com sucesso')
-          })
-          .catch(() => {
-            this.$refs.modalForm.notify('Não foi possível cadastrar cupom')
-          })
-      },
-      editCoupon() {
-        this.axios.put(`api/v1/coupon/${this.form.id}`, this.form)
-          .then(() => {
-            this.$emit('getCoupons')
-            this.$refs.modalForm.notify('Cupom editado com sucesso')
-          })
-          .catch(() => {
-            this.$refs.modalForm.notify('Não foi possível editar cupom')
-          })
-      },
-      send() {
-        if (!/^(\d{1,3}(\.\d{3})*|\d+)(\,\d{2})?$/.test(this.form.amount)) {
-          this.$refs.modalForm.notify('Formato de moeda em Real invalido')
+      isValidAmount() {
+        if (
+          /^(\d{1,3}(\.\d{3})*|\d+)(\,\d{2})?$/.test(this.form.payload.amount)
+        ) {
+          this.disabled = false
           return
         }
 
-        this.$refs.modalForm.hide()
-
-        if (this.modal.action === 'create') {
-          this.createCoupon()
-          return
-        }
-
-        this.editCoupon()
+        this.$refs.modalForm.notify('Formato de moeda em Real invalido')
+        this.disabled = true
       },
-      showModalForm(coupon) {
+      show(coupon) {
         this.$refs.modalForm.show()
 
         if (coupon) {
-          this.modal.action = 'edit'
-          this.form = coupon
-        } else {
-          this.modal.action = 'create'
+          this.form.action = 'edit'
+          this.form.payload = Object.assign({}, coupon)
+          return
         }
+
+        this.form.action = 'create'
+        this.form.payload = Object.assign({}, this.form.default)
+      },
+      done(response) {
+        this.$refs.modalForm.hide()
+
+        response
+          .then(message => {
+            this.$emit('getCoupons')
+            this.$refs.modalForm.notify(message)
+          })
+          .catch(message => {
+            this.$refs.modalForm.notify(message)
+          })
       }
-    },
-    mounted() {
-      this.axios.get('api/v1/account/available')
-        .then(response => {
-          const defaultOption = {
-            id: '',
-            name: 'Não vinculada'
-          }
-
-          const accounts = response.data
-          accounts.unshift(defaultOption)
-
-          this.options.accounts = accounts.map(account => ({
-            value: account.id,
-            text: account.name
-          }))
-        })
     }
   }
 </script>

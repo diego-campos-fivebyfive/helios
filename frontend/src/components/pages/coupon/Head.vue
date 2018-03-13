@@ -8,17 +8,11 @@
         icon='plus-square',
         label='Novo Cupom',
         pos='single',
-        v-on:click.native='showModalForm')
+        v-on:click.native='$emit("show")')
 </template>
 
 <script>
-  export default {
-    methods: {
-      showModalForm() {
-        this.$emit('showModalForm')
-      }
-    }
-  }
+  /* Head Script */
 </script>
 
 <style lang="scss" scoped>

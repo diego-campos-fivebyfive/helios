@@ -6,12 +6,12 @@
     Panel.panel
       Head(
         slot='header',
-        v-on:showModalForm='showModalForm')
+        v-on:show='show')
       Content(
         slot='section',
         :coupons='coupons',
         v-on:getCoupons='getCoupons',
-        v-on:showModalForm='showModalForm')
+        v-on:show='show')
       Paginator(
         slot='footer',
         :pagination='pagination',
@@ -34,11 +34,12 @@
       pagination: {}
     }),
     methods: {
-      showModalForm(coupon) {
-        this.$refs.contentForm.showModalForm(coupon)
+      show(coupon) {
+        this.$refs.contentForm.show(coupon)
       },
       getCoupons(pageNumber = 1) {
         const uri = `/api/v1/coupon?page=${pageNumber}`
+
         this.axios.get(uri).then(response => {
           this.coupons = response.data.results
           this.pagination = response.data.page

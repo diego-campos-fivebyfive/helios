@@ -32,4 +32,4 @@ fi
 git branch -D $BRANCH
 git push origin --delete $BRANCH > /dev/null 2>&1
 
-$CLI_PATH/ces-slack-notify "--${LOGS_CHANNEL}" "[$BRANCH] _${NICK}_ closed these local and remote branch"
+$CLI_PATH/ces-slack-notify "--${LOGS_CHANNEL}" "[$BRANCH] _${NICK}_ closed these issue local and remote branch"
