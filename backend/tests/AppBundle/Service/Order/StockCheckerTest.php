@@ -34,6 +34,7 @@ class StockCheckerTest extends AppTestCase
     public function setUp()
     {
         $this->stockChecker = $this->service('order_stock_checker');
+        $this->clearComponents();
     }
 
     /**
@@ -46,6 +47,28 @@ class StockCheckerTest extends AppTestCase
         $order = $this->createOrder();
 
         $this->testGroupComponents($order);
+
+        $this->testLoadStockComponents($order);
+    }
+
+    /**
+     * @param Order $order
+     */
+    private function testLoadStockComponents(Order $order)
+    {
+        $groups = $this->stockChecker->groupComponents($order);
+
+        $this->stockChecker->loadStockComponents($groups);
+
+        foreach ($groups as $family => $items) {
+            foreach ($items as $code => $config) {
+                if ($config['stock'] == 50) {
+                    $this->assertEquals(50, $config['stock']);
+                } else {
+                    $this->assertEquals(0, $config['stock']);
+                }
+            }
+        }
     }
 
     /**
@@ -133,7 +156,7 @@ class StockCheckerTest extends AppTestCase
     private function loadComponents()
     {
         $components = [];
-        foreach ($this->families as $family){
+        foreach ($this->families as $family) {
             $components[$family] = $this->manager($family)->findAll();
         }
 
@@ -155,12 +178,25 @@ class StockCheckerTest extends AppTestCase
 
                 $code = md5(uniqid(time())) . rand(10, 99);
 
+                $stock = $i == 2 ? null : 50;
+
                 $component
                     ->setCode($code)
                     ->setDescription("This is a component {$code}")
-                    ->setStock(50);
+                    ->setStock($stock);
 
                 $manager->save($component, ($i + 1) == $max); // prevent massive persistent operations
+            }
+        }
+    }
+
+    private function clearComponents()
+    {
+        $groups = $this->loadComponents();
+
+        foreach ($groups as $family => $components) {
+            foreach ($components as $component) {
+                $this->manager($family)->delete($component);
             }
         }
     }
