@@ -49,6 +49,25 @@ class StockCheckerTest extends AppTestCase
         $this->testGroupComponents($order);
 
         $this->testLoadStockComponents($order);
+
+        $this->testFilterOutOfStock($order);
+    }
+
+    /**
+     * @param Order $order
+     */
+    private function testGroupComponents(Order $order)
+    {
+        $groups = $this->stockChecker->groupComponents($order);
+
+        foreach ($this->families as $family) {
+            $this->assertArrayHasKey($family, $groups);
+            foreach ($groups as $family => $items){
+                foreach ($items as $code => $config){
+                    $this->assertEquals(10, $config['quantity']);
+                }
+            }
+        }
     }
 
     /**
@@ -74,16 +93,17 @@ class StockCheckerTest extends AppTestCase
     /**
      * @param Order $order
      */
-    private function testGroupComponents(Order $order)
+    private function testFilterOutOfStock(Order $order)
     {
         $groups = $this->stockChecker->groupComponents($order);
 
-        foreach ($this->families as $family) {
-            $this->assertArrayHasKey($family, $groups);
-            foreach ($groups as $family => $items){
-                foreach ($items as $code => $config){
-                    $this->assertEquals(10, $config['quantity']);
-                }
+        $this->stockChecker->loadStockComponents($groups);
+
+        $componentsOutOfStock = $this->stockChecker->filterOutOfStock($groups);
+
+        foreach ($componentsOutOfStock as $family => $items) {
+            foreach ($items as $code => $config) {
+                $this->assertLessThan($config['quantity'], $config['stock']);
             }
         }
     }
@@ -190,6 +210,9 @@ class StockCheckerTest extends AppTestCase
         }
     }
 
+    /**
+     * Clear all persistent components
+     */
     private function clearComponents()
     {
         $groups = $this->loadComponents();

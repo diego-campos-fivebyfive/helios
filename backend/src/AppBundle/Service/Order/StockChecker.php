@@ -42,7 +42,7 @@ class StockChecker
     }
 
     /**
-     * @param array $components
+     * @param array $groups
      */
     public function loadStockComponents(array &$groups)
     {
@@ -60,6 +60,24 @@ class StockChecker
                 }
             }
         }
+    }
+
+    /**
+     * @param array $groups
+     */
+    public function filterOutOfStock(array $groups)
+    {
+        $componentsOutOfStock = [];
+
+        foreach ($groups as $family => $group) {
+            foreach ($group as $code => $item) {
+                if ($item['quantity'] > $item['stock']) {
+                    $componentsOutOfStock[$family][$code] = $item;
+                }
+            }
+        }
+
+        return $componentsOutOfStock;
     }
 
     /**
