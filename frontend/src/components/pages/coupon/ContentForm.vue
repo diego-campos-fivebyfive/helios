@@ -11,7 +11,8 @@
           | Valor
           input(
             v-model='form.payload.amount',
-            placeholder='Valor')
+            placeholder='Valor',
+            v-on:blur='isValidAmount')
         label.full
           | Conta
           SelectAccountForm(
