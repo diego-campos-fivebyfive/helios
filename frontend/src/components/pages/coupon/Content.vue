@@ -26,13 +26,13 @@
             type='primary-common',
             icon='pencil',
             pos='first',
-            v-on:click.native='showModalForm(coupon)')
+            v-on:click.native='$emit("show", coupon)')
           Button(
             v-if='!coupon.applied',
             type='danger-common',
             icon='trash',
             pos='last',
-            v-on:click.native='showModalConfirm(coupon.id)')
+            v-on:click.native='$refs.modalConfirm.show(coupon.id)')
 </template>
 
 <script>
@@ -41,12 +41,6 @@
       'coupons'
     ],
     methods: {
-      showModalForm(coupon) {
-        this.$emit('showModalForm', coupon)
-      },
-      showModalConfirm(coupon) {
-        this.$refs.modalConfirm.show(coupon)
-      },
       removeCoupon(id) {
         this.$refs.modalConfirm.hide()
 

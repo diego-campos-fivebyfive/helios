@@ -11,7 +11,7 @@
         slot='section',
         :coupons='coupons',
         v-on:getCoupons='getCoupons',
-        v-on:showModalForm='show')
+        v-on:show='show')
       Paginator(
         slot='footer',
         :pagination='pagination',
@@ -39,6 +39,7 @@
       },
       getCoupons(pageNumber = 1) {
         const uri = `/api/v1/coupon?page=${pageNumber}`
+
         this.axios.get(uri).then(response => {
           this.coupons = response.data.results
           this.pagination = response.data.page

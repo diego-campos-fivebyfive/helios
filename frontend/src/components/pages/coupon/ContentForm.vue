@@ -44,12 +44,14 @@
           amount: null,
           account: {}
         },
-        payload: {},
+        payload: {}
       }
     }),
     methods: {
       isValidAmount() {
-        if (/^(\d{1,3}(\.\d{3})*|\d+)(\,\d{2})?$/.test(this.form.payload.amount)) {
+        if (
+          /^(\d{1,3}(\.\d{3})*|\d+)(\,\d{2})?$/.test(this.form.payload.amount)
+        ) {
           this.disabled = false
           return
         }
