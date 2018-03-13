@@ -58,9 +58,15 @@ class StockCheckerTest extends AppTestCase
     {
         $componentsOutOfStock = $this->stockChecker->checkOutOfStock($order);
 
+        $components = $this->loadComponents();
+
+        // Código que não pode estar no componentsOutOfStock porque familia variety não está
+        // nos params
+        $code = $components['variety'][0]->getCode();
+
         foreach ($componentsOutOfStock as $componentOutOfStock) {
             $this->assertLessThan($componentOutOfStock['quantity'], $componentOutOfStock['stock']);
-            $this->assertNotEquals($componentOutOfStock['family'], 'variety');
+            $this->assertNotEquals($componentOutOfStock['code'], $code);
         }
     }
 
