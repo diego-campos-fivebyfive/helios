@@ -4,6 +4,7 @@ namespace AppBundle\Service\Order;
 
 use AppBundle\Entity\Order\Element;
 use AppBundle\Entity\Order\Order;
+use AppBundle\Manager\Stock\ProductManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class StockChecker
@@ -73,5 +74,28 @@ class StockChecker
         }
 
         $group[$family][$code]['quantity'] += $element->getQuantity();
+    }
+
+    /**
+     * @param array $components
+     */
+    public function loadStockComponents(array &$groups)
+    {
+        foreach ($groups as $family => $group) {
+
+            $manager = $this->container->get($family . '_manager');
+
+            foreach ($group as $code => $item) {
+                $element = $manager->findOneBy([
+                   'code' => $code
+                ]);
+
+                if ($element && !is_null($element->getStock())) {
+                    $groups[$family][$code]['stock'] = $element->getStock();
+                } else {
+                    $groups[$family][$code]['stock'] = 0;
+                }
+            }
+        }
     }
 }
