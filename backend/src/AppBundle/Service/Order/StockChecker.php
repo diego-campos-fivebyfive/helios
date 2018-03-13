@@ -77,8 +77,6 @@ class StockChecker
             }
         }
 
-        //dump($componentsOutOfStock);die;
-
         return $componentsOutOfStock;
     }
 
