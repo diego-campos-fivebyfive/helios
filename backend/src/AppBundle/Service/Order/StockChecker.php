@@ -107,8 +107,7 @@ class StockChecker
                         'code' => $code,
                         'description' => $item['description'],
                         'quantity' => $item['quantity'],
-                        'stock' => $item['stock'],
-                        'family' => $family
+                        'stock' => $item['stock']
                     ];
                 }
             }
