@@ -84,7 +84,7 @@ Esclarecimentos gerais relacionados a documentação:
       ##### Execução de tarefas em fluxo normal:
 
         ```
-        1. Iniciada nas colunas TO DO: (General, Backend, Frontend, Devops)
+        1. Iniciada em colunas To do: (General, Backend, Frontend, Devops)
         2. Executada pelo Desenvolvedor (in progress)
         3. Enviada para Revisão de código pela equipe (review)
         4. Disponibilizada para teste em Homolog pelo desenvolvedor (testing I)
@@ -127,12 +127,12 @@ Esclarecimentos gerais relacionados a documentação:
   <a name="workflow--flags"></a><a name="2.5"></a>
   - [2.5](#workflow--flags) **Solicitações no Slack**: utilizamos por padrão flags de classificações no início de cada solicitação.
 
-    - **REVIEW**: a notificação de REVIEW, é direcionada para o channel correto, de acordo com a categoria (chat [devops](https://kolinalabs-si.slack.com/messages/C64ACCF2M))
-    - **TEST**: a notificação de TEST, é direcionada para o channel correto, e também direcionada para o slackboot do Product_Tester (chat [devops](https://kolinalabs-si.slack.com/messages/C64ACCF2M))
+    - **REVIEW**: a notificação de REVIEW, é direcionada para o channel correto, de acordo com a categoria.
+    - **TEST**: a notificação de TEST, é direcionada para o channel correto, e também direcionada para o slackboot do Product_Tester.
 
     `Ex.: @here: _joaozaqueuchereta_ needs a *REVIEW*: https://github.com/sices/sices/pull/1863/files`
     
-    > **Nota**: Para o Product_Tester é direcionada a notificação + possiveis descrições referentes ao TEST
+    > **Nota**: Para o Product_Tester é direcionada a notificação e também, caso incluida, uma possível descrição adicional do teste.
 
     Para responder uma solicitação utilizamos por padrão o nome de usuário junto a resposta.
 
@@ -421,7 +421,7 @@ Esclarecimentos gerais relacionados a documentação:
   <a name="tarefas--start"></a><a name="5.4"></a>
   - [5.4](#tarefas--start) **Processos executados pelo comando ces-issue-start**:
 
-    | Stage From  | TO DO's    | B                | IP     | IP   | R   | TI     | TI     | TII\|D |
+    | Stage From  | TO DO    | B                | IP     | IP   | R   | TI     | TI     | TII\|D |
     | :---        | :---:      | :---:            | :---:  | :--: | :-: | :---:  | :---:  | :---:  |
     | Conditional | --         | --               | [N]    | [Y]  | --  | [Y]    | [N]    | --     |
     | Branch      | Create     | Create \| Update | Remove | Keep | X   | Delete | Delete | --     |
