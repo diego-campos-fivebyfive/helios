@@ -68,7 +68,8 @@ class StockChecker
         if (!array_key_exists($code, $group[$family])) {
             $group[$family][$code] = [
                 'description' => $element->getDescription(),
-                'quantity' => 0
+                'quantity' => 0,
+                'stock' => 0
             ];
         }
 
@@ -89,10 +90,8 @@ class StockChecker
                    'code' => $code
                 ]);
 
-                if ($element && !is_null($element->getStock())) {
-                    $groups[$family][$code]['stock'] = $element->getStock();
-                } else {
-                    $groups[$family][$code]['stock'] = 0;
+                if ($element) {
+                    $groups[$family][$code]['stock'] = (int) $element->getStock();
                 }
             }
         }
