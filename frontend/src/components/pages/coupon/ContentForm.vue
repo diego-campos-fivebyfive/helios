@@ -14,12 +14,10 @@
             placeholder='Valor')
         label.full
           | Conta
-          Select(
-            v-model='form.payload.account',
-            :selected='form.payload.account.id',
-            :options='form.options.accounts',
-            v-on:update='updateAccount')
-    Button(
+          SelectAccountForm(
+            v-model.sync='form.payload.account',
+            :currentAccount='form.payload.account')
+    ActionForm(
       slot='buttons',
       icon='save',
       type='primary-strong',
@@ -29,7 +27,14 @@
 </template>
 
 <script>
+  import ActionForm from './ActionForm'
+  import SelectAccountForm from './SelectAccountForm'
+
   export default {
+    components: {
+      ActionForm,
+      SelectAccountForm
+    },
     data: () => ({
       form: {
         default: {
@@ -38,12 +43,6 @@
           account: {}
         },
         payload: {},
-        options: {
-          accounts: []
-        }
-      },
-      modal: {
-        action: ''
       }
     }),
     methods: {
@@ -99,23 +98,6 @@
 
         this.$refs.modalForm.show()
       }
-    },
-    mounted() {
-      this.axios.get('api/v1/account/available')
-        .then(response => {
-          const defaultOption = {
-            id: '',
-            name: 'Não vinculada'
-          }
-
-          const accounts = response.data
-          accounts.unshift(defaultOption)
-
-          this.form.options.accounts = accounts.map(account => ({
-            value: account.id,
-            text: account.name
-          }))
-        })
     }
   }
 </script>
