@@ -150,22 +150,27 @@
 
                 <div class="col-md-10">
                     {{ form_start(form, {attr:{id:'form-filter'}}) }}
+
+                    {% set hasAgent = attribute(form, 'agent') is defined %}
                     <div class="row">
                         <div class="form-group col-md-4">
                             {{ form_widget(form.like,{attr:{class:'form-control', placeholder: 'nome, razão social, cnpj, número...'}}) }}
                         </div>
 
-                        <div class="group-input col-md-6">
+                        <div class="group-input col-md-5">
                             {{ form_widget(form.optionsAt,{attr:{class:'form-control'}}) }}
                             {{ form_widget(form.dateAt,{attr:{class:'form-control', placeholder:'Filtrar p/ data' }}) }}
                             <button type="button" id="clear-dateAt" class="btn btn-primary ">
                                 <i class="fa fa-eraser"></i>
                             </button>
                         </div>
+
+                        <div class="col-md-3">
+                            {% include view('admin/helper/status_filter.html.twig') %}
+                        </div>
                     </div>
 
                     <div class="row form-group">
-                        {% set hasAgent = attribute(form, 'agent') is defined %}
                         {% if hasAgent %}
                             <div class="col-md-2 ">
                                 {{ form_widget(form.agent,{attr:{class:'form-control'}}) }}
@@ -176,8 +181,8 @@
                             {% include view('admin/helper/states_filter.html.twig') %}
                         </div>
 
-                        <div class="col-md-2">
-                            {% include view('admin/helper/status_filter.html.twig') %}
+                        <div class="col-md-{% if hasAgent %}3{% else %}4{% endif %}">
+                            {% include view('admin/helper/components_filter.html.twig') %}
                         </div>
 
                         <div class="group-input col-md-4">
@@ -186,9 +191,9 @@
                             {{ form_widget(form.valueMax,{attr:{class:'form-control', placeholder:'Máximo' }}) }}
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-{% if hasAgent %}1{% else %}2{% endif %}">
                             <button type="submit" class="btn btn-primary btn-md btn-block">
-                                <i class="fa fa-search"></i> Pesquisar
+                                <i class="fa fa-search"></i> {% if not hasAgent %}Pesquisar{% endif %}
                             </button>
                         </div>
 
@@ -473,6 +478,7 @@
         if(form_filtration.length){
           StateFilter(form_filtration);
           StatusFilter(form_filtration);
+          ComponentFilter(form_filtration);
         }
 
         $('#filter_valueMin').on('change', function () {
