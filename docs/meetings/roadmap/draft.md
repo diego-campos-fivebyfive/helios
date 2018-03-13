@@ -37,7 +37,7 @@
   
 7. SUBINTEGRADOR
 - * Conta que possui associação com outra conta
-- Não vê funcionalidades relacionadas aos pontos e fidelidade SICES
+- Não vê funcionalidades relacionadas aos pontos e fidelidade SICES (Se for conta filha, só aparece se o ranking for maior que 0)
 - Os pontos são transferidos para a conta ao qual o integrador está associada
 - Nível de conta e agente comercial são herdados da conta "mãe"
 
