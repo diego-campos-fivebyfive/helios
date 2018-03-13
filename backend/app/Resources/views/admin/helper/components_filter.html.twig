@@ -1,0 +1,74 @@
+<div class="button-group" id="filter-components">
+    <button
+        type="button"
+        class="form-control selected dropdown-toggle"
+        data-toggle="dropdown">
+        Lista de Componentes
+        <span id="quantity-components"></span>
+        <span class="caret"></span>
+    </button>
+    {% set quantity = 0 %}
+    <ul class="dropdown-menu"  style="max-height: 250px; overflow: auto">
+        {% for code, component in componentsList %}
+            <li>
+                <a href="#" class="small" data-value="{{ code }}" tabIndex="-1">
+                    <input value="{{ code }}" type="checkbox" {% if component.checked %}checked{% set quantity = quantity + 1 %}{% endif %}>
+                    {{ component.name|trans }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+<script>
+
+    var quantity = {{ quantity }};
+    if (quantity)
+        $('#quantity-components').html('('+quantity+')');
+
+    function ComponentFilter(form_filtration) {
+        var filter_component = $('#filter-components');
+
+        form_filtration.append($('<input type="hidden" name="components"/>').val(getComponent()));
+
+        $filterComponentHasChanges = false;
+
+        function getComponent() {
+            var options = $('#filter-components .dropdown-menu a');
+            var component = [];
+
+            Array
+                .from(options)
+                .forEach(function (option) {
+                    var code = option.getAttribute('data-value');
+                    var checked = option.querySelector('input').checked;
+
+                    if (checked) {
+                        component.push(code);
+                    }
+                });
+
+            return component;
+        }
+
+        function filterComponent() {
+            $('#filter-components .dropdown-menu').on('click', function(event) {
+                $filterComponentHasChanges = true;
+                event.stopPropagation();
+            });
+
+            $(document).one('click', function(event) {
+                document.removeEventListener('click', filterComponent);
+
+                if ($filterComponentHasChanges) {
+                    $('input[name="components"]').val(getComponent());
+                    form_filtration.trigger('submit');
+                    $filterComponentHasChanges = false;
+                }
+            });
+        }
+
+        filter_component.on('click', function() {
+            document.addEventListener('click', filterComponent);
+        });
+    }
+</script>

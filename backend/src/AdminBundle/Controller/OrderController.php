@@ -6,12 +6,17 @@ use AdminBundle\Form\Order\FilterType;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\BusinessInterface;
+use AppBundle\Entity\Component\Inverter;
+use AppBundle\Entity\Component\Maker;
+use AppBundle\Entity\Component\Module;
+use AppBundle\Entity\Component\Structure;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\Order\Element;
 use AppBundle\Configuration\Brazil;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Form\Order\OrderType;
+use AppBundle\Manager\OrderElementManager;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -99,16 +104,32 @@ class OrderController extends AbstractController
             }
         }
 
+        if (-1 != $components = $request->get('components')) {
+            $components = explode(',', $components);
+            $arrayComponents = array_filter($components, 'strlen');
+            if (!empty($arrayComponents)) {
+                $qb->andWhere($qb->expr()->in('e.code', $arrayComponents));
+            }
+        }
+
         $expanseStates = [];
         if ($this->member()->isPlatformExpanse()) {
             $expanseStates = $this->member()->getAttributes()['states'];
             $qb->andWhere($qb->expr()->in('o.state', $expanseStates));
         }
 
-        $qbTotals = clone $qb;
-        $qbTotals->resetDQLPart('join');
-        $qbTotals->select('sum(o.total) as total, sum(o.power) as power');
-        $totals = current($qbTotals->getQuery()->getResult());
+        $qbIds = clone $qb;
+        $qbIds->select('DISTINCT(o.id)');
+
+        $ids = array_map('current', ($qbIds->getQuery()->getResult())) ?? [0];
+
+        $qb3 = $this->manager('order')->createQueryBuilder();
+
+        $qb3
+            ->select('sum(o.total) as total, sum(o.power) as power')
+            ->where($qb3->expr()->in('o.id', $ids));
+
+        $totals = current($qb3->getQuery()->getResult());
 
         $pagination = $this->getPaginator()->paginate(
             $qb->getQuery(),
@@ -116,14 +137,48 @@ class OrderController extends AbstractController
             10
         );
 
+        $componentsList = $this->getComponentsList();
+
         return $this->render('admin/orders/index.html.twig', array(
             'orders' => $pagination,
             'member' => $member,
             'form' => $form->createView(),
             'totals' => $totals,
             'states' => $this->resolveFilters($this->getStates($expanseStates), $arrayStates),
-            'statusList' => $this->resolveFilters(Order::getStatusNames(), $arrayStatus)
+            'statusList' => $this->resolveFilters(Order::getStatusNames(), $arrayStatus),
+            'componentsList' => $this->resolveFilters($this->getComponentsList(), $arrayComponents)
         ));
+    }
+
+    /**
+     * @return array
+     */
+    private function getComponentsList()
+    {
+        $families = Maker::getContextList();
+
+        $componentsList = [];
+
+        foreach ($families as $family) {
+            $this->getComponents($family, $componentsList);
+        }
+
+        return $componentsList;
+    }
+
+    /**
+     * @param $componentName
+     * @param $componentsList
+     */
+    private function getComponents($componentName, &$componentsList)
+    {
+        $qb = $this->manager($componentName)->createQueryBuilder();
+
+        $components = $qb->select($qb->getAllAliases()[0])->getQuery()->getResult();
+
+        foreach ($components as $component) {
+            $componentsList[$component->getCode()] = $component->getDescription();
+        }
     }
 
     /**
@@ -421,8 +476,9 @@ class OrderController extends AbstractController
         }
 
         $states = [];
-        foreach ($filterStates as $state)
+        foreach ($filterStates as $state) {
             $states[$state] = $allStates[$state];
+        }
 
         asort($states);
         return $states;
