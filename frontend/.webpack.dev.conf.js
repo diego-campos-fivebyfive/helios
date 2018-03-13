@@ -1,6 +1,35 @@
+'use strict'
+
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path')
 const webpack = require('webpack')
+const axios = require('axios')
+
+const host = 'http://localhost:8000'
+const sessid = process.env.SICES_PHPSESSID
+
+;(() => {
+  if (!sessid) {
+    console.error('ERROR: PHPSESSID env variable not exported')
+    process.exit(1)
+  }
+
+  const testURL = `${host}/api/v1/coupon`
+
+  axios.get(testURL, {
+    headers: {
+      Cookie: `PHPSESSID=${sessid};`
+    }
+  }).then(response => {
+    if (typeof response.data !== 'object') {
+      console.error('ERROR: Session has been expired, please, export a new PHPSESSID')
+      process.exit(1)
+    }
+  }).catch(error => {
+    console.error(`ERROR: Could not connect to server, error message: ${error.message}`)
+    process.exit(1)
+  })
+})()
 
 module.exports = {
   entry: './src/main.js',
@@ -97,8 +126,8 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env': {
         'AMBIENCE': JSON.stringify('development'),
-        'API_URL': JSON.stringify('http://localhost:8000'),
-        'PHPSESSID': JSON.stringify(process.env.SICES_PHPSESSID)
+        'API_URL': JSON.stringify(host),
+        'PHPSESSID': JSON.stringify(sessid)
       }
     }),
     new HtmlWebpackPlugin({
