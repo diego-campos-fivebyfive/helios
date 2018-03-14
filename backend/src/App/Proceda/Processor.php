@@ -67,6 +67,15 @@ class Processor
     private $timelineList = [];
 
     /**
+     * @var array
+     */
+    private $result = [
+        'loaded_files' => 0,
+        'loaded_events' => 0,
+        'cached_events' => 0
+    ];
+
+    /**
      * Processor constructor.
      * @param ContainerInterface $container
      */
@@ -90,13 +99,15 @@ class Processor
     }
 
     /**
-     * Resolve events
+     * @return array
      */
     public function resolve()
     {
         $this->refreshCache();
 
         $this->processCache();
+
+        return $this->result;
     }
 
     /**
@@ -197,16 +208,16 @@ class Processor
     private function processGroups(array &$groups = [])
     {
         foreach ($groups as $invoice => $events){
-
-            $this->processGroupEvents($invoice, $events);
-
-            unset($groups[$invoice]);
+            if($this->processGroupEvents($invoice, $events)){
+                unset($groups[$invoice]);
+            }
         }
     }
 
     /**
      * @param string $invoice
      * @param array $events
+     * @return bool
      */
     private function processGroupEvents(string $invoice, array $events = [])
     {
@@ -220,7 +231,11 @@ class Processor
 
                 $this->prepareTimelineEvent($order, $event);
             }
+
+            return true;
         }
+
+        return false;
     }
 
     /**
