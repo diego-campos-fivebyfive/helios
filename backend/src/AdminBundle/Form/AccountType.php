@@ -4,10 +4,12 @@ namespace AdminBundle\Form;
 
 use AppBundle\Configuration\Brazil;
 use AppBundle\Entity\AccountInterface;
+use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Util\Validator\Constraints\ContainsCnpj;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -89,6 +91,37 @@ class AccountType extends AbstractType
         $builder->add('email',EmailType::class);
         $builder->add('phone',TextType::class);
 
+        if (!$account->isParentAccount()) {
+            $builder->add('parentAccount', EntityType::class, [
+                'class' => Customer::class,
+                'query_builder' => function (EntityRepository $er) use ($account) {
+                    $qb = $er->createQueryBuilder('a');
+
+                    $qb
+                        ->where('a.context = :context')
+                        ->andWhere('a.parent is null')
+                        ->andWhere('a.status = :status')
+                        ->setParameters([
+                            'context' => BusinessInterface::CONTEXT_ACCOUNT,
+                            'status' => 3
+                        ])
+                    ;
+
+                    if ($account->getId()) {
+                        $qb
+                            ->andWhere('a.id <> :thisAccount')
+                            ->setParameter(
+                                'thisAccount', $account
+                            )
+                        ;
+                    }
+
+                    return $qb;
+                },
+                'choice_label' => 'firstname',
+                'required' => false
+            ]);
+        }
     }
 
     /**
