@@ -20,7 +20,7 @@ class FiscalController extends AbstractController
     public function danfeAction(Request $request)
     {
         if (!$this->getAuth($request)) {
-            return $this->json([]);
+            return $this->json([], Response::HTTP_FORBIDDEN);
         }
 
         try {
@@ -40,7 +40,7 @@ class FiscalController extends AbstractController
     public function procedaAction(Request $request)
     {
         if (!$this->getAuth($request)) {
-            return $this->json([]);
+            return $this->json([], Response::HTTP_FORBIDDEN);
         }
 
         try{
