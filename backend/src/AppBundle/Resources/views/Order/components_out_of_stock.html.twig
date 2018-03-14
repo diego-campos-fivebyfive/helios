@@ -2,10 +2,17 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th></th>
+                <th>Código</th>
+                <th>Nome</th>
             </tr>
         </thead>
         <tbody>
+            {% for component in componentsOutOfStock %}
+            <tr>
+                <th>{{ component.code }}</th>
+                <th>{{ component.description }}</th>
+            </tr>
+            {% endfor %}
         </tbody>
     </table>
 {% endif %}
