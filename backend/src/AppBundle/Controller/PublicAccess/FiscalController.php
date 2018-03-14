@@ -25,14 +25,12 @@ class FiscalController extends AbstractController
 
         try {
 
-            $this->get('nfe_core')->core();
+            return $this->json($this->get('nfe_core')->core());
 
         }catch (\Exception $e){
 
             return $this->json(['error' => $e->getMessage()], Response::HTTP_CONFLICT);
         }
-
-        return $this->json([]);
     }
 
     /**
@@ -47,14 +45,12 @@ class FiscalController extends AbstractController
 
         try{
 
-            $this->get('proceda_processor')->resolve();
+            return $this->json($this->get('proceda_processor')->resolve());
 
         }catch (\Exception $e){
 
             return $this->json(['error' => $e->getMessage()], Response::HTTP_CONFLICT);
         }
-
-        return $this->json([]);
     }
 
     /**
