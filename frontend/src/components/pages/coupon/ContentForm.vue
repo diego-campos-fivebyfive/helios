@@ -1,23 +1,24 @@
 <template lang="pug">
   ModalForm(ref='modalForm')
-    form(slot='section', name='coupon')
-      fieldset.fields
-        label.half
-          | Nome
-          input(
-            v-model='form.payload.name',
-            placeholder='Nome')
-        label.half
-          | Valor
-          input(
-            v-model='form.payload.amount',
-            placeholder='Valor',
-            v-on:blur='isValidAmount')
-        label.full
-          | Conta
-          SelectAccountForm(
-            v-model.sync='form.payload.account',
-            :currentAccount='form.payload.account')
+    h1.title(slot='header')
+      | {{ form.title }}
+    form.form(slot='section', name='coupon')
+      label.field-name
+        | Nome
+        input(
+          v-model='form.payload.name',
+          placeholder='Nome')
+      label.field-value
+        | Valor
+        input(
+          v-model='form.payload.amount',
+          placeholder='Valor',
+          v-on:blur='isValidAmount')
+      label.field-account
+        | Conta
+        SelectAccountForm(
+          v-model.sync='form.payload.account',
+          :currentAccount='form.payload.account')
     ActionForm(
       slot='buttons',
       :action='form.action',
@@ -64,11 +65,13 @@
 
         if (coupon) {
           this.form.action = 'edit'
+          this.form.title = 'Edição de Cupom'
           this.form.payload = Object.assign({}, coupon)
           return
         }
 
         this.form.action = 'create'
+        this.form.title = 'Cadastro de Cupom'
         this.form.payload = Object.assign({}, this.form.default)
       },
       done(response) {
@@ -88,5 +91,20 @@
 </script>
 
 <style lang="scss">
-  /* ContentForm Style */
+  $field-base-size: $ui-size-sm - $ui-space-x*2;
+  $form-cols: 2;
+
+  $col-size: get-col-size($field-base-size, $form-cols);
+
+  .field-name {
+    flex: 1 1 get-field-size($col-size, 1);
+  }
+
+  .field-value {
+    flex: 1 1 get-field-size($col-size, 1);
+  }
+
+  .field-account {
+    flex: 1 1 get-field-size($col-size, 2);
+  }
 </style>
