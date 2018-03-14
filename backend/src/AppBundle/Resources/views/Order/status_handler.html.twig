@@ -1,15 +1,6 @@
 <script>
 
-    $('[data-status]').on('click', function () {
-        var id = $(this).data('id');
-        var status = $(this).data('status');
-
-        var title = 'Confirma a operação?';
-        var text = 'Este processo não pode ser desfeito';
-        if (status == {{ constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') }}) {
-            title = 'Aprovar e gerar pró-forma?';
-            text = 'ATENÇÃO: Ao prosseguir você estará confirmando seu pedido, que será processado após a identificação do pagamento.';
-        }
+    function showSwal(id, status, title, text) {
         swal({
             title: title,
             text: text,
@@ -55,8 +46,45 @@
                     });
                 }
             });
-
         });
+    }
+
+    $('[data-status]').on('click', function () {
+        var id = $(this).data('id');
+        var status = $(this).data('status');
+
+        var title = 'Confirma a operação?';
+        var text = 'Este processo não pode ser desfeito';
+
+        if (status == {{ constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') }}) {
+            title = 'Aprovar e gerar pró-forma?';
+            text = 'ATENÇÃO: Ao prosseguir você estará confirmando seu pedido, que será processado após a identificação do pagamento.';
+
+            $.ajax({
+                url: '{{ path('components_out_of_stock',{id:'_id_'}) }}'.replace(/_id_/g, id),
+                method: 'get',
+                complete: function (xhr) {
+                    if (200 === xhr.status) {
+
+                        var response = xhr.responseText;
+
+                        if (response !== "") {
+                            $('#components_out_of_stock').modal('show');
+                            $('#components_out_of_stock').find('.modal-body').html(response);
+                        }
+                        else {
+                            showSwal(id, status, title, text);
+                        }
+                    } else {
+                        var response = xhr.responseJSON;
+                        swal('Ooops', response.hasOwnProperty('error') ? response.error : 'Falha ao executar a operação', 'error');
+                    }
+                }
+            });
+        }
+        else {
+            showSwal(id, status, title, text);
+        }
     });
 
 </script>
