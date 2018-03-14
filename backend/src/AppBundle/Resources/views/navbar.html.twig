@@ -97,6 +97,11 @@
             {% endif %}#}
             {% if app.user and not app.user.isPlatform %}
                 <li>
+                    {% if (account.parentAccount and account.ranking > 0) or not account.isChildAccount %}
+                        {{ account.ranking ?? 0 }} pontos
+                    {% endif %}
+                </li>
+                <li>
                     <div class="label label-level label-size level-{{ account.level }}">
                     </div>
                 </li>
