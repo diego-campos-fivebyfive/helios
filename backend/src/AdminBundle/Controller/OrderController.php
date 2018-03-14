@@ -121,7 +121,8 @@ class OrderController extends AbstractController
         $qbIds = clone $qb;
         $qbIds->select('DISTINCT(o.id)');
 
-        $ids = array_map('current', ($qbIds->getQuery()->getResult())) ?? [0];
+        $ids = array_map('current', ($qbIds->getQuery()->getResult()));
+        $ids = $ids ? $ids : [0];
 
         $qb3 = $this->manager('order')->createQueryBuilder();
 
