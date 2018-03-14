@@ -350,10 +350,10 @@ class Processor
     private function connect()
     {
         return FileSystemFactory::create([
-            'host' => getenv('SICES_DEVELOPMENT_FTP_HOST'),//$this->container->getParameter('ftp_host'),
-            'port' => getenv('SICES_DEVELOPMENT_FTP_PORT'),//$this->container->getParameter('ftp_port'),
-            'username' => getenv('SICES_DEVELOPMENT_FTP_USER'),//$this->container->getParameter('ftp_user'),
-            'password' => getenv('SICES_DEVELOPMENT_FTP_PASS'),//$this->container->getParameter('ftp_password'),
+            'host' => $this->container->getParameter('ftp_host'),
+            'port' => $this->container->getParameter('ftp_port'),
+            'username' => $this->container->getParameter('ftp_user'),
+            'password' => $this->container->getParameter('ftp_password'),
             'directory' => '/PROCEDA-SICESSOLAR'
         ]);
     }
