@@ -119,6 +119,8 @@ class Processor
 
         $files = $this->loadAndFilterFiles();
 
+        $this->result['loaded_files'] = count($files);
+
         $contents = $this->loadContents($files);
 
         $collection = $this->loadCollection($contents);
@@ -208,7 +210,13 @@ class Processor
     private function processGroups(array &$groups = [])
     {
         foreach ($groups as $invoice => $events){
+            $count = count($events);
+            $this->result['loaded_events'] += $count;
+            $this->result['cached_events'] += $count;
+
             if($this->processGroupEvents($invoice, $events)){
+                $this->result['cached_events'] -= $count;
+
                 unset($groups[$invoice]);
             }
         }
