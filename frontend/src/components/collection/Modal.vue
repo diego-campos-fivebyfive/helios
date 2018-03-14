@@ -57,7 +57,18 @@
   }
 
   .collection-modal-section {
+    background-color: #f8fafb;
+    border-bottom: $ui-space-y/10 solid $ui-divider-color;
+    border-top: $ui-space-y/10 solid $ui-divider-color;
     padding: $ui-space-y 0;
+
+    .list {
+      padding-left: $ui-space-x*2;
+
+      li {
+        padding: $ui-space-y/5 0;
+      }
+    }
   }
 
   .collection-modal-footer,
@@ -82,20 +93,6 @@
         font-style: italic;
         font-weight: 400;
         padding-top: $ui-space-y/1.5;
-      }
-    }
-  }
-
-  .collection-modal-section {
-    background-color: #f8fafb;
-    border-bottom: $ui-space-y/10 solid $ui-divider-color;
-    border-top: $ui-space-y/10 solid $ui-divider-color;
-
-    .list {
-      padding-left: $ui-space-x*2;
-
-      li {
-        padding: $ui-space-y/5 0;
       }
     }
   }

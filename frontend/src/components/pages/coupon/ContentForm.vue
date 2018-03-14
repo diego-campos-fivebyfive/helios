@@ -91,14 +91,13 @@
 </script>
 
 <style lang="scss">
-  $field-base-size: $ui-size-sm - $ui-space-x * 2;
+  $field-base-size: $ui-size-sm - $ui-space-x*2;
   $form-cols: 2;
 
   $col-size: get-col-size($field-base-size, $form-cols);
 
   .field-name {
     flex: 1 1 get-field-size($col-size, 1);
-    min-width: 100px;
   }
 
   .field-value {
