@@ -20,19 +20,17 @@ class FiscalController extends AbstractController
     public function danfeAction(Request $request)
     {
         if (!$this->getAuth($request)) {
-            return $this->json([]);
+            return $this->json([], Response::HTTP_FORBIDDEN);
         }
 
         try {
 
-            $this->get('nfe_core')->core();
+            return $this->json($this->get('nfe_core')->core());
 
         }catch (\Exception $e){
 
             return $this->json(['error' => $e->getMessage()], Response::HTTP_CONFLICT);
         }
-
-        return $this->json([]);
     }
 
     /**
@@ -42,19 +40,17 @@ class FiscalController extends AbstractController
     public function procedaAction(Request $request)
     {
         if (!$this->getAuth($request)) {
-            return $this->json([]);
+            return $this->json([], Response::HTTP_FORBIDDEN);
         }
 
         try{
 
-            $this->get('proceda_processor')->resolve();
+            return $this->json($this->get('proceda_processor')->resolve());
 
         }catch (\Exception $e){
 
             return $this->json(['error' => $e->getMessage()], Response::HTTP_CONFLICT);
         }
-
-        return $this->json([]);
     }
 
     /**

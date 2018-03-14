@@ -4,6 +4,7 @@ namespace App\Sices\Nfe;
 
 use App\Sices\Ftp\FileReader;
 use App\Sices\Ftp\FileSystemFactory;
+use AppBundle\Entity\Order\Order;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Core
@@ -17,6 +18,14 @@ class Core
      * @var string
      */
     private $path;
+
+    /**
+     * @var array
+     */
+    private $result = [
+        'loaded_files' => 0,
+        'processed_files' => 0
+    ];
 
     /**
      * Core constructor.
@@ -61,19 +70,20 @@ class Core
             $danfe = $parse::extract($filename);
             $order = $processor->matchReference($danfe);
 
-            if (!$order) {
-                continue;
-            }
+            if ($order instanceof Order) {
 
-            $processor->setOrderDanfe($order, $danfe, $filename, $extensions);
+                $processor->setOrderDanfe($order, $danfe, $filename, $extensions);
 
-            $date = (new \DateTime('now'))->format('Ymd');
-            $prefix = "PROCESSED-${date}-";
+                $date = (new \DateTime('now'))->format('Ymd');
+                $prefix = "PROCESSED-${date}-";
 
-            foreach ($extensions as $extension) {
-                $file = "${filename}.${extension}";
-                $fileReader->prefixer($file, $prefix);
+                foreach ($extensions as $extension) {
+                    $file = "${filename}.${extension}";
+                    $fileReader->prefixer($file, $prefix);
+                }
             }
         }
+
+        return $this->result;
     }
 }
