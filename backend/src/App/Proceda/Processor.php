@@ -117,13 +117,6 @@ class Processor
     {
         $groups = $this->loadCache();
 
-        $qtEvents = 0;
-        foreach ($groups as $group) {
-            $qtEvents += count($group);
-        }
-
-        $this->result['loaded_events'] = $qtEvents;
-
         $files = $this->loadAndFilterFiles();
 
         $this->result['loaded_files'] = count($files);
@@ -133,13 +126,6 @@ class Processor
         $collection = $this->loadCollection($contents);
 
         $this->mergeGroups($collection, $groups);
-
-        $qtEventsCached = 0;
-        foreach ($groups as $group) {
-            $qtEventsCached += count($group);
-        }
-
-        $this->result['cached_events'] = $qtEventsCached;
 
         $this->persistCache($groups);
 
@@ -224,7 +210,13 @@ class Processor
     private function processGroups(array &$groups = [])
     {
         foreach ($groups as $invoice => $events){
+            $count = count($events);
+            $this->result['loaded_events'] += $count;
+            $this->result['cached_events'] += $count;
+
             if($this->processGroupEvents($invoice, $events)){
+                $this->result['cached_events'] -= $count;
+
                 unset($groups[$invoice]);
             }
         }
@@ -358,10 +350,10 @@ class Processor
     private function connect()
     {
         return FileSystemFactory::create([
-            'host' => $this->container->getParameter('ftp_host'),
-            'port' => $this->container->getParameter('ftp_port'),
-            'username' => $this->container->getParameter('ftp_user'),
-            'password' => $this->container->getParameter('ftp_password'),
+            'host' => getenv('SICES_DEVELOPMENT_FTP_HOST'),//$this->container->getParameter('ftp_host'),
+            'port' => getenv('SICES_DEVELOPMENT_FTP_PORT'),//$this->container->getParameter('ftp_port'),
+            'username' => getenv('SICES_DEVELOPMENT_FTP_USER'),//$this->container->getParameter('ftp_user'),
+            'password' => getenv('SICES_DEVELOPMENT_FTP_PASS'),//$this->container->getParameter('ftp_password'),
             'directory' => '/PROCEDA-SICESSOLAR'
         ]);
     }
