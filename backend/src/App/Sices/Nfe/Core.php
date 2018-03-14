@@ -60,6 +60,8 @@ class Core
             return $prefix != "PROCESSED";
         });
 
+        $this->result['loaded_files'] = count($filesList);
+
         $fileReader->downloadList($filesList, $this->path);
 
         $processor->pushS3($filesList, $this->path);
@@ -80,6 +82,7 @@ class Core
                 foreach ($extensions as $extension) {
                     $file = "${filename}.${extension}";
                     $fileReader->prefixer($file, $prefix);
+                    $this->result['processed_files']++;
                 }
             }
         }

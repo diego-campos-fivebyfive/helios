@@ -19,15 +19,16 @@ class ProcessorNfeTest extends AppTestCase
             "PR180212345678000112AA123123456789C12345678B171010000013201802052.xml",
             "PR180212345678000112AA123123456789C12345678B171010000013201802053.pdf",
             "PR180212345678000112AA123123456789C12345678B171010000013201802053.xml",
+            "3517111777450100012855001000012345100466462417112800820171120S.xml"
         ];
 
-        $processor = new Processor();
+        $processor = new Processor($this->getContainer());
 
         $filesIndexed = $processor->indexer($files);
 
-        self::assertCount(3, $filesIndexed);
+        self::assertCount(4, $filesIndexed);
         self::assertArrayHasKey(
-            'PR180212345678000112AA123123456789C12345678B171010000013201802051',
+            '3517111777450100012855001000012345100466462417112800820171120S',
             $filesIndexed
         );
         self::assertArrayNotHasKey('xml', $filesIndexed);
