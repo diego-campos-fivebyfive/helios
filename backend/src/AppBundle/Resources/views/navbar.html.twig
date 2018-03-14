@@ -96,18 +96,8 @@
                 </li>
             {% endif %}#}
             {% if app.user and not app.user.isPlatform %}
-                {% if account.ranking %}
-                    {% if account.parentAccount %}
-                        {% if account.ranking > 0 %}
-                            <li>
-                                {{ account.ranking }} pontos
-                            </li>
-                        {% endif %}
-                    {% else %}
-                        <li>
-                            {{ account.ranking }} pontos
-                        </li>
-                    {% endif %}
+                {% if account.ranking > 0 %}
+                    {{ account.isChildAccount ? account.parent.ranking : account.ranking }} pontos
                 {% endif %}
                 <li>
                     <div class="label label-level label-size level-{{ account.level }}">
