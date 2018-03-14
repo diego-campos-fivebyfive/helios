@@ -157,16 +157,16 @@
                             {{ form_widget(form.like,{attr:{class:'form-control', placeholder: 'nome, razão social, cnpj, número...'}}) }}
                         </div>
 
+                        <div class="col-md-3">
+                            {% include view('admin/helper/status_filter.html.twig') %}
+                        </div>
+
                         <div class="group-input col-md-5">
                             {{ form_widget(form.optionsAt,{attr:{class:'form-control'}}) }}
                             {{ form_widget(form.dateAt,{attr:{class:'form-control', placeholder:'Filtrar p/ data' }}) }}
                             <button type="button" id="clear-dateAt" class="btn btn-primary ">
                                 <i class="fa fa-eraser"></i>
                             </button>
-                        </div>
-
-                        <div class="col-md-3">
-                            {% include view('admin/helper/status_filter.html.twig') %}
                         </div>
                     </div>
 
