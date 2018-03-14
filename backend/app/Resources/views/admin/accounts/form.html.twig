@@ -130,13 +130,20 @@
                         {% endif %}
 
                         {% if form.agent is defined %}
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 {{ form_label(form.agent, 'Agente Comercial *') }}
                                 {{ form_widget(form.agent,{attr:{class:'form-control', 'placeholder':'Status'}}) }}
                             </div>
                         {% endif %}
                     </div>
                     <div class="col-md-12">
+                        {% if form.parentAccount is defined %}
+                            <div class="col-md-4">
+                                {{ form_label(form.parentAccount, 'Conta Mãe') }}
+                                {{ form_widget(form.parentAccount,{attr:{class:'form-control', 'placeholder':'Conta Mãe'}}) }}
+                            </div>
+                        {% endif %}
+
                         {% if app.user.isPlatformAdmin or app.user.isPlatformMaster %}
                         <div class="col-md-6 check-persistent">
                                 <div class="col-md-1">
@@ -206,6 +213,22 @@
 
 
     <script>
+        function resolveParent(selected) {
+            if(selected) {
+                $('#account_level').attr('disabled', 'disabled');
+                $('#account_agent').attr('disabled', 'disabled');
+            } else {
+                $('#account_level').removeAttr('disabled');
+                $('#account_agent').removeAttr('disabled');
+            }
+        }
+
+        resolveParent($('#account_parentAccount').val());
+
+        $('#account_parentAccount').on('change', function () {
+            resolveParent($(this).val());
+        });
+
         $('#account_email').change(function () {
             $('#account_member_email').val($(this).val());
             $('#account_member_users_email').val($(this).val());
