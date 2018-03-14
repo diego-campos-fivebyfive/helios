@@ -8,19 +8,19 @@
         | Confirma exclusão deste Cupom?
     Table.table(type='stripped')
       tr(slot='head')
-        th Nome
-        th Código
-        th Conta
-        th Status
-        th Valor
-        th Ações
+        th.col-name Nome
+        th.col-code Código
+        th.col-account Conta
+        th.col-status Status
+        th.col-amount Valor
+        th.col-action Ações
       tr.rows(slot='rows', v-for='coupon in coupons')
-        td {{ coupon.name }}
-        td {{ coupon.code }}
-        td {{ coupon.account.name || 'Não Vinculada' }}
-        td {{ coupon.applied ? 'Aplicado' : 'Não Aplicado' }}
-        td R$ {{ coupon.amount }}
-        td
+        td.col-name {{ coupon.name }}
+        td.col-code {{ coupon.code }}
+        td.col-account {{ coupon.account.name || 'Não Vinculada' }}
+        td.col-status {{ coupon.applied ? 'Aplicado' : 'Não Aplicado' }}
+        td.col-amount R$ {{ coupon.amount }}
+        td.col-action
           Button(
             v-if='!coupon.applied',
             type='primary-common',
@@ -59,34 +59,29 @@
     cursor: pointer;
   }
 
-  .table {
-    td,
-    th {
-      &:nth-child(1) {
-        text-align: left;
-        width: 25%;
-      }
+  .col-name {
+    min-width: 20%;
+    text-align: left;
+  }
 
-      &:nth-child(2) {
-        text-align: center;
-      }
+  .col-code {
+    text-align: center;
+  }
 
-      &:nth-child(3) {
-        text-align: center;
-        width: 25%;
-      }
+  .col-account {
+    min-width: 20%;
+    text-align: center;
+  }
 
-      &:nth-child(4) {
-        text-align: center;
-      }
+  .col-status {
+    text-align: center;
+  }
 
-      &:nth-child(5) {
-        text-align: right;
-      }
+  .col-amount {
+    text-align: right;
+  }
 
-      &:nth-child(6) {
-        text-align: right;
-      }
-    }
+  .col-action {
+    text-align: right;
   }
 </style>
