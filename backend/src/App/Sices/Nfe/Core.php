@@ -64,7 +64,7 @@ class Core
 
         $fileReader->downloadList($filesList, $this->path);
 
-        //$processor->pushS3($filesList, $this->path);
+        $processor->pushS3($filesList, $this->path);
 
         $files = $processor->indexer($filesList);
 
