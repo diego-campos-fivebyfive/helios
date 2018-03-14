@@ -1,0 +1,7 @@
+@function get-col-size($field-base-size, $form-cols) {
+  @return $field-base-size / $form-cols;
+}
+
+@function get-field-size($col-size, $field-cols) {
+  @return $col-size * $field-cols;
+}
