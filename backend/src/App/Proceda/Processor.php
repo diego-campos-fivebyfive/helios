@@ -117,13 +117,29 @@ class Processor
     {
         $groups = $this->loadCache();
 
+        $qtEvents = 0;
+        foreach ($groups as $group) {
+            $qtEvents += count($group);
+        }
+
+        $this->result['loaded_events'] = $qtEvents;
+
         $files = $this->loadAndFilterFiles();
+
+        $this->result['loaded_files'] = count($files);
 
         $contents = $this->loadContents($files);
 
         $collection = $this->loadCollection($contents);
 
         $this->mergeGroups($collection, $groups);
+
+        $qtEventsCached = 0;
+        foreach ($groups as $group) {
+            $qtEventsCached += count($group);
+        }
+
+        $this->result['cached_events'] = $qtEventsCached;
 
         $this->persistCache($groups);
 
