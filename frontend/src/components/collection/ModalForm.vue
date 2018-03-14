@@ -25,12 +25,18 @@
 
 <style lang="scss">
   .collection-modal-form {
-    .fields {
+    .form {
+      align-content: flex-start;
+      align-items: flex-start;
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: flex-start;
+      width: 100%;
+
       label {
         float: left;
         font-weight: 600;
-        margin: $ui-space-y/2 $ui-space-x/2;
-        width: 100%;
+        padding: $ui-space-y/2 $ui-space-x/2;
       }
 
       select {
@@ -60,14 +66,6 @@
         &:focus {
           border-color: $ui-blue-light;
         }
-      }
-
-      .full {
-        max-width: calc(100% - #{$ui-space-x});
-      }
-
-      .half {
-        max-width: calc(50% - #{$ui-space-x});
       }
     }
   }
