@@ -48,6 +48,64 @@ class OrderController extends AbstractController
 
         $data = $form->handleRequest($request)->getData();
 
+        $expanseStates = [];
+        $arrayStates = [];
+        $arrayStatus = [];
+        $arrayComponents = [];
+
+
+        $qb = $this->filterOrders($request, $data, $expanseStates, $arrayStates, $arrayStatus, $arrayComponents);
+
+        $totals = $this->getFiltersTotals(clone $qb);
+
+        $pagination = $this->getPaginator()->paginate(
+            $qb->getQuery(),
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->render('admin/orders/index.html.twig', array(
+            'orders' => $pagination,
+            'member' => $member,
+            'form' => $form->createView(),
+            'totals' => $totals,
+            'states' => $this->resolveFilters($this->getStates($expanseStates), $arrayStates),
+            'statusList' => $this->resolveFilters(Order::getStatusNames(), $arrayStatus),
+            'componentsList' => $this->resolveFilters($this->getComponentsList(), $arrayComponents)
+        ));
+    }
+
+    /**
+     * @param $qb
+     * @return mixed
+     */
+    private function getFiltersTotals($qb)
+    {
+        $qb->select('DISTINCT(o.id)');
+
+        $ids = array_map('current', ($qb->getQuery()->getResult()));
+        $ids = $ids ? $ids : [0];
+
+        $qb3 = $this->manager('order')->createQueryBuilder();
+
+        $qb3
+            ->select('sum(o.total) as total, sum(o.power) as power')
+            ->where($qb3->expr()->in('o.id', $ids));
+
+        return current($qb3->getQuery()->getResult());
+    }
+
+    /**
+     * @param $request
+     * @param $data
+     * @param array $expanseStates
+     * @param array $arrayStates
+     * @param array $arrayStatus
+     * @param array $arrayComponents
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function filterOrders($request, $data, &$expanseStates = [], &$arrayStates = [], &$arrayStatus = [], &$arrayComponents = [])
+    {
         $optionVal = $data['optionsVal'];
         $valueMin = $data['valueMin'] ? str_replace(',', '.', $data['valueMin']) : null;
         $valueMax = $data['valueMax'] ? str_replace(',', '.', $data['valueMax']) : null;
@@ -60,7 +118,7 @@ class OrderController extends AbstractController
         };
 
         if(is_array($data) && !array_key_exists('agent',$data) || !$data['agent']) {
-            $data['agent'] = $member;
+            $data['agent'] = $this->member();
         }
 
         /** @var \AppBundle\Service\Order\OrderFinder $finder */
@@ -112,43 +170,12 @@ class OrderController extends AbstractController
             }
         }
 
-        $expanseStates = [];
         if ($this->member()->isPlatformExpanse()) {
             $expanseStates = $this->member()->getAttributes()['states'];
             $qb->andWhere($qb->expr()->in('o.state', $expanseStates));
         }
 
-        $qbIds = clone $qb;
-        $qbIds->select('DISTINCT(o.id)');
-
-        $ids = array_map('current', ($qbIds->getQuery()->getResult()));
-        $ids = $ids ? $ids : [0];
-
-        $qb3 = $this->manager('order')->createQueryBuilder();
-
-        $qb3
-            ->select('sum(o.total) as total, sum(o.power) as power')
-            ->where($qb3->expr()->in('o.id', $ids));
-
-        $totals = current($qb3->getQuery()->getResult());
-
-        $pagination = $this->getPaginator()->paginate(
-            $qb->getQuery(),
-            $request->query->getInt('page', 1),
-            10
-        );
-
-        $componentsList = $this->getComponentsList();
-
-        return $this->render('admin/orders/index.html.twig', array(
-            'orders' => $pagination,
-            'member' => $member,
-            'form' => $form->createView(),
-            'totals' => $totals,
-            'states' => $this->resolveFilters($this->getStates($expanseStates), $arrayStates),
-            'statusList' => $this->resolveFilters(Order::getStatusNames(), $arrayStatus),
-            'componentsList' => $this->resolveFilters($this->getComponentsList(), $arrayComponents)
-        ));
+        return $qb;
     }
 
     /**
