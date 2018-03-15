@@ -49,14 +49,30 @@
     }),
     methods: {
       isValidAmount() {
-        if (
-          /^(\d{1,3}(\.\d{3})*|\d+)(\,\d{2})?$/.test(this.form.payload.amount)
-        ) {
+        const field = this.form.payload.amount
+        const expType = 'money'
+        const customException = 'Formato de moeda inválido'
+
+
+        const patterns = {
+          'money': /^(\d{1,3}(\.\d{3})*|\d+)(\,\d{2})?$/
+        }
+
+        const pattern = patterns[expType]
+
+        const exceptions = {
+          'money': 'Formato de moeda em Real invalido'
+        }
+
+        const defaultException = exceptions[expType]
+
+
+        if (pattern.test(field)) {
           this.form.resolved = false
           return
         }
 
-        this.$refs.modalForm.notify('Formato de moeda em Real invalido')
+        this.$refs.modalForm.notify(customException || defaultException)
         this.form.resolved = true
       },
       show(coupon) {
