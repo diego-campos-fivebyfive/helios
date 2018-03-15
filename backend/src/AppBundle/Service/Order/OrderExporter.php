@@ -147,7 +147,6 @@ class OrderExporter
                     $suborderData = $this->extractSuborderData($suborder);
                     $this->setInsuranceColumns($suborderData, $suborder);
                     $subordersData[] = $suborderData;
-
                 }
 
                 $this->setSpreadsheetHeaders($spreadsheet, $this->suborderColumnMapping);
@@ -248,7 +247,6 @@ class OrderExporter
                     ->setCellValueByColumnAndRow($i, 1, $column);
                 $i++;
             }
-
         } catch (\Exception $e) {
 
         }

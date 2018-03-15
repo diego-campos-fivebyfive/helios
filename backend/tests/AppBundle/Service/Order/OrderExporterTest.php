@@ -70,7 +70,7 @@ class OrderExporterTest extends AppTestCase
         $accountManager->save($account);
 
         /** @var Order $order */
-        $orders =[];
+        $orders = [];
         $order = $orderManager->create();
 
         $order->setReference('12345');
