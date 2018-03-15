@@ -42,45 +42,43 @@ function formatResultMessage($service, array $result = []){
 
 if (3 == count($argv) && in_array($argv[2], ['proceda', 'danfe'])) {
 
-
     $service = $argv[2];
     $host = getenv('CES_SICES_HOST');
     $port = getenv('CES_SICES_PORT');
     $label = strtoupper($service);
 
-    $uri = (8000 == $port) ? "${host}:${port}" : $host;
-    $url = "{$uri}/public/fiscal/{$service}";
+    $baseUri = (8000 == $port) ? "${host}:${port}" : $host;
+    $uri = "/public/fiscal/{$service}";
 
     $headers = [
-        'AUTHORIZATION: OewkQ42mCxVyfk7cbKg5jORFTWdWMQhxIO2bjHQt',
-        'SECRET: NXTh0oqmwed4PvK3HCysMJjMWEGGJ2Fw0hXDfyox'
+        'AUTHORIZATION' => 'OewkQ42mCxVyfk7cbKg5jORFTWdWMQhxIO2bjHQt',
+        'SECRET' => 'NXTh0oqmwed4PvK3HCysMJjMWEGGJ2Fw0hXDfyox'
     ];
 
     $startTime = microtime(true);
+
     createLog($service, sprintf('%s: Processamento iniciado.', strtoupper($service)));
 
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_HEADER, true);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_POST, true);
+    $client = new \GuzzleHttp\Client([
+        'base_uri' => $baseUri,
+        'headers' => $headers
+    ]);
 
-    $result = curl_exec($curl);
-    $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    $content = curl_getinfo($curl);
-    curl_close($curl);
+    $response = $client->post($uri);
+
+    $content = $response->getBody()->getContents();
+    $statusCode = $response->getStatusCode();
 
     if (200 == $statusCode) {
 
-        $result = (array) json_decode($content, true);
+        $result = json_decode($content, true);
         $result['time'] = round(microtime(true) - $startTime, 1);
 
         createLog($service, formatResultMessage($service, $result));
 
     } else {
 
-        createLog($service, 'Falha ao executar processamento: ' . $result, \Monolog\Logger::ERROR);
+        createLog($service, 'Falha ao executar processamento: ' . $content, \Monolog\Logger::ERROR);
     }
 
     die("Processo executado, verifique o status em {$currentDir}/logs/cron-{$service}.log\n");

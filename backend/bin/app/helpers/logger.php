@@ -12,7 +12,7 @@ function createLog($context, $message, $level = Logger::INFO){
 
     $env = getEnvironment();
 
-    exec("\$CLI_PATH/ces-slack-notify --$env '$message'");
+    exec("\$CLI_PATH/ces-slack-notify --{$env} '$message'");
 
     $filename = dirname(__DIR__) . sprintf('/logs/cron-%s.log', $context);
 

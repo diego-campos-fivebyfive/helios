@@ -21,7 +21,13 @@ function getEnvironment(){
  * @return array
  */
 function getParameters(){
-    return require_once dirname(__FILE__) . '/parameters.php';
+
+    if(!defined('PARAMETERS')){
+        $parameters =  require_once dirname(__FILE__) . '/parameters.php';
+        define('PARAMETERS', serialize($parameters));
+    }
+
+    return unserialize(PARAMETERS);
 }
 
 /**
