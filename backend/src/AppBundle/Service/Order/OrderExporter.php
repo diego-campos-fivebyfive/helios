@@ -60,7 +60,7 @@ class OrderExporter
      * @var array
      */
     private $orderColumnMapping = [
-        'reference' => 'Orcamento',
+        'reference' => 'Orçamento',
         'status' => 'Status',
         'status_at' => 'Data status',
         'account' => 'Integrador',
