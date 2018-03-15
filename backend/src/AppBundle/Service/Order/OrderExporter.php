@@ -60,20 +60,21 @@ class OrderExporter
 
     /**
      * @param Order $order
+     * @return array
      */
     public function extractOrderData(Order $order)
     {
-        $orderData = [
+        return [
             'reference' => $order->getReference(),
             'status' => $this->getStatusNameInPortuguese()[$order->getStatus()],
-            'send_at' => $this->formatDate($order->getSendAt()),
+            'status_at' => $this->formatDate($order->getStatusAt()),
             'account' => $order->getAccount()->getName(),
-            'cnpj' => $order->getCnpj(),
+            'cnpj' => $order->getAccount()->getDocument(),
             'level' => $order->getLevel(),
-            //'agent' => $order->getAgent()->getName(),
+            'agent' => $order->getAgent()->getName(),
             'sub_orders' => count($order->getChildrens()),
             'power' => $order->getPower() . " kWp",
-            'total' => $this->formatMoney($order->getTotal()),
+            'total_price' => $this->formatMoney($order->getTotal()),
             'shipping_type' => $order->getShippingRules()['type'],
             'shipping_price' => $this->formatMoney($order->getShipping()),
             'payment_method' => $order->getPaymentMethod('array')['name'],
@@ -84,8 +85,28 @@ class OrderExporter
             'invoices' => implode(", ", $order->getInvoices()),
             'billed_at' => $this->formatDate($order->getBilledAt())
         ];
+    }
 
-        return $orderData;
+    /**
+     * @param Order $order
+     * @return array
+     */
+    public function extractSuborderData(Order $order)
+    {
+        $parent = $order->getParent();
+
+        $data = [
+            'reference' => $parent->getReference(),
+            'status' => $this->getStatusNameInPortuguese()[$parent->getStatus()],
+            'status_at' => $this->formatDate($parent->getStatusAt()),
+            'account' => $parent->getAccount()->getName(),
+            'cnpj' => $parent->getAccount()->getDocument(),
+            'level' => $order->getLevel(),
+            'power' => $order->getPower() . " kWp",
+            'total_price' => $this->formatMoney($order->getTotal())
+        ];
+
+        return $data;
     }
 
     /**
