@@ -40,7 +40,7 @@ class AppListener
         $this->container = $container;
 
         if('dev' === $container->get('kernel')->getEnvironment()){
-            $this->handleExceptions = true;
+            $this->handleExceptions = false;
         }
     }
 
