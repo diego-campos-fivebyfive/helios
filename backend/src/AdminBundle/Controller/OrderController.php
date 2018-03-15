@@ -326,13 +326,13 @@ class OrderController extends AbstractController
         $ids = array_map('current', ($qb->getQuery()->getResult()));
         $ids = $ids ? $ids : [0];
 
-        $qb3 = $this->manager('order')->createQueryBuilder();
+        $qb2 = $this->manager('order')->createQueryBuilder();
 
-        $qb3
+        $qb2
             ->select('sum(o.total) as total, sum(o.power) as power')
-            ->where($qb3->expr()->in('o.id', $ids));
+            ->where($qb2->expr()->in('o.id', $ids));
 
-        return current($qb3->getQuery()->getResult());
+        return current($qb2->getQuery()->getResult());
     }
 
     /**
