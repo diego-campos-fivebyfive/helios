@@ -84,7 +84,7 @@ class AppListener
         $this->sendSlackNotification($event->getException());
 
         if(!$this->handleExceptions)
-        throw $event->getException();
+            throw $event->getException();
 
         $request = $event->getRequest();
         $pathInfo = $request->getPathInfo();
