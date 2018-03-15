@@ -27,11 +27,11 @@ export default new Router({
       name: 'Contas',
       component: Account
     },
-    {
+    /*{
       path: '/coupon',
       name: 'Cupons',
       component: Coupon
-    },
+    },*/
     {
       path: '/metrics',
       name: 'Métricas',
