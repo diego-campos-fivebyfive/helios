@@ -5,6 +5,7 @@ namespace Tests\AppBundle\Service\Order;
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Component\MakerInterface;
+use AppBundle\Entity\Misc\Additive;
 use AppBundle\Entity\Order\Element;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
@@ -26,6 +27,29 @@ class OrderExporterTest extends AppTestCase
 
     public function testExtractOrderData()
     {
+        $additiveManager = $this->getContainer()->get('additive_manager');
+
+        $insurance1 = new Additive();
+        $insurance1->setName('seguro 1');
+        $insurance1->setType(1);
+        $insurance1->setTarget(1);
+        $insurance1->setValue(1);
+        $additiveManager->save($insurance1);
+
+        $insurance2 = new Additive();
+        $insurance2->setName('seguro 2');
+        $insurance2->setType(1);
+        $insurance2->setTarget(1);
+        $insurance2->setValue(1);
+        $additiveManager->save($insurance2);
+
+        $insurance3 = new Additive();
+        $insurance3->setName('seguro 3');
+        $insurance3->setType(1);
+        $insurance3->setTarget(1);
+        $insurance3->setValue(1);
+        $additiveManager->save($insurance3);
+
         $orderManager = $this->getContainer()->get('order_manager');
         /** @var OrderExporter $orderExporter */
         $orderExporter = $this->getContainer()->get('order_exporter');
