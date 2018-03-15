@@ -40,7 +40,7 @@ class AppListener
         $this->container = $container;
 
         if('dev' === $container->get('kernel')->getEnvironment()){
-            $this->handleExceptions = false;
+            $this->handleExceptions = true;
         }
     }
 
@@ -81,10 +81,10 @@ class AppListener
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
-        $this->sendSlackNotification($event->getException());
-
         if(!$this->handleExceptions)
             throw $event->getException();
+
+        $this->sendSlackNotification($event->getException());
 
         $request = $event->getRequest();
         $pathInfo = $request->getPathInfo();

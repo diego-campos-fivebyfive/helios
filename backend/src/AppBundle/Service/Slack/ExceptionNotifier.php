@@ -32,9 +32,7 @@ class ExceptionNotifier
         $output .= strlen($traced) ? $traced : 'No trace info.';
         $output .= '\n\n';
 
-        $ambience = 'production' != $environment ? 'homolog' : 'production';
-
-        exec("\${CLI_PATH}/ces-slack-notify --{$ambience} '$output'");
+        exec("\${CLI_PATH}/ces-slack-notify --{$environment} '$output'");
     }
 
     /**
