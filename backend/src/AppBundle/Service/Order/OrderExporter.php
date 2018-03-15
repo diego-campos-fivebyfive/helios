@@ -20,6 +20,8 @@ use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Manager\AdditiveManager;
 use Exporter\Writer\CsvWriter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 /**
  * Class OrderExporter
@@ -58,7 +60,7 @@ class OrderExporter
      * @var array
      */
     private $orderColumnMapping = [
-        'reference' => 'Orçamento',
+        'reference' => 'Orcamento',
         'status' => 'Status',
         'status_at' => 'Data status',
         'account' => 'Integrador',
@@ -108,10 +110,63 @@ class OrderExporter
     }
 
     /**
+     * @param $orders
+     * @param $mode
+     * @return string
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function export($orders, $mode)
+    {
+        $spreadsheet = new Spreadsheet();
+        $spreadsheet->getProperties()
+            ->setCreator('Sices Solar')
+            ->setTitle('Orçamentos Filtrados');
+        $projectRoot = $this->container->get('kernel')->getRootDir() . "/../..";
+        $fileName = uniqid(md5(time())) . ".xlsx";
+        $path = $projectRoot . "/.uploads/orders/export/" . $fileName;
+
+        if ($mode === 1) {
+
+            $ordersData = [];
+
+            foreach ($orders as $order) {
+                $ordersData[] = $this->extractOrderData($order);
+            }
+
+            $this->setSpreadsheetHeaders($spreadsheet, $this->orderColumnMapping);
+            $this->setSpreadsheetData($spreadsheet, $ordersData);
+
+        } elseif ($mode == 2) {
+
+            $subordersData = [];
+
+            foreach ($orders as $order) {
+                $suborders = $order->getChildrens();
+
+                foreach ($suborders as $suborder) {
+                    $suborderData = $this->extractSuborderData($suborder);
+                    $this->setInsuranceColumns($suborderData, $suborder);
+                    $subordersData[] = $suborderData;
+
+                }
+
+                $this->setSpreadsheetHeaders($spreadsheet, $this->suborderColumnMapping);
+                $this->setSpreadsheetData($spreadsheet, $subordersData);
+            }
+        }
+
+        $writer = new Xlsx($spreadsheet);
+
+        $writer->save($path);
+
+        return $path;
+    }
+
+    /**
      * @param Order $order
      * @return array
      */
-    public function extractOrderData(Order $order)
+    private function extractOrderData(Order $order)
     {
         return [
             'reference' => $order->getReference(),
@@ -140,7 +195,7 @@ class OrderExporter
      * @param Order $order
      * @return array
      */
-    public function extractSuborderData(Order $order)
+    private function extractSuborderData(Order $order)
     {
         $parent = $order->getParent();
 
@@ -160,11 +215,51 @@ class OrderExporter
     }
 
     /**
+     * @param Spreadsheet $spreadsheet
+     * @param $data
+     */
+    private function setSpreadsheetData(Spreadsheet &$spreadsheet, $data) {
+        try {
+
+            $initialRow = 2;
+
+            for ($i = 0; $i < count($data); $i++) {
+                $column = 1;
+                foreach ($data[$i] as $value) {
+                    $spreadsheet->setActiveSheetIndex(0)
+                        ->setCellValueByColumnAndRow($column, $initialRow, $value);
+                    $column++;
+                }
+                $initialRow++;
+            }
+        } catch (\Exception $e) {
+
+        }
+    }
+
+    /**
+     * @param Spreadsheet $spreadsheet
+     */
+    private function setSpreadsheetHeaders(Spreadsheet &$spreadsheet, $headers) {
+        try {
+            $i = 1;
+            foreach ($headers as $column) {
+                $spreadsheet->setActiveSheetIndex(0)
+                    ->setCellValueByColumnAndRow($i, 1, $column);
+                $i++;
+            }
+
+        } catch (\Exception $e) {
+
+        }
+    }
+
+    /**
      * @deprecated
      * @param OrderInterface $order
      * @return string
      */
-    public function export(OrderInterface $order)
+    public function exportLegacy(OrderInterface $order)
     {
         $reference = $order->getReference();
 
@@ -240,6 +335,23 @@ class OrderExporter
         ];
 
         return $data;
+    }
+
+    /**
+     * Set Insurance Columns
+     */
+    private function setInsuranceColumns(&$suborderData, $suborder) {
+
+        /** @var AdditiveManager $additiveManager */
+        $additiveManager = $this->container->get('additive_manager');
+
+        $insurances = $additiveManager->findBy([
+            'type' => AdditiveInterface::TYPE_INSURANCE
+        ]);
+
+        foreach ($insurances as $insurance) {
+            $suborderData[$insurance->getName()] = $suborder->hasAdditive($insurance) ? "Sim" : "Não";
+        }
     }
 
     /**
