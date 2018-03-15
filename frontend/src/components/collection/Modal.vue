@@ -39,7 +39,7 @@
     color: $ui-text-main;
     left: 0;
     margin: auto;
-    max-height: calc(100% - 130px);
+    max-height: 50%;
     max-width: $ui-size-md;
     position: fixed;
     right: 0;
