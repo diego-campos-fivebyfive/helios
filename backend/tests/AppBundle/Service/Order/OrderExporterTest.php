@@ -27,6 +27,7 @@ class OrderExporterTest extends AppTestCase
     public function testExtractOrderData()
     {
         $orderManager = $this->getContainer()->get('order_manager');
+        /** @var OrderExporter $orderExporter */
         $orderExporter = $this->getContainer()->get('order_exporter');
         $accountManager = $this->getContainer()->get('account_manager');
 
@@ -46,8 +47,7 @@ class OrderExporterTest extends AppTestCase
         $order->setReference('12345');
         $order->setAccount($account);
         $order->setStatus(3);
-        $order->setSendAt(new \DateTime());
-        $order->setCnpj('3333');
+        $order->getAccount()->setDocument('3333');
         $order->setPower('20');
         $order->addInvoice('123');
         $order->addInvoice('456');
@@ -77,7 +77,10 @@ class OrderExporterTest extends AppTestCase
         $order->addChildren($subOrder2);
 
         $subOrder1->addElement($element);
+        $subOrder1->setPower(10);
+
         $subOrder2->addElement($element);
+        $subOrder2->setPower(2);
 
         $orderManager->save($order);
 
@@ -85,13 +88,13 @@ class OrderExporterTest extends AppTestCase
 
         $this->assertEquals($orderData['reference'], '12345');
         $this->assertEquals($orderData['status'], 'Aprovado');
-        $this->assertEquals($orderData['send_at'], (new \DateTime())->format('d/m/Y'));
+        $this->assertEquals($orderData['status_at'], (new \DateTime())->format('d/m/Y'));
         $this->assertEquals($orderData['account'], 'Conta');
         $this->assertEquals($orderData['cnpj'], '3333');
         $this->assertEquals($orderData['level'], 'Partner');
         $this->assertEquals($orderData['sub_orders'], 2);
-        $this->assertEquals($orderData['power'], '0 kWp');
-        $this->assertEquals($orderData['total'], 'R$ 40,00');
+        $this->assertEquals($orderData['power'], '12 kWp');
+        $this->assertEquals($orderData['total_price'], 'R$ 40,00');
         $this->assertEquals($orderData['shipping_type'], 'sices');
         $this->assertEquals($orderData['shipping_price'], 'R$ 0,00');
         $this->assertEquals($orderData['payment_method'], 'dinheiro');
@@ -99,7 +102,17 @@ class OrderExporterTest extends AppTestCase
         $this->assertEquals($orderData['billing_name'], 'Consumidor');
         $this->assertEquals($orderData['billing_cnpj'], '54321');
         $this->assertEquals($orderData['invoices'], '123, 456');
-        $this->assertEquals($orderData['send_at'], (new \DateTime())->format('d/m/Y'));
+
+        $suborderData = $orderExporter->extractSuborderData($subOrder1);
+
+        $this->assertEquals($suborderData['reference'], '12345');
+        $this->assertEquals($suborderData['status'], 'Aprovado');
+        $this->assertEquals($suborderData['status_at'], (new \DateTime())->format('d/m/Y'));
+        $this->assertEquals($suborderData['account'], 'Conta');
+        $this->assertEquals($suborderData['cnpj'], '3333');
+        $this->assertEquals($suborderData['level'], 'Partner');
+        $this->assertEquals($suborderData['power'], '10 kWp');
+        $this->assertEquals($suborderData['total_price'], 'R$ 20,00');
     }
 
 //    public function testDefaultServiceScenario()
