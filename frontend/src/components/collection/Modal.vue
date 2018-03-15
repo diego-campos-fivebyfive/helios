@@ -31,12 +31,15 @@
 </script>
 
 <style lang="scss">
+  $modal-header-size: 50px;
+  $modal-footer-size: 65px;
+
   .collection-modal {
     bottom: 0;
     color: $ui-text-main;
     left: 0;
     margin: auto;
-    max-height: 50%;
+    max-height: calc(100% - 130px);
     max-width: $ui-size-md;
     position: fixed;
     right: 0;
@@ -56,33 +59,9 @@
     }
   }
 
-  .collection-modal-section {
-    background-color: #f8fafb;
-    border-bottom: $ui-space-y/10 solid $ui-divider-color;
-    border-top: $ui-space-y/10 solid $ui-divider-color;
-    padding: $ui-space-y 0;
-
-    .list {
-      padding-left: $ui-space-x*2;
-
-      li {
-        padding: $ui-space-y/5 0;
-      }
-    }
-  }
-
-  .collection-modal-footer,
   .collection-modal-header {
-    padding: $ui-space-y $ui-space-x/2;
-  }
+    min-height: $modal-header-size;
 
-  .collection-modal-footer,
-  .collection-modal-header,
-  .collection-modal-section {
-    background-color: $ui-white-regular;
-  }
-
-  .collection-modal-header {
     .title {
       font-size: 1.75rem;
       font-weight: 300;
@@ -97,8 +76,37 @@
     }
   }
 
+  .collection-modal-section {
+    background-color: #f8fafb;
+    border-bottom: $ui-space-y/10 solid $ui-divider-color;
+    border-top: $ui-space-y/10 solid $ui-divider-color;
+    overflow-x: auto;
+    padding: $ui-space-y 0;
+    max-height: calc(100% - (#{$modal-header-size} + #{$modal-footer-size}));
+
+    .list {
+      padding-left: $ui-space-x*2;
+
+      li {
+        padding: $ui-space-y/5 0;
+      }
+    }
+  }
+
   .collection-modal-footer {
     display: flex;
     justify-content: space-between;
+    min-height: $modal-footer-size;
+  }
+
+  .collection-modal-footer,
+  .collection-modal-header {
+    padding: $ui-space-y $ui-space-x/2;
+  }
+
+  .collection-modal-footer,
+  .collection-modal-header,
+  .collection-modal-section {
+    background-color: $ui-white-regular;
   }
 </style>
