@@ -78,7 +78,7 @@ class OrderController extends AbstractController
             'totals' => $totals,
             'states' => $this->resolveFilters($this->getStates($expanseStates), $filteredStates),
             'statusList' => $this->resolveFilters(Order::getStatusNames(), $filteredStatus),
-            'componentsList' => $this->resolveFilters($this->getComponentsList(), $filteredStates)
+            'componentsList' => $this->resolveFilters($this->getComponentsList(), $filteredComponents)
         ));
     }
 
