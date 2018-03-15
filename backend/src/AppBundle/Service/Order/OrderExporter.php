@@ -13,9 +13,11 @@ namespace AppBundle\Service\Order;
 
 use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Component\MakerInterface;
+use AppBundle\Entity\Misc\AdditiveInterface;
 use AppBundle\Entity\Order\Element;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
+use AppBundle\Manager\AdditiveManager;
 use Exporter\Writer\CsvWriter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -48,14 +50,61 @@ class OrderExporter
     private $manager;
 
     /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    /**
+     * @var array
+     */
+    private $orderColumnMapping = [
+        'reference' => 'Orçamento',
+        'status' => 'Status',
+        'status_at' => 'Data status',
+        'account' => 'Integrador',
+        'cnpj' => 'CNPJ',
+        'level' => 'Nível',
+        'agent' => 'Atendente',
+        'sub_orders' => 'Qte Sistemas',
+        'power' => 'Potência total',
+        'total_price' => 'Valor total',
+        'shipping_type' => 'Tipo de frete',
+        'shipping_price' => 'Valor do frete',
+        'payment_method' => 'Condição pagamento',
+        'delivery_at' => 'Disp. Coleta',
+        'note' => 'Obs',
+        'billing_name' => 'Nome faturamento',
+        'billing_cnpj' => 'CNPJ faturamento',
+        'invoices' => 'Num. NF',
+        'billed_at' => 'Data faturamento'
+    ];
+
+    /**
+     * @var array
+     */
+    private $suborderColumnMapping = [
+        'reference' => 'Referência',
+        'status' => 'Status',
+        'status_at' => 'Data status',
+        'account' => 'Integrador',
+        'cnpj' => 'CNPJ',
+        'level' => 'Nível do orçamento',
+        'agent' => 'Atendente',
+        'power' => 'Potência',
+        'total_price' => 'Valor'
+    ];
+
+    /**
      * OrderExporter constructor.
      * @param ContainerInterface $container
      */
     function __construct(ContainerInterface $container)
     {
+        $this->container = $container;
         $this->collector = $container->get('component_collector');
         $this->storage = $container->get('app_storage');
         $this->manager = $container->get('order_manager');
+        $this->addInsuranceColumns();
     }
 
     /**
@@ -68,10 +117,10 @@ class OrderExporter
             'reference' => $order->getReference(),
             'status' => $this->getStatusNameInPortuguese()[$order->getStatus()],
             'status_at' => $this->formatDate($order->getStatusAt()),
-            'account' => $order->getAccount()->getName(),
+            'account' => $order->getAccount()->getFirstname(),
             'cnpj' => $order->getAccount()->getDocument(),
             'level' => $order->getLevel(),
-            'agent' => $order->getAgent()->getName(),
+            'agent' => $order->getAgent() ? $order->getAgent()->getFirstname() : '',
             'sub_orders' => count($order->getChildrens()),
             'power' => $order->getPower() . " kWp",
             'total_price' => $this->formatMoney($order->getTotal()),
@@ -99,9 +148,10 @@ class OrderExporter
             'reference' => $parent->getReference(),
             'status' => $this->getStatusNameInPortuguese()[$parent->getStatus()],
             'status_at' => $this->formatDate($parent->getStatusAt()),
-            'account' => $parent->getAccount()->getName(),
+            'account' => $parent->getAccount()->getFirstname(),
             'cnpj' => $parent->getAccount()->getDocument(),
             'level' => $order->getLevel(),
+            'agent' => $parent->getAgent() ? $parent->getAgent()->getFirstname() : '',
             'power' => $order->getPower() . " kWp",
             'total_price' => $this->formatMoney($order->getTotal())
         ];
@@ -190,6 +240,23 @@ class OrderExporter
         ];
 
         return $data;
+    }
+
+    /**
+     * Add Insurance Columns
+     */
+    private function addInsuranceColumns()
+    {
+        /** @var AdditiveManager $additiveManager */
+        $additiveManager = $this->container->get('additive_manager');
+
+        $insurances = $additiveManager->findBy([
+            'type' => AdditiveInterface::TYPE_INSURANCE
+        ]);
+
+        foreach ($insurances as $insurance) {
+            $this->suborderColumnMapping['insurance_' . $insurance->getId()] = $insurance->getName();
+        }
     }
 
     /**
