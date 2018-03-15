@@ -49,12 +49,19 @@ class OrderController extends AbstractController
         $data = $form->handleRequest($request)->getData();
 
         $expanseStates = [];
-        $arrayStates = [];
-        $arrayStatus = [];
-        $arrayComponents = [];
+        $filteredStates = [];
+        $filteredStatus = [];
+        $filteredComponents = [];
 
-
-        $qb = $this->filterOrders($request, $data, $expanseStates, $arrayStates, $arrayStatus, $arrayComponents);
+        $qb =
+            $this->filterOrders(
+                $request,
+                $data,
+                $expanseStates,
+                $filteredStates,
+                $filteredStatus,
+                $filteredComponents
+            );
 
         $totals = $this->getFiltersTotals(clone $qb);
 
@@ -69,9 +76,9 @@ class OrderController extends AbstractController
             'member' => $member,
             'form' => $form->createView(),
             'totals' => $totals,
-            'states' => $this->resolveFilters($this->getStates($expanseStates), $arrayStates),
-            'statusList' => $this->resolveFilters(Order::getStatusNames(), $arrayStatus),
-            'componentsList' => $this->resolveFilters($this->getComponentsList(), $arrayComponents)
+            'states' => $this->resolveFilters($this->getStates($expanseStates), $filteredStates),
+            'statusList' => $this->resolveFilters(Order::getStatusNames(), $filteredStatus),
+            'componentsList' => $this->resolveFilters($this->getComponentsList(), $filteredStates)
         ));
     }
 
@@ -339,12 +346,12 @@ class OrderController extends AbstractController
      * @param $request
      * @param $data
      * @param array $expanseStates
-     * @param array $arrayStates
-     * @param array $arrayStatus
-     * @param array $arrayComponents
+     * @param array $filteredStates
+     * @param array $filteredStatus
+     * @param array $filteredComponents
      * @return \Doctrine\ORM\QueryBuilder
      */
-    private function filterOrders($request, $data, &$expanseStates = [], &$arrayStates = [], &$arrayStatus = [], &$arrayComponents = [])
+    private function filterOrders($request, $data, &$expanseStates = [], &$filteredStates = [], &$filteredStatus = [], &$filteredComponents = [])
     {
         $optionVal = $data['optionsVal'];
         $valueMin = $data['valueMin'] ? str_replace(',', '.', $data['valueMin']) : null;
@@ -388,25 +395,25 @@ class OrderController extends AbstractController
         }
 
         if(-1 != $states = $request->get('states')){
-            $arrayStates = array_filter(explode(',', $states));
-            if (!empty($arrayStates)) {
-                $qb->andWhere($qb->expr()->in('o.state', $arrayStates));
+            $filteredStates = array_filter(explode(',', $states));
+            if (!empty($filteredStates)) {
+                $qb->andWhere($qb->expr()->in('o.state', $filteredStates));
             };
         }
 
         if (-1 != $status = $request->get('status')) {
             $status = explode(',', $status);
-            $arrayStatus = array_filter($status, 'strlen');
-            if (!empty($arrayStatus)) {
-                $qb->andWhere($qb->expr()->in('o.status', $arrayStatus));
+            $filteredStatus = array_filter($status, 'strlen');
+            if (!empty($filteredStatus)) {
+                $qb->andWhere($qb->expr()->in('o.status', $filteredStatus));
             }
         }
 
         if (-1 != $components = $request->get('components')) {
             $components = explode(',', $components);
-            $arrayComponents = array_filter($components, 'strlen');
-            if (!empty($arrayComponents)) {
-                $qb->andWhere($qb->expr()->in('e.code', $arrayComponents));
+            $filteredComponents = array_filter($components, 'strlen');
+            if (!empty($filteredComponents)) {
+                $qb->andWhere($qb->expr()->in('e.code', $filteredComponents));
             }
         }
 
@@ -428,25 +435,16 @@ class OrderController extends AbstractController
         $componentsList = [];
 
         foreach ($families as $family) {
-            $this->getComponents($family, $componentsList);
+            $qb = $this->manager($family)->createQueryBuilder();
+
+            $components = $qb->select($qb->getAllAliases()[0])->getQuery()->getResult();
+
+            foreach ($components as $component) {
+                $componentsList[$component->getCode()] = $component->getDescription();
+            }
         }
 
         return $componentsList;
-    }
-
-    /**
-     * @param $componentName
-     * @param $componentsList
-     */
-    private function getComponents($componentName, &$componentsList)
-    {
-        $qb = $this->manager($componentName)->createQueryBuilder();
-
-        $components = $qb->select($qb->getAllAliases()[0])->getQuery()->getResult();
-
-        foreach ($components as $component) {
-            $componentsList[$component->getCode()] = $component->getDescription();
-        }
     }
 
     /**
