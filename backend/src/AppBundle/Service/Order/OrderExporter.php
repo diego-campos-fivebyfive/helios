@@ -14,6 +14,7 @@ namespace AppBundle\Service\Order;
 use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Component\MakerInterface;
 use AppBundle\Entity\Order\Element;
+use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
 use Exporter\Writer\CsvWriter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -58,6 +59,37 @@ class OrderExporter
     }
 
     /**
+     * @param Order $order
+     */
+    public function extractOrderData(Order $order)
+    {
+        $orderData = [
+            'reference' => $order->getReference(),
+            'status' => $this->getStatusNameInPortuguese()[$order->getStatus()],
+            'send_at' => $this->formatDate($order->getSendAt()),
+            'account' => $order->getAccount()->getName(),
+            'cnpj' => $order->getCnpj(),
+            'level' => $order->getLevel(),
+            //'agent' => $order->getAgent()->getName(),
+            'sub_orders' => count($order->getChildrens()),
+            'power' => $order->getPower() . " kWp",
+            'total' => $this->formatMoney($order->getTotal()),
+            'shipping_type' => $order->getShippingRules()['type'],
+            'shipping_price' => $this->formatMoney($order->getShipping()),
+            'payment_method' => $order->getPaymentMethod('array')['name'],
+            'delivery_at' => $this->formatDate($order->getDeliveryAt()),
+            'note' => $order->getNote(),
+            'billing_name' => $order->getBillingFirstname(),
+            'billing_cnpj' => $order->getBillingCnpj(),
+            'invoices' => implode(", ", $order->getInvoices()),
+            'billed_at' => $this->formatDate($order->getBilledAt())
+        ];
+
+        return $orderData;
+    }
+
+    /**
+     * @deprecated
      * @param OrderInterface $order
      * @return string
      */
@@ -117,6 +149,7 @@ class OrderExporter
     }
 
     /**
+     * @deprecated
      * @param OrderInterface $order
      * @param $item
      * @return array
@@ -139,6 +172,47 @@ class OrderExporter
     }
 
     /**
+     * @return array
+     */
+    private function getStatusNameInPortuguese()
+    {
+        return [
+            'Editando',
+            'Pendente',
+            'Validado',
+            'Aprovado',
+            'Cancelado',
+            'Confirmado',
+            'Em produção',
+            'Coleta disponível',
+            'Coletado',
+            'Em trânsito',
+            'Entregue'
+        ];
+    }
+
+    /**
+     * @param $money
+     * @return mixed
+     */
+    private function formatMoney($money) {
+
+        $formatedMoney = 'R$ '. number_format($money, 2);
+
+        return str_replace('.',',', $formatedMoney);
+    }
+
+    /**
+     * @param $date
+     * @return mixed
+     */
+    private function formatDate($date)
+    {
+        return $date->format('d/m/Y');
+    }
+
+    /**
+     * @deprecated
      * @param OrderInterface $order
      * @return float
      */
@@ -150,6 +224,7 @@ class OrderExporter
     }
 
     /**
+     * @deprecated
      * @param OrderInterface $order
      * @return string
      */
@@ -159,6 +234,7 @@ class OrderExporter
     }
 
     /**
+     * @deprecated
      * @param OrderInterface $order
      * @param $family
      * @return string
@@ -177,6 +253,7 @@ class OrderExporter
     }
 
     /**
+     * @deprecated
      * @param ComponentInterface $component
      * @return string
      */
@@ -192,6 +269,7 @@ class OrderExporter
     }
 
     /**
+     * @deprecated
      * @param OrderInterface $order
      * @return string
      */
@@ -210,6 +288,7 @@ class OrderExporter
     }
 
     /**
+     * @deprecated
      * @param OrderInterface $order
      * @return int
      */
@@ -224,6 +303,7 @@ class OrderExporter
     }
 
     /**
+     * @deprecated
      * @param $filename
      */
     private function prepareFilePath($filename)

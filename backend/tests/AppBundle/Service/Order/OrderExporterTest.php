@@ -2,10 +2,14 @@
 
 namespace Tests\AppBundle\Service\Order;
 
+use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Component\MakerInterface;
 use AppBundle\Entity\Order\Element;
+use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
+use AppBundle\Manager\AccountManager;
+use AppBundle\Model\Document\Account;
 use AppBundle\Service\Order\ElementResolver;
 use AppBundle\Service\Order\OrderExporter;
 use AppBundle\Service\Order\OrderManipulator;
@@ -20,78 +24,156 @@ class OrderExporterTest extends AppTestCase
 {
     use ObjectHelperTest;
 
-    public function testDefaultServiceScenario()
+    public function testExtractOrderData()
     {
-        // Configure Module
-        $module = $this->configureModule([
-            'code' => self::randomString(25),
-            'maker' => $this->createMakerModule('Module Maker'),
-            'max_power' => 500
+        $orderManager = $this->getContainer()->get('order_manager');
+        $orderExporter = $this->getContainer()->get('order_exporter');
+        $accountManager = $this->getContainer()->get('account_manager');
+
+        /** @var AccountInterface $account */
+        $account = $accountManager->create();
+
+        $account->setFirstname('Conta');
+        $account->setLevel('Partner');
+
+        $account->setContext('account');
+
+        $accountManager->save($account);
+
+        /** @var Order $order */
+        $order = $orderManager->create();
+
+        $order->setReference('12345');
+        $order->setAccount($account);
+        $order->setStatus(3);
+        $order->setSendAt(new \DateTime());
+        $order->setCnpj('3333');
+        $order->setPower('20');
+        $order->addInvoice('123');
+        $order->addInvoice('456');
+        $order->setMetadata([
+            'payment_method' => [
+                'name' => 'dinheiro',
+                'enabled' => true
+            ]
         ]);
-
-        // Configure Inverter
-        $inverter = $this->configureInverter([
-            'code' => self::randomString(15),
-            'maker' =>  $this->createMakerInverter('Inverter Maker')
+        $order->setNote('nota');
+        $order->setShippingRules([
+            'type' => 'sices',
         ]);
+        $order->setBilledAt(new \DateTime());
+        $order->setDeliveryAt(new \DateTime());
+        $order->setBillingFirstname('Consumidor');
+        $order->setBillingCnpj('54321');
 
-        // Configure Structure
-        $structure = $this->configureStructure([
-            'code' => self::randomString(18),
-            'maker' =>  $this->createMakerInverter('Structure Maker')
-        ]);
+        $subOrder1 = $orderManager->create();
+        $subOrder2 = $orderManager->create();
 
-        $manager = $this->manager('order');
-
-        /** @var OrderInterface $children */
-        $children = $manager->create();
-
-        // Add Module
         $element = new Element();
-        ElementResolver::resolve($element, $module);
-        $children->addElement($element);
+        $element->setUnitPrice(10);
+        $element->setQuantity(2);
 
-        // Add Inverter
-        $element2 = new Element();
-        ElementResolver::resolve($element2, $inverter);
-        $children->addElement($element2);
+        $order->addChildren($subOrder1);
+        $order->addChildren($subOrder2);
 
-        // Add Structure
-        $element3 = new Element();
-        ElementResolver::resolve($element3, $structure);
-        $children->addElement($element3);
+        $subOrder1->addElement($element);
+        $subOrder2->addElement($element);
 
-        OrderManipulator::checkPower($children);
+        $orderManager->save($order);
 
-        $this->assertEquals(0.5, $children->getPower());
+        $orderData = $orderExporter->extractOrderData($order);
 
-        /** @var OrderInterface $order */
-        $order = $manager->create();
-
-        $order->addChildren($children);
-
-        $manager->save($order);
-
-        $this->service('order_reference')->generate($order);
-
-        $exporter = $this->getOrderExporter();
-
-        $data = $exporter->normalizeData($children, 2);
-
-        $this->assertCount(6,$data);
-        $this->assertEquals('02', $data['item']);
-        $this->assertArrayHasKey('power', $data);
-        $this->assertNotNull($order->getReference());
-        $this->assertEquals($order->getReference(), $data['reference']);
-        $this->assertEquals(1, $data['modules']);
-        $this->assertEquals(0.500, $data['power']);
-        $this->assertEquals('K', $data['power_initial']);
-        /*$this->assertEquals('M', $data['module_maker_initial']);
-        $this->assertEquals('I', $data['inverter_maker_initial']);
-        $this->assertEquals('M', $data['structure_type_initial']);*/
-
-        $exporter->export($order);
+        $this->assertEquals($orderData['reference'], '12345');
+        $this->assertEquals($orderData['status'], 'Aprovado');
+        $this->assertEquals($orderData['send_at'], (new \DateTime())->format('d/m/Y'));
+        $this->assertEquals($orderData['account'], 'Conta');
+        $this->assertEquals($orderData['cnpj'], '3333');
+        $this->assertEquals($orderData['level'], 'Partner');
+        $this->assertEquals($orderData['sub_orders'], 2);
+        $this->assertEquals($orderData['power'], '0 kWp');
+        $this->assertEquals($orderData['total'], 'R$ 40,00');
+        $this->assertEquals($orderData['shipping_type'], 'sices');
+        $this->assertEquals($orderData['shipping_price'], 'R$ 0,00');
+        $this->assertEquals($orderData['payment_method'], 'dinheiro');
+        $this->assertEquals($orderData['note'], 'nota');
+        $this->assertEquals($orderData['billing_name'], 'Consumidor');
+        $this->assertEquals($orderData['billing_cnpj'], '54321');
+        $this->assertEquals($orderData['invoices'], '123, 456');
+        $this->assertEquals($orderData['send_at'], (new \DateTime())->format('d/m/Y'));
     }
+
+//    public function testDefaultServiceScenario()
+//    {
+//        // Configure Module
+//        $module = $this->configureModule([
+//            'code' => self::randomString(25),
+//            'maker' => $this->createMakerModule('Module Maker'),
+//            'max_power' => 500
+//        ]);
+//
+//        // Configure Inverter
+//        $inverter = $this->configureInverter([
+//            'code' => self::randomString(15),
+//            'maker' =>  $this->createMakerInverter('Inverter Maker')
+//        ]);
+//
+//        // Configure Structure
+//        $structure = $this->configureStructure([
+//            'code' => self::randomString(18),
+//            'maker' =>  $this->createMakerInverter('Structure Maker')
+//        ]);
+//
+//        $manager = $this->manager('order');
+//
+//        /** @var OrderInterface $children */
+//        $children = $manager->create();
+//
+//        // Add Module
+//        $element = new Element();
+//        ElementResolver::resolve($element, $module);
+//        $children->addElement($element);
+//
+//        // Add Inverter
+//        $element2 = new Element();
+//        ElementResolver::resolve($element2, $inverter);
+//        $children->addElement($element2);
+//
+//        // Add Structure
+//        $element3 = new Element();
+//        ElementResolver::resolve($element3, $structure);
+//        $children->addElement($element3);
+//
+//        OrderManipulator::checkPower($children);
+//
+//        $this->assertEquals(0.5, $children->getPower());
+//
+//        /** @var OrderInterface $order */
+//        $order = $manager->create();
+//
+//        $order->addChildren($children);
+//
+//        $manager->save($order);
+//
+//        $this->service('order_reference')->generate($order);
+//
+//        $exporter = $this->getOrderExporter();
+//
+//        $data = $exporter->normalizeData($children, 2);
+//
+//        $this->assertCount(6,$data);
+//        $this->assertEquals('02', $data['item']);
+//        $this->assertArrayHasKey('power', $data);
+//        $this->assertNotNull($order->getReference());
+//        $this->assertEquals($order->getReference(), $data['reference']);
+//        $this->assertEquals(1, $data['modules']);
+//        $this->assertEquals(0.500, $data['power']);
+//        $this->assertEquals('K', $data['power_initial']);
+//        /*$this->assertEquals('M', $data['module_maker_initial']);
+//        $this->assertEquals('I', $data['inverter_maker_initial']);
+//        $this->assertEquals('M', $data['structure_type_initial']);*/
+//
+//        $exporter->export($order);
+//    }
 
     /**
      * @param $name
