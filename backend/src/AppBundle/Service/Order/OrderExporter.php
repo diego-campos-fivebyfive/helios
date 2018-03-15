@@ -89,6 +89,7 @@ class OrderExporter
     }
 
     /**
+     * @deprecated
      * @param OrderInterface $order
      * @return string
      */
@@ -148,6 +149,7 @@ class OrderExporter
     }
 
     /**
+     * @deprecated
      * @param OrderInterface $order
      * @param $item
      * @return array
@@ -169,6 +171,9 @@ class OrderExporter
         return $data;
     }
 
+    /**
+     * @return array
+     */
     private function getStatusNameInPortuguese()
     {
         return [
@@ -207,6 +212,7 @@ class OrderExporter
     }
 
     /**
+     * @deprecated
      * @param OrderInterface $order
      * @return float
      */
@@ -218,6 +224,7 @@ class OrderExporter
     }
 
     /**
+     * @deprecated
      * @param OrderInterface $order
      * @return string
      */
@@ -227,6 +234,7 @@ class OrderExporter
     }
 
     /**
+     * @deprecated
      * @param OrderInterface $order
      * @param $family
      * @return string
@@ -245,6 +253,7 @@ class OrderExporter
     }
 
     /**
+     * @deprecated
      * @param ComponentInterface $component
      * @return string
      */
@@ -260,6 +269,7 @@ class OrderExporter
     }
 
     /**
+     * @deprecated
      * @param OrderInterface $order
      * @return string
      */
@@ -278,6 +288,7 @@ class OrderExporter
     }
 
     /**
+     * @deprecated
      * @param OrderInterface $order
      * @return int
      */
@@ -292,6 +303,7 @@ class OrderExporter
     }
 
     /**
+     * @deprecated
      * @param $filename
      */
     private function prepareFilePath($filename)
