@@ -123,7 +123,7 @@ class OrderExporter
             ->setTitle('Orçamentos Filtrados');
         $projectRoot = $this->container->get('kernel')->getRootDir() . "/../..";
         $fileName = uniqid(md5(time())) . ".xlsx";
-        $path = $projectRoot . "/.uploads/orders/export/" . $fileName;
+        $path = $projectRoot . "/.uploads/order/export/" . $fileName;
 
         if ($mode == 1) {
 

@@ -102,7 +102,7 @@ class OrderController extends AbstractController
 
         $results = $qb->getQuery()->getResult();
 
-        /** @var OrderExporter $orderExporterManager */
+        /** @var OrderExporter $orderExporter */
         $orderExporter = $this->container->get('order_exporter');
 
         $path = $orderExporter->export($results, $mode);
