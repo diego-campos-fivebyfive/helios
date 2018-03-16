@@ -5,14 +5,14 @@
         label.half
           | Nome
           input(
-            v-model='form.payload.name',
+            v-model='form.payload.name.value',
             placeholder='Nome')
         label.half
           | Valor
           input(
-            v-model='form.payload.amount',
+            v-model='form.payload.amount.value',
             placeholder='Valor',
-            v-on:blur='isValidAmount')
+            v-on:blur='validateField(form.payload.amount)')
         label.full
           | Conta
           SelectAccountForm(
@@ -38,54 +38,63 @@
     data: () => ({
       form: {
         action: '',
-        default: {
-          name: '',
-          amount: null,
-          account: {}
-        },
-        payload: {},
-        resolved: false
+        payload: {
+          name: {
+            default: '',
+            type: 'string',
+            resolved: false
+          },
+          amount: {
+            default: null,
+            type: 'money',
+            exception: 'Formato de moeda inválido',
+            resolved: false
+          },
+          account: {
+            id: {
+              default: null
+            },
+            name: {
+              default: ''
+            }
+          }
+        }
       }
     }),
     methods: {
-      isValidAmount() {
-        const field = this.form.payload.amount
-        const expType = 'money'
-        const customException = 'Formato de moeda inválido'
-
-
+      validateField(field) {
         const patterns = {
           'money': /^(\d{1,3}(\.\d{3})*|\d+)(\,\d{2})?$/
         }
 
-        const pattern = patterns[expType]
+        const pattern = patterns[field.type]
 
         const exceptions = {
           'money': 'Formato de moeda em Real invalido'
         }
 
-        const defaultException = exceptions[expType]
+        const defaultException = exceptions[field.type]
 
 
-        if (pattern.test(field)) {
-          this.form.resolved = false
+        if (pattern.test(field.value)) {
+          field.resolved = true
           return
         }
 
-        this.$refs.modalForm.notify(customException || defaultException)
-        this.form.resolved = true
+        this.$refs.modalForm.notify(field.exception || defaultException)
+        field.resolved = false
       },
       show(coupon) {
         this.$refs.modalForm.show()
 
         if (coupon) {
           this.form.action = 'edit'
-          this.form.payload = Object.assign({}, coupon)
+          this.form.payload = Object.assign(this.form.default, coupon)
           return
         }
 
         this.form.action = 'create'
-        this.form.payload = Object.assign({}, this.form.default)
+        this.form.payload = Object.assign(this.form.default, {})
       },
       done(response) {
         this.$refs.modalForm.hide()
