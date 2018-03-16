@@ -122,8 +122,16 @@ class OrderExporter
             ->setCreator('Sices Solar')
             ->setTitle('Orçamentos Filtrados');
         $projectRoot = $this->container->get('kernel')->getRootDir() . "/../..";
-        $fileName = uniqid(md5(time())) . ".xlsx";
-        $path = $projectRoot . "/.uploads/orders/export/" . $fileName;
+
+        $loggedAccount = $this->container->get('security.token_storage')->getToken()->getUser();
+        $customerName = $loggedAccount->getInfo()->getFirstName();
+        $customerName = trim($customerName);
+        $customerName = str_replace(' ', '_', $customerName);
+
+        $currentDateAndTime = (new \DateTime())->format('Y-m-d_H-m-s');
+
+        $fileName = $customerName . "-" . $currentDateAndTime . ".xlsx";
+        $path = $projectRoot . "/.uploads/order/export/" . $fileName;
 
         if ($mode == 1) {
 
