@@ -154,6 +154,11 @@ class OrderExporter
             }
         }
 
+        foreach(range('A','Z') as $columnID) {
+            $spreadsheet->getActiveSheet()->getColumnDimension($columnID)
+                ->setAutoSize(true);
+        }
+
         $writer = new Xlsx($spreadsheet);
 
         $writer->save($path);
@@ -178,9 +183,9 @@ class OrderExporter
             'sub_orders' => count($order->getChildrens()),
             'power' => $order->getPower() . " kWp",
             'total_price' => $this->formatMoney($order->getTotal()),
-            'shipping_type' => $order->getShippingRules()['type'],
-            'shipping_price' => $this->formatMoney($order->getShipping()),
-            'payment_method' => $order->getPaymentMethod('array')['name'],
+            'shipping_type' => $order->getShippingRules() ? $order->getShippingRules()['type'] : '',
+            'shipping_price' => $order->getShipping() ? $this->formatMoney($order->getShipping()) : '',
+            'payment_method' => $order->getPaymentMethod() ? $order->getPaymentMethod('array')['name'] : '',
             'delivery_at' => $order->getDeliveryAt() ? $this->formatDate($order->getDeliveryAt()) : '',
             'note' => $order->getNote(),
             'billing_name' => $order->getBillingFirstname(),

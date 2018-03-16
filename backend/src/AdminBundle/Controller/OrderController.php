@@ -111,8 +111,6 @@ class OrderController extends AbstractController
 
         $file = new BinaryFileResponse($path, Response::HTTP_OK, [], true, $header);
 
-        $file->deleteFileAfterSend(true);
-
         return $file;
     }
 
