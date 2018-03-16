@@ -17,9 +17,12 @@ use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Form\Order\OrderType;
 use AppBundle\Manager\OrderElementManager;
+use AppBundle\Service\Order\OrderExporter;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -80,6 +83,33 @@ class OrderController extends AbstractController
             'statusList' => $this->resolveFilters(Order::getStatusNames(), $filteredStatus),
             'componentsList' => $this->resolveFilters($this->getComponentsList(), $filteredComponents)
         ));
+    }
+
+    /**
+     * @Route("/{mode}/export", name="export_list")
+     */
+    public function exportAction(Request $request, $mode)
+    {
+        $member = $this->member();
+
+        $form = $this->createForm(FilterType::class, null, [
+            'member' => $member
+        ]);
+
+        $data = $form->handleRequest($request)->getData();
+
+        $qb = $this->filterOrders($request, $data);
+
+        $results = $qb->getQuery()->getResult();
+
+        /** @var OrderExporter $orderExporterManager */
+        $orderExporterManager = $this->container->get('order_exporter');
+
+        $path = $orderExporterManager->export($results, $mode);
+
+        $header = ('spreadsheet') ? ResponseHeaderBag::DISPOSITION_ATTACHMENT : ResponseHeaderBag::DISPOSITION_INLINE;
+
+        return new BinaryFileResponse($path, Response::HTTP_OK, [], true, $header);
     }
 
     /**
