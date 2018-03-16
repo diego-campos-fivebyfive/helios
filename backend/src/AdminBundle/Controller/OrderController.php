@@ -103,9 +103,9 @@ class OrderController extends AbstractController
         $results = $qb->getQuery()->getResult();
 
         /** @var OrderExporter $orderExporterManager */
-        $orderExporterManager = $this->container->get('order_exporter');
+        $orderExporter = $this->container->get('order_exporter');
 
-        $path = $orderExporterManager->export($results, $mode);
+        $path = $orderExporter->export($results, $mode);
 
         $header = ('spreadsheet') ? ResponseHeaderBag::DISPOSITION_ATTACHMENT : ResponseHeaderBag::DISPOSITION_INLINE;
 
