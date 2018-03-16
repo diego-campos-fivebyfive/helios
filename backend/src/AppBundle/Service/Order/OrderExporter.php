@@ -125,7 +125,7 @@ class OrderExporter
         $fileName = uniqid(md5(time())) . ".xlsx";
         $path = $projectRoot . "/.uploads/orders/export/" . $fileName;
 
-        if ($mode === 1) {
+        if ($mode == 1) {
 
             $ordersData = [];
 
@@ -154,6 +154,11 @@ class OrderExporter
             }
         }
 
+        foreach(range('A','Z') as $columnID) {
+            $spreadsheet->getActiveSheet()->getColumnDimension($columnID)
+                ->setAutoSize(true);
+        }
+
         $writer = new Xlsx($spreadsheet);
 
         $writer->save($path);
@@ -170,23 +175,23 @@ class OrderExporter
         return [
             'reference' => $order->getReference(),
             'status' => $this->getStatusNameInPortuguese()[$order->getStatus()],
-            'status_at' => $this->formatDate($order->getStatusAt()),
-            'account' => $order->getAccount()->getFirstname(),
-            'cnpj' => $order->getAccount()->getDocument(),
+            'status_at' => $order->getStatusAt() ? $this->formatDate($order->getStatusAt()) : '',
+            'account' => $order->getAccount() ? $order->getAccount()->getFirstname(): '',
+            'cnpj' => $order->getAccount() ? $order->getAccount()->getDocument() : '',
             'level' => $order->getLevel(),
             'agent' => $order->getAgent() ? $order->getAgent()->getFirstname() : '',
             'sub_orders' => count($order->getChildrens()),
             'power' => $order->getPower() . " kWp",
             'total_price' => $this->formatMoney($order->getTotal()),
-            'shipping_type' => $order->getShippingRules()['type'],
-            'shipping_price' => $this->formatMoney($order->getShipping()),
-            'payment_method' => $order->getPaymentMethod('array')['name'],
-            'delivery_at' => $this->formatDate($order->getDeliveryAt()),
+            'shipping_type' => $order->getShippingRules() ? $order->getShippingRules()['type'] : '',
+            'shipping_price' => $order->getShipping() ? $this->formatMoney($order->getShipping()) : '',
+            'payment_method' => $order->getPaymentMethod() ? $order->getPaymentMethod('array')['name'] : '',
+            'delivery_at' => $order->getDeliveryAt() ? $this->formatDate($order->getDeliveryAt()) : '',
             'note' => $order->getNote(),
             'billing_name' => $order->getBillingFirstname(),
             'billing_cnpj' => $order->getBillingCnpj(),
             'invoices' => implode(", ", $order->getInvoices()),
-            'billed_at' => $this->formatDate($order->getBilledAt())
+            'billed_at' => $order->getBilledAt() ? $this->formatDate($order->getBilledAt()) : ''
         ];
     }
 
@@ -201,9 +206,9 @@ class OrderExporter
         $data = [
             'reference' => $parent->getReference(),
             'status' => $this->getStatusNameInPortuguese()[$parent->getStatus()],
-            'status_at' => $this->formatDate($parent->getStatusAt()),
-            'account' => $parent->getAccount()->getFirstname(),
-            'cnpj' => $parent->getAccount()->getDocument(),
+            'status_at' => $parent->getStatusAt() ? $this->formatDate($parent->getStatusAt()) : '',
+            'account' => $parent->getAccount() ? $parent->getAccount()->getFirstname() : '',
+            'cnpj' => $parent->getAccount() ? $parent->getAccount()->getDocument() : '',
             'level' => $order->getLevel(),
             'agent' => $parent->getAgent() ? $parent->getAgent()->getFirstname() : '',
             'power' => $order->getPower() . " kWp",
