@@ -170,7 +170,7 @@ class OrderExporter
         return [
             'reference' => $order->getReference(),
             'status' => $this->getStatusNameInPortuguese()[$order->getStatus()],
-            'status_at' => $order->getStatusAt()? $this->formatDate($order->getStatusAt()) : '',
+            'status_at' => $order->getStatusAt() ? $this->formatDate($order->getStatusAt()) : '',
             'account' => $order->getAccount() ? $order->getAccount()->getFirstname(): '',
             'cnpj' => $order->getAccount() ? $order->getAccount()->getDocument() : '',
             'level' => $order->getLevel(),
