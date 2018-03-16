@@ -109,7 +109,11 @@ class OrderController extends AbstractController
 
         $header = ('spreadsheet') ? ResponseHeaderBag::DISPOSITION_ATTACHMENT : ResponseHeaderBag::DISPOSITION_INLINE;
 
-        return new BinaryFileResponse($path, Response::HTTP_OK, [], true, $header);
+        $file = new BinaryFileResponse($path, Response::HTTP_OK, [], true, $header);
+
+        $file->deleteFileAfterSend(true);
+
+        return $file;
     }
 
     /**
