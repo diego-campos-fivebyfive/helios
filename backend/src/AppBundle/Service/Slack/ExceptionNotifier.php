@@ -54,19 +54,27 @@ class ExceptionNotifier
     public function notify($exception)
     {
         $output = $this->formatOutput($exception);
-        $uri = $this->formatUri();
         $client = $this->createClient();
 
+        $response = $client->post($this->formatUri(), [
+            'body' => $this->formatBody($output)
+        ]);
+
+        return $response->getStatusCode();
+    }
+
+    /**
+     * @param $output
+     * @return string
+     */
+    private function formatBody($output)
+    {
         $data = [
             'text' => $output,
             'link_names' => 1
         ];
 
-        $response = $client->post($uri, [
-            'body' => stripslashes(json_encode($data, JSON_UNESCAPED_SLASHES))
-        ]);
-
-        return $response->getStatusCode();
+        return stripslashes(json_encode($data, JSON_UNESCAPED_SLASHES));
     }
 
     /**
