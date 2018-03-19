@@ -16,18 +16,28 @@ class FinderTest extends AppTestCase
      */
     public function testDefaultScenario()
     {
+
+        $manager = $this->manager('postcode');
+
+        /** @var Postcode $postcodeTest */
+        $postcodeTest = $manager->create();
+
+        $postcodeTest->setId(85015310);
+        $postcodeTest->setAttributes([
+            'postcode' => '85015-310',
+            'state' => 'PR',
+            'city' => 'Guarapuava',
+            'neighborhood' => 'Batel',
+            'street' => 'Rua Dom Álvaro Nunes Cabeza de Vaca'
+        ]);
+        $manager->save($postcodeTest);
+        
         /** @var Finder $postcodeFinder */
         $postcodeFinder = $this->getContainer()->get('postcode_finder');
 
-        $request = new Request();
+        $postcode = '85015310';
 
-        $request->request->add(
-            [
-                'postcode' => '85015310'
-            ]
-        );
-
-        $response = $postcodeFinder->searchAndFormat($request);
+        $response = $postcodeFinder->find($postcode);
 
         $this->assertEquals($response['status'], 200);
         $this->assertEquals($response['state'], 'PR');
@@ -35,9 +45,27 @@ class FinderTest extends AppTestCase
         $this->assertEquals($response['neighborhood'], 'Batel');
         $this->assertEquals($response['street'], 'Rua Dom Álvaro Nunes Cabeza de Vaca');
 
-        $request->request->set('postcode', 'asd');
+        $newPostcode = $manager->find(85015470);
 
-        $response = $postcodeFinder->searchAndFormat($request);
+        $this->assertNull($newPostcode);
+
+        $postcode = '85015470';
+
+        $response = $postcodeFinder->find($postcode);
+
+        $this->assertEquals($response['status'], 200);
+        $this->assertEquals($response['state'], 'PR');
+        $this->assertEquals($response['city'], 'Guarapuava');
+        $this->assertEquals($response['neighborhood'], 'Batel');
+        $this->assertEquals($response['street'], 'Rua Celmira Garcia Costa');
+
+        $newPostcode = $manager->find(85015470);
+
+        $this->assertNotNull($newPostcode);
+
+        $postcode = 'asd';
+
+        $response = $postcodeFinder->find($postcode);
 
         $this->assertEquals($response['status'], 404);
     }

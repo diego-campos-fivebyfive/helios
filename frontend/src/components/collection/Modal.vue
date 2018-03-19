@@ -26,6 +26,15 @@
       hide() {
         this.open = false
       }
+    },
+    mounted() {
+      document.addEventListener('keyup', event => {
+        const escCode = 27
+
+        if (event.keyCode === escCode) {
+          this.hide()
+        }
+      })
     }
   }
 </script>
