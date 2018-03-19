@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Component\MakerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -38,12 +39,30 @@ class MakerController extends AbstractController
         $qb = $manager->getEntityManager()->createQueryBuilder();
         $qb->select('m')->from(Maker::class, 'm')->orderBy('m.name');
 
+        $currentFamily = null;
+        if ($currentFamily = $request->get('family')) {
+            $qb->andWhere('m.context = :context');
+            $qb->setParameter('context', $currentFamily);
+        }
+
+        $this->overrideGetFilters();
+
         $pagination = $paginator->paginate(
             $qb->getQuery(), $request->query->getInt('page', 1), 10
         );
 
+        $families = [
+            ComponentInterface::FAMILY_MODULE => ComponentInterface::FAMILY_MODULE,
+            ComponentInterface::FAMILY_INVERTER => ComponentInterface::FAMILY_INVERTER,
+            ComponentInterface::FAMILY_STRING_BOX => ComponentInterface::FAMILY_STRING_BOX,
+            ComponentInterface::FAMILY_STRUCTURE => ComponentInterface::FAMILY_STRUCTURE,
+            ComponentInterface::FAMILY_VARIETY => ComponentInterface::FAMILY_VARIETY
+        ];
+
         return $this->render("maker.index", [
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'families' => $families,
+            'current_family' => $currentFamily
         ]);
     }
 
