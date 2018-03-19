@@ -343,6 +343,10 @@ services:
         class: AppBundle\Service\Order\OrderFinder
         arguments: ['@order_manager']
 
+    postcode_finder:
+        class: AppBundle\Service\Postcode\Finder
+        arguments: ['@service_container']
+
     order_status_changer:
         class: AppBundle\Service\Order\StatusChanger
         arguments: ['@service_container']
