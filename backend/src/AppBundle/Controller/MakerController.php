@@ -110,11 +110,10 @@ class MakerController extends AbstractController
         $components = $familyManager->findBy([
             'maker' => $maker
         ]);
-        
+
         $makerManager = $this->manager('maker');
 
         if (count($components) > 0) {
-            dump("teste");
             $this->setNotice("-Este fabricante possui um ou mais produtos<br>-Remova os produtos antes de efetuar a remoção do fabricante", "error");
             return $this->redirectToRoute("maker_index");
         }
