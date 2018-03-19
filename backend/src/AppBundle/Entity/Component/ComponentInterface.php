@@ -10,6 +10,12 @@ interface ComponentInterface
     const DISABLE = 0;
     const ACTIVE = 1;
 
+    const FAMILY_MODULE = 'module';
+    const FAMILY_INVERTER = 'inverter';
+    const FAMILY_STRING_BOX = 'string_box';
+    const FAMILY_STRUCTURE = 'structure';
+    const FAMILY_VARIETY = 'variety';
+
     /**
      * @return int
      */
@@ -186,6 +192,11 @@ interface ComponentInterface
      * @return string
      */
     public function getFamily();
+
+    /**
+     * @return array
+     */
+    public static function getFamilies();
 
     /**
      * @return array
