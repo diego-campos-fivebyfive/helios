@@ -21,7 +21,7 @@ use AppBundle\Form\Component\MakerType;
  *
  * @Route("maker")
  *
- * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_PLATFORM_MASTER')")
+ * @Security("has_role('ROLE_PLATFORM_MASTER')")
  *
  * @Breadcrumb("Makers", route={"name"="maker_index"})
  */
