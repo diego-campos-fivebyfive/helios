@@ -8,6 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\Component\MakerInterface;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use AppBundle\Entity\Component\Maker;
 
 class MakerType extends AbstractType
@@ -20,13 +21,10 @@ class MakerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add("name");
-        $builder->add('enabled', ChoiceType::class, [
-            'choices' => [
-                MakerInterface::STATUS_ENABLED => "Enabled",
-                MakerInterface::STATUS_DISABLED => "Disabled",
-            ],
-                ]
-        );
+        $builder->add('enabled', CheckboxType::class, [
+            'enabled' => MakerInterface::STATUS_ENABLED,
+            'disabled' => MakerInterface::STATUS_DISABLED
+        ]);
         $builder->add('context', ChoiceType::class, [
             'choices' => [
                 MakerInterface::CONTEXT_MODULE => "Fabricante de Módulos",
