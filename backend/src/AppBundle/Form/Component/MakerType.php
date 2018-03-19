@@ -20,7 +20,6 @@ class MakerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add("name");
-        $builder->add("country");
         $builder->add('enabled', ChoiceType::class, [
             'choices' => [
                 MakerInterface::STATUS_ENABLED => "Enabled",
@@ -31,8 +30,10 @@ class MakerType extends AbstractType
         $builder->add('context', ChoiceType::class, [
             'choices' => [
                 MakerInterface::CONTEXT_MODULE => "Fabricante de Módulos",
-                MakerInterface::CONTEXT_INVERTER => "Fabricante de Inversores"
-                //MakerInterface::CONTEXT_ALL => "Ambos",
+                MakerInterface::CONTEXT_INVERTER => "Fabricante de Inversores",
+                MakerInterface::CONTEXT_STRING_BOX => "Fabricande de String Box",
+                MakerInterface::CONTEXT_VARIETY => "Fabricante de Variedades",
+                MakerInterface::CONTEXT_STRUCTURE => "Fabricante de Estruturas"
             ],
                 ]
         );
