@@ -126,11 +126,11 @@
             method: 'post',
             data: {postcode: $('#delivery_deliveryPostcode').val()},
             complete: function (xhr) {
-                if (200 == xhr.status) {
-                    $('#delivery_deliveryState').val(xhr.responseJSON.uf);
-                    $('#delivery_deliveryCity').val(xhr.responseJSON.cidade);
-                    $('#delivery_deliveryDistrict').val(xhr.responseJSON.bairro);
-                    $('#delivery_deliveryStreet').val(xhr.responseJSON.logradouro);
+                if (xhr.status == 200 && xhr.responseJSON.status == 200) {
+                    $('#delivery_deliveryState').val(xhr.responseJSON.state);
+                    $('#delivery_deliveryCity').val(xhr.responseJSON.city);
+                    $('#delivery_deliveryDistrict').val(xhr.responseJSON.neighborhood);
+                    $('#delivery_deliveryStreet').val(xhr.responseJSON.street);
                 }
             }
         });
