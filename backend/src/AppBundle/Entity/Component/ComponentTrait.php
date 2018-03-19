@@ -448,7 +448,21 @@ trait ComponentTrait
             return $this->maker->getContext();
         return null;
     }
-    
+
+    /**
+     * @inheritdoc
+     */
+    public static function getFamilies()
+    {
+        return [
+            self::FAMILY_MODULE,
+            self::FAMILY_INVERTER,
+            self::FAMILY_STRING_BOX,
+            self::FAMILY_STRUCTURE,
+            self::FAMILY_VARIETY
+        ];
+    }
+
     /**
      * @inheritDoc
      */
