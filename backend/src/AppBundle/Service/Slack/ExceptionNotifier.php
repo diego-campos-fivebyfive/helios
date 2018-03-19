@@ -2,6 +2,8 @@
 
 namespace AppBundle\Service\Slack;
 
+use GuzzleHttp\Client;
+
 /**
  * Send exception notifications to slack
  * @author Claudinei Machado <claudinei@kolinalabs.com>
@@ -9,17 +11,84 @@ namespace AppBundle\Service\Slack;
 class ExceptionNotifier
 {
     /**
-     * @param \Exception $exception
-     * @param string $environment
+     * @var string
      */
-    public function notify($exception, $environment)
+    private $slackUri = 'https://hooks.slack.com';
+
+    /**
+     * @var string
+     */
+    private $slackEntry = '/services/T637J8WTD';
+
+    /**
+     * @var array
+     */
+    private $slackChannels = [
+        'tester' => '/B7RG9C6QY/83hdQY97qEOsPjYWexEfobCN',
+        'backend' => '/B9PBEM4CX/pgEmHlA5upMTLwwrk0COqbbI',
+        'developers' => '/B9NDJ4FCM/eNlfu3KYJTzUxE9grjlfcytb',
+        'frontend' => '/B9ML39XG8/3GMotrj2XPBQzBazlwfSqjuZ',
+        'homolog' => '/B7PPVC42D/FIXd946YfYB6wN5XBIE9P5yR',
+        'production' => '/B7PKYSBEC/R2k2c5GqdzjtazDFuabywnmG',
+        'tasks' => '/B84MS6VNW/t2T7U7t6y1LKVRZHvOZCxPY0'
+    ];
+
+    /**
+     * @var string
+     */
+    private $environment;
+
+    /**
+     * ExceptionNotifier constructor.
+     * @param $environment
+     */
+    function __construct($environment)
+    {
+        $this->environment = $environment;
+    }
+
+    /**
+     * @param \Exception $exception
+     * @return int
+     */
+    public function notify($exception)
+    {
+        $output = $this->formatOutput($exception);
+        $client = $this->createClient();
+
+        $response = $client->post($this->formatUri(), [
+            'body' => $this->formatBody($output)
+        ]);
+
+        return $response->getStatusCode();
+    }
+
+    /**
+     * @param $output
+     * @return string
+     */
+    private function formatBody($output)
+    {
+        $data = [
+            'text' => $output,
+            'link_names' => 1
+        ];
+
+        return stripslashes(json_encode($data, JSON_UNESCAPED_SLASHES));
+    }
+
+    /**
+     * @param \Exception $exception
+     * @return string
+     */
+    private function formatOutput($exception)
     {
         $statusCode = method_exists($exception, 'getStatusCode') ? $exception->getStatusCode() : 0 ;
-        $message = $exception->getMessage();
+        $message = addslashes($exception->getMessage());
         $file = $exception->getFile();
         $line = $exception->getLine();
 
-        $output = sprintf('\n\nException on %s ambience...\n', $environment);
+        $output = sprintf('\n\nException on %s ambience...\n', $this->environment);
         $output .= ':: INFO \n';
         $output .= sprintf('Message: %s \n', $message);
         $output .= sprintf('Status: %d \n', $statusCode);
@@ -32,7 +101,7 @@ class ExceptionNotifier
         $output .= strlen($traced) ? $traced : 'No trace info.';
         $output .= '\n\n';
 
-        exec("\${CLI_PATH}/ces-slack-notify --{$environment} '$output'");
+        return $output;
     }
 
     /**
@@ -57,7 +126,7 @@ class ExceptionNotifier
                 if ($value && $definition != 'type' && !is_array($value)) {
 
                     $tag = ucfirst($definition);
-                    $str = str_replace('\\', '\\\\', is_string($value) ? $value : '');
+                    $str = addslashes(is_string($value) ? $value : '');
 
                     if ($str) {
                         $info .= sprintf('%s: %s\n', $tag, $str);
@@ -71,5 +140,26 @@ class ExceptionNotifier
         }
 
         return $output;
+    }
+
+    /**
+     * @return Client
+     */
+    private function createClient()
+    {
+        return new Client([
+            'base_uri' => $this->slackUri,
+            'headers' => [
+                'Content-Type' => 'application/json'
+            ]
+        ]);
+    }
+
+    /**
+     * @return string
+     */
+    private function formatUri()
+    {
+        return "{$this->slackEntry}{$this->slackChannels[$this->environment]}";
     }
 }
