@@ -20,7 +20,6 @@ class MakerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add("name");
-        $builder->add("country");
         $builder->add('enabled', ChoiceType::class, [
             'choices' => [
                 MakerInterface::STATUS_ENABLED => "Enabled",

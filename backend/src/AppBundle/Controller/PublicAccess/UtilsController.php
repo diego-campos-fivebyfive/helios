@@ -3,7 +3,6 @@
 namespace AppBundle\Controller\PublicAccess;
 
 use AppBundle\Service\Postcode\Finder;
-use GuzzleHttp\Client as Guzzle;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -25,6 +24,6 @@ class UtilsController extends AbstractController
         /** @var Finder $postcodeFinder */
         $postcodeFinder = $this->get('postcode_finder');
 
-       // return $postcodeFinder->
+        return $this->json($postcodeFinder->find($postcode));
     }
 }
