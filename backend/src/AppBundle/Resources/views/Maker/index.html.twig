@@ -11,28 +11,18 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <td>{{'Name'|trans}}</td>
-                                    <td>{{'Country'|trans}}</td>
-                                    <td>Tipo de Fabricante</td>
-                                    <td>Status</td>
-                                    <td>Ações</td>
+                                    <th>{{'Name'|trans}}</th>
+                                    <th class="col-md-2">Tipo de Fabricante</th>
+                                    <th class="col-md-2">Status</th>
+                                    <th class="col-md-2">Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for maker in makers %}
                                     <tr>
                                         <td>{{maker.name}}</td>
-                                        <td>{{maker.country}}</td>
                                         <td>
-                                            {% if maker.context is same as('component_inverter') %}
-                                                {{'Inverter'|trans}}
-                                            {% elseif maker.context is same as('component_module') %}
-                                                {{'Module'|trans}}
-                                            {% elseif maker.context is same as('component_all')%}
-                                                {{'Both'|trans}}
-                                            {% else %}
-                                                {{'Not supported'|trans}}
-                                            {% endif %}
+                                            {{maker.context|trans}}
                                         </td>
                                         <td>
                                             {% if(maker.enabled == 1) %}
@@ -43,15 +33,19 @@
 
                                         </td>
                                         <td>
-                                            <a href="{{path('maker_update',{'id':maker.id})}}" class="btn btn-xs btn-default">{{'Edit'|trans}}</a>
-                                            <a href="{{path('maker_delete',{'id':maker.id})}}"class="btn btn-xs btn-default">{{'Delete'|trans}}</a>
+                                            <a href="{{path('maker_update',{'id':maker.id})}}" class="btn btn-sm btn-success">
+                                                <i class="fa fa-edit"></i> {{'Edit'|trans}}
+                                            </a>
+                                            <a href="{{path('maker_delete',{'id':maker.id})}}" class="btn btn-sm btn-danger">
+                                                <i class="fa fa-remove"></i> {{'Delete'|trans}}
+                                            </a>
                                         </td>
                                     <tr>
                                     {% endfor %}
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="5">
+                                    <td colspan="4" class="text-center">
                                         {{ knp_pagination_render(pagination) }}
                                     </td>
                                 </tr>
