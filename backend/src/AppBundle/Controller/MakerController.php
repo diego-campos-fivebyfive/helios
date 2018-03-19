@@ -119,6 +119,7 @@ class MakerController extends AbstractController
         }
         $makerManager->delete($maker);
         $this->setNotice("Fabricante removido com sucesso !");
+
         return $this->redirectToRoute("maker_index");
     }
 
