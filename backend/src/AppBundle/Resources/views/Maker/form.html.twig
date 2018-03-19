@@ -14,11 +14,11 @@
                         {{ form_label(form.context, 'Tipo de Fábrica') }}
                         {{ form_widget(form.context, {'attr' : { 'class' : 'form-control' }} ) }}
                     </div>
-                    <div class="col-md-2">
-                        <center>
+                    <div class="col-md-2 text-center">
+                        <div>
                             {{ form_label(form.enabled, 'Ativo') }}
-                        </center>
-                        {{ form_widget(form.enabled, {'attr' : { 'class' : 'form-control' }} ) }}
+                        </div>
+                        {{ form_widget(form.enabled ) }}
                     </div>
                 </div>
                 <div class="row">
