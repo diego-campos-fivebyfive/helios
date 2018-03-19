@@ -108,6 +108,14 @@ class MenuAdmin
                     'route' => 'variety_index',
                     'icon' => 'variety',
                     'allowedRoles' => '*'
+                ],
+                'makers' => [
+                    'name' => 'Fabricantes',
+                    'route' => 'maker_index',
+                    'icon' => 'building',
+                    'allowedRoles' => [
+                        'master'
+                    ]
                 ]
             ]
         ],
