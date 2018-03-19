@@ -28,8 +28,8 @@
       }
     },
     mounted() {
-      document.body.addEventListener('keyup', e => {
-        if (e.keyCode === 27) {
+      document.addEventListener('keyup', event => {
+        if (event.keyCode === 27) {
           this.hide()
         }
       })
