@@ -267,11 +267,10 @@ class OrderExporter
     }
 
     /**
-     * @deprecated
      * @param OrderInterface $order
      * @return string
      */
-    public function exportLegacy(OrderInterface $order)
+    public function exportCsv(OrderInterface $order)
     {
         $reference = $order->getReference();
 
