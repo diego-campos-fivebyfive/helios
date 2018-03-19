@@ -20,10 +20,8 @@ use AppBundle\Form\Component\MakerType;
  *
  * @Route("maker")
  *
- * @Security("has_role('ROLE_OWNER')")
+ * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_PLATFORM_MASTER')")
  *
- * @Breadcrumb("Dashboard", route={"name"="app_index"})
- * @Breadcrumb("Components")
  * @Breadcrumb("Makers", route={"name"="maker_index"})
  */
 class MakerController extends AbstractController
@@ -34,18 +32,16 @@ class MakerController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-        //
-        //$this->dd($request->attributes);
-
         $manager = $this->manager('maker');
         $paginator = $this->getPaginator();
 
-        $query = $manager->getEntityManager()->createQueryBuilder();
-        $query->select('m')->from('AppBundle\Entity\Component\Maker', 'm')->orderBy('m.name');
+        $qb = $manager->getEntityManager()->createQueryBuilder();
+        $qb->select('m')->from(Maker::class, 'm')->orderBy('m.name');
 
         $pagination = $paginator->paginate(
-            $query->getQuery(), $request->query->getInt('page', 1), 10
+            $qb->getQuery(), $request->query->getInt('page', 1), 10
         );
+
         return $this->render("maker.index", [
             'pagination' => $pagination
         ]);
