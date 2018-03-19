@@ -3,15 +3,14 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Sonata\ClassificationBundle\Entity\BaseContext;
 
 /**
  * Context
  *
- * @ORM\Table(name="app_context")
+ * @ORM\Table(name="app_postcode")
  * @ORM\Entity
  */
-class Context extends BaseContext
+class Postcode
 {
     /**
      * @var string
@@ -23,6 +22,35 @@ class Context extends BaseContext
     protected $id;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(name="attributes", type="json")
+     */
+    protected $attributes;
+
+    public function __construct()
+    {
+        $this->attributes = [
+            'postcode' => '',
+            'state' => '',
+            'city' => '',
+            'neighborhood' => '',
+            'street' => ''
+        ];
+    }
+
+    /**
+     * @param $id
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = str_replace('-', '', $id);
+
+        return $this;
+    }
+
+    /**
      * Get id
      *
      * @return integer
@@ -30,6 +58,42 @@ class Context extends BaseContext
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setAttributes($attributes)
+    {
+        $this->attributes = $attributes;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setAttribute($attribute, $value)
+    {
+        $this->attributes[$attribute] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getAttribute($attribute)
+    {
+        return $this->attributes[$attribute];
     }
 }
 
