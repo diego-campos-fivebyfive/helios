@@ -1,36 +1,44 @@
 <?php
 
-namespace Tests\AppBundle\Service\Order;
+namespace Tests\AppBundle\Service\Postcode;
 
-use AppBundle\Entity\Order\Element;
-use AppBundle\Service\Order\ElementResolver;
-use Liip\FunctionalTestBundle\Test\WebTestCase;
+use AppBundle\Service\Postcode\Finder;
+use Symfony\Component\HttpFoundation\Request;
+use Tests\AppBundle\AppTestCase;
 
 /**
- * @group element_resolver
+ * @group postcode_finder
  */
-class ElementResolverTest extends WebTestCase
+class FinderTest extends AppTestCase
 {
-    public function testResolveElementAndData()
+    /**
+     * Create test scenario
+     */
+    public function testDefaultScenario()
     {
-        $firstArg = null;   //  Instância desconhecida
-        $secondArg = null;  //  Instância desconhecida
+        /** @var Finder $postcodeFinder */
+        $postcodeFinder = $this->getContainer()->get('postcode_finder');
 
-        $element = ElementResolver::resolve($firstArg, $secondArg);
-        $this->assertInstanceOf(Element::class, $element);
+        $request = new Request();
 
-        $firstArg = [];
-        $secondArg = null;
+        $request->request->add(
+            [
+                'postcode' => '85015310'
+            ]
+        );
 
-        $element = ElementResolver::resolve($firstArg, $secondArg);
-        $this->assertInstanceOf(Element::class, $element);
+        $response = $postcodeFinder->searchAndFormat($request);
 
-        $firstArg = new Element();
-        $firstArg->setCode('ABC');
-        $secondArg = [];
+        $this->assertEquals($response['status'], 200);
+        $this->assertEquals($response['state'], 'PR');
+        $this->assertEquals($response['city'], 'Guarapuava');
+        $this->assertEquals($response['neighborhood'], 'Batel');
+        $this->assertEquals($response['street'], 'Rua Dom Álvaro Nunes Cabeza de Vaca');
 
-        $element = ElementResolver::resolve($firstArg, $secondArg);
-        $this->assertInstanceOf(Element::class, $firstArg);
-        $this->assertEquals($element->getCode(), $firstArg->getCode());
+        $request->request->set('postcode', 'asd');
+
+        $response = $postcodeFinder->searchAndFormat($request);
+
+        $this->assertEquals($response['status'], 404);
     }
 }
