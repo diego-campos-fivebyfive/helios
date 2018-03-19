@@ -22,8 +22,7 @@ class MakerType extends AbstractType
     {
         $builder->add("name");
         $builder->add('enabled', CheckboxType::class, [
-            'enabled' => MakerInterface::STATUS_ENABLED,
-            'disabled' => MakerInterface::STATUS_DISABLED
+            'required' => false
         ]);
         $builder->add('context', ChoiceType::class, [
             'choices' => [
