@@ -40,7 +40,7 @@ class AppListener
         $this->container = $container;
 
         if('dev' === $container->get('kernel')->getEnvironment()){
-            $this->handleExceptions = false;
+            $this->handleExceptions = true;
         }
     }
 
@@ -167,6 +167,6 @@ class AppListener
      */
     private function sendSlackNotification($exception)
     {
-        (new ExceptionNotifier())->notify($exception, $this->container->getParameter('ambience'));
+        (new ExceptionNotifier($this->container->getParameter('ambience')))->notify($exception);
     }
 }
