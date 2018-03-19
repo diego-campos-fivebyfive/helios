@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Component\MakerInterface;
+use AppBundle\Manager\MakerManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -104,12 +105,20 @@ class MakerController extends AbstractController
      */
     public function deleteAction(Request $request, Maker $maker)
     {
-        $manager = $this->manager('maker');
-        if (count($maker->getInverters()) > 0 || count($maker->getModules()) > 0) {
+        $familyManager = $this->manager($maker->getContext());
+
+        $components = $familyManager->findBy([
+            'maker' => $maker
+        ]);
+        
+        $makerManager = $this->manager('maker');
+
+        if (count($components) > 0) {
+            dump("teste");
             $this->setNotice("-Este fabricante possui um ou mais produtos<br>-Remova os produtos antes de efetuar a remoção do fabricante", "error");
             return $this->redirectToRoute("maker_index");
         }
-        $manager->delete($maker);
+        $makerManager->delete($maker);
         $this->setNotice("Fabricante removido com sucesso !");
         return $this->redirectToRoute("maker_index");
     }
