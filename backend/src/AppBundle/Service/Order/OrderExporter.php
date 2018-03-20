@@ -128,7 +128,7 @@ class OrderExporter
         $customerName = trim($customerName);
         $customerName = str_replace(' ', '_', $customerName);
 
-        $currentDateAndTime = (new \DateTime())->format('Y-m-d_H-m-s');
+        $currentDateAndTime = (new \DateTime())->format('Y-m-d_H-i-s');
 
         $fileName = $customerName . "-" . $currentDateAndTime . ".xlsx";
 
