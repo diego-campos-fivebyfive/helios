@@ -259,7 +259,7 @@ class ExceptionNotifier
                 $dir = sprintf('/%s/', $namespace);
                 $name = sprintf('\%s\\', $namespace);
 
-                if (strpos($value, $dir) > 5 || strpos($value, $name) > 5) {
+                if (strpos($value, $dir) > 5 || 0 == strpos($value, $name)) {
                     return true;
                 }
             }
