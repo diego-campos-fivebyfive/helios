@@ -13,28 +13,25 @@ echo "Starting Deploy..."
 
 if [[ $CES_AMBIENCE == 'homolog' ]]; then
 
-  $CLI_PATH/ces-slack-notify --homolog "Starting Homolog Deploy..."
+  $CLI_PATH/ces-slack-notify --devops "Starting Homolog Deploy..."
   $CLI_PATH/ces-app-clone --homolog
   $CLI_PATH/ces-permission-fix --homolog
-  source $CLI_PATH/config/variables-ci --homolog
   $CLI_PATH/ces-app-install
   $CLI_PATH/ces-database-update
   $CLI_PATH/ces-cache-clear
   $CLI_PATH/ces-frontend-compile
 
   [ ! -d $PROJECT_ROOT/web/app ] && {
-    $CLI_PATH/ces-slack-notify --homolog "Frontend Build Failed!"
+    $CLI_PATH/ces-slack-notify --devops "Frontend Build Failed!"
   }
 
-  $CLI_PATH/ces-slack-notify --homolog "Homolog Deploy Done!"
+  $CLI_PATH/ces-slack-notify --devops "Homolog Deploy Done!"
 
 elif [[ $CES_AMBIENCE == 'production' ]]; then
 
-  $CLI_PATH/ces-slack-notify --production '@here: Starting Production Deploy...'
+  $CLI_PATH/ces-slack-notify --devops '@here: Starting Production Deploy...'
   $CLI_PATH/ces-permission-fix --production
-  source $CLI_PATH/config/homolog/variables
   $CLI_PATH/ces-app-clone --production
-  source $CLI_PATH/config/variables-ci --production
   $CLI_PATH/ces-app-config --production
   $CLI_PATH/ces-cache-clear
   $CLI_PATH/ces-database-update
@@ -47,7 +44,7 @@ elif [[ $CES_AMBIENCE == 'production' ]]; then
   rm .uploads/order/proforma/**
   rm .uploads/order/order/**
 
-  $CLI_PATH/ces-slack-notify --production '@here: Production Deploy Done!'
+  $CLI_PATH/ces-slack-notify --devops '@here: Production Deploy Done!'
 
 else
   echo '$CES_AMBIENCE variable is not defined'

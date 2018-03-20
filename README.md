@@ -189,6 +189,7 @@ Esclarecimentos gerais relacionados a documentação:
     export PATH=$PATH:$SICES_PATH/devops/cli
     ```
     > **Nota**: lembre-se de substitir `[PROJECT_PATH]` pelo caminho do projeto.
+    > **Adicional**: Ambiente de produção deve possuir linha adicional de source de váriaveis de homolog `source $SICES_PATH/devops/cli/config/homolog/variables`.
 
     - ##### 3.2.3. *Carregue as alterações do arquivo bash*
     ```

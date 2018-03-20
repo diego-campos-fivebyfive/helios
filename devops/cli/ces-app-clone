@@ -28,8 +28,6 @@ if [ $1 = '--homolog' ]; then
 
 elif [ $1 = '--production' ]; then
 
-  source $CLI_PATH/config/homolog/variables
-
   echo "Importing Temp files from homolog Server..."
   rsync -azvv --delete \
     -e "ssh -i $SICES_PATH/devops/aws/homolog.pem" \
