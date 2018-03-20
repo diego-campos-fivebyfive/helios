@@ -213,11 +213,7 @@ class ExceptionNotifier
      */
     private function arrayToInfo(array $data = [], $inline = false)
     {
-        /** @var Serializer $serializer */
-        $serializer = $this->container->get('serializer');
-
-        $json = $serializer->serialize($data, 'json');
-        $data = json_decode($json, true);
+        $data = json_decode($this->serializer->serialize($data, 'json'), true);
 
         $info = '';
         foreach ($data as $key => $value) {
