@@ -778,6 +778,7 @@ Esclarecimentos gerais relacionados a documentação:
     Slack: @gianlucabine
     Github: @Pr3d4dor
     E-mail: gian_bine@hotmail.com
+    ```
 
     - #### João Zaqueu Chereta
     ```
