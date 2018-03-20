@@ -371,7 +371,7 @@ Esclarecimentos gerais relacionados a documentação:
   <a name="tarefas--start"></a><a name="5.4"></a>
   - [5.4](#tarefas--start) **Processos executados pelo comando ces-issue-start**:
 
-    | Stage From  | TD    | B                | IP     | IP   | R   | TI     | TI     | TII\|D |
+    | Stage From  | TD         | B                | IP     | IP   | R   | TI     | TI     | TII\|D |
     | :---        | :---:      | :---:            | :---:  | :--: | :-: | :---:  | :---:  | :---:  |
     | Conditional | --         | --               | [N]    | [Y]  | --  | [Y]    | [N]    | --     |
     | Branch      | Create     | Create \| Update | Remove | Keep | X   | Delete | Delete | --     |
