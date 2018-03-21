@@ -40,9 +40,7 @@
         action: '',
         payload: {
           name: {
-            default: '',
-            type: 'string',
-            resolved: false
+            default: ''
           },
           amount: {
             default: null,
@@ -84,17 +82,37 @@
         this.$refs.modalForm.notify(field.exception || defaultException)
         field.resolved = false
       },
+      assign(base, data = {}) {
+        const assign = (base, data = {}) =>
+          Object
+            .entries(base)
+            .reduce((acc, [key, val]) => {
+              if (val === Object(val)) {
+                acc[key] = assign(val, data[key] || '')
+                return acc
+              }
+
+              if (key === 'default') {
+                acc['value'] = data || val
+              }
+
+              acc[key] = (key === 'resolved') ? false : val
+              return acc
+            }, {})
+
+        return assign(base, data)
+      },
       show(coupon) {
         this.$refs.modalForm.show()
 
         if (coupon) {
           this.form.action = 'edit'
-          this.form.payload = Object.assign(this.form.default, coupon)
+          this.form.payload = this.assign(this.form.payload, coupon)
           return
         }
 
         this.form.action = 'create'
-        this.form.payload = Object.assign(this.form.default, {})
+        this.form.payload = this.assign(this.form.payload, {})
       },
       done(response) {
         this.$refs.modalForm.hide()
