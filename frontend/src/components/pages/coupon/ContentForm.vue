@@ -38,6 +38,9 @@
       form: {
         action: '',
         payload: {
+          id: {
+            default: null
+          },
           name: {
             default: ''
           },
@@ -109,7 +112,20 @@
           return false
         }
 
-        return true
+        return this.formatPayload(this.form.payload)
+      },
+      formatPayload(payload) {
+        const format = obj =>
+          Object
+            .entries(obj)
+            .reduce((acc, [key, val]) => {
+              acc[key] = val.hasOwnProperty('value')
+                ? val.value
+                : format(val)
+              return acc
+            }, {})
+
+        return format(payload)
       },
       assign(base, data = {}) {
         const assign = (base, data = {}) =>
