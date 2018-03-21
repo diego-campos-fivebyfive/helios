@@ -157,6 +157,17 @@ class MenuAdmin
                 'master'
             ]
         ],
+        'utils' => [
+            'name' => 'Links Úteis',
+            'link' => 'https://suporte.plataformasicessolar.com.br/faq/links-uteis',
+            'icon' => 'link',
+            'custom' => [
+                'attributes' => [
+                    'id' => 'idUtils'
+                ]
+            ],
+            'allowedRoles' => '*',
+        ],
        'settings' => [
             'name' => 'Configurações',
             'uri' => '#',
