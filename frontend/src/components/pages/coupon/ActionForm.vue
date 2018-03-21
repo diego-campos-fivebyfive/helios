@@ -21,12 +21,11 @@
   export default {
     props: [
       'action',
-      'payload',
-      'resolved'
+      'getPayload'
     ],
     methods: {
       editCoupon() {
-        if (this.resolved) {
+        if (!this.getPayload()) {
           return
         }
 
@@ -39,7 +38,7 @@
         this.$emit('done', response)
       },
       createCoupon() {
-        if (this.resolved) {
+        if (!this.getPayload()) {
           return
         }
 
