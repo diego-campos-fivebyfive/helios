@@ -21,31 +21,34 @@
   export default {
     props: [
       'action',
-      'payload',
-      'resolved'
+      'getPayload'
     ],
     methods: {
       editCoupon() {
-        if (this.resolved) {
+        const payload = this.getPayload()
+
+        if (!payload) {
           return
         }
 
-        const uri = `api/v1/coupon/${this.payload.id}`
+        const uri = `api/v1/coupon/${payload.id}`
 
-        const response = this.axios.put(uri, this.payload)
+        const response = this.axios.put(uri, payload)
           .then(() => 'Cupom editado com sucesso')
           .catch(() => 'Não foi possível editar cupom')
 
         this.$emit('done', response)
       },
       createCoupon() {
-        if (this.resolved) {
+        const payload = this.getPayload()
+
+        if (!payload) {
           return
         }
 
         const uri = 'api/v1/coupon/'
 
-        const response = this.axios.post(uri, this.payload)
+        const response = this.axios.post(uri, payload)
           .then(() => 'Cupom cadastrado com sucesso')
           .catch(() => 'Não foi possível cadastrar cupom')
 

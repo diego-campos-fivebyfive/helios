@@ -48,7 +48,7 @@
     color: $ui-text-main;
     left: 0;
     margin: auto;
-    max-height: calc(100% - #{$ui-space-y}*4);
+    max-height: calc(100% - #{$ui-space-y} * 4);
     max-width: $ui-size-md;
     position: fixed;
     right: 0;
