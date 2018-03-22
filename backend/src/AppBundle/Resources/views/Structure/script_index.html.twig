@@ -1,6 +1,20 @@
 <script>
     $(function () {
 
+        var form_filtration = $('#form_filtration');
+        var component_active = $('#component-active');
+        var active_val = '{{ components_active_val }}';
+        if (form_filtration.length) {
+            form_filtration.append($('<input type="hidden" name="actives"/>').val(active_val));
+
+            component_active.val(active_val);
+
+            component_active.on('change', function(){
+                $('input[name="actives"]').val($(this).val());
+                form_filtration.trigger('submit');
+            });
+        }
+
         var detail_structure = $('#detail_structure');
         var detail_spinner = detail_structure.html();
         $('[data-target="#modal_details"]').on('click', function(){
