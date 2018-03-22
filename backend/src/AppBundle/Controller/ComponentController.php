@@ -52,12 +52,21 @@ class ComponentController extends AbstractController
         $powerField = 'module' == $type ? 'c.maxPower' : 'c.nominalPower';
         $this->makerQueryBuilderFilter($qb, $request, $powerField);
 
-        $components_actives = 0;
         if ($components_actives = $request->get('actives')) {
+            if ((int) $components_actives == 1) {
+                $expression  =
+                    $qb->expr()->neq(
+                        'c.generatorLevels',
+                        $qb->expr()->literal('[]'));
+            } else {
+                $expression  =
+                    $qb->expr()->eq(
+                        'c.generatorLevels',
+                        $qb->expr()->literal('[]'));
+            }
+
             $qb->andWhere(
-                $qb->expr()->neq(
-                    'c.generatorLevels',
-                    $qb->expr()->literal('[]'))
+                $expression
             );
         }
 
@@ -77,7 +86,7 @@ class ComponentController extends AbstractController
                 'display' => 'grid',
                 'strict' => 0
             ], $request->query->all()),
-            'components_actives' => $components_actives
+            'components_active_val' => $components_actives
         ]);
     }
 
