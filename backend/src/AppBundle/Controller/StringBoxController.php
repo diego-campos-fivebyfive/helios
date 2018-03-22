@@ -50,6 +50,24 @@ class StringBoxController extends AbstractController
             ]);
         }
 
+        if ($components_actives = $request->get('actives')) {
+            if ((int) $components_actives == 1) {
+                $expression  =
+                    $qb->expr()->neq(
+                        's.generatorLevels',
+                        $qb->expr()->literal('[]'));
+            } else {
+                $expression  =
+                    $qb->expr()->eq(
+                        's.generatorLevels',
+                        $qb->expr()->literal('[]'));
+            }
+
+            $qb->andWhere(
+                $expression
+            );
+        }
+
         $this->overrideGetFilters();
 
         $pagination = $this->getPaginator()->paginate(
@@ -63,7 +81,8 @@ class StringBoxController extends AbstractController
             'query' => array_merge([
                 'display' => 'grid',
                 'strict' => 0
-            ], $request->query->all())
+            ], $request->query->all()),
+            'components_active_val' => $components_actives
         ));
     }
 
