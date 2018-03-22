@@ -33,15 +33,20 @@
         const defaultException = exceptions[field.type]
 
         if (pattern.test(field.value)) {
+          /* eslint-disable no-param-reassign */
           field.resolved = true
+          /* eslint-enable no-param-reassign */
           return true
         }
 
         this.notify(field.exception || defaultException)
+        /* eslint-disable no-param-reassign */
         field.resolved = false
+        /* eslint-enable no-param-reassign */
         return false
       },
       isValidPayload(payload) {
+        /* eslint-disable no-use-before-define, no-restricted-syntax */
         const isResolved = (obj, key) => {
           const val = obj[key]
 
@@ -63,6 +68,7 @@
         }
 
         return isValid(payload)
+        /* eslint-enable no-use-before-define, no-restricted-syntax */
       },
       formatPayload(payload) {
         const format = obj =>
