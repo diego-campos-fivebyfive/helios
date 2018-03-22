@@ -78,34 +78,35 @@
 
         if (pattern.test(field.value)) {
           field.resolved = true
-          return
+          return true
         }
 
         this.$refs.modalForm.notify(field.exception || defaultException)
         field.resolved = false
+        return false
       },
-      isValidPayload(obj) {
-        const isResolved = (key, val) => {
+      isValidPayload(payload) {
+        const isResolved = (obj, key) => {
+          const val = obj[key]
+
           if (val === Object(val)) {
             return isValid(val)
           }
 
-          return (val || key !== 'resolved')
+          return (key === 'resolved' && !val)
+            ? this.validateField(obj)
+            : true
         }
 
         const isValid = obj => {
           for (let key in obj) {
-            const val = obj[key]
-
-            if(!isResolved(key, val)) {
-              return false
-            }
+            if (!isResolved(obj, key)) return false
           }
 
           return true
         }
 
-        return isValid(obj)
+        return isValid(payload)
       },
       getPayload() {
         if (!this.isValidPayload(this.form.payload)) {
