@@ -34,7 +34,7 @@ class MenuAdmin
             'icon' => 'trophy',
             'allowedRoles' => '*'
         ],
-        'coupon' => [
+        /*'coupon' => [
             'name' => 'Cupom de Desconto',
             'link' => '/coupon',
             'icon' => 'ticket',
@@ -42,7 +42,7 @@ class MenuAdmin
               'admin',
               'master'
             ]
-        ],
+        ],*/
         'memorials' => [
             'name' => 'Memoriais',
             'route' => 'memorials',
@@ -108,6 +108,14 @@ class MenuAdmin
                     'route' => 'variety_index',
                     'icon' => 'variety',
                     'allowedRoles' => '*'
+                ],
+                'makers' => [
+                    'name' => 'Fabricantes',
+                    'route' => 'maker_index',
+                    'icon' => 'building',
+                    'allowedRoles' => [
+                        'master'
+                    ]
                 ]
             ]
         ],
@@ -148,6 +156,17 @@ class MenuAdmin
                 'admin',
                 'master'
             ]
+        ],
+        'utils' => [
+            'name' => 'Links Úteis',
+            'link' => 'https://suporte.plataformasicessolar.com.br/faq/links-uteis',
+            'icon' => 'link',
+            'custom' => [
+                'attributes' => [
+                    'id' => 'idUtils'
+                ]
+            ],
+            'allowedRoles' => '*',
         ],
        'settings' => [
             'name' => 'Configurações',

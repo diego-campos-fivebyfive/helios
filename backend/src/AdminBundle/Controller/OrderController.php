@@ -17,9 +17,12 @@ use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Form\Order\OrderType;
 use AppBundle\Manager\OrderElementManager;
+use AppBundle\Service\Order\OrderExporter;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -48,88 +51,22 @@ class OrderController extends AbstractController
 
         $data = $form->handleRequest($request)->getData();
 
-        $optionVal = $data['optionsVal'];
-        $valueMin = $data['valueMin'] ? str_replace(',', '.', $data['valueMin']) : null;
-        $valueMax = $data['valueMax'] ? str_replace(',', '.', $data['valueMax']) : null;
-
-        $dateAt = $data['dateAt'];
-        $optionDate = $data['optionsAt'];
-
-        $formatDateAt = function($dateAt){
-            return implode('-', array_reverse(explode('/', $dateAt)));
-        };
-
-        if(is_array($data) && !array_key_exists('agent',$data) || !$data['agent']) {
-            $data['agent'] = $member;
-        }
-
-        /** @var \AppBundle\Service\Order\OrderFinder $finder */
-        $finder = $this->get('order_finder');
-
-        $finder
-            ->set('agent', $data['agent'])
-            ->set('filter', $data)
-        ;
-
-        $qb = $finder->queryBuilder();
-
-        if ($dateAt) {
-            $this->filterDateAt($qb, $optionDate, $dateAt, $formatDateAt);
-        }
-
-        if ($valueMin) {
-            $qb->andWhere('o.'.$optionVal.' >= :valMin');
-
-            $qb->setParameter('valMin', $valueMin);
-        }
-
-        if ($valueMax) {
-            $qb->andWhere('o.'.$optionVal.' <= :valMax');
-
-            $qb->setParameter('valMax', $valueMax);
-        }
-
-        if(-1 != $states = $request->get('states')){
-            $arrayStates = array_filter(explode(',', $states));
-            if (!empty($arrayStates)) {
-                $qb->andWhere($qb->expr()->in('o.state', $arrayStates));
-            };
-        }
-
-        if (-1 != $status = $request->get('status')) {
-            $status = explode(',', $status);
-            $arrayStatus = array_filter($status, 'strlen');
-            if (!empty($arrayStatus)) {
-                $qb->andWhere($qb->expr()->in('o.status', $arrayStatus));
-            }
-        }
-
-        if (-1 != $components = $request->get('components')) {
-            $components = explode(',', $components);
-            $arrayComponents = array_filter($components, 'strlen');
-            if (!empty($arrayComponents)) {
-                $qb->andWhere($qb->expr()->in('e.code', $arrayComponents));
-            }
-        }
-
         $expanseStates = [];
-        if ($this->member()->isPlatformExpanse()) {
-            $expanseStates = $this->member()->getAttributes()['states'];
-            $qb->andWhere($qb->expr()->in('o.state', $expanseStates));
-        }
+        $filteredStates = [];
+        $filteredStatus = [];
+        $filteredComponents = [];
 
-        $qbIds = clone $qb;
-        $qbIds->select('DISTINCT(o.id)');
+        $qb =
+            $this->filterOrders(
+                $request,
+                $data,
+                $expanseStates,
+                $filteredStates,
+                $filteredStatus,
+                $filteredComponents
+            );
 
-        $ids = array_map('current', ($qbIds->getQuery()->getResult())) ?? [0];
-
-        $qb3 = $this->manager('order')->createQueryBuilder();
-
-        $qb3
-            ->select('sum(o.total) as total, sum(o.power) as power')
-            ->where($qb3->expr()->in('o.id', $ids));
-
-        $totals = current($qb3->getQuery()->getResult());
+        $totals = $this->getFiltersTotals(clone $qb);
 
         $pagination = $this->getPaginator()->paginate(
             $qb->getQuery(),
@@ -137,48 +74,44 @@ class OrderController extends AbstractController
             10
         );
 
-        $componentsList = $this->getComponentsList();
-
         return $this->render('admin/orders/index.html.twig', array(
             'orders' => $pagination,
             'member' => $member,
             'form' => $form->createView(),
             'totals' => $totals,
-            'states' => $this->resolveFilters($this->getStates($expanseStates), $arrayStates),
-            'statusList' => $this->resolveFilters(Order::getStatusNames(), $arrayStatus),
-            'componentsList' => $this->resolveFilters($this->getComponentsList(), $arrayComponents)
+            'states' => $this->resolveFilters($this->getStates($expanseStates), $filteredStates),
+            'statusList' => $this->resolveFilters(Order::getStatusNames(), $filteredStatus),
+            'componentsList' => $this->resolveFilters($this->getComponentsList(), $filteredComponents)
         ));
     }
 
     /**
-     * @return array
+     * @Route("/{mode}/export", name="export_list")
      */
-    private function getComponentsList()
+    public function exportAction(Request $request, $mode)
     {
-        $families = Maker::getContextList();
+        $member = $this->member();
 
-        $componentsList = [];
+        $form = $this->createForm(FilterType::class, null, [
+            'member' => $member
+        ]);
 
-        foreach ($families as $family) {
-            $this->getComponents($family, $componentsList);
-        }
+        $data = $form->handleRequest($request)->getData();
 
-        return $componentsList;
-    }
+        $qb = $this->filterOrders($request, $data);
 
-    /**
-     * @param $componentName
-     * @param $componentsList
-     */
-    private function getComponents($componentName, &$componentsList)
-    {
-        $qb = $this->manager($componentName)->createQueryBuilder();
+        $results = $qb->getQuery()->getResult();
 
-        $components = $qb->select($qb->getAllAliases()[0])->getQuery()->getResult();
+        /** @var OrderExporter $orderExporter */
+        $orderExporter = $this->container->get('order_exporter');
 
-        foreach ($components as $component) {
-            $componentsList[$component->getCode()] = $component->getDescription();
-        }
+        $path = $orderExporter->export($results, $mode);
+
+        $header = ('spreadsheet') ? ResponseHeaderBag::DISPOSITION_ATTACHMENT : ResponseHeaderBag::DISPOSITION_INLINE;
+
+        $file = new BinaryFileResponse($path, Response::HTTP_OK, [], true, $header);
+
+        return $file;
     }
 
     /**
@@ -419,6 +352,131 @@ class OrderController extends AbstractController
 
             return $this->json(['importations' => $importations]);
         }
+    }
+
+    /**
+     * @param $qb
+     * @return mixed
+     */
+    private function getFiltersTotals($qb)
+    {
+        $qb->select('DISTINCT(o.id)');
+
+        $ids = array_map('current', ($qb->getQuery()->getResult()));
+        $ids = $ids ? $ids : [0];
+
+        $qb2 = $this->manager('order')->createQueryBuilder();
+
+        $qb2
+            ->select('sum(o.total) as total, sum(o.power) as power')
+            ->where($qb2->expr()->in('o.id', $ids));
+
+        return current($qb2->getQuery()->getResult());
+    }
+
+    /**
+     * @param $request
+     * @param $data
+     * @param array $expanseStates
+     * @param array $filteredStates
+     * @param array $filteredStatus
+     * @param array $filteredComponents
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function filterOrders($request, $data, &$expanseStates = [], &$filteredStates = [], &$filteredStatus = [], &$filteredComponents = [])
+    {
+        $optionVal = $data['optionsVal'];
+        $valueMin = $data['valueMin'] ? str_replace(',', '.', $data['valueMin']) : null;
+        $valueMax = $data['valueMax'] ? str_replace(',', '.', $data['valueMax']) : null;
+
+        $dateAt = $data['dateAt'];
+        $optionDate = $data['optionsAt'];
+
+        $formatDateAt = function($dateAt){
+            return implode('-', array_reverse(explode('/', $dateAt)));
+        };
+
+        if(is_array($data) && !array_key_exists('agent',$data) || !$data['agent']) {
+            $data['agent'] = $this->member();
+        }
+
+        /** @var \AppBundle\Service\Order\OrderFinder $finder */
+        $finder = $this->get('order_finder');
+
+        $finder
+            ->set('agent', $data['agent'])
+            ->set('filter', $data)
+        ;
+
+        $qb = $finder->queryBuilder();
+
+        if ($dateAt) {
+            $this->filterDateAt($qb, $optionDate, $dateAt, $formatDateAt);
+        }
+
+        if ($valueMin) {
+            $qb->andWhere('o.'.$optionVal.' >= :valMin');
+
+            $qb->setParameter('valMin', $valueMin);
+        }
+
+        if ($valueMax) {
+            $qb->andWhere('o.'.$optionVal.' <= :valMax');
+
+            $qb->setParameter('valMax', $valueMax);
+        }
+
+        if(-1 != $states = $request->get('states')){
+            $filteredStates = array_filter(explode(',', $states));
+            if (!empty($filteredStates)) {
+                $qb->andWhere($qb->expr()->in('o.state', $filteredStates));
+            };
+        }
+
+        if (-1 != $status = $request->get('status')) {
+            $status = explode(',', $status);
+            $filteredStatus = array_filter($status, 'strlen');
+            if (!empty($filteredStatus)) {
+                $qb->andWhere($qb->expr()->in('o.status', $filteredStatus));
+            }
+        }
+
+        if (-1 != $components = $request->get('components')) {
+            $components = explode(',', $components);
+            $filteredComponents = array_filter($components, 'strlen');
+            if (!empty($filteredComponents)) {
+                $qb->andWhere($qb->expr()->in('e.code', $filteredComponents));
+            }
+        }
+
+        if ($this->member()->isPlatformExpanse()) {
+            $expanseStates = $this->member()->getAttributes()['states'];
+            $qb->andWhere($qb->expr()->in('o.state', $expanseStates));
+        }
+
+        return $qb;
+    }
+
+    /**
+     * @return array
+     */
+    private function getComponentsList()
+    {
+        $families = Maker::getContextList();
+
+        $componentsList = [];
+
+        foreach ($families as $family) {
+            $qb = $this->manager($family)->createQueryBuilder();
+
+            $components = $qb->select($qb->getAllAliases()[0])->getQuery()->getResult();
+
+            foreach ($components as $component) {
+                $componentsList[$component->getCode()] = $component->getDescription();
+            }
+        }
+
+        return $componentsList;
     }
 
     /**

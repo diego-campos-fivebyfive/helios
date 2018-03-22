@@ -140,11 +140,11 @@
                 method: 'post',
                 data: {postcode: $('#pre_register_postcode').val()},
                 complete: function (xhr) {
-                    if (200 == xhr.status) {
-                        $('#pre_register_state').val(xhr.responseJSON.uf);
-                        $('#pre_register_city').val(xhr.responseJSON.cidade);
-                        $('#pre_register_district').val(xhr.responseJSON.bairro);
-                        $('#pre_register_street').val(xhr.responseJSON.logradouro);
+                    if (xhr.status == 200 && xhr.responseJSON.status == 200) {
+                        $('#pre_register_state').val(xhr.responseJSON.state);
+                        $('#pre_register_city').val(xhr.responseJSON.city);
+                        $('#pre_register_district').val(xhr.responseJSON.neighborhood);
+                        $('#pre_register_street').val(xhr.responseJSON.street);
                     }
                 }
             });

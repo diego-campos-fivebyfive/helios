@@ -2,7 +2,9 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Component\MakerInterface;
+use AppBundle\Manager\MakerManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -20,10 +22,8 @@ use AppBundle\Form\Component\MakerType;
  *
  * @Route("maker")
  *
- * @Security("has_role('ROLE_OWNER')")
+ * @Security("has_role('ROLE_PLATFORM_MASTER')")
  *
- * @Breadcrumb("Dashboard", route={"name"="app_index"})
- * @Breadcrumb("Components")
  * @Breadcrumb("Makers", route={"name"="maker_index"})
  */
 class MakerController extends AbstractController
@@ -34,20 +34,36 @@ class MakerController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-        //
-        //$this->dd($request->attributes);
-
         $manager = $this->manager('maker');
         $paginator = $this->getPaginator();
 
-        $query = $manager->getEntityManager()->createQueryBuilder();
-        $query->select('m')->from('AppBundle\Entity\Component\Maker', 'm')->orderBy('m.name');
+        $qb = $manager->getEntityManager()->createQueryBuilder();
+        $qb->select('m')->from(Maker::class, 'm')->orderBy('m.name');
+
+        $currentFamily = null;
+        if ($currentFamily = $request->get('family')) {
+            $qb->andWhere('m.context = :context');
+            $qb->setParameter('context', $currentFamily);
+        }
+
+        $this->overrideGetFilters();
 
         $pagination = $paginator->paginate(
-            $query->getQuery(), $request->query->getInt('page', 1), 10
+            $qb->getQuery(), $request->query->getInt('page', 1), 10
         );
+
+        $families = [
+            ComponentInterface::FAMILY_MODULE => ComponentInterface::FAMILY_MODULE,
+            ComponentInterface::FAMILY_INVERTER => ComponentInterface::FAMILY_INVERTER,
+            ComponentInterface::FAMILY_STRING_BOX => ComponentInterface::FAMILY_STRING_BOX,
+            ComponentInterface::FAMILY_STRUCTURE => ComponentInterface::FAMILY_STRUCTURE,
+            ComponentInterface::FAMILY_VARIETY => ComponentInterface::FAMILY_VARIETY
+        ];
+
         return $this->render("maker.index", [
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'families' => $families,
+            'current_family' => $currentFamily
         ]);
     }
 
@@ -105,13 +121,21 @@ class MakerController extends AbstractController
      */
     public function deleteAction(Request $request, Maker $maker)
     {
-        $manager = $this->manager('maker');
-        if (count($maker->getInverters()) > 0 || count($maker->getModules()) > 0) {
+        $familyManager = $this->manager($maker->getContext());
+
+        $components = $familyManager->findBy([
+            'maker' => $maker
+        ]);
+
+        $makerManager = $this->manager('maker');
+
+        if (count($components) > 0) {
             $this->setNotice("-Este fabricante possui um ou mais produtos<br>-Remova os produtos antes de efetuar a remoção do fabricante", "error");
             return $this->redirectToRoute("maker_index");
         }
-        $manager->delete($maker);
+        $makerManager->delete($maker);
         $this->setNotice("Fabricante removido com sucesso !");
+
         return $this->redirectToRoute("maker_index");
     }
 

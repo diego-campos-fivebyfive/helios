@@ -273,6 +273,20 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/componentsOutOfStock", name="components_out_of_stock")
+     */
+    public function componentsOutOfStockAction(Order $order)
+    {
+        $stockChecker = $this->container->get('order_stock_checker');
+
+        $componentsOutOfStock = $stockChecker->checkOutOfStock($order);
+
+        return $this->render('order.components_out_of_stock', array(
+           'componentsOutOfStock' => $componentsOutOfStock
+        ));
+    }
+
+    /**
      * @Route("/{id}/upload", name="order_upload")
      */
     public function uploadAction(Order $order, Request $request)

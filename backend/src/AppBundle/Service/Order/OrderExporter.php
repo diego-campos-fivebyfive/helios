@@ -13,10 +13,15 @@ namespace AppBundle\Service\Order;
 
 use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Component\MakerInterface;
+use AppBundle\Entity\Misc\AdditiveInterface;
 use AppBundle\Entity\Order\Element;
+use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
+use AppBundle\Manager\AdditiveManager;
 use Exporter\Writer\CsvWriter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 /**
  * Class OrderExporter
@@ -47,21 +52,225 @@ class OrderExporter
     private $manager;
 
     /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    /**
+     * @var array
+     */
+    private $orderColumnMapping = [
+        'reference' => 'Orçamento',
+        'status' => 'Status',
+        'status_at' => 'Data status',
+        'account' => 'Integrador',
+        'cnpj' => 'CNPJ',
+        'level' => 'Nível',
+        'agent' => 'Atendente',
+        'sub_orders' => 'Qte Sistemas',
+        'power' => 'Potência total',
+        'total_price' => 'Valor total',
+        'shipping_type' => 'Tipo de frete',
+        'shipping_price' => 'Valor do frete',
+        'payment_method' => 'Condição pagamento',
+        'delivery_at' => 'Disp. Coleta',
+        'note' => 'Obs',
+        'billing_name' => 'Nome faturamento',
+        'billing_cnpj' => 'CNPJ faturamento',
+        'invoices' => 'Num. NF',
+        'billed_at' => 'Data faturamento'
+    ];
+
+    /**
+     * @var array
+     */
+    private $suborderColumnMapping = [
+        'reference' => 'Referência',
+        'status' => 'Status',
+        'status_at' => 'Data status',
+        'account' => 'Integrador',
+        'cnpj' => 'CNPJ',
+        'level' => 'Nível do orçamento',
+        'agent' => 'Atendente',
+        'power' => 'Potência',
+        'total_price' => 'Valor'
+    ];
+
+    /**
      * OrderExporter constructor.
      * @param ContainerInterface $container
      */
     function __construct(ContainerInterface $container)
     {
+        $this->container = $container;
         $this->collector = $container->get('component_collector');
         $this->storage = $container->get('app_storage');
         $this->manager = $container->get('order_manager');
+        $this->addInsuranceColumns();
+    }
+
+    /**
+     * @param $orders
+     * @param $mode
+     * @return string
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function export($orders, $mode)
+    {
+        $spreadsheet = new Spreadsheet();
+        $spreadsheet->getProperties()
+            ->setCreator('Sices Solar')
+            ->setTitle('Orçamentos Filtrados');
+        $projectRoot = $this->container->get('kernel')->getRootDir() . "/../..";
+
+        $loggedAccount = $this->container->get('security.token_storage')->getToken()->getUser();
+        $customerName = $loggedAccount->getInfo()->getFirstName();
+        $customerName = trim($customerName);
+        $customerName = str_replace(' ', '_', $customerName);
+
+        $currentDateAndTime = (new \DateTime())->format('Y-m-d_H-i-s');
+
+        $fileName = $customerName . "-" . $currentDateAndTime . ".xlsx";
+
+        $path = $projectRoot . "/.uploads/order/export/" . $fileName;
+
+        if ($mode == 1) {
+
+            $ordersData = [];
+
+            foreach ($orders as $order) {
+                $ordersData[] = $this->extractOrderData($order);
+            }
+
+            $this->setSpreadsheetHeaders($spreadsheet, $this->orderColumnMapping);
+            $this->setSpreadsheetData($spreadsheet, $ordersData);
+
+        } elseif ($mode == 2) {
+
+            $subordersData = [];
+
+            foreach ($orders as $order) {
+                $suborders = $order->getChildrens();
+
+                foreach ($suborders as $suborder) {
+                    $suborderData = $this->extractSuborderData($suborder);
+                    $this->setInsuranceColumns($suborderData, $suborder);
+                    $subordersData[] = $suborderData;
+                }
+
+                $this->setSpreadsheetHeaders($spreadsheet, $this->suborderColumnMapping);
+                $this->setSpreadsheetData($spreadsheet, $subordersData);
+            }
+        }
+
+        foreach(range('A','Z') as $columnID) {
+            $spreadsheet->getActiveSheet()->getColumnDimension($columnID)
+                ->setAutoSize(true);
+        }
+
+        $writer = new Xlsx($spreadsheet);
+
+        $writer->save($path);
+
+        return $path;
+    }
+
+    /**
+     * @param Order $order
+     * @return array
+     */
+    private function extractOrderData(Order $order)
+    {
+        return [
+            'reference' => $order->getReference(),
+            'status' => $this->getStatusNameInPortuguese()[$order->getStatus()],
+            'status_at' => $order->getStatusAt() ? $this->formatDate($order->getStatusAt()) : '',
+            'account' => $order->getAccount() ? $order->getAccount()->getFirstname(): '',
+            'cnpj' => $order->getAccount() ? $order->getAccount()->getDocument() : '',
+            'level' => $order->getLevel(),
+            'agent' => $order->getAgent() ? $order->getAgent()->getFirstname() : '',
+            'sub_orders' => count($order->getChildrens()),
+            'power' => $order->getPower() . " kWp",
+            'total_price' => $this->formatMoney($order->getTotal()),
+            'shipping_type' => $order->getShippingRules() ? $order->getShippingRules()['type'] : '',
+            'shipping_price' => $order->getShipping() ? $this->formatMoney($order->getShipping()) : '',
+            'payment_method' => $order->getPaymentMethod() ? $order->getPaymentMethod('array')['name'] : '',
+            'delivery_at' => $order->getDeliveryAt() ? $this->formatDate($order->getDeliveryAt()) : '',
+            'note' => $order->getNote(),
+            'billing_name' => $order->getBillingFirstname(),
+            'billing_cnpj' => $order->getBillingCnpj(),
+            'invoices' => implode(", ", $order->getInvoices()),
+            'billed_at' => $order->getBilledAt() ? $this->formatDate($order->getBilledAt()) : ''
+        ];
+    }
+
+    /**
+     * @param Order $order
+     * @return array
+     */
+    private function extractSuborderData(Order $order)
+    {
+        $parent = $order->getParent();
+
+        $data = [
+            'reference' => $parent->getReference(),
+            'status' => $this->getStatusNameInPortuguese()[$parent->getStatus()],
+            'status_at' => $parent->getStatusAt() ? $this->formatDate($parent->getStatusAt()) : '',
+            'account' => $parent->getAccount() ? $parent->getAccount()->getFirstname() : '',
+            'cnpj' => $parent->getAccount() ? $parent->getAccount()->getDocument() : '',
+            'level' => $order->getLevel(),
+            'agent' => $parent->getAgent() ? $parent->getAgent()->getFirstname() : '',
+            'power' => $order->getPower() . " kWp",
+            'total_price' => $this->formatMoney($order->getTotal())
+        ];
+
+        return $data;
+    }
+
+    /**
+     * @param Spreadsheet $spreadsheet
+     * @param $data
+     */
+    private function setSpreadsheetData(Spreadsheet &$spreadsheet, $data) {
+        try {
+
+            $initialRow = 2;
+
+            for ($i = 0; $i < count($data); $i++) {
+                $column = 1;
+                foreach ($data[$i] as $value) {
+                    $spreadsheet->setActiveSheetIndex(0)
+                        ->setCellValueByColumnAndRow($column, $initialRow, $value);
+                    $column++;
+                }
+                $initialRow++;
+            }
+        } catch (\Exception $e) {
+
+        }
+    }
+
+    /**
+     * @param Spreadsheet $spreadsheet
+     */
+    private function setSpreadsheetHeaders(Spreadsheet &$spreadsheet, $headers) {
+        try {
+            $i = 1;
+            foreach ($headers as $column) {
+                $spreadsheet->setActiveSheetIndex(0)
+                    ->setCellValueByColumnAndRow($i, 1, $column);
+                $i++;
+            }
+        } catch (\Exception $e) {
+
+        }
     }
 
     /**
      * @param OrderInterface $order
      * @return string
      */
-    public function export(OrderInterface $order)
+    public function exportCsv(OrderInterface $order)
     {
         $reference = $order->getReference();
 
@@ -117,6 +326,7 @@ class OrderExporter
     }
 
     /**
+     * @deprecated
      * @param OrderInterface $order
      * @param $item
      * @return array
@@ -139,6 +349,81 @@ class OrderExporter
     }
 
     /**
+     * Set Insurance Columns
+     */
+    private function setInsuranceColumns(&$suborderData, $suborder) {
+
+        /** @var AdditiveManager $additiveManager */
+        $additiveManager = $this->container->get('additive_manager');
+
+        $insurances = $additiveManager->findBy([
+            'type' => AdditiveInterface::TYPE_INSURANCE
+        ]);
+
+        foreach ($insurances as $insurance) {
+            $suborderData[$insurance->getName()] = $suborder->hasAdditive($insurance) ? "Sim" : "Não";
+        }
+    }
+
+    /**
+     * Add Insurance Columns
+     */
+    private function addInsuranceColumns()
+    {
+        /** @var AdditiveManager $additiveManager */
+        $additiveManager = $this->container->get('additive_manager');
+
+        $insurances = $additiveManager->findBy([
+            'type' => AdditiveInterface::TYPE_INSURANCE
+        ]);
+
+        foreach ($insurances as $insurance) {
+            $this->suborderColumnMapping['insurance_' . $insurance->getId()] = $insurance->getName();
+        }
+    }
+
+    /**
+     * @return array
+     */
+    private function getStatusNameInPortuguese()
+    {
+        return [
+            'Editando',
+            'Pendente',
+            'Validado',
+            'Aprovado',
+            'Cancelado',
+            'Confirmado',
+            'Em produção',
+            'Coleta disponível',
+            'Coletado',
+            'Em trânsito',
+            'Entregue'
+        ];
+    }
+
+    /**
+     * @param $money
+     * @return mixed
+     */
+    private function formatMoney($money) {
+
+        $formatedMoney = 'R$ '. number_format($money, 2);
+
+        return str_replace('.',',', $formatedMoney);
+    }
+
+    /**
+     * @param $date
+     * @return mixed
+     */
+    private function formatDate($date)
+    {
+        return $date->format('d/m/Y');
+    }
+
+    /**
+     * @deprecated
      * @param OrderInterface $order
      * @return float
      */
@@ -150,6 +435,7 @@ class OrderExporter
     }
 
     /**
+     * @deprecated
      * @param OrderInterface $order
      * @return string
      */
@@ -159,6 +445,7 @@ class OrderExporter
     }
 
     /**
+     * @deprecated
      * @param OrderInterface $order
      * @param $family
      * @return string
@@ -177,6 +464,7 @@ class OrderExporter
     }
 
     /**
+     * @deprecated
      * @param ComponentInterface $component
      * @return string
      */
@@ -192,6 +480,7 @@ class OrderExporter
     }
 
     /**
+     * @deprecated
      * @param OrderInterface $order
      * @return string
      */
@@ -210,6 +499,7 @@ class OrderExporter
     }
 
     /**
+     * @deprecated
      * @param OrderInterface $order
      * @return int
      */
@@ -224,6 +514,7 @@ class OrderExporter
     }
 
     /**
+     * @deprecated
      * @param $filename
      */
     private function prepareFilePath($filename)

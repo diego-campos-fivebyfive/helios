@@ -47,6 +47,10 @@ class ProjectGeneratorController extends AbstractController
         /** @var Order $order */
         $order = $this->manager('order')->find($id);
 
+        if (is_null($order)) {
+            throw $this->createAccessDeniedException('Order not found');
+        }
+
         if (!in_array($order->getStatus(), [Order::STATUS_BUILDING, Order::STATUS_PENDING, Order::STATUS_VALIDATED])) {
             throw $this->createAccessDeniedException('Order with this status can not be edited');
         }
@@ -55,8 +59,9 @@ class ProjectGeneratorController extends AbstractController
 
         $this->denyAccessUnlessGranted('edit', $order);
 
-        if($order->isChildren())
+        if ($order->isChildren()) {
             throw $this->createAccessDeniedException('Only master order can be edited');
+        }
 
         $this->synchronizerOrder($order);
 

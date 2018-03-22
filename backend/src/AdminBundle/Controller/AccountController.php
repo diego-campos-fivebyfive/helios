@@ -161,6 +161,7 @@ class AccountController extends AdminController
             'method' => 'post',
             'member' => $this->member()
         ));
+
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()) {
@@ -175,8 +176,13 @@ class AccountController extends AdminController
                 'document' => $account->getDocument()
             ]);
 
-            if (!$this->member()->isPlatformAdmin() || !$this->member()->isPlatformMaster()) {
+            if (!$this->member()->isPlatformAdmin() && !$this->member()->isPlatformMaster()) {
                 $account->setLevel(Memorial::LEVEL_PARTNER);
+            }
+
+            if ($parent = $account->getParentAccount()) {
+                $account->setAgent($parent->getAgent());
+                $account->setLevel($parent->getLevel());
             }
 
             $existsDoc = false;
@@ -234,10 +240,7 @@ class AccountController extends AdminController
      */
     public function updateAction(Request $request, Customer $account)
     {
-
         $manager = $this->manager('customer');
-
-        $email = $account->getEmail();
 
         $form = $this->createForm(AccountType::class, $account, array(
             'method' => 'post',
@@ -248,7 +251,10 @@ class AccountController extends AdminController
 
         if($form->isSubmitted() && $form->isValid()) {
 
-            if ($this->member()->isPlatformCommercial() && !$account->getAgent()) {
+            if ($parent = $account->getParentAccount()) {
+                $account->setAgent($parent->getAgent());
+                $account->setLevel($parent->getLevel());
+            } else if ($this->member()->isPlatformCommercial() && !$account->getAgent()) {
                 $account->setAgent($this->member());
             }
 

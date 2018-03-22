@@ -5,7 +5,7 @@ import Router from 'vue-router'
 import VueCookies from 'vue-cookies'
 
 import Account from '@/components/pages/account'
-import Coupon from '@/components/pages/coupon'
+// import Coupon from '@/components/pages/coupon'
 import Metric from '@/components/pages/metric'
 import NotFound from '@/components/pages/notfound'
 
@@ -27,11 +27,11 @@ export default new Router({
       name: 'Contas',
       component: Account
     },
-    {
-      path: '/coupon',
-      name: 'Cupons',
-      component: Coupon
-    },
+    // {
+    //   path: '/coupon',
+    //   name: 'Cupons',
+    //   component: Coupon
+    // },
     {
       path: '/metrics',
       name: 'Métricas',

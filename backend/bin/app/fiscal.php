@@ -10,36 +10,75 @@ $currentDir = dirname(__FILE__);
 
 require_once $currentDir . '/helpers/logger.php';
 
+/**
+ * @param $service
+ * @param array $result
+ * @return string
+ */
+function formatResultMessage($service, array $result = []){
+
+    // Prevent undefined index exception
+    $result = array_merge([
+        'loaded_files' => 0,
+        'loaded_events' => 0,
+        'cached_events' => 0,
+        'processed_files' => 0,
+        'time' => 0
+    ], $result);
+
+    $formats = [
+        'proceda' => [
+            'message' => '%s: Processamento concluído. \n Arquivos processados: %d \n Cache \n - Inicial: %d \n - Final: %d \n Time: %s segundos',
+            'data' => [strtoupper($service), $result['loaded_files'], $result['loaded_events'], $result['cached_events'], $result['time']]
+        ],
+        'danfe' => [
+            'message' => '%s: Processamento concluído. \n Arquivos carregados: %d \n Arquivos processados: %d \n Time: %s segundos',
+            'data' => [strtoupper($service), $result['loaded_files'], $result['processed_files'], $result['time']]
+        ]
+    ];
+
+    return vsprintf($formats[$service]['message'], $formats[$service]['data']);
+}
+
 if (3 == count($argv) && in_array($argv[2], ['proceda', 'danfe'])) {
 
     $service = $argv[2];
     $host = getenv('CES_SICES_HOST');
     $port = getenv('CES_SICES_PORT');
+    $label = strtoupper($service);
 
-    $uri = (8000 == $port) ? "${host}:${port}" : $host;
-    $url = "{$uri}/public/fiscal/{$service}";
+    $baseUri = (8000 == $port) ? "${host}:${port}" : $host;
+    $uri = "/public/fiscal/{$service}";
 
     $headers = [
-        'AUTHORIZATION: OewkQ42mCxVyfk7cbKg5jORFTWdWMQhxIO2bjHQt',
-        'SECRET: NXTh0oqmwed4PvK3HCysMJjMWEGGJ2Fw0hXDfyox'
+        'AUTHORIZATION' => 'OewkQ42mCxVyfk7cbKg5jORFTWdWMQhxIO2bjHQt',
+        'SECRET' => 'NXTh0oqmwed4PvK3HCysMJjMWEGGJ2Fw0hXDfyox'
     ];
 
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_HEADER, true);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_POST, true);
+    $startTime = microtime(true);
 
-    $result = curl_exec($curl);
-    $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    $content = curl_getinfo($curl);
-    curl_close($curl);
+    createLog($service, sprintf('%s: Processamento iniciado.', strtoupper($service)));
+
+    $client = new \GuzzleHttp\Client([
+        'base_uri' => $baseUri,
+        'headers' => $headers
+    ]);
+
+    $response = $client->post($uri);
+
+    $content = $response->getBody()->getContents();
+    $statusCode = $response->getStatusCode();
 
     if (200 == $statusCode) {
-        createLog($service, 'Processo executado com sucesso.');
+
+        $result = json_decode($content, true);
+        $result['time'] = round(microtime(true) - $startTime, 1);
+
+        createLog($service, formatResultMessage($service, $result));
+
     } else {
-        createLog($service, 'Falha ao executar processamento: ' . $result, \Monolog\Logger::ERROR);
+
+        createLog($service, 'Falha ao executar processamento: ' . $content, \Monolog\Logger::ERROR);
     }
 
     die("Processo executado, verifique o status em {$currentDir}/logs/cron-{$service}.log\n");

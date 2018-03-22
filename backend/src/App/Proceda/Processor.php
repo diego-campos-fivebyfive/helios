@@ -67,6 +67,15 @@ class Processor
     private $timelineList = [];
 
     /**
+     * @var array
+     */
+    private $result = [
+        'loaded_files' => 0,
+        'loaded_events' => 0,
+        'cached_events' => 0
+    ];
+
+    /**
      * Processor constructor.
      * @param ContainerInterface $container
      */
@@ -90,13 +99,29 @@ class Processor
     }
 
     /**
-     * Resolve events
+     * @return array
      */
     public function resolve()
     {
         $this->refreshCache();
 
         $this->processCache();
+
+        $this->uploadCache();
+
+        return $this->result;
+    }
+
+    /**
+     * Upload cache to FTP
+     */
+    public function uploadCache()
+    {
+        $ocoren = $this->fileSystem->createFile('ocoren.json');
+
+        $cacheData = file_get_contents($this->cache);
+
+        $this->fileSystem->write($ocoren->getKey(), $cacheData, true);
     }
 
     /**
@@ -107,6 +132,8 @@ class Processor
         $groups = $this->loadCache();
 
         $files = $this->loadAndFilterFiles();
+
+        $this->result['loaded_files'] = count($files);
 
         $contents = $this->loadContents($files);
 
@@ -197,16 +224,22 @@ class Processor
     private function processGroups(array &$groups = [])
     {
         foreach ($groups as $invoice => $events){
+            $count = count($events);
+            $this->result['loaded_events'] += $count;
+            $this->result['cached_events'] += $count;
 
-            $this->processGroupEvents($invoice, $events);
+            if($this->processGroupEvents($invoice, $events)){
+                $this->result['cached_events'] -= $count;
 
-            unset($groups[$invoice]);
+                unset($groups[$invoice]);
+            }
         }
     }
 
     /**
      * @param string $invoice
      * @param array $events
+     * @return bool
      */
     private function processGroupEvents(string $invoice, array $events = [])
     {
@@ -220,7 +253,11 @@ class Processor
 
                 $this->prepareTimelineEvent($order, $event);
             }
+
+            return true;
         }
+
+        return false;
     }
 
     /**

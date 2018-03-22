@@ -4,15 +4,12 @@ namespace AppBundle\EventListener;
 
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\UserInterface;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use AppBundle\Service\Slack\ExceptionNotifier;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AppListener
 {
@@ -80,14 +77,18 @@ class AppListener
 
     /**
      * @param GetResponseForExceptionEvent $event
+     * @throws \Exception
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         if(!$this->handleExceptions)
             throw $event->getException();
 
+        $this->sendSlackNotification($event->getException());
+
         $request = $event->getRequest();
         $pathInfo = $request->getPathInfo();
+
 
         /**
          * Strict check for path info api
@@ -159,5 +160,13 @@ class AppListener
     protected function getWoopraManager()
     {
         return $this->container->get('app.woopra_manager');
+    }
+
+    /**
+     * @param \Exception $exception
+     */
+    private function sendSlackNotification($exception)
+    {
+        (new ExceptionNotifier($this->container))->notify($exception);
     }
 }

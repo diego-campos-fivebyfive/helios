@@ -189,6 +189,7 @@ Esclarecimentos gerais relacionados a documentação:
     export PATH=$PATH:$SICES_PATH/devops/cli
     ```
     > **Nota**: lembre-se de substitir `[PROJECT_PATH]` pelo caminho do projeto.
+    > **Adicional**: Ambiente de produção deve possuir linha adicional de source de váriaveis de homolog `source $SICES_PATH/devops/cli/config/homolog/variables`.
 
     - ##### 3.2.3. *Carregue as alterações do arquivo bash*
     ```
@@ -330,58 +331,8 @@ Esclarecimentos gerais relacionados a documentação:
       Definem `sprints` de execução, onde cada nova sprint é adicionada a direita da coluna principal (coluna Roadmap), seguindo o fluxo de mais nova para mais antiga, de esquerda para a direita. Os títulos de cada coluna apresentam data de vigência, mês e semana de vigência e número de issues executadas.
 
   <a name="tarefas--waffle"></a><a name="5.2"></a>
-  - [5.2](#tarefas--waffle) **Waffle**:
-
-    - ##### 5.2.1. **Etiquetas de tipo (type)**
-
-      - `Bug`: usada para tarefas de ajuste de bugs.
-      - `Improvement`: usada para aprimoramento de features já existentes.
-      - `New feature`: usada para implementação de features não existentes.
-
-    - ##### 5.2.2. **Etiquetas de prioridade (priority)**
-
-      - `High`: Utilizada para tarefas com maior relevância.
-      - `Highest`: Utilizada para tarefas com necessidade de execução imediata.
-      - `Low`: Utilizada para tarefas com baixa relevância.
-      - `Lowest`: Utilizada para tarefas que agregam valor extremamente baixo.
-      - `Medium`: Valor padrão de relevância de tarefas, para tarefas comuns.
-
-    - ##### 5.2.3. **Etiquetas de categorias (category)**
-
-      - `Backend`: Utilizada para issues server side.
-      - `Backend (+Twig)`: Utilizada para issues server side, com alterações na twig.
-      - `Devops`: Utilizada para issues relacionadas ao devops.
-      - `Docs`: Utilizada para issues de documentação.
-      - `Frontend`: Utilizada para issues client side.
-      - `Infra`: Utilizada para issues de infraestrutura.
-      - `Random`: Utilizada para issues de âmbito geral que não se enquadrão nas anteriores.
-
-    - ##### 5.2.4. **Etiquetas de módulos (modules)**:
-
-      - Plataforma
-        - `An. Financeira`: Corresponde ao módulo de análise financeira.
-        - `Application`: Corresponde a contextos mais genéricos voltados a aplicação, como por exemplo mecanismos de autenticação, menu, etc.
-        - `Componentes`: Corresponde a componentes sices, como inversores, estruturas, string-boxes, etc.
-        - `Configuração`: Corresponde ao módulo de configuração a parte de "settings" do usuário da plataforma como dados climáticos e suas configurações.
-        - `Conta`: Corresponde aos contextos: conta sices, integradores e contatos, com suas respectivas sub divisões: como conta sices: agent, admin, master; como integradores: user, member, account ...; e como contato.
-        - `Dashboard`: Corresponde a dashboard inicial do sistema.
-        - `Dimensionamento`: Corresponde ao módulo de dimensionamento.
-        - `Empresarial`: Corresponde a dados relacionados ao integrador e seu formato de trabalho, sendo eles: tarefas, meus itens e preço de venda.
-        - `Memorial`: Corresponde ao módulo de memorial.
-        - `Orçamento`: Corresponde ao módulo de orçamento.
-        - `Projeto`: Corresponde ao módulo de projeto.
-        - `Proposta`: Corresponde ao módulo de proposta.
-
-      - Devops
-        - `Ambiences`: Corresponde a contexto genérios de ambientes, locais e remotos.
-        - `Deploy`: Corresponde a scripts e configurações de deploy.
-        - `Developers`: Corresponde a suporte e melhorias para desenvolvedores.
-        - `Issues`: Corresponde ao módulo de automação de issues.
-        - `Metrics`: Corresponde a métricas geral, de aplicação, produtividade, hardware, etc.
-        - `Mirrors`:  Corresponde a scripts e configurações de mirrors de aplicações remotas para local.
-
-    - ##### 5.2.5. **Colunas e estágios (stage)**:
-
+  - [5.2](#tarefas--colunas-estagios) **Colunas e estágios (stage)**:
+  
       - `To do`:
         - `General`: Utilizada para issues de contexto geral.
         - `Backend`: Utilizada para issues de contexto backend
@@ -421,7 +372,7 @@ Esclarecimentos gerais relacionados a documentação:
   <a name="tarefas--start"></a><a name="5.4"></a>
   - [5.4](#tarefas--start) **Processos executados pelo comando ces-issue-start**:
 
-    | Stage From  | TO DO    | B                | IP     | IP   | R   | TI     | TI     | TII\|D |
+    | Stage From  | TD         | B                | IP     | IP   | R   | TI     | TI     | TII\|D |
     | :---        | :---:      | :---:            | :---:  | :--: | :-: | :---:  | :---:  | :---:  |
     | Conditional | --         | --               | [N]    | [Y]  | --  | [Y]    | [N]    | --     |
     | Branch      | Create     | Create \| Update | Remove | Keep | X   | Delete | Delete | --     |
@@ -432,7 +383,7 @@ Esclarecimentos gerais relacionados a documentação:
 
     - #### Legenda:
     ```
-    TD's: General, Backend, Frontend, Devops
+    TD: General, Backend, Frontend, Devops
     
     IP: In progress           B: Blocked
     TI: Testing I             R: Review
@@ -787,8 +738,9 @@ Esclarecimentos gerais relacionados a documentação:
     - [Integração - Protheus](docs/integrations/protheus)
     - [Roadmap - Draft Semanal](docs/meetings/roadmap/draft.md)
     - [Diagramas - UML](docs/uml/diagrams.md)
-    - [Issue tracker (github) - Milestones](https://github.com/sices/sices/milestones)
-
+    - [Issue tracker](https://github.com/sices/sices/issues)
+        - [Milestones](https://github.com/sices/sices/milestones)
+        - [Labels](https://github.com/sices/sices/labels)
 
 **[⬆ Voltar ao Topo](#sumário)**
 
@@ -827,6 +779,7 @@ Esclarecimentos gerais relacionados a documentação:
     Slack: @gianlucabine
     Github: @Pr3d4dor
     E-mail: gian_bine@hotmail.com
+    ```
 
     - #### João Zaqueu Chereta
     ```

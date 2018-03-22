@@ -1,3 +1,9 @@
+<style>
+    .component-levels {
+        padding-top: 10px;
+    }
+</style>
+
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -17,12 +23,34 @@
                                 </h2>
                             </div>
                             <hr>
-                            <div class="product-images">
-                                <div>
-                                    <img class="col-md-12" src="{{ module.image|componentFilePath }}"/>
+                            <div class="row">
+                                <div class="product-images">
+                                    <div>
+                                        <img class="col-md-12" src="{{ module.image|componentFilePath }}"/>
+                                    </div>
                                 </div>
                             </div>
 
+                            {% if app.user.isPlatform %}
+                            <div class="row component-levels">
+                                <table class="table table-stripped table-bordered table-hover text-cente">
+                                    <thead>
+                                    <tr>
+                                        <th>
+                                            Disponível nos níveis
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for level in module.generatorLevels %}
+                                        <tr>
+                                            <td>{{ level|trans }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endif %}
                         </div>
 
                         <div class="col-md-7">

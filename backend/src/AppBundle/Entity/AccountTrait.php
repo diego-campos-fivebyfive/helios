@@ -274,11 +274,11 @@ trait AccountTrait
     /**
      * @inheritDoc
      */
-    public function setAgent(MemberInterface $agent)
+    public function setAgent(MemberInterface $agent = null)
     {
         $this->ensureAccount();
 
-        if(!$agent->isPlatformUser()){
+        if($agent && !$agent->isPlatformUser()){
             $this->unsupportedContextException();
         }
 

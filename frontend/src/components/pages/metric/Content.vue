@@ -8,14 +8,14 @@
         li(v-for='issue in metric.issues') {{ issue.title }}
     Table.table(type='stripped')
       tr(slot='head')
-        th Título
-        th Concluídas / Cadastradas (%)
+        th.col-title Título
+        th.col-milestone Concluídas / Cadastradas (%)
       tr.rows(
         slot='rows',
         v-for='milestone in milestones',
         v-on:click='getIssues(milestone)')
-        td {{ milestone.title }}
-        td
+        td.col-title {{ milestone.title }}
+        td.col-milestone
           Progress(:percent='milestone.average')
             span.caption
               b {{ milestone.closed }}/{{ milestone.total }}
@@ -57,18 +57,13 @@
     cursor: pointer;
   }
 
-  .table {
-    td,
-    th {
-      &:nth-child(1) {
-        text-align: left;
-        width: 40%;
-      }
+  .col-title {
+    min-width: 40%;
+    text-align: left;
+  }
 
-      &:nth-child(2) {
-        text-align: right;
-      }
-    }
+  .col-milestone {
+    text-align: right;
   }
 
   .title {

@@ -34,7 +34,8 @@
         return (
           this.currentAccount
           && this.currentAccount.id
-          && this.currentAccount.id.value)
+          && this.currentAccount.id.value
+        )
           ? this.currentAccount.id.value
           : this.defaultOption.id
       }
