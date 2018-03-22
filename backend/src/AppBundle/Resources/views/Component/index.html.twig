@@ -29,9 +29,6 @@
         #form_filtration > .form-group > .col-sm-2 {
             display: none;
         }
-        .filter-component {
-            margin-top: 5px;
-        }
     </style>
 {% endblock %}
 
@@ -96,10 +93,11 @@
             {{ knp_pagination_filter(pagination, {'c.model, m.name':''}) }}
 
             <div class="col-md-2">
-                <label class="filter-component">
-                    <input type="checkbox" id="component-active" {{ components_actives ? "checked" }}>
-                    Apenas disponíveis
-                </label>
+                <select id="component-active" class="form-control">
+                    <option value="">Todos</option>
+                    <option value="1">Com nível</option>
+                    <option value="2">Sem nível</option>
+                </select>
             </div>
 
             <div class="col-md-2">
@@ -241,7 +239,7 @@
 
             var form_filtration = $('#form_filtration');
             var component_active = $('#component-active');
-            var active_val = '{{ components_actives }}';
+            var active_val = '{{ components_active_val }}';
             if (form_filtration.length) {
                 form_filtration
                     .append('<input type="hidden" name="display" value="{{ display }}">')
@@ -249,12 +247,10 @@
 
                 form_filtration.append($('<input type="hidden" name="actives"/>').val(active_val));
 
+                component_active.val(active_val);
+
                 component_active.on('change', function(){
-                    if($('input[name="actives"]').val() == 1) {
-                        $('input[name="actives"]').val(0);
-                    } else {
-                        $('input[name="actives"]').val(1);
-                    }
+                    $('input[name="actives"]').val($(this).val());
                     form_filtration.trigger('submit');
                 });
             }
