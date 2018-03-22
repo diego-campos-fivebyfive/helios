@@ -18,6 +18,91 @@
       },
       notify(message) {
         this.$refs.notification.notify(message)
+      },
+      validateField(field) {
+        const patterns = {
+          money: /^(\d{1,3}(\.\d{3})*|\d+)(\,\d{2})?$/
+        }
+
+        const pattern = patterns[field.type]
+
+        const exceptions = {
+          money: 'Formato de moeda em Real invalido'
+        }
+
+        const defaultException = exceptions[field.type]
+
+        if (pattern.test(field.value)) {
+          field.resolved = true
+          return true
+        }
+
+        this.notify(field.exception || defaultException)
+        field.resolved = false
+        return false
+      },
+      isValidPayload(payload) {
+        const isResolved = (obj, key) => {
+          const val = obj[key]
+
+          if (val === Object(val)) {
+            return isValid(val)
+          }
+
+          return (key === 'resolved' && !val)
+            ? this.validateField(obj)
+            : true
+        }
+
+        const isValid = obj => {
+          for (const key in obj) {
+            if (!isResolved(obj, key)) return false
+          }
+
+          return true
+        }
+
+        return isValid(payload)
+      },
+      formatPayload(payload) {
+        const format = obj =>
+          Object
+            .entries(obj)
+            .reduce((acc, [key, val]) => {
+              acc[key] = Object.prototype.hasOwnProperty.call(val, 'value')
+                ? val.value
+                : format(val)
+              return acc
+            }, {})
+
+        return format(payload)
+      },
+      assignPayload(payload, dataPayload = {}) {
+        const assign = (base, data = {}) =>
+          Object
+            .entries(base)
+            .reduce((acc, [key, val]) => {
+              if (val === Object(val)) {
+                acc[key] = assign(val, data[key] || '')
+                return acc
+              }
+
+              if (key === 'default') {
+                acc.value = data || val
+              }
+
+              acc[key] = (key === 'resolved') ? false : val
+              return acc
+            }, {})
+
+        return assign(payload, dataPayload)
+      },
+      getPayload(payload) {
+        if (!this.isValidPayload(payload)) {
+          return false
+        }
+
+        return this.formatPayload(payload)
       }
     }
   }
