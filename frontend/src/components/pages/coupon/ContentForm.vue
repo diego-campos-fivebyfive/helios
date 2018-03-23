@@ -13,7 +13,8 @@
         input(
           v-model='form.payload.amount.value',
           placeholder='Valor',
-          v-on:blur='validate(form.payload.amount)')
+          v-on:blur='validate(form.payload.amount)',
+          :class='{ "danger-common": form.payload.amount.resolved }')
       label.field-account
         | Conta
         SelectAccountForm(
@@ -117,5 +118,9 @@
 
   .field-account {
     flex: 1 1 get-field-size($col-size, 2);
+  }
+
+  .danger-common {
+    border-color: $ui-red-lighter !important;
   }
 </style>
