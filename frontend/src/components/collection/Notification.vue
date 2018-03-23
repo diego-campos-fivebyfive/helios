@@ -1,20 +1,22 @@
 <template lang="pug">
   .collection-notification(v-show='open')
-    span.collection-notification-message
+    span.collection-notification-message(:class='type')
       Icon(name='check', scale='1.5')
       | {{ message }}
       slot
-      .collection-notification-status
+      .collection-notification-status(:class='type')
 </template>
 
 <script>
   export default {
     data: () => ({
       open: false,
-      message: ''
+      message: '',
+      type: ''
     }),
     methods: {
-      notify(message) {
+      notify(message, type = 'common-success') {
+        this.type = type
         this.open = true
         this.message = message
         setTimeout(() => {
@@ -37,7 +39,6 @@
   }
 
   .collection-notification-message {
-    background-color: $ui-blue-light;
     border-radius: $ui-corner;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
     color: $ui-white-regular;
@@ -47,6 +48,14 @@
     svg {
       margin-right: $ui-space-x/2;
       vertical-align: middle;
+    }
+
+    &.common-success {
+      background-color: $ui-blue-light;
+    }
+
+    &.common-warning {
+      background-color: $ui-red-lighter;
     }
   }
 
@@ -63,7 +72,14 @@
   .collection-notification-status {
     animation: lifetime 5s 1;
     height: $ui-space-y/3;
-    background-color: $ui-blue-dark;
     border-radius: $ui-corner;
+
+    &.common-success {
+      background-color: $ui-blue-dark;
+    }
+
+    &.common-warning {
+      background-color: $ui-red-dark;
+    }
   }
 </style>

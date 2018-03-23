@@ -91,10 +91,11 @@
         response
           .then(message => {
             this.$emit('getCoupons')
-            notify(message)
+            this.$refs.modalForm.notify(message, 'common-success')
           })
           .catch(message => {
-            notify(message)
+            this.$refs.modalForm.notify(message, 'common-warning')
+
           })
       }
     }
