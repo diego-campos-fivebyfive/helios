@@ -6,14 +6,14 @@
       label.field-name
         | Nome
         input(
-          v-model='form.payload.name',
+          v-model='form.payload.name.value',
           placeholder='Nome')
       label.field-value
         | Valor
         input(
-          v-model='form.payload.amount',
+          v-model='form.payload.amount.value',
           placeholder='Valor',
-          v-on:blur='isValidAmount')
+          v-on:blur='validate(form.payload.amount)')
       label.field-account
         | Conta
         SelectAccountForm(
@@ -22,8 +22,7 @@
     ActionForm(
       slot='buttons',
       :action='form.action',
-      :payload='form.payload',
-      :resolved='form.resolved',
+      :getPayload='() => $refs.modalForm.getPayload(form.payload)',
       v-on:done='done')
 </template>
 
@@ -39,13 +38,29 @@
     data: () => ({
       form: {
         action: '',
-        default: {
-          name: '',
-          amount: null,
-          account: {}
-        },
-        payload: {},
-        resolved: false
+        title: '',
+        payload: {
+          id: {
+            default: null
+          },
+          name: {
+            default: ''
+          },
+          amount: {
+            default: null,
+            type: 'money',
+            exception: 'Formato de moeda inválido',
+            resolved: false
+          },
+          account: {
+            id: {
+              default: null
+            },
+            name: {
+              default: ''
+            }
+          }
+        }
       }
     }),
     methods: {
@@ -63,30 +78,44 @@
         )
         this.form.resolved = true
       },
+      validate(field) {
+        return this.$refs.modalForm.validateField(field)
+      },
       show(coupon) {
-        this.$refs.modalForm.show()
+        const { assignPayload, show } = this.$refs.modalForm
+
+        show()
 
         if (coupon) {
           this.form.action = 'edit'
           this.form.title = 'Edição de Cupom'
-          this.form.payload = Object.assign({}, coupon)
+          this.form.payload = assignPayload(this.form.payload, coupon)
           return
         }
 
         this.form.action = 'create'
         this.form.title = 'Cadastro de Cupom'
-        this.form.payload = Object.assign({}, this.form.default)
+        this.form.payload = assignPayload(this.form.payload, {})
       },
       done(response) {
-        this.$refs.modalForm.hide()
+        const { hide, notify } = this.$refs.modalForm
+
+        hide()
 
         response
           .then(message => {
             this.$emit('getCoupons')
+<<<<<<< HEAD
             this.$refs.modalForm.notify(message, 'common-success')
           })
           .catch(message => {
             this.$refs.modalForm.notify(message, 'common-warning')
+=======
+            notify(message)
+          })
+          .catch(message => {
+            notify(message)
+>>>>>>> 4354ead9415d6b4df28075cabd1559b60e09e4e1
           })
       }
     }

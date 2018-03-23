@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller\PublicAccess;
 
-use GuzzleHttp\Client as Guzzle;
+use AppBundle\Service\Postcode\Finder;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -19,28 +19,11 @@ class UtilsController extends AbstractController
      */
     public function postcodeAction(Request $request)
     {
-        return $this->json([
-            'resultado' => 0,
-            'uf' => '',
-            'cidade' => '',
-            'bairro' => '',
-            'logradouro' => '',
-            'tipo_logradouro' => ''
-        ]);
-
         $postcode = $request->request->get('postcode');
 
-        $uri = sprintf('//cep.republicavirtual.com.br/web_cep.php?cep=%s&formato=json', $postcode);
+        /** @var Finder $postcodeFinder */
+        $postcodeFinder = $this->get('postcode_finder');
 
-        $client = new Guzzle([
-            'base_uri' => $uri,
-            'headers' => [
-                'Content-Type' => 'application/json'
-            ]
-        ]);
-
-        $response = $client->request('get');
-
-        return $this->json(json_decode($response->getBody()->getContents(), true));
+        return $this->json($postcodeFinder->find($postcode));
     }
 }

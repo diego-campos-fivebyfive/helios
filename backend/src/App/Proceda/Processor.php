@@ -107,7 +107,21 @@ class Processor
 
         $this->processCache();
 
+        $this->uploadCache();
+
         return $this->result;
+    }
+
+    /**
+     * Upload cache to FTP
+     */
+    public function uploadCache()
+    {
+        $ocoren = $this->fileSystem->createFile('ocoren.json');
+
+        $cacheData = file_get_contents($this->cache);
+
+        $this->fileSystem->write($ocoren->getKey(), $cacheData, true);
     }
 
     /**

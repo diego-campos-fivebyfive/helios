@@ -100,6 +100,10 @@ services:
         class: AppBundle\Manager\ParameterManager
         arguments: ['AppBundle\Entity\Parameter', '@doctrine']
 
+    postcode_manager:
+        class: AppBundle\Manager\PostcodeManager
+        arguments: ['AppBundle\Entity\Postcode', '@doctrine']
+
     project_manager:
         class: AppBundle\Manager\ProjectManager
         arguments: ['AppBundle\Entity\Component\Project', '@doctrine']
@@ -342,6 +346,10 @@ services:
     order_finder:
         class: AppBundle\Service\Order\OrderFinder
         arguments: ['@order_manager']
+
+    postcode_finder:
+        class: AppBundle\Service\Postcode\Finder
+        arguments: ['@service_container']
 
     order_status_changer:
         class: AppBundle\Service\Order\StatusChanger

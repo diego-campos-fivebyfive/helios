@@ -81,10 +81,10 @@ class AppListener
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
-        $this->sendSlackNotification($event->getException());
-
         if(!$this->handleExceptions)
             throw $event->getException();
+
+        $this->sendSlackNotification($event->getException());
 
         $request = $event->getRequest();
         $pathInfo = $request->getPathInfo();
@@ -167,6 +167,6 @@ class AppListener
      */
     private function sendSlackNotification($exception)
     {
-        (new ExceptionNotifier())->notify($exception, $this->container->getParameter('ambience'));
+        (new ExceptionNotifier($this->container))->notify($exception);
     }
 }

@@ -26,12 +26,21 @@
       hide() {
         this.open = false
       }
+    },
+    mounted() {
+      document.addEventListener('keyup', event => {
+        const escCode = 27
+
+        if (event.keyCode === escCode) {
+          this.hide()
+        }
+      })
     }
   }
 </script>
 
 <style lang="scss">
-  $modal-header-size: 50px;
+  $modal-header-size: 70px;
   $modal-footer-size: 65px;
 
   .collection-modal {
@@ -39,13 +48,16 @@
     color: $ui-text-main;
     left: 0;
     margin: auto;
-    max-height: 50%;
+    max-height: calc(100% - #{$ui-space-y} * 4);
     max-width: $ui-size-md;
     position: fixed;
     right: 0;
     top: 0;
     width: 100%;
     z-index: 1;
+    display: flex;
+    justify-content: center;
+    flex-flow: column;
 
     &:before {
       content: "";
@@ -60,8 +72,6 @@
   }
 
   .collection-modal-header {
-    min-height: $modal-header-size;
-
     .title {
       font-size: 1.75rem;
       font-weight: 300;
@@ -96,7 +106,6 @@
   .collection-modal-footer {
     display: flex;
     justify-content: space-between;
-    min-height: $modal-footer-size;
   }
 
   .collection-modal-footer,

@@ -20,6 +20,8 @@ use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Manager\AdditiveManager;
 use Exporter\Writer\CsvWriter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 /**
  * Class OrderExporter
@@ -108,31 +110,97 @@ class OrderExporter
     }
 
     /**
+     * @param $orders
+     * @param $mode
+     * @return string
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function export($orders, $mode)
+    {
+        $spreadsheet = new Spreadsheet();
+        $spreadsheet->getProperties()
+            ->setCreator('Sices Solar')
+            ->setTitle('Orçamentos Filtrados');
+        $projectRoot = $this->container->get('kernel')->getRootDir() . "/../..";
+
+        $loggedAccount = $this->container->get('security.token_storage')->getToken()->getUser();
+        $customerName = $loggedAccount->getInfo()->getFirstName();
+        $customerName = trim($customerName);
+        $customerName = str_replace(' ', '_', $customerName);
+
+        $currentDateAndTime = (new \DateTime())->format('Y-m-d_H-i-s');
+
+        $fileName = $customerName . "-" . $currentDateAndTime . ".xlsx";
+
+        $path = $projectRoot . "/.uploads/order/export/" . $fileName;
+
+        if ($mode == 1) {
+
+            $ordersData = [];
+
+            foreach ($orders as $order) {
+                $ordersData[] = $this->extractOrderData($order);
+            }
+
+            $this->setSpreadsheetHeaders($spreadsheet, $this->orderColumnMapping);
+            $this->setSpreadsheetData($spreadsheet, $ordersData);
+
+        } elseif ($mode == 2) {
+
+            $subordersData = [];
+
+            foreach ($orders as $order) {
+                $suborders = $order->getChildrens();
+
+                foreach ($suborders as $suborder) {
+                    $suborderData = $this->extractSuborderData($suborder);
+                    $this->setInsuranceColumns($suborderData, $suborder);
+                    $subordersData[] = $suborderData;
+                }
+
+                $this->setSpreadsheetHeaders($spreadsheet, $this->suborderColumnMapping);
+                $this->setSpreadsheetData($spreadsheet, $subordersData);
+            }
+        }
+
+        foreach(range('A','Z') as $columnID) {
+            $spreadsheet->getActiveSheet()->getColumnDimension($columnID)
+                ->setAutoSize(true);
+        }
+
+        $writer = new Xlsx($spreadsheet);
+
+        $writer->save($path);
+
+        return $path;
+    }
+
+    /**
      * @param Order $order
      * @return array
      */
-    public function extractOrderData(Order $order)
+    private function extractOrderData(Order $order)
     {
         return [
             'reference' => $order->getReference(),
             'status' => $this->getStatusNameInPortuguese()[$order->getStatus()],
-            'status_at' => $this->formatDate($order->getStatusAt()),
-            'account' => $order->getAccount()->getFirstname(),
-            'cnpj' => $order->getAccount()->getDocument(),
+            'status_at' => $order->getStatusAt() ? $this->formatDate($order->getStatusAt()) : '',
+            'account' => $order->getAccount() ? $order->getAccount()->getFirstname(): '',
+            'cnpj' => $order->getAccount() ? $order->getAccount()->getDocument() : '',
             'level' => $order->getLevel(),
             'agent' => $order->getAgent() ? $order->getAgent()->getFirstname() : '',
             'sub_orders' => count($order->getChildrens()),
             'power' => $order->getPower() . " kWp",
             'total_price' => $this->formatMoney($order->getTotal()),
-            'shipping_type' => $order->getShippingRules()['type'],
-            'shipping_price' => $this->formatMoney($order->getShipping()),
-            'payment_method' => $order->getPaymentMethod('array')['name'],
-            'delivery_at' => $this->formatDate($order->getDeliveryAt()),
+            'shipping_type' => $order->getShippingRules() ? $order->getShippingRules()['type'] : '',
+            'shipping_price' => $order->getShipping() ? $this->formatMoney($order->getShipping()) : '',
+            'payment_method' => $order->getPaymentMethod() ? $order->getPaymentMethod('array')['name'] : '',
+            'delivery_at' => $order->getDeliveryAt() ? $this->formatDate($order->getDeliveryAt()) : '',
             'note' => $order->getNote(),
             'billing_name' => $order->getBillingFirstname(),
             'billing_cnpj' => $order->getBillingCnpj(),
             'invoices' => implode(", ", $order->getInvoices()),
-            'billed_at' => $this->formatDate($order->getBilledAt())
+            'billed_at' => $order->getBilledAt() ? $this->formatDate($order->getBilledAt()) : ''
         ];
     }
 
@@ -140,16 +208,16 @@ class OrderExporter
      * @param Order $order
      * @return array
      */
-    public function extractSuborderData(Order $order)
+    private function extractSuborderData(Order $order)
     {
         $parent = $order->getParent();
 
         $data = [
             'reference' => $parent->getReference(),
             'status' => $this->getStatusNameInPortuguese()[$parent->getStatus()],
-            'status_at' => $this->formatDate($parent->getStatusAt()),
-            'account' => $parent->getAccount()->getFirstname(),
-            'cnpj' => $parent->getAccount()->getDocument(),
+            'status_at' => $parent->getStatusAt() ? $this->formatDate($parent->getStatusAt()) : '',
+            'account' => $parent->getAccount() ? $parent->getAccount()->getFirstname() : '',
+            'cnpj' => $parent->getAccount() ? $parent->getAccount()->getDocument() : '',
             'level' => $order->getLevel(),
             'agent' => $parent->getAgent() ? $parent->getAgent()->getFirstname() : '',
             'power' => $order->getPower() . " kWp",
@@ -160,11 +228,49 @@ class OrderExporter
     }
 
     /**
-     * @deprecated
+     * @param Spreadsheet $spreadsheet
+     * @param $data
+     */
+    private function setSpreadsheetData(Spreadsheet &$spreadsheet, $data) {
+        try {
+
+            $initialRow = 2;
+
+            for ($i = 0; $i < count($data); $i++) {
+                $column = 1;
+                foreach ($data[$i] as $value) {
+                    $spreadsheet->setActiveSheetIndex(0)
+                        ->setCellValueByColumnAndRow($column, $initialRow, $value);
+                    $column++;
+                }
+                $initialRow++;
+            }
+        } catch (\Exception $e) {
+
+        }
+    }
+
+    /**
+     * @param Spreadsheet $spreadsheet
+     */
+    private function setSpreadsheetHeaders(Spreadsheet &$spreadsheet, $headers) {
+        try {
+            $i = 1;
+            foreach ($headers as $column) {
+                $spreadsheet->setActiveSheetIndex(0)
+                    ->setCellValueByColumnAndRow($i, 1, $column);
+                $i++;
+            }
+        } catch (\Exception $e) {
+
+        }
+    }
+
+    /**
      * @param OrderInterface $order
      * @return string
      */
-    public function export(OrderInterface $order)
+    public function exportCsv(OrderInterface $order)
     {
         $reference = $order->getReference();
 
@@ -240,6 +346,23 @@ class OrderExporter
         ];
 
         return $data;
+    }
+
+    /**
+     * Set Insurance Columns
+     */
+    private function setInsuranceColumns(&$suborderData, $suborder) {
+
+        /** @var AdditiveManager $additiveManager */
+        $additiveManager = $this->container->get('additive_manager');
+
+        $insurances = $additiveManager->findBy([
+            'type' => AdditiveInterface::TYPE_INSURANCE
+        ]);
+
+        foreach ($insurances as $insurance) {
+            $suborderData[$insurance->getName()] = $suborder->hasAdditive($insurance) ? "Sim" : "Não";
+        }
     }
 
     /**

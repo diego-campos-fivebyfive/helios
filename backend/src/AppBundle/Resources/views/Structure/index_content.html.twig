@@ -55,6 +55,14 @@
     {{ knp_pagination_filter(pagination, {'s.description, s.type, s.subtype, s.code, m.name':''}) }}
 
     <div class="col-md-2">
+        <select id="component-active" class="form-control">
+            <option value="">Todos</option>
+            <option value="1">Com nível</option>
+            <option value="2">Sem nível</option>
+        </select>
+    </div>
+
+    <div class="col-md-2">
         <a href="{{ path(_route, _route_params) }}" class="btn btn-default btn-block">
             <i class="fa fa-{{ is_grid ? 'list' : 'th' }}"></i> {{ is_grid ? 'Exibir Lista'|trans : 'Exibir Grade'|trans }}
         </a>

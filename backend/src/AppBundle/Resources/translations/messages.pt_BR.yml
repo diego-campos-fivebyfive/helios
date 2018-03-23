@@ -309,11 +309,14 @@ Scaling: Dimensionamento
 sale_stage: Etapas de Venda
 Subscribe: Assinar
 Support: Suporte
+string_box: String Box
+structure: Estrutura
 Structures: Estruturas
 
 Tasks: Tarefas
 Team: Equipe
 Teams: Equipes
+titanium: Titanium
 Treatment: Tratamento
 Trash: Lixeira
 Type: Tipo
@@ -333,6 +336,7 @@ Unit Price: "Preço Unit."
 Value: Valor
 Validated: Validado
 validated: Validado
+variety: Variedade
 
 Operation: Operação
 

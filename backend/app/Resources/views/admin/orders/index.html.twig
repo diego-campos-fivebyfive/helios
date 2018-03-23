@@ -81,6 +81,10 @@
         #filter_valueMin , #filter_valueMax {
             width: 30%;
         }
+        .open>.dropdown-toggle.btn-success[aria-expanded='true'] {
+            background-color: #0a6aa1;
+            border-color: #0a6aa1;
+        }
     </style>
 
 {% endblock %}
@@ -99,26 +103,6 @@
                 </div>
                 <div class="modal-body" id="content_accounts">
                     {% include view('Helper.spinner') %}
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal inmodal" id="modal_upload_csv" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content animated bounceInRight">
-                <div class="modal-header">
-                    <h4 class="modal-title">
-                        <i class="fa fa-file-text"></i> Importar arquivo CSV
-                    </h4>
-                </div>
-                <div class="modal-body">
-                    {% include view('helper.spinner') %}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                        <i class="fa fa-close"></i> {{ 'Close'|trans }}
-                    </button>
                 </div>
             </div>
         </div>
@@ -217,12 +201,15 @@
                         {% endif %}
                     </div>
                     <div class="row form-group">
-                        {% if member.PlatformMaster or member.PlatformAdmin %}
-                            <a class="btn btn-success" data-target="#modal_upload_csv" data-toggle="modal"
-                               data-href="{{ path('import_csv', {filename:0}) }}">
-                                <i class="fa fa-file-text"> </i> <small>Importar CSV</small>
-                            </a>
-                        {% endif %}
+                        <div class="dropdown">
+                            <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
+                                <i class="fa fa-table"> </i> <small>Exportar</small>
+                                <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ path('export_list',{mode:1}|merge(app.request.query.all) ) }}">Orçamentos</a></li>
+                                <li><a href="{{ path('export_list',{mode:2}|merge(app.request.query.all) ) }}">Sistemas</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
@@ -401,7 +388,6 @@
     {% include view('helper.request') %}
     {% include view('helper.plugins_js') %}
 
-
     <script>
 
         var content_accounts = $('#content_accounts');
@@ -449,20 +435,6 @@
 
         $('#clear-dateAt').on('click', function () {
             dateAt.val('');
-        });
-
-        var modalUpload = $('#modal_upload_csv');
-        var modalUploadBody = modalUpload.find('.modal-body');
-
-        modalUpload.on('show.bs.modal', function (event) {
-            var target = $(event.relatedTarget);
-            var url = target.data('href');
-            $.ajax({
-                url: url,
-                success: function (response) {
-                    modalUploadBody.html(response);
-                }
-            });
         });
 
         var modalFiles = $('#modal_files');

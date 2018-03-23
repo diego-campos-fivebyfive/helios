@@ -7,6 +7,7 @@ use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -19,7 +20,7 @@ class AccountController extends AbstractController
      *
      * @Method("get")
      */
-    public function accountsAction()
+    public function accountsAction(Request $request)
     {
         $qb = $this->manager('account')->createQueryBuilder();
 
@@ -33,7 +34,18 @@ class AccountController extends AbstractController
                 'context' => BusinessInterface::CONTEXT_ACCOUNT,
                 'email_sices' => 'servidor@sicesbrasil.com.br'
             ])
-            ->groupBy('a.id');
+            ->groupBy('a.id')
+            ->setMaxResults(10);
+
+        $search = $request->get('search');
+
+        if ($search) {
+            $qb->andWhere(
+                $qb->expr()->like(
+                    'a.firstname',
+                    $qb->expr()->literal('%'.$search.'%')
+                    ));
+        }
 
         return $this->json($qb->getQuery()->getResult(), Response::HTTP_OK);
     }

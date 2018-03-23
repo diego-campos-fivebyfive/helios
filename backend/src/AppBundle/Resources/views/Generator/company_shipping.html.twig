@@ -157,10 +157,10 @@
             method: 'post',
             data: {postcode: $('#company_postcode').val()},
             complete: function (xhr) {
-                if (200 == xhr.status) {
-                    $('#company_state').val(xhr.responseJSON.uf);
-                    $('#company_city').val(xhr.responseJSON.cidade);
-                    $('#company_address').val(xhr.responseJSON.logradouro);
+                if (xhr.status == 200 && xhr.responseJSON.status == 200) {
+                    $('#company_state').val(xhr.responseJSON.state);
+                    $('#company_city').val(xhr.responseJSON.city);
+                    $('#company_address').val(xhr.responseJSON.street);
                 }
             }
         });

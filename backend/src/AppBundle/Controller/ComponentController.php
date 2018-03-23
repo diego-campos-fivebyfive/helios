@@ -52,6 +52,24 @@ class ComponentController extends AbstractController
         $powerField = 'module' == $type ? 'c.maxPower' : 'c.nominalPower';
         $this->makerQueryBuilderFilter($qb, $request, $powerField);
 
+        if ($components_actives = $request->get('actives')) {
+            if ((int) $components_actives == 1) {
+                $expression  =
+                    $qb->expr()->neq(
+                        'c.generatorLevels',
+                        $qb->expr()->literal('[]'));
+            } else {
+                $expression  =
+                    $qb->expr()->eq(
+                        'c.generatorLevels',
+                        $qb->expr()->literal('[]'));
+            }
+
+            $qb->andWhere(
+                $expression
+            );
+        }
+
         $pagination = $this->getPaginator()->paginate(
             $qb->getQuery(),
             $request->query->getInt('page', 1),
@@ -67,7 +85,8 @@ class ComponentController extends AbstractController
             'query' => array_merge([
                 'display' => 'grid',
                 'strict' => 0
-            ], $request->query->all())
+            ], $request->query->all()),
+            'components_active_val' => $components_actives
         ]);
     }
 

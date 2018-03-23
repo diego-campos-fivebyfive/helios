@@ -436,12 +436,12 @@
             method: 'post',
             data: {postcode: postcode},
             complete: function (xhr) {
-                if (200 == xhr.status) {
+                if (xhr.status == 200 && xhr.responseJSON.status == 200) {
                     var response = xhr.responseJSON;
-                    $('#order_billingState').val(response.uf);
-                    $('#order_billingCity').val(response.cidade);
-                    $('#order_billingDistrict').val(response.bairro);
-                    $('#order_billingStreet').val(response.tipo_logradouro + ' ' + response.logradouro);
+                    $('#order_billingState').val(response.state);
+                    $('#order_billingCity').val(response.city);
+                    $('#order_billingDistrict').val(response.neighborhood);
+                    $('#order_billingStreet').val(response.street);
                 }
             }
         });
@@ -454,12 +454,12 @@
             method: 'post',
             data: {postcode: postcode},
             complete: function (xhr) {
-                if (200 == xhr.status) {
+                if (xhr.status == 200 && xhr.responseJSON.status == 200) {
                     var response = xhr.responseJSON;
-                    $('#order_state').val(response.uf);
-                    $('#order_city').val(response.cidade);
-                    $('#order_district').val(response.bairro);
-                    $('#order_address').val(response.tipo_logradouro + ' ' + response.logradouro);
+                    $('#order_state').val(response.state);
+                    $('#order_city').val(response.city);
+                    $('#order_district').val(response.neighborhood);
+                    $('#order_address').val(response.street);
                 }
             }
         });
