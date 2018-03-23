@@ -15,7 +15,7 @@
       type: ''
     }),
     methods: {
-      notify(message, type = 'common-success') {
+      notify(message, type = 'primary-common') {
         this.type = type
         this.open = true
         this.message = message
@@ -50,11 +50,11 @@
       vertical-align: middle;
     }
 
-    &.common-success {
+    &.primary-common {
       background-color: $ui-blue-light;
     }
 
-    &.common-warning {
+    &.danger-common {
       background-color: $ui-red-lighter;
     }
   }
@@ -74,11 +74,11 @@
     height: $ui-space-y/3;
     border-radius: $ui-corner;
 
-    &.common-success {
+    &.primary-common {
       background-color: $ui-blue-dark;
     }
 
-    &.common-warning {
+    &.danger-common {
       background-color: $ui-red-light;
     }
   }

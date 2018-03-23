@@ -91,10 +91,10 @@
         response
           .then(message => {
             this.$emit('getCoupons')
-            notify(message, 'common-success')
+            notify(message, 'primary-common')
           })
           .catch(message => {
-            notify(message, 'common-warning')
+            notify(message, 'danger-common')
           })
       }
     }
