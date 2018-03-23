@@ -16,8 +16,8 @@
       show() {
         this.$refs.modal.show()
       },
-      notify(message) {
-        this.$refs.notification.notify(message)
+      notify(message, type) {
+        this.$refs.notification.notify(message, type)
       }
     }
   }

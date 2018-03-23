@@ -57,7 +57,7 @@
           return
         }
 
-        this.$refs.modalForm.notify('Formato de moeda em Real invalido')
+        this.$refs.modalForm.notify('Formato de moeda em Real invalido', 'warning')
         this.form.resolved = true
       },
       show(coupon) {
@@ -80,10 +80,10 @@
         response
           .then(message => {
             this.$emit('getCoupons')
-            this.$refs.modalForm.notify(message)
+            this.$refs.modalForm.notify(message, 'success')
           })
           .catch(message => {
-            this.$refs.modalForm.notify(message)
+            this.$refs.modalForm.notify(message, 'warning')
           })
       }
     }
