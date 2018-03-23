@@ -54,6 +54,22 @@
 
         this.$emit('done', response)
       }
+    },
+    mounted() {
+      document.addEventListener('keyup', event => {
+        const enterCode = 13
+
+        if (event.keyCode !== enterCode) {
+          return
+        }
+
+        if (this.action === 'edit') {
+          this.editCoupon()
+          return
+        }
+
+        this.createCoupon()
+      })
     }
   }
 </script>
