@@ -40,15 +40,6 @@ class StructureController extends AbstractController
             ->orderBy('m.name', 'asc')
             ->addOrderBy('s.description', 'asc');
 
-        if(!$this->user()->isAdmin() && !$this->user()->isPlatformMaster()) {
-            $qb->where('s.status = :status');
-            $qb->andWhere('s.available = :available');
-            $qb->setParameters([
-                'status' => 1,
-                'available' => 1
-            ]);
-        }
-
         if ($components_actives = $request->get('actives')) {
             if ((int) $components_actives == 1) {
                 $expression  =

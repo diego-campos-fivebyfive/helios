@@ -40,15 +40,6 @@ class ComponentController extends AbstractController
             ->orderBy('m.name', 'asc')
             ->addOrderBy('c.model', 'asc');
 
-        if (!$this->user()->isAdmin() && !$this->user()->isPlatformMaster()) {
-            $qb->where('c.status = :status');
-            $qb->andWhere('c.available = :available');
-            $qb->setParameters([
-                'status' => 1,
-                'available' => 1
-            ]);
-        }
-
         $powerField = 'module' == $type ? 'c.maxPower' : 'c.nominalPower';
         $this->makerQueryBuilderFilter($qb, $request, $powerField);
 
