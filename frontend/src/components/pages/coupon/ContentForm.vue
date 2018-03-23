@@ -64,6 +64,20 @@
       }
     }),
     methods: {
+      isValidAmount() {
+        if (
+          /^(\d{1,3}(\.\d{3})*|\d+)(\,\d{2})?$/.test(this.form.payload.amount)
+        ) {
+          this.form.resolved = false
+          return
+        }
+
+        this.$refs.modalForm.notify(
+          'Formato de moeda em Real invalido',
+          'common-warning'
+        )
+        this.form.resolved = true
+      },
       validate(field) {
         return this.$refs.modalForm.validateField(field)
       },
@@ -91,11 +105,10 @@
         response
           .then(message => {
             this.$emit('getCoupons')
-            this.$refs.modalForm.notify(message, 'common-success')
+            notify(message, 'common-success')
           })
           .catch(message => {
-            this.$refs.modalForm.notify(message, 'common-warning')
-
+            notify(message, 'common-warning')
           })
       }
     }
