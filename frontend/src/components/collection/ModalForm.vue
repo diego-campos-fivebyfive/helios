@@ -39,7 +39,7 @@
           return true
         }
 
-        this.notify(field.exception || defaultException)
+        this.notify(field.exception || defaultException, 'common-warning')
         /* eslint-disable no-param-reassign */
         field.resolved = false
         /* eslint-enable no-param-reassign */
