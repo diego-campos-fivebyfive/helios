@@ -79,7 +79,7 @@
     }
 
     &.common-warning {
-      background-color: $ui-red-dark;
+      background-color: $ui-red-light;
     }
   }
 </style>
