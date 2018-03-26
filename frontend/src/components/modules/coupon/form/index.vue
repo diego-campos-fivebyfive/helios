@@ -66,11 +66,10 @@
     }),
     methods: {
       validate(path) {
-        const { getPayloadField, isValidField } = this.$refs.modalForm
+        const { getPayloadField, isInvalidField } = this.$refs.modalForm
 
         const field = getPayloadField(this, path)
-        field.rejected = isValidField(field)
-        console.log(field.rejected)
+        field.rejected = isInvalidField(field)
       },
       show(coupon) {
         const { assignPayload, show } = this.$refs.modalForm

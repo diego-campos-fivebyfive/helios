@@ -19,7 +19,7 @@
       notify(message, type) {
         this.$refs.notification.notify(message, type)
       },
-      isValidField(field) {
+      isInvalidField(field) {
         const patterns = {
           money: /^(\d{1,3}(\.\d{3})*|\d+)(\,\d{2})?$/
         }
@@ -54,7 +54,7 @@
           }
 
           return (key === 'rejected' && val)
-            ? this.isValidField(obj)
+            ? this.isInvalidField(obj)
             : true
         }
 
