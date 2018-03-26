@@ -13,7 +13,7 @@
         input(
           v-model='form.payload.amount.value',
           placeholder='Valor',
-          v-on:blur='validate(form.payload.amount)')
+          v-on:blur='validate("form.payload.amount")')
       label.field-account
         | Conta
         AccountSelect(
@@ -64,8 +64,11 @@
       }
     }),
     methods: {
-      validate(field) {
-        return this.$refs.modalForm.validateField(field)
+      validate(path) {
+        const { getPayloadField, validateField } = this.$refs.modalForm
+
+        const field = getPayloadField(this, path)
+        field.resolved = validateField(field)
       },
       show(coupon) {
         const { assignPayload, show } = this.$refs.modalForm

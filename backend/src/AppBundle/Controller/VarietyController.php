@@ -39,15 +39,6 @@ class VarietyController extends AbstractController
             ->orderBy('m.name', 'asc')
             ->addOrderBy('v.description', 'asc');
 
-        if (!$this->user()->isAdmin() && !$this->user()->isPlatformMaster()) {
-            $qb->where('v.status = :status');
-            $qb->andWhere('v.available = :available');
-            $qb->setParameters([
-                'status' => 1,
-                'available' => 1
-            ]);
-        }
-
         if ($components_actives = $request->get('actives')) {
             if ((int) $components_actives == 1) {
                 $expression  =

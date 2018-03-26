@@ -33,17 +33,16 @@
         const defaultException = exceptions[field.type]
 
         if (pattern.test(field.value)) {
-          /* eslint-disable no-param-reassign */
-          field.resolved = true
-          /* eslint-enable no-param-reassign */
           return true
         }
 
         this.notify(field.exception || defaultException, 'danger-common')
-        /* eslint-disable no-param-reassign */
-        field.resolved = false
-        /* eslint-enable no-param-reassign */
         return false
+      },
+      getPayloadField(vm, path) {
+        return path
+          .split('.')
+          .reduce((obj, key) => obj[key], vm)
       },
       isValidPayload(payload) {
         /* eslint-disable no-use-before-define, no-restricted-syntax */
