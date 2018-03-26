@@ -92,11 +92,30 @@ FRONTEND
     - Uses scoped styles
     - Does not use BEM nomenclatures
 
-  - 4.3. Pages:
+  - 4.3. Modules:
 
     - All routed components (`router-vue`)
     - Uses scoped styles
     - Does not use BEM nomenclatures
+    
+    4.3.1. Application
+
+      - Componentes "genéricos" da aplicação, são incluidos na pasta application, onde são alocados por grupo (pasta) e por dados (arquivo).
+        Para inclusão do componente o importamos com o seguinte nome de váriavel: `Nome do arquivo no singular` + `Grupo`.
+
+        ex.:
+        ```javascript
+        import AccountSelect from 'application/select/Accounts'
+
+        export default {
+           components: {
+             AccountSelect
+           }
+        }
+        ```
+
+        Onde:
+          O componente de select de `Accounts` encontrasse na pasta `select`, logo a variavel será: `AccountSelect`.
 
 5. Forms
 

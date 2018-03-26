@@ -16,10 +16,10 @@
           v-on:blur='validate("form.payload.amount")')
       label.field-account
         | Conta
-        SelectAccountForm(
+        AccountSelect(
           v-model.sync='form.payload.account',
           :currentAccount='form.payload.account')
-    ActionForm(
+    Actions(
       slot='buttons',
       :action='form.action',
       :getPayload='() => $refs.modalForm.getPayload(form.payload)',
@@ -27,13 +27,13 @@
 </template>
 
 <script>
-  import ActionForm from './ActionForm'
-  import SelectAccountForm from './SelectAccountForm'
+  import Actions from './Actions'
+  import AccountSelect from 'application/select/Accounts'
 
   export default {
     components: {
-      ActionForm,
-      SelectAccountForm
+      Actions,
+      AccountSelect
     },
     data: () => ({
       form: {
@@ -75,7 +75,7 @@
 
         show()
 
-        if (coupon) {
+        if (Object.keys(coupon).length > 0) {
           this.form.action = 'edit'
           this.form.title = 'Edição de Cupom'
           this.form.payload = assignPayload(this.form.payload, coupon)
