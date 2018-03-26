@@ -19,7 +19,7 @@
       notify(message, type) {
         this.$refs.notification.notify(message, type)
       },
-      validateField(field) {
+      isInvalidField(field) {
         const patterns = {
           money: /^(\d{1,3}(\.\d{3})*|\d+)(\,\d{2})?$/
         }
@@ -33,11 +33,11 @@
         const defaultException = exceptions[field.type]
 
         if (pattern.test(field.value)) {
-          return true
+          return false
         }
 
         this.notify(field.exception || defaultException, 'danger-common')
-        return false
+        return true
       },
       getPayloadField(vm, path) {
         return path
@@ -53,8 +53,8 @@
             return isValid(val)
           }
 
-          return (key === 'resolved' && !val)
-            ? this.validateField(obj)
+          return (key === 'rejected' && val)
+            ? this.isInvalidField(obj)
             : true
         }
 
@@ -96,7 +96,7 @@
                 acc.value = data || val
               }
 
-              acc[key] = (key === 'resolved') ? false : val
+              acc[key] = (key === 'rejected') ? false : val
               return acc
             }, {})
 
