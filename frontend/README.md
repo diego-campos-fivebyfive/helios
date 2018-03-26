@@ -92,11 +92,20 @@ FRONTEND
     - Uses scoped styles
     - Does not use BEM nomenclatures
 
-  - 4.3. Pages:
+  - 4.3. Modules:
 
     - All routed components (`router-vue`)
     - Uses scoped styles
     - Does not use BEM nomenclatures
+    
+    4.3.1. Application
+    
+      - Nas definições de componentes de application, sempre utilizar o nome do componente no singular + nome da pasta do componente
+        
+        Ex:
+        ```
+          import AccountSelect from 'application/select/Accounts'
+        ```
 
 5. Forms
 
