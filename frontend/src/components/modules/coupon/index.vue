@@ -4,9 +4,16 @@
       ref='contentForm',
       v-on:getCoupons='getCoupons')
     Panel.panel
-      Head(
-        slot='header',
-        v-on:show='show')
+      div(slot='header')
+        h2.title
+          | Gerenciamento de Cupons
+        nav.menu
+          Button(
+            type='primary-common',
+            icon='plus-square',
+            label='Novo Cupom',
+            pos='single',
+            v-on:click.native='show()')
       Content(
         slot='section',
         :coupons='coupons',
@@ -19,22 +26,20 @@
 </template>
 
 <script>
-  import Content from './Content'
-  import ContentForm from './ContentForm'
-  import Head from './Head'
+  import Content from './list'
+  import ContentForm from './form'
 
   export default {
     components: {
       Content,
-      ContentForm,
-      Head
+      ContentForm
     },
     data: () => ({
       coupons: [],
       pagination: {}
     }),
     methods: {
-      show(coupon) {
+      show(coupon = {}) {
         this.$refs.contentForm.show(coupon)
       },
       getCoupons(pageNumber = 1) {
