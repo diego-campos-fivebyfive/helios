@@ -99,13 +99,23 @@ FRONTEND
     - Does not use BEM nomenclatures
     
     4.3.1. Application
-    
-      - Nas definições de componentes de application, sempre utilizar o nome do componente no singular + nome da pasta do componente
-        
-        Ex:
+
+      - Componentes "genéricos" da aplicação, são incluidos na pasta application, onde são alocados por grupo (pasta) e por dados (arquivo).
+        Para inclusão do componente o importamos com o seguinte nome de váriavel: `Nome do arquivo no singular` + `Grupo`.
+
+        ex.:
+        ```javascript
+        import AccountSelect from 'application/select/Accounts'
+
+        export default {
+           components: {
+             AccountSelect
+           }
+        }
         ```
-          import AccountSelect from 'application/select/Accounts'
-        ```
+
+        Onde:
+          O componente de select de `Accounts` encontrasse na pasta `select`, logo a variavel será: `AccountSelect`.
 
 5. Forms
 
