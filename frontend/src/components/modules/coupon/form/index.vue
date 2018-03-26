@@ -27,13 +27,13 @@
 </template>
 
 <script>
-  import ActionForm from './ActionForm'
-  import SelectAccountForm from './SelectAccountForm'
+  import Actions from './Actions'
+  import AccountSelect from './Application/fields/AccountSelect'
 
   export default {
     components: {
-      ActionForm,
-      SelectAccountForm
+      Actions,
+      AccountSelect
     },
     data: () => ({
       form: {
