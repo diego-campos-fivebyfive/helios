@@ -13,8 +13,8 @@
         input(
           v-model='form.payload.amount.value',
           placeholder='Valor',
-          v-on:blur='validate("form.payload.amount")'),
-          :class='{ "danger-common": form.payload.amount.resolved }')
+          v-on:blur='validate("form.payload.amount")',
+          :class='{ "danger-common": form.payload.amount.rejected }')
       label.field-account
         | Conta
         AccountSelect(
@@ -51,7 +51,7 @@
             default: null,
             type: 'money',
             exception: 'Formato de moeda inválido',
-            resolved: false
+            rejected: false
           },
           account: {
             id: {
@@ -66,10 +66,11 @@
     }),
     methods: {
       validate(path) {
-        const { getPayloadField, validateField } = this.$refs.modalForm
+        const { getPayloadField, isValidField } = this.$refs.modalForm
 
         const field = getPayloadField(this, path)
-        field.resolved = validateField(field)
+        field.rejected = isValidField(field)
+        console.log(field.rejected)
       },
       show(coupon) {
         const { assignPayload, show } = this.$refs.modalForm
