@@ -190,10 +190,10 @@ class OrderExporter
             'level' => $order->getLevel(),
             'agent' => $order->getAgent() ? $order->getAgent()->getFirstname() : '',
             'sub_orders' => count($order->getChildrens()),
-            'power' => $order->getPower() . " kWp",
-            'total_price' => $this->formatMoney($order->getTotal()),
+            'power' => $this->formatNumber($order->getPower()),
+            'total_price' => $this->formatNumber($order->getTotal()),
             'shipping_type' => $order->getShippingRules() ? $order->getShippingRules()['type'] : '',
-            'shipping_price' => $order->getShipping() ? $this->formatMoney($order->getShipping()) : '',
+            'shipping_price' => $order->getShipping() ? $this->formatNumber($order->getShipping()) : '',
             'payment_method' => $order->getPaymentMethod() ? $order->getPaymentMethod('array')['name'] : '',
             'delivery_at' => $order->getDeliveryAt() ? $this->formatDate($order->getDeliveryAt()) : '',
             'note' => $order->getNote(),
@@ -220,8 +220,8 @@ class OrderExporter
             'cnpj' => $parent->getAccount() ? $parent->getAccount()->getDocument() : '',
             'level' => $order->getLevel(),
             'agent' => $parent->getAgent() ? $parent->getAgent()->getFirstname() : '',
-            'power' => $order->getPower() . " kWp",
-            'total_price' => $this->formatMoney($order->getTotal())
+            'power' => $this->formatNumber($order->getPower()),
+            'total_price' => $this->formatNumber($order->getTotal())
         ];
 
         return $data;
@@ -406,11 +406,11 @@ class OrderExporter
      * @param $money
      * @return mixed
      */
-    private function formatMoney($money) {
+    private function formatNumber($number) {
 
-        $formatedMoney = 'R$ '. number_format($money, 2, ',', '.');
+        $formatedNumber = number_format($number,2,',','');
 
-        return $formatedMoney;
+        return $formatedNumber;
     }
 
     /**
