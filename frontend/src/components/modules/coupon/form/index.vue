@@ -119,7 +119,7 @@
   .form {
     .danger-common {
       color: $ui-red-dark !important;
-      opacity: 0.8;
+      opacity: 0.75;
 
       input {
         border-color: $ui-red-lighter !important;
@@ -128,14 +128,14 @@
     }
 
     .icon {
-      position: absolute;
-      right: 1.75em;
-      bottom: 1.15em;
       border: 1px solid $ui-red-dark;
-      height: 20px;
-      width: 20px;
-      padding: 2px;
       border-radius: 100%;
+      bottom: $ui-space-y;
+      height: 1.5rem;
+      padding: 0.25rem;
+      position: absolute;
+      right: $ui-space-x;
+      width: 1.5rem;
     }
   }
 </style>
