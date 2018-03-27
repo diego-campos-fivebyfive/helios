@@ -408,9 +408,9 @@ class OrderExporter
      */
     private function formatMoney($money) {
 
-        $formatedMoney = 'R$ '. number_format($money, 2);
+        $formatedMoney = 'R$ '. number_format($money, 2, ',', '.');
 
-        return str_replace('.',',', $formatedMoney);
+        return $formatedMoney;
     }
 
     /**
