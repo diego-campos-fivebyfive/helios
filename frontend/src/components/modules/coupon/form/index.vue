@@ -15,7 +15,7 @@
           v-model='form.payload.amount.value',
           placeholder='Valor',
           v-on:blur='validate("form.payload.amount")')
-        Icon.icon(v-if="form.payload.amount.rejected", name="info", class="danger-common")
+        Icon.icon(v-if='form.payload.amount.rejected', name='info')
       label.field-account
         | Conta
         AccountSelect(
