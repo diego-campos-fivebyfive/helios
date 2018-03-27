@@ -42,26 +42,17 @@
         action: '',
         title: '',
         payload: {
-          id: {
-            default: null
-          },
-          name: {
-            default: ''
+          account: {
+            id: {},
+            name: {}
           },
           amount: {
-            default: null,
             type: 'money',
             exception: 'Formato de moeda inválido',
             rejected: false
           },
-          account: {
-            id: {
-              default: null
-            },
-            name: {
-              default: ''
-            }
-          }
+          id: {},
+          name: {}
         }
       }
     }),
