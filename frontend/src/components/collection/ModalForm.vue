@@ -87,16 +87,22 @@
           Object
             .entries(base)
             .reduce((acc, [key, val]) => {
-              if (val === Object(val)) {
-                acc[key] = assign(val, data[key] || '')
+              if (
+                Object.keys(val).length > 0
+                && !Object.prototype.hasOwnProperty.call(val, 'value')
+                && !Object.prototype.hasOwnProperty.call(val, 'type')
+              ) {
+                acc[key] = assign(val, data[key])
                 return acc
               }
 
-              if (key === 'default') {
-                acc.value = data || val
+              acc[key] = val || {}
+              acc[key].value = data[key] || null
+
+              if (Object.prototype.hasOwnProperty.call(val, 'type')) {
+                acc[key].rejected = false
               }
 
-              acc[key] = (key === 'rejected') ? false : val
               return acc
             }, {})
 
