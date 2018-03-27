@@ -15,7 +15,7 @@
           v-model='form.payload.amount.value',
           placeholder='Valor',
           v-on:blur='validate("form.payload.amount")')
-        Icon.icon(v-if="form.payload.amount.rejected", name="info-circle", class="danger-common")
+        Icon.icon(v-if="form.payload.amount.rejected", name="info", class="danger-common")
       label.field-account
         | Conta
         AccountSelect(
@@ -129,9 +129,13 @@
 
     .icon {
       position: absolute;
-      right: 2em;
-      bottom: 1.25em;
-      color: $ui-red-lighter;
+      right: 1.75em;
+      bottom: 1.15em;
+      border: 1px solid $ui-red-dark;
+      height: 20px;
+      width: 20px;
+      padding: 2px;
+      border-radius: 100%;
     }
   }
 </style>
