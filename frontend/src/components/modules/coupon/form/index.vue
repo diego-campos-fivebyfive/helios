@@ -8,13 +8,14 @@
         input(
           v-model='form.payload.name.value',
           placeholder='Nome')
-      label.field-value
+      label.field-value(
+        :class='{ "danger-common": form.payload.amount.rejected }')
         | Valor
         input(
           v-model='form.payload.amount.value',
           placeholder='Valor',
-          v-on:blur='validate("form.payload.amount")',
-          :class='{ "danger-common": form.payload.amount.rejected }')
+          v-on:blur='validate("form.payload.amount")')
+        Icon.icon(v-if='form.payload.amount.rejected', name='info')
       label.field-account
         | Conta
         AccountSelect(
@@ -108,13 +109,33 @@
 
   .field-value {
     flex: 1 1 get-field-size($col-size, 1);
+    position: relative;
   }
 
   .field-account {
     flex: 1 1 get-field-size($col-size, 2);
   }
 
-  .danger-common {
-    border-color: $ui-red-lighter !important;
+  .form {
+    .danger-common {
+      color: $ui-red-dark !important;
+      opacity: 0.75;
+
+      input {
+        border-color: $ui-red-lighter !important;
+        color: inherit !important;
+      }
+    }
+
+    .icon {
+      border: 1px solid $ui-red-dark;
+      border-radius: 100%;
+      bottom: $ui-space-y;
+      height: 1.5rem;
+      padding: 0.25rem;
+      position: absolute;
+      right: $ui-space-x;
+      width: 1.5rem;
+    }
   }
 </style>

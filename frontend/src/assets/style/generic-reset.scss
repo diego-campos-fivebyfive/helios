@@ -18,20 +18,17 @@ img {
   outline: none;
 }
 
-a,
-input[type=button] {
-  cursor: pointer;
-  text-decoration: none;
-}
-
 button,
 input,
 select,
 textarea {
   background-color: transparent;
   border: none;
-  cursor: pointer;
   outline: none;
+}
+
+select {
+  cursor: pointer;
 }
 
 button {
@@ -39,12 +36,16 @@ button {
 }
 
 a,
-button {
+button,
+input[type=button] {
+  text-decoration: none;
   outline: none !important;
+  cursor: pointer;
 }
 
-input[type="button"], 
-input[type="submit"], 
+
+input[type="button"],
+input[type="submit"],
 input[type="reset"],
 input[type="file"]::-webkit-file-upload-button {
   padding: 0;
