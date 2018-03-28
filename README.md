@@ -692,8 +692,20 @@ Esclarecimentos gerais relacionados a documentação:
     | STATUS_BILLED | 9 | Produto (Sistema) faturado. |
     | STATUS_DELIVERED | 10 | Produto (Sistema) entregue. |
 
-  <a name="status--orçamento-origem"></a><a name="8.3"></a>
-  - [8.3](#status--orçamento-origem) **Origem de Orçamentos**:
+  <a name="status--orçamento-substatus"></a><a name="8.3"></a>
+  - [8.3](#status--orçamento-substatus) **Sub-status de Orçamentos**:
+
+    | Constante | Valor | Descrição |
+    | :--- | :---: | :---|
+    | SUBSTATUS_DONE_CONFIRMED | 0 | Done - Confirmado |
+    | SUBSTATUS_DONE_RESERVED | 1 | Done - Reservado |
+    | SUBSTATUS_INSERTED_PRODUCTION | 0 | Inserted - Em produção |
+    | SUBSTATUS_INSERTED_RESERVED | 1 | Inserted - Reserva em produção |
+    | SUBSTATUS_INSERTED_WAITING_MATERIAL | 2 | Inserted - Aguardando material |
+    | SUBSTATUS_INSERTED_WAITING_PAYMENT | 3 | Inserted - Aguardando pagamento |
+
+  <a name="status--orçamento-origem"></a><a name="8.4"></a>
+  - [8.4](#status--orçamento-origem) **Origem de Orçamentos**:
 
     | Constante | Valor | Descrição |
     | :--- | :---: | :---|

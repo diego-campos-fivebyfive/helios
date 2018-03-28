@@ -35,6 +35,14 @@ interface OrderInterface
     const STATUS_DELIVERING = 9;    // Product in process of delivery
     const STATUS_DELIVERED = 10;    // Product delivered
 
+    // SUB-STATUS
+    const SUBSTATUS_DONE_CONFIRMED = 0;             // STATUS_DONE - Confirmed
+    const SUBSTATUS_DONE_RESERVED = 1;              // STATUS_DONE - Reserved
+    const SUBSTATUS_INSERTED_PRODUCTION = 0;        // STATUS_INSERTED - In production
+    const SUBSTATUS_INSERTED_RESERVED = 1;          // STATUS_INSERTED - Production reserve
+    const SUBSTATUS_INSERTED_WAITING_MATERIAL = 2;  // STATUS_INSERTED - Waiting material
+    const SUBSTATUS_INSERTED_WAITING_PAYMENT = 3;   // STATUS_INSERTED - Waiting payment
+
     const SOURCE_ACCOUNT = 0;
     const SOURCE_PLATFORM = 1;
 
@@ -132,6 +140,17 @@ interface OrderInterface
      * @return \DateTime
      */
     public function getStatusAt();
+
+    /**
+     * @param $subStatus
+     * @return OrderInterface
+     */
+    public function setSubStatus($subStatus);
+
+    /**
+     * @return int
+     */
+    public function getSubStatus();
 
     /**
      * @param array $config
