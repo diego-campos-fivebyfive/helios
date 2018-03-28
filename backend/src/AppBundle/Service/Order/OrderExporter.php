@@ -408,7 +408,9 @@ class OrderExporter
      */
     private function formatNumber($number) {
 
-        $formatedNumber = number_format($number,2,',','');
+        $formatedNumber = number_format($number,2,'.','');
+
+        $formatedNumber = floatval($formatedNumber);
 
         return $formatedNumber;
     }
