@@ -3,19 +3,15 @@
     h1.title(slot='header')
       | {{ form.title }}
     form.form(slot='section', name='coupon')
-      label.field-name
-        | Nome
-        input(
-          v-model='form.payload.name.value',
-          placeholder='Nome')
-      label.field-value(
-        :class='{ "danger-common": form.payload.amount.rejected }')
-        | Valor
-        input(
-          v-model='form.payload.amount.value',
-          placeholder='Valor',
-          v-on:blur='validate("form.payload.amount")')
-        Icon.icon(v-if='form.payload.amount.rejected', name='info')
+      Input.field-name(
+        label='Nome',
+        :params='form.payload.name',
+        v-model.sync='form.payload.name.value')
+      Input.field-amount(
+        label='Valor',
+        :params='form.payload.amount',
+        v-model.sync='form.payload.amount.value',
+        v-on:validate='() => validate("form.payload.amount")')
       label.field-account
         | Conta
         AccountSelect(
@@ -106,35 +102,11 @@
     flex: 1 1 get-field-size($col-size, 1);
   }
 
-  .field-value {
+  .field-amount {
     flex: 1 1 get-field-size($col-size, 1);
-    position: relative;
   }
 
   .field-account {
     flex: 1 1 get-field-size($col-size, 2);
-  }
-
-  .form {
-    .danger-common {
-      color: $ui-red-dark !important;
-      opacity: 0.75;
-
-      input {
-        border-color: $ui-red-lighter !important;
-        color: inherit !important;
-      }
-    }
-
-    .icon {
-      border: 1px solid $ui-red-dark;
-      border-radius: 100%;
-      bottom: $ui-space-y;
-      height: 1.5rem;
-      padding: 0.25rem;
-      position: absolute;
-      right: $ui-space-x;
-      width: 1.5rem;
-    }
   }
 </style>
