@@ -1,4 +1,5 @@
 import Button from '@/components/collection/Button'
+import Input from '@/components/collection/Input'
 import Modal from '@/components/collection/Modal'
 import ModalConfirm from '@/components/collection/ModalConfirm'
 import ModalForm from '@/components/collection/ModalForm'
@@ -17,6 +18,7 @@ import App from './App'
 import router from './router'
 
 Vue.component('Icon', Icon)
+Vue.component('Input', Input)
 Vue.component('Button', Button)
 Vue.component('Modal', Modal)
 Vue.component('ModalConfirm', ModalConfirm)
@@ -35,6 +37,7 @@ new Vue({
   components: {
     App,
     Button,
+    Input,
     Modal,
     ModalConfirm,
     ModalForm,

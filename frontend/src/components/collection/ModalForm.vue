@@ -54,7 +54,7 @@
           }
 
           return (key === 'rejected' && val)
-            ? this.isInvalidField(obj)
+            ? !this.isInvalidField(obj)
             : true
         }
 
