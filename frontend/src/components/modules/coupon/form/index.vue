@@ -48,8 +48,7 @@
           },
           amount: {
             type: 'money',
-            exception: 'Formato de moeda inválido',
-            rejected: false
+            exception: 'Formato de moeda inválido'
           },
           id: {},
           name: {}

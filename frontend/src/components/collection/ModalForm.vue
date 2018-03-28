@@ -97,10 +97,10 @@
               }
 
               acc[key] = val || {}
-              acc[key].value = data[key] || null
+              this.$set(acc[key], 'value', data[key] || null)
 
               if (Object.prototype.hasOwnProperty.call(val, 'type')) {
-                acc[key].rejected = false
+                this.$set(acc[key], 'rejected', false)
               }
 
               return acc
