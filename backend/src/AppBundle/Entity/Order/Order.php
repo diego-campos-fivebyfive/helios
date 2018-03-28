@@ -89,6 +89,13 @@ class Order implements OrderInterface
     /**
      * @var int
      *
+     * @ORM\Column(name="sub_status", type="smallint", nullable=true)
+     */
+    private $subStatus;
+
+    /**
+     * @var int
+     *
      * @ORM\Column(name="previous_status", type="smallint", nullable=true)
      */
     private $previousStatus;
@@ -689,6 +696,24 @@ class Order implements OrderInterface
     public function getStatusAt()
     {
         return $this->statusAt;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setSubStatus($subStatus)
+    {
+        $this->subStatus = $subStatus;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSubStatus()
+    {
+        return $this->subStatus;
     }
 
     /**
