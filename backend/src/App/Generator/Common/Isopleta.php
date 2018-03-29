@@ -241,41 +241,41 @@ class Isopleta
      */
     private static function specialPreResult($long, $lat)
     {
-        $xi_a = (float) self::$data['XI'][4];
-        $yi_a = (float) self::$data['YI'][4];
-        $xf_a = (float) self::$data['XF'][4];
-        $x5_a = (float) self::$data['X5'][4];
-        $x4_a = (float) self::$data['X4'][4];
-        $x3_a = (float) self::$data['X3'][4];
-        $x2_a = (float) self::$data['X2'][4];
-        $x1_a = (float) self::$data['X1'][4];
-        $x0_a = (float) self::$data['X0'][4];
-        $xi_b = (float) self::$data['XI'][5];
-        $yi_b = (float) self::$data['YI'][5];
-        $xf_b = (float) self::$data['XF'][5];
-        $yf_b = (float) self::$data['YF'][5];
-        $x5_b = (float) self::$data['X5'][5];
-        $x4_b = (float) self::$data['X4'][5];
-        $x3_b = (float) self::$data['X3'][5];
-        $x2_b = (float) self::$data['X2'][5];
-        $x1_b = (float) self::$data['X1'][5];
-        $x0_b = (float) self::$data['X0'][5];
+        $xiA = (float) self::$data['XI'][4];
+        $yiA = (float) self::$data['YI'][4];
+        $xfA = (float) self::$data['XF'][4];
+        $x5A = (float) self::$data['X5'][4];
+        $x4A = (float) self::$data['X4'][4];
+        $x3A = (float) self::$data['X3'][4];
+        $x2A = (float) self::$data['X2'][4];
+        $x1A = (float) self::$data['X1'][4];
+        $x0A = (float) self::$data['X0'][4];
+        $xiB = (float) self::$data['XI'][5];
+        $yiB = (float) self::$data['YI'][5];
+        $xfB = (float) self::$data['XF'][5];
+        $yfB = (float) self::$data['YF'][5];
+        $x5B = (float) self::$data['X5'][5];
+        $x4B = (float) self::$data['X4'][5];
+        $x3B = (float) self::$data['X3'][5];
+        $x2B = (float) self::$data['X2'][5];
+        $x1B = (float) self::$data['X1'][5];
+        $x0B = (float) self::$data['X0'][5];
 
-        if ($lat < $xi_a) {
-            return $long > $yi_a ? 1 : -1;
+        if ($lat < $xiA) {
+            return $long > $yiA ? 1 : -1;
         } else {
-            if ($lat > $xf_a) {
-                if ($lat < $xi_b) {
-                    return $long > $yi_b? 1 : -1;
+            if ($lat > $xfA) {
+                if ($lat < $xiB) {
+                    return $long > $yiB? 1 : -1;
                 } else {
-                    if ($lat > $xf_b) {
-                        return $long > $yf_b ? 1 : -1;
+                    if ($lat > $xfB) {
+                        return $long > $yfB ? 1 : -1;
                     } else {
-                        return ($x5_b * $lat ** 5) + ($x4_b * $lat ** 4) + ($x3_b * $lat ** 3) + ($x2_b * $lat ** 2) + ($x1_b * $lat) + $x0_b < $long ? 1 : -1;
+                        return ($x5B * $lat ** 5) + ($x4B * $lat ** 4) + ($x3B * $lat ** 3) + ($x2B * $lat ** 2) + ($x1B * $lat) + $x0B < $long ? 1 : -1;
                     }
                 }
             } else {
-                return ($x5_a * $lat ** 5) + ($x4_a * $lat ** 4) + ($x3_a * $lat ** 3) + ($x2_a * $lat ** 2) + ($x1_a * $lat) + $x0_a < $long ? 1 : -1;
+                return ($x5A * $lat ** 5) + ($x4A * $lat ** 4) + ($x3A * $lat ** 3) + ($x2A * $lat ** 2) + ($x1A * $lat) + $x0A < $long ? 1 : -1;
             }
         }
     }
