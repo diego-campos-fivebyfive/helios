@@ -92,7 +92,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   $field-base-size: $ui-size-sm - $ui-space-x*2;
   $form-cols: 2;
 
