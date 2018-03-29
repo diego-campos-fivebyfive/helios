@@ -201,14 +201,14 @@ class Isopleta
      */
     private static function specialSelection($long, $lat)
     {
-        $xi_11 = self::$data['XI'][11];
-        $x1_11 = self::$data['X1'][11];
-        $yi_11 = self::$data['YI'][11];
-        $x0_11 = self::$data['X0'][11];
+        $xi = self::$data['XI'][11];
+        $x1 = self::$data['X1'][11];
+        $yi = self::$data['YI'][11];
+        $x0 = self::$data['X0'][11];
 
-        if ($lat > $xi_11-$x1_11 && $lat < $xi_11+$x1_11) {
-            if ($long < $yi_11 + ((1 - ($lat - $xi_11) ** 2 / $x1_11 ** 2) * $x0_11 ** 2) ** 0.5
-                && $long > $yi_11 - ((1 - ($lat - $xi_11) ** 2 / $x1_11 ** 2) * $x0_11 ** 2) ** 0.5) {
+        if ($lat > $xi-$x1 && $lat < $xi+$x1) {
+            if ($long < $yi + ((1 - ($lat - $xi) ** 2 / $x1 ** 2) * $x0 ** 2) ** 0.5
+                && $long > $yi - ((1 - ($lat - $xi) ** 2 / $x1 ** 2) * $x0 ** 2) ** 0.5) {
                 return 45;
             } else {
                 return self::$preResult[7] == 1 && self::$preResult[6] == -1 ? 40 : 0;
