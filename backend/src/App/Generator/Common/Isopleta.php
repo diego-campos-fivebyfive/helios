@@ -160,7 +160,7 @@ class Isopleta
         ]
     ];
 
-    private static $pre_result = [
+    private static $preResult = [
         0 => null, // L11
         1 => null, // L12
         2 => null, // L13
@@ -178,17 +178,17 @@ class Isopleta
         self::calculatePreResult($longitude, $latitude);
 
         $selection = [
-            self::$pre_result[0] == 1 ? 40 : 0,
-            self::$pre_result[1] == 1 && self::$pre_result[0] == -1 ? 35 : 0,
-            self::$pre_result[2] == 1 && self::$pre_result[1] == -1 ? 30 : 0,
-            self::$pre_result[3] == 1 && self::$pre_result[2] == -1 ? 35 : 0,
-            self::$pre_result[4] == 1 && self::$pre_result[3] == -1 && self::$pre_result[1] == -1 ? 30 : 0,
-            self::$pre_result[6] == 1 && self::$pre_result[4] == -1 ? 35 : 0,
+            self::$preResult[0] == 1 ? 40 : 0,
+            self::$preResult[1] == 1 && self::$preResult[0] == -1 ? 35 : 0,
+            self::$preResult[2] == 1 && self::$preResult[1] == -1 ? 30 : 0,
+            self::$preResult[3] == 1 && self::$preResult[2] == -1 ? 35 : 0,
+            self::$preResult[4] == 1 && self::$preResult[3] == -1 && self::$preResult[1] == -1 ? 30 : 0,
+            self::$preResult[6] == 1 && self::$preResult[4] == -1 ? 35 : 0,
             self::specialSelection($longitude, $latitude),
-            self::$pre_result[8] == 1 && self::$pre_result[7] == -1 ? 45 : 0,
-            self::$pre_result[9] == 1 && self::$pre_result[8] == -1 ? 50 : 0,
-            self::$pre_result[10] == 1 && self::$pre_result[9] == -1 ? 45 : 0,
-            self::$pre_result[10] == -1 ? 50 : 0
+            self::$preResult[8] == 1 && self::$preResult[7] == -1 ? 45 : 0,
+            self::$preResult[9] == 1 && self::$preResult[8] == -1 ? 50 : 0,
+            self::$preResult[10] == 1 && self::$preResult[9] == -1 ? 45 : 0,
+            self::$preResult[10] == -1 ? 50 : 0
         ];
 
         return max($selection);
@@ -211,10 +211,10 @@ class Isopleta
                 && $long > $yi_11 - ((1 - ($lat - $xi_11) ** 2 / $x1_11 ** 2) * $x0_11 ** 2) ** 0.5) {
                 return 45;
             } else {
-                return self::$pre_result[7] == 1 && self::$pre_result[6] == -1 ? 40 : 0;
+                return self::$preResult[7] == 1 && self::$preResult[6] == -1 ? 40 : 0;
             }
         } else {
-            return self::$pre_result[7] == 1 && self::$pre_result[6] == -1 ? 40 : 0;
+            return self::$preResult[7] == 1 && self::$preResult[6] == -1 ? 40 : 0;
         }
     }
 
@@ -297,10 +297,10 @@ class Isopleta
                         $val = self::extraExprCheck($i, $lat) < $long ? 1 : -1;
                     }
                 }
-                self::$pre_result[$i] = $val;
+                self::$preResult[$i] = $val;
             } else {
-                self::$pre_result[$i] = self::specialPreResult($long, $lat);
+                self::$preResult[$i] = self::specialPreResult($long, $lat);
             }
-        }, array_keys(self::$pre_result));
+        }, array_keys(self::$preResult));
     }
 }
