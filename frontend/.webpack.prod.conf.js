@@ -164,6 +164,7 @@ const config = {
     alias: {
       '@': path.resolve(__dirname, './src'),
       'vue$': 'vue/dist/vue.esm.js',
+      'application': path.resolve(__dirname, './src/components/modules/application'),
       'styles': path.resolve(__dirname, './src/assets/style/')
     },
     extensions: ['*', '.js', '.vue', '.json']
