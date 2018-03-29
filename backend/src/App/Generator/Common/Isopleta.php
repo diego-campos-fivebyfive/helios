@@ -206,7 +206,7 @@ class Isopleta
         $yi = self::$data['YI'][11];
         $x0 = self::$data['X0'][11];
 
-        if ($lat > $xi-$x1 && $lat < $xi+$x1) {
+        if ($lat > $xi - $x1 && $lat < $xi + $x1) {
             if ($long < $yi + ((1 - ($lat - $xi) ** 2 / $x1 ** 2) * $x0 ** 2) ** 0.5
                 && $long > $yi - ((1 - ($lat - $xi) ** 2 / $x1 ** 2) * $x0 ** 2) ** 0.5) {
                 return 45;
