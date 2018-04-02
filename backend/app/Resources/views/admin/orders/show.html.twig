@@ -1155,9 +1155,9 @@
         });
 
         {% if not order.billedAt %}
-        sourceBilledAt.val(' ');
+            sourceBilledAt.val(' ');
         {% else %}
-        sourceBilledAt.val('{{ order.billedAt|date('d/m/Y') }}');
+            sourceBilledAt.val('{{ order.billedAt|date('d/m/Y') }}');
         {% endif %}
 
         {#TODO: Está funcionalidade já está ok, esta apenas aguardando outras propriedades#}
