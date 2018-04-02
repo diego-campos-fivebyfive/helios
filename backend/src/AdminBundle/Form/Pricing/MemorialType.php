@@ -27,6 +27,8 @@ class MemorialType extends AbstractType
                 'choices' => $statuses
             ]);
         }
+
+        ini_set('memory_limit', '768M');
     }
 
     /**
