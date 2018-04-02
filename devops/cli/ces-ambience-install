@@ -57,7 +57,10 @@ if [[ -z $1 || $1 = '--installation-list' ]]; then
 
     Mysql Server:
 
-      $ sudo apt install mysql-server \n\n'
+      $ echo "deb http://repo.mysql.com/apt/ubuntu/ precise mysql-apt-config deb http://repo.mysql.com/apt/ubuntu/ precise mysql-5.6" | sudo tee /etc/apt/sources.list.d/mysql.list
+      $ curl -s http://ronaldbradford.com/mysql/mysql.gpg | sudo apt-key add -
+      $ sudo apt-get update
+      $ sudo apt-get install mysql-server-5.6 \n\n'
 
   exit 0
 
@@ -81,10 +84,15 @@ elif [[ $1 = '--full' ]]; then
       php7.0-sqlite\
       php7.0-gd\
       php7.0-zip\
-    mysql-server\
     nodejs\
     yarn\
     composer\
     git\
   -y
+
+  echo "deb http://repo.mysql.com/apt/ubuntu/ precise mysql-apt-config deb http://repo.mysql.com/apt/ubuntu/ precise mysql-5.6"\
+    | sudo tee /etc/apt/sources.list.d/mysql.list
+  curl -s http://ronaldbradford.com/mysql/mysql.gpg | sudo apt-key add -
+  sudo apt-get update
+  sudo apt-get install mysql-server-5.6
 fi
