@@ -42,34 +42,31 @@ class StatusChanger
     }
 
     /**
-     * Change status and process associated behaviors
-     *
+     * Change status and sub_status and process associated behaviors
      * @param Order $order
      * @param $status
+     * @param null $subStatus
      */
-    public function change(Order $order, $status)
+    public function change(Order $order, $status, $subStatus = null)
     {
         if(in_array($status, Order::getStatusList())) {
 
             $order->setStatus($status);
+            $order->setSubStatus($subStatus);
 
-            switch ($order->getStatus()){
+            switch ($order->getStatus()) {
                 case Order::STATUS_PENDING:
                     $this->onChangeToPending($order);
                     break;
-
                 case Order::STATUS_VALIDATED:
                     $this->onChangeToValidated($order);
                     break;
-
                 case Order::STATUS_APPROVED:
                     $this->onChangeToApproved($order);
                     break;
-
                 case Order::STATUS_REJECTED:
                     $this->onChangeToRejected($order);
                     break;
-
                 case Order::STATUS_AVAILABLE:
                     $this->onChangeToAvailable($order);
                     break;

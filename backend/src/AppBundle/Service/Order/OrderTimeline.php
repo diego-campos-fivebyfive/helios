@@ -55,6 +55,12 @@ class OrderTimeline
             ->addAttribute('statusLabel', self::loadStatusLabel($order))
             ->setCreatedAt(new \DateTime());
 
+        if ($order->getStatus() == OrderInterface::STATUS_DONE || $order->getStatus() == OrderInterface::STATUS_INSERTED) {
+            $timeline
+                ->addAttribute('subStatus', $order->getSubStatus())
+                ->addAttribute('subStatusLabel', self::loadSubStatusLabel($order));
+        }
+
         $this->manager->save($timeline);
 
         return $timeline;
@@ -140,12 +146,32 @@ class OrderTimeline
     }
 
     /**
-     * @param $order
+     * @param Order $order
      * @return string
      */
     private function loadStatusLabel(OrderInterface $order)
     {
         return !count(self::load($order)) && $order->getStatus() == OrderInterface::STATUS_BUILDING
             ? 'initiated' : Order::getStatusNames()[$order->getStatus()];
+    }
+
+    /**
+     * @param Order $order
+     * @return string
+     */
+    private function loadSubStatusLabel(OrderInterface $order)
+    {
+        $status = $order->getStatus();
+
+        if ($status != OrderInterface::STATUS_DONE && $status != OrderInterface::STATUS_INSERTED) {
+            return "";
+        } else {
+
+            if (is_null($order->getSubStatus())) {
+                return "";
+            }
+
+            return Order::getSubStatusNames()[$status][$order->getSubStatus()];
+        }
     }
 }

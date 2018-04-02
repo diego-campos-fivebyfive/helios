@@ -190,13 +190,18 @@ class OrderController extends AbstractController
         $this->denyAccessUnlessGranted('edit', $order);
 
         $status = (int) $request->get('status');
+        $subStatus = $request->get('subStatus');
 
         /** @var \AppBundle\Service\Order\StatusChanger $changer */
         $changer = $this->get('order_status_changer');
 
         if($changer->accept($order, $status, $this->user()) or $this->user()->isPlatform()) {
 
-            $changer->change($order, $status);
+            if ($subStatus == 1) {
+                $changer->change($order, $status, $subStatus);
+            } else {
+                $changer->change($order, $status);
+            }
 
             return $this->json();
         }

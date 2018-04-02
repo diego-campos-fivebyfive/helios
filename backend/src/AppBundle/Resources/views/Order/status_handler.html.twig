@@ -1,6 +1,6 @@
 <script>
 
-    function showSwal(id, status, title, text) {
+    function showSwal(id, status, subStatus, title, text) {
         swal({
             title: title,
             text: text,
@@ -11,11 +11,13 @@
             cancelButtonText: '{{ 'Cancelar'|trans }}',
             closeOnConfirm: false
         }, function () {
-
             $.ajax({
                 url: '{{ path('order_status',{id:'_id_'}) }}'.replace(/_id_/g, id),
                 method: 'post',
-                data: {status: status},
+                data: {
+                    status: status,
+                    subStatus: subStatus
+                },
                 complete: function (xhr) {
 
                     if (200 == xhr.status) {
@@ -33,6 +35,9 @@
                         }, 1500);
 
                     } else {
+
+                        console.log(xhr.status);
+
                         var response = xhr.responseJSON;
                         swal('Ooops', response.hasOwnProperty('error') ? response.error : 'Falha ao executar a operação', 'error');
                     }
@@ -52,6 +57,11 @@
     $('[data-status]').on('click', function () {
         var id = $(this).data('id');
         var status = $(this).data('status');
+        var subStatus = $(this).data('substatus');
+
+        if (subStatus === undefined) {
+            subStatus = false;
+        }
 
         var title = 'Confirma a operação?';
         var text = 'Este processo não pode ser desfeito';
@@ -73,7 +83,7 @@
                             $('#components_out_of_stock').find('.modal-body').html(response);
                         }
                         else {
-                            showSwal(id, status, title, text);
+                            showSwal(id, status, subStatus, title, text);
                         }
                     } else {
                         var response = xhr.responseJSON;
@@ -83,7 +93,7 @@
             });
         }
         else {
-            showSwal(id, status, title, text);
+            showSwal(id, status, subStatus, title, text);
         }
     });
 

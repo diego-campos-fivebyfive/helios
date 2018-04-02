@@ -756,6 +756,25 @@ class Order implements OrderInterface
     /**
      * @inheritDoc
      */
+    public static function getSubStatusNames()
+    {
+        return [
+            self::STATUS_DONE => [
+                "Confirmado",
+                "Reservado"
+            ],
+            self::STATUS_INSERTED => [
+                "Em Produção",
+                "Reservado",
+                "Aguardando Material",
+                "Aguardando Pagamento"
+            ]
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
     public static function getStatusList()
     {
         return [
@@ -770,6 +789,25 @@ class Order implements OrderInterface
             self::STATUS_COLLECTED => self::STATUS_COLLECTED,
             self::STATUS_DELIVERING => self::STATUS_DELIVERING,
             self::STATUS_DELIVERED => self::STATUS_DELIVERED
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function getSubStatusList()
+    {
+        return [
+            self::STATUS_DONE => [
+                self::SUBSTATUS_DONE_CONFIRMED,
+                self::SUBSTATUS_DONE_RESERVED
+            ],
+            self::STATUS_INSERTED => [
+                self::SUBSTATUS_INSERTED_PRODUCTION,
+                self::SUBSTATUS_INSERTED_RESERVED,
+                self::SUBSTATUS_INSERTED_WAITING_MATERIAL,
+                self::SUBSTATUS_INSERTED_WAITING_PAYMENT
+            ]
         ];
     }
 
