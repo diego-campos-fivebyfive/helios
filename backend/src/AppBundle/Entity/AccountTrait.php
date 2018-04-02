@@ -25,7 +25,7 @@ trait AccountTrait
 
     /**
      * @var AccountInterface|null
-     * @ORM\ManyToOne(targetEntity="Customer")
+     * @ORM\ManyToOne(targetEntity="Customer", inversedBy="childAccounts")
      */
     protected $parent;
 

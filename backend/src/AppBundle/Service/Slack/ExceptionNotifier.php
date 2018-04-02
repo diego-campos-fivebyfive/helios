@@ -64,6 +64,11 @@ class ExceptionNotifier
     private $serializer;
 
     /**
+     * @var array
+     */
+    private $ignoreNotifications = [403, 404];
+
+    /**
      * ExceptionNotifier constructor.
      * @param ContainerInterface $container
      */
@@ -81,14 +86,17 @@ class ExceptionNotifier
      */
     public function notify($exception)
     {
-        $output = $this->formatOutput($exception);
-        $client = $this->createClient();
+        if (!in_array($exception->getStatusCode(), $this->ignoreNotifications)) {
 
-        $response = $client->post($this->formatUri(), [
-            'body' => $this->formatBody($output)
-        ]);
+            $output = $this->formatOutput($exception);
+            $client = $this->createClient();
 
-        return $response->getStatusCode();
+            $response = $client->post($this->formatUri(), [
+                'body' => $this->formatBody($output)
+            ]);
+
+            return $response->getStatusCode();
+        }
     }
 
     /**
