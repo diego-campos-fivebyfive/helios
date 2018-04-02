@@ -101,6 +101,13 @@ class Order implements OrderInterface
     private $previousStatus;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="previous_sub_status", type="smallint", nullable=true)
+     */
+    private $previousSubStatus;
+
+    /**
      * @var DateTime
      *
      * @ORM\Column(name="status_at", type="datetime", nullable=true)
@@ -691,6 +698,14 @@ class Order implements OrderInterface
     }
 
     /**
+     * @return int
+     */
+    public function getPreviousSubStatus()
+    {
+        return $this->previousSubStatus;
+    }
+
+    /**
      * @return DateTime
      */
     public function getStatusAt()
@@ -703,6 +718,8 @@ class Order implements OrderInterface
      */
     public function setSubStatus($subStatus)
     {
+        $this->previousSubStatus = $this->subStatus;
+
         $this->subStatus = $subStatus;
 
         return $this;

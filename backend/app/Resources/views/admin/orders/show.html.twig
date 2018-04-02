@@ -169,7 +169,7 @@
             <div class="col-md-8">
                 {% if expired %}
                     {% if not (order.isDone or order.isApproved or order.isRejected)
-                    and (order.isBuilding or (order.isPending and member.isPlatformUser) or (order.isValidated and not member.isPlatformUser)) %}
+                        and (order.isBuilding or (order.isPending and member.isPlatformUser) or (order.isValidated and not member.isPlatformUser)) %}
                         <div class="ibox">
                             <div class="ibox-content">
                                 <div class="alert alert-info text-center">
@@ -211,10 +211,45 @@
                                                 </span>
 
                                                 {% if order.isInserted and member.isPlatformLogistic %}
-                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_AVAILABLE') }}">
-                                                        <i class="fa fa-archive"></i> Coleta disponível
-                                                    </a>
+                                                    {% if order.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_RESERVED') %}
+                                                        <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                           data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}"
+                                                           data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_MATERIAL') }}">
+                                                            <i class="fa fa-archive"></i> Aguardando Material
+                                                        </a>
+                                                        <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                           data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}"
+                                                           data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_PAYMENT') }}">
+                                                            <i class="fa fa-archive"></i> Produção Concluída
+                                                        </a>
+                                                    {% endif %}
+
+                                                    {% if order.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_PRODUCTION') %}
+                                                        <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                           data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_AVAILABLE') }}">
+                                                            <i class="fa fa-archive"></i> Produção Concluída
+                                                        </a>
+                                                        <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                           data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}"
+                                                           data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_MATERIAL') }}">
+                                                            <i class="fa fa-archive"></i> Aguardando Material
+                                                        </a>
+                                                    {% endif %}
+
+                                                    {% if order.previousSubStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_RESERVED') %}
+                                                        <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                        data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}"
+                                                        data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_PAYMENT') }}">
+                                                        <i class="fa fa-archive"></i> Produção Concluída
+                                                        </a>
+                                                    {% endif %}
+
+                                                    {% if order.previousSubStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_PRODUCTION') %}
+                                                        <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                        data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_AVAILABLE') }}">
+                                                        <i class="fa fa-archive"></i> Produção Concluída
+                                                        </a>
+                                                    {% endif %}
                                                 {% endif %}
 
                                                 {% if order.isAvailable and member.isPlatformLogistic %}
@@ -225,18 +260,35 @@
                                                 {% endif %}
 
                                                 {% if order.isDone and member.isPlatformAfterSales %}
+                                                    {% if order.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_DONE_RESERVED') %}
+                                                        <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                           data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}"
+                                                           data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_RESERVED') }}">
+                                                            <i class="fa fa-check"></i> Produção de Reserva
+                                                        </a>
+                                                    {% endif %}
+                                                    {% if order.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_DONE_CONFIRMED') %}
+                                                        <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                           data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}"
+                                                           data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_PRODUCTION') }}">
+                                                            <i class="fa fa-check"></i> Em Produção
+                                                        </a>
+                                                    {% endif %}
+                                                {% endif %}
+
+                                                {% if order.isInserted and member.isPlatformAfterSales and order.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_PAYMENT') %}
                                                     <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}">
-                                                        <i class="fa fa-check"></i> Inserido
+                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_AVAILABLE') }}">
+                                                        <i class="fa fa-archive"></i> Coleta Disponível
                                                     </a>
                                                 {% endif %}
 
                                                 {# Todo: Funcionalidade retirada temporiamente, será re-utilizada em novas regras #}
                                                 {#{% if order.isCollected and member.isPlatformAfterSales %}#}
-                                                    {#<a class="btn btn-sm btn-green" data-id="{{ order.id }}"#}
-                                                       {#data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DELIVERED') }}">#}
-                                                        {#<i class="fa fa-check"></i> Entregue#}
-                                                    {#</a>#}
+                                                {#<a class="btn btn-sm btn-green" data-id="{{ order.id }}"#}
+                                                {#data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DELIVERED') }}">#}
+                                                {#<i class="fa fa-check"></i> Entregue#}
+                                                {#</a>#}
                                                 {#{% endif %}#}
 
                                                 {% if not member.isPlatformExpanse %}
@@ -257,8 +309,8 @@
 
                                                 {% if not member.isPlatformExpanse %}
                                                     {% if (not member.isPlatformUser and order.isValidated)
-                                                    or (member.isPlatformUser and (order.isValidated or order.isPending or order.isApproved))
-                                                    or (member.isPlatformMaster and not order.isBuilding and not order.isRejected) %}
+                                                        or (member.isPlatformUser and (order.isValidated or order.isPending or order.isApproved))
+                                                        or (member.isPlatformMaster and not order.isBuilding and not order.isRejected) %}
                                                         <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
                                                            data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_REJECTED') }}">
                                                             <i class="fa fa-thumbs-o-down"></i> Cancelar este orçamento
@@ -275,9 +327,17 @@
 
                                                 {% if (member.isPlatformFinancial or member.isPlatformFinancing) and order.isApproved %}
                                                     <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DONE') }}">
-                                                        <i class="fa fa-check-square-o"></i> {{ member.isPlatformFinancial ? 'Pagamento' : 'Financiamento' }}
-                                                        confirmado
+                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DONE') }}"
+                                                       data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_DONE_RESERVED') }}">
+                                                        <i class="fa fa-check-square-o"></i> Reservado
+                                                    </a>
+                                                {% endif %}
+
+                                                {% if member.isPlatformFinancial and order.isApproved %}
+                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DONE') }}"
+                                                       data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_DONE_CONFIRMED') }}">
+                                                        <i class="fa fa-check-square-o"></i> Confirmado
                                                     </a>
                                                 {% endif %}
 
@@ -300,7 +360,7 @@
                                                 {% endif %}
                                                 {% if not expired %}
                                                     {% if not (order.isDone or order.isApproved or order.isRejected)
-                                                    and (order.isBuilding or (order.isPending and member.isPlatformUser) or (order.isValidated and not member.isPlatformUser)) %}
+                                                        and (order.isBuilding or (order.isPending and member.isPlatformUser) or (order.isValidated and not member.isPlatformUser)) %}
                                                         <a class="btn btn-sm btn-success pull-right"
                                                            href="{{ path('project_generator', {order:order.id}) }}">
                                                             <i class="fa fa-pencil"></i> Editar Orçamento
@@ -313,7 +373,7 @@
                                             <h2>
                                                 Orçamento {{ order.reference }}
                                                 {% if order.fileExtract and
-                                                (member.isPlatformAdmin or member.isPlatformMaster or member.isPlatformAfterSales) %}
+                                                    (member.isPlatformAdmin or member.isPlatformMaster or member.isPlatformAfterSales) %}
                                                     <a class="pull-right" target="_blank"
                                                        href="{{ path('order_file',{id:order.id, type:'fileExtract'}) }}">
                                                         <i class="fa fa-download"></i> CSV
@@ -411,17 +471,17 @@
                         <div class="row">
                             <div class="row wrapper">
                                 <ol class="breadcrumb">
-                                <div class="col-md-10">
-                                    <label>Dados Fiscais</label>
-                                </div>
-                                <div class="col-md-2">
-                                    {% if files %}
-                                    <button type="button" class="btn btn-primary btn-sm"
-                                            data-toggle="modal" data-target="#download_files">
-                                        <i class="fa fa-download"></i> Baixar NFe
-                                    </button>
-                                    {% endif %}
-                                </div>
+                                    <div class="col-md-10">
+                                        <label>Dados Fiscais</label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        {% if files %}
+                                            <button type="button" class="btn btn-primary btn-sm"
+                                                    data-toggle="modal" data-target="#download_files">
+                                                <i class="fa fa-download"></i> Baixar NFe
+                                            </button>
+                                        {% endif %}
+                                    </div>
                                 </ol>
                             </div>
                         </div>
@@ -561,7 +621,7 @@
                                                 {% for payment in order.paymentMethod('array').quotas %}
                                                     &#{{ loop.index + 96 }}; ) {{ payment.description }} {{ payment.percent }}%
                                                     {% if payment.display_payment_date is defined
-                                                    and payment.display_payment_date == 'true' and order.isApproved %}
+                                                        and payment.display_payment_date == 'true' and order.isApproved %}
                                                         - {{ payment.date|date('d/m/Y') }}
                                                     {% endif %}<br>
                                                 {% endfor %}
@@ -932,18 +992,18 @@
 
     <script>
 
-      var FormCoupon = $('#coupon_form');
+        var FormCoupon = $('#coupon_form');
 
-      function getAssociatedCoupon() {
-        $.ajax({
-          url: "{{ path('coupon_create', {id:order.id, isShow: '1'}) }}",
-          success: function (response) {
-            FormCoupon.html(response);
-          }
-        });
-      }
+        function getAssociatedCoupon() {
+            $.ajax({
+                url: "{{ path('coupon_create', {id:order.id, isShow: '1'}) }}",
+                success: function (response) {
+                    FormCoupon.html(response);
+                }
+            });
+        }
 
-      getAssociatedCoupon();
+        getAssociatedCoupon();
 
         $('[data-delete]').on('click', function () {
 
@@ -1062,36 +1122,36 @@
         var sourceBilledAt = $('#up_billed_at');
 
         sourceBilledAt.daterangepicker({
-          startDate: {{ order.billedAt ? order.billedAt|date('d/m/Y') : ('now')|date('d/m/Y') }},
-          singleDatePicker: true,
-          locale: {
-            format: 'DD/MM/YYYY',
-            daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
-            monthNames: [
-              "Janeiro",
-              "Fevereiro",
-              "Março",
-              "Abril",
-              "Maio",
-              "Junho",
-              "Julho",
-              "Agosto",
-              "Setembro",
-              "Outubro",
-              "Novembro",
-              "Dezembro"
-            ]
-          }
-        }).on('change', function () {
-          var billed_at = $(this).val();
-          $.ajax({
-            url: '{{ path('billed_at', {id:order.id}) }}',
-            method: 'post',
-            data: {billed_at: billed_at},
-            complete: function (xhr) {
-              $('#up_billed_at').html(xhr['billedAt']);
+            startDate: {{ order.billedAt ? order.billedAt|date('d/m/Y') : ('now')|date('d/m/Y') }},
+            singleDatePicker: true,
+            locale: {
+                format: 'DD/MM/YYYY',
+                daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+                monthNames: [
+                    "Janeiro",
+                    "Fevereiro",
+                    "Março",
+                    "Abril",
+                    "Maio",
+                    "Junho",
+                    "Julho",
+                    "Agosto",
+                    "Setembro",
+                    "Outubro",
+                    "Novembro",
+                    "Dezembro"
+                ]
             }
-          });
+        }).on('change', function () {
+            var billed_at = $(this).val();
+            $.ajax({
+                url: '{{ path('billed_at', {id:order.id}) }}',
+                method: 'post',
+                data: {billed_at: billed_at},
+                complete: function (xhr) {
+                    $('#up_billed_at').html(xhr['billedAt']);
+                }
+            });
         });
 
         {% if not order.billedAt %}
