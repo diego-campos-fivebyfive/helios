@@ -236,20 +236,20 @@
                                                         </a>
                                                     {% endif %}
 
-                                                    {#{% if order.previousSubStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_RESERVED') %}#}
-                                                    {#<a class="btn btn-sm btn-green" data-id="{{ order.id }}"#}
-                                                    {#data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}"#}
-                                                    {#data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_PAYMENT') }}">#}
-                                                    {#<i class="fa fa-archive"></i> Produção Concluída#}
-                                                    {#</a>#}
-                                                    {#{% endif %}#}
+                                                    {% if order.previousSubStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_RESERVED') %}
+                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                    data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}"
+                                                    data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_PAYMENT') }}">
+                                                    <i class="fa fa-archive"></i> Produção Concluída
+                                                    </a>
+                                                    {% endif %}
 
-                                                    {#{% if order.previousSubStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_PRODUCTION') %}#}
-                                                    {#<a class="btn btn-sm btn-green" data-id="{{ order.id }}"#}
-                                                    {#data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_AVAILABLE') }}">#}
-                                                    {#<i class="fa fa-archive"></i> Produção Concluída#}
-                                                    {#</a>#}
-                                                    {#{% endif %}#}
+                                                    {% if order.previousSubStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_PRODUCTION') %}
+                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                    data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_AVAILABLE') }}">
+                                                    <i class="fa fa-archive"></i> Produção Concluída
+                                                    </a>
+                                                    {% endif %}
                                                 {% endif %}
 
                                                 {% if order.isAvailable and member.isPlatformLogistic %}
