@@ -6,7 +6,7 @@ if [[ -z $1 || $1 = '--installation-list' ]]; then
   Requirements:
 
     * Apache2
-    * PHP
+    * PHP v7.025
       * php-mbstring
       * php-xml
       * php-mysql
@@ -16,11 +16,11 @@ if [[ -z $1 || $1 = '--installation-list' ]]; then
       * php-sqlite
       * php-gd
       * php-zip
-    * Nodejs
+    * Nodejs v8.0+
     * Curl
     * Yarn
     * Composer
-    * Mysql-server
+    * Mysql-server v5.6
 
 
   How to:
