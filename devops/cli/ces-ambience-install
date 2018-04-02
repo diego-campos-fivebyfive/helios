@@ -22,6 +22,7 @@ if [[ -z $1 || $1 = '--installation-list' ]]; then
     * Composer
     * Mysql-server
 
+
   How to:
 
     Apache:
@@ -60,7 +61,19 @@ if [[ -z $1 || $1 = '--installation-list' ]]; then
       $ echo "deb http://repo.mysql.com/apt/ubuntu/ precise mysql-apt-config deb http://repo.mysql.com/apt/ubuntu/ precise mysql-5.6" | sudo tee /etc/apt/sources.list.d/mysql.list
       $ curl -s http://ronaldbradford.com/mysql/mysql.gpg | sudo apt-key add -
       $ sudo apt-get update
-      $ sudo apt-get install mysql-server-5.6 \n\n'
+      $ sudo apt-get install mysql-server-5.6 \n\n
+
+
+  Downgrades:
+
+    Mysql Server:
+
+      > Note: This script will drop all mysql databases, make sure to create the needed backups.
+
+    sudo apt-get purge mysql-server mysql-client mysql-common mysql-server-core-5.7 mysql-client-core-5.7
+    sudo rm -rf /etc/mysql /var/lib/mysql
+    sudo apt-get autoremove
+    sudo apt-get autoclean \n\n'
 
   exit 0
 
