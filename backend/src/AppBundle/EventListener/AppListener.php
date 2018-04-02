@@ -32,11 +32,6 @@ class AppListener
     ];
 
     /**
-     * @var array
-     */
-    private $ignoreNotifications = [403, 404];
-
-    /**
      * AppListener constructor.
      * @param ContainerInterface $container
      */
@@ -172,8 +167,6 @@ class AppListener
      */
     private function sendSlackNotification($exception)
     {
-        if (!in_array($exception->getStatusCode(), $this->ignoreNotifications)) {
-            (new ExceptionNotifier($this->container))->notify($exception);
-        }
+        (new ExceptionNotifier($this->container))->notify($exception);
     }
 }
