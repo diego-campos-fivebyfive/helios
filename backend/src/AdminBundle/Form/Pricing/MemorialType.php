@@ -15,6 +15,8 @@ class MemorialType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        ini_set('memory_limit', '768M');
+
         /** @var Memorial $memorial */
         $memorial = $options['data'];
 
