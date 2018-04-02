@@ -53,13 +53,9 @@ class OrderTimeline
             ->setMessage(self::loadMessage($order, $tag))
             ->addAttribute('status', $order->getStatus())
             ->addAttribute('statusLabel', self::loadStatusLabel($order))
+            ->addAttribute('subStatus', $order->getSubStatus())
+            ->addAttribute('subStatusLabel', self::loadSubStatusLabel($order))
             ->setCreatedAt(new \DateTime());
-
-        if ($order->getStatus() == OrderInterface::STATUS_DONE || $order->getStatus() == OrderInterface::STATUS_INSERTED) {
-            $timeline
-                ->addAttribute('subStatus', $order->getSubStatus())
-                ->addAttribute('subStatusLabel', self::loadSubStatusLabel($order));
-        }
 
         $this->manager->save($timeline);
 
