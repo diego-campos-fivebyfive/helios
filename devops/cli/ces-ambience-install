@@ -11,7 +11,11 @@ if [[ -z $1 || $1 = '--installation-list' ]]; then
       * php-xml
       * php-mysql
       * php-intl
+      * php-common
+      * php-curl
       * php-sqlite
+      * php-gd
+      * php-zip
     * Nodejs
     * Curl
     * Yarn
@@ -30,7 +34,7 @@ if [[ -z $1 || $1 = '--installation-list' ]]; then
 
     pacotes do PHP:
 
-      $ sudo apt install php-mbstring php-xml php-mysql php-intl php-common php-curl
+      $ sudo apt install php-mbstring php-xml php-mysql php-intl php-common php-curl php-sqlite php-gd php-zip
 
     Nodejs:
 
@@ -63,5 +67,5 @@ elif [[ $1 = '--full' ]]; then
   echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
   curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
   sudo apt-get update
-  sudo apt-get install apache2 php php-mbstring php-xml php-mysql php-intl php-common php-curl mysql-server nodejs yarn composer git -y
+  sudo apt-get install apache2 php php-mbstring php-xml php-mysql php-intl php-common php-curl php-sqlite php-gd php-zip mysql-server nodejs yarn composer git -y
 fi
