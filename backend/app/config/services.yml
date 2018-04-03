@@ -281,6 +281,12 @@ services:
         tags:
             - { name: form.type }
 
+    variety_type:
+        class: AppBundle\Form\Component\VarietyType
+        arguments: ['@component_query']
+        tags:
+            - { name: form.type }
+
     entity_filter:
         class: AppBundle\Service\Filter\EntityFilter
         arguments: ['@doctrine.orm.entity_manager']
