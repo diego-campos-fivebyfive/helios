@@ -9,6 +9,9 @@
 
 <script>
   export default {
+    props: [
+      'payload'
+    ],
     methods: {
       hide() {
         this.$refs.modal.hide()
@@ -42,7 +45,7 @@
       getPayloadField(vm, path) {
         return path
           .split('.')
-          .reduce((obj, key) => obj[key], vm)
+          .reduce((obj, key) => obj[key], vm || this.payload)
       },
       isValidPayload(payload) {
         /* eslint-disable no-use-before-define, no-restricted-syntax */

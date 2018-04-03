@@ -1,22 +1,19 @@
 <template lang="pug">
-  ModalForm(ref='modalForm')
+  ModalForm(ref='modalForm', :payload='form.payload')
     h1.title(slot='header')
       | {{ form.title }}
     form.form(slot='section', name='coupon')
-      Input.field-name(
+      input(
+        slot='input',
         label='Nome',
-        :params='form.payload.name',
+        size='1, 1, 3',
         v-model.sync='form.payload.name.value')
       Input.field-amount(
+        validate,
         label='Valor',
-        :params='form.payload.amount',
-        v-model.sync='form.payload.amount.value',
-        v-on:validate='() => validate("form.payload.amount")')
-      label.field-account
-        | Conta
-        AccountSelect(
-          v-model.sync='form.payload.account',
-          :currentAccount='form.payload.account')
+        v-model.sync='form.payload.amount.value')
+      AccountSelect(
+        v-model.sync='form.payload.account')
     Actions(
       slot='buttons',
       :action='form.action',
@@ -26,7 +23,7 @@
 
 <script>
   import Actions from './Actions'
-  import AccountSelect from 'application/select/Accounts'
+  import AccountSelect from '@/components/select/Accounts'
 
   export default {
     components: {

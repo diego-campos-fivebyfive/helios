@@ -64,7 +64,7 @@ const config = {
                   loader: 'sass-loader',
                   options: {
                     sourceMap: true,
-                    includePaths: ['./src/assets/style'],
+                    includePaths: ['./src/theme/assets/style'],
                     data: '@import "main.scss";'
                   }
                 }
@@ -164,8 +164,7 @@ const config = {
     alias: {
       '@': path.resolve(__dirname, './src'),
       'vue$': 'vue/dist/vue.esm.js',
-      'application': path.resolve(__dirname, './src/components/modules/application'),
-      'styles': path.resolve(__dirname, './src/assets/style/')
+      'styles': path.resolve(__dirname, './src/theme/assets/style/')
     },
     extensions: ['*', '.js', '.vue', '.json']
   },
