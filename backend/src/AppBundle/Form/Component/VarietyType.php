@@ -131,10 +131,10 @@ class VarietyType extends AbstractType
             $qb->where($qb->expr()->neq('v.id', $updateVariety->getId()));
         }
 
-        $varieries = $qb->getQuery()->getResult();
+        $varieties = $qb->getQuery()->getResult();
 
         $data = [];
-        foreach ($varieries as $variety) {
+        foreach ($varieties as $variety) {
             if(!key_exists($variety['name'], $data)) {
                 $data[$variety['name']] = [];
             }

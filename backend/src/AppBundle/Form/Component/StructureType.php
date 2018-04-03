@@ -5,6 +5,8 @@ namespace AppBundle\Form\Component;
 use AppBundle\Entity\Component\MakerInterface;
 use AppBundle\Entity\Pricing\Memorial;
 use Symfony\Component\Form\AbstractType;
+use AppBundle\Service\Component\Query;
+use AppBundle\Entity\Component\Maker;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,6 +18,19 @@ use AppBundle\Entity\Component\Structure;
 
 class StructureType extends AbstractType
 {
+    /**
+     * @var Query
+     */
+    private $query;
+
+    /**
+     * @param Query $query
+     */
+    public function __construct(Query $query)
+    {
+        $this->query = $query;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -69,6 +84,17 @@ class StructureType extends AbstractType
             'multiple' => true,
             'required' => false
         ]);
+        $builder->add('minPowerSelection', null, [
+            'required' => false
+        ]);
+        $builder->add('maxPowerSelection', null, [
+            'required' => false
+        ]);
+        $builder->add('alternative', ChoiceType::class, [
+            'multiple' => false,
+            'required' => false,
+            'choices' => $this->getStructures($options)
+        ]);
     }
 
     /**
@@ -79,5 +105,38 @@ class StructureType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\Component\Structure'
         ));
+    }
+
+    /**
+     * @param $options
+     * @return array
+     */
+    private function getStructures($options)
+    {
+        $updateStructure = $options['data'];
+
+        $manager = $this->query->manager('structure');
+
+        $qb = $manager->createQueryBuilder();
+
+        $qb->select('s.id, s.description, m.name')
+            ->join(Maker::class, 'm', 'WITH', 's.maker = m.id')
+            ->orderBy('m.name');
+
+        if($updateStructure->getId()) {
+            $qb->where($qb->expr()->neq('s.id', $updateStructure->getId()));
+        }
+
+        $structures = $qb->getQuery()->getResult();
+
+        $data = [];
+        foreach ($structures as $structure) {
+            if(!key_exists($structure['name'], $data)) {
+                $data[$structure['name']] = [];
+            }
+            $data[$structure['name']][$structure['id']] = $structure['description'];
+        }
+
+        return $data;
     }
 }
