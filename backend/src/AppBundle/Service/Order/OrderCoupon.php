@@ -56,10 +56,8 @@ class OrderCoupon
         $discountLimit = $maxOrderDiscount < $accountRanking ? $maxOrderDiscount : $accountRanking;
 
         if ($discountLimit >= $step) {
-            if ($step > 0) {
-                if (intval($discountLimit / $step) == 1) {
-                    return [$step];
-                }
+            if ($step > 0 && intval($discountLimit / $step) == 1) {
+                return [$step];
             }
 
             return range($step, intval($discountLimit), $step);
