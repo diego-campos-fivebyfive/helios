@@ -1,19 +1,13 @@
 import Vue from 'vue'
-import VueAxios from 'vue-axios'
-import axios from 'axios'
 import Router from 'vue-router'
 import VueCookies from 'vue-cookies'
+import VueAxios from 'vue-axios'
+import axios from './axios'
 
 import Account from '@/pages/account'
 // import Coupon from '@/pages/coupon'
 import Metric from '@/pages/metric'
 import NotFound from '@/pages/notfound'
-
-axios.defaults.headers.post['Content-Type'] = 'application/json'
-axios.defaults.headers.common['Content-Type'] = 'application/json'
-axios.defaults.headers.common['Accept-Language'] = 'pt_BR'
-axios.defaults.withCredentials = true
-axios.defaults.baseURL = process.env.API_URL
 
 Vue.use(VueAxios, axios)
 Vue.use(VueCookies)
