@@ -30,7 +30,7 @@ $desire_power = adjust_desire_power($all_inv, $desire_power, $fdi_max);
 $all_inv = inv_power_filter($all_inv, $desire_power);
 $all_inv = inv_choice($all_inv, $desire_power, $fdi_min, $fdi_max);
 $power_balance = inv_power_balance($all_inv, $desire_power);
-$mppt_op = inv_get_mppt_op($all_inv);
+$mppt_op = inv_get_mppt_op($all_inv);   // Areas
 $in_protection = inv_get_in_protections($all_inv);
 
 $arrangements = array();
@@ -38,6 +38,9 @@ $string_box = array();
 for ($i=0; $i<count($all_inv); $i++){
     $arrangements[$i] = all_arrangements($all_inv[$i], $mppt_op[$i], $mod[0]);
     $arrangements[$i] = auto_arrangement_choice($arrangements[$i], $power_balance[$i], $mppt_op[$i]);
+    // Esta função retorna todas as áreas de todos os inversores
+    // serial => mod_string
+    // parallel => nro_string
     if ($in_protection[$i] == 0){
         $stringbox_parameters = stringbox_parameters($arrangements[$i]);
         $string_box[$i] = stringbox_choice($stringbox_parameters, $stb);
