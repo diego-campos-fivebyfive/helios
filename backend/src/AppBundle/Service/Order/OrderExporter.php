@@ -181,7 +181,7 @@ class OrderExporter
      */
     private function extractOrderData(Order $order)
     {
-        return [
+        $data = [
             'reference' => $order->getReference(),
             'status' => $this->getStatusNameInPortuguese()[$order->getStatus()],
             'status_at' => $order->getStatusAt() ? $this->formatDate($order->getStatusAt()) : '',
@@ -202,6 +202,12 @@ class OrderExporter
             'invoices' => implode(", ", $order->getInvoices()),
             'billed_at' => $order->getBilledAt() ? $this->formatDate($order->getBilledAt()) : ''
         ];
+
+        if (!is_null($order->getSubStatus())) {
+            $data['status'] .= " / " . Order::getSubStatusNames()[$order->getStatus()][$order->getSubStatus()];
+        }
+
+        return $data;
     }
 
     /**
@@ -223,6 +229,10 @@ class OrderExporter
             'power' => $this->formatNumber($order->getPower()),
             'total_price' => $this->formatNumber($order->getTotal())
         ];
+
+        if (!is_null($order->getSubStatus())) {
+            $data['status'] .= " / " . Order::getSubStatusNames()[$order->getStatus()][$order->getSubStatus()];
+        }
 
         return $data;
     }
