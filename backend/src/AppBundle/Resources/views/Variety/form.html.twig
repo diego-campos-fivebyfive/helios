@@ -92,9 +92,21 @@
                                             {% endif %}
                                         </div>
 
-                                        <div class="form-group col-md-3">
+                                        <div class="form-group col-md-2">
                                             {{ form_label(form.position, 'Posição') }}
                                             {{ form_widget(form.position, {attr:{class:'form-control'}}) }}
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            {{ form_label(form.minPowerSelection, 'Potência mínima para seleção') }}
+                                            {{ form_widget(form.minPowerSelection,{attr:{class:'form-control'}}) }}
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            {{ form_label(form.maxPowerSelection, 'Potência máxima para seleção') }}
+                                            {{ form_widget(form.maxPowerSelection,{attr:{class:'form-control'}}) }}
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            {{ form_label(form.alternative, 'Variedade alternativa') }}
+                                            {{ form_widget(form.alternative,{attr:{class:'form-control'}}) }}
                                         </div>
                                     </div>
                                 </div>
@@ -187,7 +199,9 @@
         var common_mask = {pattern: '##,##', reverse: true};
         var targets = {
             'appbundle_component_variety_cmvProtheus': common_mask,
-            'appbundle_component_variety_cmvApplied': common_mask
+            'appbundle_component_variety_cmvApplied': common_mask,
+            'appbundle_component_variety_minPowerSelection': common_mask,
+            'appbundle_component_variety_maxPowerSelection': common_mask
         };
 
         $.each(targets, function (id, options) {
