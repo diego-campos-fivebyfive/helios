@@ -24,6 +24,13 @@ class InverterLoader
     private $manager;
 
     /**
+     * @var string
+     */
+    private $properties = 'i.id, i.generatorLevels levels, i.alternative, i.phases, i.phaseVoltage,
+        i.compatibility, i.nominalPower, i.minPowerSelection, i.maxPowerSelection, i.mpptParallel,
+        i.mpptNumber, i.mpptMin, i.inProtection, i.maxDcVoltage, i.mpptMaxDcCurrent';
+
+    /**
      * InverterLoader constructor.
      * @param array $config
      */
@@ -49,7 +56,8 @@ class InverterLoader
     {
         $qb = $this->manager->createQueryBuilder();
 
-        $qb->where('i.maker = :maker')
+        $qb->select($this->properties)
+            ->where('i.maker = :maker')
             ->orderBy('i.nominalPower', 'ASC')
             ->setParameter('maker', $this->config['maker']);
 
@@ -73,7 +81,8 @@ class InverterLoader
         );
 
         if ($alternatives) {
-            return $qb->where(
+            return $qb->select($this->properties)
+                ->where(
                 $qb->expr()->andX(
                     $qb->expr()->in(
                         'i.id',
@@ -87,5 +96,10 @@ class InverterLoader
         }
 
         return [];
+    }
+
+    private function createQueryBuilder()
+    {
+
     }
 }
