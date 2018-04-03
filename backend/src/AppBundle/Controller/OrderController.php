@@ -197,7 +197,7 @@ class OrderController extends AbstractController
 
         if($changer->accept($order, $status, $this->user()) or $this->user()->isPlatform()) {
 
-            if ($subStatus == "error") {
+            if ($subStatus == "undefined") {
                 $changer->change($order, $status);
             } else {
                 $changer->change($order, $status, $subStatus);
