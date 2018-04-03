@@ -13,7 +13,7 @@ trait FilterLevelTrait
     public static function filterActives($level, array $data, array $alternatives = []){
 
         foreach ($data as $key => $item){
-            if(null != $item = self::filterAlternativeItem($level,$item, $alternatives)) {
+            if (null != $item = self::filterAlternativeItem($level, $item, $alternatives)) {
                 $data[$key] = $item;
             } else {
                 unset($data[$key]);
@@ -34,8 +34,8 @@ trait FilterLevelTrait
      */
     private static function filterAlternativeItem($level, $item, array &$alternatives = []) {
 
-        if(!is_null($item)) {
-            if($item['active'] && in_array($item['levels'], $level)) {
+        if (!is_null($item)) {
+            if (in_array(json_decode($item['levels'], true), $level)) {
                 return $item;
             } elseif(array_key_exists('alternative', $item)){
 
