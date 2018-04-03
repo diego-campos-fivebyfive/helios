@@ -5,6 +5,10 @@ namespace AppBundle\Service\ProjectGenerator\Core;
 use AppBundle\Manager\StringBoxManager;
 use Doctrine\ORM\QueryBuilder;
 
+/**
+ * Class StringBoxLoader
+*  @author Gianluca Bine <gian_bine@hotmail.com>
+*/
 class StringBoxLoader
 {
 
@@ -33,7 +37,7 @@ class StringBoxLoader
         /** @var QueryBuilder $qb */
         $qb = $this->config['manager']->createQueryBuilder();
 
-        $qb->select()
+        $qb->select('s.id, s.inputs, s.outputs')
             ->addOrderBy('s.inputs', 'ASC')
             ->addOrderBy('s.outputs', 'ASC');
 
