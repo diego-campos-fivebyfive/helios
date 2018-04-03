@@ -59,21 +59,29 @@ class StringBoxLoaderTest extends AppTestCase
         $stringBox1->setDescription('desc 1');
         $stringBox1->setCode(123);
         $stringBox1->setMaker($maker1);
+        $stringBox1->setInputs(2);
+        $stringBox1->setOutputs(3);
 
         $stringBox2 = $stringBoxManager->create();
         $stringBox2->setDescription('desc 1');
         $stringBox2->setCode(123);
         $stringBox2->setMaker($maker1);
+        $stringBox2->setInputs(1);
+        $stringBox2->setOutputs(1);
 
         $stringBox3 = $stringBoxManager->create();
         $stringBox3->setDescription('desc 1');
         $stringBox3->setCode(123);
         $stringBox3->setMaker($maker1);
+        $stringBox3->setInputs(5);
+        $stringBox3->setOutputs(5);
 
         $stringBox4 = $stringBoxManager->create();
         $stringBox4->setDescription('desc 2');
         $stringBox4->setCode(567);
         $stringBox4->setMaker($maker2);
+        $stringBox4->setInputs(3);
+        $stringBox4->setOutputs(3);
 
         $stringBoxManager->save($stringBox1);
         $stringBoxManager->save($stringBox2);
@@ -86,7 +94,17 @@ class StringBoxLoaderTest extends AppTestCase
 
         /** @var StringBox $stringBox */
         foreach ($loadedStringBoxes as $stringBox) {
-            self::assertNotEquals($stringBox->getMakerId(), 2);
+            self::assertNotEquals($stringBox['id'], 4);
         }
+
+        // Todos os String Boxes
+        $stringBoxLoader = StringBoxLoader::create([
+            'manager' => $stringBoxManager,
+            'maker' => null
+        ]);
+
+        $allStringBoxes = $stringBoxLoader->all();
+
+        self::assertEquals(count($allStringBoxes), 4);
     }
 }
