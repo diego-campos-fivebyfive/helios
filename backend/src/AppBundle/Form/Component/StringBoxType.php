@@ -2,8 +2,10 @@
 
 namespace AppBundle\Form\Component;
 
+use AppBundle\Entity\Component\Maker;
 use AppBundle\Entity\Component\MakerInterface;
 use AppBundle\Entity\Pricing\Memorial;
+use AppBundle\Service\Component\Query;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -13,6 +15,19 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class StringBoxType extends AbstractType
 {
+    /**
+     * @var Query
+     */
+    private $query;
+
+    /**
+     * @param Query $query
+     */
+    public function __construct(Query $query)
+    {
+        $this->query = $query;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -57,6 +72,17 @@ class StringBoxType extends AbstractType
                     }
                 )
             );
+        $builder->add('minPowerSelection', null, [
+            'required' => false
+        ]);
+        $builder->add('maxPowerSelection', null, [
+            'required' => false
+        ]);
+        $builder->add('alternative', ChoiceType::class, [
+            'multiple' => false,
+            'required' => false,
+            'choices' => $this->getStringBoxes($options)
+        ]);
     }
     
     /**
@@ -77,5 +103,34 @@ class StringBoxType extends AbstractType
         return 'appbundle_component_stringbox';
     }
 
+    /**
+     * @param $options
+     * @return array
+     */
+    private function getStringBoxes($options)
+    {
+        $updateStringBox = $options['data'];
 
+        $manager = $this->query->manager('String_box');
+
+        $qb = $manager->createQueryBuilder();
+
+        $qb->select('s.id, s.description, m.name')
+            ->join(Maker::class, 'm', 'WITH', 's.maker = m.id')
+            ->orderBy('m.name');
+
+        if($updateStringBox->getId())
+            $qb->where($qb->expr()->neq('s.id',$updateStringBox->getId()));
+
+        $stringBoxes = $qb->getQuery()->getResult();
+
+        $data = [];
+        foreach ($stringBoxes as $stringBox) {
+            if(!key_exists($stringBox['name'], $data))
+                $data[$stringBox['name']] = [];
+            $data[$stringBox['name']][$stringBox['id']] = $stringBox['description'];
+        }
+
+        return $data;
+    }
 }

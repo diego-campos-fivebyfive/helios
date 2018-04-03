@@ -340,7 +340,9 @@
             'inverter_maxDcVoltage': common_mask,
             'inverter_mpptMaxDcCurrent': common_mask,
             'inverter_mpptMin': common_mask,
-            'inverter_mpptMax': common_mask
+            'inverter_mpptMax': common_mask,
+            'inverter_maxPowerSelection': common_mask,
+            'inverter_minPowerSelection': common_mask
         };
 
         $.each(targets, function (id, options) {
@@ -348,6 +350,7 @@
         });
         $('#inverter_mpptNumber').mask('0#',{reverse:false});
 
+        $('#inverter_alternative option[value=""]').html('Nenhum');
     </script>
 
     {% include view('helper.chosen') with({

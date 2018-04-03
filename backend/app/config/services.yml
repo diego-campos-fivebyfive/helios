@@ -281,6 +281,12 @@ services:
         tags:
             - { name: form.type }
 
+    string_box_type:
+        class: AppBundle\Form\Component\StringBoxType
+        arguments: ['@component_query']
+        tags:
+            - { name: form.type }
+
     variety_type:
         class: AppBundle\Form\Component\VarietyType
         arguments: ['@component_query']
