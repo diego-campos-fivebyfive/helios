@@ -25,6 +25,9 @@ class StringBoxLoader
         $this->config = $config;
     }
 
+    /**
+     * @return array
+     */
     public function all()
     {
         /** @var QueryBuilder $qb */
