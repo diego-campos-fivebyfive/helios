@@ -97,9 +97,4 @@ class InverterLoader
 
         return [];
     }
-
-    private function createQueryBuilder()
-    {
-
-    }
 }
