@@ -162,11 +162,6 @@ class OrderTimeline
         if ($status != OrderInterface::STATUS_DONE && $status != OrderInterface::STATUS_INSERTED) {
             return "";
         } else {
-
-            if (is_null($order->getSubStatus())) {
-                return "";
-            }
-
             return Order::getSubStatusNames()[$status][$order->getSubStatus()];
         }
     }

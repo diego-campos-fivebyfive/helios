@@ -35,9 +35,6 @@
                         }, 1500);
 
                     } else {
-
-                        console.log(xhr.status);
-
                         var response = xhr.responseJSON;
                         swal('Ooops', response.hasOwnProperty('error') ? response.error : 'Falha ao executar a operação', 'error');
                     }
@@ -60,7 +57,7 @@
         var subStatus = $(this).data('substatus');
 
         if (subStatus === undefined) {
-            subStatus = false;
+            subStatus = "error";
         }
 
         var title = 'Confirma a operação?';
