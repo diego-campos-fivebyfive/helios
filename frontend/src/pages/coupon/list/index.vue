@@ -1,7 +1,7 @@
 <template lang="pug">
   div
     Notification(ref='notification')
-    ModalConfirm(ref='modalConfirm', v-on:removeItem='removeCoupon')
+    Confirm(ref='confirm', v-on:removeItem='removeCoupon')
       div(slot='content')
         Icon.icon(name='question-circle-o', scale='4')
         h2
@@ -32,7 +32,7 @@
             type='danger-common',
             icon='trash',
             pos='last',
-            v-on:click.native='$refs.modalConfirm.show(coupon.id)')
+            v-on:click.native='$refs.confirm.show(coupon.id)')
 </template>
 
 <script>
@@ -42,7 +42,7 @@
     ],
     methods: {
       removeCoupon(id) {
-        this.$refs.modalConfirm.hide()
+        this.$refs.confirm.hide()
 
         this.axios.delete(`/api/v1/coupon/${id}`)
           .then(() => {

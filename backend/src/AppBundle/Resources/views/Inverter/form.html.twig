@@ -82,12 +82,12 @@
                                     </div>
                                     <div class="panel-body">
 
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-3">
                                             {{ form_label(form.code, 'Código do Produto') }}
                                             {{ form_row(form.code, {attr:{class:'form-control'}}) }}
                                         </div>
 
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-3">
                                             {{ form_row(form.maker,{attr:{class:'form-control'}}) }}
                                         </div>
 
@@ -95,7 +95,7 @@
                                             {{ form_row(form.model,{attr:{class:'form-control'}}) }}
                                         </div>
 
-                                        <div class="form-group col-md-3">
+                                        <div class="form-group col-md-2">
                                             {{ form_label(form.connection_type, 'Tipo de Conexão') }}
                                             {{ form_widget(form.connection_type,{attr:{class:'form-control'}}) }}
                                         </div>
@@ -106,6 +106,10 @@
                                         <div class="form-group col-md-3">
                                             {{ form_label(form.minPowerSelection, 'Potência mínima para seleção') }}
                                             {{ form_widget(form.minPowerSelection,{attr:{class:'form-control'}}) }}
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            {{ form_label(form.maxPowerSelection, 'Potência máxima para seleção') }}
+                                            {{ form_widget(form.maxPowerSelection,{attr:{class:'form-control'}}) }}
                                         </div>
                                         <div class="form-group col-md-4">
                                             {{ form_label(form.alternative, 'Inversor alternativo') }}
@@ -336,7 +340,9 @@
             'inverter_maxDcVoltage': common_mask,
             'inverter_mpptMaxDcCurrent': common_mask,
             'inverter_mpptMin': common_mask,
-            'inverter_mpptMax': common_mask
+            'inverter_mpptMax': common_mask,
+            'inverter_maxPowerSelection': common_mask,
+            'inverter_minPowerSelection': common_mask
         };
 
         $.each(targets, function (id, options) {
@@ -344,6 +350,7 @@
         });
         $('#inverter_mpptNumber').mask('0#',{reverse:false});
 
+        $('#inverter_alternative option[value=""]').html('Nenhum');
     </script>
 
     {% include view('helper.chosen') with({

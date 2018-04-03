@@ -78,6 +78,26 @@
                                             {{ form_widget(form.description,{attr:{class:'form-control'}}) }}
                                         </div>
 
+                                        <div class="form-group col-md-3">
+                                            {{ form_label(form.minPowerSelection, 'Potência mínima para seleção') }}
+                                            {{ form_widget(form.minPowerSelection,{attr:{class:'form-control'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-md-3">
+                                            {{ form_label(form.maxPowerSelection, 'Potência máxima para seleção') }}
+                                            {{ form_widget(form.maxPowerSelection,{attr:{class:'form-control'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-md-4">
+                                            {{ form_label(form.alternative, 'String Box alternativo') }}
+                                            {{ form_widget(form.alternative,{attr:{class:'form-control'}}) }}
+                                        </div>
+
+                                        <div class="form-group col-md-2">
+                                            {{ form_label(form.position, 'Posição') }}
+                                            {{ form_widget(form.position, {attr:{class:'form-control'}}) }}
+                                        </div>
+
                                         <div class="form-group col-md-6">
                                             <label> Datasheet (PDF) </label>
                                             <input type="file" name="dataSheet" accept="application/pdf">
@@ -96,11 +116,6 @@
                                                     Este componente já possui imagem
                                                 </span>
                                             {% endif %}
-                                        </div>
-
-                                        <div class="form-group col-md-3">
-                                            {{ form_label(form.position, 'Posição') }}
-                                            {{ form_widget(form.position, {attr:{class:'form-control'}}) }}
                                         </div>
                                     </div>
                                 </div>
@@ -203,12 +218,18 @@
         var common_mask = {pattern: '##,##', reverse: true};
         var targets = {
             'appbundle_component_stringbox_cmvProtheus': common_mask,
-            'appbundle_component_stringbox_cmvApplied': common_mask
+            'appbundle_component_stringbox_cmvApplied': common_mask,
+            'appbundle_component_stringbox_minPowerSelection': common_mask,
+            'appbundle_component_stringbox_maxPowerSelection': common_mask
         };
 
         $.each(targets, function (id, options) {
             custom_mask($('#' + id));
         });
+
+        $('#appbundle_component_stringbox_alternative option[value=""]').html('Nenhum');
+
+        $('#appbundle_component_stringbox_alternative').chosen();
 
     </script>
 

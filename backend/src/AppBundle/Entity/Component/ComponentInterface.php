@@ -224,4 +224,37 @@ interface ComponentInterface
      * @return array
      */
     public function getGeneratorLevels();
+
+    /**
+     * @param $power
+     * @return mixed
+     */
+    public function setMinPowerSelection($power);
+
+    /**
+     * @return float
+     */
+    public function getMinPowerSelection();
+
+    /**
+     * @param $power
+     * @return mixed
+     */
+    public function setMaxPowerSelection($power);
+
+    /**
+     * @return float
+     */
+    public function getMaxPowerSelection();
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function setAlternative($id);
+
+    /**
+     * @return int
+     */
+    public function getAlternative();
 }

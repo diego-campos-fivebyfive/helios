@@ -1,5 +1,5 @@
 <template lang="pug">
-  ModalForm(ref='modalForm', :payload='form.payload')
+  Form(ref='modalForm', modal)
     h1.title(slot='header')
       | {{ form.title }}
     form.form(slot='section', name='coupon')

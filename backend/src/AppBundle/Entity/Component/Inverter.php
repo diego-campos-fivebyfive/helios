@@ -174,13 +174,6 @@ class Inverter implements InverterInterface, ComponentInterface
     private $modules;
 
     /**
-     * @var float
-     *
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $minPowerSelection;
-
-    /**
      * @var int
      *
      * @ORM\Column(type="smallint", nullable=true)
@@ -192,13 +185,6 @@ class Inverter implements InverterInterface, ComponentInterface
      * @var bool
      */
     public $viewMode = false;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $alternative;
 
     /**
      * @inheritDoc
@@ -540,24 +526,6 @@ class Inverter implements InverterInterface, ComponentInterface
     }
 
     /**
-     * @inheritDoc
-     */
-    public function setMinPowerSelection($minPowerSelection)
-    {
-        $this->minPowerSelection = $minPowerSelection;
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getMinPowerSelection()
-    {
-        return $this->minPowerSelection;
-    }
-
-    /**
      * @return int
      */
     public function getId()
@@ -584,24 +552,6 @@ class Inverter implements InverterInterface, ComponentInterface
     }
 
     /**
-     * @inheritdoc
-     */
-    public function setAlternative($id)
-    {
-        $this->alternative = $id;
-
-        return $this;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getAlternative()
-    {
-        return $this->alternative;
-    }
-
-    /**
      * @inheritDoc
      */
     public function setModules($modules)
@@ -618,6 +568,4 @@ class Inverter implements InverterInterface, ComponentInterface
     {
         return $this->modules;
     }
-
-
 }

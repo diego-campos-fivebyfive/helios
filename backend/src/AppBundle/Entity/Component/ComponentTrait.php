@@ -138,6 +138,27 @@ trait ComponentTrait
     protected $generatorLevels;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(type="float", nullable=true)
+     */
+    protected $minPowerSelection;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="float", nullable=true)
+     */
+    protected $maxPowerSelection;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $alternative;
+
+    /**
      * @inheritDoc
      */
     public function __construct()
@@ -508,5 +529,59 @@ trait ComponentTrait
     public function getGeneratorLevels()
     {
         return $this->generatorLevels;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setMinPowerSelection($power)
+    {
+        $this->minPowerSelection = $power;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMinPowerSelection()
+    {
+        return $this->minPowerSelection;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setMaxPowerSelection($power)
+    {
+        $this->maxPowerSelection = $power;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMaxPowerSelection()
+    {
+        return $this->maxPowerSelection;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setAlternative($id)
+    {
+        $this->alternative = $id;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAlternative()
+    {
+        return $this->alternative;
     }
 }

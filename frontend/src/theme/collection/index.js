@@ -1,8 +1,8 @@
 import Button from './Button'
+import Confirm from './Confirm'
 import Input from './Input'
 import Modal from './Modal'
-import ModalConfirm from './ModalConfirm'
-import ModalForm from './ModalForm'
+import Form from './Form'
 import Notification from './Notification'
 import Paginator from './Paginator'
 import Panel from './Panel'
@@ -11,19 +11,19 @@ import Select from './Select'
 import Table from './Table'
 
 import Icon from 'vue-awesome/components/Icon'
-import '@/theme/assets/script/icons'
+import '../assets/script/icons'
 
 export default {
-  Icon: Icon,
-  Input: Input,
-  Button: Button,
-  Modal: Modal,
-  ModalConfirm: ModalConfirm,
-  ModalForm: ModalForm,
-  Notification: Notification,
-  Paginator: Paginator,
-  Panel: Panel,
-  Progress: Progress,
-  Select: Select,
-  Table: Table
+  Icon,
+  Button,
+  Confirm,
+  Form,
+  Input,
+  Modal,
+  Notification,
+  Paginator,
+  Panel,
+  Progress,
+  Select,
+  Table
 }

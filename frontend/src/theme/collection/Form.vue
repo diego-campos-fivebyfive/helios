@@ -1,7 +1,11 @@
 <template lang="pug">
   .collection-modal-form
     Notification(ref='notification')
-    Modal(ref='modal')
+    Modal(v-if='modal', ref='modal')
+      slot(name='header', slot='header')
+      slot(name='section', slot='section')
+      slot(name='buttons', slot='buttons')
+    div(v-else)
       slot(name='header', slot='header')
       slot(name='section', slot='section')
       slot(name='buttons', slot='buttons')
@@ -10,7 +14,7 @@
 <script>
   export default {
     props: [
-      'payload'
+      'modal'
     ],
     methods: {
       hide() {
@@ -45,7 +49,7 @@
       getPayloadField(vm, path) {
         return path
           .split('.')
-          .reduce((obj, key) => obj[key], vm || this.payload)
+          .reduce((obj, key) => obj[key], vm)
       },
       isValidPayload(payload) {
         /* eslint-disable no-use-before-define, no-restricted-syntax */
