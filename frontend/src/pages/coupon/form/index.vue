@@ -26,7 +26,6 @@
 
 <script>
   import Actions from './Actions'
-  import AccountSelect from 'application/select/Accounts'
 
   export default {
     components: {

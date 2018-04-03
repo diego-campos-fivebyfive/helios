@@ -1,6 +1,8 @@
 <template lang="pug">
   a.header(href='/')
-    img(src='@/assets/media/logo-small.png', alt='Sices Solar Logo')
+    img(
+      src='@/theme/assets/media/logo-small.png',
+      alt='Sices Solar Logo')
     span.title {{ user.name }}
     span {{ user.company }}
 </template>
@@ -11,16 +13,17 @@
       user: {}
     }),
     mounted() {
-      this.axios.get('api/v1/user').then(response => {
-        this.user = response.data
-      })
+      this.axios.get('api/v1/user')
+        .then(response => {
+          this.user = response.data
+        })
     }
   }
 </script>
 
 <style lang="scss" scoped>
   .header {
-    background: url("~@/assets/media/logo-cover.png");
+    background: url("~@/theme/assets/media/logo-cover.png");
     color: $ui-white-regular;
     display: block;
     text-align: center;

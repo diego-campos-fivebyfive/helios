@@ -1,54 +1,24 @@
-import Button from '@/components/collection/Button'
-import Confirm from '@/components/collection/Confirm'
-import Form from '@/components/collection/Form'
-import Input from '@/components/collection/Input'
-import Modal from '@/components/collection/Modal'
-import Notification from '@/components/collection/Notification'
-import Paginator from '@/components/collection/Paginator'
-import Panel from '@/components/collection/Panel'
-import Progress from '@/components/collection/Progress'
-import Select from '@/components/collection/Select'
-import Table from '@/components/collection/Table'
-
-import Icon from 'vue-awesome/components/Icon'
-import '@/assets/script/icons'
-
 import Vue from 'vue'
-import App from './App'
-import router from './router'
+import App from '@/App'
+import router from '@/router'
+import ThemeCollection from '@/theme/collection'
 
-Vue.component('Icon', Icon)
+import AccountSelect from '@/components/select/Accounts'
 
-Vue.component('Button', Button)
-Vue.component('Confirm', Confirm)
-Vue.component('Form', Form)
-Vue.component('Input', Input)
-Vue.component('Modal', Modal)
-Vue.component('Notification', Notification)
-Vue.component('Paginator', Paginator)
-Vue.component('Panel', Panel)
-Vue.component('Progress', Progress)
-Vue.component('Select', Select)
-Vue.component('Table', Table)
+const components = Object.assign(ThemeCollection, {
+  AccountSelect
+})
+
+Object.entries(components)
+  .forEach(([name, component]) => {
+    Vue.component(name, component)
+  })
 
 /* eslint-disable no-new, no-console */
 new Vue({
   el: '#app',
   router,
-  components: {
-    App,
-    Button,
-    Confirm,
-    Form,
-    Input,
-    Modal,
-    Notification,
-    Paginator,
-    Panel,
-    Progress,
-    Select,
-    Table
-  },
+  components,
   template: '<App/>',
   render: h => h(App),
   mounted() {

@@ -1,7 +1,9 @@
 <template lang="pug">
   .wrapper
     header
-      img.logo(src='@/assets/media/logo-ui.png', alt='Sices Solar - Logo')
+      img.logo(
+        src='@/theme/assets/media/logo-ui.png',
+        alt='Sices Solar - Logo')
     section.section
       h1.title
         | Oops.
