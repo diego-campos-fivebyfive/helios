@@ -1,3 +1,6 @@
+import Icon from 'vue-awesome/components/Icon'
+import './icons'
+
 import Button from './Button'
 import Confirm from './Confirm'
 import Input from './Input'
@@ -9,9 +12,6 @@ import Panel from './Panel'
 import Progress from './Progress'
 import Select from './Select'
 import Table from './Table'
-
-import Icon from 'vue-awesome/components/Icon'
-import '../assets/script/icons'
 
 export default {
   Icon,
