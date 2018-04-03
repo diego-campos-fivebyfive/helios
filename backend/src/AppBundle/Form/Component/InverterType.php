@@ -87,6 +87,9 @@ class InverterType extends AbstractType
         $builder->add('minPowerSelection', null, [
             'required' => false
         ]);
+        $builder->add('maxPowerSelection', null, [
+            'required' => false
+        ]);
         $builder->add('connection_type', null,[
             'required' => false
         ]);
