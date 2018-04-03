@@ -11,6 +11,7 @@ export default [
   },
   {
     path: '/coupon',
+    redirect: '/not-found',
     name: 'Cupons',
     component: Coupon
   },
