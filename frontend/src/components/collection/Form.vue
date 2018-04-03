@@ -1,7 +1,11 @@
 <template lang="pug">
   .collection-modal-form
     Notification(ref='notification')
-    Modal(ref='modal')
+    Modal(v-if='modal', ref='modal')
+      slot(name='header', slot='header')
+      slot(name='section', slot='section')
+      slot(name='buttons', slot='buttons')
+    div(v-else)
       slot(name='header', slot='header')
       slot(name='section', slot='section')
       slot(name='buttons', slot='buttons')
@@ -9,6 +13,9 @@
 
 <script>
   export default {
+    props: [
+      'modal'
+    ],
     methods: {
       hide() {
         this.$refs.modal.hide()
