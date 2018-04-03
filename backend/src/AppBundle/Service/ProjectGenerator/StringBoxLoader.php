@@ -62,7 +62,8 @@ class StringBoxLoader
 
             $stringBoxes = $qb->getQuery()->getResult();
 
-        }while(empty($stringBoxes));
+            $continue = empty($stringBoxes) && $quantity < 50;
+        }while($continue);
 
         return $stringBoxes;
     }
