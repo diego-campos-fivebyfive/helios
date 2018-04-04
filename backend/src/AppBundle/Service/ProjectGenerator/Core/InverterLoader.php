@@ -27,7 +27,7 @@ class InverterLoader
     /**
      * @var string
      */
-    private $properties = 'i.id, i.generatorLevels levels, i.alternative, i.phases, i.phaseVoltage,
+    private $properties = 'i.id, i.generatorLevels levels, i.alternative, i.phases phaseNumber, i.phaseVoltage,
         i.compatibility, i.nominalPower, i.minPowerSelection, i.maxPowerSelection, i.mpptParallel,
         i.mpptNumber, i.mpptMin, i.inProtection, i.maxDcVoltage, i.mpptMaxDcCurrent';
 
@@ -99,6 +99,15 @@ class InverterLoader
         }
 
         return [];
+    }
+
+    /**
+     * @param $level
+     * @return array
+     */
+    public function filter($level)
+    {
+        return FilterLevelTrait::filterActives($level, $this->all(), $this->alternatives());
     }
 
     /**
