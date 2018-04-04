@@ -97,6 +97,23 @@ class OrderExporter
     ];
 
     /**
+     * @var array
+     */
+    private $suborderColumnMappingWaitingMaterial = [
+        'reference' => 'Referência',
+        'status' => 'Status',
+        'status_at' => 'Data status',
+        'account' => 'Cliente',
+        'cnpj' => 'CNPJ',
+        'level' => 'Nível do orçamento',
+        'agent' => 'Atendente',
+        'family' => 'Família',
+        'code' => 'Código',
+        'description' => 'Descrição',
+        'quantity' => 'Quantidade'
+    ];
+
+    /**
      * OrderExporter constructor.
      * @param ContainerInterface $container
      */
@@ -134,33 +151,64 @@ class OrderExporter
 
         $path = $projectRoot . "/.uploads/order/export/" . $fileName;
 
-        if ($mode == 1) {
+        switch ($mode) {
+            case 1:
+                $ordersData = [];
 
-            $ordersData = [];
-
-            foreach ($orders as $order) {
-                $ordersData[] = $this->extractOrderData($order);
-            }
-
-            $this->setSpreadsheetHeaders($spreadsheet, $this->orderColumnMapping);
-            $this->setSpreadsheetData($spreadsheet, $ordersData);
-
-        } elseif ($mode == 2) {
-
-            $subordersData = [];
-
-            foreach ($orders as $order) {
-                $suborders = $order->getChildrens();
-
-                foreach ($suborders as $suborder) {
-                    $suborderData = $this->extractSuborderData($suborder);
-                    $this->setInsuranceColumns($suborderData, $suborder);
-                    $subordersData[] = $suborderData;
+                foreach ($orders as $order) {
+                    $ordersData[] = $this->extractOrderData($order);
                 }
 
-                $this->setSpreadsheetHeaders($spreadsheet, $this->suborderColumnMapping);
-                $this->setSpreadsheetData($spreadsheet, $subordersData);
-            }
+                $this->setSpreadsheetHeaders($spreadsheet, $this->orderColumnMapping);
+                $this->setSpreadsheetData($spreadsheet, $ordersData);
+                break;
+
+            case 2:
+                $subordersData = [];
+
+                foreach ($orders as $order) {
+                    $suborders = $order->getChildrens();
+
+                    foreach ($suborders as $suborder) {
+                        $suborderData = $this->extractSuborderData($suborder);
+                        $this->setInsuranceColumns($suborderData, $suborder);
+                        $subordersData[] = $suborderData;
+                    }
+
+                    $this->setSpreadsheetHeaders($spreadsheet, $this->suborderColumnMapping);
+                    $this->setSpreadsheetData($spreadsheet, $subordersData);
+                }
+                break;
+
+            case 3:
+                $subordersWaitingMaterialData = [];
+
+                foreach ($orders as $order) {
+
+                    $suborders = $order->getChildrens();
+
+                    /** @var Order $suborder */
+                    foreach ($suborders as $suborder) {
+                        $parent = $suborder->getParent();
+                        if ($parent->getStatus() == OrderInterface::STATUS_INSERTED &&
+
+                            $parent->getSubStatus() == OrderInterface::SUBSTATUS_INSERTED_WAITING_MATERIAL) {
+
+                            $elements = $suborder->getElements();
+
+                            foreach ($elements as $key => $element) {
+                                if ($element->getMetadata('waiting_material')) {
+                                    $subordersWaitingMaterialData[] = $this->extractSuborderDataWaiting($suborder, $element);
+                                }
+                            }
+                        }
+                    }
+
+                    $this->setSpreadsheetHeaders($spreadsheet, $this->suborderColumnMappingWaitingMaterial);
+                    $this->setSpreadsheetData($spreadsheet, $subordersWaitingMaterialData);
+                }
+
+                break;
         }
 
         foreach(range('A','Z') as $columnID) {
@@ -230,50 +278,40 @@ class OrderExporter
             'total_price' => $this->formatNumber($order->getTotal())
         ];
 
-        if (!is_null($order->getSubStatus())) {
-            $data['status'] .= " / " . Order::getSubStatusNames()[$order->getStatus()][$order->getSubStatus()];
+        if (!is_null($parent->getSubStatus())) {
+            $data['status'] .= " / " . Order::getSubStatusNames()[$parent->getStatus()][$parent->getSubStatus()];
         }
 
         return $data;
     }
 
     /**
-     * @param Spreadsheet $spreadsheet
-     * @param $data
+     * @param Order $order
+     * @return array
      */
-    private function setSpreadsheetData(Spreadsheet &$spreadsheet, $data) {
-        try {
+    private function extractSuborderDataWaiting(Order $order, Element $element)
+    {
+        $parent = $order->getParent();
 
-            $initialRow = 2;
+        $data = [
+            'reference' => $parent->getReference(),
+            'status' => $this->getStatusNameInPortuguese()[$parent->getStatus()],
+            'status_at' => $parent->getStatusAt() ? $this->formatDate($parent->getStatusAt()) : '',
+            'account' => $parent->getAccount() ? $parent->getAccount()->getFirstname() : '',
+            'cnpj' => $parent->getAccount() ? $parent->getAccount()->getDocument() : '',
+            'level' => $order->getLevel(),
+            'agent' => $parent->getAgent() ? $parent->getAgent()->getFirstname() : '',
+            'family' => $this->getFamilyNameInPortuguese()[$element->getFamily()],
+            'code' => $element->getCode(),
+            'description' => $element->getDescription(),
+            'quantity' => $element->getQuantity()
+        ];
 
-            for ($i = 0; $i < count($data); $i++) {
-                $column = 1;
-                foreach ($data[$i] as $value) {
-                    $spreadsheet->setActiveSheetIndex(0)
-                        ->setCellValueByColumnAndRow($column, $initialRow, $value);
-                    $column++;
-                }
-                $initialRow++;
-            }
-        } catch (\Exception $e) {
-
+        if (!is_null($parent->getSubStatus())) {
+            $data['status'] .= " / " . Order::getSubStatusNames()[$parent->getStatus()][$parent->getSubStatus()];
         }
-    }
 
-    /**
-     * @param Spreadsheet $spreadsheet
-     */
-    private function setSpreadsheetHeaders(Spreadsheet &$spreadsheet, $headers) {
-        try {
-            $i = 1;
-            foreach ($headers as $column) {
-                $spreadsheet->setActiveSheetIndex(0)
-                    ->setCellValueByColumnAndRow($i, 1, $column);
-                $i++;
-            }
-        } catch (\Exception $e) {
-
-        }
+        return $data;
     }
 
     /**
@@ -359,7 +397,47 @@ class OrderExporter
     }
 
     /**
-     * Set Insurance Columns
+     * @param Spreadsheet $spreadsheet
+     * @param $data
+     */
+    private function setSpreadsheetData(Spreadsheet &$spreadsheet, $data) {
+        try {
+
+            $initialRow = 2;
+
+            for ($i = 0; $i < count($data); $i++) {
+                $column = 1;
+                foreach ($data[$i] as $value) {
+                    $spreadsheet->setActiveSheetIndex(0)
+                        ->setCellValueByColumnAndRow($column, $initialRow, $value);
+                    $column++;
+                }
+                $initialRow++;
+            }
+        } catch (\Exception $e) {
+
+        }
+    }
+
+    /**
+     * @param Spreadsheet $spreadsheet
+     */
+    private function setSpreadsheetHeaders(Spreadsheet &$spreadsheet, $headers) {
+        try {
+            $i = 1;
+            foreach ($headers as $column) {
+                $spreadsheet->setActiveSheetIndex(0)
+                    ->setCellValueByColumnAndRow($i, 1, $column);
+                $i++;
+            }
+        } catch (\Exception $e) {
+
+        }
+    }
+
+    /**
+     * @param $suborderData
+     * @param $suborder
      */
     private function setInsuranceColumns(&$suborderData, $suborder) {
 
@@ -409,6 +487,20 @@ class OrderExporter
             'Coletado',
             'Em trânsito',
             'Entregue'
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getFamilyNameInPortuguese()
+    {
+        return [
+            'inverter' => 'Inversor',
+            'module' => 'Módulo',
+            'structure' => 'Estrutura',
+            'string_box' => 'String Box',
+            'variety' => 'Variedade'
         ];
     }
 
