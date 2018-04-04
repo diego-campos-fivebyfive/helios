@@ -51,8 +51,8 @@ class Helper
 
                 for ($j = 0; $j < $nElements; $j++) {
                     $index = $combinations[$k][$j];
-                    $acuIn += $allStringbox[$index]["in_qty"];
-                    $acuOut += $allStringbox[$index]["out_qty"];
+                    $acuIn += $allStringbox[$index]["inputs"];
+                    $acuOut += $allStringbox[$index]["outputs"];
 
                     $selection[$j] = $allStringbox[$index];
                 }

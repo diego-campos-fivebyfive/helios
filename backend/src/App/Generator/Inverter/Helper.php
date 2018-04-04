@@ -156,7 +156,8 @@ class Helper
     {
         $net = [$phaseVoltage, $phaseNumber];
 
-        if ($net == [220, 1] or $net == [220, 2]) {
+        //if ($net == [220, 1] or $net == [220, 2]) {
+        if($phaseNumber < 3){
             $count = count($inverters);
             for ($i = 0; $i < $count; $i++) {
                 if ($inverters[$i]["phase_number"] > $phaseNumber) {
@@ -197,8 +198,8 @@ class Helper
     {
         $count = count($inverters);
         for ($i = 0; $i < $count; $i++) {
-            $maxShow = $inverters[$i]["pow_max_show"];
-            $minShow = $inverters[$i]["pow_min_show"];
+            $maxShow = $inverters[$i]["max_power_selection"];
+            $minShow = $inverters[$i]["min_power_selection"];
             if ($maxShow > 0) {
                 if ($desiredPower < $minShow or $desiredPower > $maxShow) {
                     unset($inverters[$i]);
