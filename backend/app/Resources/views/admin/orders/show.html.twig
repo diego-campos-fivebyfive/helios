@@ -862,15 +862,25 @@
                                                                         <td class="text-center">{{ element.unitPrice|currency }}</td>
                                                                         <td class="text-center">{{ element.total|currency }}</td>
                                                                     {% endif %}
-                                                                    {% if order.parent.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_MATERIAL') and
-                                                                        order.parent.status == constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') %}
-                                                                        <td class="col-md-2 text-center">
-                                                                            {% if element.metadata.waiting_material is defined and element.metadata.waiting_material %}
-                                                                                <input data-metadata="{{ path('element_metadata', {id:element.id}) }}" class="element" type="checkbox" checked>
-                                                                            {% else %}
-                                                                                <input data-metadata="{{ path('element_metadata', {id:element.id}) }}" class="element" type="checkbox">
-                                                                            {% endif %}
-                                                                        </td>
+                                                                    {% if order.parent.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_MATERIAL')
+                                                                        and order.parent.status == constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') %}
+
+                                                                        {% if member.isPlatformLogistic %}
+                                                                            <td class="col-md-2 text-center">
+                                                                                {% if element.metadata.waiting_material is defined and element.metadata.waiting_material %}
+                                                                                    <input data-metadata="{{ path('element_metadata', {id:element.id}) }}" type="checkbox" checked>
+                                                                                {% else %}
+                                                                                    <input data-metadata="{{ path('element_metadata', {id:element.id}) }}" type="checkbox">
+                                                                                {% endif %}
+                                                                            </td>
+                                                                        {% else %}
+                                                                            <td class="col-md-2 text-center">
+                                                                                {% if element.metadata.waiting_material is defined and element.metadata.waiting_material %}
+                                                                                    <i class="fa fa-check-circle"></i>
+                                                                                {% endif %}
+                                                                            </td>
+                                                                        {% endif %}
+
                                                                     {% endif %}
                                                                 </tr>
                                                             {% endfor %}
@@ -1033,11 +1043,7 @@
 
             var url = $(this).data('metadata');
 
-            var checked = "";
-
-            if ($(this).is(":checked")) {
-                checked = true;
-            }
+            var checked = $(this).is(":checked") ? true : "";
 
             $.ajax({
                 url: url,
