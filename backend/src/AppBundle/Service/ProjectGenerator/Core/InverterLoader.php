@@ -3,6 +3,7 @@
 namespace AppBundle\Service\ProjectGenerator\Core;
 
 use AppBundle\Manager\InverterManager;
+use Doctrine\Common\Inflector\Inflector;
 
 /**
  * Class InverterLoader
@@ -61,7 +62,7 @@ class InverterLoader
             ->orderBy('i.nominalPower', 'ASC')
             ->setParameter('maker', $this->config['maker']);
 
-        return $qb->getQuery()->getResult();
+        return $this->formatKeys($qb->getQuery()->getResult());
     }
 
     /**
@@ -81,7 +82,7 @@ class InverterLoader
         );
 
         if ($alternatives) {
-            return $qb->select($this->properties)
+            $results = $qb->select($this->properties)
                 ->where(
                 $qb->expr()->andX(
                     $qb->expr()->in(
@@ -93,8 +94,25 @@ class InverterLoader
                 ->orderBy('i.nominalPower', 'ASC')
                 ->setParameter('maker', $this->config['maker'])
                 ->getQuery()->getResult();
+
+            return $this->formatKeys($results);
         }
 
         return [];
+    }
+
+    /**
+     * @param $data
+     * @return array
+     */
+    private function formatKeys($data)
+    {
+        return array_map(function ($arrayInverter) {
+            $keys = array_map(function ($key) {
+                return Inflector::tableize($key);
+            }, array_keys($arrayInverter));
+
+            return array_combine($keys, $arrayInverter);
+        }, $data);
     }
 }
