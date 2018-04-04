@@ -241,15 +241,30 @@ function inv_active_alternative_filter($all_inv, $all_alternatives)
     return $inv;
 }
 
+/**
+ * Opções de combo
+ * Volts/Fase
+ * 127/2
+ * 220/1
+ * 220/2
+ * 220/3
+ * 380/3
+ * 380+ >>> Quando esta opção for selecionada, deve-se efetuar a conversão para o valor 381
+ *
+ * @param $all_inv
+ * @param $phase_voltage
+ * @param $n_phase
+ * @return array
+ */
 // TODO: Generator\Inverter\Helper::filterPhases() - TEST OK
 function inv_phase_filter($all_inv, $phase_voltage, $n_phase)
 {
-
     $inv = $all_inv;
     $net = [$phase_voltage, $n_phase];
 
 
-    if ($net == [220, 1] or $net == [220, 2]) {
+    //if ($net == [220, 1] or $net == [220, 2]) {
+    if($n_phase < 3){
         $cont_inv = count($inv);
         for ($i = 0; $i < $cont_inv; $i++) {
             $np = $inv[$i]["phase_number"];
@@ -259,7 +274,6 @@ function inv_phase_filter($all_inv, $phase_voltage, $n_phase)
         }
         $inv = array_values($inv);
     }
-
 
     if ($net == [380, 3] or $net == [220, 3]) {
         $cont_inv = count($inv);
@@ -276,12 +290,11 @@ function inv_phase_filter($all_inv, $phase_voltage, $n_phase)
         $inv = array_values($inv);
     }
 
-
     if ($phase_voltage > 380) {
         $cont_inv = count($inv);
         for ($i = 0; $i < $cont_inv; $i++) {
             $pv = $inv[$i]["phase_voltage"];
-            if ($pv != $phase_voltage) {
+            if ($pv <= 380) {
                 unset($inv[$i]);
             }
         }
