@@ -17,7 +17,7 @@ ISSUE=${title/issue-/}
 LOGS_CHANNEL=$($CLI_PATH/ces-issue-info $ISSUE --category-channel)
 
 [[ $ACTION == '--answer' ]] && {
-  message="[${title}] _${developer}_ had answered a pull-request comment ${link}"
+  message="[${title}] _${developer}_ answered a pull-request comment ${link}"
 }
 
 [[ $ACTION == '--submitted' ]] && {
