@@ -845,6 +845,10 @@
                                                                     <td class="col-md-2 text-center"><b>VALOR TOTAL</b>
                                                                     </td>
                                                                 {% endif %}
+                                                                {% if order.parent.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_MATERIAL') and
+                                                                    order.parent.status == constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') %}
+                                                                    <td class="col-md-2 text-center"><b>AGUARDANDO MATERIAL</b></td>
+                                                                {% endif %}
                                                             </tr>
                                                             </thead>
                                                             <tbody>
@@ -857,6 +861,16 @@
                                                                     {% if (not order.isPromotional and not order.isFiname) or isPlatform %}
                                                                         <td class="text-center">{{ element.unitPrice|currency }}</td>
                                                                         <td class="text-center">{{ element.total|currency }}</td>
+                                                                    {% endif %}
+                                                                    {% if order.parent.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_MATERIAL') and
+                                                                        order.parent.status == constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') %}
+                                                                        <td class="col-md-2 text-center">
+                                                                            {% if element.metadata.waiting_material is defined and element.metadata.waiting_material %}
+                                                                                <input data-metadata="{{ path('element_metadata', {id:element.id}) }}" class="element" type="checkbox" checked>
+                                                                            {% else %}
+                                                                                <input data-metadata="{{ path('element_metadata', {id:element.id}) }}" class="element" type="checkbox">
+                                                                            {% endif %}
+                                                                        </td>
                                                                     {% endif %}
                                                                 </tr>
                                                             {% endfor %}
@@ -979,7 +993,8 @@
 
                                         <p>{{ item.message }}</p>
 
-                                        {% if item.attributes.subStatusLabel is defined  %}
+                                        {% if item.attributes.subStatusLabel is defined and item.attributes.subStatusLabel
+                                            and order.subStatus is not null %}
                                             <p>Substatus: {{ item.attributes.subStatusLabel }}</p>
                                         {% endif %}
                                     </div>
@@ -1013,6 +1028,41 @@
         }
 
         getAssociatedCoupon();
+
+        $('[data-metadata]').on('change', function () {
+
+            var url = $(this).data('metadata');
+
+            var checked = "";
+
+            if ($(this).is(":checked")) {
+                checked = true;
+            }
+
+            $.ajax({
+                url: url,
+                method: 'post',
+                data: {
+                    waiting_material: checked
+                },
+                complete: function (xhr) {
+                    if (200 == xhr.status) {
+                        toastr.success('Elemento atualizado com sucesso!', '', {
+                            positionClass: 'toast-top-center',
+                            progressBar: true,
+                            preventDuplicates: true
+                        });
+                    }
+                    else {
+                        toastr.error('Falha na atualização do elemento!', '', {
+                            positionClass: 'toast-top-center',
+                            progressBar: true,
+                            preventDuplicates: true
+                        });
+                    }
+                }
+            })
+        });
 
         $('[data-delete]').on('click', function () {
 
