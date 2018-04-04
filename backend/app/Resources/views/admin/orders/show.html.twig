@@ -1003,8 +1003,7 @@
 
                                         <p>{{ item.message }}</p>
 
-                                        {% if item.attributes.subStatusLabel is defined and item.attributes.subStatusLabel
-                                            and order.subStatus is not null %}
+                                        {% if item.attributes.subStatusLabel is defined and item.attributes.subStatusLabel %}
                                             <p>Substatus: {{ item.attributes.subStatusLabel }}</p>
                                         {% endif %}
                                     </div>
