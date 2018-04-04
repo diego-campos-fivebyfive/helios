@@ -28,10 +28,10 @@ inverter = [
     'nominal_power' => float,
     'min_power_selection' => float|null,
     'max_power_selection' => float|null,
-    'mppt_parallel' => bool,
+    'mppt_parallel' => bool|null,
     'mmpt_number' => int,
     'mppt_min' => int,
-    'in_protection' => bool,
+    'in_protection' => bool|null,
     'max_dc_voltage' => float,
     'mppt_max_dc_current' => float
 ]
