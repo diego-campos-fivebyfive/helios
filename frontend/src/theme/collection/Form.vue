@@ -12,6 +12,8 @@
 </template>
 
 <script>
+  import exceptions from '@/locale/pt-br'
+
   export default {
     props: [
       'modal'
@@ -32,10 +34,6 @@
         }
 
         const pattern = patterns[field.type]
-
-        const exceptions = {
-          money: 'Formato de moeda em Real invalido'
-        }
 
         const defaultException = exceptions[field.type]
 
