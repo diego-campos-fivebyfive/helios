@@ -10,11 +10,12 @@ trait FilterLevelTrait
      * @param array $alternatives
      * @return array
      */
-    public static function filterActives($level, array $data, array $alternatives = []){
+    public static function filterActives($level, array $data, array $alternatives = [])
+    {
 
-        foreach ($data as $key => $item){
-            if (null != $item = self::filterAlternativeItem($level, $item, $alternatives)) {
-                $data[$key] = $item;
+        foreach ($data as $key => $item) {
+            if (null != $itemX = self::filterAlternativeItem($level, $item, $alternatives)) {
+                $data[$key] = $itemX;
             } else {
                 unset($data[$key]);
             }
@@ -32,12 +33,13 @@ trait FilterLevelTrait
      * @param array $alternatives
      * @return null
      */
-    private static function filterAlternativeItem($level, $item, array &$alternatives = []) {
+    private static function filterAlternativeItem($level, $item, array &$alternatives = [])
+    {
 
         if (!is_null($item)) {
-            if (in_array(json_decode($item['levels'], true), $level)) {
+            if (in_array($level, $item['levels'])) {
                 return $item;
-            } elseif(array_key_exists('alternative', $item)){
+            } elseif(array_key_exists('alternative', $item)) {
 
                 $key = array_search($item['alternative'], array_column($alternatives, 'id'));
 
@@ -47,7 +49,7 @@ trait FilterLevelTrait
 
                     if (!array_key_exists('visited', $next) || !$next['visited']) {
                         $next['visited'] = true;
-                        return self::filterAlternativeItem($next, $alternatives);
+                        return self::filterAlternativeItem($level, $next, $alternatives);
                     }
                 }
             }
@@ -55,5 +57,4 @@ trait FilterLevelTrait
 
         return null;
     }
-
 }
