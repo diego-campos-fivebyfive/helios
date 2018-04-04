@@ -86,6 +86,33 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/elementMetadata", name="element_metadata")
+     *
+     * @Method("post")
+     */
+    public function ElementMetadataAction(Request $request, Element $element)
+    {
+        $metadata = $request->request->all();
+
+        array_map(function ($key, $value) use ($element) {
+            if ($value) {
+                if ($value == "true" || $value == "false") {
+                    $value = $value == "true" ? true : false;
+                }
+                $element->addMetadata($key, $value);
+            } else {
+                $element->removeMetadata($key);
+            }
+        }, array_keys($metadata), $metadata);
+
+        $manager = $this->manager('order_element');
+
+        $manager->save($element);
+
+        return $this->json([]);
+    }
+
+    /**
      * @Route("/{mode}/export", name="export_list")
      */
     public function exportAction(Request $request, $mode)

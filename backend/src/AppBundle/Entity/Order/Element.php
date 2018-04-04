@@ -256,6 +256,28 @@ class Element implements ElementInterface
     /**
      * @inheritDoc
      */
+    public function addMetadata($key, $value = null)
+    {
+        $this->metadata[$key] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeMetadata($key)
+    {
+        if (array_key_exists($key, $this->metadata)) {
+            unset($this->metadata[$key]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setOrder(OrderInterface $order)
     {
         $this->order = $order;

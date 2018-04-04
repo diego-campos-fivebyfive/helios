@@ -92,6 +92,19 @@ interface ElementInterface
     public function getMetadata($key = null, $default = null);
 
     /**
+     * @param $key
+     * @param null $value
+     * @return ElementInterface
+     */
+    public function addMetadata($key, $value = null);
+
+    /**
+     * @param $key
+     * @return ElementInterface
+     */
+    public function removeMetadata($key);
+
+    /**
      * @param OrderInterface $order
      * @return ElementInterface
      */
