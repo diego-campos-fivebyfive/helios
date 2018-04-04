@@ -13,6 +13,7 @@
 
 <script>
   import exceptions from '@/locale/pt-br'
+  import patterns from '@/validation/pattern'
 
   export default {
     props: [
@@ -29,10 +30,6 @@
         this.$refs.notification.notify(message, type)
       },
       isInvalidField(field) {
-        const patterns = {
-          money: /^(\d{1,3}(\.\d{3})*|\d+)(\,\d{2})?$/
-        }
-
         const pattern = patterns[field.type]
 
         const defaultException = exceptions[field.type]
