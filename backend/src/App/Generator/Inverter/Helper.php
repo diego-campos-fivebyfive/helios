@@ -198,7 +198,7 @@ class Helper
     {
         $count = count($inverters);
         for ($i = 0; $i < $count; $i++) {
-            $maxShow = $inverters[$i]["min_power_selection"];
+            $maxShow = $inverters[$i]["max_power_selection"];
             $minShow = $inverters[$i]["min_power_selection"];
             if ($maxShow > 0) {
                 if ($desiredPower < $minShow or $desiredPower > $maxShow) {
