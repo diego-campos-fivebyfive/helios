@@ -191,7 +191,6 @@ class OrderExporter
                     foreach ($suborders as $suborder) {
                         $parent = $suborder->getParent();
                         if ($parent->getStatus() == OrderInterface::STATUS_INSERTED &&
-
                             $parent->getSubStatus() == OrderInterface::SUBSTATUS_INSERTED_WAITING_MATERIAL) {
 
                             $elements = $suborder->getElements();
