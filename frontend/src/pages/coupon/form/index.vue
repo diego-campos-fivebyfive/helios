@@ -29,8 +29,7 @@
 
   export default {
     components: {
-      Actions,
-      AccountSelect
+      Actions
     },
     data: () => ({
       form: {

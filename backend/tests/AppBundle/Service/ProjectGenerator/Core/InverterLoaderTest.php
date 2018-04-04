@@ -18,7 +18,6 @@ class InverterLoaderTest extends AppTestCase
 {
     public function testAll()
     {
-
         $makerManager = $this->manager('maker');
 
         /** @var Maker $maker */
@@ -46,11 +45,26 @@ class InverterLoaderTest extends AppTestCase
 
         $inverterManager->save($inverter);
 
+        /** @var Inverter $inverter2 */
         $inverter2 = $inverterManager->create();
-        $inverter2->setDescription('desc2');
-        $inverter2->setCode(321);
-        $inverter2->setMaker($maker);
+        $inverter2->setCode(123);
+        $inverter2->setGeneratorLevels(["black","platinum","premium","partner","promotional","finame"]);
+        $inverter2->setAlternative($inverter->getId());
+        $inverter2->setPhases(2);
+        $inverter2->setPhaseVoltage(3.5);
+        $inverter2->setCompatibility(4);
+        $inverter2->setNominalPower(5.5);
+        $inverter2->setMinPowerSelection(7.7);
+        $inverter2->setMaxPowerSelection(8.8);
+        $inverter2->setMpptParallel(true);
+        $inverter2->setMpptNumber(10);
+        $inverter2->setMpptMin(11);
+        $inverter2->setInProtection(true);
+        $inverter2->setMaxDcVoltage(13.5);
+        $inverter2->setMpptMaxDcCurrent(14.5);
 
+
+        $inverter2->setMaker($maker);
         $inverterManager->save($inverter2);
 
         $inverterLoader = InverterLoader::create([
@@ -99,16 +113,7 @@ class InverterLoaderTest extends AppTestCase
         $inverter2->setDescription('desc2');
         $inverter2->setCode(321);
         $inverter2->setMaker($maker);
-        $inverter2->setAlternative($inverter->getId());
         $inverterManager->save($inverter2);
-
-        /** @var Inverter $inverter3 */
-        $inverter3 = $inverterManager->create();
-        $inverter3->setDescription('desc2');
-        $inverter3->setCode(321);
-        $inverter3->setMaker($maker);
-        $inverter3->setAlternative($inverter->getId());
-        $inverterManager->save($inverter3);
 
         /** @var Maker $maker2 */
         $maker2 = $makerManager->create();
@@ -116,6 +121,14 @@ class InverterLoaderTest extends AppTestCase
         $maker2->setEnabled(1);
         $maker2->setContext('inverter');
         $makerManager->save($maker2);
+
+        /** @var Inverter $inverter3 */
+        $inverter3 = $inverterManager->create();
+        $inverter3->setDescription('desc2');
+        $inverter3->setCode(321);
+        $inverter3->setMaker($maker2);
+        $inverter3->setAlternative($inverter->getId());
+        $inverterManager->save($inverter3);
 
         $inverterAlt = $inverterManager->create();
         $inverterAlt->setDescription('alt');
@@ -134,7 +147,7 @@ class InverterLoaderTest extends AppTestCase
         $inverterAlt3->setDescription('alt2');
         $inverterAlt3->setCode(654);
         $inverterAlt3->setMaker($maker2);
-        $inverterAlt3->setAlternative($inverter2->getId());
+        $inverterAlt3->setAlternative($inverter3->getId());
         $inverterManager->save($inverterAlt3);
 
         $inverterLoader = InverterLoader::create([
@@ -144,8 +157,9 @@ class InverterLoaderTest extends AppTestCase
 
         $alternatives = $inverterLoader->alternatives();
 
-        self::assertEquals(1, count($alternatives));
+        self::assertEquals(2, count($alternatives));
 
-        self::assertEquals(5, $alternatives[0]->getId());
+        self::assertEquals(4, $alternatives[0]['id']);
+        self::assertEquals(5, $alternatives[1]['id']);
     }
 }
