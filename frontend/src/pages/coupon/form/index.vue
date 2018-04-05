@@ -3,19 +3,28 @@
     h1.title(slot='header')
       | {{ form.title }}
     form.form(slot='section', name='coupon')
-      Input.field-name(
-        label='Nome',
-        :params='form.payload.name',
-        v-model.sync='form.payload.name.value')
-      Input.field-amount(
-        label='Valor',
-        :params='form.payload.amount',
-        v-model.sync='form.payload.amount.value',
-        v-on:validate='() => validate("form.payload.amount")')
-      AccountSelect.field-account(
-        label='Conta',
-        v-model.sync='form.payload.account',
-        :currentAccount='form.payload.account')
+      component(
+        v-for='field in form.payload',
+        :key='field.name',
+        :is='field.component',
+        :label='field.label',
+        :params='field',
+        :class='"field-" + field.name',
+        :update='update')
+        | {{ field.name }}
+      // Input.field-name(
+      //   label='Nome',
+      //   :params='form.payload.name',
+      //   v-model.sync='form.payload.name.value')
+      // Input.field-amount(
+      //   label='Valor',
+      //   :params='form.payload.amount',
+      //   v-model.sync='form.payload.amount.value',
+      //   v-on:validate='() => validate("form.payload.amount")')
+      // AccountSelect.field-account(
+      //   label='Conta',
+      //   v-model.sync='form.payload.account',
+      //   :currentAccount='form.payload.account')
     Actions(
       slot='buttons',
       :action='form.action',
@@ -25,6 +34,8 @@
 
 <script>
   import Actions from './Actions'
+  import Input from '@/theme/collection/Input'
+  import AccountSelect from '@/components/select/Accounts'
 
   export default {
     components: {
@@ -34,21 +45,42 @@
       form: {
         action: '',
         title: '',
-        payload: {
-          account: {
-            id: {},
-            name: {}
+        payload: [
+          {
+            name: 'id'
           },
-          amount: {
+          {
+            name: 'name',
+            label: 'Nome',
+            component: Input
+          },
+          {
+            name: 'amount',
+            label: 'Valor',
+            component: Input,
             type: 'money',
             exception: 'Formato de moeda inválido'
           },
-          id: {},
-          name: {}
-        }
+          {
+            name: 'account',
+            component: AccountSelect,
+            args: {
+              id: {},
+              name: {}
+            }
+          }
+        ]
       }
     }),
     methods: {
+      update(name, value) {
+        this.form.payload.map(field => {
+          if(field.name === name) {
+            this.$set(field, 'value', value)
+          }
+          return field
+        })
+      },
       validate(path) {
         const { getPayloadField, isInvalidField } = this.$refs.modalForm
 
