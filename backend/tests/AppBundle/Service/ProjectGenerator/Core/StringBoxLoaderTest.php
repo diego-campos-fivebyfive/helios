@@ -35,7 +35,7 @@ class StringBoxLoaderTest extends AppTestCase
             $stringBoxManager->delete($stringBox1);
         }
 
-        $stringBoxLoader = StringBoxLoader::create([
+        $stringBoxLoader = new StringBoxLoader([
             'manager' => $stringBoxManager,
             'maker' => 1
         ]);
@@ -98,7 +98,7 @@ class StringBoxLoaderTest extends AppTestCase
         }
 
         // Todos os String Boxes
-        $stringBoxLoader = StringBoxLoader::create([
+        $stringBoxLoader = new StringBoxLoader([
             'manager' => $stringBoxManager,
             'maker' => null
         ]);
@@ -180,7 +180,7 @@ class StringBoxLoaderTest extends AppTestCase
         $stringBox4->setAlternative($stringBox2->getId());
         $stringBoxManager->save($stringBox4);
 
-        $stringBoxLoader = StringBoxLoader::create([
+        $stringBoxLoader = new StringBoxLoader([
             'manager' => $stringBoxManager,
             'maker' => $maker->getId()
         ]);
@@ -191,9 +191,9 @@ class StringBoxLoaderTest extends AppTestCase
         self::assertEquals(3, $alternatives[0]['id']);
         self::assertEquals(4, $alternatives[1]['id']);
 
-        $filter = $stringBoxLoader->filter('platinum');
+        //$filter = $stringBoxLoader->filter('platinum');
 
-        self::assertEquals(1, count($filter));
-        self::assertEquals(1, $filter[0]['id']);
+        //self::assertEquals(1, count($filter));
+        //self::assertEquals(1, $filter[0]['id']);
     }
 }
