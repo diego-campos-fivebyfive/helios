@@ -76,9 +76,6 @@ class OrderController extends AbstractController
             10
         );
 
-        //dump($filteredStatus);die;
-        //dump($this->resolveSubStatus(Order::getSubStatusNames(), $filteredSubStatus));die;
-
         return $this->render('admin/orders/index.html.twig', array(
             'orders' => $pagination,
             'member' => $member,
