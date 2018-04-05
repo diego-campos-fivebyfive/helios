@@ -3,6 +3,7 @@
 namespace App\Generator\Inverter;
 
 use App\Generator\Common\Math;
+use App\Generator\StringBox\Helper as StringBoxHelper;
 
 /**
  * Class Helper
@@ -388,6 +389,21 @@ class Helper
             $arrangements = self::allArrangements($inverters[$i], $mpptOperations[$i], $module);
             $arrangements = self::autoArrangement($arrangements, $powerBalance[$i], $mpptOperations[$i]);
             $inverters[$i]['arrangements'] = $arrangements;
+        }
+
+        return $inverters;
+    }
+
+    public static function configure($inverters, $stringBoxes)
+    {
+        $inProtection = self::hasProtection($inverters);
+
+        for($i = 0; $i < count($inverters); $i++) {
+            if ($inProtection[$i] == 0 || $inProtection[$i] == null) {
+                $stringBoxParameters = StringBoxHelper::getParameters($inverters[$i]['arrangements']);
+                $stringBoxesChoices = StringBoxHelper::getChoices($stringBoxParameters, $stringBoxes);
+                $inverters[$i]['string_boxes'] = $stringBoxesChoices;
+            }
         }
 
         return $inverters;
