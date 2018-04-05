@@ -42,6 +42,10 @@ abstract class AbstractLoader {
      */
     public abstract function alternatives();
 
+    /**
+     * @param array $ids
+     * @return array
+     */
     public function findByIds(array $ids)
     {
         $qb = $this->manager->createQueryBuilder();
