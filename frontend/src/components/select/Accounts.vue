@@ -17,17 +17,15 @@
     }),
     props: [
       'currentAccount',
-      'label'
+      'label',
+      'params',
+      'update'
     ],
     methods: {
       updateAccount(account) {
-        this.$emit('input', {
-          id: {
-            value: account.value
-          },
-          name: {
-            value: account.text
-          }
+        this.update(this.params.name, {
+          id: account.value,
+          name: account.text
         })
       }
     },
