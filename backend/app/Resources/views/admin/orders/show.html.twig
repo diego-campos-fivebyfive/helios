@@ -1003,7 +1003,7 @@
 
                                         <p>{{ item.message }}</p>
 
-                                        {% if item.attributes.subStatusLabel is defined and item.attributes.subStatusLabel %}
+                                        {% if item.attributes.subStatusLabel is defined and item.attributes.subStatusLabel and isPlatform %}
                                             <p>Substatus: {{ item.attributes.subStatusLabel }}</p>
                                         {% endif %}
                                     </div>
