@@ -269,6 +269,10 @@ services:
         class: AppBundle\Service\ProjectGenerator\Checker\Checker
         arguments: ['@service_container']
 
+    generator_bridge:
+        class: AppBundle\Service\ProjectGenerator\Core\Bridge
+        arguments: ['@service_container']
+
     project_generator_type:
         class: AppBundle\Form\Component\GeneratorType
         arguments: ['@generator_checker']
