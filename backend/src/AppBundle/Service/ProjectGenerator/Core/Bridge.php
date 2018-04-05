@@ -10,6 +10,7 @@
 
 namespace AppBundle\Service\ProjectGenerator\Core;
 
+use App\Generator\Core;
 use AppBundle\Entity\Component\ProjectInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -28,6 +29,10 @@ class Bridge
         $this->container = $container;
     }
 
+    /**
+     * @param ProjectInterface $project
+     * @return array
+     */
     public function resolve(ProjectInterface $project)
     {
         $defaults = $project->getDefaults();
@@ -40,6 +45,39 @@ class Bridge
         $phaseNumber = $defaults['phases'];
         $inverterMakerId = $defaults['inverter_maker'];
         $stringBoxMakerId = $defaults['string_box_maker'];
+
+        $inverterManager = $this->container->get('inverter_manager');
+
+        $config = [
+            'manager' => $inverterManager,
+            'maker' => $inverterMakerId
+        ];
+
+        $inverterLoader = InverterLoader::create($config);
+
+        $inverters = $inverterLoader->filter($level);
+
+        $stringBoxManager = $this->container->get('string_box_manager');
+
+        $config = [
+            'manager' => $stringBoxManager,
+            'maker' => $stringBoxMakerId
+        ];
+
+        $stringBoxLoader = StringBoxLoader::create($config);
+
+        $stringboxes = $stringBoxLoader->filter($level);
+
+        $parameters['module'] = $project->getProjectModules()->first();
+        $parameters['inverters'] = $inverters;
+        $parameters['string_boxes'] = $stringboxes;
+        $parameters['power'] = $power;
+        $parameters['fdi_min'] = $fdiMin;
+        $parameters['fdi_max'] = $fdiMax;
+        $parameters['phase_voltage'] = $phaseVoltage;
+        $parameters['phase_number'] = $phaseNumber;
+
+        return $result = Core::process($parameters);
     }
 
     /**
@@ -48,8 +86,8 @@ class Bridge
      */
     private function getLevel($defaults)
     {
-        if ($defaults['finame'] || $defaults['is_promotional']) {
-            return $defaults['finame'] ? 'finame' : 'promotional';
+        if (isset($defaults['finame']) || isset($defaults['is_promotional'])) {
+            return isset($defaults['finame']) ? 'finame' : 'promotional';
         }
 
         return $defaults['level'];
