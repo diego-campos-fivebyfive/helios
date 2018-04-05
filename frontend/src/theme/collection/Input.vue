@@ -4,8 +4,8 @@
     input(
       :value='params.value',
       :placeholder='placeholder || label',
-      v-on:blur='$emit("validate")',
-      v-on:input='update(params.name, $event.target.value)')
+      v-on:blur='validateField(params)',
+      v-on:input='updateInput($event.target.value)')
     Icon.icon(
       v-if='params.rejected',
       name='info')
@@ -17,8 +17,18 @@
       'label',
       'params',
       'placeholder',
-      'update'
-    ]
+      'updateField',
+      'validateField'
+    ],
+    methods: {
+      updateInput(value) {
+        this.updateField({
+          name: this.params.name,
+          key: 'value',
+          value
+        })
+      }
+    }
   }
 </script>
 

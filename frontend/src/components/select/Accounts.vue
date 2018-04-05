@@ -19,13 +19,17 @@
       'currentAccount',
       'label',
       'params',
-      'update'
+      'updateField'
     ],
     methods: {
       updateAccount(account) {
-        this.update(this.params.name, {
-          id: account.value,
-          name: account.text
+        this.updateField({
+          name: this.params.name,
+          key: 'value',
+          value: {
+            id: account.value,
+            name: account.text
+          }
         })
       }
     },
