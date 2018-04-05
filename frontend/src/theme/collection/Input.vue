@@ -5,7 +5,7 @@
       :value='params.value',
       :placeholder='placeholder || label',
       v-on:blur='$emit("validate")',
-      v-on:input='$emit("input", $event.target.value)')
+      v-on:input='update(params.name, $event.target.value)')
     Icon.icon(
       v-if='params.rejected',
       name='info')
@@ -16,7 +16,8 @@
     props: [
       'label',
       'params',
-      'placeholder'
+      'placeholder',
+      'update'
     ]
   }
 </script>

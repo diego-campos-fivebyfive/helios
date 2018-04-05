@@ -9,7 +9,8 @@
         :is='field.component',
         :label='field.label',
         :params='field',
-        :class='"field-" + field.name')
+        :class='"field-" + field.name',
+        :update='update')
         | {{ field.name }}
       // Input.field-name(
       //   label='Nome',
@@ -72,6 +73,14 @@
       }
     }),
     methods: {
+      update(name, value) {
+        this.form.payload.map(field => {
+          if(field.name === name) {
+            this.$set(field, 'value', value)
+          }
+          return field
+        })
+      },
       validate(path) {
         const { getPayloadField, isInvalidField } = this.$refs.modalForm
 
