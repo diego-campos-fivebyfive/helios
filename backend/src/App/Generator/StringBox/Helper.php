@@ -68,4 +68,24 @@ class Helper
         }
         return $selection;
     }
+
+    /**
+     * @param $inverters
+     * @param $stringBoxes
+     * @return mixed
+     */
+    public static function configure($inverters, $stringBoxes)
+    {
+        $inProtection = InverterHelper::hasProtection($inverters);
+
+        for($i = 0; $i < count($inverters); $i++) {
+            if ($inProtection[$i] == 0 || $inProtection[$i] == null) {
+                $stringBoxParameters = self::getParameters($inverters[$i]['arrangements']);
+                $stringBoxesChoices = self::getChoices($stringBoxParameters, $stringBoxes);
+                $inverters[$i]['string_boxes'] = $stringBoxesChoices;
+            }
+        }
+
+        return $inverters;
+    }
 }

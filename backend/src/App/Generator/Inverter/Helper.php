@@ -394,21 +394,6 @@ class Helper
         return $inverters;
     }
 
-    public static function configure($inverters, $stringBoxes)
-    {
-        $inProtection = self::hasProtection($inverters);
-
-        for($i = 0; $i < count($inverters); $i++) {
-            if ($inProtection[$i] == 0 || $inProtection[$i] == null) {
-                $stringBoxParameters = StringBoxHelper::getParameters($inverters[$i]['arrangements']);
-                $stringBoxesChoices = StringBoxHelper::getChoices($stringBoxParameters, $stringBoxes);
-                $inverters[$i]['string_boxes'] = $stringBoxesChoices;
-            }
-        }
-
-        return $inverters;
-    }
-
     /**
      * @param $item
      * @param array $alternatives
