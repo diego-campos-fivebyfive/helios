@@ -1,5 +1,6 @@
 <template lang="pug">
   Select(
+    :label='label',
     :selected='getAccountSelected',
     :options='options',
     v-on:update='updateAccount')
@@ -15,7 +16,8 @@
       }
     }),
     props: [
-      'currentAccount'
+      'currentAccount',
+      'label'
     ],
     methods: {
       updateAccount(account) {

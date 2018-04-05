@@ -12,11 +12,10 @@
         :params='form.payload.amount',
         v-model.sync='form.payload.amount.value',
         v-on:validate='() => validate("form.payload.amount")')
-      label.field-account
-        | Conta
-        AccountSelect(
-          v-model.sync='form.payload.account',
-          :currentAccount='form.payload.account')
+      AccountSelect.field-account(
+        label='Conta',
+        v-model.sync='form.payload.account',
+        :currentAccount='form.payload.account')
     Actions(
       slot='buttons',
       :action='form.action',

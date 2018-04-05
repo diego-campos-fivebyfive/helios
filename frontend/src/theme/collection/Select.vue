@@ -1,17 +1,20 @@
 <template lang="pug">
-  select(v-on:change='updateOption($event.target.value)')
-    option(
-      v-for='option in options',
-      :selected='selected === option.value',
-      :value='option.value')
-      | {{ option.text }}
+  label
+    | {{ label }}
+    select(v-on:change='updateOption($event.target.value)')
+      option(
+        v-for='option in options',
+        :selected='selected === option.value',
+        :value='option.value')
+        | {{ option.text }}
 </template>
 
 <script>
   export default {
     props: [
-      'selected',
-      'options'
+      'label',
+      'options',
+      'selected'
     ],
     methods: {
       updateOption(selectedOption) {
