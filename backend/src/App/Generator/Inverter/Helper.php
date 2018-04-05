@@ -3,7 +3,6 @@
 namespace App\Generator\Inverter;
 
 use App\Generator\Common\Math;
-use App\Generator\StringBox\Helper as StringBoxHelper;
 
 /**
  * Class Helper
