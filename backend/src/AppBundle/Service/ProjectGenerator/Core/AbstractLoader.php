@@ -3,7 +3,6 @@
 namespace AppBundle\Service\ProjectGenerator\Core;
 
 use Doctrine\Common\Inflector\Inflector;
-use Doctrine\ORM\Query\Expr\Select;
 
 abstract class AbstractLoader {
 
