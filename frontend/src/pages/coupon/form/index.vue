@@ -63,11 +63,7 @@
           },
           {
             name: 'account',
-            component: AccountSelect,
-            args: {
-              id: {},
-              name: {}
-            }
+            component: AccountSelect
           }
         ]
       }
