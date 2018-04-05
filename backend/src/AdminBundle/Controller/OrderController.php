@@ -54,6 +54,7 @@ class OrderController extends AbstractController
         $expanseStates = [];
         $filteredStates = [];
         $filteredStatus = [];
+        $filteredSubStatus = [];
         $filteredComponents = [];
 
         $qb =
@@ -63,6 +64,7 @@ class OrderController extends AbstractController
                 $expanseStates,
                 $filteredStates,
                 $filteredStatus,
+                $filteredSubStatus,
                 $filteredComponents
             );
 
@@ -74,6 +76,9 @@ class OrderController extends AbstractController
             10
         );
 
+        //dump($filteredStatus);die;
+        //dump($this->resolveSubStatus(Order::getSubStatusNames(), $filteredSubStatus));die;
+
         return $this->render('admin/orders/index.html.twig', array(
             'orders' => $pagination,
             'member' => $member,
@@ -81,6 +86,7 @@ class OrderController extends AbstractController
             'totals' => $totals,
             'states' => $this->resolveFilters($this->getStates($expanseStates), $filteredStates),
             'statusList' => $this->resolveFilters(Order::getStatusNames(), $filteredStatus),
+            'subStatusList' => $this->resolveSubStatus(Order::getSubStatusNames(), $filteredSubStatus),
             'componentsList' => $this->resolveFilters($this->getComponentsList(), $filteredComponents)
         ));
     }
@@ -410,7 +416,7 @@ class OrderController extends AbstractController
      * @param array $filteredComponents
      * @return \Doctrine\ORM\QueryBuilder
      */
-    private function filterOrders($request, $data, &$expanseStates = [], &$filteredStates = [], &$filteredStatus = [], &$filteredComponents = [])
+    private function filterOrders($request, $data, &$expanseStates = [], &$filteredStates = [], &$filteredStatus = [], &$filteredSubStatus = [], &$filteredComponents = [])
     {
         $optionVal = $data['optionsVal'];
         $valueMin = $data['valueMin'] ? str_replace(',', '.', $data['valueMin']) : null;
@@ -465,6 +471,21 @@ class OrderController extends AbstractController
             $filteredStatus = array_filter($status, 'strlen');
             if (!empty($filteredStatus)) {
                 $qb->andWhere($qb->expr()->in('o.status', $filteredStatus));
+            }
+        }
+
+        if (-1 != $subStatus = $request->get('substatus')) {
+            $subStatus = explode(',', $subStatus);
+            $filteredSubStatus = array_filter($subStatus, 'strlen');
+
+            $values = [];
+
+            foreach ($filteredSubStatus as $value) {
+                array_push($values, substr($value, -1));
+            }
+
+            if (!empty($values)) {
+                $qb->andWhere($qb->expr()->in('o.subStatus', $values));
             }
         }
 
@@ -583,6 +604,28 @@ class OrderController extends AbstractController
                 'name' => $option,
                 'checked' => in_array($key, $selected)
             ];
+        }
+
+        return $finalOptions;
+    }
+
+    /**
+     * @param array $options
+     * @param array $selected
+     * @return array
+     */
+    private function resolveSubStatus(array $subStatus, array $selected)
+    {
+        $finalOptions = [];
+
+        foreach ($subStatus as $key1 => $options) {
+            foreach ($options as $key2 => $option) {
+
+                $finalOptions[$key1][] = [
+                    'name' => $option,
+                    'checked' => in_array($key1 . $key2, $selected)
+                ];
+            }
         }
 
         return $finalOptions;
