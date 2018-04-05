@@ -19,6 +19,18 @@ class InverterLoaderTest extends AppTestCase
     public function testAll()
     {
         $makerManager = $this->manager('maker');
+        $inverterManager = $this->manager('inverter');
+
+        $makers = $makerManager->findAll();
+        $inverters = $inverterManager->findAll();
+
+        foreach ($makers as $maker1) {
+            $makerManager->delete($maker1);
+        }
+
+        foreach ($inverters as $inverter1) {
+            $inverterManager->delete($inverter1);
+        }
 
         /** @var Maker $maker */
         $maker = $makerManager->create();
@@ -32,8 +44,6 @@ class InverterLoaderTest extends AppTestCase
         $maker2->setEnabled(1);
         $maker2->setContext('inverter');
         $makerManager->save($maker2);
-
-        $inverterManager = $this->manager('inverter');
 
         /** @var Inverter $inverter */
         $inverter = $inverterManager->create();
@@ -107,6 +117,17 @@ class InverterLoaderTest extends AppTestCase
 
         $makerManager = $this->manager('maker');
 
+        $makers = $makerManager->findAll();
+        $inverters = $inverterManager->findAll();
+
+        foreach ($makers as $maker1) {
+            $makerManager->delete($maker1);
+        }
+
+        foreach ($inverters as $inverter1) {
+            $inverterManager->delete($inverter1);
+        }
+
         /** @var Maker $maker */
         $maker = $makerManager->create();
         $maker->setName('Fab. 1');
@@ -170,13 +191,101 @@ class InverterLoaderTest extends AppTestCase
         $alternatives = $inverterLoader->alternatives();
 
         self::assertEquals(2, count($alternatives));
-        self::assertEquals(4, $alternatives[0]['id']);
-        self::assertEquals(5, $alternatives[1]['id']);
+        self::assertEquals(3, $alternatives[0]['id']);
+        self::assertEquals(4, $alternatives[1]['id']);
 
         //$filter = $inverterLoader->filter('platinum');
 
         //self::assertEquals(2, count($filter));
         //self::assertEquals(2, $filter[0]['id']);
         //self::assertEquals(4, $filter[1]['id']);
+    }
+
+    public function testFindByIds()
+    {
+        $inverterManager = $this->manager('inverter');
+
+        $makerManager = $this->manager('maker');
+
+        $makers = $makerManager->findAll();
+        $inverters = $inverterManager->findAll();
+
+        foreach ($makers as $maker1) {
+            $makerManager->delete($maker1);
+        }
+
+        foreach ($inverters as $inverter1) {
+            $inverterManager->delete($inverter1);
+        }
+
+        /** @var Maker $maker */
+        $maker = $makerManager->create();
+        $maker->setName('Fab. 1');
+        $maker->setEnabled(1);
+        $maker->setContext('inverter');
+        $makerManager->save($maker);
+
+        /** @var Maker $maker2 */
+        $maker2 = $makerManager->create();
+        $maker2->setName('Fab. 2');
+        $maker2->setEnabled(1);
+        $maker2->setContext('inverter');
+        $makerManager->save($maker2);
+
+        /** @var Inverter $inverter */
+        $inverter = $inverterManager->create();
+        $inverter->setPhases(111);
+        $inverter->setGeneratorLevels(["black","platinum"]);
+        $inverter->setCode(111);
+        $inverter->setMaker($maker);
+        $inverterManager->save($inverter);
+
+        /** @var Inverter $inverter2 */
+        $inverter2 = $inverterManager->create();
+        $inverter2->setPhases(222);
+        $inverter2->setGeneratorLevels(["black"]);
+        $inverter2->setCode(222);
+        $inverter2->setMaker($maker);
+        $inverterManager->save($inverter2);
+
+        /** @var Inverter $inverter3 */
+        $inverter3 = $inverterManager->create();
+        $inverter3->setPhases(333);
+        $inverter3->setGeneratorLevels(["black","platinum"]);
+        $inverter3->setCode(333);
+        $inverter3->setMaker($maker2);
+        $inverterManager->save($inverter3);
+
+        /** @var Inverter $inverter4 */
+        $inverter4 = $inverterManager->create();
+        $inverter4->setPhases(444);
+        $inverter4->setGeneratorLevels(["black"]);
+        $inverter4->setCode(444);
+        $inverter4->setMaker($maker2);
+        $inverterManager->save($inverter4);
+
+        $inverter2->setAlternative($inverter3->getId());
+        $inverterManager->save($inverter2);
+
+        $inverter3->setAlternative($inverter4->getId());
+        $inverterManager->save($inverter3);
+
+        $inverter4->setAlternative($inverter2->getId());
+        $inverterManager->save($inverter4);
+
+        $inverterLoader = new InverterLoader([
+            'manager' => $inverterManager,
+            'maker' => $maker->getId()
+        ]);
+
+        $ids = [1, 2];
+
+        $results = $inverterLoader->findByIds($ids);
+
+        self::assertEquals(count($ids), count($results));
+
+        foreach ($results as $result) {
+            self::assertTrue(in_array($result->getId(), $ids));
+        }
     }
 }
