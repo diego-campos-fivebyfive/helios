@@ -41,6 +41,8 @@ class Core
         $inverters = InverterHelper::inverterChoices($inverters, $power, $fdiMin, $fdiMax);
         $power = InverterHelper::powerBalance($inverters, $power);
         $mpptOperations = InverterHelper::mpptOperations($inverters);
+        $inverters = InverterHelper::configureArrangements($inverters, $mpptOperations, $module, $power);
+        $inverters = StringBoxHelper::configure($inverters, $stringBoxes);
 
         return [
             'module' => $module,
