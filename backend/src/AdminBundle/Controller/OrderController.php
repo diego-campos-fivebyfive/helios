@@ -484,7 +484,7 @@ class OrderController extends AbstractController
                 $qb->andWhere($qb->expr()->in('o.status', $values2));
                 $qb->andWhere($qb->expr()->in('o.subStatus', $values));
             } else {
-                $qb->add('where', $qb->expr()->andX(
+                $qb->andWhere($qb->expr()->andX(
                     $qb->expr()->orX(
                         $qb->expr()->in('o.status', $filteredStatus),
                         $qb->expr()->andX(
@@ -508,6 +508,7 @@ class OrderController extends AbstractController
             $expanseStates = $this->member()->getAttributes()['states'];
             $qb->andWhere($qb->expr()->in('o.state', $expanseStates));
         }
+
 
         return $qb;
     }
