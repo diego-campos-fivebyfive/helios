@@ -48,23 +48,19 @@ class Bridge
 
         $inverterManager = $this->container->get('inverter_manager');
 
-        $config = [
+        $inverterLoader = new InverterLoader([
             'manager' => $inverterManager,
             'maker' => $inverterMakerId
-        ];
-
-        $inverterLoader = InverterLoader::create($config);
+        ]);
 
         $inverters = $inverterLoader->filter($level);
 
         $stringBoxManager = $this->container->get('string_box_manager');
 
-        $config = [
+        $stringBoxLoader = new StringBoxLoader([
             'manager' => $stringBoxManager,
             'maker' => $stringBoxMakerId
-        ];
-
-        $stringBoxLoader = StringBoxLoader::create($config);
+        ]);
 
         $stringboxes = $stringBoxLoader->filter($level);
 

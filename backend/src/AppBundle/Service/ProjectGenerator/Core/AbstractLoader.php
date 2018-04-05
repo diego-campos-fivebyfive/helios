@@ -64,7 +64,7 @@ abstract class AbstractLoader {
      * @param $level
      * @return array
      */
-    protected function filter($level)
+    public function filter($level)
     {
         return FilterLevelTrait::filterActives($level, $this->all(), $this->alternatives());
     }
