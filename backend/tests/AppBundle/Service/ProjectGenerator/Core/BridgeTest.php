@@ -9,11 +9,7 @@ use AppBundle\Entity\Component\StringBox;
 use AppBundle\Manager\StringBoxManager;
 use AppBundle\Service\ProjectGenerator\Core\Bridge;
 use AppBundle\Service\ProjectGenerator\Core\InverterLoader;
-use AppBundle\Service\ProjectGenerator\ProjectGenerator;
-use Proxies\__CG__\AppBundle\Entity\Order\Element;
 use Tests\AppBundle\AppTestCase;
-use Tests\AppBundle\Entity\DataFixtures\Component\ModuleData;
-use Tests\AppBundle\Helpers\ObjectHelperTest;
 
 /**
  * @group generator_bridge
