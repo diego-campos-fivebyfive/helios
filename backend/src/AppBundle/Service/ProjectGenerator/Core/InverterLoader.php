@@ -11,22 +11,12 @@ use Doctrine\Common\Inflector\Inflector;
  */
 class InverterLoader extends AbstractLoader
 {
-
     /**
      * @var string
      */
     protected $properties = 'i.id, i.generatorLevels levels, i.alternative, i.phases phaseNumber, i.phaseVoltage,
         i.compatibility, i.nominalPower, i.minPowerSelection, i.maxPowerSelection, i.mpptParallel,
         i.mpptNumber, i.mpptMin, i.inProtection, i.maxDcVoltage, i.mpptMaxDcCurrent';
-
-    /**
-     * @param array $config
-     * @return InverterLoader
-     */
-    public static function create(array $config)
-    {
-        return new self($config);
-    }
 
     /**
      * @return array
@@ -48,8 +38,6 @@ class InverterLoader extends AbstractLoader
      */
     public function alternatives()
     {
-        $qb = $this->manager->createQueryBuilder();
-
         $qb2 = $this->manager->createQueryBuilder();
 
         $alternatives = array_map(function ($alt) {
@@ -60,6 +48,8 @@ class InverterLoader extends AbstractLoader
         );
 
         if ($alternatives) {
+            $qb = $this->manager->createQueryBuilder();
+
             $results = $qb->select($this->properties)
                 ->where(
                 $qb->expr()->andX(
