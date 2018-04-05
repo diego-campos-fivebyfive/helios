@@ -374,6 +374,26 @@ class Helper
     }
 
     /**
+     * @param $inverters
+     * @param $mpptOperations
+     * @param $module
+     * @param $power
+     * @return mixed
+     */
+    public static function configureArrangements($inverters, $mpptOperations, $module, $power)
+    {
+        $powerBalance = self::powerBalance($inverters, $power);
+
+        for ($i = 0; $i < count($inverters); $i++){
+            $arrangements = self::allArrangements($inverters[$i], $mpptOperations[$i], $module);
+            $arrangements = self::autoArrangement($arrangements, $powerBalance[$i], $mpptOperations[$i]);
+            $inverters[$i]['arrangements'] = $arrangements;
+        }
+
+        return $inverters;
+    }
+
+    /**
      * @param $item
      * @param array $alternatives
      * @return null
