@@ -512,8 +512,6 @@ class OrderController extends AbstractController
             $qb->andWhere($qb->expr()->in('o.state', $expanseStates));
         }
 
-        //dump($qb->getQuery());die;
-
         return $qb;
     }
 
