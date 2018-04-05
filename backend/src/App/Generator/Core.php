@@ -45,7 +45,7 @@ class Core
         return [
             'module' => $module,
             'inverters' => $inverters,
-            'arragements' => [],
+            'arrangements' => [],
             'string_boxes' => []
         ];
     }
