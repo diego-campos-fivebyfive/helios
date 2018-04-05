@@ -3,6 +3,7 @@
 namespace AppBundle\Service\ProjectGenerator\Core;
 
 use Doctrine\Common\Inflector\Inflector;
+use Doctrine\ORM\Query\Expr\Select;
 
 abstract class AbstractLoader {
 
@@ -41,6 +42,20 @@ abstract class AbstractLoader {
      * @return array
      */
     public abstract function alternatives();
+
+    public function findByIds(array $ids)
+    {
+        $qb = $this->manager->createQueryBuilder();
+
+        $alias = $qb->getRootAlias();
+
+        $qb->select()
+            ->where(
+                $qb->expr()->in("{$alias}.id", $ids)
+            );
+
+        return $qb->getQuery()->getResult();
+    }
 
     /**
      * @param $level
