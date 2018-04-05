@@ -54,6 +54,7 @@ class OrderController extends AbstractController
         $expanseStates = [];
         $filteredStates = [];
         $filteredStatus = [];
+        $filteredSubStatus = [];
         $filteredComponents = [];
 
         $qb =
@@ -63,6 +64,7 @@ class OrderController extends AbstractController
                 $expanseStates,
                 $filteredStates,
                 $filteredStatus,
+                $filteredSubStatus,
                 $filteredComponents
             );
 
@@ -81,6 +83,7 @@ class OrderController extends AbstractController
             'totals' => $totals,
             'states' => $this->resolveFilters($this->getStates($expanseStates), $filteredStates),
             'statusList' => $this->resolveFilters(Order::getStatusNames(), $filteredStatus),
+            'subStatusList' => $this->resolveSubStatus(Order::getSubStatusNames(), $filteredSubStatus),
             'componentsList' => $this->resolveFilters($this->getComponentsList(), $filteredComponents)
         ));
     }
@@ -410,7 +413,7 @@ class OrderController extends AbstractController
      * @param array $filteredComponents
      * @return \Doctrine\ORM\QueryBuilder
      */
-    private function filterOrders($request, $data, &$expanseStates = [], &$filteredStates = [], &$filteredStatus = [], &$filteredComponents = [])
+    private function filterOrders($request, $data, &$expanseStates = [], &$filteredStates = [], &$filteredStatus = [], &$filteredSubStatus = [], &$filteredComponents = [])
     {
         $optionVal = $data['optionsVal'];
         $valueMin = $data['valueMin'] ? str_replace(',', '.', $data['valueMin']) : null;
@@ -460,11 +463,36 @@ class OrderController extends AbstractController
             };
         }
 
-        if (-1 != $status = $request->get('status')) {
-            $status = explode(',', $status);
+        if ($request->get('status') ||  $request->get('substatus')) {
+            $status = explode(',', $request->get('status'));
             $filteredStatus = array_filter($status, 'strlen');
-            if (!empty($filteredStatus)) {
+
+            $subStatus = explode(',', $request->get('substatus'));
+            $filteredSubStatus = array_filter($subStatus, 'strlen');
+
+            $values = [];
+            $values2 = [];
+
+            foreach ($filteredSubStatus as $value) {
+                array_push($values, substr($value, -1));
+                array_push($values2, substr($value, -2, 1));
+            }
+
+            if (!empty($filteredStatus) && empty($filteredSubStatus)) {
                 $qb->andWhere($qb->expr()->in('o.status', $filteredStatus));
+            } else if (!empty($filteredSubStatus) && empty($filteredStatus)) {
+                $qb->andWhere($qb->expr()->in('o.status', $values2));
+                $qb->andWhere($qb->expr()->in('o.subStatus', $values));
+            } else {
+                $qb->andWhere($qb->expr()->andX(
+                    $qb->expr()->orX(
+                        $qb->expr()->in('o.status', $filteredStatus),
+                        $qb->expr()->andX(
+                            $qb->expr()->in('o.status', $values2),
+                            $qb->expr()->in('o.subStatus', $values)
+                        )
+                    )
+                ));
             }
         }
 
@@ -480,6 +508,7 @@ class OrderController extends AbstractController
             $expanseStates = $this->member()->getAttributes()['states'];
             $qb->andWhere($qb->expr()->in('o.state', $expanseStates));
         }
+
 
         return $qb;
     }
@@ -583,6 +612,28 @@ class OrderController extends AbstractController
                 'name' => $option,
                 'checked' => in_array($key, $selected)
             ];
+        }
+
+        return $finalOptions;
+    }
+
+    /**
+     * @param array $options
+     * @param array $selected
+     * @return array
+     */
+    private function resolveSubStatus(array $subStatus, array $selected)
+    {
+        $finalOptions = [];
+
+        foreach ($subStatus as $key1 => $options) {
+            foreach ($options as $key2 => $option) {
+
+                $finalOptions[$key1][] = [
+                    'name' => $option,
+                    'checked' => in_array($key1 . $key2, $selected)
+                ];
+            }
         }
 
         return $finalOptions;
