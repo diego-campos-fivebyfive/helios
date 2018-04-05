@@ -202,7 +202,7 @@
 
                                             {% set shippingInfo = order.isRejected or order.isDone or order.isAvailable or order.isCollected or order.isDelivered %}
 
-                                            {% if order.isRejected or order.isDone or order.isInserted or order.isAvailable or order.isCollected or order.isDelivered %}
+                                            {% if order.status >= constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') %}
                                                 {% include view('admin/orders/shipping_info.html.twig') %}
                                             {% else %}
 
