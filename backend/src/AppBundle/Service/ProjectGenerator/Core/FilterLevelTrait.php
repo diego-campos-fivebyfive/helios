@@ -10,7 +10,7 @@ trait FilterLevelTrait
      * @param array $alternatives
      * @return array
      */
-    public static function filterActives($level, array $data, array $alternatives = [])
+    public static function filterActives($level, array $data, array $alternatives = [], $sortBy = null)
     {
 
         foreach ($data as $key => $item) {
@@ -21,9 +21,11 @@ trait FilterLevelTrait
             }
         }
 
-        uasort($data, function ($a, $b) {
-            return $a["nominal_power"] > $b["nominal_power"];
-        });
+        if (!is_null($sortBy)) {
+            uasort($data, function ($a, $b, $sortBy) {
+                return $a[$sortBy] > $b[$sortBy];
+            });
+        }
 
         return array_values($data);
     }

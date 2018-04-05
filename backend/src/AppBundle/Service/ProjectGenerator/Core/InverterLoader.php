@@ -9,37 +9,15 @@ use Doctrine\Common\Inflector\Inflector;
  * Class InverterLoader
  * @author Fabio Dukievicz <fabiojd47@gmail.com>
  */
-class InverterLoader
+class InverterLoader extends AbstractLoader
 {
-    /**
-     * @var array
-     */
-    private $config = [
-        'manager' => null,
-        'maker' => null
-    ];
-
-    /**
-     * @var InverterManager
-     */
-    private $manager;
 
     /**
      * @var string
      */
-    private $properties = 'i.id, i.generatorLevels levels, i.alternative, i.phases phaseNumber, i.phaseVoltage,
+    protected $properties = 'i.id, i.generatorLevels levels, i.alternative, i.phases phaseNumber, i.phaseVoltage,
         i.compatibility, i.nominalPower, i.minPowerSelection, i.maxPowerSelection, i.mpptParallel,
         i.mpptNumber, i.mpptMin, i.inProtection, i.maxDcVoltage, i.mpptMaxDcCurrent';
-
-    /**
-     * InverterLoader constructor.
-     * @param array $config
-     */
-    private function __construct(array $config)
-    {
-        $this->config = $config;
-        $this->manager = $this->config['manager'];
-    }
 
     /**
      * @param array $config
@@ -101,27 +79,4 @@ class InverterLoader
         return [];
     }
 
-    /**
-     * @param $level
-     * @return array
-     */
-    public function filter($level)
-    {
-        return FilterLevelTrait::filterActives($level, $this->all(), $this->alternatives());
-    }
-
-    /**
-     * @param $data
-     * @return array
-     */
-    private function formatKeys($data)
-    {
-        return array_map(function ($arrayInverter) {
-            $keys = array_map(function ($key) {
-                return Inflector::tableize($key);
-            }, array_keys($arrayInverter));
-
-            return array_combine($keys, $arrayInverter);
-        }, $data);
-    }
 }

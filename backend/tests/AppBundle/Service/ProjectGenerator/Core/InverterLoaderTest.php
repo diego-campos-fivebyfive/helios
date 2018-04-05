@@ -70,7 +70,7 @@ class InverterLoaderTest extends AppTestCase
         $inverter3->setMaker($maker2);
         $inverterManager->save($inverter3);
 
-        $inverterLoader = InverterLoader::create([
+        $inverterLoader = new InverterLoader([
             'manager' => $inverterManager,
             'maker' => $maker->getId()
         ]);
@@ -91,7 +91,7 @@ class InverterLoaderTest extends AppTestCase
         self::assertEquals(13.5, $all[1]['max_dc_voltage']);
         self::assertEquals(14.5, $all[1]['mppt_max_dc_current']);
 
-        $inverterLoader2 = InverterLoader::create([
+        $inverterLoader2 = new InverterLoader([
             'manager' => $inverterManager,
             'maker' => $maker2->getId()
         ]);
@@ -162,7 +162,7 @@ class InverterLoaderTest extends AppTestCase
         $inverter4->setAlternative($inverter2->getId());
         $inverterManager->save($inverter4);
 
-        $inverterLoader = InverterLoader::create([
+        $inverterLoader = new InverterLoader([
             'manager' => $inverterManager,
             'maker' => $maker->getId()
         ]);
@@ -173,10 +173,10 @@ class InverterLoaderTest extends AppTestCase
         self::assertEquals(4, $alternatives[0]['id']);
         self::assertEquals(5, $alternatives[1]['id']);
 
-        $filter = $inverterLoader->filter('platinum');
+        //$filter = $inverterLoader->filter('platinum');
 
-        self::assertEquals(2, count($filter));
-        self::assertEquals(2, $filter[0]['id']);
-        self::assertEquals(4, $filter[1]['id']);
+        //self::assertEquals(2, count($filter));
+        //self::assertEquals(2, $filter[0]['id']);
+        //self::assertEquals(4, $filter[1]['id']);
     }
 }

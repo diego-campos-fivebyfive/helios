@@ -11,45 +11,13 @@ use Doctrine\Common\Inflector\Inflector;
  * Class StringBoxLoader
 *  @author Gianluca Bine <gian_bine@hotmail.com>
 */
-class StringBoxLoader
+class StringBoxLoader extends AbstractLoader
 {
-
-    /**
-     * @var array
-     */
-    private $config = [
-        'manager' => null,
-        'maker' => null
-    ];
-
-    /**
-     * @var StringBoxManager
-     */
-    private $manager;
 
     /**
      * @var string
      */
-    private $properties = 's.id, s.inputs, s.outputs, s.generatorLevels levels';
-
-    /**
-     * StringBoxLoader constructor.
-     * @param array $config
-     */
-    private function __construct(array $config)
-    {
-        $this->config = $config;
-        $this->manager = $this->config['manager'];
-    }
-
-    /**
-     * @param array $config
-     * @return StringBoxLoader
-     */
-    public static function create(array $config)
-    {
-        return new self($config);
-    }
+    protected $properties = 's.id, s.inputs, s.outputs, s.generatorLevels levels';
 
     /**
      * @return array
@@ -105,30 +73,6 @@ class StringBoxLoader
         }
 
         return [];
-    }
-
-    /**
-     * @param $level
-     * @return array
-     */
-    public function filter($level)
-    {
-        return FilterLevelTrait::filterActives($level, $this->all(), $this->alternatives());
-    }
-
-    /**
-     * @param $data
-     * @return array
-     */
-    private function formatKeys($data)
-    {
-        return array_map(function ($arrayInverter) {
-            $keys = array_map(function ($key) {
-                return Inflector::tableize($key);
-            }, array_keys($arrayInverter));
-
-            return array_combine($keys, $arrayInverter);
-        }, $data);
     }
 
 }
