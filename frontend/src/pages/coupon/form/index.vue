@@ -10,7 +10,8 @@
         :label='field.label',
         :params='field',
         :class='"field-" + field.name',
-        :update='update')
+        :updateField='updateField',
+        :validateField='validateField')
         | {{ field.name }}
       // Input.field-name(
       //   label='Nome',
@@ -69,19 +70,22 @@
       }
     }),
     methods: {
-      update(name, value) {
+      updateField({ name, key, value }) {
         this.form.payload.map(field => {
           if(field.name === name) {
-            this.$set(field, 'value', value)
+            this.$set(field, key, value)
           }
           return field
         })
       },
-      validate(path) {
-        const { getPayloadField, isInvalidField } = this.$refs.modalForm
+      validateField(params) {
+        const { isInvalidField } = this.$refs.modalForm
 
-        const field = getPayloadField(this, path)
-        field.rejected = isInvalidField(field)
+        this.updateField({
+          name: params.name,
+          key: 'rejected',
+          value: isInvalidField(params)
+        })
       },
       show(coupon) {
         const { assignPayload, show } = this.$refs.modalForm
