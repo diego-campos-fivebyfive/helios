@@ -70,9 +70,9 @@ class Helper
     }
 
     /**
-     * @param $inverters
-     * @param $stringBoxes
-     * @return mixed
+     * @param array $inverters
+     * @param array $stringBoxes
+     * @return array
      */
     public static function configure(array $inverters, array $stringBoxes)
     {
