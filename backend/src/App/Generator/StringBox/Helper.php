@@ -74,7 +74,7 @@ class Helper
      * @param $stringBoxes
      * @return mixed
      */
-    public static function configure($inverters, $stringBoxes)
+    public static function configure(array $inverters, array $stringBoxes)
     {
         $inProtection = InverterHelper::hasProtection($inverters);
 
