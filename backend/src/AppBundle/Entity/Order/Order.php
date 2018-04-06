@@ -568,6 +568,36 @@ class Order implements OrderInterface
     private $coupon;
 
     /**
+     * @var bool
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $antecipatedBilling;
+
+    /**
+     * @var int
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $erpOR;
+
+    /**
+     * @var int
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $erpOP;
+
+    /**
+     * @var int
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $erpPV;
+
+    /**
+     * @var int
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $erpRPV;
+
+    /**
      * Order constructor.
      */
     public function __construct()
@@ -767,7 +797,9 @@ class Order implements OrderInterface
                 "Em Produção",
                 "Reservado",
                 "Aguardando Material",
-                "Aguardando Pagamento"
+                "Aguardando Pagamento",
+                "Aguardando Faturamento",
+                "Faturado"
             ]
         ];
     }
@@ -806,7 +838,9 @@ class Order implements OrderInterface
                 self::SUBSTATUS_INSERTED_PRODUCTION,
                 self::SUBSTATUS_INSERTED_RESERVED,
                 self::SUBSTATUS_INSERTED_WAITING_MATERIAL,
-                self::SUBSTATUS_INSERTED_WAITING_PAYMENT
+                self::SUBSTATUS_INSERTED_WAITING_PAYMENT,
+                self::SUBSTATUS_INSERTED_ON_BILLING,
+                self::SUBSTATUS_INSERTED_BILLED
             ]
         ];
     }
@@ -2691,5 +2725,96 @@ class Order implements OrderInterface
     {
         return $this->coupon;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function isAntecipatedBilling()
+    {
+        return $this->antecipatedBilling;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setAntecipatedBilling($antecipatedBilling)
+    {
+        $this->antecipatedBilling = $antecipatedBilling;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getErpOR()
+    {
+        return $this->erpOR;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setErpOR($erpOR)
+    {
+        $this->erpOR = $erpOR;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getErpOP()
+    {
+        return $this->erpOP;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setErpOP($erpOP)
+    {
+        $this->erpOP = $erpOP;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getErpPV()
+    {
+        return $this->erpPV;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setErpPV($erpPV)
+    {
+        $this->erpPV = $erpPV;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getErpRPV()
+    {
+        return $this->erpRPV;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setErpRPV($erpRPV)
+    {
+        $this->erpRPV = $erpRPV;
+
+        return $this;
+    }
+
 }
 
