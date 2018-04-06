@@ -88,3 +88,9 @@ const getPayload = payload => {
 
   return formatPayload(payload)
 }
+
+export default {
+  assignPayload,
+  getPayload,
+  isInvalidField
+}

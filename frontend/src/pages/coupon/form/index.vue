@@ -15,10 +15,19 @@
     Actions(
       slot='buttons',
       :action='form.action',
+      :getPayload='getFormPayload',
       v-on:done='done')
 </template>
 
 <script>
+  import {
+    assignPayload,
+    getPayload,
+    isInvalidField
+  } from '@/theme/validation/payload'
+
+  import AccountSelect from '@/components/select/Accounts'
+  import Input from '@/theme/collection/Input'
   import Actions from './Actions'
 
   export default {
@@ -46,8 +55,8 @@
     methods: {
       update(name, value) {
         this.form.payload.map(field => {
-          if(field.name === name) {
-            this.$set(field, 'value', value)
+          if (field.name === name) {
+            this.$set(field, key, value)
           }
           return field
         })
@@ -55,11 +64,17 @@
       validateField(params) {
         const { isInvalidField } = this.$refs.form
 
-        const field = getPayloadField(this, path)
-        field.rejected = isInvalidField(field)
+        this.updateField({
+          name: params.name,
+          key: 'rejected',
+          value: isInvalidField(params)
+        })
+      },
+      getFormPayload() {
+        getPayload(this.form.fields)
       },
       show(coupon) {
-        const { assignPayload, show } = this.$refs.form
+        const { show } = this.$refs.form
 
         show()
 
