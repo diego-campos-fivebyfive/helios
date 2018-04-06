@@ -7,8 +7,10 @@
       form.form(slot='section')
         component(
           v-for='(field, name) in payload',
-          :key='name',
+          v-if='field.component',
           :is='field.component',
+          :key='name',
+          :style='getFieldSize(field.style.size)',
           :label='field.label',
           :params='field',
           :updateField='updateField',
@@ -19,6 +21,7 @@
 </template>
 
 <script>
+  import styles from '@/theme/assets/style/main.scss'
   import payload from '@/theme/validation/payload'
 
   const { assignPayload, getPayload, isInvalidField } = payload
@@ -40,12 +43,34 @@
       },
       notify(message, type) {
         this.$refs.notification.notify(message, type)
+      },
+      getFieldSize([grow, shrink, cols]) {
+        const base = this.getColumnsSize * cols
+        return `flex: ${grow} ${shrink} ${base}px`
+      }
+    },
+    computed: {
+      getColumnsSize() {
+        const sizeTypes = {
+          'extra-large': 'xl',
+          'extra-small': 'xs',
+          large: 'lg',
+          medium: 'md',
+          small: 'sm'
+        }
+
+        const sizeType = sizeTypes[this.params.size]
+
+        const baseSize = parseInt(styles[`ui-size-${sizeType}`])
+        const spaces = parseInt(styles['ui-space-x']) * 2
+
+        return (baseSize - spaces) / this.params.cols
       }
     }
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .collection-form {
     form {
       align-content: flex-start;
