@@ -1,17 +1,28 @@
 <template lang="pug">
   .collection-form
     Notification(ref='notification')
-    Modal(v-if='modal', ref='modal')
-      slot(name='header', slot='header')
-      slot(name='section', slot='section')
-      slot(name='buttons', slot='buttons')
-    div(v-else)
-      slot(name='header', slot='header')
-      slot(name='section', slot='section')
-      slot(name='buttons', slot='buttons')
+    Modal(ref='modal')
+      h1.title(slot='header')
+        | {{ getFormTitle }}
+      form.form(slot='section')
+        component(
+          v-for='(field, name) in payload',
+          :key='name',
+          :is='field.component',
+          :label='field.label',
+          :params='field',
+          :updateField='updateField',
+          :validateField='validateField')
+      component(
+        slot='buttons',
+        :is='action.component')
 </template>
 
 <script>
+  import payload from '@/theme/validation/payload'
+
+  const { assignPayload, getPayload, isInvalidField } = payload
+
   export default {
     props: [
       'modal'
@@ -25,6 +36,12 @@
       },
       notify(message, type) {
         this.$refs.notification.notify(message, type)
+      }
+    },
+    computed: {
+      getFormTitle() {
+        const { titles, current } = this.action
+        return titles[current]
       }
     }
   }
