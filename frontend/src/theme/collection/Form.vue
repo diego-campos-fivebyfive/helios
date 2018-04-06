@@ -12,8 +12,8 @@
 </template>
 
 <script>
-  import exceptions from '@/locale/pt-br'
-  import patterns from '@/validation/pattern'
+  import exceptions from '@/theme/locale/pt-br'
+  import patterns from '@/theme/validation/pattern'
 
   export default {
     props: [
