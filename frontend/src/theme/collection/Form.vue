@@ -41,11 +41,6 @@
         this.notify(field.exception || defaultException, 'danger-common')
         return true
       },
-      getPayloadField(vm, path) {
-        return path
-          .split('.')
-          .reduce((obj, key) => obj[key], vm)
-      },
       isValidPayload(payload) {
         /* eslint-disable no-use-before-define, no-restricted-syntax */
         const isResolved = (obj, key) => {
