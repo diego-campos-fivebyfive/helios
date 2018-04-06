@@ -84,6 +84,22 @@ trait MemberTrait
     }
 
     /**
+     * @inheritdoc
+     */
+    public function isPlatformBilling()
+    {
+        return $this->checkUserRole(UserInterface::ROLE_PLATFORM_BILLING);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isPlatformExpedition()
+    {
+        return $this->checkUserRole(UserInterface::ROLE_PLATFORM_EXPEDITION);
+    }
+
+    /**
      * @inheritDoc
      */
     public function getUserType()
@@ -99,7 +115,9 @@ trait MemberTrait
             UserInterface::ROLE_PLATFORM_AFTER_SALES => 'Pós-Venda',
             UserInterface::ROLE_PLATFORM_EXPANSE => 'Expansão',
             UserInterface::ROLE_PLATFORM_LOGISTIC => 'Logística',
-            UserInterface::ROLE_PLATFORM_FINANCING => 'Financiamento'
+            UserInterface::ROLE_PLATFORM_FINANCING => 'Financiamento',
+            UserInterface::ROLE_PLATFORM_BILLING => 'Faturamento',
+            UserInterface::ROLE_PLATFORM_EXPEDITION => 'Expedição'
         );
 
         if (!$this->user instanceof UserInterface || !$this->user->getRoles()) {

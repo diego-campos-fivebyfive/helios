@@ -11,7 +11,10 @@
 namespace AppBundle\Service\ProjectGenerator\Core;
 
 use App\Generator\Core;
+use AppBundle\Entity\Component\Module;
 use AppBundle\Entity\Component\ProjectInterface;
+use AppBundle\Entity\Component\ProjectInverter;
+use AppBundle\Entity\Component\ProjectStringBox;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Bridge
@@ -53,7 +56,7 @@ class Bridge
             'maker' => $inverterMakerId
         ]);
 
-        $inverters = $inverterLoader->filter($level);
+        $invertersArray = $inverterLoader->filter($level);
 
         $stringBoxManager = $this->container->get('string_box_manager');
 
@@ -62,18 +65,88 @@ class Bridge
             'maker' => $stringBoxMakerId
         ]);
 
-        $stringboxes = $stringBoxLoader->filter($level);
+        $stringBoxesArray = $stringBoxLoader->filter($level);
 
-        $parameters['module'] = $project->getProjectModules()->first();
-        $parameters['inverters'] = $inverters;
-        $parameters['string_boxes'] = $stringboxes;
+        /** @var Module $module */
+        $module = $project->getProjectModules()->first()->getModule();
+
+        $module = [
+            'id' => $module->getId(),
+            'max_power' => $module->getMaxPower(),
+            'voltage_max_power' => $module->getVoltageMaxPower(),
+            'open_circuit_voltage' => $module->getOpenCircuitVoltage(),
+            'short_circuit_current' => $module->getShortCircuitCurrent(),
+            'temp_coefficient_voc' => $module->getTempCoefficientVoc()
+        ];
+
+        $parameters['module'] = $module;
+        $parameters['inverters'] = $invertersArray;
+        $parameters['string_boxes'] = $stringBoxesArray;
         $parameters['power'] = $power;
         $parameters['fdi_min'] = $fdiMin;
         $parameters['fdi_max'] = $fdiMax;
         $parameters['phase_voltage'] = $phaseVoltage;
         $parameters['phase_number'] = $phaseNumber;
 
-        return $result = Core::process($parameters);
+        $result = Core::process($parameters);
+
+        $this->inverterResolution($result, $inverterLoader, $project);
+
+        $this->stringBoxResolution($result, $stringBoxLoader, $project);
+
+        $projectManager = $this->container->get('project_manager');
+
+        $projectManager->save($project);
+    }
+
+    /**
+     * @param $data
+     * @param InverterLoader $inverterLoader
+     * @param ProjectInterface $project
+     */
+    private function inverterResolution($data, InverterLoader $inverterLoader, ProjectInterface $project)
+    {
+        $invertersIds = array_column($data['inverters'], 'id');
+
+        $invertersQuantities = array_count_values($invertersIds);
+
+        $invertersId = array_unique($invertersIds);
+
+        $inverters = $inverterLoader->findByIds($invertersId);
+
+        foreach ($inverters as $inverter) {
+            for ($i = 0; $i < $invertersQuantities[$inverter->getId()]; $i++) {
+                $projectInverter = new ProjectInverter();
+
+                $projectInverter->setInverter($inverter);
+                $projectInverter->setQuantity(1);
+                $projectInverter->setProject($project);
+            }
+        }
+    }
+
+    /**
+     * @param $data
+     * @param StringBoxLoader $stringBoxLoader
+     * @param ProjectInterface $project
+     */
+    private function stringBoxResolution($data, StringBoxLoader $stringBoxLoader, ProjectInterface $project)
+    {
+        $stringBoxesIds = array_column($data['string_boxes'], 'id');
+
+        $stringBoxesQuantities = array_count_values($stringBoxesIds);
+
+        $stringBoxesId = array_unique($stringBoxesIds);
+
+        $stringBoxes = $stringBoxLoader->findByIds($stringBoxesId);
+
+        foreach ($stringBoxes as $stringBox) {
+            $projectStringBox = new ProjectStringBox();
+
+            $projectStringBox->setStringBox($stringBox);
+            $projectStringBox->setProject($project);
+            $projectStringBox->setQuantity($stringBoxesQuantities[$stringBox->getId()]);
+        }
     }
 
     /**

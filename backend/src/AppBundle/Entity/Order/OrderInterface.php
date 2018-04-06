@@ -42,6 +42,8 @@ interface OrderInterface
     const SUBSTATUS_INSERTED_RESERVED = 1;          // STATUS_INSERTED - Production reserve
     const SUBSTATUS_INSERTED_WAITING_MATERIAL = 2;  // STATUS_INSERTED - Waiting material
     const SUBSTATUS_INSERTED_WAITING_PAYMENT = 3;   // STATUS_INSERTED - Waiting payment
+    const SUBSTATUS_INSERTED_ON_BILLING = 4;        // STATUS_INSERTED - Waiting billing
+    const SUBSTATUS_INSERTED_BILLED = 5;            // STATUS_INSERTED - Billed
 
     const SOURCE_ACCOUNT = 0;
     const SOURCE_PLATFORM = 1;
@@ -1111,4 +1113,59 @@ interface OrderInterface
      * @return CouponInterface
      */
     public function getCoupon();
+
+    /**
+     * @return bool
+     */
+    public function isAntecipatedBilling();
+
+    /**
+     * @param bool $antecipatedBilling
+     * @return OrderInterface
+     */
+    public function setAntecipatedBilling($antecipatedBilling);
+
+    /**
+     * @return int
+     */
+    public function getErpOR();
+
+    /**
+     * @param int $erpOR
+     * @return OrderInterface
+     */
+    public function setErpOR($erpOR);
+
+    /**
+     * @return int
+     */
+    public function getErpOP();
+
+    /**
+     * @param int $erpOP
+     * @return OrderInterface
+     */
+    public function setErpOP($erpOP);
+
+    /**
+     * @return int
+     */
+    public function getErpPV();
+
+    /**
+     * @param int $erpPV
+     * @return OrderInterface
+     */
+    public function setErpPV($erpPV);
+
+    /**
+     * @return int
+     */
+    public function getErpRPV();
+
+    /**
+     * @param int $erpRPV
+     * @return OrderInterface
+     */
+    public function setErpRPV($erpRPV);
 }

@@ -39,7 +39,6 @@ class Core
         $power = InverterHelper::adjustPower($inverters, $power, $fdiMax);
         $inverters = InverterHelper::filterPower($inverters, $power);
         $inverters = InverterHelper::inverterChoices($inverters, $power, $fdiMin, $fdiMax);
-        $power = InverterHelper::powerBalance($inverters, $power);
         $mpptOperations = InverterHelper::mpptOperations($inverters);
         $inverters = InverterHelper::configureArrangements($inverters, $mpptOperations, $module, $power);
         $inverters = StringBoxHelper::configure($inverters, $stringBoxes);
@@ -47,9 +46,23 @@ class Core
         return [
             'module' => $module,
             'inverters' => $inverters,
-            'arrangements' => [],
-            'string_boxes' => []
+            'arrangements' => self::flattenArray(array_column($inverters,'arrangements')),
+            'string_boxes' => self::flattenArray(array_column($inverters,'string_boxes'))
         ];
+    }
+
+    /**
+     * @param $array
+     * @return array
+     */
+    private static function flattenArray($array)
+    {
+        $flattenArray = [];
+        array_map(function ($array) use (&$flattenArray) {
+            $flattenArray = array_merge($flattenArray, $array);
+        }, $array);
+
+        return $flattenArray;
     }
 
     /**

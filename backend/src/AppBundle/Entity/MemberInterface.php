@@ -82,6 +82,16 @@ interface MemberInterface
     /**
      * @return bool
      */
+    public function isPlatformBilling();
+
+    /**
+     * @return bool
+     */
+    public function isPlatformExpedition();
+
+    /**
+     * @return bool
+     */
     public function isPlatformUser();
 
     /**
