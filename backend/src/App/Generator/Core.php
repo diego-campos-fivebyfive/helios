@@ -46,9 +46,23 @@ class Core
         return [
             'module' => $module,
             'inverters' => $inverters,
-            'arrangements' => [],
-            'string_boxes' => []
+            'arrangements' => self::flattenArray(array_column($inverters,'arrangements')),
+            'string_boxes' => self::flattenArray(array_column($inverters,'string_boxes'))
         ];
+    }
+
+    /**
+     * @param $array
+     * @return array
+     */
+    private static function flattenArray($array)
+    {
+        $flattenArray = [];
+        array_map(function ($array) use (&$flattenArray) {
+            $flattenArray = array_merge($flattenArray, $array);
+        }, $array);
+
+        return $flattenArray;
     }
 
     /**

@@ -14,6 +14,7 @@ use App\Generator\Core;
 use AppBundle\Entity\Component\Module;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverter;
+use AppBundle\Entity\Component\ProjectStringBox;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Bridge
@@ -91,6 +92,8 @@ class Bridge
 
         $this->inverterResolution($result, $inverterLoader, $project);
 
+        $this->stringBoxResolution($result, $stringBoxLoader, $project);
+
         $projectManager = $this->container->get('project_manager');
 
         $projectManager->save($project);
@@ -119,6 +122,30 @@ class Bridge
                 $projectInverter->setQuantity(1);
                 $projectInverter->setProject($project);
             }
+        }
+    }
+
+    /**
+     * @param $data
+     * @param StringBoxLoader $stringBoxLoader
+     * @param ProjectInterface $project
+     */
+    private function stringBoxResolution($data, StringBoxLoader $stringBoxLoader, ProjectInterface $project)
+    {
+        $stringBoxesIds = array_column($data['string_boxes'], 'id');
+
+        $stringBoxesQuantities = array_count_values($stringBoxesIds);
+
+        $stringBoxesId = array_unique($stringBoxesIds);
+
+        $stringBoxes = $stringBoxLoader->findByIds($stringBoxesId);
+
+        foreach ($stringBoxes as $stringBox) {
+            $projectStringBox = new ProjectStringBox();
+
+            $projectStringBox->setStringBox($stringBox);
+            $projectStringBox->setProject($project);
+            $projectStringBox->setQuantity($stringBoxesQuantities[$stringBox->getId()]);
         }
     }
 
