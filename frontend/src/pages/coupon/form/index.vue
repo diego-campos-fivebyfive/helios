@@ -36,24 +36,33 @@
       form: {
         action: '',
         title: '',
-        payload: {
-          account: {
-            id: {},
-            name: {}
+        payload: [
+          {
+            name: 'id'
           },
-          amount: {
+          {
+            name: 'name',
+            label: 'Nome',
+            component: Input
+          },
+          {
+            name: 'amount',
+            label: 'Valor',
+            component: Input,
             type: 'money',
             exception: 'Formato de moeda inválido'
           },
-          id: {},
-          name: {}
-        }
+          {
+            name: 'account',
+            component: AccountSelect
+          }
+        ]
       }
     }),
     methods: {
-      update(name, value) {
+      updateField({ name, key, value }) {
         this.form.payload.map(field => {
-          if (field.name === name) {
+          if(field.name === name) {
             this.$set(field, key, value)
           }
           return field
