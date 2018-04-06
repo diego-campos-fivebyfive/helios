@@ -65,7 +65,7 @@ class BridgeTest extends AppTestCase
         $inverter->setPhases(1);
         $inverter->setPhaseVoltage(220);
         $inverter->setCompatibility(2);
-        $inverter->setNominalPower(8.5);
+        $inverter->setNominalPower(5.5);
         $inverter->setMinPowerSelection(0);
         $inverter->setMaxPowerSelection(18);
         $inverter->setMpptParallel(true);

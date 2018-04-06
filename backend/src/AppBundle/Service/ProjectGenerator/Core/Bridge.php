@@ -11,7 +11,9 @@
 namespace AppBundle\Service\ProjectGenerator\Core;
 
 use App\Generator\Core;
+use AppBundle\Entity\Component\Module;
 use AppBundle\Entity\Component\ProjectInterface;
+use AppBundle\Entity\Component\ProjectInverter;
 use AppBundle\Entity\Component\ProjectStringBox;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -65,6 +67,7 @@ class Bridge
 
         $stringBoxesArray = $stringBoxLoader->filter($level);
 
+        /** @var Module $module */
         $module = $project->getProjectModules()->first()->getModule();
 
         $module = [
@@ -87,7 +90,39 @@ class Bridge
 
         $result = Core::process($parameters);
 
+        $this->inverterResolution($result, $inverterLoader, $project);
+
         $this->stringBoxResolution($result, $stringBoxLoader, $project);
+
+        $projectManager = $this->container->get('project_manager');
+
+        $projectManager->save($project);
+    }
+
+    /**
+     * @param $data
+     * @param InverterLoader $inverterLoader
+     * @param ProjectInterface $project
+     */
+    private function inverterResolution($data, InverterLoader $inverterLoader, ProjectInterface $project)
+    {
+        $invertersIds = array_column($data['inverters'], 'id');
+
+        $invertersQuantities = array_count_values($invertersIds);
+
+        $invertersId = array_unique($invertersIds);
+
+        $inverters = $inverterLoader->findByIds($invertersId);
+
+        foreach ($inverters as $inverter) {
+            for ($i = 0; $i < $invertersQuantities[$inverter->getId()]; $i++) {
+                $projectInverter = new ProjectInverter();
+
+                $projectInverter->setInverter($inverter);
+                $projectInverter->setQuantity(1);
+                $projectInverter->setProject($project);
+            }
+        }
     }
 
     /**
