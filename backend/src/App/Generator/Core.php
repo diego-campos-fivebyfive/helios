@@ -22,9 +22,9 @@ class Core
      * @param array $parameters
      * @return array
      */
-    public function process(array $parameters)
+    public static function process(array $parameters)
     {
-        $this->resolveDefaults($parameters);
+        self::resolveDefaults($parameters);
 
         $module = $parameters['module'];
         $inverters = $parameters['inverters'];
@@ -41,6 +41,8 @@ class Core
         $inverters = InverterHelper::inverterChoices($inverters, $power, $fdiMin, $fdiMax);
         $power = InverterHelper::powerBalance($inverters, $power);
         $mpptOperations = InverterHelper::mpptOperations($inverters);
+        $inverters = InverterHelper::configureArrangements($inverters, $mpptOperations, $module, $power);
+        $inverters = StringBoxHelper::configure($inverters, $stringBoxes);
 
         return [
             'module' => $module,
@@ -53,7 +55,7 @@ class Core
     /**
      * @param $parameters
      */
-    private function resolveDefaults(&$parameters)
+    private static function resolveDefaults(&$parameters)
     {
         $parameters['string_boxes'] = $parameters['string_boxes'] ?? [];
         $parameters['power'] = $parameters['power'] ?? 0;

@@ -43,8 +43,6 @@ class StringBoxLoader extends AbstractLoader
      */
     public function alternatives()
     {
-        $qb = $this->manager->createQueryBuilder();
-
         $qb2 = $this->manager->createQueryBuilder();
 
         $alternatives = array_map(function ($alt) {
@@ -55,6 +53,8 @@ class StringBoxLoader extends AbstractLoader
         );
 
         if ($alternatives) {
+            $qb = $this->manager->createQueryBuilder();
+
             $results = $qb->select($this->properties)
                 ->where(
                     $qb->expr()->andX(
