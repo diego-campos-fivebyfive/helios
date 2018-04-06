@@ -44,42 +44,46 @@ const isValidPayload = payload => {
 }
 
 const formatPayload = payload => {
-  const format = obj =>
-    Object
-      .entries(obj)
-      .reduce((acc, [key, val]) => {
-        acc[key] = Object.prototype.hasOwnProperty.call(val, 'value')
-          ? val.value
-          : format(val)
-        return acc
-      }, {})
+  const updateTree = (obj, [pos, ...path], value) => {
+    if (!pos) {
+      return obj = value
+    }
 
-  return format(payload)
+    return updateTree(obj[pos], path, value)
+  }
+
+  return payload.reduce((acc, { path, value }) => (
+    updateTree(acc, path, value)
+  ), {})
 }
 
 const assignPayload = (payload, dataPayload = {}) => {
-  const assign = (base, data = {}) =>
+  const assign = (base, data = {}, path = [], fields = []) =>
     Object
       .entries(base)
       .reduce((acc, [key, val]) => {
         if (
           Object.keys(val).length > 0
-          && !Object.prototype.hasOwnProperty.call(val, 'value')
-          && !Object.prototype.hasOwnProperty.call(val, 'type')
+          && !Object.prototype.hasOwnProperty.call(val, 'component')
         ) {
-          acc[key] = assign(val, data[key])
+          assign(val.value, data[key], path.push(key), fields)
           return acc
         }
 
-        acc[key] = val || {}
-        this.$set(acc[key], 'value', data[key] || null)
+        const field = val || {}
+        field.name = key
+        field.value = data[key] || null
+        field.path = path.push(key)
+        //this.$set(field, 'value', data[key] || null)
+        //this.$set(field, 'path', path)
 
         if (Object.prototype.hasOwnProperty.call(val, 'type')) {
-          this.$set(acc[key], 'rejected', false)
+          field.rejected = false
+          //this.$set(field, 'rejected', false)
         }
 
-        return acc
-      }, {})
+        return acc.concat(field)
+      }, fields || [])
 
   return assign(payload, dataPayload)
 }

@@ -36,27 +36,22 @@
       form: {
         action: '',
         title: '',
-        payload: [
-          {
-            name: 'id'
-          },
-          {
-            name: 'name',
+        payload: {
+          id: {},
+          name: {
             label: 'Nome',
             component: Input
           },
-          {
-            name: 'amount',
+          amount: {
             label: 'Valor',
             component: Input,
             type: 'money',
             exception: 'Formato de moeda inválido'
           },
-          {
-            name: 'account',
+          account: {
             component: AccountSelect
           }
-        ]
+        }
       }
     }),
     methods: {
@@ -82,7 +77,9 @@
         }
       },
       getFormPayload() {
-        getPayload(this.form.fields)
+        const payload = getPayload(this.form.payload)
+        console.log(payload)
+        return payload
       },
       show(coupon) {
         const { show } = this.$refs.form
