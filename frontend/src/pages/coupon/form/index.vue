@@ -1,5 +1,5 @@
 <template lang="pug">
-  Form(ref='modalForm', modal)
+  Form(ref='form', modal)
     h1.title(slot='header')
       | {{ form.title }}
     form.form(slot='section', name='coupon')
@@ -12,31 +12,21 @@
         :class='"field-" + field.name',
         :updateField='updateField',
         :validateField='validateField')
-        | {{ field.name }}
-      // Input.field-name(
-      //   label='Nome',
-      //   :params='form.payload.name',
-      //   v-model.sync='form.payload.name.value')
-      // Input.field-amount(
-      //   label='Valor',
-      //   :params='form.payload.amount',
-      //   v-model.sync='form.payload.amount.value',
-      //   v-on:validate='() => validate("form.payload.amount")')
-      // AccountSelect.field-account(
-      //   label='Conta',
-      //   v-model.sync='form.payload.account',
-      //   :currentAccount='form.payload.account')
     Actions(
       slot='buttons',
       :action='form.action',
-      :getPayload='() => $refs.modalForm.getPayload(form.payload)',
+      :getPayload='getFormPayload',
       v-on:done='done')
 </template>
 
 <script>
-  import Actions from './Actions'
-  import Input from '@/theme/collection/Input'
+  import payload from '@/theme/validation/payload'
+
   import AccountSelect from '@/components/select/Accounts'
+  import Input from '@/theme/collection/Input'
+  import Actions from './Actions'
+
+  const { assignPayload, getPayload, isInvalidField } = payload
 
   export default {
     components: {
@@ -46,27 +36,22 @@
       form: {
         action: '',
         title: '',
-        payload: [
-          {
-            name: 'id'
-          },
-          {
-            name: 'name',
+        payload: {
+          id: {},
+          name: {
             label: 'Nome',
             component: Input
           },
-          {
-            name: 'amount',
+          amount: {
             label: 'Valor',
             component: Input,
             type: 'money',
             exception: 'Formato de moeda inválido'
           },
-          {
-            name: 'account',
+          account: {
             component: AccountSelect
           }
-        ]
+        }
       }
     }),
     methods: {
@@ -79,16 +64,25 @@
         })
       },
       validateField(params) {
-        const { isInvalidField } = this.$refs.modalForm
+        const { rejected, exception } = isInvalidField(params)
 
         this.updateField({
           name: params.name,
           key: 'rejected',
-          value: isInvalidField(params)
+          value: rejected
         })
+
+        if (rejected) {
+          this.$refs.form.notify(exception, 'danger-common')
+        }
+      },
+      getFormPayload() {
+        const payload = getPayload(this.form.payload)
+        console.log(payload)
+        return payload
       },
       show(coupon) {
-        const { assignPayload, show } = this.$refs.modalForm
+        const { show } = this.$refs.form
 
         show()
 
@@ -104,7 +98,7 @@
         this.form.payload = assignPayload(this.form.payload, {})
       },
       done(response) {
-        const { hide, notify } = this.$refs.modalForm
+        const { hide, notify } = this.$refs.form
 
         hide()
 
