@@ -44,17 +44,17 @@ const isValidPayload = payload => {
 }
 
 const formatPayload = payload => {
-  const format = obj =>
-    Object
-      .entries(obj)
-      .reduce((acc, [key, val]) => {
-        acc[key] = Object.prototype.hasOwnProperty.call(val, 'value')
-          ? val.value
-          : format(val)
-        return acc
-      }, {})
+  const updateTree = (obj, [pos, ...path], value) => {
+    if (!pos) {
+      return obj = value
+    }
 
-  return format(payload)
+    return updateTree(obj[pos], path, value)
+  }
+
+  return payload.reduce((acc, { path, value }) => (
+    updateTree(acc, path, value)
+  ), {})
 }
 
 const assignPayload = (payload, dataPayload = {}) => {
@@ -73,7 +73,7 @@ const assignPayload = (payload, dataPayload = {}) => {
         const field = val || {}
         field.name = key
         field.value = data[key] || null
-        field.path = path
+        field.path = path.push(key)
         //this.$set(field, 'value', data[key] || null)
         //this.$set(field, 'path', path)
 
