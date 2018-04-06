@@ -3,15 +3,18 @@ import patterns from '@/theme/validation/pattern'
 
 const isInvalidField = field => {
   const pattern = patterns[field.type]
-
   const defaultException = exceptions[field.type]
 
   if (pattern.test(field.value)) {
-    return false
+    return {
+      rejected: false
+    }
   }
 
-  this.notify(field.exception || defaultException, 'danger-common')
-  return true
+  return {
+    rejected: true,
+    exception: field.exception || defaultException
+  }
 }
 
 const isValidPayload = payload => {

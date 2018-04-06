@@ -20,15 +20,13 @@
 </template>
 
 <script>
-  import {
-    assignPayload,
-    getPayload,
-    isInvalidField
-  } from '@/theme/validation/payload'
+  import payload from '@/theme/validation/payload'
 
   import AccountSelect from '@/components/select/Accounts'
   import Input from '@/theme/collection/Input'
   import Actions from './Actions'
+
+  const { assignPayload, getPayload, isInvalidField } = payload
 
   export default {
     components: {
@@ -62,13 +60,17 @@
         })
       },
       validateField(params) {
-        const { isInvalidField } = this.$refs.form
+        const { rejected, exception } = isInvalidField(params)
 
         this.updateField({
           name: params.name,
           key: 'rejected',
-          value: isInvalidField(params)
+          value: rejected
         })
+
+        if (rejected) {
+          this.$refs.form.notify(exception, 'danger-common')
+        }
       },
       getFormPayload() {
         getPayload(this.form.fields)
