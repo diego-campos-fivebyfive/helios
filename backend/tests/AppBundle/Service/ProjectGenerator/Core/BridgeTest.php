@@ -4,11 +4,11 @@ namespace Tests\AppBundle\Service\ProjectGenerator\Core;
 
 use AppBundle\Entity\Component\Inverter;
 use AppBundle\Entity\Component\Maker;
+use AppBundle\Entity\Component\Module;
 use AppBundle\Entity\Component\ProjectModule;
 use AppBundle\Entity\Component\StringBox;
 use AppBundle\Manager\StringBoxManager;
 use AppBundle\Service\ProjectGenerator\Core\Bridge;
-use AppBundle\Service\ProjectGenerator\Core\InverterLoader;
 use Tests\AppBundle\AppTestCase;
 
 /**
@@ -20,7 +20,16 @@ class BridgeTest extends AppTestCase
     {
         $manager = $this->manager('project');
 
-        $module = $this->getFixture('module');
+        /** @var Module $module */
+        $module = new Module();
+        $module->setMaxPower(280);
+        $module->setVoltageMaxPower(30.5);
+        $module->setOpenCircuitVoltage(40.5);
+        $module->setShortCircuitCurrent(9.45);
+        $module->setTempCoefficientVoc(-0.31);
+
+        $moduleManager = $this->manager('module');
+        $moduleManager->save($module);
 
         $project = $manager->create();
 
@@ -78,13 +87,14 @@ class BridgeTest extends AppTestCase
         $stringBox->setMaker($maker2);
         $stringBox->setInputs(2);
         $stringBox->setOutputs(3);
+        $stringBox->setGeneratorLevels(["partner","promotional","finame"]);
         $stringBoxManager->save($stringBox);
 
         $project->setDefaults([
             'level' => 'partner',
             'fdi_min' => 0.75,
             'fdi_max' => 1.3,
-            'power' => 0,
+            'power' => 18,
             'voltage' => 220,
             'phases' => 1,
             'inverter_maker' => $maker->getId(),
