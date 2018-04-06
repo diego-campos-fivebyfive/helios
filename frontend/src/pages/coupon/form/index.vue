@@ -1,5 +1,5 @@
 <template lang="pug">
-  Form(ref='modalForm', modal)
+  Form(ref='form', modal)
     h1.title(slot='header')
       | {{ form.title }}
     form.form(slot='section', name='coupon')
@@ -15,7 +15,6 @@
     Actions(
       slot='buttons',
       :action='form.action',
-      :getPayload='() => $refs.modalForm.getPayload(form.payload)',
       v-on:done='done')
 </template>
 
@@ -45,14 +44,22 @@
       }
     }),
     methods: {
-      validate(path) {
-        const { getPayloadField, isInvalidField } = this.$refs.modalForm
+      update(name, value) {
+        this.form.payload.map(field => {
+          if(field.name === name) {
+            this.$set(field, 'value', value)
+          }
+          return field
+        })
+      },
+      validateField(params) {
+        const { isInvalidField } = this.$refs.form
 
         const field = getPayloadField(this, path)
         field.rejected = isInvalidField(field)
       },
       show(coupon) {
-        const { assignPayload, show } = this.$refs.modalForm
+        const { assignPayload, show } = this.$refs.form
 
         show()
 
@@ -68,7 +75,7 @@
         this.form.payload = assignPayload(this.form.payload, {})
       },
       done(response) {
-        const { hide, notify } = this.$refs.modalForm
+        const { hide, notify } = this.$refs.form
 
         hide()
 
