@@ -73,7 +73,7 @@ class CoreTest extends GeneratorTest
         $inverter2->setMaker($maker);
         $inverterManager->save($inverter2);
 
-        $inverterLoader = InverterLoader::create([
+        $inverterLoader = new InverterLoader([
             'manager' => $inverterManager,
             'maker' => $maker->getId()
         ]);
