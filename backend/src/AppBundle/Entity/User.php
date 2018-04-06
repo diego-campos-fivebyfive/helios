@@ -150,6 +150,22 @@ class User extends AbstractUser implements UserInterface
     /**
      * @inheritDoc
      */
+    public function isPlatformBilling()
+    {
+        return $this->hasRole(self::ROLE_PLATFORM_BILLING);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isPlatformExpedition()
+    {
+        return $this->hasRole(self::ROLE_PLATFORM_EXPEDITION);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function isAdmin()
     {
         return $this->hasRole(self::ROLE_ADMIN);
@@ -302,7 +318,9 @@ class User extends AbstractUser implements UserInterface
             self::ROLE_PLATFORM_AFTER_SALES => 'Pós-Venda',
             self::ROLE_PLATFORM_EXPANSE => 'Expansão',
             self::ROLE_PLATFORM_LOGISTIC => 'Logística',
-            self::ROLE_PLATFORM_FINANCING => 'Financiamento'
+            self::ROLE_PLATFORM_FINANCING => 'Financiamento',
+            self::ROLE_PLATFORM_BILLING => 'Faturamento',
+            self::ROLE_PLATFORM_EXPEDITION => 'Expedição'
         ];
     }
 
@@ -329,7 +347,9 @@ class User extends AbstractUser implements UserInterface
             self::ROLE_PLATFORM_AFTER_SALES,
             self::ROLE_PLATFORM_EXPANSE,
             self::ROLE_PLATFORM_LOGISTIC,
-            self::ROLE_PLATFORM_FINANCING
+            self::ROLE_PLATFORM_FINANCING,
+            self::ROLE_PLATFORM_BILLING,
+            self::ROLE_PLATFORM_EXPEDITION
         ];
     }
 
@@ -343,7 +363,9 @@ class User extends AbstractUser implements UserInterface
             'financial' => self::ROLE_PLATFORM_FINANCIAL,
             'financing' => self::ROLE_PLATFORM_FINANCING,
             'logistic' => self::ROLE_PLATFORM_LOGISTIC,
-            'master' => self::ROLE_PLATFORM_MASTER
+            'master' => self::ROLE_PLATFORM_MASTER,
+            'billing' => self::ROLE_PLATFORM_BILLING,
+            'expedition' => self::ROLE_PLATFORM_EXPEDITION,
         ];
     }
 }
