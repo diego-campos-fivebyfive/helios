@@ -112,11 +112,13 @@ class Bridge
         $inverters = $inverterLoader->findByIds($invertersId);
 
         foreach ($inverters as $inverter) {
-            $projectInverter = new ProjectInverter();
+            for ($i = 0; $i < $invertersQuantities[$inverter->getId()]; $i++) {
+                $projectInverter = new ProjectInverter();
 
-            $projectInverter->setInverter($inverter);
-            $projectInverter->setProject($project);
-            $projectInverter->setQuantity($invertersQuantities[$inverter->getId()]);
+                $projectInverter->setInverter($inverter);
+                $projectInverter->setQuantity(1);
+                $projectInverter->setProject($project);
+            }
         }
     }
 
