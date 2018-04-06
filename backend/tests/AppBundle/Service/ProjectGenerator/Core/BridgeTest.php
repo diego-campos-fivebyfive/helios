@@ -71,7 +71,7 @@ class BridgeTest extends AppTestCase
         $inverter->setMpptParallel(true);
         $inverter->setMpptNumber(2);
         $inverter->setMpptMin(300);
-        $inverter->setInProtection(true);
+        $inverter->setInProtection(false);
         $inverter->setMaxDcVoltage(900);
         $inverter->setMpptMaxDcCurrent(18.9);
         $inverter->setMaker($maker);
