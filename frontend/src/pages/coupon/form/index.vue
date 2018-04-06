@@ -3,19 +3,15 @@
     h1.title(slot='header')
       | {{ form.title }}
     form.form(slot='section', name='coupon')
-      Input.field-name(
-        label='Nome',
-        :params='form.payload.name',
-        v-model.sync='form.payload.name.value')
-      Input.field-amount(
-        label='Valor',
-        :params='form.payload.amount',
-        v-model.sync='form.payload.amount.value',
-        v-on:validate='() => validate("form.payload.amount")')
-      AccountSelect.field-account(
-        label='Conta',
-        v-model.sync='form.payload.account',
-        :currentAccount='form.payload.account')
+      component(
+        v-for='field in form.payload',
+        :key='field.name',
+        :is='field.component',
+        :label='field.label',
+        :params='field',
+        :class='"field-" + field.name',
+        :updateField='updateField',
+        :validateField='validateField')
     Actions(
       slot='buttons',
       :action='form.action',
