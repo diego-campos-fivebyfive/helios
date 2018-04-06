@@ -592,6 +592,12 @@ class Order implements OrderInterface
     private $erpPV;
 
     /**
+     * @var int
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $erpRPV;
+
+    /**
      * Order constructor.
      */
     public function __construct()
@@ -2791,5 +2797,24 @@ class Order implements OrderInterface
 
         return $this;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function getErpRPV()
+    {
+        return $this->erpRPV;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setErpRPV($erpRPV)
+    {
+        $this->erpRPV = $erpRPV;
+
+        return $this;
+    }
+
 }
 

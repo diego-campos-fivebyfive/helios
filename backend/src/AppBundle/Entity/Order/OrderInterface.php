@@ -1157,4 +1157,15 @@ interface OrderInterface
      * @return OrderInterface
      */
     public function setErpPV($erpPV);
+
+    /**
+     * @return int
+     */
+    public function getErpRPV();
+
+    /**
+     * @param int $erpRPV
+     * @return OrderInterface
+     */
+    public function setErpRPV($erpRPV);
 }
