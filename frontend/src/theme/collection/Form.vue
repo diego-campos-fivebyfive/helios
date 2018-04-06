@@ -1,5 +1,5 @@
 <template lang="pug">
-  .collection-modal-form
+  .collection-form
     Notification(ref='notification')
     Modal(v-if='modal', ref='modal')
       slot(name='header', slot='header')
@@ -117,8 +117,8 @@
 </script>
 
 <style lang="scss">
-  .collection-modal-form {
-    .form {
+  .collection-form {
+    form {
       align-content: flex-start;
       align-items: flex-start;
       display: flex;
