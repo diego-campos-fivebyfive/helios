@@ -3,7 +3,7 @@
     Notification(ref='notification')
     Modal(ref='modal')
       h1.title(slot='header')
-        | {{ getFormTitle }}
+        | {{ action.title }}
       form.form(slot='section')
         component(
           v-for='(field, name) in payload',
@@ -24,6 +24,9 @@
   const { assignPayload, getPayload, isInvalidField } = payload
 
   export default {
+    data: () => ({
+      action: {}
+    }),
     props: [
       'modal'
     ],
@@ -31,17 +34,12 @@
       hide() {
         this.$refs.modal.hide()
       },
-      show() {
+      show(action, coupon) {
+        this.action = this.actions[action]
         this.$refs.modal.show()
       },
       notify(message, type) {
         this.$refs.notification.notify(message, type)
-      }
-    },
-    computed: {
-      getFormTitle() {
-        const { titles, current } = this.action
-        return titles[current]
       }
     }
   }

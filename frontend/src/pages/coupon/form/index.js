@@ -2,19 +2,12 @@ import Form from '@/theme/collection/Form'
 import Input from '@/theme/collection/Input'
 import AccountSelect from '@/components/select/Accounts'
 
-import Actions from './Actions'
+import actions from './actions'
 
 export default {
   mixins: [Form],
   data: () => ({
-    action: {
-      component: Actions,
-      current: 'create',
-      titles: {
-        edit: 'Edição de Cupom',
-        create: 'Cadastro de Cupom'
-      }
-    },
+    actions,
     payload: {
       id: {},
       name: {
