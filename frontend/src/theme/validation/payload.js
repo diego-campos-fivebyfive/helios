@@ -58,28 +58,32 @@ const formatPayload = payload => {
 }
 
 const assignPayload = (payload, dataPayload = {}) => {
-  const assign = (base, data = {}) =>
+  const assign = (base, data = {}, path = [], fields = []) =>
     Object
       .entries(base)
       .reduce((acc, [key, val]) => {
         if (
           Object.keys(val).length > 0
-          && !Object.prototype.hasOwnProperty.call(val, 'value')
-          && !Object.prototype.hasOwnProperty.call(val, 'type')
+          && !Object.prototype.hasOwnProperty.call(val, 'component')
         ) {
-          acc[key] = assign(val, data[key])
+          assign(val.value, data[key], path.push(key), fields)
           return acc
         }
 
-        acc[key] = val || {}
-        this.$set(acc[key], 'value', data[key] || null)
+        const field = val || {}
+        field.name = key
+        field.value = data[key] || null
+        field.path = path
+        //this.$set(field, 'value', data[key] || null)
+        //this.$set(field, 'path', path)
 
         if (Object.prototype.hasOwnProperty.call(val, 'type')) {
-          this.$set(acc[key], 'rejected', false)
+          field.rejected = false
+          //this.$set(field, 'rejected', false)
         }
 
-        return acc
-      }, {})
+        return acc.concat(field)
+      }, fields || [])
 
   return assign(payload, dataPayload)
 }
