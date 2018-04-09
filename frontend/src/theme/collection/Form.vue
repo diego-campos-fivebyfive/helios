@@ -1,18 +1,35 @@
 <template lang="pug">
   .collection-form
     Notification(ref='notification')
-    Modal(v-if='modal', ref='modal')
-      slot(name='header', slot='header')
-      slot(name='section', slot='section')
-      slot(name='buttons', slot='buttons')
-    div(v-else)
-      slot(name='header', slot='header')
-      slot(name='section', slot='section')
-      slot(name='buttons', slot='buttons')
+    Modal(ref='modal')
+      h1.title(slot='header')
+        | {{ action.title }}
+      form.form(slot='section')
+        component(
+          v-for='(field, name) in payload',
+          v-if='field.component',
+          :is='field.component',
+          :key='name',
+          :style='getFieldSize(field.style.size)',
+          :label='field.label',
+          :params='field',
+          :updateField='updateField',
+          :validateField='validateField')
+      component(
+        slot='buttons',
+        :is='action.component')
 </template>
 
 <script>
+  import styles from '@/theme/assets/style/main.scss'
+  import payload from '@/theme/validation/payload'
+
+  const { assignPayload, getPayload, isInvalidField } = payload
+
   export default {
+    data: () => ({
+      action: {}
+    }),
     props: [
       'modal'
     ],
@@ -20,17 +37,40 @@
       hide() {
         this.$refs.modal.hide()
       },
-      show() {
+      show(action, coupon) {
+        this.action = this.actions[action]
         this.$refs.modal.show()
       },
       notify(message, type) {
         this.$refs.notification.notify(message, type)
+      },
+      getFieldSize([grow, shrink, cols]) {
+        const base = this.getColumnsSize * cols
+        return `flex: ${grow} ${shrink} ${base}px`
+      }
+    },
+    computed: {
+      getColumnsSize() {
+        const sizeTypes = {
+          'extra-large': 'xl',
+          'extra-small': 'xs',
+          large: 'lg',
+          medium: 'md',
+          small: 'sm'
+        }
+
+        const sizeType = sizeTypes[this.params.size]
+
+        const baseSize = parseInt(styles[`ui-size-${sizeType}`])
+        const spaces = parseInt(styles['ui-space-x']) * 2
+
+        return (baseSize - spaces) / this.params.cols
       }
     }
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .collection-form {
     form {
       align-content: flex-start;
