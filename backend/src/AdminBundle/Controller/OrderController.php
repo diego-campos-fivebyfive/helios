@@ -68,6 +68,12 @@ class OrderController extends AbstractController
                 $filteredComponents
             );
 
+        $hasFilter = $this->checkFilter($data);
+
+        if ($filteredStates || $filteredStatus || $filteredSubStatus || $filteredComponents) {
+            $hasFilter = true;
+        }
+
         $totals = $this->getFiltersTotals(clone $qb);
 
         $pagination = $this->getPaginator()->paginate(
@@ -84,7 +90,8 @@ class OrderController extends AbstractController
             'states' => $this->resolveFilters($this->getStates($expanseStates), $filteredStates),
             'statusList' => $this->resolveFilters(Order::getStatusNames(), $filteredStatus),
             'subStatusList' => $this->resolveSubStatus(Order::getSubStatusNames(), $filteredSubStatus),
-            'componentsList' => $this->resolveFilters($this->getComponentsList(), $filteredComponents)
+            'componentsList' => $this->resolveFilters($this->getComponentsList(), $filteredComponents),
+            'hasFilter' => $hasFilter
         ));
     }
 
@@ -637,5 +644,18 @@ class OrderController extends AbstractController
         }
 
         return $finalOptions;
+    }
+
+    /**
+     * @param $data
+     * @return bool
+     */
+    private function checkFilter($data) {
+        if ($data['status'] || $data['like'] || $data['agent'] ||
+            $data['dateAt'] || $data['valueMin'] || $data['valueMax']) {
+            return true;
+        }
+
+        return false;
     }
 }
