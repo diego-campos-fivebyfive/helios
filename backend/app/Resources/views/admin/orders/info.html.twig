@@ -389,8 +389,9 @@
                 $('.billing').attr('readonly', 'readonly');
 
                 GeneratorHandler.enableValidate --;
-                if (!GeneratorHandler.enableValidate)
+                if (!GeneratorHandler.enableValidate) {
                     GeneratorHandler.btnValidate.removeClass('hide');
+                }
             }
         }
     };
