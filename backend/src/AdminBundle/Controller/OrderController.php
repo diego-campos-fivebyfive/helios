@@ -31,7 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Security("has_role('ROLE_PLATFORM_LOGISTIC') or has_role('ROLE_PLATFORM_EXPANSE')")
+ * @Security("has_role('ROLE_PLATFORM_LOGISTIC') or has_role('ROLE_PLATFORM_EXPANSE') or has_role('ROLE_PLATFORM_BILLING') or has_role('ROLE_PLATFORM_EXPEDITION')")
  *
  * @Route("orders")
  * @Breadcrumb("Orçamentos")
@@ -516,6 +516,18 @@ class OrderController extends AbstractController
             $qb->andWhere($qb->expr()->in('o.state', $expanseStates));
         }
 
+        $exprStatus = $qb->expr()->gte('o.status', OrderInterface::STATUS_INSERTED);
+
+        if ($this->member()->isPlatformBilling()) {
+            $qb->andWhere($qb->expr()->orX(
+                $exprStatus,
+                $qb->expr()->eq('o.antecipatedBilling', true)
+            ));
+        }
+
+        if ($this->member()->isPlatformExpedition()) {
+            $qb->andWhere($exprStatus);
+        }
 
         return $qb;
     }
@@ -651,8 +663,9 @@ class OrderController extends AbstractController
      * @return bool
      */
     private function checkFilter($data) {
-        if ($data['status'] || $data['like'] || $data['agent'] ||
-            $data['dateAt'] || $data['valueMin'] || $data['valueMax']) {
+
+        if ($data['status'] || $data['like'] || $data['dateAt']
+            || $data['valueMin'] || $data['valueMax']) {
             return true;
         }
 

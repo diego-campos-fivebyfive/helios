@@ -164,6 +164,10 @@
         </div>
     </div>
 
+    {% if member.isPlatformAfterSales %}
+        {% include view('admin/orders/after_sales_modal.html.twig') %}
+    {% endif %}
+
     <div class="wrapper wrapper-content  animated fadeInRight">
         <div class="row">
             <div class="col-md-8">
@@ -350,6 +354,14 @@
                                                     <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
                                                        data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') }}">
                                                         <i class="fa fa-stop"></i> Cancelar Confirmação
+                                                    </a>
+                                                {% endif %}
+
+                                                {% if member.isPlatformAfterSales %}
+                                                    <a data-target="#after_sales_modal"
+                                                       data-toggle="modal"
+                                                       class="btn btn-sm btn-success">
+                                                        <i class="fa fa-pencil"></i> Editar Dados
                                                     </a>
                                                 {% endif %}
                                             </div>
