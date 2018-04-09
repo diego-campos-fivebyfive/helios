@@ -509,11 +509,17 @@ class OrderController extends AbstractController
             $qb->andWhere($qb->expr()->in('o.state', $expanseStates));
         }
 
-        if ($this->member()->isPlatformBilling() || $this->member()->isPlatformExpedition()) {
+        $exprStatus = $qb->expr()->gte('o.status', OrderInterface::STATUS_INSERTED);
+
+        if ($this->member()->isPlatformBilling()) {
             $qb->andWhere($qb->expr()->orX(
-                $qb->expr()->gte('o.status', OrderInterface::STATUS_INSERTED),
+                $exprStatus,
                 $qb->expr()->eq('o.antecipatedBilling', true)
             ));
+        }
+
+        if ($this->member()->isPlatformExpedition()) {
+            $qb->andWhere($exprStatus);
         }
 
         return $qb;
