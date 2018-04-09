@@ -46,7 +46,6 @@
     var buttonErpEdit = $('#button_erp_edit');
 
     $(buttonErpEdit).on('click', function () {
-        ErpManager.editable = true;
         ErpManager.changeEditable(true);
     });
 
@@ -57,6 +56,8 @@
         erpPV: $('#erp_erpPV'),
         erpRPV: $('#erp_erpRPV'),
         changeEditable: function(editable) {
+            ErpManager.editable = editable;
+
             if (editable) {
                 $(buttonErpSubmit).removeClass('hide');
                 $(buttonErpEdit).addClass('hide');
@@ -104,7 +105,6 @@
                 }
 
                 buttonErpSubmit.ladda('stop');
-                ErpManager.editable = false;
                 ErpManager.changeEditable(false);
 
                 $('#erp_erpOR').attr('readonly', 'readonly');
