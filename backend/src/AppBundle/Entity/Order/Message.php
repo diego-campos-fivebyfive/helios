@@ -34,6 +34,13 @@ class Message implements MessageInterface
     private $content;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $restricted;
+
+    /**
      * @var OrderInterface
      *
      * @ORM\ManyToOne(targetEntity="Order", inversedBy="messages")
@@ -128,6 +135,23 @@ class Message implements MessageInterface
         return $this->author;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function setRestricted($restricted)
+    {
+        $this->restricted = $restricted;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isRestricted()
+    {
+        return $this->restricted;
+    }
 
 }
 
