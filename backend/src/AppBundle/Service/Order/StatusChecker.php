@@ -137,11 +137,7 @@ class StatusChecker
                 ],
                 OrderInterface::STATUS_DONE => [
                     UserInterface::TYPE_PLATFORM => [
-                        UserInterface::ROLE_PLATFORM_FINANCIAL
-                    ]
-                ],
-                OrderInterface::STATUS_DONE => [
-                    UserInterface::TYPE_PLATFORM => [
+                        UserInterface::ROLE_PLATFORM_FINANCIAL,
                         UserInterface::ROLE_PLATFORM_FINANCING
                     ]
                 ]
@@ -154,11 +150,7 @@ class StatusChecker
                 ],
                 OrderInterface::STATUS_APPROVED => [
                     UserInterface::TYPE_PLATFORM => [
-                        UserInterface::ROLE_PLATFORM_FINANCIAL
-                    ]
-                ],
-                OrderInterface::STATUS_APPROVED => [
-                    UserInterface::TYPE_PLATFORM => [
+                        UserInterface::ROLE_PLATFORM_FINANCIAL,
                         UserInterface::ROLE_PLATFORM_FINANCING
                     ]
                 ]
@@ -166,7 +158,8 @@ class StatusChecker
             OrderInterface::STATUS_INSERTED => [
                 OrderInterface::STATUS_AVAILABLE=> [
                     UserInterface::TYPE_PLATFORM => [
-                        UserInterface::ROLE_PLATFORM_LOGISTIC
+                        UserInterface::ROLE_PLATFORM_LOGISTIC,
+                        UserInterface::ROLE_PLATFORM_EXPEDITION
                     ]
                 ]
             ],
