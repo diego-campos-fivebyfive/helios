@@ -164,7 +164,9 @@
         </div>
     </div>
 
-    {% include view('admin/orders/after_sales_modal.html.twig') %}
+    {% if member.isPlatformAfterSales %}
+        {% include view('admin/orders/after_sales_modal.html.twig') %}
+    {% endif %}
 
     <div class="wrapper wrapper-content  animated fadeInRight">
         <div class="row">
