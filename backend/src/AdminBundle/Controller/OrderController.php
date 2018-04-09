@@ -663,8 +663,9 @@ class OrderController extends AbstractController
      * @return bool
      */
     private function checkFilter($data) {
-        if ($data['status'] || $data['like'] || $data['agent'] ||
-            $data['dateAt'] || $data['valueMin'] || $data['valueMax']) {
+
+        if ($data['status'] || $data['like'] || $data['dateAt']
+            || $data['valueMin'] || $data['valueMax']) {
             return true;
         }
 
