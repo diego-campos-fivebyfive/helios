@@ -225,7 +225,7 @@
                             <button class="btn btn-success btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
                                 <i class="fa fa-table"> </i> <small>Exportar</small>
                                 <span class="caret"></span></button>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu" style="left: -50px">
                                 <li><a href="{{ path('export_list',{mode:1}|merge(app.request.query.all) ) }}">Orçamentos</a></li>
                                 <li><a href="{{ path('export_list',{mode:2}|merge(app.request.query.all) ) }}">Sistemas</a></li>
                                 <li><a href="{{ path('export_list',{mode:3}|merge(app.request.query.all) ) }}">Aguardando Material</a></li>
