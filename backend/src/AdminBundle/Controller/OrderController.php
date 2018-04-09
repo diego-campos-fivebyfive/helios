@@ -31,7 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Security("has_role('ROLE_PLATFORM_LOGISTIC') or has_role('ROLE_PLATFORM_EXPANSE')")
+ * @Security("has_role('ROLE_PLATFORM_LOGISTIC') or has_role('ROLE_PLATFORM_EXPANSE') or has_role('ROLE_PLATFORM_BILLING') or has_role('ROLE_PLATFORM_EXPEDITION')")
  *
  * @Route("orders")
  * @Breadcrumb("Orçamentos")
@@ -509,6 +509,12 @@ class OrderController extends AbstractController
             $qb->andWhere($qb->expr()->in('o.state', $expanseStates));
         }
 
+        if ($this->member()->isPlatformBilling() || $this->member()->isPlatformExpedition()) {
+            $qb->andWhere($qb->expr()->orX(
+                $qb->expr()->gte('o.status', OrderInterface::STATUS_INSERTED),
+                $qb->expr()->eq('o.antecipatedBilling', true)
+            ));
+        }
 
         return $qb;
     }
