@@ -65,6 +65,9 @@
                 $('#erp_erpOP').removeAttr('readonly');
                 $('#erp_erpPV').removeAttr('readonly');
                 $('#erp_erpRPV').removeAttr('readonly');
+
+                GeneratorHandler.enableValidate ++;
+                GeneratorHandler.btnValidate.addClass('hide');
             } else {
                 $(buttonErpSubmit).addClass('hide');
                 $(buttonErpEdit).removeClass('hide');
@@ -73,6 +76,11 @@
                 $('#erp_erpOP').attr('readonly', 'readonly');
                 $('#erp_erpPV').attr('readonly', 'readonly');
                 $('#erp_erpRPV').attr('readonly', 'readonly');
+
+                GeneratorHandler.enableValidate --;
+                if (!GeneratorHandler.enableValidate) {
+                    GeneratorHandler.btnValidate.removeClass('hide');
+                }
             }
         }
     };
@@ -95,6 +103,7 @@
                     swal('Ooops', 'Falha ao executar a operação.', 'error');
                 }
 
+                buttonErpSubmit.ladda('stop');
                 ErpManager.editable = false;
                 ErpManager.changeEditable(false);
 
