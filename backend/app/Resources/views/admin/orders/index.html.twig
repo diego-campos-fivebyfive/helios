@@ -131,89 +131,90 @@
     <div class="wrapper wrapper-content animated fadeInRight">
 
         <div class="row">
+            <div class="col-md-12">
+                <div class="ibox-title flow-lg">
+                    <span class="pull-left">
+                        <a data-toggle="collapse" href="#filtros">
+                            <h4>
+                                <i class="fa fa-archive"> </i> Filtros
+                            </h4>
+                        </a>
+                    </span>
+                </div>
 
-                <div class="col-md-10">
-                    {{ form_start(form, {attr:{id:'form-filter'}}) }}
+                <div id="filtros" class="collapse {{ hasFilter == true ? "in" }}" style="padding-top: 10px; background-color: white; border: 10px; border-style: solid; border-color: white">
 
-                    {% set hasAgent = attribute(form, 'agent') is defined %}
-                    <div class="row">
-                        <div class="form-group col-md-4">
-                            {{ form_widget(form.like,{attr:{class:'form-control', placeholder: 'nome, razão social, cnpj, número...'}}) }}
-                        </div>
+                        {{ form_start(form, {attr:{id:'form-filter'}}) }}
 
-                        <div class="col-md-3">
-                            {% include view('admin/helper/status_filter.html.twig') %}
-                        </div>
-
-                        <div class="group-input col-md-5">
-                            {{ form_widget(form.optionsAt,{attr:{class:'form-control'}}) }}
-                            {{ form_widget(form.dateAt,{attr:{class:'form-control', placeholder:'Filtrar p/ data' }}) }}
-                            <button type="button" id="clear-dateAt" class="btn btn-primary ">
-                                <i class="fa fa-eraser"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="row form-group">
-                        {% if hasAgent %}
-                            <div class="col-md-2 ">
-                                {{ form_widget(form.agent,{attr:{class:'form-control'}}) }}
+                        {% set hasAgent = attribute(form, 'agent') is defined %}
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                {{ form_widget(form.like,{attr:{class:'form-control', placeholder: 'nome, razão social, cnpj, número...'}}) }}
                             </div>
-                        {% endif %}
 
-                        <div class="col-md-2">
-                            {% include view('admin/helper/states_filter.html.twig') %}
+                            <div class="col-md-3">
+                                {% include view('admin/helper/status_filter.html.twig') %}
+                            </div>
+
+                            <div class="group-input col-md-5">
+                                {{ form_widget(form.optionsAt,{attr:{class:'form-control'}}) }}
+                                {{ form_widget(form.dateAt,{attr:{class:'form-control', placeholder:'Filtrar p/ data' }}) }}
+                                <button type="button" id="clear-dateAt" class="btn btn-primary ">
+                                    <i class="fa fa-eraser"></i>
+                                </button>
+                            </div>
                         </div>
 
-                        <div class="col-md-{% if hasAgent %}3{% else %}4{% endif %}">
-                            {% include view('admin/helper/components_filter.html.twig') %}
-                        </div>
+                        <div class="row form-group">
+                            {% if hasAgent %}
+                                <div class="col-md-2 ">
+                                    {{ form_widget(form.agent,{attr:{class:'form-control'}}) }}
+                                </div>
+                            {% endif %}
 
-                        <div class="group-input col-md-4">
-                            {{ form_widget(form.optionsVal,{attr:{class:'form-control'}}) }}
-                            {{ form_widget(form.valueMin,{attr:{class:'form-control', placeholder:'Mínimo' }}) }}
-                            {{ form_widget(form.valueMax,{attr:{class:'form-control', placeholder:'Máximo' }}) }}
-                        </div>
+                            <div class="col-md-2">
+                                {% include view('admin/helper/states_filter.html.twig') %}
+                            </div>
 
-                        <div class="col-md-{% if hasAgent %}1{% else %}2{% endif %}">
-                            <button type="submit" class="btn btn-primary btn-md btn-block">
-                                <i class="fa fa-search"></i> {% if not hasAgent %}Pesquisar{% endif %}
-                            </button>
-                        </div>
+                            <div class="col-md-{% if hasAgent %}3{% else %}4{% endif %}">
+                                {% include view('admin/helper/components_filter.html.twig') %}
+                            </div>
 
-                        <div class="hide">
-                            {{ form_rest(form) }}
+                            <div class="group-input col-md-4">
+                                {{ form_widget(form.optionsVal,{attr:{class:'form-control'}}) }}
+                                {{ form_widget(form.valueMin,{attr:{class:'form-control', placeholder:'Mínimo' }}) }}
+                                {{ form_widget(form.valueMax,{attr:{class:'form-control', placeholder:'Máximo' }}) }}
+                            </div>
+
+                            <div class="col-md-{% if hasAgent %}1{% else %}2{% endif %}">
+                                <button type="submit" class="btn btn-primary btn-md btn-block">
+                                    <i class="fa fa-search"></i> {% if not hasAgent %}Pesquisar{% endif %}
+                                </button>
+                            </div>
+
+                            <div class="hide">
+                                {{ form_rest(form) }}
+                            </div>
                         </div>
-                    </div>
-                    {{ form_end(form) }}
+                        {{ form_end(form) }}
+
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
 
                 </div>
 
-                <div class="col-md-2 text-right">
-                    <div class="row form-group">
-                        {% if allowAdd %}
-                            <a data-url="{{ path('accounts_list') }}"
-                               data-toggle="modal"
-                               data-target="#modal_accounts"
-                               class="btn btn-success">
-                                <i class="fa fa-plus"></i> Orçamento
-                            </a>
-                        {% endif %}
-                    </div>
-                    <div class="row form-group">
-                        <div class="dropdown">
-                            <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
-                                <i class="fa fa-table"> </i> <small>Exportar</small>
-                                <span class="caret"></span></button>
-                            <ul class="dropdown-menu">
-                                <li><a href="{{ path('export_list',{mode:1}|merge(app.request.query.all) ) }}">Orçamentos</a></li>
-                                <li><a href="{{ path('export_list',{mode:2}|merge(app.request.query.all) ) }}">Sistemas</a></li>
-                                <li><a href="{{ path('export_list',{mode:3}|merge(app.request.query.all) ) }}">Aguardando Material</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                <div class="form-group">
 
+                </div>
+            </div>
+
+            <div class="col-md-2 text-right">
+
+            </div>
         </div>
 
         <div class="row" id="real-content">
@@ -223,6 +224,30 @@
                         <h4>
                         <i class="fa fa-files-o"> </i> Solicitações
                         </h4>
+                    </span>
+
+                    {% if allowAdd %}
+                        <span class="pull-right small text-muted">
+                            <a data-url="{{ path('accounts_list') }}"
+                               data-toggle="modal"
+                               data-target="#modal_accounts"
+                               class="btn btn-success btn-xs col-md-12">
+                            <i class="fa fa-plus"></i> Orçamento
+                            </a>
+                        </span>
+                    {% endif %}
+
+                    <span class="pull-right small text-muted">
+                        <div class="dropdown col-md-12">
+                            <button class="btn btn-success btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
+                                <i class="fa fa-table"> </i> <small>Exportar</small>
+                                <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ path('export_list',{mode:1}|merge(app.request.query.all) ) }}">Orçamentos</a></li>
+                                <li><a href="{{ path('export_list',{mode:2}|merge(app.request.query.all) ) }}">Sistemas</a></li>
+                                <li><a href="{{ path('export_list',{mode:3}|merge(app.request.query.all) ) }}">Aguardando Material</a></li>
+                            </ul>
+                        </div>
                     </span>
 
                     <span class="pull-right small text-muted">
@@ -244,7 +269,6 @@
                             Potência total: {{ totals.power|number_format(2,',','.') }} kWp
                         </h4>
                     </span>
-
                 </div>
                 <div class="ibox flow-h">
                     <div class="ibox-content flow-lg">
@@ -373,7 +397,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <div class="row text-center">
@@ -449,9 +472,9 @@
         var form_filtration = $("#form-filter");
 
         if(form_filtration.length){
-          StateFilter(form_filtration);
-          StatusFilter(form_filtration);
-          ComponentFilter(form_filtration);
+            StateFilter(form_filtration);
+            StatusFilter(form_filtration);
+            ComponentFilter(form_filtration);
         }
 
         $('#filter_valueMin').on('change', function () {
@@ -479,39 +502,39 @@
         });
 
         var sanitize = function(element){
-          function clear(v){ return v.replace(/\D+/g,''); }
-          var value = element.val();
-          var backup = value.replace(/\./g,',');
-          value = clear(value);
-          if(backup.indexOf(',') > 0){
-            var commas = backup.split(',');
-            value = clear(commas[0])+',';
-            if(commas[1].length){
-              value += clear(commas[1]);
+            function clear(v){ return v.replace(/\D+/g,''); }
+            var value = element.val();
+            var backup = value.replace(/\./g,',');
+            value = clear(value);
+            if(backup.indexOf(',') > 0){
+                var commas = backup.split(',');
+                value = clear(commas[0])+',';
+                if(commas[1].length){
+                    value += clear(commas[1]);
+                }
             }
-          }
-          if(0 == backup.indexOf('-')){
-            if(2 == backup.split('-').length){
-              value = '-' + value;
+            if(0 == backup.indexOf('-')){
+                if(2 == backup.split('-').length){
+                    value = '-' + value;
+                }
             }
-          }
-          element.val(value);
+            element.val(value);
         };
 
         var custom_mask = function(element){
-          element.on('keyup', function(){
-            sanitize(element);
-          });
+            element.on('keyup', function(){
+                sanitize(element);
+            });
         };
 
         var common_mask = {pattern: '##,##', reverse: true};
         var targets = {
-          'filter_valueMin': common_mask,
-          'filter_valueMax': common_mask
+            'filter_valueMin': common_mask,
+            'filter_valueMax': common_mask
         };
 
         $.each(targets, function (id, options) {
-          custom_mask($('#'+id));
+            custom_mask($('#'+id));
         });
     </script>
 
