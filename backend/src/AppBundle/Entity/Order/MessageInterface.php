@@ -61,4 +61,15 @@ interface MessageInterface
      * @return mixed
      */
     public function getAuthor();
+
+    /**
+     * @param bool $restricted
+     * @return MessageInterface
+     */
+    public function setRestricted($restricted);
+
+    /**
+     * @return bool
+     */
+    public function isRestricted();
 }
