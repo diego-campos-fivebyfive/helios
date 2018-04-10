@@ -7,6 +7,8 @@
 </template>
 
 <script>
+  import Select from '@/theme/collection/Select'
+
   export default {
     data: () => ({
       options: [],
