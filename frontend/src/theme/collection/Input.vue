@@ -4,7 +4,7 @@
     input(
       :value='field.value',
       :placeholder='field.placeholder || field.label',
-      v-on:blur='$emit("validateField", field)',
+      v-on:blur='$emit("validate", field)',
       v-on:input='$set(field, "value", $event.target.value)')
     Icon.icon(
       v-if='field.rejected',

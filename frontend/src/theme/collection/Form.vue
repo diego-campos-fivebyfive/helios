@@ -6,7 +6,7 @@
         | {{ action.title }}
       form.form(slot='section')
         component(
-          v-on:validateField='validateField',
+          v-on:validate='validate',
           v-for='(field, name) in payload',
           v-if='field.component',
           :is='field.component',
@@ -19,12 +19,11 @@
 </template>
 
 <script>
-  import payload from '@/theme/payload'
   import validate from '@/theme/validation/validate'
   import styles from '@/theme/assets/style/main.scss'
+  import payload from '@/theme/payload'
 
   const { assignPayload, extractPayload } = payload
-  const { isInvalidField, isValidPayload } = validate
 
   export default {
     data: () => ({
@@ -57,8 +56,8 @@
       notify(message, type) {
         this.$refs.notification.notify(message, type)
       },
-      validateField(field) {
-        const { rejected, exception } = isInvalidField(field)
+      validate(field) {
+        const { rejected, exception } = validate(field)
 
         this.$set(field, 'rejected', rejected)
 
