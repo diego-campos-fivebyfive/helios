@@ -24,8 +24,6 @@
   import validate from '@/theme/validation/validate'
   import payload from '@/theme/payload'
 
-  const { assignPayload } = payload
-
   export default {
     data: () => ({
       action: {
@@ -51,7 +49,7 @@
         }
 
         this.action = Object.assign(defaultActionParams, currentAction)
-        this.payload = assignPayload(this.schema, data, this)
+        this.payload = payload.assign(this.schema, data, this)
         this.$refs.modal.show()
       },
       notify(message, type) {

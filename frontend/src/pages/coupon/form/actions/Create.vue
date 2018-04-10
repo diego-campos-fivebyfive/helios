@@ -11,19 +11,17 @@
 <script>
   import payload from '@/theme/payload'
 
-  const { checkPayload, extractPayload } = payload
-
   export default {
     props: [
       'payload'
     ],
     methods: {
       createCoupon() {
-        if (!checkPayload(this.payload)) {
+        if (!payload.available(this.payload)) {
           return
         }
 
-        const data = extractPayload(this.payload)
+        const data = payload.extract(this.payload)
 
         const uri = 'api/v1/coupon/'
 
