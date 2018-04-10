@@ -191,7 +191,7 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-            <button type="submit" class="btn btn-primary save">Salvar</button>
+            <button id="button_after_sales_submit" type="submit" class="ladda-button btn btn-primary save" data-style="zoom-in">Salvar</button>
         </div>
         {{ form_end(form) }}
     </div>
@@ -292,8 +292,13 @@
         });
     });
 
+    var buttonAfterSalesSubmit = $('#button_after_sales_submit');
+
     $('#form_after_sales').on('submit', function (event) {
         event.preventDefault();
+
+        buttonAfterSalesSubmit.ladda();
+        buttonAfterSalesSubmit.ladda('start');
 
         var form = $(this);
 
@@ -302,6 +307,8 @@
             method: form.attr('method'),
             data: form.serialize(),
             complete: function (xhr) {
+                buttonAfterSalesSubmit.ladda('stop');
+
                 if (200 != xhr.status) {
                     swal('Ooops', 'Falha ao executar a operação.', 'error');
                 } else {
