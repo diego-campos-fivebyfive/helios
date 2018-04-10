@@ -6,6 +6,6 @@ export default {
   mixins: [Form],
   data: () => ({
     actions,
-    payload: schema
+    schema
   })
 }

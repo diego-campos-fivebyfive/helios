@@ -1,8 +1,8 @@
 <template lang="pug">
   Select(
-    :label='label',
-    :selected='getAccountSelected',
+    :label='field.label',
     :options='options',
+    :selected='getCurrentAccount',
     v-on:update='updateAccount')
 </template>
 
@@ -21,31 +21,23 @@
       }
     }),
     props: [
-      'currentAccount',
-      'label',
-      'params',
-      'updateField'
+      'field'
     ],
     methods: {
-      updateAccount(account) {
-        this.updateField({
-          name: this.params.name,
-          key: 'value',
-          value: {
-            id: account.value,
-            name: account.text
-          }
+      updateAccount(select) {
+        this.$set(this.field, 'value', {
+          id: select.value,
+          name: select.text
         })
       }
     },
     computed: {
-      getAccountSelected() {
+      getCurrentAccount() {
         return (
-          this.currentAccount
-          && this.currentAccount.id
-          && this.currentAccount.id.value
+          this.field.value
+          && this.field.value.id
         )
-          ? this.currentAccount.id.value
+          ? this.field.value.id
           : this.defaultOption.id
       }
     },

@@ -10,11 +10,8 @@
           v-if='field.component',
           :is='field.component',
           :key='name',
-          :style='getFieldSize(field.style.size)',
-          :label='field.label',
-          :params='field',
-          :updateField='updateField',
-          :validateField='validateField')
+          :field='field',
+          :style='getFieldSize(field.style.size)')
       component(
         slot='buttons',
         :is='action.component')
@@ -29,8 +26,8 @@
   export default {
     data: () => ({
       action: {
-        layout: {}
-      }
+      },
+      payload: {}
     }),
     props: [
       'modal'
@@ -39,7 +36,7 @@
       hide() {
         this.$refs.modal.hide()
       },
-      show(action, coupon) {
+      show(action, data) {
         const currentAction = this.actions[action]
         const defaultActionParams = this.actions.default || {}
 
@@ -48,6 +45,7 @@
         }
 
         this.action = Object.assign(currentAction, defaultActionParams)
+        this.payload = assignPayload(this.schema, data, this)
         this.$refs.modal.show()
       },
       notify(message, type) {

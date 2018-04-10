@@ -57,35 +57,32 @@ const formatPayload = payload => {
   ), {})
 }
 
-const assignPayload = (payload, dataPayload = {}) => {
-  const assign = (base, data = {}, path = [], fields = []) =>
+const assignPayload = (schema, data = {}, self) => {
+  const assign = (schemaObj, dataObj = {}, path = [], fields = []) =>
     Object
-      .entries(base)
+      .entries(schemaObj)
       .reduce((acc, [key, val]) => {
+        const newPath = path.push(key)
         if (
           Object.keys(val).length > 0
           && !Object.prototype.hasOwnProperty.call(val, 'component')
         ) {
-          assign(val.value, data[key], path.push(key), fields)
+          assign(val.value, dataObj[key], newPath, fields)
           return acc
         }
 
         const field = val || {}
-        field.name = key
-        field.value = data[key] || null
-        field.path = path.push(key)
-        //this.$set(field, 'value', data[key] || null)
-        //this.$set(field, 'path', path)
+        self.$set(field, 'value', dataObj[key] || null)
+        self.$set(field, 'path', newPath)
 
         if (Object.prototype.hasOwnProperty.call(val, 'type')) {
-          field.rejected = false
-          //this.$set(field, 'rejected', false)
+          self.$set(field, 'rejected', false)
         }
 
         return acc.concat(field)
       }, fields || [])
 
-  return assign(payload, dataPayload)
+  return assign(schema, data)
 }
 
 const getPayload = payload => {
