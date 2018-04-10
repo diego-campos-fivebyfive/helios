@@ -294,10 +294,11 @@
 
     var buttonAfterSalesSubmit = $('#button_after_sales_submit');
 
+    buttonAfterSalesSubmit.ladda();
+
     $('#form_after_sales').on('submit', function (event) {
         event.preventDefault();
 
-        buttonAfterSalesSubmit.ladda();
         buttonAfterSalesSubmit.ladda('start');
 
         var form = $(this);
