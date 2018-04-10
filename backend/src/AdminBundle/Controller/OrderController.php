@@ -15,10 +15,12 @@ use AppBundle\Entity\Order\Element;
 use AppBundle\Configuration\Brazil;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
+use AppBundle\Form\Order\InfoEditType;
 use AppBundle\Form\Order\OrderType;
 use AppBundle\Form\Order\ErpType;
 use AppBundle\Manager\OrderElementManager;
 use AppBundle\Service\Order\OrderExporter;
+use AppBundle\Service\Order\StatusChanger;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,6 +32,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @Security("has_role('ROLE_PLATFORM_LOGISTIC') or has_role('ROLE_PLATFORM_EXPANSE') or has_role('ROLE_PLATFORM_BILLING') or has_role('ROLE_PLATFORM_EXPEDITION')")
@@ -255,6 +258,37 @@ class OrderController extends AbstractController
         }
 
         return $this->render('generator.erp_data', [
+            'order' => $order,
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/modal_after_sales", name="modal_after_sales")
+     */
+    public function afterSalesModalAction(Request $request, Order $order)
+    {
+        $form = $this->createForm(InfoEditType::class, $order, [
+            'paymentMethods' => $this->getPaymentMethods()
+        ]);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            $this->manager('order')->save($order);
+
+            /** @var StatusChanger $statusChanger */
+            $statusChanger = $this->get('order_status_changer');
+
+            $statusChanger->generateProforma($order);
+
+            $this->manager('order')->save($order);
+
+            return $this->json();
+        }
+
+        return $this->render('admin/orders/after_sales_modal.html.twig', [
             'order' => $order,
             'form' => $form->createView()
         ]);
@@ -493,7 +527,11 @@ class OrderController extends AbstractController
             };
         }
 
-        if ($request->get('status') ||  $request->get('substatus')) {
+        $status = $request->get('status') == "" ? null : $request->get('status');
+        $subStatus = $request->get('substatus') == "" ? null : $request->get('substatus');
+
+        if (!is_null($status) || !is_null($subStatus)) {
+
             $status = explode(',', $request->get('status'));
             $filteredStatus = array_filter($status, 'strlen');
 
@@ -694,4 +732,5 @@ class OrderController extends AbstractController
 
         return false;
     }
+
 }

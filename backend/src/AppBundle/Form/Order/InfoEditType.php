@@ -64,6 +64,12 @@ class InfoEditType extends AbstractType
             ->add('billingStreet', TextType::class, [
                 'required' => false
             ])
+            ->add('billingNumber', TextType::class, [
+                'required' => false
+            ])
+            ->add('billingComplement', TextType::class, [
+                'required' => false
+            ])
             ->add('antecipatedBilling', CheckboxType::class, [
                 'required' => false
             ]);
