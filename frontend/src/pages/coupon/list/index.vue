@@ -26,7 +26,7 @@
             type='primary-common',
             icon='pencil',
             pos='first',
-            v-on:click.native='$emit("show", coupon)')
+            v-on:click.native='$emit("show", "edit", coupon)')
           Button(
             v-if='!coupon.applied',
             type='danger-common',
