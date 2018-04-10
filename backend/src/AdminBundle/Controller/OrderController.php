@@ -20,6 +20,7 @@ use AppBundle\Form\Order\OrderType;
 use AppBundle\Form\Order\ErpType;
 use AppBundle\Manager\OrderElementManager;
 use AppBundle\Service\Order\OrderExporter;
+use AppBundle\Service\Order\StatusChanger;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -277,7 +278,7 @@ class OrderController extends AbstractController
 
             $this->manager('order')->save($order);
 
-            $this->generateProforma($order);
+            $this->manager('order_status_changer')->generateProforma($order);
 
             return $this->json();
         }
@@ -723,40 +724,4 @@ class OrderController extends AbstractController
         return false;
     }
 
-    /**
-     * @param Order $order
-     */
-    private function generateProforma(Order $order)
-    {
-        /** @var \AppBundle\Service\Component\FileHandler $storage */
-        $storage = $this->get('app_storage');
-        /** @var \Symfony\Bundle\FrameworkBundle\Routing\Router $router */
-        $router = $this->get('router');
-
-        $id = $order->getId();
-        $date = (new \DateTime())->format('Ymd-His');
-        $filename = sprintf('proforma_%s_%s_.pdf', $order->getId(), $date);
-
-        $url = $router->generate('proforma_pdf', ['id' => $id], UrlGeneratorInterface::ABSOLUTE_URL);
-
-        $options = [
-            'id' => $id,
-            'root' => 'order',
-            'type' => 'proforma',
-            'filename' => $filename,
-            'access' => 'private',
-            'snappy' => $url
-        ];
-
-        $file = $storage->location($options);
-
-        $this->get('app_generator')->pdf($options, $file);
-
-        if (file_exists($file)) {
-
-            $storage->push($options, $file);
-
-            $order->setProforma($filename);
-        }
-    }
 }

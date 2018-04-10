@@ -1049,16 +1049,18 @@
 
         getAssociatedCoupon();
 
-        var ModalAfterSales = $('#after_sales_modal');
+        {% if member.isPlatformAfterSales %}
+            var ModalAfterSales = $('#after_sales_modal');
 
-        $('#after_sales_button').on('click', function () {
-            $.ajax({
-                url: "{{ path('modal_after_sales', {id:order.id}) }}",
-                success: function (response) {
-                    ModalAfterSales.html(response);
-                }
+            $('#after_sales_button').on('click', function () {
+                $.ajax({
+                    url: "{{ path('modal_after_sales', {id:order.id}) }}",
+                    success: function (response) {
+                        ModalAfterSales.html(response);
+                    }
+                });
             });
-        });
+        {% endif %}
 
         $('[data-metadata]').on('change', function () {
 

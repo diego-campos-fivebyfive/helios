@@ -207,7 +207,7 @@ class StatusChanger
     /**
      * @param Order $order
      */
-    private function generateProforma(Order $order)
+    public function generateProforma(Order $order)
     {
         /** @var \AppBundle\Service\Component\FileHandler $storage */
         $storage = $this->get('app_storage');
