@@ -15,6 +15,7 @@ use AppBundle\Entity\Order\Element;
 use AppBundle\Configuration\Brazil;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
+use AppBundle\Form\Order\InfoEditType;
 use AppBundle\Form\Order\OrderType;
 use AppBundle\Form\Order\ErpType;
 use AppBundle\Manager\OrderElementManager;
@@ -30,6 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @Security("has_role('ROLE_PLATFORM_LOGISTIC') or has_role('ROLE_PLATFORM_EXPANSE') or has_role('ROLE_PLATFORM_BILLING') or has_role('ROLE_PLATFORM_EXPEDITION')")
@@ -255,6 +257,32 @@ class OrderController extends AbstractController
         }
 
         return $this->render('generator.erp_data', [
+            'order' => $order,
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/modal_after_sales", name="modal_after_sales")
+     */
+    public function afterSalesModalAction(Request $request, Order $order)
+    {
+        $form = $this->createForm(InfoEditType::class, $order, [
+            'paymentMethods' => $this->getPaymentMethods()
+        ]);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            $this->manager('order')->save($order);
+
+            $this->generateProforma($order);
+
+            return $this->json();
+        }
+
+        return $this->render('admin/orders/after_sales_modal.html.twig', [
             'order' => $order,
             'form' => $form->createView()
         ]);
@@ -693,5 +721,42 @@ class OrderController extends AbstractController
         }
 
         return false;
+    }
+
+    /**
+     * @param Order $order
+     */
+    private function generateProforma(Order $order)
+    {
+        /** @var \AppBundle\Service\Component\FileHandler $storage */
+        $storage = $this->get('app_storage');
+        /** @var \Symfony\Bundle\FrameworkBundle\Routing\Router $router */
+        $router = $this->get('router');
+
+        $id = $order->getId();
+        $date = (new \DateTime())->format('Ymd-His');
+        $filename = sprintf('proforma_%s_%s_.pdf', $order->getId(), $date);
+
+        $url = $router->generate('proforma_pdf', ['id' => $id], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $options = [
+            'id' => $id,
+            'root' => 'order',
+            'type' => 'proforma',
+            'filename' => $filename,
+            'access' => 'private',
+            'snappy' => $url
+        ];
+
+        $file = $storage->location($options);
+
+        $this->get('app_generator')->pdf($options, $file);
+
+        if (file_exists($file)) {
+
+            $storage->push($options, $file);
+
+            $order->setProforma($filename);
+        }
     }
 }
