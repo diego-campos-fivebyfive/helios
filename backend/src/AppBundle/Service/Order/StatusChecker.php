@@ -166,7 +166,7 @@ class StatusChecker
             OrderInterface::STATUS_AVAILABLE => [
                 OrderInterface::STATUS_COLLECTED => [
                     UserInterface::TYPE_PLATFORM => [
-                        UserInterface::ROLE_PLATFORM_LOGISTIC
+                        UserInterface::ROLE_PLATFORM_EXPEDITION
                     ]
                 ]
             ],
