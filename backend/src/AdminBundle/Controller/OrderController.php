@@ -278,7 +278,12 @@ class OrderController extends AbstractController
 
             $this->manager('order')->save($order);
 
-            //$this->manager('order_status_changer')->generateProforma($order);
+            /** @var StatusChanger $statusChanger */
+            $statusChanger = $this->manager('order_status_changer');
+
+            $statusChanger->generateProforma($order);
+
+            $this->manager('order')->save($order);
 
             return $this->json();
         }
