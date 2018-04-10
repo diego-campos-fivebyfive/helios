@@ -24,6 +24,4 @@ const checkPayload = payload => {
   /* eslint-enable no-use-before-define, no-restricted-syntax */
 }
 
-export default {
-  checkPayload
-}
+export default checkPayload
