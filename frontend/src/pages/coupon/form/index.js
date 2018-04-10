@@ -6,10 +6,6 @@ export default {
   mixins: [Form],
   data: () => ({
     actions,
-    params: {
-      size: 'medium',
-      cols: 2
-    },
     payload: schema
   })
 }

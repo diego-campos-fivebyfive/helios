@@ -28,7 +28,9 @@
 
   export default {
     data: () => ({
-      action: {}
+      action: {
+        layout: {}
+      }
     }),
     props: [
       'modal'
@@ -38,7 +40,14 @@
         this.$refs.modal.hide()
       },
       show(action, coupon) {
-        this.action = this.actions[action]
+        const currentAction = this.actions[action]
+        const defaultActionParams = this.actions.default || {}
+
+        if (!currentAction.component) {
+          throw `Error: ${action} action component is not defined`
+        }
+
+        this.action = Object.assign(currentAction, defaultActionParams)
         this.$refs.modal.show()
       },
       notify(message, type) {
@@ -59,12 +68,12 @@
           small: 'sm'
         }
 
-        const sizeType = sizeTypes[this.params.size]
+        const sizeType = sizeTypes[this.action.layout.columns.size]
 
         const baseSize = parseInt(styles[`ui-size-${sizeType}`])
         const spaces = parseInt(styles['ui-space-x']) * 2
 
-        return (baseSize - spaces) / this.params.cols
+        return (baseSize - spaces) / this.action.layout.columns.total
       }
     }
   }
