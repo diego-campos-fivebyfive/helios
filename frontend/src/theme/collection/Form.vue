@@ -50,7 +50,7 @@
           throw `Error: ${action} action component is not defined`
         }
 
-        this.action = Object.assign(currentAction, defaultActionParams)
+        this.action = Object.assign(defaultActionParams, currentAction)
         this.payload = assignPayload(this.schema, data, this)
         this.$refs.modal.show()
       },
