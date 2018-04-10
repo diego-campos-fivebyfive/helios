@@ -10,6 +10,9 @@
   import Select from '@/theme/collection/Select'
 
   export default {
+    components: {
+      Select
+    },
     data: () => ({
       options: [],
       defaultOption: {
