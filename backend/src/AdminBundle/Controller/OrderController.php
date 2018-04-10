@@ -527,7 +527,11 @@ class OrderController extends AbstractController
             };
         }
 
-        if ($request->get('status') ||  $request->get('substatus')) {
+        $status = $request->get('status') == "" ? null : $request->get('status');
+        $subStatus = $request->get('substatus') == "" ? null : $request->get('substatus');
+
+        if (!is_null($status) || !is_null($subStatus)) {
+
             $status = explode(',', $request->get('status'));
             $filteredStatus = array_filter($status, 'strlen');
 
