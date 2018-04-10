@@ -306,6 +306,7 @@
                     swal('Ooops', 'Falha ao executar a operação.', 'error');
                 } else {
                     swal('Sucesso', 'Orçamento atualizado com sucesso e pró-forma gerada novamente.', 'success');
+                    $('#after_sales_modal').modal('hide');
                 }
             }
         });
