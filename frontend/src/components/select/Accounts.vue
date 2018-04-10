@@ -19,16 +19,18 @@
     }),
     props: [
       'currentAccount',
-      'label'
+      'label',
+      'params',
+      'updateField'
     ],
     methods: {
       updateAccount(account) {
-        this.$emit('input', {
-          id: {
-            value: account.value
-          },
-          name: {
-            value: account.text
+        this.updateField({
+          name: this.params.name,
+          key: 'value',
+          value: {
+            id: account.value,
+            name: account.text
           }
         })
       }

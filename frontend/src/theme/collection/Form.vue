@@ -1,21 +1,35 @@
 <template lang="pug">
-  .collection-modal-form
+  .collection-form
     Notification(ref='notification')
-    Modal(v-if='modal', ref='modal')
-      slot(name='header', slot='header')
-      slot(name='section', slot='section')
-      slot(name='buttons', slot='buttons')
-    div(v-else)
-      slot(name='header', slot='header')
-      slot(name='section', slot='section')
-      slot(name='buttons', slot='buttons')
+    Modal(ref='modal')
+      h1.title(slot='header')
+        | {{ action.title }}
+      form.form(slot='section')
+        component(
+          v-for='(field, name) in payload',
+          v-if='field.component',
+          :is='field.component',
+          :key='name',
+          :style='getFieldSize(field.style.size)',
+          :label='field.label',
+          :params='field',
+          :updateField='updateField',
+          :validateField='validateField')
+      component(
+        slot='buttons',
+        :is='action.component')
 </template>
 
 <script>
-  import exceptions from '@/locale/pt-br'
-  import patterns from '@/validation/pattern'
+  import styles from '@/theme/assets/style/main.scss'
+  import payload from '@/theme/validation/payload'
+
+  const { assignPayload, getPayload, isInvalidField } = payload
 
   export default {
+    data: () => ({
+      action: {}
+    }),
     props: [
       'modal'
     ],
@@ -23,107 +37,42 @@
       hide() {
         this.$refs.modal.hide()
       },
-      show() {
+      show(action, coupon) {
+        this.action = this.actions[action]
         this.$refs.modal.show()
       },
       notify(message, type) {
         this.$refs.notification.notify(message, type)
       },
-      isInvalidField(field) {
-        const pattern = patterns[field.type]
-
-        const defaultException = exceptions[field.type]
-
-        if (pattern.test(field.value)) {
-          return false
+      getFieldSize([grow, shrink, cols]) {
+        const base = this.getColumnsSize * cols
+        return `flex: ${grow} ${shrink} ${base}px`
+      }
+    },
+    computed: {
+      getColumnsSize() {
+        const sizeTypes = {
+          'extra-large': 'xl',
+          'extra-small': 'xs',
+          large: 'lg',
+          medium: 'md',
+          small: 'sm'
         }
 
-        this.notify(field.exception || defaultException, 'danger-common')
-        return true
-      },
-      getPayloadField(vm, path) {
-        return path
-          .split('.')
-          .reduce((obj, key) => obj[key], vm)
-      },
-      isValidPayload(payload) {
-        /* eslint-disable no-use-before-define, no-restricted-syntax */
-        const isResolved = (obj, key) => {
-          const val = obj[key]
+        const sizeType = sizeTypes[this.params.size]
 
-          if (val === Object(val)) {
-            return isValid(val)
-          }
+        const baseSize = parseInt(styles[`ui-size-${sizeType}`])
+        const spaces = parseInt(styles['ui-space-x']) * 2
 
-          return (key === 'rejected' && val)
-            ? !this.isInvalidField(obj)
-            : true
-        }
-
-        const isValid = obj => {
-          for (const key in obj) {
-            if (!isResolved(obj, key)) return false
-          }
-
-          return true
-        }
-
-        return isValid(payload)
-        /* eslint-enable no-use-before-define, no-restricted-syntax */
-      },
-      formatPayload(payload) {
-        const format = obj =>
-          Object
-            .entries(obj)
-            .reduce((acc, [key, val]) => {
-              acc[key] = Object.prototype.hasOwnProperty.call(val, 'value')
-                ? val.value
-                : format(val)
-              return acc
-            }, {})
-
-        return format(payload)
-      },
-      assignPayload(payload, dataPayload = {}) {
-        const assign = (base, data = {}) =>
-          Object
-            .entries(base)
-            .reduce((acc, [key, val]) => {
-              if (
-                Object.keys(val).length > 0
-                && !Object.prototype.hasOwnProperty.call(val, 'value')
-                && !Object.prototype.hasOwnProperty.call(val, 'type')
-              ) {
-                acc[key] = assign(val, data[key])
-                return acc
-              }
-
-              acc[key] = val || {}
-              this.$set(acc[key], 'value', data[key] || null)
-
-              if (Object.prototype.hasOwnProperty.call(val, 'type')) {
-                this.$set(acc[key], 'rejected', false)
-              }
-
-              return acc
-            }, {})
-
-        return assign(payload, dataPayload)
-      },
-      getPayload(payload) {
-        if (!this.isValidPayload(payload)) {
-          return false
-        }
-
-        return this.formatPayload(payload)
+        return (baseSize - spaces) / this.params.cols
       }
     }
   }
 </script>
 
-<style lang="scss">
-  .collection-modal-form {
-    .form {
+<style lang="scss" scoped>
+  .collection-form {
+    form {
       align-content: flex-start;
       align-items: flex-start;
       display: flex;
