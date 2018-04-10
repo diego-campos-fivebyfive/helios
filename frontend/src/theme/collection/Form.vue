@@ -58,13 +58,13 @@
         this.$refs.notification.notify(message, type)
       },
       validateField(field) {
-         const { rejected, exception } = isInvalidField(field)
+        const { rejected, exception } = isInvalidField(field)
 
-         this.$set(field, 'rejected', rejected)
+        this.$set(field, 'rejected', rejected)
 
-         if (rejected) {
-           this.notify(exception, 'danger-common')
-         }
+        if (rejected) {
+          this.notify(exception, 'danger-common')
+        }
       },
       getFieldSize([grow, shrink, cols]) {
         const base = this.getColumnsSize * cols
@@ -76,9 +76,9 @@
         const sizeTypes = {
           'extra-large': 'xl',
           'extra-small': 'xs',
-          large: 'lg',
-          medium: 'md',
-          small: 'sm'
+          'large': 'lg',
+          'medium': 'md',
+          'small': 'sm'
         }
 
         const sizeType = sizeTypes[this.action.layout.columns.size]
