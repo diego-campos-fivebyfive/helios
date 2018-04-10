@@ -165,7 +165,7 @@
     </div>
 
     {% if member.isPlatformAfterSales %}
-        {% include view('admin/orders/after_sales_modal.html.twig') %}
+        <div id="after_sales_modal" class="modal fade" tabindex="-1" role="dialog"></div>
     {% endif %}
 
     <div class="wrapper wrapper-content  animated fadeInRight">
@@ -356,14 +356,6 @@
                                                         <i class="fa fa-stop"></i> Cancelar Confirmação
                                                     </a>
                                                 {% endif %}
-
-                                                {% if member.isPlatformAfterSales %}
-                                                    <a data-target="#after_sales_modal"
-                                                       data-toggle="modal"
-                                                       class="btn btn-sm btn-success">
-                                                        <i class="fa fa-pencil"></i> Editar Dados
-                                                    </a>
-                                                {% endif %}
                                             </div>
 
                                             <div class="pull-right btn-group">
@@ -383,6 +375,13 @@
                                                             <i class="fa fa-pencil"></i> Editar Orçamento
                                                         </a>
                                                     {% endif %}
+                                                {% endif %}
+                                                {% if member.isPlatformAfterSales %}
+                                                    <a id="after_sales_button" data-target="#after_sales_modal"
+                                                       data-toggle="modal"
+                                                       class="btn btn-sm btn-success pull-right">
+                                                        <i class="fa fa-pencil"></i> Editar Informações
+                                                    </a>
                                                 {% endif %}
                                             </div>
                                         </div>
@@ -1049,6 +1048,17 @@
         }
 
         getAssociatedCoupon();
+
+        var ModalAfterSales = $('#after_sales_modal');
+
+        $('#after_sales_button').on('click', function () {
+            $.ajax({
+                url: "{{ path('modal_after_sales', {id:order.id}) }}",
+                success: function (response) {
+                    ModalAfterSales.html(response);
+                }
+            });
+        });
 
         $('[data-metadata]').on('change', function () {
 
