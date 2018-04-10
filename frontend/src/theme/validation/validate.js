@@ -1,5 +1,5 @@
-import exceptions from '@/theme/locale/pt-br'
-import patterns from '@/theme/validation/pattern'
+import exceptions from '@/theme/validation/locale/pt-br'
+import patterns from '@/theme/validation/patterns'
 
 const isInvalidField = field => {
   const pattern = patterns[field.type]
