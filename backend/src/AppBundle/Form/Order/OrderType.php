@@ -135,7 +135,6 @@ class OrderType extends AbstractType
                 ->add('deliveryDelay')
                 ->add('expireDays')
             ;
-
         }
     }
 

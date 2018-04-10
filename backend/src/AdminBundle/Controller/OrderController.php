@@ -16,6 +16,7 @@ use AppBundle\Configuration\Brazil;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Form\Order\OrderType;
+use AppBundle\Form\Order\ErpType;
 use AppBundle\Manager\OrderElementManager;
 use AppBundle\Service\Order\OrderExporter;
 use Symfony\Component\HttpFoundation\File\File;
@@ -235,6 +236,28 @@ class OrderController extends AbstractController
             'order' => $order,
             'form' => $form->createView()
         ));
+    }
+
+    /**
+     * @Route("/{id}/erp", name="erp_order")
+     */
+    public function erpAction(Request $request, Order $order)
+    {
+        $form = $this->createForm(ErpType::class, $order);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            $this->manager('order')->save($order);
+
+            return $this->json();
+        }
+
+        return $this->render('generator.erp_data', [
+            'order' => $order,
+            'form' => $form->createView()
+        ]);
     }
 
     /**

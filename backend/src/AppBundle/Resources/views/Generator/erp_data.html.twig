@@ -1,0 +1,117 @@
+{{ form_start(form,{attr:{action: app.request.uri, id:'form_order_erp'}}) }}
+
+<div class="form-group col-md-12">
+    <div class="row">
+        <div class="col-md-3">
+            {{ form_label(form.erpOR, 'OR') }}
+            {{ form_widget(form.erpOR, {attr:{class:'form-control', readonly: 'readonly' }}) }}
+        </div>
+        <div class="col-md-3">
+            {{ form_label(form.erpOP, 'OP') }}
+            {{ form_widget(form.erpOP, {attr:{class:'form-control', readonly: 'readonly'  }}) }}
+        </div>
+        <div class="col-md-3">
+            {{ form_label(form.erpPV, 'PV') }}
+            {{ form_widget(form.erpPV, {attr:{class:'form-control', readonly: 'readonly'  }}) }}
+        </div>
+        <div class="col-md-3">
+            {{ form_label(form.erpRPV, 'RPV') }}
+            {{ form_widget(form.erpRPV, {attr:{class:'form-control', readonly: 'readonly'  }}) }}
+        </div>
+    </div>
+</div>
+
+<div class="form-group col-md-12">
+    <div class="col-md-9">&nbsp;</div>
+    <div class="col-md-3">
+        <a id="button_erp_edit" class="btn btn-success btn-block">
+            <i class="fa fa-edit"></i> Editar
+        </a>
+        <button id="button_erp_submit" type="submit" data-style="zoom-in"
+                class="btn btn-success btn-block ladda-button hide">
+            <i class="fa fa-save"></i> Salvar
+        </button>
+    </div>
+</div>
+
+<div class="form-group hide">
+    {{ form_rest(form) }}
+</div>
+
+{{ form_end(form) }}
+
+<script>
+
+    var buttonErpSubmit = $('#button_erp_submit');
+    var buttonErpEdit = $('#button_erp_edit');
+
+    $(buttonErpEdit).on('click', function () {
+        ErpManager.changeEditable(true);
+    });
+
+    var ErpManager = {
+        editable: false,
+        erpOR: $('#erp_erpOR'),
+        erpOP: $('#erp_erpOP'),
+        erpPV: $('#erp_erpPV'),
+        erpRPV: $('#erp_erpRPV'),
+        changeEditable: function(editable) {
+            ErpManager.editable = editable;
+
+            if (editable) {
+                $(buttonErpSubmit).removeClass('hide');
+                $(buttonErpEdit).addClass('hide');
+
+                $('#erp_erpOR').removeAttr('readonly');
+                $('#erp_erpOP').removeAttr('readonly');
+                $('#erp_erpPV').removeAttr('readonly');
+                $('#erp_erpRPV').removeAttr('readonly');
+
+                GeneratorHandler.enableValidate ++;
+                GeneratorHandler.btnValidate.addClass('hide');
+            } else {
+                $(buttonErpSubmit).addClass('hide');
+                $(buttonErpEdit).removeClass('hide');
+
+                $('#erp_erpOR').attr('readonly', 'readonly');
+                $('#erp_erpOP').attr('readonly', 'readonly');
+                $('#erp_erpPV').attr('readonly', 'readonly');
+                $('#erp_erpRPV').attr('readonly', 'readonly');
+
+                GeneratorHandler.enableValidate --;
+                if (!GeneratorHandler.enableValidate) {
+                    GeneratorHandler.btnValidate.removeClass('hide');
+                }
+            }
+        }
+    };
+
+
+    $('#form_order_erp').on('submit', function (event) {
+        event.preventDefault();
+
+        buttonErpSubmit.ladda();
+        buttonErpSubmit.ladda('start');
+
+        var form = $(this);
+
+        $.ajax({
+            url: form.attr('action'),
+            method: form.attr('method'),
+            data: form.serialize(),
+            complete: function (xhr) {
+                if (200 != xhr.status) {
+                    swal('Ooops', 'Falha ao executar a operação.', 'error');
+                }
+
+                buttonErpSubmit.ladda('stop');
+                ErpManager.changeEditable(false);
+
+                $('#erp_erpOR').attr('readonly', 'readonly');
+                $('#erp_erpOP').attr('readonly', 'readonly');
+                $('#erp_erpPV').attr('readonly', 'readonly');
+                $('#erp_erpRPV').attr('readonly', 'readonly');
+            }
+        });
+    });
+</script>
