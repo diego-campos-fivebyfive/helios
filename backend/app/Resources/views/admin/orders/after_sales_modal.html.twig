@@ -1,31 +1,313 @@
-<div id="after_sales_modal" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <ul class="nav nav-tabs" id="tabContent">
-                    <li><a href="#billingData" data-toggle="tab">Dados de Faturamento</a></li>
-                    <li><a href="#paymentAndDelivery" data-toggle="tab">Pagamento e Entrega</a></li>
-                    <li><a href="#erpData" data-toggle="tab">Dados do ERP</a></li>
+<!-- Modal -->
+<div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title" >Editar Informações</h4>
+        </div>
+        {{ form_start(form, {attr:{action: app.request.uri, id:'form_after_sales'}}) }}
+        <div class="modal-body">
+            <div role="tabpanel">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active">
+                        <a href="#billingData" aria-controls="billingTab" role="tab" data-toggle="tab">Dados de Faturamento</a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#paymentAndDelivery" aria-controls="paymentAndDeliveryTab" role="tab" data-toggle="tab">Pagamento e Entrega</a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#erpData" aria-controls="erpTab" role="tab" data-toggle="tab">Dados do ERP</a>
+                    </li>
                 </ul>
 
+                <!-- Tab panes -->
                 <div class="tab-content">
-                    <div class="tab-pane active" id="billingData">
-                        Dados de Faturamento
+                    <div role="tabpanel" class="tab-pane active" id="billingData">
+                        <div class="row" style="margin-top: 5px;">
+                            <div class="col-md-6">
+                                {{ form_widget(form.billingDirect) }}
+                                {{ form_label(form.billingDirect, 'Dados de faturamento') }}
+                            </div>
+
+                            <div class="col-md-6">
+                                {{ form_widget(form.antecipatedBilling) }}
+                                {{ form_label(form.antecipatedBilling, 'Faturamento antecipado') }}
+                            </div>
+
+                            <div id="billingForm" class="{{ not order.billingDirect ? 'hidden' }}">
+                                <div class="col-md-3">
+                                    {{ form_label(form.billingFirstname, 'Cliente') }}
+                                    {{ form_widget(form.billingFirstname, {attr:{class:'form-control'}}) }}
+                                </div>
+
+                                <div class="col-md-3">
+                                    {{ form_label(form.billingLastname, 'Razão social') }}
+                                    {{ form_widget(form.billingLastname, {attr:{class:'form-control'}}) }}
+                                </div>
+
+                                <div class="col-md-3">
+                                    {{ form_label(form.billingContact, 'Contato') }}
+                                    {{ form_widget(form.billingContact, {attr:{class:'form-control'}}) }}
+                                </div>
+
+                                <div class="col-md-3">
+                                    {{ form_label(form.billingCnpj, 'CNPJ') }}
+                                    {{ form_widget(form.billingCnpj, {attr:{class:'form-control'}}) }}
+                                </div>
+
+                                <div class="col-md-3">
+                                    {{ form_label(form.billingIe, 'IE') }}
+                                    {{ form_widget(form.billingIe, {attr:{class:'form-control'}}) }}
+                                </div>
+
+                                <div class="col-md-3">
+                                    {{ form_label(form.billingPhone, 'Telefone') }}
+                                    {{ form_widget(form.billingPhone, {attr:{class:'form-control'}}) }}
+                                </div>
+
+                                <div class="col-md-3">
+                                    {{ form_label(form.billingEmail, 'Email') }}
+                                    {{ form_widget(form.billingEmail, {attr:{class:'form-control'}}) }}
+                                </div>
+                                <div class="col-md-3">
+                                    {{ form_label(form.billingPostcode, 'CEP') }}
+                                    {{ form_widget(form.billingPostcode, {attr:{class:'form-control'}}) }}
+                                </div>
+
+                                <div class="col-md-12">
+                                    {{ form_label(form.billingStreet, 'Rua') }}
+                                    {{ form_widget(form.billingStreet, {attr:{class:'form-control'}}) }}
+                                </div>
+
+                                <div class="col-md-3">
+                                    {{ form_label(form.billingCity, 'Cidade') }}
+                                    {{ form_widget(form.billingCity, {attr:{class:'form-control'}}) }}
+                                </div>
+
+                                <div class="col-md-1">
+                                    {{ form_label(form.billingState, 'Estado') }}
+                                    {{ form_widget(form.billingState, {attr:{class:'form-control'}}) }}
+                                </div>
+
+                                <div class="col-md-3">
+                                    {{ form_label(form.billingDistrict, 'Bairro') }}
+                                    {{ form_widget(form.billingDistrict, {attr:{class:'form-control'}}) }}
+                                </div>
+
+                                <div class="col-md-2">
+                                    {{ form_label(form.billingNumber, 'Número') }}
+                                    {{ form_widget(form.billingNumber, {attr:{class:'form-control'}}) }}
+                                </div>
+
+                                <div class="col-md-3">
+                                    {{ form_label(form.billingComplement, 'Complemento') }}
+                                    {{ form_widget(form.billingComplement, {attr:{class:'form-control'}}) }}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="paymentAndDelivery">
+                        <div class="row" style="margin-top: 5px;">
+                            <div class="col-md-12">
+                                {{ form_label(form.paymentMethod, 'Condição de Pagamento') }}
+                                {{ form_widget(form.paymentMethod, {attr:{class:'form-control' }}) }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3" style="margin-top: 5px;">
+                                <label for="delivery_at">Disp. para Coleta (data)</label>
+                                <div class="btn-group clear-date-group">
+                                    <input class="form-control clear-date-input" id="billing_delivery_at" type="text">
+                                    <button type="button" id="billing_clear_date" class="btn btn-primary clear-date-btn">
+                                        <i class="fa fa-eraser"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-3" style="margin-top: 5px;">
+                                {{ form_label(form.deliveryDelay, 'Disp. para Coleta (dias)') }}
+                                {{ form_widget(form.deliveryDelay, {attr:{class:'form-control' }}) }}
+                            </div>
+                            <div class="col-md-3" style="margin-top: 5px;">
+                                {{ form_label(form.deadline, 'Prazo de Entrega (dias)') }}
+                                {{ form_widget(form.deadline, {attr:{class:'form-control' }}) }}
+                            </div>
+                            <div class="col-md-3" style="margin-top: 5px;">
+                                {{ form_label(form.expireDays, 'Validade da proposta (dias)') }}
+                                {{ form_widget(form.expireDays, {attr:{class:'form-control'}}) }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                {{ form_label(form.note, 'Observações a serem inseridas na pró-forma') }}
+                                {{ form_widget(form.note, {attr:{class:'form-control', rows: '5', cols: '5' }}) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="erpData">
+                        <div class="row" style="margin-top: 5px">
+                            <div class="col-md-3">
+                                {{ form_label(form.erpOR, 'OR') }}
+                                {{ form_widget(form.erpOR, {attr:{class:'form-control' }}) }}
+                            </div>
+                            <div class="col-md-3">
+                                {{ form_label(form.erpOP, 'OP') }}
+                                {{ form_widget(form.erpOP, {attr:{class:'form-control' }}) }}
+                            </div>
+                            <div class="col-md-3">
+                                {{ form_label(form.erpPV, 'PV') }}
+                                {{ form_widget(form.erpPV, {attr:{class:'form-control' }}) }}
+                            </div>
+                            <div class="col-md-3">
+                                {{ form_label(form.erpRPV, 'RPV') }}
+                                {{ form_widget(form.erpRPV, {attr:{class:'form-control' }}) }}
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="tab-pane" id="paymentAndDelivery">
-                        Pagamento e Entrega
-                    </div>
-
-                    <div class="tab-pane" id="erpData">
-                        Dados do ERP
+                    <div class="hidden">
+                        {{ form_rest(form) }}
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Salvar alterações</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-            </div>
         </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+            <button id="button_after_sales_submit" type="submit" class="btn btn-primary save">Salvar</button>
+        </div>
+        {{ form_end(form) }}
     </div>
 </div>
+
+<script>
+    $('#info_edit_billingDirect').on('change', function () {
+        var checked = $(this).is(":checked") ? true : "";
+
+        if (checked) {
+            $('#billingForm').removeAttr('class');
+        } else {
+            $('#billingForm').attr('class', 'hidden');
+        }
+    })
+
+    var sourceDeliveryAt = $('#billing_delivery_at');
+
+    sourceDeliveryAt.daterangepicker({
+        startDate: '{{ order.deliveryAt ? order.deliveryAt|date('d/m/Y') : 'now'|date_modify("+3 day")|date('d/m/Y') }}',
+        singleDatePicker: true,
+
+        minDate: moment(),
+        locale: {
+            format: 'DD/MM/YYYY',
+            daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+            monthNames: [
+                "Janeiro",
+                "Fevereiro",
+                "Março",
+                "Abril",
+                "Maio",
+                "Junho",
+                "Julho",
+                "Agosto",
+                "Setembro",
+                "Outubro",
+                "Novembro",
+                "Dezembro"
+            ]
+        }
+    }).on('change', function () {
+        $('#info_edit_deliveryAt').val(sourceDeliveryAt.val());
+    });
+
+    {% if not order.deliveryAt %}
+        sourceDeliveryAt.val('');
+    {% endif %}
+
+
+    $('#billing_clear_date').on('click', function () {
+        sourceDeliveryAt.val('');
+    });
+
+    var SPMaskBehavior = function (val) {
+            return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+        },
+        spOptions = {
+            onKeyPress: function(val, e, field, options) {
+                field.mask(SPMaskBehavior.apply({}, arguments), options);
+            }
+        };
+
+    $('#info_edit_billingPhone').mask(SPMaskBehavior, spOptions);
+    $("#info_edit_billingPostcode").mask("00000-000");
+    $("#info_edit_billingCnpj").mask("99.999.999/9999-99");
+
+    $('#info_edit_billingPostcode').change(function () {
+        $.ajax({
+            url: '{{ path('utils_postcode') }}',
+            method: 'post',
+            data: {postcode: $('#info_edit_billingPostcode').val()},
+            complete: function (xhr) {
+                if (xhr.status == 200 && xhr.responseJSON.status == 200) {
+                    $('#info_edit_billingState').val(xhr.responseJSON.state);
+                    $('#info_edit_billingCity').val(xhr.responseJSON.city);
+                    $('#info_edit_billingDistrict').val(xhr.responseJSON.neighborhood);
+                    $('#info_edit_billingStreet').val(xhr.responseJSON.street);
+                    $('#info_edit_billingNumber').focus();
+                }
+            }
+        });
+    });
+
+    $('#info_edit_billingCnpj').change(function () {
+        $.ajax({
+            url: '{{ path('order_cnpj_validate') }}',
+            data: {cnpj:$('#info_edit_billingCnpj').val()},
+            complete: function (xhr) {
+                if (xhr.status != 200) {
+                    toastr.error('CNPJ inválido', '', {
+                        positionClass: 'toast-top-center',
+                        progressBar: true,
+                        preventDuplicates: true
+                    });
+                }
+            }
+        });
+    });
+
+    $('#form_after_sales').on('submit', function (event) {
+        event.preventDefault();
+
+        var form = $(this);
+
+        $.ajax({
+            url: form.attr('action'),
+            method: form.attr('method'),
+            data: form.serialize(),
+            complete: function (xhr) {
+                if (200 != xhr.status) {
+                    swal('Ooops', 'Falha ao executar a operação.', 'error');
+                } else {
+                    swal('Sucesso', 'Orçamento atualizado com sucesso e pró-forma gerada novamente.', 'success');
+                }
+            }
+        });
+    });
+</script>
+
+<style>
+    textarea {
+        resize: none;
+    }
+    .clear-date-input {
+        width: 80%;
+        float: left;
+    }
+    .clear-date-btn {
+        width: 20%;
+    }
+    .clear-date-group {
+        width: 100%;
+    }
+</style>
