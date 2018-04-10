@@ -1,34 +1,20 @@
 <template lang="pug">
-  label(:class='{ "danger-common": params.rejected }')
-    | {{ label }}
+  label(:class='{ "danger-common": field.rejected }')
+    | {{ field.label }}
     input(
-      :value='params.value',
-      :placeholder='placeholder || label',
-      v-on:blur='validateField(params)',
-      v-on:input='updateInput($event.target.value)')
+      :value='field.value',
+      :placeholder='field.placeholder || field.label',
+      v-on:input='$set(field, "value", $event.target.value)')
     Icon.icon(
-      v-if='params.rejected',
+      v-if='field.rejected',
       name='info')
 </template>
 
 <script>
   export default {
     props: [
-      'label',
-      'params',
-      'placeholder',
-      'updateField',
-      'validateField'
-    ],
-    methods: {
-      updateInput(value) {
-        this.updateField({
-          name: this.params.name,
-          key: 'value',
-          value
-        })
-      }
-    }
+      'field'
+    ]
   }
 </script>
 
