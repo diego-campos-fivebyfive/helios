@@ -14,6 +14,7 @@ namespace AppBundle\Service;
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\Order\Message;
 use AppBundle\Entity\Order\OrderInterface;
 use Fos\UserBundle\Model\UserInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -130,6 +131,10 @@ class Mailer extends AbstractMailer
         $account = $order->getAccount();
         $parameters  = $this->getMessageParameters($order);
 
+        if (isset($parameters['restricted'])) {
+            return null;
+        }
+
         $message = $this->createMessage($parameters);
 
         $this->resolvePlatformEmails($message);
@@ -160,15 +165,27 @@ class Mailer extends AbstractMailer
      */
     private function getMessageParameters(OrderInterface $order)
     {
+        /** @var Message $message */
         $message = $order->getMessages()->last();
 
-        $parameters = [
-            'subject' => 'Nova mensagem',
-            'body' => $this->templating->render('orders/emails/message.html.twig', array(
-                'message' => $message,
-                'order' => $order
-            ))
-        ];
+        if ($message->isRestricted()) {
+            $parameters = [
+                'subject' => 'Nova mensagem',
+                'body' => $this->templating->render('orders/emails/message.html.twig', array(
+                    'message' => $message,
+                    'order' => $order
+                )),
+                'restricted' => $message->isRestricted()
+            ];
+        } else {
+            $parameters = [
+                'subject' => 'Nova mensagem',
+                'body' => $this->templating->render('orders/emails/message.html.twig', array(
+                    'message' => $message,
+                    'order' => $order
+                ))
+            ];
+        }
 
         return $parameters;
     }
