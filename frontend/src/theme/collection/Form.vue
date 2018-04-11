@@ -6,7 +6,7 @@
         | {{ action.title }}
       form.form(slot='section')
         component(
-          v-on:validateField='validateField',
+          v-on:validate='validate',
           v-for='(field, name) in payload',
           v-if='field.component',
           :is='field.component',
@@ -19,12 +19,11 @@
 </template>
 
 <script>
-  import payload from '@/theme/payload'
   import validate from '@/theme/validation/validate'
   import styles from '@/theme/assets/style/main.scss'
+  import payload from '@/theme/payload'
 
   const { assignPayload, extractPayload } = payload
-  const { isInvalidField, isValidPayload } = validate
 
   export default {
     data: () => ({
@@ -50,15 +49,15 @@
           throw `Error: ${action} action component is not defined`
         }
 
-        this.action = Object.assign(currentAction, defaultActionParams)
+        this.action = Object.assign(defaultActionParams, currentAction)
         this.payload = assignPayload(this.schema, data, this)
         this.$refs.modal.show()
       },
       notify(message, type) {
         this.$refs.notification.notify(message, type)
       },
-      validateField(field) {
-        const { rejected, exception } = isInvalidField(field)
+      validate(field) {
+        const { rejected, exception } = validate(field)
 
         this.$set(field, 'rejected', rejected)
 
