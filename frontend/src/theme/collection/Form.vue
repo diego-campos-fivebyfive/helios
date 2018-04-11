@@ -49,7 +49,7 @@
         }
 
         this.action = Object.assign(defaultActionParams, currentAction)
-        this.payload = payload.init(this.schema, data, this)
+        this.payload = payload.init(this.schema, data, this.setObjectAttrs)
         this.$refs.modal.show()
       },
       notify(message, type) {
@@ -63,6 +63,13 @@
         if (rejected) {
           this.notify(exception, 'danger-common')
         }
+      },
+      setObjectAttrs(obj, attrs) {
+        Object
+          .entries(attrs)
+          .forEach(([key, value]) => {
+            this.$set(obj, key, value)
+          })
       },
       getFieldSize([grow, shrink, cols]) {
         const base = this.getColumnsSize * cols

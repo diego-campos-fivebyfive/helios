@@ -1,4 +1,4 @@
-const assignPayload = (schema, data = {}, self) => {
+const assignPayload = (schema, data = {}, setObjectAttrs) => {
   const assign = (schemaObj, dataObj = {}, path = [], fields = []) =>
     Object
       .entries(schemaObj)
@@ -14,12 +14,18 @@ const assignPayload = (schema, data = {}, self) => {
         }
 
         const field = val || {}
-        self.$set(field, 'value', dataObj[key] || null)
-        self.$set(field, 'path', path)
+
+        const fieldAttrs = {
+          name: key,
+          path: path,
+          value: dataObj[key] || null
+        }
 
         if (Object.prototype.hasOwnProperty.call(val, 'type')) {
-          self.$set(field, 'rejected', false)
+          fieldAttrs.rejected = false
         }
+
+        setObjectAttrs(field, fieldAttrs)
 
         return acc.concat(field)
       }, fields || [])
