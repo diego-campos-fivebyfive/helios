@@ -14,6 +14,7 @@ namespace AppBundle\Service;
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\Order\Message;
 use AppBundle\Entity\Order\OrderInterface;
 use Fos\UserBundle\Model\UserInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -130,6 +131,10 @@ class Mailer extends AbstractMailer
         $account = $order->getAccount();
         $parameters  = $this->getMessageParameters($order);
 
+        if (isset($parameters['restricted'])) {
+            return null;
+        }
+
         $message = $this->createMessage($parameters);
 
         $this->resolvePlatformEmails($message);
@@ -160,6 +165,7 @@ class Mailer extends AbstractMailer
      */
     private function getMessageParameters(OrderInterface $order)
     {
+        /** @var Message $message */
         $message = $order->getMessages()->last();
 
         $parameters = [
@@ -169,6 +175,10 @@ class Mailer extends AbstractMailer
                 'order' => $order
             ))
         ];
+
+        if ($message->isRestricted()) {
+            $parameters['restricted'] = 'restricted';
+        }
 
         return $parameters;
     }
