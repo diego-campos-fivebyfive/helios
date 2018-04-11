@@ -18,10 +18,11 @@
     ],
     methods: {
       updateOption(selectedOption) {
-        const option = this.options.find(currentOption => (
-          String(currentOption.value) === selectedOption
+        const currentOption = this.options.find(eachOption => (
+          String(eachOption.value) === selectedOption
         ))
-        this.$emit('update', option)
+
+        this.$emit('update', currentOption)
       }
     }
   }

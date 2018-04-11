@@ -1,22 +1,20 @@
 <template lang="pug">
-  label(:class='{ "danger-common": params.rejected }')
-    | {{ label }}
+  label(:class='{ "danger-common": field.rejected }')
+    | {{ field.label }}
     input(
-      :value='params.value',
-      :placeholder='placeholder || label',
-      v-on:blur='$emit("validate")',
-      v-on:input='$emit("input", $event.target.value)')
+      :value='field.value',
+      :placeholder='field.placeholder || field.label',
+      v-on:blur='$emit("validate", field)',
+      v-on:input='$set(field, "value", $event.target.value)')
     Icon.icon(
-      v-if='params.rejected',
+      v-if='field.rejected',
       name='info')
 </template>
 
 <script>
   export default {
     props: [
-      'label',
-      'params',
-      'placeholder'
+      'field'
     ]
   }
 </script>
