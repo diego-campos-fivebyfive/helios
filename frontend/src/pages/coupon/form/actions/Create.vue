@@ -9,18 +9,23 @@
 </template>
 
 <script>
+  import payload from '@/theme/payload'
+
   export default {
+    props: [
+      'payload'
+    ],
     methods: {
       createCoupon() {
-        const payload = this.getPayload()
-
-        if (!payload) {
+        if (!payload.available(this.payload)) {
           return
         }
 
+        const data = payload.extract(this.payload)
+
         const uri = 'api/v1/coupon/'
 
-        const response = this.axios.post(uri, payload)
+        const response = this.axios.post(uri, data)
           .then(() => 'Cupom cadastrado com sucesso')
           .catch(() => 'Não foi possível cadastrar cupom')
 
