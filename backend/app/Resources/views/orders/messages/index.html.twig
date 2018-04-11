@@ -53,14 +53,14 @@
                     <button type="submit" class="btn btn-warning pull-right" ><i class="fa fa-send"></i> Enviar</button>
                 </form>
             </div>
-        {% else %}
-            <div role="tabpanel" class="tab-pane {% if not isPlatform %} active {% endif %}" id="messages">
-                <form action="{{ path('order_message',{id:order.id}) }}" method="post" id="form_order_message" class="col-md-10 pull-right">
-                    <textarea id="message" class="form-control margin-bottom" placeholder="Mensagem" ></textarea>
-                    <button type="submit" class="btn btn-success pull-right" ><i class="fa fa-send"></i> Enviar</button>
-                </form>
-            </div>
         {% endif %}
+
+        <div role="tabpanel" class="tab-pane {% if not isPlatform %} active {% endif %}" id="messages">
+            <form action="{{ path('order_message',{id:order.id}) }}" method="post" id="form_order_message" class="col-md-10 pull-right">
+                <textarea id="message" class="form-control margin-bottom" placeholder="Mensagem" ></textarea>
+                <button type="submit" class="btn btn-success pull-right" ><i class="fa fa-send"></i> Enviar</button>
+            </form>
+        </div>
     </div>
 </div>
 
