@@ -1,37 +1,50 @@
-const assignPayload = (schema, data = {}, setObjectAttrs) => {
-  const assign = (schemaObj, dataObj = {}, path = [], fields = []) =>
-    Object
-      .entries(schemaObj)
-      .reduce((acc, [key, val]) => {
-        const newPath = path.slice()
-        newPath.push(key)
+const emptyObject = obj =>
+  Object.keys(obj).length === 0
 
-        if (
-          Object.keys(val).length > 0
-          && !Object.prototype.hasOwnProperty.call(val, 'component')
-        ) {
-          assign(val.value, dataObj[key], newPath, fields)
-          return acc
-        }
+const isObject = val =>
+  val === Object(val)
 
-        const field = val || {}
-
-        const fieldAttrs = {
-          name: key,
-          path: newPath,
-          value: dataObj[key] || null
-        }
-
-        if (Object.prototype.hasOwnProperty.call(val, 'type')) {
-          fieldAttrs.rejected = false
-        }
-
-        setObjectAttrs(field, fieldAttrs)
-
-        return acc.concat(field)
-      }, fields || [])
-
-  return assign(schema, data)
+const getNextPath = (path, key) => {
+  const pathCopy = path.slice()
+  pathCopy.push(key)
+  return pathCopy
 }
 
-export default assignPayload
+const typeLeaf = obj =>
+  Object
+    .values(obj)
+    .reduce((acc, value) => (
+      acc || !isObject(value)
+    ), false)
+
+const typeGroup = obj =>
+  !emptyObject(obj) && !typeLeaf(obj)
+
+const deepTree = (obj, payload = [], path = [], data = {}) =>
+  Object
+    .entries(obj)
+    .reduce((acc, [key, value = {}]) => {
+
+      if (typeGroup(value)) {
+        return deepTree(value, payload, getNextPath(path, key), data[key])
+      }
+
+      const item = Object.assign({}, value)
+
+      item.name = key
+      item.path = path
+      item.value = data[key] || null
+
+      if (value.type) {
+        item.rejected = false
+      }
+
+      acc.push(item)
+      return acc
+
+    }, payload)
+
+const init = (schema, data) =>
+  deepTree(schema, [], [], data)
+
+export default init
