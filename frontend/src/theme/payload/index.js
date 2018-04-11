@@ -1,9 +1,9 @@
-import assign from './assign'
 import available from './available'
 import extract from './extract'
+import init from './init'
 
 export default {
-  assign,
   available,
-  extract
+  extract,
+  init
 }

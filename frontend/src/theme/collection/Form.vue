@@ -49,7 +49,7 @@
         }
 
         this.action = Object.assign(defaultActionParams, currentAction)
-        this.payload = payload.assign(this.schema, data, this)
+        this.payload = payload.init(this.schema, data, this)
         this.$refs.modal.show()
       },
       notify(message, type) {
