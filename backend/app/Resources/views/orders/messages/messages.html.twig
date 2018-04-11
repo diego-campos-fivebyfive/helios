@@ -2,21 +2,41 @@
         {% set isPlatform = message.author.user.isPlatform %}
         {% set thisUser = message.author.user.id == app.user.id  %}
 
-        <div class="col-md-10 margin-bottom shadow border-message {% if isPlatform %}pull-right{% endif %}">
-            <div class="header">
-                <span class="{% if not isPlatform %}pull-right{% endif %}" style="font-size: 10px;">{{ message.createdAt|date('d/m/Y H:i') }}</span>
-                <span class="{% if isPlatform %}pull-right{% endif %}">
+        {% if (message.restricted == true and app.user.isPlatform) or (not message.restricted) %}
+            <div class="col-md-10 margin-bottom shadow border-message {% if isPlatform %}pull-right{% endif %}" {% if message.restricted == true %} style="background-color: #fdf0db" {% endif %}>
+                {% if message.restricted == true and app.user.isPlatform %}
+                    <div class="header">
+                        <span class="{% if not isPlatform %}pull-right{% endif %}" style="font-size: 10px;">{{ message.createdAt|date('d/m/Y H:i') }}</span>
+                        <span class="{% if isPlatform %}pull-right{% endif %}">
                     <span class="name">{{ message.author.firstname }}</span>
-                    {% if thisUser and isPlatform %}
-                        - <i class="fa fa-times-circle delete-message" data-delete-message="{{ path('order_message_delete', {id:order.id, message:message.id})}}"></i>
-                    {% endif %}
+                            {% if thisUser and isPlatform %}
+                                - <i class="fa fa-times-circle delete-message" data-delete-message="{{ path('order_message_delete', {id:order.id, message:message.id})}}"></i>
+                            {% endif %}
                 </span>
-            </div>
+                    </div>
 
-            <div class="content {% if isPlatform %}pull-right aling-right{% endif %}">
-                {{ message.content }}
+                    <div class="content {% if isPlatform %}pull-right aling-right{% endif %}">
+                        {{ message.content }}
+                    </div>
+                {% else %}
+                    <div class="header">
+                        <span class="{% if not isPlatform %}pull-right{% endif %}" style="font-size: 10px;">{{ message.createdAt|date('d/m/Y H:i') }}</span>
+                        <span class="{% if isPlatform %}pull-right{% endif %}">
+                    <span class="name">{{ message.author.firstname }}</span>
+                            {% if thisUser and isPlatform %}
+                                - <i class="fa fa-times-circle delete-message" data-delete-message="{{ path('order_message_delete', {id:order.id, message:message.id})}}"></i>
+                            {% endif %}
+                </span>
+                    </div>
+
+                    <div class="content {% if isPlatform %}pull-right aling-right{% endif %}">
+                        {{ message.content }}
+                    </div>
+                {% endif %}
             </div>
-        </div>
+        {% endif %}
+
+
 
     {% endfor %}
 
