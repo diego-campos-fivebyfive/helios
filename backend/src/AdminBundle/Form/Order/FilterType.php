@@ -8,6 +8,7 @@ use AppBundle\Entity\Order\Order;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use AppBundle\Form\Order\FilterType as AppFilterType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -73,6 +74,10 @@ class FilterType extends AppFilterType
         ]);
 
         $builder->add('valueMax', null, [
+            'required' => false
+        ]);
+
+        $builder->add('antecipatedBilling', CheckboxType::class, [
             'required' => false
         ]);
     }
