@@ -24,21 +24,53 @@
     }
 </style>
 
-<div id="list_messages">
+<div class="row" style="padding-top: 10px">
+    <div id="list_messages"></div>
 </div>
 
 <div style="border-bottom: solid 1px #c7c7c7; " class="col-md-12 margin-bottom"></div>
 
-<form action="{{ path('order_message',{id:order.id}) }}" method="post" id="form_order_message" class="col-md-10 pull-right">
-    <textarea  id="message" class="form-control margin-bottom" placeholder="Mensagem" ></textarea>
-    <button type="submit" class="btn btn-success pull-right" ><i class="fa fa-send"></i> Enviar</button>
-</form>
+<div role="tabpanel">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs justify-content-end" role="tablist">
+        {% if isPlatform %}
+            <li role="presentation" class="active">
+                <a href="#notes" aria-controls="notes" role="tab" data-toggle="tab">Notas</a>
+            </li>
+        {% endif %}
+        <li role="presentation" {% if not isPlatform %} class="active" {% endif %}>
+            <a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Mensagens</a>
+        </li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content" style="padding-top: 8px">
+        {% if isPlatform %}
+            <div role="tabpanel" class="tab-pane active" id="notes">
+                <form action="{{ path('order_message',{id:order.id}) }}" method="get" id="form_order_note" class="col-md-10 pull-right">
+                    <textarea id="note" class="form-control margin-bottom" placeholder="Nota" ></textarea>
+                    <input id="restricted" type="hidden" value="restricted">
+                    <button type="submit" class="btn btn-warning pull-right" ><i class="fa fa-send"></i> Enviar</button>
+                </form>
+            </div>
+        {% else %}
+            <div role="tabpanel" class="tab-pane {% if not isPlatform %} active {% endif %}" id="messages">
+                <form action="{{ path('order_message',{id:order.id}) }}" method="post" id="form_order_message" class="col-md-10 pull-right">
+                    <textarea id="message" class="form-control margin-bottom" placeholder="Mensagem" ></textarea>
+                    <button type="submit" class="btn btn-success pull-right" ><i class="fa fa-send"></i> Enviar</button>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+</div>
 
 <script>
 
     Message = {
-        form: $('#form_order_message'),
+        messageForm: $('#form_order_message'),
+        noteForm: $('#form_order_note'),
         message: $('#message'),
+        note: $('#note'),
         listMessages: $('#list_messages'),
         loaded: true,
         loadMessages: function () {
@@ -51,15 +83,29 @@
                 }
             });
         },
-        send: function () {
+        sendMessage: function () {
             $.ajax({
-                url: Message.form.attr('action'),
+                url: Message.messageForm.attr('action'),
                 method: 'POST',
                 data: {message: Message.message.val()},
                 complete: function (xhr) {
                     Message.listMessages.html(xhr.responseText);
                     Message.sendEmail();
                     Message.message.val('');
+                }
+            });
+        },
+        sendNote: function () {
+            $.ajax({
+                url: Message.noteForm.attr('action'),
+                method: 'POST',
+                data: {
+                    note: Message.note.val(),
+                    restricted: $('#restricted').val()
+                },
+                complete: function (xhr) {
+                    Message.listMessages.html(xhr.responseText);
+                    Message.note.val('');
                 }
             });
         },
@@ -76,9 +122,18 @@
             $('#form_order_message').on('submit', function (event) {
                 event.preventDefault();
                 if(Message.message.val().replace( /\s/g, '' ))
-                    Message.send();
+                    Message.sendMessage();
                 else {
                     Message.message.val('');
+                }
+            });
+
+            $('#form_order_note').on('submit', function (event) {
+                event.preventDefault();
+                if(Message.note.val().replace( /\s/g, '' ))
+                    Message.sendNote();
+                else {
+                    Message.note.val('');
                 }
             });
 
