@@ -15,15 +15,14 @@
           :style='getFieldSize(field.style.size)')
       component(
         slot='buttons',
-        :is='action.component')
+        :is='action.component',
+        :payload='payload')
 </template>
 
 <script>
-  import validate from '@/theme/validation/validate'
   import styles from '@/theme/assets/style/main.scss'
+  import validate from '@/theme/validation/validate'
   import payload from '@/theme/payload'
-
-  const { assignPayload, extractPayload } = payload
 
   export default {
     data: () => ({
@@ -50,7 +49,7 @@
         }
 
         this.action = Object.assign(defaultActionParams, currentAction)
-        this.payload = assignPayload(this.schema, data, this)
+        this.payload = payload.assign(this.schema, data, this)
         this.$refs.modal.show()
       },
       notify(message, type) {

@@ -1,9 +1,9 @@
-import assignPayload from './assign'
-import checkPayload from './check'
-import extractPayload from './extract'
+import assign from './assign'
+import available from './available'
+import extract from './extract'
 
 export default {
-  assignPayload,
-  checkPayload,
-  extractPayload
+  assign,
+  available,
+  extract
 }
