@@ -137,14 +137,6 @@
                                             </div>
                                         {% endif %}
 
-                                        <div class="panel panel-success">
-                                            <div class="panel-heading">
-                                                <i class="fa fa-th"></i>
-                                                Dados do ERP
-                                            </div>
-                                            <div class="panel-body" id="erp_data"></div>
-                                        </div>
-
                                         <div class="panel panel-primary">
                                             <div class="panel-heading">
                                                 <i class="fa fa-th"></i>
@@ -289,15 +281,6 @@
         }
 
         getAssociatedCoupon();
-
-        var FormErp = $('#erp_data');
-
-        $.ajax({
-            url: "{{ path('erp_order', {id:order.id}) }}",
-            success: function (response) {
-                FormErp.html(response);
-            }
-        })
 
         $('#conditions').on('change', function () {
             if ($(this).is(':checked')) {

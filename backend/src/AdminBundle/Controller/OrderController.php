@@ -242,28 +242,6 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/erp", name="erp_order")
-     */
-    public function erpAction(Request $request, Order $order)
-    {
-        $form = $this->createForm(ErpType::class, $order);
-
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()){
-
-            $this->manager('order')->save($order);
-
-            return $this->json();
-        }
-
-        return $this->render('generator.erp_data', [
-            'order' => $order,
-            'form' => $form->createView()
-        ]);
-    }
-
-    /**
      * @Route("/{id}/modal_after_sales", name="modal_after_sales")
      */
     public function afterSalesModalAction(Request $request, Order $order)
