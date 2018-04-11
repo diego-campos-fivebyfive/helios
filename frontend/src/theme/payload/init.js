@@ -3,13 +3,14 @@ const assignPayload = (schema, data = {}, setObjectAttrs) => {
     Object
       .entries(schemaObj)
       .reduce((acc, [key, val]) => {
-        path.push(key)
+        const newPath = path.slice()
+        newPath.push(key)
 
         if (
           Object.keys(val).length > 0
           && !Object.prototype.hasOwnProperty.call(val, 'component')
         ) {
-          assign(val.value, dataObj[key], path, fields)
+          assign(val.value, dataObj[key], newPath, fields)
           return acc
         }
 
@@ -17,7 +18,7 @@ const assignPayload = (schema, data = {}, setObjectAttrs) => {
 
         const fieldAttrs = {
           name: key,
-          path: path,
+          path: newPath,
           value: dataObj[key] || null
         }
 
