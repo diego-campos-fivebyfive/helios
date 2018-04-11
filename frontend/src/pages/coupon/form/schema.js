@@ -1,18 +1,19 @@
-import Input from '@/theme/collection/Input'
+import Check from '@/theme/collection/Check'
+import Text from '@/theme/collection/Text'
 import AccountSelect from '@/components/select/Accounts'
 
 export default {
   id: {},
   name: {
     label: 'Nome',
-    component: Input,
+    component: Text,
     style: {
       size: [1, 1, 1]
     }
   },
   amount: {
     label: 'Valor',
-    component: Input,
+    component: Check,
     type: 'money',
     exception: 'Formato de moeda inválido',
     style: {
