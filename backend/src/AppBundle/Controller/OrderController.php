@@ -502,7 +502,7 @@ class OrderController extends AbstractController
      */
     public function orderMessageAction(Request $request, Order $order)
     {
-        $contentMessage = $request->get('message');
+        $contentMessage = $request->get('message') ? $request->get('message') : $request->get('note');
 
         if ($request->isMethod('POST') && $contentMessage) {
 
@@ -514,7 +514,12 @@ class OrderController extends AbstractController
             $message
                 ->setOrder($order)
                 ->setAuthor($this->member())
-                ->setContent($contentMessage);
+                ->setContent($contentMessage)
+                ->setRestricted(false);
+
+            if ($request->get('restricted')) {
+                $message->setRestricted(true);
+            }
 
             $messageManager->save($message);
         }
@@ -525,7 +530,6 @@ class OrderController extends AbstractController
             'messages' => $messages->getValues(),
             'order' => $order
         ]);
-
     }
 
     /**
