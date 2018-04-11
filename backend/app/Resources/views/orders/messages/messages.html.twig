@@ -3,7 +3,7 @@
         {% set thisUser = message.author.user.id == app.user.id  %}
 
         {% if (message.restricted == true and app.user.isPlatform) or (not message.restricted) %}
-            <div class="col-md-10 margin-bottom shadow border-message {% if isPlatform %}pull-right{% endif %}" {% if message.restricted == true %} style="background-color: #f2bc5e" {% endif %}>
+            <div class="col-md-10 margin-bottom shadow border-message {% if isPlatform %}pull-right{% endif %}" {% if message.restricted == true %} style="background-color: #fdf0db" {% endif %}>
                 {% if message.restricted == true and app.user.isPlatform %}
                     <div class="header">
                         <span class="{% if not isPlatform %}pull-right{% endif %}" style="font-size: 10px;">{{ message.createdAt|date('d/m/Y H:i') }}</span>
