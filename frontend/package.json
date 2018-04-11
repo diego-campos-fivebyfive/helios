@@ -10,7 +10,8 @@
     "lint": "npm run lint:template; npm run lint:style; npm run lint:script",
     "lint:template": "pug-lint-vue ./src",
     "lint:style": "stylelint '**/*.vue' --syntax scss",
-    "lint:script": "eslint --ext .js,.vue ./src"
+    "lint:script": "eslint --ext .js,.vue ./src",
+    "test": "jest ./src"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -49,6 +50,7 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "jest": "^22.4.3",
     "vue": "^2.5.13",
     "vue-awesome": "^2.3.4",
     "vue-axios": "^2.0.2",

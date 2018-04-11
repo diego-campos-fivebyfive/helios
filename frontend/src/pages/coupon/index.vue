@@ -13,7 +13,7 @@
             icon='plus-square',
             label='Novo Cupom',
             pos='single',
-            v-on:click.native='show()')
+            v-on:click.native='show("create")')
       Content(
         slot='section',
         :coupons='coupons',
@@ -39,8 +39,8 @@
       pagination: {}
     }),
     methods: {
-      show(coupon = {}) {
-        this.$refs.contentForm.show(coupon)
+      show(action, coupon = {}) {
+        this.$refs.contentForm.show(action, coupon)
       },
       getCoupons(pageNumber = 1) {
         const uri = `/api/v1/coupon?page=${pageNumber}`
