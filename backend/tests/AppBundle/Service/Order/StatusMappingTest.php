@@ -4,130 +4,609 @@ namespace Tests\AppBundle\Service\Order;
 
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Entity\UserInterface;
-use AppBundle\Service\Order\StatusChecker;
+use AppBundle\Service\Order\StatusMapping;
 use Tests\AppBundle\AppTestCase;
 
 /**
- * Class StatusCheckerTest
- * @group order_status_checker
+ * Class StatusMappingTest
+ * @group order_status_mapping
  */
-class StatusCheckerTest extends AppTestCase
+class StatusMappingTest extends AppTestCase
 {
-    public function testAcceptStatus()
+    public function testGetActions()
     {
-        $tests = [
-            UserInterface::TYPE_ACCOUNT => [
-                'run' => true,
-                'cases' => [
-                    OrderInterface::STATUS_BUILDING => [
-                        [OrderInterface::STATUS_PENDING, [], true],
-                        [OrderInterface::STATUS_VALIDATED, [], false],
-                        [OrderInterface::STATUS_APPROVED, [], false],
-                        [OrderInterface::STATUS_REJECTED, [], false],
-                        [OrderInterface::STATUS_DONE, [], false],
-                    ],
-                    OrderInterface::STATUS_PENDING => [
-                        [OrderInterface::STATUS_BUILDING, [], false],
-                        [OrderInterface::STATUS_VALIDATED, [], false],
-                        [OrderInterface::STATUS_APPROVED, [], false],
-                        [OrderInterface::STATUS_REJECTED, [], false],
-                        [OrderInterface::STATUS_DONE, [], false],
-                    ],
-                    OrderInterface::STATUS_VALIDATED => [
-                        [OrderInterface::STATUS_BUILDING, [], true],
-                        [OrderInterface::STATUS_PENDING, [], false],
-                        [OrderInterface::STATUS_APPROVED, [], true],
-                        [OrderInterface::STATUS_REJECTED, [], true],
-                        [OrderInterface::STATUS_DONE, [], false],
-                    ],
-                    OrderInterface::STATUS_APPROVED => [
-                        [OrderInterface::STATUS_BUILDING, [], false],
-                        [OrderInterface::STATUS_PENDING, [], false],
-                        [OrderInterface::STATUS_VALIDATED, [], false],
-                        [OrderInterface::STATUS_REJECTED, [], false],
-                        [OrderInterface::STATUS_DONE, [], false],
-                    ],
-                    OrderInterface::STATUS_REJECTED => [
-                        [OrderInterface::STATUS_BUILDING, [], false],
-                        [OrderInterface::STATUS_PENDING, [], false],
-                        [OrderInterface::STATUS_APPROVED, [], false],
-                        [OrderInterface::STATUS_VALIDATED, [], false],
-                        [OrderInterface::STATUS_DONE, [], false],
-                    ],
-                    OrderInterface::STATUS_DONE => [
-                        [OrderInterface::STATUS_BUILDING, [], false],
-                        [OrderInterface::STATUS_PENDING, [], false],
-                        [OrderInterface::STATUS_APPROVED, [], false],
-                        [OrderInterface::STATUS_VALIDATED, [], false],
-                        [OrderInterface::STATUS_REJECTED, [], false]
-                    ]
-                ]
-            ],
-            UserInterface::TYPE_PLATFORM => [
-                'run' => true,
-                'cases' => [
-                    OrderInterface::STATUS_BUILDING => [
-                        [OrderInterface::STATUS_PENDING, [], false],
-                        [OrderInterface::STATUS_VALIDATED, [], true],
-                        [OrderInterface::STATUS_APPROVED, [], false],
-                        [OrderInterface::STATUS_REJECTED, [], false],
-                        [OrderInterface::STATUS_DONE, [], false],
-                    ],
-                    OrderInterface::STATUS_PENDING => [
-                        [OrderInterface::STATUS_BUILDING, [], false],
-                        [OrderInterface::STATUS_VALIDATED, [], true],
-                        [OrderInterface::STATUS_APPROVED, [], false],
-                        [OrderInterface::STATUS_REJECTED, [], false],
-                        [OrderInterface::STATUS_DONE, [], false],
-                    ],
-                    OrderInterface::STATUS_VALIDATED => [
-                        [OrderInterface::STATUS_BUILDING, [], true],
-                        [OrderInterface::STATUS_PENDING, [], false],
-                        [OrderInterface::STATUS_APPROVED, [], false],
-                        [OrderInterface::STATUS_REJECTED, [], false],
-                        [OrderInterface::STATUS_DONE, [], false],
-                    ],
-                    OrderInterface::STATUS_APPROVED => [
-                        [OrderInterface::STATUS_BUILDING, [], false],
-                        [OrderInterface::STATUS_PENDING, [], false],
-                        [OrderInterface::STATUS_VALIDATED, [], false],
-                        [OrderInterface::STATUS_REJECTED, [], false],
-                        [OrderInterface::STATUS_REJECTED, [UserInterface::ROLE_PLATFORM_FINANCIAL], true],
-                        [OrderInterface::STATUS_DONE, [], false],
-                        [OrderInterface::STATUS_DONE, [UserInterface::ROLE_PLATFORM_FINANCIAL], true],
-                    ],
-                    OrderInterface::STATUS_REJECTED => [
-                        [OrderInterface::STATUS_BUILDING, [], false],
-                        [OrderInterface::STATUS_PENDING, [], false],
-                        [OrderInterface::STATUS_APPROVED, [], false],
-                        [OrderInterface::STATUS_VALIDATED, [], false],
-                        [OrderInterface::STATUS_DONE, [], false],
-                    ],
-                    OrderInterface::STATUS_DONE => [
-                        [OrderInterface::STATUS_BUILDING, [], false],
-                        [OrderInterface::STATUS_PENDING, [], false],
-                        [OrderInterface::STATUS_APPROVED, [], false],
-                        [OrderInterface::STATUS_VALIDATED, [], false],
-                        [OrderInterface::STATUS_REJECTED, [], false]
-                    ]
-                ]
-            ]
-        ];
+//        $parameters = [
+//            'sourceStatus' => OrderInterface::STATUS_BUILDING,
+//            'sourceSubStatus',
+//            'targetStatus',
+//            'targetSubStatus',
+//            'type',
+//            'role',
+//            'previousStatus',
+//            'previousSubStatus',
+//        ];
 
-        foreach ($tests as $type => $config) {
+        $tests = $this->getTests();
 
-            if (!$config['run']) {
-                $this->markTestSkipped();
-                continue;
+        foreach ($tests as $test) {
+            $parameters = $test[0];
+            $targetsStatus = $test[1];
+            $targetsSubStatus = $test[2];
+            $quantity = $test[3];
+
+            $possibilities = StatusMapping::getPossibilities($parameters);
+            foreach ($possibilities as $possibility) {
+                self::assertEquals(true, in_array($possibility['status'], $targetsStatus));
+                self::assertEquals(true, in_array($possibility['substatus'], $targetsSubStatus));
+
             }
-
-            foreach ($config['cases'] as $current => $cases) {
-                foreach ($cases as $case) {
-                    list($next, $roles, $expected) = $case;
-                    $method = $expected ? 'assertTrue' : 'assertFalse';
-                    $this->$method(StatusChecker::acceptStatus($current, $next, $type, $roles));
-                }
-            }
+            self::assertEquals($quantity, count($possibilities));
         }
+    }
+
+    private function getTests()
+    {
+        return [
+            [
+                [                                                       // parametros
+                    'sourceStatus' => OrderInterface::STATUS_BUILDING,
+                    'type' => UserInterface::TYPE_ACCOUNT
+                ],
+                [OrderInterface::STATUS_PENDING],                       // status aceitos
+                [null],                                                 // sub status aceitos
+                1                                                       // quantidade de possibilidades
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_BUILDING,
+                    'sourceSubStatus' => null,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_MASTER,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_VALIDATED
+                ],
+                [null],
+                1
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_BUILDING,
+                    'sourceSubStatus' => null,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_ADMIN,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_VALIDATED
+                ],
+                [null],
+                1
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_BUILDING,
+                    'sourceSubStatus' => null,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_COMMERCIAL,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_VALIDATED
+                ],
+                [null],
+                1
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_PENDING,
+                    'sourceSubStatus' => null,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_MASTER,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_BUILDING,
+                    OrderInterface::STATUS_VALIDATED,
+                    OrderInterface::STATUS_REJECTED,
+                ],
+                [null],
+                3
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_PENDING,
+                    'sourceSubStatus' => null,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_ADMIN,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_BUILDING,
+                    OrderInterface::STATUS_VALIDATED,
+                    OrderInterface::STATUS_REJECTED,
+                ],
+                [null],
+                3
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_PENDING,
+                    'sourceSubStatus' => null,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_COMMERCIAL,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_BUILDING,
+                    OrderInterface::STATUS_VALIDATED,
+                    OrderInterface::STATUS_REJECTED,
+                ],
+                [null],
+                3
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_VALIDATED,
+                    'sourceSubStatus' => null,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_MASTER,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_PENDING,
+                    OrderInterface::STATUS_REJECTED,
+                ],
+                [null],
+                2
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_VALIDATED,
+                    'sourceSubStatus' => null,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_ADMIN,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_PENDING,
+                    OrderInterface::STATUS_REJECTED,
+                ],
+                [null],
+                2
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_VALIDATED,
+                    'sourceSubStatus' => null,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_COMMERCIAL,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_PENDING,
+                    OrderInterface::STATUS_REJECTED,
+                ],
+                [null],
+                2
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_VALIDATED,
+                    'sourceSubStatus' => null,
+                    'type' => UserInterface::TYPE_ACCOUNT,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_BUILDING,
+                    OrderInterface::STATUS_APPROVED,
+                    OrderInterface::STATUS_REJECTED,
+                ],
+                [null],
+                3
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_APPROVED,
+                    'sourceSubStatus' => null,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_MASTER,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_REJECTED,
+                ],
+                [null],
+                1
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_APPROVED,
+                    'sourceSubStatus' => null,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_ADMIN,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_REJECTED,
+                ],
+                [null],
+                1
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_APPROVED,
+                    'sourceSubStatus' => null,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_COMMERCIAL,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_REJECTED,
+                ],
+                [null],
+                1
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_APPROVED,
+                    'sourceSubStatus' => null,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_FINANCIAL,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_REJECTED,
+                    OrderInterface::STATUS_DONE,
+                ],
+                [
+                    OrderInterface::SUBSTATUS_DONE_CONFIRMED,
+                    OrderInterface::SUBSTATUS_DONE_RESERVED,
+                ],
+                3
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_APPROVED,
+                    'sourceSubStatus' => null,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_FINANCING,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_REJECTED,
+                    OrderInterface::STATUS_DONE,
+                ],
+                [
+                    OrderInterface::SUBSTATUS_DONE_CONFIRMED,
+                    OrderInterface::SUBSTATUS_DONE_RESERVED,
+                ],
+                3
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_DONE,
+                    'sourceSubStatus' => null,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_MASTER,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_REJECTED,
+                ],
+                [
+                    null
+                ],
+                1
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_DONE,
+                    'sourceSubStatus' => null,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_ADMIN,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_REJECTED,
+                ],
+                [
+                    null
+                ],
+                1
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_DONE,
+                    //'sourceSubStatus' => null,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_FINANCIAL,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_APPROVED,
+                ],
+                [
+                    null
+                ],
+                1
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_DONE,
+                    'sourceSubStatus' => null,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_FINANCING,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_APPROVED,
+                ],
+                [
+                    null
+                ],
+                1
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_DONE,
+                    'sourceSubStatus' => OrderInterface::SUBSTATUS_DONE_CONFIRMED,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_AFTER_SALES,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_INSERTED,
+                ],
+                [
+                    OrderInterface::SUBSTATUS_INSERTED_PRODUCTION,
+                ],
+                1
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_DONE,
+                    'sourceSubStatus' => OrderInterface::SUBSTATUS_DONE_RESERVED,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_AFTER_SALES,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_INSERTED,
+                ],
+                [
+                    OrderInterface::SUBSTATUS_INSERTED_RESERVED,
+                ],
+                1
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_INSERTED,
+                    //'sourceSubStatus' => 'any',
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_MASTER,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_REJECTED,
+                ],
+                [
+                    null,
+                ],
+                1
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_INSERTED,
+                    //'sourceSubStatus' => 'any',
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_ADMIN,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_REJECTED,
+                ],
+                [
+                    null,
+                ],
+                1
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_INSERTED,
+                    'sourceSubStatus' => OrderInterface::SUBSTATUS_INSERTED_PRODUCTION,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_LOGISTIC,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_INSERTED,
+                ],
+                [
+                    OrderInterface::SUBSTATUS_INSERTED_WAITING_MATERIAL,
+                    OrderInterface::SUBSTATUS_INSERTED_ON_BILLING,
+                ],
+                2
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_INSERTED,
+                    'sourceSubStatus' => OrderInterface::SUBSTATUS_INSERTED_RESERVED,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_LOGISTIC,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_INSERTED,
+                ],
+                [
+                    OrderInterface::SUBSTATUS_INSERTED_WAITING_MATERIAL,
+                    OrderInterface::SUBSTATUS_INSERTED_WAITING_PAYMENT,
+                ],
+                2
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_INSERTED,
+                    'sourceSubStatus' => OrderInterface::SUBSTATUS_INSERTED_WAITING_MATERIAL,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_LOGISTIC,
+                    'previous' => [OrderInterface::STATUS_INSERTED, OrderInterface::SUBSTATUS_INSERTED_RESERVED]
+                ],
+                [
+                    OrderInterface::STATUS_INSERTED,
+                ],
+                [
+                    OrderInterface::SUBSTATUS_INSERTED_WAITING_PAYMENT,
+                ],
+                1
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_INSERTED,
+                    'sourceSubStatus' => OrderInterface::SUBSTATUS_INSERTED_WAITING_MATERIAL,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_LOGISTIC,
+                    'previous' => [OrderInterface::STATUS_INSERTED, OrderInterface::SUBSTATUS_INSERTED_PRODUCTION]
+                ],
+                [
+                    OrderInterface::STATUS_INSERTED,
+                ],
+                [
+                    OrderInterface::SUBSTATUS_INSERTED_ON_BILLING,
+                ],
+                1
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_INSERTED,
+                    'sourceSubStatus' => OrderInterface::SUBSTATUS_INSERTED_WAITING_PAYMENT,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_AFTER_SALES,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_INSERTED,
+                ],
+                [
+                    OrderInterface::SUBSTATUS_INSERTED_ON_BILLING,
+                ],
+                1
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_INSERTED,
+                    'sourceSubStatus' => OrderInterface::SUBSTATUS_INSERTED_ON_BILLING,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_BILLING,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_INSERTED,
+                ],
+                [
+                    OrderInterface::SUBSTATUS_INSERTED_BILLED,
+                ],
+                1
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_INSERTED,
+                    'sourceSubStatus' => OrderInterface::SUBSTATUS_INSERTED_BILLED,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_EXPEDITION,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_AVAILABLE,
+                ],
+                [
+                    null,
+                ],
+                1
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_AVAILABLE,
+                    'sourceSubStatus' => null,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_MASTER,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_REJECTED,
+                ],
+                [
+                    null,
+                ],
+                1
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_AVAILABLE,
+                    'sourceSubStatus' => null,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_ADMIN,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_REJECTED,
+                ],
+                [
+                    null,
+                ],
+                1
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_AVAILABLE,
+                    'sourceSubStatus' => null,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_EXPEDITION,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_COLLECTED,
+                ],
+                [
+                    null,
+                ],
+                1
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_COLLECTED,
+                    'sourceSubStatus' => null,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_MASTER,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_REJECTED,
+                ],
+                [
+                    null,
+                ],
+                1
+            ],
+            [
+                [
+                    'sourceStatus' => OrderInterface::STATUS_COLLECTED,
+                    'sourceSubStatus' => null,
+                    'type' => UserInterface::TYPE_PLATFORM,
+                    'role' => UserInterface::ROLE_PLATFORM_ADMIN,
+                    'previous' => []
+                ],
+                [
+                    OrderInterface::STATUS_REJECTED,
+                ],
+                [
+                    null,
+                ],
+                1
+            ],
+
+        ];
     }
 }
