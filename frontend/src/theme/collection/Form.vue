@@ -45,7 +45,7 @@
         const defaultActionParams = this.actions.default || {}
 
         if (!currentAction.component) {
-          throw `Error: ${action} action component is not defined`
+          throw new Error(`Error: ${action} action component is not defined`)
         }
 
         this.action = Object.assign(defaultActionParams, currentAction)
@@ -81,8 +81,8 @@
 
         const sizeType = sizeTypes[this.action.layout.columns.size]
 
-        const baseSize = parseInt(styles[`ui-size-${sizeType}`])
-        const spaces = parseInt(styles['ui-space-x']) * 2
+        const baseSize = parseInt(styles[`ui-size-${sizeType}`], 10)
+        const spaces = parseInt(styles['ui-space-x'], 10) * 2
 
         return (baseSize - spaces) / this.action.layout.columns.total
       }

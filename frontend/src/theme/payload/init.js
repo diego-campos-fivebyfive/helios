@@ -18,29 +18,38 @@ const typeLeaf = obj =>
     ), false)
 
 const typeGroup = obj =>
-  !emptyObject(obj) && !typeLeaf(obj)
+  (!emptyObject(obj) && !typeLeaf(obj))
 
-const deepTree = (obj, payload = [], path = [], data = {}) =>
+const deepTree = ({
+  schema,
+  data = {},
+  payload = [],
+  path = []
+}) => (
   Object
-    .entries(obj)
+    .entries(schema)
     .reduce((acc, [key, value = {}]) => {
-
       if (typeGroup(value)) {
-        return deepTree(value, payload, getNextPath(path, key), data[key])
+        return deepTree({
+          path: getNextPath(path, key),
+          data: data[key],
+          schema: value,
+          payload
+        })
       }
 
       const item = Object.assign(value, {
+        value: data[key] || null,
         name: key,
-        path: path,
-        value: data[key] || null
+        path
       })
 
       acc.push(item)
       return acc
-
     }, payload)
+)
 
 const init = (schema, data) =>
-  deepTree(schema, [], [], data)
+  deepTree({ schema, data })
 
 export default init
