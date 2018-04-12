@@ -35,10 +35,6 @@ const deepTree = (obj, payload = [], path = [], data = {}) =>
       item.path = path
       item.value = data[key] || null
 
-      if (value.type) {
-        item.rejected = false
-      }
-
       acc.push(item)
       return acc
 

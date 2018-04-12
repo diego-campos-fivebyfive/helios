@@ -167,42 +167,19 @@ describe('init()', () => {
       attr1: {
         name: 'attrX',
         path: ['pathX'],
-        type: 'typeX',
-        rejected: true
+        type: 'typeX'
       }
     }
 
     const expected = [
       expect.objectContaining({
         name: 'attr1',
-        path: [],
-        rejected: false
+        path: []
       })
     ]
 
     expect(init(schema)).toEqual(expected)
   })
-
-  // an issue must be create after this code
-  // to to the master to solve jest's .not method
-  // undefined problem, maybe it is a setup problem
-  // if not, maybe we should setup another task runner
-
-  // it('should remove a define rejected attribute in the leaf object if has no type defined', () => {
-  //   const schema = {
-  //     attr1: {
-  //       rejected: true
-  //     }
-  //   }
-
-  //   const expected = [
-  //     expect.not.objectContaining({
-  //       rejected: expect.anything()
-  //     })
-  //   ]
-
-  //   expect(init(schema)).toEqual(expected)
-  // })
 
   // not sure how to implement this
   // if should whe use a console.log
