@@ -48,8 +48,7 @@ class StatusMapping
     const INSERTED_BILLED = OrderInterface::SUBSTATUS_INSERTED_BILLED;
 
     // PREVIOUS STATUS/SUB-STATUS
-    const PREV_SUB_STATUS = 'prevSubStatus';
-    const PREV_STATUS = 'prevStatus';
+    const PREVIOUS = 'previous';
 
     // USER TYPE
     const PLATFORM = UserInterface::TYPE_PLATFORM;
@@ -68,8 +67,22 @@ class StatusMapping
     const EXPEDITION = UserInterface::ROLE_PLATFORM_EXPEDITION;
 
     /**
+     * PARAMETERS:
+     *
+     * 'sourceStatus' => STATUS_SOURCE
+     * 'sourceSubStatus' => SUB_STATUS_SOURCE (default: self::NULL, "null")
+     * 'type' => USER_TYPE
+     * 'role' => USER_ROLE (default: null)
+     * 'previous' => [TARGET_STATUS, TARGET_SUB_STATUS] (default: null)
+     *
+     */
+
+    /**
      * [
      *     STATUS_ORIGEM => [
+     *         self::ANY => [ (Em qualquer sub-status de origem)
+     *          ...
+     *         ],
      *         SUB_STATUS_ORIGEM => [
      *             STATUS_DESTINO => [
      *                 SUB_STATUS_DESTINO => [
@@ -78,30 +91,29 @@ class StatusMapping
      *                         ROLE_USER_1,
      *                         ROLE_USER_2,
      *                     ],
-     *                     self::PREV_STATUS => [ (status anterior, previousStatus)
-     *                         STATUS_ANTERIOR
-     *                     ],
-     *                     self::PREV_SUB_STATUS => [ (sub-status anterior, previousSubStatus)
-     *                         SUB_STATUS_ANTERIOR
-     *                     ],
+     *                     self::PREVIOUS => [ (status / sub-status anterior, previousStatus previousSubStatus)
+     *                         [STATUS_ANTERIOR, SUB_STATUS_ANTERIOR],
+     *                         [STATUS_ANTERIOR_2],
+     *                         [STATUS_ANTERIOR_1, SUB_STATUS_ANTERIOR_1]
+     *
+     *                     ]
      *                 ]
      *             ]
      *         ],
+     *     ],
+     *     STATUS_ORIGEM_2 => [
      *         self::NULL => [ (Sub-status de origem nulo)
      *             STATUS_DESTINO => [
      *                 self::NULL => [ (Sub-status de destino nulo)
      *                     ...
      *                 ],
-     *                 self::ANY => [ (Em qualquer sub-status de destino)
-     *                     ...
-     *                 ],
      *             ]
-     *         ],
+     *         ]
      *     ]
      * ]
      */
 
-    private $mapping = [
+    private static $mapping = [
         self::BUILDING => [
             self::NULL => [
                 self::PENDING => [
@@ -117,7 +129,7 @@ class StatusMapping
                             self::COMMERCIAL
                         ]
                     ]
-                ],
+                ]
             ]
         ],
         self::PENDING => [
@@ -148,7 +160,7 @@ class StatusMapping
                             self::COMMERCIAL
                         ]
                     ]
-                ],
+                ]
             ]
         ],
         self::VALIDATED => [
@@ -181,7 +193,7 @@ class StatusMapping
                             self::COMMERCIAL
                         ]
                     ]
-                ],
+                ]
             ]
         ],
         self::APPROVED => [
@@ -209,8 +221,8 @@ class StatusMapping
                             self::FINANCIAL,
                             self::FINANCING,
                         ]
-                    ],
-                ],
+                    ]
+                ]
             ]
         ],
         self::DONE => [
@@ -230,7 +242,7 @@ class StatusMapping
                             self::FINANCING,
                         ]
                     ]
-                ],
+                ]
             ],
             self::DONE_CONFIRMED => [
                 self::INSERTED => [
@@ -239,7 +251,7 @@ class StatusMapping
                             self::AFTER_SALES,
                         ]
                     ]
-                ],
+                ]
             ],
             self::DONE_RESERVED => [
                 self::INSERTED => [
@@ -248,8 +260,8 @@ class StatusMapping
                             self::AFTER_SALES,
                         ]
                     ]
-                ],
-            ],
+                ]
+            ]
         ],
         self::INSERTED => [
             self::ANY => [
@@ -260,7 +272,7 @@ class StatusMapping
                             self::ADMIN,
                         ]
                     ]
-                ],
+                ]
             ],
             self::INSERTED_PRODUCTION => [
                 self::INSERTED => [
@@ -273,8 +285,8 @@ class StatusMapping
                         self::PLATFORM => [
                             self::LOGISTIC,
                         ]
-                    ],
-                ],
+                    ]
+                ]
             ],
             self::INSERTED_RESERVED => [
                 self::INSERTED => [
@@ -287,8 +299,8 @@ class StatusMapping
                         self::PLATFORM => [
                             self::LOGISTIC,
                         ]
-                    ],
-                ],
+                    ]
+                ]
             ],
             self::INSERTED_WAITING_MATERIAL => [
                 self::INSERTED => [
@@ -296,47 +308,47 @@ class StatusMapping
                         self::PLATFORM => [
                             self::LOGISTIC,
                         ],
-                        self::PREV_SUB_STATUS => [
-                            self::INSERTED_RESERVED
+                        self::PREVIOUS => [
+                            [self::INSERTED, self::INSERTED_RESERVED]
                         ]
                     ],
                     self::INSERTED_ON_BILLING => [
                         self::PLATFORM => [
                             self::LOGISTIC,
                         ],
-                        self::PREV_SUB_STATUS => [
-                            self::INSERTED_PRODUCTION
+                        self::PREVIOUS => [
+                            [self::INSERTED, self::INSERTED_PRODUCTION]
                         ]
-                    ],
-                ],
+                    ]
+                ]
             ],
             self::INSERTED_WAITING_PAYMENT => [
                 self::INSERTED => [
                     self::INSERTED_ON_BILLING => [
                         self::PLATFORM => [
                             self::AFTER_SALES,
-                        ],
-                    ],
-                ],
+                        ]
+                    ]
+                ]
             ],
             self::INSERTED_ON_BILLING => [
                 self::INSERTED => [
                     self::INSERTED_BILLED => [
                         self::PLATFORM => [
                             self::BILLING,
-                        ],
-                    ],
-                ],
+                        ]
+                    ]
+                ]
             ],
             self::INSERTED_BILLED => [
                 self::AVAILABLE => [
                     self::NULL => [
                         self::PLATFORM => [
                             self::EXPEDITION,
-                        ],
-                    ],
-                ],
-            ],
+                        ]
+                    ]
+                ]
+            ]
         ],
         self::AVAILABLE => [
             self::NULL => [
@@ -354,7 +366,7 @@ class StatusMapping
                             self::EXPEDITION,
                         ]
                     ]
-                ],
+                ]
             ]
         ],
         self::COLLECTED => [
@@ -366,8 +378,95 @@ class StatusMapping
                             self::ADMIN,
                         ]
                     ]
-                ],
+                ]
             ]
-        ],
+        ]
     ];
+
+    /**
+     * @param $parameters
+     * @return array
+     */
+    public static function getPossibilities($parameters)
+    {
+        $possibilities = [];
+
+        if (array_key_exists($parameters['sourceStatus'], self::$mapping)) {
+            $sourceSubStatus = array_key_exists('sourceSubStatus', $parameters) && $parameters['sourceSubStatus'] !== null  ? $parameters['sourceSubStatus'] : self::NULL;
+            self::fromSubStatus($parameters, $sourceSubStatus, $possibilities);
+        }
+
+        return $possibilities;
+    }
+
+    /**
+     * @param $config
+     * @param $parameters
+     * @return bool
+     */
+    private static function validatePrevious($config, $parameters)
+    {
+        if (array_key_exists(self::PREVIOUS, $config)) {
+            $previousStatus = array_key_exists('previous', $parameters) ? $parameters['previous'][0] : null;
+            $previousSubStatus = array_key_exists('previous', $parameters) ? $parameters['previous'][1] : null;
+
+            foreach ($config[self::PREVIOUS] as $previous) {
+                if (array_key_exists(1, $previous)) {
+                    if($previous[0] === $previousStatus && $previous[1] === $previousSubStatus){
+                        return true;
+                        break;
+                    }
+                } else {
+                    if($previous[0] === $previousStatus){
+                        return true;
+                        break;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $parameters
+     * @param $sourceSubStatus
+     * @param $possibilities
+     */
+    private static function fromSubStatus($parameters, $sourceSubStatus, &$possibilities)
+    {
+        if ($sourceSubStatus != self::ANY) {
+            self::fromSubStatus($parameters, self::ANY, $possibilities);
+        }
+
+        $map = self::$mapping;
+
+        $sourceStatus = $parameters['sourceStatus'];
+
+        if (array_key_exists($sourceSubStatus, $map[$sourceStatus])) {
+            $possibleStatus = $map[$sourceStatus][$sourceSubStatus];
+
+            foreach ($possibleStatus as $status => $possibleSubStatus) {
+                foreach ($possibleSubStatus as $subStatus => $config) {
+
+                    if (!self::validatePrevious($config, $parameters)) {
+                        continue;
+                    }
+
+                    $type = $parameters['type'];
+                    $role = array_key_exists('role', $parameters) ? $parameters['role'] : null;
+
+                    if (in_array($type, $config) || (array_key_exists($type, $config) && in_array($role, $config[$type]))) {
+                        $possibilities[] = [
+                            'status' => $status,
+                            'substatus' => $subStatus === self::NULL ? null : $subStatus,
+                            'type' => $type
+                        ];
+                    }
+                }
+            }
+        }
+    }
 }
