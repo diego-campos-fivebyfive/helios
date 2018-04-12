@@ -13,7 +13,7 @@ use Tests\AppBundle\AppTestCase;
  */
 class StatusMappingTest extends AppTestCase
 {
-    public function testGetActions()
+    public function testGetPossibilities()
     {
 //        $parameters = [
 //            'sourceStatus' => OrderInterface::STATUS_BUILDING,
@@ -44,6 +44,39 @@ class StatusMappingTest extends AppTestCase
         }
     }
 
+    public function testGetActions()
+    {
+        $tests = $this->getTests();
+
+        foreach ($tests as $test) {
+            if (array_key_exists('action', $test)) {
+                $expectedAction = $test['action'];
+
+                $parameters = $test[0];
+
+                $actions = StatusMapping::getPossibilities($parameters, true);
+
+                self::assertEquals(count($expectedAction), count($actions));
+
+                foreach ($actions as $action) {
+                    $ok = false;
+                    foreach ($expectedAction as $item) {
+                        if ($action['status'] === $item[0] &&
+                            $action['substatus'] === $item[1]) {
+                            $ok = true;
+                        }
+                    }
+                    self::assertEquals(true, $ok);
+                }
+            }
+
+
+        }
+    }
+
+    /**
+     * @return array
+     */
     private function getTests()
     {
         return [
@@ -54,7 +87,10 @@ class StatusMappingTest extends AppTestCase
                 ],
                 [OrderInterface::STATUS_PENDING],                       // status aceitos
                 [null],                                                 // sub status aceitos
-                1                                                       // quantidade de possibilidades
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_PENDING, null]
+                ]
             ],
             [
                 [
@@ -68,7 +104,10 @@ class StatusMappingTest extends AppTestCase
                     OrderInterface::STATUS_VALIDATED
                 ],
                 [null],
-                1
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_VALIDATED, null],
+                ]
             ],
             [
                 [
@@ -82,7 +121,10 @@ class StatusMappingTest extends AppTestCase
                     OrderInterface::STATUS_VALIDATED
                 ],
                 [null],
-                1
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_VALIDATED, null],
+                ]
             ],
             [
                 [
@@ -96,7 +138,10 @@ class StatusMappingTest extends AppTestCase
                     OrderInterface::STATUS_VALIDATED
                 ],
                 [null],
-                1
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_VALIDATED, null],
+                ]
             ],
             [
                 [
@@ -112,7 +157,11 @@ class StatusMappingTest extends AppTestCase
                     OrderInterface::STATUS_REJECTED,
                 ],
                 [null],
-                3
+                3,
+                'action' => [
+                    [OrderInterface::STATUS_VALIDATED, null],
+                    [OrderInterface::STATUS_REJECTED, null]
+                ]
             ],
             [
                 [
@@ -128,7 +177,11 @@ class StatusMappingTest extends AppTestCase
                     OrderInterface::STATUS_REJECTED,
                 ],
                 [null],
-                3
+                3,
+                'action' => [
+                    [OrderInterface::STATUS_VALIDATED, null],
+                    [OrderInterface::STATUS_REJECTED, null]
+                ]
             ],
             [
                 [
@@ -144,7 +197,11 @@ class StatusMappingTest extends AppTestCase
                     OrderInterface::STATUS_REJECTED,
                 ],
                 [null],
-                3
+                3,
+                'action' => [
+                    [OrderInterface::STATUS_VALIDATED, null],
+                    [OrderInterface::STATUS_REJECTED, null]
+                ]
             ],
             [
                 [
@@ -159,7 +216,11 @@ class StatusMappingTest extends AppTestCase
                     OrderInterface::STATUS_REJECTED,
                 ],
                 [null],
-                2
+                2,
+                'action' => [
+                    [OrderInterface::STATUS_PENDING, null],
+                    [OrderInterface::STATUS_REJECTED, null]
+                ]
             ],
             [
                 [
@@ -174,7 +235,11 @@ class StatusMappingTest extends AppTestCase
                     OrderInterface::STATUS_REJECTED,
                 ],
                 [null],
-                2
+                2,
+                'action' => [
+                    [OrderInterface::STATUS_PENDING, null],
+                    [OrderInterface::STATUS_REJECTED, null]
+                ]
             ],
             [
                 [
@@ -189,7 +254,11 @@ class StatusMappingTest extends AppTestCase
                     OrderInterface::STATUS_REJECTED,
                 ],
                 [null],
-                2
+                2,
+                'action' => [
+                    [OrderInterface::STATUS_PENDING, null],
+                    [OrderInterface::STATUS_REJECTED, null]
+                ]
             ],
             [
                 [
@@ -204,7 +273,11 @@ class StatusMappingTest extends AppTestCase
                     OrderInterface::STATUS_REJECTED,
                 ],
                 [null],
-                3
+                3,
+                'action' => [
+                    [OrderInterface::STATUS_APPROVED, null],
+                    [OrderInterface::STATUS_REJECTED, null]
+                ]
             ],
             [
                 [
@@ -218,7 +291,10 @@ class StatusMappingTest extends AppTestCase
                     OrderInterface::STATUS_REJECTED,
                 ],
                 [null],
-                1
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_REJECTED, null]
+                ]
             ],
             [
                 [
@@ -232,7 +308,10 @@ class StatusMappingTest extends AppTestCase
                     OrderInterface::STATUS_REJECTED,
                 ],
                 [null],
-                1
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_REJECTED, null]
+                ]
             ],
             [
                 [
@@ -246,7 +325,10 @@ class StatusMappingTest extends AppTestCase
                     OrderInterface::STATUS_REJECTED,
                 ],
                 [null],
-                1
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_REJECTED, null]
+                ]
             ],
             [
                 [
@@ -264,7 +346,12 @@ class StatusMappingTest extends AppTestCase
                     OrderInterface::SUBSTATUS_DONE_CONFIRMED,
                     OrderInterface::SUBSTATUS_DONE_RESERVED,
                 ],
-                3
+                3,
+                'action' => [
+                    [OrderInterface::STATUS_REJECTED, null],
+                    [OrderInterface::STATUS_DONE, OrderInterface::SUBSTATUS_DONE_CONFIRMED],
+                    [OrderInterface::STATUS_DONE, OrderInterface::SUBSTATUS_DONE_RESERVED],
+                ]
             ],
             [
                 [
@@ -282,7 +369,12 @@ class StatusMappingTest extends AppTestCase
                     OrderInterface::SUBSTATUS_DONE_CONFIRMED,
                     OrderInterface::SUBSTATUS_DONE_RESERVED,
                 ],
-                3
+                3,
+                'action' => [
+                    [OrderInterface::STATUS_REJECTED, null],
+                    [OrderInterface::STATUS_DONE, OrderInterface::SUBSTATUS_DONE_CONFIRMED],
+                    [OrderInterface::STATUS_DONE, OrderInterface::SUBSTATUS_DONE_RESERVED],
+                ]
             ],
             [
                 [
@@ -298,7 +390,10 @@ class StatusMappingTest extends AppTestCase
                 [
                     null
                 ],
-                1
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_REJECTED, null],
+                ]
             ],
             [
                 [
@@ -314,7 +409,10 @@ class StatusMappingTest extends AppTestCase
                 [
                     null
                 ],
-                1
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_REJECTED, null],
+                ]
             ],
             [
                 [
@@ -330,7 +428,10 @@ class StatusMappingTest extends AppTestCase
                 [
                     null
                 ],
-                1
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_APPROVED, null],
+                ]
             ],
             [
                 [
@@ -346,7 +447,10 @@ class StatusMappingTest extends AppTestCase
                 [
                     null
                 ],
-                1
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_APPROVED, null],
+                ]
             ],
             [
                 [
@@ -362,7 +466,10 @@ class StatusMappingTest extends AppTestCase
                 [
                     OrderInterface::SUBSTATUS_INSERTED_PRODUCTION,
                 ],
-                1
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_INSERTED, OrderInterface::SUBSTATUS_INSERTED_PRODUCTION],
+                ]
             ],
             [
                 [
@@ -378,7 +485,10 @@ class StatusMappingTest extends AppTestCase
                 [
                     OrderInterface::SUBSTATUS_INSERTED_RESERVED,
                 ],
-                1
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_INSERTED, OrderInterface::SUBSTATUS_INSERTED_RESERVED],
+                ]
             ],
             [
                 [
@@ -394,7 +504,10 @@ class StatusMappingTest extends AppTestCase
                 [
                     null,
                 ],
-                1
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_REJECTED, null],
+                ]
             ],
             [
                 [
@@ -410,7 +523,10 @@ class StatusMappingTest extends AppTestCase
                 [
                     null,
                 ],
-                1
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_REJECTED, null],
+                ]
             ],
             [
                 [
@@ -427,7 +543,11 @@ class StatusMappingTest extends AppTestCase
                     OrderInterface::SUBSTATUS_INSERTED_WAITING_MATERIAL,
                     OrderInterface::SUBSTATUS_INSERTED_ON_BILLING,
                 ],
-                2
+                2,
+                'action' => [
+                    [OrderInterface::STATUS_INSERTED, OrderInterface::SUBSTATUS_INSERTED_WAITING_MATERIAL],
+                    [OrderInterface::STATUS_INSERTED, OrderInterface::SUBSTATUS_INSERTED_ON_BILLING],
+                ]
             ],
             [
                 [
@@ -444,7 +564,11 @@ class StatusMappingTest extends AppTestCase
                     OrderInterface::SUBSTATUS_INSERTED_WAITING_MATERIAL,
                     OrderInterface::SUBSTATUS_INSERTED_WAITING_PAYMENT,
                 ],
-                2
+                2,
+                'action' => [
+                    [OrderInterface::STATUS_INSERTED, OrderInterface::SUBSTATUS_INSERTED_WAITING_MATERIAL],
+                    [OrderInterface::STATUS_INSERTED, OrderInterface::SUBSTATUS_INSERTED_WAITING_PAYMENT],
+                ]
             ],
             [
                 [
@@ -460,7 +584,10 @@ class StatusMappingTest extends AppTestCase
                 [
                     OrderInterface::SUBSTATUS_INSERTED_WAITING_PAYMENT,
                 ],
-                1
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_INSERTED, OrderInterface::SUBSTATUS_INSERTED_WAITING_PAYMENT],
+                ]
             ],
             [
                 [
@@ -476,7 +603,10 @@ class StatusMappingTest extends AppTestCase
                 [
                     OrderInterface::SUBSTATUS_INSERTED_ON_BILLING,
                 ],
-                1
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_INSERTED, OrderInterface::SUBSTATUS_INSERTED_ON_BILLING],
+                ]
             ],
             [
                 [
@@ -492,7 +622,10 @@ class StatusMappingTest extends AppTestCase
                 [
                     OrderInterface::SUBSTATUS_INSERTED_ON_BILLING,
                 ],
-                1
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_INSERTED, OrderInterface::SUBSTATUS_INSERTED_ON_BILLING],
+                ]
             ],
             [
                 [
@@ -508,7 +641,10 @@ class StatusMappingTest extends AppTestCase
                 [
                     OrderInterface::SUBSTATUS_INSERTED_BILLED,
                 ],
-                1
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_INSERTED, OrderInterface::SUBSTATUS_INSERTED_BILLED],
+                ]
             ],
             [
                 [
@@ -524,7 +660,10 @@ class StatusMappingTest extends AppTestCase
                 [
                     null,
                 ],
-                1
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_AVAILABLE, null],
+                ]
             ],
             [
                 [
@@ -540,7 +679,10 @@ class StatusMappingTest extends AppTestCase
                 [
                     null,
                 ],
-                1
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_REJECTED, null],
+                ]
             ],
             [
                 [
@@ -556,7 +698,10 @@ class StatusMappingTest extends AppTestCase
                 [
                     null,
                 ],
-                1
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_REJECTED, null],
+                ]
             ],
             [
                 [
@@ -572,7 +717,10 @@ class StatusMappingTest extends AppTestCase
                 [
                     null,
                 ],
-                1
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_COLLECTED, null],
+                ]
             ],
             [
                 [
@@ -588,7 +736,10 @@ class StatusMappingTest extends AppTestCase
                 [
                     null,
                 ],
-                1
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_REJECTED, null],
+                ]
             ],
             [
                 [
@@ -604,7 +755,10 @@ class StatusMappingTest extends AppTestCase
                 [
                     null,
                 ],
-                1
+                1,
+                'action' => [
+                    [OrderInterface::STATUS_REJECTED, null],
+                ]
             ],
 
         ];
