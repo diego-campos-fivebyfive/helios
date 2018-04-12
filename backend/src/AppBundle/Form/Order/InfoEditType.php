@@ -89,6 +89,30 @@ class InfoEditType extends AbstractType
             ->add('deliveryDelay')
             ->add('expireDays');
 
+        // Address
+        $builder
+            ->add('deliveryPostcode', null, [
+                'required' => true
+            ])
+            ->add('deliveryState', null, [
+                'required' => true
+            ])
+            ->add('deliveryCity', null, [
+                'required' => true
+            ])
+            ->add('deliveryDistrict', null, [
+                'required' => true
+            ])
+            ->add('deliveryStreet', null, [
+                'required' => true
+            ])
+            ->add('deliveryNumber', null, [
+                'required' => true
+            ])
+            ->add('deliveryComplement', null, [
+                'required' => false
+            ]);
+
         // ERP
         $builder
             ->add('erpOR', TextType::class, [

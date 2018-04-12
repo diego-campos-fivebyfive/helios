@@ -3,8 +3,10 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Order\Order;
+use AppBundle\Service\Mailer;
 use AppBundle\Service\Order\OrderExporter;
 use AppBundle\Service\Order\OrderFinder;
+use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
@@ -52,5 +54,19 @@ class DebugController extends AbstractController
         // Manter estes procedimentos para controle
         var_dump($ids);
         die(sprintf('<br> %d orçamentos corrigidos.', count($ids)));
+    }
+
+    /**
+     * @Route("/{id}/email")
+     */
+    public function emailAction(Request $request, Order $order)
+    {
+        //dump($order->getMessages()->last()->isRestricted());die;
+
+        /** @var Mailer $mailerService */
+        $mailerService = $this->container->get('app_mailer');
+
+        $mailerService->sendOrderMessage($order);
+
     }
 }
