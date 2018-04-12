@@ -379,7 +379,7 @@ class StatusMappingTest extends AppTestCase
             [
                 [
                     'sourceStatus' => OrderInterface::STATUS_DONE,
-                    'sourceSubStatus' => null,
+                    'sourceSubStatus' => OrderInterface::SUBSTATUS_DONE_CONFIRMED,
                     'type' => UserInterface::TYPE_PLATFORM,
                     'role' => UserInterface::ROLE_PLATFORM_MASTER,
                     'previous' => []
