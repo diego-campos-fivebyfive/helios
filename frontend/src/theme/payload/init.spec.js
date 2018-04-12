@@ -1,13 +1,22 @@
 import init from './init'
 
+const setAttr = (field, key, value) => {
+  field[key] = value
+  return field
+}
+
 describe('init()', () => {
   it('should returns an empty array if receives an empty schema', () => {
+    const data = {}
+
     const schema = {}
 
-    expect(init(schema)).toEqual([])
+    expect(init(schema, data, setAttr)).toEqual([])
   })
 
   it('should returns each attribute value in the array', () => {
+    const data = {}
+
     const schema = {
       attr1: {},
       attr2: {},
@@ -20,10 +29,12 @@ describe('init()', () => {
       expect.any(Object)
     ]
 
-    expect(init(schema)).toEqual(expected)
+    expect(init(schema, data, setAttr)).toEqual(expected)
   })
 
   it('should includes empty attributes in the payload array', () => {
+    const data = {}
+
     const schema = {
       attr1: {
         attr2: {}
@@ -46,10 +57,12 @@ describe('init()', () => {
       expect.any(Object)
     ]
 
-    expect(init(schema)).toEqual(expected)
+    expect(init(schema, data, setAttr)).toEqual(expected)
   })
 
   it('should includes attributes when it contains an attribute that is not object in the payload array', () => {
+    const data = {}
+
     const schema = {
       attr1: {
         attr2: {
@@ -62,9 +75,13 @@ describe('init()', () => {
     const expected = [
       expect.objectContaining({})
     ]
+
+    expect(init(schema, data, setAttr)).toEqual(expected)
   })
 
   it('should returns the leafs and keep their attributes in the payload array', () => {
+    const data = {}
+
     const schema = {
       attr1: {
         type: 'type1'
@@ -76,9 +93,13 @@ describe('init()', () => {
         type: 'type1'
       })
     ]
+
+    expect(init(schema, data, setAttr)).toEqual(expected)
   })
 
   it('should returns the key as name attribute to leaf in the payload array', () => {
+    const data = {}
+
     const schema = {
       attr1: {
         attr2: {}
@@ -91,10 +112,12 @@ describe('init()', () => {
       })
     ]
 
-    expect(init(schema)).toEqual(expected)
+    expect(init(schema, data, setAttr)).toEqual(expected)
   })
 
   it('should includes all the leaf\'s parents key in a path array attribute, ordened by the composition order', () => {
+    const data = {}
+
     const schema = {
       attr1: {
         attr2: {
@@ -115,7 +138,28 @@ describe('init()', () => {
       })
     ]
 
-    expect(init(schema)).toEqual(expected)
+    expect(init(schema, data, setAttr)).toEqual(expected)
+  })
+
+  it('should rewrite the reserved attribute in the leaf object if it is already defined', () => {
+    const data = {}
+
+    const schema = {
+      attr1: {
+        name: 'attrX',
+        path: ['pathX'],
+        type: 'typeX'
+      }
+    }
+
+    const expected = [
+      expect.objectContaining({
+        name: 'attr1',
+        path: []
+      })
+    ]
+
+    expect(init(schema, data, setAttr)).toEqual(expected)
   })
 
   it('should includes to the leaf value attribute the current data value', () => {
@@ -137,7 +181,7 @@ describe('init()', () => {
       })
     ]
 
-    expect(init(schema, data)).toEqual(expected)
+    expect(init(schema, data, setAttr)).toEqual(expected)
   })
 
   it('should includes to the leaf value attribute a null value if the current data value is not defined', () => {
@@ -159,44 +203,6 @@ describe('init()', () => {
       })
     ]
 
-    expect(init(schema, data)).toEqual(expected)
+    expect(init(schema, data, setAttr)).toEqual(expected)
   })
-
-  it('should rewrite the reserved attribute in the leaf object if it is already defined', () => {
-    const schema = {
-      attr1: {
-        name: 'attrX',
-        path: ['pathX'],
-        type: 'typeX'
-      }
-    }
-
-    const expected = [
-      expect.objectContaining({
-        name: 'attr1',
-        path: []
-      })
-    ]
-
-    expect(init(schema)).toEqual(expected)
-  })
-
-  // not sure how to implement this
-  // if should whe use a console.log
-  // or if there is a way to test throw without break
-  // early tests and without adding component attrs
-  // for each leaf on them
-
-  // it('should throws an exception when a leaf not contains a component attribute', () => {
-  //   const schema = {
-  //     attr1: {
-  //       some: 'someX'
-  //     },
-  //     attr2: {}
-  //   }
-
-  //   const expected = 'attr1 in the schema has attributes defined but not a component'
-
-  //   expect(init(schema)).toThrow(expected)
-  // })
 })

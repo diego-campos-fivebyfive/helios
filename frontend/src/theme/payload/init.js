@@ -25,7 +25,7 @@ const deepTree = ({
   data = {},
   payload = [],
   path = []
-}) => (
+}, setAttr) => (
   Object
     .entries(schema)
     .reduce((acc, [key, value = {}]) => {
@@ -35,21 +35,21 @@ const deepTree = ({
           data: data[key],
           schema: value,
           payload
-        })
+        }, setAttr)
       }
 
-      const item = Object.assign(value, {
-        value: data[key] || null,
-        name: key,
-        path
-      })
+      const item = Object.assign({}, value)
+
+      setAttr(item, 'value', data[key] || null)
+      setAttr(item, 'path', path)
+      setAttr(item, 'name', key)
 
       acc.push(item)
       return acc
     }, payload)
 )
 
-const init = (schema, data) =>
-  deepTree({ schema, data })
+const init = (schema, data, setAttr) =>
+  deepTree({ schema, data }, setAttr)
 
 export default init
