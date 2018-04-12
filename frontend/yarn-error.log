@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/bin/node /usr/share/yarn/bin/yarn.js test
+  /usr/bin/node /usr/share/yarn/bin/yarn.js lint
 
 PATH: 
   /rafael/sices/devops/cli:/rafael/bin:/rafael/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/rafael/sices/devops/cli
@@ -39,10 +39,11 @@ npm manifest:
       "eslint-config-airbnb-base": "^12.1.0",
       "eslint-loader": "^1.9.0",
       "eslint-plugin-import": "^2.8.0",
-      "eslint-plugin-vue": "^4.2.0",
+      "eslint-plugin-vue": "^4.4.0",
       "extract-text-webpack-plugin": "^3.0.2",
       "file-loader": "^1.1.6",
       "html-webpack-plugin": "^2.30.1",
+      "jest": "^22.4.3",
       "node-sass": "^4.7.2",
       "optimize-css-assets-webpack-plugin": "^3.2.0",
       "postcss-import": "^11.0.0",
@@ -66,7 +67,6 @@ npm manifest:
     },
     "dependencies": {
       "axios": "^0.17.1",
-      "jest": "^22.4.3",
       "vue": "^2.5.13",
       "vue-awesome": "^2.3.4",
       "vue-axios": "^2.0.2",
@@ -2478,11 +2478,11 @@ Lockfile:
     version "2.3.1"
     resolved "https://registry.yarnpkg.com/eslint-plugin-standard/-/eslint-plugin-standard-2.3.1.tgz#6765bd2a6d9ecdc7bdf1b145ae4bb30e2b7b86f8"
   
-  eslint-plugin-vue@^4.2.0:
-    version "4.2.2"
-    resolved "https://registry.yarnpkg.com/eslint-plugin-vue/-/eslint-plugin-vue-4.2.2.tgz#63e55c61574af8ef983328ddd2688d6389a0214b"
+  eslint-plugin-vue@^4.4.0:
+    version "4.4.0"
+    resolved "https://registry.yarnpkg.com/eslint-plugin-vue/-/eslint-plugin-vue-4.4.0.tgz#bfc3a71f76bd0e139313e4425a807257ae42f768"
     dependencies:
-      vue-eslint-parser "^2.0.1"
+      vue-eslint-parser "^2.0.3"
   
   eslint-restricted-globals@^0.1.1:
     version "0.1.1"
@@ -8181,9 +8181,9 @@ Lockfile:
     version "1.5.4"
     resolved "https://registry.yarnpkg.com/vue-cookies/-/vue-cookies-1.5.4.tgz#c897fd43f5c7edead3e993d4d3d116100bb8a3bb"
   
-  vue-eslint-parser@^2.0.1:
-    version "2.0.2"
-    resolved "https://registry.yarnpkg.com/vue-eslint-parser/-/vue-eslint-parser-2.0.2.tgz#8d603545e9d7c134699075bd1772af1ffd86b744"
+  vue-eslint-parser@^2.0.3:
+    version "2.0.3"
+    resolved "https://registry.yarnpkg.com/vue-eslint-parser/-/vue-eslint-parser-2.0.3.tgz#c268c96c6d94cfe3d938a5f7593959b0ca3360d1"
     dependencies:
       debug "^3.1.0"
       eslint-scope "^3.7.1"
@@ -8616,7 +8616,7 @@ Trace:
   Error: Command failed.
   Exit code: 1
   Command: sh
-  Arguments: -c jest ./src
+  Arguments: -c npm run lint:template; npm run lint:style; npm run lint:script
   Directory: /rafael/sices/frontend
   Output:
   
