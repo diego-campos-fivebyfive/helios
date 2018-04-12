@@ -147,11 +147,11 @@
 
                     {% set hasAgent = attribute(form, 'agent') is defined %}
                     <div class="row">
-                        <div class="form-group col-md-4">
-                            {{ form_widget(form.like,{attr:{class:'form-control', placeholder: 'nome, razão social, cnpj, número...'}}) }}
+                        <div class="form-group col-md-3">
+                            {{ form_widget(form.like,{attr:{class:'form-control', placeholder: 'nome, razão social, etc...'}}) }}
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             {% include view('admin/helper/status_filter.html.twig') %}
                         </div>
 
@@ -162,20 +162,21 @@
                                 <i class="fa fa-eraser"></i>
                             </button>
                         </div>
-                    </div>
 
-                    <div class="row form-group">
                         {% if hasAgent %}
-                            <div class="col-md-2 ">
+                            <div class="col-md-2">
                                 {{ form_widget(form.agent,{attr:{class:'form-control'}}) }}
                             </div>
                         {% endif %}
+                    </div>
+
+                    <div class="row form-group">
 
                         <div class="col-md-2">
                             {% include view('admin/helper/states_filter.html.twig') %}
                         </div>
 
-                        <div class="col-md-{% if hasAgent %}3{% else %}4{% endif %}">
+                        <div class="col-md-3">
                             {% include view('admin/helper/components_filter.html.twig') %}
                         </div>
 
@@ -185,9 +186,16 @@
                             {{ form_widget(form.valueMax,{attr:{class:'form-control', placeholder:'Máximo' }}) }}
                         </div>
 
-                        <div class="col-md-{% if hasAgent %}1{% else %}2{% endif %}">
+                        <div class="col-lg-3">
+                            <div class="form-group col-md-12">
+                                {{ form_widget(form.antecipatedBilling) }}
+                                {{ form_label(form.antecipatedBilling, 'Faturamento antecipado') }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 pull-right">
                             <button type="submit" class="btn btn-primary btn-md btn-block">
-                                <i class="fa fa-search"></i> {% if not hasAgent %}Pesquisar{% endif %}
+                                <i class="fa fa-search"></i> Pesquisar
                             </button>
                         </div>
 

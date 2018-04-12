@@ -48,8 +48,10 @@ class StatusMapping
     const INSERTED_BILLED = OrderInterface::SUBSTATUS_INSERTED_BILLED;
 
     // PREVIOUS STATUS/SUB-STATUS
-    const PREV_SUB_STATUS = 'prevSubStatus';
-    const PREV_STATUS = 'prevStatus';
+    const PREVIOUS = 'previous';
+
+    const ACTION = 'action';
+    const LABEL = 'label';
 
     // USER TYPE
     const PLATFORM = UserInterface::TYPE_PLATFORM;
@@ -68,8 +70,22 @@ class StatusMapping
     const EXPEDITION = UserInterface::ROLE_PLATFORM_EXPEDITION;
 
     /**
+     * PARAMETERS:
+     *
+     * 'sourceStatus' => STATUS_SOURCE
+     * 'sourceSubStatus' => SUB_STATUS_SOURCE (default: self::NULL, "null")
+     * 'type' => USER_TYPE
+     * 'role' => USER_ROLE (default: null)
+     * 'previous' => [TARGET_STATUS, TARGET_SUB_STATUS] (default: null)
+     *
+     */
+
+    /**
      * [
      *     STATUS_ORIGEM => [
+     *         self::ANY => [ (Em qualquer sub-status de origem)
+     *          ...
+     *         ],
      *         SUB_STATUS_ORIGEM => [
      *             STATUS_DESTINO => [
      *                 SUB_STATUS_DESTINO => [
@@ -78,35 +94,37 @@ class StatusMapping
      *                         ROLE_USER_1,
      *                         ROLE_USER_2,
      *                     ],
-     *                     self::PREV_STATUS => [ (status anterior, previousStatus)
-     *                         STATUS_ANTERIOR
-     *                     ],
-     *                     self::PREV_SUB_STATUS => [ (sub-status anterior, previousSubStatus)
-     *                         SUB_STATUS_ANTERIOR
-     *                     ],
+     *                     self::PREVIOUS => [ (status / sub-status anterior, previousStatus previousSubStatus)
+     *                         [STATUS_ANTERIOR, SUB_STATUS_ANTERIOR],
+     *                         [STATUS_ANTERIOR_2],
+     *                         [STATUS_ANTERIOR_1, SUB_STATUS_ANTERIOR_1]
+     *
+     *                     ]
      *                 ]
      *             ]
      *         ],
+     *     ],
+     *     STATUS_ORIGEM_2 => [
      *         self::NULL => [ (Sub-status de origem nulo)
      *             STATUS_DESTINO => [
      *                 self::NULL => [ (Sub-status de destino nulo)
      *                     ...
      *                 ],
-     *                 self::ANY => [ (Em qualquer sub-status de destino)
-     *                     ...
-     *                 ],
      *             ]
-     *         ],
+     *         ]
      *     ]
      * ]
      */
 
-    private $mapping = [
+    private static $mapping = [
         self::BUILDING => [
             self::NULL => [
                 self::PENDING => [
                     self::NULL => [
                         self::ACCOUNT
+                    ],
+                    self::ACTION => [
+                        self::LABEL => 'Enviar solicitação para SICES'
                     ]
                 ],
                 self::VALIDATED => [
@@ -116,8 +134,11 @@ class StatusMapping
                             self::ADMIN,
                             self::COMMERCIAL
                         ]
+                    ],
+                    self::ACTION => [
+                        self::LABEL => 'Validar Orçamento'
                     ]
-                ],
+                ]
             ]
         ],
         self::PENDING => [
@@ -138,6 +159,9 @@ class StatusMapping
                             self::ADMIN,
                             self::COMMERCIAL
                         ]
+                    ],
+                    self::ACTION => [
+                        self::LABEL => 'Validar Orçamento'
                     ]
                 ],
                 self::REJECTED => [
@@ -147,8 +171,11 @@ class StatusMapping
                             self::ADMIN,
                             self::COMMERCIAL
                         ]
+                    ],
+                    self::ACTION => [
+                        self::LABEL => 'Cancelar Orçamento'
                     ]
-                ],
+                ]
             ]
         ],
         self::VALIDATED => [
@@ -165,11 +192,17 @@ class StatusMapping
                             self::ADMIN,
                             self::COMMERCIAL
                         ]
+                    ],
+                    self::ACTION => [
+                        self::LABEL => 'Remover Validação'
                     ]
                 ],
                 self::APPROVED => [
                     self::NULL => [
                         self::ACCOUNT
+                    ],
+                    self::ACTION => [
+                        self::LABEL => 'Aprovar Orçamento'
                     ]
                 ],
                 self::REJECTED => [
@@ -180,8 +213,11 @@ class StatusMapping
                             self::ADMIN,
                             self::COMMERCIAL
                         ]
+                    ],
+                    self::ACTION => [
+                        self::LABEL => 'Cancelar Orçamento'
                     ]
-                ],
+                ]
             ]
         ],
         self::APPROVED => [
@@ -195,6 +231,9 @@ class StatusMapping
                             self::FINANCIAL,
                             self::FINANCING,
                         ]
+                    ],
+                    self::ACTION => [
+                        self::LABEL => 'Cancelar Orçamento'
                     ]
                 ],
                 self::DONE => [
@@ -202,15 +241,21 @@ class StatusMapping
                         self::PLATFORM => [
                             self::FINANCIAL,
                             self::FINANCING,
+                        ],
+                        self::ACTION => [
+                            self::LABEL => 'Pagamento Confirmado'
                         ]
                     ],
                     self::DONE_RESERVED => [
                         self::PLATFORM => [
                             self::FINANCIAL,
                             self::FINANCING,
+                        ],
+                        self::ACTION => [
+                            self::LABEL => 'Confirmar Reserva'
                         ]
-                    ],
-                ],
+                    ]
+                ]
             ]
         ],
         self::DONE => [
@@ -221,6 +266,9 @@ class StatusMapping
                             self::MASTER,
                             self::ADMIN,
                         ]
+                    ],
+                    self::ACTION => [
+                        self::LABEL => 'Cancelar Orçamento'
                     ]
                 ],
                 self::APPROVED => [
@@ -229,8 +277,11 @@ class StatusMapping
                             self::FINANCIAL,
                             self::FINANCING,
                         ]
+                    ],
+                    self::ACTION => [
+                        self::LABEL => 'Remover Confirmação'
                     ]
-                ],
+                ]
             ],
             self::DONE_CONFIRMED => [
                 self::INSERTED => [
@@ -238,8 +289,11 @@ class StatusMapping
                         self::PLATFORM => [
                             self::AFTER_SALES,
                         ]
+                    ],
+                    self::ACTION => [
+                        self::LABEL => 'Iniciar Produção'
                     ]
-                ],
+                ]
             ],
             self::DONE_RESERVED => [
                 self::INSERTED => [
@@ -247,9 +301,12 @@ class StatusMapping
                         self::PLATFORM => [
                             self::AFTER_SALES,
                         ]
+                    ],
+                    self::ACTION => [
+                        self::LABEL => 'Iniciar Produção de Reserva'
                     ]
-                ],
-            ],
+                ]
+            ]
         ],
         self::INSERTED => [
             self::ANY => [
@@ -259,36 +316,51 @@ class StatusMapping
                             self::MASTER,
                             self::ADMIN,
                         ]
+                    ],
+                    self::ACTION => [
+                        self::LABEL => 'Cancelar Orçamento'
                     ]
-                ],
+                ]
             ],
             self::INSERTED_PRODUCTION => [
                 self::INSERTED => [
                     self::INSERTED_WAITING_MATERIAL => [
                         self::PLATFORM => [
                             self::LOGISTIC,
+                        ],
+                        self::ACTION => [
+                            self::LABEL => 'Aguardando Material'
                         ]
                     ],
                     self::INSERTED_ON_BILLING => [
                         self::PLATFORM => [
                             self::LOGISTIC,
+                        ],
+                        self::ACTION => [
+                            self::LABEL => 'Produção Concluída'
                         ]
-                    ],
-                ],
+                    ]
+                ]
             ],
             self::INSERTED_RESERVED => [
                 self::INSERTED => [
                     self::INSERTED_WAITING_MATERIAL => [
                         self::PLATFORM => [
                             self::LOGISTIC,
+                        ],
+                        self::ACTION => [
+                            self::LABEL => 'Aguardando Material'
                         ]
                     ],
                     self::INSERTED_WAITING_PAYMENT => [
                         self::PLATFORM => [
                             self::LOGISTIC,
+                        ],
+                        self::ACTION => [
+                            self::LABEL => 'Produção Concluída'
                         ]
-                    ],
-                ],
+                    ]
+                ]
             ],
             self::INSERTED_WAITING_MATERIAL => [
                 self::INSERTED => [
@@ -296,47 +368,62 @@ class StatusMapping
                         self::PLATFORM => [
                             self::LOGISTIC,
                         ],
-                        self::PREV_SUB_STATUS => [
-                            self::INSERTED_RESERVED
+                        self::PREVIOUS => [
+                            [self::INSERTED, self::INSERTED_RESERVED]
+                        ],
+                        self::ACTION => [
+                            self::LABEL => 'Produção Concluída'
                         ]
                     ],
                     self::INSERTED_ON_BILLING => [
                         self::PLATFORM => [
                             self::LOGISTIC,
                         ],
-                        self::PREV_SUB_STATUS => [
-                            self::INSERTED_PRODUCTION
+                        self::PREVIOUS => [
+                            [self::INSERTED, self::INSERTED_PRODUCTION]
+                        ],
+                        self::ACTION => [
+                            self::LABEL => 'Produção Concluída'
                         ]
-                    ],
-                ],
+                    ]
+                ]
             ],
             self::INSERTED_WAITING_PAYMENT => [
                 self::INSERTED => [
                     self::INSERTED_ON_BILLING => [
                         self::PLATFORM => [
                             self::AFTER_SALES,
-                        ],
+                        ]
                     ],
-                ],
+                    self::ACTION => [
+                        self::LABEL => 'Pagamento Confirmado'
+                    ]
+                ]
             ],
             self::INSERTED_ON_BILLING => [
                 self::INSERTED => [
                     self::INSERTED_BILLED => [
                         self::PLATFORM => [
                             self::BILLING,
-                        ],
+                        ]
                     ],
-                ],
+                    self::ACTION => [
+                        self::LABEL => 'Faturado'
+                    ]
+                ]
             ],
             self::INSERTED_BILLED => [
                 self::AVAILABLE => [
                     self::NULL => [
                         self::PLATFORM => [
                             self::EXPEDITION,
-                        ],
+                        ]
                     ],
-                ],
-            ],
+                    self::ACTION => [
+                        self::LABEL => 'Coleta Disponível'
+                    ]
+                ]
+            ]
         ],
         self::AVAILABLE => [
             self::NULL => [
@@ -346,6 +433,9 @@ class StatusMapping
                             self::MASTER,
                             self::ADMIN,
                         ]
+                    ],
+                    self::ACTION => [
+                        self::LABEL => 'Cancelar Orçamento'
                     ]
                 ],
                 self::COLLECTED => [
@@ -353,8 +443,11 @@ class StatusMapping
                         self::PLATFORM => [
                             self::EXPEDITION,
                         ]
+                    ],
+                    self::ACTION => [
+                        self::LABEL => 'Coletado'
                     ]
-                ],
+                ]
             ]
         ],
         self::COLLECTED => [
@@ -365,9 +458,115 @@ class StatusMapping
                             self::MASTER,
                             self::ADMIN,
                         ]
+                    ],
+                    self::ACTION => [
+                        self::LABEL => 'Cancelar Orçamento'
                     ]
-                ],
+                ]
             ]
-        ],
+        ]
     ];
+
+    /**
+     * @param $parameters
+     * @return array
+     */
+    public static function getPossibilities($parameters, $getActions = false)
+    {
+        $possibilities = [];
+
+        if (array_key_exists($parameters['sourceStatus'], self::$mapping)) {
+            $sourceSubStatus = array_key_exists('sourceSubStatus', $parameters) && $parameters['sourceSubStatus'] !== null  ? $parameters['sourceSubStatus'] : self::NULL;
+            self::fromSubStatus($parameters, $sourceSubStatus, $possibilities, $getActions);
+        }
+
+        return $possibilities;
+    }
+
+    /**
+     * @param $config
+     * @param $parameters
+     * @return bool
+     */
+    private static function validatePrevious($config, $parameters)
+    {
+        if (array_key_exists(self::PREVIOUS, $config)) {
+            $previousStatus = array_key_exists('previous', $parameters) ? $parameters['previous'][0] : null;
+            $previousSubStatus = array_key_exists('previous', $parameters) ? $parameters['previous'][1] : null;
+
+            foreach ($config[self::PREVIOUS] as $previous) {
+                if (array_key_exists(1, $previous)) {
+                    if($previous[0] === $previousStatus && $previous[1] === $previousSubStatus){
+                        return true;
+                        break;
+                    }
+                } else {
+                    if($previous[0] === $previousStatus){
+                        return true;
+                        break;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $parameters
+     * @param $sourceSubStatus
+     * @param $possibilities
+     */
+    private static function fromSubStatus($parameters, $sourceSubStatus, &$possibilities, $getActions)
+    {
+        if ($sourceSubStatus != self::ANY) {
+            self::fromSubStatus($parameters, self::ANY, $possibilities, $getActions);
+        }
+
+        $map = self::$mapping;
+
+        $sourceStatus = $parameters['sourceStatus'];
+
+        if (array_key_exists($sourceSubStatus, $map[$sourceStatus])) {
+            $possibleStatus = $map[$sourceStatus][$sourceSubStatus];
+
+            foreach ($possibleStatus as $status => $possibleSubStatus) {
+
+                $genericAction = array_key_exists(self::ACTION, $possibleSubStatus) ? $possibleSubStatus[self::ACTION] : null;
+
+                foreach ($possibleSubStatus as $subStatus => $config) {
+                    if ($subStatus === self::ACTION) {
+                        continue;
+                    }
+
+                    $action = array_key_exists(self::ACTION, $config) ? $config[self::ACTION] : $genericAction;
+
+                    if ($getActions && !$action) {
+                        continue;
+                    }
+
+                    if (!self::validatePrevious($config, $parameters)) {
+                        continue;
+                    }
+
+                    $type = $parameters['type'];
+                    $role = array_key_exists('role', $parameters) ? $parameters['role'] : null;
+
+                    if (in_array($type, $config) || (array_key_exists($type, $config) && in_array($role, $config[$type]))) {
+                        $info = [
+                            'status' => $status,
+                            'substatus' => $subStatus === self::NULL ? null : $subStatus
+                        ];
+                        if ($getActions) {
+                            $info['label'] = $action[self::LABEL];
+                            $info['type'] = $type;
+                        }
+                        $possibilities[] = $info;
+                    }
+                }
+            }
+        }
+    }
 }
