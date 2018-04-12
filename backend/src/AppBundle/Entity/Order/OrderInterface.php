@@ -139,6 +139,11 @@ interface OrderInterface
     public function getPreviousStatus();
 
     /**
+     * @return int
+     */
+    public function getPreviousSubStatus();
+
+    /**
      * @return \DateTime
      */
     public function getStatusAt();
