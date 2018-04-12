@@ -29,11 +29,11 @@ const deepTree = (obj, payload = [], path = [], data = {}) =>
         return deepTree(value, payload, getNextPath(path, key), data[key])
       }
 
-      const item = Object.assign({}, value)
-
-      item.name = key
-      item.path = path
-      item.value = data[key] || null
+      const item = Object.assign(value, {
+        name: key,
+        path: path,
+        value: data[key] || null
+      })
 
       acc.push(item)
       return acc
