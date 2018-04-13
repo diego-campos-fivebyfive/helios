@@ -50,7 +50,7 @@ class GroundStructureLoader extends AbstractLoader
 
                 $type = $groundDataKey == 'diagonalGapSize' ? 'ground_diagonal' : 'ground_cross';
 
-                $this->loadStructuresWithSize($type, $groundData[$groundDataKey], $groundStructures);
+                $this->loadGroundStructuresWithSize($type, $groundData[$groundDataKey], $groundStructures);
             }
         }
 
@@ -78,7 +78,7 @@ class GroundStructureLoader extends AbstractLoader
      * @param $size
      * @param $groundStructures
      */
-    private function loadStructuresWithSize($type, $size, &$groundStructures)
+    private function loadGroundStructuresWithSize($type, $size, &$groundStructures)
     {
         /** @var QueryBuilder $qb */
         $qb = $this->config['manager']->createQueryBuilder();
