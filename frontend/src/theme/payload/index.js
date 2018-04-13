@@ -1,9 +1,9 @@
 import available from './available'
-import extract from './extract'
+import parse from './parse'
 import init from './init'
 
 export default {
   available,
-  extract,
+  parse,
   init
 }
