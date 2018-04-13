@@ -124,6 +124,11 @@ interface UserInterface extends BaseUserInterface
     public function getType();
 
     /**
+     * @return string
+     */
+    public function getRole();
+
+    /**
      * @return BusinessInterface | null
      */
     public function getInfo();

@@ -50,8 +50,16 @@ class StatusMapping
     // PREVIOUS STATUS/SUB-STATUS
     const PREVIOUS = 'previous';
 
+    //BUTTON PROPERTIES
     const ACTION = 'action';
     const LABEL = 'label';
+    const SPECIAL_VIEW = 'specialView'; // Button identifier that is not displayed on the preview screen
+    const STYLE = 'style';
+    const STYLE_DEFAULT = 'default';
+    const STYLE_WARNING = 'warning';
+    const STYLE_GREEN = 'green';
+    const STYLE_ORANGE = 'orange';
+    const STYLE_SUCCESS = 'success';
 
     // USER TYPE
     const PLATFORM = UserInterface::TYPE_PLATFORM;
@@ -116,356 +124,322 @@ class StatusMapping
      * ]
      */
 
-    private static $mapping = [
-        self::BUILDING => [
-            self::NULL => [
-                self::PENDING => [
-                    self::NULL => [
-                        self::ACCOUNT
-                    ],
-                    self::ACTION => [
-                        self::LABEL => 'Enviar solicitação para SICES'
-                    ]
-                ],
-                self::VALIDATED => [
-                    self::NULL => [
-                        self::PLATFORM => [
-                            self::MASTER,
-                            self::ADMIN,
-                            self::COMMERCIAL
-                        ]
-                    ],
-                    self::ACTION => [
-                        self::LABEL => 'Validar Orçamento'
-                    ]
-                ]
-            ]
-        ],
-        self::PENDING => [
-            self::NULL => [
-                self::BUILDING => [
-                    self::NULL => [
-                        self::PLATFORM => [
-                            self::MASTER,
-                            self::ADMIN,
-                            self::COMMERCIAL
-                        ]
-                    ]
-                ],
-                self::VALIDATED => [
-                    self::NULL => [
-                        self::PLATFORM => [
-                            self::MASTER,
-                            self::ADMIN,
-                            self::COMMERCIAL
-                        ]
-                    ],
-                    self::ACTION => [
-                        self::LABEL => 'Validar Orçamento'
-                    ]
-                ],
-                self::REJECTED => [
-                    self::NULL => [
-                        self::PLATFORM => [
-                            self::MASTER,
-                            self::ADMIN,
-                            self::COMMERCIAL
-                        ]
-                    ],
-                    self::ACTION => [
-                        self::LABEL => 'Cancelar Orçamento'
-                    ]
-                ]
-            ]
-        ],
-        self::VALIDATED => [
-            self::NULL => [
-                self::BUILDING => [
-                    self::NULL => [
-                        self::ACCOUNT
-                    ]
-                ],
-                self::PENDING => [
-                    self::NULL => [
-                        self::PLATFORM => [
-                            self::MASTER,
-                            self::ADMIN,
-                            self::COMMERCIAL
-                        ]
-                    ],
-                    self::ACTION => [
-                        self::LABEL => 'Remover Validação'
-                    ]
-                ],
-                self::APPROVED => [
-                    self::NULL => [
-                        self::ACCOUNT
-                    ],
-                    self::ACTION => [
-                        self::LABEL => 'Aprovar Orçamento'
-                    ]
-                ],
-                self::REJECTED => [
-                    self::NULL => [
-                        self::ACCOUNT,
-                        self::PLATFORM => [
-                            self::MASTER,
-                            self::ADMIN,
-                            self::COMMERCIAL
-                        ]
-                    ],
-                    self::ACTION => [
-                        self::LABEL => 'Cancelar Orçamento'
-                    ]
-                ]
-            ]
-        ],
-        self::APPROVED => [
-            self::NULL => [
-                self::REJECTED => [
-                    self::NULL => [
-                        self::PLATFORM => [
-                            self::MASTER,
-                            self::ADMIN,
-                            self::COMMERCIAL,
-                            self::FINANCIAL,
-                            self::FINANCING,
-                        ]
-                    ],
-                    self::ACTION => [
-                        self::LABEL => 'Cancelar Orçamento'
-                    ]
-                ],
-                self::DONE => [
-                    self::DONE_CONFIRMED => [
-                        self::PLATFORM => [
-                            self::FINANCIAL,
-                            self::FINANCING,
+    /**
+     * @return array
+     */
+    private static function getMapping()
+    {
+        return [
+            self::BUILDING => [
+                self::NULL => [
+                    self::PENDING => [
+                        self::NULL => [
+                            self::ACCOUNT
                         ],
-                        self::ACTION => [
-                            self::LABEL => 'Pagamento Confirmado'
-                        ]
+                        self::ACTION => self::mountAction('Enviar solicitação para SICES', self::STYLE_WARNING, true)
                     ],
-                    self::DONE_RESERVED => [
-                        self::PLATFORM => [
-                            self::FINANCIAL,
-                            self::FINANCING,
+                    self::VALIDATED => [
+                        self::NULL => [
+                            self::PLATFORM => [
+                                self::MASTER,
+                                self::ADMIN,
+                                self::COMMERCIAL
+                            ]
                         ],
-                        self::ACTION => [
-                            self::LABEL => 'Confirmar Reserva'
-                        ]
-                    ]
-                ]
-            ]
-        ],
-        self::DONE => [
-            self::ANY => [
-                self::REJECTED => [
-                    self::NULL => [
-                        self::PLATFORM => [
-                            self::MASTER,
-                            self::ADMIN,
-                        ]
-                    ],
-                    self::ACTION => [
-                        self::LABEL => 'Cancelar Orçamento'
-                    ]
-                ],
-                self::APPROVED => [
-                    self::NULL => [
-                        self::PLATFORM => [
-                            self::FINANCIAL,
-                            self::FINANCING,
-                        ]
-                    ],
-                    self::ACTION => [
-                        self::LABEL => 'Remover Confirmação'
+                        self::ACTION => self::mountAction('Validar Orçamento', self::STYLE_SUCCESS, true)
                     ]
                 ]
             ],
-            self::DONE_CONFIRMED => [
-                self::INSERTED => [
-                    self::INSERTED_PRODUCTION => [
-                        self::PLATFORM => [
-                            self::AFTER_SALES,
+            self::PENDING => [
+                self::NULL => [
+                    self::BUILDING => [
+                        self::NULL => [
+                            self::PLATFORM => [
+                                self::MASTER,
+                                self::ADMIN,
+                                self::COMMERCIAL
+                            ]
                         ]
                     ],
-                    self::ACTION => [
-                        self::LABEL => 'Iniciar Produção'
+                    self::VALIDATED => [
+                        self::NULL => [
+                            self::PLATFORM => [
+                                self::MASTER,
+                                self::ADMIN,
+                                self::COMMERCIAL
+                            ]
+                        ],
+                        self::ACTION => self::mountAction('Validar Orçamento', self::STYLE_SUCCESS, true)
+                    ],
+                    self::REJECTED => [
+                        self::NULL => [
+                            self::PLATFORM => [
+                                self::MASTER,
+                                self::ADMIN,
+                                self::COMMERCIAL
+                            ]
+                        ],
+                        self::ACTION => self::mountAction('Cancelar Orçamento', self::STYLE_ORANGE)
                     ]
                 ]
             ],
-            self::DONE_RESERVED => [
-                self::INSERTED => [
-                    self::INSERTED_RESERVED => [
-                        self::PLATFORM => [
-                            self::AFTER_SALES,
+            self::VALIDATED => [
+                self::NULL => [
+                    self::BUILDING => [
+                        self::NULL => [
+                            self::ACCOUNT
                         ]
                     ],
-                    self::ACTION => [
-                        self::LABEL => 'Iniciar Produção de Reserva'
-                    ]
-                ]
-            ]
-        ],
-        self::INSERTED => [
-            self::ANY => [
-                self::REJECTED => [
-                    self::NULL => [
-                        self::PLATFORM => [
-                            self::MASTER,
-                            self::ADMIN,
-                        ]
+                    self::PENDING => [
+                        self::NULL => [
+                            self::PLATFORM => [
+                                self::MASTER,
+                                self::ADMIN,
+                                self::COMMERCIAL
+                            ]
+                        ],
+                        self::ACTION => self::mountAction('Remover Validação', self::STYLE_ORANGE)
                     ],
-                    self::ACTION => [
-                        self::LABEL => 'Cancelar Orçamento'
+                    self::APPROVED => [
+                        self::NULL => [
+                            self::ACCOUNT
+                        ],
+                        self::ACTION => self::mountAction('Aprovar Orçamento', self::STYLE_GREEN)
+                    ],
+                    self::REJECTED => [
+                        self::NULL => [
+                            self::ACCOUNT,
+                            self::PLATFORM => [
+                                self::MASTER,
+                                self::ADMIN,
+                                self::COMMERCIAL
+                            ]
+                        ],
+                        self::ACTION => self::mountAction('Cancelar Orçamento', self::STYLE_ORANGE)
                     ]
                 ]
             ],
-            self::INSERTED_PRODUCTION => [
-                self::INSERTED => [
-                    self::INSERTED_WAITING_MATERIAL => [
-                        self::PLATFORM => [
-                            self::LOGISTIC,
+            self::APPROVED => [
+                self::NULL => [
+                    self::REJECTED => [
+                        self::NULL => [
+                            self::PLATFORM => [
+                                self::MASTER,
+                                self::ADMIN,
+                                self::COMMERCIAL,
+                                self::FINANCIAL,
+                                self::FINANCING,
+                            ]
                         ],
-                        self::ACTION => [
-                            self::LABEL => 'Aguardando Material'
-                        ]
+                        self::ACTION => self::mountAction('Cancelar Orçamento', self::STYLE_ORANGE)
                     ],
-                    self::INSERTED_ON_BILLING => [
-                        self::PLATFORM => [
-                            self::LOGISTIC,
+                    self::DONE => [
+                        self::DONE_CONFIRMED => [
+                            self::PLATFORM => [
+                                self::FINANCIAL,
+                                self::FINANCING,
+                            ],
+                            self::ACTION => self::mountAction('Pagamento Confirmado', self::STYLE_GREEN)
                         ],
-                        self::ACTION => [
-                            self::LABEL => 'Produção Concluída'
+                        self::DONE_RESERVED => [
+                            self::PLATFORM => [
+                                self::FINANCIAL,
+                                self::FINANCING,
+                            ],
+                            self::ACTION => self::mountAction('Confirmar Reserva', self::STYLE_GREEN)
                         ]
                     ]
                 ]
             ],
-            self::INSERTED_RESERVED => [
-                self::INSERTED => [
-                    self::INSERTED_WAITING_MATERIAL => [
-                        self::PLATFORM => [
-                            self::LOGISTIC,
+            self::DONE => [
+                self::ANY => [
+                    self::REJECTED => [
+                        self::NULL => [
+                            self::PLATFORM => [
+                                self::MASTER,
+                                self::ADMIN,
+                            ]
                         ],
-                        self::ACTION => [
-                            self::LABEL => 'Aguardando Material'
-                        ]
+                        self::ACTION => self::mountAction('Cancelar Orçamento', self::STYLE_ORANGE)
                     ],
-                    self::INSERTED_WAITING_PAYMENT => [
-                        self::PLATFORM => [
-                            self::LOGISTIC,
+                    self::APPROVED => [
+                        self::NULL => [
+                            self::PLATFORM => [
+                                self::FINANCIAL,
+                                self::FINANCING,
+                            ]
                         ],
-                        self::ACTION => [
-                            self::LABEL => 'Produção Concluída'
-                        ]
-                    ]
-                ]
-            ],
-            self::INSERTED_WAITING_MATERIAL => [
-                self::INSERTED => [
-                    self::INSERTED_WAITING_PAYMENT => [
-                        self::PLATFORM => [
-                            self::LOGISTIC,
-                        ],
-                        self::PREVIOUS => [
-                            [self::INSERTED, self::INSERTED_RESERVED]
-                        ],
-                        self::ACTION => [
-                            self::LABEL => 'Produção Concluída'
-                        ]
-                    ],
-                    self::INSERTED_ON_BILLING => [
-                        self::PLATFORM => [
-                            self::LOGISTIC,
-                        ],
-                        self::PREVIOUS => [
-                            [self::INSERTED, self::INSERTED_PRODUCTION]
-                        ],
-                        self::ACTION => [
-                            self::LABEL => 'Produção Concluída'
-                        ]
-                    ]
-                ]
-            ],
-            self::INSERTED_WAITING_PAYMENT => [
-                self::INSERTED => [
-                    self::INSERTED_ON_BILLING => [
-                        self::PLATFORM => [
-                            self::AFTER_SALES,
-                        ]
-                    ],
-                    self::ACTION => [
-                        self::LABEL => 'Pagamento Confirmado'
-                    ]
-                ]
-            ],
-            self::INSERTED_ON_BILLING => [
-                self::INSERTED => [
-                    self::INSERTED_BILLED => [
-                        self::PLATFORM => [
-                            self::BILLING,
-                        ]
-                    ],
-                    self::ACTION => [
-                        self::LABEL => 'Faturado'
-                    ]
-                ]
-            ],
-            self::INSERTED_BILLED => [
-                self::AVAILABLE => [
-                    self::NULL => [
-                        self::PLATFORM => [
-                            self::EXPEDITION,
-                        ]
-                    ],
-                    self::ACTION => [
-                        self::LABEL => 'Coleta Disponível'
-                    ]
-                ]
-            ]
-        ],
-        self::AVAILABLE => [
-            self::NULL => [
-                self::REJECTED => [
-                    self::NULL => [
-                        self::PLATFORM => [
-                            self::MASTER,
-                            self::ADMIN,
-                        ]
-                    ],
-                    self::ACTION => [
-                        self::LABEL => 'Cancelar Orçamento'
+                        self::ACTION => self::mountAction('Remover Confirmação', self::STYLE_ORANGE)
                     ]
                 ],
-                self::COLLECTED => [
-                    self::NULL => [
-                        self::PLATFORM => [
-                            self::EXPEDITION,
+                self::DONE_CONFIRMED => [
+                    self::INSERTED => [
+                        self::INSERTED_PRODUCTION => [
+                            self::PLATFORM => [
+                                self::AFTER_SALES,
+                            ]
+                        ],
+                        self::ACTION => self::mountAction('Iniciar Produção', self::STYLE_GREEN)
+                    ]
+                ],
+                self::DONE_RESERVED => [
+                    self::INSERTED => [
+                        self::INSERTED_RESERVED => [
+                            self::PLATFORM => [
+                                self::AFTER_SALES,
+                            ]
+                        ],
+                        self::ACTION => self::mountAction('Iniciar Produção de Reserva', self::STYLE_GREEN)
+                    ]
+                ]
+            ],
+            self::INSERTED => [
+                self::ANY => [
+                    self::REJECTED => [
+                        self::NULL => [
+                            self::PLATFORM => [
+                                self::MASTER,
+                                self::ADMIN,
+                            ]
+                        ],
+                        self::ACTION => self::mountAction('Cancelar Orçamento', self::STYLE_ORANGE)
+                    ]
+                ],
+                self::INSERTED_PRODUCTION => [
+                    self::INSERTED => [
+                        self::INSERTED_WAITING_MATERIAL => [
+                            self::PLATFORM => [
+                                self::LOGISTIC,
+                            ],
+                            self::ACTION => self::mountAction('Aguardando Material', self::STYLE_GREEN)
+                        ],
+                        self::INSERTED_ON_BILLING => [
+                            self::PLATFORM => [
+                                self::LOGISTIC,
+                            ],
+                            self::ACTION => self::mountAction('Produção Concluída', self::STYLE_GREEN)
                         ]
+                    ]
+                ],
+                self::INSERTED_RESERVED => [
+                    self::INSERTED => [
+                        self::INSERTED_WAITING_MATERIAL => [
+                            self::PLATFORM => [
+                                self::LOGISTIC,
+                            ],
+                            self::ACTION => self::mountAction('Aguardando Material', self::STYLE_GREEN)
+                        ],
+                        self::INSERTED_WAITING_PAYMENT => [
+                            self::PLATFORM => [
+                                self::LOGISTIC,
+                            ],
+                            self::ACTION => self::mountAction('Produção Concluída', self::STYLE_GREEN)
+                        ]
+                    ]
+                ],
+                self::INSERTED_WAITING_MATERIAL => [
+                    self::INSERTED => [
+                        self::INSERTED_WAITING_PAYMENT => [
+                            self::PLATFORM => [
+                                self::LOGISTIC,
+                            ],
+                            self::PREVIOUS => [
+                                [self::INSERTED, self::INSERTED_RESERVED]
+                            ],
+                            self::ACTION => self::mountAction('Produção Concluída', self::STYLE_GREEN)
+                        ],
+                        self::INSERTED_ON_BILLING => [
+                            self::PLATFORM => [
+                                self::LOGISTIC,
+                            ],
+                            self::PREVIOUS => [
+                                [self::INSERTED, self::INSERTED_PRODUCTION]
+                            ],
+                            self::ACTION => self::mountAction('Produção Concluída', self::STYLE_GREEN)
+                        ]
+                    ]
+                ],
+                self::INSERTED_WAITING_PAYMENT => [
+                    self::INSERTED => [
+                        self::INSERTED_ON_BILLING => [
+                            self::PLATFORM => [
+                                self::AFTER_SALES,
+                            ]
+                        ],
+                        self::ACTION => self::mountAction('Pagamento Confirmado', self::STYLE_GREEN)
+                    ]
+                ],
+                self::INSERTED_ON_BILLING => [
+                    self::INSERTED => [
+                        self::INSERTED_BILLED => [
+                            self::PLATFORM => [
+                                self::BILLING,
+                            ]
+                        ],
+                        self::ACTION => self::mountAction('Faturado', self::STYLE_GREEN)
+                    ]
+                ],
+                self::INSERTED_BILLED => [
+                    self::AVAILABLE => [
+                        self::NULL => [
+                            self::PLATFORM => [
+                                self::EXPEDITION,
+                            ]
+                        ],
+                        self::ACTION => self::mountAction('Coleta Disponível', self::STYLE_GREEN)
+                    ]
+                ]
+            ],
+            self::AVAILABLE => [
+                self::NULL => [
+                    self::REJECTED => [
+                        self::NULL => [
+                            self::PLATFORM => [
+                                self::MASTER,
+                                self::ADMIN,
+                            ]
+                        ],
+                        self::ACTION => self::mountAction('Cancelar Orçamento', self::STYLE_ORANGE)
                     ],
-                    self::ACTION => [
-                        self::LABEL => 'Coletado'
+                    self::COLLECTED => [
+                        self::NULL => [
+                            self::PLATFORM => [
+                                self::EXPEDITION,
+                            ]
+                        ],
+                        self::ACTION => self::mountAction('Coletado', self::STYLE_GREEN)
+                    ]
+                ]
+            ],
+            self::COLLECTED => [
+                self::NULL => [
+                    self::REJECTED => [
+                        self::NULL => [
+                            self::PLATFORM => [
+                                self::MASTER,
+                                self::ADMIN,
+                            ]
+                        ],
+                        self::ACTION => self::mountAction('Cancelar Orçamento', self::STYLE_ORANGE)
                     ]
                 ]
             ]
-        ],
-        self::COLLECTED => [
-            self::NULL => [
-                self::REJECTED => [
-                    self::NULL => [
-                        self::PLATFORM => [
-                            self::MASTER,
-                            self::ADMIN,
-                        ]
-                    ],
-                    self::ACTION => [
-                        self::LABEL => 'Cancelar Orçamento'
-                    ]
-                ]
-            ]
-        ]
-    ];
+        ];
+    }
+
+    /**
+     * @param $label
+     * @param $specialView
+     * @return array
+     */
+    private static function mountAction($label, $style = self::STYLE_DEFAULT, $specialView = false)
+    {
+        return [
+            self::LABEL => $label,
+            self::STYLE => $style,
+            self::SPECIAL_VIEW => $specialView
+        ];
+    }
 
     /**
      * @param $parameters
@@ -475,7 +449,7 @@ class StatusMapping
     {
         $possibilities = [];
 
-        if (array_key_exists($parameters['sourceStatus'], self::$mapping)) {
+        if (array_key_exists($parameters['sourceStatus'], self::getMapping())) {
             $sourceSubStatus = array_key_exists('sourceSubStatus', $parameters) && $parameters['sourceSubStatus'] !== null  ? $parameters['sourceSubStatus'] : self::NULL;
             self::fromSubStatus($parameters, $sourceSubStatus, $possibilities, $getActions);
         }
@@ -521,11 +495,11 @@ class StatusMapping
      */
     private static function fromSubStatus($parameters, $sourceSubStatus, &$possibilities, $getActions)
     {
-        if ($sourceSubStatus != self::ANY) {
+        if ($sourceSubStatus !== self::ANY) {
             self::fromSubStatus($parameters, self::ANY, $possibilities, $getActions);
         }
 
-        $map = self::$mapping;
+        $map = self::getMapping();
 
         $sourceStatus = $parameters['sourceStatus'];
 
@@ -546,7 +520,6 @@ class StatusMapping
                     if ($getActions && !$action) {
                         continue;
                     }
-
                     if (!self::validatePrevious($config, $parameters)) {
                         continue;
                     }
@@ -560,7 +533,7 @@ class StatusMapping
                             'substatus' => $subStatus === self::NULL ? null : $subStatus
                         ];
                         if ($getActions) {
-                            $info['label'] = $action[self::LABEL];
+                            $info['attributes'] = $action;
                             $info['type'] = $type;
                         }
                         $possibilities[] = $info;
