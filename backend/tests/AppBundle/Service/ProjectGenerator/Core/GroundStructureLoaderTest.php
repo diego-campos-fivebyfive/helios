@@ -7,7 +7,6 @@ use AppBundle\Entity\Component\Maker;
 use AppBundle\Service\ProjectGenerator\Core\GroundStructureLoader;
 use App\Generator\Structure\Ground;
 use AppBundle\Service\ProjectGenerator\ProjectGenerator;
-use Proxies\__CG__\AppBundle\Entity\Order\Element;
 use Tests\AppBundle\AppTestCase;
 use Tests\AppBundle\Entity\DataFixtures\Component\ModuleData;
 use Tests\AppBundle\Helpers\ObjectHelperTest;
