@@ -20,7 +20,8 @@
     <tbody {#id="payment_methods_list"#}>
     {% for paymentMethod in paymentMethods %}
 
-        {% set id = loop.index0 %}
+        {% set page = app.request.query.get('page', 1) %}
+        {% set id = (page - 1) * 10 + loop.index0 %}
 
         <tr>
             <td> {{ paymentMethod.name }} </td>
