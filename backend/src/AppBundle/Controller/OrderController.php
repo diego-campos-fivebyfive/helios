@@ -651,9 +651,9 @@ class OrderController extends AbstractController
 
         return array_filter($actions, function ($action) use ($order, $expired) {
             if ($action['type'] === UserInterface::TYPE_ACCOUNT &&
-                $order->getStatus() == OrderInterface::STATUS_VALIDATED &&
+                $order->getStatus() === OrderInterface::STATUS_VALIDATED &&
                 $expired &&
-                $action['status'] == OrderInterface::STATUS_APPROVED ||
+                $action['status'] === OrderInterface::STATUS_APPROVED ||
                 ($action['attributes'][StatusMapping::SPECIAL_VIEW])) {
                 return false;
             }
