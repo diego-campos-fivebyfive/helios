@@ -21,7 +21,7 @@
           return
         }
 
-        const data = payload.extract(this.payload)
+        const data = payload.parse(this.payload)
 
         const uri = 'api/v1/coupon/'
 
