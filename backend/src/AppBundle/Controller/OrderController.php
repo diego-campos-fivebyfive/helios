@@ -119,7 +119,7 @@ class OrderController extends AbstractController
             'expired' => $expired,
             'timeline' => $this->get('order_timeline')->load($order),
             'files' => $files,
-            'buttons' => $this->getButtons($order)
+            'buttons' => $this->getButtons($order, $expired)
         ));
     }
 
@@ -632,7 +632,7 @@ class OrderController extends AbstractController
      * @param OrderInterface $order
      * @return array
      */
-    private function getButtons(OrderInterface $order)
+    private function getButtons(OrderInterface $order, $expired = false)
     {
         $userType = $this->user()->getType();
 
@@ -649,8 +649,15 @@ class OrderController extends AbstractController
 
         $actions = StatusMapping::getPossibilities($parameters, true);
 
-        return array_filter($actions, function ($action) {
-            return $action['attributes'][StatusMapping::SPECIAL_VIEW] ? false : true;
+        return array_filter($actions, function ($action) use ($order, $expired) {
+            if ($action['type'] === UserInterface::TYPE_ACCOUNT &&
+                $order->getStatus() === OrderInterface::STATUS_VALIDATED &&
+                $expired &&
+                $action['status'] === OrderInterface::STATUS_APPROVED ||
+                ($action['attributes'][StatusMapping::SPECIAL_VIEW])) {
+                return false;
+            }
+            return true;
         });
     }
 

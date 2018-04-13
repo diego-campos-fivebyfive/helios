@@ -198,7 +198,7 @@ class StatusMapping
                                 self::COMMERCIAL
                             ]
                         ],
-                        self::ACTION => self::mountAction('Remover Validação', self::STYLE_ORANGE)
+                        self::ACTION => self::mountAction('Remover Validação', self::STYLE_SUCCESS)
                     ],
                     self::APPROVED => [
                         self::NULL => [
@@ -311,7 +311,7 @@ class StatusMapping
                             self::PLATFORM => [
                                 self::LOGISTIC,
                             ],
-                            self::ACTION => self::mountAction('Aguardando Material', self::STYLE_GREEN)
+                            self::ACTION => self::mountAction('Aguardando Material', self::STYLE_ORANGE)
                         ],
                         self::INSERTED_ON_BILLING => [
                             self::PLATFORM => [
@@ -327,7 +327,7 @@ class StatusMapping
                             self::PLATFORM => [
                                 self::LOGISTIC,
                             ],
-                            self::ACTION => self::mountAction('Aguardando Material', self::STYLE_GREEN)
+                            self::ACTION => self::mountAction('Aguardando Material', self::STYLE_ORANGE)
                         ],
                         self::INSERTED_WAITING_PAYMENT => [
                             self::PLATFORM => [
