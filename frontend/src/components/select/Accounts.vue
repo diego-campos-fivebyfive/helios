@@ -1,13 +1,18 @@
 <template lang="pug">
   Select(
-    :label='label',
-    :selected='getAccountSelected',
+    :label='field.label',
     :options='options',
+    :selected='getCurrentAccount',
     v-on:update='updateAccount')
 </template>
 
 <script>
+  import Select from '@/theme/collection/Select'
+
   export default {
+    components: {
+      Select
+    },
     data: () => ({
       options: [],
       defaultOption: {
@@ -16,29 +21,23 @@
       }
     }),
     props: [
-      'currentAccount',
-      'label'
+      'field'
     ],
     methods: {
-      updateAccount(account) {
-        this.$emit('input', {
-          id: {
-            value: account.value
-          },
-          name: {
-            value: account.text
-          }
+      updateAccount(select) {
+        this.$set(this.field, 'value', {
+          id: select.value,
+          name: select.text
         })
       }
     },
     computed: {
-      getAccountSelected() {
+      getCurrentAccount() {
         return (
-          this.currentAccount
-          && this.currentAccount.id
-          && this.currentAccount.id.value
+          this.field.value
+          && this.field.value.id
         )
-          ? this.currentAccount.id.value
+          ? this.field.value.id
           : this.defaultOption.id
       }
     },
