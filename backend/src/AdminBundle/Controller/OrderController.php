@@ -330,6 +330,20 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/antecipatedBilling", name="antecipated_billing_order")
+     */
+    public function antecipatedBillingAction(Request $request, Order $order)
+    {
+        $antecipatedBilling = $request->request->get('antecipated_billing');
+
+        $order->setAntecipatedBilling((boolean)$antecipatedBilling);
+
+        $this->manager('order')->save($order);
+
+        return $this->json([]);
+    }
+
+    /**
      * @Route("/{id}/expireAt", name="expire_at_order")
      */
     public function expireAtAction(Request $request, Order $order)

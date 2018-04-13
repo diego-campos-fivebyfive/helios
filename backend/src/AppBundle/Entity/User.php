@@ -201,6 +201,20 @@ class User extends AbstractUser implements UserInterface
     /**
      * @inheritDoc
      */
+    public function getRole()
+    {
+        foreach ($this->getRoles() as $role){
+            if(in_array($role, self::getPlatformRoles())){
+                return $role;
+            }
+        }
+
+        return self::ROLE_DEFAULT;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setIsquikId($isquik_id)
     {
         $this->isquik_id = $isquik_id;

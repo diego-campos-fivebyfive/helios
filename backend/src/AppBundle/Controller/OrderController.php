@@ -12,8 +12,10 @@ use AppBundle\Entity\Order\OrderAdditive;
 use AppBundle\Entity\Order\OrderAdditiveInterface;
 use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Entity\TimelineInterface;
+use AppBundle\Entity\UserInterface;
 use AppBundle\Form\Order\FilterType;
 use AppBundle\Service\Order\OrderCoupon;
+use AppBundle\Service\Order\StatusMapping;
 use AppBundle\Service\ProjectGenerator\ShippingRuler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -116,7 +118,8 @@ class OrderController extends AbstractController
             'order' => $order,
             'expired' => $expired,
             'timeline' => $this->get('order_timeline')->load($order),
-            'files' => $files
+            'files' => $files,
+            'buttons' => $this->getButtons($order, $expired)
         ));
     }
 
@@ -623,6 +626,39 @@ class OrderController extends AbstractController
         return $this->json([
                 'total' => $order->getTotal()
         ]);
+    }
+
+    /**
+     * @param OrderInterface $order
+     * @return array
+     */
+    private function getButtons(OrderInterface $order, $expired = false)
+    {
+        $userType = $this->user()->getType();
+
+        $parameters = [
+            'sourceStatus' => $order->getStatus(),
+            'sourceSubStatus' => $order->getSubStatus(),
+            'type' => $userType,
+            'previous' => [$order->getPreviousStatus(), $order->getPreviousSubStatus()]
+        ];
+
+        if ($userType = UserInterface::TYPE_PLATFORM) {
+            $parameters['role'] = $this->user()->getRole();
+        }
+
+        $actions = StatusMapping::getPossibilities($parameters, true);
+
+        return array_filter($actions, function ($action) use ($order, $expired) {
+            if ($action['type'] === UserInterface::TYPE_ACCOUNT &&
+                $order->getStatus() === OrderInterface::STATUS_VALIDATED &&
+                $expired &&
+                $action['status'] === OrderInterface::STATUS_APPROVED ||
+                ($action['attributes'][StatusMapping::SPECIAL_VIEW])) {
+                return false;
+            }
+            return true;
+        });
     }
 
     /**
