@@ -46,41 +46,11 @@ class GroundStructureLoader extends AbstractLoader
         $keys = array_keys($groundData);
 
         foreach ($keys as $key) {
-            /** @var QueryBuilder $qb2 */
-            $qb2 = $this->config['manager']->createQueryBuilder();
+            if ($key == 'mainCrossSize' || $key == 'balanceCrossSize' || $key == 'diagonalGapSize') {
 
-            if ($key == 'diagonalGapSize') {
-                $qb2->select()
-                    ->andWhere($qb->expr()->eq('s.type', $qb->expr()->literal('ground_diagonal')))
-                    ->andWhere($qb->expr()->eq('s.size', $groundData['diagonalGapSize']));
+                $type = $key == 'diagonalGapSize' ? 'ground_diagonal' : 'ground_cross';
 
-                $results = $qb2->getQuery()->getResult();
-
-                foreach ($results as $result) {
-                    $groundStructures[] = $result;
-                }
-            }
-            if ($key == 'mainCrossSize') {
-                $qb2->select()
-                    ->andWhere($qb->expr()->eq('s.type', $qb->expr()->literal('ground_cross')))
-                    ->andWhere($qb->expr()->eq('s.size', $groundData['mainCrossSize']));
-
-                $results = $qb2->getQuery()->getResult();
-
-                foreach ($results as $result) {
-                    $groundStructures[] = $result;
-                }
-            }
-            if ( $key == 'balanceCrossSize') {
-                $qb2->select()
-                    ->andWhere($qb->expr()->eq('s.type', $qb->expr()->literal('ground_cross')))
-                    ->andWhere($qb->expr()->eq('s.size', $groundData['balanceCrossSize']));
-
-                $results = $qb2->getQuery()->getResult();
-
-                foreach ($results as $result) {
-                    $groundStructures[] = $result;
-                }
+                $this->loadStructuresWithSize($type, $groundData[$key], $groundStructures);
             }
         }
 
@@ -101,6 +71,27 @@ class GroundStructureLoader extends AbstractLoader
     public function alternatives()
     {
         return [];
+    }
+
+    /**
+     * @param $type
+     * @param $size
+     * @param $groundStructures
+     */
+    private function loadStructuresWithSize($type, $size, &$groundStructures)
+    {
+        /** @var QueryBuilder $qb */
+        $qb = $this->config['manager']->createQueryBuilder();
+
+        $qb->select()
+            ->andWhere($qb->expr()->eq('s.type', $qb->expr()->literal($type)))
+            ->andWhere($qb->expr()->eq('s.size', $size));
+
+        $results = $qb->getQuery()->getResult();
+
+        foreach ($results as $result) {
+            $groundStructures[] = $result;
+        }
     }
 
 }
