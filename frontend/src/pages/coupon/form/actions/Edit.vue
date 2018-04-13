@@ -9,43 +9,28 @@
 </template>
 
 <script>
+  import payload from '@/theme/payload'
+
   export default {
     props: [
-      'action',
-      'getPayload'
+      'payload'
     ],
     methods: {
       editCoupon() {
-        const payload = this.getPayload()
-
-        if (!payload) {
+        if (!payload.available(this.payload)) {
           return
         }
 
-        const uri = `api/v1/coupon/${payload.id}`
+        const data = payload.parse(this.payload)
 
-        const response = this.axios.put(uri, payload)
+        const uri = `api/v1/coupon/${data.id}`
+
+        const response = this.axios.put(uri, data)
           .then(() => 'Cupom editado com sucesso')
           .catch(() => 'Não foi possível editar cupom')
 
         this.$emit('done', response)
       }
-    },
-    mounted() {
-      document.addEventListener('keyup', event => {
-        const enterCode = 13
-
-        if (event.keyCode !== enterCode) {
-          return
-        }
-
-        if (this.action === 'edit') {
-          this.editCoupon()
-          return
-        }
-
-        this.createCoupon()
-      })
     }
   }
 </script>

@@ -1,8 +1,8 @@
 <template lang="pug">
   .wrapper
-    ContentForm(
-      ref='contentForm',
-      v-on:getCoupons='getCoupons')
+    Form(
+      ref='form',
+      v-on:updateList='getCoupons')
     Panel.panel
       div(slot='header')
         h2.title
@@ -27,12 +27,12 @@
 
 <script>
   import Content from './list'
-  import ContentForm from './form'
+  import Form from './form'
 
   export default {
     components: {
       Content,
-      ContentForm
+      Form
     },
     data: () => ({
       coupons: [],
@@ -40,7 +40,7 @@
     }),
     methods: {
       show(action, coupon = {}) {
-        this.$refs.contentForm.show(action, coupon)
+        this.$refs.form.show(action, coupon)
       },
       getCoupons(pageNumber = 1) {
         const uri = `/api/v1/coupon?page=${pageNumber}`

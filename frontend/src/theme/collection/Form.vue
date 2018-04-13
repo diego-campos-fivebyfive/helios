@@ -15,6 +15,7 @@
           :style='getFieldSize(field.style.size)')
       component(
         slot='buttons',
+        v-on:done='done',
         :is='action.component',
         :payload='payload')
 </template>
@@ -37,8 +38,8 @@
       'modal'
     ],
     methods: {
-      hide() {
-        this.$refs.modal.hide()
+      notify(message, type) {
+        this.$refs.notification.notify(message, type)
       },
       show(action, data) {
         const currentAction = this.actions[action]
@@ -52,8 +53,17 @@
         this.payload = payload.init(this.schema, data, this.$set)
         this.$refs.modal.show()
       },
-      notify(message, type) {
-        this.$refs.notification.notify(message, type)
+      done(response) {
+        this.$refs.modal.hide()
+
+        response
+          .then(message => {
+            this.$emit('updateList')
+            this.notify(message, 'primary-common')
+          })
+          .catch(message => {
+            this.notify(message, 'danger-common')
+          })
       },
       validate(field) {
         const { rejected, exception } = validate(field)
