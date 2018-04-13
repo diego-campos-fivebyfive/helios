@@ -43,14 +43,14 @@ class GroundStructureLoader extends AbstractLoader
             $groundStructures[] = $result;
         }
 
-        $keys = array_keys($groundData);
+        $groundDataKeys = array_keys($groundData);
 
-        foreach ($keys as $key) {
-            if ($key == 'mainCrossSize' || $key == 'balanceCrossSize' || $key == 'diagonalGapSize') {
+        foreach ($groundDataKeys as $groundDataKey) {
+            if ($groundDataKey == 'mainCrossSize' || $groundDataKey == 'balanceCrossSize' || $groundDataKey == 'diagonalGapSize') {
 
-                $type = $key == 'diagonalGapSize' ? 'ground_diagonal' : 'ground_cross';
+                $type = $groundDataKey == 'diagonalGapSize' ? 'ground_diagonal' : 'ground_cross';
 
-                $this->loadStructuresWithSize($type, $groundData[$key], $groundStructures);
+                $this->loadStructuresWithSize($type, $groundData[$groundDataKey], $groundStructures);
             }
         }
 
