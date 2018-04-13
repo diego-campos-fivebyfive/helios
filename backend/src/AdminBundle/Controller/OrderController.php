@@ -336,7 +336,7 @@ class OrderController extends AbstractController
     {
         $antecipatedBilling = $request->request->get('antecipated_billing');
 
-        $order->setAntecipatedBilling($antecipatedBilling ? true : false);
+        $order->setAntecipatedBilling((boolean)$antecipatedBilling);
 
         $this->manager('order')->save($order);
 
