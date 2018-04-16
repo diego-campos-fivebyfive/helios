@@ -2052,7 +2052,7 @@ class Project implements ProjectInterface
      */
     public static function getRoofTypes()
     {
-        return array_combine(StructureCalculator::getRoofTypes(), StructureCalculator::getRoofTypes());
+        return array_combine(self::getStructuresTypes(), self::getStructuresTypes());
     }
 
     /**
@@ -2078,5 +2078,20 @@ class Project implements ProjectInterface
         }
 
         return $price;
+    }
+
+    /**
+     * @return array
+     */
+    private static function getStructuresTypes()
+    {
+        return [
+            self::ROOF_CEMENT,
+            self::ROOF_ROMAN_AMERICAN,
+            self::ROOF_FLAT_SLAB,
+            self::ROOF_SHEET_METAL,
+            self::ROOF_SHEET_METAL_PFM,
+            self::GROUND_STRUCTURE
+        ];
     }
 }
