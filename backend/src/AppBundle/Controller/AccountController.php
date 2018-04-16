@@ -6,6 +6,7 @@ use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Manager\AccountManager;
+use AppBundle\Model\Document\Account;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -83,6 +84,17 @@ class AccountController extends AbstractController
      */
     public function getSingleAction(Customer $account)
     {
+        $users = [];
+
+        /** @var Customer $user */
+        foreach ($account->getMembers() as $user) {
+            $userData['name'] = $user->getName();
+            $userData['email'] = $user->getEmail();
+            $userData['userLevel'] = $user->getType();
+
+            $users[] = $userData;
+        }
+
         $data = [
             'name' => $account->getName(),
             'phone' => $account->getPhone(),
@@ -97,8 +109,8 @@ class AccountController extends AbstractController
             'activatedAt' => $account->getActivatedAt(),
             'email' => $account->getEmail(),
             'district' => $account->getDistrict(),
-            'agents' => $account->getAgent(),
-            'users' => $account->getMembers(),
+            'agent' => $account->getAgent(),
+            'users' => $users,
             'owner' => $account->getOwner()->getId()
         ];
 
@@ -142,6 +154,7 @@ class AccountController extends AbstractController
             return $this->json($data, $status);
         }
 
+        /** @var AccountInterface $account */
         $account = $manager->create();
         $account
             ->setDocument($data['document'])
@@ -158,7 +171,9 @@ class AccountController extends AbstractController
             ->setPhone($data['phone'])
             ->setStatus($data['status'])
             ->setContext(Customer::CONTEXT_ACCOUNT)
-            ->setLevel($data['level']);
+            ->setLevel($data['level'])
+            ->setAgent($data['agent'])
+            ->setParentAccount($data['parentAccount']);
 
         try {
             $manager->save($account);
@@ -178,7 +193,9 @@ class AccountController extends AbstractController
                 'number' => $account->getNumber(),
                 'postcode' => $account->getPostcode(),
                 'level' => $account->getLevel(),
-                'status' => $account->getStatus()
+                'status' => $account->getStatus(),
+                'agent' => $account->getAgent()->getId(),
+                'parentAccount' => $account->getParentAccount()->getId()
             ];
         } catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
@@ -222,7 +239,9 @@ class AccountController extends AbstractController
             ->setNumber($data['number'])
             ->setPostcode($data['postcode'])
             ->setStatus($data['status'])
-            ->setLevel($data['level']);
+            ->setLevel($data['level'])
+            ->setAgent($data['agent'])
+            ->setParentAccount($data['parentAccount']);
 
         try {
             $accountManager->save($account);
@@ -244,6 +263,8 @@ class AccountController extends AbstractController
                 'postcode' => $account->getPostcode(),
                 'level' => $account->getLevel(),
                 'status' => $account->getStatus(),
+                'agent' => $account->getAgent()->getId(),
+                'parentAccount' => $account->getParentAccount()->getId(),
                 'owner' => $account->getOwner()->getId()
             ];
         } catch (\Exception $exception ) {
