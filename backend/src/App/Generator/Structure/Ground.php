@@ -87,9 +87,9 @@ class Ground {
             for ($k = 0; $k < $countKeys; $k++) {
                 $actualKey = $keys[$k];
                 if (!array_key_exists($actualKey , $allMaterials) or is_numeric(array_search($actualKey, $notMergeMaterials))) {
-                    $allMaterials[$actualKey] = $allTablesMaterials[$i][$actualKey];
+                    $allMaterials[$actualKey] = (int) $allTablesMaterials[$i][$actualKey];
                 }else{
-                    $allMaterials[$actualKey] += $allTablesMaterials[$i][$actualKey];
+                    $allMaterials[$actualKey] += (int) $allTablesMaterials[$i][$actualKey];
                 }
             }
         }
