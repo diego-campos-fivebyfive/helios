@@ -1,6 +1,6 @@
 import Check from '@/theme/collection/Check'
 import Text from '@/theme/collection/Text'
-import AccountSelect from '@/components/select/Accounts'
+import AccountSelect from './fields/Accounts'
 
 export default {
   id: {},
