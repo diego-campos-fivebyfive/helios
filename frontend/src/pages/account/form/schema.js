@@ -121,6 +121,7 @@ export default {
   },
   persistent: {
     label: '',
+    description: 'Esta conta não será bloqueada nem sofrerá alteração de nível automaticamente',
     component: Checkbox,
     style: {
       size: [1, 1, 1]
