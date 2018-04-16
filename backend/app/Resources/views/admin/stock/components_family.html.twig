@@ -11,9 +11,9 @@
             <div class="ibox-content">
                 <div class="col-md-offset-5">
                     <form id="stock_control_families_form">
-                        {% for family in families %}
+                        {% for family, active in families %}
                             <div class="row">
-                                <input type="checkbox" name="stock_control_families[]" value="{{ family }}">
+                                <input type="checkbox" name="stock_control_families[]" value="{{ family }}" {{ active ? 'checked' }}>
                                 <label for="families">{{ family|trans }}</label>
                             </div>
                         {% endfor %}
