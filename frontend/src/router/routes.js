@@ -5,7 +5,7 @@ import Metric from '@/pages/metric'
 import NotFound from '@/pages/notfound'
 
 const RouterView = {
-  template: `<router-view></router-view>`
+  template: '<router-view></router-view>'
 }
 
 export default [

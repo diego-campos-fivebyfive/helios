@@ -1,4 +1,5 @@
 import Text from '@/theme/collection/Text'
+import Checkbox from '@/theme/collection/Checkbox'
 import Agent from './fields/Agent'
 import Level from './fields/Level'
 import ParentAccount from './fields/ParentAccount'
@@ -114,6 +115,16 @@ export default {
   agent: {
     label: 'Agente Comercial *',
     component: Agent,
+    style: {
+      size: [1, 1, 1]
+    }
+  },
+  persistent: {
+    label: '',
+    // eslint-disable-next-line max-len
+    description: 'Esta conta não será bloqueada nem sofrerá alteração de nível automaticamente',
+    // eslint-enable-next-line max-len
+    component: Checkbox,
     style: {
       size: [1, 1, 1]
     }
