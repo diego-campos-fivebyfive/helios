@@ -26,7 +26,9 @@
     padding: $ui-space-y/2 $ui-space-x/2;
 
     &:hover {
-      border-color: $ui-blue-dark;
+      .collection-checkbox-wrapper-checker {
+        border-color: $ui-blue-dark;
+      }
     }
   }
 
@@ -68,7 +70,8 @@
   }
 
   .collection-checkbox-wrapper-description {
-    font-weight: 700;
+    color: $ui-gray-dark;
+    font-weight: 600;
     margin-left: $ui-space-y/2;
   }
 </style>
