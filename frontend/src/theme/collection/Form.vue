@@ -1,129 +1,108 @@
 <template lang="pug">
-  .collection-modal-form
+  .collection-form
     Notification(ref='notification')
-    Modal(v-if='modal', ref='modal')
-      slot(name='header', slot='header')
-      slot(name='section', slot='section')
-      slot(name='buttons', slot='buttons')
-    div(v-else)
-      slot(name='header', slot='header')
-      slot(name='section', slot='section')
-      slot(name='buttons', slot='buttons')
+    Modal(ref='modal')
+      h1.title(slot='header')
+        | {{ action.title }}
+      form.form(slot='section')
+        component(
+          v-on:validate='validate',
+          v-for='(field, name) in payload',
+          v-if='field.component',
+          :is='field.component',
+          :key='name',
+          :field='field',
+          :style='getFieldSize(field.style.size)')
+      component(
+        slot='buttons',
+        v-on:done='done',
+        :is='action.component',
+        :payload='payload')
 </template>
 
 <script>
-  import exceptions from '@/locale/pt-br'
-  import patterns from '@/validation/pattern'
+  import styles from '@/theme/assets/style/main.scss'
+  import validate from '@/theme/validation/validate'
+  import payload from '@/theme/payload'
 
   export default {
+    data: () => ({
+      action: {
+        layout: {
+          columns: {}
+        }
+      },
+      payload: {}
+    }),
     props: [
       'modal'
     ],
     methods: {
-      hide() {
-        this.$refs.modal.hide()
-      },
-      show() {
-        this.$refs.modal.show()
-      },
       notify(message, type) {
         this.$refs.notification.notify(message, type)
       },
-      isInvalidField(field) {
-        const pattern = patterns[field.type]
+      show(action, data) {
+        const currentAction = this.actions[action]
+        const defaultActionParams = this.actions.default || {}
 
-        const defaultException = exceptions[field.type]
-
-        if (pattern.test(field.value)) {
-          return false
+        if (!currentAction.component) {
+          throw new Error(`Error: ${action} action component is not defined`)
         }
 
-        this.notify(field.exception || defaultException, 'danger-common')
-        return true
+        this.action = Object.assign(defaultActionParams, currentAction)
+        this.payload = payload.init(this.schema, data, this.$set)
+        this.$refs.modal.show()
       },
-      getPayloadField(vm, path) {
-        return path
-          .split('.')
-          .reduce((obj, key) => obj[key], vm)
+      done(response) {
+        this.$refs.modal.hide()
+
+        response
+          .then(message => {
+            this.$emit('updateList')
+            this.notify(message, 'primary-common')
+          })
+          .catch(message => {
+            this.notify(message, 'danger-common')
+          })
       },
-      isValidPayload(payload) {
-        /* eslint-disable no-use-before-define, no-restricted-syntax */
-        const isResolved = (obj, key) => {
-          const val = obj[key]
+      validate(field) {
+        const { rejected, exception } = validate(field)
 
-          if (val === Object(val)) {
-            return isValid(val)
-          }
+        this.$set(field, 'rejected', rejected)
 
-          return (key === 'rejected' && val)
-            ? !this.isInvalidField(obj)
-            : true
+        if (rejected) {
+          this.notify(exception, 'danger-common')
+        }
+      },
+      getFieldSize([grow, shrink, cols]) {
+        const base = this.getColumnsSize * cols
+        return `flex: ${grow} ${shrink} ${base}px`
+      }
+    },
+    computed: {
+      getColumnsSize() {
+        const sizeTypes = {
+          'extra-large': 'xl',
+          'extra-small': 'xs',
+          'large': 'lg',
+          'medium': 'md',
+          'small': 'sm'
         }
 
-        const isValid = obj => {
-          for (const key in obj) {
-            if (!isResolved(obj, key)) return false
-          }
+        const sizeType = sizeTypes[this.action.layout.columns.size]
 
-          return true
-        }
+        const baseSize = parseInt(styles[`ui-size-${sizeType}`], 10)
+        const spaces = parseInt(styles['ui-space-x'], 10) * 2
 
-        return isValid(payload)
-        /* eslint-enable no-use-before-define, no-restricted-syntax */
-      },
-      formatPayload(payload) {
-        const format = obj =>
-          Object
-            .entries(obj)
-            .reduce((acc, [key, val]) => {
-              acc[key] = Object.prototype.hasOwnProperty.call(val, 'value')
-                ? val.value
-                : format(val)
-              return acc
-            }, {})
-
-        return format(payload)
-      },
-      assignPayload(payload, dataPayload = {}) {
-        const assign = (base, data = {}) =>
-          Object
-            .entries(base)
-            .reduce((acc, [key, val]) => {
-              if (
-                Object.keys(val).length > 0
-                && !Object.prototype.hasOwnProperty.call(val, 'value')
-                && !Object.prototype.hasOwnProperty.call(val, 'type')
-              ) {
-                acc[key] = assign(val, data[key])
-                return acc
-              }
-
-              acc[key] = val || {}
-              this.$set(acc[key], 'value', data[key] || null)
-
-              if (Object.prototype.hasOwnProperty.call(val, 'type')) {
-                this.$set(acc[key], 'rejected', false)
-              }
-
-              return acc
-            }, {})
-
-        return assign(payload, dataPayload)
-      },
-      getPayload(payload) {
-        if (!this.isValidPayload(payload)) {
-          return false
-        }
-
-        return this.formatPayload(payload)
+        return (baseSize - spaces) / this.action.layout.columns.total
       }
     }
   }
 </script>
 
-<style lang="scss">
-  .collection-modal-form {
-    .form {
+<style lang="scss" scoped>
+  .collection-form {
+    form {
       align-content: flex-start;
       align-items: flex-start;
       display: flex;
