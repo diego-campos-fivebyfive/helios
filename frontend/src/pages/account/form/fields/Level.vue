@@ -2,8 +2,8 @@
   Select(
     :label='field.label',
     :options='options',
-    :selected='getCurrentAccount',
-    v-on:update='updateAccount')
+    :selected='getCurrentLevel',
+    v-on:update='updateLevel')
 </template>
 
 <script>
@@ -17,14 +17,14 @@
       options: [],
       defaultOption: {
         id: '',
-        name: 'Não vinculada'
+        name: 'Não vinculado'
       }
     }),
     props: [
       'field'
     ],
     methods: {
-      updateAccount(select) {
+      updateLevel(select) {
         this.$set(this.field, 'value', {
           id: select.value,
           name: select.text
@@ -32,7 +32,7 @@
       }
     },
     computed: {
-      getCurrentAccount() {
+      getCurrentLevel() {
         return (
           this.field.value
           && this.field.value.id

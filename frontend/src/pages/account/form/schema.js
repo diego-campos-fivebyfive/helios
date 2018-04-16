@@ -1,5 +1,8 @@
 import Text from '@/theme/collection/Text'
-import Select from '@/theme/collection/Select'
+import Agent from './fields/Agent'
+import Level from './fields/Level'
+import ParentAccount from './fields/ParentAccount'
+import State from './fields/State'
 
 export default {
   id: {},
@@ -61,7 +64,7 @@ export default {
   },
   state: {
     label: 'Estado *',
-    component: Select,
+    component: State,
     style: {
       size: [1, 1, 1]
     }
@@ -96,21 +99,21 @@ export default {
   },
   parentAccount: {
     label: 'Conta Mãe',
-    component: Select,
+    component: ParentAccount,
     style: {
       size: [1, 1, 1]
     }
   },
   level: {
-    label: 'Conta Mãe',
-    component: Select,
+    label: 'Nivel de Conta *',
+    component: Level,
     style: {
       size: [1, 1, 1]
     }
   },
   agent: {
-    label: 'Conta Mãe',
-    component: Select,
+    label: 'Agente Comercial *',
+    component: Agent,
     style: {
       size: [1, 1, 1]
     }
