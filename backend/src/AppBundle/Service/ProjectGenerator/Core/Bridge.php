@@ -115,8 +115,6 @@ class Bridge
     {
         $moduleQuantity = $project->countAssociatedModules();
 
-        $moduleQuantity = 2480;
-
         $windSpeed = Isopleta::calculate($project->getLatitude(), $project->getLongitude());
 
         if (empty($project->getProjectModules()->first()->getGroups())) {
