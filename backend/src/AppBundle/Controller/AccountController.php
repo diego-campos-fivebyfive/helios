@@ -2,9 +2,13 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Configuration\Brazil;
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
+use AppBundle\Entity\Pricing\MemorialInterface;
+use Doctrine\ORM\EntityRepository;
+use AppBundle\Entity\Pricing\Memorial;
 use AppBundle\Manager\AccountManager;
 use AppBundle\Model\Document\Account;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -51,6 +55,107 @@ class AccountController extends AbstractController
         }
 
         return $this->json($qb->getQuery()->getResult(), Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/states", name="all_states")
+     *
+     * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_AFTER_SALES') or has_role('ROLE_PLATFORM_COMMERCIAL') or has_role('ROLE_PLATFORM_EXPANSE') or has_role('ROLE_PLATFORM_FINANCIAL') or has_role('ROLE_PLATFORM_MASTER')")
+     *
+     * @Method("get")
+     */
+    public function getStates()
+    {
+        $data = Brazil::states();
+
+        return $this->json($data, Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/levels", name="account_levels")
+     *
+     * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_AFTER_SALES') or has_role('ROLE_PLATFORM_COMMERCIAL') or has_role('ROLE_PLATFORM_EXPANSE') or has_role('ROLE_PLATFORM_FINANCIAL') or has_role('ROLE_PLATFORM_MASTER')")
+     *
+     * @Method("get")
+     */
+    public function getLevels()
+    {
+        $data = Memorial::getDefaultLevels();
+
+        return $this->json($data, Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/agents/{id}", name="account_agents")
+     *
+     * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_AFTER_SALES') or has_role('ROLE_PLATFORM_COMMERCIAL') or has_role('ROLE_PLATFORM_EXPANSE') or has_role('ROLE_PLATFORM_FINANCIAL') or has_role('ROLE_PLATFORM_MASTER')")
+     *
+     * @Method("get")
+     */
+    public function getAgents(Customer $account)
+    {
+        $platform = $account->getAccount();
+
+        if ($platform) {
+            $members = $platform->getMembers()->filter(function ($account) {
+                return $account->isPlatformCommercial();
+            });
+
+            $data = [];
+
+            foreach ($members as $member) {
+                $data[] = $member->toArray();
+            }
+
+            return $this->json($data, Response::HTTP_OK);
+        }
+
+        return $this->json([], Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/parent_accounts/{id}", name="account_levels")
+     *
+     * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_AFTER_SALES') or has_role('ROLE_PLATFORM_COMMERCIAL') or has_role('ROLE_PLATFORM_EXPANSE') or has_role('ROLE_PLATFORM_FINANCIAL') or has_role('ROLE_PLATFORM_MASTER')")
+     *
+     * @Method("get")
+     */
+    public function getPossibleParents(Customer $account)
+    {
+
+        $qb = $this->manager('account')->createQueryBuilder();
+
+        $qb
+            ->where('c.context = :context')
+            ->andWhere('c.parent is null')
+            ->andWhere('c.status = :status')
+            ->setParameters([
+                'context' => BusinessInterface::CONTEXT_ACCOUNT,
+                'status' => 3
+            ])
+        ;
+
+        if ($account->getId()) {
+            $qb
+                ->andWhere('c.id <> :thisAccount')
+                ->setParameter(
+                    'thisAccount', $account
+                )
+            ;
+        }
+
+        $data = [];
+
+        $possibleParentAccounts = $qb->getQuery()->getResult();
+
+        foreach ($possibleParentAccounts as $account) {
+            $accountData['id'] = $account->getId();
+            $accountData['name'] = $account->getName();
+
+            $data[] = $accountData;
+        }
+
+        return $this->json($data, Response::HTTP_OK);
     }
 
     /**
