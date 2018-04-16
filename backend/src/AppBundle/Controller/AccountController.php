@@ -72,7 +72,7 @@ class AccountController extends AbstractController
     }
 
     /**
-     * @Route("/levels", name="account_levels")
+     * @Route("/levels", name="account_levels_api")
      *
      * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_AFTER_SALES') or has_role('ROLE_PLATFORM_COMMERCIAL') or has_role('ROLE_PLATFORM_EXPANSE') or has_role('ROLE_PLATFORM_FINANCIAL') or has_role('ROLE_PLATFORM_MASTER')")
      *
