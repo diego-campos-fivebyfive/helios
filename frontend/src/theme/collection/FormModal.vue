@@ -34,9 +34,6 @@
       },
       payload: {}
     }),
-    props: [
-      'modal'
-    ],
     methods: {
       notify(message, type) {
         this.$refs.notification.notify(message, type)
