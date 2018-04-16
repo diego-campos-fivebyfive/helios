@@ -1,4 +1,5 @@
 import Text from '@/theme/collection/Text'
+import Checkbox from '@/theme/collection/Checkbox'
 import Agent from './fields/Agent'
 import Level from './fields/Level'
 import ParentAccount from './fields/ParentAccount'
@@ -114,6 +115,13 @@ export default {
   agent: {
     label: 'Agente Comercial *',
     component: Agent,
+    style: {
+      size: [1, 1, 1]
+    }
+  },
+  persistent: {
+    label: '',
+    component: Checkbox,
     style: {
       size: [1, 1, 1]
     }
