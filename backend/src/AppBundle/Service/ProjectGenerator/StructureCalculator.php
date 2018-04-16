@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service\ProjectGenerator;
 
+use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectStructure;
 use AppBundle\Entity\Component\Structure;
@@ -413,12 +414,6 @@ class StructureCalculator
      */
     public static function getRoofTypes()
     {
-        return [
-            self::ROOF_CEMENT,
-            self::ROOF_ROMAN_AMERICAN,
-            self::ROOF_FLAT_SLAB,
-            self::ROOF_SHEET_METAL,
-            self::ROOF_SHEET_METAL_PFM
-        ];
+        return Project::getRoofTypes();
     }
 }
