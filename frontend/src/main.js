@@ -3,11 +3,7 @@ import App from '@/App'
 import router from '@/router'
 import ThemeCollection from '@/theme/collection'
 
-import AccountSelect from '@/components/select/Accounts'
-
-const components = Object.assign(ThemeCollection, {
-  AccountSelect
-})
+const components = Object.assign(ThemeCollection, {})
 
 Object.entries(components)
   .forEach(([name, component]) => {
