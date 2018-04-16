@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
+use AppBundle\Manager\AccountManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -54,7 +55,7 @@ class AccountController extends AbstractController
     /**
      * @Route("/", name="all_accounts")
      *
-     * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_AFTER_SALES') or has_role('ROLE_PLATFORM_COMMERCIAL') or has_role('ROLE_PLATFORM_EXPANSE') or has_role('ROLE_PLATFORM_financial') or has_role('ROLE_PLATFORM_MASTER')")
+     * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_AFTER_SALES') or has_role('ROLE_PLATFORM_COMMERCIAL') or has_role('ROLE_PLATFORM_EXPANSE') or has_role('ROLE_PLATFORM_FINANCIAL') or has_role('ROLE_PLATFORM_MASTER')")
      *
      * @Method("get")
      */
@@ -76,11 +77,11 @@ class AccountController extends AbstractController
     /**
      * @Route("/{id}", name="single_account")
      *
-     * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_AFTER_SALES') or has_role('ROLE_PLATFORM_COMMERCIAL') or has_role('ROLE_PLATFORM_EXPANSE') or has_role('ROLE_PLATFORM_financial') or has_role('ROLE_PLATFORM_MASTER')")
+     * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_AFTER_SALES') or has_role('ROLE_PLATFORM_COMMERCIAL') or has_role('ROLE_PLATFORM_EXPANSE') or has_role('ROLE_PLATFORM_FINANCIAL') or has_role('ROLE_PLATFORM_MASTER')")
      *
      * @Method("get")
      */
-    public function getSingleAction(Request $request, Customer $account)
+    public function getSingleAction(Customer $account)
     {
         $data = [
             'name' => $account->getName(),
@@ -107,7 +108,7 @@ class AccountController extends AbstractController
     /**
      * @Route("/", name="create_account")
      *
-     * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_AFTER_SALES') or has_role('ROLE_PLATFORM_COMMERCIAL') or has_role('ROLE_PLATFORM_EXPANSE') or has_role('ROLE_PLATFORM_financial') or has_role('ROLE_PLATFORM_MASTER')")
+     * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_AFTER_SALES') or has_role('ROLE_PLATFORM_COMMERCIAL') or has_role('ROLE_PLATFORM_EXPANSE') or has_role('ROLE_PLATFORM_FINANCIAL') or has_role('ROLE_PLATFORM_MASTER')")
      *
      * @Method("post")
      */
@@ -115,35 +116,33 @@ class AccountController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        /** @var Customer $manager */
-        $manager = $this->get('account_manager');
-        $email = $manager->findOneBy([
+        /** @var AccountManager $manager */
+        $manager = $this->manager('account');
+        $emailAlreadyInUse = $manager->findOneBy([
             'context' => 'account',
             'email' => $data['email']
         ]);
 
-        if ($email) {
+        if ($emailAlreadyInUse) {
             $data = "This email already exists!";
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
 
             return $this->json($data, $status);
         }
 
-        $document = $manager->findOneBy([
+        $documentAlreadyInUse = $manager->findOneBy([
             'context' => 'account',
             'document' => $data['document']
         ]);
 
-        if ($document) {
+        if ($documentAlreadyInUse) {
             $data = "This CNPJ already exists!";
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
 
             return $this->json($data, $status);
         }
 
-        /** @var AccountInterface $accountManager */
-        $accountManager = $this->get('account_manager');
-        $account = $accountManager->create();
+        $account = $manager->create();
         $account
             ->setDocument($data['document'])
             ->setExtraDocument($data['extraDocument'])
@@ -160,8 +159,9 @@ class AccountController extends AbstractController
             ->setStatus($data['status'])
             ->setContext(Customer::CONTEXT_ACCOUNT)
             ->setLevel($data['level']);
+
         try {
-            $accountManager->save($account);
+            $manager->save($account);
             $status = Response::HTTP_CREATED;
             $data = [
                 'id' => $account->getId(),
@@ -180,8 +180,7 @@ class AccountController extends AbstractController
                 'level' => $account->getLevel(),
                 'status' => $account->getStatus()
             ];
-        }
-        catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
             $data = $exception;
         }
@@ -192,7 +191,7 @@ class AccountController extends AbstractController
     /**
      * @Route("/", name="create_account")
      *
-     * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_AFTER_SALES') or has_role('ROLE_PLATFORM_COMMERCIAL') or has_role('ROLE_PLATFORM_EXPANSE') or has_role('ROLE_PLATFORM_financial') or has_role('ROLE_PLATFORM_MASTER')")
+     * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_AFTER_SALES') or has_role('ROLE_PLATFORM_COMMERCIAL') or has_role('ROLE_PLATFORM_EXPANSE') or has_role('ROLE_PLATFORM_FINANCIAL') or has_role('ROLE_PLATFORM_MASTER')")
      *
      * @Method("put")
      */
@@ -208,9 +207,8 @@ class AccountController extends AbstractController
         }
 
         /** @var AccountInterface $accountManager */
-        $accountManager = $this->get('account_manager');
+        $accountManager = $this->manager('account');
         $account
-            ->setIsquikId($data['isquik_id'])
             ->setFirstName($data['firstname'])
             ->setLastName($data['lastname'])
             ->setExtraDocument($data['extraDocument'])
@@ -224,7 +222,6 @@ class AccountController extends AbstractController
             ->setNumber($data['number'])
             ->setPostcode($data['postcode'])
             ->setStatus($data['status'])
-            ->setConfirmationToken($data['confirmationToken'])
             ->setLevel($data['level']);
 
         try {
@@ -249,8 +246,7 @@ class AccountController extends AbstractController
                 'status' => $account->getStatus(),
                 'owner' => $account->getOwner()->getId()
             ];
-        }
-        catch (\Exception $exception ) {
+        } catch (\Exception $exception ) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
             $data = $exception;
         }
