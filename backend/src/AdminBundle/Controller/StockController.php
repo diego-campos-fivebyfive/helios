@@ -5,6 +5,7 @@ namespace AdminBundle\Controller;
 use AppBundle\Entity\Component\Maker;
 use AdminBundle\Form\Stock\TransactionType;
 use AppBundle\Entity\Order\OrderInterface;
+use AppBundle\Entity\Parameter;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -26,6 +27,17 @@ class StockController extends AbstractController
     public function stockAction()
     {
         $families = Maker::getContextList();
+
+        $manager = $this->manager('parameter');
+
+        /** @var Parameter $parameter */
+        $parameter = $manager->findOrCreate('platform_settings');
+
+        $control = $parameter->get('stock_control_families');
+
+        $families = array_map(function ($family) use ($control) {
+            return in_array($family, $control);
+        },$families);
 
         return $this->render('admin/stock/index.html.twig', [
             'families' => $families,
