@@ -1,9 +1,9 @@
-import FormModal from '@/theme/collection/FormModal'
+import Form from '@/theme/collection/Form'
 import actions from './actions'
 import schema from './schema'
 
 export default {
-  mixins: [FormModal],
+  mixins: [Form],
   data: () => ({
     actions,
     schema
