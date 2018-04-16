@@ -109,7 +109,7 @@ class AccountController extends AbstractController
             'activatedAt' => $account->getActivatedAt(),
             'email' => $account->getEmail(),
             'district' => $account->getDistrict(),
-            'agent' => $account->getAgent(),
+            'agent' => $account->getAgent() ? $account->getAgent()->getName() : null,
             'users' => $users,
             'owner' => $account->getOwner()->getId()
         ];
