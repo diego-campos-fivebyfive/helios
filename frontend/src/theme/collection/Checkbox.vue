@@ -21,20 +21,27 @@
 </script>
 
 <style lang="scss" scoped>
-  .collection-checkbox {
-    float: left;
-    padding: $ui-space-y/2 $ui-space-x/2;
-
-    &:hover {
-      .collection-checkbox-wrapper-checker {
-        border-color: $ui-blue-dark;
-      }
-    }
+  .collection-checkbox-wrapper-checker-icon {
+    opacity: 0;
   }
 
-  .collection-checkbox-wrapper {
-    display: flex;
-    margin-top: $ui-space-y/2;
+  .collection-checkbox-wrapper-checker-field {
+    display: none;
+    transition: opacity 0.1s ease-in;
+
+    &:checked {
+      + .collection-checkbox-wrapper-checker-icon {
+        background-color: $ui-blue-dark;
+        color: $ui-white-regular;
+        height: 100%;
+        left: 0;
+        opacity: 1;
+        padding: 0.25rem;
+        position: absolute;
+        top: 0;
+        width: 100%;
+      }
+    }
   }
 
   .collection-checkbox-wrapper-checker {
@@ -46,32 +53,25 @@
     position: relative;
   }
 
-  .collection-checkbox-wrapper-checker-field {
-    display: none;
-    transition: opacity 0.1s ease-in;
-
-    &:checked {
-      + .collection-checkbox-wrapper-checker-icon {
-        background-color: $ui-blue-dark;
-        color: $ui-white-regular;
-        top: 0;
-        left: 0;
-        opacity: 1;
-        position: absolute;
-        padding: 0.25rem;
-        width: 100%;
-        height: 100%;
-      }
-    }
-  }
-
-  .collection-checkbox-wrapper-checker-icon {
-    opacity: 0;
-  }
-
   .collection-checkbox-wrapper-description {
     color: $ui-gray-dark;
     font-weight: 600;
     margin-left: $ui-space-y/2;
+  }
+
+  .collection-checkbox-wrapper {
+    display: flex;
+    margin-top: $ui-space-y/2;
+  }
+
+  .collection-checkbox {
+    float: left;
+    padding: $ui-space-y/2 $ui-space-x/2;
+
+    &:hover {
+      .collection-checkbox-wrapper-checker {
+        border-color: $ui-blue-dark;
+      }
+    }
   }
 </style>

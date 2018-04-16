@@ -121,7 +121,9 @@ export default {
   },
   persistent: {
     label: '',
+    // eslint-disable-next-line max-len
     description: 'Esta conta não será bloqueada nem sofrerá alteração de nível automaticamente',
+    // eslint-enable-next-line max-len
     component: Checkbox,
     style: {
       size: [1, 1, 1]
