@@ -10,11 +10,16 @@
 
 namespace AppBundle\Service\ProjectGenerator\Core;
 
+use App\Generator\Common\Isopleta;
 use App\Generator\Core;
+use App\Generator\Structure\Ground;
 use AppBundle\Entity\Component\Module;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverter;
+use AppBundle\Entity\Component\ProjectModule;
 use AppBundle\Entity\Component\ProjectStringBox;
+use AppBundle\Entity\Component\ProjectStructure;
+use AppBundle\Entity\Component\Structure;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Bridge
@@ -34,7 +39,7 @@ class Bridge
 
     /**
      * @param ProjectInterface $project
-     * @return array
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function resolve(ProjectInterface $project)
     {
@@ -94,9 +99,37 @@ class Bridge
 
         $this->stringBoxResolution($result, $stringBoxLoader, $project);
 
+        $this->structureResolution($this->getStructures($project), $project);
+
         $projectManager = $this->container->get('project_manager');
 
         $projectManager->save($project);
+    }
+
+    /**
+     * @param ProjectInterface $project
+     * @return array
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    private function getStructures(ProjectInterface $project)
+    {
+        $moduleQuantity = 0;
+        /** @var ProjectModule $projectModule */
+        foreach ($project->getProjectModules() as $projectModule) {
+            $moduleQuantity += $projectModule->getQuantity();
+        }
+        $windSpeed = Isopleta::calculate($project->getLatitude(), $project->getLongitude());
+        $autoModuleQuantityPerTable = Ground::autoModuleQuantityPerTable($windSpeed, $moduleQuantity);
+        $allTablesMaterials = Ground::allTablesMaterials($windSpeed, $autoModuleQuantityPerTable);
+        $tablesMaterials = Ground::mergeTablesMaterials($allTablesMaterials);
+
+        $structureManager = $this->container->get('structure_manager');
+
+        $structureLoader = new GroundStructureLoader([
+            'manager' => $structureManager
+        ]);
+
+        return $structureLoader->load($tablesMaterials);
     }
 
     /**
@@ -146,6 +179,21 @@ class Bridge
             $projectStringBox->setStringBox($stringBox);
             $projectStringBox->setProject($project);
             $projectStringBox->setQuantity($stringBoxesQuantities[$stringBox->getId()]);
+        }
+    }
+
+    /**
+     * @param $structuresList
+     * @param ProjectInterface $project
+     */
+    private function structureResolution($structuresList, ProjectInterface $project)
+    {
+        foreach ($structuresList as $item) {
+            $projectStructure = new ProjectStructure();
+
+            $projectStructure->setStructure($item['structure']);
+            $projectStructure->setProject($project);
+            $projectStructure->setQuantity($item['quantity']);
         }
     }
 
