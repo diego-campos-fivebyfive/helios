@@ -5,7 +5,7 @@
     type='primary-strong',
     label='Salvar',
     pos='single',
-    v-on:click.native='createCoupon')
+    v-on:click.native='createAccoutn')
 </template>
 
 <script>
@@ -16,18 +16,18 @@
       'payload'
     ],
     methods: {
-      createCoupon() {
+      createAccoutn() {
         if (!payload.available(this.payload)) {
           return
         }
 
         const data = payload.parse(this.payload)
 
-        const uri = 'api/v1/coupon/'
+        const uri = 'api/v1/account/'
 
         const response = this.axios.post(uri, data)
-          .then(() => 'Cupom cadastrado com sucesso')
-          .catch(() => 'Não foi possível cadastrar cupom')
+          .then(() => 'Conta cadastrada com sucesso')
+          .catch(() => 'Não foi possível cadastrar conta')
 
         this.$emit('done', response)
       }
