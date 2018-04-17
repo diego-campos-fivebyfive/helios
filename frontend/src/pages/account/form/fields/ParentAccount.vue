@@ -50,7 +50,7 @@
       }
     },
     mounted() {
-      this.axios.get('api/v1/account/available')
+      this.axios.get('api/v1/account/parent_accounts/2209')
         .then(response => {
           const accounts = response.data
           accounts.unshift(this.defaultOption)

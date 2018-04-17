@@ -17,8 +17,8 @@
     data: () => ({
       options: [],
       defaultOption: {
-        id: '',
-        name: 'Não vinculado'
+        key: '',
+        value: 'Não vinculado'
       }
     }),
     props: [
@@ -43,14 +43,14 @@
       }
     },
     mounted() {
-      this.axios.get('api/v1/account/available')
+      this.axios.get('api/v1/account/levels')
         .then(response => {
-          const accounts = response.data
-          accounts.unshift(this.defaultOption)
+          const levels = response.data
 
-          this.options = accounts.map(account => ({
-            value: account.id,
-            text: account.name
+          this.options = Object.entries(levels)
+            .map(item => ({
+              value: item[0],
+              text: item[1]
           }))
         })
     }

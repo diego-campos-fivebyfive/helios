@@ -42,15 +42,15 @@
       }
     },
     mounted() {
-      this.axios.get('api/v1/account/available')
+      this.axios.get('api/v1/account/states')
         .then(response => {
-          const accounts = response.data
-          accounts.unshift(this.defaultOption)
+          const states = response.data
 
-          this.options = accounts.map(account => ({
-            value: account.id,
-            text: account.name
-          }))
+          this.options = Object.entries(states)
+            .map(item => ({
+              value: item[0],
+              text: item[1]
+            }))
         })
     }
   }
