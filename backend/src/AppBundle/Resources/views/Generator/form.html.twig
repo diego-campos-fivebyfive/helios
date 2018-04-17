@@ -146,18 +146,18 @@
 
 <script>
 
-    if ($('#generator_roof_type').val() === 'GROUND_STRUCTURE') {
-        $('#coordinates').removeAttr('class');
-    } else {
-        $('#coordinates').attr('class', 'hide')
+    function verifyGroundType() {
+        if ($('#generator_roof_type').val() === 'GROUND_STRUCTURE') {
+            $('#coordinates').removeAttr('class');
+        } else {
+            $('#coordinates').attr('class', 'hide')
+        }
     }
 
+    verifyGroundType();
+
     $('#generator_roof_type').on('change', function () {
-       if ($(this).val() === 'GROUND_STRUCTURE') {
-           $('#coordinates').removeAttr('class');
-       } else {
-           $('#coordinates').attr('class', 'hide')
-       }
+        verifyGroundType();
     });
 
     var promo_phrase = $('#generator_promo_notice').val();
