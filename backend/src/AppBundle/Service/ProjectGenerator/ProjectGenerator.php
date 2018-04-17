@@ -591,7 +591,7 @@ class ProjectGenerator
 
         $this->resetStructures($project);
 
-        if ($defaults['roof_type'] == 'GROUND_STRUCTURE') {
+        if ($defaults['roof_type'] == ProjectInterface::GROUND_STRUCTURE) {
             $this->bridge->resolve($project);
         } else {
             CriteriaAggregator::level($defaults['level']);
