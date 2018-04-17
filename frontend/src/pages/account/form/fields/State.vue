@@ -2,8 +2,8 @@
   Select(
     :label='field.label',
     :options='options',
-    :selected='getCurrentAccount',
-    v-on:update='updateAccount')
+    :selected='getCurrentState',
+    v-on:update='updateState')
 </template>
 
 <script>
@@ -14,43 +14,36 @@
       Select
     },
     data: () => ({
-      options: [],
-      defaultOption: {
-        id: '',
-        name: 'Não vinculada'
-      }
+      options: []
     }),
     props: [
       'field'
     ],
     methods: {
-      updateAccount(select) {
-        this.$set(this.field, 'value', {
-          id: select.value,
-          name: select.text
-        })
+      updateState(select) {
+        this.$set(this.field, 'value', select.value)
       }
     },
     computed: {
-      getCurrentAccount() {
+      getCurrentState() {
         return (
           this.field.value
           && this.field.value.id
         )
           ? this.field.value.id
-          : this.defaultOption.id
+          : null
       }
     },
     mounted() {
-      this.axios.get('api/v1/account/available')
+      this.axios.get('api/v1/account/states')
         .then(response => {
-          const accounts = response.data
-          accounts.unshift(this.defaultOption)
+          const states = response.data
 
-          this.options = accounts.map(account => ({
-            value: account.id,
-            text: account.name
-          }))
+          this.options = Object.entries(states)
+            .map(item => ({
+              value: item[0],
+              text: item[1]
+            }))
         })
     }
   }

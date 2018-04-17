@@ -6,7 +6,7 @@
         input.collection-checkbox-wrapper-checker-field(
           type='checkbox',
           :value='field.value',
-          v-on:input='$set(field, "value", $event.target.value)')
+          v-on:change='$set(field, "value", !field.value)')
         Icon.collection-checkbox-wrapper-checker-icon(name='check')
       .collection-checkbox-wrapper-description
         | {{ field.description }}
