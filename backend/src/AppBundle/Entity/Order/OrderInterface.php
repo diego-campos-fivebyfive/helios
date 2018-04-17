@@ -1131,7 +1131,7 @@ interface OrderInterface
     public function setAntecipatedBilling($antecipatedBilling);
 
     /**
-     * @return int
+     * @return string
      */
     public function getErpOR();
 
@@ -1142,7 +1142,7 @@ interface OrderInterface
     public function setErpOR($erpOR);
 
     /**
-     * @return int
+     * @return string
      */
     public function getErpOP();
 
@@ -1153,7 +1153,7 @@ interface OrderInterface
     public function setErpOP($erpOP);
 
     /**
-     * @return int
+     * @return string
      */
     public function getErpPV();
 
@@ -1164,7 +1164,7 @@ interface OrderInterface
     public function setErpPV($erpPV);
 
     /**
-     * @return int
+     * @return string
      */
     public function getErpRPV();
 

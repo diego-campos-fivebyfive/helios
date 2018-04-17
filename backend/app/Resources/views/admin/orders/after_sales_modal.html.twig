@@ -351,8 +351,6 @@
     $('#form_after_sales').on('submit', function (event) {
         event.preventDefault();
 
-        buttonAfterSalesSubmit.ladda('start');
-
         var form = $(this);
 
         swal({
@@ -365,6 +363,8 @@
             cancelButtonText: '{{ 'Cancelar'|trans }}',
             closeOnConfirm: false
         }, function () {
+
+            buttonAfterSalesSubmit.ladda('start');
 
             $.ajax({
                 url: form.attr('action'),

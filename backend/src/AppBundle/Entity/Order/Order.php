@@ -574,26 +574,26 @@ class Order implements OrderInterface
     private $antecipatedBilling;
 
     /**
-     * @var int
-     * @ORM\Column(type="smallint", nullable=true)
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
      */
     private $erpOR;
 
     /**
-     * @var int
-     * @ORM\Column(type="smallint", nullable=true)
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
      */
     private $erpOP;
 
     /**
-     * @var int
-     * @ORM\Column(type="smallint", nullable=true)
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
      */
     private $erpPV;
 
     /**
-     * @var int
-     * @ORM\Column(type="smallint", nullable=true)
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
      */
     private $erpRPV;
 
