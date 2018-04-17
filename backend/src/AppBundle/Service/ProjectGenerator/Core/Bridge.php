@@ -43,6 +43,10 @@ class Bridge
      */
     public function resolve(ProjectInterface $project)
     {
+        $this->resolveOnlyStructures($project);
+
+        return;
+
         $defaults = $project->getDefaults();
 
         $level = $this->getLevel($defaults);
@@ -108,6 +112,19 @@ class Bridge
 
     /**
      * @param ProjectInterface $project
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    private function resolveOnlyStructures(ProjectInterface $project)
+    {
+        $this->structureResolution($this->getStructures($project), $project);
+
+        $projectManager = $this->container->get('project_manager');
+
+        $projectManager->save($project);
+    }
+
+    /**
+     * @param ProjectInterface $project
      * @return array
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
@@ -121,6 +138,10 @@ class Bridge
             $groups = Ground::autoModuleQuantityPerTable($windSpeed, $moduleQuantity);
         } else {
             $groups = $project->getProjectModules()->first()->getGroups();
+
+            $groups = array_map(function($group) {
+                return $group['modules'] * $group['lines'];
+            }, $groups);
         }
 
         $allTablesMaterials = Ground::allTablesMaterials($windSpeed, $groups);
