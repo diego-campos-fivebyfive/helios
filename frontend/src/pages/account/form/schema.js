@@ -8,8 +8,9 @@ import State from './fields/State'
 export const schema = {
   id: {},
   document: {
-    label: 'CNPJ *',
+    label: 'CNPJ',
     component: Text,
+    required: true,
     style: {
       size: [1, 1, 1]
     }
@@ -22,78 +23,89 @@ export const schema = {
     }
   },
   lastname: {
-    label: 'Razão Social *',
+    label: 'Razão Social',
     component: Text,
+    required: true,
     style: {
       size: [1, 1, 1]
     }
   },
   firstname: {
-    label: 'Nome Fantasia *',
+    label: 'Nome Fantasia',
     component: Text,
+    required: true,
     style: {
       size: [1, 1, 1]
     }
   },
   email: {
-    label: 'E-mail *',
+    label: 'E-mail',
     component: Text,
+    required: true,
     style: {
       size: [1, 1, 1]
     }
   },
   owner: {
-    label: 'Pessoa para contato *',
+    label: 'Pessoa para contato',
     component: Text,
+    required: true,
     style: {
       size: [1, 1, 1]
     }
   },
   phone: {
-    label: 'Telefone *',
+    label: 'Telefone',
     component: Text,
+    required: true,
     style: {
       size: [1, 1, 1]
     }
   },
   postcode: {
-    label: 'CEP *',
+    label: 'CEP',
     component: Text,
+    required: true,
     style: {
       size: [1, 1, 1]
     }
   },
   state: {
-    label: 'Estado *',
+    label: 'Estado',
     component: State,
+    required: true,
     style: {
       size: [1, 1, 1]
     }
   },
   city: {
-    label: 'Cidade *',
+    label: 'Cidade',
     component: Text,
+    required: true,
     style: {
       size: [1, 1, 1]
     }
   },
   district: {
-    label: 'Bairro *',
+    label: 'Bairro',
     component: Text,
+    required: true,
     style: {
       size: [1, 1, 1]
     }
   },
   street: {
-    label: 'Logradouro *',
+    label: 'Logradouro',
     component: Text,
+    required: true,
     style: {
       size: [1, 1, 1]
     }
   },
   number: {
-    label: 'Número *',
+    label: 'Número',
     component: Text,
+    required: true,
     style: {
       size: [1, 1, 1]
     }
@@ -107,8 +119,9 @@ export const schema = {
     }
   },
   level: {
-    label: 'Nivel de Conta *',
+    label: 'Nivel de Conta',
     component: Level,
+    required: true,
     style: {
       size: [1, 1, 1]
     },
@@ -118,8 +131,9 @@ export const schema = {
     }
   },
   agent: {
-    label: 'Agente Comercial *',
+    label: 'Agente Comercial',
     component: Agent,
+    required: true,
     style: {
       size: [1, 1, 1]
     },

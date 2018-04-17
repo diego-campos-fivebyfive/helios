@@ -7,6 +7,7 @@ export default {
   name: {
     label: 'Nome',
     component: Text,
+    required: true,
     style: {
       size: [1, 1, 1]
     }
@@ -14,6 +15,7 @@ export default {
   amount: {
     label: 'Valor',
     component: Check,
+    required: true,
     type: 'money',
     exception: 'Formato de moeda inválido',
     style: {
