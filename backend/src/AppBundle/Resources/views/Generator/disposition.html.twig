@@ -1,0 +1,235 @@
+    {% set projectModule = project.projectModules.first %}
+
+    {% if projectModule %}
+        <style>
+            .group-components {
+                height: 39px;
+            }
+        </style>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Disposição dos Módulos
+            </div>
+            <div class="panel-body">
+
+                <table class="hide">
+                    <tbody id="template-lines">
+                    <tr class="dist-line">
+                        <td class="col-md-6">
+                            <label class="dist-line-number">
+                                Mesa
+                            </label>
+                        </td>
+                        <td class="col-md-3">
+                            <input placeholder="Módulos por Mesa" type="text" value="__modules__"
+                                   class="form-control dist-line-module group-components">
+                        </td>
+                        <td class="col-md-3">
+                            <button class="remove-dist-line btn btn-danger btn-block">
+                                <i class="fa fa-trash"></i> Remover Mesa
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <td colspan="3">
+                            <div class="btn-group btn-group-md">
+                                <button id="add-dist-line" class="btn btn-success">
+                                    <i class="fa fa-plus"></i> Adicionar
+                                </button>
+                            </div>
+
+                            <div class="btn-group btn-group-md">
+                                <button class="btn btn-primary">
+                                    Módulos: <span id="dist-counter"> {{ projectModule.quantity }} </span>
+                                </button>
+                            </div>
+
+                            <div class="btn-group btn-group-md">
+                                <button id="dist-checker" class="btn btn-danger">
+                                    <strong> {{ projectModule.quantity }} </strong>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr style="background-color: #f5f5f5">
+                        <th class="col-md-6" >
+                            Mesas
+                        </th>
+                        <th class="col-md-3 text-center">
+                            Módulos
+                        </th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody id="dist-container">
+                    </tbody>
+
+                    <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <button data-style="zoom-in" class="btn btn-success pull-right ladda-button"
+                                    id="btn-dist-submit">
+                                <i class="fa fa-refresh"></i>
+                                <span> Recalcular estruturas</span>
+                            </button>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <i class="fa fa-shield"></i>
+                Seguros
+            </div>
+            <div class="panel-body">
+                {% include 'admin/projects/insurances.html.twig' %}
+            </div>
+        </div>
+    {% endif %}
+
+
+<script>
+
+    {% if projectModule %}
+
+    LinesManager = {
+        lines: {{ projectModule.groups|json_encode|raw }},
+        container: $('#dist-container'),
+        template: $('#template-lines').html(),
+        checker: $('#dist-checker'),
+        modulesQtt: {{ projectModule.quantity }},
+        //definir
+        maxPerLine: 248,
+        submit: $('#btn-dist-submit'),
+        count: function () {
+            var count = 0;
+            $.each(LinesManager.lines, function (i, line) {
+                count += line.modules;
+            });
+
+            return count;
+        },
+        check: function () {
+            var counter = LinesManager.count();
+            if (LinesManager.modulesQtt === counter) {
+                LinesManager.submit.removeAttr('disabled');
+                LinesManager.checker.hide();
+            } else {
+                LinesManager.submit.attr('disabled', 'disabled');
+                LinesManager.checker.show();
+            }
+            var diff = LinesManager.modulesQtt - counter;
+
+            if (diff > 0) diff = '+' + diff;
+
+            LinesManager.checker.html(diff);
+        },
+        touchspinModule: function (input, qttInLine) {
+            input.TouchSpin({
+                min: 1,
+                step: 1,
+                // TODO: Verificar o numero limite por linha
+                max: 248, //assim se tiver mais na linha ele perde mas nao mostra
+                // qttInLine < LinesManager.maxPerLine ? LinesManager.maxPerLine : qttInLine,
+                verticalbuttons: true,
+            }).on('change', function () {
+                var value = parseInt($(this).val());
+                var index = $(this).closest('tr').index();
+                var current = LinesManager.lines[index].modules;
+
+                if (value > current && LinesManager.count() >= LinesManager.modulesQtt) {
+                    $(this).val(current);
+                } else {
+                    LinesManager.lines[index].modules = value;
+                }
+
+                LinesManager.check();
+            });
+        },
+        register: function (line, qttInLine) {
+            var moduleInput = line.find('.dist-line-module');
+            var btnRemove = line.find('.remove-dist-line');
+
+            LinesManager.touchspinModule(moduleInput, qttInLine);
+
+            btnRemove.on('click', function () {
+                if (LinesManager.lines.length > 1) {
+                    var line = $(this).closest('tr');
+                    LinesManager.lines.splice(line.index(), 1);
+                    line.remove();
+                    LinesManager.check();
+                }
+            });
+        },
+        render: function (line, i) {
+            if (!line.hasOwnProperty('rendered')) {
+
+                var renderLine = $(LinesManager.template .replace(/__modules__/g, line.modules));
+
+                renderLine.find('.dist-line-number').html('Mesa ' + i);
+
+                LinesManager.container.append(renderLine);
+
+                line.rendered = true;
+
+                LinesManager.register(renderLine, line.modules);
+            }
+        },
+        refresh: function () {
+            $.each(LinesManager.lines, function (i, line) {
+                LinesManager.render(line, i + 1);
+                if (i === LinesManager.lines.length - 1) {
+                    LinesManager.check();
+                }
+            });
+        },
+        init: function () {
+            $.each(LinesManager.lines, function (i, modules) {
+                LinesManager.lines[i] = {modules: modules};
+                if (i === LinesManager.lines.length - 1) {
+                    LinesManager.refresh();
+                }
+            });
+
+            $('#add-dist-line').on('click', function () {
+                LinesManager.lines[LinesManager.lines.length] = {modules: 1};
+                LinesManager.refresh();
+            });
+        }
+    };
+
+    LinesManager.init();
+    /*
+    LinesManager.submit.ladda();
+    LinesManager.submit.on('click', function () {
+        $(this).ladda('start');
+        $.each(LinesManager.lines, function (i, line) {
+           // delete line.rendered;
+           // formatar sem chaves
+        });
+        Request.send({
+            url: '{#{{ path('project_groups',{id:project.id, precify:true}) }}#}',
+            method: 'post',
+            data: {lines: LinesManager.lines},
+            callback: function (xhr) {
+                LinesManager.submit.ladda('stop');
+                //GeneratorHandler.getComponents();
+            }
+        });
+        $.each(LinesManager.lines, function (i, line) {
+            line.rendered = true;
+        });
+    });*/
+
+    {% endif %}
+
+</script>

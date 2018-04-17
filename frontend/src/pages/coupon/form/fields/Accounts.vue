@@ -16,8 +16,8 @@
     data: () => ({
       options: [],
       defaultOption: {
-        id: '',
-        name: 'Não vinculada'
+        value: '',
+        text: 'Não vinculada'
       }
     }),
     props: [
@@ -38,19 +38,21 @@
           && this.field.value.id
         )
           ? this.field.value.id
-          : this.defaultOption.id
+          : this.defaultOption.value
       }
     },
     mounted() {
       this.axios.get('api/v1/account/available')
         .then(response => {
           const accounts = response.data
-          accounts.unshift(this.defaultOption)
 
-          this.options = accounts.map(account => ({
-            value: account.id,
-            text: account.name
-          }))
+          this.options = accounts
+            .map(account => ({
+              value: account.id,
+              text: account.name
+            }))
+
+          this.options.unshift(this.defaultOption)
         })
     }
   }

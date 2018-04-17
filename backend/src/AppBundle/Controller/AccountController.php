@@ -96,23 +96,17 @@ class AccountController extends AbstractController
      */
     public function getAgents(Customer $account)
     {
-        $platform = $account->getAccount();
+        $members = $account->getMembers()->filter(function ($member) {
+            return $member->isPlatformCommercial();
+        });
 
-        if ($platform) {
-            $members = $platform->getMembers()->filter(function ($account) {
-                return $account->isPlatformCommercial();
-            });
+        $data = [];
 
-            $data = [];
-
-            foreach ($members as $member) {
-                $data[] = $member->toArray();
-            }
-
-            return $this->json($data, Response::HTTP_OK);
+        foreach ($members as $member) {
+            $data[] = $member->toArray();
         }
 
-        return $this->json([], Response::HTTP_OK);
+        return $this->json($data, Response::HTTP_OK);
     }
 
     /**

@@ -15,21 +15,14 @@
       Select
     },
     data: () => ({
-      options: [],
-      defaultOption: {
-        id: '',
-        name: 'Não vinculado'
-      }
+      options: []
     }),
     props: [
       'field'
     ],
     methods: {
       updateLevel(select) {
-        this.$set(this.field, 'value', {
-          id: select.value,
-          name: select.text
-        })
+        this.$set(this.field, 'value', select.value)
       }
     },
     computed: {
@@ -39,18 +32,18 @@
           && this.field.value.id
         )
           ? this.field.value.id
-          : this.defaultOption.id
+          : null
       }
     },
     mounted() {
-      this.axios.get('api/v1/account/available')
+      this.axios.get('api/v1/account/levels')
         .then(response => {
-          const accounts = response.data
-          accounts.unshift(this.defaultOption)
+          const levels = response.data
 
-          this.options = accounts.map(account => ({
-            value: account.id,
-            text: account.name
+          this.options = Object.entries(levels)
+            .map(item => ({
+              value: item[0],
+              text: item[1]
           }))
         })
     }

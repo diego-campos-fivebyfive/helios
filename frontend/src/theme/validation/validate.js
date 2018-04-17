@@ -5,15 +5,28 @@ const validate = field => {
   const pattern = patterns[field.type]
   const defaultException = exceptions[field.type]
 
-  if (pattern.test(field.value)) {
+  if (field.value) {
+    if (pattern.test(field.value)) {
+      return {
+        rejected: false
+      }
+    }
+
     return {
-      rejected: false
+      rejected: true,
+      exception: field.exception || defaultException
+    }
+  }
+
+  if (field.required) {
+    return {
+      rejected: true,
+      exception: `Campo ${field.label} requirido`
     }
   }
 
   return {
-    rejected: true,
-    exception: field.exception || defaultException
+    rejected: false
   }
 }
 
