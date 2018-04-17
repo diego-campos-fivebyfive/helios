@@ -113,14 +113,17 @@ class Bridge
      */
     private function getStructures(ProjectInterface $project)
     {
-        $moduleQuantity = 0;
-        /** @var ProjectModule $projectModule */
-        foreach ($project->getProjectModules() as $projectModule) {
-            $moduleQuantity += $projectModule->getQuantity();
-        }
+        $moduleQuantity = $project->countAssociatedModules();
+
         $windSpeed = Isopleta::calculate($project->getLatitude(), $project->getLongitude());
-        $autoModuleQuantityPerTable = Ground::autoModuleQuantityPerTable($windSpeed, $moduleQuantity);
-        $allTablesMaterials = Ground::allTablesMaterials($windSpeed, $autoModuleQuantityPerTable);
+
+        if (empty($project->getProjectModules()->first()->getGroups())) {
+            $groups = Ground::autoModuleQuantityPerTable($windSpeed, $moduleQuantity);
+        } else {
+            $groups = $project->getProjectModules()->first()->getGroups();
+        }
+
+        $allTablesMaterials = Ground::allTablesMaterials($windSpeed, $groups);
         $tablesMaterials = Ground::mergeTablesMaterials($allTablesMaterials);
 
         $structureManager = $this->container->get('structure_manager');

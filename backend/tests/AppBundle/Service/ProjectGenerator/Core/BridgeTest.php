@@ -6,6 +6,7 @@ use AppBundle\Entity\Component\Inverter;
 use AppBundle\Entity\Component\Maker;
 use AppBundle\Entity\Component\Module;
 use AppBundle\Entity\Component\ProjectModule;
+use AppBundle\Entity\Component\ProjectStructure;
 use AppBundle\Entity\Component\StringBox;
 use AppBundle\Entity\Component\Structure;
 use AppBundle\Manager\StringBoxManager;
@@ -113,6 +114,217 @@ class BridgeTest extends AppTestCase
         $this->createStructures();
         // TODO: retorno do "Core::process($parameters)" do metodo resolve
         $result = $bridge->resolve($project);
+
+//        self::assertEquals(4, count($result));
+//        self::assertEquals(2, $result['inverters'][0]['id']);
+    }
+
+    public function testGroups()
+    {
+        $manager = $this->manager('project');
+
+        /** @var Module $module */
+        $module = new Module();
+        $module->setMaxPower(280);
+        $module->setVoltageMaxPower(30.5);
+        $module->setOpenCircuitVoltage(40.5);
+        $module->setShortCircuitCurrent(9.45);
+        $module->setTempCoefficientVoc(-0.31);
+
+        $moduleManager = $this->manager('module');
+        $moduleManager->save($module);
+
+        $project1 = $manager->create();
+        $project2 = $manager->create();
+        $project3 = $manager->create();
+
+        $projectModule1 = new ProjectModule();
+        $projectModule1
+            ->setProject($project1)
+            ->setModule($module)
+            ->setQuantity(2728)
+            ->setGroups([
+                248,
+                248,
+                248,
+                248,
+                248,
+                248,
+                248,
+                248,
+                248,
+                248,
+                248
+            ])
+        ;
+
+        $projectModule2 = new ProjectModule();
+        $projectModule2
+            ->setProject($project2)
+            ->setModule($module)
+            ->setQuantity(2480)
+        ;
+
+        $projectModule3 = new ProjectModule();
+        $projectModule3
+            ->setProject($project3)
+            ->setModule($module)
+            ->setQuantity(2480)
+            ->setGroups([
+                248,
+                248,
+                248,
+                248,
+                248,
+                248,
+                248,
+                248,
+                248,
+                248
+            ])
+        ;
+
+        $makerManager = $this->manager('maker');
+        /** @var Maker $maker */
+        $maker = $makerManager->create();
+        $maker->setName('Novo Maker');
+        $maker->setEnabled(1);
+        $maker->setContext('inverter');
+        $makerManager->save($maker);
+
+        /** @var Maker $maker */
+        $maker2 = $makerManager->create();
+        $maker2->setName('Maker stringBox');
+        $maker2->setEnabled(1);
+        $maker2->setContext('string_box');
+        $makerManager->save($maker2);
+
+        $inverterManager = $this->manager('inverter');
+
+        /** @var Inverter $inverter */
+        $inverter = $inverterManager->create();
+        $inverter->setDescription('desc');
+        $inverter->setCode(123);
+        $inverter->setGeneratorLevels(["partner","promotional","finame"]);
+        $inverter->setPhases(1);
+        $inverter->setPhaseVoltage(220);
+        $inverter->setCompatibility(2);
+        $inverter->setNominalPower(5.5);
+        $inverter->setMinPowerSelection(0);
+        $inverter->setMaxPowerSelection(18);
+        $inverter->setMpptParallel(true);
+        $inverter->setMpptNumber(2);
+        $inverter->setMpptMin(300);
+        $inverter->setInProtection(false);
+        $inverter->setMaxDcVoltage(900);
+        $inverter->setMpptMaxDcCurrent(18.9);
+        $inverter->setMaker($maker);
+        $inverterManager->save($inverter);
+
+        /** @var StringBoxManager $stringBoxManager */
+        $stringBoxManager = $this->manager('string_box');
+
+        /** @var StringBox $stringBox */
+        $stringBox = $stringBoxManager->create();
+        $stringBox->setDescription('desc 1');
+        $stringBox->setCode(123);
+        $stringBox->setMaker($maker2);
+        $stringBox->setInputs(2);
+        $stringBox->setOutputs(3);
+        $stringBox->setGeneratorLevels(["partner","promotional","finame"]);
+        $stringBoxManager->save($stringBox);
+
+        $project1->setDefaults([
+            'level' => 'partner',
+            'fdi_min' => 0.75,
+            'fdi_max' => 1.3,
+            'power' => 18,
+            'voltage' => 220,
+            'phases' => 1,
+            'inverter_maker' => $maker->getId(),
+            'string_box_maker' => $maker2->getId(),
+            'latitude' => 0,
+            'longitude' => 0,
+            'consumption' => 0
+        ]);
+
+        $project2->setDefaults([
+            'level' => 'partner',
+            'fdi_min' => 0.75,
+            'fdi_max' => 1.3,
+            'power' => 18,
+            'voltage' => 220,
+            'phases' => 1,
+            'inverter_maker' => $maker->getId(),
+            'string_box_maker' => $maker2->getId(),
+            'latitude' => 0,
+            'longitude' => 0,
+            'consumption' => 0
+        ]);
+
+        $project3->setDefaults([
+            'level' => 'partner',
+            'fdi_min' => 0.75,
+            'fdi_max' => 1.3,
+            'power' => 18,
+            'voltage' => 220,
+            'phases' => 1,
+            'inverter_maker' => $maker->getId(),
+            'string_box_maker' => $maker2->getId(),
+            'latitude' => 0,
+            'longitude' => 0,
+            'consumption' => 0
+        ]);
+
+        $manager->save($project1);
+        $manager->save($project2);
+        $manager->save($project3);
+
+        /** @var Bridge $bridge */
+        $bridge = $this->getContainer()->get('generator_bridge');
+
+        $this->createStructures();
+        // TODO: retorno do "Core::process($parameters)" do metodo resolve
+        $result1 = $bridge->resolve($project1);
+        $result2 = $bridge->resolve($project2);
+        $result3 = $bridge->resolve($project3);
+
+        $structures1 = [];
+        $structures2 = [];
+        $structures3 = [];
+
+        /** @var ProjectStructure $projectStructure */
+        foreach ($result1->getProjectStructures() as $projectStructure) {
+            $structureData['id'] = $projectStructure->getStructure()->getId();
+            $structureData['quantity'] = $projectStructure->getQuantity();
+
+            $structures1[] = $structureData;
+        }
+
+        /** @var ProjectStructure $projectStructure */
+        foreach ($result2->getProjectStructures() as $projectStructure) {
+            $structureData['id'] = $projectStructure->getStructure()->getId();
+            $structureData['quantity'] = $projectStructure->getQuantity();
+
+            $structures2[] = $structureData;
+        }
+
+        /** @var ProjectStructure $projectStructure */
+        foreach ($result3->getProjectStructures() as $projectStructure) {
+            $structureData['id'] = $projectStructure->getStructure()->getId();
+            $structureData['quantity'] = $projectStructure->getQuantity();
+
+            $structures3[] = $structureData;
+        }
+
+//        for ($i = 0; $i < count($structures1); $i++) {
+//            $this->assertEquals($structures1[$i]['id'], $structures2[$i]['id']);
+//            $this->assertNotEquals($structures1[$i]['quantity'], $structures2[$i]['quantity']);
+//
+//            $this->assertEquals($structures2[$i]['id'], $structures3[$i]['id']);
+//            $this->assertEquals($structures2[$i]['quantity'], $structures3[$i]['quantity']);
+//        }
+        //dump($result2->getProjectStructures()->toArray());
 
 //        self::assertEquals(4, count($result));
 //        self::assertEquals(2, $result['inverters'][0]['id']);
