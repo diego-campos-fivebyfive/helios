@@ -82,6 +82,8 @@ class AccountController extends AbstractController
     {
         $data = Memorial::getDefaultLevels();
 
+        unset($data['promotional'], $data['finame']);
+
         return $this->json($data, Response::HTTP_OK);
     }
 
@@ -203,7 +205,7 @@ class AccountController extends AbstractController
         $data = [
             'name' => $account->getName(),
             'phone' => $account->getPhone(),
-            'address' => $account->getAddress(),
+            'street' => $account->getAddress(),
             'firstname' => $account->getFirstname(),
             'lastname' => $account->getLastname(),
             'postcode' => $account->getPostcode(),
@@ -216,7 +218,9 @@ class AccountController extends AbstractController
             'district' => $account->getDistrict(),
             'agent' => $account->getAgent() ? $account->getAgent()->getName() : null,
             'users' => $users,
-            'owner' => $account->getOwner()->getId()
+            'owner' => $account->getOwner()->getFirstname(),
+            'persistent' => $account->isPersistent(),
+            'number' => $account->getNumber()
         ];
 
         return $this->json($data, Response::HTTP_OK);
