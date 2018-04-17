@@ -144,8 +144,8 @@ class ProjectGeneratorTest extends AppTestCase
             $structures2[] = $structureData;
         }
 
-        dump($structures2);
-        dump($structures1);die;
+        $this->assertNotEmpty($structures1);
+        $this->assertEmpty($structures2);
     }
 
     /**
