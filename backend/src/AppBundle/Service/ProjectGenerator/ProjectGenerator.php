@@ -10,6 +10,7 @@ use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverter;
 use AppBundle\Entity\Component\ProjectModule;
 use AppBundle\Entity\Component\VarietyInterface;
+use AppBundle\Service\ProjectGenerator\Core\Bridge;
 use AppBundle\Service\ProjectGenerator\Dependency\Resolver;
 use AppBundle\Service\ProjectProcessor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -54,6 +55,11 @@ class ProjectGenerator
     private $resolveDependencies = true;
 
     /**
+     * @var Bridge
+     */
+    private $bridge;
+
+    /**
      * @inheritDoc
      */
     public function __construct(ContainerInterface $container)
@@ -61,6 +67,7 @@ class ProjectGenerator
         $this->container = $container;
         $this->project = $this->manager('project')->create();
         $this->autoSave = true;
+        $this->bridge = new Bridge($container);
     }
 
     /**
@@ -574,6 +581,7 @@ class ProjectGenerator
     /**
      * @param ProjectInterface $project
      * @return $this
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function generateStructures(ProjectInterface $project)
     {
@@ -583,12 +591,15 @@ class ProjectGenerator
 
         $this->resetStructures($project);
 
-        CriteriaAggregator::level($defaults['level']);
-
-        /** @var \AppBundle\Manager\StructureManager $manager */
-        $manager = $this->manager('structure');
-        $calculator = new StructureCalculator($manager);
-        $calculator->calculate($project);
+        if ($defaults['roof_type'] == ProjectInterface::GROUND_STRUCTURE) {
+            $this->bridge->resolve($project);
+        } else {
+            CriteriaAggregator::level($defaults['level']);
+            /** @var \AppBundle\Manager\StructureManager $manager */
+            $manager = $this->manager('structure');
+            $calculator = new StructureCalculator($manager);
+            $calculator->calculate($project);
+        }
 
         $this->save($project);
 
