@@ -15,21 +15,14 @@
       Select
     },
     data: () => ({
-      options: [],
-      defaultOption: {
-        key: '',
-        value: 'Não vinculado'
-      }
+      options: []
     }),
     props: [
       'field'
     ],
     methods: {
       updateLevel(select) {
-        this.$set(this.field, 'value', {
-          id: select.value,
-          name: select.text
-        })
+        this.$set(this.field, 'value', select.value)
       }
     },
     computed: {
@@ -39,7 +32,7 @@
           && this.field.value.id
         )
           ? this.field.value.id
-          : this.defaultOption.id
+          : null
       }
     },
     mounted() {

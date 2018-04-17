@@ -3,8 +3,8 @@
     :label='field.label',
     :disabled='field.disabled.state',
     :options='options',
-    :selected='getCurrentAccount',
-    v-on:update='updateAccount')
+    :selected='getCurrentAgent',
+    v-on:update='updateAgent')
 </template>
 
 <script>
@@ -17,41 +17,40 @@
     data: () => ({
       options: [],
       defaultOption: {
-        id: '',
-        name: 'Não vinculada'
+        value: '',
+        text: 'Não vinculada'
       }
     }),
     props: [
       'field'
     ],
     methods: {
-      updateAccount(select) {
-        this.$set(this.field, 'value', {
-          id: select.value,
-          name: select.text
-        })
+      updateAgent(select) {
+        this.$set(this.field, 'value', select.value)
       }
     },
     computed: {
-      getCurrentAccount() {
+      getCurrentAgent() {
         return (
           this.field.value
           && this.field.value.id
         )
           ? this.field.value.id
-          : this.defaultOption.id
+          : this.defaultOption.value
       }
     },
     mounted() {
       this.axios.get('api/v1/account/agents/2209')
         .then(response => {
           const accounts = response.data
-          accounts.unshift(this.defaultOption)
 
-          this.options = accounts.map(account => ({
-            value: account.id,
-            text: account.name
-          }))
+          this.options = accounts
+            .map(account => ({
+              value: account.id,
+              text: account.name
+            }))
+
+          this.options.unshift(this.defaultOption)
         })
     }
   }

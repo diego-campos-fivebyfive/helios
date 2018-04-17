@@ -2,8 +2,8 @@
   Select(
     :label='field.label',
     :options='options',
-    :selected='getCurrentAccount',
-    v-on:update='updateAccount')
+    :selected='getCurrentParentAccount',
+    v-on:update='updateParentAccount')
 </template>
 
 <script>
@@ -16,49 +16,51 @@
     data: () => ({
       options: [],
       defaultOption: {
-        id: '',
-        name: 'Não vinculada'
+        value: '',
+        text: 'Não vinculada'
       }
     }),
     props: [
       'field'
     ],
     methods: {
-      setCurrentAccount(select) {
+      setDisabledState(select) {
+        this.$emit('disableFields', {
+          state: (select.value !== this.defaultOption.value),
+          manager: this.field.schemaID
+        })
+      },
+      updateParentAccount(select) {
+        this.setDisabledState(select)
+
         this.$set(this.field, 'value', {
           id: select.value,
           name: select.text
         })
-      },
-      updateAccount(select) {
-        this.$emit('disableFields', {
-          state: (select.value !== this.defaultOption.id),
-          manager: this.field.schemaID
-        })
-
-        this.setCurrentAccount(select)
       }
     },
     computed: {
-      getCurrentAccount() {
+      getCurrentParentAccount() {
         return (
           this.field.value
           && this.field.value.id
         )
           ? this.field.value.id
-          : this.defaultOption.id
+          : this.defaultOption.value
       }
     },
     mounted() {
       this.axios.get('api/v1/account/parent_accounts/2209')
         .then(response => {
           const accounts = response.data
-          accounts.unshift(this.defaultOption)
 
-          this.options = accounts.map(account => ({
-            value: account.id,
-            text: account.name
-          }))
+          this.options = accounts
+            .map(account => ({
+              value: account.id,
+              text: account.name
+            }))
+
+          this.options.unshift(this.defaultOption)
         })
     }
   }
