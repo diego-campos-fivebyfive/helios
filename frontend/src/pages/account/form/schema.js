@@ -5,7 +5,7 @@ import Level from './fields/Level'
 import ParentAccount from './fields/ParentAccount'
 import State from './fields/State'
 
-export default {
+export const schema = {
   id: {},
   document: {
     label: 'CNPJ *',
@@ -99,6 +99,7 @@ export default {
     }
   },
   parentAccount: {
+    schemaID: 'PA01',
     label: 'Conta Mãe',
     component: ParentAccount,
     style: {
@@ -110,6 +111,10 @@ export default {
     component: Level,
     style: {
       size: [1, 1, 1]
+    },
+    disabled: {
+      manager: 'PA01',
+      state: false
     }
   },
   agent: {
@@ -117,6 +122,10 @@ export default {
     component: Agent,
     style: {
       size: [1, 1, 1]
+    },
+    disabled: {
+      manager: 'PA01',
+      state: false
     }
   },
   persistent: {

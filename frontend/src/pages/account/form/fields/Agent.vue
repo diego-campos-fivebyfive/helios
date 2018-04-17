@@ -1,6 +1,7 @@
 <template lang="pug">
   Select(
     :label='field.label',
+    :disabled='field.disabled.state',
     :options='options',
     :selected='getCurrentAccount',
     v-on:update='updateAccount')

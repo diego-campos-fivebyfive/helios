@@ -6,13 +6,14 @@
         | {{ action.title }}
       form.form(slot='section')
         component(
-          v-on:validate='validate',
           v-for='(field, name) in payload',
           v-if='field.component',
           :is='field.component',
           :key='name',
           :field='field',
-          :style='getFieldSize(field.style.size)')
+          :style='getFieldSize(field.style.size)',
+          v-on:validate='validate',
+          v-on:disableFields='disableFields')
       component(
         slot='footer',
         v-on:done='done',
@@ -56,6 +57,16 @@
         if (rejected) {
           this.notify(exception, 'danger-common')
         }
+      },
+      disableFields({ state, manager }) {
+        this.payload.forEach(item => {
+          if (
+            item.disabled
+            && item.disabled.manager === manager
+          ) {
+            this.$set(item.disabled, 'state', state)
+          }
+        })
       },
       getFieldSize([grow, shrink, cols]) {
         const base = this.getColumnsSize * cols

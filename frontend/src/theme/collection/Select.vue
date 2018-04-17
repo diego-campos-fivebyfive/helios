@@ -1,7 +1,9 @@
 <template lang="pug">
   label
     | {{ label }}
-    select(v-on:change='updateOption($event.target.value)')
+    select(
+      :disabled='disabled',
+      v-on:change='updateOption($event.target.value)')
       option(
         v-for='option in options',
         :selected='selected === option.value',
@@ -13,6 +15,7 @@
   export default {
     props: [
       'label',
+      'disabled',
       'options',
       'selected'
     ],
@@ -51,6 +54,11 @@
 
     &:focus {
       border-color: $ui-blue-light;
+    }
+
+    &:disabled {
+      background-color: $ui-gray-light;
+      cursor: not-allowed;
     }
   }
 </style>
