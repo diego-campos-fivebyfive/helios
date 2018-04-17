@@ -3,41 +3,41 @@
     {% if projectModule %}
         <style>
             .group-components {
-                height: 44px;
+                height: 39px;
             }
         </style>
 
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            Disposição dos Módulos
-        </div>
-        <div class="panel-body">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Disposição dos Módulos
+            </div>
+            <div class="panel-body">
 
-            <table class="hide">
-                <tbody id="template-lines">
+                <table class="hide">
+                    <tbody id="template-lines">
                     <tr class="dist-line">
-                        <td class="col-md-5">
+                        <td class="col-md-6">
                             <label class="dist-line-number">
-                                Linha
+                                Mesa
                             </label>
                         </td>
-                        <td class="col-md-6">
-                            <input placeholder="Módulos por Linha" type="text" value="__modules__"
+                        <td class="col-md-3">
+                            <input placeholder="Módulos por Mesa" type="text" value="__modules__"
                                    class="form-control dist-line-module group-components">
                         </td>
-                        <td class="col-md-1">
+                        <td class="col-md-3">
                             <button class="remove-dist-line btn btn-danger btn-block">
-                                <i class="fa fa-trash"></i>
+                                <i class="fa fa-trash"></i> Remover Mesa
                             </button>
                         </td>
                     </tr>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
 
-            <table class="table">
-                <thead>
+                <table class="table">
+                    <thead>
                     <tr>
-                        <td colspan="4">
+                        <td colspan="3">
                             <div class="btn-group btn-group-md">
                                 <button id="add-dist-line" class="btn btn-success">
                                     <i class="fa fa-plus"></i> Adicionar
@@ -57,11 +57,20 @@
                             </div>
                         </td>
                     </tr>
-                </thead>
-                <tbody id="dist-container">
-                </tbody>
+                    <tr style="background-color: #f5f5f5">
+                        <th class="col-md-6" >
+                            Mesas
+                        </th>
+                        <th class="col-md-3 text-center">
+                            Módulos
+                        </th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody id="dist-container">
+                    </tbody>
 
-                <tfoot>
+                    <tfoot>
                     <tr>
                         <td colspan="4">
                             <button data-style="zoom-in" class="btn btn-success pull-right ladda-button"
@@ -71,12 +80,20 @@
                             </button>
                         </td>
                     </tr>
-                </tfoot>
-            </table>
-
+                    </tfoot>
+                </table>
+            </div>
         </div>
-    </div>
 
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <i class="fa fa-shield"></i>
+                Seguros
+            </div>
+            <div class="panel-body">
+                {% include 'admin/projects/insurances.html.twig' %}
+            </div>
+        </div>
     {% endif %}
 
 
@@ -85,7 +102,7 @@
     {% if projectModule %}
 
     LinesManager = {
-        lines: [248,250]{#{{ projectModule.groups|json_encode|raw }}#},
+        lines: {{ projectModule.groups|json_encode|raw }},
         container: $('#dist-container'),
         template: $('#template-lines').html(),
         checker: $('#dist-checker'),
@@ -124,7 +141,6 @@
                 max: 248, //assim se tiver mais na linha ele perde mas nao mostra
                 // qttInLine < LinesManager.maxPerLine ? LinesManager.maxPerLine : qttInLine,
                 verticalbuttons: true,
-                prefix: 'Módulos por Linha'
             }).on('change', function () {
                 var value = parseInt($(this).val());
                 var index = $(this).closest('tr').index();
@@ -159,7 +175,7 @@
 
                 var renderLine = $(LinesManager.template .replace(/__modules__/g, line.modules));
 
-                renderLine.find('.dist-line-number').html('Linha ' + i);
+                renderLine.find('.dist-line-number').html('Mesa ' + i);
 
                 LinesManager.container.append(renderLine);
 
