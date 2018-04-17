@@ -85,8 +85,6 @@ class AccountController extends AbstractController
         unset($data['promotional']);
         unset($data['finame']);
 
-        dump($data);die;
-
         return $this->json($data, Response::HTTP_OK);
     }
 
