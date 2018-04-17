@@ -141,6 +141,8 @@ class Ground {
             $gapSize = 3;
         }
 
+        //dump($moduleQuantity);die;
+
         $tableSize = ceil($moduleQuantity / 2);
         $remainder = $tableSize % $gapSize;
 
