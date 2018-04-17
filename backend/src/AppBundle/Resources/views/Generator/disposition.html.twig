@@ -14,7 +14,7 @@
         <div class="panel-body">
 
             <table class="hide">
-                <tbody id="template_lines">
+                <tbody id="template-lines">
                     <tr class="dist-line">
                         <td class="col-md-5">
                             <label class="dist-line-number">
@@ -46,7 +46,7 @@
 
                             <div class="btn-group btn-group-md">
                                 <button class="btn btn-primary">
-                                    Módulos : <span id="dist-counter"> {{ projectModule.quantity }} </span>
+                                    Módulos: <span id="dist-counter"> {{ projectModule.quantity }} </span>
                                 </button>
                             </div>
 
@@ -87,9 +87,9 @@
     LinesManager = {
         lines: [248,250]{#{{ projectModule.groups|json_encode|raw }}#},
         container: $('#dist-container'),
-        template: $('#template_lines').html(),
+        template: $('#template-lines').html(),
         checker: $('#dist-checker'),
-        modules_qtt: {{ projectModule.quantity }},
+        modulesQtt: {{ projectModule.quantity }},
         //definir
         maxPerLine: 248,
         submit: $('#btn-dist-submit'),
@@ -103,14 +103,14 @@
         },
         check: function () {
             var counter = LinesManager.count();
-            if (LinesManager.modules_qtt === counter) {
+            if (LinesManager.modulesQtt === counter) {
                 LinesManager.submit.removeAttr('disabled');
                 LinesManager.checker.hide();
             } else {
                 LinesManager.submit.attr('disabled', 'disabled');
                 LinesManager.checker.show();
             }
-            var diff = LinesManager.modules_qtt - counter;
+            var diff = LinesManager.modulesQtt - counter;
 
             if (diff > 0) diff = '+' + diff;
 
@@ -130,7 +130,7 @@
                 var index = $(this).closest('tr').index();
                 var current = LinesManager.lines[index].modules;
 
-                if (value > current && LinesManager.count() >= LinesManager.modules_qtt) {
+                if (value > current && LinesManager.count() >= LinesManager.modulesQtt) {
                     $(this).val(current);
                 } else {
                     LinesManager.lines[index].modules = value;
