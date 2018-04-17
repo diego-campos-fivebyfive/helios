@@ -24,11 +24,19 @@
       'field'
     ],
     methods: {
-      updateAccount(select) {
+      setCurrentAccount(select) {
         this.$set(this.field, 'value', {
           id: select.value,
           name: select.text
         })
+      },
+      updateAccount(select) {
+        this.$emit('disableFields', {
+          state: (select.value !== this.defaultOption.id),
+          manager: this.field.schemaID
+        })
+
+        this.setCurrentAccount(select)
       }
     },
     computed: {
