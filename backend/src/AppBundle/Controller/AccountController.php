@@ -82,8 +82,7 @@ class AccountController extends AbstractController
     {
         $data = Memorial::getDefaultLevels();
 
-        unset($data['promotional']);
-        unset($data['finame']);
+        unset($data['promotional'], $data['finame']);
 
         return $this->json($data, Response::HTTP_OK);
     }
