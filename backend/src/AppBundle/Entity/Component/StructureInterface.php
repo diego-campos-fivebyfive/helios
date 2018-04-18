@@ -10,6 +10,12 @@ interface StructureInterface
     const TYPE_TERMINAL = 'terminal';
     const TYPE_FIXER = 'fixador';
     const TYPE_BASE = 'base';
+    const TYPE_GROUND_PORTICO = 'ground_portico';
+    const TYPE_GROUND_SCREW = 'ground_screw';
+    const TYPE_GROUND_CLAMPS = 'ground_clamps';
+    const TYPE_GROUND_DIAGONAL_UNION = 'ground_diagonal_union';
+    const TYPE_GROUND_CROSS = 'ground_cross';
+    const TYPE_GROUND_DIAGONAl = 'ground_diagonal';
 
     /* Subtypes */
     const ST_ROMAN = 'roman';

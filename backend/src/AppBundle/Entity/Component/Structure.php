@@ -205,7 +205,13 @@ class Structure implements StructureInterface, ComponentInterface
             self::TYPE_JUNCTION => 'Junção',
             self::TYPE_TERMINAL => 'Terminal',
             self::TYPE_FIXER => 'Fixador',
-            self::TYPE_BASE => 'Base'
+            self::TYPE_BASE => 'Base',
+            self::TYPE_GROUND_PORTICO => 'Portico',
+            self::TYPE_GROUND_SCREW => 'Parafuso para Solo',
+            self::TYPE_GROUND_CLAMPS => 'Clamps',
+            self::TYPE_GROUND_DIAGONAL_UNION => 'União para Diagonal',
+            self::TYPE_GROUND_CROSS => 'Terça',
+            self::TYPE_GROUND_DIAGONAl => 'Diagonal'
         ];
     }
 
