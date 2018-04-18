@@ -1,7 +1,8 @@
 <template lang="pug">
-  label
-    | {{ label }}
-    select(
+  Field(
+    :label='label'
+    :field='options')
+    select.field(
       :disabled='disabled',
       v-on:change='updateOption($event.target.value)')
       option(
@@ -12,7 +13,12 @@
 </template>
 
 <script>
+  import Field from '@/theme/collection/Field'
+
   export default {
+    components: {
+      Field
+    },
     props: [
       'label',
       'disabled',
@@ -32,33 +38,5 @@
 </script>
 
 <style lang="scss" scoped>
-  label {
-    float: left;
-    font-weight: 600;
-    padding: $ui-space-y/2 $ui-space-x/2;
-  }
-
-  select {
-    background-color: $ui-white-regular;
-    border: 1px solid $ui-gray-light;
-    border-radius: 1px;
-    color: $ui-gray-dark;
-    display: block;
-    height: $ui-action-y;
-    padding: 0 $ui-space-x/3;
-    margin-top: $ui-space-y/2;
-    width: 100%;
-    transition:
-      border-color 150ms ease-in-out 0s,
-      box-shadow 150ms ease-in-out 0s;
-
-    &:focus {
-      border-color: $ui-blue-light;
-    }
-
-    &:disabled {
-      background-color: $ui-gray-light;
-      cursor: not-allowed;
-    }
-  }
+  /* Select Style */
 </style>
