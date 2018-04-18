@@ -1,10 +1,10 @@
 import Mask from '@/theme/collection/Mask'
 import Text from '@/theme/collection/Text'
 import Checkbox from '@/theme/collection/Checkbox'
-import Agent from './fields/Agent'
-import Level from './fields/Level'
-import ParentAccount from './fields/ParentAccount'
-import State from './fields/State'
+import Agents from './fields/Agents'
+import Levels from './fields/Levels'
+import ParentAccounts from './fields/ParentAccounts'
+import States from './fields/States'
 
 export const schema = {
   id: {},
@@ -76,7 +76,7 @@ export const schema = {
   },
   state: {
     label: 'Estado',
-    component: State,
+    component: States,
     required: true,
     style: {
       size: [1, 1, 1]
@@ -117,14 +117,14 @@ export const schema = {
   parentAccount: {
     schemaID: 'PA01',
     label: 'Conta Mãe',
-    component: ParentAccount,
+    component: ParentAccounts,
     style: {
       size: [1, 1, 1]
     }
   },
   level: {
     label: 'Nivel de Conta',
-    component: Level,
+    component: Levels,
     required: true,
     style: {
       size: [1, 1, 1]
@@ -136,7 +136,7 @@ export const schema = {
   },
   agent: {
     label: 'Agente Comercial',
-    component: Agent,
+    component: Agents,
     required: true,
     style: {
       size: [1, 1, 1]
