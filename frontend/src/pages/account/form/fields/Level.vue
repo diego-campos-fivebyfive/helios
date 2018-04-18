@@ -44,7 +44,7 @@
             .map(item => ({
               value: item[0],
               text: item[1]
-          }))
+            }))
         })
     }
   }

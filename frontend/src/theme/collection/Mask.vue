@@ -9,13 +9,13 @@
 </template>
 
 <script>
-  import {mask} from 'vue-the-mask'
+  import { mask } from 'vue-the-mask'
 
   export default {
     props: [
       'field'
     ],
-    directives: {mask},
+    directives: { mask },
     methods: {
       getMask(type) {
         const masks = {
