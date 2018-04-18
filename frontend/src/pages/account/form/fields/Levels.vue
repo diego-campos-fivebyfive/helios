@@ -1,6 +1,6 @@
 <template lang="pug">
   Select(
-    :label='field.label',
+    :field='field',
     :disabled='field.disabled.state',
     :options='options',
     :selected='getCurrentLevel',

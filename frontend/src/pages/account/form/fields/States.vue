@@ -1,6 +1,6 @@
 <template lang="pug">
   Select(
-    :label='field.label',
+    :field='field',
     :options='options',
     :selected='getCurrentState',
     v-on:update='updateState')
