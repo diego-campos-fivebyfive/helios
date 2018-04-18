@@ -394,31 +394,38 @@ class ProjectController extends AbstractController
 
     /**
      * @Route("/{id}/groups", name="project_groups")
+     *
+     * @param Request $request
+     * @param Project $project
+     * @return \Symfony\Component\HttpFoundation\JsonResponse|Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function groupsAction(Request $request, Project $project)
     {
-        if($request->isMethod('post')){
+        if ($request->isMethod('post')) {
 
             /** @var ProjectModule $projectModule */
             $projectModule = $project->getProjectModules()->first();
 
-            $current = $projectModule->getGroups();
-
             $groups = $request->request->get('groups');
 
-            foreach ($current as $key => $data){
-                if(array_sum($data) != array_sum($groups[$key])){
+            if ($project->getDefaults()['roof_type'] == ProjectInterface::GROUND_STRUCTURE) {
+                $groups = array_map(function ($group) {
+                    $group['modules'] = (int) $group['modules'];
 
-                    $generator = $this->getGenerator();
+                    return $group;
+                }, $groups);
+                $this->setGroups($project, $groups, $request);
+            } else {
+                $current = $projectModule->getGroups();
 
-                    $projectModule->setGroups($groups);
-                    $generator->generateStructures($project);
+                foreach ($current as $key => $data) {
+                    if (array_sum($data) != array_sum($groups[$key])) {
 
-                    if(null != $request->get('precify')){
-                        $generator->pricing($project);
+                        $this->setGroups($project, $groups, $request);
+
+                        break;
                     }
-
-                    break;
                 }
             }
 
@@ -750,6 +757,27 @@ class ProjectController extends AbstractController
         $manager->delete($projectAdditive);
 
         return $this->json([]);
+    }
+
+    /**
+     * @param Project $project
+     * @param $groups
+     * @param Request $request
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    private function setGroups(Project $project, $groups, Request $request) {
+        /** @var ProjectModule $projectModule */
+        $projectModule = $project->getProjectModules()->first();
+
+        $generator = $this->getGenerator();
+
+        $projectModule->setGroups($groups);
+
+        $generator->generateStructures($project);
+
+        if (null != $request->get('precify')) {
+            $generator->pricing($project);
+        }
     }
 
     /**
