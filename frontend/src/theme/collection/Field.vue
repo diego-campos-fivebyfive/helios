@@ -47,8 +47,8 @@
       margin-top: $ui-space-y/2;
       width: 100%;
       transition:
-              border-color 150ms ease-in-out 0s,
-              box-shadow 150ms ease-in-out 0s;
+        border-color 150ms ease-in-out 0s,
+        box-shadow 150ms ease-in-out 0s;
 
       &:focus {
         border-color: $ui-blue-light;

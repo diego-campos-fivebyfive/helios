@@ -1,6 +1,6 @@
 <template lang="pug">
   Field(
-    :label='label'
+    :label='label',
     :field='options')
     select.field(
       :disabled='disabled',
