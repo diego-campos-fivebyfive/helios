@@ -195,7 +195,8 @@ class StatusMapping
                             self::PLATFORM => [
                                 self::MASTER,
                                 self::ADMIN,
-                                self::COMMERCIAL
+                                self::COMMERCIAL,
+                                self::EXPANSE
                             ]
                         ],
                         self::ACTION => self::mountAction('Remover Validação', self::STYLE_SUCCESS)
