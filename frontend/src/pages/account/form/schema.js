@@ -1,3 +1,4 @@
+import Mask from '@/theme/collection/Mask'
 import Text from '@/theme/collection/Text'
 import Checkbox from '@/theme/collection/Checkbox'
 import Agent from './fields/Agent'
@@ -9,7 +10,8 @@ export const schema = {
   id: {},
   document: {
     label: 'CNPJ',
-    component: Text,
+    component: Mask,
+    type: 'cnpj',
     required: true,
     style: {
       size: [1, 1, 1]
@@ -56,7 +58,8 @@ export const schema = {
   },
   phone: {
     label: 'Telefone',
-    component: Text,
+    component: Mask,
+    type: 'phone',
     required: true,
     style: {
       size: [1, 1, 1]
@@ -64,7 +67,8 @@ export const schema = {
   },
   postcode: {
     label: 'CEP',
-    component: Text,
+    component: Mask,
+    type: 'postcode',
     required: true,
     style: {
       size: [1, 1, 1]
