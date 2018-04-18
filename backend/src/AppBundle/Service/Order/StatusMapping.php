@@ -489,11 +489,7 @@ class StatusMapping
      */
     private static function checkKeyIfExists($key)
     {
-        if ($key || $key === 0) {
-            return $key;
-        }
-
-        return self::NULL;
+        return ($key || $key === 0) ? $key : self::NULL;
     }
 
     /**
