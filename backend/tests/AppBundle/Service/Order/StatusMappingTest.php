@@ -15,17 +15,6 @@ class StatusMappingTest extends AppTestCase
 {
     public function testGetPossibilities()
     {
-//        $parameters = [
-//            'sourceStatus' => OrderInterface::STATUS_BUILDING,
-//            'sourceSubStatus',
-//            'targetStatus',
-//            'targetSubStatus',
-//            'type',
-//            'role',
-//            'previousStatus',
-//            'previousSubStatus',
-//        ];
-
         $tests = $this->getTests();
 
         foreach ($tests as $test) {
@@ -72,6 +61,147 @@ class StatusMappingTest extends AppTestCase
 
 
         }
+    }
+
+    public function testCheckPermissions()
+    {
+       $parameters = [
+            'sourceStatus' => 1,
+            'sourceSubStatus' => null,
+            'nextStatus' => 2,
+            //'nextSubstatus' => null,
+            'type' => StatusMapping::PLATFORM,
+            'role' => StatusMapping::COMMERCIAL,
+        ];
+
+       $this->assertTrue(StatusMapping::checkPermission($parameters));
+
+        $parameters = [
+            'sourceStatus' => 1,
+            'sourceSubStatus' => null,
+            'nextStatus' => 3,
+            //'nextSubstatus' => null,
+            'type' => StatusMapping::PLATFORM,
+            'role' => StatusMapping::COMMERCIAL,
+        ];
+
+        $this->assertFalse(StatusMapping::checkPermission($parameters));
+
+        $parameters = [
+            'sourceStatus' => 3,
+            'sourceSubStatus' => null,
+            'nextStatus' => 5,
+            'nextSubstatus' => 0,
+            'type' => StatusMapping::PLATFORM,
+            'role' => StatusMapping::FINANCIAL,
+        ];
+
+        $this->assertTrue(StatusMapping::checkPermission($parameters));
+
+        $parameters = [
+            'sourceStatus' => 3,
+            'sourceSubStatus' => null,
+            'nextStatus' => 5,
+            'nextSubstatus' => 0,
+            'type' => StatusMapping::PLATFORM,
+            'role' => StatusMapping::LOGISTIC,
+        ];
+
+        $this->assertFalse(StatusMapping::checkPermission($parameters));
+
+        $parameters = [
+            'sourceStatus' => 6,
+            'sourceSubStatus' => 0,
+            'nextStatus' => 6,
+            'nextSubstatus' => 2,
+            'type' => StatusMapping::PLATFORM,
+            'role' => StatusMapping::LOGISTIC,
+        ];
+
+        $this->assertTrue(StatusMapping::checkPermission($parameters));
+
+        $parameters = [
+            'sourceStatus' => 6,
+            'sourceSubStatus' => 0,
+            'nextStatus' => 6,
+            'nextSubstatus' => 3,
+            'type' => StatusMapping::PLATFORM,
+            'role' => StatusMapping::LOGISTIC,
+        ];
+
+        $this->assertFalse(StatusMapping::checkPermission($parameters));
+
+        $parameters = [
+            'sourceStatus' => 6,
+            'sourceSubStatus' => 2,
+            'nextStatus' => 6,
+            'nextSubstatus' => 3,
+            'type' => StatusMapping::PLATFORM,
+            'role' => StatusMapping::LOGISTIC,
+        ];
+
+        $this->assertTrue(StatusMapping::checkPermission($parameters));
+
+        $parameters = [
+            'sourceStatus' => 6,
+            'sourceSubStatus' => 2,
+            'nextStatus' => 6,
+            'nextSubstatus' => 4,
+            'type' => StatusMapping::PLATFORM,
+            'role' => StatusMapping::LOGISTIC,
+        ];
+
+        $this->assertTrue(StatusMapping::checkPermission($parameters));
+
+        $parameters = [
+            'sourceStatus' => 6,
+            'sourceSubStatus' => 5,
+            'nextStatus' => 7,
+            'type' => StatusMapping::PLATFORM,
+            'role' => StatusMapping::EXPEDITION,
+        ];
+
+        $this->assertTrue(StatusMapping::checkPermission($parameters));
+
+        $parameters = [
+            'sourceStatus' => 6,
+            'sourceSubStatus' => 5,
+            'nextStatus' => 7,
+            'nextSubstatus' => null,
+            'type' => StatusMapping::PLATFORM,
+            'role' => StatusMapping::EXPEDITION,
+        ];
+
+        $this->assertTrue(StatusMapping::checkPermission($parameters));
+
+        $parameters = [
+            'sourceStatus' => 0,
+            'sourceSubStatus' => null,
+            'nextStatus' => 1,
+            'nextSubstatus' => null,
+            'type' => StatusMapping::ACCOUNT
+        ];
+
+        $this->assertTrue(StatusMapping::checkPermission($parameters));
+
+        $parameters = [
+            'sourceStatus' => 2,
+            'sourceSubStatus' => null,
+            'nextStatus' => 0,
+            'nextSubstatus' => null,
+            'type' => StatusMapping::ACCOUNT
+        ];
+
+        $this->assertTrue(StatusMapping::checkPermission($parameters));
+
+        $parameters = [
+            'sourceStatus' => 2,
+            'sourceSubStatus' => null,
+            'nextStatus' => 1,
+            'type' => StatusMapping::ACCOUNT
+        ];
+
+        $this->assertFalse(StatusMapping::checkPermission($parameters));
     }
 
     /**

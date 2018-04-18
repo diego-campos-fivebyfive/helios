@@ -429,20 +429,6 @@ class StatusMapping
     }
 
     /**
-     * @param $label
-     * @param $specialView
-     * @return array
-     */
-    private static function mountAction($label, $style = self::STYLE_DEFAULT, $specialView = false)
-    {
-        return [
-            self::LABEL => $label,
-            self::STYLE => $style,
-            self::SPECIAL_VIEW => $specialView
-        ];
-    }
-
-    /**
      * @param $parameters
      * @return array
      */
@@ -456,6 +442,68 @@ class StatusMapping
         }
 
         return $possibilities;
+    }
+
+    /**
+     * @param $parameters
+     * @return bool
+     */
+    public static function checkPermission($parameters)
+    {
+        $sourceStatus = self::checkKeyIfExists($parameters['sourceStatus']);
+        $sourceSubstatus = self::checkKeyIfExists($parameters['sourceSubStatus']);
+        $nextStatus = self::checkKeyIfExists($parameters['nextStatus']);
+        $nextSubstatus = isset($parameters['nextSubstatus']) ? self::checkKeyIfExists($parameters['nextSubstatus']) : self::NULL;
+        $type = $parameters['type'];
+        $role = isset($parameters['role']) ? $parameters['role'] : null;
+
+        $mapping = self::getMapping();
+
+        $possibleNextStatus = $mapping[$sourceStatus][$sourceSubstatus];
+
+        if (array_key_exists($nextStatus, $possibleNextStatus)) {
+            if (array_key_exists($nextSubstatus, $possibleNextStatus[$nextStatus])) {
+
+                $possibleRoles = $possibleNextStatus[$nextStatus][$nextSubstatus];
+
+                if ($type === self::ACCOUNT) {
+                    if (in_array($type, $possibleRoles)) {
+                        return true;
+                    }
+                } else {
+                    if (array_key_exists($type, $possibleRoles)) {
+                        if (in_array($role, $possibleRoles[$type])) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $key
+     * @return string
+     */
+    private static function checkKeyIfExists($key)
+    {
+        return ($key || $key === 0) ? $key : self::NULL;
+    }
+
+    /**
+     * @param $label
+     * @param $specialView
+     * @return array
+     */
+    private static function mountAction($label, $style = self::STYLE_DEFAULT, $specialView = false)
+    {
+        return [
+            self::LABEL => $label,
+            self::STYLE => $style,
+            self::SPECIAL_VIEW => $specialView
+        ];
     }
 
     /**
