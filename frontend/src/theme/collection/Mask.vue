@@ -3,15 +3,30 @@
     | {{ field.label }}
     input(
       :value='field.value',
+      v-mask='getMask(field.type)',
       :placeholder='field.placeholder || field.label',
       v-on:input='$set(field, "value", $event.target.value)')
 </template>
 
 <script>
+  import {mask} from 'vue-the-mask'
+
   export default {
     props: [
       'field'
-    ]
+    ],
+    directives: {mask},
+    methods: {
+      getMask(type) {
+        const masks = {
+          phone: ['(##) ####-####', '(##) #####-####'],
+          cnpj: '##.###.###/####-##',
+          postcode: '#####-###'
+        }
+
+        return masks[type]
+      }
+    }
   }
 </script>
 
