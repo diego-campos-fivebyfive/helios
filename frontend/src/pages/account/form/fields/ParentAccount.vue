@@ -1,6 +1,6 @@
 <template lang="pug">
   Select(
-    :label='field.label',
+    :field='field',
     :options='options',
     :selected='getCurrentParentAccount',
     v-on:update='updateParentAccount')

@@ -1,7 +1,6 @@
 <template lang="pug">
   Field(
-    :label='label',
-    :field='options')
+    :field='field')
     select.field(
       :disabled='disabled',
       v-on:change='updateOption($event.target.value)')
@@ -20,7 +19,7 @@
       Field
     },
     props: [
-      'label',
+      'field',
       'disabled',
       'options',
       'selected'
