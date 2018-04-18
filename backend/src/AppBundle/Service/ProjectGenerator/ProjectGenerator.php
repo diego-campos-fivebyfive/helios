@@ -329,8 +329,13 @@ class ProjectGenerator
     public function generateGroups(ProjectInterface $project)
     {
         $defaults = $project->getDefaults();
-        if(count($defaults['errors']))
+        if (count($defaults['errors'])) {
             return $this;
+        }
+
+        if ($defaults['roof_type'] == ProjectInterface::GROUND_STRUCTURE) {
+            return;
+        }
 
         $projectModule = $project->getProjectModules()->first();
 
