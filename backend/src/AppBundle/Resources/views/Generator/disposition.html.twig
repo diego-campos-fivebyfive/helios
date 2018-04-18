@@ -108,18 +108,19 @@
         checker: $('#dist-checker'),
         modulesQtt: {{ projectModule.quantity }},
         //definir
-        maxPerLine: 248,
+        maxPerLine: 300,
         submit: $('#btn-dist-submit'),
         count: function () {
             var count = 0;
             $.each(LinesManager.lines, function (i, line) {
-                count += line.modules;
+                count += parseInt(line.modules);
             });
 
             return count;
         },
         check: function () {
             var counter = LinesManager.count();
+
             if (LinesManager.modulesQtt === counter) {
                 LinesManager.submit.removeAttr('disabled');
                 LinesManager.checker.hide();
@@ -138,7 +139,7 @@
                 min: 1,
                 step: 1,
                 // TODO: Verificar o numero limite por linha
-                max: 248, //assim se tiver mais na linha ele perde mas nao mostra
+                max: 300, //assim se tiver mais na linha ele perde mas nao mostra
                 // qttInLine < LinesManager.maxPerLine ? LinesManager.maxPerLine : qttInLine,
                 verticalbuttons: true,
             }).on('change', function () {
@@ -194,7 +195,7 @@
         },
         init: function () {
             $.each(LinesManager.lines, function (i, modules) {
-                LinesManager.lines[i] = {modules: modules};
+                LinesManager.lines[i] = {modules: modules.lines ? modules.modules * modules.lines : modules.modules};
                 if (i === LinesManager.lines.length - 1) {
                     LinesManager.refresh();
                 }
@@ -208,28 +209,47 @@
     };
 
     LinesManager.init();
-    /*
+
     LinesManager.submit.ladda();
     LinesManager.submit.on('click', function () {
         $(this).ladda('start');
+
         $.each(LinesManager.lines, function (i, line) {
-           // delete line.rendered;
-           // formatar sem chaves
-        });
-        Request.send({
-            url: '{#{{ path('project_groups',{id:project.id, precify:true}) }}#}',
-            method: 'post',
-            data: {lines: LinesManager.lines},
-            callback: function (xhr) {
-                LinesManager.submit.ladda('stop');
-                //GeneratorHandler.getComponents();
+
+            delete line.rendered;
+
+            if (i === LinesManager.lines.length - 1) {
+                Request.send({
+                    url: '{{ path('project_groups',{id:project.id, precify:true}) }}',
+                    method: 'post',
+                    data: {groups: LinesManager.lines},
+                    callback: function (xhr) {
+                        LinesManager.submit.ladda('stop');
+                        $.each(LinesManager.lines, function (i, line) {
+                            line.rendered = true;
+                        });
+                        GeneratorHandler.getComponents();
+                    }
+                });
             }
         });
-        $.each(LinesManager.lines, function (i, line) {
-            line.rendered = true;
-        });
-    });*/
+    });
 
     {% endif %}
 
+    var modal_component = $('#modal_component');
+    var modal_body = modal_component.find('.modal-body');
+    var loader = modal_body.html();
+
+    modal_component.on('show.bs.modal', function (event) {
+        var target = $(event.relatedTarget);
+        var url = target.data('url');
+        modal_body.html(loader);
+        Request.send({
+            url: url,
+            callback: function (xhr) {
+                modal_body.html(xhr.responseText);
+            }
+        });
+    });
 </script>
