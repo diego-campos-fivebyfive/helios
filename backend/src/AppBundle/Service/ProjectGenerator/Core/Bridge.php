@@ -136,11 +136,15 @@ class Bridge
 
         if (empty($project->getProjectModules()->first()->getGroups())) {
             $groups = Ground::autoModuleQuantityPerTable($windSpeed, $moduleQuantity);
+
+            $formatedGroups = array_combine(array_fill(0, count($groups),'modules'), $groups);
+
+            $project->getProjectModules()->first()->setGroups([$formatedGroups]);
         } else {
             $groups = $project->getProjectModules()->first()->getGroups();
 
             $groups = array_map(function($group) {
-                return $group['modules'] * $group['lines'];
+                return $group['modules'];
             }, $groups);
         }
 

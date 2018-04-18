@@ -102,7 +102,9 @@ class ProjectGeneratorController extends AbstractController
      */
     public function positionAction(Project $project)
     {
-        return $this->render('generator.position', [
+        $view = $project->getDefaults()['roof_type'] == ProjectInterface::GROUND_STRUCTURE ? 'generator.disposition' : 'generator.position';
+
+        return $this->render($view, [
             'project' => $project
         ]);
     }
