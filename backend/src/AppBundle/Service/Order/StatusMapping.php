@@ -466,7 +466,7 @@ class StatusMapping
 
                 $possibleRoles = $possibleNextStatus[$nextStatus][$nextSubstatus];
 
-                if ($type == self::ACCOUNT) {
+                if ($type === self::ACCOUNT) {
                     if (in_array($type, $possibleRoles)) {
                         return true;
                     }
