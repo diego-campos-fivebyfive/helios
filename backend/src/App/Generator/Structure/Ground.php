@@ -6,6 +6,15 @@ class Ground {
 
     /**
      * @param $windSpeed
+     * @return int
+     */
+    public static function minModulePerTable($windSpeed)
+    {
+        return $windSpeed >= 30 && $windSpeed < 50 ? 6 : 8;
+    }
+
+    /**
+     * @param $windSpeed
      * @param $moduleQuantity
      * @return array
      */
@@ -14,10 +23,7 @@ class Ground {
 
         $maxModuleTableQuantity = 248;
 
-        $minModuleTableQuantity = 8;
-        if ($windSpeed >= 30 and $windSpeed < 50){
-            $minModuleTableQuantity = 6;
-        }
+        $minModuleTableQuantity = self::minModulePerTable($windSpeed);
 
         $tables = array();
 
