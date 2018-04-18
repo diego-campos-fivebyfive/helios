@@ -1,7 +1,6 @@
 <template lang="pug">
   Field(
-    :field='field',
-    :label='field.label')
+    :field='field')
     input.field(
       :value='field.value',
       :placeholder='field.placeholder || field.label',
