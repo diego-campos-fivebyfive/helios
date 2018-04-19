@@ -266,22 +266,26 @@
 
                         <table class="table table-stripped">
                             <thead>
-                            <tr>
-                                <th class="text-center col-md-2"> Número</th>
-                                <th class="text-center col-md-2"> Integrador</th>
-                                <th class="text-center col-md-1"> Atendente</th>
-                                <th class="text-center col-md-2"> Sistemas</th>
-                                <th class="text-center"> Status</th>
-                                <th class="text-center col-md-3"> Arquivos</th>
-                                <th class="text-center"> &nbsp; </th>
-                            </tr>
+                                <tr>
+                                    <th class="text-center col-md-2"> Número</th>
+                                    <th class="text-center col-md-2"> Integrador</th>
+                                    <th class="text-center col-md-1"> Atendente</th>
+                                    <th class="text-center col-md-2"> Sistemas</th>
+                                    <th class="text-center col-md-2"> Status</th>
+                                    <th class="text-center col-md-2"> Arquivos</th>
+                                </tr>
                             </thead>
                             <tbody>
 
                             {% for order in orders %}
                                 <tr>
                                     <td class="text-center">
-                                        <h4> {{ order.reference }} </h4>
+                                        {% if order.reference %}
+                                            <a href="{{ path('order_show', {id: order.id}) }}"><h4> {{ order.reference }} </h4></a>
+                                        {% else %}
+                                            <a href="{{ path('order_show', {id: order.id}) }}"><h4> Visualizar </h4></a>
+                                        {% endif %}
+
                                         {% if order.createdAt %}
                                             <small>
                                                 {{ order.createdAt|format_date }}
@@ -341,13 +345,9 @@
                                                 <a class="btn btn-default {{ order.proforma ? 'validated' }}"
                                                    href="{{ path('order_file',{id:order.id, type:'proforma'}) }}"
                                                    target="_blank"> <i class="fa fa-file-pdf-o"></i>
-                                                    <br>
-                                                    <small>Prof.</small>
                                                 </a>
                                             {% else %}
                                                 <i class="btn btn-default fa fa-file-pdf-o">
-                                                    <br>
-                                                    <small>Prof.</small>
                                                 </i>
                                             {% endif %}
 
@@ -360,24 +360,14 @@
                                                    data-target="#modal_files"
                                                    data-url="{{ path('order_files',{id:order.id, type: 'payment'}) }}"
                                                    class="btn btn-default {{ order.hasFile('payment') ? 'validated' }}">
-                                                    <i class="fa fa-file-text"></i> <br>
-                                                    <small>Comprov. </small>
                                                 </a>
                                             {% else %}
                                                 <i class="btn btn-default fa fa fa-file-text">
-                                                    <br>
-                                                    <small>Comprov.</small>
                                                 </i>
                                             {% endif %}
 
                                         </div>
                                     </td>
-                                    <td>
-                                        <a href="{{ path('order_show', {id: order.id}) }}" class="btn btn-default">
-                                            <i class="fa fa-eye"></i>
-                                        </a>
-                                    </td>
-
                                 </tr>
 
                             {% endfor %}
