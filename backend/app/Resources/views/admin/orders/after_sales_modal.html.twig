@@ -344,6 +344,16 @@
         });
     });
 
+    var infoEditPaymentMethod = $('#info_edit_paymentMethod');
+
+    var currentPaymentMethod = {{ order.paymentMethod|raw }};
+    $.each(infoEditPaymentMethod.find('option'), function(i, option){
+        var value = JSON.parse($(option).attr('value'));
+        if(value.name == currentPaymentMethod.name  && value.quotas.length == currentPaymentMethod.quotas.length){
+            $(option).attr('selected', 'selected');
+        }
+    });
+
     var buttonAfterSalesSubmit = $('#button_after_sales_submit');
 
     buttonAfterSalesSubmit.ladda();
