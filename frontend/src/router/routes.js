@@ -8,7 +8,7 @@ const RouterView = {
   template: '<router-view></router-view>'
 }
 
-export default [
+export const routes = [
   {
     path: '/account',
     name: 'Contas',
