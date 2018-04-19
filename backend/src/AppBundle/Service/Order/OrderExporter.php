@@ -78,7 +78,11 @@ class OrderExporter
         'billing_name' => 'Nome faturamento',
         'billing_cnpj' => 'CNPJ faturamento',
         'invoices' => 'Num. NF',
-        'billed_at' => 'Data faturamento'
+        'billed_at' => 'Data faturamento',
+        'erp_op' => 'OP',
+        'erp_or' => 'OR',
+        'erp_pv' => 'PV',
+        'erp_rpv' => 'RPV'
     ];
 
     /**
@@ -110,7 +114,11 @@ class OrderExporter
         'family' => 'Família',
         'code' => 'Código',
         'description' => 'Descrição',
-        'quantity' => 'Quantidade'
+        'quantity' => 'Quantidade',
+        'erp_op' => 'OP',
+        'erp_or' => 'OR',
+        'erp_pv' => 'PV',
+        'erp_rpv' => 'RPV'
     ];
 
     /**
@@ -247,7 +255,11 @@ class OrderExporter
             'billing_name' => $order->getBillingFirstname(),
             'billing_cnpj' => $order->getBillingCnpj(),
             'invoices' => implode(", ", $order->getInvoices()),
-            'billed_at' => $order->getBilledAt() ? $this->formatDate($order->getBilledAt()) : ''
+            'billed_at' => $order->getBilledAt() ? $this->formatDate($order->getBilledAt()) : '',
+            'erp_op' => $order->getErpOP() || $order->getErpOP() == 0  ? $order->getErpOP() : '',
+            'erp_or' => $order->getErpOR() || $order->getErpOR() == 0  ? $order->getErpOR() : '',
+            'erp_pv' => $order->getErpPV() || $order->getErpPV() == 0  ? $order->getErpPV() : '',
+            'erp_rpv' => $order->getErpRPV() || $order->getErpRPV() == 0  ? $order->getErpRPV() : ''
         ];
 
         if (!is_null($order->getSubStatus())) {
@@ -303,7 +315,11 @@ class OrderExporter
             'family' => $this->getFamilyNameInPortuguese()[$element->getFamily()],
             'code' => $element->getCode(),
             'description' => $element->getDescription(),
-            'quantity' => $element->getQuantity()
+            'quantity' => $element->getQuantity(),
+            'erp_op' => $parent->getErpOP() || $parent->getErpOP() == 0  ? $parent->getErpOP() : '',
+            'erp_or' => $parent->getErpOR() || $parent->getErpOR() == 0  ? $parent->getErpOR() : '',
+            'erp_pv' => $parent->getErpPV() || $parent->getErpPV() == 0  ? $parent->getErpPV() : '',
+            'erp_rpv' => $parent->getErpRPV() || $parent->getErpRPV() == 0  ? $parent->getErpRPV() : ''
         ];
 
         if (!is_null($parent->getSubStatus())) {
