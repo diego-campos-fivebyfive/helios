@@ -2830,6 +2830,8 @@ class Order implements OrderInterface
 
         $key = substr(md5(uniqid(time())), 0, 8);
 
+        $tag['id'] = $key;
+
         $this->metadata['tags'][$role][$key] = $tag;
 
         return $this;
