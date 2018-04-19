@@ -3,6 +3,7 @@
 namespace AdminBundle\Controller;
 
 use AdminBundle\Form\Order\FilterType;
+use AppBundle\Configuration\Json;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\BusinessInterface;
@@ -15,6 +16,7 @@ use AppBundle\Entity\Order\Element;
 use AppBundle\Configuration\Brazil;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\Order\OrderInterface;
+use AppBundle\Entity\Parameter;
 use AppBundle\Form\Order\InfoEditType;
 use AppBundle\Form\Order\OrderType;
 use AppBundle\Form\Order\ErpType;
@@ -35,7 +37,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * @Security("has_role('ROLE_PLATFORM_LOGISTIC') or has_role('ROLE_PLATFORM_EXPANSE') or has_role('ROLE_PLATFORM_BILLING') or has_role('ROLE_PLATFORM_EXPEDITION')")
+ * @Security("user.isPlatform()")
  *
  * @Route("orders")
  * @Breadcrumb("Orçamentos")
@@ -438,6 +440,141 @@ class OrderController extends AbstractController
 
             return $this->json(['importations' => $importations]);
         }
+    }
+
+    /**
+     * @Route("/new_tag", name="new_orders_tag")
+     *
+     * @Method("post")
+     */
+    public function postTagAction(Request $request)
+    {
+        $manager = $this->manager('parameter');
+
+        /** @var Parameter $tagsParameter */
+        $tagsParameter = $manager->findOrCreate('order_tags');
+
+        $role = $this->user()->getRole();
+
+        $key = substr(md5(uniqid(time())), 0, 8);
+
+        $newTag = $request->request->all();
+
+        $newTag['id'] = $key;
+
+        $tags = $tagsParameter->get($role);
+
+        $tags[$key] = $newTag;
+
+        $tagsParameter->set($role, $tags);
+
+        $manager->save($tagsParameter);
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/{id}/{tag}/add_tag", name="add_order_tag")
+     *
+     * @Method("post")
+     */
+    public function postOrderTagAction(Order $order, $tag)
+    {
+        $parameterManager = $this->manager('parameter');
+
+        /** @var Parameter $tagsParameter */
+        $tagsParameter = $parameterManager->findOrCreate('order_tags');
+
+        $role = $this->user()->getRole();
+
+        $id = $tag;
+
+        $tags = $tagsParameter->get($role);
+
+        $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+        if ($tags && array_key_exists($id, $tags)) {
+            $status = Response::HTTP_OK;
+
+            $order->addTag($role, $id, $tags[$id]);
+
+            $manager = $this->manager('order');
+
+            $manager->save($order);
+        }
+
+        return $this->json([], $status);
+    }
+
+    /**
+     * @Route("/{id}/delete_tag", name="delete_orders_tag")
+     *
+     * @Method("delete")
+     */
+    public function deleteTagAction($id)
+    {
+        $manager = $this->manager('parameter');
+
+        /** @var Parameter $tagsParameter */
+        $tagsParameter = $manager->findOrCreate('order_tags');
+
+        $role = $this->user()->getRole();
+
+        $tags = $tagsParameter->get($role);
+
+        $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+        if ($tags && array_key_exists($id, $tags)) {
+            $status = Response::HTTP_OK;
+
+            unset($tags[$id]);
+
+            $tagsParameter->set($role, $tags);
+        }
+
+        $manager->save($tagsParameter);
+
+        return $this->json([], $status);
+    }
+
+    /**
+     * @Route("/{id}/{tag}/remove_tag", name="remove_order_tag")
+     *
+     * @Method("delete")
+     */
+    public function removeTagAction(Order $order, $tag)
+    {
+        $role = $this->user()->getRole();
+
+        $order->removeTag($role, $tag);
+
+        $manager = $this->manager('order');
+
+        $manager->save($order);
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/{id}/tags", name="get_order_tags")
+     *
+     * @Method("get")
+     */
+    public function getTagsAction(Order $order)
+    {
+        $manager = $this->manager('parameter');
+
+        /** @var Parameter $tagsParameter */
+        $tagsParameter = $manager->findOrCreate('order_tags');
+
+        $role = $this->user()->getRole();
+
+        $tags = $tagsParameter->get($role);
+
+        $orderTags = $order->getTags($role);
+
+        return $this->json([
+            'tags' => $tags,
+            'orderTags' => $orderTags
+        ]);
     }
 
     /**
