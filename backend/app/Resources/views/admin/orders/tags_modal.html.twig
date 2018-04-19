@@ -1,0 +1,163 @@
+<!-- Modal -->
+<div id="tags_modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" >Gerenciamento de Tags</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Criar Tag e Adicionar ao Orçamento
+                        </div>
+                        <div class="panel-body">
+                            <form>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="sr-only" for="tagName">Nome: </label>
+                                        <input type="text" class="form-control" id="tagName" placeholder="Nome" maxlength="20" value="Tag Exemplo">
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label class="sr-only" for="tagInitials">Iniciais: </label>
+                                        <input type="text" class="form-control" id="tagInitials" placeholder="Iniciais" maxlength="2" oninput="upperCaseF(this)" value="TE">
+                                    </div>
+
+                                    <div class="col-md-5">
+                                        <label for="tagBackgroundColor">Cor de fundo </label>
+                                        <input type="color" id="tagBackgroundColor" value="#6d747f">
+
+                                        <label for="tagTextColor">Cor do texto: </label>
+                                        <input type="color" id="tagTextColor">
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <button id="button_tags_submit" type="submit" class="ladda-button btn btn-primary save" data-style="zoom-in">Salvar</button>
+                                    </div>
+                                </div>
+
+                                <div class="row" style="padding-top: 10px">
+                                    <div class="col-md-3">
+                                        <label for="tagTextColor">Preview: </label>
+                                        <span id="tagPreview" class="label label-default">
+                                <font id="tagPreviewText" color="black">
+                                    Nome
+                                </font>
+                            </span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Tags Disponíveis para Uso
+                        </div>
+                        <div class="panel-body">
+                            <div class="row" style="padding-left: 10px">
+                                <div class="col-auto">
+                                    <span id="algumId1" class="label label-default">
+                                        <font id="algumId1" color="black">
+                                            Tag Cadastrada na Role
+                                        </font>
+                                    </span>
+                                    <i class="fa fa-times">
+                                    </i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Tags Aplicadas ao Orçamento
+                        </div>
+                        <div class="panel-body">
+                            <div class="row" style="padding-left: 10px">
+                                <div class="col-auto">
+                                    <span id="algumId1" class="label label-default">
+                                        <font id="algumId2" color="black">
+                                            Tag Aplicada no Orçamento
+                                        </font>
+                                    </span>
+                                    <i class="fa fa-times">
+                                    </i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function upperCaseF(a)
+    {
+        setTimeout(function(){
+            a.value = a.value.toUpperCase();
+        }, 1);
+    }
+
+    function getInitials(text) {
+        var initials = "";
+
+        if (text.length >= 2) {
+            var split = text.split(' ');
+
+            if (split.length > 1) {
+                initials = split[0][0].toUpperCase() + split[1][0].toUpperCase();
+            } else {
+                initials = split[0][0].toUpperCase() + split[0][1].toUpperCase();
+            }
+        }
+
+        return initials;
+    }
+
+    function updatePreviewStyle() {
+        // INITIALS
+        var initials = $('#tagInitials').val();
+        $('#tagPreviewText').text(initials);
+
+        // BACKGROUND COLOR
+        var backgroundColor = $('#tagBackgroundColor').val();
+        $('#tagPreview').removeAttr('style');
+        $('#tagPreview').attr('style', 'background-color: ' + backgroundColor);
+
+        // TEXT COLOR
+        var textColor = $('#tagTextColor').val();
+        $('#tagPreviewText').removeAttr('color');
+        $('#tagPreviewText').attr('color', textColor);
+    }
+
+    updatePreviewStyle();
+
+    $('#tagName').on('change', function () {
+        var initials = getInitials($(this).val());
+        $('#tagInitials').val(initials);
+        updatePreviewStyle();
+    });
+
+    $('#tagInitials').on('change', function () {
+        upperCaseF($(this));
+        updatePreviewStyle();
+    });
+
+    $('#tagBackgroundColor').on('change', function () {
+        updatePreviewStyle();
+    });
+
+    $('#tagTextColor').on('change', function () {
+        updatePreviewStyle();
+    });
+    
+</script>
