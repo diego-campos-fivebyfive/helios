@@ -27,6 +27,8 @@ class OrderEntityTest extends GeneratorTest
 
         $role2 = "ROLE_PLATFORM_FINANCIAL";
 
+        $roleEmpty = "ROLE_EMPTY";
+
         self::assertEquals([], $order->getTags());
 
         $order->addTag($tag, $role);
@@ -52,6 +54,8 @@ class OrderEntityTest extends GeneratorTest
         $t = $order->getTags($role);
 
         self::assertEquals(0, count($t));
+
+        self::assertEquals([], $order->getTags($roleEmpty));
     }
 
     public function testDiscountConfig()
