@@ -31,11 +31,17 @@ class OrderEntityTest extends GeneratorTest
 
         self::assertEquals([], $order->getTags());
 
-        $order->addTag($tag, $role);
+        $key = substr(md5(uniqid(time())), 0, 8);
 
-        $order->addTag($tag, $role2);
+        $order->addTag($role, $key, $tag);
 
-        $order->addTag($tag, $role2);
+        $key1 = substr(md5(uniqid(time())), 0, 8);
+
+        $order->addTag($role2, $key1, $tag);
+
+        $key2 = substr(md5(uniqid(time())), 0, 8);
+
+        $order->addTag($role2, $key2, $tag);
 
         self::assertEquals(1, count($order->getTags($role)));
 
@@ -45,7 +51,9 @@ class OrderEntityTest extends GeneratorTest
 
         $t = $order->getTags($role);
 
-        $key = array_keys($t)[0];
+        $keyResult = array_keys($t)[0];
+
+        self::assertEquals($key, $keyResult);
 
         self::assertEquals($key, $t[$key]['id']);
 
