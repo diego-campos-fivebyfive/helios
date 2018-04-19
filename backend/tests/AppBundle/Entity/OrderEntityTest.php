@@ -12,6 +12,52 @@ use Tests\App\Generator\GeneratorTest;
  */
 class OrderEntityTest extends GeneratorTest
 {
+    public function testTags() {
+        /** @var OrderInterface $order */
+        $order = $this->createOrder();
+
+        $tag = [
+            'name' => "Nome da tag",
+            'initials' => "TG",
+            'tag_color' => "#000",
+            'text_color' => "#FFF"
+        ];
+
+        $role = "ROLE_PLATFORM_COMMERCIAL";
+
+        $role2 = "ROLE_PLATFORM_FINANCIAL";
+
+        $roleEmpty = "ROLE_EMPTY";
+
+        self::assertEquals([], $order->getTags());
+
+        $order->addTag($tag, $role);
+
+        $order->addTag($tag, $role2);
+
+        $order->addTag($tag, $role2);
+
+        self::assertEquals(1, count($order->getTags($role)));
+
+        self::assertEquals(2, count($order->getTags()));
+
+        self::assertEquals(2, count($order->getTags()[$role2]));
+
+        $t = $order->getTags($role);
+
+        $key = array_keys($t)[0];
+
+        self::assertEquals(1, count($t));
+
+        $order->removeTag($role, $key);
+
+        $t = $order->getTags($role);
+
+        self::assertEquals(0, count($t));
+
+        self::assertEquals([], $order->getTags($roleEmpty));
+    }
+
     public function testDiscountConfig()
     {
         $discountConfigFixed = [
