@@ -2816,5 +2816,55 @@ class Order implements OrderInterface
         return $this;
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function addTag(array $tag, $role)
+    {
+        if (!array_key_exists('tags', $this->metadata)) {
+            $this->metadata['tags'] = [];
+        }
+        if (!array_key_exists($role, $this->metadata['tags'])) {
+            $this->metadata['tags'][$role] = [];
+        }
+
+        $key = substr(md5(uniqid(time())), 0, 8);
+
+        $this->metadata['tags'][$role][$key] = $tag;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function removeTag($role, $key)
+    {
+        if (array_key_exists('tags', $this->metadata) &&
+            array_key_exists($role, $this->metadata['tags']) &&
+            array_key_exists($key, $this->metadata['tags'][$role])) {
+            unset($this->metadata['tags'][$role][$key]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getTags($role = null)
+    {
+        if (array_key_exists('tags', $this->metadata)) {
+            if ($role) {
+                if (array_key_exists($role, $this->metadata['tags'])) {
+                    return $this->metadata['tags'][$role];
+                }
+            } else {
+                return $this->metadata['tags'];
+            }
+        }
+
+        return [];
+    }
 }
 
