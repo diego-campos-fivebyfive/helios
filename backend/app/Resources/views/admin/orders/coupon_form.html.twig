@@ -67,7 +67,7 @@
                     <div class="row">
     {% endif %}
 
-    {% if not isShow or order.status >= constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') %}
+    {% if not isShow or order.status >= constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') and order.coupon %}
     <div class="col-md-12">
         <h3><b>Cupom de desconto aplicado:</b></h3>
         <p><b>Código:</b> {{ order.coupon.code }}</p>
