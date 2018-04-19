@@ -275,7 +275,7 @@
                                     <th class="text-center col-md-2"> Sistemas</th>
                                     <th class="text-center col-md-2"> Status</th>
                                     <th class="text-center col-md-2"> Arquivos</th>
-                                    <th class="text-center col-md-2"> Tags</th>
+                                    <th class="text-center col-md-1"> Tags</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -373,11 +373,33 @@
                                     </td>
 
                                     <td class="text-center">
-                                        <a data-toggle="modal"
-                                           data-target="#tags_modal"
-                                           class="btn btn-default btn-xs">
-                                            <i class="fa fa-plus-square"></i>
-                                        </a>
+                                        {% set role = user.role %}
+
+                                        {% if order.tags(role) %}
+                                            <a data-toggle="modal"
+                                               data-target="#tags_modal"
+                                                class="btn">
+                                            {% set count = 0 %}
+                                            {% for orderTag in order.tags(role) %}
+                                                {% if count == 3  %}
+                                                    <br>
+                                                    {% set count = 0 %}
+                                                {% endif %}
+                                                <span class="label label-default" title="{{ orderTag.name }}" style="background-color: {{ orderTag.tag_color }}; margin-right: 1px; padding-top: 1px">
+                                                    <font color="{{ orderTag.text_color }}">
+                                                        {{ orderTag.initials }}
+                                                    </font>
+                                                </span>
+                                                {% set count = count + 1 %}
+                                            {% endfor %}
+                                            </a>
+                                        {% else %}
+                                            <a data-toggle="modal"
+                                               data-target="#tags_modal"
+                                               class="btn btn-default btn-xs">
+                                                <i class="fa fa-plus-square"></i>
+                                            </a>
+                                        {% endif %}
                                     </td>
                                 </tr>
 
