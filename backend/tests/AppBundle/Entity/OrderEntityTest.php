@@ -47,6 +47,8 @@ class OrderEntityTest extends GeneratorTest
 
         $key = array_keys($t)[0];
 
+        self::assertEquals($key, $t[$key]['id']);
+
         self::assertEquals(1, count($t));
 
         $order->removeTag($role, $key);
