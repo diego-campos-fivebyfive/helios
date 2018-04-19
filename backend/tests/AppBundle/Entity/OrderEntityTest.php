@@ -33,6 +33,8 @@ class OrderEntityTest extends GeneratorTest
 
         $key = substr(md5(uniqid(time())), 0, 8);
 
+        $tag['id'] = $key;
+
         $order->addTag($role, $key, $tag);
 
         $key1 = substr(md5(uniqid(time())), 0, 8);

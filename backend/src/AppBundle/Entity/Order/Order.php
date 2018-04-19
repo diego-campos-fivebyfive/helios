@@ -2828,8 +2828,6 @@ class Order implements OrderInterface
             $this->metadata['tags'][$role] = [];
         }
 
-        $tag['id'] = $key;
-
         $this->metadata['tags'][$role][$key] = $tag;
 
         return $this;
