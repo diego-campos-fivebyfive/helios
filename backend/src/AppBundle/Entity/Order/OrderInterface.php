@@ -1173,4 +1173,24 @@ interface OrderInterface
      * @return OrderInterface
      */
     public function setErpRPV($erpRPV);
+
+    /**
+     * @param array $tag
+     * @param $role
+     * @return OrderInterface
+     */
+    public function addTag(array $tag, $role);
+
+    /**
+     * @param $role
+     * @param $key
+     * @return OrderInterface
+     */
+    public function removeTag($role, $key);
+
+    /**
+     * @param null $role
+     * @return array
+     */
+    public function getTags($role = null);
 }
