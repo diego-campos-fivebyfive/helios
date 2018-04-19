@@ -1175,11 +1175,12 @@ interface OrderInterface
     public function setErpRPV($erpRPV);
 
     /**
-     * @param array $tag
      * @param $role
+     * @param $key
+     * @param array $tag
      * @return OrderInterface
      */
-    public function addTag(array $tag, $role);
+    public function addTag($role, $key, array $tag);
 
     /**
      * @param $role
