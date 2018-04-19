@@ -107,6 +107,7 @@
         template: $('#template-lines').html(),
         checker: $('#dist-checker'),
         modulesQtt: {{ projectModule.quantity }},
+        minModulesPerTable: ({{ project.defaults|json_encode|raw }}).minModulesPerTable,
         //definir
         maxPerLine: 300,
         submit: $('#btn-dist-submit'),
@@ -136,7 +137,7 @@
         },
         touchspinModule: function (input, qttInLine) {
             input.TouchSpin({
-                min: 1,
+                min: LinesManager.minModulesPerTable,
                 step: 1,
                 // TODO: Verificar o numero limite por linha
                 max: 300, //assim se tiver mais na linha ele perde mas nao mostra
@@ -202,7 +203,7 @@
             });
 
             $('#add-dist-line').on('click', function () {
-                LinesManager.lines[LinesManager.lines.length] = {modules: 1};
+                LinesManager.lines[LinesManager.lines.length] = {modules: LinesManager.minModulesPerTable};
                 LinesManager.refresh();
             });
         }

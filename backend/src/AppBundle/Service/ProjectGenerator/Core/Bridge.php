@@ -134,6 +134,12 @@ class Bridge
 
         $windSpeed = Isopleta::calculate($project->getLatitude(), $project->getLongitude());
 
+        $defaults = $project->getDefaults();
+
+        $defaults['minModulesPerTable'] = Ground::minModulePerTable($windSpeed);
+
+        $project->setDefaults($defaults);
+
         if (empty($project->getProjectModules()->first()->getGroups())) {
             $groups = Ground::autoModuleQuantityPerTable($windSpeed, $moduleQuantity);
 
