@@ -2819,7 +2819,7 @@ class Order implements OrderInterface
     /**
      * @inheritdoc
      */
-    public function addTag(array $tag, $role)
+    public function addTag($role, $key, array $tag)
     {
         if (!array_key_exists('tags', $this->metadata)) {
             $this->metadata['tags'] = [];
@@ -2827,8 +2827,6 @@ class Order implements OrderInterface
         if (!array_key_exists($role, $this->metadata['tags'])) {
             $this->metadata['tags'][$role] = [];
         }
-
-        $key = substr(md5(uniqid(time())), 0, 8);
 
         $this->metadata['tags'][$role][$key] = $tag;
 
