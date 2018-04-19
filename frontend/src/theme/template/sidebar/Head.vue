@@ -3,21 +3,15 @@
     img(
       src='@/theme/assets/media/logo-small.png',
       alt='Sices Solar Logo')
-    span.title {{ user.name }}
-    span {{ user.company }}
+    span.title {{ $global.user.name }}
+    span {{ $global.user.company }}
 </template>
 
 <script>
   export default {
     data: () => ({
       user: {}
-    }),
-    mounted() {
-      this.axios.get('api/v1/user')
-        .then(response => {
-          this.user = response.data
-        })
-    }
+    })
   }
 </script>
 

@@ -6,4 +6,4 @@ axios.defaults.headers.common['Accept-Language'] = 'pt_BR'
 axios.defaults.withCredentials = true
 axios.defaults.baseURL = process.env.API_URL
 
-export default axios
+export { axios }
