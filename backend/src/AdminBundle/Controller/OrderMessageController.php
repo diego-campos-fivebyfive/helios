@@ -21,8 +21,9 @@ class OrderMessageController extends AbstractController
 {
     /**
      * @Route("/", name="list_order_messages_to")
+     * @Method("get")
      */
-    public function listMessagesAction(Request $request)
+    public function getAction(Request $request)
     {
         /** @var OrderFinder $orderFinder */
         $orderFinder = $this->get('order_finder');
@@ -46,8 +47,6 @@ class OrderMessageController extends AbstractController
         $qb2->andWhere($qb2->expr()->in('m.to', $this->member()->getId()));
         $qb2->andWhere($qb2->expr()->eq('m.restricted', 1));
         $qb2->orWhere($qb2->expr()->in('m.order', $ids));
-
-        //dump($qb2->getQuery()->getResult());die;
 
         $itemsPerPage = 10;
         $pagination = $this->getPaginator()->paginate(
@@ -81,10 +80,14 @@ class OrderMessageController extends AbstractController
                 ];
             }
 
+            /** @var \DateTime $createDate */
+            $createDate = $orderMesage->getCreatedAt()->format('Y-m-d H:i:s ');
+
             return [
                 'id' => $orderMesage->getId(),
                 'author' => $author,
-                'content' => $orderMesage->getContent()
+                'content' => $orderMesage->getContent(),
+                'created_at' => $createDate
             ];
         }, $messageCollection);
     }
