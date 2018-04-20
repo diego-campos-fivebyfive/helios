@@ -82,7 +82,7 @@ interface MessageInterface
      * @param array $to
      * @return MessageInterface
      */
-    public function setTo($to);
+    public function setTo(array $to);
 
     /**
      * @return array
@@ -93,6 +93,6 @@ interface MessageInterface
      * @param array $read
      * @return MessageInterface
      */
-    public function setRead($read);
+    public function setRead(array $read);
 
 }

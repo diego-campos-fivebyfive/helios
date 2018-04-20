@@ -68,6 +68,15 @@ class Message implements MessageInterface
     protected $author;
 
     /**
+     * Message constructor.
+     */
+    public function __construct()
+    {
+        $this->to = [];
+        $this->read = [];
+    }
+
+    /**
      * Get id
      *
      * @return int
@@ -178,7 +187,7 @@ class Message implements MessageInterface
     /**
      * @inheritDoc
      */
-    public function setTo($to)
+    public function setTo(array $to)
     {
         $this->to = $to;
 
@@ -196,7 +205,7 @@ class Message implements MessageInterface
     /**
      * @inheritDoc
      */
-    public function setRead($read)
+    public function setRead(array $read)
     {
         $this->read = $read;
 
