@@ -11,7 +11,14 @@
   export default {
     props: [
       'field'
-    ]
+    ],
+    methods: {
+      getPlaceholder() {
+        const text = this.field.placeholder || this.field.label
+        const mark = this.field.required ? ' *' : ''
+        return `${text}${mark}`
+      }
+    }
   }
 </script>
 

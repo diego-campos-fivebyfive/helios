@@ -51,6 +51,7 @@ export const schema = {
   owner: {
     label: 'Pessoa para contato',
     component: Text,
+    placeholder: 'Nome',
     required: true,
     style: {
       size: [1, 1, 1]
