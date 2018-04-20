@@ -72,4 +72,27 @@ interface MessageInterface
      * @return bool
      */
     public function isRestricted();
+
+    /**
+     * @return array
+     */
+    public function getTo();
+
+    /**
+     * @param array $to
+     * @return MessageInterface
+     */
+    public function setTo($to);
+
+    /**
+     * @return array
+     */
+    public function getRead();
+
+    /**
+     * @param array $read
+     * @return Message
+     */
+    public function setRead($read);
+
 }
