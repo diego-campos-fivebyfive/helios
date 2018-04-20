@@ -3,6 +3,7 @@
 namespace AdminBundle\Controller;
 
 use AppBundle\Controller\AbstractController;
+use AppBundle\Entity\User;
 use AppBundle\Manager\OrderMessageManager;
 use AppBundle\Service\Order\OrderFinder;
 use Doctrine\ORM\QueryBuilder;
@@ -57,6 +58,33 @@ class OrderMessageController extends AbstractController
         $data = $this->formatCollection($pagination);
 
         return $this->json($data, Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/mentions", name="list_order_messages_to")
+     * @Method("get")
+     */
+    public function getMentionRolesAndMembers()
+    {
+        $members = $this->account()->getMembers();
+        $roles = User::getRolesOptions();
+
+        $membersData = [];
+
+        foreach ($members as $member) {
+            $membersData[$member->getId()] = [
+                'id' => $member->getId(),
+                'name' => $member->getName(),
+                'email' => $member->getEmail()
+            ];
+        }
+
+        $data = [
+            'roles' => $roles,
+            'members' => $membersData
+        ];
+
+        return $this->json($data);
     }
 
     /**
