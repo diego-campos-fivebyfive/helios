@@ -65,8 +65,8 @@ class OrderMessageController extends AbstractController
      */
     private function formatEntity($messageCollection)
     {
-        return array_map(function($orderMesage) {
-            $author = $orderMesage->getAuthor();
+        return array_map(function($orderMessage) {
+            $author = $orderMessage->getAuthor();
 
             if ($author) {
                 $author = [
@@ -81,12 +81,12 @@ class OrderMessageController extends AbstractController
             }
 
             /** @var \DateTime $createDate */
-            $createDate = $orderMesage->getCreatedAt()->format('Y-m-d H:i:s ');
+            $createDate = $orderMessage->getCreatedAt()->format('Y-m-d H:i:s ');
 
             return [
-                'id' => $orderMesage->getId(),
+                'id' => $orderMessage->getId(),
                 'author' => $author,
-                'content' => $orderMesage->getContent(),
+                'content' => $orderMessage->getContent(),
                 'created_at' => $createDate
             ];
         }, $messageCollection);
