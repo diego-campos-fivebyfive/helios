@@ -1,99 +1,61 @@
 <!-- Modal -->
-<div id="tags_modal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" >Gerenciamento de Tags</h4>
-            </div>
-            <div class="modal-body">
-                <div class="panel-group">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Criar Tag e Adicionar ao Orçamento
-                        </div>
-                        <div class="panel-body">
-                            <form>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label class="sr-only" for="tagName">Nome: </label>
-                                        <input type="text" class="form-control" id="tagName" placeholder="Nome" maxlength="20" value="Tag Exemplo">
-                                    </div>
-
-                                    <div class="col-md-2">
-                                        <label class="sr-only" for="tagInitials">Iniciais: </label>
-                                        <input type="text" class="form-control" id="tagInitials" placeholder="Iniciais" maxlength="2" oninput="upperCaseF(this)" value="TE">
-                                    </div>
-
-                                    <div class="col-md-5">
-                                        <label for="tagBackgroundColor">Cor de fundo </label>
-                                        <input type="color" id="tagBackgroundColor" value="#6d747f">
-
-                                        <label for="tagTextColor">Cor do texto: </label>
-                                        <input type="color" id="tagTextColor">
-                                    </div>
-
-                                    <div class="col-md-2">
-                                        <button id="button_tags_submit" type="submit" class="ladda-button btn btn-primary save" data-style="zoom-in">Salvar</button>
-                                    </div>
-                                </div>
-
-                                <div class="row" style="padding-top: 10px">
-                                    <div class="col-md-3">
-                                        <label for="tagTextColor">Preview: </label>
-                                        <span id="tagPreview" class="label label-default">
-                                <font id="tagPreviewText" color="black">
-                                    Nome
-                                </font>
-                            </span>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
+<div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title" >Gerenciamento de Tags</h4>
+        </div>
+        <div class="modal-body">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Criar Tag
                     </div>
+                    <div class="panel-body">
+                        <form id="tagForm" method="post">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="sr-only" for="tagName">Nome: </label>
+                                    <input type="text" class="form-control" id="tagName" placeholder="Nome" maxlength="20" value="Tag Exemplo">
+                                </div>
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Tags Disponíveis para Uso
-                        </div>
-                        <div class="panel-body">
-                            <div class="row" style="padding-left: 10px">
-                                <div class="col-auto">
-                                    <span id="algumId1" class="label label-default">
-                                        <font id="algumId1" color="black">
-                                            Tag Cadastrada na Role
-                                        </font>
-                                    </span>
-                                    <i class="fa fa-times">
-                                    </i>
+                                <div class="col-md-2">
+                                    <label class="sr-only" for="tagInitials">Iniciais: </label>
+                                    <input type="text" class="form-control" id="tagInitials" placeholder="Iniciais" maxlength="2" oninput="upperCaseF(this)" value="TE">
+                                </div>
+
+                                <div class="col-md-5">
+                                    <label for="tagBackgroundColor">Cor de fundo </label>
+                                    <input type="color" id="tagBackgroundColor" value="#6d747f">
+
+                                    <label for="tagTextColor">Cor do texto: </label>
+                                    <input type="color" id="tagTextColor">
+                                </div>
+
+                                <div class="col-md-2">
+                                    <button id="button_tags_submit" type="submit" class="ladda-button btn btn-primary save" data-style="zoom-in">Salvar</button>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Tags Aplicadas ao Orçamento
-                        </div>
-                        <div class="panel-body">
-                            <div class="row" style="padding-left: 10px">
-                                <div class="col-auto">
-                                    <span id="algumId1" class="label label-default" title="Nome Tag">
-                                        <font id="algumId2" color="black">
-                                            Tag Aplicada no Orçamento
+                            <div class="row" style="padding-top: 10px">
+                                <div class="col-md-3">
+                                    <label for="tagTextColor">Preview: </label>
+                                    <span id="tagPreview" class="label label-default">
+                                        <font id="tagPreviewText" color="black">
+                                            Nome
                                         </font>
                                     </span>
-                                    <i class="fa fa-times">
-                                    </i>
                                 </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
-            </div>
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                <div id="tags" style="padding-top: 5px"></div>
             </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
         </div>
     </div>
 </div>
@@ -139,6 +101,18 @@
         $('#tagPreviewText').attr('color', textColor);
     }
 
+    var tags = $('#tags');
+
+    function getTags() {
+        $.ajax({
+            url: "{{ path('get_order_tags', {id:order.id}) }}",
+            success: function (response) {
+                tags.html(response);
+            }
+        })
+    }
+
+    getTags();
     updatePreviewStyle();
 
     $('#tagName').on('change', function () {
@@ -158,6 +132,33 @@
 
     $('#tagTextColor').on('change', function () {
         updatePreviewStyle();
+    });
+
+    var buttonTagsSubmit = $('#button_tags_submit');
+
+    buttonTagsSubmit.ladda();
+
+    $('#tagForm').on('submit', function (event) {
+        event.preventDefault();
+
+        buttonTagsSubmit.ladda('start');
+
+        var data = {
+            'name': $('#tagName').val(),
+            'initials': $('#tagInitials').val(),
+            'tag_color': $('#tagBackgroundColor').val(),
+            'text_color': $('#tagTextColor').val()
+        };
+
+        $.ajax({
+            url: "{{ path('new_orders_tag') }}",
+            data: data,
+            method: 'post',
+            complete: function (response) {
+                getTags();
+                buttonTagsSubmit.ladda('stop');
+            }
+        })
     });
     
 </script>

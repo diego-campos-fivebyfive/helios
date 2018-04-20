@@ -274,6 +274,16 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/modal_tags", name="modal_tags")
+     */
+    public function tagsModalAction(Request $request, Order $order)
+    {
+        return $this->render('admin/orders/tags_modal.html.twig', [
+            'order' => $order
+        ]);
+    }
+
+    /**
      * @Route("/{id}/invoice", name="invoice_number")
      */
     public function invoiceNumberAction(Request $request, Order $order)
@@ -570,9 +580,10 @@ class OrderController extends AbstractController
 
         $orderTags = $order->getTags($role);
 
-        return $this->json([
+        return $this->render('admin/orders/tags_modal_content.html.twig', [
             'tags' => $tags,
-            'orderTags' => $orderTags
+            'orderTags' => $orderTags,
+            'order' => $order
         ]);
     }
 
