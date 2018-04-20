@@ -6,17 +6,11 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Manager\OrderMessageManager;
 use AppBundle\Service\Order\OrderFinder;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\Validator\Constraints\DateTime;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @Security("user.isPlatform()")
