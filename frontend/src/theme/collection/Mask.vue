@@ -1,10 +1,11 @@
 <template lang="pug">
   Field(
+    ref='field',
     :field='field')
     input.field(
       :value='field.value',
       v-mask='getMask(field.type)',
-      :placeholder='field.placeholder || field.label',
+      :placeholder='placeholder',
       v-on:input='$set(field, "value", $event.target.value)')
 </template>
 
@@ -13,6 +14,9 @@
   import { mask } from 'vue-the-mask'
 
   export default {
+    data: () => ({
+      placeholder: ''
+    }),
     components: {
       Field
     },
@@ -30,6 +34,9 @@
 
         return masks[type]
       }
+    },
+    mounted() {
+      this.placeholder = this.$refs.field.getPlaceholder()
     }
   }
 </script>
