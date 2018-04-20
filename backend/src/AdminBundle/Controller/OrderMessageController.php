@@ -61,7 +61,7 @@ class OrderMessageController extends AbstractController
     }
 
     /**
-     * @Route("/mentions", name="list_order_messages_to")
+     * @Route("/mentions", name="list_mentions")
      * @Method("get")
      */
     public function getMentionRolesAndMembers()
