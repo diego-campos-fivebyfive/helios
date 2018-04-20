@@ -28,7 +28,7 @@
                                     <input type="color" id="tagBackgroundColor" value="#6d747f">
 
                                     <label for="tagTextColor">Cor do texto: </label>
-                                    <input type="color" id="tagTextColor">
+                                    <input type="color" id="tagTextColor" value="#FFFFFF">
                                 </div>
 
                                 <div class="col-md-2">
@@ -40,7 +40,7 @@
                                 <div class="col-md-3">
                                     <label for="tagTextColor">Preview: </label>
                                     <span id="tagPreview" class="label label-default">
-                                        <font id="tagPreviewText" color="black">
+                                        <font id="tagPreviewText" color="white">
                                             Nome
                                         </font>
                                     </span>
@@ -62,8 +62,7 @@
 
 <script>
 
-    function upperCaseF(a)
-    {
+    function upperCaseF(a) {
         setTimeout(function(){
             a.value = a.value.toUpperCase();
         }, 1);
