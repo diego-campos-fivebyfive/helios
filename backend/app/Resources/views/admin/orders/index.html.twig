@@ -490,6 +490,10 @@
             });
         });
 
+        ModalTags.on('hidden.bs.modal', function () {
+            location.reload();
+        })
+
         var modalFiles = $('#modal_files');
 
         modalFiles.on('show.bs.modal', function(event){

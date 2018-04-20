@@ -55,7 +55,7 @@
         </div>
 
         <div class="modal-footer">
-            <button id='closeTagsModal' type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
         </div>
     </div>
 </div>
@@ -134,8 +134,14 @@
         updatePreviewStyle();
     });
 
+    var buttonTagsSubmit = $('#button_tags_submit');
+
+    buttonTagsSubmit.ladda();
+
     $('#tagForm').on('submit', function (event) {
         event.preventDefault();
+
+        buttonTagsSubmit.ladda('start');
 
         var data = {
             'name': $('#tagName').val(),
@@ -148,14 +154,11 @@
             url: "{{ path('new_orders_tag') }}",
             data: data,
             method: 'post',
-            success: function (response) {
+            complete: function (response) {
                 getTags();
+                buttonTagsSubmit.ladda('stop');
             }
         })
-    });
-
-    $('#closeTagsModal').on('click', function () {
-        location.reload();
     });
     
 </script>
