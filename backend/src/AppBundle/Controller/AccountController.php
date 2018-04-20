@@ -6,11 +6,10 @@ use AppBundle\Configuration\Brazil;
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
-use AppBundle\Entity\Pricing\MemorialInterface;
-use Doctrine\ORM\EntityRepository;
+use AppBundle\Entity\MemberInterface;
+use AppBundle\Entity\UserInterface;
+use AppBundle\Manager\CustomerManager;
 use AppBundle\Entity\Pricing\Memorial;
-use AppBundle\Manager\AccountManager;
-use AppBundle\Model\Document\Account;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -221,7 +220,7 @@ class AccountController extends AbstractController
     }
 
     /**
-     * @Route("/", name="create_account")
+     * @Route("/", name="create_account_api")
      *
      * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_AFTER_SALES') or has_role('ROLE_PLATFORM_COMMERCIAL') or has_role('ROLE_PLATFORM_EXPANSE') or has_role('ROLE_PLATFORM_FINANCIAL') or has_role('ROLE_PLATFORM_MASTER')")
      *
@@ -231,85 +230,52 @@ class AccountController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        /** @var AccountManager $manager */
-        $manager = $this->manager('account');
-        $emailAlreadyInUse = $manager->findOneBy([
-            'context' => 'account',
-            'email' => $data['email']
-        ]);
+        /** @var CustomerManager $manager */
+        $manager = $this->manager('customer');
 
-        if ($emailAlreadyInUse) {
-            $data = "This email already exists!";
-            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+        $agent = !empty($data['agent']) ? $data['agent'] : null;
 
-            return $this->json($data, $status);
-        }
+        $parentAccount = !empty($data['parentAccount']) ? $data['parentAccount'] : null;
 
-        $documentAlreadyInUse = $manager->findOneBy([
-            'context' => 'account',
-            'document' => $data['document']
-        ]);
+        $errors = $this->validateData($data, $manager, $agent, $parentAccount);
 
-        if ($documentAlreadyInUse) {
-            $data = "This CNPJ already exists!";
-            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-
-            return $this->json($data, $status);
+        if ($errors) {
+            return $errors;
         }
 
         /** @var AccountInterface $account */
         $account = $manager->create();
-        $account
-            ->setDocument($data['document'])
-            ->setExtraDocument($data['extraDocument'])
-            ->setFirstName($data['firstname'])
-            ->setLastName($data['lastname'])
-            ->setPostcode($data['postcode'])
-            ->setState($data['state'])
-            ->setCity($data['city'])
-            ->setDistrict($data['district'])
-            ->setStreet($data['street'])
-            ->setNumber($data['number'])
-            ->setEmail($data['email'])
-            ->setPhone($data['phone'])
-            ->setStatus($data['status'])
-            ->setContext(Customer::CONTEXT_ACCOUNT)
-            ->setLevel($data['level'])
-            ->setAgent($data['agent'])
-            ->setParentAccount($data['parentAccount']);
+        $account->setContext(Customer::CONTEXT_ACCOUNT);
+
+        $this->setValues($account, $data, $agent, $parentAccount);
+
+        /** @var MemberInterface $member */
+        $member = $manager->create();
+        $member->setContext(Customer::CONTEXT_MEMBER);
+
+        $account->addMember($member);
+
+        $member->setEmail($account->getEmail());
+
+        $this->createUser($member);
 
         try {
             $manager->save($account);
-            $status = Response::HTTP_CREATED;
-            $data = [
-                'id' => $account->getId(),
-                'firstname' => $account->getFirstName(),
-                'lastname' => $account->getLastName(),
-                'extraDocument' => $account->getExtraDocument(),
-                'document' => $account->getDocument(),
-                'email' => $account->getEmail(),
-                'state' => $account->getState(),
-                'city' => $account->getCity(),
-                'phone' => $account->getPhone(),
-                'district' => $account->getDistrict(),
-                'street' => $account->getStreet(),
-                'number' => $account->getNumber(),
-                'postcode' => $account->getPostcode(),
-                'level' => $account->getLevel(),
-                'status' => $account->getStatus(),
-                'agent' => $account->getAgent()->getId(),
-                'parentAccount' => $account->getParentAccount()->getId()
-            ];
         } catch (\Exception $exception) {
-            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $data = $exception;
+            return $this->json([
+                'error' => $exception
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        return $this->json($data, $status);
+        if ($account->isApproved()) {
+            $this->getMailer()->sendAccountConfirmationMessage($account);
+        }
+
+        return $this->json([], Response::HTTP_CREATED);
     }
 
     /**
-     * @Route("/", name="create_account")
+     * @Route("/", name="update_account_api")
      *
      * @Security("has_role('ROLE_PLATFORM_ADMIN') or has_role('ROLE_AFTER_SALES') or has_role('ROLE_PLATFORM_COMMERCIAL') or has_role('ROLE_PLATFORM_EXPANSE') or has_role('ROLE_PLATFORM_FINANCIAL') or has_role('ROLE_PLATFORM_MASTER')")
      *
@@ -376,6 +342,139 @@ class AccountController extends AbstractController
         }
 
         return $this->json($data, $status);
+    }
+
+    /**
+     * @param $data
+     * @param $manager
+     * @param $agent
+     * @param $parentAccount
+     * @return null|\Symfony\Component\HttpFoundation\JsonResponse
+     */
+    private function validateData($data, CustomerManager $manager, &$agent, &$parentAccount)
+    {
+        $helper = $this->get('app.register_helper');
+
+        $error = null;
+
+        if (!$helper->emailCanBeUsed($data['email'])) {
+            $error = "This email is already in use!";
+        }
+
+        $documentAlreadyInUse = $manager->findOneBy([
+            'document' => $data['document']
+        ]);
+
+        if ($documentAlreadyInUse) {
+            $error = "This CNPJ already exists!";
+        }
+
+        if ($agent) {
+            $agent = $manager->findOneBy([
+                'context' => 'member',
+                'id' => $agent
+            ]);
+
+            if (!$agent) {
+                $error = "Agent not found!";
+            }
+        }
+
+        if ($parentAccount) {
+            $parentAccount = $manager->findOneBy([
+                'context' => 'account',
+                'id' => $parentAccount
+            ]);
+
+            if (!$parentAccount) {
+                $error = "Parent account not found!";
+            }
+        }
+
+        return $error ? $this->json(['error' => $error], $status = Response::HTTP_UNPROCESSABLE_ENTITY) : null;
+    }
+
+    /**
+     * @return \FOS\UserBundle\Util\TokenGenerator
+     */
+    private function getTokenGenerator()
+    {
+        return $this->get('fos_user.util.token_generator');
+    }
+
+    /**
+     * @return \AppBundle\Service\Mailer
+     */
+    private function getMailer()
+    {
+        return $this->get('app_mailer');
+    }
+
+    /**
+     * @param AccountInterface $account
+     * @param $data
+     * @param $agent
+     * @param $parentAccount
+     */
+    private function setValues(AccountInterface $account, $data, $agent, $parentAccount)
+    {
+        $account
+            ->setDocument($data['document'])
+            ->setExtraDocument($data['extraDocument'])
+            ->setFirstName($data['firstname'])
+            ->setLastName($data['lastname'])
+            ->setPostcode($data['postcode'])
+            ->setState($data['state'])
+            ->setCity($data['city'])
+            ->setDistrict($data['district'])
+            ->setStreet($data['street'])
+            ->setNumber($data['number'])
+            ->setEmail($data['email'])
+            ->setPhone($data['phone'])
+            ->setStatus(Customer::APPROVED)
+            ->setContext(Customer::CONTEXT_ACCOUNT);
+
+
+        if (!$this->member()->isPlatformAdmin() && !$this->member()->isPlatformMaster()) {
+            $account->setLevel(Memorial::LEVEL_PARTNER);
+        } else {
+            $account->setLevel($data['level']);
+        }
+
+        $agent = $this->member()->isPlatformCommercial() ? $this->member() : $agent;
+
+        $account->setAgent($agent);
+
+        $account->setParentAccount($parentAccount);
+
+        if ($parent = $account->getParentAccount()) {
+            $account->setAgent($parent->getAgent());
+            $account->setLevel($parent->getLevel());
+        }
+
+        $account->setConfirmationToken($this->getTokenGenerator()->generateToken());
+    }
+
+    /**
+     * @param MemberInterface $member
+     */
+    private function createUser(MemberInterface $member)
+    {
+        /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+        $userManager = $this->get('fos_user.user_manager');
+
+        $user = $userManager->createUser();
+
+        $user
+            ->setEmail($member->getEmail())
+            ->setUsername($member->getEmail())
+            ->setPlainPassword(uniqid())
+            ->setRoles([
+                UserInterface::ROLE_OWNER,
+                UserInterface::ROLE_OWNER_MASTER
+            ]);
+
+        $member->setUser($user);
     }
 
     /**
