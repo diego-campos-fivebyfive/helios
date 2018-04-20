@@ -91,7 +91,7 @@ interface MessageInterface
 
     /**
      * @param array $read
-     * @return Message
+     * @return MessageInterface
      */
     public function setRead($read);
 
