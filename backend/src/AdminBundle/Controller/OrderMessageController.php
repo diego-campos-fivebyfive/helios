@@ -45,9 +45,10 @@ class OrderMessageController extends AbstractController
         /** @var QueryBuilder $qb2 */
         $qb2 = $orderMessageManager->createQueryBuilder();
 
-        $qb2->andWhere($qb2->expr()->in('m.to', $this->member()->getId()));
-        $qb2->andWhere($qb2->expr()->eq('m.restricted', 1));
+        $qb2->andWhere($qb2->expr()->like('m.to', ':memberId'));
         $qb2->orWhere($qb2->expr()->in('m.order', $ids));
+        $qb2->andWhere($qb2->expr()->eq('m.restricted', true));
+        $qb2->setParameter('memberId', '%"' . $this->member()->getId() . '"%');
 
         $itemsPerPage = 10;
         $pagination = $this->getPaginator()->paginate(
@@ -100,9 +101,9 @@ class OrderMessageController extends AbstractController
         $qb = $orderMessageManager->createQueryBuilder();
 
         $qb->select('COUNT(m.id) AS unreadMessages');
-        $qb->andWhere($qb->expr()->in('m.to', $this->member()->getId()));
-        $qb->andWhere($qb->expr()->in('m.read', $this->member()->getId()));
-        $qb->andWhere($qb->expr()->eq('m.restricted', 1));
+        $qb->andWhere($qb->expr()->like('m.read', ':memberId'));
+        $qb->andWhere($qb->expr()->eq('m.restricted', true));
+        $qb->setParameter('memberId', '%"' . $this->member()->getId() . '"%');
 
         $data = $qb->getQuery()->getSingleResult();
 
