@@ -19,7 +19,6 @@
 
 <style lang="scss" scoped>
   .collection-search {
-    display: inline-block;
     height: 2.25rem;
     position: relative;
     width: 100%;
@@ -29,7 +28,7 @@
       background-image: none;
       border: 1px solid $ui-blue-light;
       color: inherit;
-      padding: 0.50rem;
+      padding: 0.5rem;
       transition:
         border-color 0.15s ease-in-out 0s,
         box-shadow 0.15s ease-in-out 0s;
