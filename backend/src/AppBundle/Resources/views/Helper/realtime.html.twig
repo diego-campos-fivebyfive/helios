@@ -20,7 +20,7 @@
             success: function(response) {
                 var unreadMessages = response.unreadMessages;
 
-                if (unreadMessages > currentUnreadMessages &&  currentUnreadMessages !== null) {
+                if (unreadMessages > currentUnreadMessages && currentUnreadMessages !== null) {
                     beepSound.play();
                 }
 
