@@ -215,12 +215,14 @@
                 </ul>
             </li>#}
 
-            <li>
-                <a class="count-info" href="#">
-                    <i class="fa fa-envelope"></i>
-                    <span id="unreadMessages" class="label label-warning-light">0</span>
-                </a>
-            </li>
+            {% if app.user.isPlatform %}
+                <li>
+                    <a class="count-info" href="#">
+                        <i class="fa fa-envelope"></i>
+                        <span id="unreadMessages" class="label label-warning-light">0</span>
+                    </a>
+                </li>
+            {% endif %}
 
             <li>
                 <a href="{{ route('logout') }}">
