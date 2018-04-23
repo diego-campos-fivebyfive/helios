@@ -189,7 +189,9 @@ class Message implements MessageInterface
      */
     public function setTo(array $to)
     {
-        $this->to = $to;
+        $data = array_map('strval', $to);
+
+        $this->to = $data;
 
         return $this;
     }
@@ -207,7 +209,9 @@ class Message implements MessageInterface
      */
     public function setRead(array $read)
     {
-        $this->read = $read;
+        $data = array_map('strval', $read);
+
+        $this->read = $data;
 
         return $this;
     }
