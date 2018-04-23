@@ -81,5 +81,7 @@
     {% endif %}
 
     Realtime.online();
-    Realtime.orders.messages();
+    {% if app.user.isPlatform %}
+        Realtime.orders.messages();
+    {% endif %}
 </script>
