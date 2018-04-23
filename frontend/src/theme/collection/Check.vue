@@ -12,6 +12,7 @@
   import Field from '@/theme/collection/Field'
 
   export default {
+    name: 'Check',
     components: {
       Field
     },

@@ -4,6 +4,7 @@
     input.field(
       :value='field.value',
       :placeholder='field.placeholder || field.label',
+      v-on:blur='$emit("validate", field)',
       v-on:input='$set(field, "value", $event.target.value)')
 </template>
 

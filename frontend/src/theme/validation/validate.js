@@ -1,7 +1,20 @@
 import exceptions from '@/theme/validation/locale/pt-br'
 import patterns from '@/theme/validation/patterns'
 
-const validate = field => {
+const validateRequired = field => {
+  if (field.required) {
+    return {
+      rejected: true,
+      exception: `Campo ${field.label} requirido`
+    }
+  }
+
+  return {
+    rejected: false
+  }
+}
+
+const validateType = field => {
   const pattern = patterns[field.type]
   const defaultException = exceptions[field.type]
 
@@ -18,16 +31,14 @@ const validate = field => {
     }
   }
 
-  if (field.required) {
-    return {
-      rejected: true,
-      exception: `Campo ${field.label} requirido`
-    }
-  }
-
-  return {
-    rejected: false
-  }
+  return validateRequired(field)
 }
 
-export default validate
+export const validate = field => {
+  return (
+    field.type
+    && field.component.name === 'Check'
+  )
+    ? validateType(field)
+    : validateRequired(field)
+}

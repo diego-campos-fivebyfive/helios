@@ -23,7 +23,7 @@
 
 <script>
   import styles from '@/theme/assets/style/main.scss'
-  import validate from '@/theme/validation/validate'
+  import { validate } from '@/theme/validation/validate'
   import payload from '@/theme/payload'
 
   export default {
