@@ -1,34 +1,36 @@
 <template lang="pug">
   .collection-action-bar
     Button.collection-action-bar-left(
+      v-for='(button, key) in buttons.left',
       type='default-bordered',
-      icon='refresh',
-      label='Atualizar',
-      pos='single')
-    Button.collection-action-bar-left(
-      type='default-bordered',
-      icon='eye',
-      pos='single')
-    Button.collection-action-bar-left(
-      type='default-bordered',
-      icon='exclamation',
-      pos='single')
-    Button.collection-action-bar-left(
-      type='default-bordered',
-      icon='trash',
-      pos='single')
+      :icon='button.icon',
+      :label='button.label || ""',
+      :pos='button.position')
     Button.collection-action-bar-right(
+      v-for='(button, key) in buttons.right',
       type='default-bordered',
-      icon='arrow-left',
-      pos='last')
-    Button.collection-action-bar-right(
-      type='default-bordered',
-      icon='arrow-right',
-      pos='first')
+      :icon='button.icon',
+      :label='button.label || ""',
+      :pos='button.position')
 </template>
 
 <script>
-  /* ActionBar Script */
+  export default {
+    data: () => ({
+      buttons: {
+        left: [
+          { icon: 'refresh', position: 'single', label: 'atualizar' },
+          { icon: 'eye', position: 'single' },
+          { icon: 'exclamation', position: 'single' },
+          { icon: 'trash', position: 'single' }
+        ],
+        right: [
+          { icon: 'arrow-right', position: 'last' },
+          { icon: 'arrow-left', position: 'first' }
+        ]
+      }
+    })
+  }
 </script>
 
 <style lang="scss" scoped>
