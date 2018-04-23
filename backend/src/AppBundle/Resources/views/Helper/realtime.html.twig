@@ -10,6 +10,29 @@
         {% endfor %}
     });
 
+    var currentUnreadMessages = null;
+    var beepSound = new Audio("{{ asset('assets/sound/beep_messages.wav') }}");
+
+    function getUnreadMessageCount() {
+        $.ajax({
+            type: "get",
+            url: "{{ route('unread_message_count') }}",
+            success: function(response) {
+                var unreadMessages = response.unreadMessages;
+
+                if (unreadMessages > currentUnreadMessages &&  currentUnreadMessages !== null) {
+                    beepSound.play();
+                }
+
+                currentUnreadMessages = unreadMessages;
+
+                $('#unreadMessages').html(unreadMessages);
+            }
+        });
+    }
+
+    getUnreadMessageCount();
+
     var Realtime = {
         tasks: {
             menu: function () {
@@ -33,6 +56,9 @@
                         }
                     });
                 }
+            },
+            messages: function () {
+                setInterval(getUnreadMessageCount, 10000);//time in milliseconds
             }
         },
         online: function () {
@@ -49,7 +75,9 @@
     };
 
     {% if app.request.attributes.get('_route') != 'task_index' %}
-    Realtime.tasks.menu();
+        Realtime.tasks.menu();
     {% endif %}
+
     Realtime.online();
+    Realtime.tasks.messages();
 </script>
