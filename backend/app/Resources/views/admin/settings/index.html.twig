@@ -418,6 +418,12 @@
                                                                 <div class="panel-body">
                                                                     <div class="row">
                                                                         <div class="col-md-6">
+                                                                            {{ form_widget(form_params.coupon_order_rescue) }}
+                                                                            {{ form_label(form_params.coupon_order_rescue, 'Ativar resgate de pontos') }}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
                                                                             {{ form_label(form_params.coupon_order_percent, 'Percentual máximo para cupom') }}
                                                                             {{ form_widget(form_params.coupon_order_percent, {attr:{class:'form-control', placeholder: 'Percentual'}}) }}
                                                                         </div>
@@ -426,12 +432,6 @@
                                                                         <div class="col-md-6">
                                                                             {{ form_label(form_params.coupon_step_options, 'Multiplicador/Passo') }}
                                                                             {{ form_widget(form_params.coupon_step_options, {attr:{class:'form-control', placeholder: 'Intervalo'}}) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-md-6">
-                                                                            {{ form_widget(form_params.coupon_order_rescue) }}
-                                                                            {{ form_label(form_params.coupon_order_rescue, 'Ativar resgate de pontos') }}
                                                                         </div>
                                                                     </div>
                                                                 </div>
