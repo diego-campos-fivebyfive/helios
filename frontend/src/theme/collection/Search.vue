@@ -3,9 +3,8 @@
     input.collection-search-input
     Button.collection-search-button(
       type='primary-common',
-      label='Search',
+      label='Pesquisar',
       pos='last')
-
 </template>
 
 <script>
@@ -20,10 +19,10 @@
 
 <style lang="scss" scoped>
   .collection-search {
-    height: 2.25rem;
-    width: 20rem;
-    position: relative;
     display: inline-block;
+    height: 2.25rem;
+    position: relative;
+    width: 100%;
 
     .collection-search-input {
       background-color: $ui-white-regular;
@@ -31,7 +30,9 @@
       border: 1px solid $ui-blue-light;
       color: inherit;
       padding: 0.50rem;
-      transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+      transition:
+        border-color 0.15s ease-in-out 0s,
+        box-shadow 0.15s ease-in-out 0s;
     }
 
     .collection-search-button {
