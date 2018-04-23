@@ -1,17 +1,19 @@
 <template lang="pug">
   .collection-action-bar
     Button.collection-action-bar-left(
-      v-for='(button, key) in buttons.left',
-      type='default-bordered',
+      v-for='button in buttons.left',
+      :key='button.icon',
       :icon='button.icon',
       :label='button.label || ""',
-      :pos='button.position')
+      :pos='button.position',
+      type='default-bordered')
     Button.collection-action-bar-right(
-      v-for='(button, key) in buttons.right',
-      type='default-bordered',
+      v-for='button in buttons.right',
+      :key='button.icon',
       :icon='button.icon',
       :label='button.label || ""',
-      :pos='button.position')
+      :pos='button.position',
+      type='default-bordered')
 </template>
 
 <script>
