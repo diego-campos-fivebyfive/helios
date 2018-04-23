@@ -56,9 +56,11 @@
                         }
                     });
                 }
-            },
+            }
+        },
+        orders: {
             messages: function () {
-                setInterval(getUnreadMessageCount, 10000);//time in milliseconds
+                setInterval(getUnreadMessageCount, 10000);
             }
         },
         online: function () {
@@ -79,5 +81,5 @@
     {% endif %}
 
     Realtime.online();
-    Realtime.tasks.messages();
+    Realtime.orders.messages();
 </script>
