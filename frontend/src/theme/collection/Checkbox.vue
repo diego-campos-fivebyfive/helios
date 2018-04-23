@@ -1,14 +1,18 @@
 <template lang="pug">
-  label.collection-checkbox
+  .collection-checkbox
+    label.collection-checkbox-label(
+      for='collection-checkbox-wrapper-checker-field')
     | {{ field.label }}
     .collection-checkbox-wrapper
       .collection-checkbox-wrapper-checker
         input.collection-checkbox-wrapper-checker-field(
+          id='collection-checkbox-wrapper-checker-field',
           type='checkbox',
           :value='field.value',
           v-on:change='$set(field, "value", !field.value)')
         Icon.collection-checkbox-wrapper-checker-icon(name='check')
-      .collection-checkbox-wrapper-description
+      .collection-checkbox-wrapper-description(
+        v-if='field.description')
         | {{ field.description }}
 </template>
 
@@ -23,23 +27,30 @@
 <style lang="scss" scoped>
   .collection-checkbox-wrapper-checker-icon {
     opacity: 0;
+    background-color: $ui-blue-dark;
+    color: $ui-white-regular;
+    height: 100%;
+    left: 0;
+    padding: $ui-space-y/4;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 1;
   }
 
   .collection-checkbox-wrapper-checker-field {
-    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
     transition: opacity 0.1s ease-in;
+    opacity: 0;
 
     &:checked {
       + .collection-checkbox-wrapper-checker-icon {
-        background-color: $ui-blue-dark;
-        color: $ui-white-regular;
-        height: 100%;
-        left: 0;
         opacity: 1;
-        padding: 0.25rem;
-        position: absolute;
-        top: 0;
-        width: 100%;
       }
     }
   }
@@ -49,7 +60,7 @@
     height: 1.75rem;
     width: 100%;
     max-width: 1.75rem;
-    margin-top: 0.25rem;
+    margin-top: $ui-space-y/4;
     position: relative;
   }
 
@@ -65,7 +76,6 @@
   }
 
   .collection-checkbox {
-    float: left;
     padding: $ui-space-y/2 $ui-space-x/2;
 
     &:hover {
