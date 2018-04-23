@@ -88,6 +88,44 @@ class OrderMessageController extends AbstractController
     }
 
     /**
+     * @Route("/unread_count", name="unread_message_count")
+     * @Method("get")
+     */
+    public function getUnreadMessagesCount()
+    {
+        /** @var OrderFinder $orderFinder */
+        $orderFinder = $this->get('order_finder');
+
+        $orderFinder
+            ->set('agent', $this->member());
+
+        $qb = $orderFinder->queryBuilder();
+
+        $qb->select('DISTINCT(o.id)');
+
+        $ids = array_map('current', ($qb->getQuery()->getResult()));
+        $ids = $ids ? $ids : [0];
+
+        /** @var OrderMessageManager $qb */
+        $orderMessageManager = $this->get('order_message_manager');
+
+        /** @var QueryBuilder $qb2 */
+        $qb2 = $orderMessageManager->createQueryBuilder();
+
+        $qb2->select('COUNT(m.id) AS unreadMessages');
+        $qb2->andWhere($qb2->expr()->in('m.to', $this->member()->getId()));
+        $qb2->andWhere($qb2->expr()->notIn('m.read', $this->member()->getId()));
+        $qb2->andWhere($qb2->expr()->eq('m.restricted', 1));
+        $qb2->orWhere($qb2->expr()->in('m.order', $ids));
+
+        $data = $qb2->getQuery()->getSingleResult();
+
+        $data['unreadMessages'] = (int) $data['unreadMessages'];
+
+        return $this->json($data);
+    }
+
+    /**
      * @param $messageCollection
      * @return array
      */
@@ -111,10 +149,19 @@ class OrderMessageController extends AbstractController
             /** @var \DateTime $createDate */
             $createDate = $orderMessage->getCreatedAt()->format('Y-m-d H:i:s ');
 
+            $read = $orderMessage->getRead();
+
+            if (in_array($this->member()->getId(), $read)) {
+                $read = true;
+            } else {
+                $read = false;
+            }
+
             return [
                 'id' => $orderMessage->getId(),
                 'author' => $author,
                 'content' => $orderMessage->getContent(),
+                'read' => $read,
                 'created_at' => $createDate
             ];
         }, $messageCollection);
