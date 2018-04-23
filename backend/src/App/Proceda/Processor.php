@@ -30,7 +30,7 @@ class Processor
     private $manager;
 
     /** @var string */
-    private $cache;
+    private $cache = 'ocoren.json';
 
     /** @var ContainerInterface */
     private $container;
@@ -93,8 +93,6 @@ class Processor
 
         $this->fileReader->init($this->fileSystem);
 
-        $this->cache =  dirname(__FILE__) . '/ocoren.json';
-
         $this->insureCache();
     }
 
@@ -107,21 +105,7 @@ class Processor
 
         $this->processCache();
 
-        $this->uploadCache();
-
         return $this->result;
-    }
-
-    /**
-     * Upload cache to FTP
-     */
-    public function uploadCache()
-    {
-        $ocoren = $this->fileSystem->createFile('ocoren.json');
-
-        $cacheData = file_get_contents($this->cache);
-
-        $this->fileSystem->write($ocoren->getKey(), $cacheData, true);
     }
 
     /**
@@ -335,7 +319,9 @@ class Processor
      */
     private function insureCache()
     {
-        if(!file_exists($this->cache)){
+        $cache = current($this->fileReader->files($this->cache));
+
+        if(!$cache){
             $this->persistCache([]);
         }
     }
@@ -345,7 +331,9 @@ class Processor
      */
     private function loadCache()
     {
-        return json_decode(file_get_contents($this->cache), true) ?? [];
+        $cache = current($this->fileReader->files($this->cache));
+
+        return $cache ? (array) json_decode($this->fileReader->read($cache), true) : [];
     }
 
     /**
@@ -353,9 +341,9 @@ class Processor
      */
     private function persistCache(array $data)
     {
-        $handle = fopen($this->cache, 'w+');
-        fwrite($handle, json_encode($data));
-        fclose($handle);
+        $content = json_encode($data);
+
+        $this->fileReader->write($this->cache, $content,  true);
     }
 
     /**
