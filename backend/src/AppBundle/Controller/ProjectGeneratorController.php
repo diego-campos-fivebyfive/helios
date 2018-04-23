@@ -74,10 +74,16 @@ class ProjectGeneratorController extends AbstractController
             ]);
         }
 
+        $manager = $this->manager('parameter');
+
+        /** @var Parameter $parameter */
+        $parameter = $manager->findOrCreate('platform_settings');
+
         return $this->render('generator.index', [
             'order' => $order,
             'member' => $this->member(),
-            'level' => $accountLevel
+            'level' => $accountLevel,
+            'couponEnabled' => $parameter->get('coupon_order_rescue')
         ]);
     }
 
