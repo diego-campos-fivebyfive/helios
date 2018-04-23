@@ -135,19 +135,10 @@ class OrderMessageController extends AbstractController
             /** @var \DateTime $createDate */
             $createDate = $orderMessage->getCreatedAt()->format('Y-m-d H:i:s ');
 
-            $read = $orderMessage->getRead();
-
-            if (in_array($this->member()->getId(), $read)) {
-                $read = true;
-            } else {
-                $read = false;
-            }
-
             return [
                 'id' => $orderMessage->getId(),
                 'author' => $author,
                 'content' => $orderMessage->getContent(),
-                'read' => $read,
                 'created_at' => $createDate
             ];
         }, $messageCollection);
