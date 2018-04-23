@@ -6,9 +6,9 @@
         | {{ action.title }}
       form.form(slot='section')
         component(
-          v-on:validate='validate',
           v-for='(field, name) in payload',
           v-if='field.component',
+          v-on:validate='validate',
           :is='field.component',
           :key='name',
           :field='field',
@@ -22,7 +22,7 @@
 
 <script>
   import styles from '@/theme/assets/style/main.scss'
-  import validate from '@/theme/validation/validate'
+  import { validate } from '@/theme/validation/validate'
   import payload from '@/theme/payload'
 
   export default {

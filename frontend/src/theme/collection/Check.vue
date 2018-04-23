@@ -13,6 +13,7 @@
   import Field from '@/theme/collection/Field'
 
   export default {
+    name: 'Check',
     data: () => ({
       placeholder: ''
     }),

@@ -6,6 +6,7 @@
       :value='field.value',
       v-mask='getMask(field.type)',
       :placeholder='placeholder',
+      v-on:blur='$emit("validate", field)',
       v-on:input='$set(field, "value", $event.target.value)')
 </template>
 
@@ -14,6 +15,7 @@
   import { mask } from 'vue-the-mask'
 
   export default {
+    name: 'Mask',
     data: () => ({
       placeholder: ''
     }),
