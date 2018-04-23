@@ -341,9 +341,7 @@ class Processor
      */
     private function persistCache(array $data)
     {
-        $content = json_encode($data);
-
-        $this->fileReader->write($this->cache, $content,  true);
+        $this->fileReader->write($this->cache, json_encode($data),  true);
     }
 
     /**
