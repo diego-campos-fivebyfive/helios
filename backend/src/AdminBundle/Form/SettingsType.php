@@ -145,6 +145,9 @@ class SettingsType extends AbstractType
                 )
                 ->add('coupon_order_percent', TextType::class)
                 ->add('coupon_step_options', TextType::class)
+                ->add('coupon_order_rescue', CheckboxType::class, [
+                    'required' => false
+                ])
         );
         $builder->get('parameters')
             ->get('promo_end_at')
