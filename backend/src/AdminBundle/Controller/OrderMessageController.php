@@ -93,32 +93,18 @@ class OrderMessageController extends AbstractController
      */
     public function getUnreadMessagesCount()
     {
-        /** @var OrderFinder $orderFinder */
-        $orderFinder = $this->get('order_finder');
-
-        $orderFinder
-            ->set('agent', $this->member());
-
-        $qb = $orderFinder->queryBuilder();
-
-        $qb->select('DISTINCT(o.id)');
-
-        $ids = array_map('current', ($qb->getQuery()->getResult()));
-        $ids = $ids ? $ids : [0];
-
         /** @var OrderMessageManager $qb */
         $orderMessageManager = $this->get('order_message_manager');
 
-        /** @var QueryBuilder $qb2 */
-        $qb2 = $orderMessageManager->createQueryBuilder();
+        /** @var QueryBuilder $qb */
+        $qb = $orderMessageManager->createQueryBuilder();
 
-        $qb2->select('COUNT(m.id) AS unreadMessages');
-        $qb2->andWhere($qb2->expr()->in('m.to', $this->member()->getId()));
-        $qb2->andWhere($qb2->expr()->notIn('m.read', $this->member()->getId()));
-        $qb2->andWhere($qb2->expr()->eq('m.restricted', 1));
-        $qb2->orWhere($qb2->expr()->in('m.order', $ids));
+        $qb->select('COUNT(m.id) AS unreadMessages');
+        $qb->andWhere($qb->expr()->in('m.to', $this->member()->getId()));
+        $qb->andWhere($qb->expr()->in('m.read', $this->member()->getId()));
+        $qb->andWhere($qb->expr()->eq('m.restricted', 1));
 
-        $data = $qb2->getQuery()->getSingleResult();
+        $data = $qb->getQuery()->getSingleResult();
 
         $data['unreadMessages'] = (int) $data['unreadMessages'];
 
