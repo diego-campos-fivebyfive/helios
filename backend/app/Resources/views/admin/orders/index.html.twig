@@ -128,7 +128,8 @@
         </div>
     </div>
 
-    {% include view('admin/orders/tags_modal.html.twig') %}
+    <div id="tags_modal" class="modal fade" tabindex="-1" role="dialog">
+    </div>
 
     <div class="wrapper wrapper-content animated fadeInRight">
 
@@ -378,7 +379,8 @@
                                         {% if order.tags(role) %}
                                             <a data-toggle="modal"
                                                data-target="#tags_modal"
-                                                class="btn">
+                                               data-url="{{ path('modal_tags', {id: order.id}) }}"
+                                                class="btn modal_tags">
                                             {% set count = 0 %}
                                             {% for orderTag in order.tags(role) %}
                                                 {% if count == 3  %}
@@ -396,7 +398,8 @@
                                         {% else %}
                                             <a data-toggle="modal"
                                                data-target="#tags_modal"
-                                               class="btn btn-default btn-xs">
+                                               data-url="{{ path('modal_tags', {id: order.id}) }}"
+                                               class="btn btn-default btn-xs modal_tags">
                                                 <i class="fa fa-plus-square"></i>
                                             </a>
                                         {% endif %}
@@ -474,6 +477,22 @@
         $('#clear-dateAt').on('click', function () {
             dateAt.val('');
         });
+
+        var ModalTags = $('#tags_modal');
+
+        $('.modal_tags').on('click', function () {
+            var url = $(this).data('url');
+            $.ajax({
+                url: url,
+                success: function (response) {
+                    ModalTags.html(response);
+                }
+            });
+        });
+
+        ModalTags.on('hidden.bs.modal', function () {
+            location.reload();
+        })
 
         var modalFiles = $('#modal_files');
 

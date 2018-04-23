@@ -41,6 +41,20 @@ class Message implements MessageInterface
     private $restricted;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(type="simple_array", nullable=true)
+     */
+    private $to;
+
+    /**
+     * @var array
+     *
+     * @ORM\Column(type="simple_array", nullable=true)
+     */
+    private $read;
+
+    /**
      * @var OrderInterface
      *
      * @ORM\ManyToOne(targetEntity="Order", inversedBy="messages")
@@ -52,6 +66,15 @@ class Message implements MessageInterface
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer")
      */
     protected $author;
+
+    /**
+     * Message constructor.
+     */
+    public function __construct()
+    {
+        $this->to = [];
+        $this->read = [];
+    }
 
     /**
      * Get id
@@ -153,5 +176,40 @@ class Message implements MessageInterface
         return $this->restricted;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function getTo()
+    {
+        return $this->to;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setTo(array $to)
+    {
+        $this->to = $to;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getRead()
+    {
+        return $this->read;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setRead(array $read)
+    {
+        $this->read = $read;
+
+        return $this;
+    }
 }
 

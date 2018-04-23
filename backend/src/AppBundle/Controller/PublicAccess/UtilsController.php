@@ -8,19 +8,34 @@ use AppBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-/**
- * @Route("utils")
- */
 class UtilsController extends AbstractController
 {
     /**
-     * @Route("/postcode", name="utils_postcode")
+     * @Route("/utils/postcode", name="utils_postcode")
      * @Method("post")
      */
-    public function postcodeAction(Request $request)
+    public function appPostcodeAction(Request $request)
     {
         $postcode = $request->request->get('postcode');
 
+        return $this->findPostcode($postcode);
+    }
+
+    /**
+     * @Route("/api/v1/utils/postcode/{postcode}", name="utils_postcode_api")
+     * @Method("get")
+     */
+    public function apiPostcodeAction($postcode)
+    {
+        return $this->findPostcode($postcode);
+    }
+
+    /**
+     * @param $postcode
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    private function findPostcode($postcode)
+    {
         /** @var Finder $postcodeFinder */
         $postcodeFinder = $this->get('postcode_finder');
 
