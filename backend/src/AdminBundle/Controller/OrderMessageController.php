@@ -45,9 +45,10 @@ class OrderMessageController extends AbstractController
         /** @var QueryBuilder $qb2 */
         $qb2 = $orderMessageManager->createQueryBuilder();
 
-        $qb2->andWhere($qb2->expr()->in('m.to', $this->member()->getId()));
-        $qb2->andWhere($qb2->expr()->eq('m.restricted', 1));
+        $qb2->andWhere($qb2->expr()->like('m.to', ':memberId'));
         $qb2->orWhere($qb2->expr()->in('m.order', $ids));
+        $qb2->andWhere($qb2->expr()->eq('m.restricted', true));
+        $qb2->setParameter('memberId', '%"' . $this->member()->getId() . '"%');
 
         $itemsPerPage = 10;
         $pagination = $this->getPaginator()->paginate(
@@ -83,6 +84,30 @@ class OrderMessageController extends AbstractController
             'roles' => $roles,
             'members' => $membersData
         ];
+
+        return $this->json($data);
+    }
+
+    /**
+     * @Route("/unread_count", name="unread_message_count")
+     * @Method("get")
+     */
+    public function getUnreadMessagesCount()
+    {
+        /** @var OrderMessageManager $qb */
+        $orderMessageManager = $this->get('order_message_manager');
+
+        /** @var QueryBuilder $qb */
+        $qb = $orderMessageManager->createQueryBuilder();
+
+        $qb->select('COUNT(m.id) AS unreadMessages');
+        $qb->andWhere($qb->expr()->like('m.read', ':memberId'));
+        $qb->andWhere($qb->expr()->eq('m.restricted', true));
+        $qb->setParameter('memberId', '%"' . $this->member()->getId() . '"%');
+
+        $data = $qb->getQuery()->getSingleResult();
+
+        $data['unreadMessages'] = (int) $data['unreadMessages'];
 
         return $this->json($data);
     }
