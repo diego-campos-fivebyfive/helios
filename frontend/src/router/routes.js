@@ -1,6 +1,7 @@
 import Account from '@/pages/account'
 import AccountForm from '@/pages/account/form'
 import Coupon from '@/pages/coupon'
+import Messenger from '@/pages/messenger'
 import Metric from '@/pages/metric'
 import NotFound from '@/pages/notfound'
 
@@ -29,6 +30,11 @@ export const routes = [
     redirect: 'not-found',
     name: 'Cupons',
     component: Coupon
+  },
+  {
+    path: '/messenger',
+    name: 'Mensagens',
+    component: Messenger
   },
   {
     path: '/metrics',
