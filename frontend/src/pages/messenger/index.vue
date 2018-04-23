@@ -1,15 +1,14 @@
 <template lang="pug">
-  .wrapper
-    Panel.panel
-      div(slot='header')
-        slot(name='head')
-          h1.title
-            | Mensagens ({{ messages }})
-          Search
-        slot(name='actions')
-          ActionBar.action-bar
-      List(
-        slot='section')
+  Panel.panel
+    div(slot='header')
+      slot(name='heading')
+        h1.title
+          | Mensagens ({{ messages }})
+        Search
+      slot(name='actions')
+        ActionBar.action-bar
+    List(
+      slot='section')
 </template>
 
 <script>
