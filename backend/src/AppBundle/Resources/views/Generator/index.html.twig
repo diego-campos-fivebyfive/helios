@@ -164,8 +164,8 @@
                                                 {% set accessCoupon = app.user.isPlatformAdmin or app.user.isPlatformMaster or app.user.isPlatformCommercial %}
 
                                                 {# TODO: Tirar classes hidden quando ocorrer o lançamento do cupom#}
-                                                {% if accessCoupon or not app.user.isPlatform %}
-                                                    <div class="row hidden" id="coupon_form"></div>
+                                                {% if (accessCoupon or not app.user.isPlatform) and couponEnabled %}
+                                                    <div class="row" id="coupon_form"></div>
                                                 {% endif %}
 
                                                 <div class="hr-line-dashed col-md-12 hidden"></div>
