@@ -28,9 +28,7 @@
 </template>
 
 <script>
-  export default {
-    name: "action-bar"
-  }
+  /* ActionBar Script */
 </script>
 
 <style lang="scss" scoped>
