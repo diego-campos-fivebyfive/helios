@@ -43,14 +43,14 @@ class Message implements MessageInterface
     /**
      * @var array
      *
-     * @ORM\Column(type="simple_array", nullable=true)
+     * @ORM\Column(name="to_users", type="simple_array", nullable=true)
      */
     private $to;
 
     /**
      * @var array
      *
-     * @ORM\Column(type="simple_array", nullable=true)
+     * @ORM\Column(name="read_users", type="simple_array", nullable=true)
      */
     private $read;
 
