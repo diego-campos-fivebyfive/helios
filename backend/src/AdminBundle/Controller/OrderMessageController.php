@@ -183,6 +183,14 @@ class OrderMessageController extends AbstractController
                 ];
             }
 
+            $memberId = "\"" . $this->member()->getId() . "\"";
+            $read = $orderMessage->getRead();
+            $isRead = false;
+
+            if (!in_array($memberId, $read)) {
+                $isRead = true;
+            }
+
             /** @var \DateTime $createDate */
             $createDate = $orderMessage->getCreatedAt()->format('Y-m-d H:i:s ');
 
@@ -190,6 +198,7 @@ class OrderMessageController extends AbstractController
                 'id' => $orderMessage->getId(),
                 'author' => $author,
                 'content' => $orderMessage->getContent(),
+                'is_read' => $isRead,
                 'created_at' => $createDate
             ];
         }, $messageCollection);
