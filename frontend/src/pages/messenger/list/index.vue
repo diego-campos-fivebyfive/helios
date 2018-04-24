@@ -6,7 +6,7 @@
           Checkbox(:field='message.author.id')
         td.col-author {{ message.author.name }}
         td.col-content {{ message.content }}
-        td.col-date {{ message.created_at }}
+        td.col-date {{ formatDate(message.created_at) }}
 </template>
 
 <script>
@@ -18,6 +18,11 @@
     ],
     components: {
       Checkbox
+    },
+    methods: {
+      formatDate(value) {
+        return this.$moment(value, 'YYYY-MM-DD').format('DD/MM/YYYY')
+      }
     }
   }
 </script>
