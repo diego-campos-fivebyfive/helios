@@ -51,10 +51,12 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "moment": "^2.22.1",
     "vue": "^2.5.13",
     "vue-awesome": "^2.3.4",
     "vue-axios": "^2.0.2",
     "vue-cookies": "^1.5.4",
+    "vue-momentjs": "^0.1.2",
     "vue-router": "^3.0.1",
     "vue-the-mask": "^0.11.1"
   }
