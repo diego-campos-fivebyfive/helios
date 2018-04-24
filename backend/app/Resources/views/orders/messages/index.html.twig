@@ -62,9 +62,16 @@
     </div>
 </div>
 
+<script src="{{ asset('assets/typeahead/bootstrap-typeahead.js') }}"></script>
+{% include view('orders/messages/mention_js.html.twig') %}
+
 <script>
 
     Message = {
+        noteUsers: [],
+        noteRoles: [],
+        toUsers: [],
+        toRoles: [],
         messageForm: $('#form_order_message'),
         noteForm: $('#form_order_note'),
         message: $('#message'),
@@ -99,7 +106,9 @@
                 method: 'POST',
                 data: {
                     note: Message.note.val(),
-                    restricted: $('#restricted').val()
+                    restricted: $('#restricted').val(),
+                    users: Object.values(Message.toUsers),
+                    roles: Object.values(Message.toRoles)
                 },
                 complete: function (xhr) {
                     Message.listMessages.html(xhr.responseText);
@@ -114,6 +123,64 @@
                 method: 'GET'
             });
         },
+        prepareNote: function () {
+            var noteContent = Message.note.val();
+
+            var cases = noteContent.match(/@[\w_.-]+|#[\w]+/g);
+
+            cases = cases ? cases : [];
+
+            Message.toUsers = [];
+            Message.toRoles = [];
+
+            if (cases.length) {
+                $.each(cases, function(i, mention){
+                    var delimiter = mention.substring(0,1);
+
+                    if (delimiter === '@') {
+                        user = Message.noteUsers[mention.replace('@', '')];
+                        if (user) {
+                            Message.toUsers[user.username] = user.id;
+                        }
+                    } else {
+                        role = Message.noteRoles[mention.replace('#', '')];
+                        if (role) {
+                            Message.toRoles[role.username] = role.id;
+                        }
+                    }
+
+                    if (i === cases.length - 1) {
+                        Message.sendNote();
+                    }
+                });
+            }  else {
+                Message.sendNote();
+            }
+        },
+        initNote: function () {
+            $.ajax({
+                url: "{{ path('list_mentions') }}",
+                method: 'get',
+                complete: function (xhr) {
+                    Message.noteUsers = xhr.responseJSON.users;
+                    Message.noteRoles = xhr.responseJSON.roles;
+
+                    var userMention = true;
+
+                    Message.note.mention({
+                        delimiter: '(@|#)',
+                        users: function(query){
+                            return userMention ? Object.values(Message.noteUsers) : Object.values(Message.noteRoles);
+                        }
+                    }).on('keypress', function(event){
+                        var code = event.keyCode;
+                        if(code === 64 || code === 35){
+                            userMention = 64 === code
+                        }
+                    });
+                }
+            });
+        },
         init: function () {
             this.loadMessages();
 
@@ -126,10 +193,13 @@
                 }
             });
 
+            Message.initNote();
+
             $('#form_order_note').on('submit', function (event) {
                 event.preventDefault();
-                if(Message.note.val().replace( /\s/g, '' ))
-                    Message.sendNote();
+                if(Message.note.val().replace( /\s/g, '' )) {
+                    Message.prepareNote();
+                }
                 else {
                     Message.note.val('');
                 }
