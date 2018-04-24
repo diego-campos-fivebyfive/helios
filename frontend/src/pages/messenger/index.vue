@@ -2,7 +2,7 @@
   Panel.panel
     div(slot='header')
       slot(name='heading')
-        h1.title Mensagens ({{ messagesTotal }})
+        h1.title Mensagens ({{ totalOfMessages }})
         Search
       ActionBar.action-bar(slot='actions')
     List(
@@ -20,7 +20,7 @@
       Search
     },
     data: () => ({
-      messagesTotal: '',
+      totalOfMessages: '',
       messages: []
     }),
     methods: {
@@ -28,7 +28,7 @@
         const uri = `admin/api/v1/orders/messages/?page=${pageNumber}`
 
         this.axios.get(uri).then(response => {
-          this.messagesTotal = response.data.size
+          this.totalOfMessages = response.data.size
           this.messages = response.data.results
         })
       }
