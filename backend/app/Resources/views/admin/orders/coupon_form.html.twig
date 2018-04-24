@@ -99,8 +99,6 @@
         progressBar: true
     };
 
-    var validated = false;
-
     CouponHandler = {
         couponInput: $('#coupon_code_input'),
         couponSelect: $('#coupon_select'),
@@ -113,7 +111,7 @@
         source: null,
         status: null,
         amount: null,
-        acceptedTerms: false,
+        validated: false,
         orderPrice: {{ order.total }},
         validateCoupon: function () {
             var url = this.getCouponUrl.replace('_code_', this.couponInput.val());
@@ -153,7 +151,7 @@
                 method: 'get',
                 data: {
                     "order": {{ order.id }},
-                    "step": CouponHandler.couponSelect.val()
+                    "step": CouponHandler.amount
                 },
                 complete: function (response) {
                     CouponHandler.status = response.status;
@@ -190,9 +188,9 @@
         CouponHandler.resetCouponSelect();
         if (CouponHandler.couponInput.val().length > 0) {
             CouponHandler.validateCoupon();
-            validated = true;
+            CouponHandler.validated = true;
         } else {
-            validated = false;
+            CouponHandler.validated = false;
             CouponHandler.resetSubmitCoupon();
         }
 
@@ -205,9 +203,9 @@
             CouponHandler.resetCouponInput();
             CouponHandler.source = "select";
             CouponHandler.changeButtonText();
-            validated = true;
+            CouponHandler.validated = true;
         } else {
-            validated = false;
+            CouponHandler.validated = false;
             CouponHandler.resetSubmitCoupon();
         }
 
@@ -217,12 +215,8 @@
     function checkAcceptedTerms() {
         var checked = $('#acceptedTerms').is(':checked');
 
-        if (checked) {
-            if (validated) {
-                CouponHandler.activateSubmitCoupon();
-            } else {
-                CouponHandler.disableSubmitCoupon();
-            }
+        if (checked && CouponHandler.validated) {
+            CouponHandler.activateSubmitCoupon();
         } else {
             CouponHandler.disableSubmitCoupon();
         }
@@ -269,7 +263,7 @@
                 CouponHandler.generateAndAssociateCoupon();
             }
         });
-    })
+    });
 
     function closeSwal() {
         var title = "Desconto aplicado";
