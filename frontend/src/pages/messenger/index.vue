@@ -4,24 +4,26 @@
       slot(name='heading')
         h1.title Mensagens ({{ totalOfMessages }})
         Search
-      ActionBar.action-bar(slot='actions')
+      ActionBar.action-bar(
+        slot='actions',
+        :getMessages='getMessages',
+        :pagination='pagination')
     List(
-      slot='section'
+      slot='section',
       :messages='messages')
 </template>
 
 <script>
   import List from './list'
-  import Search from '@/theme/collection/Search'
 
   export default {
     components: {
-      List,
-      Search
+      List
     },
     data: () => ({
-      totalOfMessages: '',
-      messages: []
+      messages: [],
+      pagination: {},
+      totalOfMessages: ''
     }),
     methods: {
       getMessages(pageNumber = 1) {
@@ -30,6 +32,7 @@
         this.axios.get(uri).then(response => {
           this.totalOfMessages = response.data.size
           this.messages = response.data.results
+          this.pagination = response.data.page
         })
       }
     },
