@@ -8,7 +8,6 @@ use AppBundle\Entity\User;
 use AppBundle\Manager\OrderMessageManager;
 use AppBundle\Service\Order\OrderFinder;
 use Doctrine\ORM\QueryBuilder;
-use Sonata\NotificationBundle\Entity\MessageManager;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -122,23 +121,26 @@ class OrderMessageController extends AbstractController
     {
         $messagesIds = $request->get('messagesIds');
 
-        /** @var MessageManager $messageManager */
+        /** @var OrderMessageManager $messageManager */
         $messageManager = $this->get('order_message_manager');
 
         foreach ($messagesIds as $messageId) {
             /** @var Message $message */
             $userId = (string) "\"" . $this->member()->getId() . "\"";
             $message = $messageManager->find($messageId);
-            $read = $message->getRead();
 
-            $search = array_search($userId, $read);
+            if ($message) {
+                $read = $message->getRead();
 
-            if (is_int($search) || is_string($search)) {
-                unset($read[$search]);
+                $search = array_search($userId, $read);
+
+                if (is_int($search) || is_string($search)) {
+                    unset($read[$search]);
+                }
+
+                $message->setRead($read);
+                $messageManager->save($message);
             }
-
-            $message->setRead($read);
-            $messageManager->save($message);
         }
 
         return $this->json([]);
