@@ -541,6 +541,10 @@ class OrderController extends AbstractController
                     }
                 }
 
+                $toUsers = array_map(function ($user) {
+                    return '"'.$user.'"';
+                }, $toUsers);
+
                 $message->setTo($toUsers);
                 $message->setRead($toUsers);
             }
