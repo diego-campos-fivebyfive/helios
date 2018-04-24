@@ -1,0 +1,229 @@
+<style>
+    .shadow {
+        background-color: #eee;
+        border-radius: 4px;
+        -webkit-box-shadow: 2px 2px 2px #bbb;
+        -moz-box-shadow:    2px 2px 2px #bbb;
+        box-shadow:         2px 2px 2px #bbb;
+    }
+    .margin-bottom {
+        margin-bottom: 15px;
+    }
+    .aling-right {
+        text-align: right;
+    }
+
+    .name {
+        color: #00a7ec;
+    }
+    .border-message {
+        border: solid #C7C7C7 1px;
+    }
+    .delete-message {
+        cursor: pointer;
+    }
+</style>
+
+<div id="list_messages" style="padding-top: 10px"></div>
+
+<div style="border-bottom: solid 1px #c7c7c7; " class="col-md-12 margin-bottom"></div>
+
+<div role="tabpanel">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs justify-content-end" role="tablist">
+        {% if app.user.isPlatform %}
+            <li role="presentation" class="active">
+                <a href="#notes" aria-controls="notes" role="tab" data-toggle="tab">Notas</a>
+            </li>
+        {% endif %}
+        <li role="presentation" {% if not app.user.isPlatform %} class="active" {% endif %}>
+            <a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Mensagens</a>
+        </li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content" style="padding-top: 8px">
+        {% if app.user.isPlatform %}
+            <div role="tabpanel" class="tab-pane active" id="notes">
+                <form action="{{ path('order_message',{id:order.id}) }}" method="get" id="form_order_note" class="col-md-10 pull-right">
+                    <textarea id="note" class="form-control margin-bottom" placeholder="Nota" ></textarea>
+                    <input id="restricted" type="hidden" value="restricted">
+                    <button type="submit" class="btn btn-warning pull-right" ><i class="fa fa-send"></i> Enviar</button>
+                </form>
+            </div>
+        {% endif %}
+
+        <div role="tabpanel" class="tab-pane {% if not app.user.isPlatform %} active {% endif %}" id="messages">
+            <form action="{{ path('order_message',{id:order.id}) }}" method="post" id="form_order_message" class="col-md-10 pull-right">
+                <textarea id="message" class="form-control margin-bottom" placeholder="Mensagem" ></textarea>
+                <button type="submit" class="btn btn-success pull-right" ><i class="fa fa-send"></i> Enviar</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    Message = {
+        userMention: true,
+        noteUsers: [],
+        noteRoles: [],
+        toUsers: [],
+        toRoles: [],
+        messageForm: $('#form_order_message'),
+        noteForm: $('#form_order_note'),
+        message: $('#message'),
+        note: $('#note'),
+        listMessages: $('#list_messages'),
+        loaded: true,
+        loadMessages: function () {
+            $.ajax({
+                url: '{{ path('order_message', {id:order.id}) }}',
+                method: 'GET',
+                complete: function (xhr) {
+                    Message.listMessages.html(xhr.responseText);
+                    Message.loaded = true;
+                }
+            });
+        },
+        sendMessage: function () {
+            $.ajax({
+                url: Message.messageForm.attr('action'),
+                method: 'POST',
+                data: {message: Message.message.val()},
+                complete: function (xhr) {
+                    Message.listMessages.html(xhr.responseText);
+                    Message.sendEmail();
+                    Message.message.val('');
+                }
+            });
+        },
+        sendNote: function () {
+            $.ajax({
+                url: Message.noteForm.attr('action'),
+                method: 'POST',
+                data: {
+                    note: Message.note.val(),
+                    restricted: $('#restricted').val(),
+                    users: Message.toUsers,
+                    roles: Message.toRoles
+                },
+                complete: function (xhr) {
+                    Message.listMessages.html(xhr.responseText);
+                    Message.note.val('');
+                }
+            });
+        },
+        sendEmail: function () {
+
+            $.ajax({
+                url: '{{ path('message_email', {id:order.id}) }}',
+                method: 'GET'
+            });
+        },
+        prepareNote: function () {
+            var noteContent = Message.note.val();
+
+            var cases = noteContent.match(/@[\w_.-]+|#[\w]+/g);
+
+            cases = cases ? cases : [];
+
+            $.each(cases, function(i, mention){
+                var delimiter = mention.substring(0,1);
+
+                if (delimiter === '@') {
+                    user = Message.noteUsers[mention.replace('@', '')];
+                    if (user) {
+                        Message.toUsers[user.username] = user.id;
+                    }
+                } else {
+                    role = Message.noteRoles[mention.replace('#', '')];
+                    if (role) {
+                        Message.toRoles[role.username] = role.id;
+                    }
+                }
+
+                if (i === cases.length - 1) {
+                    console.log(Object.values(Message.toUsers))
+                    console.log(Object.values(Message.toRoles))
+                }
+            });
+        },
+        initNote: function () {
+            //requisição para tipos
+            var users = {
+                'user10abc' : {
+                    id: 10,
+                    username: 'user10abc',
+                    name: 'Lindsay Made'
+                }, 'user.19abc' : {
+                    id: 19,
+                    username: 'user.19abc',
+                    name: 'Loud Mouth Burrito'
+                }};
+
+            Message.noteUsers  = users;
+
+            var roles = {
+                'commercial' : {
+                    id: 'ROLE_PLAT_C',
+                    username: 'commercial',
+                    name: 'Lindsay Made'
+                }, 'admin' : {
+                    id: 'ROLE_PLAT_A',
+                    username: 'admin',
+                    name: 'Administrador'
+                }};
+
+            Message.noteRoles  = roles;
+
+            Message.note.mention({
+                delimiter: '(@|#)',
+                users: function(query){
+                    //user = ..
+                    //roles = ..
+
+                    return Message.userMention ? Object.values(users) : Object.values(roles) ;
+                }
+            }).on('keypress', function(event){
+                var code = event.keyCode;
+                if(code === 64 || code === 35){
+                    Message.userMention = 64 === code
+                }
+            });
+        },
+        init: function () {
+            this.loadMessages();
+
+            $('#form_order_message').on('submit', function (event) {
+                event.preventDefault();
+                if(Message.message.val().replace( /\s/g, '' ))
+                    Message.sendMessage();
+                else {
+                    Message.message.val('');
+                }
+            });
+            Message.initNote();
+
+            $('#form_order_note').on('submit', function (event) {
+                event.preventDefault();
+                if(Message.note.val().replace( /\s/g, '' )) {
+                    Message.prepareNote();
+                }
+                else {
+                    Message.note.val('');
+                }
+            });
+
+            setInterval(function () {
+                if (Message.loaded) {
+                    Message.loadMessages();
+                    Message.loaded = false;
+                }
+            }, 10000);
+        }
+    };
+
+    Message.init();
+
+</script>

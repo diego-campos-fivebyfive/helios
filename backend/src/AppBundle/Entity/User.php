@@ -338,6 +338,24 @@ class User extends AbstractUser implements UserInterface
         ];
     }
 
+    /**
+     * @inheritDoc
+     */
+    public static function getRolesAlternativeOptions() {
+
+        return [
+            self::ROLE_PLATFORM_ADMIN => 'administrador',
+            self::ROLE_PLATFORM_COMMERCIAL => 'comercial',
+            self::ROLE_PLATFORM_FINANCIAL => 'financeiro',
+            self::ROLE_PLATFORM_AFTER_SALES => 'posvenda',
+            self::ROLE_PLATFORM_EXPANSE => 'expansao',
+            self::ROLE_PLATFORM_LOGISTIC => 'logistica',
+            self::ROLE_PLATFORM_FINANCING => 'financiamento',
+            self::ROLE_PLATFORM_BILLING => 'faturamento',
+            self::ROLE_PLATFORM_EXPEDITION => 'expedicao'
+        ];
+    }
+
     public static function getAccountGroupRoles()
     {
         return [
