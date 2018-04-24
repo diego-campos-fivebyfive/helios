@@ -66,24 +66,40 @@ class OrderMessageController extends AbstractController
      * @Route("/mentions", name="list_mentions")
      * @Method("get")
      */
-    public function getMentionRolesAndMembersAction()
+    public function getMentionRolesAndUsersAction()
     {
-        $members = $this->account()->getMembers();
+        $rolesData = [];
+
         $roles = User::getRolesOptions();
+
+        foreach ($roles as $const => $role) {
+            $username = User::getRolesAlternativeOptions()[$const];
+
+            $rolesData[$username] = [
+                'id' => $const,
+                'name' => $role,
+                'username' => $username
+            ];
+        }
 
         $membersData = [];
 
+        $members = $this->account()->getMembers();
+
         foreach ($members as $member) {
-            $membersData[$member->getId()] = [
+            $email = $member->getEmail();
+            $username = substr($email, 0, strpos($email, '@'));
+
+            $membersData[$username] = [
                 'id' => $member->getId(),
-                'name' => $member->getName(),
-                'email' => $member->getEmail()
+                'name' => $member->getFirstName(),
+                'username' => $username
             ];
         }
 
         $data = [
-            'roles' => $roles,
-            'members' => $membersData
+            'roles' => $rolesData,
+            'users' => $membersData
         ];
 
         return $this->json($data);

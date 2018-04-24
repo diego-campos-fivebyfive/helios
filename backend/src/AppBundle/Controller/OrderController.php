@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\Misc\Additive;
 use AppBundle\Entity\Misc\Coupon;
 use AppBundle\Entity\Order\Element;
@@ -522,6 +523,26 @@ class OrderController extends AbstractController
 
             if ($request->get('restricted')) {
                 $message->setRestricted(true);
+
+                $toUsers = $request->get('users') ? $request->get('users') : [];
+
+                $toRoles = $request->get('roles') ? $request->get('roles') : [];
+
+                $members = $this->account()->getMembers();
+
+                /** @var MemberInterface $member */
+                foreach ($members as $member) {
+                    $roleAccepted = in_array($member->getUser()->getRole(), $toRoles);
+
+                    $added = in_array($member->getId(), $toUsers);
+
+                    if ($roleAccepted && !$added) {
+                        $toUsers[] = $member->getId();
+                    }
+                }
+
+                $message->setTo($toUsers);
+                $message->setRead($toUsers);
             }
 
             $messageManager->save($message);
