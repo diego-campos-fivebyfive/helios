@@ -1,7 +1,12 @@
 import Vue from 'vue'
+import VueMoment from 'vue-momentjs'
+import moment from 'moment'
+
 import App from '@/App'
 import { router } from '@/router'
 import { initGlobals, globalComponents } from '@/globals'
+
+Vue.use(VueMoment, moment)
 
 initGlobals(Vue).then(() => {
   /* eslint-disable no-new, no-console */
