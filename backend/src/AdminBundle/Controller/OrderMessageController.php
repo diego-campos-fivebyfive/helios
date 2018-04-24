@@ -3,10 +3,12 @@
 namespace AdminBundle\Controller;
 
 use AppBundle\Controller\AbstractController;
+use AppBundle\Entity\Order\Message;
 use AppBundle\Entity\User;
 use AppBundle\Manager\OrderMessageManager;
 use AppBundle\Service\Order\OrderFinder;
 use Doctrine\ORM\QueryBuilder;
+use Sonata\NotificationBundle\Entity\MessageManager;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -24,7 +26,7 @@ class OrderMessageController extends AbstractController
      * @Route("/", name="list_order_messages_to")
      * @Method("get")
      */
-    public function getAction(Request $request)
+    public function getMessagesAction(Request $request)
     {
         /** @var OrderFinder $orderFinder */
         $orderFinder = $this->get('order_finder');
@@ -65,7 +67,7 @@ class OrderMessageController extends AbstractController
      * @Route("/mentions", name="list_mentions")
      * @Method("get")
      */
-    public function getMentionRolesAndMembers()
+    public function getMentionRolesAndMembersAction()
     {
         $members = $this->account()->getMembers();
         $roles = User::getRolesOptions();
@@ -92,7 +94,7 @@ class OrderMessageController extends AbstractController
      * @Route("/unread_count", name="unread_message_count")
      * @Method("get")
      */
-    public function getUnreadMessagesCount()
+    public function getUnreadMessagesCountAction()
     {
         /** @var OrderMessageManager $qb */
         $orderMessageManager = $this->get('order_message_manager');
@@ -110,6 +112,36 @@ class OrderMessageController extends AbstractController
         $data['unreadMessages'] = (int) $data['unreadMessages'];
 
         return $this->json($data);
+    }
+
+    /**
+     * @Route("/mark_as_read", name="mark_as_read")
+     * @Method("post")
+     */
+    public function postMarkAsReadAction(Request $request)
+    {
+        $messagesIds = $request->get('messagesIds');
+
+        /** @var MessageManager $messageManager */
+        $messageManager = $this->get('order_message_manager');
+
+        foreach ($messagesIds as $messageId) {
+            /** @var Message $message */
+            $userId = (string) "\"" . $this->member()->getId() . "\"";
+            $message = $messageManager->find($messageId);
+            $read = $message->getRead();
+
+            $search = array_search($userId, $read);
+
+            if (is_int($search) || is_string($search)) {
+                unset($read[$search]);
+            }
+
+            $message->setRead($read);
+            $messageManager->save($message);
+        }
+
+        return $this->json([]);
     }
 
     /**
