@@ -408,7 +408,7 @@
 
                                             {% if member.isPlatformFinancial or member.isPlatformFinancing %}
                                                 <input type="checkbox" data-antecipated-billing="{{ path('antecipated_billing_order', {id:order.id}) }}" {{ order.antecipatedBilling ? 'checked' }}>
-                                                Faruramento Antecipado
+                                                Faturamento Antecipado
                                             {% else %}
                                                 {{ order.antecipatedBilling ? 'Faruramento Antecipado' }}
                                             {% endif %}
@@ -1160,7 +1160,7 @@
                 },
                 complete: function (xhr) {
                     if (200 == xhr.status) {
-                        toastr.success('Farutamento Antecipado alterado!', '', {
+                        toastr.success('Faturamento Antecipado alterado!', '', {
                             positionClass: 'toast-top-center',
                             progressBar: true,
                             preventDuplicates: true
