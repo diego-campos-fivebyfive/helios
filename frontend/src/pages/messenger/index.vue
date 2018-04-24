@@ -9,18 +9,16 @@
         :getMessages='getMessages',
         :pagination='pagination')
     List(
-      slot='section'
+      slot='section',
       :messages='messages')
 </template>
 
 <script>
   import List from './list'
-  import Search from '@/theme/collection/Search'
 
   export default {
     components: {
-      List,
-      Search
+      List
     },
     data: () => ({
       messages: [],
