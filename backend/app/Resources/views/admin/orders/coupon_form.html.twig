@@ -99,6 +99,8 @@
         progressBar: true
     };
 
+    var validated = false;
+
     CouponHandler = {
         couponInput: $('#coupon_code_input'),
         couponSelect: $('#coupon_select'),
@@ -128,7 +130,7 @@
                     } else {
                         CouponHandler.source = "input";
                         CouponHandler.amount = Number(CouponHandler.coupon.amount);
-                        CouponHandler.activateSubmitCoupon(CouponHandler.coupon.amount);
+                        CouponHandler.changeButtonText();
                     }
                 }
             });
@@ -163,65 +165,77 @@
             this.couponSelect.val(this.couponSelectDefault)
         },
         resetSubmitCoupon: function () {
-            this.submitCoupon.attr('disabled', 'disabled');
             this.submitCoupon.html(this.submitCouponDefaultText);
         },
         resetCouponInput: function () {
             this.couponInput.val('');
         },
-        activateSubmitCoupon: function (amount) {
-            if (this.acceptedTerms) {
-                amount = Number(amount);
-                this.submitCoupon.removeAttr('disabled');
-                this.submitCoupon.html('Valor ' + numeral(amount).format('$0,0.00') + '| <i class="fa fa-check-circle-o"></i> Aplicar');
-            } else {
-                this.disableSubmitCoupon();
-            }
+        activateSubmitCoupon: function () {
+            this.submitCoupon.removeAttr('disabled');
         },
         disableSubmitCoupon: function() {
             this.submitCoupon.attr('disabled', 'disabled');
         },
+        changeButtonText: function() {
+            amount = Number(CouponHandler.amount);
+            this.submitCoupon.html('Valor ' + numeral(amount).format('$0,0.00') + '| <i class="fa fa-check-circle-o"></i> Aplicar');
+        },
         init: function () {
             this.submitCoupon.html(this.submitCouponDefaultText);
-
-            $('#acceptedTerms').on('change', function () {
-                var checked = $(this).is(':checked');
-
-                CouponHandler.acceptedTerms = checked;
-
-                if (!checked) {
-                    CouponHandler.disableSubmitCoupon();
-                }
-            });
         }
     };
     CouponHandler.init();
 
-    function couponSelectCheck() {
+    function couponCodeSearch() {
         CouponHandler.resetCouponSelect();
         if (CouponHandler.couponInput.val().length > 0) {
             CouponHandler.validateCoupon();
+            validated = true;
         } else {
+            validated = false;
             CouponHandler.resetSubmitCoupon();
         }
+
+        checkAcceptedTerms();
     }
 
-    function couponCodeSearchCheck() {
+    function couponSelect() {
         if (CouponHandler.couponSelect.val() !== '') {
             CouponHandler.amount = CouponHandler.couponSelect.val();
-            CouponHandler.activateSubmitCoupon(CouponHandler.couponSelect.val());
             CouponHandler.resetCouponInput();
             CouponHandler.source = "select";
+            CouponHandler.changeButtonText();
+            validated = true;
         } else {
+            validated = false;
             CouponHandler.resetSubmitCoupon();
+        }
+
+        checkAcceptedTerms();
+    }
+
+    function checkAcceptedTerms() {
+        var checked = $('#acceptedTerms').is(':checked');
+
+        if (checked) {
+            if (validated) {
+                CouponHandler.activateSubmitCoupon();
+            } else {
+                CouponHandler.disableSubmitCoupon();
+            }
+        } else {
+            CouponHandler.disableSubmitCoupon();
         }
     }
 
     $('#coupon_code_search').on('click', function () {
-        couponSelectCheck();
+        couponCodeSearch();
     });
     $('#coupon_select').on('change', function () {
-        couponCodeSearchCheck();
+        couponSelect();
+    });
+    $('#acceptedTerms').on('change', function () {
+        checkAcceptedTerms();
     });
     $('#submit_coupon').on('click', function () {
 
