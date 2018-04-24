@@ -135,7 +135,7 @@
 
             if (cases.length) {
                 $.each(cases, function(i, mention){
-                    var delimiter = mention.substring(0,1);
+                    var delimiter = mention.substring(0, 1);
 
                     if (delimiter === '@') {
                         user = Message.noteUsers[mention.replace('@', '')];
