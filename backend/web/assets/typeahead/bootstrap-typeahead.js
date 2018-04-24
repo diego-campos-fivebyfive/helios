@@ -81,9 +81,10 @@
   , lookup: function (event) {
       var items
 
-      this.query = this.$element.val()
+      this.query = this.$element.val()  //.replace( /[\s.]/g, '' )
 
       if (!this.query || this.query.length < this.options.minLength) {
+
         return this.shown ? this.hide() : this
       }
 
@@ -128,8 +129,8 @@
     }
 
   , highlighter: function (item) {
-      var query = this.query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
-      return item.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
+          var query = this.query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
+          return item.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
         return '<strong>' + match + '</strong>'
       })
     }
