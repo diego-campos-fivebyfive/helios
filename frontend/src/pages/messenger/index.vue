@@ -4,7 +4,10 @@
       slot(name='heading')
         h1.title Mensagens ({{ totalOfMessages }})
         Search
-      ActionBar.action-bar(slot='actions')
+      ActionBar.action-bar(
+        slot='actions',
+        :getMessages='getMessages',
+        :pagination='pagination')
     List(
       slot='section'
       :messages='messages')
@@ -20,8 +23,9 @@
       Search
     },
     data: () => ({
-      totalOfMessages: '',
-      messages: []
+      messages: [],
+      pagination: {},
+      totalOfMessages: ''
     }),
     methods: {
       getMessages(pageNumber = 1) {
@@ -30,6 +34,7 @@
         this.axios.get(uri).then(response => {
           this.totalOfMessages = response.data.size
           this.messages = response.data.results
+          this.pagination = response.data.page
         })
       }
     },
