@@ -22,9 +22,7 @@
       buttons: {
         left: [
           { icon: 'refresh', position: 'single', label: 'atualizar' },
-          { icon: 'eye', position: 'single' },
-          { icon: 'exclamation', position: 'single' },
-          { icon: 'trash', position: 'single' }
+          { icon: 'eye', position: 'single' }
         ],
         right: [
           { icon: 'arrow-right', position: 'last' },

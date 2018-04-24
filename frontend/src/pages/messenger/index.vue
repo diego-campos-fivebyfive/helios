@@ -2,13 +2,12 @@
   Panel.panel
     div(slot='header')
       slot(name='heading')
-        h1.title
-          | Mensagens ({{ messages }})
+        h1.title Mensagens ({{ totalOfMessages }})
         Search
-      slot(name='actions')
-        ActionBar.action-bar
+      ActionBar.action-bar(slot='actions')
     List(
-      slot='section')
+      slot='section'
+      :messages='messages')
 </template>
 
 <script>
@@ -21,8 +20,22 @@
       Search
     },
     data: () => ({
-      messages: 11
-    })
+      totalOfMessages: '',
+      messages: []
+    }),
+    methods: {
+      getMessages(pageNumber = 1) {
+        const uri = `admin/api/v1/orders/messages/?page=${pageNumber}`
+
+        this.axios.get(uri).then(response => {
+          this.totalOfMessages = response.data.size
+          this.messages = response.data.results
+        })
+      }
+    },
+    mounted() {
+      this.getMessages()
+    }
   }
 </script>
 
