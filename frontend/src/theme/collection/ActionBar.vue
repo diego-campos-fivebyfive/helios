@@ -22,6 +22,7 @@
   export default {
     props: [
       'getMessages',
+      'checkedMessagesClear',
       'messages',
       'pagination'
     ],
@@ -54,7 +55,7 @@
     },
     methods: {
       refresh() {
-        this.$emit('checkedMessagesClear')
+        this.checkedMessagesClear()
       },
       next() {
         if (this.pagination.links.next) {
@@ -79,8 +80,7 @@
           const uri = 'admin/api/v1/orders/messages/mark_as_read'
 
           this.axios.post(uri, data)
-
-          this.getMessages(this.pagination.current)
+          this.checkedMessagesClear()
         }
       }
     }
