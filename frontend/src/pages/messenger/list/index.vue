@@ -6,7 +6,7 @@
         v-for='message in messages',
         :class='{ "not-read": !message.isRead }')
         td.col-checkbox
-          Checkbox(:field='message')
+          Checkbox(:field='includeCheckedState(message)')
         td.col-author {{ message.author.name }}
         td.col-content {{ message.content }}
         td.col-date {{ formatDate(message.createdAt) }}
@@ -17,6 +17,7 @@
 
   export default {
     props: [
+      'checkedMessages',
       'messages'
     ],
     components: {
@@ -25,6 +26,15 @@
     methods: {
       formatDate(value) {
         return this.$moment(value, 'YYYY-MM-DD').format('DD/MM/YYYY')
+      },
+      includeCheckedState(message) {
+        const checked = this.checkedMessages.find(checkedMessage => (
+          checkedMessage === message.id
+        ))
+
+        this.$set(message, 'value', Boolean(checked))
+
+        return message
       }
     }
   }

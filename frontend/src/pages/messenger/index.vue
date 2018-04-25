@@ -11,7 +11,7 @@
         :pagination='pagination')
     List(
       slot='section',
-      :messages='messages')
+      v-bind='{ checkedMessages, messages }')
 </template>
 
 <script>
@@ -22,12 +22,18 @@
       List
     },
     data: () => ({
+      checkedMessages: [],
       messages: [],
       pagination: {},
       totalOfMessages: ''
     }),
     methods: {
       getMessages(pageNumber = 1) {
+        this.checkedMessages = this.messages
+          .filter(message => message.value)
+          .map(message => message.id)
+          .concat(this.checkedMessages)
+
         const uri = `admin/api/v1/orders/messages/?page=${pageNumber}`
 
         this.axios.get(uri).then(response => {
@@ -35,6 +41,9 @@
           this.messages = response.data.results
           this.pagination = response.data.page
         })
+      },
+      checkedMessagesClear() {
+        this.checkedMessages = []
       }
     },
     mounted() {
