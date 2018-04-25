@@ -7,6 +7,7 @@
       ActionBar.action-bar(
         slot='actions',
         :getMessages='getMessages',
+        :messages='messages',
         :pagination='pagination')
     List(
       slot='section',
