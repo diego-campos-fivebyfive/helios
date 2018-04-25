@@ -27,6 +27,12 @@
                 currentUnreadMessages = unreadMessages;
 
                 $('#unreadMessages').html(unreadMessages);
+
+                if (unreadMessages) {
+                    $('#unreadMessages').show();
+                } else {
+                    $('#unreadMessages').hide();
+                }
             }
         });
     }
