@@ -73,12 +73,9 @@ class OrderMessageController extends AbstractController
         $roles = User::getRolesOptions();
 
         foreach ($roles as $const => $role) {
-            $username = User::getRolesAlternativeOptions()[$const];
-
-            $rolesData[$username] = [
+            $rolesData[$const] = [
                 'id' => $const,
-                'name' => $role,
-                'username' => $username
+                'name' => $role
             ];
         }
 
@@ -87,13 +84,11 @@ class OrderMessageController extends AbstractController
         $members = $this->account()->getMembers();
 
         foreach ($members as $member) {
-            $email = $member->getEmail();
-            $username = substr($email, 0, strpos($email, '@'));
+            $id = $member->getId();
 
-            $membersData[$username] = [
-                'id' => $member->getId(),
-                'name' => $member->getFirstName(),
-                'username' => $username
+            $membersData[$id] = [
+                'id' => $id,
+                'name' => $member->getFirstName()
             ];
         }
 
