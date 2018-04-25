@@ -180,11 +180,6 @@ interface UserInterface extends BaseUserInterface
     /**
      * @return array
      */
-    public static function getRolesAlternativeOptions();
-
-    /**
-     * @return array
-     */
     public static function getAccountGroupRoles();
 
     /**
