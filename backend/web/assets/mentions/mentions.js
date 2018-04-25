@@ -90,7 +90,7 @@ function Mentions(id, options) {
     currentOffset = anchorOffset;
 
     var pr = selection.focusNode.data;
-    var sub = anchorOffset ? pr.substring(0, anchorOffset) : '';
+    var sub = anchorOffset && pr ? pr.substring(0, anchorOffset) : '';
     var sp = sub.split(' ').reverse()[0];
     var nextSp = sp.replace(/\s/g, '');
     var delimiter = nextSp.substring(0, 1);
