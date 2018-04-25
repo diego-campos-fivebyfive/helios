@@ -1,12 +1,15 @@
 <template lang="pug">
   form
     Table.table
-      tr.rows(slot='rows', v-for='message in messages')
+      tr.rows(
+        slot='rows',
+        v-for='message in messages',
+        :class='{ "not-read": !message.isRead }')
         td.col-checkbox
-          Checkbox(:field='message.author.id')
+          Checkbox(:field='message')
         td.col-author {{ message.author.name }}
         td.col-content {{ message.content }}
-        td.col-date {{ formatDate(message.created_at) }}
+        td.col-date {{ formatDate(message.createdAt) }}
 </template>
 
 <script>
@@ -28,6 +31,10 @@
 </script>
 
 <style lang="scss" scoped>
+  .not-read {
+    font-weight: bold;
+  }
+
   .col-checkbox {
     width: 10%;
     text-align: center;
