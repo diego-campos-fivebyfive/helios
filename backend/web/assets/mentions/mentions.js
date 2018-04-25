@@ -26,7 +26,8 @@ function Mentions(id, options) {
     var tag = document.createElement('span');
     tag.setAttribute('class', 'mention-tag');
     tag.setAttribute('contenteditable', 'false');
-    if (item.id) tag.setAttribute('data-id', item.id);
+    tag.setAttribute('data-delimiter', currentDelimiter);
+    if (item.id) tag.setAttribute('data-mention', item.id);
     var text = document.createTextNode(currentDelimiter + item.name);
     tag.appendChild(text);
 
@@ -37,7 +38,7 @@ function Mentions(id, options) {
     var stringTokens = textTokens.join('');
 
     previousText.previousSibling.data = stringTokens;
-    previousText.insertData(0, "\u00A0")
+    previousText.insertData(0, "\u00A0");
 
     currentNode.parentNode.insertBefore(tag, previousText);
 
@@ -67,7 +68,7 @@ function Mentions(id, options) {
 
       child.addEventListener('click', function(event) {
         self.selectItem(item);
-      })
+      });
 
       container.appendChild(child);
 
