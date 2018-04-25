@@ -198,8 +198,8 @@ class OrderMessageController extends AbstractController
                 'id' => $orderMessage->getId(),
                 'author' => $author,
                 'content' => $orderMessage->getContent(),
-                'is_read' => $isRead,
-                'created_at' => $createDate
+                'isRead' => $isRead,
+                'createdAt' => $createDate
             ];
         }, $messageCollection);
     }
