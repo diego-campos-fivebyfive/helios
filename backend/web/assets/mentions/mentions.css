@@ -1,0 +1,49 @@
+.mention-editable {
+    max-height: 100px;
+    overflow: auto;
+    background: #fefefe;
+    border: 2px solid #999;
+    border-radius: 5px;
+    padding: 5px;
+    color: #2C2D30;
+}
+.mention-editable, .mentions-before, .mentions-after {
+    max-width: 100%;
+    font-family: sans-serif;
+}
+.mentions-list {
+    list-style: none;
+    padding: 0;
+    max-height: 200px;
+    overflow: auto;
+    width: 100%;
+    background-color: #F9F9F9;
+    border: solid 1px #DDD;
+    border-radius: 4px;
+    position: absolute;
+    display: none;
+}
+.mentions-list li {
+    padding: 8px 10px 6px 15px;
+}
+.mentions-list li:hover {
+    background: #2D9EE0;
+    color: #FFF;
+    cursor: pointer;
+}
+.mentions-before, .mentions-after {
+    position: relative;
+    height: 0;
+}
+.mentions-before .mentions-list{
+    bottom: -14px;
+}
+.mentions-after .mentions-list {
+    top: -14px;
+}
+.mention-tag{
+    padding: 0 2px 1px 2px;
+    background: #e0f0fa;
+    color: #005e99;
+    border-radius: 3px;
+}
