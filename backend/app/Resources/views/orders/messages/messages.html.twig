@@ -1,3 +1,8 @@
+    <style>
+        .content {
+            padding-bottom: 5px;
+        }
+    </style>
     {% for message in messages %}
         {% set isPlatform = message.author.user.isPlatform %}
         {% set thisUser = message.author.user.id == app.user.id  %}
@@ -16,7 +21,7 @@
                     </div>
 
                     <div class="content {% if isPlatform %}pull-right aling-right{% endif %}">
-                        {{ message.content }}
+                        {{ message.content|raw }}
                     </div>
                 {% else %}
                     <div class="header">
