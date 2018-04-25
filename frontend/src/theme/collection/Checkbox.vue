@@ -6,9 +6,9 @@
     .collection-checkbox-wrapper
       .collection-checkbox-wrapper-checker
         input.collection-checkbox-wrapper-checker-field(
-          id='collection-checkbox-wrapper-checker-field',
+          :id='`collection-checkbox-wrapper-checker-field-${field.id}`',
           type='checkbox',
-          :value='field.value',
+          :checked='field.value',
           v-on:change='$set(field, "value", !field.value)')
         Icon.collection-checkbox-wrapper-checker-icon(name='check')
       .collection-checkbox-wrapper-description(
