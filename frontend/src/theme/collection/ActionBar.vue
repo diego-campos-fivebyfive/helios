@@ -22,6 +22,7 @@
   export default {
     props: [
       'getMessages',
+      'messages',
       'pagination'
     ],
     data() {
@@ -36,7 +37,8 @@
             click: () => self.refresh()
           }, {
             icon: 'eye',
-            position: 'single'
+            position: 'single',
+            click: () => self.markIsRead()
           }],
           right: [{
             icon: 'arrow-right',
@@ -64,6 +66,21 @@
         if (this.pagination.links.prev) {
           const pageNumber = this.pagination.current - 1
           this.getMessages(pageNumber)
+        }
+      },
+      markIsRead() {
+        const messagesIds = this.messages
+          .filter(message => message.value && !message.isRead)
+          .map(message => message.id)
+
+        if (messagesIds.length > 0) {
+          const data = { messagesIds }
+
+          const uri = 'admin/api/v1/orders/messages/mark_as_read'
+
+          this.axios.post(uri, data)
+
+          this.getMessages(this.pagination.current)
         }
       }
     }
