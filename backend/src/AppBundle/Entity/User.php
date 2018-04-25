@@ -331,7 +331,7 @@ class User extends AbstractUser implements UserInterface
             self::ROLE_PLATFORM_FINANCIAL => 'Financeiro',
             self::ROLE_PLATFORM_AFTER_SALES => 'Pós-Venda',
             self::ROLE_PLATFORM_EXPANSE => 'Expansão',
-            self::ROLE_PLATFORM_LOGISTIC => 'Logística',
+            self::ROLE_PLATFORM_LOGISTIC => 'Produção',
             self::ROLE_PLATFORM_FINANCING => 'Financiamento',
             self::ROLE_PLATFORM_BILLING => 'Faturamento',
             self::ROLE_PLATFORM_EXPEDITION => 'Expedição'
