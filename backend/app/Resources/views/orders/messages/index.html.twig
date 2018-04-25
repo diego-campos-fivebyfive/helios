@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="{{ asset('assets/mentions/mentions.css') }}">
 <style>
     .shadow {
         background-color: #eee;
@@ -46,7 +47,11 @@
         {% if app.user.isPlatform %}
             <div role="tabpanel" class="tab-pane active" id="notes">
                 <form action="{{ path('order_message',{id:order.id}) }}" method="get" id="form_order_note" class="col-md-10 pull-right">
-                    <textarea id="note" class="form-control margin-bottom" placeholder="Nota" ></textarea>
+                    <div  class="mentions-before">
+                        <ul id="note-list" class="mentions-list"></ul>
+                    </div>
+                    <div id="note" class="mention-editable margin-bottom"></div>
+
                     <input id="restricted" type="hidden" value="restricted">
                     <button type="submit" class="btn btn-warning pull-right" ><i class="fa fa-send"></i> Enviar</button>
                 </form>
@@ -62,8 +67,7 @@
     </div>
 </div>
 
-<script src="{{ asset('assets/typeahead/bootstrap-typeahead.js') }}"></script>
-{% include view('orders/messages/mention_js.html.twig') %}
+<script src="{{ asset('assets/mentions/mentions.js') }}"></script>
 
 <script>
 
@@ -105,14 +109,14 @@
                 url: Message.noteForm.attr('action'),
                 method: 'POST',
                 data: {
-                    note: Message.note.val(),
+                    note: Message.note.html(),
                     restricted: $('#restricted').val(),
                     users: Object.values(Message.toUsers),
                     roles: Object.values(Message.toRoles)
                 },
                 complete: function (xhr) {
                     Message.listMessages.html(xhr.responseText);
-                    Message.note.val('');
+                    Message.note.html('');
                 }
             });
         },
@@ -124,36 +128,33 @@
             });
         },
         prepareNote: function () {
-            var noteContent = Message.note.val();
 
-            var cases = noteContent.match(/@[\w_.-]+|#[\w]+/g);
-
-            cases = cases ? cases : [];
+            var mentions = Message.note.find("[data-mention]");
 
             Message.toUsers = [];
             Message.toRoles = [];
 
-            if (cases.length) {
-                $.each(cases, function(i, mention){
-                    var delimiter = mention.substring(0, 1);
+            if (mentions.length) {
+                $.each(mentions, function(i, mention){
+                    var delimiter = $(mention).data('delimiter');
 
                     if (delimiter === '@') {
-                        user = Message.noteUsers[mention.replace('@', '')];
+                        user = Message.noteUsers[$(mention).data('mention')];
                         if (user) {
-                            Message.toUsers[user.username] = user.id;
+                            Message.toUsers[user.id] = user.id;
                         }
-                    } else {
-                        role = Message.noteRoles[mention.replace('#', '')];
+                    } else if (delimiter === '#') {
+                        role = Message.noteRoles[$(mention).data('mention')];
                         if (role) {
-                            Message.toRoles[role.username] = role.id;
+                            Message.toRoles[role.id] = role.id;
                         }
                     }
 
-                    if (i === cases.length - 1) {
+                    if (i === mentions.length - 1) {
                         Message.sendNote();
                     }
                 });
-            }  else {
+            } else {
                 Message.sendNote();
             }
         },
@@ -165,18 +166,18 @@
                     Message.noteUsers = xhr.responseJSON.users;
                     Message.noteRoles = xhr.responseJSON.roles;
 
-                    var userMention = true;
-
-                    Message.note.mention({
-                        delimiter: '(@|#)',
-                        users: function(query){
-                            return userMention ? Object.values(Message.noteUsers) : Object.values(Message.noteRoles);
-                        }
-                    }).on('keypress', function(event){
-                        var code = event.keyCode;
-                        if(code === 64 || code === 35){
-                            userMention = 64 === code
-                        }
+                    new Mentions('note', {
+                        container: 'note-list',
+                        providers: [
+                            {
+                                delimiter: '@',
+                                data: Object.values(Message.noteUsers)
+                            },
+                            {
+                                delimiter: '#',
+                                data: Object.values(Message.noteRoles)
+                            }
+                        ]
                     });
                 }
             });
@@ -197,11 +198,11 @@
 
             $('#form_order_note').on('submit', function (event) {
                 event.preventDefault();
-                if(Message.note.val().replace( /\s/g, '' )) {
+                if(Message.note.html().replace( /[\s&nbsp;]/g, '' )) {
                     Message.prepareNote();
                 }
                 else {
-                    Message.note.val('');
+                    Message.note.html('');
                 }
             });
 
