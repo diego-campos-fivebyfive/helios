@@ -54,7 +54,7 @@
     },
     methods: {
       refresh() {
-        this.getMessages(this.pagination.current)
+        this.$emit('checkedMessagesClear')
       },
       next() {
         if (this.pagination.links.next) {

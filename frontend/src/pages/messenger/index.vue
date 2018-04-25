@@ -7,6 +7,7 @@
       ActionBar.action-bar(
         slot='actions',
         :getMessages='getMessages',
+        :checkedMessagesClear='checkedMessagesClear',
         :messages='messages',
         :pagination='pagination')
     List(
@@ -44,6 +45,12 @@
       },
       checkedMessagesClear() {
         this.checkedMessages = []
+
+        this.messages.forEach(message => {
+          return this.$set(message, 'value', false)
+        })
+
+        this.getMessages(this.pagination.current)
       }
     },
     mounted() {
