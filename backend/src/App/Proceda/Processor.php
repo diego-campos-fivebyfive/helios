@@ -211,41 +211,34 @@ class Processor
      */
     private function processGroups(array &$groups = [])
     {
-        foreach ($groups as $invoice => $events){
-            $count = count($events);
-            $this->result['loaded_events'] += $count;
-            $this->result['cached_events'] += $count;
+        $this->result['loaded_events'] = array_sum(array_map('count', $groups));
 
-            if($this->processGroupEvents($invoice, $events)){
-                $this->result['cached_events'] -= $count;
+        $orders = $this->findOrders(array_keys($groups));
+
+        foreach ($orders as $invoice => $order){
+            if(array_key_exists($invoice, $groups)) {
+
+                $this->processGroupEvents($orders[$invoice], (array) $groups[$invoice]);
 
                 unset($groups[$invoice]);
             }
         }
+
+        $this->result['cached_events'] = array_sum(array_map('count', $groups));
     }
 
     /**
-     * @param string $invoice
+     * @param Order $order
      * @param array $events
-     * @return bool
      */
-    private function processGroupEvents(string $invoice, array $events = [])
+    private function processGroupEvents(Order $order, array $events = [])
     {
-        $order = $this->findOrder($invoice);
+        foreach ($events as $event) {
 
-        if($order instanceof OrderInterface) {
+            $this->changeStatusByEvent($order, $event['event']);
 
-            foreach ($events as $event) {
-
-                $this->changeStatusByEvent($order, $event['event']);
-
-                $this->prepareTimelineEvent($order, $event);
-            }
-
-            return true;
+            $this->prepareTimelineEvent($order, $event);
         }
-
-        return false;
     }
 
     /**
@@ -269,16 +262,20 @@ class Processor
     /**
      * @param $invoice
      * @return Order | null
+     * @deprecated Consulta otimizada em findOrders
      */
     private function findOrder($invoice)
     {
         $qb = $this->manager->createQueryBuilder();
 
         $qb
+            ->select('o.id')
             ->where($qb->expr()->like('o.invoices', $qb->expr()->literal("%${invoice}%")))
             ->setMaxResults(1);
 
-        return $qb->getQuery()->getOneOrNullResult();
+        $ids = $qb->getQuery()->getOneOrNullResult();
+
+        return $ids ? array_map('current', $ids) : null ;
     }
 
     /**
@@ -360,5 +357,42 @@ class Processor
             'password' => $this->container->getParameter('ftp_password'),
             'directory' => '/PROCEDA-SICESSOLAR'
         ]);
+    }
+
+    /**
+     * @param array $invoices
+     * @return array
+     */
+    private function findOrders(array $invoices)
+    {
+        $regex = implode('|', $invoices);
+
+        $SQL = "SELECT id FROM app_order WHERE invoices REGEXP '{$regex}'";
+
+        $stmt = $this->manager->getConnection()->prepare($SQL);
+        $stmt->execute();
+
+        $ids = array_map('current', $stmt->fetchAll());
+
+        if(empty($ids)){
+            return [];
+        }
+
+        $qb = $this->manager->createQueryBuilder();
+
+        $qb->where(
+            $qb->expr()->in('o.id', $ids)
+        );
+
+        $result = $qb->getQuery()->getResult();
+        $orders = [];
+        /** @var Order $order */
+        foreach ($result as $order){
+            foreach ($order->getInvoices() as $invoice){
+                $orders[$invoice] = $order;
+            }
+        }
+
+        return $orders;
     }
 }
