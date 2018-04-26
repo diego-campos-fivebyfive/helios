@@ -6,8 +6,6 @@ function Mentions(id, options) {
 
   var element = document.getElementById(id);
   element.setAttribute('contenteditable', 'true');
-  element.innerHTML = '<br>';
-
   var container = document.getElementById(options.container);
 
   var currentDelimiter = null;

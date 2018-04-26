@@ -1,5 +1,6 @@
 .mention-editable {
     max-height: 100px;
+    min-height: 70px;
     overflow: auto;
     background: #fefefe;
     border: 2px solid #999;
