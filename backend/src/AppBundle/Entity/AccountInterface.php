@@ -290,7 +290,7 @@ interface AccountInterface extends CustomerInterface
 
     /**
      * @param json $terms
-     * @return CustomerInterface
+     * @return AccountInterface
      */
     public function setTerms($terms);
 }
