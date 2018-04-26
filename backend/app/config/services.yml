@@ -164,6 +164,10 @@ services:
         class: AppBundle\Manager\TaskManager
         arguments: ['AppBundle\Entity\Task', '@doctrine']
 
+    term_manager:
+        class: AppBundle\Manager\TermManager
+        arguments: ['AppBundle\Entity\Term', '@doctrine']
+
     theme_manager:
         class: AppBundle\Manager\ThemeManager
         arguments: ['AppBundle\Entity\Theme', '@doctrine']
