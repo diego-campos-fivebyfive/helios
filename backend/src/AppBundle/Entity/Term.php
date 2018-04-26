@@ -63,6 +63,7 @@ class Term implements TermInterface {
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -80,6 +81,7 @@ class Term implements TermInterface {
     public function setTitle($title)
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -97,6 +99,7 @@ class Term implements TermInterface {
     public function setUrl($url)
     {
         $this->url = $url;
+
         return $this;
     }
 
@@ -114,6 +117,7 @@ class Term implements TermInterface {
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -131,6 +135,7 @@ class Term implements TermInterface {
     public function setUpdatedAt($updatedAt)
     {
         $this->updatedAt = $updatedAt;
+
         return $this;
     }
 
