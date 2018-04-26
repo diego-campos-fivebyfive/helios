@@ -25,11 +25,24 @@
     }
     [placeholder]:empty:before {
         content: attr(placeholder);
-        color: #555;
+        color: #a0a0a0;
     }
 
     [placeholder]:empty:focus:before {
         content: "";
+    }
+    #message {
+        max-height: 100px;
+        min-height: 70px;
+        min-width: 100%;
+        max-width: 300px;
+        overflow: auto;
+        background: #fefefe;
+        border: 2px solid #999;
+        border-radius: 5px;
+        padding: 5px;
+        color: #2C2D30;
+        word-wrap: break-word;
     }
 </style>
 
@@ -68,7 +81,7 @@
 
         <div role="tabpanel" class="tab-pane {% if not app.user.isPlatform %} active {% endif %}" id="messages">
             <form action="{{ path('order_message',{id:order.id}) }}" method="post" id="form_order_message" class="col-md-10 pull-right">
-                <textarea id="message" class="form-control margin-bottom" placeholder="Mensagem" ></textarea>
+                <textarea id="message" class="margin-bottom" placeholder="Mensagem" ></textarea>
                 <button type="submit" class="btn btn-success pull-right" ><i class="fa fa-send"></i> Enviar</button>
             </form>
         </div>
