@@ -47,7 +47,7 @@ trait AccountTrait
     /**
      * @var json
      *
-     * @ORM\Column(name="attributes", type="json", nullable=true)
+     * @ORM\Column(type="json", nullable=true)
      */
     private $terms;
 
