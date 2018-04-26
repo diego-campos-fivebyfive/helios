@@ -50,6 +50,7 @@ class OrderMessageController extends AbstractController
         $qb2->orWhere($qb2->expr()->in('m.order', $ids));
         $qb2->andWhere($qb2->expr()->eq('m.restricted', true));
         $qb2->setParameter('memberId', '%"' . $this->member()->getId() . '"%');
+        $qb2->orderBy('m.createdAt', 'DESC');
 
         $itemsPerPage = 10;
         $pagination = $this->getPaginator()->paginate(
