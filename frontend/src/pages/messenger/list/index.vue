@@ -2,7 +2,7 @@
   form
     Table.table(type='stripped')
       tr(slot='head')
-        th.col-checkbox
+        th.col-checkbox Selecionar
         th.col-reference Número
         th.col-author Autor
         th.col-content Conteúdo
@@ -17,7 +17,7 @@
           a(:href='linkOrder(message)')
             | {{ message.order.reference || 'Visualizar' }}
         td.col-author {{ message.author.name }}
-        td.col-content(v-html='message.content')
+        td.col-content {{ preContent(message.content)}}
         td.col-date {{ formatDate(message.createdAt) }}
 </template>
 
@@ -49,6 +49,16 @@
       },
       linkOrder(message) {
         return `/orders/${message.order.id}/show`
+      },
+      preContent(content) {
+        const maxPos = 120
+        const operator = ''
+
+        if (content.length > maxPos) {
+          return `${content.substr(0, maxPos)} ...`
+        }
+
+        return content
       }
     }
   }
