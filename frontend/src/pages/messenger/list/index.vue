@@ -28,9 +28,10 @@
         return this.$moment(value, 'YYYY-MM-DD').format('DD/MM/YYYY')
       },
       includeCheckedState(message) {
-        const checked = this.checkedMessages.find(checkedMessage => (
-          checkedMessage.id === message.id
-        ))
+        const checked = this.checkedMessages
+          .find(checkedMessage => (
+            checkedMessage.id === message.id
+          ))
 
         this.$set(message, 'value', Boolean(checked))
 

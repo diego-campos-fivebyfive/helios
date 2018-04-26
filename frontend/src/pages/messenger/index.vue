@@ -7,7 +7,7 @@
       ActionBar.action-bar(
         slot='actions',
         :getMessages='getMessages',
-        :checkedMessagesClear='checkedMessagesClear',
+        :clearCheckedMessages='clearCheckedMessages',
         :incrementCheckedMessages='incrementCheckedMessages',
         :messages='messages',
         :pagination='pagination')
@@ -52,7 +52,7 @@
           resolve(this.checkedMessages)
         })
       },
-      checkedMessagesClear() {
+      clearCheckedMessages() {
         this.checkedMessages = []
 
         this.messages.forEach(message => (

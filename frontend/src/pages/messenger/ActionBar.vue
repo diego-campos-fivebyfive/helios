@@ -22,7 +22,7 @@
   export default {
     props: [
       'getMessages',
-      'checkedMessagesClear',
+      'clearCheckedMessages',
       'incrementCheckedMessages',
       'messages',
       'pagination'
@@ -56,7 +56,7 @@
     },
     methods: {
       refresh() {
-        this.checkedMessagesClear()
+        this.clearCheckedMessages()
       },
       next() {
         if (this.pagination.links.next) {
@@ -71,23 +71,24 @@
         }
       },
       markIsRead() {
-        this.incrementCheckedMessages().then(messages => {
-          const messagesIds = messages
-            .filter(message => !message.isRead)
-            .map(message => message.id)
+        this.incrementCheckedMessages()
+          .then(messages => {
+            const messagesIds = messages
+              .filter(message => !message.isRead)
+              .map(message => message.id)
 
-          if (messagesIds.length > 0) {
-            const data = { messagesIds }
+            if (messagesIds.length > 0) {
+              const data = { messagesIds }
 
-            const uri = 'admin/api/v1/orders/messages/mark_as_read'
+              const uri = 'admin/api/v1/orders/messages/mark_as_read'
 
-            this.axios.post(uri, data)
-              .then(() => {
-                this.checkedMessagesClear()
-              })
-              .catch(() => 'Não foi possível marcar mensagens como lidas')
-          }
-        })
+              this.axios.post(uri, data)
+                .then(() => {
+                  this.clearCheckedMessages()
+                })
+                .catch(() => 'Não foi possível marcar mensagens como lidas')
+            }
+          })
       }
     }
   }
