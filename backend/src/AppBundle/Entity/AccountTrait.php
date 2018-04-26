@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Configuration\Json;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -42,6 +43,13 @@ trait AccountTrait
      * @ORM\OneToMany(targetEntity="Customer", mappedBy="parent", cascade={"persist", "remove"})
      */
     protected $childAccounts;
+
+    /**
+     * @var json
+     *
+     * @ORM\Column(name="attributes", type="json", nullable=true)
+     */
+    private $terms;
 
     /**
      * @param $level
@@ -382,5 +390,23 @@ trait AccountTrait
     private function ensureAccount()
     {
         $this->ensureContext(Customer::CONTEXT_ACCOUNT);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTerms()
+    {
+        return $this->terms;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setTerms($terms)
+    {
+        $this->terms = $terms;
+
+        return $this;
     }
 }
