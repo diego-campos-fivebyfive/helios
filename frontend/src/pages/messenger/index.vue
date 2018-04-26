@@ -18,7 +18,7 @@
 
 <script>
   import List from './list'
-  import ActionBar from './fields/ActionBar'
+  import ActionBar from './ActionBar'
 
   export default {
     components: {
@@ -44,7 +44,7 @@
         })
       },
       incrementCheckedMessages() {
-        return new Promise( (resolve, reject) => {
+        return new Promise(resolve => {
           this.checkedMessages = this.messages
             .filter(message => message.value)
             .concat(this.checkedMessages)
@@ -55,9 +55,9 @@
       checkedMessagesClear() {
         this.checkedMessages = []
 
-        this.messages.forEach(message => {
-          return this.$set(message, 'value', false)
-        })
+        this.messages.forEach(message => (
+          this.$set(message, 'value', false)
+        ))
 
         this.getMessages(this.pagination.current)
       }
