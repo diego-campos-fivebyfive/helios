@@ -165,6 +165,7 @@ class OrderMessageController extends AbstractController
     {
         return array_map(function($orderMessage) {
             $author = $orderMessage->getAuthor();
+            $order = $orderMessage->getOrder();
 
             if ($author) {
                 $author = [
@@ -177,6 +178,10 @@ class OrderMessageController extends AbstractController
                     'name' => ''
                 ];
             }
+            $order = [
+                'id' => $order->getId(),
+                'reference' => (string) $order->getReference()
+            ];
 
             $memberId = "\"" . $this->member()->getId() . "\"";
             $read = $orderMessage->getRead();
@@ -192,6 +197,7 @@ class OrderMessageController extends AbstractController
             return [
                 'id' => $orderMessage->getId(),
                 'author' => $author,
+                'order' => $order,
                 'content' => $orderMessage->getContent(),
                 'isRead' => $isRead,
                 'createdAt' => $createDate
