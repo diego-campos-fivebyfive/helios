@@ -28,7 +28,7 @@
 .mentions-list li {
     padding: 8px 10px 6px 15px;
 }
-.mentions-list li:hover {
+.mention-focus {
     background: #2D9EE0;
     color: #FFF;
     cursor: pointer;
