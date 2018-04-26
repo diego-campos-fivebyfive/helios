@@ -8,7 +8,7 @@
         td.col-checkbox
           Checkbox(:field='includeCheckedState(message)')
         td.col-author {{ message.author.name }}
-        td.col-content {{ message.content }}
+        td.col-content(v-html='message.content')
         td.col-date {{ formatDate(message.createdAt) }}
 </template>
 
