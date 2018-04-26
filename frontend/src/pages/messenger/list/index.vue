@@ -29,7 +29,7 @@
       },
       includeCheckedState(message) {
         const checked = this.checkedMessages.find(checkedMessage => (
-          checkedMessage === message.id
+          checkedMessage.id === message.id
         ))
 
         this.$set(message, 'value', Boolean(checked))
