@@ -180,7 +180,7 @@ class OrderMessageController extends AbstractController
             }
             $order = [
                 'id' => $order->getId(),
-                'reference' => $order->getReference() ? $order->getReference() : ''
+                'reference' => (string) $order->getReference()
             ];
 
             $memberId = "\"" . $this->member()->getId() . "\"";
