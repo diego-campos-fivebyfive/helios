@@ -52,7 +52,6 @@
       },
       preContent(content) {
         const maxPos = 120
-        const operator = ''
 
         if (content.length > maxPos) {
           return `${content.substr(0, maxPos)} ...`
