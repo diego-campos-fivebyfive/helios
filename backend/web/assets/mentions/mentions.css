@@ -1,11 +1,13 @@
 .mention-editable {
     max-height: 100px;
+    min-height: 70px;
     overflow: auto;
     background: #fefefe;
     border: 2px solid #999;
     border-radius: 5px;
     padding: 5px;
     color: #2C2D30;
+    word-wrap: break-word;
 }
 .mention-editable, .mentions-before, .mentions-after {
     max-width: 100%;
