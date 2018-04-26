@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Configuration\Json;
 use AppBundle\Entity\Misc\RankingInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Kolina\CustomerBundle\Entity\CustomerInterface;
@@ -281,4 +282,15 @@ interface AccountInterface extends CustomerInterface
      * @return bool
      */
     public function isParentAccount();
+
+    /**
+     * @return json
+     */
+    public function getTerms();
+
+    /**
+     * @param json $terms
+     * @return AccountInterface
+     */
+    public function setTerms($terms);
 }
