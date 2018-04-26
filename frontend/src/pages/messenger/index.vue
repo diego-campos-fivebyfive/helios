@@ -8,6 +8,7 @@
         slot='actions',
         :getMessages='getMessages',
         :checkedMessagesClear='checkedMessagesClear',
+        :incrementCheckedMessages='incrementCheckedMessages',
         :messages='messages',
         :pagination='pagination')
     List(
@@ -17,10 +18,12 @@
 
 <script>
   import List from './list'
+  import ActionBar from './fields/ActionBar'
 
   export default {
     components: {
-      List
+      List,
+      ActionBar
     },
     data: () => ({
       checkedMessages: [],
@@ -30,10 +33,7 @@
     }),
     methods: {
       getMessages(pageNumber = 1) {
-        this.checkedMessages = this.messages
-          .filter(message => message.value)
-          .map(message => message.id)
-          .concat(this.checkedMessages)
+        this.incrementCheckedMessages()
 
         const uri = `admin/api/v1/orders/messages/?page=${pageNumber}`
 
@@ -41,6 +41,15 @@
           this.totalOfMessages = response.data.size
           this.messages = response.data.results
           this.pagination = response.data.page
+        })
+      },
+      incrementCheckedMessages() {
+        return new Promise( (resolve, reject) => {
+          this.checkedMessages = this.messages
+            .filter(message => message.value)
+            .concat(this.checkedMessages)
+
+          resolve(this.checkedMessages)
         })
       },
       checkedMessagesClear() {
