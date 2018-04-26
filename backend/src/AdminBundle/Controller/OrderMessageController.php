@@ -199,11 +199,23 @@ class OrderMessageController extends AbstractController
                 'id' => $orderMessage->getId(),
                 'author' => $author,
                 'order' => $order,
-                'content' => $orderMessage->getContent(),
+                'content' => $this->decodeHtml($orderMessage->getContent()),
                 'isRead' => $isRead,
                 'createdAt' => $createDate
             ];
         }, $messageCollection);
+    }
+
+    /**
+     * @param $contentHtml
+     * @return string
+     */
+    private function decodeHtml($contentHtml)
+    {
+        $decodedHtml = html_entity_decode($contentHtml);
+        $decodedHtml = strip_tags($decodedHtml);
+
+        return $decodedHtml;
     }
 
     /**
