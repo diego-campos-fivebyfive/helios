@@ -15,7 +15,7 @@
           Checkbox(:field='includeCheckedState(message)')
         td.col-reference
           a(:href='linkOrder(message)')
-          | {{ message.order.reference || 'Visualizar' }}
+            | {{ message.order.reference || 'Visualizar' }}
         td.col-author {{ message.author.name }}
         td.col-content(v-html='message.content')
         td.col-date {{ formatDate(message.createdAt) }}
