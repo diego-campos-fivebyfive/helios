@@ -14,7 +14,8 @@
         td.col-checkbox
           Checkbox(:field='includeCheckedState(message)')
         td.col-reference
-          a(:href='linkOrder(message)') {{ message.order.reference || 'Visualizar' }}
+          a(:href='linkOrder(message)')
+          | {{ message.order.reference || 'Visualizar' }}
         td.col-author {{ message.author.name }}
         td.col-content(v-html='message.content')
         td.col-date {{ formatDate(message.createdAt) }}
@@ -32,8 +33,9 @@
       Checkbox
     },
     methods: {
-      formatDate(value) {
-        return this.$moment(value, 'YYYY-MM-DD').format('DD/MM/YYYY')
+      formatDate(date) {
+        const moment = this.$moment(date, 'YYYY-MM-DD, hh:mm a')
+        return moment.format('DD/MM/YYYY, hh:mm a')
       },
       includeCheckedState(message) {
         const checked = this.checkedMessages
