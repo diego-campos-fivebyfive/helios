@@ -23,6 +23,14 @@
     .delete-message {
         cursor: pointer;
     }
+    [placeholder]:empty:before {
+        content: attr(placeholder);
+        color: #555;
+    }
+
+    [placeholder]:empty:focus:before {
+        content: "";
+    }
 </style>
 
 <div id="list_messages" style="padding-top: 10px"></div>
@@ -50,7 +58,7 @@
                     <div  class="mentions-before">
                         <ul id="note-list" class="mentions-list"></ul>
                     </div>
-                    <div id="note" class="mention-editable margin-bottom"></div>
+                    <div id="note" class="mention-editable margin-bottom" placeholder="Nota"></div>
 
                     <input id="restricted" type="hidden" value="restricted">
                     <button type="submit" class="btn btn-warning pull-right" ><i class="fa fa-send"></i> Enviar</button>
@@ -216,5 +224,14 @@
     };
 
     Message.init();
+
+    jQuery(function($){
+        $("#note").focusout(function(){
+            var element = $(this);
+            if (!element.text().trim().length) {
+                element.empty();
+            }
+        });
+    });
 
 </script>
