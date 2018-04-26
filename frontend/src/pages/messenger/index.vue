@@ -59,7 +59,7 @@
           this.$set(message, 'value', false)
         ))
 
-        this.getMessages(this.pagination.current)
+        this.getMessages()
       }
     },
     mounted() {
