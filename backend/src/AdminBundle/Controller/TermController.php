@@ -65,6 +65,26 @@ class TermController extends AbstractController
     }
 
     /**
+     * @Route("/{id}", name="create_term")
+     * @Method("put")
+     */
+    public function putTermAction(Request $request, Term $term)
+    {
+        /** @var TermManager $termManager */
+        $termManager = $this->get('term_manager');
+
+        $data = json_decode($request->getContent(), true);
+
+        $term->setTitle($data['title']);
+        $term->setUrl($data['url']);
+        $term->setUpdatedAt(new \DateTime($data['updatedAt']));
+
+        $termManager->save($term);
+
+        return $this->json();
+    }
+
+    /**
     * @param $termCollection
     * @return array
     */
