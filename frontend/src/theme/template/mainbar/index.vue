@@ -2,6 +2,7 @@
   header.bar
     h1.title {{ getPageTitle }}
     h2.info {{ date }}
+    NotifierOfMessage.menu
     nav.menu
       Button(
         type='default-common',
@@ -13,6 +14,8 @@
 </template>
 
 <script>
+  import NotifierOfMessage from '@/pages/messenger/NotifierOfMessage'
+
   const getDate = () => {
     const months = [
       'janeiro',
@@ -52,6 +55,9 @@
     data: () => ({
       date: ''
     }),
+    components: {
+      NotifierOfMessage
+    },
     computed: {
       getPageTitle() {
         return this.$router.history.current.name
