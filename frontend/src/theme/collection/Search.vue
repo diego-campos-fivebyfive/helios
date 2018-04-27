@@ -1,7 +1,9 @@
 <template lang="pug">
-  form.collection-search
-    input.collection-search-input
+  form.collection-search(
+    v-on:keypress.enter.prevent='search')
+    input.collection-search-input(v-model='termSearch')
     Button.collection-search-button(
+      v-on:click.native='search',
       type='primary-common',
       label='Pesquisar',
       pos='last')
@@ -11,8 +13,28 @@
   import Button from '@/theme/collection/Button'
 
   export default {
+    props: [
+      'getMessages',
+      'incrementParams'
+    ],
+    data: () => ({
+      termSearch: ''
+    }),
     components: {
       Button
+    },
+    methods: {
+      search() {
+        this.incrementSearch()
+        this.getMessages()
+      },
+      incrementSearch() {
+        return new Promise(resolve => {
+          this.incrementParams(this.termSearch)
+
+          resolve('success')
+        })
+      }
     }
   }
 </script>
