@@ -1,11 +1,27 @@
 <template lang="pug">
   a.notify-message(href='/messenger')
     Icon.notify-message-icon(name='envelope')
-    label.notify-message-label 01
+    label.notify-message-label(v-if='totalOfMessages')
+      | {{ totalOfMessages }}
 </template>
 
 <script>
   export default {
+    data: () => ({
+      totalOfMessages: null
+    }),
+    methods: {
+      unreadMessageCount() {
+        const uri = '/admin/api/v1/orders/messages/unread_count'
+
+        this.axios.get(uri).then(response => {
+          this.totalOfMessages = response.data.unreadMessages
+        })
+      }
+    },
+    mounted() {
+      this.unreadMessageCount()
+    }
   }
 </script>
 
