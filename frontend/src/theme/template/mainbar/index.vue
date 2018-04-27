@@ -57,13 +57,9 @@
       date: '',
       totalOfMessages: null
     }),
-    methods: {
-      unreadMessageCount() {
-        const uri = '/admin/api/v1/orders/messages/unread_count'
-
-        this.axios.get(uri).then(response => {
-          this.totalOfMessages = response.data.unreadMessages
-        })
+    sockets: {
+      updateTotalOfMessages(data) {
+        this.totalOfMessages = this.totalOfMessages + data
       }
     },
     computed: {
@@ -72,11 +68,7 @@
       }
     },
     mounted() {
-      setInterval(() => {
-        this.date = getDate()
-      }, 500)
-
-      this.unreadMessageCount()
+      this.date = getDate()
     }
   }
 </script>
