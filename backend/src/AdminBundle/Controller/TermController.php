@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 class TermController extends AbstractController
 {
     /**
-     * @Route("/", name="list_order_messages_to")
+     * @Route("/", name="list_terms")
      * @Method("get")
      */
     public function getTermsAction(Request $request)
