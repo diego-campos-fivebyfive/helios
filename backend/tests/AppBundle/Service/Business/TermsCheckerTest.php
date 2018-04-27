@@ -33,6 +33,9 @@ class TermsCheckerTest extends WebTestCase
         /** @var TermInterface $term2 */
         $term2 = $this->createTerm('now');
 
+        /** @var TermInterface $term2 */
+        $term2 = $this->createTerm('2019-01-01');
+
         /** @var TermsChecker $checker */
         $checker = $this->getContainer()->get('terms_checker');
 
@@ -43,7 +46,7 @@ class TermsCheckerTest extends WebTestCase
 
         self::assertEquals(2, count($terms));
         $all = $checker->synchronize($terms)->all();
-        self::assertEquals(3, count($all));
+        self::assertEquals(4, count($all));
         self::assertEquals(3, count($terms));
 
         $terms = [

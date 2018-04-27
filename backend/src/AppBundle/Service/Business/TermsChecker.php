@@ -49,14 +49,15 @@ class TermsChecker
     {
         /** @var TermInterface $term */
         foreach ($this->allTerms as $term) {
-            /** @var \DateTime $date */
-            $date = $term->getUpdatedAt();
+            $timestamp = $term->getUpdatedAt()->getTimestamp();
             $id = $term->getId();
 
-            if (!array_key_exists($id, $terms)) {
-                $terms[$id] = ['checkedAt' => null];
-            } else {
-                if ($terms[$id]['checkedAt'] < $date->getTimestamp()) {
+            $currentTimestamp = (new \DateTime())->getTimestamp();
+
+            if ($timestamp <= $currentTimestamp) {
+                if (!array_key_exists($id, $terms)) {
+                    $terms[$id] = ['checkedAt' => null];
+                } else if ($terms[$id]['checkedAt'] <= $timestamp) {
                     $terms[$id]['checkedAt'] = null;
                 }
             }
