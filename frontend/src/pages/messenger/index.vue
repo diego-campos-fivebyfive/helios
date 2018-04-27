@@ -4,8 +4,8 @@
       slot(name='heading')
         h1.title Mensagens ({{ totalOfMessages }})
         Search(
-          :getMessages='getMessages',
-          :incrementParams='incrementParams')
+          ref='search',
+          :getMessages='getMessages')
       ActionBar.action-bar(
         slot='actions',
         :getMessages='getMessages',
@@ -29,7 +29,6 @@
     },
     data: () => ({
       checkedMessages: [],
-      paramsTerms: [],
       messages: [],
       pagination: {},
       totalOfMessages: ''
@@ -41,7 +40,7 @@
         const uri = `admin/api/v1/orders/messages/?page=${pageNumber}`
 
         const data = {
-          params: { searchTerm: this.paramsTerms }
+          params: { searchTerm: this.$refs.search.termSearch }
         }
 
         this.axios.get(uri, data).then(response => {
@@ -59,12 +58,8 @@
           resolve(this.checkedMessages)
         })
       },
-      incrementParams(params) {
-        this.paramsTerms = params
-      },
       clearCheckedMessages() {
         this.checkedMessages = []
-        this.paramsTerms = []
 
         this.messages.forEach(message => (
           this.$set(message, 'value', false)
