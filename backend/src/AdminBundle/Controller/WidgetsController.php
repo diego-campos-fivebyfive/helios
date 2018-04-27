@@ -66,10 +66,11 @@ class WidgetsController extends AdminController
         $today = new \DateTime;
 
         $status = $request->get('status');
-        if ($status == "null")
+        if ($status == "null") {
             $status = null;
-        else
+        } else {
             $status = array_merge(explode(",", $status));
+        }
 
         $group = $request->get('group', 'month');
         $year = $request->get('year', $today->format('Y'));
@@ -85,7 +86,7 @@ class WidgetsController extends AdminController
         $qb = $this->getOrderFilter();
 
         $qb
-            ->select('sum(o.total) as total, sum(o.power) as power, o.createdAt')
+            ->select('sum(o.total) as total, sum(o.power) as power, o.statusAt')
             ->groupBy('o.id')
         ;
 
@@ -106,11 +107,11 @@ class WidgetsController extends AdminController
         foreach ($orders as $order) {
 
             /** @var \DateTime $createdAt */
-            $createdAt = $order['createdAt'];
+            $statusAt = $order['statusAt'];
 
             $index = 'month' == $group
-                ? (int) $createdAt->format('d')
-                : (int) $createdAt->format('m');
+                ? (int) $statusAt->format('d')
+                : (int) $statusAt->format('m');
 
             $groups[$index]['count'] += 1;
             $groups[$index]['power'] += $order['power'];

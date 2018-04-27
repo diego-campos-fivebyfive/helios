@@ -2,6 +2,10 @@
   header.bar
     h1.title {{ getPageTitle }}
     h2.info {{ date }}
+    a.messages(href='/messenger')
+      Icon.messages-icon(name='envelope')
+      label.messages-label(v-if='totalOfMessages')
+        | {{ totalOfMessages }}
     nav.menu
       Button(
         type='default-common',
@@ -50,8 +54,18 @@
 
   export default {
     data: () => ({
-      date: ''
+      date: '',
+      totalOfMessages: null
     }),
+    methods: {
+      unreadMessageCount() {
+        const uri = '/admin/api/v1/orders/messages/unread_count'
+
+        this.axios.get(uri).then(response => {
+          this.totalOfMessages = response.data.unreadMessages
+        })
+      }
+    },
     computed: {
       getPageTitle() {
         return this.$router.history.current.name
@@ -61,6 +75,8 @@
       setInterval(() => {
         this.date = getDate()
       }, 500)
+
+      this.unreadMessageCount()
     }
   }
 </script>
@@ -100,5 +116,31 @@
 
   .menu {
     display: inline-block;
+  }
+
+  .messages {
+    margin-right: 0.75rem;
+
+    .messages-icon {
+      display: inline-block;
+      z-index: 1;
+    }
+
+    .messages-label {
+      background-color: $ui-orange-light;
+      border-radius: 0.25rem;
+      color: $ui-white-regular;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.25rem;
+      position: absolute;
+      right: 7.75rem;
+      top: 0.8rem;
+      z-index: 2;
+    }
+  }
+
+  a {
+    color: $ui-gray-regular;
   }
 </style>
