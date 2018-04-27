@@ -70,20 +70,20 @@ class TermsChecker
     /**
      * @return array
      */
-    public function unchecked()
+    public function checked()
     {
         return array_filter($this->terms, function ($term) {
-            return empty($term['checkedAt']);
+            return !empty($term['checkedAt']);
         });
     }
 
     /**
      * @return array
      */
-    public function checked()
+    public function unchecked()
     {
         return array_filter($this->terms, function ($term) {
-            return !empty($term['checkedAt']);
+            return empty($term['checkedAt']);
         });
     }
 
