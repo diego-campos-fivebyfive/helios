@@ -65,6 +65,20 @@ class TermController extends AbstractController
     }
 
     /**
+     * @Route("/{id}", name="delete_term")
+     * @Method("delete")
+     */
+    public function deleteTermAction(Term $term)
+    {
+        /** @var TermManager $termManager */
+        $termManager = $this->get('term_manager');
+
+        $termManager->delete($term);
+
+        return $this->json();
+    }
+
+    /**
     * @param $termCollection
     * @return array
     */
