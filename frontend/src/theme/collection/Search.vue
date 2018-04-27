@@ -1,7 +1,9 @@
 <template lang="pug">
-  form.collection-search
-    input.collection-search-input
+  form.collection-search(
+    v-on:keypress.enter.prevent='')
+    input.collection-search-input(v-model='termSearch')
     Button.collection-search-button(
+      v-on:click.native='$emit("updateList")',
       type='primary-common',
       label='Pesquisar',
       pos='last')
@@ -11,6 +13,9 @@
   import Button from '@/theme/collection/Button'
 
   export default {
+    data: () => ({
+      termSearch: ''
+    }),
     components: {
       Button
     }
