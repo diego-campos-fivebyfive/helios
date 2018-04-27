@@ -5,7 +5,7 @@
         h1.title Mensagens ({{ totalOfMessages }})
         Search(
           ref='search',
-          :getMessages='getMessages')
+          v-on:updateList='getMessages')
       ActionBar.action-bar(
         slot='actions',
         :getMessages='getMessages',
@@ -40,7 +40,9 @@
         const uri = `admin/api/v1/orders/messages/?page=${pageNumber}`
 
         const data = {
-          params: { searchTerm: this.$refs.search.termSearch }
+          params: {
+            searchTerm: this.$refs.search.termSearch
+          }
         }
 
         this.axios.get(uri, data).then(response => {
