@@ -48,6 +48,11 @@ class OrderMessageController extends AbstractController
 
         $qb2->andWhere($qb2->expr()->like('m.to', ':memberId'));
         $qb2->orWhere($qb2->expr()->in('m.order', $ids));
+        $qb2->innerJoin('m.order', 'o');
+        $qb2->innerJoin('m.author', 'c');
+
+        $this->filterMessages($request, $qb2);
+
         $qb2->andWhere($qb2->expr()->eq('m.restricted', true));
         $qb2->setParameter('memberId', '%"' . $this->member()->getId() . '"%');
         $qb2->orderBy('m.createdAt', 'DESC');
@@ -156,6 +161,26 @@ class OrderMessageController extends AbstractController
         }
 
         return $this->json([]);
+    }
+
+    /**
+     * @param Request $request
+     * @param QueryBuilder $qb
+     */
+    private function filterMessages(Request $request, QueryBuilder &$qb)
+    {
+        $searchTerm = $request->get('searchTerm');
+
+        if (!is_null($searchTerm)) {
+            $qb->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->like('m.content', ':searchTerm'),
+                    $qb->expr()->like('o.reference', ':searchTerm'),
+                    $qb->expr()->like('c.firstname', ':searchTerm')
+                )
+            );
+            $qb->setParameter('searchTerm', '%' . $searchTerm . '%');
+        }
     }
 
     /**
