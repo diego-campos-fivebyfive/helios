@@ -3,10 +3,10 @@
     v-on:keypress.enter.prevent='search')
     input.collection-search-input(v-model='termSearch')
     Button.collection-search-button(
-      v-on:click.native='search',
       type='primary-common',
       label='Pesquisar',
-      pos='last')
+      pos='last',
+      v-on:click.native='search')
 </template>
 
 <script>
@@ -14,8 +14,7 @@
 
   export default {
     props: [
-      'getMessages',
-      'incrementParams'
+      'getMessages'
     ],
     data: () => ({
       termSearch: ''
@@ -25,15 +24,7 @@
     },
     methods: {
       search() {
-        this.incrementSearch()
         this.getMessages()
-      },
-      incrementSearch() {
-        return new Promise(resolve => {
-          this.incrementParams(this.termSearch)
-
-          resolve('success')
-        })
       }
     }
   }
