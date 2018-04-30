@@ -3,6 +3,7 @@
     div(slot='header')
       slot(name='heading')
         h1.title Mensagens ({{ totalOfMessages }})
+          h2.sub Não lidas (x)
         Search(
           ref='search',
           v-on:updateList='getMessages')
@@ -78,6 +79,6 @@
 
 <style lang="scss" scoped>
   .action-bar {
-    margin-top: 1.5rem;
+    margin-top: 3rem;
   }
 </style>
