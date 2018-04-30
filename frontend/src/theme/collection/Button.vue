@@ -39,16 +39,45 @@
     &.primary-common {
       background-color: $ui-blue-light;
       color: $ui-white-regular;
+
+      &:hover {
+        background-color: $ui-blue-dark;
+      }
+
+      &:active {
+        box-shadow:
+          inset 3px 3px 3px $ui-blue-darken;
+      }
     }
 
     &.primary-strong {
       background-color: $ui-blue-dark;
       color: $ui-white-regular;
+
+      &:hover {
+        background-color: $ui-blue-darken;
+      }
+
+      &:active {
+        box-shadow:
+          inset 1px 1px 4px $ui-blue-darken,
+          inset -1px -1px 4px $ui-blue-darken;
+      }
     }
 
     &.danger-common {
       background-color: $ui-red-lighter;
       color: $ui-white-regular;
+
+      &:hover {
+        background-color: $ui-red-light;
+      }
+
+      &:active {
+        box-shadow:
+          inset 1px 1px 4px $ui-red-dark,
+          inset -1px -1px 4px $ui-red-dark;
+      }
     }
 
     &.default-common {
@@ -60,6 +89,17 @@
       background-color: $ui-white-regular;
       border: 1px solid $ui-gray-light;
       color: $ui-text-main;
+
+      &:hover {
+        background-color: $ui-gray-light;
+        border-color: $ui-gray-light;
+      }
+
+      &:active {
+        box-shadow:
+          inset 1px 1px 4px $ui-gray-regular,
+          inset -1px -1px 4px $ui-gray-regular;
+      }
     }
 
     &.labeled {
