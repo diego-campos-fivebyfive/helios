@@ -64,7 +64,7 @@ class TermController extends AbstractController
      * @Route("/agree/{id}", name="agree_term_account")
      * @Method("post")
      */
-    public function getAgreeTermAction(Term $term) {
+    public function postAgreeTermAction(Term $term) {
         $account = $this->account();
 
         $accountTerms = $account->getTerms() ? $account->getTerms() : [];
@@ -73,6 +73,13 @@ class TermController extends AbstractController
         $accountManager = $this->get('account_manager');
 
         $currentTimestamp = (new \DateTime())->getTimestamp();
+
+        /** @var TermsChecker $termChecker */
+        $termChecker = $this->get('terms_checker');
+
+        $uncheckedTerms = $termChecker->synchronize($accountTerms)->unchecked();
+
+        dump($uncheckedTerms);die();
 
         $accountTerms[$term->getId()] = $currentTimestamp;
 
