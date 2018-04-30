@@ -55,9 +55,7 @@ class TermsChecker
             $currentTimestamp = (new \DateTime())->getTimestamp();
 
             if ($timestamp <= $currentTimestamp) {
-                if (!array_key_exists($id, $terms)) {
-                    $terms[$id] = [null];
-                } else if ($terms[$id] <= $timestamp) {
+                if (!array_key_exists($id, $terms) || $terms[$id] <= $timestamp) {
                     $terms[$id] = null;
                 }
             }
