@@ -79,6 +79,8 @@ class TermController extends AbstractController
         $account->setTerms($accountTerms);
 
         $accountManager->save($account);
+
+        return $this->json([]);
     }
 
     /**
