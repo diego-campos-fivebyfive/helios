@@ -3,6 +3,9 @@
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
+$currentDir = dirname(__FILE__);
+require_once $currentDir . '/helpers/logger.php';
+
 require_once(dirname(__FILE__) . '/config/functions.php');
 getAutoload();
 
@@ -74,12 +77,15 @@ function executeSQL($sql)
 
 /**
  * @param array $config
+ * @return bool
  */
 function normalizeLevels(array $config)
 {
     if(!array_key_exists('levels', $config)) {
         return false;
     }
+
+    $beforeProccess = countAccounts();
 
     normalizeConfig($config);
 
@@ -158,9 +164,60 @@ WHERE c.id %s (
         executeSQL($updateSQL);
     }
 
+    $afterProccess = countAccounts();
+
+    slackNotify($beforeProccess, $afterProccess);
+
     return true;
 }
 
+/**
+ * @param $beforeProccess
+ * @param $afterProccess
+ */
+function slackNotify($beforeProccess, $afterProccess)
+{
+    $message = formatMessage($beforeProccess, $afterProccess);
+
+    $context = "account-levels";
+    createLog($context, sprintf('%s: ' . $message, strtoupper($context)));
+}
+
+/**
+ * @param $beforeProccess
+ * @param $afterProccess
+ * @return string
+ */
+function formatMessage($beforeProccess, $afterProccess)
+{
+    $message = '\nInformações dos níveis de contas:\n';
+
+    function formatArray($array, &$message) {
+        $arrayKeys = array_keys($array);
+
+        for ($i = 0; $i < count($array); $i++) {
+            $level = $arrayKeys[$i];
+            $total = $array[$level];
+
+            $endLine = ($i == count($array) - 1) ? '\n' : ',\n';
+            $messageLevel = '_'.$level.'_: '.$total.$endLine;
+
+            $message .= $messageLevel;
+        }
+    }
+
+    $message .= '*Antes:*\n';
+    formatArray($beforeProccess, $message);
+
+    $message .= '*Depois:*\n';
+    formatArray($afterProccess, $message);
+
+    return $message;
+}
+
+/**
+ * @return array
+ */
 function countAccounts()
 {
     $sql = "SELECT a.level as level, COUNT(a.id) as total
