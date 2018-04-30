@@ -39,7 +39,7 @@ class Term implements TermInterface {
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="published_at", type="datetime", nullable=true)
+     * @ORM\Column(name="published_at", type="datetime")
      */
     private $publishedAt;
 

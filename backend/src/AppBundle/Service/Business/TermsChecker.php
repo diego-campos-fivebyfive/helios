@@ -49,7 +49,7 @@ class TermsChecker
     {
         /** @var TermInterface $term */
         foreach ($this->allTerms as $term) {
-            $timestamp = $term->getUpdatedAt()->getTimestamp();
+            $timestamp = $term->getPublishedAt()->getTimestamp();
             $id = $term->getId();
 
             $currentTimestamp = (new \DateTime())->getTimestamp();

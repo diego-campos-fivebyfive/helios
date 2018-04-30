@@ -114,9 +114,9 @@ class TermController extends AbstractController
     {
         return array_map(function(Term $term) {
             /** @var \DateTime $createdAt */
-            $createdAt = $term->getCreatedAt()->format('Y-m-d H:i:s ');
-            $updatedAt = $term->getUpdatedAt()->format('Y-m-d H:i:s ');
-            $publishedAt = $term->getPublishedAt()->format('Y-m-d H:i:s ');
+            $createdAt = $term->getCreatedAt()->format('Y-m-d H:i:s');
+            $updatedAt = $term->getUpdatedAt()->format('Y-m-d H:i:s');
+            $publishedAt = $term->getPublishedAt()->format('Y-m-d H:i:s');
 
             return [
                 'id' => $term->getId(),
