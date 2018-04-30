@@ -3,6 +3,9 @@
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
+require_once(dirname(__FILE__) . '/config/functions.php');
+getAutoload();
+
 /**
  * Este script efetua o procedimento de alteração de nível das contas
  * com base nos orçamentos dentro dos parâmetros definidos.
@@ -156,6 +159,23 @@ WHERE c.id %s (
     }
 
     return true;
+}
+
+function countAccounts()
+{
+    $sql = "SELECT a.level as level, COUNT(a.id) as total
+    FROM app_customer a
+    WHERE a.context = 'account'
+    GROUP BY a.level;";
+
+    $result = [];
+    $rows = R::getAll($sql);
+
+    foreach ($rows as $row) {
+        $result[$row['level']] = intval($row['total']);
+    }
+
+    return $result;
 }
 
 if(normalizeLevels($config)){
