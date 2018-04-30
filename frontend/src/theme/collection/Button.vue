@@ -45,8 +45,7 @@
       }
 
       &:active {
-        box-shadow:
-          inset 3px 3px 3px $ui-blue-darken;
+        box-shadow: inset 3px 3px 3px $ui-blue-darken;
       }
     }
 
