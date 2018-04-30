@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Term;
+use AppBundle\Manager\AccountManager;
 use AppBundle\Manager\TermManager;
 use AppBundle\Service\Business\TermsChecker;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,6 +58,29 @@ class TermController extends AbstractController
         }
 
         return $this->json($data, Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/agree/{id}", name="agree_term_account")
+     * @Method("post")
+     */
+    public function postAgreeTermAction(Term $term) {
+        $account = $this->account();
+
+        $accountTerms = $account->getTerms() ? $account->getTerms() : [];
+
+        /** @var AccountManager $accountManager */
+        $accountManager = $this->get('account_manager');
+
+        $currentTimestamp = (new \DateTime())->getTimestamp();
+
+        $accountTerms[$term->getId()] = $currentTimestamp;
+
+        $account->setTerms($accountTerms);
+
+        $accountManager->save($account);
+
+        return $this->json([]);
     }
 
     /**
