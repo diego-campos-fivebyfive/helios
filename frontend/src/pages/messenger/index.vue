@@ -3,7 +3,9 @@
     div(slot='header')
       slot(name='heading')
         h1.title Mensagens ({{ totalOfMessages }})
-        Search
+        Search(
+          ref='search',
+          v-on:updateList='getMessages')
       ActionBar.action-bar(
         slot='actions',
         :getMessages='getMessages',
@@ -37,7 +39,13 @@
 
         const uri = `admin/api/v1/orders/messages/?page=${pageNumber}`
 
-        this.axios.get(uri).then(response => {
+        const data = {
+          params: {
+            searchTerm: this.$refs.search.termSearch
+          }
+        }
+
+        this.axios.get(uri, data).then(response => {
           this.totalOfMessages = response.data.size
           this.messages = response.data.results
           this.pagination = response.data.page

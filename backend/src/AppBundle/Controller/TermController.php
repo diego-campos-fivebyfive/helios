@@ -1,10 +1,11 @@
 <?php
 
-namespace AdminBundle\Controller;
+namespace AppBundle\Controller;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Term;
 use AppBundle\Manager\TermManager;
+use AppBundle\Service\Business\TermsChecker;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -12,14 +13,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Security("user.isPlatform()")
  *
  * @Route("/api/v1/terms")
  */
 class TermController extends AbstractController
 {
     /**
-     * @Route("/", name="list_terms")
+     * @Route("/", name="list_terms_account")
      * @Method("get")
      */
     public function getTermsAction(Request $request)
@@ -29,6 +29,15 @@ class TermController extends AbstractController
 
         $qb = $termManager->createQueryBuilder();
 
+        $qb->andWhere('DATE_DIFF(t.updatedAt, CURRENT_DATE()) <= 0');
+
+        $accountTerms = $this->account()->getTerms() ? $this->account()->getTerms() : [];
+
+        /** @var TermsChecker $termChecker */
+        $termChecker = $this->get('terms_checker');
+
+        $uncheckedTerms = $termChecker->synchronize($accountTerms)->unchecked();
+
         $itemsPerPage = 10;
         $pagination = $this->getPaginator()->paginate(
             $qb->getQuery(),
@@ -37,71 +46,23 @@ class TermController extends AbstractController
 
         $data = $this->formatCollection($pagination);
 
+        $terms = $data['results'];
+        /** @var Term $term */
+        foreach ($terms as $key => $term) {
+            if (array_key_exists($term['id'], $uncheckedTerms)) {
+                $data['results'][$key]['isAgree'] = false;
+            } else {
+                $data['results'][$key]['isAgree'] = true;
+            }
+        }
+
         return $this->json($data, Response::HTTP_OK);
     }
 
     /**
-     * @Route("/", name="create_term")
-     * @Method("post")
-     */
-    public function postTermAction(Request $request)
-    {
-        /** @var TermManager $termManager */
-        $termManager = $this->get('term_manager');
-
-        $data = json_decode($request->getContent(), true);
-
-        /** @var Term $term */
-        $term = $termManager->create();
-
-        $term->setTitle($data['title']);
-        $term->setUrl($data['url']);
-        $term->setUpdatedAt(new \DateTime($data['updatedAt']));
-        $term->setCreatedAt(new \DateTime());
-
-        $termManager->save($term);
-
-        return $this->json();
-    }
-
-    /**
-     * @Route("/{id}", name="create_term")
-     * @Method("put")
-     */
-    public function putTermAction(Request $request, Term $term)
-    {
-        /** @var TermManager $termManager */
-        $termManager = $this->get('term_manager');
-
-        $data = json_decode($request->getContent(), true);
-
-        $term->setTitle($data['title']);
-        $term->setUrl($data['url']);
-        $term->setUpdatedAt(new \DateTime($data['updatedAt']));
-
-        $termManager->save($term);
-
-        return $this->json();
-    }
-
-    /**
-     * @Route("/{id}", name="delete_term")
-     * @Method("delete")
-     */
-    public function deleteTermAction(Term $term)
-    {
-        /** @var TermManager $termManager */
-        $termManager = $this->get('term_manager');
-
-        $termManager->delete($term);
-
-        return $this->json();
-    }
-
-    /**
-     * @param $termCollection
-     * @return array
-     */
+    * @param $termCollection
+    * @return array
+    */
     private function formatEntity($termCollection)
     {
         return array_map(function(Term $term) {
