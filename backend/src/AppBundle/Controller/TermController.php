@@ -113,8 +113,8 @@ class TermController extends AbstractController
     private function formatEntity($termCollection)
     {
         return array_map(function(Term $term) {
-            /** @var \DateTime $createDate */
-            $createDate = $term->getCreatedAt()->format('Y-m-d H:i:s');
+            /** @var \DateTime $createdDate */
+            $createdDate = $term->getCreatedAt()->format('Y-m-d H:i:s');
             $updatedAt = $term->getUpdatedAt()->format('Y-m-d H:i:s');
             $publishedAt = $term->getPublishedAt()->format('Y-m-d H:i:s');
 
@@ -124,7 +124,7 @@ class TermController extends AbstractController
                 'url' => $term->getUrl(),
                 'publishedAt' => $publishedAt,
                 'updatedAt' => $updatedAt,
-                'createdAt' => $createDate
+                'createdAt' => $createdDate
             ];
         }, $termCollection);
     }
