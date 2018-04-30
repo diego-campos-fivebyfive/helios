@@ -101,6 +101,7 @@
             method: 'post',
             success: function (response) {
                 getTags();
+                doReload = true;
             }
         })
     });
@@ -118,6 +119,7 @@
             method: 'delete',
             success: function (response) {
                 getTags();
+                doReload = true;
             }
         })
     });
