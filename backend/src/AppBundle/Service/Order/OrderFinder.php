@@ -250,7 +250,8 @@ class OrderFinder
             if (array_key_exists('like', $filter) && null != $filter['like']) {
 
                 $expressions = [];
-                foreach ($this->likes as $field) {
+                $likes = array_key_exists('likes', $filter) && null != $filter['likes'] ? $filter['likes'] : $this->likes;
+                foreach ($likes as $field) {
                     $expressions[] = $qb->expr()->like($field, $qb->expr()->literal('%' . $filter['like'] . '%'));
                 }
 
