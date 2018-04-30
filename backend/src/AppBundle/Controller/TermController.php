@@ -64,7 +64,8 @@ class TermController extends AbstractController
      * @Route("/agree/{id}", name="agree_term_account")
      * @Method("post")
      */
-    public function postAgreeTermAction(Term $term) {
+    public function postAgreeTermAction(Term $term)
+    {
         $account = $this->account();
 
         $accountTerms = $account->getTerms() ? $account->getTerms() : [];
@@ -75,6 +76,28 @@ class TermController extends AbstractController
         $currentTimestamp = (new \DateTime())->getTimestamp();
 
         $accountTerms[$term->getId()] = $currentTimestamp;
+
+        $account->setTerms($accountTerms);
+
+        $accountManager->save($account);
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/disagree/{id}", name="disagree_term_account")
+     * @Method("post")
+     */
+    public function postDisagreeTermAction(Term $term)
+    {
+        $account = $this->account();
+
+        $accountTerms = $account->getTerms() ? $account->getTerms() : [];
+
+        /** @var AccountManager $accountManager */
+        $accountManager = $this->get('account_manager');
+
+        $accountTerms[$term->getId()] = null;
 
         $account->setTerms($accountTerms);
 
