@@ -490,9 +490,12 @@
             });
         });
 
+        var doReload = false;
         ModalTags.on('hidden.bs.modal', function () {
-            location.reload();
-        })
+            if (doReload) {
+                location.reload();
+            }
+        });
 
         var modalFiles = $('#modal_files');
 
