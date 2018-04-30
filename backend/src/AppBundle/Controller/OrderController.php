@@ -115,12 +115,18 @@ class OrderController extends AbstractController
             ];
         }
 
+        $manager = $this->manager('parameter');
+
+        /** @var Parameter $parameter */
+        $parameter = $manager->findOrCreate('platform_settings');
+
         return $this->render('admin/orders/show.html.twig', array(
             'order' => $order,
             'expired' => $expired,
             'timeline' => $this->get('order_timeline')->load($order),
             'files' => $files,
-            'buttons' => $this->getButtons($order, $expired)
+            'buttons' => $this->getButtons($order, $expired),
+            'couponOrderRescue' => $parameter->get('coupon_order_rescue')
         ));
     }
 
