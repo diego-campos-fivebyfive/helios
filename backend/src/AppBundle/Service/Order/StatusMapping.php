@@ -77,6 +77,24 @@ class StatusMapping
     const BILLING = UserInterface::ROLE_PLATFORM_BILLING;
     const EXPEDITION = UserInterface::ROLE_PLATFORM_EXPEDITION;
 
+    // MESSAGES
+    const MSG_SEND_REQUEST = "Enviar solicitação para SICES";
+    const MSG_VALIDATE = "Validar Orçamento";
+    const MSG_CANCEL = "Cancelar Orçamento";
+    const MSG_REMOVE_VALIDATION = "Remover Validação";
+    const MSG_APPROVE = "Aprovar Orçamento";
+    const MSG_PAYMENT_CONFIRMED = "Pagamento Confirmado";
+    const MSG_BILLED = "Faturado";
+    const MSG_AVAILABLE = "Coleta Disponível";
+    const MSG_COLLECTED = "Coletado";
+    const MSG_START_PRODUCTION = "Iniciar Produção";
+    const MSG_RESERVE_PRODUCTION = "Iniciar Produção de Reserva";
+    const MSG_PRODUCTION_COMPLETED = "Produção Concluída";
+    const MSG_CONFIRM_RESERVATION = "Confirmar Reserva";
+    const MSG_AWAITING_MATERIAL = "Aguardando Material";
+    const MSG_REMOVE_CONFIRMATION = "Remover Confirmação";
+
+
     /**
      * PARAMETERS:
      *
@@ -136,7 +154,7 @@ class StatusMapping
                         self::NULL => [
                             self::ACCOUNT
                         ],
-                        self::ACTION => self::mountAction('Enviar solicitação para SICES', self::STYLE_WARNING, true)
+                        self::ACTION => self::mountAction(self::MSG_SEND_REQUEST, self::STYLE_WARNING, true)
                     ],
                     self::VALIDATED => [
                         self::NULL => [
@@ -146,7 +164,7 @@ class StatusMapping
                                 self::COMMERCIAL
                             ]
                         ],
-                        self::ACTION => self::mountAction('Validar Orçamento', self::STYLE_SUCCESS, true)
+                        self::ACTION => self::mountAction(self::MSG_VALIDATE, self::STYLE_SUCCESS, true)
                     ]
                 ]
             ],
@@ -169,7 +187,7 @@ class StatusMapping
                                 self::COMMERCIAL
                             ]
                         ],
-                        self::ACTION => self::mountAction('Validar Orçamento', self::STYLE_SUCCESS, true)
+                        self::ACTION => self::mountAction(self::MSG_VALIDATE, self::STYLE_SUCCESS, true)
                     ],
                     self::REJECTED => [
                         self::NULL => [
@@ -179,7 +197,7 @@ class StatusMapping
                                 self::COMMERCIAL
                             ]
                         ],
-                        self::ACTION => self::mountAction('Cancelar Orçamento', self::STYLE_ORANGE)
+                        self::ACTION => self::mountAction(self::MSG_CANCEL, self::STYLE_ORANGE)
                     ]
                 ]
             ],
@@ -199,13 +217,13 @@ class StatusMapping
                                 self::EXPANSE
                             ]
                         ],
-                        self::ACTION => self::mountAction('Remover Validação', self::STYLE_SUCCESS)
+                        self::ACTION => self::mountAction(self::MSG_REMOVE_VALIDATION, self::STYLE_SUCCESS)
                     ],
                     self::APPROVED => [
                         self::NULL => [
                             self::ACCOUNT
                         ],
-                        self::ACTION => self::mountAction('Aprovar Orçamento', self::STYLE_GREEN)
+                        self::ACTION => self::mountAction(self::MSG_APPROVE, self::STYLE_GREEN)
                     ],
                     self::REJECTED => [
                         self::NULL => [
@@ -216,7 +234,7 @@ class StatusMapping
                                 self::COMMERCIAL
                             ]
                         ],
-                        self::ACTION => self::mountAction('Cancelar Orçamento', self::STYLE_ORANGE)
+                        self::ACTION => self::mountAction(self::MSG_CANCEL, self::STYLE_ORANGE)
                     ]
                 ]
             ],
@@ -232,7 +250,7 @@ class StatusMapping
                                 self::FINANCING,
                             ]
                         ],
-                        self::ACTION => self::mountAction('Cancelar Orçamento', self::STYLE_ORANGE)
+                        self::ACTION => self::mountAction(self::MSG_CANCEL, self::STYLE_ORANGE)
                     ],
                     self::DONE => [
                         self::DONE_CONFIRMED => [
@@ -240,14 +258,14 @@ class StatusMapping
                                 self::FINANCIAL,
                                 self::FINANCING,
                             ],
-                            self::ACTION => self::mountAction('Pagamento Confirmado', self::STYLE_GREEN)
+                            self::ACTION => self::mountAction(self::MSG_PAYMENT_CONFIRMED, self::STYLE_GREEN)
                         ],
                         self::DONE_RESERVED => [
                             self::PLATFORM => [
                                 self::FINANCIAL,
                                 self::FINANCING,
                             ],
-                            self::ACTION => self::mountAction('Confirmar Reserva', self::STYLE_GREEN)
+                            self::ACTION => self::mountAction(self::MSG_CONFIRM_RESERVATION, self::STYLE_GREEN)
                         ]
                     ]
                 ]
@@ -261,7 +279,7 @@ class StatusMapping
                                 self::ADMIN,
                             ]
                         ],
-                        self::ACTION => self::mountAction('Cancelar Orçamento', self::STYLE_ORANGE)
+                        self::ACTION => self::mountAction(self::MSG_CANCEL, self::STYLE_ORANGE)
                     ],
                     self::APPROVED => [
                         self::NULL => [
@@ -270,7 +288,7 @@ class StatusMapping
                                 self::FINANCING,
                             ]
                         ],
-                        self::ACTION => self::mountAction('Remover Confirmação', self::STYLE_ORANGE)
+                        self::ACTION => self::mountAction(self::MSG_REMOVE_CONFIRMATION, self::STYLE_ORANGE)
                     ]
                 ],
                 self::DONE_CONFIRMED => [
@@ -280,7 +298,7 @@ class StatusMapping
                                 self::AFTER_SALES,
                             ]
                         ],
-                        self::ACTION => self::mountAction('Iniciar Produção', self::STYLE_GREEN)
+                        self::ACTION => self::mountAction(self::MSG_START_PRODUCTION, self::STYLE_GREEN)
                     ]
                 ],
                 self::DONE_RESERVED => [
@@ -290,7 +308,7 @@ class StatusMapping
                                 self::AFTER_SALES,
                             ]
                         ],
-                        self::ACTION => self::mountAction('Iniciar Produção de Reserva', self::STYLE_GREEN)
+                        self::ACTION => self::mountAction(self::MSG_RESERVE_PRODUCTION, self::STYLE_GREEN)
                     ]
                 ]
             ],
@@ -303,7 +321,7 @@ class StatusMapping
                                 self::ADMIN,
                             ]
                         ],
-                        self::ACTION => self::mountAction('Cancelar Orçamento', self::STYLE_ORANGE)
+                        self::ACTION => self::mountAction(self::MSG_CANCEL, self::STYLE_ORANGE)
                     ]
                 ],
                 self::INSERTED_PRODUCTION => [
@@ -312,13 +330,13 @@ class StatusMapping
                             self::PLATFORM => [
                                 self::LOGISTIC,
                             ],
-                            self::ACTION => self::mountAction('Aguardando Material', self::STYLE_ORANGE)
+                            self::ACTION => self::mountAction(self::MSG_AWAITING_MATERIAL, self::STYLE_ORANGE)
                         ],
                         self::INSERTED_ON_BILLING => [
                             self::PLATFORM => [
                                 self::LOGISTIC,
                             ],
-                            self::ACTION => self::mountAction('Produção Concluída', self::STYLE_GREEN)
+                            self::ACTION => self::mountAction(self::MSG_PRODUCTION_COMPLETED, self::STYLE_GREEN)
                         ]
                     ]
                 ],
@@ -328,13 +346,13 @@ class StatusMapping
                             self::PLATFORM => [
                                 self::LOGISTIC,
                             ],
-                            self::ACTION => self::mountAction('Aguardando Material', self::STYLE_ORANGE)
+                            self::ACTION => self::mountAction(self::MSG_AWAITING_MATERIAL, self::STYLE_ORANGE)
                         ],
                         self::INSERTED_WAITING_PAYMENT => [
                             self::PLATFORM => [
                                 self::LOGISTIC,
                             ],
-                            self::ACTION => self::mountAction('Produção Concluída', self::STYLE_GREEN)
+                            self::ACTION => self::mountAction(self::MSG_PRODUCTION_COMPLETED, self::STYLE_GREEN)
                         ]
                     ]
                 ],
@@ -347,7 +365,7 @@ class StatusMapping
                             self::PREVIOUS => [
                                 [self::INSERTED, self::INSERTED_RESERVED]
                             ],
-                            self::ACTION => self::mountAction('Produção Concluída', self::STYLE_GREEN)
+                            self::ACTION => self::mountAction(self::MSG_PRODUCTION_COMPLETED, self::STYLE_GREEN)
                         ],
                         self::INSERTED_ON_BILLING => [
                             self::PLATFORM => [
@@ -356,7 +374,7 @@ class StatusMapping
                             self::PREVIOUS => [
                                 [self::INSERTED, self::INSERTED_PRODUCTION]
                             ],
-                            self::ACTION => self::mountAction('Produção Concluída', self::STYLE_GREEN)
+                            self::ACTION => self::mountAction(self::MSG_PRODUCTION_COMPLETED, self::STYLE_GREEN)
                         ]
                     ]
                 ],
@@ -367,7 +385,7 @@ class StatusMapping
                                 self::AFTER_SALES,
                             ]
                         ],
-                        self::ACTION => self::mountAction('Pagamento Confirmado', self::STYLE_GREEN)
+                        self::ACTION => self::mountAction(self::MSG_PAYMENT_CONFIRMED, self::STYLE_GREEN)
                     ]
                 ],
                 self::INSERTED_ON_BILLING => [
@@ -377,7 +395,7 @@ class StatusMapping
                                 self::BILLING,
                             ]
                         ],
-                        self::ACTION => self::mountAction('Faturado', self::STYLE_GREEN)
+                        self::ACTION => self::mountAction(self::MSG_BILLED, self::STYLE_GREEN)
                     ]
                 ],
                 self::INSERTED_BILLED => [
@@ -387,7 +405,7 @@ class StatusMapping
                                 self::EXPEDITION,
                             ]
                         ],
-                        self::ACTION => self::mountAction('Coleta Disponível', self::STYLE_GREEN)
+                        self::ACTION => self::mountAction(self::MSG_AVAILABLE, self::STYLE_GREEN)
                     ]
                 ]
             ],
@@ -400,7 +418,7 @@ class StatusMapping
                                 self::ADMIN,
                             ]
                         ],
-                        self::ACTION => self::mountAction('Cancelar Orçamento', self::STYLE_ORANGE)
+                        self::ACTION => self::mountAction(self::MSG_CANCEL, self::STYLE_ORANGE)
                     ],
                     self::COLLECTED => [
                         self::NULL => [
@@ -408,7 +426,7 @@ class StatusMapping
                                 self::EXPEDITION,
                             ]
                         ],
-                        self::ACTION => self::mountAction('Coletado', self::STYLE_GREEN)
+                        self::ACTION => self::mountAction(self::MSG_COLLECTED, self::STYLE_GREEN)
                     ]
                 ]
             ],
@@ -421,7 +439,7 @@ class StatusMapping
                                 self::ADMIN,
                             ]
                         ],
-                        self::ACTION => self::mountAction('Cancelar Orçamento', self::STYLE_ORANGE)
+                        self::ACTION => self::mountAction(self::MSG_CANCEL, self::STYLE_ORANGE)
                     ]
                 ]
             ]
