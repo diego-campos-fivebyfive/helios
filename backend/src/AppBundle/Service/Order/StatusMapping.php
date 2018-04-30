@@ -91,7 +91,7 @@ class StatusMapping
     const MSG_RESERVE_PRODUCTION = "Iniciar Produção de Reserva";
     const MSG_PRODUCTION_COMPLETED = "Produção Concluída";
     const MSG_CONFIRM_RESERVATION = "Confirmar Reserva";
-    const MSG_AWAITING_MATERIAL = "Aguardando Material";
+    const MSG_WAITING_MATERIAL = "Aguardando Material";
     const MSG_REMOVE_CONFIRMATION = "Remover Confirmação";
 
 
@@ -330,7 +330,7 @@ class StatusMapping
                             self::PLATFORM => [
                                 self::LOGISTIC,
                             ],
-                            self::ACTION => self::mountAction(self::MSG_AWAITING_MATERIAL, self::STYLE_ORANGE)
+                            self::ACTION => self::mountAction(self::MSG_WAITING_MATERIAL, self::STYLE_ORANGE)
                         ],
                         self::INSERTED_ON_BILLING => [
                             self::PLATFORM => [
@@ -346,7 +346,7 @@ class StatusMapping
                             self::PLATFORM => [
                                 self::LOGISTIC,
                             ],
-                            self::ACTION => self::mountAction(self::MSG_AWAITING_MATERIAL, self::STYLE_ORANGE)
+                            self::ACTION => self::mountAction(self::MSG_WAITING_MATERIAL, self::STYLE_ORANGE)
                         ],
                         self::INSERTED_WAITING_PAYMENT => [
                             self::PLATFORM => [
