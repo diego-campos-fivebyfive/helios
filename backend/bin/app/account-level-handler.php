@@ -81,11 +81,11 @@ function executeSQL($sql)
  */
 function normalizeLevels(array $config)
 {
-    $beforeProccess = countAccounts();
-
     if(!array_key_exists('levels', $config)) {
         return false;
     }
+
+    $beforeProccess = countAccounts();
 
     normalizeConfig($config);
 
