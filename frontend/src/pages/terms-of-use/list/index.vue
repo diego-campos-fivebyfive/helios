@@ -3,8 +3,7 @@
     Confirm(ref='confirm', v-on:removeItem='removeTerm')
       div(slot='content')
         Icon.icon(name='question-circle-o', scale='4')
-        h2
-        | Confirma exclusão deste Termo?
+        h2.title Confirma exclusão deste Termo?
     Table.table(type='stripped')
       tr(slot='head')
         th.col-title Título
