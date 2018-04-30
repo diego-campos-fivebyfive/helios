@@ -88,7 +88,7 @@ class TermController extends AbstractController
      * @Route("/disagree/{id}", name="disagree_term_account")
      * @Method("post")
      */
-    public function postDsiagreeTermAction(Term $term)
+    public function postDisagreeTermAction(Term $term)
     {
         $account = $this->account();
 
