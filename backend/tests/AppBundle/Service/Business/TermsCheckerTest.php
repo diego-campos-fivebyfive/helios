@@ -76,8 +76,7 @@ class TermsCheckerTest extends WebTestCase
 
         $term->setTitle('termo x');
         $term->setUrl('www');
-        $term->setUpdatedAt(new \DateTime($date));
-        $term->setCreatedAt(new \DateTime());
+        $term->setPublishedAt(new \DateTime($date));
 
         $manager->save($term);
 
