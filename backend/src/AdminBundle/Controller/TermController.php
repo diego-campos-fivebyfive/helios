@@ -21,6 +21,8 @@ class TermController extends AbstractController
     /**
      * @Route("/", name="list_terms")
      * @Method("get")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function getTermsAction(Request $request)
     {
@@ -43,6 +45,8 @@ class TermController extends AbstractController
     /**
      * @Route("/", name="create_term")
      * @Method("post")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function postTermAction(Request $request)
     {
@@ -56,8 +60,7 @@ class TermController extends AbstractController
 
         $term->setTitle($data['title']);
         $term->setUrl($data['url']);
-        $term->setUpdatedAt(new \DateTime($data['updatedAt']));
-        $term->setCreatedAt(new \DateTime());
+        $term->setPublishedAt(new \DateTime($data['publishedAt']));
 
         $termManager->save($term);
 
@@ -65,8 +68,11 @@ class TermController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="create_term")
+     * @Route("/{id}", name="update_term")
      * @Method("put")
+     * @param Request $request
+     * @param Term $term
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function putTermAction(Request $request, Term $term)
     {
@@ -77,7 +83,7 @@ class TermController extends AbstractController
 
         $term->setTitle($data['title']);
         $term->setUrl($data['url']);
-        $term->setUpdatedAt(new \DateTime($data['updatedAt']));
+        $term->setPublishedAt(new \DateTime($data['publishedAt']));
 
         $termManager->save($term);
 
@@ -87,6 +93,8 @@ class TermController extends AbstractController
     /**
      * @Route("/{id}", name="delete_term")
      * @Method("delete")
+     * @param Term $term
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function deleteTermAction(Term $term)
     {
@@ -105,16 +113,18 @@ class TermController extends AbstractController
     private function formatEntity($termCollection)
     {
         return array_map(function(Term $term) {
-            /** @var \DateTime $createDate */
-            $createDate = $term->getCreatedAt()->format('Y-m-d H:i:s ');
+            /** @var \DateTime $createdAt */
+            $createdAt = $term->getCreatedAt()->format('Y-m-d H:i:s ');
             $updatedAt = $term->getUpdatedAt()->format('Y-m-d H:i:s ');
+            $publishedAt = $term->getPublishedAt()->format('Y-m-d H:i:s ');
 
             return [
                 'id' => $term->getId(),
                 'title' => $term->getTitle(),
                 'url' => $term->getUrl(),
+                'publishedAt' => $publishedAt,
                 'updatedAt' => $updatedAt,
-                'createdAt' => $createDate
+                'createdAt' => $createdAt
             ];
         }, $termCollection);
     }
