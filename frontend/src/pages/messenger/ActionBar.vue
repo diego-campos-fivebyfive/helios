@@ -16,6 +16,8 @@
       :label='button.label || ""',
       :pos='button.position',
       type='default-bordered')
+    label.collection-action-bar-text
+      | Página {{ pagination.current }} de {{ pagination.total }}
 </template>
 
 <script>
@@ -101,6 +103,13 @@
     .collection-action-bar-left {
       float: left;
       margin-right: 0.25rem;
+    }
+
+    .collection-action-bar-text {
+      float: right;
+      font-weight: 600;
+      padding: 0.75rem;
+      vertical-align: middle;
     }
 
     .collection-action-bar-right {
