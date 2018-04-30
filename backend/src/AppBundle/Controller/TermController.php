@@ -62,7 +62,7 @@ class TermController extends AbstractController
 
     /**
      * @Route("/agree/{id}", name="agree_term_account")
-     * @Method("get")
+     * @Method("post")
      */
     public function getAgreeTermAction(Term $term) {
         $account = $this->account();
