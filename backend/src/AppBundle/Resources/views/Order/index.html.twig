@@ -21,6 +21,15 @@
 
         .validated {  color: #0a6aa1;  }
 
+        .group-values select {
+            float: left;
+            width: 30%;
+        }
+
+        .group-values input {
+            float: left;
+            width: 55%;
+        }
         .group-input input {
             float: left;
             width: 85%;
@@ -32,6 +41,15 @@
         .chosen-choices {
             border-radius: 1px;
             padding: 2px !important;
+        }
+        #filter_optionsVal {
+            width: 40%;
+        }
+        #filter_valueMin , #filter_valueMax {
+            width: 30%;
+        }
+        #form-filter {
+            margin-bottom: 10px;
         }
     </style>
 
@@ -84,25 +102,46 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
 
-                <div class="col-md-8">
+                <div class="col-md-10">
+                    {{ form_start(form, {attr:{id:'form-filter'}}) }}
                     <div class="row">
 
-                        {{ form_start(form, {attr:{id:'form-filter-status'}}) }}
+                        <div class="form-group col-md-3">
+                            {{ form_widget(form.like,{attr:{class:'form-control', placeholder: 'Referência'}}) }}
+                        </div>
 
+                        <div class="group-values col-md-4">
+                            {{ form_widget(form.optionsVal,{attr:{class:'form-control'}}) }}
+                            {{ form_widget(form.valueMin,{attr:{class:'form-control', placeholder:'Mínimo' }}) }}
+                            {{ form_widget(form.valueMax,{attr:{class:'form-control', placeholder:'Máximo' }}) }}
+                        </div>
+
+                        <div class="group-input col-md-5">
+                            {{ form_widget(form.statusAt,{attr:{class:'form-control', placeholder:'Filtrar p/ data de status' }}) }}
+                            <button type="button" id="clear-statusAt" class="btn btn-primary ">
+                                <i class="fa fa-eraser"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-3">
                             {% include view('admin/helper/status_filter.html.twig') %}
+                        </div>
+
+                        <div class="col-md-2 pull-right">
+                            <button type="submit" class="btn btn-primary btn-md btn-block">
+                                <i class="fa fa-search"></i> Pesquisar
+                            </button>
                         </div>
 
                         <div class="hide">
                             {{ form_rest(form) }}
                         </div>
-
-                        {{ form_end(form) }}
-
                     </div>
+                    {{ form_end(form) }}
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <a class="btn btn-success pull-right" href="{{ path('project_generator') }}">
                         <i class="fa fa-plus"></i> Orçamento
                     </a>
@@ -348,11 +387,100 @@
             });
         });
 
-        var form_filtration = $("#form-filter-status");
+        var form_filtration = $("#form-filter");
 
         if(form_filtration.length){
           StatusFilter(form_filtration);
         }
+
+        var statusAt = $('#filter_statusAt');
+
+        statusAt.daterangepicker({
+            locale: {
+                format: 'DD/MM/YYYY',
+                daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+                monthNames: [
+                    "Janeiro",
+                    "Fevereiro",
+                    "Março",
+                    "Abril",
+                    "Maio",
+                    "Junho",
+                    "Julho",
+                    "Agosto",
+                    "Setembro",
+                    "Outubro",
+                    "Novembro",
+                    "Dezembro"
+                ]
+            }
+        });
+
+        statusAt.val('');
+
+        $('#clear-statusAt').on('click', function () {
+            statusAt.val('');
+        });
+
+        $('#filter_valueMin').on('change', function () {
+            if ($('#filter_valueMax').val()) {
+                var thisValue = Number($(this).val().replace(',','.'));
+                var value = Number($('#filter_valueMax').val().replace(',','.'));
+
+                if (thisValue > value) {
+                    $(this).val((value.toString()).replace('.',','));
+                    $('#filter_valueMax').val((thisValue.toString()).replace('.',','));
+                }
+            }
+        });
+
+        $('#filter_valueMax').on('change', function () {
+            if ($('#filter_valueMin').val()) {
+                var thisValue = Number($(this).val().replace(',','.'));
+                var value = Number($('#filter_valueMin').val().replace(',','.'));
+
+                if (thisValue < value) {
+                    $(this).val((value.toString()).replace('.',','));
+                    $('#filter_valueMin').val((thisValue.toString()).replace('.',','));
+                }
+            }
+        });
+
+        var sanitize = function(element){
+            function clear(v){ return v.replace(/\D+/g,''); }
+            var value = element.val();
+            var backup = value.replace(/\./g,',');
+            value = clear(value);
+            if(backup.indexOf(',') > 0){
+                var commas = backup.split(',');
+                value = clear(commas[0])+',';
+                if(commas[1].length){
+                    value += clear(commas[1]);
+                }
+            }
+            if(0 == backup.indexOf('-')){
+                if(2 == backup.split('-').length){
+                    value = '-' + value;
+                }
+            }
+            element.val(value);
+        };
+
+        var custom_mask = function(element){
+            element.on('keyup', function(){
+                sanitize(element);
+            });
+        };
+
+        var common_mask = {pattern: '##,##', reverse: true};
+        var targets = {
+            'filter_valueMin': common_mask,
+            'filter_valueMax': common_mask
+        };
+
+        $.each(targets, function (id, options) {
+            custom_mask($('#'+id));
+        });
 
     </script>
 {% endblock %}

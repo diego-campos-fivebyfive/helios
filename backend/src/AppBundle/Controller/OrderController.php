@@ -45,15 +45,52 @@ class OrderController extends AbstractController
 
         $filter = $form->handleRequest($request)->getData();
 
+        if (is_array($filter) && array_key_exists('like', $filter)) {
+            $filter['likes'] = ['o.reference'];
+        }
+
         /** @var \AppBundle\Service\Order\OrderFinder $finder */
         $finder = $this->get('order_finder');
 
         $finder
             ->set('member', $this->member())
-            ->set('filter', $filter)
-        ;
+            ->set('filter', $filter);
 
         $qb = $finder->queryBuilder();
+
+        $optionVal = $filter['optionsVal'];
+        $valueMin = $filter['valueMin'] ? str_replace(',', '.', $filter['valueMin']) : null;
+        $valueMax = $filter['valueMax'] ? str_replace(',', '.', $filter['valueMax']) : null;
+
+        if ($valueMin) {
+            $qb->andWhere('o.' . $optionVal . ' >= :valMin');
+
+            $qb->setParameter('valMin', $valueMin);
+        }
+
+        if ($valueMax) {
+            $qb->andWhere('o.' . $optionVal . ' <= :valMax');
+
+            $qb->setParameter('valMax', $valueMax);
+        }
+
+        $statusAt = $filter['statusAt'];
+
+        if ($statusAt) {
+            $formatDateAt = function ($dateAt) {
+                return implode('-', array_reverse(explode('/', $dateAt)));
+            };
+
+            $statusAt = explode(' - ', $statusAt);
+            $startAt = new \DateTime($formatDateAt($statusAt[0]));
+            $endAt = new \DateTime($formatDateAt($statusAt[1]));
+
+            $qb->andWhere('o.statusAt >= :startAt');
+            $qb->andWhere('o.statusAt <= :endAt');
+
+            $qb->setParameter('startAt', $startAt->format('Y-m-d 00:00:00'));
+            $qb->setParameter('endAt', $endAt->format('Y-m-d 23:59:59'));
+        }
 
         if (-1 != $status = $request->get('status')) {
             $status = explode(',', $status);
