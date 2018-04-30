@@ -11,7 +11,8 @@
           pos='single')
     List(
       slot='section',
-      :terms='terms')
+      :terms='terms',
+      v-on:getTerms='getTerms')
     Paginator(
       slot='footer',
       :pagination='pagination',
