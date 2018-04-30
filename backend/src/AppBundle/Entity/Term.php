@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="app_term")
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks()
  */
 class Term implements TermInterface {
 
@@ -38,14 +39,21 @@ class Term implements TermInterface {
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="created_at", type="datetime")
+     * @ORM\Column(name="published_at", type="datetime", nullable=true)
+     */
+    private $publishedAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
      */
     private $createdAt;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="updated_at", type="datetime")
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
      */
     private $updatedAt;
 
@@ -106,19 +114,27 @@ class Term implements TermInterface {
     /**
      * @inheritDoc
      */
-    public function getCreatedAt()
+    public function setPublishedAt($publishedAt)
     {
-        return $this->createdAt;
+        $this->publishedAt = $publishedAt;
+
+        return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function setCreatedAt($createdAt)
+    public function getPublishedAt()
     {
-        $this->createdAt = $createdAt;
+        return $this->publishedAt;
+    }
 
-        return $this;
+    /**
+     * @inheritDoc
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
     }
 
     /**
@@ -130,13 +146,19 @@ class Term implements TermInterface {
     }
 
     /**
-     * @inheritDoc
+     * @ORM\prePersist
      */
-    public function setUpdatedAt($updatedAt)
+    public function prePersist()
     {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
+        $this->createdAt = new \DateTime;
+        $this->updatedAt = new \DateTime;
     }
 
+    /**
+     * @ORM\preUpdate
+     */
+    public function preUpdate()
+    {
+        $this->updatedAt = new \DateTime;
+    }
 }
