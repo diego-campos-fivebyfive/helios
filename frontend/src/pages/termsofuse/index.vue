@@ -1,16 +1,30 @@
 <template lang="pug">
   Panel.panel
     div(slot='header')
-      slot(name='heading')
-        h1.title Lista de Termos de Uso
-      Paginator(
-        slot='footer',
-        :pagination='pagination',
-        v-on:paginate='getTerms')
+      h1.title
+        | Gerenciamento de Termos de Uso
+      nav.menu
+        Button(
+          type='primary-common',
+          icon='plus-square',
+          label='Novo Termo',
+          pos='single')
+    List(
+      slot='section',
+      :terms='terms')
+    Paginator(
+      slot='footer',
+      :pagination='pagination',
+      v-on:paginate='getTerms')
 </template>
 
 <script>
+  import List from './list'
+
   export default {
+    components: {
+      List
+    },
     data: () => ({
       terms: [],
       pagination: {}
@@ -20,8 +34,7 @@
         const uri = `/admin/api/v1/terms?page=${pageNumber}`
 
         this.axios.get(uri).then(response => {
-          console.log(response)
-          this.coupons = response.data.results
+          this.terms = response.data.results
           this.pagination = response.data.page
         })
       }
