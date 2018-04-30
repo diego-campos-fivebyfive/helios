@@ -56,9 +56,9 @@ class TermsChecker
 
             if ($timestamp <= $currentTimestamp) {
                 if (!array_key_exists($id, $terms)) {
-                    $terms[$id] = ['checkedAt' => null];
-                } else if ($terms[$id]['checkedAt'] <= $timestamp) {
-                    $terms[$id]['checkedAt'] = null;
+                    $terms[$id] = [null];
+                } else if ($terms[$id] <= $timestamp) {
+                    $terms[$id] = null;
                 }
             }
         }
@@ -74,7 +74,7 @@ class TermsChecker
     public function checked()
     {
         return array_filter($this->terms, function ($term) {
-            return !empty($term['checkedAt']);
+            return !is_null($term);
         });
     }
 
@@ -84,7 +84,7 @@ class TermsChecker
     public function unchecked()
     {
         return array_filter($this->terms, function ($term) {
-            return empty($term['checkedAt']);
+            return is_null($term);
         });
     }
 
