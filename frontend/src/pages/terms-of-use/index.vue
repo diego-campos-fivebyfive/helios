@@ -1,22 +1,25 @@
 <template lang="pug">
-  Panel.panel
-    div(slot='header')
-      h1.title
-        | Gerenciamento de Termos de Uso
-      nav.menu
-        Button(
-          type='primary-common',
-          icon='plus-square',
-          label='Novo Termo',
-          pos='single')
-    List(
-      slot='section',
-      :terms='terms',
-      v-on:getTerms='getTerms')
-    Paginator(
-      slot='footer',
-      :pagination='pagination',
-      v-on:paginate='getTerms')
+  .wrapper
+    Notification(ref='notification')
+    Panel.panel
+      div(slot='header')
+        h1.title
+          | Gerenciamento de Termos de Uso
+        nav.menu
+          Button(
+            type='primary-common',
+            icon='plus-square',
+            label='Novo Termo',
+            pos='single')
+      List(
+        slot='section',
+        :terms='terms',
+        :notification='$refs.notification',
+        v-on:getTerms='getTerms')
+      Paginator(
+        slot='footer',
+        :pagination='pagination',
+        v-on:paginate='getTerms')
 </template>
 
 <script>

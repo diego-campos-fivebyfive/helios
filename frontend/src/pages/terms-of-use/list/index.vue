@@ -1,6 +1,5 @@
 <template lang="pug">
   div
-    Notification(ref='notification')
     Confirm(ref='confirm', v-on:removeItem='removeTerm')
       div(slot='content')
         Icon.icon(name='question-circle-o', scale='4')
@@ -32,7 +31,8 @@
 <script>
   export default {
     props: [
-      'terms'
+      'terms',
+      'notification'
     ],
     methods: {
       formatDate(date) {
@@ -45,7 +45,7 @@
         this.axios.delete(`/admin/api/v1/terms/${id}`)
           .then(() => {
             this.$emit('getTerms')
-            this.$refs.notification.notify('Termo removido com sucesso')
+            this.notification.notify('Termo removido com sucesso')
           })
       }
     }
