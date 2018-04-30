@@ -45,7 +45,7 @@
             <div class="form-group {% if isShow %} col-md-6 {% else %} col-md-5 pull-right {% endif %}">
                 <label> &nbsp; </label>
                 <button class="btn btn-success btn-block ladda-button" disabled="disabled" id="submit_coupon" data-style="zoom-in" type="submit">
-                    <i class="fa fa-check-circle-o"></i> Informe o código ou selecione uma opção
+                    <i class="fa fa-check-circle-o"></i> Digite o código ou selecione uma opção
                 </button>
             </div>
 
@@ -93,7 +93,7 @@
 {% endif %}
 
 <script>
-    var options = {
+        var options = {
         positionClass: "toast-top-center",
         preventDuplicates: true,
         progressBar: true
@@ -103,7 +103,7 @@
         couponInput: $('#coupon_code_input'),
         couponSelect: $('#coupon_select'),
         submitCoupon: $('#submit_coupon'),
-        submitCouponDefaultText: "<i class=\"fa fa-check-circle-o\"></i> Informe o código ou selecione uma opção",
+        submitCouponDefaultText: "<i class=\"fa fa-check-circle-o\"></i> Digite o código ou selecione uma opção",
         couponSelectDefault: "",
         coupon: null,
         getCouponUrl: "{{ path('get_coupon', {code: '_code_'}) }}",
