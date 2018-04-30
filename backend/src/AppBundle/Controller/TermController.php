@@ -74,13 +74,6 @@ class TermController extends AbstractController
 
         $currentTimestamp = (new \DateTime())->getTimestamp();
 
-        /** @var TermsChecker $termChecker */
-        $termChecker = $this->get('terms_checker');
-
-        $uncheckedTerms = $termChecker->synchronize($accountTerms)->unchecked();
-
-        dump($uncheckedTerms);die();
-
         $accountTerms[$term->getId()] = $currentTimestamp;
 
         $account->setTerms($accountTerms);
