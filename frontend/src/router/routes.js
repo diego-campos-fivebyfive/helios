@@ -27,7 +27,6 @@ export const routes = [
   },
   {
     path: '/coupon',
-    redirect: 'not-found',
     name: 'Cupons',
     component: Coupon
   },
