@@ -2,7 +2,7 @@ import exceptions from '@/theme/validation/locale/pt-br'
 import patterns from '@/theme/validation/patterns'
 
 const validateRequired = field => {
-  if (field.required) {
+  if (!field.value && field.required) {
     return {
       rejected: true,
       exception: `Campo ${field.label} requirido`
