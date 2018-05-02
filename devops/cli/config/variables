@@ -13,6 +13,7 @@ export SICES_AUTH_USER='1_2b14bvyiqfr4wksgcc0ck004w8og4wkwc4o4gksk4ks8oooo8g'
 export SICES_AUTH_KEY='53xlex74i4kk8ckww08goc8oocw048s0wwcok84040w0kcw0ks'
 
 export SICES_HOOK_PORT=3000
+export SICES_SOCKET_PORT=81
 
 slack_uri='https://hooks.slack.com/services/T637J8WTD'
 export SLACK_HOOK_BACKEND="${slack_uri}/B9PBEM4CX/pgEmHlA5upMTLwwrk0COqbbI"
