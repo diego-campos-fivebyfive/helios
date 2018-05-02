@@ -24,7 +24,7 @@
 
                         </div>
 
-                        {% if app.user.isPlatformMaster %}
+                        {% if app.user.isPlatformMaster or app.user.isPlatformAdmin %}
                             <div class="row">
                                 <div class="col-md-6">
                                     {% include view('admin/stock/components_family.html.twig') %}
