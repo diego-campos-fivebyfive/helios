@@ -68,22 +68,33 @@ class Core
 
         $files = $processor->indexer($filesList);
 
+        $ordersReferences = [];
+        $ordersData = [];
         foreach ($files as $filename => $extensions) {
             $danfe = $parse::extract($filename);
-            $order = $processor->matchReference($danfe);
+            $ordersReferences[] = $danfe['reference'];
+            $ordersData[$danfe['reference']]['danfe'] = $danfe;
+            $ordersData[$danfe['reference']]['filename'] = $filename;
+            $ordersData[$danfe['reference']]['extensions'] = $extensions;
+        }
 
-            if ($order instanceof Order) {
+        $orders = $processor->matchReferences($ordersReferences);
 
-                $processor->setOrderDanfe($order, $danfe, $filename, $extensions);
+        /** @var Order $order */
+        foreach ($orders as $order) {
+            $danfe = $ordersData[$order->getReference()]['danfe'];
+            $filename = $ordersData[$order->getReference()]['filename'];
+            $extensions = $ordersData[$order->getReference()]['extensions'];
 
-                $date = (new \DateTime('now'))->format('Ymd');
-                $prefix = "PROCESSED-${date}-";
+            $processor->setOrderDanfe($order, $danfe, $filename, $extensions);
 
-                foreach ($extensions as $extension) {
-                    $file = "${filename}.${extension}";
-                    $fileReader->prefixer($file, $prefix);
-                    $this->result['processed_files']++;
-                }
+            $date = (new \DateTime('now'))->format('Ymd');
+            $prefix = "PROCESSED-${date}-";
+
+            foreach ($extensions as $extension) {
+                $file = "${filename}.${extension}";
+                $fileReader->prefixer($file, $prefix);
+                $this->result['processed_files']++;
             }
         }
 
