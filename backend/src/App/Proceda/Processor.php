@@ -287,7 +287,7 @@ class Processor
      * @param Order $order
      * @param array $event
      */
-    private function changeStatusByEvent(Order $order, $event)
+    private function changeStatusByEvent(Order $order, array $event)
     {
         if($order->getStatus() != Order::STATUS_DELIVERED
             && in_array($event['code'], array_merge(self::DELIVERING, self::DELIVERED))){
