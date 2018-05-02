@@ -1,24 +1,24 @@
 <?php
 
 use App\Sices\Nfe\Core;
-use Tests\AppBundle\AppTestCase;
+use Liip\FunctionalTestBundle\Test\WebTestCase as WebTestCase;
 
 /**
  * Class CoreNfeTest
  * @group sices_nfe_core
  */
-class CoreNfeTest extends AppTestCase
+class CoreNfeTest extends WebTestCase
 {
 
     public function testCore()
     {
-        $orderManager = $this->getContainer()->get('order_manager');
-
-        $order = $orderManager->create();
-
-        $order->setReference('171128008');
-
-        $orderManager->save($order);
+//        $orderManager = $this->getContainer()->get('order_manager');
+//
+//        $order = $orderManager->create();
+//
+//        $order->setReference('171128008');
+//
+//        $orderManager->save($order);
 
         $core = new Core($this->getContainer());
 
