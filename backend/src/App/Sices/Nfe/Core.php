@@ -38,11 +38,6 @@ class Core
 
     public function core()
     {
-        $parse = $this->container->get('nfe_parser');
-
-        /** @var Processor $processor */
-        $processor = $this->container->get('nfe_processor');
-
         $fileSystem = FileSystemFactory::create([
             'host' => $this->container->getParameter('ftp_host'),
             'port' => $this->container->getParameter('ftp_port'),
@@ -71,7 +66,7 @@ class Core
         $ordersReferences = [];
         $ordersData = [];
         foreach ($files as $filename => $extensions) {
-            $danfe = $parse::extract($filename);
+            $danfe = Parser::extract($filename);
             $ordersReferences[] = $danfe['reference'];
             $ordersData[$danfe['reference']]['danfe'] = $danfe;
             $ordersData[$danfe['reference']]['filename'] = $filename;
