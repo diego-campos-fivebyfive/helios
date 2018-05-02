@@ -37,7 +37,9 @@
         });
     }
 
+    {% if app.user.isPlatform %}
     getUnreadMessageCount();
+    {% endif %}
 
     var Realtime = {
         tasks: {
@@ -64,11 +66,6 @@
                 }
             }
         },
-        orders: {
-            messages: function () {
-                setInterval(getUnreadMessageCount, 10000);
-            }
-        },
         online: function () {
             $.ajax({
                 url: '{{ path('app_check_online') }}',
@@ -87,7 +84,4 @@
     {% endif %}
 
     Realtime.online();
-    {% if app.user.isPlatform %}
-        Realtime.orders.messages();
-    {% endif %}
 </script>
