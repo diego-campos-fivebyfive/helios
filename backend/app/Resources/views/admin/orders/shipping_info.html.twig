@@ -21,14 +21,14 @@
        data-toggle="modal" data-target="#modal_shipping"
        data-url="{{ path('order_shipping', {id:order.id}) }}"
        data-shipping="self">
-        <i class="fa fa-truck"></i>
+        <i class="fa fa-truck"></i><br><small>Transport.</small>
     </a>
 {% else %}
     <a class="btn btn-default {{ order.deliveryAddress ? 'validated' }}"
        data-toggle="modal" data-target="#modal_shipping"
        data-shipping="sices"
        data-url="{{ path('order_shipping', {id:order.id}) }}">
-        <i class="fa fa-truck"></i>
+        <i class="fa fa-truck"></i><br><small>Frete Sices</small>
     </a>
 {% endif %}
 
