@@ -1,5 +1,9 @@
 <template lang="pug">
   div
+    Confirm(ref='confirm', v-on:removeItem='removeTerm')
+      div(slot='content')
+        Icon.icon(name='question-circle-o', scale='4')
+        h2.title Confirma exclusão deste Termo?
     Table.table(type='stripped')
       tr(slot='head')
         th.col-title Título
@@ -19,18 +23,29 @@
           Button(
             type='danger-common',
             icon='trash',
-            pos='last')
+            pos='last',
+            v-on:click.native='$refs.confirm.show(term.id)')
 </template>
 
 <script>
   export default {
     props: [
-      'terms'
+      'terms',
+      'notification'
     ],
     methods: {
       formatDate(date) {
         const moment = this.$moment(date, 'YYYY-MM-DD, hh:mm a')
         return moment.format('DD/MM/YYYY, hh:mm a')
+      },
+      removeTerm(id) {
+        this.$refs.confirm.hide()
+
+        this.axios.delete(`/admin/api/v1/terms/${id}`)
+          .then(() => {
+            this.$emit('getTerms')
+            this.notification.notify('Termo removido com sucesso')
+          })
       }
     }
   }
