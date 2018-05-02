@@ -30,17 +30,15 @@ class AccountController extends AbstractController
     {
         $qb = $this->manager('account')->createQueryBuilder();
 
-        $qb->select('a.id, a.firstname as name')
-            ->from(Customer::class, 'a')
-            ->where('a.status = :status')
-            ->andWhere('a.context = :context')
-            ->andWhere('a.email <> :email_sices')
+        $qb->select('c.id, c.firstname as name')
+            ->where('c.status = :status')
+            ->andWhere('c.context = :context')
+            ->andWhere('c.email <> :email_sices')
             ->setParameters([
                 'status' => AccountInterface::ACTIVATED,
                 'context' => BusinessInterface::CONTEXT_ACCOUNT,
                 'email_sices' => 'servidor@sicesbrasil.com.br'
             ])
-            ->groupBy('a.id')
             ->setMaxResults(10);
 
         $search = $request->get('search');
@@ -48,7 +46,7 @@ class AccountController extends AbstractController
         if ($search) {
             $qb->andWhere(
                 $qb->expr()->like(
-                    'a.firstname',
+                    'c.firstname',
                     $qb->expr()->literal('%'.$search.'%')
                     ));
         }
