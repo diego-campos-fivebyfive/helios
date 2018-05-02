@@ -234,10 +234,7 @@ class Processor
     private function processGroupEvents(Order $order, array $events = [])
     {
         foreach ($events as $event) {
-
-            $this->changeStatusByEvent($order, $event['event']);
-
-            $this->prepareTimelineEvent($order, $event);
+            $this->changeStatusByEvent($order, $event);
         }
     }
 
@@ -288,18 +285,20 @@ class Processor
 
     /**
      * @param Order $order
-     * @param int $event
+     * @param array $event
      */
     private function changeStatusByEvent(Order $order, $event)
     {
-        $status = $order->getStatus();
+        if($order->getStatus() != Order::STATUS_DELIVERED
+            && in_array($event['code'], array_merge(self::DELIVERING, self::DELIVERED))){
 
-        if ($status != OrderInterface::STATUS_DELIVERED
-            && in_array($event, self::DELIVERING)) {
-            $order->setStatus(OrderInterface::STATUS_DELIVERING);
-        } elseif ($status != OrderInterface::STATUS_DELIVERED
-            && in_array($event, self::DELIVERED)) {
-            $order->setStatus(OrderInterface::STATUS_DELIVERED);
+            $status = in_array($event['code'], self::DELIVERED)
+                ? Order::STATUS_DELIVERED
+                : Order::STATUS_DELIVERING ;
+
+            $order->setStatus($status);
+
+            $this->prepareTimelineEvent($order, $event);
         }
 
         $this->manager->save($order, false);
@@ -365,6 +364,10 @@ class Processor
      */
     private function findOrders(array $invoices)
     {
+        if(empty($invoices)){
+            return [];
+        }
+
         $regex = implode('|', $invoices);
 
         $SQL = "SELECT id FROM app_order WHERE invoices REGEXP '{$regex}'";
@@ -380,9 +383,7 @@ class Processor
 
         $qb = $this->manager->createQueryBuilder();
 
-        $qb->where(
-            $qb->expr()->in('o.id', $ids)
-        );
+        $qb->where($qb->expr()->in('o.id', $ids));
 
         $result = $qb->getQuery()->getResult();
         $orders = [];
