@@ -38,6 +38,9 @@ class Core
 
     public function core()
     {
+        /** @var Processor $processor */
+        $processor = $this->container->get('nfe_processor');
+
         $fileSystem = FileSystemFactory::create([
             'host' => $this->container->getParameter('ftp_host'),
             'port' => $this->container->getParameter('ftp_port'),
