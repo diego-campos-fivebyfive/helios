@@ -14,8 +14,8 @@
                 <form id="components_filter" action="{{ route('components_stock') }}">
                     <div class="col-md-4 filters">
                         <select name="type" class="form-control">
-                            <option value="">Tipo</option>
-                            {% for family in families %}
+                            <option value="">Todos</option>
+                            {% for family, value in families %}
                                 <option value="{{ family }}">{{ family|trans }}</option>
                             {% endfor %}
                         </select>
