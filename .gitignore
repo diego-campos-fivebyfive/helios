@@ -2,6 +2,7 @@
 .ssh
 .idea
 backend/app/logs/*
+backend/bin/app/logs/*
 backend/app/cache/*
 backend/app/sessions/
 backend/app/config/parameters.yml
