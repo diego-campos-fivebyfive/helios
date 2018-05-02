@@ -24,11 +24,13 @@
 
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                {% include view('admin/stock/components_family.html.twig') %}
+                        {% if app.user.isPlatformMaster %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {% include view('admin/stock/components_family.html.twig') %}
+                                </div>
                             </div>
-                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
