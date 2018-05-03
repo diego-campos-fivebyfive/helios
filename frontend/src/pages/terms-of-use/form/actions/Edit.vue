@@ -23,11 +23,12 @@
 
         const data = payload.parse(this.payload)
 
-        const uri = `api/v1/coupon/${data.id}`
+        console.log('data', data)
+        const uri = `/admin/api/v1/terms/${data.id}`
 
         const response = this.axios.put(uri, data)
-          .then(() => 'Cupom editado com sucesso')
-          .catch(() => 'Não foi possível editar cupom')
+          .then(() => 'Termo editado com sucesso')
+          .catch(() => 'Não foi possível editar termo')
 
         this.$emit('done', response)
       }

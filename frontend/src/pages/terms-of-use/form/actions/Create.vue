@@ -5,7 +5,7 @@
     type='primary-strong',
     label='Salvar',
     pos='single',
-    v-on:click.native='createCoupon')
+    v-on:click.native='createTerm')
 </template>
 
 <script>
@@ -16,18 +16,18 @@
       'payload'
     ],
     methods: {
-      createCoupon() {
+      createTerm() {
         if (!payload.available(this.payload)) {
           return
         }
 
         const data = payload.parse(this.payload)
 
-        const uri = 'api/v1/coupon/'
+        const uri = '/admin/api/v1/terms/'
 
         const response = this.axios.post(uri, data)
-          .then(() => 'Cupom cadastrado com sucesso')
-          .catch(() => 'Não foi possível cadastrar cupom')
+          .then(() => 'Termo cadastrado com sucesso')
+          .catch(() => 'Não foi possível cadastrar termo')
 
         this.$emit('done', response)
       }

@@ -3,20 +3,20 @@ import Edit from './Edit'
 
 const actions = {
   default: {
-    title: 'Gerenciamento de Cupom',
+    title: 'Gerenciamento de Termo',
     layout: {
       columns: {
-        size: 'medium',
-        total: 2
+        size: 'small',
+        total: 1
       }
     }
   },
   create: {
-    title: 'Cadastro de Cupom',
+    title: 'Cadastro de Termo de uso',
     component: Create
   },
   edit: {
-    title: 'Edição de Cupom',
+    title: 'Edição de Termo de uso',
     component: Edit
   }
 }
