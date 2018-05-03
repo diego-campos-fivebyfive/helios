@@ -43,6 +43,10 @@
             icon: 'eye',
             position: 'single',
             click: () => self.markIsRead()
+          }, {
+            icon: 'envelope',
+            position: 'single',
+            click: () => self.filterUnread()
           }],
           right: [{
             icon: 'arrow-right',
@@ -53,24 +57,14 @@
             position: 'first',
             click: () => self.prev()
           }]
-        }
+        },
+        unreadMessages: false
       }
     },
     methods: {
       refresh() {
+        this.unreadMessages = false
         this.clearCheckedMessages()
-      },
-      next() {
-        if (this.pagination.links.next) {
-          const pageNumber = this.pagination.current + 1
-          this.getMessages(pageNumber)
-        }
-      },
-      prev() {
-        if (this.pagination.links.prev) {
-          const pageNumber = this.pagination.current - 1
-          this.getMessages(pageNumber)
-        }
       },
       markIsRead() {
         this.incrementCheckedMessages()
@@ -91,6 +85,22 @@
                 .catch(() => 'Não foi possível marcar mensagens como lidas')
             }
           })
+      },
+      filterUnread() {
+        this.unreadMessages = true
+        this.$emit('updateList')
+      },
+      next() {
+        if (this.pagination.links.next) {
+          const pageNumber = this.pagination.current + 1
+          this.getMessages(pageNumber)
+        }
+      },
+      prev() {
+        if (this.pagination.links.prev) {
+          const pageNumber = this.pagination.current - 1
+          this.getMessages(pageNumber)
+        }
       }
     }
   }
