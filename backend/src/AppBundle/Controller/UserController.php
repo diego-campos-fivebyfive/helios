@@ -21,6 +21,7 @@ class UserController extends AbstractController
         $account = $member->getAccount();
 
         return $this->json([
+            'id' => $member->getId(),
             'name' => $member->getFirstname(),
             'company' => $account->getFirstname(),
             'level' => $account->getLevel()

@@ -1,5 +1,6 @@
 # This file is auto-replaced during the sices app config command execution
 parameters:
+    platform_host: ${CES_SICES_HOST}
     database_host: ${CES_SICES_DATABASE_HOST}
     database_port: ${CES_SICES_DATABASE_PORT}
     database_name: ${CES_SICES_DATABASE_NAME}
@@ -14,5 +15,6 @@ parameters:
     mailer_user: ${SICES_MAILER_USER}
     mailer_password: ${SICES_MAILER_PASS}
     secret: ${SICES_MAILER_KEY}
+    socket_port: ${SICES_SOCKET_PORT}
     ambience: ${CES_AMBIENCE}
     github_repository: ${GITHUB_REPOSITORY}

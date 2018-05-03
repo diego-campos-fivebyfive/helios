@@ -31,6 +31,9 @@ framework:
 twig:
     debug: "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    globals:
+        socket_port: "%socket_port%"
+        platform_host: "%platform_host%"
 
 doctrine:
     dbal:

@@ -176,7 +176,8 @@ const config = {
     new webpack.DefinePlugin({
       'process.env': {
         'AMBIENCE': JSON.stringify('production'),
-        'API_URL': JSON.stringify(process.env.CES_SICES_URI)
+        'API_URL': JSON.stringify(process.env.CES_SICES_URI),
+        'SOCKET_URL': JSON.stringify(`${process.env.CES_SICES_HOST}:${process.env.SICES_SOCKET_PORT}`)
       }
     }),
     new UglifyJsPlugin({

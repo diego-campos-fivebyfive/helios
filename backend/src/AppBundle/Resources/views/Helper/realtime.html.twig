@@ -1,6 +1,16 @@
+<script src="https://socket-io-chat.now.sh/socket.io/socket.io.js"></script>
 <script>
     {# general scripts #}
     $(function () {
+        var socket = io('{{ platform_host }}:{{ socket_port }}/socket?id={{ app.user.info.id }}');
+        var beepSound = new Audio("{{ asset('assets/sound/beep_messages.wav') }}");
+
+        socket.on('updateTotalOfMessages', function(data) {
+          var totalOfMessages = Number($('#unreadMessages').html()) + data;
+          $('#unreadMessages').html(totalOfMessages);
+          $('#unreadMessages').show();
+          beepSound.play();
+        });
 
         {% for notice in app.request.session.flashBag.get('notice') %}
         toastr.{{ notice.type }}('{{ notice.message }}', '{{ notice.title }}', {
@@ -10,21 +20,12 @@
         {% endfor %}
     });
 
-    var currentUnreadMessages = null;
-    var beepSound = new Audio("{{ asset('assets/sound/beep_messages.wav') }}");
-
     function getUnreadMessageCount() {
         $.ajax({
             type: "get",
             url: "{{ route('unread_message_count') }}",
             success: function(response) {
                 var unreadMessages = response.unreadMessages;
-
-                if (unreadMessages > currentUnreadMessages && currentUnreadMessages !== null) {
-                    beepSound.play();
-                }
-
-                currentUnreadMessages = unreadMessages;
 
                 $('#unreadMessages').html(unreadMessages);
 
@@ -64,11 +65,6 @@
                 }
             }
         },
-        orders: {
-            messages: function () {
-                setInterval(getUnreadMessageCount, 10000);
-            }
-        },
         online: function () {
             $.ajax({
                 url: '{{ path('app_check_online') }}',
@@ -87,7 +83,4 @@
     {% endif %}
 
     Realtime.online();
-    {% if app.user.isPlatform %}
-        Realtime.orders.messages();
-    {% endif %}
 </script>
