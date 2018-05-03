@@ -5,6 +5,7 @@ cd $SICES_PATH
 echo "Starting Application..."
 
 hook_app=devops/hook
+socket_app=backend/socket
 
 if [ -z ${1+x} ] || [ $1 = '--development' ]; then
 
@@ -35,6 +36,9 @@ elif [[ $1 = '--homolog' ]] || [[ $1 = '--staging' ]] || [[ $1 = '--production' 
 
   echo "Hook application starting on $CES_SICES_HOST:$SICES_HOOK_PORT"
   $hook_app/node_modules/.bin/pm2 start $hook_app/index.js --node-args="--harmony" -n "hook"
+
+  echo "Hook application starting on $CES_SICES_HOST:$SICES_SOCKET_PORT"
+  backend/node_modules/.bin/pm2 start $socket_app/index.js --node-args="--harmony" -n "socket"
 
 else
 

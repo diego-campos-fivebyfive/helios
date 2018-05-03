@@ -544,6 +544,21 @@ class OrderController extends AbstractController
         ], Response::HTTP_BAD_REQUEST);
     }
 
+    private function sendNotification($message, array $ids)
+    {
+        $host = $this->container->getParameter('platform_host');
+        $port = $this->container->getParameter('socket_port');
+
+
+        foreach($ids as $id) {
+          $socketUrl = "${host}:${port}/messages?id=${id}";
+          $curl = curl_init();
+          curl_setopt($curl, CURLOPT_URL, $socketUrl);
+          curl_exec($curl);
+          curl_close($curl);
+        }
+    }
+
     /**
      * @Route("/{id}/message", name="order_message")
      */
@@ -583,6 +598,8 @@ class OrderController extends AbstractController
                         $toUsers[] = $member->getId();
                     }
                 }
+
+                $this->sendNotification($contentMessage, $toUsers);
 
                 $toUsers = array_map(function ($user) {
                     return '"'.$user.'"';

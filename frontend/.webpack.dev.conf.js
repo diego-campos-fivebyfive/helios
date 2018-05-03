@@ -5,7 +5,7 @@ const path = require('path')
 const webpack = require('webpack')
 const axios = require('axios')
 
-const host = 'http://localhost:8000'
+const uri = 'http://localhost:8000'
 const sessid = process.env.SICES_PHPSESSID
 
 ;(() => {
@@ -14,7 +14,7 @@ const sessid = process.env.SICES_PHPSESSID
     process.exit(1)
   }
 
-  const testURL = `${host}/api/v1/coupon`
+  const testURL = `${uri}/api/v1/coupon`
 
   axios.get(testURL, {
     headers: {
@@ -126,7 +126,8 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env': {
         'AMBIENCE': JSON.stringify('development'),
-        'API_URL': JSON.stringify(host),
+        'API_URL': JSON.stringify(uri),
+        'SOCKET_URL': JSON.stringify(`http://localhost:${process.env.SICES_SOCKET_PORT}`),
         'PHPSESSID': JSON.stringify(sessid)
       }
     }),

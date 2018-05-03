@@ -40,7 +40,7 @@ elif [ $1 = '--production' ]; then
   rsync -avzh --delete $SICES_PATH/.temp/** $SICES_PATH
 
   echo "Replacing Frontend homolog URI..."
-  sed -i "s/${SICES_HOMOLOG_URI}/${SICES_PRODUCTION_URI}/g;" \
+  sed -i "s,${SICES_HOMOLOG_URI},${SICES_PRODUCTION_URI},g;" \
     backend/web/app/main.js
 
 else

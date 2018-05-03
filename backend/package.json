@@ -1,6 +1,13 @@
 {
   "dependencies": {
+    "express": "^4.16.3",
+    "http": "^0.0.0",
+    "pm2": "^2.10.3",
+    "socket.io": "^2.1.0",
     "uglify-js": "^3.0.23",
     "uglifycss": "^0.0.27"
+  },
+  "devDependencies": {
+    "supervisor": "^0.12.0"
   }
 }
