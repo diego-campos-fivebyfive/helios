@@ -1,6 +1,9 @@
 <template lang="pug">
   .wrapper
     Notification(ref='notification')
+    Form(
+      ref='form',
+      v-on:updateList='getTerms')
     Panel.panel
       div(slot='header')
         h1.title
@@ -10,12 +13,14 @@
             type='primary-common',
             icon='plus-square',
             label='Novo Termo',
-            pos='single')
+            pos='single',
+            v-on:click.native='show("create")')
       List(
         slot='section',
         :terms='terms',
         :notification='$refs.notification',
-        v-on:getTerms='getTerms')
+        v-on:getTerms='getTerms',
+        v-on:show='show')
       Paginator(
         slot='footer',
         :pagination='pagination',
@@ -23,10 +28,12 @@
 </template>
 
 <script>
+  import Form from './form'
   import List from './list'
 
   export default {
     components: {
+      Form,
       List
     },
     data: () => ({
@@ -34,6 +41,9 @@
       pagination: {}
     }),
     methods: {
+      show(action, term = {}) {
+        this.$refs.form.show(action, term)
+      },
       getTerms(pageNumber = 1) {
         const uri = `/admin/api/v1/terms?page=${pageNumber}`
 
