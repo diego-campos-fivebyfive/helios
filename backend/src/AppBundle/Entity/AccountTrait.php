@@ -397,7 +397,7 @@ trait AccountTrait
      */
     public function getTerms()
     {
-        return $this->terms;
+        return (array) $this->terms;
     }
 
     /**

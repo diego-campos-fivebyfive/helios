@@ -170,7 +170,7 @@ class OrderMessageController extends AbstractController
     private function filterMessages(Request $request, QueryBuilder &$qb)
     {
         $searchTerm = $request->get('searchTerm');
-        $unreadMessages = $request->get('unreadMessages');
+        $unreadMessages = $request->query->getBoolean('unreadMessages');
 
         if (!is_null($searchTerm)) {
             $qb->andWhere(
