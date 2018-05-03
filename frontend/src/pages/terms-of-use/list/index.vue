@@ -19,7 +19,8 @@
           Button(
             type='primary-common',
             icon='pencil',
-            pos='first')
+            pos='first',
+            v-on:click.native='$emit("show", "edit", term)')
           Button(
             type='danger-common',
             icon='trash',
