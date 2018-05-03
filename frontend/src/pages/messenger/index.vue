@@ -9,6 +9,8 @@
           v-on:updateList='getMessages')
       ActionBar.action-bar(
         slot='actions',
+        ref='actionBar',
+        v-on:updateList='getMessages',
         :getMessages='getMessages',
         :clearCheckedMessages='clearCheckedMessages',
         :incrementCheckedMessages='incrementCheckedMessages',
@@ -42,7 +44,8 @@
 
         const data = {
           params: {
-            searchTerm: this.$refs.search.termSearch
+            searchTerm: this.$refs.search.termSearch,
+            unreadMessages: this.$refs.actionBar.unreadMessages
           }
         }
 
