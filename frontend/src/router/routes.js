@@ -4,6 +4,7 @@ import Coupon from '@/pages/coupon'
 import Messenger from '@/pages/messenger'
 import Metric from '@/pages/metric'
 import NotFound from '@/pages/notfound'
+import Terms from '@/pages/terms'
 import TermsOfUse from '@/pages/terms-of-use'
 
 const RouterView = {
@@ -54,5 +55,10 @@ export const routes = [
     path: '/terms-of-use',
     name: 'Termos de Uso',
     component: TermsOfUse
+  },
+  {
+    path: '/terms',
+    name: 'Termos de Uso',
+    component: Terms
   }
 ]
