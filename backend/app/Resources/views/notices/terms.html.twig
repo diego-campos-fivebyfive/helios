@@ -1,0 +1,70 @@
+{% extends view('layout') %}
+
+{% block body %}
+    <style>
+        .filters {
+            padding-right: 3px;
+            padding-left: 3px;
+        }
+    </style>
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="ibox flow-h">
+                    <div class="ibox-content flow-lg">
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                {% include view('admin/stock/components.html.twig') %}
+                            </div>
+
+                            <div id="transations_block" class="col-md-6">
+                            </div>
+
+                        </div>
+
+                        {% if app.user.isPlatformMaster or app.user.isPlatformAdmin %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {% include view('admin/stock/components_family.html.twig') %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(' body ').toggleClass('mini-navbar');
+
+        Stock = {
+            inventory: {{ inventory|json_encode|raw }},
+            transactionsBlock: $('#transations_block'),
+            loadTransaction: function (urlComponent) {
+                $.ajax({
+                    url: urlComponent,
+                    complete: function (xhr) {
+                        Stock.transactionsBlock.html(xhr.responseText);
+                    }
+                });
+            },
+            reloadContent: function () {
+                ComponentsStock.loadComponents();
+                TransactionStock.loadTransactions();
+            },
+            loadInventory: function () {
+                var components = $('[data-code]');
+
+                for (i = 0; i < components.length; i++) {
+                    if(Stock.inventory[1])
+                        $(components[i]).find('td.pending').html(Stock.inventory[1][$(components[i]).data('code')]);
+                    if(Stock.inventory[2])
+                        $(components[i]).find('td.validated').html(Stock.inventory[2][$(components[i]).data('code')]);
+                }
+            }
+        }
+    </script>
+{% endblock %}
