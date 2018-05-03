@@ -10,8 +10,8 @@
       td.col-published {{ formatDate(term.publishedAt) }}
       td.col-action
         Checkbox(
-        :field='includeCheckedState(term)',
-        v-on:click.native='changedCheck(term, $event.target.checked)')
+          :field='includeCheckedState(term)',
+          v-on:click.native='changedCheck(term, $event.target.checked)')
 </template>
 
 <script>
