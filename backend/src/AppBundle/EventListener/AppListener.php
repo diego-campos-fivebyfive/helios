@@ -4,6 +4,7 @@ namespace AppBundle\EventListener;
 
 use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\UserInterface;
+use AppBundle\Service\Business\TermsChecker;
 use AppBundle\Service\Slack\ExceptionNotifier;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -126,7 +127,13 @@ class AppListener
     {
         $member = $this->getMember();
 
-        if ($member && !$member->isPlatformUser() && !$event->getRequest()->isXmlHttpRequest()) {
+        $request = $event->getRequest();
+
+        // TODO: tambem nao deverá entrar quando a rota for a dos termos
+        if ($member && !$member->isPlatformUser()
+            && !$request->isXmlHttpRequest()
+            && $request->attributes->get('_route') != "notice_render"
+            && $request->getPathInfo() != "/_fragment") {
             $account = $member->getAccount();
             $terms = $account->getTerms();
 
@@ -142,10 +149,12 @@ class AppListener
                 } else {
 
                 }
+                // TODO: mover essa linha para o else
+                $url = $this->container->get('router')->generate('notice_render', ['view' => 'terms']);
 
-                //        $response = new RedirectResponse('http://www.google.com');
-                //
-                //        $event->setResponse($response);
+                $response = new RedirectResponse($url);
+
+                $event->setResponse($response);
             }
         }
     }
